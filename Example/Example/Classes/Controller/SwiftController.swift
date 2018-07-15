@@ -26,6 +26,8 @@ import FWFramework
         objcButton.addTarget(self, action: #selector(onObjc), for: .touchUpInside)
         objcButton.frame = CGRect(x: self.view.frame.size.width / 2 - 75, y: 20, width: 150, height: 30)
         self.view.addSubview(objcButton)
+        
+        self.fwSwift()
     }
     
     // MARK: - Action

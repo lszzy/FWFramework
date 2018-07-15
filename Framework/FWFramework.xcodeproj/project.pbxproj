@@ -7,11 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F65194520FB028C00FC28E3 /* UINavigationController+FWWorkflow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65194020FB028B00FC28E3 /* UINavigationController+FWWorkflow.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F65194620FB028C00FC28E3 /* UIKit+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65194120FB028B00FC28E3 /* UIKit+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F65194720FB028C00FC28E3 /* UINavigationController+FWWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F65194220FB028B00FC28E3 /* UINavigationController+FWWorkflow.m */; };
+		2F65194820FB028C00FC28E3 /* UIView+FWAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65194320FB028B00FC28E3 /* UIView+FWAutoLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F65194920FB028C00FC28E3 /* UIView+FWAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F65194420FB028B00FC28E3 /* UIView+FWAutoLayout.m */; };
+		2F65195120FB064400FC28E3 /* NSObject+FWSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65195020FB064400FC28E3 /* NSObject+FWSwift.swift */; };
 		2F8C542420A3D5E900CFB71B /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8C541020A3D5E900CFB71B /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2F51D75A1E5C1274009FD40F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F65194020FB028B00FC28E3 /* UINavigationController+FWWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWWorkflow.h"; sourceTree = "<group>"; };
+		2F65194120FB028B00FC28E3 /* UIKit+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+FWFramework.h"; sourceTree = "<group>"; };
+		2F65194220FB028B00FC28E3 /* UINavigationController+FWWorkflow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWWorkflow.m"; sourceTree = "<group>"; };
+		2F65194320FB028B00FC28E3 /* UIView+FWAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWAutoLayout.h"; sourceTree = "<group>"; };
+		2F65194420FB028B00FC28E3 /* UIView+FWAutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWAutoLayout.m"; sourceTree = "<group>"; };
+		2F65195020FB064400FC28E3 /* NSObject+FWSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+FWSwift.swift"; sourceTree = "<group>"; };
 		2F8C541020A3D5E900CFB71B /* FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -46,9 +58,111 @@
 			isa = PBXGroup;
 			children = (
 				2F8C541020A3D5E900CFB71B /* FWFramework.h */,
+				2F65193120FAF56C00FC28E3 /* Framework */,
+				2F65193220FAF57A00FC28E3 /* Application */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
+			sourceTree = "<group>";
+		};
+		2F65193120FAF56C00FC28E3 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				2F65193C20FB01BF00FC28E3 /* Extend */,
+				2F65193B20FB01BF00FC28E3 /* Kernel */,
+				2F65193F20FB01BF00FC28E3 /* Module */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
+		2F65193220FAF57A00FC28E3 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				2F65193320FAF5BC00FC28E3 /* App */,
+				2F65193720FAF5D100FC28E3 /* Service */,
+				2F65193420FAF5C100FC28E3 /* Controller */,
+				2F65193520FAF5C700FC28E3 /* Model */,
+				2F65193620FAF5CC00FC28E3 /* View */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		2F65193320FAF5BC00FC28E3 /* App */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2F65193420FAF5C100FC28E3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2F65193520FAF5C700FC28E3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2F65193620FAF5CC00FC28E3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2F65193720FAF5D100FC28E3 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2F65193B20FB01BF00FC28E3 /* Kernel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Kernel;
+			sourceTree = "<group>";
+		};
+		2F65193C20FB01BF00FC28E3 /* Extend */ = {
+			isa = PBXGroup;
+			children = (
+				2F65193E20FB01BF00FC28E3 /* Foundation */,
+				2F65193D20FB01BF00FC28E3 /* UIKit */,
+			);
+			path = Extend;
+			sourceTree = "<group>";
+		};
+		2F65193D20FB01BF00FC28E3 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				2F65194120FB028B00FC28E3 /* UIKit+FWFramework.h */,
+				2F65194320FB028B00FC28E3 /* UIView+FWAutoLayout.h */,
+				2F65194420FB028B00FC28E3 /* UIView+FWAutoLayout.m */,
+				2F65194020FB028B00FC28E3 /* UINavigationController+FWWorkflow.h */,
+				2F65194220FB028B00FC28E3 /* UINavigationController+FWWorkflow.m */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		2F65193E20FB01BF00FC28E3 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				2F65195020FB064400FC28E3 /* NSObject+FWSwift.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		2F65193F20FB01BF00FC28E3 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Module;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -58,6 +172,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F65194520FB028C00FC28E3 /* UINavigationController+FWWorkflow.h in Headers */,
+				2F65194620FB028C00FC28E3 /* UIKit+FWFramework.h in Headers */,
+				2F65194820FB028C00FC28E3 /* UIView+FWAutoLayout.h in Headers */,
 				2F8C542420A3D5E900CFB71B /* FWFramework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,6 +212,7 @@
 				TargetAttributes = {
 					2F51D7591E5C1274009FD40F = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 0940;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -147,6 +265,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F65194920FB028C00FC28E3 /* UIView+FWAutoLayout.m in Sources */,
+				2F65194720FB028C00FC28E3 /* UINavigationController+FWWorkflow.m in Sources */,
+				2F65195120FB064400FC28E3 /* NSObject+FWSwift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +389,7 @@
 		2F51D7631E5C1274009FD40F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -283,12 +405,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		2F51D7641E5C1274009FD40F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -304,6 +429,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

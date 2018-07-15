@@ -16,10 +16,12 @@ FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 /*! @brief FWFramework版本号字符 */
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-
+// Framework
+#import <FWFramework/UIKit+FWFramework.h>
 
 #else
 
-
+// Framework
+#import "UIKit+FWFramework.h"
 
 #endif
