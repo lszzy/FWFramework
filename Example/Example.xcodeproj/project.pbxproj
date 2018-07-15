@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				2F51D7891E5C2357009FD40F /* App */,
-				2F78602D20A14FDB00A7DF73 /* Library */,
+				2F78602D20A14FDB00A7DF73 /* Service */,
 				2F51D78C1E5C2357009FD40F /* Controller */,
 				2F78602A20A14FDB00A7DF73 /* Model */,
 				2F78602C20A14FDB00A7DF73 /* View */,
@@ -151,11 +151,11 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		2F78602D20A14FDB00A7DF73 /* Library */ = {
+		2F78602D20A14FDB00A7DF73 /* Service */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Library;
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

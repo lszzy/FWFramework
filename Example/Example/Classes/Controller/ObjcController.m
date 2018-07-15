@@ -33,6 +33,8 @@
     [swiftButton addTarget:self action:@selector(onSwift) forControlEvents:UIControlEventTouchUpInside];
     swiftButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 20, 150, 30);
     [self.view addSubview:swiftButton];
+    
+    [self fwSwift];
 }
 
 #pragma mark - Action
