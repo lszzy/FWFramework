@@ -8,10 +8,14 @@
 
 import Foundation
 
-public extension NSObject {
+@objc public extension NSObject {
     
     public func fwSwift() {
         print(#function)
+    }
+    
+    public func fwSwiftCallObjc() {
+        self.fwObjc()
     }
     
 }

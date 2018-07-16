@@ -16,12 +16,19 @@ FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 /*! @brief FWFramework版本号字符 */
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
+// Swift
+#if __has_include(<FWFramework/FWFramework-Swift.h>)
+#import <FWFramework/FWFramework-Swift.h>
+#endif
+
 // Framework
+#import <FWFramework/Foundation+FWFramework.h>
 #import <FWFramework/UIKit+FWFramework.h>
 
 #else
 
 // Framework
+#import "Foundation+FWFramework.h"
 #import "UIKit+FWFramework.h"
 
 #endif

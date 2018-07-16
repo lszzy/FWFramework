@@ -38,6 +38,7 @@
 		2F51D78B1E5C2357009FD40F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2F51D7E71E5C2357009FD40F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F5A5BE01FB1B18500EA39D0 /* FWFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FWFramework.xcodeproj; path = ../Framework/FWFramework.xcodeproj; sourceTree = "<group>"; };
+		2F7E423220FC327D00CE3E2F /* SwiftHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +85,7 @@
 			children = (
 				2F51D7821E5C1330009FD40F /* Info.plist */,
 				2F4D6B661E6E539300F4A52D /* PrefixHeader.pch */,
+				2F7E423220FC327D00CE3E2F /* SwiftHeader.h */,
 				2F06BE672097152C000F8587 /* BridgingHeader.h */,
 				2F51D7721E5C1330009FD40F /* main.m */,
 			);
