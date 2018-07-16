@@ -31,9 +31,6 @@ import FWFramework
     // MARK: - Action
     @discardableResult
     func onObjc() -> Bool {
-        self.fwObjcCallSwift()
-        self.fwSwiftCallObjc()
-        
         let viewController = ObjcController()
         self.navigationController?.pushViewController(viewController, animated: true)
         return true

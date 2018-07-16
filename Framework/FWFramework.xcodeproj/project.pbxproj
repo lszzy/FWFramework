@@ -12,13 +12,10 @@
 		2F7E422020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E421020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7E422120FC2EA500CE3E2F /* UIView+FWAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E421120FC2EA500CE3E2F /* UIView+FWAutoLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7E422220FC2EA500CE3E2F /* UIKit+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E421220FC2EA500CE3E2F /* UIKit+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F7E422320FC2EA500CE3E2F /* NSObject+FWSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7E421420FC2EA500CE3E2F /* NSObject+FWSwift.swift */; };
 		2F7E422420FC2EA500CE3E2F /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E421720FC2EA500CE3E2F /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7E422820FC2F6200CE3E2F /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */; };
 		2F7E422920FC2F6200CE3E2F /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7E422A20FC2F6200CE3E2F /* Foundation+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F7E422D20FC300900CE3E2F /* NSObject+FWObjc.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422B20FC300900CE3E2F /* NSObject+FWObjc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F7E422E20FC300900CE3E2F /* NSObject+FWObjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7E422C20FC300900CE3E2F /* NSObject+FWObjc.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,13 +25,10 @@
 		2F7E421020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWWorkflow.h"; sourceTree = "<group>"; };
 		2F7E421120FC2EA500CE3E2F /* UIView+FWAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWAutoLayout.h"; sourceTree = "<group>"; };
 		2F7E421220FC2EA500CE3E2F /* UIKit+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+FWFramework.h"; sourceTree = "<group>"; };
-		2F7E421420FC2EA500CE3E2F /* NSObject+FWSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+FWSwift.swift"; sourceTree = "<group>"; };
 		2F7E421720FC2EA500CE3E2F /* FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 		2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
 		2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
 		2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+FWFramework.h"; sourceTree = "<group>"; };
-		2F7E422B20FC300900CE3E2F /* NSObject+FWObjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWObjc.h"; sourceTree = "<group>"; };
-		2F7E422C20FC300900CE3E2F /* NSObject+FWObjc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWObjc.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,9 +106,6 @@
 				2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */,
 				2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */,
 				2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */,
-				2F7E422B20FC300900CE3E2F /* NSObject+FWObjc.h */,
-				2F7E422C20FC300900CE3E2F /* NSObject+FWObjc.m */,
-				2F7E421420FC2EA500CE3E2F /* NSObject+FWSwift.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -193,7 +184,6 @@
 				2F7E422220FC2EA500CE3E2F /* UIKit+FWFramework.h in Headers */,
 				2F7E422920FC2F6200CE3E2F /* NSNull+FWFramework.h in Headers */,
 				2F7E422A20FC2F6200CE3E2F /* Foundation+FWFramework.h in Headers */,
-				2F7E422D20FC300900CE3E2F /* NSObject+FWObjc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,11 +271,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F7E422E20FC300900CE3E2F /* NSObject+FWObjc.m in Sources */,
 				2F7E421E20FC2EA500CE3E2F /* UIView+FWAutoLayout.m in Sources */,
 				2F7E422820FC2F6200CE3E2F /* NSNull+FWFramework.m in Sources */,
 				2F7E421F20FC2EA500CE3E2F /* UINavigationController+FWWorkflow.m in Sources */,
-				2F7E422320FC2EA500CE3E2F /* NSObject+FWSwift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

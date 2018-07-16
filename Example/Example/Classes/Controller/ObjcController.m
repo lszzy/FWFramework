@@ -38,9 +38,6 @@
 #pragma mark - Action
 
 - (void)onSwift {
-    [self fwObjcCallSwift];
-    [self fwSwiftCallObjc];
-    
     SwiftController *viewController = [[SwiftController alloc] init];
     [self.navigationController pushViewController:viewController animated:YES];
 }
