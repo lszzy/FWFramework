@@ -11,6 +11,8 @@
 #define Foundation_FWFramework_h
 
 #import "NSNull+FWFramework.h"
+#import "NSObject+FWFramework.h"
 #import "NSObject+FWRuntime.h"
+#import "NSObject+FWSafeType.h"
 
 #endif /* Foundation_FWFramework_h */
