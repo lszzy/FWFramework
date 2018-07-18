@@ -25,10 +25,16 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/Foundation+FWFramework.h>
 #import <FWFramework/UIKit+FWFramework.h>
 
+// Application
+#import <FWFramework/FWAppDelegate.h>
+
 #else
 
 // Framework
 #import "Foundation+FWFramework.h"
 #import "UIKit+FWFramework.h"
+
+// Application
+#import "FWAppDelegate.h"
 
 #endif
