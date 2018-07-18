@@ -25,6 +25,11 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/Foundation+FWFramework.h>
 #import <FWFramework/UIKit+FWFramework.h>
 #import <FWFramework/FWLog.h>
+#import <FWFramework/FWTest.h>
+#import <FWFramework/FWPlugin.h>
+#import <FWFramework/FWMessage.h>
+#import <FWFramework/FWAspect.h>
+#import <FWFramework/FWProxy.h>
 
 // Application
 #import <FWFramework/FWAppDelegate.h>
@@ -34,6 +39,12 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 // Framework
 #import "Foundation+FWFramework.h"
 #import "UIKit+FWFramework.h"
+#import "FWLog.h"
+#import "FWTest.h"
+#import "FWPlugin.h"
+#import "FWMessage.h"
+#import "FWAspect.h"
+#import "FWProxy.h"
 
 // Application
 #import "FWAppDelegate.h"
