@@ -9,6 +9,8 @@
 
 #import "NSObject+FWSafeType.h"
 
+#pragma mark - NSObject+FWSafeType
+
 @implementation NSObject (FWSafeType)
 
 - (BOOL)fwIsNotNull
@@ -150,6 +152,237 @@
     } else {
         return nil;
     }
+}
+
+@end
+
+#pragma mark - NSString+FWSafeType
+
+@implementation NSString (FWSafeType)
+
+- (NSString *)fwSubstringFromIndex:(NSInteger)from
+{
+    if (from < 0) {
+        return nil;
+    }
+    
+    if (from > self.length) {
+        return nil;
+    }
+    
+    return [self substringFromIndex:from];
+}
+
+- (NSString *)fwSubstringToIndex:(NSInteger)to
+{
+    if (to < 0) {
+        return nil;
+    }
+    
+    if (to > self.length) {
+        return nil;
+    }
+    
+    return [self substringToIndex:to];
+}
+
+- (NSString *)fwSubstringWithRange:(NSRange)range
+{
+    if (range.location > self.length) {
+        return nil;
+    }
+    
+    if (range.length > self.length) {
+        return nil;
+    }
+    
+    if (range.location + range.length > self.length) {
+        return nil;
+    }
+    
+    return [self substringWithRange:range];
+}
+
+@end
+
+#pragma mark - NSArray+FWSafeType
+
+@implementation NSArray (FWSafeType)
+
+- (id)fwObjectAtIndex:(NSInteger)index
+{
+    if (index < 0) {
+        return nil;
+    }
+    
+    if (index >= self.count) {
+        return nil;
+    }
+    
+    return [self objectAtIndex:index];
+}
+
+- (NSArray *)fwSubarrayWithRange:(NSRange)range
+{
+    if (range.location > self.count) {
+        return nil;
+    }
+    
+    if (range.length > self.count) {
+        return nil;
+    }
+    
+    if (range.location + range.length > self.count) {
+        return nil;
+    }
+    
+    return [self subarrayWithRange:range];
+}
+
+@end
+
+#pragma mark - NSMutableArray+FWSafeType
+
+@implementation NSMutableArray (FWSafeType)
+
+- (void)fwAddObject:(id)object
+{
+    if (object == nil) {
+        return;
+    }
+    
+    [self addObject:object];
+}
+
+- (void)fwRemoveObjectAtIndex:(NSInteger)index
+{
+    if (index < 0) {
+        return;
+    }
+    
+    if (index >= self.count) {
+        return;
+    }
+    
+    [self removeObjectAtIndex:index];
+}
+
+- (void)fwInsertObject:(id)object atIndex:(NSInteger)index
+{
+    if (object == nil) {
+        return;
+    }
+    
+    if (index < 0) {
+        return;
+    }
+    
+    if (index > self.count) {
+        return;
+    }
+    
+    [self insertObject:object atIndex:index];
+}
+
+- (void)fwReplaceObjectAtIndex:(NSInteger)index withObject:(id)object
+{
+    if (object == nil) {
+        return;
+    }
+    
+    if (index < 0) {
+        return;
+    }
+    
+    if (index >= self.count) {
+        return;
+    }
+    
+    [self replaceObjectAtIndex:index withObject:object];
+}
+
+- (void)fwRemoveObjectsInRange:(NSRange)range
+{
+    if (range.location > self.count) {
+        return;
+    }
+    
+    if (range.length > self.count) {
+        return;
+    }
+    
+    if (range.location + range.length > self.count) {
+        return;
+    }
+    
+    [self removeObjectsInRange:range];
+}
+
+- (void)fwInsertObjects:(NSArray *)objects atIndex:(NSInteger)index
+{
+    if (objects.count == 0) {
+        return;
+    }
+    
+    if (index < 0) {
+        return;
+    }
+    
+    if (index > self.count) {
+        return;
+    }
+    
+    for (NSInteger i = objects.count - 1; i >= 0; i--) {
+        [self insertObject:objects[i] atIndex:index];
+    }
+}
+
+@end
+
+#pragma mark - NSDictionary+FWSafeType
+
+@implementation NSDictionary (FWSafeType)
+
+- (id)fwObjectForKey:(id)key
+{
+    if (!key) {
+        return nil;
+    }
+    
+    id object = [self objectForKey:key];
+    if (object == nil || object == [NSNull null]) {
+        return nil;
+    }
+    
+    return object;
+}
+
+@end
+
+#pragma mark - NSMutableDictionary+FWSafeType
+
+@implementation NSMutableDictionary (FWSafeType)
+
+- (void)fwRemoveObjectForKey:(id)key
+{
+    if (!key) {
+        return;
+    }
+    
+    [self removeObjectForKey:key];
+}
+
+- (void)fwSetObject:(id)object forKey:(id<NSCopying>)key
+{
+    if (!key) {
+        return;
+    }
+    
+    if (object == nil || object == [NSNull null]) {
+        return;
+    }
+    
+    [self setObject:object forKey:key];
 }
 
 @end
