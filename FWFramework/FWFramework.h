@@ -35,9 +35,6 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWMutableArray.h>
 #import <FWFramework/FWMutableDictionary.h>
 
-// Application
-#import <FWFramework/FWAppDelegate.h>
-
 #else
 
 // Framework
@@ -53,8 +50,5 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWPromise.h"
 #import "FWMutableArray.h"
 #import "FWMutableDictionary.h"
-
-// Application
-#import "FWAppDelegate.h"
 
 #endif

@@ -15,8 +15,6 @@
 		2F03584E21476BE9005A045C /* NSTimer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03584C21476BE9005A045C /* NSTimer+FWFramework.m */; };
 		2F4709E920FEDA90006D8455 /* NSObject+FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4709E720FEDA8F006D8455 /* NSObject+FWRuntime.m */; };
 		2F4709EA20FEDA90006D8455 /* NSObject+FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4709E820FEDA8F006D8455 /* NSObject+FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F4709ED20FEDE2C006D8455 /* FWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4709EB20FEDE2C006D8455 /* FWAppDelegate.m */; };
-		2F4709EE20FEDE2C006D8455 /* FWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4709EC20FEDE2C006D8455 /* FWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F470A0220FEEB1F006D8455 /* FWMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4709F620FEEB1E006D8455 /* FWMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F470A0320FEEB1F006D8455 /* FWLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4709F720FEEB1E006D8455 /* FWLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F470A0420FEEB1F006D8455 /* FWLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4709F820FEEB1E006D8455 /* FWLog.m */; };
@@ -56,8 +54,6 @@
 		2F03584C21476BE9005A045C /* NSTimer+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+FWFramework.m"; sourceTree = "<group>"; };
 		2F4709E720FEDA8F006D8455 /* NSObject+FWRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWRuntime.m"; sourceTree = "<group>"; };
 		2F4709E820FEDA8F006D8455 /* NSObject+FWRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWRuntime.h"; sourceTree = "<group>"; };
-		2F4709EB20FEDE2C006D8455 /* FWAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAppDelegate.m; sourceTree = "<group>"; };
-		2F4709EC20FEDE2C006D8455 /* FWAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAppDelegate.h; sourceTree = "<group>"; };
 		2F4709F620FEEB1E006D8455 /* FWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMessage.h; sourceTree = "<group>"; };
 		2F4709F720FEEB1E006D8455 /* FWLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWLog.h; sourceTree = "<group>"; };
 		2F4709F820FEEB1E006D8455 /* FWLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWLog.m; sourceTree = "<group>"; };
@@ -131,21 +127,12 @@
 			isa = PBXGroup;
 			children = (
 				2F7E421720FC2EA500CE3E2F /* FWFramework.h */,
-				2F7E420B20FC2EA500CE3E2F /* Framework */,
-				2F7E421820FC2EA500CE3E2F /* Application */,
-			);
-			name = FWFramework;
-			path = ../FWFramework;
-			sourceTree = "<group>";
-		};
-		2F7E420B20FC2EA500CE3E2F /* Framework */ = {
-			isa = PBXGroup;
-			children = (
 				2F7E420C20FC2EA500CE3E2F /* Extend */,
 				2F7E421620FC2EA500CE3E2F /* Kernel */,
 				2F7E421520FC2EA500CE3E2F /* Module */,
 			);
-			path = Framework;
+			name = FWFramework;
+			path = ../FWFramework;
 			sourceTree = "<group>";
 		};
 		2F7E420C20FC2EA500CE3E2F /* Extend */ = {
@@ -217,55 +204,6 @@
 			path = Kernel;
 			sourceTree = "<group>";
 		};
-		2F7E421820FC2EA500CE3E2F /* Application */ = {
-			isa = PBXGroup;
-			children = (
-				2F7E421920FC2EA500CE3E2F /* App */,
-				2F7E421D20FC2EA500CE3E2F /* Service */,
-				2F7E421A20FC2EA500CE3E2F /* Controller */,
-				2F7E421B20FC2EA500CE3E2F /* Model */,
-				2F7E421C20FC2EA500CE3E2F /* View */,
-			);
-			path = Application;
-			sourceTree = "<group>";
-		};
-		2F7E421920FC2EA500CE3E2F /* App */ = {
-			isa = PBXGroup;
-			children = (
-				2F4709EC20FEDE2C006D8455 /* FWAppDelegate.h */,
-				2F4709EB20FEDE2C006D8455 /* FWAppDelegate.m */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		2F7E421A20FC2EA500CE3E2F /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		2F7E421B20FC2EA500CE3E2F /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		2F7E421C20FC2EA500CE3E2F /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		2F7E421D20FC2EA500CE3E2F /* Service */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Service;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -285,7 +223,6 @@
 				2F470A0A20FEEB1F006D8455 /* FWProxy.h in Headers */,
 				2F470A0220FEEB1F006D8455 /* FWMessage.h in Headers */,
 				2F470A0B20FEEB1F006D8455 /* FWAspect.h in Headers */,
-				2F4709EE20FEDE2C006D8455 /* FWAppDelegate.h in Headers */,
 				2F4709EA20FEDA90006D8455 /* NSObject+FWRuntime.h in Headers */,
 				2F7E422020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h in Headers */,
 				2F7E422120FC2EA500CE3E2F /* UIView+FWAutoLayout.h in Headers */,
@@ -389,7 +326,6 @@
 				2F470A0820FEEB1F006D8455 /* FWAspect.m in Sources */,
 				2F7E422820FC2F6200CE3E2F /* NSNull+FWFramework.m in Sources */,
 				2F7DDC4620FF141700A96FFF /* NSObject+FWSafeType.m in Sources */,
-				2F4709ED20FEDE2C006D8455 /* FWAppDelegate.m in Sources */,
 				2F7DDC3C20FF119E00A96FFF /* FWPromise.m in Sources */,
 				2F470A0420FEEB1F006D8455 /* FWLog.m in Sources */,
 				2F7E421F20FC2EA500CE3E2F /* UINavigationController+FWWorkflow.m in Sources */,
