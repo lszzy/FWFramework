@@ -9,9 +9,37 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^FWResolveBlock)(id value);
+
+typedef void (^FWRejectBlock)(NSError *error);
+
+typedef id (^FWThenBlock)(id value);
+
+typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
+
 /*!
- @brief FWPromise约定类
+ @brief FWPromise约定类，参考自RWPromiseKit
+ 
+ @see https://github.com/deput/RWPromiseKit
  */
 @interface FWPromise : NSObject
+
++ (FWPromise *)promise:(FWPromiseBlock)block;
+
++ (FWPromise *)resolve:(id)value;
+
++ (FWPromise *)reject:(NSError *)error;
+
+- (FWPromise *(^)(FWThenBlock))then;
+
+- (FWPromise *(^)(FWRejectBlock))catch;
+
+- (void (^)(dispatch_block_t))finally;
+
+- (void)resolve:(id)value;
+
+- (void)reject:(NSError *)error;
+
++ (FWPromise *)timer:(NSTimeInterval)interval;
 
 @end
