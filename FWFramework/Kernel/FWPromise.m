@@ -42,6 +42,8 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @property (nonatomic, strong) id retryValue;
 
+@property (nonatomic, assign) NSInteger retryCount;
+
 @property (nonatomic, strong) id strongSelf;
 
 @property (nonatomic, strong) NSMutableSet<FWPromise *> *promises;
@@ -186,6 +188,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     } else if (newState == FWPromiseStateResolved) {
         [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
         self.retryValue = promise.value;
+        self.retryCount = 0;
         if (self.thenBlock) {
             id value = self.thenBlock(promise.value);
             self.thenBlock = nil;
@@ -323,8 +326,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
         
         __weak FWPromise *weakPromise = newPromise;
         newPromise.catchBlock = ^(NSError *error){
-            static NSUInteger retried = 0;
-            if (retried++ < retryCount){
+            if (weakPromise.retryCount++ < retryCount){
                 if (thenBlock) {
                     @autoreleasepool {
                         __weak FWPromise *retryPromise = nil;
@@ -600,20 +602,6 @@ FWTest(finally)
     FWTestAssert([result isEqualToString:@"finally"]);
 }
 
-- (FWPromise *)promiseTask:(NSInteger)value
-{
-    return [FWPromise progress:^(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress) {
-        __block NSInteger result = value;
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            for (int i = 0; i < 10; i++) {
-                result += i;
-                progress(i / 10.f, @(i));
-            }
-            resolve(@(result));
-        });
-    }];
-}
-
 FWTest(progress)
 {
     __block NSMutableArray *res = @[].mutableCopy;
@@ -637,7 +625,18 @@ FWTest(progress)
     __block NSInteger result = 0;
     __block double prog = 0;
     @autoreleasepool {
-        FWPromise *p1 = [self promiseTask:result];
+        FWPromise *p1 = [FWPromise progress:^(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress) {
+            __block NSInteger result = 0;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                for (int i = 0; i < 10; i++) {
+                    result += i;
+                    progress(i / 10.f, @(i));
+                }
+            });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.03 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                resolve(@(result));
+            });
+        }];
         p1.progress(^(double ratio, id value){
             prog = ratio;
         }).then(^id(id value){
@@ -645,7 +644,7 @@ FWTest(progress)
             return nil;
         });
     }
-    [NSThread sleepForTimeInterval:0.5];
+    [NSThread sleepForTimeInterval:0.05];
     FWTestAssert(result == 45);
     FWTestAssert(prog > 0 && prog <= 1.0);
 }
@@ -654,7 +653,7 @@ FWTest(timer)
 {
     __weak id object = nil;
     @autoreleasepool {
-        FWPromise* p1 = [FWPromise timer:1];
+        FWPromise* p1 = [FWPromise timer:0.1];
         p1.then(^id(NSString* value){
             return nil;
         });
@@ -662,7 +661,7 @@ FWTest(timer)
     }
     FWTestAssert(object != nil);
     
-    [NSThread sleepForTimeInterval:1.5];
+    [NSThread sleepForTimeInterval:0.15];
     FWTestAssert(object == nil);
 }
 
@@ -671,13 +670,13 @@ FWTest(timeout)
     __block id result = nil;
     [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
         
-    }].timeout(3).then(^id(id value){
+    }].timeout(0.1).then(^id(id value){
         result = value;
         return nil;
     });
     FWTestAssert(result == nil);
-    [NSThread sleepForTimeInterval:4];
-    FWTestAssert([result isEqual:@(3)]);
+    [NSThread sleepForTimeInterval:0.2];
+    FWTestAssert([result isEqual:@(0.1)]);
 }
 
 FWTest(all)
@@ -687,25 +686,25 @@ FWTest(all)
         FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
             resolve(@"1");
         }];
-        FWPromise *p2 = [FWPromise timer:1];
-        FWPromise *p3 = [FWPromise timer:2];
+        FWPromise *p2 = [FWPromise timer:0.1];
+        FWPromise *p3 = [FWPromise timer:0.2];
         [FWPromise all:@[p1,p2,p3]].then(^id(NSArray* values){
             result = values;
             return nil;
         });
     }
-    [NSThread sleepForTimeInterval:3];
+    [NSThread sleepForTimeInterval:0.4];
     FWTestAssert([result[0] isEqualToString:@"1"]);
-    FWTestAssert([result[1] isEqualToNumber:@1]);
-    FWTestAssert([result[2] isEqualToNumber:@2]);
+    FWTestAssert([result[1] isEqualToNumber:@0.1]);
+    FWTestAssert([result[2] isEqualToNumber:@0.2]);
     
     result = nil;
     @autoreleasepool {
         FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
             reject([NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"on purpose"}]);
         }];
-        FWPromise *p2 = [FWPromise timer:1];
-        FWPromise *p3 = [FWPromise timer:2];
+        FWPromise *p2 = [FWPromise timer:0.1];
+        FWPromise *p3 = [FWPromise timer:0.2];
         [FWPromise all:@[p1,p2,p3]].then(^id(NSArray* values){
             result = values;
             return nil;
@@ -713,7 +712,7 @@ FWTest(all)
             result = error;
         });
     }
-    [NSThread sleepForTimeInterval:3];
+    [NSThread sleepForTimeInterval:0.4];
     FWTestAssert([result isKindOfClass:[NSError class]]);
     FWTestAssert([((NSError *)result).localizedDescription isEqualToString:@"on purpose"]);
 }
@@ -725,22 +724,22 @@ FWTest(race)
         FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
             resolve(@"1");
         }];
-        FWPromise *p2 = [FWPromise timer:1];
-        FWPromise *p3 = [FWPromise timer:2];
+        FWPromise *p2 = [FWPromise timer:0.1];
+        FWPromise *p3 = [FWPromise timer:0.2];
         [FWPromise race:@[p1,p2,p3]].then(^id(id value){
             result = value;
             return nil;
         });
     }
-    [NSThread sleepForTimeInterval:3];
+    [NSThread sleepForTimeInterval:0.4];
     FWTestAssert([(NSString*)result isEqualToString:@"1"]);
     
     result = nil;
     @autoreleasepool {
-        FWPromise *p2 = [FWPromise timer:1].then(^id (id value){
+        FWPromise *p2 = [FWPromise timer:0.1].then(^id (id value){
             return @"2";
         });
-        FWPromise *p3 = [FWPromise timer:2].then(^id (id value){
+        FWPromise *p3 = [FWPromise timer:0.2].then(^id (id value){
             return @"3";
         });
         [FWPromise race:@[p2,p3]].then(^id(id value){
@@ -748,7 +747,7 @@ FWTest(race)
             return nil;
         });
     }
-    [NSThread sleepForTimeInterval:3];
+    [NSThread sleepForTimeInterval:0.4];
     FWTestAssert([(NSString*)result isEqualToString:@"2"]);
     
     result = nil;
@@ -756,10 +755,10 @@ FWTest(race)
         FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
             reject([NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"1"}]);
         }];
-        FWPromise *p2 = [FWPromise timer:1].then(^id (id value){
+        FWPromise *p2 = [FWPromise timer:0.1].then(^id (id value){
             return [NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"1"}];
         });
-        FWPromise *p3 = [FWPromise timer:2].then(^id (id value){
+        FWPromise *p3 = [FWPromise timer:0.2].then(^id (id value){
             return [NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"1"}];
         });
         [FWPromise race:@[p1,p2,p3]].then(^id(id value){
@@ -769,7 +768,7 @@ FWTest(race)
             result = error;
         });
     }
-    [NSThread sleepForTimeInterval:3];
+    [NSThread sleepForTimeInterval:0.4];
     FWTestAssert([result isKindOfClass:[NSError class]]);
 }
 
