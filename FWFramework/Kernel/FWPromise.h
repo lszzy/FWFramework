@@ -13,9 +13,13 @@ typedef void (^FWResolveBlock)(id value);
 
 typedef void (^FWRejectBlock)(NSError *error);
 
+typedef void (^FWProgressBlock)(double ratio, id value);
+
 typedef id (^FWThenBlock)(id value);
 
 typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
+
+typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress);
 
 /*!
  @brief FWPromise约定类，参考自RWPromiseKit
@@ -26,6 +30,8 @@ typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
 
 + (FWPromise *)promise:(FWPromiseBlock)block;
 
++ (FWPromise *)progress:(FWProgressPromiseBlock)block;
+
 + (FWPromise *)resolve:(id)value;
 
 + (FWPromise *)reject:(NSError *)error;
@@ -34,12 +40,24 @@ typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
 
 - (FWPromise *(^)(FWRejectBlock))catch;
 
+- (FWPromise *(^)(FWProgressBlock))progress;
+
 - (void (^)(dispatch_block_t))finally;
 
 - (void)resolve:(id)value;
 
 - (void)reject:(NSError *)error;
 
+- (void)progress:(double)ratio value:(id)value;
+
 + (FWPromise *)timer:(NSTimeInterval)interval;
+
+- (FWPromise *(^)(NSTimeInterval))timeout;
+
+- (FWPromise *(^)(NSUInteger))retry;
+
++ (FWPromise *)all:(NSArray<FWPromise *> *)promises;
+
++ (FWPromise *)race:(NSArray<FWPromise *> *)promises;
 
 @end

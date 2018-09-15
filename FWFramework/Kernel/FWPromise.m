@@ -24,15 +24,19 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @property (atomic, assign) FWPromiseState state;
 
+@property (nonatomic, copy) FWPromiseBlock promiseBlock;
+
 @property (nonatomic, copy) FWResolveBlock resolveBlock;
 
 @property (nonatomic, copy) FWRejectBlock rejectBlock;
 
-@property (nonatomic, copy) FWPromiseBlock promiseBlock;
+@property (nonatomic, copy) FWProgressBlock progressBlock;
 
 @property (nonatomic, copy) FWRejectBlock catchBlock;
 
 @property (nonatomic, copy) FWThenBlock thenBlock;
+
+@property (nonatomic, copy) FWProgressBlock ratioBlock;
 
 // 循环引用自身，防止自动释放
 @property (nonatomic, strong) id strongSelf;
@@ -43,7 +47,12 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 + (FWPromise *)promise:(FWPromiseBlock)block
 {
-    return [[FWPromise alloc] initWithBlock:block];
+    return [[FWPromise alloc] initWithBlock:block progressBlock:nil];
+}
+
++ (FWPromise *)progress:(FWProgressPromiseBlock)block
+{
+    return [[FWPromise alloc] initWithBlock:nil progressBlock:block];
 }
 
 + (FWPromise *)resolve:(id)value
@@ -60,7 +69,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     }];
 }
 
-- (instancetype)initWithBlock:(FWPromiseBlock)block
+- (instancetype)initWithBlock:(FWPromiseBlock)block progressBlock:(FWProgressPromiseBlock)progressBlock
 {
     self = [super init];
     if (self) {
@@ -94,7 +103,24 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             strongSelf.strongSelf = nil;
         };
         
-        self.promiseBlock = block;
+        if (progressBlock) {
+            self.progressBlock = ^(double ratio, id value) {
+                __strong FWPromise *strongSelf = weakSelf;
+                if (strongSelf.state != FWPromiseStatePending) {
+                    return;
+                }
+                
+                if (strongSelf.ratioBlock) {
+                    strongSelf.ratioBlock(ratio, value);
+                }
+            };
+            
+            self.promiseBlock = ^(FWResolveBlock resolve, FWRejectBlock reject) {
+                progressBlock(resolve, reject, weakSelf.progressBlock);
+            };
+        } else {
+            self.promiseBlock = block;
+        }
         
         if (self.promiseBlock) {
             self.promiseBlock(self.resolveBlock, self.rejectBlock);
@@ -168,6 +194,15 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     };
 }
 
+- (FWPromise *(^)(FWProgressBlock))progress
+{
+    __weak FWPromise *weakSelf = self;
+    return ^FWPromise *(FWProgressBlock ratioBlock){
+        weakSelf.ratioBlock = ratioBlock;
+        return weakSelf;
+    };
+}
+
 - (void (^)(dispatch_block_t))finally
 {
     __weak FWPromise *weakSelf = self;
@@ -195,6 +230,15 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 {
     self.rejectBlock(error);
 }
+
+- (void)progress:(double)ratio value:(id)value
+{
+    if (self.ratioBlock) {
+        self.ratioBlock(ratio, value);
+    }
+}
+
+#pragma mark - Extend
 
 + (FWPromise *)timer:(NSTimeInterval)interval
 {
@@ -357,6 +401,89 @@ FWTest(catch)
     FWTestAssert(err != nil);
 }
 
+FWTest(finally)
+{
+    __block id result = nil;
+    @autoreleasepool {
+        [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            resolve(@"1");
+        }].then(^id(id value){
+            result = value;
+            return nil;
+        }).catch(^(NSError *error){
+            
+        }).finally(^{
+            result = @"finally";
+        });
+    }
+    FWTestAssert([result isEqualToString:@"finally"]);
+    
+    result = nil;
+    @autoreleasepool {
+        [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            reject(nil);
+        }].then(^id(id value){
+            result = value;
+            return nil;
+        }).catch(^(NSError *error){
+            
+        }).finally(^{
+            result = @"finally";
+        });
+    }
+    FWTestAssert([result isEqualToString:@"finally"]);
+}
+
+- (FWPromise *)promiseTask:(NSInteger)value
+{
+    return [FWPromise progress:^(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress) {
+        __block NSInteger result = value;
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            for (int i = 0; i < 10; i++) {
+                result += i;
+                progress(i / 10.f, @(i));
+            }
+            resolve(@(result));
+        });
+    }];
+}
+
+FWTest(progress)
+{
+    __block NSMutableArray *res = @[].mutableCopy;
+    @autoreleasepool {
+        FWPromise *p = [FWPromise progress:^(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress) {
+        }];
+        p.progress(^(double ratio, id value){
+            [res addObject:value];
+        }).then(^id(id value){
+            [res addObject:value];
+            return nil;
+        });
+        [p progress:0.f value:@1];
+        [p progress:1.f value:@2];
+        [p resolve:@3];
+    }
+    FWTestAssert([res[0] isEqualToNumber:@1]);
+    FWTestAssert([res[1] isEqualToNumber:@2]);
+    FWTestAssert([res[2] isEqualToNumber:@3]);
+    
+    __block NSInteger result = 0;
+    __block double prog = 0;
+    @autoreleasepool {
+        FWPromise *p1 = [self promiseTask:result];
+        p1.progress(^(double ratio, id value){
+            prog = ratio;
+        }).then(^id(id value){
+            result = [value integerValue];
+            return nil;
+        });
+    }
+    [NSThread sleepForTimeInterval:0.5];
+    FWTestAssert(result == 45);
+    FWTestAssert(prog > 0 && prog <= 1.0);
+}
+
 FWTest(timer)
 {
     __weak id object = nil;
@@ -371,6 +498,20 @@ FWTest(timer)
     
     [NSThread sleepForTimeInterval:1.5];
     FWTestAssert(object == nil);
+}
+
+FWTest(timeout)
+{
+    __block id result = nil;
+    [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        
+    }].timeout(3).then(^id(id value){
+        result = value;
+        return nil;
+    });
+    FWTestAssert(result == nil);
+    [NSThread sleepForTimeInterval:4];
+    FWTestAssert([result isEqual:@(3)]);
 }
 
 FWTestTearDown() {}
