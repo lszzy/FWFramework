@@ -28,6 +28,14 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  */
 @interface FWPromise : NSObject
 
+@property (nonatomic, readonly) FWPromise *(^then)(FWThenBlock);
+
+@property (nonatomic, readonly) FWPromise *(^catch)(FWRejectBlock);
+
+@property (nonatomic, readonly) void (^finally)(dispatch_block_t);
+
+@property (nonatomic, readonly) FWPromise *(^progress)(FWProgressBlock);
+
 + (FWPromise *)promise:(FWPromiseBlock)block;
 
 + (FWPromise *)progress:(FWProgressPromiseBlock)block;
@@ -35,14 +43,6 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 + (FWPromise *)resolve:(id)value;
 
 + (FWPromise *)reject:(NSError *)error;
-
-- (FWPromise *(^)(FWThenBlock))then;
-
-- (FWPromise *(^)(FWRejectBlock))catch;
-
-- (FWPromise *(^)(FWProgressBlock))progress;
-
-- (void (^)(dispatch_block_t))finally;
 
 - (void)resolve:(id)value;
 
