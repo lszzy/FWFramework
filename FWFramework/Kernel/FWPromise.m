@@ -38,8 +38,27 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @property (nonatomic, copy) FWProgressBlock ratioBlock;
 
-// 循环引用自身，防止自动释放
+@property (nonatomic, strong) FWPromise *dependPromise;
+
+@property (nonatomic, strong) id retryValue;
+
 @property (nonatomic, strong) id strongSelf;
+
+@property (nonatomic, strong) NSMutableSet<FWPromise *> *promises;
+
+@property (nonatomic, strong) NSMutableArray *values;
+
+@end
+
+@interface FWAllPromise : FWPromise
+
+@end
+
+@interface FWRacePromise : FWPromise
+
+@end
+
+@interface FWRetryPromise : FWPromise
 
 @end
 
@@ -47,12 +66,12 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 + (FWPromise *)promise:(FWPromiseBlock)block
 {
-    return [[FWPromise alloc] initWithBlock:block progressBlock:nil];
+    return [[FWPromise alloc] initWithBlock:block progressBlock:nil promises:nil];
 }
 
 + (FWPromise *)progress:(FWProgressPromiseBlock)block
 {
-    return [[FWPromise alloc] initWithBlock:nil progressBlock:block];
+    return [[FWPromise alloc] initWithBlock:nil progressBlock:block promises:nil];
 }
 
 + (FWPromise *)resolve:(id)value
@@ -69,12 +88,23 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     }];
 }
 
-- (instancetype)initWithBlock:(FWPromiseBlock)block progressBlock:(FWProgressPromiseBlock)progressBlock
+- (instancetype)initWithBlock:(FWPromiseBlock)block progressBlock:(FWProgressPromiseBlock)progressBlock promises:(NSArray *)promises
 {
     self = [super init];
     if (self) {
         self.state = FWPromiseStatePending;
         self.strongSelf = self;
+        
+        if (promises) {
+            self.promises = [NSMutableSet set];
+            self.values = [NSMutableArray array];
+            [promises enumerateObjectsUsingBlock:^(FWPromise *promise, NSUInteger idx, BOOL *stop) {
+                [promise fwObserveProperty:@"state" target:self action:@selector(onState:change:)];
+                if (promise.state == FWPromiseStatePending) {
+                    [self.promises addObject:promise];
+                }
+            }];
+        }
         
         __weak FWPromise *weakSelf = self;
         self.resolveBlock = ^(id value) {
@@ -84,6 +114,9 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             }
             
             if ([value isKindOfClass:[FWPromise class]]) {
+                if (((FWPromise *)value).state == FWPromiseStatePending) {
+                    strongSelf.dependPromise = value;
+                }
                 [value fwObserveProperty:@"state" target:strongSelf action:@selector(onState:change:)];
             } else {
                 strongSelf.value = value;
@@ -118,12 +151,16 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             self.promiseBlock = ^(FWResolveBlock resolve, FWRejectBlock reject) {
                 progressBlock(resolve, reject, weakSelf.progressBlock);
             };
-        } else {
+            
+            if (self.promiseBlock) {
+                self.promiseBlock(self.resolveBlock, self.rejectBlock);
+            }
+        } else if (block) {
             self.promiseBlock = block;
-        }
-        
-        if (self.promiseBlock) {
-            self.promiseBlock(self.resolveBlock, self.rejectBlock);
+            
+            if (self.promiseBlock) {
+                self.promiseBlock(self.resolveBlock, self.rejectBlock);
+            }
         }
     }
     return self;
@@ -132,6 +169,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 - (void)dealloc
 {
     self.state = self.state;
+    self.dependPromise = nil;
 }
 
 - (void)onState:(FWPromise *)promise change:(NSDictionary *)change
@@ -147,6 +185,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
         }
     } else if (newState == FWPromiseStateResolved) {
         [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+        self.retryValue = promise.value;
         if (self.thenBlock) {
             id value = self.thenBlock(promise.value);
             self.thenBlock = nil;
@@ -238,7 +277,15 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     }
 }
 
-#pragma mark - Extend
++ (FWPromise *)all:(NSArray<FWPromise *> *)promises
+{
+    return [[FWAllPromise alloc] initWithBlock:nil progressBlock:nil promises:promises];
+}
+
++ (FWPromise *)race:(NSArray<FWPromise *> *)promises
+{
+    return [[FWRacePromise alloc] initWithBlock:nil progressBlock:nil promises:promises];
+}
 
 + (FWPromise *)timer:(NSTimeInterval)interval
 {
@@ -247,6 +294,125 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             resolve(@(interval));
         });
     }];
+}
+
+- (FWPromise *(^)(NSTimeInterval))timeout
+{
+    return ^FWPromise *(NSTimeInterval interval) {
+        __weak FWPromise *newPromise = [FWPromise race:[NSArray arrayWithObjects:self, [FWPromise timer:interval], nil]];
+        return newPromise;
+    };
+}
+
+- (FWPromise *(^)(NSUInteger))retry
+{
+    __weak FWPromise *weakSelf = self;
+    return ^FWPromise *(NSUInteger retryCount) {
+        FWPromise *newPromise = nil;
+        newPromise = [[FWRetryPromise alloc] initWithBlock:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            __strong FWPromise *strongSelf = weakSelf;
+            resolve(strongSelf);
+        } progressBlock:nil promises:nil];
+        
+        BOOL thenBlock = NO;
+        id block = self.promiseBlock;
+        if (self.thenBlock != nil) {
+            block = self.thenBlock;
+            thenBlock = YES;
+        }
+        
+        __weak FWPromise *weakPromise = newPromise;
+        newPromise.catchBlock = ^(NSError *error){
+            static NSUInteger retried = 0;
+            if (retried++ < retryCount){
+                if (thenBlock) {
+                    @autoreleasepool {
+                        __weak FWPromise *retryPromise = nil;
+                        retryPromise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+                            id value = ((FWThenBlock)block)(weakSelf.retryValue);
+                            if (value && [value isKindOfClass:[NSError class]]) {
+                                reject(value);
+                            } else {
+                                resolve(value);
+                            }
+                        }];
+                        weakPromise.resolveBlock(retryPromise);
+                    }
+                } else {
+                    FWPromise *retryPromise = nil;
+                    retryPromise = [FWPromise promise:block];
+                    weakPromise.resolveBlock(retryPromise);
+                }
+            } else {
+                weakPromise.rejectBlock(error);
+            }
+        };
+        return newPromise;
+    };
+}
+
+@end
+
+@implementation FWAllPromise
+
+- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
+{
+    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
+    [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+    [self.promises removeObject:promise];
+    if (newState == FWPromiseStateRejected) {
+        [self.promises enumerateObjectsUsingBlock:^(FWPromise *obj, BOOL *stop) {
+            [obj fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+        }];
+        self.rejectBlock(promise.error);
+    } else if (newState == FWPromiseStateResolved) {
+        [self.values addObject:promise.value];
+    }
+    
+    if (self.promises.count == 0) {
+        self.resolveBlock(self.values);
+    }
+}
+
+@end
+
+@implementation FWRacePromise
+
+- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
+{
+    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
+    [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+    [self.promises removeObject:promise];
+    if (newState == FWPromiseStateRejected) {
+        [self.values addObject:promise.error];
+        if (self.promises.count == 0) {
+            self.rejectBlock(promise.error);
+        }
+    } else if (newState == FWPromiseStateResolved) {
+        [self.promises enumerateObjectsUsingBlock:^(FWPromise *obj, BOOL *stop) {
+            [obj fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+        }];
+        self.resolveBlock(promise.value);
+    }
+}
+
+@end
+
+@implementation FWRetryPromise
+
+- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
+{
+    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
+    if (newState == FWPromiseStateRejected) {
+        [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+        if (self.catchBlock) {
+            self.catchBlock(promise.error);
+        } else {
+            self.rejectBlock(promise.error);
+        }
+    } else if (newState == FWPromiseStateResolved) {
+        [super onState:promise change:change];
+    }
 }
 
 @end
@@ -512,6 +678,176 @@ FWTest(timeout)
     FWTestAssert(result == nil);
     [NSThread sleepForTimeInterval:4];
     FWTestAssert([result isEqual:@(3)]);
+}
+
+FWTest(all)
+{
+    __block id result = nil;
+    @autoreleasepool {
+        FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            resolve(@"1");
+        }];
+        FWPromise *p2 = [FWPromise timer:1];
+        FWPromise *p3 = [FWPromise timer:2];
+        [FWPromise all:@[p1,p2,p3]].then(^id(NSArray* values){
+            result = values;
+            return nil;
+        });
+    }
+    [NSThread sleepForTimeInterval:3];
+    FWTestAssert([result[0] isEqualToString:@"1"]);
+    FWTestAssert([result[1] isEqualToNumber:@1]);
+    FWTestAssert([result[2] isEqualToNumber:@2]);
+    
+    result = nil;
+    @autoreleasepool {
+        FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            reject([NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"on purpose"}]);
+        }];
+        FWPromise *p2 = [FWPromise timer:1];
+        FWPromise *p3 = [FWPromise timer:2];
+        [FWPromise all:@[p1,p2,p3]].then(^id(NSArray* values){
+            result = values;
+            return nil;
+        }).catch(^(NSError* error){
+            result = error;
+        });
+    }
+    [NSThread sleepForTimeInterval:3];
+    FWTestAssert([result isKindOfClass:[NSError class]]);
+    FWTestAssert([((NSError *)result).localizedDescription isEqualToString:@"on purpose"]);
+}
+
+FWTest(race)
+{
+    __block id result = nil;
+    @autoreleasepool {
+        FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            resolve(@"1");
+        }];
+        FWPromise *p2 = [FWPromise timer:1];
+        FWPromise *p3 = [FWPromise timer:2];
+        [FWPromise race:@[p1,p2,p3]].then(^id(id value){
+            result = value;
+            return nil;
+        });
+    }
+    [NSThread sleepForTimeInterval:3];
+    FWTestAssert([(NSString*)result isEqualToString:@"1"]);
+    
+    result = nil;
+    @autoreleasepool {
+        FWPromise *p2 = [FWPromise timer:1].then(^id (id value){
+            return @"2";
+        });
+        FWPromise *p3 = [FWPromise timer:2].then(^id (id value){
+            return @"3";
+        });
+        [FWPromise race:@[p2,p3]].then(^id(id value){
+            result = value;
+            return nil;
+        });
+    }
+    [NSThread sleepForTimeInterval:3];
+    FWTestAssert([(NSString*)result isEqualToString:@"2"]);
+    
+    result = nil;
+    @autoreleasepool {
+        FWPromise *p1 = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            reject([NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"1"}]);
+        }];
+        FWPromise *p2 = [FWPromise timer:1].then(^id (id value){
+            return [NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"1"}];
+        });
+        FWPromise *p3 = [FWPromise timer:2].then(^id (id value){
+            return [NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"1"}];
+        });
+        [FWPromise race:@[p1,p2,p3]].then(^id(id value){
+            result = value;
+            return nil;
+        }).catch(^(NSError* error){
+            result = error;
+        });
+    }
+    [NSThread sleepForTimeInterval:3];
+    FWTestAssert([result isKindOfClass:[NSError class]]);
+}
+
+FWTest(retry)
+{
+    NSUInteger retryCount = 3;
+    __block NSMutableArray *res = @[].mutableCopy;
+    __block id final = nil;
+    @autoreleasepool {
+        [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            static NSUInteger triedCount = 0;
+            triedCount++;
+            [res addObject:@(triedCount)];
+            if (triedCount == retryCount) {
+                resolve(@"ahha");
+            }else{
+                reject([NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"needRetry"}]);
+            }
+        }]
+        .retry(retryCount)
+        .then(^id(id value){
+            final = value;
+            return nil;
+        });
+    }
+    FWTestAssert(res.count == retryCount);
+    FWTestAssert([final isEqualToString:@"ahha"]);
+    
+    retryCount = 3;
+    res = @[].mutableCopy;
+    final = nil;
+    @autoreleasepool {
+        [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            static NSUInteger triedCount = 0;
+            triedCount++;
+            [res addObject:@(triedCount)];
+            reject([NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"needRetry"}]);
+        }]
+        .retry(retryCount)
+        .then(^id(id value){
+            final = value;
+            return nil;
+        })
+        .catch(^(NSError* e){
+            final = e;
+        });
+    }
+    FWTestAssert(res.count == retryCount + 1);
+    FWTestAssert([final isKindOfClass:[NSError class]]);
+    
+    retryCount = 3;
+    res = @[].mutableCopy;
+    final = nil;
+    @autoreleasepool {
+        [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            resolve(@"1");
+        }]
+        .then(^id(id value){
+            static NSUInteger triedCount = 0;
+            triedCount++;
+            [res addObject:[value copy]];
+            if (triedCount == retryCount) {
+                return @"hola";
+            }else{
+                return [NSError errorWithDomain:@"test" code:0 userInfo:@{NSLocalizedDescriptionKey: @"needRetry"}];
+            }
+        })
+        .retry(retryCount)
+        .then(^id(id value){
+            final = value;
+            return nil;
+        })
+        .catch(^(NSError* e){
+            final = e;
+        });
+    }
+    FWTestAssert(res.count == retryCount);
+    FWTestAssert([final isEqualToString:@"hola"]);
 }
 
 FWTestTearDown() {}

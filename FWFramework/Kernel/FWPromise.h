@@ -50,14 +50,14 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 
 - (void)progress:(double)ratio value:(id)value;
 
++ (FWPromise *)all:(NSArray<FWPromise *> *)promises;
+
++ (FWPromise *)race:(NSArray<FWPromise *> *)promises;
+
 + (FWPromise *)timer:(NSTimeInterval)interval;
 
 - (FWPromise *(^)(NSTimeInterval))timeout;
 
 - (FWPromise *(^)(NSUInteger))retry;
-
-+ (FWPromise *)all:(NSArray<FWPromise *> *)promises;
-
-+ (FWPromise *)race:(NSArray<FWPromise *> *)promises;
 
 @end
