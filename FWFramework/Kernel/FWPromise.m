@@ -38,13 +38,15 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @property (nonatomic, copy) FWProgressBlock ratioBlock;
 
+@property (nonatomic, copy) void (^stateBlock)(FWPromise *object, FWPromiseState state);
+
 @property (nonatomic, strong) FWPromise *dependPromise;
+
+@property (nonatomic, strong) id strongSelf;
 
 @property (nonatomic, strong) id retryValue;
 
 @property (nonatomic, assign) NSInteger retryCount;
-
-@property (nonatomic, strong) id strongSelf;
 
 @property (nonatomic, strong) NSMutableSet<FWPromise *> *promises;
 
@@ -52,28 +54,11 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @end
 
-@interface FWAllPromise : FWPromise
-
-@end
-
-@interface FWRacePromise : FWPromise
-
-@end
-
-@interface FWRetryPromise : FWPromise
-
-@end
-
 @implementation FWPromise
 
 + (FWPromise *)promise:(FWPromiseBlock)block
 {
-    return [[FWPromise alloc] initWithBlock:block progressBlock:nil promises:nil];
-}
-
-+ (FWPromise *)progress:(FWProgressPromiseBlock)block
-{
-    return [[FWPromise alloc] initWithBlock:nil progressBlock:block promises:nil];
+    return [[FWPromise alloc] initWithBlock:block];
 }
 
 + (FWPromise *)resolve:(id)value
@@ -90,23 +75,12 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     }];
 }
 
-- (instancetype)initWithBlock:(FWPromiseBlock)block progressBlock:(FWProgressPromiseBlock)progressBlock promises:(NSArray *)promises
+- (instancetype)initWithBlock:(FWPromiseBlock)block
 {
     self = [super init];
     if (self) {
         self.state = FWPromiseStatePending;
         self.strongSelf = self;
-        
-        if (promises) {
-            self.promises = [NSMutableSet set];
-            self.values = [NSMutableArray array];
-            [promises enumerateObjectsUsingBlock:^(FWPromise *promise, NSUInteger idx, BOOL *stop) {
-                [promise fwObserveProperty:@"state" target:self action:@selector(onState:change:)];
-                if (promise.state == FWPromiseStatePending) {
-                    [self.promises addObject:promise];
-                }
-            }];
-        }
         
         __weak FWPromise *weakSelf = self;
         self.resolveBlock = ^(id value) {
@@ -119,7 +93,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
                 if (((FWPromise *)value).state == FWPromiseStatePending) {
                     strongSelf.dependPromise = value;
                 }
-                [value fwObserveProperty:@"state" target:strongSelf action:@selector(onState:change:)];
+                [value fwObserveProperty:@"state" target:strongSelf action:@selector(state:change:)];
             } else {
                 strongSelf.value = value;
                 strongSelf.state = FWPromiseStateResolved;
@@ -138,31 +112,10 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             strongSelf.strongSelf = nil;
         };
         
-        if (progressBlock) {
-            self.progressBlock = ^(double ratio, id value) {
-                __strong FWPromise *strongSelf = weakSelf;
-                if (strongSelf.state != FWPromiseStatePending) {
-                    return;
-                }
-                
-                if (strongSelf.ratioBlock) {
-                    strongSelf.ratioBlock(ratio, value);
-                }
-            };
-            
-            self.promiseBlock = ^(FWResolveBlock resolve, FWRejectBlock reject) {
-                progressBlock(resolve, reject, weakSelf.progressBlock);
-            };
-            
-            if (self.promiseBlock) {
-                self.promiseBlock(self.resolveBlock, self.rejectBlock);
-            }
-        } else if (block) {
-            self.promiseBlock = block;
-            
-            if (self.promiseBlock) {
-                self.promiseBlock(self.resolveBlock, self.rejectBlock);
-            }
+        self.promiseBlock = block;
+        
+        if (self.promiseBlock) {
+            self.promiseBlock(self.resolveBlock, self.rejectBlock);
         }
     }
     return self;
@@ -174,23 +127,28 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     self.dependPromise = nil;
 }
 
-- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
+- (void)state:(FWPromise *)object change:(NSDictionary *)change
 {
-    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
-    if (newState == FWPromiseStateRejected) {
-        [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
+    FWPromiseState state = [change[NSKeyValueChangeNewKey] integerValue];
+    if (self.stateBlock) {
+        self.stateBlock(object, state);
+        return;
+    }
+    
+    if (state == FWPromiseStateRejected) {
+        [object fwUnobserveProperty:@"state" target:self action:@selector(state:change:)];
         if (self.catchBlock) {
-            self.catchBlock(promise.error);
+            self.catchBlock(object.error);
             self.resolveBlock(nil);
         } else {
-            self.rejectBlock(promise.error);
+            self.rejectBlock(object.error);
         }
-    } else if (newState == FWPromiseStateResolved) {
-        [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
-        self.retryValue = promise.value;
+    } else if (state == FWPromiseStateResolved) {
+        [object fwUnobserveProperty:@"state" target:self action:@selector(state:change:)];
+        self.retryValue = object.value;
         self.retryCount = 0;
         if (self.thenBlock) {
-            id value = self.thenBlock(promise.value);
+            id value = self.thenBlock(object.value);
             self.thenBlock = nil;
             if (value && [value isKindOfClass:[NSError class]]) {
                 if (self.catchBlock) {
@@ -203,8 +161,25 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
                 self.resolveBlock(value);
             }
         } else {
-            self.resolveBlock(promise.value);
+            self.resolveBlock(object.value);
         }
+    }
+}
+
+- (void)resolve:(id)value
+{
+    self.resolveBlock(value);
+}
+
+- (void)reject:(NSError *)error
+{
+    self.rejectBlock(error);
+}
+
+- (void)progress:(double)ratio value:(id)value
+{
+    if (self.ratioBlock) {
+        self.ratioBlock(ratio, value);
     }
 }
 
@@ -236,15 +211,6 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     };
 }
 
-- (FWPromise *(^)(FWProgressBlock))progress
-{
-    __weak FWPromise *weakSelf = self;
-    return ^FWPromise *(FWProgressBlock ratioBlock){
-        weakSelf.ratioBlock = ratioBlock;
-        return weakSelf;
-    };
-}
-
 - (void (^)(dispatch_block_t))finally
 {
     __weak FWPromise *weakSelf = self;
@@ -263,31 +229,103 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     };
 }
 
-- (void)resolve:(id)value
+- (FWPromise *(^)(FWProgressBlock))progress
 {
-    self.resolveBlock(value);
+    __weak FWPromise *weakSelf = self;
+    return ^FWPromise *(FWProgressBlock ratioBlock){
+        weakSelf.ratioBlock = ratioBlock;
+        return weakSelf;
+    };
 }
 
-- (void)reject:(NSError *)error
++ (FWPromise *)progress:(FWProgressPromiseBlock)block
 {
-    self.rejectBlock(error);
-}
-
-- (void)progress:(double)ratio value:(id)value
-{
-    if (self.ratioBlock) {
-        self.ratioBlock(ratio, value);
+    FWPromise *promise = [[FWPromise alloc] initWithBlock:nil];
+    __weak FWPromise *weakPromise = promise;
+    promise.progressBlock = ^(double ratio, id value) {
+        __strong FWPromise *strongPromise = weakPromise;
+        if (strongPromise.state != FWPromiseStatePending) {
+            return;
+        }
+        
+        if (strongPromise.ratioBlock) {
+            strongPromise.ratioBlock(ratio, value);
+        }
+    };
+    
+    promise.promiseBlock = ^(FWResolveBlock resolve, FWRejectBlock reject) {
+        block(resolve, reject, weakPromise.progressBlock);
+    };
+    
+    if (promise.promiseBlock) {
+        promise.promiseBlock(promise.resolveBlock, promise.rejectBlock);
     }
+    return promise;
 }
 
 + (FWPromise *)all:(NSArray<FWPromise *> *)promises
 {
-    return [[FWAllPromise alloc] initWithBlock:nil progressBlock:nil promises:promises];
+    FWPromise *promise = [[FWPromise alloc] initWithBlock:nil];
+    promise.promises = [NSMutableSet set];
+    promise.values = [NSMutableArray array];
+    __weak FWPromise *weakPromise = promise;
+    promise.stateBlock = ^(FWPromise *object, FWPromiseState state) {
+        __strong FWPromise *strongPromise = weakPromise;
+        
+        [object fwUnobserveProperty:@"state" target:strongPromise action:@selector(state:change:)];
+        [strongPromise.promises removeObject:object];
+        if (state == FWPromiseStateRejected) {
+            [strongPromise.promises enumerateObjectsUsingBlock:^(FWPromise *obj, BOOL *stop) {
+                [obj fwUnobserveProperty:@"state" target:strongPromise action:@selector(state:change:)];
+            }];
+            strongPromise.rejectBlock(object.error);
+        } else if (state == FWPromiseStateResolved) {
+            [strongPromise.values addObject:object.value];
+        }
+        
+        if (strongPromise.promises.count == 0) {
+            strongPromise.resolveBlock(strongPromise.values);
+        }
+    };
+    [promises enumerateObjectsUsingBlock:^(FWPromise *obj, NSUInteger idx, BOOL *stop) {
+        [obj fwObserveProperty:@"state" target:promise action:@selector(state:change:)];
+        if (obj.state == FWPromiseStatePending) {
+            [promise.promises addObject:obj];
+        }
+    }];
+    return promise;
 }
 
 + (FWPromise *)race:(NSArray<FWPromise *> *)promises
 {
-    return [[FWRacePromise alloc] initWithBlock:nil progressBlock:nil promises:promises];
+    FWPromise *promise = [[FWPromise alloc] initWithBlock:nil];
+    promise.promises = [NSMutableSet set];
+    promise.values = [NSMutableArray array];
+    __weak FWPromise *weakPromise = promise;
+    promise.stateBlock = ^(FWPromise *object, FWPromiseState state) {
+        __strong FWPromise *strongPromise = weakPromise;
+        
+        [object fwUnobserveProperty:@"state" target:strongPromise action:@selector(state:change:)];
+        [strongPromise.promises removeObject:object];
+        if (state == FWPromiseStateRejected) {
+            [strongPromise.values addObject:object.error];
+            if (strongPromise.promises.count == 0) {
+                strongPromise.rejectBlock(object.error);
+            }
+        } else if (state == FWPromiseStateResolved) {
+            [strongPromise.promises enumerateObjectsUsingBlock:^(FWPromise *obj, BOOL *stop) {
+                [obj fwUnobserveProperty:@"state" target:strongPromise action:@selector(state:change:)];
+            }];
+            strongPromise.resolveBlock(object.value);
+        }
+    };
+    [promises enumerateObjectsUsingBlock:^(FWPromise *obj, NSUInteger idx, BOOL *stop) {
+        [obj fwObserveProperty:@"state" target:promise action:@selector(state:change:)];
+        if (obj.state == FWPromiseStatePending) {
+            [promise.promises addObject:obj];
+        }
+    }];
+    return promise;
 }
 
 + (FWPromise *)timer:(NSTimeInterval)interval
@@ -301,8 +339,9 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 - (FWPromise *(^)(NSTimeInterval))timeout
 {
+    __weak FWPromise *weakSelf = self;
     return ^FWPromise *(NSTimeInterval interval) {
-        __weak FWPromise *newPromise = [FWPromise race:[NSArray arrayWithObjects:self, [FWPromise timer:interval], nil]];
+        __weak FWPromise *newPromise = [FWPromise race:[NSArray arrayWithObjects:weakSelf, [FWPromise timer:interval], nil]];
         return newPromise;
     };
 }
@@ -312,19 +351,52 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     __weak FWPromise *weakSelf = self;
     return ^FWPromise *(NSUInteger retryCount) {
         FWPromise *newPromise = nil;
-        newPromise = [[FWRetryPromise alloc] initWithBlock:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        newPromise = [[FWPromise alloc] initWithBlock:^(FWResolveBlock resolve, FWRejectBlock reject) {
             __strong FWPromise *strongSelf = weakSelf;
             resolve(strongSelf);
-        } progressBlock:nil promises:nil];
+        }];
+        
+        __weak FWPromise *weakPromise = newPromise;
+        newPromise.stateBlock = ^(FWPromise *object, FWPromiseState state) {
+            __strong FWPromise *strongPromise = weakPromise;
+            
+            if (state == FWPromiseStateRejected) {
+                [object fwUnobserveProperty:@"state" target:strongPromise action:@selector(state:change:)];
+                if (strongPromise.catchBlock) {
+                    strongPromise.catchBlock(object.error);
+                } else {
+                    strongPromise.rejectBlock(object.error);
+                }
+            } else if (state == FWPromiseStateResolved) {
+                [object fwUnobserveProperty:@"state" target:strongPromise action:@selector(state:change:)];
+                strongPromise.retryValue = object.value;
+                strongPromise.retryCount = 0;
+                if (strongPromise.thenBlock) {
+                    id value = strongPromise.thenBlock(object.value);
+                    strongPromise.thenBlock = nil;
+                    if (value && [value isKindOfClass:[NSError class]]) {
+                        if (strongPromise.catchBlock) {
+                            strongPromise.catchBlock(value);
+                            strongPromise.resolveBlock(nil);
+                        } else {
+                            strongPromise.rejectBlock(value);
+                        }
+                    } else {
+                        strongPromise.resolveBlock(value);
+                    }
+                } else {
+                    strongPromise.resolveBlock(object.value);
+                }
+            }
+        };
         
         BOOL thenBlock = NO;
-        id block = self.promiseBlock;
-        if (self.thenBlock != nil) {
-            block = self.thenBlock;
+        id block = weakSelf.promiseBlock;
+        if (weakSelf.thenBlock != nil) {
+            block = weakSelf.thenBlock;
             thenBlock = YES;
         }
         
-        __weak FWPromise *weakPromise = newPromise;
         newPromise.catchBlock = ^(NSError *error){
             if (weakPromise.retryCount++ < retryCount){
                 if (thenBlock) {
@@ -351,70 +423,6 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
         };
         return newPromise;
     };
-}
-
-@end
-
-@implementation FWAllPromise
-
-- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
-{
-    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
-    [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
-    [self.promises removeObject:promise];
-    if (newState == FWPromiseStateRejected) {
-        [self.promises enumerateObjectsUsingBlock:^(FWPromise *obj, BOOL *stop) {
-            [obj fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
-        }];
-        self.rejectBlock(promise.error);
-    } else if (newState == FWPromiseStateResolved) {
-        [self.values addObject:promise.value];
-    }
-    
-    if (self.promises.count == 0) {
-        self.resolveBlock(self.values);
-    }
-}
-
-@end
-
-@implementation FWRacePromise
-
-- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
-{
-    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
-    [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
-    [self.promises removeObject:promise];
-    if (newState == FWPromiseStateRejected) {
-        [self.values addObject:promise.error];
-        if (self.promises.count == 0) {
-            self.rejectBlock(promise.error);
-        }
-    } else if (newState == FWPromiseStateResolved) {
-        [self.promises enumerateObjectsUsingBlock:^(FWPromise *obj, BOOL *stop) {
-            [obj fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
-        }];
-        self.resolveBlock(promise.value);
-    }
-}
-
-@end
-
-@implementation FWRetryPromise
-
-- (void)onState:(FWPromise *)promise change:(NSDictionary *)change
-{
-    FWPromiseState newState = [change[NSKeyValueChangeNewKey] integerValue];
-    if (newState == FWPromiseStateRejected) {
-        [promise fwUnobserveProperty:@"state" target:self action:@selector(onState:change:)];
-        if (self.catchBlock) {
-            self.catchBlock(promise.error);
-        } else {
-            self.rejectBlock(promise.error);
-        }
-    } else if (newState == FWPromiseStateResolved) {
-        [super onState:promise change:change];
-    }
 }
 
 @end
