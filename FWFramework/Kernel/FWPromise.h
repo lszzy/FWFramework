@@ -13,11 +13,11 @@ typedef void (^FWResolveBlock)(id value);
 
 typedef void (^FWRejectBlock)(NSError *error);
 
-typedef void (^FWProgressBlock)(double ratio, id value);
-
 typedef id (^FWThenBlock)(id value);
 
 typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
+
+typedef void (^FWProgressBlock)(double ratio, id value);
 
 typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress);
 
@@ -38,8 +38,6 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 
 + (FWPromise *)promise:(FWPromiseBlock)block;
 
-+ (FWPromise *)progress:(FWProgressPromiseBlock)block;
-
 + (FWPromise *)resolve:(id)value;
 
 + (FWPromise *)reject:(NSError *)error;
@@ -49,6 +47,8 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 - (void)reject:(NSError *)error;
 
 - (void)progress:(double)ratio value:(id)value;
+
++ (FWPromise *)progress:(FWProgressPromiseBlock)block;
 
 + (FWPromise *)all:(NSArray<FWPromise *> *)promises;
 
