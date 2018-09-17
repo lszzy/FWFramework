@@ -43,6 +43,18 @@
 		2F7E422820FC2F6200CE3E2F /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */; };
 		2F7E422920FC2F6200CE3E2F /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7E422A20FC2F6200CE3E2F /* Foundation+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F905F5E214F54B90021E10F /* NSArray+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F5C214F54B90021E10F /* NSArray+FWFramework.h */; };
+		2F905F5F214F54B90021E10F /* NSArray+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F5D214F54B90021E10F /* NSArray+FWFramework.m */; };
+		2F905F66214F5EEE0021E10F /* NSDictionary+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F64214F5EEE0021E10F /* NSDictionary+FWFramework.h */; };
+		2F905F67214F5EEE0021E10F /* NSDictionary+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F65214F5EEE0021E10F /* NSDictionary+FWFramework.m */; };
+		2F905F73214F83D00021E10F /* NSBundle+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F71214F83D00021E10F /* NSBundle+FWFramework.h */; };
+		2F905F74214F83D00021E10F /* NSBundle+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F72214F83D00021E10F /* NSBundle+FWFramework.m */; };
+		2F905F7E214FA0840021E10F /* NSData+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F7C214FA0840021E10F /* NSData+FWFramework.h */; };
+		2F905F7F214FA0840021E10F /* NSData+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F7D214FA0840021E10F /* NSData+FWFramework.m */; };
+		2F905F82214FA1120021E10F /* UIApplication+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F80214FA1120021E10F /* UIApplication+FWFramework.h */; };
+		2F905F83214FA1120021E10F /* UIApplication+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F81214FA1120021E10F /* UIApplication+FWFramework.m */; };
+		2F905F86214FA7380021E10F /* NSDate+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F84214FA7380021E10F /* NSDate+FWFramework.h */; };
+		2F905F87214FA7380021E10F /* NSDate+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F85214FA7380021E10F /* NSDate+FWFramework.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +95,18 @@
 		2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
 		2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
 		2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F5C214F54B90021E10F /* NSArray+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F5D214F54B90021E10F /* NSArray+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FWFramework.m"; sourceTree = "<group>"; };
+		2F905F64214F5EEE0021E10F /* NSDictionary+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F65214F5EEE0021E10F /* NSDictionary+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+FWFramework.m"; sourceTree = "<group>"; };
+		2F905F71214F83D00021E10F /* NSBundle+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F72214F83D00021E10F /* NSBundle+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+FWFramework.m"; sourceTree = "<group>"; };
+		2F905F7C214FA0840021E10F /* NSData+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F7D214FA0840021E10F /* NSData+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+FWFramework.m"; sourceTree = "<group>"; };
+		2F905F80214FA1120021E10F /* UIApplication+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F81214FA1120021E10F /* UIApplication+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWFramework.m"; sourceTree = "<group>"; };
+		2F905F84214FA7380021E10F /* NSDate+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDate+FWFramework.h"; sourceTree = "<group>"; };
+		2F905F85214FA7380021E10F /* NSDate+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDate+FWFramework.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				2F7E421220FC2EA500CE3E2F /* UIKit+FWFramework.h */,
+				2F905F80214FA1120021E10F /* UIApplication+FWFramework.h */,
+				2F905F81214FA1120021E10F /* UIApplication+FWFramework.m */,
 				2F7E421120FC2EA500CE3E2F /* UIView+FWAutoLayout.h */,
 				2F7E420E20FC2EA500CE3E2F /* UIView+FWAutoLayout.m */,
 				2F7E421020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h */,
@@ -160,6 +186,16 @@
 			isa = PBXGroup;
 			children = (
 				2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */,
+				2F905F5C214F54B90021E10F /* NSArray+FWFramework.h */,
+				2F905F5D214F54B90021E10F /* NSArray+FWFramework.m */,
+				2F905F64214F5EEE0021E10F /* NSDictionary+FWFramework.h */,
+				2F905F65214F5EEE0021E10F /* NSDictionary+FWFramework.m */,
+				2F905F71214F83D00021E10F /* NSBundle+FWFramework.h */,
+				2F905F72214F83D00021E10F /* NSBundle+FWFramework.m */,
+				2F905F7C214FA0840021E10F /* NSData+FWFramework.h */,
+				2F905F7D214FA0840021E10F /* NSData+FWFramework.m */,
+				2F905F84214FA7380021E10F /* NSDate+FWFramework.h */,
+				2F905F85214FA7380021E10F /* NSDate+FWFramework.m */,
 				2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */,
 				2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */,
 				2F7DDC4720FF14EF00A96FFF /* NSObject+FWFramework.h */,
@@ -213,9 +249,11 @@
 			files = (
 				2F035849214766F9005A045C /* FWMutableDictionary.h in Headers */,
 				2F03584521476541005A045C /* FWMutableArray.h in Headers */,
+				2F905F7E214FA0840021E10F /* NSData+FWFramework.h in Headers */,
 				2F7DDC4920FF14EF00A96FFF /* NSObject+FWFramework.h in Headers */,
 				2F7DDC4520FF141700A96FFF /* NSObject+FWSafeType.h in Headers */,
 				2F7DDC3B20FF119E00A96FFF /* FWPromise.h in Headers */,
+				2F905F5E214F54B90021E10F /* NSArray+FWFramework.h in Headers */,
 				2F7DDC3E20FF125800A96FFF /* FWMacro.h in Headers */,
 				2F470A0920FEEB1F006D8455 /* FWPlugin.h in Headers */,
 				2F470A0620FEEB1F006D8455 /* FWTest.h in Headers */,
@@ -223,7 +261,9 @@
 				2F470A0A20FEEB1F006D8455 /* FWProxy.h in Headers */,
 				2F470A0220FEEB1F006D8455 /* FWMessage.h in Headers */,
 				2F470A0B20FEEB1F006D8455 /* FWAspect.h in Headers */,
+				2F905F73214F83D00021E10F /* NSBundle+FWFramework.h in Headers */,
 				2F4709EA20FEDA90006D8455 /* NSObject+FWRuntime.h in Headers */,
+				2F905F82214FA1120021E10F /* UIApplication+FWFramework.h in Headers */,
 				2F7E422020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h in Headers */,
 				2F7E422120FC2EA500CE3E2F /* UIView+FWAutoLayout.h in Headers */,
 				2F7E422420FC2EA500CE3E2F /* FWFramework.h in Headers */,
@@ -231,6 +271,8 @@
 				2F7E422920FC2F6200CE3E2F /* NSNull+FWFramework.h in Headers */,
 				2F03584D21476BE9005A045C /* NSTimer+FWFramework.h in Headers */,
 				2F7E422A20FC2F6200CE3E2F /* Foundation+FWFramework.h in Headers */,
+				2F905F66214F5EEE0021E10F /* NSDictionary+FWFramework.h in Headers */,
+				2F905F86214FA7380021E10F /* NSDate+FWFramework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +309,7 @@
 				TargetAttributes = {
 					2F7E41FD20FC2DCF00CE3E2F = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
 					};
 				};
 			};
@@ -319,8 +362,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F7E421E20FC2EA500CE3E2F /* UIView+FWAutoLayout.m in Sources */,
+				2F905F74214F83D00021E10F /* NSBundle+FWFramework.m in Sources */,
 				2F7DDC4A20FF14EF00A96FFF /* NSObject+FWFramework.m in Sources */,
+				2F905F7F214FA0840021E10F /* NSData+FWFramework.m in Sources */,
 				2F470A0D20FEEB1F006D8455 /* FWTest.m in Sources */,
+				2F905F5F214F54B90021E10F /* NSArray+FWFramework.m in Sources */,
+				2F905F87214FA7380021E10F /* NSDate+FWFramework.m in Sources */,
 				2F470A0720FEEB1F006D8455 /* FWPlugin.m in Sources */,
 				2F03584E21476BE9005A045C /* NSTimer+FWFramework.m in Sources */,
 				2F470A0820FEEB1F006D8455 /* FWAspect.m in Sources */,
@@ -329,10 +376,12 @@
 				2F7DDC3C20FF119E00A96FFF /* FWPromise.m in Sources */,
 				2F470A0420FEEB1F006D8455 /* FWLog.m in Sources */,
 				2F7E421F20FC2EA500CE3E2F /* UINavigationController+FWWorkflow.m in Sources */,
+				2F905F83214FA1120021E10F /* UIApplication+FWFramework.m in Sources */,
 				2F470A0520FEEB1F006D8455 /* FWMessage.m in Sources */,
 				2F03584621476541005A045C /* FWMutableArray.m in Sources */,
 				2F03584A214766F9005A045C /* FWMutableDictionary.m in Sources */,
 				2F4709E920FEDA90006D8455 /* NSObject+FWRuntime.m in Sources */,
+				2F905F67214F5EEE0021E10F /* NSDictionary+FWFramework.m in Sources */,
 				2F470A0C20FEEB1F006D8455 /* FWProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,6 +512,7 @@
 		2F7E420720FC2DCF00CE3E2F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -481,6 +531,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -489,6 +540,7 @@
 		2F7E420820FC2DCF00CE3E2F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
