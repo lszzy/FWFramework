@@ -9,6 +9,9 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "NSString+FWEncode.h"
+#import "NSString+FWEncrypt.h"
+#import "NSString+FWFormat.h"
 
 /*!
  @brief NSString+FWFramework

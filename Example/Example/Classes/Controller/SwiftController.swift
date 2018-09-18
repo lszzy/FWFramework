@@ -30,7 +30,7 @@ import FWFramework
     
     // MARK: - Action
     @discardableResult
-    func onObjc() -> Bool {
+    @objc func onObjc() -> Bool {
         let viewController = ObjcController()
         self.navigationController?.pushViewController(viewController, animated: true)
         return true

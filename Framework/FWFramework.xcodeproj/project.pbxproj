@@ -11,7 +11,7 @@
 		2F03584621476541005A045C /* FWMutableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03584421476541005A045C /* FWMutableArray.m */; };
 		2F035849214766F9005A045C /* FWMutableDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F035847214766F9005A045C /* FWMutableDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03584A214766F9005A045C /* FWMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F035848214766F9005A045C /* FWMutableDictionary.m */; };
-		2F03584D21476BE9005A045C /* NSTimer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03584B21476BE9005A045C /* NSTimer+FWFramework.h */; };
+		2F03584D21476BE9005A045C /* NSTimer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03584B21476BE9005A045C /* NSTimer+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03584E21476BE9005A045C /* NSTimer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03584C21476BE9005A045C /* NSTimer+FWFramework.m */; };
 		2F4709E920FEDA90006D8455 /* NSObject+FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4709E720FEDA8F006D8455 /* NSObject+FWRuntime.m */; };
 		2F4709EA20FEDA90006D8455 /* NSObject+FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4709E820FEDA8F006D8455 /* NSObject+FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -43,31 +43,31 @@
 		2F7E422820FC2F6200CE3E2F /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7E422520FC2F6200CE3E2F /* NSNull+FWFramework.m */; };
 		2F7E422920FC2F6200CE3E2F /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422620FC2F6200CE3E2F /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7E422A20FC2F6200CE3E2F /* Foundation+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7E422720FC2F6200CE3E2F /* Foundation+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F85E8C42150E2DD003254C1 /* NSFileManager+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8C22150E2DD003254C1 /* NSFileManager+FWFramework.h */; };
+		2F85E8C42150E2DD003254C1 /* NSFileManager+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8C22150E2DD003254C1 /* NSFileManager+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8C52150E2DD003254C1 /* NSFileManager+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8C32150E2DD003254C1 /* NSFileManager+FWFramework.m */; };
-		2F85E8C82150E4DF003254C1 /* NSNumber+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8C62150E4DF003254C1 /* NSNumber+FWFramework.h */; };
+		2F85E8C82150E4DF003254C1 /* NSNumber+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8C62150E4DF003254C1 /* NSNumber+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8C92150E4DF003254C1 /* NSNumber+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8C72150E4DF003254C1 /* NSNumber+FWFramework.m */; };
-		2F85E8CC2150E7C5003254C1 /* NSUserDefaults+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8CA2150E7C5003254C1 /* NSUserDefaults+FWFramework.h */; };
+		2F85E8CC2150E7C5003254C1 /* NSUserDefaults+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8CA2150E7C5003254C1 /* NSUserDefaults+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8CD2150E7C5003254C1 /* NSUserDefaults+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8CB2150E7C5003254C1 /* NSUserDefaults+FWFramework.m */; };
-		2F85E8D02150E820003254C1 /* NSString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8CE2150E820003254C1 /* NSString+FWFramework.h */; };
+		2F85E8D02150E820003254C1 /* NSString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8CE2150E820003254C1 /* NSString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8D12150E820003254C1 /* NSString+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8CF2150E820003254C1 /* NSString+FWFramework.m */; };
-		2F85E8D42150EB1F003254C1 /* NSString+FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8D22150EB1F003254C1 /* NSString+FWEncode.h */; };
+		2F85E8D42150EB1F003254C1 /* NSString+FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8D22150EB1F003254C1 /* NSString+FWEncode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8D52150EB1F003254C1 /* NSString+FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8D32150EB1F003254C1 /* NSString+FWEncode.m */; };
-		2F85E8D82150ED4B003254C1 /* NSString+FWEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8D62150ED4B003254C1 /* NSString+FWEncrypt.h */; };
+		2F85E8D82150ED4B003254C1 /* NSString+FWEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8D62150ED4B003254C1 /* NSString+FWEncrypt.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8D92150ED4B003254C1 /* NSString+FWEncrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8D72150ED4B003254C1 /* NSString+FWEncrypt.m */; };
-		2F85E8DD2150FC69003254C1 /* NSString+FWFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8DB2150FC69003254C1 /* NSString+FWFormat.h */; };
+		2F85E8DD2150FC69003254C1 /* NSString+FWFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F85E8DB2150FC69003254C1 /* NSString+FWFormat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F85E8DE2150FC69003254C1 /* NSString+FWFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F85E8DC2150FC69003254C1 /* NSString+FWFormat.m */; };
-		2F905F5E214F54B90021E10F /* NSArray+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F5C214F54B90021E10F /* NSArray+FWFramework.h */; };
+		2F905F5E214F54B90021E10F /* NSArray+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F5C214F54B90021E10F /* NSArray+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F905F5F214F54B90021E10F /* NSArray+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F5D214F54B90021E10F /* NSArray+FWFramework.m */; };
-		2F905F66214F5EEE0021E10F /* NSDictionary+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F64214F5EEE0021E10F /* NSDictionary+FWFramework.h */; };
+		2F905F66214F5EEE0021E10F /* NSDictionary+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F64214F5EEE0021E10F /* NSDictionary+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F905F67214F5EEE0021E10F /* NSDictionary+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F65214F5EEE0021E10F /* NSDictionary+FWFramework.m */; };
-		2F905F73214F83D00021E10F /* NSBundle+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F71214F83D00021E10F /* NSBundle+FWFramework.h */; };
+		2F905F73214F83D00021E10F /* NSBundle+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F71214F83D00021E10F /* NSBundle+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F905F74214F83D00021E10F /* NSBundle+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F72214F83D00021E10F /* NSBundle+FWFramework.m */; };
-		2F905F7E214FA0840021E10F /* NSData+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F7C214FA0840021E10F /* NSData+FWFramework.h */; };
+		2F905F7E214FA0840021E10F /* NSData+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F7C214FA0840021E10F /* NSData+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F905F7F214FA0840021E10F /* NSData+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F7D214FA0840021E10F /* NSData+FWFramework.m */; };
-		2F905F82214FA1120021E10F /* UIApplication+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F80214FA1120021E10F /* UIApplication+FWFramework.h */; };
+		2F905F82214FA1120021E10F /* UIApplication+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F80214FA1120021E10F /* UIApplication+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F905F83214FA1120021E10F /* UIApplication+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F81214FA1120021E10F /* UIApplication+FWFramework.m */; };
-		2F905F86214FA7380021E10F /* NSDate+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F84214FA7380021E10F /* NSDate+FWFramework.h */; };
+		2F905F86214FA7380021E10F /* NSDate+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F905F84214FA7380021E10F /* NSDate+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F905F87214FA7380021E10F /* NSDate+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F905F85214FA7380021E10F /* NSDate+FWFramework.m */; };
 /* End PBXBuildFile section */
 
@@ -290,13 +290,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F85E8DD2150FC69003254C1 /* NSString+FWFormat.h in Headers */,
+				2F905F7E214FA0840021E10F /* NSData+FWFramework.h in Headers */,
+				2F905F5E214F54B90021E10F /* NSArray+FWFramework.h in Headers */,
+				2F85E8D02150E820003254C1 /* NSString+FWFramework.h in Headers */,
+				2F85E8D82150ED4B003254C1 /* NSString+FWEncrypt.h in Headers */,
+				2F905F73214F83D00021E10F /* NSBundle+FWFramework.h in Headers */,
+				2F85E8C42150E2DD003254C1 /* NSFileManager+FWFramework.h in Headers */,
+				2F905F82214FA1120021E10F /* UIApplication+FWFramework.h in Headers */,
+				2F85E8C82150E4DF003254C1 /* NSNumber+FWFramework.h in Headers */,
+				2F03584D21476BE9005A045C /* NSTimer+FWFramework.h in Headers */,
+				2F85E8D42150EB1F003254C1 /* NSString+FWEncode.h in Headers */,
+				2F85E8CC2150E7C5003254C1 /* NSUserDefaults+FWFramework.h in Headers */,
+				2F905F66214F5EEE0021E10F /* NSDictionary+FWFramework.h in Headers */,
+				2F905F86214FA7380021E10F /* NSDate+FWFramework.h in Headers */,
 				2F035849214766F9005A045C /* FWMutableDictionary.h in Headers */,
 				2F03584521476541005A045C /* FWMutableArray.h in Headers */,
-				2F905F7E214FA0840021E10F /* NSData+FWFramework.h in Headers */,
 				2F7DDC4920FF14EF00A96FFF /* NSObject+FWFramework.h in Headers */,
 				2F7DDC4520FF141700A96FFF /* NSObject+FWSafeType.h in Headers */,
 				2F7DDC3B20FF119E00A96FFF /* FWPromise.h in Headers */,
-				2F905F5E214F54B90021E10F /* NSArray+FWFramework.h in Headers */,
 				2F7DDC3E20FF125800A96FFF /* FWMacro.h in Headers */,
 				2F470A0920FEEB1F006D8455 /* FWPlugin.h in Headers */,
 				2F470A0620FEEB1F006D8455 /* FWTest.h in Headers */,
@@ -304,24 +315,13 @@
 				2F470A0A20FEEB1F006D8455 /* FWProxy.h in Headers */,
 				2F470A0220FEEB1F006D8455 /* FWMessage.h in Headers */,
 				2F470A0B20FEEB1F006D8455 /* FWAspect.h in Headers */,
-				2F85E8D02150E820003254C1 /* NSString+FWFramework.h in Headers */,
-				2F85E8D82150ED4B003254C1 /* NSString+FWEncrypt.h in Headers */,
-				2F905F73214F83D00021E10F /* NSBundle+FWFramework.h in Headers */,
-				2F85E8C42150E2DD003254C1 /* NSFileManager+FWFramework.h in Headers */,
 				2F4709EA20FEDA90006D8455 /* NSObject+FWRuntime.h in Headers */,
-				2F905F82214FA1120021E10F /* UIApplication+FWFramework.h in Headers */,
 				2F7E422020FC2EA500CE3E2F /* UINavigationController+FWWorkflow.h in Headers */,
 				2F7E422120FC2EA500CE3E2F /* UIView+FWAutoLayout.h in Headers */,
-				2F85E8C82150E4DF003254C1 /* NSNumber+FWFramework.h in Headers */,
 				2F7E422420FC2EA500CE3E2F /* FWFramework.h in Headers */,
 				2F7E422220FC2EA500CE3E2F /* UIKit+FWFramework.h in Headers */,
 				2F7E422920FC2F6200CE3E2F /* NSNull+FWFramework.h in Headers */,
-				2F03584D21476BE9005A045C /* NSTimer+FWFramework.h in Headers */,
 				2F7E422A20FC2F6200CE3E2F /* Foundation+FWFramework.h in Headers */,
-				2F85E8D42150EB1F003254C1 /* NSString+FWEncode.h in Headers */,
-				2F85E8CC2150E7C5003254C1 /* NSUserDefaults+FWFramework.h in Headers */,
-				2F905F66214F5EEE0021E10F /* NSDictionary+FWFramework.h in Headers */,
-				2F905F86214FA7380021E10F /* NSDate+FWFramework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,7 +401,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# document path\n# DOC_PATH=\"${PROJECT_DIR}/../Document/HeaderDoc/\"\n# source path\n# SRC_PATH=\"${PROJECT_DIR}/../FWFramework/\"\n\n# clear document\n# rm -rf \"${DOC_PATH}\"\n# mkdir -p \"${DOC_PATH}\"\n\n# generate headerdoc .h\n# find \"${SRC_PATH}\" -name \\*.h -print | xargs headerdoc2html -o \"${DOC_PATH}\"\n# generate headerdoc *\n# headerdoc2html -o \"${DOC_PATH}\" \"${SRC_PATH}\"\n\n# gather headerdoc\n# gatherheaderdoc \"${DOC_PATH}\"\n\n# open document path\n# open \"${DOC_PATH}/masterTOC.html\"\n\n# exit 0";
+			shellScript = "# document path\n# DOC_PATH=\"${PROJECT_DIR}/../Document/HeaderDoc/\"\n# source path\n# SRC_PATH=\"${PROJECT_DIR}/../FWFramework/\"\n\n# clear document\n# rm -rf \"${DOC_PATH}\"\n# mkdir -p \"${DOC_PATH}\"\n\n# generate headerdoc .h\n# find \"${SRC_PATH}\" -name \\*.h -print | xargs headerdoc2html -o \"${DOC_PATH}\"\n# generate headerdoc *\n# headerdoc2html -o \"${DOC_PATH}\" \"${SRC_PATH}\"\n\n# gather headerdoc\n# gatherheaderdoc \"${DOC_PATH}\"\n\n# open document path\n# open \"${DOC_PATH}/masterTOC.html\"\n\n# exit 0\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
