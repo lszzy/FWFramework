@@ -10,9 +10,17 @@
 #ifndef Foundation_FWFramework_h
 #define Foundation_FWFramework_h
 
+#import "NSArray+FWFramework.h"
+#import "NSDictionary+FWFramework.h"
+#import "NSBundle+FWFramework.h"
+#import "NSData+FWFramework.h"
+#import "NSDate+FWFramework.h"
+#import "NSFileManager+FWFramework.h"
 #import "NSNull+FWFramework.h"
+#import "NSNumber+FWFramework.h"
 #import "NSObject+FWFramework.h"
-#import "NSObject+FWRuntime.h"
-#import "NSObject+FWSafeType.h"
+#import "NSString+FWFramework.h"
+#import "NSTimer+FWFramework.h"
+#import "NSUserDefaults+FWFramework.h"
 
 #endif /* Foundation_FWFramework_h */

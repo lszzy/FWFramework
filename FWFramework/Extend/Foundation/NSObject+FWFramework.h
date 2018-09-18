@@ -8,6 +8,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSafeType.h"
 
 /*!
  @brief NSObject分类

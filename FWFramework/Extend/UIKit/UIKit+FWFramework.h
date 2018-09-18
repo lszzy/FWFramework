@@ -10,6 +10,7 @@
 #ifndef UIKit_FWFramework_h
 #define UIKit_FWFramework_h
 
+#import "UIApplication+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
 #import "UINavigationController+FWWorkflow.h"
 
