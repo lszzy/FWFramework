@@ -20,6 +20,12 @@
 // 使用NSKeyedUnarchiver解压数据
 - (id)fwUnarchiveObject;
 
+// 保存对象归档
++ (void)fwArchiveObject:(id)object toFile:(NSString *)path;
+
+// 读取对象归档
++ (id)fwUnarchiveObjectWithFile:(NSString *)path;
+
 // 转为UTF8字符串
 - (NSString *)fwUTF8String;
 
