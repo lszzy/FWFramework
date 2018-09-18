@@ -28,4 +28,15 @@
     }
 }
 
+- (id)fwArchiveCopy
+{
+    id obj = nil;
+    @try {
+        obj = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
+    return obj;
+}
+
 @end

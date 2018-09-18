@@ -21,6 +21,16 @@
     return [NSKeyedUnarchiver unarchiveObjectWithData:self];
 }
 
++ (void)fwArchiveObject:(id)object toFile:(NSString *)path
+{
+    [NSKeyedArchiver archiveRootObject:object toFile:path];
+}
+
++ (id)fwUnarchiveObjectWithFile:(NSString *)path
+{
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+}
+
 - (NSString *)fwUTF8String
 {
     return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];

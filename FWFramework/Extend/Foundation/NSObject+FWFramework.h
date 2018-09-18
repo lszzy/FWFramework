@@ -17,4 +17,11 @@
 /*! @brief 临时对象 */
 @property (nonatomic, strong) id fwTempObject;
 
+/**
+ 使用NSKeyedArchiver和NSKeyedUnarchiver深拷对象
+ 
+ @return 出错返回nil
+ */
+- (id)fwArchiveCopy;
+
 @end
