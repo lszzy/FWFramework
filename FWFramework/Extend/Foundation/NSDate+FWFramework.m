@@ -195,6 +195,36 @@ static NSTimeInterval localBaseTime = 0;
     return NO;
 }
 
+- (BOOL)fwIsSameDay:(NSDate *)date
+{
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:(NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:date];
+    NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    components = [[NSCalendar currentCalendar] components:(NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:self];
+    NSDate *dateTwo = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    return [dateOne isEqualToDate:dateTwo];
+}
+
+- (NSDate *)fwDateByAdding:(NSDateComponents *)components
+{
+    return [[NSCalendar currentCalendar] dateByAddingComponents:components toDate:self options:0];
+}
+
+- (NSInteger)fwDaysFrom:(NSDate *)date
+{
+    NSDate *earliest = [self earlierDate:date];
+    NSDate *latest = (earliest == self) ? date : self;
+    NSInteger multipier = (earliest == self) ? -1 : 1;
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:earliest toDate:latest options:0];
+    return multipier * components.day;
+}
+
+- (double)fwSecondsFrom:(NSDate *)date
+{
+    return [self timeIntervalSinceDate:date];
+}
+
 #pragma mark - Format
 
 + (NSString *)fwFormatDuration:(float)duration hasHour:(BOOL)hasHour

@@ -123,6 +123,18 @@
 // 是否是闰年
 - (BOOL)fwIsLeapYear;
 
+// 是否是同一天
+- (BOOL)fwIsSameDay:(NSDate *)date;
+
+// 添加指定日期，如year:1|month:-1|day:1等
+- (NSDate *)fwDateByAdding:(NSDateComponents *)components;
+
+// 与指定日期相隔天数
+- (NSInteger)fwDaysFrom:(NSDate *)date;
+
+// 与指定日期相隔秒数。分钟数/60，小时数/3600
+- (double)fwSecondsFrom:(NSDate *)date;
+
 #pragma mark - Format
 
 // 格式化时长，格式"00:00"或"00:00:00"
