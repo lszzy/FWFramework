@@ -1,0 +1,142 @@
+//
+//  UIScrollView+FWFramework.m
+//  FWFramework
+//
+//  Created by wuyong on 17/3/13.
+//  Copyright © 2017年 ocphp.com. All rights reserved.
+//
+
+#import "UIScrollView+FWFramework.h"
+
+@implementation UIScrollView (FWFramework)
+
+#pragma mark - Frame
+
+- (CGFloat)fwContentWidth
+{
+    return self.contentSize.width;
+}
+
+- (void)setFwContentWidth:(CGFloat)fwContentWidth
+{
+    self.contentSize = CGSizeMake(fwContentWidth, self.contentSize.height);
+}
+
+- (CGFloat)fwContentHeight
+{
+    return self.contentSize.height;
+}
+
+- (void)setFwContentHeight:(CGFloat)fwContentHeight
+{
+    self.contentSize = CGSizeMake(self.contentSize.width, fwContentHeight);
+}
+
+- (CGFloat)fwContentOffsetX
+{
+    return self.contentOffset.x;
+}
+
+- (void)setFwContentOffsetX:(CGFloat)fwContentOffsetX
+{
+    self.contentOffset = CGPointMake(fwContentOffsetX, self.contentOffset.y);
+}
+
+- (CGFloat)fwContentOffsetY
+{
+    return self.contentOffset.y;
+}
+
+- (void)setFwContentOffsetY:(CGFloat)fwContentOffsetY
+{
+    self.contentOffset = CGPointMake(self.contentOffset.x, fwContentOffsetY);
+}
+
+#pragma mark - Page
+
+- (NSInteger)fwTotalPage
+{
+    return (NSInteger)ceil((self.contentSize.width / self.frame.size.width));
+}
+
+- (NSInteger)fwCurrentPage
+{
+    CGFloat pageWidth = self.frame.size.width;
+    return (NSInteger)floor((self.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+}
+
+- (void)fwSetCurrentPage:(NSInteger)page
+{
+    CGFloat offset = (self.frame.size.width * page);
+    self.contentOffset = CGPointMake(offset, 0.f);
+}
+
+- (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated
+{
+    CGFloat offset = (self.frame.size.width * page);
+    [self setContentOffset:CGPointMake(offset, 0.f) animated:animated];
+}
+
+- (BOOL)fwIsLastPage
+{
+    return (self.fwCurrentPage == (self.fwTotalPage - 1));
+}
+
+#pragma mark - Scroll
+
+- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
+{
+    CGPoint offset = self.contentOffset;
+    switch (edge) {
+        case UIRectEdgeTop:
+            offset.y = 0 - self.contentInset.top;
+            break;
+        case UIRectEdgeLeft:
+            offset.x = 0 - self.contentInset.left;
+            break;
+        case UIRectEdgeBottom:
+            offset.y = self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
+            break;
+        case UIRectEdgeRight:
+            offset.x = self.contentSize.width - self.bounds.size.width + self.contentInset.right;
+            break;
+        default:
+            break;
+    }
+    [self setContentOffset:offset animated:animated];
+}
+
+- (UIRectEdge)fwScrollEdge
+{
+    UIRectEdge edge;
+    if ([self.panGestureRecognizer translationInView:self.superview].y > 0.0f) {
+        edge = UIRectEdgeTop;
+    } else if ([self.panGestureRecognizer translationInView:self.superview].y < 0.0f) {
+        edge = UIRectEdgeBottom;
+    } else if ([self.panGestureRecognizer translationInView:self].x < 0.0f) {
+        edge = UIRectEdgeLeft;
+    } else if ([self.panGestureRecognizer translationInView:self].x > 0.0f) {
+        edge = UIRectEdgeRight;
+    } else {
+        edge = UIRectEdgeNone;
+    }
+    return edge;
+}
+
+#pragma mark - Content
+
++ (void)fwContentInsetNever
+{
+    if (@available(iOS 11.0, *)) {
+        [UIScrollView appearance].contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+}
+
+- (void)fwContentInsetNever
+{
+    if (@available(iOS 11.0, *)) {
+        self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+}
+
+@end
