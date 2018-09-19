@@ -43,8 +43,6 @@
 #define fw_macro_string_( A ) \
     @(#A)
 
-#pragma mark - Args
-
 /*!
  @brief 截取第一个参数
  
@@ -211,5 +209,52 @@
     N > 6 ? X : fw_macro_default_at_6( N, F, A, B, C, D, E )
 #define fw_macro_default_at_8( N, X, A, B, C, D, E, F, G ) \
     N > 7 ? X : fw_macro_default_at_7( N, G, A, B, C, D, E, F )
+
+#pragma mark - Foundation
+
+#ifdef DEBUG
+
+// 调试模式打开日志
+#define NSLog(format, ...) \
+    NSLog((@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
+
+#else
+
+// 正式环境关闭日志
+#define NSLog(...)
+
+#endif
+
+// 标记废弃方法或属性
+#define	FWDeprecated( msg ) \
+    __attribute__((deprecated(msg)))
+
+// 标记未使用的变量
+#define	FWUnused( x ) \
+    { id __unused_var__ __attribute__((unused)) = (id)(x); }
+
+// 标记未完成的功能
+#define FWTodo( msg ) \
+    _Pragma(fw_macro_cstring(message("✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖ TODO: " msg)))
+
+// 声明dealloc方法，可不传参数，也可传code，或者{code}
+#define FWDealloc( x ) \
+    - (void)dealloc \
+    { \
+        [[NSNotificationCenter defaultCenter] removeObserver:self]; \
+        NSLog(@"%@ did dealloc", NSStringFromClass(self.class)); \
+        x \
+    }
+
+// 标记忽略调用方法警告开始
+#define FWIgnoredBegin( ) \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+    _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"") \
+    _Pragma("clang diagnostic ignored \"-Wundeclared-selector\"")
+
+// 标记忽略警告结束
+#define FWIgnoredEnd( ) \
+    _Pragma("clang diagnostic pop")
 
 #endif /* FWMacro_h */

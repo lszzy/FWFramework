@@ -49,4 +49,36 @@
     return (UIViewController *)matchController;
 }
 
+#pragma mark - Snapshot
+
+- (UIImage *)fwSnapshotImage
+{
+    UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0);
+    // iOS7+：是否更新屏幕后再截图，效率高
+    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:NO];
+    // iOS6+：截取当前状态，效率低
+    // [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return snapshot;
+}
+
+- (NSData *)fwSnapshotPdf
+{
+    CGRect bounds = self.bounds;
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGContextRef context = CGPDFContextCreate(consumer, &bounds, NULL);
+    CGDataConsumerRelease(consumer);
+    if (!context) return nil;
+    CGPDFContextBeginPage(context, NULL);
+    CGContextTranslateCTM(context, 0, bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    [self.layer renderInContext:context];
+    CGPDFContextEndPage(context);
+    CGPDFContextClose(context);
+    CGContextRelease(context);
+    return data;
+}
+
 @end

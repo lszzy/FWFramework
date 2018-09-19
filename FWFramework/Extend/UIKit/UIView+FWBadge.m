@@ -7,7 +7,7 @@
 //
 
 #import "UIView+FWBadge.h"
-#import "NSObject+FWKvo.h"
+#import "FWMessage.h"
 #import "UIView+FWAutoLayout.h"
 
 #pragma mark - FWBadgeView

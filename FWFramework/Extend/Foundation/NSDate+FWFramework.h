@@ -9,6 +9,15 @@
 
 #import <Foundation/Foundation.h>
 
+// 标记时间调试开始
+#define FWBenchmarkBegin( x ) \
+    NSDate *fwBenchmarkBegin_##x = [NSDate date];
+
+// 标记时间调试结束并打印消耗时间
+#define FWBenchmarkEnd( x ) \
+    NSDate *fwBenchmarkEnd_##x = [NSDate date]; \
+    NSLog(@"FWBenchmark-%@: %.3fms", @(#x), [fwBenchmarkEnd_##x timeIntervalSince1970] * 1000 - [fwBenchmarkBegin_##x timeIntervalSince1970] * 1000);
+
 /*!
  @brief NSDate+FWFramework
  */

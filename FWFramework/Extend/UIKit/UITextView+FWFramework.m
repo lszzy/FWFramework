@@ -7,8 +7,8 @@
 //
 
 #import "UITextView+FWFramework.h"
-#import "NSObject+FWNotification.h"
-#import "NSObject+FWProxy.h"
+#import "FWMessage.h"
+#import "FWProxy.h"
 #import "NSString+FWEncode.h"
 #import <objc/runtime.h>
 

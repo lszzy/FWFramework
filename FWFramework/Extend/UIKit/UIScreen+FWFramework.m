@@ -38,34 +38,54 @@
                       );
 }
 
-+ (BOOL)fwInnerIsScreenWidth:(CGFloat)width height:(CGFloat)height
++ (BOOL)fwIsScreenSize:(CGSize)size
 {
-    return CGSizeEqualToSize(CGSizeMake(width, height), [UIScreen mainScreen].bounds.size);
+    return CGSizeEqualToSize(size, [UIScreen mainScreen].bounds.size);
+}
+
++ (BOOL)fwIsScreenResolution:(CGSize)resolution
+{
+    return CGSizeEqualToSize(resolution, [self fwScreenResolution]);
 }
 
 + (BOOL)fwIsScreen35
 {
-    return [self fwInnerIsScreenWidth:320 height:480];
+    return [self fwIsScreenSize:CGSizeMake(320, 480)];
 }
 
 + (BOOL)fwIsScreen40
 {
-    return [self fwInnerIsScreenWidth:320 height:568];
+    return [self fwIsScreenSize:CGSizeMake(320, 568)];
 }
 
 + (BOOL)fwIsScreen47
 {
-    return [self fwInnerIsScreenWidth:375 height:667];
+    return [self fwIsScreenSize:CGSizeMake(375, 667)];
 }
 
 + (BOOL)fwIsScreen55
 {
-    return [self fwInnerIsScreenWidth:414 height:736];
+    return [self fwIsScreenSize:CGSizeMake(414, 736)];
+}
+
++ (BOOL)fwIsScreen58
+{
+    return [self fwIsScreenSize:CGSizeMake(375, 812)];
+}
+
++ (BOOL)fwIsScreen61
+{
+    return [self fwIsScreenResolution:CGSizeMake(828, 1792)];
+}
+
++ (BOOL)fwIsScreen65
+{
+    return [self fwIsScreenResolution:CGSizeMake(1242, 2688)];
 }
 
 + (BOOL)fwIsScreenX
 {
-    return [self fwInnerIsScreenWidth:375 height:812];
+    return [self fwIsScreenSize:CGSizeMake(375, 812)] || [self fwIsScreenSize:CGSizeMake(414, 896)];
 }
 
 + (CGFloat)fwStatusBarHeight

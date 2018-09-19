@@ -7,8 +7,7 @@
 //
 
 #import "UITextView+FWPlaceholder.h"
-#import "NSObject+FWNotification.h"
-#import "NSObject+FWKvo.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 @implementation UITextView (FWPlaceholder)

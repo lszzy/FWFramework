@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 - (void)fwShowAlertWithTitle:(NSString *)title
                      message:(NSString *)message
                       cancel:(NSString *)cancel
-                 cancelBlock:(void (^)())cancelBlock;
+                 cancelBlock:(void (^)(void))cancelBlock;
 
 /**
  *  显示警告框(详细版)
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                       cancel:(NSString *)cancel
                      actions:(NSArray<NSString *> *)actions
                  actionBlock:(void (^)(NSInteger index))actionBlock
-                 cancelBlock:(void (^)())cancelBlock
+                 cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority;
 
 /**
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                        message:(NSString *)message
                         cancel:(NSString *)cancel
                        confirm:(NSString *)confirm
-                  confirmBlock:(void (^)())confirmBlock;
+                  confirmBlock:(void (^)(void))confirmBlock;
 
 /**
  *  显示确认框(详细版)
@@ -87,8 +87,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                        message:(NSString *)message
                         cancel:(NSString *)cancel
                        confirm:(NSString *)confirm
-                  confirmBlock:(void (^)())confirmBlock
-                   cancelBlock:(void (^)())cancelBlock
+                  confirmBlock:(void (^)(void))confirmBlock
+                   cancelBlock:(void (^)(void))cancelBlock
                       priority:(FWAlertPriority)priority;
 
 /**
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                       confirm:(NSString *)confirm
                   promptBlock:(void (^)(UITextField *textField))promptBlock
                  confirmBlock:(void (^)(NSString *text))confirmBlock
-                  cancelBlock:(void (^)())cancelBlock
+                  cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority;
 
 #pragma mark - Sheet
@@ -156,7 +156,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                       cancel:(NSString *)cancel
                      actions:(NSArray<NSString *> *)actions
                  actionBlock:(void (^)(NSInteger index))actionBlock
-                 cancelBlock:(void (^)())cancelBlock
+                 cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority;
 
 @end

@@ -29,9 +29,9 @@
 @property (nonatomic, assign) BOOL fwDragVertical;
 
 // 开始拖动回调
-@property (nonatomic, copy) void (^fwDragStartedBlock)();
+@property (nonatomic, copy) void (^fwDragStartedBlock)(void);
 
 // 结束拖动回调
-@property (nonatomic, copy) void (^fwDragEndedBlock)();
+@property (nonatomic, copy) void (^fwDragEndedBlock)(void);
 
 @end
