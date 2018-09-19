@@ -30,41 +30,45 @@
 #define FWScreenResolution \
     CGSizeMake( [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale )
 
-// 判断屏幕英寸
-#define FWIsScreenInch_( x, y ) \
-    (CGSizeEqualToSize(CGSizeMake(x, y), [UIScreen mainScreen].bounds.size) ? YES : NO)
+// 判断屏幕尺寸
+#define FWIsScreenSize( width, height ) \
+    CGSizeEqualToSize(CGSizeMake(width, height), [UIScreen mainScreen].bounds.size)
+
+// 判断屏幕分辨率
+#define FWIsScreenResolution( width, height ) \
+    CGSizeEqualToSize(CGSizeMake(width, height), FWScreenResolution)
 
 // 是否是3.5英寸屏幕
 #define FWIsScreen35 \
-    FWIsScreenInch_( 320, 480 )
+    FWIsScreenSize( 320, 480 )
 
 // 是否是4.0英寸屏幕
 #define FWIsScreen40 \
-    FWIsScreenInch_( 320, 568 )
+    FWIsScreenSize( 320, 568 )
 
 // 是否是4.7英寸屏幕
 #define FWIsScreen47 \
-    FWIsScreenInch_( 375, 667 )
+    FWIsScreenSize( 375, 667 )
 
 // 是否是5.5英寸屏幕
 #define FWIsScreen55 \
-    FWIsScreenInch_( 414, 736 )
+    FWIsScreenSize( 414, 736 )
 
 // 是否是5.8英寸屏幕
 #define FWIsScreen58 \
-    FWIsScreenInch_( 375, 812 )
+    FWIsScreenSize( 375, 812 )
 
 // 是否是6.1英寸屏幕
 #define FWIsScreen61 \
-    FWIsScreenInch_( 375, 812 )
+    FWIsScreenResolution( 828, 1792 )
 
 // 是否是6.5英寸屏幕
 #define FWIsScreen65 \
-    FWIsScreenInch_( 375, 812 )
+    FWIsScreenResolution( 1242, 2688 )
 
 // 是否是iPhoneX系列全面屏幕
 #define FWIsScreenX \
-    (FWIsScreenInch_( 375, 812 ) || FWIsScreenInch_( 414, 896 ))
+    (FWIsScreenSize( 375, 812 ) || FWIsScreenSize( 414, 896 ))
 
 // 状态栏高度
 #define FWStatusBarHeight (FWIsScreenX ? 44.0 : 20.0)
@@ -92,6 +96,12 @@
 // 屏幕分辨率
 + (CGSize)fwScreenResolution;
 
+// 是否是指定尺寸屏幕
++ (BOOL)fwIsScreenSize:(CGSize)size;
+
+// 是否是指定分辨率屏幕
++ (BOOL)fwIsScreenResolution:(CGSize)resolution;
+
 // 是否是3.5英寸屏幕
 + (BOOL)fwIsScreen35;
 
@@ -104,7 +114,16 @@
 // 是否是5.5英寸屏幕
 + (BOOL)fwIsScreen55;
 
-// 是否是5.8英寸iPhoneX屏幕
+// 是否是5.8英寸屏幕
++ (BOOL)fwIsScreen58;
+
+// 是否是6.1英寸屏幕
++ (BOOL)fwIsScreen61;
+
+// 是否是6.5英寸屏幕
++ (BOOL)fwIsScreen65;
+
+// 是否是iPhoneX系列全面屏幕
 + (BOOL)fwIsScreenX;
 
 // 状态栏高度，与是否隐藏无关

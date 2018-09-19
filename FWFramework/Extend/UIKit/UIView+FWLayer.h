@@ -13,11 +13,11 @@
 #pragma mark - Effect
 
 /**
- *  设置毛玻璃效果，iOS8使用UIVisualEffectView，iOS7使用UIToolbar实现
+ *  设置毛玻璃效果，使用UIVisualEffectView
  *
- *  @param style 传UIBlurEffectStyle对应整数值即可兼容iOS7
+ *  @param style 毛玻璃效果样式
  */
-- (void)fwSetBlurEffect:(NSInteger)style;
+- (void)fwSetBlurEffect:(UIBlurEffectStyle)style;
 
 #pragma mark - Shadow
 
@@ -75,13 +75,5 @@
                 gradientBlock:(void (^)(CALayer *layer))gradientBlock
                   strokeColor:(UIColor *)strokeColor
                   strokeWidth:(CGFloat)strokeWidth;
-
-#pragma mark - Snapshot
-
-// 图片截图
-- (UIImage *)fwSnapshotImage;
-
-// Pdf截图
-- (NSData *)fwSnapshotPdf;
 
 @end

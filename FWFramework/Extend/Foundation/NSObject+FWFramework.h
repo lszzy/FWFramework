@@ -8,6 +8,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSObject+FWBlock.h"
 #import "NSObject+FWRuntime.h"
 #import "NSObject+FWSafeType.h"
 

@@ -69,22 +69,22 @@
     objc_setAssociatedObject(self, @selector(fwDragHorizontal), [NSNumber numberWithBool:fwDragHorizontal], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void (^)())fwDragStartedBlock
+- (void (^)(void))fwDragStartedBlock
 {
     return objc_getAssociatedObject(self, @selector(fwDragStartedBlock));
 }
 
-- (void)setFwDragStartedBlock:(void (^)())fwDragStartedBlock
+- (void)setFwDragStartedBlock:(void (^)(void))fwDragStartedBlock
 {
     objc_setAssociatedObject(self, @selector(fwDragStartedBlock), fwDragStartedBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (void (^)())fwDragEndedBlock
+- (void (^)(void))fwDragEndedBlock
 {
     return objc_getAssociatedObject(self, @selector(fwDragEndedBlock));
 }
 
-- (void)setFwDragEndedBlock:(void (^)())fwDragEndedBlock
+- (void)setFwDragEndedBlock:(void (^)(void))fwDragEndedBlock
 {
     objc_setAssociatedObject(self, @selector(fwDragEndedBlock), fwDragEndedBlock, OBJC_ASSOCIATION_COPY);
 }

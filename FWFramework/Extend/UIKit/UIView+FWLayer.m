@@ -14,68 +14,22 @@
 
 #pragma mark - Effect
 
-- (void)fwSetBlurEffect:(NSInteger)style
+- (void)fwSetBlurEffect:(UIBlurEffectStyle)style
 {
-    // 根据是否存在UIBlurEffect进行兼容
-    BOOL hasBlurEffect = NSClassFromString(@"UIBlurEffect") != NULL;
-    
     // 移除旧毛玻璃视图
-    Class effectClass = hasBlurEffect ? [UIVisualEffectView class] : [UIToolbar class];
     for (UIView *subview in self.subviews) {
-        if ([subview isKindOfClass:effectClass]) {
+        if ([subview isKindOfClass:[UIVisualEffectView class]]) {
             [subview removeFromSuperview];
         }
     }
     
-    // 设置新毛玻璃效果
-    if (hasBlurEffect) {
-        // 转化参数，无效为-1
-        NSInteger effectStyle = -1;
-        switch (style) {
-            case UIBlurEffectStyleExtraLight:
-                effectStyle = UIBlurEffectStyleExtraLight;
-                break;
-            case UIBlurEffectStyleLight:
-                effectStyle = UIBlurEffectStyleLight;
-                break;
-            case UIBlurEffectStyleDark:
-                effectStyle = UIBlurEffectStyleDark;
-                break;
-            default:
-                break;
-        }
-        
-        if (effectStyle > -1) {
-            UIBlurEffect *effect = [UIBlurEffect effectWithStyle:(UIBlurEffectStyle)effectStyle];
-            UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-            [effectView fwSetAutoLayout:YES];
-            [self addSubview:effectView];
-            [effectView fwPinEdgesToSuperview];
-        }
-    } else {
-        // 转化参数，无效为-1
-        NSInteger barStyle = -1;
-        switch (style) {
-            case 0:
-                barStyle = UIBarStyleDefault;
-                break;
-            case 1:
-                barStyle = UIBarStyleDefault;
-                break;
-            case 2:
-                barStyle = UIBarStyleBlack;
-                break;
-            default:
-                break;
-        }
-        
-        if (barStyle > -1) {
-            UIToolbar *toolbar = [UIToolbar fwAutoLayoutView];
-            toolbar.barStyle = (UIBarStyle)barStyle;
-            [toolbar fwSetAutoLayout:YES];
-            [self addSubview:toolbar];
-            [toolbar fwPinEdgesToSuperview];
-        }
+    // 设置新毛玻璃效果，清空为-1
+    if (((NSInteger)style) > -1) {
+        UIBlurEffect *effect = [UIBlurEffect effectWithStyle:style];
+        UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+        [effectView fwSetAutoLayout:YES];
+        [self addSubview:effectView];
+        [effectView fwPinEdgesToSuperview];
     }
 }
 
@@ -138,7 +92,7 @@
     // 计算开始和结束点
     CGFloat startX, startY, endX, endY;
     switch (startEdge) {
-            // 从左到右
+        // 从左到右
         case UIRectEdgeLeft: {
             startX = CGRectGetMinX(rect);
             startY = CGRectGetMidY(rect);
@@ -146,7 +100,7 @@
             endY = CGRectGetMidY(rect);
             break;
         }
-            // 从下到上
+        // 从下到上
         case UIRectEdgeBottom: {
             startX = CGRectGetMidX(rect);
             startY = CGRectGetMaxY(rect);
@@ -154,7 +108,7 @@
             endY = CGRectGetMinY(rect);
             break;
         }
-            // 从右到左
+        // 从右到左
         case UIRectEdgeRight: {
             startX = CGRectGetMaxX(rect);
             startY = CGRectGetMidY(rect);
@@ -162,7 +116,7 @@
             endY = CGRectGetMidY(rect);
             break;
         }
-            // 从上到下
+        // 从上到下
         default: {
             startX = CGRectGetMidX(rect);
             startY = CGRectGetMinY(rect);
@@ -277,38 +231,6 @@
 
     // 可用mask实现strokeEnd动画
     return gradientLayer;
-}
-
-#pragma mark - Snapshot
-
-- (UIImage *)fwSnapshotImage
-{
-    UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0);
-    // iOS7+：是否更新屏幕后再截图，效率高
-    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:NO];
-    // iOS6+：截取当前状态，效率低
-    // [self.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return snapshot;
-}
-
-- (NSData *)fwSnapshotPdf
-{
-    CGRect bounds = self.bounds;
-    NSMutableData *data = [NSMutableData data];
-    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
-    CGContextRef context = CGPDFContextCreate(consumer, &bounds, NULL);
-    CGDataConsumerRelease(consumer);
-    if (!context) return nil;
-    CGPDFContextBeginPage(context, NULL);
-    CGContextTranslateCTM(context, 0, bounds.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    [self.layer renderInContext:context];
-    CGPDFContextEndPage(context);
-    CGPDFContextClose(context);
-    CGContextRelease(context);
-    return data;
 }
 
 @end

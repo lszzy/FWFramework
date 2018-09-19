@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "UIImage+FWGif.h"
 
 // 系统缓存方式加载UIImage
 #define FWImageName( name ) \
