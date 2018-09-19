@@ -12,10 +12,17 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.0' }
   spec.frameworks          = [ "Foundation", "UIKit" ]
   spec.library             = [ "sqlite3" ]
-  spec.default_subspecs    = 'FWFramework'
+  spec.default_subspecs    = 'FWFramework', "FWApplication"
 
   spec.subspec 'FWFramework' do |subspec|
-    subspec.source_files = 'FWFramework/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/**/*.h'
+    subspec.source_files = 'FWFramework/FWFramework/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/FWFramework/**/*.h'
+  end
+
+  spec.subspec 'FWApplication' do |subspec|
+    subspec.source_files = 'FWFramework/FWApplication/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/FWApplication/**/*.h'
+
+    subspec.dependency 'FWFramework/FWFramework'
   end
 end

@@ -66,17 +66,20 @@
     // 监听应用启动通知，自动执行框架单元测试
     [FWUnitTest sharedInstance].testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
         // 并行队列执行框架单元测试
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
+        dispatch_async(queue, ^{
             // 移除应用启动通知
             [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
             [FWUnitTest sharedInstance].testRunner = nil;
             
             // 执行框架单元测试
-            [[FWUnitTest sharedInstance] run];
-            
-            // 打印测试结果及插件
-            FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
-            FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
+            if ([FWUnitTest sharedInstance].testCases.count > 0) {
+                [[FWUnitTest sharedInstance] run];
+                
+                // 打印测试结果及插件
+                FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
+                FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
+            }
         });
     }];
 }
