@@ -32,7 +32,7 @@
                                            options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
     });
     
-    dispatch_queue_t queue = dispatch_queue_create("com.ocphp.FWFramework.FWFaceQueue", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWFaceQueue", NULL);
     dispatch_async(queue, ^{
         CIImage *image = aImage.CIImage;
         if (image == nil) {
