@@ -13,7 +13,25 @@
 
 + (NSString *)fwLocalizedLanguage
 {
+    NSString *localizedLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
+    if (localizedLanguage) {
+        return localizedLanguage;
+    }
     return [NSLocale preferredLanguages].firstObject;
+}
+
++ (void)fwSetLocalizedLanguage:(NSString *)language
+{
+    if (!language || language.length == 0) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWLocalizedLanguage"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AppleLanguages"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        return;
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"FWLocalizedLanguage"];
+    [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"AppleLanguages"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSString *)fwLocalizedString:(NSString *)key

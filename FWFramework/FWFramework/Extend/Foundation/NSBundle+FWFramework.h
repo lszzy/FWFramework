@@ -21,6 +21,9 @@
 // 读取本地化语言
 + (NSString *)fwLocalizedLanguage;
 
+// 设置本地化语言，设置为空时清空语言设置
++ (void)fwSetLocalizedLanguage:(NSString *)language;
+
 // 读取本地化字符串(默认Localizable.strings)
 + (NSString *)fwLocalizedString:(NSString *)key;
 
