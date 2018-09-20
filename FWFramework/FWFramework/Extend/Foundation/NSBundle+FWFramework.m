@@ -36,11 +36,11 @@ static const char FWInnerBundleKey = 0;
 {
     NSString *localizedLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
     if (localizedLanguage) {
-        [self fwApplyLanguage:localizedLanguage];
+        [self fwApplyLocalizedLanguage:localizedLanguage];
     }
 }
 
-+ (void)fwApplyLanguage:(NSString *)language
++ (void)fwApplyLocalizedLanguage:(NSString *)language
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -56,24 +56,25 @@ static const char FWInnerBundleKey = 0;
     NSString *localizedLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
     if (localizedLanguage) {
         return localizedLanguage;
+    } else {
+        return [NSLocale preferredLanguages].firstObject;
     }
-    return [NSLocale preferredLanguages].firstObject;
 }
 
 + (void)fwSetLocalizedLanguage:(NSString *)language
 {
-    if (!language || language.length == 0) {
+    if (!language) {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWLocalizedLanguage"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AppleLanguages"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        [self fwApplyLanguage:nil];
+        [self fwApplyLocalizedLanguage:nil];
         return;
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"FWLocalizedLanguage"];
-    [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"AppleLanguages"];
+    [[NSUserDefaults standardUserDefaults] setObject:@[language] forKey:@"AppleLanguages"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self fwApplyLanguage:language];
+    [self fwApplyLocalizedLanguage:language];
 }
 
 + (NSString *)fwLocalizedString:(NSString *)key

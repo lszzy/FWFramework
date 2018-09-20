@@ -18,10 +18,10 @@
  */
 @interface NSBundle (FWFramework)
 
-// 读取本地化语言
+// 读取本地化语言，未自定义时返回系统语言
 + (NSString *)fwLocalizedLanguage;
 
-// 设置本地化语言，设置为空时清空语言设置
+// 设置本地化语言，参数为空时重置系统语言。系统组件下次启动生效
 + (void)fwSetLocalizedLanguage:(NSString *)language;
 
 // 读取本地化字符串(默认Localizable.strings)
