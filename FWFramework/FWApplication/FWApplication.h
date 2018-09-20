@@ -1,6 +1,6 @@
 /*!
  @header     FWApplication.h
- @indexgroup FWApplication
+ @indexgroup FWFramework
  @brief      FWApplication头文件
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
@@ -9,20 +9,10 @@
 
 #import <Foundation/Foundation.h>
 
-#if __has_include(<FWApplication/FWApplication.h>)
-
-/*! @brief FWApplication版本号数字 */
-FOUNDATION_EXPORT double FWApplicationVersionNumber;
-/*! @brief FWApplication版本号字符 */
-FOUNDATION_EXPORT const unsigned char FWFWApplicationVersionString[];
-
-// Swift
-#if __has_include(<FWApplication/FWApplication-Swift.h>)
-#import <FWApplication/FWApplication-Swift.h>
-#endif
+#if __has_include(<FWFramework/FWApplication.h>)
 
 // Application
-#import <FWApplication/FWAppDelegate.h>
+#import <FWFramework/FWAppDelegate.h>
 
 #else
 
