@@ -32,14 +32,13 @@ static const char FWInnerBundleKey = 0;
 
 @implementation NSBundle (FWFramework)
 
-/*
 + (void)load
 {
     NSString *localizedLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
     if (localizedLanguage) {
         [self fwApplyLanguage:localizedLanguage];
     }
-}*/
+}
 
 + (void)fwApplyLanguage:(NSString *)language
 {
