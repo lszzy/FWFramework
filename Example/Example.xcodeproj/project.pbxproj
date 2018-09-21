@@ -11,6 +11,7 @@
 		2F06BE6520971483000F8587 /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE6420971483000F8587 /* SwiftController.swift */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
+		2F4CFA3D21551E8900203A37 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA3C21551E8900203A37 /* TestViewController.m */; };
 		2F51D7731E5C1330009FD40F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51D7721E5C1330009FD40F /* main.m */; };
 		2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51D78B1E5C2357009FD40F /* AppDelegate.m */; };
 		2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F51D7E71E5C2357009FD40F /* Assets.xcassets */; };
@@ -36,6 +37,8 @@
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2F30D89C2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2F4CFA3B21551E8900203A37 /* TestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TestViewController.h; path = Example/Classes/Controller/Home/TestViewController.h; sourceTree = SOURCE_ROOT; };
+		2F4CFA3C21551E8900203A37 /* TestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TestViewController.m; path = Example/Classes/Controller/Home/TestViewController.m; sourceTree = SOURCE_ROOT; };
 		2F4D6B661E6E539300F4A52D /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		2F51D76E1E5C1330009FD40F /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F51D7721E5C1330009FD40F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -85,6 +88,23 @@
 			children = (
 			);
 			path = Library;
+			sourceTree = "<group>";
+		};
+		2F4CFA3821551D9500203A37 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				2F4CFA3B21551E8900203A37 /* TestViewController.h */,
+				2F4CFA3C21551E8900203A37 /* TestViewController.m */,
+			);
+			name = Test;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		2F4CFA3A21551DBA00203A37 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		2F51D7651E5C1330009FD40F = {
@@ -151,6 +171,8 @@
 		2F51D78C1E5C2357009FD40F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2F4CFA3A21551DBA00203A37 /* Home */,
+				2F4CFA3821551D9500203A37 /* Test */,
 				2F06BE5D2097137C000F8587 /* ObjcController.h */,
 				2F06BE5E2097137C000F8587 /* ObjcController.m */,
 				2F06BE6420971483000F8587 /* SwiftController.swift */,
@@ -274,6 +296,7 @@
 				2F06BE6520971483000F8587 /* SwiftController.swift in Sources */,
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
+				2F4CFA3D21551E8900203A37 /* TestViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

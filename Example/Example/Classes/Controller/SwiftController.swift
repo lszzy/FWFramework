@@ -16,7 +16,7 @@ import FWFramework
         super.viewDidLoad()
         
         // FIXME: hotfix
-        self.title = String(describing: type(of: self))
+        self.navigationItem.title = String(describing: type(of: self))
         self.edgesForExtendedLayout = []
         self.view.backgroundColor = UIColor.white
         

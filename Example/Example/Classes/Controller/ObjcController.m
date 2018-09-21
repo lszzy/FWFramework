@@ -23,7 +23,7 @@
     [super viewDidLoad];
     
     // FIXME: hotfix
-    self.title = NSStringFromClass(self.class);
+    self.navigationItem.title = NSStringFromClass(self.class);
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];
     
