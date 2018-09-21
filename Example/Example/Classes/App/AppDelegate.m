@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ObjcController.h"
+#import "TestViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,10 +20,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     
-    UIViewController *viewController = [[ObjcController alloc] init];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    self.window.rootViewController = navigationController;
-    
+    self.window.rootViewController = [self tabBarController];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -45,6 +43,19 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     
+}
+
+- (UITabBarController *)tabBarController
+{
+    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:[ObjcController new]];
+    homeNav.tabBarItem.title = @"首页";
+    
+    UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:[TestViewController new]];
+    testNav.tabBarItem.title = @"测试";
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.viewControllers = @[homeNav, testNav];
+    return tabBarController;
 }
 
 @end
