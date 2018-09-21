@@ -282,6 +282,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F4CFA2F21551B9E00203A37 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
 		2F72837B2152210E00F71DC5 /* FWFramework */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,6 +475,7 @@
 			children = (
 				2F7284042152210E00F71DC5 /* FWApplication.h */,
 				2F7284012152210E00F71DC5 /* App */,
+				2F4CFA2F21551B9E00203A37 /* Library */,
 				2F7284082152210E00F71DC5 /* Service */,
 				2F7284052152210E00F71DC5 /* Controller */,
 				2F7284062152210E00F71DC5 /* Model */,
