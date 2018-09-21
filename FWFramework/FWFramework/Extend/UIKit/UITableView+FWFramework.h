@@ -7,15 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UITableView+FWEstimatedHeight.h"
 
 // UITableView分类(Plain有悬停，Group无悬停)
 @interface UITableView (FWFramework)
-
-// 全体禁用高度估算(iOS11默认启用后，先cell再height，会导致文字不显示)
-+ (void)fwEstimatedHeightZero;
-
-// 单独禁用高度估算，同上
-- (void)fwEstimatedHeightZero;
 
 // 设置Plain样式sectionHeader和Footer跟随滚动(不悬停)，在scrollViewDidScroll:中调用即可
 - (void)fwFollowWithHeader:(CGFloat)headerHeight footer:(CGFloat)footerHeight;

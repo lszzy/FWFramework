@@ -7,11 +7,11 @@
  @updated    2018/9/21
  */
 
-#import <UIKit/UIKit.h>
+#import "BaseTableViewController.h"
 
 /*!
  @brief TestViewController
  */
-@interface TestViewController : UIViewController
+@interface TestViewController : BaseTableViewController
 
 @end

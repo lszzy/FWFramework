@@ -9,6 +9,9 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
+#import <FWFramework/FWFramework.h>
 #import "SwiftHeader.h"
+#import "AppConfig.h"
+#import "AppStandard.h"
 
 #endif /* PrefixHeader_pch */

@@ -11,20 +11,6 @@
 
 @implementation UITableView (FWFramework)
 
-+ (void)fwEstimatedHeightZero
-{
-    [UITableView appearance].estimatedRowHeight = 0.f;
-    [UITableView appearance].estimatedSectionHeaderHeight = 0.f;
-    [UITableView appearance].estimatedSectionFooterHeight = 0.f;
-}
-
-- (void)fwEstimatedHeightZero
-{
-    self.estimatedRowHeight = 0.f;
-    self.estimatedSectionHeaderHeight = 0.f;
-    self.estimatedSectionFooterHeight = 0.f;
-}
-
 - (void)fwFollowWithHeader:(CGFloat)headerHeight footer:(CGFloat)footerHeight
 {
     CGFloat offsetY = self.contentOffset.y;
