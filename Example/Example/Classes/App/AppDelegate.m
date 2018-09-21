@@ -48,9 +48,11 @@
 - (UITabBarController *)tabBarController
 {
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:[ObjcController new]];
+    homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
     homeNav.tabBarItem.title = @"首页";
     
     UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:[TestViewController new]];
+    testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
     testNav.tabBarItem.title = @"测试";
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];

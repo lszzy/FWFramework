@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import FWFramework
 
 // MARK: - SwiftController
 @objc class SwiftController: UIViewController {

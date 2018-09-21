@@ -7,7 +7,6 @@
 //
 
 #import "ObjcController.h"
-#import <FWFramework/FWFramework.h>
 
 #pragma mark - ObjcController
 
