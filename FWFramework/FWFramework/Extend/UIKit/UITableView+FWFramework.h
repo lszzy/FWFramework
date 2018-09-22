@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UITableView+FWEstimatedHeight.h"
+#import "UITableView+FWTemplateLayout.h"
 
 // UITableView分类(Plain有悬停，Group无悬停)
 @interface UITableView (FWFramework)
