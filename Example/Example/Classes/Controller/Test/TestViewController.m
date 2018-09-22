@@ -20,6 +20,7 @@
     [self.dataList addObjectsFromArray:@[
                                        @[@"FWFramework", @[
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
+                                             @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
                                              ]],
                                        @[@"FWApplication", @[

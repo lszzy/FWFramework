@@ -15,6 +15,7 @@
 #import "UIView+FWBorder.h"
 #import "UIView+FWDrag.h"
 #import "UIView+FWFrame.h"
+#import "UIView+FWIndicator.h"
 #import "UIView+FWLayer.h"
 
 /*!
