@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2F4CFA48215523D800203A37 /* UITableView+FWTemplateLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4CFA46215523D800203A37 /* UITableView+FWTemplateLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F4CFA49215523D800203A37 /* UITableView+FWTemplateLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA47215523D800203A37 /* UITableView+FWTemplateLayout.m */; };
+		2F593FD5215609380022137F /* UIView+FWIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F593FD3215609380022137F /* UIView+FWIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F593FD6215609380022137F /* UIView+FWIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FD4215609380022137F /* UIView+FWIndicator.m */; };
 		2F7284732152210E00F71DC5 /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283E92152210E00F71DC5 /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7284742152210E00F71DC5 /* FWMutableDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283EC2152210E00F71DC5 /* FWMutableDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F7284752152210E00F71DC5 /* FWMutableArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283ED2152210E00F71DC5 /* FWMutableArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -143,6 +145,8 @@
 /* Begin PBXFileReference section */
 		2F4CFA46215523D800203A37 /* UITableView+FWTemplateLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWTemplateLayout.h"; sourceTree = "<group>"; };
 		2F4CFA47215523D800203A37 /* UITableView+FWTemplateLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWTemplateLayout.m"; sourceTree = "<group>"; };
+		2F593FD3215609380022137F /* UIView+FWIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWIndicator.h"; sourceTree = "<group>"; };
+		2F593FD4215609380022137F /* UIView+FWIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWIndicator.m"; sourceTree = "<group>"; };
 		2F7283E92152210E00F71DC5 /* FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 		2F7283EC2152210E00F71DC5 /* FWMutableDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMutableDictionary.h; sourceTree = "<group>"; };
 		2F7283ED2152210E00F71DC5 /* FWMutableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMutableArray.h; sourceTree = "<group>"; };
@@ -373,6 +377,8 @@
 				2F7284F32152287500F71DC5 /* UIView+FWFrame.m */,
 				2F7284F12152287500F71DC5 /* UIView+FWFramework.h */,
 				2F7285002152287600F71DC5 /* UIView+FWFramework.m */,
+				2F593FD3215609380022137F /* UIView+FWIndicator.h */,
+				2F593FD4215609380022137F /* UIView+FWIndicator.m */,
 				2F7284DF2152287400F71DC5 /* UIView+FWLayer.h */,
 				2F7284EF2152287500F71DC5 /* UIView+FWLayer.m */,
 				2F7285032152287700F71DC5 /* UIViewController+FWAlert.h */,
@@ -560,6 +566,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F593FD5215609380022137F /* UIView+FWIndicator.h in Headers */,
 				2F4CFA48215523D800203A37 /* UITableView+FWTemplateLayout.h in Headers */,
 				2F7284B52152283100F71DC5 /* NSString+FWFramework.h in Headers */,
 				2F7285532152287900F71DC5 /* UIApplication+FWFramework.h in Headers */,
@@ -729,6 +736,7 @@
 				2F4CFA49215523D800203A37 /* UITableView+FWTemplateLayout.m in Sources */,
 				2F7284B92152283100F71DC5 /* NSString+FWEncode.m in Sources */,
 				2F7284BF2152283100F71DC5 /* NSNull+FWFramework.m in Sources */,
+				2F593FD6215609380022137F /* UIView+FWIndicator.m in Sources */,
 				2F72853C2152287900F71DC5 /* UITextField+FWFramework.m in Sources */,
 				2F72854C2152287900F71DC5 /* UIColor+FWFramework.m in Sources */,
 				2F7284CB2152283100F71DC5 /* NSArray+FWFramework.m in Sources */,
