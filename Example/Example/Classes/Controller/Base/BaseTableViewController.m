@@ -52,8 +52,8 @@
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     // 默认表格底部为空
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    // 默认禁用估算高度
-    [tableView fwSetEstimatedHeight:NO];
+    // 默认启用估算高度
+    [tableView fwSetTemplateLayout:YES];
     return tableView;
 }
 
@@ -125,6 +125,16 @@
         [self renderCellData:cell indexPath:indexPath];
         return cell;
     }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [tableView fwTemplateHeightAtIndexPath:indexPath];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView fwSetTemplateHeight:cell.fwHeight atIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

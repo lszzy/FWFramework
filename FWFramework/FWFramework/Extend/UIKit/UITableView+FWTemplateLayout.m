@@ -1,20 +1,20 @@
 //
-//  UITableView+FWEstimatedHeight.m
+//  UITableView+FWTemplateLayout.m
 //  FWFramework
 //
 //  Created by wuyong on 2017/4/24.
 //  Copyright © 2017年 ocphp.com. All rights reserved.
 //
 
-#import "UITableView+FWEstimatedHeight.h"
+#import "UITableView+FWTemplateLayout.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
-#pragma mark - UITableView+FWEstimatedHeight
+#pragma mark - UITableView+FWTemplateLayout
 
-@implementation UITableView (FWEstimatedHeight)
+@implementation UITableView (FWTemplateLayout)
 
-+ (void)fwSetEstimatedHeight:(BOOL)enabled
++ (void)fwSetTemplateLayout:(BOOL)enabled
 {
     if (enabled) {
         [UITableView appearance].estimatedRowHeight = UITableViewAutomaticDimension;
@@ -30,7 +30,7 @@
     }
 }
 
-- (void)fwSetEstimatedHeight:(BOOL)enabled
+- (void)fwSetTemplateLayout:(BOOL)enabled
 {
     if (enabled) {
         self.rowHeight = UITableViewAutomaticDimension;
@@ -46,9 +46,9 @@
     }
 }
 
-- (CGFloat)fwEstimatedHeightAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)fwTemplateHeightAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSNumber *height = [self.fwInnerEstimatedHeightCache objectForKey:indexPath];
+    NSNumber *height = [self.fwInnerTemplateHeightCache objectForKey:indexPath];
     if (height) {
         return height.floatValue;
     } else {
@@ -56,19 +56,21 @@
     }
 }
 
-- (void)fwSetEstimatedHeight:(CGFloat)height atIndexPath:(NSIndexPath *)indexPath
+- (void)fwSetTemplateHeight:(CGFloat)height atIndexPath:(NSIndexPath *)indexPath
 {
     if (height > 0) {
-        [self.fwInnerEstimatedHeightCache setObject:@(height) forKey:indexPath];
+        [self.fwInnerTemplateHeightCache setObject:@(height) forKey:indexPath];
+    } else {
+        [self.fwInnerTemplateHeightCache removeObjectForKey:indexPath];
     }
 }
 
-- (void)fwClearEstimatedHeightCache
+- (void)fwClearTemplateHeightCache
 {
-    [self.fwInnerEstimatedHeightCache removeAllObjects];
+    [self.fwInnerTemplateHeightCache removeAllObjects];
 }
 
-- (NSMutableDictionary *)fwInnerEstimatedHeightCache
+- (NSMutableDictionary *)fwInnerTemplateHeightCache
 {
     NSMutableDictionary *cache = objc_getAssociatedObject(self, _cmd);
     if (!cache) {
@@ -80,15 +82,15 @@
 
 @end
 
-#pragma mark - UIView+FWEstimatedHeight
+#pragma mark - UIView+FWTemplateLayout
 
-@interface NSLayoutConstraint (FWEstimatedHeight)
+@interface NSLayoutConstraint (FWTemplateLayout)
 
 @property (nonatomic, assign) CGFloat fwOriginalConstant;
 
 @end
 
-@implementation NSLayoutConstraint (FWEstimatedHeight)
+@implementation NSLayoutConstraint (FWTemplateLayout)
 
 - (CGFloat)fwOriginalConstant
 {
@@ -102,7 +104,7 @@
 
 @end
 
-@implementation UIView (FWEstimatedHeight)
+@implementation UIView (FWTemplateLayout)
 
 + (void)load
 {
@@ -175,7 +177,7 @@
     }
 }
 
-- (CGFloat)fwEstimatedHeightWithWidth:(CGFloat)width
+- (CGFloat)fwTemplateHeightWithWidth:(CGFloat)width
 {
     CGFloat contentViewWidth = width;
     CGFloat fittingHeight = 0;

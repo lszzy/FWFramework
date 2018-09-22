@@ -125,7 +125,6 @@
 - (UITableView *)renderTableView
 {
     UITableView *tableView = [super renderTableView];
-    [tableView fwSetEstimatedHeight:YES];
     [tableView registerClass:[TestTableLayoutCell class] forCellReuseIdentifier:@"Cell"];
     return tableView;
 }
@@ -137,16 +136,6 @@
     TestTableLayoutObject *object = [self.dataList objectAtIndex:indexPath.row];
     cell.object = object;
     return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return [tableView fwEstimatedHeightAtIndexPath:indexPath];
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView fwSetEstimatedHeight:cell.fwHeight atIndexPath:indexPath];
 }
 
 - (TestTableLayoutObject *)randomObject
