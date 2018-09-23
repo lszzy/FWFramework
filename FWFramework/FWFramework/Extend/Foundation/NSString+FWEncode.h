@@ -1,0 +1,108 @@
+/*!
+ @header     NSString+FWEncode.h
+ @indexgroup FWFramework
+ @brief      NSString+FWEncode
+ @author     wuyong
+ @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
+ @updated    2018/9/18
+ */
+
+#import <Foundation/Foundation.h>
+
+#pragma mark - NSString+FWEncode
+
+/**
+ *  字符串编码扩展
+ */
+@interface NSString (FWEncode)
+
+#pragma mark - Json
+
+/*!
+ @brief Foundation对象编码为json字符串
+ 
+ @param object 编码对象
+ @return json字符串
+ */
++ (NSString *)fwJsonEncode:(id)object;
+
+/**
+ *  json字符串解码为Foundation对象
+ *
+ *  @return Foundation对象
+ */
+- (id)fwJsonDecode;
+
+#pragma mark - Unicode
+
+/**
+ *  计算长度，中文为1，英文为0.5
+ */
+- (NSUInteger)fwUnicodeLength;
+
+/**
+ *  截取字符串，中文为1，英文为0.5
+ *
+ *  @param length 截取长度
+ */
+- (NSString *)fwUnicodeSubstring:(NSUInteger)length;
+
+/**
+ *  Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
+ *
+ *  @return Unicode字符串
+ */
+- (NSString *)fwUnicodeEncode;
+
+/**
+ *  Unicode中文解码，将Unicode字符串(如\u7E8C)转换成中文
+ *
+ *  @return 中文字符串
+ */
+- (NSString *)fwUnicodeDecode;
+
+#pragma mark - Base64
+
+/**
+ *  base64编码
+ *
+ *  @return base64字符串
+ */
+- (NSString *)fwBase64Encode;
+
+/**
+ *  base64解码
+ *
+ *  @return 原字符串
+ */
+- (NSString *)fwBase64Decode;
+
+#pragma mark - Url
+
+/**
+ *  url编码，适用于整个url编码
+ *
+ *  @return url编码地址
+ */
+- (NSString *)fwUrlEncode;
+
+/**
+ *  url解码
+ *
+ *  @return 原url地址
+ */
+- (NSString *)fwUrlDecode;
+
+#pragma mark - Query
+
+/**
+ * 字典编码为url参数字符串
+ */
++ (NSString *)fwQueryEncode:(NSDictionary *)dictionary;
+
+/**
+ * url参数字符串解码为字典
+ */
+- (NSDictionary *)fwQueryDecode;
+
+@end

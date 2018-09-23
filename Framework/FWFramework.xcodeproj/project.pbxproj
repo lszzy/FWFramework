@@ -1,0 +1,995 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2F4CFA48215523D800203A37 /* UITableView+FWTemplateLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4CFA46215523D800203A37 /* UITableView+FWTemplateLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F4CFA49215523D800203A37 /* UITableView+FWTemplateLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA47215523D800203A37 /* UITableView+FWTemplateLayout.m */; };
+		2F593FD5215609380022137F /* UIView+FWIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F593FD3215609380022137F /* UIView+FWIndicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F593FD6215609380022137F /* UIView+FWIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FD4215609380022137F /* UIView+FWIndicator.m */; };
+		2F7284732152210E00F71DC5 /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283E92152210E00F71DC5 /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284742152210E00F71DC5 /* FWMutableDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283EC2152210E00F71DC5 /* FWMutableDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284752152210E00F71DC5 /* FWMutableArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283ED2152210E00F71DC5 /* FWMutableArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284762152210E00F71DC5 /* FWMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283EE2152210E00F71DC5 /* FWMutableDictionary.m */; };
+		2F7284772152210E00F71DC5 /* FWMutableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283EF2152210E00F71DC5 /* FWMutableArray.m */; };
+		2F7284782152210E00F71DC5 /* FWProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283F12152210E00F71DC5 /* FWProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284792152210E00F71DC5 /* FWPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283F22152210E00F71DC5 /* FWPromise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72847A2152210E00F71DC5 /* FWTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283F32152210E00F71DC5 /* FWTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72847B2152210E00F71DC5 /* FWLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283F42152210E00F71DC5 /* FWLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72847C2152210E00F71DC5 /* FWPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283F52152210E00F71DC5 /* FWPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72847D2152210E00F71DC5 /* FWAspect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283F62152210E00F71DC5 /* FWAspect.m */; };
+		2F72847E2152210E00F71DC5 /* FWMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283F72152210E00F71DC5 /* FWMessage.m */; };
+		2F72847F2152210E00F71DC5 /* FWProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283F82152210E00F71DC5 /* FWProxy.m */; };
+		2F7284802152210E00F71DC5 /* FWPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283F92152210E00F71DC5 /* FWPromise.m */; };
+		2F7284812152210E00F71DC5 /* FWLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283FA2152210E00F71DC5 /* FWLog.m */; };
+		2F7284822152210E00F71DC5 /* FWTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283FB2152210E00F71DC5 /* FWTest.m */; };
+		2F7284832152210E00F71DC5 /* FWMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283FC2152210E00F71DC5 /* FWMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284842152210E00F71DC5 /* FWAspect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283FD2152210E00F71DC5 /* FWAspect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284852152210E00F71DC5 /* FWPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7283FE2152210E00F71DC5 /* FWPlugin.m */; };
+		2F7284862152210E00F71DC5 /* FWMacro.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7283FF2152210E00F71DC5 /* FWMacro.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284872152210E00F71DC5 /* FWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284022152210E00F71DC5 /* FWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284882152210E00F71DC5 /* FWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284032152210E00F71DC5 /* FWAppDelegate.m */; };
+		2F7284892152210E00F71DC5 /* FWApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284042152210E00F71DC5 /* FWApplication.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284B22152283100F71DC5 /* NSData+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72848B2152282E00F71DC5 /* NSData+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284B32152283100F71DC5 /* NSString+FWFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F72848C2152282E00F71DC5 /* NSString+FWFormat.m */; };
+		2F7284B42152283100F71DC5 /* NSDate+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72848D2152282E00F71DC5 /* NSDate+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284B52152283100F71DC5 /* NSString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72848E2152282E00F71DC5 /* NSString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284B62152283100F71DC5 /* NSString+FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72848F2152282E00F71DC5 /* NSString+FWEncode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284B72152283100F71DC5 /* NSBundle+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284902152282E00F71DC5 /* NSBundle+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284B82152283100F71DC5 /* NSObject+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284912152282E00F71DC5 /* NSObject+FWFramework.m */; };
+		2F7284B92152283100F71DC5 /* NSString+FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284922152282E00F71DC5 /* NSString+FWEncode.m */; };
+		2F7284BA2152283100F71DC5 /* NSDictionary+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284932152282E00F71DC5 /* NSDictionary+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284BB2152283100F71DC5 /* NSFileManager+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284942152282E00F71DC5 /* NSFileManager+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284BC2152283100F71DC5 /* NSObject+FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284952152282E00F71DC5 /* NSObject+FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284BD2152283100F71DC5 /* NSBundle+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284962152282E00F71DC5 /* NSBundle+FWFramework.m */; };
+		2F7284BE2152283100F71DC5 /* NSString+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284972152282E00F71DC5 /* NSString+FWFramework.m */; };
+		2F7284BF2152283100F71DC5 /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284982152282F00F71DC5 /* NSNull+FWFramework.m */; };
+		2F7284C02152283100F71DC5 /* NSNumber+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284992152282F00F71DC5 /* NSNumber+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284C12152283100F71DC5 /* NSTimer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F72849A2152282F00F71DC5 /* NSTimer+FWFramework.m */; };
+		2F7284C22152283100F71DC5 /* NSUserDefaults+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72849B2152282F00F71DC5 /* NSUserDefaults+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284C32152283100F71DC5 /* NSString+FWEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72849C2152282F00F71DC5 /* NSString+FWEncrypt.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284C42152283100F71DC5 /* NSObject+FWSafeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72849D2152282F00F71DC5 /* NSObject+FWSafeType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284C52152283100F71DC5 /* NSThread+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72849E2152282F00F71DC5 /* NSThread+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284C62152283100F71DC5 /* NSUserDefaults+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F72849F2152282F00F71DC5 /* NSUserDefaults+FWFramework.m */; };
+		2F7284C72152283100F71DC5 /* Foundation+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284A02152282F00F71DC5 /* Foundation+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284C82152283100F71DC5 /* NSDictionary+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284A12152282F00F71DC5 /* NSDictionary+FWFramework.m */; };
+		2F7284C92152283100F71DC5 /* NSString+FWEncrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284A22152282F00F71DC5 /* NSString+FWEncrypt.m */; };
+		2F7284CA2152283100F71DC5 /* NSString+FWFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284A32152282F00F71DC5 /* NSString+FWFormat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284CB2152283100F71DC5 /* NSArray+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284A42152283000F71DC5 /* NSArray+FWFramework.m */; };
+		2F7284CC2152283100F71DC5 /* NSTimer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284A52152283000F71DC5 /* NSTimer+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284CD2152283100F71DC5 /* NSObject+FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284A62152283000F71DC5 /* NSObject+FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284CE2152283100F71DC5 /* NSObject+FWBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284A72152283000F71DC5 /* NSObject+FWBlock.m */; };
+		2F7284CF2152283100F71DC5 /* NSArray+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284A82152283000F71DC5 /* NSArray+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284D02152283100F71DC5 /* NSDate+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284A92152283000F71DC5 /* NSDate+FWFramework.m */; };
+		2F7284D12152283100F71DC5 /* NSData+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284AA2152283000F71DC5 /* NSData+FWFramework.m */; };
+		2F7284D22152283100F71DC5 /* NSThread+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284AB2152283000F71DC5 /* NSThread+FWFramework.m */; };
+		2F7284D32152283100F71DC5 /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284AC2152283000F71DC5 /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284D42152283100F71DC5 /* NSObject+FWSafeType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284AD2152283000F71DC5 /* NSObject+FWSafeType.m */; };
+		2F7284D52152283100F71DC5 /* NSNumber+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284AE2152283100F71DC5 /* NSNumber+FWFramework.m */; };
+		2F7284D62152283100F71DC5 /* NSObject+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284AF2152283100F71DC5 /* NSObject+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7284D72152283100F71DC5 /* NSObject+FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284B02152283100F71DC5 /* NSObject+FWRuntime.m */; };
+		2F7284D82152283100F71DC5 /* NSFileManager+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284B12152283100F71DC5 /* NSFileManager+FWFramework.m */; };
+		2F72851C2152287900F71DC5 /* UIColor+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284D92152287300F71DC5 /* UIColor+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72851D2152287900F71DC5 /* UIButton+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284DA2152287300F71DC5 /* UIButton+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72851E2152287900F71DC5 /* UIImage+FWGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284DB2152287300F71DC5 /* UIImage+FWGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72851F2152287900F71DC5 /* UINavigationController+FWTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284DC2152287300F71DC5 /* UINavigationController+FWTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285202152287900F71DC5 /* UINavigationController+FWWorkflow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284DD2152287300F71DC5 /* UINavigationController+FWWorkflow.m */; };
+		2F7285212152287900F71DC5 /* UIButton+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284DE2152287400F71DC5 /* UIButton+FWFramework.m */; };
+		2F7285222152287900F71DC5 /* UIView+FWLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284DF2152287400F71DC5 /* UIView+FWLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285232152287900F71DC5 /* UIView+FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284E02152287400F71DC5 /* UIView+FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285242152287900F71DC5 /* UITextView+FWPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284E12152287400F71DC5 /* UITextView+FWPlaceholder.m */; };
+		2F7285252152287900F71DC5 /* UITextView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284E22152287400F71DC5 /* UITextView+FWFramework.m */; };
+		2F7285262152287900F71DC5 /* UIView+FWBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284E32152287400F71DC5 /* UIView+FWBadge.m */; };
+		2F7285272152287900F71DC5 /* UIScrollView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284E42152287400F71DC5 /* UIScrollView+FWFramework.m */; };
+		2F7285282152287900F71DC5 /* UINavigationController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284E52152287400F71DC5 /* UINavigationController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285292152287900F71DC5 /* UINavigationController+FWWorkflow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284E62152287400F71DC5 /* UINavigationController+FWWorkflow.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72852A2152287900F71DC5 /* UIViewController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284E72152287400F71DC5 /* UIViewController+FWBar.m */; };
+		2F72852B2152287900F71DC5 /* UIView+FWAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284E82152287400F71DC5 /* UIView+FWAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72852C2152287900F71DC5 /* UIWindow+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284E92152287400F71DC5 /* UIWindow+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72852D2152287900F71DC5 /* UIScreen+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284EA2152287400F71DC5 /* UIScreen+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72852E2152287900F71DC5 /* UIKit+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284EB2152287500F71DC5 /* UIKit+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72852F2152287900F71DC5 /* UIScreen+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284EC2152287500F71DC5 /* UIScreen+FWFramework.m */; };
+		2F7285302152287900F71DC5 /* UIViewController+FWTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284ED2152287500F71DC5 /* UIViewController+FWTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285312152287900F71DC5 /* UIView+FWDrag.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284EE2152287500F71DC5 /* UIView+FWDrag.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285322152287900F71DC5 /* UIView+FWLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284EF2152287500F71DC5 /* UIView+FWLayer.m */; };
+		2F7285332152287900F71DC5 /* UIBezierPath+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F02152287500F71DC5 /* UIBezierPath+FWFramework.m */; };
+		2F7285342152287900F71DC5 /* UIView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284F12152287500F71DC5 /* UIView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285352152287900F71DC5 /* UIView+FWBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F22152287500F71DC5 /* UIView+FWBlock.m */; };
+		2F7285362152287900F71DC5 /* UIView+FWFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F32152287500F71DC5 /* UIView+FWFrame.m */; };
+		2F7285372152287900F71DC5 /* UITextField+FWKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F42152287500F71DC5 /* UITextField+FWKeyboard.m */; };
+		2F7285382152287900F71DC5 /* UIViewController+FWTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F52152287500F71DC5 /* UIViewController+FWTransition.m */; };
+		2F7285392152287900F71DC5 /* UIApplication+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F62152287500F71DC5 /* UIApplication+FWFramework.m */; };
+		2F72853A2152287900F71DC5 /* UIView+FWAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F72152287600F71DC5 /* UIView+FWAnimation.m */; };
+		2F72853B2152287900F71DC5 /* UIImage+FWGif.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F82152287600F71DC5 /* UIImage+FWGif.m */; };
+		2F72853C2152287900F71DC5 /* UITextField+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284F92152287600F71DC5 /* UITextField+FWFramework.m */; };
+		2F72853D2152287900F71DC5 /* UIFont+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284FA2152287600F71DC5 /* UIFont+FWFramework.m */; };
+		2F72853E2152287900F71DC5 /* UIView+FWDrag.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284FB2152287600F71DC5 /* UIView+FWDrag.m */; };
+		2F72853F2152287900F71DC5 /* UIWindow+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284FC2152287600F71DC5 /* UIWindow+FWFramework.m */; };
+		2F7285402152287900F71DC5 /* UIView+FWAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284FD2152287600F71DC5 /* UIView+FWAutoLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285412152287900F71DC5 /* UIView+FWBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7284FE2152287600F71DC5 /* UIView+FWBorder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285422152287900F71DC5 /* UIView+FWBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7284FF2152287600F71DC5 /* UIView+FWBorder.m */; };
+		2F7285432152287900F71DC5 /* UIView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285002152287600F71DC5 /* UIView+FWFramework.m */; };
+		2F7285442152287900F71DC5 /* UIDevice+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285012152287600F71DC5 /* UIDevice+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285452152287900F71DC5 /* UIViewController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285022152287700F71DC5 /* UIViewController+FWFramework.m */; };
+		2F7285462152287900F71DC5 /* UIViewController+FWAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285032152287700F71DC5 /* UIViewController+FWAlert.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285472152287900F71DC5 /* UIDevice+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285042152287700F71DC5 /* UIDevice+FWFramework.m */; };
+		2F7285482152287900F71DC5 /* UITextField+FWKeyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285052152287700F71DC5 /* UITextField+FWKeyboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285492152287900F71DC5 /* UIViewController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285062152287700F71DC5 /* UIViewController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72854A2152287900F71DC5 /* UINavigationController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285072152287700F71DC5 /* UINavigationController+FWFramework.m */; };
+		2F72854B2152287900F71DC5 /* UIImage+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285082152287700F71DC5 /* UIImage+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72854C2152287900F71DC5 /* UIColor+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285092152287700F71DC5 /* UIColor+FWFramework.m */; };
+		2F72854D2152287900F71DC5 /* UIView+FWAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F72850A2152287700F71DC5 /* UIView+FWAutoLayout.m */; };
+		2F72854E2152287900F71DC5 /* UIView+FWFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72850B2152287700F71DC5 /* UIView+FWFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72854F2152287900F71DC5 /* UITableView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F72850C2152287700F71DC5 /* UITableView+FWFramework.m */; };
+		2F7285502152287900F71DC5 /* UITextView+FWPlaceholder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72850D2152287800F71DC5 /* UITextView+FWPlaceholder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285512152287900F71DC5 /* UITextField+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72850E2152287800F71DC5 /* UITextField+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285522152287900F71DC5 /* UITableView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72850F2152287800F71DC5 /* UITableView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285532152287900F71DC5 /* UIApplication+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285102152287800F71DC5 /* UIApplication+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285542152287900F71DC5 /* UIFont+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285112152287800F71DC5 /* UIFont+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285552152287900F71DC5 /* UIScrollView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285122152287800F71DC5 /* UIScrollView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285562152287900F71DC5 /* UIViewController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285132152287800F71DC5 /* UIViewController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285572152287900F71DC5 /* UINavigationController+FWTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285142152287800F71DC5 /* UINavigationController+FWTransition.m */; };
+		2F7285582152287900F71DC5 /* UIBezierPath+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285152152287800F71DC5 /* UIBezierPath+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7285592152287900F71DC5 /* UIImage+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285162152287800F71DC5 /* UIImage+FWFramework.m */; };
+		2F72855A2152287900F71DC5 /* UITextView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7285172152287900F71DC5 /* UITextView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72855B2152287900F71DC5 /* UIViewController+FWAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285182152287900F71DC5 /* UIViewController+FWAlert.m */; };
+		2F72855C2152287900F71DC5 /* UIImageView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285192152287900F71DC5 /* UIImageView+FWFramework.m */; };
+		2F72855D2152287900F71DC5 /* UIImageView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72851A2152287900F71DC5 /* UIImageView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F72855E2152287900F71DC5 /* UIView+FWBadge.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72851B2152287900F71DC5 /* UIView+FWBadge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2F4CFA46215523D800203A37 /* UITableView+FWTemplateLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWTemplateLayout.h"; sourceTree = "<group>"; };
+		2F4CFA47215523D800203A37 /* UITableView+FWTemplateLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWTemplateLayout.m"; sourceTree = "<group>"; };
+		2F593FD3215609380022137F /* UIView+FWIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWIndicator.h"; sourceTree = "<group>"; };
+		2F593FD4215609380022137F /* UIView+FWIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWIndicator.m"; sourceTree = "<group>"; };
+		2F7283E92152210E00F71DC5 /* FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
+		2F7283EC2152210E00F71DC5 /* FWMutableDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMutableDictionary.h; sourceTree = "<group>"; };
+		2F7283ED2152210E00F71DC5 /* FWMutableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMutableArray.h; sourceTree = "<group>"; };
+		2F7283EE2152210E00F71DC5 /* FWMutableDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWMutableDictionary.m; sourceTree = "<group>"; };
+		2F7283EF2152210E00F71DC5 /* FWMutableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWMutableArray.m; sourceTree = "<group>"; };
+		2F7283F12152210E00F71DC5 /* FWProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWProxy.h; sourceTree = "<group>"; };
+		2F7283F22152210E00F71DC5 /* FWPromise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWPromise.h; sourceTree = "<group>"; };
+		2F7283F32152210E00F71DC5 /* FWTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWTest.h; sourceTree = "<group>"; };
+		2F7283F42152210E00F71DC5 /* FWLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWLog.h; sourceTree = "<group>"; };
+		2F7283F52152210E00F71DC5 /* FWPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWPlugin.h; sourceTree = "<group>"; };
+		2F7283F62152210E00F71DC5 /* FWAspect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAspect.m; sourceTree = "<group>"; };
+		2F7283F72152210E00F71DC5 /* FWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWMessage.m; sourceTree = "<group>"; };
+		2F7283F82152210E00F71DC5 /* FWProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWProxy.m; sourceTree = "<group>"; };
+		2F7283F92152210E00F71DC5 /* FWPromise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWPromise.m; sourceTree = "<group>"; };
+		2F7283FA2152210E00F71DC5 /* FWLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWLog.m; sourceTree = "<group>"; };
+		2F7283FB2152210E00F71DC5 /* FWTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTest.m; sourceTree = "<group>"; };
+		2F7283FC2152210E00F71DC5 /* FWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMessage.h; sourceTree = "<group>"; };
+		2F7283FD2152210E00F71DC5 /* FWAspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAspect.h; sourceTree = "<group>"; };
+		2F7283FE2152210E00F71DC5 /* FWPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWPlugin.m; sourceTree = "<group>"; };
+		2F7283FF2152210E00F71DC5 /* FWMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMacro.h; sourceTree = "<group>"; };
+		2F7284022152210E00F71DC5 /* FWAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAppDelegate.h; sourceTree = "<group>"; };
+		2F7284032152210E00F71DC5 /* FWAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAppDelegate.m; sourceTree = "<group>"; };
+		2F7284042152210E00F71DC5 /* FWApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWApplication.h; sourceTree = "<group>"; };
+		2F72848B2152282E00F71DC5 /* NSData+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FWFramework.h"; sourceTree = "<group>"; };
+		2F72848C2152282E00F71DC5 /* NSString+FWFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWFormat.m"; sourceTree = "<group>"; };
+		2F72848D2152282E00F71DC5 /* NSDate+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+FWFramework.h"; sourceTree = "<group>"; };
+		2F72848E2152282E00F71DC5 /* NSString+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFramework.h"; sourceTree = "<group>"; };
+		2F72848F2152282E00F71DC5 /* NSString+FWEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWEncode.h"; sourceTree = "<group>"; };
+		2F7284902152282E00F71DC5 /* NSBundle+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284912152282E00F71DC5 /* NSObject+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284922152282E00F71DC5 /* NSString+FWEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncode.m"; sourceTree = "<group>"; };
+		2F7284932152282E00F71DC5 /* NSDictionary+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284942152282E00F71DC5 /* NSFileManager+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284952152282E00F71DC5 /* NSObject+FWBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWBlock.h"; sourceTree = "<group>"; };
+		2F7284962152282E00F71DC5 /* NSBundle+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284972152282E00F71DC5 /* NSString+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284982152282F00F71DC5 /* NSNull+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284992152282F00F71DC5 /* NSNumber+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+FWFramework.h"; sourceTree = "<group>"; };
+		2F72849A2152282F00F71DC5 /* NSTimer+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+FWFramework.m"; sourceTree = "<group>"; };
+		2F72849B2152282F00F71DC5 /* NSUserDefaults+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+FWFramework.h"; sourceTree = "<group>"; };
+		2F72849C2152282F00F71DC5 /* NSString+FWEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWEncrypt.h"; sourceTree = "<group>"; };
+		2F72849D2152282F00F71DC5 /* NSObject+FWSafeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWSafeType.h"; sourceTree = "<group>"; };
+		2F72849E2152282F00F71DC5 /* NSThread+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+FWFramework.h"; sourceTree = "<group>"; };
+		2F72849F2152282F00F71DC5 /* NSUserDefaults+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284A02152282F00F71DC5 /* Foundation+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284A12152282F00F71DC5 /* NSDictionary+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284A22152282F00F71DC5 /* NSString+FWEncrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncrypt.m"; sourceTree = "<group>"; };
+		2F7284A32152282F00F71DC5 /* NSString+FWFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFormat.h"; sourceTree = "<group>"; };
+		2F7284A42152283000F71DC5 /* NSArray+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284A52152283000F71DC5 /* NSTimer+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284A62152283000F71DC5 /* NSObject+FWRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWRuntime.h"; sourceTree = "<group>"; };
+		2F7284A72152283000F71DC5 /* NSObject+FWBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWBlock.m"; sourceTree = "<group>"; };
+		2F7284A82152283000F71DC5 /* NSArray+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284A92152283000F71DC5 /* NSDate+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284AA2152283000F71DC5 /* NSData+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284AB2152283000F71DC5 /* NSThread+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284AC2152283000F71DC5 /* NSNull+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284AD2152283000F71DC5 /* NSObject+FWSafeType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWSafeType.m"; sourceTree = "<group>"; };
+		2F7284AE2152283100F71DC5 /* NSNumber+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284AF2152283100F71DC5 /* NSObject+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284B02152283100F71DC5 /* NSObject+FWRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWRuntime.m"; sourceTree = "<group>"; };
+		2F7284B12152283100F71DC5 /* NSFileManager+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284D92152287300F71DC5 /* UIColor+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284DA2152287300F71DC5 /* UIButton+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284DB2152287300F71DC5 /* UIImage+FWGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWGif.h"; sourceTree = "<group>"; };
+		2F7284DC2152287300F71DC5 /* UINavigationController+FWTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWTransition.h"; sourceTree = "<group>"; };
+		2F7284DD2152287300F71DC5 /* UINavigationController+FWWorkflow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWWorkflow.m"; sourceTree = "<group>"; };
+		2F7284DE2152287400F71DC5 /* UIButton+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284DF2152287400F71DC5 /* UIView+FWLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWLayer.h"; sourceTree = "<group>"; };
+		2F7284E02152287400F71DC5 /* UIView+FWBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWBlock.h"; sourceTree = "<group>"; };
+		2F7284E12152287400F71DC5 /* UITextView+FWPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+FWPlaceholder.m"; sourceTree = "<group>"; };
+		2F7284E22152287400F71DC5 /* UITextView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284E32152287400F71DC5 /* UIView+FWBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWBadge.m"; sourceTree = "<group>"; };
+		2F7284E42152287400F71DC5 /* UIScrollView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284E52152287400F71DC5 /* UINavigationController+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284E62152287400F71DC5 /* UINavigationController+FWWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWWorkflow.h"; sourceTree = "<group>"; };
+		2F7284E72152287400F71DC5 /* UIViewController+FWBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBar.m"; sourceTree = "<group>"; };
+		2F7284E82152287400F71DC5 /* UIView+FWAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWAnimation.h"; sourceTree = "<group>"; };
+		2F7284E92152287400F71DC5 /* UIWindow+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284EA2152287400F71DC5 /* UIScreen+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284EB2152287500F71DC5 /* UIKit+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284EC2152287500F71DC5 /* UIScreen+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284ED2152287500F71DC5 /* UIViewController+FWTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWTransition.h"; sourceTree = "<group>"; };
+		2F7284EE2152287500F71DC5 /* UIView+FWDrag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWDrag.h"; sourceTree = "<group>"; };
+		2F7284EF2152287500F71DC5 /* UIView+FWLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWLayer.m"; sourceTree = "<group>"; };
+		2F7284F02152287500F71DC5 /* UIBezierPath+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284F12152287500F71DC5 /* UIView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWFramework.h"; sourceTree = "<group>"; };
+		2F7284F22152287500F71DC5 /* UIView+FWBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWBlock.m"; sourceTree = "<group>"; };
+		2F7284F32152287500F71DC5 /* UIView+FWFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWFrame.m"; sourceTree = "<group>"; };
+		2F7284F42152287500F71DC5 /* UITextField+FWKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+FWKeyboard.m"; sourceTree = "<group>"; };
+		2F7284F52152287500F71DC5 /* UIViewController+FWTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWTransition.m"; sourceTree = "<group>"; };
+		2F7284F62152287500F71DC5 /* UIApplication+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284F72152287600F71DC5 /* UIView+FWAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWAnimation.m"; sourceTree = "<group>"; };
+		2F7284F82152287600F71DC5 /* UIImage+FWGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FWGif.m"; sourceTree = "<group>"; };
+		2F7284F92152287600F71DC5 /* UITextField+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284FA2152287600F71DC5 /* UIFont+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284FB2152287600F71DC5 /* UIView+FWDrag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWDrag.m"; sourceTree = "<group>"; };
+		2F7284FC2152287600F71DC5 /* UIWindow+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+FWFramework.m"; sourceTree = "<group>"; };
+		2F7284FD2152287600F71DC5 /* UIView+FWAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWAutoLayout.h"; sourceTree = "<group>"; };
+		2F7284FE2152287600F71DC5 /* UIView+FWBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWBorder.h"; sourceTree = "<group>"; };
+		2F7284FF2152287600F71DC5 /* UIView+FWBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWBorder.m"; sourceTree = "<group>"; };
+		2F7285002152287600F71DC5 /* UIView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWFramework.m"; sourceTree = "<group>"; };
+		2F7285012152287600F71DC5 /* UIDevice+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285022152287700F71DC5 /* UIViewController+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWFramework.m"; sourceTree = "<group>"; };
+		2F7285032152287700F71DC5 /* UIViewController+FWAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWAlert.h"; sourceTree = "<group>"; };
+		2F7285042152287700F71DC5 /* UIDevice+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+FWFramework.m"; sourceTree = "<group>"; };
+		2F7285052152287700F71DC5 /* UITextField+FWKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+FWKeyboard.h"; sourceTree = "<group>"; };
+		2F7285062152287700F71DC5 /* UIViewController+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285072152287700F71DC5 /* UINavigationController+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWFramework.m"; sourceTree = "<group>"; };
+		2F7285082152287700F71DC5 /* UIImage+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285092152287700F71DC5 /* UIColor+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+FWFramework.m"; sourceTree = "<group>"; };
+		2F72850A2152287700F71DC5 /* UIView+FWAutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWAutoLayout.m"; sourceTree = "<group>"; };
+		2F72850B2152287700F71DC5 /* UIView+FWFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWFrame.h"; sourceTree = "<group>"; };
+		2F72850C2152287700F71DC5 /* UITableView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWFramework.m"; sourceTree = "<group>"; };
+		2F72850D2152287800F71DC5 /* UITextView+FWPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+FWPlaceholder.h"; sourceTree = "<group>"; };
+		2F72850E2152287800F71DC5 /* UITextField+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+FWFramework.h"; sourceTree = "<group>"; };
+		2F72850F2152287800F71DC5 /* UITableView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285102152287800F71DC5 /* UIApplication+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285112152287800F71DC5 /* UIFont+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285122152287800F71DC5 /* UIScrollView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285132152287800F71DC5 /* UIViewController+FWBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBar.h"; sourceTree = "<group>"; };
+		2F7285142152287800F71DC5 /* UINavigationController+FWTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWTransition.m"; sourceTree = "<group>"; };
+		2F7285152152287800F71DC5 /* UIBezierPath+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285162152287800F71DC5 /* UIImage+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FWFramework.m"; sourceTree = "<group>"; };
+		2F7285172152287900F71DC5 /* UITextView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+FWFramework.h"; sourceTree = "<group>"; };
+		2F7285182152287900F71DC5 /* UIViewController+FWAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWAlert.m"; sourceTree = "<group>"; };
+		2F7285192152287900F71DC5 /* UIImageView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FWFramework.m"; sourceTree = "<group>"; };
+		2F72851A2152287900F71DC5 /* UIImageView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FWFramework.h"; sourceTree = "<group>"; };
+		2F72851B2152287900F71DC5 /* UIView+FWBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWBadge.h"; sourceTree = "<group>"; };
+		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2F7E41FA20FC2DCF00CE3E2F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2F4CFA2F21551B9E00203A37 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		2F72837B2152210E00F71DC5 /* FWFramework */ = {
+			isa = PBXGroup;
+			children = (
+				2F7283E92152210E00F71DC5 /* FWFramework.h */,
+				2F72837C2152210E00F71DC5 /* Extend */,
+				2F7283F02152210E00F71DC5 /* Kernel */,
+				2F7283EA2152210E00F71DC5 /* Module */,
+			);
+			path = FWFramework;
+			sourceTree = "<group>";
+		};
+		2F72837C2152210E00F71DC5 /* Extend */ = {
+			isa = PBXGroup;
+			children = (
+				2F7283C12152210E00F71DC5 /* Foundation */,
+				2F72837D2152210E00F71DC5 /* UIKit */,
+			);
+			path = Extend;
+			sourceTree = "<group>";
+		};
+		2F72837D2152210E00F71DC5 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				2F7284EB2152287500F71DC5 /* UIKit+FWFramework.h */,
+				2F7285102152287800F71DC5 /* UIApplication+FWFramework.h */,
+				2F7284F62152287500F71DC5 /* UIApplication+FWFramework.m */,
+				2F7285152152287800F71DC5 /* UIBezierPath+FWFramework.h */,
+				2F7284F02152287500F71DC5 /* UIBezierPath+FWFramework.m */,
+				2F7284DA2152287300F71DC5 /* UIButton+FWFramework.h */,
+				2F7284DE2152287400F71DC5 /* UIButton+FWFramework.m */,
+				2F7284D92152287300F71DC5 /* UIColor+FWFramework.h */,
+				2F7285092152287700F71DC5 /* UIColor+FWFramework.m */,
+				2F7285012152287600F71DC5 /* UIDevice+FWFramework.h */,
+				2F7285042152287700F71DC5 /* UIDevice+FWFramework.m */,
+				2F7285112152287800F71DC5 /* UIFont+FWFramework.h */,
+				2F7284FA2152287600F71DC5 /* UIFont+FWFramework.m */,
+				2F7285082152287700F71DC5 /* UIImage+FWFramework.h */,
+				2F7285162152287800F71DC5 /* UIImage+FWFramework.m */,
+				2F7284DB2152287300F71DC5 /* UIImage+FWGif.h */,
+				2F7284F82152287600F71DC5 /* UIImage+FWGif.m */,
+				2F72851A2152287900F71DC5 /* UIImageView+FWFramework.h */,
+				2F7285192152287900F71DC5 /* UIImageView+FWFramework.m */,
+				2F7284E52152287400F71DC5 /* UINavigationController+FWFramework.h */,
+				2F7285072152287700F71DC5 /* UINavigationController+FWFramework.m */,
+				2F7284DC2152287300F71DC5 /* UINavigationController+FWTransition.h */,
+				2F7285142152287800F71DC5 /* UINavigationController+FWTransition.m */,
+				2F7284E62152287400F71DC5 /* UINavigationController+FWWorkflow.h */,
+				2F7284DD2152287300F71DC5 /* UINavigationController+FWWorkflow.m */,
+				2F7284EA2152287400F71DC5 /* UIScreen+FWFramework.h */,
+				2F7284EC2152287500F71DC5 /* UIScreen+FWFramework.m */,
+				2F7285122152287800F71DC5 /* UIScrollView+FWFramework.h */,
+				2F7284E42152287400F71DC5 /* UIScrollView+FWFramework.m */,
+				2F72850F2152287800F71DC5 /* UITableView+FWFramework.h */,
+				2F72850C2152287700F71DC5 /* UITableView+FWFramework.m */,
+				2F4CFA46215523D800203A37 /* UITableView+FWTemplateLayout.h */,
+				2F4CFA47215523D800203A37 /* UITableView+FWTemplateLayout.m */,
+				2F72850E2152287800F71DC5 /* UITextField+FWFramework.h */,
+				2F7284F92152287600F71DC5 /* UITextField+FWFramework.m */,
+				2F7285052152287700F71DC5 /* UITextField+FWKeyboard.h */,
+				2F7284F42152287500F71DC5 /* UITextField+FWKeyboard.m */,
+				2F7285172152287900F71DC5 /* UITextView+FWFramework.h */,
+				2F7284E22152287400F71DC5 /* UITextView+FWFramework.m */,
+				2F72850D2152287800F71DC5 /* UITextView+FWPlaceholder.h */,
+				2F7284E12152287400F71DC5 /* UITextView+FWPlaceholder.m */,
+				2F7284E82152287400F71DC5 /* UIView+FWAnimation.h */,
+				2F7284F72152287600F71DC5 /* UIView+FWAnimation.m */,
+				2F7284FD2152287600F71DC5 /* UIView+FWAutoLayout.h */,
+				2F72850A2152287700F71DC5 /* UIView+FWAutoLayout.m */,
+				2F72851B2152287900F71DC5 /* UIView+FWBadge.h */,
+				2F7284E32152287400F71DC5 /* UIView+FWBadge.m */,
+				2F7284E02152287400F71DC5 /* UIView+FWBlock.h */,
+				2F7284F22152287500F71DC5 /* UIView+FWBlock.m */,
+				2F7284FE2152287600F71DC5 /* UIView+FWBorder.h */,
+				2F7284FF2152287600F71DC5 /* UIView+FWBorder.m */,
+				2F7284EE2152287500F71DC5 /* UIView+FWDrag.h */,
+				2F7284FB2152287600F71DC5 /* UIView+FWDrag.m */,
+				2F72850B2152287700F71DC5 /* UIView+FWFrame.h */,
+				2F7284F32152287500F71DC5 /* UIView+FWFrame.m */,
+				2F7284F12152287500F71DC5 /* UIView+FWFramework.h */,
+				2F7285002152287600F71DC5 /* UIView+FWFramework.m */,
+				2F593FD3215609380022137F /* UIView+FWIndicator.h */,
+				2F593FD4215609380022137F /* UIView+FWIndicator.m */,
+				2F7284DF2152287400F71DC5 /* UIView+FWLayer.h */,
+				2F7284EF2152287500F71DC5 /* UIView+FWLayer.m */,
+				2F7285032152287700F71DC5 /* UIViewController+FWAlert.h */,
+				2F7285182152287900F71DC5 /* UIViewController+FWAlert.m */,
+				2F7285132152287800F71DC5 /* UIViewController+FWBar.h */,
+				2F7284E72152287400F71DC5 /* UIViewController+FWBar.m */,
+				2F7285062152287700F71DC5 /* UIViewController+FWFramework.h */,
+				2F7285022152287700F71DC5 /* UIViewController+FWFramework.m */,
+				2F7284ED2152287500F71DC5 /* UIViewController+FWTransition.h */,
+				2F7284F52152287500F71DC5 /* UIViewController+FWTransition.m */,
+				2F7284E92152287400F71DC5 /* UIWindow+FWFramework.h */,
+				2F7284FC2152287600F71DC5 /* UIWindow+FWFramework.m */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		2F7283C12152210E00F71DC5 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				2F7284A02152282F00F71DC5 /* Foundation+FWFramework.h */,
+				2F7284A82152283000F71DC5 /* NSArray+FWFramework.h */,
+				2F7284A42152283000F71DC5 /* NSArray+FWFramework.m */,
+				2F7284902152282E00F71DC5 /* NSBundle+FWFramework.h */,
+				2F7284962152282E00F71DC5 /* NSBundle+FWFramework.m */,
+				2F72848B2152282E00F71DC5 /* NSData+FWFramework.h */,
+				2F7284AA2152283000F71DC5 /* NSData+FWFramework.m */,
+				2F72848D2152282E00F71DC5 /* NSDate+FWFramework.h */,
+				2F7284A92152283000F71DC5 /* NSDate+FWFramework.m */,
+				2F7284932152282E00F71DC5 /* NSDictionary+FWFramework.h */,
+				2F7284A12152282F00F71DC5 /* NSDictionary+FWFramework.m */,
+				2F7284942152282E00F71DC5 /* NSFileManager+FWFramework.h */,
+				2F7284B12152283100F71DC5 /* NSFileManager+FWFramework.m */,
+				2F7284AC2152283000F71DC5 /* NSNull+FWFramework.h */,
+				2F7284982152282F00F71DC5 /* NSNull+FWFramework.m */,
+				2F7284992152282F00F71DC5 /* NSNumber+FWFramework.h */,
+				2F7284AE2152283100F71DC5 /* NSNumber+FWFramework.m */,
+				2F7284952152282E00F71DC5 /* NSObject+FWBlock.h */,
+				2F7284A72152283000F71DC5 /* NSObject+FWBlock.m */,
+				2F7284AF2152283100F71DC5 /* NSObject+FWFramework.h */,
+				2F7284912152282E00F71DC5 /* NSObject+FWFramework.m */,
+				2F7284A62152283000F71DC5 /* NSObject+FWRuntime.h */,
+				2F7284B02152283100F71DC5 /* NSObject+FWRuntime.m */,
+				2F72849D2152282F00F71DC5 /* NSObject+FWSafeType.h */,
+				2F7284AD2152283000F71DC5 /* NSObject+FWSafeType.m */,
+				2F72848F2152282E00F71DC5 /* NSString+FWEncode.h */,
+				2F7284922152282E00F71DC5 /* NSString+FWEncode.m */,
+				2F72849C2152282F00F71DC5 /* NSString+FWEncrypt.h */,
+				2F7284A22152282F00F71DC5 /* NSString+FWEncrypt.m */,
+				2F7284A32152282F00F71DC5 /* NSString+FWFormat.h */,
+				2F72848C2152282E00F71DC5 /* NSString+FWFormat.m */,
+				2F72848E2152282E00F71DC5 /* NSString+FWFramework.h */,
+				2F7284972152282E00F71DC5 /* NSString+FWFramework.m */,
+				2F72849E2152282F00F71DC5 /* NSThread+FWFramework.h */,
+				2F7284AB2152283000F71DC5 /* NSThread+FWFramework.m */,
+				2F7284A52152283000F71DC5 /* NSTimer+FWFramework.h */,
+				2F72849A2152282F00F71DC5 /* NSTimer+FWFramework.m */,
+				2F72849B2152282F00F71DC5 /* NSUserDefaults+FWFramework.h */,
+				2F72849F2152282F00F71DC5 /* NSUserDefaults+FWFramework.m */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		2F7283EA2152210E00F71DC5 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				2F7283EB2152210E00F71DC5 /* Thread */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		2F7283EB2152210E00F71DC5 /* Thread */ = {
+			isa = PBXGroup;
+			children = (
+				2F7283ED2152210E00F71DC5 /* FWMutableArray.h */,
+				2F7283EF2152210E00F71DC5 /* FWMutableArray.m */,
+				2F7283EC2152210E00F71DC5 /* FWMutableDictionary.h */,
+				2F7283EE2152210E00F71DC5 /* FWMutableDictionary.m */,
+			);
+			path = Thread;
+			sourceTree = "<group>";
+		};
+		2F7283F02152210E00F71DC5 /* Kernel */ = {
+			isa = PBXGroup;
+			children = (
+				2F7283FF2152210E00F71DC5 /* FWMacro.h */,
+				2F7283F42152210E00F71DC5 /* FWLog.h */,
+				2F7283FA2152210E00F71DC5 /* FWLog.m */,
+				2F7283F32152210E00F71DC5 /* FWTest.h */,
+				2F7283FB2152210E00F71DC5 /* FWTest.m */,
+				2F7283F12152210E00F71DC5 /* FWProxy.h */,
+				2F7283F82152210E00F71DC5 /* FWProxy.m */,
+				2F7283F22152210E00F71DC5 /* FWPromise.h */,
+				2F7283F92152210E00F71DC5 /* FWPromise.m */,
+				2F7283F52152210E00F71DC5 /* FWPlugin.h */,
+				2F7283FE2152210E00F71DC5 /* FWPlugin.m */,
+				2F7283FD2152210E00F71DC5 /* FWAspect.h */,
+				2F7283F62152210E00F71DC5 /* FWAspect.m */,
+				2F7283FC2152210E00F71DC5 /* FWMessage.h */,
+				2F7283F72152210E00F71DC5 /* FWMessage.m */,
+			);
+			path = Kernel;
+			sourceTree = "<group>";
+		};
+		2F7284002152210E00F71DC5 /* FWApplication */ = {
+			isa = PBXGroup;
+			children = (
+				2F7284042152210E00F71DC5 /* FWApplication.h */,
+				2F7284012152210E00F71DC5 /* App */,
+				2F4CFA2F21551B9E00203A37 /* Library */,
+				2F7284082152210E00F71DC5 /* Service */,
+				2F7284052152210E00F71DC5 /* Controller */,
+				2F7284062152210E00F71DC5 /* Model */,
+				2F7284072152210E00F71DC5 /* View */,
+			);
+			path = FWApplication;
+			sourceTree = "<group>";
+		};
+		2F7284012152210E00F71DC5 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2F7284022152210E00F71DC5 /* FWAppDelegate.h */,
+				2F7284032152210E00F71DC5 /* FWAppDelegate.m */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2F7284052152210E00F71DC5 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2F7284062152210E00F71DC5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2F7284072152210E00F71DC5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2F7284082152210E00F71DC5 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2F7E41F420FC2DCF00CE3E2F = {
+			isa = PBXGroup;
+			children = (
+				2F7E420A20FC2EA500CE3E2F /* FWFramework */,
+				2F7E41FF20FC2DCF00CE3E2F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2F7E41FF20FC2DCF00CE3E2F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2F7E420A20FC2EA500CE3E2F /* FWFramework */ = {
+			isa = PBXGroup;
+			children = (
+				2F72837B2152210E00F71DC5 /* FWFramework */,
+				2F7284002152210E00F71DC5 /* FWApplication */,
+			);
+			name = FWFramework;
+			path = ../FWFramework;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2F7E41FB20FC2DCF00CE3E2F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F593FD5215609380022137F /* UIView+FWIndicator.h in Headers */,
+				2F4CFA48215523D800203A37 /* UITableView+FWTemplateLayout.h in Headers */,
+				2F7284B52152283100F71DC5 /* NSString+FWFramework.h in Headers */,
+				2F7285532152287900F71DC5 /* UIApplication+FWFramework.h in Headers */,
+				2F72854B2152287900F71DC5 /* UIImage+FWFramework.h in Headers */,
+				2F72851D2152287900F71DC5 /* UIButton+FWFramework.h in Headers */,
+				2F7284BC2152283100F71DC5 /* NSObject+FWBlock.h in Headers */,
+				2F7284B42152283100F71DC5 /* NSDate+FWFramework.h in Headers */,
+				2F7284D32152283100F71DC5 /* NSNull+FWFramework.h in Headers */,
+				2F7285302152287900F71DC5 /* UIViewController+FWTransition.h in Headers */,
+				2F72855E2152287900F71DC5 /* UIView+FWBadge.h in Headers */,
+				2F7284C72152283100F71DC5 /* Foundation+FWFramework.h in Headers */,
+				2F7285232152287900F71DC5 /* UIView+FWBlock.h in Headers */,
+				2F7285492152287900F71DC5 /* UIViewController+FWFramework.h in Headers */,
+				2F7285552152287900F71DC5 /* UIScrollView+FWFramework.h in Headers */,
+				2F7285342152287900F71DC5 /* UIView+FWFramework.h in Headers */,
+				2F72851E2152287900F71DC5 /* UIImage+FWGif.h in Headers */,
+				2F7285512152287900F71DC5 /* UITextField+FWFramework.h in Headers */,
+				2F7284CD2152283100F71DC5 /* NSObject+FWRuntime.h in Headers */,
+				2F7284B22152283100F71DC5 /* NSData+FWFramework.h in Headers */,
+				2F7284BB2152283100F71DC5 /* NSFileManager+FWFramework.h in Headers */,
+				2F7284CA2152283100F71DC5 /* NSString+FWFormat.h in Headers */,
+				2F7285482152287900F71DC5 /* UITextField+FWKeyboard.h in Headers */,
+				2F7285312152287900F71DC5 /* UIView+FWDrag.h in Headers */,
+				2F7284C02152283100F71DC5 /* NSNumber+FWFramework.h in Headers */,
+				2F72851F2152287900F71DC5 /* UINavigationController+FWTransition.h in Headers */,
+				2F7285282152287900F71DC5 /* UINavigationController+FWFramework.h in Headers */,
+				2F7285412152287900F71DC5 /* UIView+FWBorder.h in Headers */,
+				2F72855D2152287900F71DC5 /* UIImageView+FWFramework.h in Headers */,
+				2F7285442152287900F71DC5 /* UIDevice+FWFramework.h in Headers */,
+				2F72851C2152287900F71DC5 /* UIColor+FWFramework.h in Headers */,
+				2F7285462152287900F71DC5 /* UIViewController+FWAlert.h in Headers */,
+				2F72852D2152287900F71DC5 /* UIScreen+FWFramework.h in Headers */,
+				2F7285522152287900F71DC5 /* UITableView+FWFramework.h in Headers */,
+				2F7284C22152283100F71DC5 /* NSUserDefaults+FWFramework.h in Headers */,
+				2F7285542152287900F71DC5 /* UIFont+FWFramework.h in Headers */,
+				2F72852C2152287900F71DC5 /* UIWindow+FWFramework.h in Headers */,
+				2F7284D62152283100F71DC5 /* NSObject+FWFramework.h in Headers */,
+				2F7284B62152283100F71DC5 /* NSString+FWEncode.h in Headers */,
+				2F72852E2152287900F71DC5 /* UIKit+FWFramework.h in Headers */,
+				2F7285222152287900F71DC5 /* UIView+FWLayer.h in Headers */,
+				2F72852B2152287900F71DC5 /* UIView+FWAnimation.h in Headers */,
+				2F7284C42152283100F71DC5 /* NSObject+FWSafeType.h in Headers */,
+				2F7284C32152283100F71DC5 /* NSString+FWEncrypt.h in Headers */,
+				2F7284C52152283100F71DC5 /* NSThread+FWFramework.h in Headers */,
+				2F72854E2152287900F71DC5 /* UIView+FWFrame.h in Headers */,
+				2F7285562152287900F71DC5 /* UIViewController+FWBar.h in Headers */,
+				2F7284CC2152283100F71DC5 /* NSTimer+FWFramework.h in Headers */,
+				2F7285582152287900F71DC5 /* UIBezierPath+FWFramework.h in Headers */,
+				2F72855A2152287900F71DC5 /* UITextView+FWFramework.h in Headers */,
+				2F7285402152287900F71DC5 /* UIView+FWAutoLayout.h in Headers */,
+				2F7284B72152283100F71DC5 /* NSBundle+FWFramework.h in Headers */,
+				2F7284CF2152283100F71DC5 /* NSArray+FWFramework.h in Headers */,
+				2F7285292152287900F71DC5 /* UINavigationController+FWWorkflow.h in Headers */,
+				2F7284BA2152283100F71DC5 /* NSDictionary+FWFramework.h in Headers */,
+				2F7285502152287900F71DC5 /* UITextView+FWPlaceholder.h in Headers */,
+				2F72847C2152210E00F71DC5 /* FWPlugin.h in Headers */,
+				2F72847B2152210E00F71DC5 /* FWLog.h in Headers */,
+				2F7284832152210E00F71DC5 /* FWMessage.h in Headers */,
+				2F7284752152210E00F71DC5 /* FWMutableArray.h in Headers */,
+				2F7284862152210E00F71DC5 /* FWMacro.h in Headers */,
+				2F7284842152210E00F71DC5 /* FWAspect.h in Headers */,
+				2F7284792152210E00F71DC5 /* FWPromise.h in Headers */,
+				2F7284742152210E00F71DC5 /* FWMutableDictionary.h in Headers */,
+				2F7284872152210E00F71DC5 /* FWAppDelegate.h in Headers */,
+				2F72847A2152210E00F71DC5 /* FWTest.h in Headers */,
+				2F7284732152210E00F71DC5 /* FWFramework.h in Headers */,
+				2F7284892152210E00F71DC5 /* FWApplication.h in Headers */,
+				2F7284782152210E00F71DC5 /* FWProxy.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2F7E41FD20FC2DCF00CE3E2F /* FWFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2F7E420620FC2DCF00CE3E2F /* Build configuration list for PBXNativeTarget "FWFramework" */;
+			buildPhases = (
+				2F7E41F920FC2DCF00CE3E2F /* Sources */,
+				2F7E41FA20FC2DCF00CE3E2F /* Frameworks */,
+				2F7E41FB20FC2DCF00CE3E2F /* Headers */,
+				2F7E41FC20FC2DCF00CE3E2F /* Resources */,
+				2F7E420920FC2E5000CE3E2F /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FWFramework;
+			productName = FWFramework;
+			productReference = 2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2F7E41F520FC2DCF00CE3E2F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = wuyong.site;
+				TargetAttributes = {
+					2F7E41FD20FC2DCF00CE3E2F = {
+						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
+					};
+				};
+			};
+			buildConfigurationList = 2F7E41F820FC2DCF00CE3E2F /* Build configuration list for PBXProject "FWFramework" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2F7E41F420FC2DCF00CE3E2F;
+			productRefGroup = 2F7E41FF20FC2DCF00CE3E2F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2F7E41FD20FC2DCF00CE3E2F /* FWFramework */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2F7E41FC20FC2DCF00CE3E2F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2F7E420920FC2E5000CE3E2F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# document path\n# DOC_PATH=\"${PROJECT_DIR}/../Document/HeaderDoc/\"\n# source path\n# SRC_PATH=\"${PROJECT_DIR}/../FWFramework/\"\n\n# clear document\n# rm -rf \"${DOC_PATH}\"\n# mkdir -p \"${DOC_PATH}\"\n\n# generate headerdoc .h\n# find \"${SRC_PATH}\" -name \\*.h -print | xargs headerdoc2html -o \"${DOC_PATH}\"\n# generate headerdoc *\n# headerdoc2html -o \"${DOC_PATH}\" \"${SRC_PATH}\"\n\n# gather headerdoc\n# gatherheaderdoc \"${DOC_PATH}\"\n\n# open document path\n# open \"${DOC_PATH}/masterTOC.html\"\n\n# exit 0\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2F7E41F920FC2DCF00CE3E2F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F7284762152210E00F71DC5 /* FWMutableDictionary.m in Sources */,
+				2F7285202152287900F71DC5 /* UINavigationController+FWWorkflow.m in Sources */,
+				2F72853E2152287900F71DC5 /* UIView+FWDrag.m in Sources */,
+				2F72854F2152287900F71DC5 /* UITableView+FWFramework.m in Sources */,
+				2F7285472152287900F71DC5 /* UIDevice+FWFramework.m in Sources */,
+				2F7284D52152283100F71DC5 /* NSNumber+FWFramework.m in Sources */,
+				2F7285572152287900F71DC5 /* UINavigationController+FWTransition.m in Sources */,
+				2F7285252152287900F71DC5 /* UITextView+FWFramework.m in Sources */,
+				2F7284822152210E00F71DC5 /* FWTest.m in Sources */,
+				2F72853A2152287900F71DC5 /* UIView+FWAnimation.m in Sources */,
+				2F4CFA49215523D800203A37 /* UITableView+FWTemplateLayout.m in Sources */,
+				2F7284B92152283100F71DC5 /* NSString+FWEncode.m in Sources */,
+				2F7284BF2152283100F71DC5 /* NSNull+FWFramework.m in Sources */,
+				2F593FD6215609380022137F /* UIView+FWIndicator.m in Sources */,
+				2F72853C2152287900F71DC5 /* UITextField+FWFramework.m in Sources */,
+				2F72854C2152287900F71DC5 /* UIColor+FWFramework.m in Sources */,
+				2F7284CB2152283100F71DC5 /* NSArray+FWFramework.m in Sources */,
+				2F7284812152210E00F71DC5 /* FWLog.m in Sources */,
+				2F7284C92152283100F71DC5 /* NSString+FWEncrypt.m in Sources */,
+				2F7284C82152283100F71DC5 /* NSDictionary+FWFramework.m in Sources */,
+				2F7285362152287900F71DC5 /* UIView+FWFrame.m in Sources */,
+				2F7284B82152283100F71DC5 /* NSObject+FWFramework.m in Sources */,
+				2F7285372152287900F71DC5 /* UITextField+FWKeyboard.m in Sources */,
+				2F7285422152287900F71DC5 /* UIView+FWBorder.m in Sources */,
+				2F7285432152287900F71DC5 /* UIView+FWFramework.m in Sources */,
+				2F7285392152287900F71DC5 /* UIApplication+FWFramework.m in Sources */,
+				2F72852F2152287900F71DC5 /* UIScreen+FWFramework.m in Sources */,
+				2F7284BE2152283100F71DC5 /* NSString+FWFramework.m in Sources */,
+				2F72852A2152287900F71DC5 /* UIViewController+FWBar.m in Sources */,
+				2F7284BD2152283100F71DC5 /* NSBundle+FWFramework.m in Sources */,
+				2F7284D82152283100F71DC5 /* NSFileManager+FWFramework.m in Sources */,
+				2F7284D42152283100F71DC5 /* NSObject+FWSafeType.m in Sources */,
+				2F7285272152287900F71DC5 /* UIScrollView+FWFramework.m in Sources */,
+				2F7284D72152283100F71DC5 /* NSObject+FWRuntime.m in Sources */,
+				2F7285382152287900F71DC5 /* UIViewController+FWTransition.m in Sources */,
+				2F7284CE2152283100F71DC5 /* NSObject+FWBlock.m in Sources */,
+				2F7285332152287900F71DC5 /* UIBezierPath+FWFramework.m in Sources */,
+				2F7284D12152283100F71DC5 /* NSData+FWFramework.m in Sources */,
+				2F72855B2152287900F71DC5 /* UIViewController+FWAlert.m in Sources */,
+				2F7284852152210E00F71DC5 /* FWPlugin.m in Sources */,
+				2F7284D22152283100F71DC5 /* NSThread+FWFramework.m in Sources */,
+				2F7285262152287900F71DC5 /* UIView+FWBadge.m in Sources */,
+				2F7284C62152283100F71DC5 /* NSUserDefaults+FWFramework.m in Sources */,
+				2F7284882152210E00F71DC5 /* FWAppDelegate.m in Sources */,
+				2F72853F2152287900F71DC5 /* UIWindow+FWFramework.m in Sources */,
+				2F7285212152287900F71DC5 /* UIButton+FWFramework.m in Sources */,
+				2F7284772152210E00F71DC5 /* FWMutableArray.m in Sources */,
+				2F72854D2152287900F71DC5 /* UIView+FWAutoLayout.m in Sources */,
+				2F7284802152210E00F71DC5 /* FWPromise.m in Sources */,
+				2F72847F2152210E00F71DC5 /* FWProxy.m in Sources */,
+				2F72854A2152287900F71DC5 /* UINavigationController+FWFramework.m in Sources */,
+				2F72847E2152210E00F71DC5 /* FWMessage.m in Sources */,
+				2F7284D02152283100F71DC5 /* NSDate+FWFramework.m in Sources */,
+				2F72853B2152287900F71DC5 /* UIImage+FWGif.m in Sources */,
+				2F7285592152287900F71DC5 /* UIImage+FWFramework.m in Sources */,
+				2F7285322152287900F71DC5 /* UIView+FWLayer.m in Sources */,
+				2F72853D2152287900F71DC5 /* UIFont+FWFramework.m in Sources */,
+				2F7284B32152283100F71DC5 /* NSString+FWFormat.m in Sources */,
+				2F72855C2152287900F71DC5 /* UIImageView+FWFramework.m in Sources */,
+				2F7284C12152283100F71DC5 /* NSTimer+FWFramework.m in Sources */,
+				2F7285452152287900F71DC5 /* UIViewController+FWFramework.m in Sources */,
+				2F7285242152287900F71DC5 /* UITextView+FWPlaceholder.m in Sources */,
+				2F72847D2152210E00F71DC5 /* FWAspect.m in Sources */,
+				2F7285352152287900F71DC5 /* UIView+FWBlock.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2F7E420420FC2DCF00CE3E2F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2F7E420520FC2DCF00CE3E2F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2F7E420720FC2DCF00CE3E2F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2F7E420820FC2DCF00CE3E2F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2F7E41F820FC2DCF00CE3E2F /* Build configuration list for PBXProject "FWFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F7E420420FC2DCF00CE3E2F /* Debug */,
+				2F7E420520FC2DCF00CE3E2F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2F7E420620FC2DCF00CE3E2F /* Build configuration list for PBXNativeTarget "FWFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F7E420720FC2DCF00CE3E2F /* Debug */,
+				2F7E420820FC2DCF00CE3E2F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2F7E41F520FC2DCF00CE3E2F /* Project object */;
+}

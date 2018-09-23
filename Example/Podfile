@@ -1,0 +1,10 @@
+platform :ios, '8.0'
+use_frameworks!
+
+abstract_target "ExampleTarget" do
+
+pod 'FWFramework'
+
+target "Example"
+
+end

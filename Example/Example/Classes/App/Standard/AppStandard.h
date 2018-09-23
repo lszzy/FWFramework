@@ -1,0 +1,178 @@
+//
+//  AppStandard.h
+//  Example
+//
+//  Created by wuyong on 16/11/9.
+//  Copyright © 2016年 ocphp.com. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+#pragma mark - Macro
+
+// 列表高度
+static CGFloat const kAppTableCellHeightLarge       = 100.f;
+static CGFloat const kAppTableCellHeightNormal      = 60.f;
+static CGFloat const kAppCollectionCellHeightNormal = 105.f;
+
+// 边框圆角
+static CGFloat const kAppBorderHeightLarge  = 1.f;
+static CGFloat const kAppBorderHeightNormal = 0.5f;
+static CGFloat const kAppCornerRadiusLarge  = 10.f;
+static CGFloat const kAppCornerRadiusNormal = 5.f;
+
+// 外边距
+static CGFloat const kAppMarginHuge   = 50.f;
+static CGFloat const kAppMarginLarge  = 40.f;
+static CGFloat const kAppMarginNormal = 30.f;
+static CGFloat const kAppMarginSmall  = 20.f;
+static CGFloat const kAppMarginTiny   = 10.f;
+
+// 内边距
+static CGFloat const kAppPaddingHuge   = 20.f;
+static CGFloat const kAppPaddingLarge  = 15.f;
+static CGFloat const kAppPaddingNormal = 10.f;
+static CGFloat const kAppPaddingSmall  = 5.f;
+static CGFloat const kAppPaddingTiny   = 1.f;
+
+// 图标
+static CGSize const kAppIconSizeLarge  = (CGSize){36.f, 36.f};
+static CGSize const kAppIconSizeNormal = (CGSize){24.f, 24.f};
+static CGSize const kAppIconSizeSmall  = (CGSize){18.f, 18.f};
+static CGSize const kAppIconSizeTiny   = (CGSize){12.f, 12.f};
+
+// 图片
+static CGSize const kAppImageSizeHuge   = (CGSize){72.f, 72.f};
+static CGSize const kAppImageSizeLarge  = (CGSize){60.f, 60.f};
+static CGSize const kAppImageSizeNormal = (CGSize){48.f, 48.f};
+static CGSize const kAppImageSizeSmall  = (CGSize){36.f, 36.f};
+static CGSize const kAppImageSizeTiny   = (CGSize){24.f, 24.f};
+
+// 透明度
+static CGFloat const kAppOpacityHigh   = 0.75;
+static CGFloat const kAppOpacityNormal = 0.5;
+static CGFloat const kAppOpacityLow    = 0.25;
+
+#pragma mark - UIColor+AppStandard
+
+@interface UIColor (AppStandard)
+
+// 主题色，用于重要功能的按钮背景
++ (UIColor *)appColorMain;
+// 辅助色，用于内容文本及分页符等
++ (UIColor *)appColorSub;
+// 填充色，用于按钮禁用背景填充等
++ (UIColor *)appColorFill;
+// 背景色，用于页面底色
++ (UIColor *)appColorBg;
+// 边框色，用于边框及分割线
++ (UIColor *)appColorBorder;
+// 遮罩色，用于浅色背景的透明弹窗
++ (UIColor *)appColorCover;
+// 透明色，用于背景
++ (UIColor *)appColorClear;
+
+// 暗灰
++ (UIColor *)appColorDarkgray;
+// 深灰
++ (UIColor *)appColorDeepgray;
+// 亮灰
++ (UIColor *)appColorLightgray;
+
+// 白色，深色背景上的文本或线条颜色
++ (UIColor *)appColorWhite;
+// 95%，深色背景上的最重要内容，一级文本
++ (UIColor *)appColorWhiteOpacityHuge;
+// 70%，二级文本
++ (UIColor *)appColorWhiteOpacityLarge;
+// 50%，三级文本
++ (UIColor *)appColorWhiteOpacityNormal;
+// 30%，最不重要内容
++ (UIColor *)appColorWhiteOpacitySmall;
+// 15%，分割线，不可用状态
++ (UIColor *)appColorWhiteOpacityTiny;
+
+// 黑色，浅色背景上的文本或线条颜色
++ (UIColor *)appColorBlack;
+// 95%，浅色背景的最重要内容，一级文本
++ (UIColor *)appColorBlackOpacityHuge;
+// 70%, 二级文本
++ (UIColor *)appColorBlackOpacityLarge;
+// 50%，三级文本
++ (UIColor *)appColorBlackOpacityNormal;
+// 30%，最不重要内容
++ (UIColor *)appColorBlackOpacitySmall;
+// 15%，分割线，不可用状态
++ (UIColor *)appColorBlackOpacityTiny;
+
+// 自定义颜色，透明度为1.0
++ (UIColor *)appColorHex:(long)hex;
+// 自定义颜色，自定义透明度
++ (UIColor *)appColorHex:(long)hex alpha:(CGFloat)alpha;
+
+@end
+
+#pragma mark - UIFont+AppStandard
+
+@interface UIFont (AppStandard)
+
+// 普通，最大号字体，金额等重要内容
++ (UIFont *)appFontHuge;
+// 普通，大号字体，按钮标题等
++ (UIFont *)appFontLarge;
+// 普通，普通字体，普通文本，表格标题等
++ (UIFont *)appFontNormal;
+// 普通，小号字体，表格副标题等
++ (UIFont *)appFontSmall;
+// 普通，最小号字体，最不重要内容等
++ (UIFont *)appFontTiny;
+// 普通，自定义字号
++ (UIFont *)appFontSize:(CGFloat)size;
+
+// 粗体，最大号字体，金额等重要内容
++ (UIFont *)appFontBoldHuge;
+// 粗体，大号字体，按钮标题等
++ (UIFont *)appFontBoldLarge;
+// 粗体，普通字体，普通文本，表格标题等
++ (UIFont *)appFontBoldNormal;
+// 粗体，小号字体，表格副标题等
++ (UIFont *)appFontBoldSmall;
+// 粗体，最小号字体，最不重要内容等
++ (UIFont *)appFontBoldTiny;
+// 粗体，自定义字号
++ (UIFont *)appFontBoldSize:(CGFloat)size;
+
+@end
+
+#pragma mark - AppStandard
+
+// 标准按钮
+typedef NS_ENUM(NSInteger, AppButtonStyle) {
+    // 默认大按钮样式
+    kAppButtonStyleDefault = 0,
+};
+
+// 标准输入框
+typedef NS_ENUM(NSInteger, AppTextFieldStyle) {
+    // 默认黑色样式
+    kAppTextFieldStyleDefault = 0,
+};
+
+// 标准文本框
+typedef NS_ENUM(NSInteger, AppTextViewStyle) {
+    // 默认黑色样式
+    kAppTextViewStyleDefault = 0,
+};
+
+@interface AppStandard : NSObject
+
+// 按钮规范
++ (UIButton *)buttonWithStyle:(AppButtonStyle)style;
+
+// 输入框规范
++ (UITextField *)textFieldWithStyle:(AppTextFieldStyle)style;
+
+// 多行输入框规范
++ (UITextView *)textViewWithStyle:(AppTextViewStyle)style;
+
+@end
