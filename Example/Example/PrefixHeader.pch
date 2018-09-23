@@ -1,0 +1,17 @@
+//
+//  PrefixHeader.pch
+//  Example
+//
+//  Created by wuyong on 17/3/7.
+//  Copyright © 2017年 wuyong.site. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import <FWFramework/FWFramework.h>
+#import "SwiftHeader.h"
+#import "AppConfig.h"
+#import "AppStandard.h"
+
+#endif /* PrefixHeader_pch */
