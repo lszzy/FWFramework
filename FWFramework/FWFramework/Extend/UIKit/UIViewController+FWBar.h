@@ -121,4 +121,7 @@
 // 设置是否隐藏顶部线条
 - (void)fwSetLineHidden:(BOOL)hidden;
 
+// 设置阴影色，默认offset:(0,1)，radius:6，可覆盖
+- (void)fwSetShadowColor:(UIColor *)color;
+
 @end
