@@ -22,6 +22,7 @@
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
+                                             @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
