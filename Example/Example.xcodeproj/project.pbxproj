@@ -25,6 +25,7 @@
 		2F593FF42157E7D30022137F /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FF32157E7D30022137F /* ExampleTests.m */; };
 		2F5940032157E8BF0022137F /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5940022157E8BF0022137F /* ExampleUITests.m */; };
 		2F5A5BE61FB1B18B00EA39D0 /* FWFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5A5BE51FB1B18600EA39D0 /* FWFramework.framework */; };
+		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,8 @@
 		2F5940042157E8BF0022137F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F5A5BE01FB1B18500EA39D0 /* FWFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FWFramework.xcodeproj; path = ../Framework/FWFramework.xcodeproj; sourceTree = "<group>"; };
 		2F7E423220FC327D00CE3E2F /* SwiftHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
+		2FB38DBF215B7058009F0450 /* TestModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestModelViewController.h; sourceTree = "<group>"; };
+		2FB38DC0215B7058009F0450 /* TestModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestModelViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +187,8 @@
 				2F4CFA592155302E00203A37 /* TestTableLayoutViewController.m */,
 				2F593FDB21560B000022137F /* TestIndicatorViewController.h */,
 				2F593FDC21560B000022137F /* TestIndicatorViewController.m */,
+				2FB38DBF215B7058009F0450 /* TestModelViewController.h */,
+				2FB38DC0215B7058009F0450 /* TestModelViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -487,6 +492,7 @@
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
+				2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */,
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
