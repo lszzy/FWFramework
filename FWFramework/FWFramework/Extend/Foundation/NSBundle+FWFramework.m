@@ -51,14 +51,14 @@ static const char FWInnerBundleKey = 0;
     objc_setAssociatedObject([NSBundle mainBundle], &FWInnerBundleKey, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
++ (NSString *)fwSystemLanguage
+{
+    return [NSLocale preferredLanguages].firstObject;
+}
+
 + (NSString *)fwLocalizedLanguage
 {
-    NSString *localizedLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
-    if (localizedLanguage) {
-        return localizedLanguage;
-    } else {
-        return [NSLocale preferredLanguages].firstObject;
-    }
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
 }
 
 + (void)fwSetLocalizedLanguage:(NSString *)language
