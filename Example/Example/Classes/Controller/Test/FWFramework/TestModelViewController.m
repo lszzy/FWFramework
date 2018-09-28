@@ -32,13 +32,11 @@
 
 @implementation TestModelObj
 
-- (instancetype)init
++ (NSDictionary *)fwModelClassMapper
 {
-    self = [super init];
-    if (self) {
-        [self setValue:@"TestModelUser" forKeyPath:@"propertyArrayMap.users"];
-    }
-    return self;
+    return @{
+             @"users": [TestModelUser class],
+             };
 }
 
 @end
@@ -73,11 +71,9 @@
                                            },
                                        ],
                                };
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:nil];
-    TestModelObj *obj = [[TestModelObj alloc] initWithJSONData:jsonData];
+    TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
     NSLog(@"obj: %@", obj);
-    NSLog(@"dict: %@", [obj objectDictionary]);
-    NSLog(@"string: %@", [obj JSONString]);
+    NSLog(@"dict: %@", [obj fwModelToJsonObject]);
 }
 
 @end
