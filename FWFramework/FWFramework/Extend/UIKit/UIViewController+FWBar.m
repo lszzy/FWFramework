@@ -314,6 +314,22 @@
     // self.shadowImage = hidden ? [UIImage new] : nil;
 }
 
+- (void)fwSetShadowColor:(UIColor *)color
+                  offset:(CGSize)offset
+                  radius:(CGFloat)radius
+{
+    // 去掉横线
+    self.barStyle = UIBarStyleBlack;
+    // 设置不透明
+    self.translucent = NO;
+    // 设置阴影色
+    self.layer.shadowColor = color.CGColor;
+    // 默认阴影配置，可覆盖
+    self.layer.shadowOffset = offset;
+    self.layer.shadowRadius = radius;
+    self.layer.shadowOpacity = 1.0;
+}
+
 @end
 
 #pragma mark - UINavigationController+FWBar

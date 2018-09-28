@@ -89,6 +89,12 @@
 // 从当前UIImage混合颜色创建UIImage，自定义模式
 - (UIImage *)fwImageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
 
+// 设置图片渲染模式为原始，始终显示原色，不显示tintColor。默认自动根据上下文
+- (UIImage *)fwImageWithRenderOriginal;
+
+// 设置图片渲染模式为模板，始终显示tintColor，不显示原色。默认自动根据上下文
+- (UIImage *)fwImageWithRenderTemplate;
+
 #pragma mark - Resize
 
 // 缩放图片到指定大小
