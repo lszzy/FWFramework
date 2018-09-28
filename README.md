@@ -85,10 +85,11 @@ Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下�
 		 fwColorWithString
 		 initWithFWString
 
-* 框架C方法必须以fw_开头，内部c方法必须以fw_inner_开头，下划线分隔，示例：
+* 框架C方法必须以fw_开头，内部c方法必须以fw_inner_开头，内部c全局静态变量必须以fw_static_开头，下划线分隔，示例：
 
 		fw_method_name
 		fw_inner_method
+		fw_static_variable
 		
 * 框架自定义协议方法、自定义类的方法、属性不需要以fw开头，示例：
 
@@ -96,10 +97,11 @@ Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下�
 		FWClassName.methodName
 		FWClassName.initWithString
 
-* 框架内部OC类必须以FWInner开头，内部OC方法必须以fwInner开头，驼峰式命名，示例：
+* 框架内部OC类必须以FWInner开头，内部OC方法必须以fwInner开头，内部OC全局静态变量必须以fwStatic开头，驼峰式命名，示例：
 
 		FWInnerClassName
 		fwInnerDebug
+		fwStaticVariable
 
 * 框架类内部全局属性统一使用_作为后缀，以区别于外部属性，示例：
 
