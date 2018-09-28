@@ -13,12 +13,12 @@
 #ifdef DEBUG
 
 // 调试默认全局日志级别：所有
-static FWLogLevel fwLogLevel = FWLogLevelAll;
+static FWLogLevel fwStaticLogLevel = FWLogLevelAll;
 
 #else
 
 // 正式默认全局日志级别：关闭
-static FWLogLevel fwLogLevel = FWLogLevelOff;
+static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 #endif
 
@@ -28,7 +28,7 @@ static FWLogLevel fwLogLevel = FWLogLevelOff;
 
 + (void)setLevel:(FWLogLevel)level
 {
-    fwLogLevel = level;
+    fwStaticLogLevel = level;
 }
 
 + (void)verbose:(NSString *)format, ...
@@ -91,7 +91,7 @@ static FWLogLevel fwLogLevel = FWLogLevelOff;
 + (void)log:(FWLogType)type withMessage:(NSString *)message
 {
     // 过滤级别
-    if (!(fwLogLevel & type)) return;
+    if (!(fwStaticLogLevel & type)) return;
     
     // 插件存在，调用插件
     id<FWLogPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWLogPlugin)];
