@@ -140,6 +140,8 @@
 		2F72855C2152287900F71DC5 /* UIImageView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7285192152287900F71DC5 /* UIImageView+FWFramework.m */; };
 		2F72855D2152287900F71DC5 /* UIImageView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72851A2152287900F71DC5 /* UIImageView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F72855E2152287900F71DC5 /* UIView+FWBadge.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72851B2152287900F71DC5 /* UIView+FWBadge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB38DBD215B6DBE009F0450 /* NSObject+FWModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB38DBB215B6DBE009F0450 /* NSObject+FWModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB38DBE215B6DBE009F0450 /* NSObject+FWModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DBC215B6DBE009F0450 /* NSObject+FWModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -277,6 +279,8 @@
 		2F72851A2152287900F71DC5 /* UIImageView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FWFramework.h"; sourceTree = "<group>"; };
 		2F72851B2152287900F71DC5 /* UIView+FWBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWBadge.h"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FB38DBB215B6DBE009F0450 /* NSObject+FWModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWModel.h"; sourceTree = "<group>"; };
+		2FB38DBC215B6DBE009F0450 /* NSObject+FWModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWModel.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -419,6 +423,8 @@
 				2F7284A72152283000F71DC5 /* NSObject+FWBlock.m */,
 				2F7284AF2152283100F71DC5 /* NSObject+FWFramework.h */,
 				2F7284912152282E00F71DC5 /* NSObject+FWFramework.m */,
+				2FB38DBB215B6DBE009F0450 /* NSObject+FWModel.h */,
+				2FB38DBC215B6DBE009F0450 /* NSObject+FWModel.m */,
 				2F7284A62152283000F71DC5 /* NSObject+FWRuntime.h */,
 				2F7284B02152283100F71DC5 /* NSObject+FWRuntime.m */,
 				2F72849D2152282F00F71DC5 /* NSObject+FWSafeType.h */,
@@ -566,6 +572,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB38DBD215B6DBE009F0450 /* NSObject+FWModel.h in Headers */,
 				2F593FD5215609380022137F /* UIView+FWIndicator.h in Headers */,
 				2F4CFA48215523D800203A37 /* UITableView+FWTemplateLayout.h in Headers */,
 				2F7284B52152283100F71DC5 /* NSString+FWFramework.h in Headers */,
@@ -753,6 +760,7 @@
 				2F7284BE2152283100F71DC5 /* NSString+FWFramework.m in Sources */,
 				2F72852A2152287900F71DC5 /* UIViewController+FWBar.m in Sources */,
 				2F7284BD2152283100F71DC5 /* NSBundle+FWFramework.m in Sources */,
+				2FB38DBE215B6DBE009F0450 /* NSObject+FWModel.m in Sources */,
 				2F7284D82152283100F71DC5 /* NSFileManager+FWFramework.m in Sources */,
 				2F7284D42152283100F71DC5 /* NSObject+FWSafeType.m in Sources */,
 				2F7285272152287900F71DC5 /* UIScrollView+FWFramework.m in Sources */,

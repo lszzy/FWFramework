@@ -359,6 +359,16 @@
     return tintedImage;
 }
 
+- (UIImage *)fwImageWithRenderOriginal
+{
+    return [self imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+- (UIImage *)fwImageWithRenderTemplate
+{
+    return [self imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+}
+
 #pragma mark - Resize
 
 - (UIImage *)fwImageWithScaleSize:(CGSize)size

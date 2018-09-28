@@ -11,9 +11,9 @@
 #import <sys/sysctl.h>
 
 // 服务器基准时间值
-static NSTimeInterval serverBaseTime = 0;
+static NSTimeInterval fwStaticServerBaseTime = 0;
 // 本地基准时间值
-static NSTimeInterval localBaseTime = 0;
+static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @implementation NSDate (FWFramework)
 
@@ -21,9 +21,9 @@ static NSTimeInterval localBaseTime = 0;
 
 + (void)fwSetServerTime:(NSTimeInterval)serverTime
 {
-    serverBaseTime = serverTime;
+    fwStaticServerBaseTime = serverTime;
     // 取运行时间，调整系统时间不会影响
-    localBaseTime = [self fwSystemUptime];
+    fwStaticLocalBaseTime = [self fwSystemUptime];
     
     // 保存当前服务器时间到本地
     [[NSUserDefaults standardUserDefaults] setObject:@(serverTime) forKey:@"FWServerTime"];
@@ -34,7 +34,7 @@ static NSTimeInterval localBaseTime = 0;
 + (NSTimeInterval)fwServerTime
 {
     // 没有同步过返回本地时间
-    if (serverBaseTime == 0) {
+    if (fwStaticServerBaseTime == 0) {
         // 是否本地有服务器时间
         NSNumber *preServerTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWServerTime"];
         NSNumber *preLocalTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalTime"];
@@ -45,10 +45,10 @@ static NSTimeInterval localBaseTime = 0;
         } else {
             return [[NSDate date] timeIntervalSince1970];
         }
-        // 同步过计算当前服务器时间
+    // 同步过计算当前服务器时间
     } else {
-        NSTimeInterval offsetTime = [self fwSystemUptime] - localBaseTime;
-        return serverBaseTime + offsetTime;
+        NSTimeInterval offsetTime = [self fwSystemUptime] - fwStaticLocalBaseTime;
+        return fwStaticServerBaseTime + offsetTime;
     }
 }
 
