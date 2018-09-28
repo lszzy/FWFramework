@@ -9,8 +9,6 @@
 
 #import "NSString+FWEncode.h"
 
-#pragma mark - NSString+FWEncode
-
 @implementation NSString (FWEncode)
 
 #pragma mark - Json
@@ -146,6 +144,31 @@
 }
 
 #pragma mark - Url
+
+- (NSString *)fwUrlEncodeComponent
+{
+    CFStringEncoding cfEncoding = kCFStringEncodingUTF8;
+    NSString *str = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                                                                 NULL,
+                                                                                 (CFStringRef)self,
+                                                                                 NULL,
+                                                                                 CFSTR("!*'();:@&=+$,/?%#[]"),
+                                                                                 cfEncoding
+                                                                                 );
+    return str;
+}
+
+- (NSString *)fwUrlDecodeComponent
+{
+    CFStringEncoding cfEncoding = kCFStringEncodingUTF8;
+    NSString *str = (__bridge NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
+                                                                                                 NULL,
+                                                                                                 (CFStringRef)self,
+                                                                                                 CFSTR(""),
+                                                                                                 cfEncoding
+                                                                                                 );
+    return str;
+}
 
 - (NSString *)fwUrlEncode
 {

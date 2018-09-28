@@ -9,8 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-#pragma mark - NSString+FWEncode
-
 /**
  *  字符串编码扩展
  */
@@ -78,6 +76,20 @@
 - (NSString *)fwBase64Decode;
 
 #pragma mark - Url
+
+/**
+ *  url参数编码，适用于query参数编码
+ *
+ *  @return url编码字符串
+ */
+- (NSString *)fwUrlEncodeComponent;
+
+/**
+ *  url参数解码
+ *
+ *  @return 原字符串
+ */
+- (NSString *)fwUrlDecodeComponent;
 
 /**
  *  url编码，适用于整个url编码
