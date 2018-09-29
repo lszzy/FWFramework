@@ -50,7 +50,7 @@
 
 - (void)onIndicator
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:nil backgroundColor:nil horizontalAlignment:NO contentInsets:UIEdgeInsetsMake(10, 10, 5, 10) cornerRadius:5];
+    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:nil backgroundColor:nil dimBackgroundColor:nil horizontalAlignment:NO contentInsets:UIEdgeInsetsMake(10, 10, 5, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view fwHideIndicator];
     });
@@ -66,7 +66,7 @@
 
 - (void)onIndicator3
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:nil backgroundColor:nil horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 5) cornerRadius:5];
+    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:nil backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor whiteColor] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 5) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view fwHideIndicator];
     });
@@ -74,7 +74,7 @@
 
 - (void)onIndicator4
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."] backgroundColor:nil horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
+    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."] backgroundColor:nil dimBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.5f] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view fwHideIndicator];
     });
