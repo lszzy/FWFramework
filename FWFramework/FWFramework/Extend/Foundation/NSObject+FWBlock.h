@@ -103,7 +103,30 @@ typedef void (^FWBlockInt)(int index);
 
 /*!
  @brief NSObject+FWBlock
+ 
+ @see https://github.com/BlocksKit/BlocksKit
  */
 @interface NSObject (FWBlock)
+
+// 延迟delay秒后主线程执行，返回可取消的block
++ (id)fwPerformBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
+
+// 延迟delay秒后后台线程执行，返回可取消的block
++ (id)fwPerformBlockInBackground:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
+
+// 延迟delay秒后指定线程执行，返回可取消的block
++ (id)fwPerformBlock:(void (^)(void))block onQueue:(dispatch_queue_t)queue afterDelay:(NSTimeInterval)delay;
+
+// 取消指定延迟block
++ (void)fwCancelBlock:(id)block;
+
+// 延迟delay秒后主线程执行，返回可取消的block
+- (id)fwPerformBlock:(void (^)(id obj))block afterDelay:(NSTimeInterval)delay;
+
+// 延迟delay秒后后台线程执行，返回可取消的block
+- (id)fwPerformBlockInBackground:(void (^)(id obj))block afterDelay:(NSTimeInterval)delay;
+
+// 延迟delay秒后指定线程执行，返回可取消的block
+- (id)fwPerformBlock:(void (^)(id obj))block onQueue:(dispatch_queue_t)queue afterDelay:(NSTimeInterval)delay;
 
 @end
