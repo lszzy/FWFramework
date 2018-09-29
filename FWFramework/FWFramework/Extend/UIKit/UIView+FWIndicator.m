@@ -15,23 +15,25 @@
 
 #pragma mark - Indicator
 
-- (void)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
+- (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
                  attributedTitle:(NSAttributedString *)attributedTitle
 {
-    [self fwShowIndicatorWithStyle:style
-                   attributedTitle:attributedTitle
-                   backgroundColor:nil
-               horizontalAlignment:NO
-                     contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
-                      cornerRadius:5.f];
+    return [self fwShowIndicatorWithStyle:style
+                          attributedTitle:attributedTitle
+                          backgroundColor:nil
+                       dimBackgroundColor:nil
+                      horizontalAlignment:NO
+                            contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
+                             cornerRadius:5.f];
 }
 
-- (void)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                 attributedTitle:(NSAttributedString *)attributedTitle
-                 backgroundColor:(UIColor *)backgroundColor
-             horizontalAlignment:(BOOL)horizontalAlignment
-                   contentInsets:(UIEdgeInsets)contentInsets
-                    cornerRadius:(CGFloat)cornerRadius
+- (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
+                     attributedTitle:(NSAttributedString *)attributedTitle
+                     backgroundColor:(UIColor *)backgroundColor
+                  dimBackgroundColor:(UIColor *)dimBackgroundColor
+                 horizontalAlignment:(BOOL)horizontalAlignment
+                       contentInsets:(UIEdgeInsets)contentInsets
+                        cornerRadius:(CGFloat)cornerRadius
 {
     // 判断之前的指示器是否存在
     UIButton *indicatorView = [self viewWithTag:2011];
@@ -39,13 +41,14 @@
         // 能否直接使用之前的指示器(避免进度重复调用出现闪烁)
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
+            indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
             centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
             centerView.layer.cornerRadius = cornerRadius;
             UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
             activityView.activityIndicatorViewStyle = style;
             UILabel *titleLabel = [indicatorView viewWithTag:2015];
             titleLabel.attributedText = attributedTitle;
-            return;
+            return indicatorView;
         }
         
         // 移除旧的视图
@@ -55,7 +58,7 @@
     // 背景容器，不可点击
     indicatorView = [UIButton fwAutoLayoutView];
     indicatorView.userInteractionEnabled = YES;
-    indicatorView.backgroundColor = [UIColor clearColor];
+    indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
     indicatorView.tag = 2011;
     [self addSubview:indicatorView];
     [indicatorView fwPinEdgesToSuperview];
@@ -113,6 +116,7 @@
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
         [titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:5.f];
     }
+    return indicatorView;
 }
 
 - (void)fwHideIndicator
@@ -125,20 +129,22 @@
 
 #pragma mark - Toast
 
-- (void)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
+- (UIView *)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
 {
-    [self fwShowToastWithAttributedText:attributedText
-                        backgroundColor:nil
-                           paddingWidth:10.f
-                          contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
-                           cornerRadius:5.f];
+    return [self fwShowToastWithAttributedText:attributedText
+                               backgroundColor:nil
+                            dimBackgroundColor:nil
+                                  paddingWidth:10.f
+                                 contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
+                                  cornerRadius:5.f];
 }
 
-- (void)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
-                      backgroundColor:(UIColor *)backgroundColor
-                         paddingWidth:(CGFloat)paddingWidth
-                        contentInsets:(UIEdgeInsets)contentInsets
-                         cornerRadius:(CGFloat)cornerRadius
+- (UIView *)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
+                          backgroundColor:(UIColor *)backgroundColor
+                       dimBackgroundColor:(UIColor *)dimBackgroundColor
+                             paddingWidth:(CGFloat)paddingWidth
+                            contentInsets:(UIEdgeInsets)contentInsets
+                             cornerRadius:(CGFloat)cornerRadius
 {
     // 移除之前的视图
     [self fwHideToast];
@@ -146,7 +152,7 @@
     // 背景容器，不可点击
     UIButton *toastView = [UIButton fwAutoLayoutView];
     toastView.userInteractionEnabled = YES;
-    toastView.backgroundColor = [UIColor clearColor];
+    toastView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
     toastView.tag = 2031;
     [self addSubview:toastView];
     [toastView fwPinEdgesToSuperview];
@@ -173,6 +179,7 @@
     textLabel.attributedText = attributedText;
     [centerView addSubview:textLabel];
     [textLabel fwPinEdgesToSuperviewWithInsets:contentInsets];
+    return toastView;
 }
 
 - (void)fwHideToast
