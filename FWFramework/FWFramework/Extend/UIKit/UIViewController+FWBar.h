@@ -81,8 +81,14 @@
 // 导航栏视图分类，全局设置用[UINavigationBar appearance]
 @interface UINavigationBar (FWBar)
 
-// 设置文字颜色(含标题)
+// 设置全局按钮文字样式(不含图片)，单个设置时详见UIBarButtonItem
++ (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes;
+
+// 设置标题和按钮颜色
 - (void)fwSetTextColor:(UIColor *)color;
+
+// 设置标题样式属性
+- (void)fwSetTitleAttributes:(NSDictionary *)attributes;
 
 // 设置背景颜色
 - (void)fwSetBackgroundColor:(UIColor *)color;
@@ -90,11 +96,11 @@
 // 设置背景图片
 - (void)fwSetBackgroundImage:(UIImage *)image;
 
-// 设置是否隐藏底部线条
-- (void)fwSetLineHidden:(BOOL)hidden;
-
 // 设置透明背景并隐藏底部线条
 - (void)fwSetBackgroundClear;
+
+// 设置是否隐藏底部线条
+- (void)fwSetLineHidden:(BOOL)hidden;
 
 // 设置返回箭头图片，值为nil则还原默认
 - (void)fwSetIndicatorImage:(UIImage *)image;
