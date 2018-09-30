@@ -95,7 +95,7 @@
 
 + (CGFloat)fwNavigationBarHeight
 {
-    return [self fwIsScreenX] ? 44.0 : 44.0;
+    return 44.0;
 }
 
 + (CGFloat)fwTabBarHeight
