@@ -215,12 +215,24 @@
 
 @implementation UINavigationBar (FWBar)
 
++ (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes
+{
+    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateDisabled];
+}
+
 - (void)fwSetTextColor:(UIColor *)color
 {
-    // 按钮
+    // 按钮颜色
     self.tintColor = color;
-    // 标题
+    // 标题颜色
     [self setTitleTextAttributes:@{NSForegroundColorAttributeName: color}];
+}
+
+- (void)fwSetTitleAttributes:(NSDictionary *)attributes
+{
+    [self setTitleTextAttributes:attributes];
 }
 
 - (void)fwSetBackgroundColor:(UIColor *)color
@@ -233,16 +245,16 @@
     [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
 }
 
-- (void)fwSetLineHidden:(BOOL)hidden
-{
-    // 设置线条颜色，传入UIColor创建的UIImage对象即可
-    [self setShadowImage:hidden ? [UIImage new] : nil];
-}
-
 - (void)fwSetBackgroundClear
 {
     [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
+}
+
+- (void)fwSetLineHidden:(BOOL)hidden
+{
+    // 设置线条颜色，传入UIColor创建的UIImage对象即可
+    [self setShadowImage:hidden ? [UIImage new] : nil];
 }
 
 - (void)fwSetIndicatorImage:(UIImage *)image
@@ -262,7 +274,7 @@
         
         self.backIndicatorImage = image;
         self.backIndicatorTransitionMaskImage = image;
-        // 系统图片
+    // 系统图片
     } else {
         self.backIndicatorImage = nil;
         self.backIndicatorTransitionMaskImage = nil;
