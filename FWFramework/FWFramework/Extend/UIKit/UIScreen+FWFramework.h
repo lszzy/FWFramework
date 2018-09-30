@@ -74,7 +74,7 @@
 #define FWStatusBarHeight (FWIsScreenX ? 44.0 : 20.0)
 
 // 导航栏高度
-#define FWNavigationBarHeight (FWIsScreenX ? 88.0 : 44.0)
+#define FWNavigationBarHeight 44.0
 
 // 标签栏高度
 #define FWTabBarHeight (FWIsScreenX ? 83.0 : 49.0)
