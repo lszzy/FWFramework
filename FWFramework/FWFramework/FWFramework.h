@@ -32,8 +32,13 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWAspect.h>
 #import <FWFramework/FWProxy.h>
 #import <FWFramework/FWPromise.h>
+#import <FWFramework/FWState.h>
 #import <FWFramework/FWMutableArray.h>
 #import <FWFramework/FWMutableDictionary.h>
+#import <FWFramework/FWAuthorizeManager.h>
+#import <FWFramework/FWKeychainManager.h>
+#import <FWFramework/FWTaskManager.h>
+#import <FWFramework/FWVersionManager.h>
 
 #else
 
@@ -48,7 +53,12 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWAspect.h"
 #import "FWProxy.h"
 #import "FWPromise.h"
+#import "FWState.h"
 #import "FWMutableArray.h"
 #import "FWMutableDictionary.h"
+#import "FWAuthorizeManager.h"
+#import "FWKeychainManager.h"
+#import "FWTaskManager.h"
+#import "FWVersionManager.h"
 
 #endif

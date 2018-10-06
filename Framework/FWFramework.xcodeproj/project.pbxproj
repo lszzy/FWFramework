@@ -142,6 +142,16 @@
 		2F72855E2152287900F71DC5 /* UIView+FWBadge.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F72851B2152287900F71DC5 /* UIView+FWBadge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB38DBD215B6DBE009F0450 /* NSObject+FWModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB38DBB215B6DBE009F0450 /* NSObject+FWModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB38DBE215B6DBE009F0450 /* NSObject+FWModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DBC215B6DBE009F0450 /* NSObject+FWModel.m */; };
+		2FF14625216902DE004A0AA7 /* FWAuthorizeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF14623216902DE004A0AA7 /* FWAuthorizeManager.m */; };
+		2FF14626216902DE004A0AA7 /* FWAuthorizeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF14624216902DE004A0AA7 /* FWAuthorizeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF1462A21690409004A0AA7 /* FWKeychainManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF1462821690409004A0AA7 /* FWKeychainManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF1462B21690409004A0AA7 /* FWKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF1462921690409004A0AA7 /* FWKeychainManager.m */; };
+		2FF1462E21690491004A0AA7 /* FWTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF1462C21690491004A0AA7 /* FWTaskManager.m */; };
+		2FF1462F21690491004A0AA7 /* FWTaskManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF1462D21690491004A0AA7 /* FWTaskManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF14632216904EC004A0AA7 /* FWState.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF14630216904EC004A0AA7 /* FWState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF14633216904EC004A0AA7 /* FWState.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF14631216904EC004A0AA7 /* FWState.m */; };
+		2FF1463621690519004A0AA7 /* FWVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF1463421690519004A0AA7 /* FWVersionManager.m */; };
+		2FF1463721690519004A0AA7 /* FWVersionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF1463521690519004A0AA7 /* FWVersionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -281,6 +291,16 @@
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FB38DBB215B6DBE009F0450 /* NSObject+FWModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWModel.h"; sourceTree = "<group>"; };
 		2FB38DBC215B6DBE009F0450 /* NSObject+FWModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWModel.m"; sourceTree = "<group>"; };
+		2FF14623216902DE004A0AA7 /* FWAuthorizeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAuthorizeManager.m; sourceTree = "<group>"; };
+		2FF14624216902DE004A0AA7 /* FWAuthorizeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAuthorizeManager.h; sourceTree = "<group>"; };
+		2FF1462821690409004A0AA7 /* FWKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWKeychainManager.h; sourceTree = "<group>"; };
+		2FF1462921690409004A0AA7 /* FWKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWKeychainManager.m; sourceTree = "<group>"; };
+		2FF1462C21690491004A0AA7 /* FWTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTaskManager.m; sourceTree = "<group>"; };
+		2FF1462D21690491004A0AA7 /* FWTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWTaskManager.h; sourceTree = "<group>"; };
+		2FF14630216904EC004A0AA7 /* FWState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWState.h; sourceTree = "<group>"; };
+		2FF14631216904EC004A0AA7 /* FWState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWState.m; sourceTree = "<group>"; };
+		2FF1463421690519004A0AA7 /* FWVersionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWVersionManager.m; sourceTree = "<group>"; };
+		2FF1463521690519004A0AA7 /* FWVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWVersionManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -451,6 +471,7 @@
 			isa = PBXGroup;
 			children = (
 				2F7283EB2152210E00F71DC5 /* Thread */,
+				2FF14622216902B6004A0AA7 /* Manager */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -484,6 +505,8 @@
 				2F7283F62152210E00F71DC5 /* FWAspect.m */,
 				2F7283FC2152210E00F71DC5 /* FWMessage.h */,
 				2F7283F72152210E00F71DC5 /* FWMessage.m */,
+				2FF14630216904EC004A0AA7 /* FWState.h */,
+				2FF14631216904EC004A0AA7 /* FWState.m */,
 			);
 			path = Kernel;
 			sourceTree = "<group>";
@@ -565,6 +588,21 @@
 			path = ../FWFramework;
 			sourceTree = "<group>";
 		};
+		2FF14622216902B6004A0AA7 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				2FF14624216902DE004A0AA7 /* FWAuthorizeManager.h */,
+				2FF14623216902DE004A0AA7 /* FWAuthorizeManager.m */,
+				2FF1462821690409004A0AA7 /* FWKeychainManager.h */,
+				2FF1462921690409004A0AA7 /* FWKeychainManager.m */,
+				2FF1462D21690491004A0AA7 /* FWTaskManager.h */,
+				2FF1462C21690491004A0AA7 /* FWTaskManager.m */,
+				2FF1463521690519004A0AA7 /* FWVersionManager.h */,
+				2FF1463421690519004A0AA7 /* FWVersionManager.m */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -572,6 +610,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FF14626216902DE004A0AA7 /* FWAuthorizeManager.h in Headers */,
+				2FF14632216904EC004A0AA7 /* FWState.h in Headers */,
+				2FF1463721690519004A0AA7 /* FWVersionManager.h in Headers */,
+				2FF1462F21690491004A0AA7 /* FWTaskManager.h in Headers */,
+				2FF1462A21690409004A0AA7 /* FWKeychainManager.h in Headers */,
 				2FB38DBD215B6DBE009F0450 /* NSObject+FWModel.h in Headers */,
 				2F593FD5215609380022137F /* UIView+FWIndicator.h in Headers */,
 				2F4CFA48215523D800203A37 /* UITableView+FWTemplateLayout.h in Headers */,
@@ -751,9 +794,12 @@
 				2F7284C92152283100F71DC5 /* NSString+FWEncrypt.m in Sources */,
 				2F7284C82152283100F71DC5 /* NSDictionary+FWFramework.m in Sources */,
 				2F7285362152287900F71DC5 /* UIView+FWFrame.m in Sources */,
+				2FF1463621690519004A0AA7 /* FWVersionManager.m in Sources */,
 				2F7284B82152283100F71DC5 /* NSObject+FWFramework.m in Sources */,
 				2F7285372152287900F71DC5 /* UITextField+FWKeyboard.m in Sources */,
+				2FF1462B21690409004A0AA7 /* FWKeychainManager.m in Sources */,
 				2F7285422152287900F71DC5 /* UIView+FWBorder.m in Sources */,
+				2FF1462E21690491004A0AA7 /* FWTaskManager.m in Sources */,
 				2F7285432152287900F71DC5 /* UIView+FWFramework.m in Sources */,
 				2F7285392152287900F71DC5 /* UIApplication+FWFramework.m in Sources */,
 				2F72852F2152287900F71DC5 /* UIScreen+FWFramework.m in Sources */,
@@ -765,6 +811,7 @@
 				2F7284D42152283100F71DC5 /* NSObject+FWSafeType.m in Sources */,
 				2F7285272152287900F71DC5 /* UIScrollView+FWFramework.m in Sources */,
 				2F7284D72152283100F71DC5 /* NSObject+FWRuntime.m in Sources */,
+				2FF14633216904EC004A0AA7 /* FWState.m in Sources */,
 				2F7285382152287900F71DC5 /* UIViewController+FWTransition.m in Sources */,
 				2F7284CE2152283100F71DC5 /* NSObject+FWBlock.m in Sources */,
 				2F7285332152287900F71DC5 /* UIBezierPath+FWFramework.m in Sources */,
@@ -774,6 +821,7 @@
 				2F7284D22152283100F71DC5 /* NSThread+FWFramework.m in Sources */,
 				2F7285262152287900F71DC5 /* UIView+FWBadge.m in Sources */,
 				2F7284C62152283100F71DC5 /* NSUserDefaults+FWFramework.m in Sources */,
+				2FF14625216902DE004A0AA7 /* FWAuthorizeManager.m in Sources */,
 				2F7284882152210E00F71DC5 /* FWAppDelegate.m in Sources */,
 				2F72853F2152287900F71DC5 /* UIWindow+FWFramework.m in Sources */,
 				2F7285212152287900F71DC5 /* UIButton+FWFramework.m in Sources */,
