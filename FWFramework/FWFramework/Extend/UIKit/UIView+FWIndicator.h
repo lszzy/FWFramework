@@ -32,7 +32,7 @@
  *  @param style               样式
  *  @param attributedTitle     属性文本，默认白色、16号字体
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
- *  @param dimBackgroundColor  全局背景色，默认透明
+ *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
  *  @param horizontalAlignment 是否水平对齐，默认垂直对齐
  *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
  *  @param cornerRadius        圆角半径，默认5.0
@@ -66,7 +66,7 @@
  *
  *  @param attributedText      属性文本，默认白色、16号字体
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
- *  @param dimBackgroundColor  全局背景色，默认透明
+ *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
  *  @param paddingWidth        吐司左右最小内间距，默认10
  *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
  *  @param cornerRadius        圆角半径，默认5.0

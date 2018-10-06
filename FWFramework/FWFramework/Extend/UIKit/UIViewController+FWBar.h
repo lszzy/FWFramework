@@ -112,7 +112,11 @@
 
 #pragma mark - UITabBar+FWBar
 
-// 标签栏视图分类，全局设置用[UITabBar appearance]
+/*!
+ @brief 标签栏视图分类，全局设置用[UITabBar appearance]
+ @discussion 如果push时需要隐藏TabBar，需要设置vc.hidesBottomBarWhenPushed，再push即可。
+    如果present时需要隐藏TabBar，需要设置tabbar.definesPresentationContext为YES，再用tabbar来present即可
+ */
 @interface UITabBar (FWBar)
 
 // 设置文字颜色(含图标)
