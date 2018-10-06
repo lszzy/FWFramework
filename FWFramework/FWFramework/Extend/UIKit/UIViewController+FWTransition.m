@@ -74,24 +74,12 @@
 
 - (UIView *)fromView
 {
-    // iOS8使用viewForKey:
-    if ([self.transitionContext respondsToSelector:@selector(viewForKey:)]) {
-        return [self.transitionContext viewForKey:UITransitionContextFromViewKey];
-        // iOS7使用viewControllerForKey:
-    } else {
-        return [self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey].view;
-    }
+    return [self.transitionContext viewForKey:UITransitionContextFromViewKey];
 }
 
 - (UIView *)toView
 {
-    // iOS8使用viewForKey:
-    if ([self.transitionContext respondsToSelector:@selector(viewForKey:)]) {
-        return [self.transitionContext viewForKey:UITransitionContextToViewKey];
-        // iOS7使用viewControllerForKey:
-    } else {
-        return [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey].view;
-    }
+    return [self.transitionContext viewForKey:UITransitionContextToViewKey];
 }
 
 - (void)start
