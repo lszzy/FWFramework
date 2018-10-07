@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+/*!
+ @brief UIScrollView分类
+ @discussion 添加顶部下拉图片时，只需将该子view添加到scrollView最底层(如frame方式添加inset视图)，再实现效果即可。
+ */
 @interface UIScrollView (FWFramework)
 
 #pragma mark - Frame
