@@ -31,7 +31,7 @@
 - (void)fwSetAutoLayout:(BOOL)enabled;
 
 /*!
- @brief 执行子视图自动布局，自动计算子视图尺寸。iOS8需要将视图添加到界面后才能调用
+ @brief 执行子视图自动布局，自动计算子视图尺寸。先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
  */
 - (void)fwAutoLayoutSubviews;
 
