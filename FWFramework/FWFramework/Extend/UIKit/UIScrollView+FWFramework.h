@@ -54,7 +54,7 @@
 // 全体禁用内边距适应(iOS11默认启用后，会导致显示不正常)
 + (void)fwContentInsetNever;
 
-// 单独禁用内边距适应，同上
+// 单独禁用内边距适应，同上。如果iOS7-10的ScrollView占不满导航栏，需设置viewController.automaticallyAdjustsScrollViewInsets为NO即可
 - (void)fwContentInsetNever;
 
 @end
