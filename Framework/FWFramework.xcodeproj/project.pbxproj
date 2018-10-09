@@ -652,13 +652,9 @@
 			isa = PBXGroup;
 			children = (
 				2F03A657216D0049001965A1 /* FWNetwork.h */,
-				2F03A626216CF882001965A1 /* AFAutoPurgingImageCache.h */,
-				2F03A630216CF882001965A1 /* AFAutoPurgingImageCache.m */,
 				2F03A62E216CF882001965A1 /* AFCompatibilityMacros.h */,
 				2F03A62F216CF882001965A1 /* AFHTTPSessionManager.h */,
 				2F03A627216CF882001965A1 /* AFHTTPSessionManager.m */,
-				2F03A625216CF882001965A1 /* AFImageDownloader.h */,
-				2F03A631216CF882001965A1 /* AFImageDownloader.m */,
 				2F03A621216CF882001965A1 /* AFNetworkReachabilityManager.h */,
 				2F03A62C216CF882001965A1 /* AFNetworkReachabilityManager.m */,
 				2F03A620216CF882001965A1 /* AFSecurityPolicy.h */,
@@ -669,6 +665,10 @@
 				2F03A624216CF882001965A1 /* AFURLResponseSerialization.m */,
 				2F03A622216CF882001965A1 /* AFURLSessionManager.h */,
 				2F03A629216CF882001965A1 /* AFURLSessionManager.m */,
+				2F03A625216CF882001965A1 /* AFImageDownloader.h */,
+				2F03A631216CF882001965A1 /* AFImageDownloader.m */,
+				2F03A626216CF882001965A1 /* AFAutoPurgingImageCache.h */,
+				2F03A630216CF882001965A1 /* AFAutoPurgingImageCache.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
