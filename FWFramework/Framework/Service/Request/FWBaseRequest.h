@@ -68,8 +68,8 @@ typedef NS_ENUM(NSInteger, FWRequestPriority) {
 
 @protocol FWMultipartFormData;
 
-typedef void (^AFConstructingBlock)(id<FWMultipartFormData> formData);
-typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
+typedef void (^FWConstructingBlock)(id<FWMultipartFormData> formData);
+typedef void (^FWURLSessionTaskProgressBlock)(NSProgress *);
 
 @class FWBaseRequest;
 
@@ -207,7 +207,7 @@ typedef void(^FWRequestCompletionBlock)(__kindof FWBaseRequest *request);
 @property (nonatomic, strong, nullable) NSMutableArray<id<FWRequestAccessory>> *requestAccessories;
 
 ///  This can be use to construct HTTP body when needed in POST request. Default is nil.
-@property (nonatomic, copy, nullable) AFConstructingBlock constructingBodyBlock;
+@property (nonatomic, copy, nullable) FWConstructingBlock constructingBodyBlock;
 
 ///  This value is used to perform resumable download request. Default is nil.
 ///
@@ -219,7 +219,7 @@ typedef void(^FWRequestCompletionBlock)(__kindof FWBaseRequest *request);
 @property (nonatomic, strong, nullable) NSString *resumableDownloadPath;
 
 ///  You can use this block to track the download progress. See also `resumableDownloadPath`.
-@property (nonatomic, copy, nullable) AFURLSessionTaskProgressBlock resumableDownloadProgressBlock;
+@property (nonatomic, copy, nullable) FWURLSessionTaskProgressBlock resumableDownloadProgressBlock;
 
 ///  The priority of the request. Effective only on iOS 8+. Default is `FWRequestPriorityDefault`.
 @property (nonatomic) FWRequestPriority requestPriority;

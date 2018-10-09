@@ -122,7 +122,7 @@
     }
     return [[NSURLCache alloc] initWithMemoryCapacity:20 * 1024 * 1024
                                          diskCapacity:150 * 1024 * 1024
-                                             diskPath:@"com.alamofire.imagedownloader"];
+                                             diskPath:@"site.wuyong.imagedownloader"];
 }
 
 + (NSURLSessionConfiguration *)defaultURLSessionConfiguration {
@@ -171,10 +171,10 @@
         self.mergedTasks = [[NSMutableDictionary alloc] init];
         self.activeRequestCount = 0;
 
-        NSString *name = [NSString stringWithFormat:@"com.alamofire.imagedownloader.synchronizationqueue-%@", [[NSUUID UUID] UUIDString]];
+        NSString *name = [NSString stringWithFormat:@"site.wuyong.imagedownloader.synchronizationqueue-%@", [[NSUUID UUID] UUIDString]];
         self.synchronizationQueue = dispatch_queue_create([name cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_SERIAL);
 
-        name = [NSString stringWithFormat:@"com.alamofire.imagedownloader.responsequeue-%@", [[NSUUID UUID] UUIDString]];
+        name = [NSString stringWithFormat:@"site.wuyong.imagedownloader.responsequeue-%@", [[NSUUID UUID] UUIDString]];
         self.responseQueue = dispatch_queue_create([name cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_CONCURRENT);
     }
 

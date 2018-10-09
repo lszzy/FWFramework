@@ -27,8 +27,8 @@
 #import <CoreServices/CoreServices.h>
 #endif
 
-NSString * const FWURLRequestSerializationErrorDomain = @"com.alamofire.error.serialization.request";
-NSString * const FWNetworkingOperationFailingURLRequestErrorKey = @"com.alamofire.serialization.request.error.response";
+NSString * const FWURLRequestSerializationErrorDomain = @"site.wuyong.error.serialization.request";
+NSString * const FWNetworkingOperationFailingURLRequestErrorKey = @"site.wuyong.serialization.request.error.response";
 
 typedef NSString * (^AFQueryStringSerializationBlock)(NSURLRequest *request, id parameters, NSError *__autoreleasing *error);
 
