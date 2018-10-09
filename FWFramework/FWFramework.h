@@ -41,13 +41,6 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWVersionManager.h>
 #import <FWFramework/FWNetwork.h>
 #import <FWFramework/FWRequest.h>
-#import <FWFramework/FWBaseRequest.h>
-#import <FWFramework/FWNetworkAgent.h>
-#import <FWFramework/FWBatchRequest.h>
-#import <FWFramework/FWBatchRequestAgent.h>
-#import <FWFramework/FWChainRequest.h>
-#import <FWFramework/FWChainRequestAgent.h>
-#import <FWFramework/FWNetworkConfig.h>
 
 // Application
 
@@ -73,13 +66,6 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWVersionManager.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
-#import "FWBaseRequest.h"
-#import "FWNetworkAgent.h"
-#import "FWBatchRequest.h"
-#import "FWBatchRequestAgent.h"
-#import "FWChainRequest.h"
-#import "FWChainRequestAgent.h"
-#import "FWNetworkConfig.h"
 
 // Application
 
