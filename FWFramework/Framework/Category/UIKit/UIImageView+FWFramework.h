@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImageView+FWNetwork.h"
 
 /**
  *  图片视图分类
