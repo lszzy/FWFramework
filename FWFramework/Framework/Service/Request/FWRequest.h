@@ -23,6 +23,13 @@
 
 #import "FWBaseRequest.h"
 
+#import "FWNetworkAgent.h"
+#import "FWBatchRequest.h"
+#import "FWBatchRequestAgent.h"
+#import "FWChainRequest.h"
+#import "FWChainRequestAgent.h"
+#import "FWNetworkConfig.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const FWRequestCacheErrorDomain;
