@@ -66,9 +66,9 @@ typedef NS_ENUM(NSInteger, FWRequestPriority) {
     FWRequestPriorityHigh = 4,
 };
 
-@protocol AFMultipartFormData;
+@protocol FWMultipartFormData;
 
-typedef void (^AFConstructingBlock)(id<AFMultipartFormData> formData);
+typedef void (^AFConstructingBlock)(id<FWMultipartFormData> formData);
 typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
 
 @class FWBaseRequest;

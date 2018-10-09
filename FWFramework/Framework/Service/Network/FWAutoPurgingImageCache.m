@@ -1,4 +1,4 @@
-// AFAutoPurgingImageCache.m
+// FWAutoPurgingImageCache.m
 // Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,9 +23,9 @@
 
 #if TARGET_OS_IOS || TARGET_OS_TV 
 
-#import "AFAutoPurgingImageCache.h"
+#import "FWAutoPurgingImageCache.h"
 
-@interface AFCachedImage : NSObject
+@interface FWCachedImage : NSObject
 
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, copy) NSString *identifier;
@@ -35,7 +35,7 @@
 
 @end
 
-@implementation AFCachedImage
+@implementation FWCachedImage
 
 - (instancetype)initWithImage:(UIImage *)image identifier:(NSString *)identifier {
     if (self = [self init]) {
@@ -64,13 +64,13 @@
 
 @end
 
-@interface AFAutoPurgingImageCache ()
-@property (nonatomic, strong) NSMutableDictionary <NSString* , AFCachedImage*> *cachedImages;
+@interface FWAutoPurgingImageCache ()
+@property (nonatomic, strong) NSMutableDictionary <NSString* , FWCachedImage*> *cachedImages;
 @property (nonatomic, assign) UInt64 currentMemoryUsage;
 @property (nonatomic, strong) dispatch_queue_t synchronizationQueue;
 @end
 
-@implementation AFAutoPurgingImageCache
+@implementation FWAutoPurgingImageCache
 
 - (instancetype)init {
     return [self initWithMemoryCapacity:100 * 1024 * 1024 preferredMemoryCapacity:60 * 1024 * 1024];
@@ -109,9 +109,9 @@
 
 - (void)addImage:(UIImage *)image withIdentifier:(NSString *)identifier {
     dispatch_barrier_async(self.synchronizationQueue, ^{
-        AFCachedImage *cacheImage = [[AFCachedImage alloc] initWithImage:image identifier:identifier];
+        FWCachedImage *cacheImage = [[FWCachedImage alloc] initWithImage:image identifier:identifier];
 
-        AFCachedImage *previousCachedImage = self.cachedImages[identifier];
+        FWCachedImage *previousCachedImage = self.cachedImages[identifier];
         if (previousCachedImage != nil) {
             self.currentMemoryUsage -= previousCachedImage.totalBytes;
         }
@@ -123,14 +123,14 @@
     dispatch_barrier_async(self.synchronizationQueue, ^{
         if (self.currentMemoryUsage > self.memoryCapacity) {
             UInt64 bytesToPurge = self.currentMemoryUsage - self.preferredMemoryUsageAfterPurge;
-            NSMutableArray <AFCachedImage*> *sortedImages = [NSMutableArray arrayWithArray:self.cachedImages.allValues];
+            NSMutableArray <FWCachedImage*> *sortedImages = [NSMutableArray arrayWithArray:self.cachedImages.allValues];
             NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastAccessDate"
                                                                            ascending:YES];
             [sortedImages sortUsingDescriptors:@[sortDescriptor]];
 
             UInt64 bytesPurged = 0;
 
-            for (AFCachedImage *cachedImage in sortedImages) {
+            for (FWCachedImage *cachedImage in sortedImages) {
                 [self.cachedImages removeObjectForKey:cachedImage.identifier];
                 bytesPurged += cachedImage.totalBytes;
                 if (bytesPurged >= bytesToPurge) {
@@ -145,7 +145,7 @@
 - (BOOL)removeImageWithIdentifier:(NSString *)identifier {
     __block BOOL removed = NO;
     dispatch_barrier_sync(self.synchronizationQueue, ^{
-        AFCachedImage *cachedImage = self.cachedImages[identifier];
+        FWCachedImage *cachedImage = self.cachedImages[identifier];
         if (cachedImage != nil) {
             [self.cachedImages removeObjectForKey:identifier];
             self.currentMemoryUsage -= cachedImage.totalBytes;
@@ -170,7 +170,7 @@
 - (nullable UIImage *)imageWithIdentifier:(NSString *)identifier {
     __block UIImage *image = nil;
     dispatch_sync(self.synchronizationQueue, ^{
-        AFCachedImage *cachedImage = self.cachedImages[identifier];
+        FWCachedImage *cachedImage = self.cachedImages[identifier];
         image = [cachedImage accessImage];
     });
     return image;

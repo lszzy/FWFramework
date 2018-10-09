@@ -34,10 +34,10 @@
 #define kFWNetworkIncompleteDownloadFolderName @"Incomplete"
 
 @implementation FWNetworkAgent {
-    AFHTTPSessionManager *_manager;
+    FWHTTPSessionManager *_manager;
     FWNetworkConfig *_config;
-    AFJSONResponseSerializer *_jsonResponseSerializer;
-    AFXMLParserResponseSerializer *_xmlParserResponseSerialzier;
+    FWJSONResponseSerializer *_jsonResponseSerializer;
+    FWXMLParserResponseSerializer *_xmlParserResponseSerialzier;
     NSMutableDictionary<NSNumber *, FWBaseRequest *> *_requestsRecord;
 
     dispatch_queue_t _processingQueue;
@@ -58,14 +58,14 @@
     self = [super init];
     if (self) {
         _config = [FWNetworkConfig sharedConfig];
-        _manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
+        _manager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
         _requestsRecord = [NSMutableDictionary dictionary];
         _processingQueue = dispatch_queue_create("com.yuantiku.networkagent.processing", DISPATCH_QUEUE_CONCURRENT);
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         pthread_mutex_init(&_lock, NULL);
 
         _manager.securityPolicy = _config.securityPolicy;
-        _manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        _manager.responseSerializer = [FWHTTPResponseSerializer serializer];
         // Take over the status code validation
         _manager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
         _manager.completionQueue = _processingQueue;
@@ -73,18 +73,18 @@
     return self;
 }
 
-- (AFJSONResponseSerializer *)jsonResponseSerializer {
+- (FWJSONResponseSerializer *)jsonResponseSerializer {
     if (!_jsonResponseSerializer) {
-        _jsonResponseSerializer = [AFJSONResponseSerializer serializer];
+        _jsonResponseSerializer = [FWJSONResponseSerializer serializer];
         _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
 
     }
     return _jsonResponseSerializer;
 }
 
-- (AFXMLParserResponseSerializer *)xmlParserResponseSerialzier {
+- (FWXMLParserResponseSerializer *)xmlParserResponseSerialzier {
     if (!_xmlParserResponseSerialzier) {
-        _xmlParserResponseSerialzier = [AFXMLParserResponseSerializer serializer];
+        _xmlParserResponseSerialzier = [FWXMLParserResponseSerializer serializer];
         _xmlParserResponseSerialzier.acceptableStatusCodes = _allStatusCodes;
     }
     return _xmlParserResponseSerialzier;
@@ -131,12 +131,12 @@
     return [NSURL URLWithString:detailUrl relativeToURL:url].absoluteString;
 }
 
-- (AFHTTPRequestSerializer *)requestSerializerForRequest:(FWBaseRequest *)request {
-    AFHTTPRequestSerializer *requestSerializer = nil;
+- (FWHTTPRequestSerializer *)requestSerializerForRequest:(FWBaseRequest *)request {
+    FWHTTPRequestSerializer *requestSerializer = nil;
     if (request.requestSerializerType == FWRequestSerializerTypeHTTP) {
-        requestSerializer = [AFHTTPRequestSerializer serializer];
+        requestSerializer = [FWHTTPRequestSerializer serializer];
     } else if (request.requestSerializerType == FWRequestSerializerTypeJSON) {
-        requestSerializer = [AFJSONRequestSerializer serializer];
+        requestSerializer = [FWJSONRequestSerializer serializer];
     }
 
     requestSerializer.timeoutInterval = [request requestTimeoutInterval];
@@ -165,7 +165,7 @@
     NSString *url = [self buildRequestUrl:request];
     id param = request.requestArgument;
     AFConstructingBlock constructingBlock = [request constructingBodyBlock];
-    AFHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
+    FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
 
     switch (method) {
         case FWRequestMethodGET:
@@ -427,7 +427,7 @@
 #pragma mark -
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
-                               requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                               requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
                                            error:(NSError * _Nullable __autoreleasing *)error {
@@ -435,10 +435,10 @@
 }
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
-                               requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                               requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
-                       constructingBodyWithBlock:(nullable void (^)(id <AFMultipartFormData> formData))block
+                       constructingBodyWithBlock:(nullable void (^)(id <FWMultipartFormData> formData))block
                                            error:(NSError * _Nullable __autoreleasing *)error {
     NSMutableURLRequest *request = nil;
 
@@ -458,7 +458,7 @@
 }
 
 - (NSURLSessionDownloadTask *)downloadTaskWithDownloadPath:(NSString *)downloadPath
-                                         requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                                         requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                                  URLString:(NSString *)URLString
                                                 parameters:(id)parameters
                                                   progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
@@ -550,16 +550,16 @@
 
 #pragma mark - Testing
 
-- (AFHTTPSessionManager *)manager {
+- (FWHTTPSessionManager *)manager {
     return _manager;
 }
 
 - (void)resetURLSessionManager {
-    _manager = [AFHTTPSessionManager manager];
+    _manager = [FWHTTPSessionManager manager];
 }
 
 - (void)resetURLSessionManagerWithConfiguration:(NSURLSessionConfiguration *)configuration {
-    _manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
+    _manager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
 }
 
 @end

@@ -29,7 +29,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class AFImageDownloader;
+@class FWImageDownloader;
 
 /**
  This category adds methods to the UIKit framework's `UIImageView` class. The methods in this category provide support for loading remote images asynchronously from a URL.
@@ -45,12 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param imageDownloader The shared image downloader used to download images.
  */
-+ (void)fwSetSharedImageDownloader:(AFImageDownloader *)imageDownloader;
++ (void)fwSetSharedImageDownloader:(FWImageDownloader *)imageDownloader;
 
 /**
  The shared image downloader used to download images.
  */
-+ (AFImageDownloader *)fwSharedImageDownloader;
++ (FWImageDownloader *)fwSharedImageDownloader;
 
 ///--------------------
 /// @name Setting Image

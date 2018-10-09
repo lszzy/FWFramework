@@ -1,4 +1,4 @@
-// AFAutoPurgingImageCache.h
+// FWAutoPurgingImageCache.h
 // Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,9 +28,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- The `AFImageCache` protocol defines a set of APIs for adding, removing and fetching images from a cache synchronously.
+ The `FWImageCache` protocol defines a set of APIs for adding, removing and fetching images from a cache synchronously.
  */
-@protocol AFImageCache <NSObject>
+@protocol FWImageCache <NSObject>
 
 /**
  Adds the image to the cache with the given identifier.
@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The `ImageRequestCache` protocol extends the `ImageCache` protocol by adding methods for adding, removing and fetching images from a cache given an `NSURLRequest` and additional identifier.
  */
-@protocol AFImageRequestCache <AFImageCache>
+@protocol FWImageRequestCache <FWImageCache>
 
 /**
  Asks if the image should be cached using an identifier created from the request and additional identifier.
@@ -117,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The `AutoPurgingImageCache` in an in-memory image cache used to store images up to a given memory capacity. When the memory capacity is reached, the image cache is sorted by last access date, then the oldest image is continuously purged until the preferred memory usage after purge is met. Each time an image is accessed through the cache, the internal access date of the image is updated.
  */
-@interface AFAutoPurgingImageCache : NSObject <AFImageRequestCache>
+@interface FWAutoPurgingImageCache : NSObject <FWImageRequestCache>
 
 /**
  The total memory capacity of the cache in bytes.

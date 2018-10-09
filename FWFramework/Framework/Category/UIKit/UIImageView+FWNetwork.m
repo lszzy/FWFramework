@@ -25,20 +25,20 @@
 
 #if TARGET_OS_IOS || TARGET_OS_TV
 
-#import "AFImageDownloader.h"
+#import "FWImageDownloader.h"
 
 @interface UIImageView (FWInnerNetwork)
-@property (readwrite, nonatomic, strong, setter = af_setActiveImageDownloadReceipt:) AFImageDownloadReceipt *af_activeImageDownloadReceipt;
+@property (readwrite, nonatomic, strong, setter = af_setActiveImageDownloadReceipt:) FWImageDownloadReceipt *af_activeImageDownloadReceipt;
 @end
 
 @implementation UIImageView (FWInnerNetwork)
 
-- (AFImageDownloadReceipt *)af_activeImageDownloadReceipt
+- (FWImageDownloadReceipt *)af_activeImageDownloadReceipt
 {
-    return (AFImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(af_activeImageDownloadReceipt));
+    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(af_activeImageDownloadReceipt));
 }
 
-- (void)af_setActiveImageDownloadReceipt:(AFImageDownloadReceipt *)imageDownloadReceipt
+- (void)af_setActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
 {
     objc_setAssociatedObject(self, @selector(af_activeImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -49,12 +49,12 @@
 
 @implementation UIImageView (FWNetwork)
 
-+ (AFImageDownloader *)fwSharedImageDownloader
++ (FWImageDownloader *)fwSharedImageDownloader
 {
-    return objc_getAssociatedObject(self, @selector(fwSharedImageDownloader)) ?: [AFImageDownloader defaultInstance];
+    return objc_getAssociatedObject(self, @selector(fwSharedImageDownloader)) ?: [FWImageDownloader defaultInstance];
 }
 
-+ (void)fwSetSharedImageDownloader:(AFImageDownloader *)imageDownloader {
++ (void)fwSetSharedImageDownloader:(FWImageDownloader *)imageDownloader {
     objc_setAssociatedObject(self, @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
@@ -95,8 +95,8 @@
     
     [self fwCancelImageDownloadTask];
 
-    AFImageDownloader *downloader = [[self class] fwSharedImageDownloader];
-    id <AFImageRequestCache> imageCache = downloader.imageCache;
+    FWImageDownloader *downloader = [[self class] fwSharedImageDownloader];
+    id <FWImageRequestCache> imageCache = downloader.imageCache;
 
     //Use the image from the image cache if it exists
     UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
@@ -114,7 +114,7 @@
 
         __weak __typeof(self)weakSelf = self;
         NSUUID *downloadID = [NSUUID UUID];
-        AFImageDownloadReceipt *receipt;
+        FWImageDownloadReceipt *receipt;
         receipt = [downloader
                    downloadImageForURLRequest:urlRequest
                    withReceiptID:downloadID

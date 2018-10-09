@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT void FWLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
-@class AFHTTPSessionManager;
+@class FWHTTPSessionManager;
 
 @interface FWNetworkUtils : NSObject
 
@@ -94,7 +94,7 @@ FOUNDATION_EXPORT void FWLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 @interface FWNetworkAgent (Private)
 
-- (AFHTTPSessionManager *)manager;
+- (FWHTTPSessionManager *)manager;
 - (void)resetURLSessionManager;
 - (void)resetURLSessionManagerWithConfiguration:(NSURLSessionConfiguration *)configuration;
 
