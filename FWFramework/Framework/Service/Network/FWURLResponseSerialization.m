@@ -31,9 +31,9 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
-NSString * const FWURLResponseSerializationErrorDomain = @"com.alamofire.error.serialization.response";
-NSString * const FWNetworkingOperationFailingURLResponseErrorKey = @"com.alamofire.serialization.response.error.response";
-NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey = @"com.alamofire.serialization.response.error.data";
+NSString * const FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
+NSString * const FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
+NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey = @"site.wuyong.serialization.response.error.data";
 
 static NSError * AFErrorWithUnderlyingError(NSError *error, NSError *underlyingError) {
     if (!error) {

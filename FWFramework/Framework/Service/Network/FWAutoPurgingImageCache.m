@@ -82,7 +82,7 @@
         self.preferredMemoryUsageAfterPurge = preferredMemoryCapacity;
         self.cachedImages = [[NSMutableDictionary alloc] init];
 
-        NSString *queueName = [NSString stringWithFormat:@"com.alamofire.autopurgingimagecache-%@", [[NSUUID UUID] UUIDString]];
+        NSString *queueName = [NSString stringWithFormat:@"site.wuyong.autopurgingimagecache-%@", [[NSUUID UUID] UUIDString]];
         self.synchronizationQueue = dispatch_queue_create([queueName cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_CONCURRENT);
 
         [[NSNotificationCenter defaultCenter]

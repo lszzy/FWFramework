@@ -32,7 +32,7 @@ static dispatch_queue_t url_session_manager_creation_queue() {
     static dispatch_queue_t af_url_session_manager_creation_queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        af_url_session_manager_creation_queue = dispatch_queue_create("com.alamofire.networking.session.manager.creation", DISPATCH_QUEUE_SERIAL);
+        af_url_session_manager_creation_queue = dispatch_queue_create("site.wuyong.networking.session.manager.creation", DISPATCH_QUEUE_SERIAL);
     });
 
     return af_url_session_manager_creation_queue;
@@ -55,7 +55,7 @@ static dispatch_queue_t url_session_manager_processing_queue() {
     static dispatch_queue_t af_url_session_manager_processing_queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        af_url_session_manager_processing_queue = dispatch_queue_create("com.alamofire.networking.session.manager.processing", DISPATCH_QUEUE_CONCURRENT);
+        af_url_session_manager_processing_queue = dispatch_queue_create("site.wuyong.networking.session.manager.processing", DISPATCH_QUEUE_CONCURRENT);
     });
 
     return af_url_session_manager_processing_queue;
@@ -71,20 +71,20 @@ static dispatch_group_t url_session_manager_completion_group() {
     return af_url_session_manager_completion_group;
 }
 
-NSString * const FWNetworkingTaskDidResumeNotification = @"com.alamofire.networking.task.resume";
-NSString * const FWNetworkingTaskDidCompleteNotification = @"com.alamofire.networking.task.complete";
-NSString * const FWNetworkingTaskDidSuspendNotification = @"com.alamofire.networking.task.suspend";
-NSString * const FWURLSessionDidInvalidateNotification = @"com.alamofire.networking.session.invalidate";
-NSString * const FWURLSessionDownloadTaskDidFailToMoveFileNotification = @"com.alamofire.networking.session.download.file-manager-error";
+NSString * const FWNetworkingTaskDidResumeNotification = @"site.wuyong.networking.task.resume";
+NSString * const FWNetworkingTaskDidCompleteNotification = @"site.wuyong.networking.task.complete";
+NSString * const FWNetworkingTaskDidSuspendNotification = @"site.wuyong.networking.task.suspend";
+NSString * const FWURLSessionDidInvalidateNotification = @"site.wuyong.networking.session.invalidate";
+NSString * const FWURLSessionDownloadTaskDidFailToMoveFileNotification = @"site.wuyong.networking.session.download.file-manager-error";
 
-NSString * const FWNetworkingTaskDidCompleteSerializedResponseKey = @"com.alamofire.networking.task.complete.serializedresponse";
-NSString * const FWNetworkingTaskDidCompleteResponseSerializerKey = @"com.alamofire.networking.task.complete.responseserializer";
-NSString * const FWNetworkingTaskDidCompleteResponseDataKey = @"com.alamofire.networking.complete.finish.responsedata";
-NSString * const FWNetworkingTaskDidCompleteErrorKey = @"com.alamofire.networking.task.complete.error";
-NSString * const FWNetworkingTaskDidCompleteAssetPathKey = @"com.alamofire.networking.task.complete.assetpath";
-NSString * const FWNetworkingTaskDidCompleteSessionTaskMetrics = @"com.alamofire.networking.complete.sessiontaskmetrics";
+NSString * const FWNetworkingTaskDidCompleteSerializedResponseKey = @"site.wuyong.networking.task.complete.serializedresponse";
+NSString * const FWNetworkingTaskDidCompleteResponseSerializerKey = @"site.wuyong.networking.task.complete.responseserializer";
+NSString * const FWNetworkingTaskDidCompleteResponseDataKey = @"site.wuyong.networking.complete.finish.responsedata";
+NSString * const FWNetworkingTaskDidCompleteErrorKey = @"site.wuyong.networking.task.complete.error";
+NSString * const FWNetworkingTaskDidCompleteAssetPathKey = @"site.wuyong.networking.task.complete.assetpath";
+NSString * const FWNetworkingTaskDidCompleteSessionTaskMetrics = @"site.wuyong.networking.complete.sessiontaskmetrics";
 
-static NSString * const FWURLSessionManagerLockName = @"com.alamofire.networking.session.manager.lock";
+static NSString * const FWURLSessionManagerLockName = @"site.wuyong.networking.session.manager.lock";
 
 static NSUInteger const AFMaximumNumberOfAttemptsToRecreateBackgroundSessionUploadTask = 3;
 
@@ -110,7 +110,7 @@ typedef NSCachedURLResponse * (^AFURLSessionDataTaskWillCacheResponseBlock)(NSUR
 typedef NSURL * (^AFURLSessionDownloadTaskDidFinishDownloadingBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location);
 typedef void (^AFURLSessionDownloadTaskDidWriteDataBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
 typedef void (^AFURLSessionDownloadTaskDidResumeBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t fileOffset, int64_t expectedTotalBytes);
-typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
+typedef void (^FWURLSessionTaskProgressBlock)(NSProgress *);
 
 typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id responseObject, NSError *error);
 
@@ -128,8 +128,8 @@ typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
 @property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics;
 #endif
 @property (nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
-@property (nonatomic, copy) AFURLSessionTaskProgressBlock uploadProgressBlock;
-@property (nonatomic, copy) AFURLSessionTaskProgressBlock downloadProgressBlock;
+@property (nonatomic, copy) FWURLSessionTaskProgressBlock uploadProgressBlock;
+@property (nonatomic, copy) FWURLSessionTaskProgressBlock downloadProgressBlock;
 @property (nonatomic, copy) AFURLSessionTaskCompletionHandler completionHandler;
 @end
 
@@ -362,8 +362,8 @@ static inline BOOL af_addMethod(Class theClass, SEL selector, Method method) {
     return class_addMethod(theClass, selector,  method_getImplementation(method),  method_getTypeEncoding(method));
 }
 
-static NSString * const AFNSURLSessionTaskDidResumeNotification  = @"com.alamofire.networking.nsurlsessiontask.resume";
-static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofire.networking.nsurlsessiontask.suspend";
+static NSString * const AFNSURLSessionTaskDidResumeNotification  = @"site.wuyong.networking.nsurlsessiontask.resume";
+static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong.networking.nsurlsessiontask.suspend";
 
 @interface _AFURLSessionTaskSwizzling : NSObject
 

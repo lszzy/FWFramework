@@ -164,7 +164,7 @@
     FWRequestMethod method = [request requestMethod];
     NSString *url = [self buildRequestUrl:request];
     id param = request.requestArgument;
-    AFConstructingBlock constructingBlock = [request constructingBodyBlock];
+    FWConstructingBlock constructingBlock = [request constructingBodyBlock];
     FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
 
     switch (method) {
