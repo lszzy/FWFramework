@@ -297,7 +297,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
             _cacheMetadata = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
             return YES;
         } @catch (NSException *exception) {
-            FWLog(@"Load cache metadata failed, reason = %@", exception.reason);
+            FWRequestLog(@"Load cache metadata failed, reason = %@", exception.reason);
             return NO;
         }
     }
@@ -343,7 +343,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
                 metadata.appVersionString = [FWNetworkUtils appVersionString];
                 [NSKeyedArchiver archiveRootObject:metadata toFile:[self cacheMetadataFilePath]];
             } @catch (NSException *exception) {
-                FWLog(@"Save cache failed, reason = %@", exception.reason);
+                FWRequestLog(@"Save cache failed, reason = %@", exception.reason);
             }
         }
     }
@@ -379,7 +379,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
     [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES
                                                attributes:nil error:&error];
     if (error) {
-        FWLog(@"create cache directory failed, error = %@", error);
+        FWRequestLog(@"create cache directory failed, error = %@", error);
     } else {
         [FWNetworkUtils addDoNotBackupAttribute:path];
     }

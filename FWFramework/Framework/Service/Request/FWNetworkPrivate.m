@@ -26,7 +26,7 @@
 
 #import "FWURLRequestSerialization.h"
 
-void FWLog(NSString *format, ...) {
+void FWRequestLog(NSString *format, ...) {
 #ifdef DEBUG
     if (![FWNetworkConfig sharedConfig].debugLogEnabled) {
         return;
@@ -92,7 +92,7 @@ void FWLog(NSString *format, ...) {
     NSError *error = nil;
     [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
     if (error) {
-        FWLog(@"error to set do not backup attribute, error = %@", error);
+        FWRequestLog(@"error to set do not backup attribute, error = %@", error);
     }
 }
 
