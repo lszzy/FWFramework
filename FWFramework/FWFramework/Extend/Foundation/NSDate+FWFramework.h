@@ -20,6 +20,7 @@
 
 /*!
  @brief NSDate+FWFramework
+ @discussion NSDate默认GMT时区；NSTimeZone默认系统时区(可设置应用默认时区)；NSDateFormatter默认当前时区(可自定义)，格式化时自动修正NSDate时区(无需手工修正NSDate)；NSLocale默认当前语言环境
  */
 @interface NSDate (FWFramework)
 
@@ -28,7 +29,7 @@
 // 同步服务器基准时间戳
 + (void)fwSetServerTime:(NSTimeInterval)serverTime;
 
-// 当前服务器时间戳，没有同步过返回本地时间
+// 当前服务器时间戳，没有同步过返回本地时间戳
 + (NSTimeInterval)fwServerTime;
 
 #pragma mark - System
@@ -42,7 +43,7 @@
 #pragma mark - Convert
 
 /**
- *  从字符串初始化日期
+ *  从字符串初始化日期，默认当前时区
  *
  *  @param string 格式：yyyy-MM-dd HH:mm:ss
  *
@@ -51,7 +52,7 @@
 + (NSDate *)fwDateWithString:(NSString *)string;
 
 /**
- *  从字符串初始化日期
+ *  从字符串初始化日期，默认当前时区
  *
  *  @param string 字符串
  *  @param format 自定义格式
@@ -59,6 +60,17 @@
  *  @return NSDate
  */
 + (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format;
+
+/**
+ *  从字符串初始化日期，指定时区
+ *
+ *  @param string 字符串
+ *  @param format 自定义格式
+ *  @param timeZone 时区
+ *
+ *  @return NSDate
+ */
++ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone;
 
 /**
  *  从时间戳初始化日期
@@ -70,29 +82,30 @@
 + (NSDate *)fwDateWithTimestamp:(NSTimeInterval)timestamp;
 
 /**
- *  从当前时间间隔获取日期
- *
- *  @param interval 当前时间间隔
- *
- *  @return NSDate
- */
-+ (NSDate *)fwDateWithInterval:(NSTimeInterval)interval;
-
-/**
- *  转化为字符串
+ *  转化为字符串，默认当前时区
  *
  *  @return 格式：yyyy-MM-dd HH:mm:ss
  */
 - (NSString *)fwStringValue;
 
 /**
- *  转化为字符串
+ *  转化为字符串，默认当前时区
  *
  *  @param format 自定义格式
  *
  *  @return 字符串
  */
 - (NSString *)fwStringWithFormat:(NSString *)format;
+
+/**
+ *  转化为字符串，指定时区
+ *
+ *  @param format 自定义格式
+ *  @param timeZone 时区
+ *
+ *  @return 字符串
+ */
+- (NSString *)fwStringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone;
 
 /**
  *  计算两个时间差，并格式化为友好的时间字符串(类似微博)
@@ -103,23 +116,19 @@
 - (NSString *)fwStringSinceDate:(NSDate *)date;
 
 /**
- *  转化为时间戳
+ *  转化为UTC时间戳
  *
- *  @return 时间戳
+ *  @return UTC时间戳
  */
 - (NSTimeInterval)fwTimestampValue;
-
-/**
- *  转换为当前时间间隔
- *
- *  @return 当前时间间隔
- */
-- (NSTimeInterval)fwIntervalValue;
 
 #pragma mark - TimeZone
 
 // 转换为当前时区时间
 - (NSDate *)fwDateWithLocalTimeZone;
+
+// 转换为UTC时区时间
+- (NSDate *)fwDateWithUTCTimeZone;
 
 // 转换为指定时区时间
 - (NSDate *)fwDateWithTimeZone:(NSTimeZone *)timeZone;
