@@ -38,4 +38,7 @@
     #import "AFURLSessionManager.h"
     #import "AFHTTPSessionManager.h"
 
+    #import "AFImageDownloader.h"
+    #import "AFAutoPurgingImageCache.h"
+
 #endif /* _AFNETWORKING_ */
