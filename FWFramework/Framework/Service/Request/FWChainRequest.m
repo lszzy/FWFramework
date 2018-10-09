@@ -52,7 +52,7 @@
 
 - (void)start {
     if (_nextRequestIndex > 0) {
-        FWLog(@"Error! Chain request has already started.");
+        FWRequestLog(@"Error! Chain request has already started.");
         return;
     }
 
@@ -61,7 +61,7 @@
         [self startNextRequest];
         [[FWChainRequestAgent sharedAgent] addChainRequest:self];
     } else {
-        FWLog(@"Error! Chain request array is empty.");
+        FWRequestLog(@"Error! Chain request array is empty.");
     }
 }
 
