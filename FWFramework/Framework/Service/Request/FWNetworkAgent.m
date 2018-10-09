@@ -229,7 +229,7 @@
     }
 
     // Retain request
-    FWLog(@"Add request: %@", NSStringFromClass([request class]));
+    FWRequestLog(@"Add request: %@", NSStringFromClass([request class]));
     [self addRequestToRecord:request];
     [request.requestTask resume];
 }
@@ -304,7 +304,7 @@
         return;
     }
 
-    FWLog(@"Finished Request: %@", NSStringFromClass([request class]));
+    FWRequestLog(@"Finished Request: %@", NSStringFromClass([request class]));
 
     NSError * __autoreleasing serializationError = nil;
     NSError * __autoreleasing validationError = nil;
@@ -373,7 +373,7 @@
 
 - (void)requestDidFailWithRequest:(FWBaseRequest *)request error:(NSError *)error {
     request.error = error;
-    FWLog(@"Request %@ failed, status code = %ld, error = %@",
+    FWRequestLog(@"Request %@ failed, status code = %ld, error = %@",
            NSStringFromClass([request class]), (long)request.responseStatusCode, error.localizedDescription);
 
     // Save incomplete download data.
@@ -420,7 +420,7 @@
 - (void)removeRequestFromRecord:(FWBaseRequest *)request {
     Lock();
     [_requestsRecord removeObjectForKey:@(request.requestTask.taskIdentifier)];
-    FWLog(@"Request queue size = %zd", [_requestsRecord count]);
+    FWRequestLog(@"Request queue size = %zd", [_requestsRecord count]);
     Unlock();
 }
 
@@ -507,7 +507,7 @@
                             }];
             resumeSucceeded = YES;
         } @catch (NSException *exception) {
-            FWLog(@"Resume download failed, reason = %@", exception.reason);
+            FWRequestLog(@"Resume download failed, reason = %@", exception.reason);
             resumeSucceeded = NO;
         }
     }
@@ -535,7 +535,7 @@
 
     NSError *error = nil;
     if(![fileManager createDirectoryAtPath:cacheFolder withIntermediateDirectories:YES attributes:nil error:&error]) {
-        FWLog(@"Failed to create cache directory at %@", cacheFolder);
+        FWRequestLog(@"Failed to create cache directory at %@", cacheFolder);
         cacheFolder = nil;
     }
     return cacheFolder;

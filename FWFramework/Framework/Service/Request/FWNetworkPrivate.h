@@ -31,7 +31,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT void FWLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 @class FWHTTPSessionManager;
 
