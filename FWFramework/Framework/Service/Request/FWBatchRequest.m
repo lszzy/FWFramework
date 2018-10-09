@@ -41,7 +41,7 @@
         _finishedCount = 0;
         for (FWRequest * req in _requestArray) {
             if (![req isKindOfClass:[FWRequest class]]) {
-                FWLog(@"Error, request item must be FWRequest instance.");
+                FWRequestLog(@"Error, request item must be FWRequest instance.");
                 return nil;
             }
         }
@@ -51,7 +51,7 @@
 
 - (void)start {
     if (_finishedCount > 0) {
-        FWLog(@"Error! Batch request has already started.");
+        FWRequestLog(@"Error! Batch request has already started.");
         return;
     }
     _failedRequest = nil;
