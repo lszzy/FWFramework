@@ -24,21 +24,21 @@
 #import <Availability.h>
 #import <TargetConditionals.h>
 
-#ifndef _AFNETWORKING_
-    #define _AFNETWORKING_
+#ifndef _FWNETWORKING_
+    #define _FWNETWORKING_
 
-    #import "AFURLRequestSerialization.h"
-    #import "AFURLResponseSerialization.h"
-    #import "AFSecurityPolicy.h"
+    #import "FWURLRequestSerialization.h"
+    #import "FWURLResponseSerialization.h"
+    #import "FWSecurityPolicy.h"
 
 #if !TARGET_OS_WATCH
-    #import "AFNetworkReachabilityManager.h"
+    #import "FWNetworkReachabilityManager.h"
 #endif
 
-    #import "AFURLSessionManager.h"
-    #import "AFHTTPSessionManager.h"
+    #import "FWURLSessionManager.h"
+    #import "FWHTTPSessionManager.h"
 
-    #import "AFImageDownloader.h"
-    #import "AFAutoPurgingImageCache.h"
+    #import "FWImageDownloader.h"
+    #import "FWAutoPurgingImageCache.h"
 
-#endif /* _AFNETWORKING_ */
+#endif /* _FWNETWORKING_ */

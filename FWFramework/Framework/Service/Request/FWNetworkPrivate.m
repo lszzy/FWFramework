@@ -24,7 +24,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "FWNetworkPrivate.h"
 
-#import "AFURLRequestSerialization.h"
+#import "FWURLRequestSerialization.h"
 
 void FWLog(NSString *format, ...) {
 #ifdef DEBUG

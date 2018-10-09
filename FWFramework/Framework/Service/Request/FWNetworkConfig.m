@@ -47,7 +47,7 @@
         _cdnUrl = @"";
         _urlFilters = [NSMutableArray array];
         _cacheDirPathFilters = [NSMutableArray array];
-        _securityPolicy = [AFSecurityPolicy defaultPolicy];
+        _securityPolicy = [FWSecurityPolicy defaultPolicy];
         _debugLogEnabled = NO;
     }
     return self;

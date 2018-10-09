@@ -1,4 +1,4 @@
-// AFURLResponseSerialization.h
+// FWURLResponseSerialization.h
 // Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,14 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Recursively removes `NSNull` values from a JSON object.
 */
-id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions);
+id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions);
 
 /**
- The `AFURLResponseSerialization` protocol is adopted by an object that decodes data into a more useful object representation, according to details in the server response. Response serializers may additionally perform validation on the incoming response and data.
+ The `FWURLResponseSerialization` protocol is adopted by an object that decodes data into a more useful object representation, according to details in the server response. Response serializers may additionally perform validation on the incoming response and data.
 
  For example, a JSON response serializer may check for an acceptable status code (`2XX` range) and content type (`application/json`), decoding a valid JSON response into an object.
  */
-@protocol AFURLResponseSerialization <NSObject, NSSecureCoding, NSCopying>
+@protocol FWURLResponseSerialization <NSObject, NSSecureCoding, NSCopying>
 
 /**
  The response object decoded from the data associated with a specified response.
@@ -54,15 +54,15 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark -
 
 /**
- `AFHTTPResponseSerializer` conforms to the `AFURLRequestSerialization` & `AFURLResponseSerialization` protocols, offering a concrete base implementation of query string / URL form-encoded parameter serialization and default request headers, as well as response status code and content type validation.
+ `FWHTTPResponseSerializer` conforms to the `FWURLRequestSerialization` & `FWURLResponseSerialization` protocols, offering a concrete base implementation of query string / URL form-encoded parameter serialization and default request headers, as well as response status code and content type validation.
 
- Any request or response serializer dealing with HTTP is encouraged to subclass `AFHTTPResponseSerializer` in order to ensure consistent default behavior.
+ Any request or response serializer dealing with HTTP is encouraged to subclass `FWHTTPResponseSerializer` in order to ensure consistent default behavior.
  */
-@interface AFHTTPResponseSerializer : NSObject <AFURLResponseSerialization>
+@interface FWHTTPResponseSerializer : NSObject <FWURLResponseSerialization>
 
 - (instancetype)init;
 
-@property (nonatomic, assign) NSStringEncoding stringEncoding DEPRECATED_MSG_ATTRIBUTE("The string encoding is never used. AFHTTPResponseSerializer only validates status codes and content types but does not try to decode the received data in any way.");
+@property (nonatomic, assign) NSStringEncoding stringEncoding DEPRECATED_MSG_ATTRIBUTE("The string encoding is never used. FWHTTPResponseSerializer only validates status codes and content types but does not try to decode the received data in any way.");
 
 /**
  Creates and returns a serializer with default configuration.
@@ -106,9 +106,9 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 
 /**
- `AFJSONResponseSerializer` is a subclass of `AFHTTPResponseSerializer` that validates and decodes JSON responses.
+ `FWJSONResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes JSON responses.
 
- By default, `AFJSONResponseSerializer` accepts the following MIME types, which includes the official standard, `application/json`, as well as other commonly-used types:
+ By default, `FWJSONResponseSerializer` accepts the following MIME types, which includes the official standard, `application/json`, as well as other commonly-used types:
 
  - `application/json`
  - `text/json`
@@ -116,7 +116,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
  In RFC 7159 - Section 8.1, it states that JSON text is required to be encoded in UTF-8, UTF-16, or UTF-32, and the default encoding is UTF-8. NSJSONSerialization provides support for all the encodings listed in the specification, and recommends UTF-8 for efficiency. Using an unsupported encoding will result in serialization error. See the `NSJSONSerialization` documentation for more details.
  */
-@interface AFJSONResponseSerializer : AFHTTPResponseSerializer
+@interface FWJSONResponseSerializer : FWHTTPResponseSerializer
 
 - (instancetype)init;
 
@@ -142,14 +142,14 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark -
 
 /**
- `AFXMLParserResponseSerializer` is a subclass of `AFHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLParser` objects.
+ `FWXMLParserResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLParser` objects.
 
- By default, `AFXMLParserResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
+ By default, `FWXMLParserResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
 
  - `application/xml`
  - `text/xml`
  */
-@interface AFXMLParserResponseSerializer : AFHTTPResponseSerializer
+@interface FWXMLParserResponseSerializer : FWHTTPResponseSerializer
 
 @end
 
@@ -158,14 +158,14 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
 
 /**
- `AFXMLDocumentResponseSerializer` is a subclass of `AFHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
+ `FWXMLDocumentResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
 
- By default, `AFXMLDocumentResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
+ By default, `FWXMLDocumentResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
 
  - `application/xml`
  - `text/xml`
  */
-@interface AFXMLDocumentResponseSerializer : AFHTTPResponseSerializer
+@interface FWXMLDocumentResponseSerializer : FWHTTPResponseSerializer
 
 - (instancetype)init;
 
@@ -188,13 +188,13 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark -
 
 /**
- `AFPropertyListResponseSerializer` is a subclass of `AFHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
+ `FWPropertyListResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
 
- By default, `AFPropertyListResponseSerializer` accepts the following MIME types:
+ By default, `FWPropertyListResponseSerializer` accepts the following MIME types:
 
  - `application/x-plist`
  */
-@interface AFPropertyListResponseSerializer : AFHTTPResponseSerializer
+@interface FWPropertyListResponseSerializer : FWHTTPResponseSerializer
 
 - (instancetype)init;
 
@@ -222,9 +222,9 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark -
 
 /**
- `AFImageResponseSerializer` is a subclass of `AFHTTPResponseSerializer` that validates and decodes image responses.
+ `FWImageResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes image responses.
 
- By default, `AFImageResponseSerializer` accepts the following MIME types, which correspond to the image formats supported by UIImage or NSImage:
+ By default, `FWImageResponseSerializer` accepts the following MIME types, which correspond to the image formats supported by UIImage or NSImage:
 
  - `image/tiff`
  - `image/jpeg`
@@ -237,7 +237,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
  - `image/x-xbitmap`
  - `image/x-win-bitmap`
  */
-@interface AFImageResponseSerializer : AFHTTPResponseSerializer
+@interface FWImageResponseSerializer : FWHTTPResponseSerializer
 
 #if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
 /**
@@ -256,21 +256,21 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark -
 
 /**
- `AFCompoundSerializer` is a subclass of `AFHTTPResponseSerializer` that delegates the response serialization to the first `AFHTTPResponseSerializer` object that returns an object for `responseObjectForResponse:data:error:`, falling back on the default behavior of `AFHTTPResponseSerializer`. This is useful for supporting multiple potential types and structures of server responses with a single serializer.
+ `FWCompoundSerializer` is a subclass of `FWHTTPResponseSerializer` that delegates the response serialization to the first `FWHTTPResponseSerializer` object that returns an object for `responseObjectForResponse:data:error:`, falling back on the default behavior of `FWHTTPResponseSerializer`. This is useful for supporting multiple potential types and structures of server responses with a single serializer.
  */
-@interface AFCompoundResponseSerializer : AFHTTPResponseSerializer
+@interface FWCompoundResponseSerializer : FWHTTPResponseSerializer
 
 /**
  The component response serializers.
  */
-@property (readonly, nonatomic, copy) NSArray <id<AFURLResponseSerialization>> *responseSerializers;
+@property (readonly, nonatomic, copy) NSArray <id<FWURLResponseSerialization>> *responseSerializers;
 
 /**
  Creates and returns a compound serializer comprised of the specified response serializers.
 
- @warning Each response serializer specified must be a subclass of `AFHTTPResponseSerializer`, and response to `-validateResponse:data:error:`.
+ @warning Each response serializer specified must be a subclass of `FWHTTPResponseSerializer`, and response to `-validateResponse:data:error:`.
  */
-+ (instancetype)compoundSerializerWithResponseSerializers:(NSArray <id<AFURLResponseSerialization>> *)responseSerializers;
++ (instancetype)compoundSerializerWithResponseSerializers:(NSArray <id<FWURLResponseSerialization>> *)responseSerializers;
 
 @end
 
@@ -283,33 +283,33 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
  The following error domain is predefined.
 
- - `NSString * const AFURLResponseSerializationErrorDomain`
+ - `NSString * const FWURLResponseSerializationErrorDomain`
 
  ### Constants
 
- `AFURLResponseSerializationErrorDomain`
- AFURLResponseSerializer errors. Error codes for `AFURLResponseSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ `FWURLResponseSerializationErrorDomain`
+ FWURLResponseSerializer errors. Error codes for `FWURLResponseSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
-FOUNDATION_EXPORT NSString * const AFURLResponseSerializationErrorDomain;
+FOUNDATION_EXPORT NSString * const FWURLResponseSerializationErrorDomain;
 
 /**
  ## User info dictionary keys
 
  These keys may exist in the user info dictionary, in addition to those defined for NSError.
 
- - `NSString * const AFNetworkingOperationFailingURLResponseErrorKey`
- - `NSString * const AFNetworkingOperationFailingURLResponseDataErrorKey`
+ - `NSString * const FWNetworkingOperationFailingURLResponseErrorKey`
+ - `NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey`
 
  ### Constants
 
- `AFNetworkingOperationFailingURLResponseErrorKey`
- The corresponding value is an `NSURLResponse` containing the response of the operation associated with an error. This key is only present in the `AFURLResponseSerializationErrorDomain`.
+ `FWNetworkingOperationFailingURLResponseErrorKey`
+ The corresponding value is an `NSURLResponse` containing the response of the operation associated with an error. This key is only present in the `FWURLResponseSerializationErrorDomain`.
 
- `AFNetworkingOperationFailingURLResponseDataErrorKey`
- The corresponding value is an `NSData` containing the original data of the operation associated with an error. This key is only present in the `AFURLResponseSerializationErrorDomain`.
+ `FWNetworkingOperationFailingURLResponseDataErrorKey`
+ The corresponding value is an `NSData` containing the original data of the operation associated with an error. This key is only present in the `FWURLResponseSerializationErrorDomain`.
  */
-FOUNDATION_EXPORT NSString * const AFNetworkingOperationFailingURLResponseErrorKey;
+FOUNDATION_EXPORT NSString * const FWNetworkingOperationFailingURLResponseErrorKey;
 
-FOUNDATION_EXPORT NSString * const AFNetworkingOperationFailingURLResponseDataErrorKey;
+FOUNDATION_EXPORT NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey;
 
 NS_ASSUME_NONNULL_END

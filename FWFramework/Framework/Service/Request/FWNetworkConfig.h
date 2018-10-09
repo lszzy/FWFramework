@@ -26,7 +26,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWBaseRequest;
-@class AFSecurityPolicy;
+@class FWSecurityPolicy;
 
 ///  FWUrlFilterProtocol can be used to append common parameters to requests before sending them.
 @protocol FWUrlFilterProtocol <NSObject>
@@ -68,11 +68,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSArray<id<FWUrlFilterProtocol>> *urlFilters;
 ///  Cache path filters. See also `FWCacheDirPathFilterProtocol`.
 @property (nonatomic, strong, readonly) NSArray<id<FWCacheDirPathFilterProtocol>> *cacheDirPathFilters;
-///  Security policy will be used by AFNetworking. See also `AFSecurityPolicy`.
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
+///  Security policy will be used by AFNetworking. See also `FWSecurityPolicy`.
+@property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
 ///  Whether to log debug info. Default is NO;
 @property (nonatomic) BOOL debugLogEnabled;
-///  SessionConfiguration will be used to initialize AFHTTPSessionManager. Default is nil.
+///  SessionConfiguration will be used to initialize FWHTTPSessionManager. Default is nil.
 @property (nonatomic, strong) NSURLSessionConfiguration* sessionConfiguration;
 
 ///  Add a new URL filter.
