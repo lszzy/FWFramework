@@ -97,8 +97,16 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 + (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format
 {
+    return [self fwDateWithString:string format:format timeZone:nil];
+}
+
++ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone
+{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = format;
+    if (timeZone) {
+        formatter.timeZone = timeZone;
+    }
     NSDate *date = [formatter dateFromString:string];
     return date;
 }
@@ -108,11 +116,6 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return [[NSDate alloc] initWithTimeIntervalSince1970:timestamp];
 }
 
-+ (NSDate *)fwDateWithInterval:(NSTimeInterval)interval
-{
-    return [[NSDate alloc] initWithTimeIntervalSinceNow:interval];
-}
-
 - (NSString *)fwStringValue
 {
     return [self fwStringWithFormat:@"yyyy-MM-dd HH:mm:ss"];
@@ -120,8 +123,16 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 - (NSString *)fwStringWithFormat:(NSString *)format
 {
+    return [self fwStringWithFormat:format timeZone:nil];
+}
+
+- (NSString *)fwStringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone
+{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = format;
+    if (timeZone) {
+        formatter.timeZone = timeZone;
+    }
     NSString *string = [formatter stringFromDate:self];
     return string;
 }
@@ -156,16 +167,16 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return [self timeIntervalSince1970];
 }
 
-- (NSTimeInterval)fwIntervalValue
-{
-    return [self timeIntervalSinceNow];
-}
-
 #pragma mark - TimeZone
 
 - (NSDate *)fwDateWithLocalTimeZone
 {
     return [self fwDateWithTimeZone:[NSTimeZone localTimeZone]];
+}
+
+- (NSDate *)fwDateWithUTCTimeZone
+{
+    return [self fwDateWithTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
 }
 
 - (NSDate *)fwDateWithTimeZone:(NSTimeZone *)timeZone
