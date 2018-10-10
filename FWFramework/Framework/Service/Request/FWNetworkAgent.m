@@ -104,7 +104,9 @@
     // Filter URL if needed
     NSArray *filters = [_config urlFilters];
     for (id<FWUrlFilterProtocol> f in filters) {
-        detailUrl = [f filterUrl:detailUrl withRequest:request];
+        if ([f respondsToSelector:@selector(filterUrl:withRequest:)]) {
+            detailUrl = [f filterUrl:detailUrl withRequest:request];
+        }
     }
 
     NSString *baseUrl;
@@ -170,20 +172,20 @@
     switch (method) {
         case FWRequestMethodGET:
             if (request.resumableDownloadPath) {
-                return [self downloadTaskWithDownloadPath:request.resumableDownloadPath requestSerializer:requestSerializer URLString:url parameters:param progress:request.resumableDownloadProgressBlock error:error];
+                return [self downloadTaskWithDownloadPath:request.resumableDownloadPath request:request requestSerializer:requestSerializer URLString:url parameters:param progress:request.resumableDownloadProgressBlock error:error];
             } else {
-                return [self dataTaskWithHTTPMethod:@"GET" requestSerializer:requestSerializer URLString:url parameters:param error:error];
+                return [self dataTaskWithHTTPMethod:@"GET" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
             }
         case FWRequestMethodPOST:
-            return [self dataTaskWithHTTPMethod:@"POST" requestSerializer:requestSerializer URLString:url parameters:param constructingBodyWithBlock:constructingBlock error:error];
+            return [self dataTaskWithHTTPMethod:@"POST" request:request requestSerializer:requestSerializer URLString:url parameters:param constructingBodyWithBlock:constructingBlock error:error];
         case FWRequestMethodHEAD:
-            return [self dataTaskWithHTTPMethod:@"HEAD" requestSerializer:requestSerializer URLString:url parameters:param error:error];
+            return [self dataTaskWithHTTPMethod:@"HEAD" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
         case FWRequestMethodPUT:
-            return [self dataTaskWithHTTPMethod:@"PUT" requestSerializer:requestSerializer URLString:url parameters:param error:error];
+            return [self dataTaskWithHTTPMethod:@"PUT" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
         case FWRequestMethodDELETE:
-            return [self dataTaskWithHTTPMethod:@"DELETE" requestSerializer:requestSerializer URLString:url parameters:param error:error];
+            return [self dataTaskWithHTTPMethod:@"DELETE" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
         case FWRequestMethodPATCH:
-            return [self dataTaskWithHTTPMethod:@"PATCH" requestSerializer:requestSerializer URLString:url parameters:param error:error];
+            return [self dataTaskWithHTTPMethod:@"PATCH" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
     }
 }
 
@@ -427,29 +429,39 @@
 #pragma mark -
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
+                                         request:(FWBaseRequest *)request
                                requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
                                            error:(NSError * _Nullable __autoreleasing *)error {
-    return [self dataTaskWithHTTPMethod:method requestSerializer:requestSerializer URLString:URLString parameters:parameters constructingBodyWithBlock:nil error:error];
+    return [self dataTaskWithHTTPMethod:method request:request requestSerializer:requestSerializer URLString:URLString parameters:parameters constructingBodyWithBlock:nil error:error];
 }
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
+                                         request:(FWBaseRequest *)request
                                requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
                        constructingBodyWithBlock:(nullable void (^)(id <FWMultipartFormData> formData))block
                                            error:(NSError * _Nullable __autoreleasing *)error {
-    NSMutableURLRequest *request = nil;
+    NSMutableURLRequest *urlRequest = nil;
 
     if (block) {
-        request = [requestSerializer multipartFormRequestWithMethod:method URLString:URLString parameters:parameters constructingBodyWithBlock:block error:error];
+        urlRequest = [requestSerializer multipartFormRequestWithMethod:method URLString:URLString parameters:parameters constructingBodyWithBlock:block error:error];
     } else {
-        request = [requestSerializer requestWithMethod:method URLString:URLString parameters:parameters error:error];
+        urlRequest = [requestSerializer requestWithMethod:method URLString:URLString parameters:parameters error:error];
+    }
+    
+    // Filter URLRequest if needed
+    NSArray *filters = [_config urlFilters];
+    for (id<FWUrlFilterProtocol> f in filters) {
+        if ([f respondsToSelector:@selector(filterUrlRequest:withRequest:)]) {
+            [f filterUrlRequest:urlRequest withRequest:request];
+        }
     }
 
     __block NSURLSessionDataTask *dataTask = nil;
-    dataTask = [_manager dataTaskWithRequest:request
+    dataTask = [_manager dataTaskWithRequest:urlRequest
                            completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *_error) {
                                [self handleRequestResult:dataTask responseObject:responseObject error:_error];
                            }];
@@ -458,6 +470,7 @@
 }
 
 - (NSURLSessionDownloadTask *)downloadTaskWithDownloadPath:(NSString *)downloadPath
+                                                   request:(FWBaseRequest *)request
                                          requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                                  URLString:(NSString *)URLString
                                                 parameters:(id)parameters
@@ -465,6 +478,14 @@
                                                      error:(NSError * _Nullable __autoreleasing *)error {
     // add parameters to URL;
     NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:@"GET" URLString:URLString parameters:parameters error:error];
+    
+    // Filter URLRequest if needed
+    NSArray *filters = [_config urlFilters];
+    for (id<FWUrlFilterProtocol> f in filters) {
+        if ([f respondsToSelector:@selector(filterUrlRequest:withRequest:)]) {
+            [f filterUrlRequest:urlRequest withRequest:request];
+        }
+    }
 
     NSString *downloadTargetPath;
     BOOL isDirectory;

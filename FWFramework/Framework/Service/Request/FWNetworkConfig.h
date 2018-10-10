@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///  FWUrlFilterProtocol can be used to append common parameters to requests before sending them.
 @protocol FWUrlFilterProtocol <NSObject>
+
+@optional
+
 ///  Preprocess request URL before actually sending them.
 ///
 ///  @param originUrl request's origin URL, which is returned by `requestUrl`
@@ -37,10 +40,20 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 ///  @return A new url which will be used as a new `requestUrl`
 - (NSString *)filterUrl:(NSString *)originUrl withRequest:(FWBaseRequest *)request;
+
+///  Preprocess URLRequest before actually sending them.
+///
+///  @param urlRequest request's URLRequest
+///  @param request   request itself
+///
+- (void)filterUrlRequest:(NSMutableURLRequest *)urlRequest withRequest:(FWBaseRequest *)request;
 @end
 
 ///  FWCacheDirPathFilterProtocol can be used to append common path components when caching response results
 @protocol FWCacheDirPathFilterProtocol <NSObject>
+
+@optional
+
 ///  Preprocess cache path before actually saving them.
 ///
 ///  @param originPath original base cache path, which is generated in `FWRequest` class.
