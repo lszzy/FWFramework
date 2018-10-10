@@ -393,7 +393,9 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
     NSArray<id<FWCacheDirPathFilterProtocol>> *filters = [[FWNetworkConfig sharedConfig] cacheDirPathFilters];
     if (filters.count > 0) {
         for (id<FWCacheDirPathFilterProtocol> f in filters) {
-            path = [f filterCacheDirPath:path withRequest:self];
+            if ([f respondsToSelector:@selector(filterCacheDirPath:withRequest:)]) {
+                path = [f filterCacheDirPath:path withRequest:self];
+            }
         }
     }
 
