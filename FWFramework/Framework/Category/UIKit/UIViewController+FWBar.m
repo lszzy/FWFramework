@@ -27,12 +27,7 @@
         [self didChangeValueForKey:@"fwStatusBarHidden"];
         
         // 视图控制器生效
-        if ([UIViewController fwStatusBarIsController]) {
-            [self setNeedsStatusBarAppearanceUpdate];
-        // UIApplication生效
-        } else {
-            [UIApplication sharedApplication].statusBarHidden = fwStatusBarHidden;
-        }
+        [self setNeedsStatusBarAppearanceUpdate];
     }
 }
 
@@ -49,25 +44,8 @@
         [self didChangeValueForKey:@"fwStatusBarStyle"];
         
         // 视图控制器生效
-        if ([UIViewController fwStatusBarIsController]) {
-            [self setNeedsStatusBarAppearanceUpdate];
-        // UIApplication生效
-        } else {
-            [UIApplication sharedApplication].statusBarStyle = fwStatusBarStyle;
-        }
+        [self setNeedsStatusBarAppearanceUpdate];
     }
-}
-
-+ (BOOL)fwStatusBarIsController
-{
-    static BOOL isController;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // 读取当前UIViewControllerBasedStatusBarAppearance设置，默认YES视图控制器生效，NO则UIApplication生效
-        id object = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"];
-        isController = (object && ![object boolValue]) ? NO : YES;
-    });
-    return isController;
 }
 
 - (BOOL)prefersStatusBarHidden

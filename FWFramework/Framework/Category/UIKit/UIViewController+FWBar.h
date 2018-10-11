@@ -11,7 +11,7 @@
 /**
  * 视图控制器Bar分类
  *
- * 备注：UIViewControllerBasedStatusBarAppearance设置为YES时，视图控制器修改状态栏样式生效；设置为NO时，UIApplication修改状态栏样式生效
+ * 备注：需要设置UIViewControllerBasedStatusBarAppearance为YES，视图控制器修改状态栏样式才会生效
  */
 @interface UIViewController (FWBar)
 

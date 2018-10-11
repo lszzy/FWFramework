@@ -107,32 +107,12 @@
 
 @implementation UIViewController (FWScreen)
 
-+ (BOOL)fwIsControllerStatusBar
-{
-    static BOOL isController;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // 读取当前UIViewControllerBasedStatusBarAppearance设置，默认YES视图控制器生效，NO则UIApplication生效
-        id object = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"];
-        isController = (object && ![object boolValue]) ? NO : YES;
-    });
-    return isController;
-}
-
 - (CGFloat)fwStatusBarHeight
 {
-    if ([self.class fwIsControllerStatusBar]) {
-        if ([self prefersStatusBarHidden]) {
-            return 0.0;
-        } else {
-            return [UIApplication sharedApplication].statusBarFrame.size.height;
-        }
+    if ([self prefersStatusBarHidden]) {
+        return 0.0;
     } else {
-        if ([UIApplication sharedApplication].statusBarHidden) {
-            return 0.0;
-        } else {
-            return [UIApplication sharedApplication].statusBarFrame.size.height;
-        }
+        return [UIApplication sharedApplication].statusBarFrame.size.height;
     }
 }
 

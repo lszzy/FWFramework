@@ -130,19 +130,22 @@
 
 #pragma mark - Token
 
-+ (NSString *)fwSetDeviceToken:(NSData *)tokenData
++ (void)fwSetDeviceToken:(NSData *)tokenData
 {
-    static NSString *deviceToken = nil;
     if (tokenData) {
-        deviceToken = [[tokenData description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+        NSString *deviceToken = [[tokenData description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
         deviceToken = [deviceToken stringByReplacingOccurrencesOfString:@" " withString:@""];
+        [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    return deviceToken;
 }
 
 + (NSString *)fwDeviceToken
 {
-    return [UIDevice fwSetDeviceToken:nil];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
 }
 
 #pragma mark - Network

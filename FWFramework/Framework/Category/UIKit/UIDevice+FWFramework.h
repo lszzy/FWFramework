@@ -71,10 +71,10 @@
 
 #pragma mark - Token
 
-// 设置设备token，返回格式化的token字符串
-+ (NSString *)fwSetDeviceToken:(NSData *)tokenData;
+// 设置设备token，格式化并保存
++ (void)fwSetDeviceToken:(NSData *)tokenData;
 
-// 获取设备Token
+// 获取设备Token格式化后的字符串
 + (NSString *)fwDeviceToken;
 
 #pragma mark - Network
