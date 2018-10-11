@@ -28,9 +28,6 @@
 // 获取响应的视图控制器
 - (UIViewController *)fwViewController;
 
-// 获取最顶端的控制器
-- (UIViewController *)fwTopMostController;
-
 #pragma mark - Snapshot
 
 // 图片截图
