@@ -32,13 +32,19 @@
     [swiftButton addTarget:self action:@selector(onSwift) forControlEvents:UIControlEventTouchUpInside];
     swiftButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 20, 150, 30);
     [self.view addSubview:swiftButton];
+    [self.view fwAddTapGestureWithTarget:self action:@selector(onClose)];
 }
 
 #pragma mark - Action
 
 - (void)onSwift {
     SwiftController *viewController = [[SwiftController alloc] init];
+    viewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)onClose {
+    [self fwOnClose];
 }
 
 @end

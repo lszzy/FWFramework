@@ -27,12 +27,7 @@
         [self didChangeValueForKey:@"fwStatusBarHidden"];
         
         // 视图控制器生效
-        if ([UIViewController fwStatusBarIsController]) {
-            [self setNeedsStatusBarAppearanceUpdate];
-        // UIApplication生效
-        } else {
-            [UIApplication sharedApplication].statusBarHidden = fwStatusBarHidden;
-        }
+        [self setNeedsStatusBarAppearanceUpdate];
     }
 }
 
@@ -49,25 +44,8 @@
         [self didChangeValueForKey:@"fwStatusBarStyle"];
         
         // 视图控制器生效
-        if ([UIViewController fwStatusBarIsController]) {
-            [self setNeedsStatusBarAppearanceUpdate];
-        // UIApplication生效
-        } else {
-            [UIApplication sharedApplication].statusBarStyle = fwStatusBarStyle;
-        }
+        [self setNeedsStatusBarAppearanceUpdate];
     }
-}
-
-+ (BOOL)fwStatusBarIsController
-{
-    static BOOL isController;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // 读取当前UIViewControllerBasedStatusBarAppearance设置，默认YES视图控制器生效，NO则UIApplication生效
-        id object = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIViewControllerBasedStatusBarAppearance"];
-        isController = (object && ![object boolValue]) ? NO : YES;
-    });
-    return isController;
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -193,17 +171,21 @@
 
 - (void)fwOnOpen:(UIViewController *)viewController
 {
-    if (self.navigationController) {
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
+    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
         [self presentViewController:viewController animated:YES completion:nil];
+    } else {
+        [self.navigationController pushViewController:viewController animated:YES];
     }
 }
 
 - (void)fwOnClose
 {
     if (self.navigationController) {
-        [self.navigationController popViewControllerAnimated:YES];
+        UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
+        // 如果已经是导航栏底部，则尝试dismiss当前控制器
+        if (!viewController && self.presentingViewController) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }

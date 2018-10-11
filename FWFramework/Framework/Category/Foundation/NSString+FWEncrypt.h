@@ -21,7 +21,7 @@
  *
  *  @return md5字符串
  */
-- (NSString *)fwMd5;
+- (NSString *)fwMd5String;
 
 /**
  *  文件md5编码

@@ -15,7 +15,7 @@
 
 #pragma mark - Md5
 
-- (NSString *)fwMd5
+- (NSString *)fwMd5String
 {
     const char *cStr = [self UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
