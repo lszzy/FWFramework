@@ -25,30 +25,6 @@
     return nil;
 }
 
-- (UIViewController *)fwTopMostController
-{
-    NSMutableArray *topControllers = [NSMutableArray array];
-    
-    UIViewController *topController = self.window.rootViewController;
-    if (topController) {
-        [topControllers addObject:topController];
-    }
-    
-    while ([topController presentedViewController]) {
-        topController = [topController presentedViewController];
-        [topControllers addObject:topController];
-    }
-    
-    UIResponder *matchController = [self fwViewController];
-    while (matchController != nil && [topControllers containsObject:matchController] == NO) {
-        do {
-            matchController = [matchController nextResponder];
-        } while (matchController != nil && [matchController isKindOfClass:[UIViewController class]] == NO);
-    }
-    
-    return (UIViewController *)matchController;
-}
-
 #pragma mark - Snapshot
 
 - (UIImage *)fwSnapshotImage

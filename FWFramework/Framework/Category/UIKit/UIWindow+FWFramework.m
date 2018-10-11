@@ -10,32 +10,60 @@
 
 @implementation UIWindow (FWFramework)
 
-- (UIViewController *)fwViewController
++ (UIWindow *)fwMainWindow
 {
-    UIViewController *currentViewController = [self fwTopMostController];
-    
-    while ([currentViewController isKindOfClass:[UITabBarController class]] &&
-           [(UITabBarController *)currentViewController selectedViewController]) {
-        currentViewController = [(UITabBarController *)currentViewController selectedViewController];
+    UIApplication *application = [UIApplication sharedApplication];
+    if ([application.delegate respondsToSelector:@selector(window)]) {
+        return [application.delegate window];
+    } else {
+        return [application keyWindow];
     }
-    
-    while ([currentViewController isKindOfClass:[UINavigationController class]] &&
-           [(UINavigationController *)currentViewController topViewController]) {
-        currentViewController = [(UINavigationController*)currentViewController topViewController];
-    }
-    
-    return currentViewController;
 }
 
-- (UIViewController *)fwTopMostController
+- (UIViewController *)fwTopViewController
 {
-    UIViewController *topController = self.rootViewController;
+    UIViewController *viewController = [self fwTopPresentedController];
     
-    while ([topController presentedViewController]) {
-        topController = [topController presentedViewController];
+    while ([viewController isKindOfClass:[UITabBarController class]] &&
+           [(UITabBarController *)viewController selectedViewController]) {
+        viewController = [(UITabBarController *)viewController selectedViewController];
     }
     
-    return topController;
+    while ([viewController isKindOfClass:[UINavigationController class]] &&
+           [(UINavigationController *)viewController topViewController]) {
+        viewController = [(UINavigationController*)viewController topViewController];
+    }
+    
+    return viewController;
+}
+
+- (UINavigationController *)fwTopNavigationController
+{
+    return [self fwTopViewController].navigationController;
+}
+
+- (UIViewController *)fwTopPresentedController
+{
+    UIViewController *presentedController = self.rootViewController;
+    
+    while ([presentedController presentedViewController]) {
+        presentedController = [presentedController presentedViewController];
+    }
+    
+    return presentedController;
+}
+
+- (void)fwPushViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated
+{
+    [[self fwTopNavigationController] pushViewController:viewController animated:animated];
+}
+
+- (void)fwPresentViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(void (^)(void))completion
+{
+    [[self fwTopPresentedController] presentViewController:viewController animated:animated completion:completion];
 }
 
 @end
