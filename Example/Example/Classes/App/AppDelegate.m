@@ -56,6 +56,8 @@
     testNav.tabBarItem.title = @"测试";
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    // present时隐藏tabBar
+    tabBarController.definesPresentationContext = YES;
     tabBarController.viewControllers = @[homeNav, testNav];
     return tabBarController;
 }

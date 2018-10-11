@@ -193,17 +193,21 @@
 
 - (void)fwOnOpen:(UIViewController *)viewController
 {
-    if (self.navigationController) {
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
+    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
         [self presentViewController:viewController animated:YES completion:nil];
+    } else {
+        [self.navigationController pushViewController:viewController animated:YES];
     }
 }
 
 - (void)fwOnClose
 {
     if (self.navigationController) {
-        [self.navigationController popViewControllerAnimated:YES];
+        UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
+        // 如果已经是导航栏底部，则尝试dismiss当前控制器
+        if (!viewController && self.presentingViewController) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
