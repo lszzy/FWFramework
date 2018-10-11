@@ -53,10 +53,15 @@
     return presentedController;
 }
 
-- (void)fwPushViewController:(UIViewController *)viewController
+- (BOOL)fwPushViewController:(UIViewController *)viewController
                     animated:(BOOL)animated
 {
-    [[self fwTopNavigationController] pushViewController:viewController animated:animated];
+    UINavigationController *navigationController = [self fwTopNavigationController];
+    if (navigationController) {
+        [navigationController pushViewController:viewController animated:animated];
+        return YES;
+    }
+    return NO;
 }
 
 - (void)fwPresentViewController:(UIViewController *)viewController

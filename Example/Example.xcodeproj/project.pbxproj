@@ -21,6 +21,7 @@
 		2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D295C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m */; };
 		2F0D298D215DFFEF005F1466 /* JQFMDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2960215DFFEF005F1466 /* JQFMDB.m */; };
 		2F0D298E215DFFEF005F1466 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2963215DFFEF005F1466 /* UIScrollView+EmptyDataSet.m */; };
+		2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D93DB216F18B00021F936 /* TestWindowViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
 		2F4CFA45215522D200203A37 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA43215522D200203A37 /* TestViewController.m */; };
@@ -95,6 +96,8 @@
 		2F0D2961215DFFEF005F1466 /* JQFMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JQFMDB.h; sourceTree = "<group>"; };
 		2F0D2963215DFFEF005F1466 /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
 		2F0D2964215DFFEF005F1466 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
+		2F1D93DA216F18B00021F936 /* TestWindowViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestWindowViewController.h; sourceTree = "<group>"; };
+		2F1D93DB216F18B00021F936 /* TestWindowViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestWindowViewController.m; sourceTree = "<group>"; };
 		2F30D8962153775B000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -301,6 +304,8 @@
 				2F593FDC21560B000022137F /* TestIndicatorViewController.m */,
 				2FB38DBF215B7058009F0450 /* TestModelViewController.h */,
 				2FB38DC0215B7058009F0450 /* TestModelViewController.m */,
+				2F1D93DA216F18B00021F936 /* TestWindowViewController.h */,
+				2F1D93DB216F18B00021F936 /* TestWindowViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -620,6 +625,7 @@
 				2F0D2989215DFFEF005F1466 /* FMDatabasePool.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
+				2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

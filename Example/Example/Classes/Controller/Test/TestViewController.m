@@ -23,6 +23,7 @@
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
+                                             @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
@@ -65,6 +66,7 @@
     NSString *vcStr = [rowData objectAtIndex:1];
     Class vcClass = NSClassFromString(vcStr);
     UIViewController *vc = [[vcClass alloc] init];
+    vc.hidesBottomBarWhenPushed = YES;
     vc.title = [rowData objectAtIndex:0];
     [self.navigationController pushViewController:vc animated:YES];
 }
