@@ -10,10 +10,25 @@
 
 @interface UIWindow (FWFramework)
 
-// 获取当前的视图控制器(fwTopMostController堆栈的topViewController)
-- (UIViewController *)fwViewController;
+// 获取当前主window
++ (UIWindow *)fwMainWindow;
 
-// 获取最顶端的控制器
-- (UIViewController *)fwTopMostController;
+// 获取最顶部的视图控制器
+- (UIViewController *)fwTopViewController;
+
+// 获取最顶部的导航栏控制器
+- (UINavigationController *)fwTopNavigationController;
+
+// 获取最顶部的显示控制器
+- (UIViewController *)fwTopPresentedController;
+
+// 使用最顶部的导航栏控制器打开控制器
+- (void)fwPushViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated;
+
+// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
+- (void)fwPresentViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(void (^)(void))completion;
 
 @end
