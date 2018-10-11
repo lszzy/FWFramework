@@ -24,13 +24,13 @@
  */
 @interface NSDate (FWFramework)
 
-#pragma mark - Server
+#pragma mark - Current
 
-// 同步服务器基准时间戳
-+ (void)fwSetServerTime:(NSTimeInterval)serverTime;
+// 设置当前时间戳，如同步服务器时间戳，同步后调整手机时间不影响
++ (void)fwSetCurrentTime:(NSTimeInterval)currentTime;
 
-// 当前服务器时间戳，没有同步过返回本地时间戳
-+ (NSTimeInterval)fwServerTime;
+// 获取当前时间戳，没有设置过返回本地时间戳，同步后调整手机不影响
++ (NSTimeInterval)fwCurrentTime;
 
 #pragma mark - System
 
@@ -156,6 +156,9 @@
 #pragma mark - Format
 
 // 格式化时长，格式"00:00"或"00:00:00"
-+ (NSString *)fwFormatDuration:(float)duration hasHour:(BOOL)hasHour;
++ (NSString *)fwFormatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour;
+
+// 格式化16位、13位时间戳为秒
++ (NSTimeInterval)fwFormatTimestamp:(NSTimeInterval)timestamp;
 
 @end

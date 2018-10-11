@@ -713,6 +713,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F03A643216CF882001965A1 /* FWNetworkPrivate.h in Headers */,
 				2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */,
 				2F03A658216D0049001965A1 /* FWNetwork.h in Headers */,
 				2F03A64B216CF882001965A1 /* FWAutoPurgingImageCache.h in Headers */,
@@ -720,7 +721,6 @@
 				2F03A63D216CF882001965A1 /* FWNetworkConfig.h in Headers */,
 				2F03A64A216CF882001965A1 /* FWImageDownloader.h in Headers */,
 				2F03A64D216CF882001965A1 /* FWURLResponseSerialization.h in Headers */,
-				2F03A643216CF882001965A1 /* FWNetworkPrivate.h in Headers */,
 				2F03A63E216CF882001965A1 /* FWChainRequest.h in Headers */,
 				2F03A63A216CF882001965A1 /* FWBatchRequestAgent.h in Headers */,
 				2F03A653216CF882001965A1 /* FWCompatibilityMacros.h in Headers */,

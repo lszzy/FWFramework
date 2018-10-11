@@ -10,45 +10,45 @@
 #import "NSDate+FWFramework.h"
 #import <sys/sysctl.h>
 
-// 服务器基准时间值
-static NSTimeInterval fwStaticServerBaseTime = 0;
+// 当前基准时间值
+static NSTimeInterval fwStaticCurrentBaseTime = 0;
 // 本地基准时间值
 static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @implementation NSDate (FWFramework)
 
-#pragma mark - Server
+#pragma mark - Current
 
-+ (void)fwSetServerTime:(NSTimeInterval)serverTime
++ (void)fwSetCurrentTime:(NSTimeInterval)currentTime
 {
-    fwStaticServerBaseTime = serverTime;
+    fwStaticCurrentBaseTime = currentTime;
     // 取运行时间，调整系统时间不会影响
     fwStaticLocalBaseTime = [self fwSystemUptime];
     
     // 保存当前服务器时间到本地
-    [[NSUserDefaults standardUserDefaults] setObject:@(serverTime) forKey:@"FWServerTime"];
+    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
     [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-+ (NSTimeInterval)fwServerTime
++ (NSTimeInterval)fwCurrentTime
 {
     // 没有同步过返回本地时间
-    if (fwStaticServerBaseTime == 0) {
+    if (fwStaticCurrentBaseTime == 0) {
         // 是否本地有服务器时间
-        NSNumber *preServerTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWServerTime"];
+        NSNumber *preCurrentTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWCurrentTime"];
         NSNumber *preLocalTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalTime"];
-        if (preServerTime && preLocalTime) {
+        if (preCurrentTime && preLocalTime) {
             // 计算当前服务器时间
             NSTimeInterval offsetTime = [[NSDate date] timeIntervalSince1970] - preLocalTime.doubleValue;
-            return preServerTime.doubleValue + offsetTime;
+            return preCurrentTime.doubleValue + offsetTime;
         } else {
             return [[NSDate date] timeIntervalSince1970];
         }
     // 同步过计算当前服务器时间
     } else {
         NSTimeInterval offsetTime = [self fwSystemUptime] - fwStaticLocalBaseTime;
-        return fwStaticServerBaseTime + offsetTime;
+        return fwStaticCurrentBaseTime + offsetTime;
     }
 }
 
@@ -238,7 +238,7 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 #pragma mark - Format
 
-+ (NSString *)fwFormatDuration:(float)duration hasHour:(BOOL)hasHour
++ (NSString *)fwFormatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour
 {
     long long seconds = (long long)duration;
     if (hasHour) {
@@ -253,6 +253,18 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         NSInteger minute = seconds / 60;
         NSInteger second = seconds % 60;
         return [NSString stringWithFormat:@"%02ld:%02ld", (long)minute, (long)second];
+    }
+}
+
++ (NSTimeInterval)fwFormatTimestamp:(NSTimeInterval)timestamp
+{
+    NSString *timestampStr = [NSString stringWithFormat:@"%ld", (long)timestamp];
+    if (timestampStr.length == 16) {
+        return timestamp / 1000.f / 1000.f;
+    } else if (timestampStr.length == 13) {
+        return timestamp / 1000.f;
+    } else {
+        return timestamp;
     }
 }
 
