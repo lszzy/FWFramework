@@ -38,4 +38,15 @@
 // 当前字体的粗斜体字体
 - (UIFont *)fwBoldItalicFont;
 
+#pragma mark - Height
+
+// 字体占用行高(含空白)
+- (CGFloat)fwLineHeight;
+
+// 字体实际高度(不含空白)
+- (CGFloat)fwPointHeight;
+
+// 上下单边空白高度，(fwLineHeight-fwPointHeight)/2，用于精确布局
+- (CGFloat)fwSpaceHeight;
+
 @end
