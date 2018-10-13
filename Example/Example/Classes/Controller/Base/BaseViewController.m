@@ -20,6 +20,9 @@
         // 默认关闭视图延伸Bar布局
         [self fwSetBarExtendEdge:UIRectEdgeNone];
         
+        // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
+        self.hidesBottomBarWhenPushed = YES;
+        
         // 渲染初始化
         [self renderInit];
     }
