@@ -47,11 +47,15 @@
 
 - (UITabBarController *)tabBarController
 {
-    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:[ObjcController new]];
+    UIViewController *homeController = [ObjcController new];
+    homeController.hidesBottomBarWhenPushed = NO;
+    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
     homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
     homeNav.tabBarItem.title = @"首页";
     
-    UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:[TestViewController new]];
+    UIViewController *testController = [TestViewController new];
+    testController.hidesBottomBarWhenPushed = NO;
+    UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:testController];
     testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
     testNav.tabBarItem.title = @"测试";
     
