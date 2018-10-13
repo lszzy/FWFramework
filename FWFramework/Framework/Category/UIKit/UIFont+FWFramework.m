@@ -51,4 +51,21 @@
     return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold | UIFontDescriptorTraitItalic] size:self.pointSize];
 }
 
+#pragma mark - Height
+
+- (CGFloat)fwLineHeight
+{
+    return self.lineHeight;
+}
+
+- (CGFloat)fwPointHeight
+{
+    return self.pointSize;
+}
+
+- (CGFloat)fwSpaceHeight
+{
+    return (self.lineHeight - self.pointSize) / 2.f;
+}
+
 @end
