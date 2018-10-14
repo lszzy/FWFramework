@@ -8,6 +8,7 @@
  */
 
 #import "UIApplication+FWFramework.h"
+#import <StoreKit/StoreKit.h>
 
 @implementation UIApplication (FWFramework)
 
@@ -107,9 +108,23 @@
     }
 }
 
++ (void)fwOpenSafari:(NSString *)url
+{
+    [self fwOpenURL:[NSURL URLWithString:url]];
+}
+
 + (void)fwOpenSettings
 {
     [self fwOpenURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+}
+
++ (void)fwRequestReview
+{
+    if (@available(iOS 10.3, *)) {
+        if ([SKStoreReviewController respondsToSelector:@selector(requestReview)]) {
+            [SKStoreReviewController requestReview];
+        }
+    }
 }
 
 + (void)fwOpenStore:(NSString *)appId
@@ -124,11 +139,6 @@
     } else {
         [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]]];
     }
-}
-
-+ (void)fwOpenSafari:(NSString *)url
-{
-    [self fwOpenURL:[NSURL URLWithString:url]];
 }
 
 + (void)fwSendEmail:(NSString *)email

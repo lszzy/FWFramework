@@ -24,6 +24,8 @@
                                          @[@"present nav && present", @"onPresent2"],
                                          @[@"present vc && push", @"onPush3"],
                                          @[@"present vc && present", @"onPresent3"],
+                                         @[@"url review", @"onReview"],
+                                         @[@"app review", @"onReview2"],
                                          ]];
 }
 
@@ -86,6 +88,16 @@
     [self presentViewController:[ObjcController new] animated:YES completion:^{
         [[UIWindow fwMainWindow] fwPresentViewController:[ObjcController new] animated:YES completion:nil];
     }];
+}
+
+- (void)onReview
+{
+    [UIApplication fwOpenReview:@"923302754"];
+}
+
+- (void)onReview2
+{
+    [UIApplication fwRequestReview];
 }
 
 @end
