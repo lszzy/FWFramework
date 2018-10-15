@@ -58,6 +58,9 @@
 
 #pragma mark - UIBarButtonItem+FWBlock
 
+/*!
+ @brief iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可
+ */
 @interface UIBarButtonItem (FWBlock)
 
 // 使用指定对象和事件创建Item

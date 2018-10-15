@@ -52,17 +52,20 @@
 // 打开URL，完成时回调
 + (void)fwOpenURL:(NSURL *)url completionHandler:(void (^)(BOOL success))completion;
 
+// 打开浏览器
++ (void)fwOpenSafari:(NSString *)url;
+
 // 打开应用设置
 + (void)fwOpenSettings;
+
+// 打开应用内评价，10.3+生效，一年内最多3次
++ (void)fwRequestReview;
 
 // 打开AppStore下载页
 + (void)fwOpenStore:(NSString *)appId;
 
 // 打开AppStore评论页
 + (void)fwOpenReview:(NSString *)appId;
-
-// 打开浏览器
-+ (void)fwOpenSafari:(NSString *)url;
 
 // 发送邮件
 + (void)fwSendEmail:(NSString *)email;

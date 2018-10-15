@@ -3,4 +3,6 @@
 //
 
 #import <FWFramework/FWFramework.h>
+#import "BaseViewController.h"
+#import "BaseTableViewController.h"
 #import "ObjcController.h"
