@@ -138,3 +138,18 @@
                   radius:(CGFloat)radius;
 
 @end
+
+#pragma mark - UISearchBar+FWBar
+
+/*!
+ @brief UISearchBar+FWBar
+ */
+@interface UISearchBar (FWBar)
+
+// 输入框
+- (UITextField *)fwTextField;
+
+// 取消按钮
+- (UIButton *)fwCancelButton;
+
+@end

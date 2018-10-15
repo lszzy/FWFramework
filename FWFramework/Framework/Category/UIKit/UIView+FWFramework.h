@@ -18,6 +18,8 @@
 #import "UIView+FWIndicator.h"
 #import "UIView+FWLayer.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIView+FWFramework
  */
@@ -26,14 +28,24 @@
 #pragma mark - ViewController
 
 // 获取响应的视图控制器
-- (UIViewController *)fwViewController;
+- (nullable UIViewController *)fwViewController;
+
+#pragma mark - Subview
+
+// 递归查找指定子类的第一个视图
+- (nullable __kindof UIView *)fwSubviewOfClass:(Class)clazz;
+
+// 递归查找指定条件的第一个视图
+- (nullable __kindof UIView *)fwSubviewOfBlock:(BOOL (^)(UIView *view))block;
 
 #pragma mark - Snapshot
 
 // 图片截图
-- (UIImage *)fwSnapshotImage;
+- (nullable UIImage *)fwSnapshotImage;
 
 // Pdf截图
-- (NSData *)fwSnapshotPdf;
+- (nullable NSData *)fwSnapshotPdf;
 
 @end
+
+NS_ASSUME_NONNULL_END
