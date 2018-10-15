@@ -11,9 +11,28 @@
 
 @interface TestViewController ()
 
+@property (nonatomic, strong) UISearchBar *searchBar;
+
 @end
 
 @implementation TestViewController
+
+- (UISearchBar *)searchBar
+{
+    if (!_searchBar) {
+        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 50)];
+        _searchBar.placeholder = @"Search";
+        _searchBar.showsCancelButton = YES;
+        _searchBar.backgroundImage = [UIImage fwImageWithColor:[UIColor whiteColor]];
+        
+        UITextField *textField = [_searchBar fwTextField];
+        textField.font = [UIFont systemFontOfSize:12];
+        UIButton *cancelButton = [_searchBar fwCancelButton];
+        
+        
+    }
+    return _searchBar;
+}
 
 - (void)renderData
 {
@@ -45,6 +64,7 @@
 {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    tableView.tableHeaderView = self.searchBar;
     return tableView;
 }
 

@@ -25,6 +25,38 @@
     return nil;
 }
 
+#pragma mark - Subview
+
+- (UIView *)fwSubviewOfClass:(Class)clazz
+{
+    return [self fwSubviewOfBlock:^BOOL(UIView *view) {
+        return [view isKindOfClass:clazz];
+    }];
+}
+
+- (UIView *)fwSubviewOfBlock:(BOOL (^)(UIView *view))block
+{
+    if (block(self)) {
+        return self;
+    }
+    
+    /* 如果需要顺序查找所有子视图，失败后再递归查找，参考此代码即可
+    for (UIView *subview in self.subviews) {
+        if (block(subview)) {
+            return subview;
+        }
+    } */
+    
+    for (UIView *subview in self.subviews) {
+        UIView *resultView = [subview fwSubviewOfBlock:block];
+        if (resultView) {
+            return resultView;
+        }
+    }
+    
+    return nil;
+}
+
 #pragma mark - Snapshot
 
 - (UIImage *)fwSnapshotImage
