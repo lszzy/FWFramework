@@ -189,6 +189,8 @@
 		2F03A658216D0049001965A1 /* FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A657216D0049001965A1 /* FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A666216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */; };
 		2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -374,6 +376,8 @@
 		2F03A657216D0049001965A1 /* FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetwork.h; sourceTree = "<group>"; };
 		2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
 		2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
+		2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISearchBar+FWFramework.m"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -441,6 +445,8 @@
 				2F03A526216CF4B9001965A1 /* UIScreen+FWFramework.m */,
 				2F03A4F7216CF4B9001965A1 /* UIScrollView+FWFramework.h */,
 				2F03A518216CF4B9001965A1 /* UIScrollView+FWFramework.m */,
+				2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */,
+				2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */,
 				2F03A519216CF4B9001965A1 /* UITableView+FWFramework.h */,
 				2F03A4F5216CF4B9001965A1 /* UITableView+FWFramework.m */,
 				2F03A515216CF4B9001965A1 /* UITableView+FWTemplateLayout.h */,
@@ -713,6 +719,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */,
 				2F03A643216CF882001965A1 /* FWNetworkPrivate.h in Headers */,
 				2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */,
 				2F03A658216D0049001965A1 /* FWNetwork.h in Headers */,
@@ -953,6 +960,7 @@
 				2F03A5FE216CF4B9001965A1 /* FWLog.m in Sources */,
 				2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */,
 				2F03A587216CF4B9001965A1 /* UIViewController+FWBar.m in Sources */,
+				2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */,
 				2F03A5B8216CF4B9001965A1 /* UIApplication+FWFramework.m in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F03A578216CF4B9001965A1 /* UINavigationController+FWTransition.m in Sources */,

@@ -20,6 +20,7 @@
 #import "UIImageView+FWFramework.h"
 #import "UIScreen+FWFramework.h"
 #import "UIScrollView+FWFramework.h"
+#import "UISearchBar+FWFramework.h"
 #import "UITableView+FWFramework.h"
 #import "UITextField+FWFramework.h"
 #import "UITextView+FWFramework.h"
