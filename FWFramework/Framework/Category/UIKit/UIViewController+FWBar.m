@@ -7,7 +7,7 @@
 //
 
 #import "UIViewController+FWBar.h"
-#import "UIView+FWBlock.h"
+#import "UIView+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
@@ -383,6 +383,22 @@
 - (UIViewController *)childViewControllerForStatusBarHidden
 {
     return self.topViewController;
+}
+
+@end
+
+#pragma mark - UISearchBar+FWBar
+
+@implementation UISearchBar (FWBar)
+
+- (UITextField *)fwTextField
+{
+    return [self fwSubviewOfClass:[UITextField class]];
+}
+
+- (UIButton *)fwCancelButton
+{
+    return [self fwSubviewOfClass:[UIButton class]];
 }
 
 @end

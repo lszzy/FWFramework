@@ -39,7 +39,6 @@
 
 - (void)onSwift {
     SwiftController *viewController = [[SwiftController alloc] init];
-    viewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
