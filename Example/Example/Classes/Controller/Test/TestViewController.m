@@ -22,14 +22,14 @@
     if (!_searchBar) {
         _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 50)];
         _searchBar.placeholder = @"Search";
-        _searchBar.showsCancelButton = YES;
-        _searchBar.backgroundImage = [UIImage fwImageWithColor:[UIColor whiteColor]];
+        [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
+        [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
+        _searchBar.fwContentInset = UIEdgeInsetsMake(9, 15, 9, 15);
+        [_searchBar fwSetSearchIconPosition:0];
         
         UITextField *textField = [_searchBar fwTextField];
         textField.font = [UIFont systemFontOfSize:12];
-        UIButton *cancelButton = [_searchBar fwCancelButton];
-        
-        
+        [textField fwSetCornerRadius:16];
     }
     return _searchBar;
 }

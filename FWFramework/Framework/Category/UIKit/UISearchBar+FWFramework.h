@@ -1,0 +1,35 @@
+/*!
+ @header     UISearchBar+FWFramework.h
+ @indexgroup FWFramework
+ @brief      UISearchBar+FWFramework
+ @author     wuyong
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/10/15
+ */
+
+#import <UIKit/UIKit.h>
+
+/*!
+ @brief UISearchBar+FWFramework
+ */
+@interface UISearchBar (FWFramework)
+
+// 自定义内容边距，可调整左右距离和TextField高度。未设置时为系统默认
+@property (nonatomic, assign) UIEdgeInsets fwContentInset;
+
+// 设置整体背景色
+- (void)fwSetBackgroundColor:(UIColor *)color;
+
+// 设置输入框背景色
+- (void)fwSetTextFieldBackgroundColor:(UIColor *)color;
+
+// 设置TextField搜索图标(placeholder)离左侧的位置
+- (void)fwSetSearchIconPosition:(CGFloat)offset;
+
+// 输入框
+- (UITextField *)fwTextField;
+
+// 取消按钮
+- (UIButton *)fwCancelButton;
+
+@end
