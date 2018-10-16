@@ -47,6 +47,14 @@ NS_ASSUME_NONNULL_BEGIN
 ///  @param request   request itself
 ///
 - (void)filterUrlRequest:(NSMutableURLRequest *)urlRequest withRequest:(FWBaseRequest *)request;
+
+///  Postprocess request before actually run callback.
+///
+///  @param request   request itself
+///  @param error   result error
+///
+- (BOOL)filterResponse:(FWBaseRequest *)request withError:(NSError * _Nullable __autoreleasing *)error;
+
 @end
 
 ///  FWCacheDirPathFilterProtocol can be used to append common path components when caching response results
