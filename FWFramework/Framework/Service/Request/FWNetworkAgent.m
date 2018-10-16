@@ -310,6 +310,7 @@
 
     NSError * __autoreleasing serializationError = nil;
     NSError * __autoreleasing validationError = nil;
+    NSError * __autoreleasing responseError = nil;
 
     NSError *requestError = nil;
     BOOL succeed = NO;
@@ -341,6 +342,17 @@
     } else {
         succeed = [self validateResult:request error:&validationError];
         requestError = validationError;
+    }
+    
+    // Filter Response if needed when succeed
+    if (succeed) {
+        NSArray *filters = [_config urlFilters];
+        for (id<FWUrlFilterProtocol> f in filters) {
+            if ([f respondsToSelector:@selector(filterResponse:withError:)]) {
+                succeed = [f filterResponse:request withError:&responseError];
+                requestError = responseError;
+            }
+        }
     }
 
     if (succeed) {
