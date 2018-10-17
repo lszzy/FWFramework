@@ -93,6 +93,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
 ///  Whether to log debug info. Default is NO;
 @property (nonatomic) BOOL debugLogEnabled;
+///  Whether to enable mock response when failed in debug mode. Default is NO.
+@property (nonatomic, assign) BOOL debugMockEnabled;
 ///  SessionConfiguration will be used to initialize FWHTTPSessionManager. Default is nil.
 @property (nonatomic, strong) NSURLSessionConfiguration* sessionConfiguration;
 

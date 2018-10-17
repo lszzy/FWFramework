@@ -256,6 +256,12 @@ typedef void(^FWRequestCompletionBlock)(__kindof FWBaseRequest *request);
 /// @name Subclass Override
 ///=============================================================================
 
+///  Called on background thread after request failed but before callback in debug mode.
+- (BOOL)responseMockProcessor;
+
+///  This validator will be used to test whether to mock response in debug mode. Default is YES if 404.
+- (BOOL)responseMockValidator;
+
 ///  Called on background thread after request succeded but before switching to main thread. Note if
 ///  cache is loaded, this method WILL be called on the main thread, just like `requestCompleteFilter`.
 - (void)requestCompletePreprocessor;

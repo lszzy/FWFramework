@@ -121,6 +121,14 @@ NSString *const FWRequestValidationErrorDomain = @"com.yuantiku.request.validati
 
 #pragma mark - Subclass Override
 
+- (BOOL)responseMockProcessor {
+    return NO;
+}
+
+- (BOOL)responseMockValidator {
+    return [self responseStatusCode] == 404;
+}
+
 - (void)requestCompletePreprocessor {
 }
 
