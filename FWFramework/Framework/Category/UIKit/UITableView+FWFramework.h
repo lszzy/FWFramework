@@ -12,7 +12,7 @@
 // UITableView分类(Plain有悬停，Group无悬停)
 @interface UITableView (FWFramework)
 
-// 设置Plain样式sectionHeader和Footer跟随滚动(不悬停)，在scrollViewDidScroll:中调用即可
+// 设置Plain样式sectionHeader和Footer跟随滚动(不悬停)，在scrollViewDidScroll:中调用即可(需先禁用内边距适应)
 - (void)fwFollowWithHeader:(CGFloat)headerHeight footer:(CGFloat)footerHeight;
 
 // reloadData完成回调
@@ -45,5 +45,26 @@
 
 // 绑定数据模型
 @property (nonatomic, strong) id fwModel;
+
+// 根据数据模型计算cell尺寸，子类重写
++ (CGSize)fwSizeWithModel:(id)model;
+
+@end
+
+// iOS9+可通过UICollectionViewFlowLayout调用sectionHeadersPinToVisibleBounds实现Header悬停效果
+@interface UICollectionViewFlowLayout (FWFramework)
+
+// 设置Header和Footer是否悬停，支持iOS9+
+- (void)fwHoverWithHeader:(BOOL)header footer:(BOOL)footer;
+
+@end
+
+@interface UICollectionReusableView (FWFramework)
+
+// 绑定数据模型
+@property (nonatomic, strong) id fwModel;
+
+// 根据数据模型计算view尺寸，子类重写
++ (CGSize)fwSizeWithModel:(id)model;
 
 @end
