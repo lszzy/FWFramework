@@ -48,6 +48,7 @@
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
+                                             @[@"FWIndicatorControl", @"FWTestIndicatorControlViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

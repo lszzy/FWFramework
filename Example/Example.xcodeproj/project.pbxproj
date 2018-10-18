@@ -26,6 +26,7 @@
 		2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E392A2178D3140051A6BB /* BaseScrollViewController.m */; };
 		2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E392E2178DFDF0051A6BB /* BaseCollectionViewController.m */; };
 		2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */; };
+		2F1E39412178F3710051A6BB /* FWTestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* FWTestIndicatorControlViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
 		2F4CFA45215522D200203A37 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA43215522D200203A37 /* TestViewController.m */; };
@@ -110,6 +111,8 @@
 		2F1E392E2178DFDF0051A6BB /* BaseCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCollectionViewController.m; sourceTree = "<group>"; };
 		2F1E39302178E02C0051A6BB /* TestCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionViewController.h; sourceTree = "<group>"; };
 		2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionViewController.m; sourceTree = "<group>"; };
+		2F1E393F2178F3710051A6BB /* FWTestIndicatorControlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTestIndicatorControlViewController.h; sourceTree = "<group>"; };
+		2F1E39402178F3710051A6BB /* FWTestIndicatorControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTestIndicatorControlViewController.m; sourceTree = "<group>"; };
 		2F30D8962153775B000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 				2F1E3927217896A90051A6BB /* TestScrollViewController.m */,
 				2F1E39302178E02C0051A6BB /* TestCollectionViewController.h */,
 				2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */,
+				2F1E393F2178F3710051A6BB /* FWTestIndicatorControlViewController.h */,
+				2F1E39402178F3710051A6BB /* FWTestIndicatorControlViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -626,6 +631,7 @@
 				2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
 				2F06BE6520971483000F8587 /* SwiftController.swift in Sources */,
+				2F1E39412178F3710051A6BB /* FWTestIndicatorControlViewController.m in Sources */,
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
