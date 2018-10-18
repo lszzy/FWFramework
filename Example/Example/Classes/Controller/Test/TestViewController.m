@@ -43,9 +43,12 @@
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
+                                             @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
+                                             @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
+                                             @[@"FWIndicatorControl", @"FWTestIndicatorControlViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];
