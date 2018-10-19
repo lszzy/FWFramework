@@ -31,9 +31,9 @@
 #define NSFoundationVersionNumber_With_QoS_Available NSFoundationVersionNumber_iOS_8_0
 #endif
 
-NSString *const FWRequestCacheErrorDomain = @"com.yuantiku.request.caching";
+NSString *const FWRequestCacheErrorDomain = @"site.wuyong.request.caching";
 
-static dispatch_queue_t ytkrequest_cache_writing_queue() {
+static dispatch_queue_t fwrequest_cache_writing_queue() {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -41,7 +41,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
         if (NSFoundationVersionNumber >= NSFoundationVersionNumber_With_QoS_Available) {
             attr = dispatch_queue_attr_make_with_qos_class(attr, QOS_CLASS_BACKGROUND, 0);
         }
-        queue = dispatch_queue_create("com.yuantiku.ytkrequest.caching", attr);
+        queue = dispatch_queue_create("site.wuyong.fwrequest.caching", attr);
     });
 
     return queue;
@@ -144,7 +144,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
     [super requestCompletePreprocessor];
 
     if (self.writeCacheAsynchronously) {
-        dispatch_async(ytkrequest_cache_writing_queue(), ^{
+        dispatch_async(fwrequest_cache_writing_queue(), ^{
             [self saveResponseDataToCacheFile:[super responseData]];
         });
     } else {

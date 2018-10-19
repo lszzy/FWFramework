@@ -21,4 +21,19 @@
  */
 - (BOOL)fwIncludeNull;
 
+/*!
+ @brief 递归移除字典中NSNull值
+ 
+ @return 不含NSNull的字典
+ */
+- (NSDictionary *)fwRemoveNull;
+
+/*!
+ @brief 移除字典中NSNull值
+ 
+ @praram recursive 是否递归
+ @return 不含NSNull的字典
+ */
+- (NSDictionary *)fwRemoveNullRecursive:(BOOL)recursive;
+
 @end
