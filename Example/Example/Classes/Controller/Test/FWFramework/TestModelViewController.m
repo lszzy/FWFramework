@@ -43,70 +43,115 @@
 
 @interface TestModelViewController () <UIScrollViewDelegate>
 
-@property(nonatomic, weak) UIScrollView *scrollView;
-@property(nonatomic, weak) UIImageView *imageView;
-@property(nonatomic, weak) UIView *redView;
-@property(nonatomic, weak) UIView *blueView;
+@property (nonatomic, strong) UIView *redView;
+@property (nonatomic, strong) UIView *hoverView;
+
+@property (nonatomic, assign) BOOL isTop;
 
 @end
 
 @implementation TestModelViewController
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        [self fwSetBackBarTitle:@""];
+    }
+    return self;
+}
+
+- (void)setIsTop:(BOOL)isTop
+{
+    _isTop = isTop;
+    
+    if (isTop) {
+        [self fwSetBarExtendEdge:UIRectEdgeTop];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // 添加scrollView
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    scrollView.frame = [UIScreen mainScreen].bounds;
-    scrollView.delegate = self;
-    [self.view addSubview:scrollView];
-    self.scrollView = scrollView;
-    
-    
-    // 添加imageView到scrollView中
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.frame = CGRectMake(0, 0, self.view.frame.size.width, 140);
-    imageView.image = [UIImage imageNamed:@"public_picture"];
-    [self.scrollView addSubview:imageView];
-    self.imageView = imageView;
-    
-    // 添加redView到scrollView中
-    UIView *redView = [[UIView alloc] init];
-    redView.frame = CGRectMake(0, self.imageView.frame.size.height, self.view.frame.size.width, 44);
-    redView.backgroundColor = [UIColor redColor];
-    [self.scrollView addSubview:redView];
-    self.redView = redView;
-    
-    // 添加blueView到scrollView中
-    UIView *blueView = [[UIView alloc] init];
-    blueView.frame = CGRectMake(0, CGRectGetMaxY(self.redView.frame), self.view.frame.size.width, 800);
-    blueView.backgroundColor = [UIColor blueColor];
-    [self.scrollView addSubview:blueView];
-    self.blueView = blueView;
-    
-    // 设置scrollView的contentSize属性
-    self.scrollView.contentSize = CGSizeMake(0, CGRectGetMaxY(self.blueView.frame));
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"切换" block:^(id sender) {
+        FWStrongifySelf();
+        
+        TestModelViewController *viewController = [TestModelViewController new];
+        viewController.isTop = !self.isTop;
+        [self fwOnOpen:viewController];
+    }];
 }
 
-#pragma mark - <UIScrollViewDelegate>
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar fwSetBackgroundClear];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar fwResetBackground];
+}
+
+- (void)renderView
+{
+    self.scrollView.delegate = self;
+    
+    UIImageView *imageView = [UIImageView fwAutoLayoutView];
+    imageView.image = [UIImage imageNamed:@"public_picture"];
+    [self.contentView addSubview:imageView]; {
+        [imageView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+        [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+        [imageView fwSetDimension:NSLayoutAttributeHeight toSize:150];
+    }
+    
+    UIView *redView = [UIView fwAutoLayoutView];
+    _redView = redView;
+    redView.backgroundColor = [UIColor redColor];
+    [self.contentView addSubview:redView]; {
+        [redView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+        [redView fwPinEdgeToSuperview:NSLayoutAttributeRight];
+        [redView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView];
+        [redView fwSetDimension:NSLayoutAttributeHeight toSize:50];
+    }
+    
+    UIView *hoverView = [UIView fwAutoLayoutView];
+    _hoverView = hoverView;
+    hoverView.backgroundColor = [UIColor redColor];
+    [redView addSubview:hoverView]; {
+        [hoverView fwPinEdgesToSuperview];
+    }
+    
+    UIView *blueView = [UIView fwAutoLayoutView];
+    blueView.backgroundColor = [UIColor blueColor];
+    [self.contentView addSubview:blueView]; {
+        [blueView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+        [blueView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:redView];
+        [blueView fwSetDimension:NSLayoutAttributeHeight toSize:FWScreenHeight];
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat originY = 140;
-    CGFloat offsetY = scrollView.contentOffset.y;
-    if (offsetY >= originY) {
-        CGRect redFrame = self.redView.frame;
-        redFrame.origin.y = 0;
-        self.redView.frame = redFrame;
-        [self.view addSubview:self.redView];
-    }else{
-        CGRect redFrame = self.redView.frame;
-        redFrame.origin.y = originY;
-        self.redView.frame = redFrame;
-        [self.scrollView addSubview:self.redView];
+    if (self.isTop) {
+        CGFloat alpha = [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:(FWStatusBarHeight + FWNavigationBarHeight)];
+        if (alpha == 1) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
+        } else if (alpha >= 0 && alpha < 1) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:alpha]];
+        }
+    } else {
+        [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:0];
     }
 }
+
+#pragma mark - Protected
 
 - (void)renderData
 {

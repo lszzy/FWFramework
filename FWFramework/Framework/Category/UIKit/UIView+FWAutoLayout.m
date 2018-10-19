@@ -42,6 +42,8 @@ static void *kUIViewFWConstraintsKey = &kUIViewFWConstraintsKey;
     self.translatesAutoresizingMaskIntoConstraints = translateConstraint;
 }
 
+#pragma mark - Key
+
 - (void)fwSetConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key
 {
     NSMutableDictionary *constraints = objc_getAssociatedObject(self, kUIViewFWConstraintsKey);
@@ -322,7 +324,34 @@ static void *kUIViewFWConstraintsKey = &kUIViewFWConstraintsKey;
     self.translatesAutoresizingMaskIntoConstraints = NO;
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self attribute:attribute relatedBy:relation toItem:otherView attribute:toAttribute multiplier:multiplier constant:offset];
     constraint.active = YES;
+    // 自动添加到当前约束列表中
+    [self.fwInnerAllConstraints addObject:constraint];
     return constraint;
+}
+
+#pragma mark - All
+
+- (NSMutableArray *)fwInnerAllConstraints
+{
+    NSMutableArray *constraints = objc_getAssociatedObject(self, @selector(fwInnerAllConstraints));
+    if (!constraints) {
+        constraints = [NSMutableArray array];
+        objc_setAssociatedObject(self, @selector(fwInnerAllConstraints), constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return constraints;
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwAllConstraints
+{
+    return [self.fwInnerAllConstraints copy];
+}
+
+- (void)fwRemoveAllConstraints
+{
+    // 禁用当前约束
+    [NSLayoutConstraint deactivateConstraints:self.fwInnerAllConstraints];
+    // 清空约束对象
+    [self.fwInnerAllConstraints removeAllObjects];
 }
 
 @end

@@ -91,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSArray<id<FWCacheDirPathFilterProtocol>> *cacheDirPathFilters;
 ///  Security policy will be used by AFNetworking. See also `FWSecurityPolicy`.
 @property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
+///  Whether to remove NSNull values from response JSON. Defaults to NO.
+@property (nonatomic, assign) BOOL removeNullValues;
 ///  Whether to log debug info. Default is NO;
 @property (nonatomic) BOOL debugLogEnabled;
 ///  Whether to enable mock response when failed in debug mode. Default is NO.
