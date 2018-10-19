@@ -35,6 +35,8 @@
  */
 - (void)fwAutoLayoutSubviews;
 
+#pragma mark - Key
+
 /*!
  @brief 设置约束保存键名，方便更新约束常量
  
@@ -393,5 +395,19 @@
  @return 布局约束
  */
 - (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+
+#pragma mark - All
+
+/*!
+ @brief 获取当前所有约束
+ 
+ @return 约束列表
+ */
+- (NSArray<NSLayoutConstraint *> *)fwAllConstraints;
+
+/*!
+ @brief 移除当前所有约束
+ */
+- (void)fwRemoveAllConstraints;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "UIScrollView+FWFramework.h"
+#import "UIView+FWAutoLayout.h"
 
 @implementation UIScrollView (FWFramework)
 
@@ -137,6 +138,37 @@
     if (@available(iOS 11.0, *)) {
         self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
+}
+
+#pragma mark - Hover
+
+- (CGFloat)fwHoverView:(UIView *)view
+         fromSuperview:(UIView *)fromSuperview
+           toSuperview:(UIView *)toSuperview
+          fromPosition:(CGFloat)fromPosition
+            toPosition:(CGFloat)toPosition
+{
+    CGFloat hoverRatio = self.contentOffset.y / (fromPosition - toPosition);
+    if (hoverRatio >= 1.f) {
+        if (view.superview != toSuperview) {
+            [view removeFromSuperview];
+            [toSuperview addSubview:view]; {
+                [view fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+                [view fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:toPosition];
+                [view fwSetDimensionsToSize:view.bounds.size];
+            }
+            return 1.f;
+        }
+    } else {
+        if (view.superview != fromSuperview) {
+            [view removeFromSuperview];
+            [fromSuperview addSubview:view]; {
+                [view fwPinEdgesToSuperview];
+            }
+            return 0.f;
+        }
+    }
+    return hoverRatio;
 }
 
 @end

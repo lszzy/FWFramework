@@ -77,7 +77,7 @@
     if (!_jsonResponseSerializer) {
         _jsonResponseSerializer = [FWJSONResponseSerializer serializer];
         _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
-
+        _jsonResponseSerializer.removesKeysWithNullValues = _config.removeNullValues;
     }
     return _jsonResponseSerializer;
 }
