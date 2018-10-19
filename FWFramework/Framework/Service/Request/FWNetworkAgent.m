@@ -60,7 +60,7 @@
         _config = [FWNetworkConfig sharedConfig];
         _manager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
         _requestsRecord = [NSMutableDictionary dictionary];
-        _processingQueue = dispatch_queue_create("com.yuantiku.networkagent.processing", DISPATCH_QUEUE_CONCURRENT);
+        _processingQueue = dispatch_queue_create("site.wuyong.networkagent.processing", DISPATCH_QUEUE_CONCURRENT);
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         pthread_mutex_init(&_lock, NULL);
 

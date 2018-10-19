@@ -8,6 +8,8 @@
 
 #import "UIViewController+FWBar.h"
 #import "UIView+FWBlock.h"
+#import "UIScreen+FWFramework.h"
+#import "UIImage+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
@@ -219,7 +221,9 @@
 
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    self.barTintColor = color;
+    // barTintColor在iOS10以下无法隐藏底部线条
+    // self.barTintColor = color;
+    [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)fwSetBackgroundImage:(UIImage *)image
@@ -237,6 +241,35 @@
 {
     // 设置线条颜色，传入UIColor创建的UIImage对象即可
     [self setShadowImage:hidden ? [UIImage new] : nil];
+}
+
+- (UIView *)fwOverlayView
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    if (!overlayView) {
+        // 设置背景透明
+        [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+        [self setShadowImage:[UIImage new]];
+        
+        overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) + FWStatusBarHeight)];
+        overlayView.userInteractionEnabled = NO;
+        overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.subviews.firstObject insertSubview:overlayView atIndex:0];
+        objc_setAssociatedObject(self, @selector(fwOverlayView), overlayView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return overlayView;
+}
+
+- (void)fwResetBackground
+{
+    [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:nil];
+    
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    if (overlayView) {
+        [overlayView removeFromSuperview];
+        objc_setAssociatedObject(self, @selector(fwOverlayView), nil, OBJC_ASSOCIATION_ASSIGN);
+    }
 }
 
 - (void)fwSetIndicatorImage:(UIImage *)image
