@@ -90,7 +90,7 @@
 // 设置标题样式属性
 - (void)fwSetTitleAttributes:(NSDictionary *)attributes;
 
-// 设置背景颜色
+// 设置背景颜色图片。系统barTintColor在iOS10以下无法隐藏底部线条
 - (void)fwSetBackgroundColor:(UIColor *)color;
 
 // 设置背景图片
@@ -101,6 +101,12 @@
 
 // 设置是否隐藏底部线条
 - (void)fwSetLineHidden:(BOOL)hidden;
+
+// 添加背景视图，可设置背景色等
+- (UIView *)fwOverlayView;
+
+// 重置导航栏背景颜色和图片，移除自定义视图
+- (void)fwResetBackground;
 
 // 设置返回箭头图片，值为nil则还原默认
 - (void)fwSetIndicatorImage:(UIImage *)image;

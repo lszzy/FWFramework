@@ -42,6 +42,21 @@
  */
 - (BOOL)fwIncludeNull;
 
+/*!
+ @brief 递归移除数组中NSNull值
+ 
+ @return 不含NSNull的数组
+ */
+- (NSArray *)fwRemoveNull;
+
+/*!
+ @brief 移除数组中NSNull值
+ 
+ @praram recursive 是否递归
+ @return 不含NSNull的数组
+ */
+- (NSArray *)fwRemoveNullRecursive:(BOOL)recursive;
+
 @end
 
 #pragma mark - NSMutableArray+FWFramework

@@ -27,7 +27,7 @@
 
 #import "FWNetwork.h"
 
-NSString *const FWRequestValidationErrorDomain = @"com.yuantiku.request.validation";
+NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validation";
 
 @interface FWBaseRequest ()
 

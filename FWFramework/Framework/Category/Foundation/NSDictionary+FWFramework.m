@@ -8,6 +8,7 @@
  */
 
 #import "NSDictionary+FWFramework.h"
+#import "NSArray+FWFramework.h"
 
 @implementation NSDictionary (FWFramework)
 
@@ -21,6 +22,36 @@
         }
     }];
     return includeNull;
+}
+
+- (NSDictionary *)fwRemoveNull
+{
+    return [self fwRemoveNullRecursive:YES];
+}
+
+- (NSDictionary *)fwRemoveNullRecursive:(BOOL)recursive
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:self];
+    for (id key in [self allKeys]) {
+        id object = [self objectForKey:key];
+        
+        if (object == [NSNull null]) {
+            [dictionary removeObjectForKey:key];
+        }
+        
+        if (recursive) {
+            if ([object isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *subdictionary = [object fwRemoveNullRecursive:YES];
+                [dictionary setValue:subdictionary forKey:key];
+            }
+            
+            if ([object isKindOfClass:[NSArray class]]) {
+                NSArray *subarray = [(NSArray *)object fwRemoveNullRecursive:YES];
+                [dictionary setValue:subarray forKey:key];
+            }
+        }
+    }
+    return [dictionary copy];
 }
 
 @end
