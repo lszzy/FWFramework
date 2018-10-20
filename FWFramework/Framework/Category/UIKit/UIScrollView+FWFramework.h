@@ -71,7 +71,7 @@
  @param toSuperview 悬停的目标视图，一般控制器self.view
  @param fromPosition 相对于toSuperview的起始originY位置
  @param toPosition 相对于toSuperview的目标originY位置
- @return 当前滚动到悬停位置的比率。大于1已经悬停，小于0未开始悬停滚动，0到1悬停滚动中，可用来设置导航栏透明度等
+ @return 悬停进度。1:开始悬停;0:停止悬停;0-1:悬停动画;-1非悬停。可用来设置导航栏透明度等
  */
 - (CGFloat)fwHoverView:(UIView *)view
          fromSuperview:(UIView *)fromSuperview
