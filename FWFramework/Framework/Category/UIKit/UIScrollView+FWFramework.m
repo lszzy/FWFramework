@@ -149,7 +149,7 @@
             toPosition:(CGFloat)toPosition
 {
     CGFloat hoverRatio = self.contentOffset.y / (fromPosition - toPosition);
-    if (hoverRatio >= 1.f) {
+    if (hoverRatio >= 1) {
         if (view.superview != toSuperview) {
             [view removeFromSuperview];
             [toSuperview addSubview:view]; {
@@ -157,7 +157,7 @@
                 [view fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:toPosition];
                 [view fwSetDimensionsToSize:view.bounds.size];
             }
-            return 1.f;
+            return 1;
         }
     } else {
         if (view.superview != fromSuperview) {
@@ -165,10 +165,13 @@
             [fromSuperview addSubview:view]; {
                 [view fwPinEdgesToSuperview];
             }
-            return 0.f;
+            return 0;
+        }
+        if (hoverRatio > 0 & hoverRatio < 1) {
+            return hoverRatio;
         }
     }
-    return hoverRatio;
+    return -1;
 }
 
 @end
