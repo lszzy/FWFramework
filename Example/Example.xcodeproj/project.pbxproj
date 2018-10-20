@@ -29,6 +29,10 @@
 		2F1E39412178F3710051A6BB /* FWTestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* FWTestIndicatorControlViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
+		2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5BE217AC3CE00BAEB59 /* SimpleViewController.m */; };
+		2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C2217AC3E700BAEB59 /* ComplexViewController.m */; };
+		2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C5217AC40B00BAEB59 /* ComplexModel.m */; };
+		2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C8217AC41D00BAEB59 /* ComplexView.m */; };
 		2F4CFA45215522D200203A37 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA43215522D200203A37 /* TestViewController.m */; };
 		2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA4D2155285500203A37 /* BaseTableViewController.m */; };
 		2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA5021552A7700203A37 /* BaseViewController.m */; };
@@ -117,6 +121,14 @@
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2F30D89C2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2F43E5BD217AC3CE00BAEB59 /* SimpleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleViewController.h; sourceTree = "<group>"; };
+		2F43E5BE217AC3CE00BAEB59 /* SimpleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SimpleViewController.m; sourceTree = "<group>"; };
+		2F43E5C1217AC3E700BAEB59 /* ComplexViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComplexViewController.h; sourceTree = "<group>"; };
+		2F43E5C2217AC3E700BAEB59 /* ComplexViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComplexViewController.m; sourceTree = "<group>"; };
+		2F43E5C4217AC40B00BAEB59 /* ComplexModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComplexModel.h; sourceTree = "<group>"; };
+		2F43E5C5217AC40B00BAEB59 /* ComplexModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComplexModel.m; sourceTree = "<group>"; };
+		2F43E5C7217AC41D00BAEB59 /* ComplexView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComplexView.h; sourceTree = "<group>"; };
+		2F43E5C8217AC41D00BAEB59 /* ComplexView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComplexView.m; sourceTree = "<group>"; };
 		2F4CFA43215522D200203A37 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		2F4CFA44215522D200203A37 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
 		2F4CFA4C2155285500203A37 /* BaseTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTableViewController.h; sourceTree = "<group>"; };
@@ -272,6 +284,52 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		2F43E5B6217AC38F00BAEB59 /* Complex */ = {
+			isa = PBXGroup;
+			children = (
+				2F43E5B7217AC38F00BAEB59 /* Controller */,
+				2F43E5B8217AC38F00BAEB59 /* Model */,
+				2F43E5B9217AC38F00BAEB59 /* View */,
+			);
+			path = Complex;
+			sourceTree = "<group>";
+		};
+		2F43E5B7217AC38F00BAEB59 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2F43E5C1217AC3E700BAEB59 /* ComplexViewController.h */,
+				2F43E5C2217AC3E700BAEB59 /* ComplexViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2F43E5B8217AC38F00BAEB59 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2F43E5C4217AC40B00BAEB59 /* ComplexModel.h */,
+				2F43E5C5217AC40B00BAEB59 /* ComplexModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2F43E5B9217AC38F00BAEB59 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2F43E5C7217AC41D00BAEB59 /* ComplexView.h */,
+				2F43E5C8217AC41D00BAEB59 /* ComplexView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2F43E5BB217AC38F00BAEB59 /* Simple */ = {
+			isa = PBXGroup;
+			children = (
+				2F43E5BD217AC3CE00BAEB59 /* SimpleViewController.h */,
+				2F43E5BE217AC3CE00BAEB59 /* SimpleViewController.m */,
+			);
+			path = Simple;
+			sourceTree = "<group>";
+		};
 		2F4CFA3021551BC900203A37 /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,6 +480,8 @@
 		2F51D78C1E5C2357009FD40F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2F43E5BB217AC38F00BAEB59 /* Simple */,
+				2F43E5B6217AC38F00BAEB59 /* Complex */,
 				2F4CFA4B2155280800203A37 /* Base */,
 				2F4CFA41215522D200203A37 /* Home */,
 				2F4CFA42215522D200203A37 /* Test */,
@@ -627,6 +687,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */,
+				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
@@ -635,11 +696,13 @@
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
+				2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */,
 				2F0D297C215DFFEF005F1466 /* DZNPolyActivity.m in Sources */,
 				2F4CFA5A2155302E00203A37 /* TestTableLayoutViewController.m in Sources */,
 				2F0D2986215DFFEF005F1466 /* FMDatabaseQueue.m in Sources */,
 				2F0D2988215DFFEF005F1466 /* FMDatabase.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
+				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
 				2F0D298B215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
@@ -647,6 +710,7 @@
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
 				2F0D298A215DFFEF005F1466 /* FMResultSet.m in Sources */,
 				2F0D298E215DFFEF005F1466 /* UIScrollView+EmptyDataSet.m in Sources */,
+				2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */,
 				2F0D298D215DFFEF005F1466 /* JQFMDB.m in Sources */,
 				2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */,
 				2F0D2987215DFFEF005F1466 /* FMDatabaseAdditions.m in Sources */,
