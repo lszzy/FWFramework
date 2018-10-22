@@ -12,59 +12,20 @@
 
 #pragma mark - FWBadgeView
 
-@interface FWBadgeView ()
-
-// 默认偏移值
-@property (nonatomic, readonly) CGPoint badgeOffset;
-
-@end
-
 @implementation FWBadgeView
 
-- (instancetype)initWithStyle:(FWBadgeStyle)style
+- (instancetype)initWithBadgeStyle:(FWBadgeStyle)badgeStyle
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         // 根据样式处理
-        switch (style) {
+        switch (badgeStyle) {
             case FWBadgeStyleSmall: {
-                CGFloat badgeHeight = 18.f;
-                CGFloat textInset = 5.f;
-                _badgeOffset = CGPointMake(7.f, 7.f);
-                
-                self.backgroundColor = [UIColor redColor];
-                self.layer.cornerRadius = badgeHeight / 2.0;
-                [self fwSetDimension:NSLayoutAttributeHeight toSize:badgeHeight];
-                [self fwSetDimension:NSLayoutAttributeWidth toSize:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual];
-                
-                _badgeLabel = [UILabel fwAutoLayoutView];
-                _badgeLabel.textColor = [UIColor whiteColor];
-                _badgeLabel.font = [UIFont systemFontOfSize:12.f];
-                _badgeLabel.textAlignment = NSTextAlignmentCenter;
-                [self addSubview:_badgeLabel];
-                [_badgeLabel fwAlignCenterToSuperview];
-                [_badgeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
-                [_badgeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
+                [self setupWithBadgeHeight:18.f badgeOffset:7.f textInset:5.f fontSize:12.f];
                 break;
             }
             case FWBadgeStyleBig: {
-                CGFloat badgeHeight = 24.f;
-                CGFloat textInset = 6.f;
-                _badgeOffset = CGPointMake(9.f, 9.f);
-                
-                self.backgroundColor = [UIColor redColor];
-                self.layer.cornerRadius = badgeHeight / 2.0;
-                [self fwSetDimension:NSLayoutAttributeHeight toSize:badgeHeight];
-                [self fwSetDimension:NSLayoutAttributeWidth toSize:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual];
-                
-                _badgeLabel = [UILabel fwAutoLayoutView];
-                _badgeLabel.textColor = [UIColor whiteColor];
-                _badgeLabel.font = [UIFont systemFontOfSize:14.f];
-                _badgeLabel.textAlignment = NSTextAlignmentCenter;
-                [self addSubview:_badgeLabel];
-                [_badgeLabel fwAlignCenterToSuperview];
-                [_badgeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
-                [_badgeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
+                [self setupWithBadgeHeight:24.f badgeOffset:9.f textInset:6.f fontSize:14.f];
                 break;
             }
             case FWBadgeStyleDot:
@@ -82,17 +43,44 @@
     return self;
 }
 
+- (instancetype)initWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGFloat)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize
+{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        [self setupWithBadgeHeight:badgeHeight badgeOffset:badgeOffset textInset:textInset fontSize:fontSize];
+    }
+    return self;
+}
+
+- (void)setupWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGFloat)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize
+{
+    _badgeOffset = CGPointMake(badgeOffset, badgeOffset);
+    
+    self.backgroundColor = [UIColor redColor];
+    self.layer.cornerRadius = badgeHeight / 2.0;
+    [self fwSetDimension:NSLayoutAttributeHeight toSize:badgeHeight];
+    [self fwSetDimension:NSLayoutAttributeWidth toSize:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    _badgeLabel = [UILabel fwAutoLayoutView];
+    _badgeLabel.textColor = [UIColor whiteColor];
+    _badgeLabel.font = [UIFont systemFontOfSize:fontSize];
+    _badgeLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:_badgeLabel];
+    [_badgeLabel fwAlignCenterToSuperview];
+    [_badgeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
+    [_badgeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
+}
+
 @end
 
 #pragma mark - UIView+FWBadge
 
 @implementation UIView (FWBadge)
 
-- (void)fwShowBadgeWithStyle:(FWBadgeStyle)style badgeValue:(NSString *)badgeValue
+- (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
-    [self fwHideBadge];
+    [self fwHideBadgeView];
     
-    FWBadgeView *badgeView = [[FWBadgeView alloc] initWithStyle:style];
     badgeView.badgeLabel.text = badgeValue;
     badgeView.tag = 2041;
     [self addSubview:badgeView];
@@ -103,7 +91,7 @@
     [badgeView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:-badgeView.badgeOffset.x];
 }
 
-- (void)fwHideBadge
+- (void)fwHideBadgeView
 {
     UIView *badgeView = [self viewWithTag:2041];
     if (badgeView) {
@@ -117,13 +105,12 @@
 
 @implementation UIBarButtonItem (FWBadge)
 
-- (void)fwShowBadgeWithStyle:(FWBadgeStyle)style badgeValue:(NSString *)badgeValue
+- (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
-    [self fwHideBadge];
+    [self fwHideBadgeView];
     
     // 查找内部视图，存在时调用
     [self fwInnerBadgeBlock:^(UIView *view) {
-        FWBadgeView *badgeView = [[FWBadgeView alloc] initWithStyle:style];
         badgeView.badgeLabel.text = badgeValue;
         badgeView.tag = 2041;
         [view addSubview:badgeView];
@@ -135,7 +122,7 @@
     }];
 }
 
-- (void)fwHideBadge
+- (void)fwHideBadgeView
 {
     UIView *superview = self.fwInnerBadgeSuperview;
     if (superview) {
@@ -187,13 +174,12 @@
 
 @implementation UITabBarItem (FWBadge)
 
-- (void)fwShowBadgeWithStyle:(FWBadgeStyle)style badgeValue:(NSString *)badgeValue
+- (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
-    [self fwHideBadge];
+    [self fwHideBadgeView];
     
     // 查找内部视图，存在时调用
     [self fwInnerBadgeBlock:^(UIView *view) {
-        FWBadgeView *badgeView = [[FWBadgeView alloc] initWithStyle:style];
         badgeView.badgeLabel.text = badgeValue;
         badgeView.tag = 2041;
         [view addSubview:badgeView];
@@ -205,7 +191,7 @@
     }];
 }
 
-- (void)fwHideBadge
+- (void)fwHideBadgeView
 {
     UIView *superview = self.fwInnerBadgeSuperview;
     if (superview) {

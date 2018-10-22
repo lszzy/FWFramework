@@ -52,6 +52,7 @@
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
     homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
     homeNav.tabBarItem.title = @"首页";
+    [homeNav.tabBarItem fwShowBadgeView:[[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall] badgeValue:@"1"];
     
     UIViewController *testController = [TestViewController new];
     testController.hidesBottomBarWhenPushed = NO;

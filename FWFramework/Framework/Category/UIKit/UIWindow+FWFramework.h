@@ -10,6 +10,9 @@
 
 @interface UIWindow (FWFramework)
 
+// 检查是否含有安全区域，可用来判断iPhoneX
++ (BOOL)fwHasSafeAreaInsets;
+
 // 获取当前主window
 + (UIWindow *)fwMainWindow;
 
