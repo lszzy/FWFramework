@@ -197,6 +197,8 @@
 		2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */; };
 		2F1E39682178F9E00051A6BB /* FWCollectionViewFlowLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1E39692178F9E00051A6BB /* FWCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */; };
+		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -391,6 +393,8 @@
 		2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
+		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -447,6 +451,8 @@
 				2F03A507216CF4B9001965A1 /* UIImageView+FWFramework.m */,
 				2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */,
 				2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */,
+				2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */,
+				2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */,
 				2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */,
 				2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */,
 				2F03A50C216CF4B9001965A1 /* UINavigationController+FWTransition.h */,
@@ -737,6 +743,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */,
 				2F1E39682178F9E00051A6BB /* FWCollectionViewFlowLayout.h in Headers */,
 				2F1E393B2178F0B90051A6BB /* FWIndicatorControl.h in Headers */,
 				2F1E393C2178F0B90051A6BB /* FWProgressView.h in Headers */,
@@ -960,6 +967,7 @@
 				2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */,
 				2F03A5FD216CF4B9001965A1 /* FWState.m in Sources */,
 				2F03A59C216CF4B9001965A1 /* UIFont+FWFramework.m in Sources */,
+				2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */,
 				2F03A5D6216CF4B9001965A1 /* NSDictionary+FWFramework.m in Sources */,
 				2F03A5D0216CF4B9001965A1 /* NSData+FWFramework.m in Sources */,
 				2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */,

@@ -18,6 +18,7 @@
 #import "UIFont+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "UIImageView+FWFramework.h"
+#import "UILabel+FWFramework.h"
 #import "UIScreen+FWFramework.h"
 #import "UIScrollView+FWFramework.h"
 #import "UISearchBar+FWFramework.h"
