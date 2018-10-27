@@ -12,17 +12,21 @@
 
 + (BOOL)fwHasSafeAreaInsets
 {
-    static BOOL hasSafeAreaInsets = NO;
+    return [self fwSafeAreaInsets].bottom > 0;
+}
+
++ (UIEdgeInsets)fwSafeAreaInsets
+{
+    static UIEdgeInsets safeAreaInsets;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (@available(iOS 11.0, *)) {
-            UIWindow *mainWindow = [self fwMainWindow];
-            if (mainWindow.safeAreaInsets.bottom > 0) {
-                hasSafeAreaInsets = YES;
-            }
+            safeAreaInsets = [self fwMainWindow].safeAreaInsets;
+        } else {
+            safeAreaInsets = UIEdgeInsetsZero;
         }
     });
-    return hasSafeAreaInsets;
+    return safeAreaInsets;
 }
 
 + (UIWindow *)fwMainWindow

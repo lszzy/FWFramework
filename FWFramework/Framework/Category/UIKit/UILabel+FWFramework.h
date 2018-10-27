@@ -20,4 +20,10 @@
 // 纵向分布方式，默认居中
 @property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
 
+// 快速设置标签，不设置传nil即可
+- (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text;
+
+// 快速创建标签，不初始化传nil即可
++ (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text;
+
 @end
