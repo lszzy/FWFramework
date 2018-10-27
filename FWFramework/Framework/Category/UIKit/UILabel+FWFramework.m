@@ -74,4 +74,24 @@
     return size;
 }
 
+- (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
+{
+    if (font) {
+        self.font = font;
+    }
+    if (textColor) {
+        self.textColor = textColor;
+    }
+    if (text) {
+        self.text = text;
+    }
+}
+
++ (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
+{
+    UILabel *label = [[self alloc] init];
+    [label fwSetFont:font textColor:textColor text:text];
+    return label;
+}
+
 @end
