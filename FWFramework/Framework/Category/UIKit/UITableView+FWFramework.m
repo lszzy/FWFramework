@@ -11,6 +11,14 @@
 
 @implementation UITableView (FWFramework)
 
+- (void)fwResetGroupedStyle
+{
+    self.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
+    self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
+    self.sectionHeaderHeight = 0;
+    self.sectionFooterHeight = 0;
+}
+
 - (void)fwFollowWithHeader:(CGFloat)headerHeight footer:(CGFloat)footerHeight
 {
     CGFloat offsetY = self.contentOffset.y;
