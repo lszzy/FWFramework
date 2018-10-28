@@ -11,6 +11,7 @@
 #import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import "UIImage+FWFramework.h"
+#import "UIScreen+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)
@@ -67,6 +68,19 @@
 - (UIButton *)fwCancelButton
 {
     return [self fwSubviewOfClass:[UIButton class]];
+}
+
+#pragma mark - Navigation
+
+- (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem
+{
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
+    titleView.backgroundColor = [UIColor clearColor];
+    [titleView addSubview:self];
+    [self fwPinEdgesToSuperview];
+    
+    navigationItem.titleView = titleView;
+    return titleView;
 }
 
 @end

@@ -32,4 +32,9 @@
 // 取消按钮
 - (UIButton *)fwCancelButton;
 
+#pragma mark - Navigation
+
+// 添加到导航栏titleView。不能直接设置为titleView，需要包裹一层再添加
+- (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem;
+
 @end
