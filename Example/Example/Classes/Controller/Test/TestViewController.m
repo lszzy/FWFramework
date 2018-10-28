@@ -20,11 +20,11 @@
 - (UISearchBar *)searchBar
 {
     if (!_searchBar) {
-        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 50)];
+        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
         _searchBar.placeholder = @"Search";
         [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
         [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
-        _searchBar.fwContentInset = UIEdgeInsetsMake(9, 15, 9, 15);
+        _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 15);
         [_searchBar fwSetSearchIconPosition:0];
         
         UITextField *textField = [_searchBar fwTextField];
@@ -59,7 +59,7 @@
 {
     [super viewDidLoad];
     
-    self.navigationItem.title = @"测试";
+    [self.searchBar fwAddToNavigationItem:self.navigationItem];
 }
 
 #pragma mark - TableView
@@ -68,7 +68,6 @@
 {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.tableHeaderView = self.searchBar;
     return tableView;
 }
 

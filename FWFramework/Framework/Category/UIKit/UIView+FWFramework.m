@@ -8,8 +8,36 @@
  */
 
 #import "UIView+FWFramework.h"
+#import "NSObject+FWRuntime.h"
+#import <objc/runtime.h>
 
 @implementation UIView (FWFramework)
+
++ (void)load
+{
+    [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUIViewIntrinsicContentSize)];
+}
+
+#pragma mark - Size
+
+- (void)fwSetIntrinsicContentSize:(CGSize)size
+{
+    if (CGSizeEqualToSize(size, CGSizeZero)) {
+        objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), nil, OBJC_ASSOCIATION_ASSIGN);
+    } else {
+        objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), [NSValue valueWithCGSize:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+- (CGSize)fwInnerUIViewIntrinsicContentSize
+{
+    NSValue *value = objc_getAssociatedObject(self, @selector(fwSetIntrinsicContentSize:));
+    if (value) {
+        return [value CGSizeValue];
+    } else {
+        return [self fwInnerUIViewIntrinsicContentSize];
+    }
+}
 
 #pragma mark - ViewController
 
