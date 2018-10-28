@@ -8,6 +8,7 @@
  */
 
 #import "UILabel+FWFramework.h"
+#import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
@@ -65,6 +66,13 @@
 
 - (CGSize)fwInnerUILabelIntrinsicContentSize
 {
+    // 兼容UIView自定义估算
+    NSValue *value = objc_getAssociatedObject(self, @selector(fwSetIntrinsicContentSize:));
+    if (value) {
+        return [value CGSizeValue];
+    }
+    
+    // 无自定义估算时动态计算
     CGSize size = [self fwInnerUILabelIntrinsicContentSize];
     NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
     if (contentInsetValue) {
