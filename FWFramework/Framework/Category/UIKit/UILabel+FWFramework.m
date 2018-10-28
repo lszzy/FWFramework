@@ -17,7 +17,7 @@
 {
     // 动态替换方法
     [self fwSwizzleInstanceMethod:@selector(drawTextInRect:) with:@selector(fwInnerDrawTextInRect:)];
-    [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerIntrinsicContentSize)];
+    [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUILabelIntrinsicContentSize)];
 }
 
 - (UIEdgeInsets)fwContentInset
@@ -63,9 +63,9 @@
     [self fwInnerDrawTextInRect:rect];
 }
 
-- (CGSize)fwInnerIntrinsicContentSize
+- (CGSize)fwInnerUILabelIntrinsicContentSize
 {
-    CGSize size = [self fwInnerIntrinsicContentSize];
+    CGSize size = [self fwInnerUILabelIntrinsicContentSize];
     NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
     if (contentInsetValue) {
         UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
