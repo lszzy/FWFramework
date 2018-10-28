@@ -19,7 +19,7 @@
 + (void)load
 {
     // 动态替换方法
-    [self fwSwizzleInstanceMethod:@selector(layoutSubviews) with:@selector(fwInnerLayoutSubviews)];
+    [self fwSwizzleInstanceMethod:@selector(layoutSubviews) with:@selector(fwInnerUISearchBarLayoutSubviews)];
 }
 
 - (UIEdgeInsets)fwContentInset
@@ -32,9 +32,9 @@
     objc_setAssociatedObject(self, @selector(fwContentInset), [NSValue valueWithUIEdgeInsets:fwContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwInnerLayoutSubviews
+- (void)fwInnerUISearchBarLayoutSubviews
 {
-    [self fwInnerLayoutSubviews];
+    [self fwInnerUISearchBarLayoutSubviews];
     
     NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
     if (contentInsetValue) {

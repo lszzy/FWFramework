@@ -109,7 +109,7 @@
 + (void)load
 {
     // 动态替换方法
-    [self fwSwizzleInstanceMethod:@selector(updateConstraints) with:@selector(fwInnerUpdateConstraints)];
+    [self fwSwizzleInstanceMethod:@selector(updateConstraints) with:@selector(fwInnerUIViewUpdateConstraints)];
 }
 
 - (BOOL)fwCollapsed
@@ -156,9 +156,9 @@
     return constraints;
 }
 
-- (void)fwInnerUpdateConstraints
+- (void)fwInnerUIViewUpdateConstraints
 {
-    [self fwInnerUpdateConstraints];
+    [self fwInnerUIViewUpdateConstraints];
     
     if (self.fwAutoCollapse && self.fwInnerCollapseConstraints.count > 0) {
         // Absent意味着视图没有固有size，即{-1, -1}
