@@ -26,4 +26,18 @@
 // 快速创建标签，不初始化传nil即可
 + (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text;
 
+#pragma mark - Size
+
+// 计算当前文本所占尺寸，需frame或者宽度布局完整，默认WordWrapping模式
+- (CGSize)fwTextSize;
+
+// 计算指定文本所占尺寸，需frame或者宽度布局完整，默认WordWrapping模式
+- (CGSize)fwTextSizeWithString:(NSString *)string;
+
+// 计算指定边界，指定文本所占尺寸，默认WordWrapping模式
+- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize;
+
+// 计算指定边界，指定文本所占尺寸，指定换行模式
+- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize lineBreak:(NSLineBreakMode)breakMode;
+
 @end
