@@ -126,4 +126,36 @@
     dispatch_resume(_timer);
 }
 
+- (void)fwSetFont:(UIFont *)font titleColor:(UIColor *)titleColor title:(NSString *)title
+{
+    if (font) {
+        self.titleLabel.font = font;
+    }
+    if (titleColor) {
+        [self setTitleColor:titleColor forState:UIControlStateNormal];
+    }
+    if (title) {
+        [self setTitle:title forState:UIControlStateNormal];
+    }
+}
+
+- (void)fwSetImage:(UIImage *)image
+{
+    [self setImage:image forState:UIControlStateNormal];
+}
+
++ (instancetype)fwButtonWithFont:(UIFont *)font titleColor:(UIColor *)titleColor title:(NSString *)title
+{
+    UIButton *button = [self buttonWithType:UIButtonTypeCustom];
+    [button fwSetFont:font titleColor:titleColor title:title];
+    return button;
+}
+
++ (instancetype)fwButtonWithImage:(UIImage *)image
+{
+    UIButton *button = [self buttonWithType:UIButtonTypeCustom];
+    [button fwSetImage:image];
+    return button;
+}
+
 @end

@@ -25,6 +25,25 @@
     return timer;
 }
 
++ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
+{
+    __block NSInteger countdown = seconds;
+    NSTimer *timer = [self fwCommonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        if (countdown <= 0) {
+            block(0);
+            [timer invalidate];
+        } else {
+            countdown--;
+            // 时间+1，防止倒计时显示0秒
+            block(countdown + 1);
+        }
+    } repeats:YES];
+    
+    // 立即触发定时器，默认等待1秒后才执行
+    [timer fire];
+    return timer;
+}
+
 + (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
     return [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
