@@ -102,4 +102,40 @@
     return label;
 }
 
+#pragma mark - Size
+
+- (CGSize)fwTextSize
+{
+    return [self fwTextSizeWithString:self.text];
+}
+
+- (CGSize)fwTextSizeWithString:(NSString *)string
+{
+    // 兼容自动布局，初始化frame
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    CGSize boundingSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    return [self fwTextSizeWithString:string boundingSize:boundingSize];
+}
+
+- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize
+{
+    return [self fwTextSizeWithString:string boundingSize:boundingSize lineBreak:NSLineBreakByWordWrapping];
+}
+
+- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize lineBreak:(NSLineBreakMode)breakMode
+{
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    attr[NSFontAttributeName] = self.font;
+    if (breakMode != NSLineBreakByWordWrapping) {
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        paragraphStyle.lineBreakMode = breakMode;
+        attr[NSParagraphStyleAttributeName] = paragraphStyle;
+    }
+    return [string boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attr context:nil].size;
+}
+
 @end
