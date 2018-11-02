@@ -12,6 +12,21 @@
 
 @implementation UIImageView (FWFramework)
 
+#pragma mark - Mode
+
+- (void)fwSetContentModeAspectFill
+{
+    [self fwSetContentMode:UIViewContentModeScaleAspectFill];
+}
+
+- (void)fwSetContentMode:(UIViewContentMode)contentMode
+{
+    self.contentMode = contentMode;
+    self.layer.masksToBounds = YES;
+}
+
+#pragma mark - Face
+
 - (void)fwFaceAware
 {
     if (self.image == nil) {
