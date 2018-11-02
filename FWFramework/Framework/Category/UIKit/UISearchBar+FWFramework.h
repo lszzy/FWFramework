@@ -26,10 +26,18 @@
 // 设置TextField搜索图标(placeholder)离左侧的位置
 - (void)fwSetSearchIconPosition:(CGFloat)offset;
 
+// 设置TextField搜索图标(placeholder)是否居中，否则居左
+- (void)fwSetSearchIconCenter:(BOOL)center;
+
 // 输入框
 - (UITextField *)fwTextField;
 
 // 取消按钮
 - (UIButton *)fwCancelButton;
+
+#pragma mark - Navigation
+
+// 添加到导航栏titleView。不能直接设置为titleView，需要包裹一层再添加
+- (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem;
 
 @end

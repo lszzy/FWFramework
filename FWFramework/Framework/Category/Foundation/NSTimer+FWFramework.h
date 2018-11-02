@@ -37,6 +37,15 @@
 + (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
 /*!
+ @brief 创建倒计时定时器
+ 
+ @param seconds 倒计时描述
+ @param block 每秒执行block，为0时自动停止
+ @return 定时器，可手工停止
+ */
++ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
+
+/*!
  @brief 创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
  @discussion 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]
  

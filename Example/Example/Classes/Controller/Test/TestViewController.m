@@ -9,7 +9,7 @@
 
 #import "TestViewController.h"
 
-@interface TestViewController ()
+@interface TestViewController () <UISearchBarDelegate>
 
 @property (nonatomic, strong) UISearchBar *searchBar;
 
@@ -20,18 +20,31 @@
 - (UISearchBar *)searchBar
 {
     if (!_searchBar) {
-        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 50)];
-        _searchBar.placeholder = @"Search";
+        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
+        _searchBar.placeholder = @"我是很长很长";
+        _searchBar.delegate = self;
         [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
         [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
-        _searchBar.fwContentInset = UIEdgeInsetsMake(9, 15, 9, 15);
+        _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 15);
+        [_searchBar fwSetSearchIconCenter:YES];
         [_searchBar fwSetSearchIconPosition:0];
         
         UITextField *textField = [_searchBar fwTextField];
         textField.font = [UIFont systemFontOfSize:12];
         [textField fwSetCornerRadius:16];
+        textField.fwTouchResign = YES;
     }
     return _searchBar;
+}
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    [searchBar fwSetSearchIconCenter:NO];
+    return YES;
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
+    [searchBar fwSetSearchIconCenter:YES];
+    return YES;
 }
 
 - (void)renderData
@@ -49,6 +62,7 @@
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
                                              @[@"FWIndicatorControl", @"FWTestIndicatorControlViewController"],
+                                             @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];
@@ -58,7 +72,7 @@
 {
     [super viewDidLoad];
     
-    self.navigationItem.title = @"测试";
+    [self.searchBar fwAddToNavigationItem:self.navigationItem];
 }
 
 #pragma mark - TableView
@@ -67,7 +81,6 @@
 {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.tableHeaderView = self.searchBar;
     return tableView;
 }
 

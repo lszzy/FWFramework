@@ -25,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWFramework)
 
+#pragma mark - Size
+
+// 设置自定义估算尺寸，CGSizeZero为清空自定义设置
+- (void)fwSetIntrinsicContentSize:(CGSize)size;
+
 #pragma mark - ViewController
 
 // 获取响应的视图控制器
