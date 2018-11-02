@@ -12,6 +12,7 @@
 #import "NSObject+FWRuntime.h"
 #import "UIImage+FWFramework.h"
 #import "UIScreen+FWFramework.h"
+#import "NSString+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)
@@ -32,15 +33,36 @@
     objc_setAssociatedObject(self, @selector(fwContentInset), [NSValue valueWithUIEdgeInsets:fwContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)fwSetSearchIconCenter:(BOOL)center
+{
+    objc_setAssociatedObject(self, @selector(fwSetSearchIconCenter:), @(center), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsLayout];
+}
+
 - (void)fwInnerUISearchBarLayoutSubviews
 {
     [self fwInnerUISearchBarLayoutSubviews];
     
+    // 自定义了才处理
     NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
     if (contentInsetValue) {
         UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
         UITextField *textField = [self fwTextField];
         textField.frame = CGRectMake(contentInset.left, contentInset.top, self.bounds.size.width - contentInset.left - contentInset.right, self.bounds.size.height - contentInset.top - contentInset.bottom);
+    }
+    
+    // 自定义了才处理
+    NSNumber *isCenterNumber = objc_getAssociatedObject(self, @selector(fwSetSearchIconCenter:));
+    if (isCenterNumber) {
+        if (![isCenterNumber boolValue]) {
+            [self setPositionAdjustment:UIOffsetMake(0, 0) forSearchBarIcon:UISearchBarIconSearch];
+        } else {
+            UITextField *textField = [self fwTextField];
+            CGFloat placeholdWidth = [self.placeholder fwSizeWithFont:textField.font].width;
+            CGFloat leftWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
+            CGFloat position = (textField.frame.size.width - placeholdWidth) / 2 - leftWidth;
+            [self setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
+        }
     }
 }
 

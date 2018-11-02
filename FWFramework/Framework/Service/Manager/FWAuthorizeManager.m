@@ -11,6 +11,8 @@
 
 #pragma mark - FWAuthorizeContacts
 
+#if FWAuthorizeContactsEnabled
+
 #import <Contacts/Contacts.h>
 #import <AddressBook/AddressBook.h>
 
@@ -78,7 +80,11 @@
 
 @end
 
+#endif
+
 #pragma mark - FWAuthorizeEventKit
+
+#if FWAuthorizeCalendarEnabled
 
 #import <EventKit/EventKit.h>
 
@@ -132,7 +138,11 @@
 
 @end
 
+#endif
+
 #pragma mark - FWAuthorizeLocation
+
+#if FWAuthorizeLocationEnabled
 
 #import <CoreLocation/CoreLocation.h>
 
@@ -233,7 +243,11 @@
 
 @end
 
+#endif
+
 #pragma mark - FWAuthorizeMicrophone
+
+#if FWAuthorizeMicrophoneEnabled
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -271,6 +285,8 @@
 }
 
 @end
+
+#endif
 
 #pragma mark - FWAuthorizePhotoLibrary
 
@@ -360,6 +376,8 @@
 
 #pragma mark - FWAuthorizeAppleMusic
 
+#if FWAuthorizeAppleMusicEnabled
+
 #import <MediaPlayer/MediaPlayer.h>
 
 // iOS9.3+需要授权，9.3以前不需要授权
@@ -414,6 +432,8 @@
 }
 
 @end
+
+#endif
 
 #pragma mark - FWAuthorizeNotifications
 
@@ -559,33 +579,43 @@
 {
     id<FWAuthorizeProtocol> object = nil;
     switch (type) {
+#if FWAuthorizeLocationEnabled
         case FWAuthorizeTypeLocationWhenInUse:
             object = [[FWAuthorizeLocation alloc] initWithIsAlways:NO];
             break;
         case FWAuthorizeTypeLocationAlways:
             object = [[FWAuthorizeLocation alloc] initWithIsAlways:YES];
             break;
+#endif
+#if FWAuthorizeMicrophoneEnabled
         case FWAuthorizeTypeMicrophone:
             object = [[FWAuthorizeMicrophone alloc] init];
             break;
+#endif
         case FWAuthorizeTypePhotoLibrary:
             object = [[FWAuthorizePhotoLibrary alloc] init];
             break;
         case FWAuthorizeTypeCamera:
             object = [[FWAuthorizeCamera alloc] init];
             break;
+#if FWAuthorizeContactsEnabled
         case FWAuthorizeTypeContacts:
             object = [[FWAuthorizeContacts alloc] init];
             break;
+#endif
+#if FWAuthorizeCalendarEnabled
         case FWAuthorizeTypeCalendars:
             object = [[FWAuthorizeEventKit alloc] initWithType:EKEntityTypeEvent];
             break;
         case FWAuthorizeTypeReminders:
             object = [[FWAuthorizeEventKit alloc] initWithType:EKEntityTypeReminder];
             break;
+#endif
+#if FWAuthorizeAppleMusicEnabled
         case FWAuthorizeTypeAppleMusic:
             object = [[FWAuthorizeAppleMusic alloc] init];
             break;
+#endif
         case FWAuthorizeTypeNotifications:
             object = [[FWAuthorizeNotifications alloc] init];
             break;

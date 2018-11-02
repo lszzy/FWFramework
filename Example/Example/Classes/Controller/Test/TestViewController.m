@@ -9,7 +9,7 @@
 
 #import "TestViewController.h"
 
-@interface TestViewController ()
+@interface TestViewController () <UISearchBarDelegate>
 
 @property (nonatomic, strong) UISearchBar *searchBar;
 
@@ -21,17 +21,30 @@
 {
     if (!_searchBar) {
         _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
-        _searchBar.placeholder = @"Search";
+        _searchBar.placeholder = @"我是很长很长";
+        _searchBar.delegate = self;
         [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
         [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
         _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 15);
+        [_searchBar fwSetSearchIconCenter:YES];
         [_searchBar fwSetSearchIconPosition:0];
         
         UITextField *textField = [_searchBar fwTextField];
         textField.font = [UIFont systemFontOfSize:12];
         [textField fwSetCornerRadius:16];
+        textField.fwTouchResign = YES;
     }
     return _searchBar;
+}
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    [searchBar fwSetSearchIconCenter:NO];
+    return YES;
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
+    [searchBar fwSetSearchIconCenter:YES];
+    return YES;
 }
 
 - (void)renderData

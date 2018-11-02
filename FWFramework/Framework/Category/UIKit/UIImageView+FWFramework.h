@@ -14,6 +14,16 @@
  */
 @interface UIImageView (FWFramework)
 
+#pragma mark - Mode
+
+// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置
+- (void)fwSetContentModeAspectFill;
+
+// 设置指定图片模式，超过区域隐藏。可通过appearance统一设置
+- (void)fwSetContentMode:(UIViewContentMode)contentMode;
+
+#pragma mark - Face
+
 // 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
 - (void)fwFaceAware;
 
