@@ -53,6 +53,22 @@
  */
 - (NSLayoutConstraint *)fwConstraintForKey:(id<NSCopying>)key;
 
+#pragma mark - Compression
+
+/*!
+ @brief 设置水平方向抗压缩优先级
+ 
+ @param priority 布局优先级
+ */
+- (void)fwSetCompressionHorizontalPriority:(UILayoutPriority)priority;
+
+/*!
+ @brief 设置竖直方向抗压缩优先级
+ 
+ @param priority 布局优先级
+ */
+- (void)fwSetCompressionVerticalPriority:(UILayoutPriority)priority;
+
 #pragma mark - Axis
 
 /*!
