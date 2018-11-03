@@ -65,6 +65,18 @@ static void *kUIViewFWConstraintsKey = &kUIViewFWConstraintsKey;
     return constraints ? [constraints objectForKey:key] : nil;
 }
 
+#pragma mark - Compression
+
+- (void)fwSetCompressionHorizontalPriority:(UILayoutPriority)priority
+{
+    [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisHorizontal];
+}
+
+- (void)fwSetCompressionVerticalPriority:(UILayoutPriority)priority
+{
+    [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisVertical];
+}
+
 #pragma mark - Axis
 
 - (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperview

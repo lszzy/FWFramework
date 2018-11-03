@@ -135,7 +135,11 @@
         paragraphStyle.lineBreakMode = breakMode;
         attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
-    return [string boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attr context:nil].size;
+    CGSize size = [string boundingRectWithSize:boundingSize
+                                       options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                    attributes:attr
+                                       context:nil].size;
+    return CGSizeMake(MIN(boundingSize.width, ceilf(size.width)), MIN(boundingSize.height, ceilf(size.height)));
 }
 
 @end
