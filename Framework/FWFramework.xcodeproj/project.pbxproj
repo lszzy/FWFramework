@@ -197,6 +197,8 @@
 		2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */; };
 		2F1E39682178F9E00051A6BB /* FWCollectionViewFlowLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1E39692178F9E00051A6BB /* FWCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */; };
+		2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
 /* End PBXBuildFile section */
@@ -392,6 +394,8 @@
 		2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWIndicatorControl.m; sourceTree = "<group>"; };
 		2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIPageControl+FWFramework.h"; sourceTree = "<group>"; };
+		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
 		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
@@ -459,6 +463,8 @@
 				2F03A4E1216CF4B9001965A1 /* UINavigationController+FWTransition.m */,
 				2F03A506216CF4B9001965A1 /* UINavigationController+FWWorkflow.h */,
 				2F03A4E6216CF4B9001965A1 /* UINavigationController+FWWorkflow.m */,
+				2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */,
+				2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */,
 				2F03A4FB216CF4B9001965A1 /* UIScreen+FWFramework.h */,
 				2F03A526216CF4B9001965A1 /* UIScreen+FWFramework.m */,
 				2F03A4F7216CF4B9001965A1 /* UIScrollView+FWFramework.h */,
@@ -743,6 +749,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */,
 				2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */,
 				2F1E39682178F9E00051A6BB /* FWCollectionViewFlowLayout.h in Headers */,
 				2F1E393B2178F0B90051A6BB /* FWIndicatorControl.h in Headers */,
@@ -978,6 +985,7 @@
 				2F03A5DD216CF4B9001965A1 /* NSFileManager+FWFramework.m in Sources */,
 				2F03A632216CF882001965A1 /* FWNetworkConfig.m in Sources */,
 				2F03A5E0216CF4B9001965A1 /* NSUserDefaults+FWFramework.m in Sources */,
+				2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */,
 				2F03A593216CF4B9001965A1 /* UIImage+FWFramework.m in Sources */,
 				2F03A5A8216CF4B9001965A1 /* UIWindow+FWFramework.m in Sources */,
 				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
