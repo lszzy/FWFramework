@@ -16,6 +16,18 @@
     return self.isViewLoaded && self.view.window;
 }
 
+- (void)fwShowPopupView:(UIView *)popupView
+{
+    UIView *superview = self.tabBarController.view ?: (self.navigationController.view ?: self.view);
+    [superview addSubview:popupView];
+    [popupView fwPinEdgesToSuperview];
+}
+
+- (void)fwHidePopupView:(UIView *)popupView
+{
+    [popupView removeFromSuperview];
+}
+
 #pragma mark - Child
 
 - (UIViewController *)fwChildViewController
