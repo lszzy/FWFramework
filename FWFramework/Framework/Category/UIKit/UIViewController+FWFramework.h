@@ -18,6 +18,16 @@
  */
 - (BOOL)fwIsViewVisible;
 
+/*!
+ @brief 显示弹出视图到控制器，占满父视图。可使用self.view.window添加到窗口
+ */
+- (void)fwShowPopupView:(UIView *)popupView;
+
+/*!
+ @brief 隐藏弹出视图，等同于removeFromSuperview
+ */
+- (void)fwHidePopupView:(UIView *)popupView;
+
 #pragma mark - Child
 
 // 获取当前显示的子控制器，解决不能触发viewWillAppear等的bug
