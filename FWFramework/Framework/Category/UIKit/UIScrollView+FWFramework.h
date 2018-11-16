@@ -61,6 +61,11 @@
 // 单独禁用内边距适应，同上。如果iOS7-10的ScrollView占不满导航栏，需设置viewController.automaticallyAdjustsScrollViewInsets为NO即可
 - (void)fwContentInsetNever;
 
+#pragma mark - Gesture
+
+// 是否允许同时识别多个手势
+@property (nonatomic, copy) BOOL (^fwShouldRecognizeSimultaneously)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
+
 #pragma mark - Hover
 
 /*!
