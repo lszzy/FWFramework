@@ -63,6 +63,7 @@
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
                                              @[@"FWIndicatorControl", @"FWTestIndicatorControlViewController"],
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
+                                             @[@"NestScrollView", @"TestNestScrollViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

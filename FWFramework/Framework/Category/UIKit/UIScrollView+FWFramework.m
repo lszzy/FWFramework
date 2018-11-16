@@ -8,8 +8,15 @@
 
 #import "UIScrollView+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
+#import <objc/runtime.h>
+#import "NSObject+FWRuntime.h"
 
 @implementation UIScrollView (FWFramework)
+
++ (void)load
+{
+    [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
+}
 
 #pragma mark - Frame
 
@@ -138,6 +145,28 @@
     if (@available(iOS 11.0, *)) {
         self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
+}
+
+#pragma mark - Gesture
+
+- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRecognizeSimultaneously
+{
+    return objc_getAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously));
+}
+
+- (void)setFwShouldRecognizeSimultaneously:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRecognizeSimultaneously
+{
+    objc_setAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously), fwShouldRecognizeSimultaneously, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
+    }
+    
+    return [self fwInnerGestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
 }
 
 #pragma mark - Hover
