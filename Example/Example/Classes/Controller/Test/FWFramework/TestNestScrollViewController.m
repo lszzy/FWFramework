@@ -237,7 +237,7 @@
         footerLabel.frame = CGRectMake(0, 270, FWScreenWidth, 30);
         [_shopScrollView addSubview:footerLabel];
         
-        _shopScrollView.contentSize = CGSizeMake(FWScreenWidth, 1000);
+        _shopScrollView.contentSize = CGSizeMake(FWScreenWidth, 300);
     }
     return _shopScrollView;
 }
@@ -246,6 +246,15 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    UIScrollView *childScrollView = nil;
+    if (self.segmentIndex == 0) {
+        childScrollView = self.orderScrollView;
+    } else if (self.segmentIndex == 1) {
+        childScrollView = self.reviewScrollView;
+    } else {
+        childScrollView = self.shopScrollView;
+    }
+    
     if (scrollView == self.scrollView) {
         if (self.isTop) {
             CGFloat progress = [scrollView fwHoverView:self.hoverView fromSuperview:self.segmentView toSuperview:self.view fromPosition:HeaderViewHeight toPosition:NavigationViewHeight];
@@ -263,6 +272,10 @@
                 self.orderScrollView.fwTempObject = @1;
                 self.reviewScrollView.fwTempObject = @1;
                 self.shopScrollView.fwTempObject = @1;
+            } else {
+                if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].y > 0.f) {
+                    [self scrollViewDidScroll:childScrollView];
+                }
             }
         } else {
             if (![scrollView.fwTempObject boolValue]) {
@@ -271,7 +284,7 @@
         }
     }
     
-    if (scrollView == self.orderScrollView || scrollView == self.reviewScrollView || scrollView == self.shopScrollView) {
+    if (scrollView == childScrollView) {
         if (![scrollView.fwTempObject boolValue]) {
             scrollView.contentOffset = CGPointZero;
         } else if (scrollView.contentOffset.y <= 0) {
