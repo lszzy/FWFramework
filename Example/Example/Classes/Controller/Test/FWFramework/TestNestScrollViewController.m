@@ -11,12 +11,15 @@
 #define HeaderViewHeight 150
 #define SegmentViewHeight 50
 #define NavigationViewHeight (FWStatusBarHeight + FWNavigationBarHeight)
+#define CartViewHeight FWTabBarHeight
+#define HoverMaxY (self.isTop ? (HeaderViewHeight - NavigationViewHeight) : HeaderViewHeight)
 
 @interface TestNestScrollViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIView *segmentView;
 @property (nonatomic, strong) UIView *hoverView;
 @property (nonatomic, strong) UIView *nestView;
+@property (nonatomic, strong) UIView *cartView;
 
 @property (nonatomic, strong) UIScrollView *orderScrollView;
 @property (nonatomic, strong) UIScrollView *reviewScrollView;
@@ -77,6 +80,11 @@
 - (void)renderView
 {
     self.scrollView.delegate = self;
+    self.scrollView.tag = -1;
+    self.scrollView.fwTempObject = @1;
+    self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
+        return YES;
+    };
     
     UIImageView *imageView = [UIImageView fwAutoLayoutView];
     imageView.image = [UIImage imageNamed:@"public_picture"];
@@ -137,8 +145,19 @@
         [nestView fwSetDimension:NSLayoutAttributeHeight toSize:nestHeight];
     }
     
+    UIView *cartView = [UIView fwAutoLayoutView];
+    _cartView = cartView;
+    cartView.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:cartView];
+    [cartView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+    [cartView fwSetDimension:NSLayoutAttributeHeight toSize:CartViewHeight];
+    UILabel *cartLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:@"我是购物车"];
+    cartLabel.textAlignment = NSTextAlignmentCenter;
+    cartLabel.frame = CGRectMake(0, 0, FWScreenWidth, CartViewHeight);
+    [cartView addSubview:cartLabel];
+    
     [nestView addSubview:self.orderScrollView];
-    [self.orderScrollView fwPinEdgesToSuperview];
+    [self.orderScrollView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, CartViewHeight, 0)];
     
     self.reviewScrollView.hidden = YES;
     [nestView addSubview:self.reviewScrollView];
@@ -155,6 +174,9 @@
 {
     if (!_orderScrollView) {
         _orderScrollView = [self renderScrollView];
+        _orderScrollView.delegate = self;
+        _orderScrollView.fwTempObject = @0;
+        _orderScrollView.tag = 0;
         _orderScrollView.backgroundColor = [UIColor whiteColor];
         
         UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:@"我是下单开头"];
@@ -176,6 +198,9 @@
 {
     if (!_reviewScrollView) {
         _reviewScrollView = [self renderScrollView];
+        _reviewScrollView.delegate = self;
+        _reviewScrollView.fwTempObject = @0;
+        _reviewScrollView.tag = 1;
         _reviewScrollView.backgroundColor = [UIColor whiteColor];
         
         UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:@"我是评价开头"];
@@ -197,6 +222,9 @@
 {
     if (!_shopScrollView) {
         _shopScrollView = [self renderScrollView];
+        _shopScrollView.delegate = self;
+        _shopScrollView.fwTempObject = @0;
+        _shopScrollView.tag = 2;
         _shopScrollView.backgroundColor = [UIColor whiteColor];
         
         UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:@"我是商家开头"];
@@ -209,7 +237,7 @@
         footerLabel.frame = CGRectMake(0, 270, FWScreenWidth, 30);
         [_shopScrollView addSubview:footerLabel];
         
-        _shopScrollView.contentSize = CGSizeMake(FWScreenWidth, 300);
+        _shopScrollView.contentSize = CGSizeMake(FWScreenWidth, 1000);
     }
     return _shopScrollView;
 }
@@ -218,15 +246,39 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (self.isTop) {
-        CGFloat progress = [scrollView fwHoverView:self.hoverView fromSuperview:self.segmentView toSuperview:self.view fromPosition:HeaderViewHeight toPosition:NavigationViewHeight];
-        if (progress == 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
-        } else if (progress >= 0 && progress < 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+    if (scrollView == self.scrollView) {
+        if (self.isTop) {
+            CGFloat progress = [scrollView fwHoverView:self.hoverView fromSuperview:self.segmentView toSuperview:self.view fromPosition:HeaderViewHeight toPosition:NavigationViewHeight];
+            if (progress == 1) {
+                [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
+            } else if (progress >= 0 && progress < 1) {
+                [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+            }
         }
-    } else {
-        [scrollView fwHoverView:self.hoverView fromSuperview:self.segmentView toSuperview:self.view fromPosition:HeaderViewHeight toPosition:0];
+        
+        if (scrollView.contentOffset.y >= HoverMaxY) {
+            scrollView.contentOffset = CGPointMake(0, HoverMaxY);
+            if ([scrollView.fwTempObject boolValue]) {
+                scrollView.fwTempObject = @0;
+                self.orderScrollView.fwTempObject = @1;
+                self.reviewScrollView.fwTempObject = @1;
+                self.shopScrollView.fwTempObject = @1;
+            }
+        } else {
+            if (![scrollView.fwTempObject boolValue]) {
+                scrollView.contentOffset = CGPointMake(0, HoverMaxY);
+            }
+        }
+    }
+    
+    if (scrollView == self.orderScrollView || scrollView == self.reviewScrollView || scrollView == self.shopScrollView) {
+        if (![scrollView.fwTempObject boolValue]) {
+            scrollView.contentOffset = CGPointZero;
+        } else if (scrollView.contentOffset.y <= 0) {
+            self.scrollView.fwTempObject = @1;
+            scrollView.fwTempObject = @0;
+            scrollView.contentOffset = CGPointZero;
+        }
     }
 }
 
@@ -243,14 +295,17 @@
         self.orderScrollView.hidden = NO;
         self.reviewScrollView.hidden = YES;
         self.shopScrollView.hidden = YES;
+        self.cartView.hidden = NO;
     } else if (self.segmentIndex == 1) {
         self.orderScrollView.hidden = YES;
         self.reviewScrollView.hidden = NO;
         self.shopScrollView.hidden = YES;
+        self.cartView.hidden = YES;
     } else {
         self.orderScrollView.hidden = YES;
         self.reviewScrollView.hidden = YES;
         self.shopScrollView.hidden = NO;
+        self.cartView.hidden = YES;
     }
 }
 
