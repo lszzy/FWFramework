@@ -276,6 +276,10 @@
             } else {
                 if (scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionUp) {
                     [self scrollViewDidScroll:childScrollView];
+                } else if (scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionDown) {
+                    if (![childScrollView fwIsScrollToEdge:UIRectEdgeBottom]) {
+                        scrollView.contentOffset = CGPointMake(0, HoverMaxY);
+                    }
                 }
             }
         } else {
