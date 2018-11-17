@@ -92,6 +92,22 @@
 
 #pragma mark - Scroll
 
+- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge
+{
+    switch (edge) {
+        case UIRectEdgeTop:
+            return self.contentOffset.y <= 0 - self.contentInset.top;
+        case UIRectEdgeLeft:
+            return self.contentOffset.x <= 0 - self.contentInset.left;
+        case UIRectEdgeBottom:
+            return self.contentOffset.y >= self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
+        case UIRectEdgeRight:
+            return self.contentOffset.x >= self.contentSize.width - self.bounds.size.width + self.contentInset.right;
+        default:
+            return NO;
+    }
+}
+
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
 {
     CGPoint offset = self.contentOffset;
@@ -114,21 +130,18 @@
     [self setContentOffset:offset animated:animated];
 }
 
-- (UIRectEdge)fwScrollEdge
+- (UISwipeGestureRecognizerDirection)fwScrollDirection
 {
-    UIRectEdge edge;
     if ([self.panGestureRecognizer translationInView:self.superview].y > 0.0f) {
-        edge = UIRectEdgeTop;
+        return UISwipeGestureRecognizerDirectionUp;
     } else if ([self.panGestureRecognizer translationInView:self.superview].y < 0.0f) {
-        edge = UIRectEdgeBottom;
+        return UISwipeGestureRecognizerDirectionDown;
     } else if ([self.panGestureRecognizer translationInView:self].x < 0.0f) {
-        edge = UIRectEdgeLeft;
+        return UISwipeGestureRecognizerDirectionLeft;
     } else if ([self.panGestureRecognizer translationInView:self].x > 0.0f) {
-        edge = UIRectEdgeRight;
-    } else {
-        edge = UIRectEdgeNone;
+        return UISwipeGestureRecognizerDirectionRight;
     }
-    return edge;
+    return 0;
 }
 
 #pragma mark - Content

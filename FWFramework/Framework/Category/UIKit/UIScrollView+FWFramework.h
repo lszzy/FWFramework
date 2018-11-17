@@ -47,11 +47,14 @@
 
 #pragma mark - Scroll
 
+// 是否已滚动到指定边
+- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
+
 // 滚动到指定边
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
 
-// 当前滚动方向
-- (UIRectEdge)fwScrollEdge;
+// 当前滚动方向，失败返回0
+- (UISwipeGestureRecognizerDirection)fwScrollDirection;
 
 #pragma mark - Content
 
