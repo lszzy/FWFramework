@@ -263,17 +263,18 @@
             } else if (progress >= 0 && progress < 1) {
                 [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
             }
+        } else {
+            [scrollView fwHoverView:self.hoverView fromSuperview:self.segmentView toSuperview:self.view fromPosition:HeaderViewHeight toPosition:0];
         }
         
         if (scrollView.contentOffset.y >= HoverMaxY) {
-            scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             if ([scrollView.fwTempObject boolValue]) {
                 scrollView.fwTempObject = @0;
                 self.orderScrollView.fwTempObject = @1;
                 self.reviewScrollView.fwTempObject = @1;
                 self.shopScrollView.fwTempObject = @1;
             } else {
-                if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].y > 0.f) {
+                if (scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionUp) {
                     [self scrollViewDidScroll:childScrollView];
                 }
             }
