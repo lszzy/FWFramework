@@ -67,6 +67,8 @@
 
 @interface TestNestScrollViewController () <UIScrollViewDelegate>
 
+@property (nonatomic, assign) BOOL isTop;
+
 @property (nonatomic, strong) UIView *segmentView;
 @property (nonatomic, strong) UIView *hoverView;
 @property (nonatomic, strong) UIScrollView *nestView;
@@ -81,9 +83,6 @@
 @property (nonatomic, strong) TestNestChildController *shopController;
 
 @property (nonatomic, assign) NSInteger segmentIndex;
-@property (nonatomic, assign) BOOL canScroll;
-
-@property (nonatomic, assign) BOOL isTop;
 
 @end
 
@@ -139,7 +138,7 @@
     [super renderScrollLayout];
     
     self.scrollView.delegate = self;
-    self.canScroll = YES;
+    self.scrollView.fwTempObject = @YES;
     FWWeakifySelf();
     self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
         FWStrongifySelf();
@@ -284,15 +283,15 @@
         if (scrollView.contentOffset.y >= HoverMaxY) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             // 标记所有子视图可滚动
-            if (self.canScroll) {
-                self.canScroll = NO;
+            if ([scrollView.fwTempObject boolValue]) {
+                scrollView.fwTempObject = @NO;
                 self.orderController.tableView.fwTempObject = @YES;
                 self.reviewController.tableView.fwTempObject = @YES;
                 self.shopController.tableView.fwTempObject = @YES;
             }
         } else {
             // 不能滚动时固定顶部
-            if (!self.canScroll) {
+            if (![scrollView.fwTempObject boolValue]) {
                 scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             }
         }
@@ -303,7 +302,7 @@
             scrollView.contentOffset = CGPointZero;
         // 子视图滚动到顶部时固定，标记主视图可滚动
         } else if (scrollView.contentOffset.y <= 0) {
-            self.canScroll = YES;
+            self.scrollView.fwTempObject = @YES;
             scrollView.fwTempObject = @NO;
             scrollView.contentOffset = CGPointZero;
         }
