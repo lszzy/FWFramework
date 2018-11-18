@@ -140,7 +140,15 @@
     
     self.scrollView.delegate = self;
     self.canScroll = YES;
+    FWWeakifySelf();
     self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
+        FWStrongifySelf();
+        // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
+        UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
+        if (direction & UISwipeGestureRecognizerDirectionLeft ||
+            direction & UISwipeGestureRecognizerDirectionRight) {
+            return NO;
+        }
         return YES;
     };
     
@@ -272,8 +280,10 @@
 {
     // 主视图
     if (scrollView == self.scrollView) {
+        // 固定在悬停位置
         if (scrollView.contentOffset.y >= HoverMaxY) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
+            // 标记所有子视图可滚动
             if (self.canScroll) {
                 self.canScroll = NO;
                 self.orderController.tableView.fwTempObject = @YES;
@@ -281,14 +291,17 @@
                 self.shopController.tableView.fwTempObject = @YES;
             }
         } else {
+            // 不能滚动时固定顶部
             if (!self.canScroll) {
                 scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             }
         }
     // 子视图，非子视图容器
     } else if (scrollView != self.nestView) {
+        // 子视图不可滚动时，固定在顶部
         if (![scrollView.fwTempObject boolValue]) {
             scrollView.contentOffset = CGPointZero;
+        // 子视图滚动到顶部时固定，标记主视图可滚动
         } else if (scrollView.contentOffset.y <= 0) {
             self.canScroll = YES;
             scrollView.fwTempObject = @NO;
@@ -301,6 +314,7 @@
 {
     // 子视图容器
     if (scrollView == self.nestView) {
+        // 左右滚动切换segmentIndex
         NSInteger selectedIndex = scrollView.contentOffset.x / FWScreenWidth;
         self.segmentIndex = selectedIndex;
     }
