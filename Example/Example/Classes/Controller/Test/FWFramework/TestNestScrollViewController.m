@@ -279,21 +279,17 @@
 {
     // 主视图
     if (scrollView == self.scrollView) {
+        // 不能滚动时固定顶部
+        if (![scrollView.fwTempObject boolValue]) {
+            scrollView.contentOffset = CGPointMake(0, HoverMaxY);
         // 固定在悬停位置
-        if (scrollView.contentOffset.y >= HoverMaxY) {
+        } else if (scrollView.contentOffset.y >= HoverMaxY) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             // 标记所有子视图可滚动
-            if ([scrollView.fwTempObject boolValue]) {
-                scrollView.fwTempObject = @NO;
-                self.orderController.tableView.fwTempObject = @YES;
-                self.reviewController.tableView.fwTempObject = @YES;
-                self.shopController.tableView.fwTempObject = @YES;
-            }
-        } else {
-            // 不能滚动时固定顶部
-            if (![scrollView.fwTempObject boolValue]) {
-                scrollView.contentOffset = CGPointMake(0, HoverMaxY);
-            }
+            scrollView.fwTempObject = @NO;
+            self.orderController.tableView.fwTempObject = @YES;
+            self.reviewController.tableView.fwTempObject = @YES;
+            self.shopController.tableView.fwTempObject = @YES;
         }
     // 子视图，非子视图容器
     } else if (scrollView != self.nestView) {
