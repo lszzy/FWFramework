@@ -82,7 +82,6 @@
 @property (nonatomic, strong) TestNestChildController *shopController;
 
 @property (nonatomic, assign) NSInteger segmentIndex;
-@property (nonatomic, weak) TestNestChildController *childController;
 @property (nonatomic, assign) BOOL canScroll;
 
 @property (nonatomic, assign) BOOL isTop;
@@ -280,10 +279,6 @@
                 self.orderController.childCanScroll = YES;
                 self.reviewController.childCanScroll = YES;
                 self.shopController.childCanScroll = YES;
-            } else {
-                if (scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionUp) {
-                    [self scrollViewDidScroll:self.childController.tableView];
-                }
             }
         } else {
             if (!self.canScroll) {
@@ -292,12 +287,20 @@
         }
     }
     
-    if (scrollView == self.childController.tableView) {
-        if (!self.childController.childCanScroll) {
+    TestNestChildController *childController = nil;
+    if (self.segmentIndex == 0) {
+        childController = self.orderController;
+    } else if (self.segmentIndex == 1) {
+        childController = self.reviewController;
+    } else {
+        childController = self.shopController;
+    }
+    if (scrollView == childController.tableView) {
+        if (!childController.childCanScroll) {
             scrollView.contentOffset = CGPointZero;
         } else if (scrollView.contentOffset.y <= 0) {
             self.canScroll = YES;
-            self.childController.childCanScroll = NO;
+            childController.childCanScroll = NO;
             scrollView.contentOffset = CGPointZero;
         }
     }
@@ -306,8 +309,8 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (scrollView == self.nestView) {
-        NSInteger index = scrollView.contentOffset.x / FWScreenWidth;
-        self.segmentIndex = index;
+        NSInteger selectedIndex = scrollView.contentOffset.x / FWScreenWidth;
+        self.segmentIndex = selectedIndex;
     }
 }
 
@@ -325,19 +328,16 @@
         self.reviewButton.selected = NO;
         self.shopButton.selected = NO;
         self.orderButton.selected = YES;
-        self.childController = self.orderController;
     } else if (segmentIndex == 1) {
         self.cartView.hidden = YES;
         self.orderButton.selected = NO;
         self.shopButton.selected = NO;
         self.reviewButton.selected = YES;
-        self.childController = self.reviewController;
     } else {
         self.cartView.hidden = YES;
         self.orderButton.selected = NO;
         self.reviewButton.selected = NO;
         self.shopButton.selected = YES;
-        self.childController = self.shopController;
     }
 }
 
