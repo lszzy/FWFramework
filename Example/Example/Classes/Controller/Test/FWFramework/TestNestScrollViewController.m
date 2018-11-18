@@ -142,10 +142,18 @@
     FWWeakifySelf();
     self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
         FWStrongifySelf();
+        /*
         // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
         UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
         if (direction == UISwipeGestureRecognizerDirectionLeft ||
             direction == UISwipeGestureRecognizerDirectionRight) {
+            return NO;
+        }*/
+        // nestView拖动中不能同时响应手势
+        UIGestureRecognizerState state = self.nestView.panGestureRecognizer.state;
+        if (state == UIGestureRecognizerStateBegan ||
+            state == UIGestureRecognizerStateChanged ||
+            state == UIGestureRecognizerStateEnded) {
             return NO;
         }
         return YES;
