@@ -145,8 +145,8 @@
         FWStrongifySelf();
         // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
         UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
-        if (direction & UISwipeGestureRecognizerDirectionLeft ||
-            direction & UISwipeGestureRecognizerDirectionRight) {
+        if (direction == UISwipeGestureRecognizerDirectionLeft ||
+            direction == UISwipeGestureRecognizerDirectionRight) {
             return NO;
         }
         return YES;
