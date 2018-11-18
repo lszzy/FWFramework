@@ -14,7 +14,6 @@
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, copy) void (^scrollViewDidScrollBlock)(UIScrollView *scrollView);
-@property (nonatomic, assign) BOOL childCanScroll;
 
 @end
 
@@ -271,36 +270,28 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    // 主视图
     if (scrollView == self.scrollView) {
         if (scrollView.contentOffset.y >= HoverMaxY) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             if (self.canScroll) {
                 self.canScroll = NO;
-                self.orderController.childCanScroll = YES;
-                self.reviewController.childCanScroll = YES;
-                self.shopController.childCanScroll = YES;
+                self.orderController.tableView.fwTempObject = @YES;
+                self.reviewController.tableView.fwTempObject = @YES;
+                self.shopController.tableView.fwTempObject = @YES;
             }
         } else {
             if (!self.canScroll) {
                 scrollView.contentOffset = CGPointMake(0, HoverMaxY);
             }
         }
-    }
-    
-    TestNestChildController *childController = nil;
-    if (self.segmentIndex == 0) {
-        childController = self.orderController;
-    } else if (self.segmentIndex == 1) {
-        childController = self.reviewController;
-    } else {
-        childController = self.shopController;
-    }
-    if (scrollView == childController.tableView) {
-        if (!childController.childCanScroll) {
+    // 子视图，非子视图容器
+    } else if (scrollView != self.nestView) {
+        if (![scrollView.fwTempObject boolValue]) {
             scrollView.contentOffset = CGPointZero;
         } else if (scrollView.contentOffset.y <= 0) {
             self.canScroll = YES;
-            childController.childCanScroll = NO;
+            scrollView.fwTempObject = @NO;
             scrollView.contentOffset = CGPointZero;
         }
     }
@@ -308,6 +299,7 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    // 子视图容器
     if (scrollView == self.nestView) {
         NSInteger selectedIndex = scrollView.contentOffset.x / FWScreenWidth;
         self.segmentIndex = selectedIndex;
