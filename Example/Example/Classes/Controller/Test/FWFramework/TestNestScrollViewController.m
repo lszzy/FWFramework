@@ -287,6 +287,14 @@
 {
     // 主视图
     if (scrollView == self.scrollView) {
+        // 导航栏透明度
+        CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - (self.isTop ? NavigationViewHeight : 0));
+        if (progress >= 1) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
+        } else if (progress >= 0 && progress < 1) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+        }
+        
         // 不能滚动时固定顶部
         if (![scrollView.fwTempObject boolValue]) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
@@ -303,7 +311,12 @@
     } else if (scrollView != self.nestView) {
         // 子视图不可滚动时，固定在顶部
         if (![scrollView.fwTempObject boolValue]) {
-            scrollView.contentOffset = CGPointZero;
+            // 上部和下部同时滚动
+            // scrollView.contentOffset = CGPointZero;
+            // 所有重置为0
+            self.orderController.tableView.contentOffset = CGPointZero;
+            self.reviewController.tableView.contentOffset = CGPointZero;
+            self.shopController.tableView.contentOffset = CGPointZero;
         // 子视图滚动到顶部时固定，标记主视图可滚动
         } else if (scrollView.contentOffset.y <= 0) {
             self.scrollView.fwTempObject = @YES;
