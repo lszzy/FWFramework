@@ -92,12 +92,12 @@
 
 - (void)onReview
 {
-    [UIApplication fwOpenReview:@"923302754"];
+    [UIApplication fwOpenAppReview:@"923302754"];
 }
 
 - (void)onReview2
 {
-    [UIApplication fwRequestReview];
+    [UIApplication fwRequestAppReview];
 }
 
 @end
