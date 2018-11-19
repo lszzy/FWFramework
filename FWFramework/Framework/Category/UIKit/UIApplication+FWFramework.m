@@ -113,12 +113,12 @@
     [self fwOpenURL:[NSURL URLWithString:url]];
 }
 
-+ (void)fwOpenSettings
++ (void)fwOpenAppSettings
 {
     [self fwOpenURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
-+ (void)fwRequestReview
++ (void)fwRequestAppReview
 {
     if (@available(iOS 10.3, *)) {
         if ([SKStoreReviewController respondsToSelector:@selector(requestReview)]) {
@@ -127,18 +127,31 @@
     }
 }
 
-+ (void)fwOpenStore:(NSString *)appId
++ (void)fwOpenAppStore:(NSString *)appId
 {
+    // SKStoreProductViewController可以内部打开，但需要加载
     [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", appId]]];
 }
 
-+ (void)fwOpenReview:(NSString *)appId
++ (void)fwOpenAppReview:(NSString *)appId
 {
     if (@available(iOS 11.0, *)) {
         [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@?action=write-review", appId]]];
     } else {
         [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]]];
     }
+}
+
++ (BOOL)fwIsAppStoreURL:(NSURL *)url
+{
+    // itms-apps等
+    if ([url.scheme hasPrefix:@"itms"]) {
+        return YES;
+    // https://itunes.apple.com/等
+    } else if ([url.host isEqualToString:@"itunes.apple.com"]) {
+        return YES;
+    }
+    return NO;
 }
 
 + (void)fwSendEmail:(NSString *)email

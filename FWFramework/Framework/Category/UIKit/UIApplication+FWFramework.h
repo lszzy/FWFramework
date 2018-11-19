@@ -56,16 +56,19 @@
 + (void)fwOpenSafari:(NSString *)url;
 
 // 打开应用设置
-+ (void)fwOpenSettings;
++ (void)fwOpenAppSettings;
 
 // 打开应用内评价，10.3+生效，一年内最多3次
-+ (void)fwRequestReview;
++ (void)fwRequestAppReview;
 
 // 打开AppStore下载页
-+ (void)fwOpenStore:(NSString *)appId;
++ (void)fwOpenAppStore:(NSString *)appId;
 
 // 打开AppStore评论页
-+ (void)fwOpenReview:(NSString *)appId;
++ (void)fwOpenAppReview:(NSString *)appId;
+
+// 判断URL是否是App Store链接
++ (BOOL)fwIsAppStoreURL:(NSURL *)url;
 
 // 发送邮件
 + (void)fwSendEmail:(NSString *)email;
