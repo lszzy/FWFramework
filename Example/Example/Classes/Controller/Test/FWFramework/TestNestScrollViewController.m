@@ -83,6 +83,7 @@
 @property (nonatomic, strong) TestNestChildController *shopController;
 
 @property (nonatomic, assign) NSInteger segmentIndex;
+@property (nonatomic, strong) UIScrollView *segmentScrollView;
 
 @end
 
@@ -151,9 +152,7 @@
         }*/
         // nestView拖动中不能同时响应手势
         UIGestureRecognizerState state = self.nestView.panGestureRecognizer.state;
-        if (state == UIGestureRecognizerStateBegan ||
-            state == UIGestureRecognizerStateChanged ||
-            state == UIGestureRecognizerStateEnded) {
+        if (state != UIGestureRecognizerStatePossible) {
             return NO;
         }
         return YES;
@@ -301,27 +300,21 @@
         // 固定在悬停位置
         } else if (scrollView.contentOffset.y >= HoverMaxY) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
-            // 标记所有子视图可滚动
             scrollView.fwTempObject = @NO;
-            self.orderController.tableView.fwTempObject = @YES;
-            self.reviewController.tableView.fwTempObject = @YES;
-            self.shopController.tableView.fwTempObject = @YES;
+            self.segmentScrollView.fwTempObject = @YES;
         }
-    // 子视图，非子视图容器
-    } else if (scrollView != self.nestView) {
+    }
+    
+    // 子视图
+    if (scrollView == self.segmentScrollView) {
         // 子视图不可滚动时，固定在顶部
         if (![scrollView.fwTempObject boolValue]) {
-            // 上部和下部同时滚动
-            // scrollView.contentOffset = CGPointZero;
-            // 所有重置为0
-            self.orderController.tableView.contentOffset = CGPointZero;
-            self.reviewController.tableView.contentOffset = CGPointZero;
-            self.shopController.tableView.contentOffset = CGPointZero;
+            scrollView.contentOffset = CGPointZero;
         // 子视图滚动到顶部时固定，标记主视图可滚动
         } else if (scrollView.contentOffset.y <= 0) {
+            scrollView.contentOffset = CGPointZero;
             self.scrollView.fwTempObject = @YES;
             scrollView.fwTempObject = @NO;
-            scrollView.contentOffset = CGPointZero;
         }
     }
 }
@@ -350,16 +343,19 @@
         self.reviewButton.selected = NO;
         self.shopButton.selected = NO;
         self.orderButton.selected = YES;
+        self.segmentScrollView = self.orderController.tableView;
     } else if (segmentIndex == 1) {
         self.cartView.hidden = YES;
         self.orderButton.selected = NO;
         self.shopButton.selected = NO;
         self.reviewButton.selected = YES;
+        self.segmentScrollView = self.reviewController.tableView;
     } else {
         self.cartView.hidden = YES;
         self.orderButton.selected = NO;
         self.reviewButton.selected = NO;
         self.shopButton.selected = YES;
+        self.segmentScrollView = self.shopController.tableView;
     }
 }
 
