@@ -57,6 +57,7 @@
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
                                              @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
+                                             @[@"UIScrollView(FWEmptyView)", @"TestEmptyViewController"],
                                              @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
                                              ]],
                                        @[@"FWApplication", @[
