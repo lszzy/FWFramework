@@ -30,6 +30,8 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  */
 @interface FWRouter : NSObject
 
+#pragma mark - Router
+
 /**
  *  注册 pattern 对应的 Handler，在 handler 中可以初始化 VC，然后对 VC 做各种操作
  *
@@ -104,7 +106,6 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  @return 返回BOOL值
  */
 + (BOOL)canOpenURL:(NSString *)URL;
-+ (BOOL)canOpenURL:(NSString *)URL matchExactly:(BOOL)exactly;
 
 /**
  *  调用此方法来拼接 pattern 和 parameters
@@ -119,5 +120,7 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  @return 返回生成的URL String
  */
 + (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters;
+
+#pragma mark - Rewrite
 
 @end

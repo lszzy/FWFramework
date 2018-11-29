@@ -62,7 +62,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 + (void)openURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion
 {
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL matchExactly:NO];
+    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
@@ -87,12 +87,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 
 + (BOOL)canOpenURL:(NSString *)URL
 {
-    return [[self sharedInstance] extractParametersFromURL:URL matchExactly:NO] ? YES : NO;
-}
-
-+ (BOOL)canOpenURL:(NSString *)URL matchExactly:(BOOL)exactly
-{
-    return [[self sharedInstance] extractParametersFromURL:URL matchExactly:YES] ? YES : NO;
+    return [[self sharedInstance] extractParametersFromURL:URL] ? YES : NO;
 }
 
 + (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters
@@ -138,7 +133,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     FWRouter *router = [FWRouter sharedInstance];
     
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *parameters = [router extractParametersFromURL:URL matchExactly:NO];
+    NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
     FWRouterObjectHandler handler = parameters[@"block"];
     
     if (handler) {
@@ -194,7 +189,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 
 #pragma mark - Utils
 
-- (NSMutableDictionary *)extractParametersFromURL:(NSString *)url matchExactly:(BOOL)exactly
+- (NSMutableDictionary *)extractParametersFromURL:(NSString *)url
 {
     NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
     
@@ -235,8 +230,6 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
                 }
                 parameters[newKey] = newPathComponent;
                 break;
-            } else if (exactly) {
-                found = NO;
             }
         }
         
