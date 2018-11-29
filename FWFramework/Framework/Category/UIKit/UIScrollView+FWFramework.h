@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIScrollView+FWEmptyView.h"
 
 /*!
  @brief UIScrollView分类

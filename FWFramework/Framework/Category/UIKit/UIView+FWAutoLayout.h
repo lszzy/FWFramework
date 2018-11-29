@@ -422,6 +422,11 @@
 - (NSArray<NSLayoutConstraint *> *)fwAllConstraints;
 
 /*!
+ @brief 移除当前指定约束
+ */
+- (void)fwRemoveConstraint:(NSLayoutConstraint *)constraint;
+
+/*!
  @brief 移除当前所有约束
  */
 - (void)fwRemoveAllConstraints;
