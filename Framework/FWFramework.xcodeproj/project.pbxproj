@@ -191,6 +191,8 @@
 		2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */; };
+		2F1D8B8321B02ED400E0F820 /* FWRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1D8B8121B02ED400E0F820 /* FWRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B8221B02ED400E0F820 /* FWRouter.m */; };
 		2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39362178F0B80051A6BB /* FWProgressView.m */; };
 		2F1E393B2178F0B90051A6BB /* FWIndicatorControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1E393C2178F0B90051A6BB /* FWProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39382178F0B80051A6BB /* FWProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -390,6 +392,8 @@
 		2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
 		2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
 		2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISearchBar+FWFramework.m"; sourceTree = "<group>"; };
+		2F1D8B8121B02ED400E0F820 /* FWRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWRouter.h; sourceTree = "<group>"; };
+		2F1D8B8221B02ED400E0F820 /* FWRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWRouter.m; sourceTree = "<group>"; };
 		2F1E39362178F0B80051A6BB /* FWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWProgressView.m; sourceTree = "<group>"; };
 		2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWIndicatorControl.h; sourceTree = "<group>"; };
 		2F1E39382178F0B80051A6BB /* FWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWProgressView.h; sourceTree = "<group>"; };
@@ -624,6 +628,8 @@
 				2F03A56A216CF4B9001965A1 /* FWPromise.m */,
 				2F03A561216CF4B9001965A1 /* FWProxy.h */,
 				2F03A569216CF4B9001965A1 /* FWProxy.m */,
+				2F1D8B8121B02ED400E0F820 /* FWRouter.h */,
+				2F1D8B8221B02ED400E0F820 /* FWRouter.m */,
 				2F03A565216CF4B9001965A1 /* FWState.h */,
 				2F03A56B216CF4B9001965A1 /* FWState.m */,
 				2F03A563216CF4B9001965A1 /* FWTest.h */,
@@ -755,6 +761,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1D8B8321B02ED400E0F820 /* FWRouter.h in Headers */,
 				2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */,
 				2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */,
 				2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */,
@@ -1011,6 +1018,7 @@
 				2F03A5B8216CF4B9001965A1 /* UIApplication+FWFramework.m in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F03A578216CF4B9001965A1 /* UINavigationController+FWTransition.m in Sources */,
+				2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */,
 				2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */,
 				2F03A57B216CF4B9001965A1 /* UINavigationController+FWFramework.m in Sources */,
 				2F03A5F2216CF4B9001965A1 /* FWMutableArray.m in Sources */,
