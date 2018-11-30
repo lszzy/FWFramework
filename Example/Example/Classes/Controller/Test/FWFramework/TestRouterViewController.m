@@ -74,19 +74,19 @@
 
 - (void)onOpenWild
 {
-    [FWRouter openURL:@"other://test"];
+    [FWRouter openURL:@"other://test1"];
 }
 
 - (void)onOpenCallback
 {
-    [FWRouter openURL:@"app://test" completion:^(id result) {
+    [FWRouter openURL:@"app://test1" completion:^(id result) {
         NSLog(@"result: %@", result);
     }];
 }
 
 - (void)onOpenObject
 {
-    TestRouterResultViewController *viewController = [FWRouter objectForURL:@"object://test"];
+    TestRouterResultViewController *viewController = [FWRouter objectForURL:@"object://test2"];
     viewController.completion = ^(id result) {
         NSLog(@"result: %@", result);
     };
@@ -96,7 +96,7 @@
 
 - (void)onOpenFailed
 {
-    [FWRouter openURL:@"other://not_found"];
+    [FWRouter openURL:@"app://test3"];
 }
 
 @end
