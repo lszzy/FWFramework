@@ -8,10 +8,12 @@
  */
 
 #import "FWRouter.h"
-#import <objc/runtime.h>
 
-static NSString * const FWROUTER_WILDCARD_CHARACTER = @"~";
-static NSString * fwStaticSpecialCharacters = @"/?&.";
+static NSString * const FWRouterWildcardCharacter = @"*";
+static NSString * FWRouterSpecialCharacters = @"/?&.";
+
+static NSString * const FWRouterCoreKey = @"FWRouterCore";
+static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 NSString * const FWRouterURLKey = @"FWRouterURL";
 NSString * const FWRouterCompletionKey = @"FWRouterCompletion";
@@ -19,11 +21,11 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 
 @interface FWRouter ()
 
-/**
- *  保存了所有已注册的 URL
- *  结构类似 @{@"beauty": @{@":id": {@"_", [block copy]}}}
- */
-@property (nonatomic) NSMutableDictionary *routes;
+// 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey, [block copy]}}}
+@property (nonatomic, strong) NSMutableDictionary *routes;
+
+// 错误URL Handler，未注册时调用
+@property (nonatomic, copy) FWRouterErrorHandler errorHandler;
 
 @end
 
@@ -44,9 +46,19 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     [[self sharedInstance] addRoute:pattern withHandler:handler];
 }
 
++ (void)registerErrorHandler:(FWRouterErrorHandler)handler
+{
+    [[self sharedInstance] setErrorHandler:handler];
+}
+
 + (void)unregisterURL:(NSString *)pattern
 {
     [[self sharedInstance] removeRoute:pattern];
+}
+
++ (void)unregisterAllURLs
+{
+    [[self sharedInstance] removeAllRoutes];
 }
 
 + (void)openURL:(NSString *)URL
@@ -63,6 +75,10 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 {
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
+    if (!parameters) {
+        [[self sharedInstance] handleErrorWithURL:URL];
+        return;
+    }
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
@@ -71,7 +87,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     }];
     
     if (parameters) {
-        FWRouterHandler handler = parameters[@"block"];
+        FWRouterHandler handler = parameters[FWRouterBlockKey];
         if (completion) {
             parameters[FWRouterCompletionKey] = completion;
         }
@@ -79,7 +95,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
             parameters[FWRouterUserInfoKey] = userInfo;
         }
         if (handler) {
-            [parameters removeObjectForKey:@"block"];
+            [parameters removeObjectForKey:FWRouterBlockKey];
             handler(parameters);
         }
     }
@@ -101,10 +117,11 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         if ([character isEqualToString:@":"]) {
             startIndexOfColon = i;
         }
-        if ([fwStaticSpecialCharacters rangeOfString:character].location != NSNotFound && i > (startIndexOfColon + 1) && startIndexOfColon) {
+        if ([FWRouterSpecialCharacters rangeOfString:character].location != NSNotFound && i > (startIndexOfColon + 1) && startIndexOfColon) {
             NSRange range = NSMakeRange(startIndexOfColon, i - startIndexOfColon);
             NSString *placeholder = [pattern substringWithRange:range];
-            if (![self containsSpecialCharacter:placeholder]) {
+            NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+            if ([placeholder rangeOfCharacterFromSet:specialCharactersSet].location == NSNotFound) {
                 [placeholders addObject:placeholder];
                 startIndexOfColon = 0;
             }
@@ -112,7 +129,8 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         if (i == pattern.length - 1 && startIndexOfColon) {
             NSRange range = NSMakeRange(startIndexOfColon, i - startIndexOfColon + 1);
             NSString *placeholder = [pattern substringWithRange:range];
-            if (![self containsSpecialCharacter:placeholder]) {
+            NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+            if ([placeholder rangeOfCharacterFromSet:specialCharactersSet].location == NSNotFound) {
                 [placeholders addObject:placeholder];
             }
         }
@@ -134,13 +152,23 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
-    FWRouterObjectHandler handler = parameters[@"block"];
+    if (!parameters) {
+        [[self sharedInstance] handleErrorWithURL:URL];
+        return nil;
+    }
     
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
+        if ([obj isKindOfClass:[NSString class]]) {
+            parameters[key] = [obj stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+    }];
+    
+    FWRouterObjectHandler handler = parameters[FWRouterBlockKey];
     if (handler) {
         if (userInfo) {
             parameters[FWRouterUserInfoKey] = userInfo;
         }
-        [parameters removeObjectForKey:@"block"];
+        [parameters removeObjectForKey:FWRouterBlockKey];
         return handler(parameters);
     }
     return nil;
@@ -160,7 +188,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 {
     NSMutableDictionary *subRoutes = [self addRoute:pattern];
     if (handler && subRoutes) {
-        subRoutes[@"_"] = [handler copy];
+        subRoutes[FWRouterCoreKey] = [handler copy];
     }
 }
 
@@ -168,7 +196,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 {
     NSMutableDictionary *subRoutes = [self addRoute:pattern];
     if (handler && subRoutes) {
-        subRoutes[@"_"] = [handler copy];
+        subRoutes[FWRouterCoreKey] = [handler copy];
     }
 }
 
@@ -187,7 +215,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     return subRoutes;
 }
 
-#pragma mark - Utils
+#pragma mark - Private
 
 - (NSMutableDictionary *)extractParametersFromURL:(NSString *)url
 {
@@ -198,7 +226,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     NSMutableDictionary* subRoutes = self.routes;
     NSArray* pathComponents = [self pathComponentsFromURL:url];
     
-    BOOL found = NO;
+    BOOL wildcardMatched = NO;
     // borrowed from HHRouter(https://github.com/Huohua/HHRouter)
     for (NSString *pathComponent in pathComponents) {
         
@@ -208,18 +236,19 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         }];
         
         for (NSString *key in subRoutesKeys) {
-            if ([key isEqualToString:pathComponent] || [key isEqualToString:FWROUTER_WILDCARD_CHARACTER]) {
-                found = YES;
+            if ([key isEqualToString:pathComponent] || [key isEqualToString:FWRouterWildcardCharacter]) {
+                wildcardMatched = YES;
                 subRoutes = subRoutes[key];
                 break;
             } else if ([key hasPrefix:@":"]) {
-                found = YES;
+                wildcardMatched = YES;
                 subRoutes = subRoutes[key];
                 NSString *newKey = [key substringFromIndex:1];
                 NSString *newPathComponent = pathComponent;
                 // 再做一下特殊处理，比如 :id.html -> :id
-                if ([self.class containsSpecialCharacter:key]) {
-                    NSCharacterSet *specialCharacterSet = [NSCharacterSet characterSetWithCharactersInString:fwStaticSpecialCharacters];
+                NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+                if ([key rangeOfCharacterFromSet:specialCharactersSet].location != NSNotFound) {
+                    NSCharacterSet *specialCharacterSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
                     NSRange range = [key rangeOfCharacterFromSet:specialCharacterSet];
                     if (range.location != NSNotFound) {
                         // 把 pathComponent 后面的部分也去掉
@@ -234,7 +263,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         }
         
         // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
-        if (!found && !subRoutes[@"_"]) {
+        if (!wildcardMatched && !subRoutes[FWRouterCoreKey]) {
             return nil;
         }
     }
@@ -246,11 +275,18 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         parameters[item.name] = item.value;
     }
     
-    if (subRoutes[@"_"]) {
-        parameters[@"block"] = [subRoutes[@"_"] copy];
+    if (subRoutes[FWRouterCoreKey]) {
+        parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
     }
     
     return parameters;
+}
+
+- (void)handleErrorWithURL:(NSString *)URL
+{
+    if (self.errorHandler) {
+        self.errorHandler(URL);
+    }
 }
 
 - (void)removeRoute:(NSString *)pattern
@@ -278,6 +314,11 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     }
 }
 
+- (void)removeAllRoutes
+{
+    [self.routes removeAllObjects];
+}
+
 - (NSArray *)pathComponentsFromURL:(NSString*)URL
 {
     NSMutableArray *pathComponents = [NSMutableArray array];
@@ -289,7 +330,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         // 如果只有协议，那么放一个占位符
         URL = pathSegments.lastObject;
         if (!URL.length) {
-            [pathComponents addObject:FWROUTER_WILDCARD_CHARACTER];
+            [pathComponents addObject:FWRouterWildcardCharacter];
         }
     }
     
@@ -307,14 +348,6 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         _routes = [[NSMutableDictionary alloc] init];
     }
     return _routes;
-}
-
-#pragma mark - Utils
-
-+ (BOOL)containsSpecialCharacter:(NSString *)checkedString
-{
-    NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:fwStaticSpecialCharacters];
-    return [checkedString rangeOfCharacterFromSet:specialCharactersSet].location != NSNotFound;
 }
 
 @end

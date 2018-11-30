@@ -28,9 +28,9 @@
         [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
     }];
     
-    [FWRouter registerURL:@"/test" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:@"/test1" withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.title = @"/test";
+        viewController.title = @"/test1";
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;
@@ -38,13 +38,13 @@
         [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
     }];
     
-    [FWRouter registerURL:@"object://test" withObjectHandler:^id(NSDictionary *parameters) {
+    [FWRouter registerURL:@"object://test2" withObjectHandler:^id(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.title = @"object://test";
+        viewController.title = @"object://test2";
         return viewController;
     }];
     
-    [FWRouter registerURL:@"/" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerErrorHandler:^(NSString *URL) {
         NSLog(@"not supported");
     }];
 }
