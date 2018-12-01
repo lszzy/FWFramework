@@ -29,7 +29,7 @@
             if (self.completion) {
                 self.completion(@"我是回调数据");
             }
-            [self fwCloseViewController];
+            [self fwCloseViewControllerAnimated:YES];
         }];
     }
 }

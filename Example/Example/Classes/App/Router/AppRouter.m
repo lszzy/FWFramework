@@ -27,7 +27,7 @@
         if (completion) {
             viewController.completion = completion;
         }
-        [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
+        [FWRouter pushViewController:viewController animated:YES];
     }];
     
     [FWRouter registerURL:@"wildcard://*" withHandler:^(NSDictionary *parameters) {
@@ -38,7 +38,7 @@
         if (completion) {
             viewController.completion = completion;
         }
-        [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
+        [FWRouter pushViewController:viewController animated:YES];
     }];
     
     [FWRouter registerURL:@"wildcard://test1" withHandler:^(NSDictionary *parameters) {
@@ -49,7 +49,7 @@
         if (completion) {
             viewController.completion = completion;
         }
-        [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
+        [FWRouter pushViewController:viewController animated:YES];
     }];
     
     [FWRouter registerURL:@"object://test2" withObjectHandler:^id(NSDictionary *parameters) {

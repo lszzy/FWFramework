@@ -81,7 +81,7 @@
         
         TestModelViewController *viewController = [TestModelViewController new];
         viewController.isTop = !self.isTop;
-        [self fwOpenViewController:viewController];
+        [self fwOpenViewController:viewController animated:YES];
     }];
 }
 

@@ -33,11 +33,6 @@
     }
 }
 
-- (void)fwOpenViewController:(UIViewController *)viewController
-{
-    [self fwOpenViewController:viewController animated:YES];
-}
-
 - (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
@@ -45,11 +40,6 @@
     } else {
         [self.navigationController pushViewController:viewController animated:animated];
     }
-}
-
-- (void)fwCloseViewController
-{
-    [self fwCloseViewControllerAnimated:YES];
 }
 
 - (void)fwCloseViewControllerAnimated:(BOOL)animated
