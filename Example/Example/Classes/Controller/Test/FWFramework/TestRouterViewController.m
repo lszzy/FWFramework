@@ -15,6 +15,13 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
+    UILabel *label = [UILabel fwAutoLayoutView];
+    label.numberOfLines = 0;
+    label.text = [NSString stringWithFormat:@"%@", self.parameters];
+    [self.view addSubview:label];
+    [label fwAlignCenterToSuperview];
+    [label fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 40];
+    
     if (self.completion) {
         FWWeakifySelf();
         [self fwSetRightBarItem:@"完成" block:^(id sender) {
@@ -43,6 +50,9 @@
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
                                          @[@"解析Url，获取Object", @"onOpenObject"],
                                          @[@"不支持的Url", @"onOpenFailed"],
+                                         @[@"RewriteUrl", @"onRewrite1"],
+                                         @[@"RewriteUrl URLEncode", @"onRewrite2"],
+                                         @[@"RewriteUrl URLDecode", @"onRewrite3"],
                                          ]];
 }
 
@@ -97,6 +107,21 @@
 - (void)onOpenFailed
 {
     [FWRouter openURL:@"app://test"];
+}
+
+- (void)onRewrite1
+{
+    [FWRouter openURL:@"https://www.baidu.com/test/66666"];
+}
+
+- (void)onRewrite2
+{
+    [FWRouter openURL:@"https://www.baidu.com/wildcard/原子弹"];
+}
+
+- (void)onRewrite3
+{
+    [FWRouter openURL:@"https://www.baidu.com/wildcard2/%E5%8E%9F%E5%AD%90%E5%BC%B9"];
 }
 
 @end
