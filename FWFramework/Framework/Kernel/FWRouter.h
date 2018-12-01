@@ -24,9 +24,6 @@ typedef void (^FWRouterHandler)(NSDictionary *parameters);
 /*! @brief 路由对象处理句柄 */
 typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
 
-/*! @brief 路由错误处理句柄 */
-typedef void (^FWRouterErrorHandler)(NSString *URL);
-
 /*!
  @brief URL路由
  
@@ -58,7 +55,7 @@ typedef void (^FWRouterErrorHandler)(NSString *URL);
  *
  *  @param handler    该 block 回传不支持的URL参数
  */
-+ (void)registerErrorHandler:(FWRouterErrorHandler)handler;
++ (void)registerErrorHandler:(FWRouterHandler)handler;
 
 /**
  *  取消注册某个 pattern
