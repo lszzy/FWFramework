@@ -43,7 +43,7 @@
 }
 
 - (void)onClose {
-    [self fwOnClose];
+    [self fwCloseViewController];
 }
 
 @end
