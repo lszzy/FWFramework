@@ -74,12 +74,12 @@
 
 - (void)onOpenWild
 {
-    [FWRouter openURL:@"other://test1"];
+    [FWRouter openURL:@"wildcard://not_found"];
 }
 
 - (void)onOpenCallback
 {
-    [FWRouter openURL:@"app://test1" completion:^(id result) {
+    [FWRouter openURL:@"wildcard://test1" completion:^(id result) {
         NSLog(@"result: %@", result);
     }];
 }
