@@ -33,28 +33,6 @@
     }
 }
 
-- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
-        [self presentViewController:viewController animated:animated completion:nil];
-    } else {
-        [self.navigationController pushViewController:viewController animated:animated];
-    }
-}
-
-- (void)fwCloseViewControllerAnimated:(BOOL)animated
-{
-    if (self.navigationController) {
-        UIViewController *viewController = [self.navigationController popViewControllerAnimated:animated];
-        // 如果已经是导航栏底部，则尝试dismiss当前控制器
-        if (!viewController && self.presentingViewController) {
-            [self dismissViewControllerAnimated:animated completion:nil];
-        }
-    } else if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:animated completion:nil];
-    }
-}
-
 @end
 
 @implementation UINavigationController (FWWorkflow)
