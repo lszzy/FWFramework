@@ -169,30 +169,6 @@
     }
 }
 
-#pragma mark - Action
-
-- (void)fwOnOpen:(UIViewController *)viewController
-{
-    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
-        [self presentViewController:viewController animated:YES completion:nil];
-    } else {
-        [self.navigationController pushViewController:viewController animated:YES];
-    }
-}
-
-- (void)fwOnClose
-{
-    if (self.navigationController) {
-        UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
-        // 如果已经是导航栏底部，则尝试dismiss当前控制器
-        if (!viewController && self.presentingViewController) {
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    } else if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-}
-
 @end
 
 #pragma mark - UINavigationBar+FWBar

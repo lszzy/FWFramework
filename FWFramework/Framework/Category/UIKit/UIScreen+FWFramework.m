@@ -103,6 +103,30 @@
     return [self fwIsScreenX] ? 83.0 : 49.0;
 }
 
++ (BOOL)fwHasSafeAreaInsets
+{
+    return [self fwSafeAreaInsets].bottom > 0;
+}
+
++ (UIEdgeInsets)fwSafeAreaInsets
+{
+    static UIEdgeInsets safeAreaInsets;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (@available(iOS 11.0, *)) {
+            UIApplication *application = [UIApplication sharedApplication];
+            if ([application.delegate respondsToSelector:@selector(window)]) {
+                safeAreaInsets = [application.delegate window].safeAreaInsets;
+            } else {
+                safeAreaInsets = [application keyWindow].safeAreaInsets;
+            }
+        } else {
+            safeAreaInsets = UIEdgeInsetsZero;
+        }
+    });
+    return safeAreaInsets;
+}
+
 @end
 
 @implementation UIViewController (FWScreen)
