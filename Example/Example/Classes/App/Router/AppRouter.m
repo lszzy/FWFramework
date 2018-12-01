@@ -28,9 +28,19 @@
         [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
     }];
     
-    [FWRouter registerURL:@"/test1" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:@"wildcard://~" withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.title = @"/test1";
+        viewController.title = @"wildcard://~";
+        FWBlockParam completion = parameters[FWRouterCompletionKey];
+        if (completion) {
+            viewController.completion = completion;
+        }
+        [[UIWindow fwMainWindow] fwPushViewController:viewController animated:YES];
+    }];
+    
+    [FWRouter registerURL:@"wildcard://test1" withHandler:^(NSDictionary *parameters) {
+        TestRouterResultViewController *viewController = [TestRouterResultViewController new];
+        viewController.title = @"wildcard://test1";
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;

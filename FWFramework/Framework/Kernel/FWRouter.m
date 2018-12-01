@@ -9,7 +9,7 @@
 
 #import "FWRouter.h"
 
-static NSString * const FWRouterWildcardCharacter = @"*";
+static NSString * const FWRouterWildcardCharacter = @"~";
 static NSString * FWRouterSpecialCharacters = @"/?&.";
 
 static NSString * const FWRouterCoreKey = @"FWRouterCore";
@@ -259,6 +259,8 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
                 }
                 parameters[newKey] = newPathComponent;
                 break;
+            } else {
+                wildcardMatched = NO;
             }
         }
         
