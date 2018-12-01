@@ -118,7 +118,7 @@
         
         TestNestScrollViewController *viewController = [TestNestScrollViewController new];
         viewController.isTop = !self.isTop;
-        [self fwOpenViewController:viewController];
+        [self fwOpenViewController:viewController animated:YES];
     }];
 }
 

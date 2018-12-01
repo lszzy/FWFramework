@@ -37,6 +37,6 @@ import UIKit
     }
     
     @objc func onClose() {
-        self.fwClose()
+        self.fwClose(animated: true)
     }
 }

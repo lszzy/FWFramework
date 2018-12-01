@@ -18,13 +18,7 @@
 @property (nonatomic, copy) NSString *fwWorkflowName;
 
 // 打开页面。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
-- (void)fwOpenViewController:(UIViewController *)viewController;
-
-// 打开页面。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
 - (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
-
-// 关闭页面。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
-- (void)fwCloseViewController;
 
 // 关闭页面。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
 - (void)fwCloseViewControllerAnimated:(BOOL)animated;
