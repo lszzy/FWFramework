@@ -46,6 +46,11 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     [[self sharedInstance] addRoute:pattern withHandler:handler];
 }
 
++ (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
+{
+    [[self sharedInstance] addRoute:pattern withObjectHandler:handler];
+}
+
 + (void)registerErrorHandler:(FWRouterErrorHandler)handler
 {
     [[self sharedInstance] setErrorHandler:handler];
@@ -59,6 +64,11 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 + (void)unregisterAllURLs
 {
     [[self sharedInstance] removeAllRoutes];
+}
+
++ (BOOL)canOpenURL:(NSString *)URL
+{
+    return [[self sharedInstance] extractParametersFromURL:URL] ? YES : NO;
 }
 
 + (void)openURL:(NSString *)URL
@@ -101,9 +111,37 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     }
 }
 
-+ (BOOL)canOpenURL:(NSString *)URL
++ (id)objectForURL:(NSString *)URL
 {
-    return [[self sharedInstance] extractParametersFromURL:URL] ? YES : NO;
+    return [self objectForURL:URL withUserInfo:nil];
+}
+
++ (id)objectForURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo
+{
+    FWRouter *router = [FWRouter sharedInstance];
+    
+    URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
+    if (!parameters) {
+        [[self sharedInstance] handleErrorWithURL:URL];
+        return nil;
+    }
+    
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
+        if ([obj isKindOfClass:[NSString class]]) {
+            parameters[key] = [obj stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+    }];
+    
+    FWRouterObjectHandler handler = parameters[FWRouterBlockKey];
+    if (handler) {
+        if (userInfo) {
+            parameters[FWRouterUserInfoKey] = userInfo;
+        }
+        [parameters removeObjectForKey:FWRouterBlockKey];
+        return handler(parameters);
+    }
+    return nil;
 }
 
 + (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters
@@ -146,58 +184,14 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     return parsedResult;
 }
 
-+ (id)objectForURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo
-{
-    FWRouter *router = [FWRouter sharedInstance];
-    
-    URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
-    if (!parameters) {
-        [[self sharedInstance] handleErrorWithURL:URL];
-        return nil;
-    }
-    
-    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
-        if ([obj isKindOfClass:[NSString class]]) {
-            parameters[key] = [obj stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        }
-    }];
-    
-    FWRouterObjectHandler handler = parameters[FWRouterBlockKey];
-    if (handler) {
-        if (userInfo) {
-            parameters[FWRouterUserInfoKey] = userInfo;
-        }
-        [parameters removeObjectForKey:FWRouterBlockKey];
-        return handler(parameters);
-    }
-    return nil;
-}
+#pragma mark - Private
 
-+ (id)objectForURL:(NSString *)URL
+- (NSMutableDictionary *)routes
 {
-    return [self objectForURL:URL withUserInfo:nil];
-}
-
-+ (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
-{
-    [[self sharedInstance] addRoute:pattern withObjectHandler:handler];
-}
-
-- (void)addRoute:(NSString *)pattern withHandler:(FWRouterHandler)handler
-{
-    NSMutableDictionary *subRoutes = [self addRoute:pattern];
-    if (handler && subRoutes) {
-        subRoutes[FWRouterCoreKey] = [handler copy];
+    if (!_routes) {
+        _routes = [[NSMutableDictionary alloc] init];
     }
-}
-
-- (void)addRoute:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
-{
-    NSMutableDictionary *subRoutes = [self addRoute:pattern];
-    if (handler && subRoutes) {
-        subRoutes[FWRouterCoreKey] = [handler copy];
-    }
+    return _routes;
 }
 
 - (NSMutableDictionary *)addRoute:(NSString *)pattern
@@ -215,80 +209,19 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     return subRoutes;
 }
 
-#pragma mark - Private
-
-- (NSMutableDictionary *)extractParametersFromURL:(NSString *)url
+- (void)addRoute:(NSString *)pattern withHandler:(FWRouterHandler)handler
 {
-    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
-    
-    parameters[FWRouterURLKey] = url;
-    
-    NSMutableDictionary* subRoutes = self.routes;
-    NSArray* pathComponents = [self pathComponentsFromURL:url];
-    
-    BOOL wildcardMatched = NO;
-    // borrowed from HHRouter(https://github.com/Huohua/HHRouter)
-    for (NSString *pathComponent in pathComponents) {
-        
-        // 对 key 进行排序，这样可以把 * 放到最后
-        NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch;
-        NSArray *subRoutesKeys =[subRoutes.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-            return [obj2 compare:obj1 options:comparisonOptions];
-        }];
-        
-        for (NSString *key in subRoutesKeys) {
-            if ([key isEqualToString:pathComponent] || [key isEqualToString:FWRouterWildcardCharacter]) {
-                wildcardMatched = YES;
-                subRoutes = subRoutes[key];
-                break;
-            } else if ([key hasPrefix:@":"]) {
-                wildcardMatched = YES;
-                subRoutes = subRoutes[key];
-                NSString *newKey = [key substringFromIndex:1];
-                NSString *newPathComponent = pathComponent;
-                // 再做一下特殊处理，比如 :id.html -> :id
-                NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
-                if ([key rangeOfCharacterFromSet:specialCharactersSet].location != NSNotFound) {
-                    NSCharacterSet *specialCharacterSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
-                    NSRange range = [key rangeOfCharacterFromSet:specialCharacterSet];
-                    if (range.location != NSNotFound) {
-                        // 把 pathComponent 后面的部分也去掉
-                        newKey = [newKey substringToIndex:range.location - 1];
-                        NSString *suffixToStrip = [key substringFromIndex:range.location];
-                        newPathComponent = [newPathComponent stringByReplacingOccurrencesOfString:suffixToStrip withString:@""];
-                    }
-                }
-                parameters[newKey] = newPathComponent;
-                break;
-            } else {
-                wildcardMatched = NO;
-            }
-        }
-        
-        // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
-        if (!wildcardMatched && !subRoutes[FWRouterCoreKey]) {
-            return nil;
-        }
+    NSMutableDictionary *subRoutes = [self addRoute:pattern];
+    if (handler && subRoutes) {
+        subRoutes[FWRouterCoreKey] = [handler copy];
     }
-    
-    // Extract Params From Query.
-    NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:[[NSURL alloc] initWithString:url] resolvingAgainstBaseURL:false].queryItems;
-    
-    for (NSURLQueryItem *item in queryItems) {
-        parameters[item.name] = item.value;
-    }
-    
-    if (subRoutes[FWRouterCoreKey]) {
-        parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
-    }
-    
-    return parameters;
 }
 
-- (void)handleErrorWithURL:(NSString *)URL
+- (void)addRoute:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
 {
-    if (self.errorHandler) {
-        self.errorHandler(URL);
+    NSMutableDictionary *subRoutes = [self addRoute:pattern];
+    if (handler && subRoutes) {
+        subRoutes[FWRouterCoreKey] = [handler copy];
     }
 }
 
@@ -345,12 +278,77 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     return [pathComponents copy];
 }
 
-- (NSMutableDictionary *)routes
+- (NSMutableDictionary *)extractParametersFromURL:(NSString *)url
 {
-    if (!_routes) {
-        _routes = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
+    
+    parameters[FWRouterURLKey] = url;
+    
+    NSMutableDictionary* subRoutes = self.routes;
+    NSArray* pathComponents = [self pathComponentsFromURL:url];
+    
+    BOOL wildcardMatched = NO;
+    // borrowed from HHRouter(https://github.com/Huohua/HHRouter)
+    for (NSString *pathComponent in pathComponents) {
+        
+        // 对 key 进行排序，这样可以把 * 放到最后
+        NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch;
+        NSArray *subRoutesKeys =[subRoutes.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+            return [obj2 compare:obj1 options:comparisonOptions];
+        }];
+        
+        for (NSString *key in subRoutesKeys) {
+            if ([key isEqualToString:pathComponent] || [key isEqualToString:FWRouterWildcardCharacter]) {
+                wildcardMatched = YES;
+                subRoutes = subRoutes[key];
+                break;
+            } else if ([key hasPrefix:@":"]) {
+                wildcardMatched = YES;
+                subRoutes = subRoutes[key];
+                NSString *newKey = [key substringFromIndex:1];
+                NSString *newPathComponent = pathComponent;
+                // 再做一下特殊处理，比如 :id.html -> :id
+                NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+                if ([key rangeOfCharacterFromSet:specialCharactersSet].location != NSNotFound) {
+                    NSCharacterSet *specialCharacterSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+                    NSRange range = [key rangeOfCharacterFromSet:specialCharacterSet];
+                    if (range.location != NSNotFound) {
+                        // 把 pathComponent 后面的部分也去掉
+                        newKey = [newKey substringToIndex:range.location - 1];
+                        NSString *suffixToStrip = [key substringFromIndex:range.location];
+                        newPathComponent = [newPathComponent stringByReplacingOccurrencesOfString:suffixToStrip withString:@""];
+                    }
+                }
+                parameters[newKey] = newPathComponent;
+                break;
+            }
+        }
+        
+        // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
+        if (!wildcardMatched && !subRoutes[FWRouterCoreKey]) {
+            return nil;
+        }
     }
-    return _routes;
+    
+    // Extract Params From Query.
+    NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:[[NSURL alloc] initWithString:url] resolvingAgainstBaseURL:false].queryItems;
+    
+    for (NSURLQueryItem *item in queryItems) {
+        parameters[item.name] = item.value;
+    }
+    
+    if (subRoutes[FWRouterCoreKey]) {
+        parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
+    }
+    
+    return parameters;
+}
+
+- (void)handleErrorWithURL:(NSString *)URL
+{
+    if (self.errorHandler) {
+        self.errorHandler(URL);
+    }
 }
 
 @end

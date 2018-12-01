@@ -69,7 +69,7 @@
 
 - (void)onOpen
 {
-    [FWRouter openURL:@"app://test"];
+    [FWRouter openURL:@"app://test/1"];
 }
 
 - (void)onOpenWild
@@ -96,7 +96,7 @@
 
 - (void)onOpenFailed
 {
-    [FWRouter openURL:@"app://test3"];
+    [FWRouter openURL:@"app://test"];
 }
 
 @end

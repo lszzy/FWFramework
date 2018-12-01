@@ -18,9 +18,9 @@
 
 + (void)registerRouters
 {
-    [FWRouter registerURL:@"app://test" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:@"app://test/:id" withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.title = @"app://test";
+        viewController.title = [NSString stringWithFormat:@"app://test/%@", parameters[@"id"]];
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;
