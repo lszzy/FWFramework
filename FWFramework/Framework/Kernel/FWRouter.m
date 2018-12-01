@@ -9,7 +9,7 @@
 
 #import "FWRouter.h"
 
-static NSString * const FWRouterWildcardCharacter = @"~";
+static NSString * const FWRouterWildcardCharacter = @"*";
 static NSString * FWRouterSpecialCharacters = @"/?&.";
 
 static NSString * const FWRouterCoreKey = @"FWRouterCore";
@@ -230,9 +230,10 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     // borrowed from HHRouter(https://github.com/Huohua/HHRouter)
     for (NSString *pathComponent in pathComponents) {
         
-        // 对 key 进行排序，这样可以把 ~ 放到最后
+        // 对 key 进行排序，这样可以把 * 放到最后
+        NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch;
         NSArray *subRoutesKeys =[subRoutes.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-            return [obj1 compare:obj2];
+            return [obj2 compare:obj1 options:comparisonOptions];
         }];
         
         for (NSString *key in subRoutesKeys) {

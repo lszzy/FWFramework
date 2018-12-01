@@ -39,7 +39,7 @@
 {
     [self.dataList addObjectsFromArray:@[
                                          @[@"打开Url", @"onOpen"],
-                                         @[@"打开Url，通配符~", @"onOpenWild"],
+                                         @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
                                          @[@"解析Url，获取Object", @"onOpenObject"],
                                          @[@"不支持的Url", @"onOpenFailed"],
@@ -74,12 +74,12 @@
 
 - (void)onOpenWild
 {
-    [FWRouter openURL:@"wildcard://not_found"];
+    [FWRouter openURL:@"wildcard://not_found?id=1"];
 }
 
 - (void)onOpenCallback
 {
-    [FWRouter openURL:@"wildcard://test1" completion:^(id result) {
+    [FWRouter openURL:@"wildcard://test1?id=2" completion:^(id result) {
         NSLog(@"result: %@", result);
     }];
 }
