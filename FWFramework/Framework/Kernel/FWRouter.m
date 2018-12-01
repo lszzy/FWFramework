@@ -25,7 +25,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
 // 错误URL Handler，未注册时调用
-@property (nonatomic, copy) FWRouterErrorHandler errorHandler;
+@property (nonatomic, copy) FWRouterHandler errorHandler;
 
 @end
 
@@ -51,7 +51,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     [[self sharedInstance] addRoute:pattern withObjectHandler:handler];
 }
 
-+ (void)registerErrorHandler:(FWRouterErrorHandler)handler
++ (void)registerErrorHandler:(FWRouterHandler)handler
 {
     [[self sharedInstance] setErrorHandler:handler];
 }
@@ -68,7 +68,8 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 
 + (BOOL)canOpenURL:(NSString *)URL
 {
-    return [[self sharedInstance] extractParametersFromURL:URL] ? YES : NO;
+    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
+    return parameters[FWRouterBlockKey] ? YES : NO;
 }
 
 + (void)openURL:(NSString *)URL
@@ -85,10 +86,6 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 {
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
-    if (!parameters) {
-        [[self sharedInstance] handleErrorWithURL:URL];
-        return;
-    }
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
@@ -96,18 +93,19 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         }
     }];
     
-    if (parameters) {
-        FWRouterHandler handler = parameters[FWRouterBlockKey];
-        if (completion) {
-            parameters[FWRouterCompletionKey] = completion;
-        }
-        if (userInfo) {
-            parameters[FWRouterUserInfoKey] = userInfo;
-        }
-        if (handler) {
-            [parameters removeObjectForKey:FWRouterBlockKey];
-            handler(parameters);
-        }
+    if (completion) {
+        parameters[FWRouterCompletionKey] = completion;
+    }
+    if (userInfo) {
+        parameters[FWRouterUserInfoKey] = userInfo;
+    }
+    
+    FWRouterHandler handler = parameters[FWRouterBlockKey];
+    if (handler) {
+        [parameters removeObjectForKey:FWRouterBlockKey];
+        handler(parameters);
+    } else {
+        [[self sharedInstance] handleError:parameters];
     }
 }
 
@@ -122,10 +120,6 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
-    if (!parameters) {
-        [[self sharedInstance] handleErrorWithURL:URL];
-        return nil;
-    }
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
@@ -133,15 +127,18 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         }
     }];
     
+    if (userInfo) {
+        parameters[FWRouterUserInfoKey] = userInfo;
+    }
+    
     FWRouterObjectHandler handler = parameters[FWRouterBlockKey];
     if (handler) {
-        if (userInfo) {
-            parameters[FWRouterUserInfoKey] = userInfo;
-        }
         [parameters removeObjectForKey:FWRouterBlockKey];
         return handler(parameters);
+    } else {
+        [[self sharedInstance] handleError:parameters];
+        return nil;
     }
-    return nil;
 }
 
 + (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters
@@ -288,7 +285,6 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     NSArray* pathComponents = [self pathComponentsFromURL:url];
     
     BOOL wildcardMatched = NO;
-    // borrowed from HHRouter(https://github.com/Huohua/HHRouter)
     for (NSString *pathComponent in pathComponents) {
         
         // 对 key 进行排序，这样可以把 * 放到最后
@@ -326,7 +322,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
         
         // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
         if (!wildcardMatched && !subRoutes[FWRouterCoreKey]) {
-            return nil;
+            break;
         }
     }
     
@@ -344,10 +340,10 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     return parameters;
 }
 
-- (void)handleErrorWithURL:(NSString *)URL
+- (void)handleError:(NSDictionary *)parameters
 {
     if (self.errorHandler) {
-        self.errorHandler(URL);
+        self.errorHandler(parameters);
     }
 }
 

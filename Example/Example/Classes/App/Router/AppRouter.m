@@ -54,8 +54,8 @@
         return viewController;
     }];
     
-    [FWRouter registerErrorHandler:^(NSString *URL) {
-        NSLog(@"not supported");
+    [FWRouter registerErrorHandler:^(NSDictionary *parameters) {
+        NSLog(@"not supported: %@", parameters);
     }];
 }
 
