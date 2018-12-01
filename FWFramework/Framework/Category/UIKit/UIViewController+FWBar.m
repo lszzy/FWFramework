@@ -188,7 +188,7 @@
         if (!viewController && self.presentingViewController) {
             [self dismissViewControllerAnimated:YES completion:nil];
         }
-    } else {
+    } else if (self.presentingViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
