@@ -73,6 +73,15 @@ typedef void (^FWRouterErrorHandler)(NSString *URL);
 + (void)unregisterAllURLs;
 
 /**
+ *  是否可以打开URL
+ *
+ *  @param URL 带 Scheme，如 app://beauty/3
+ *
+ *  @return 返回BOOL值
+ */
++ (BOOL)canOpenURL:(NSString *)URL;
+
+/**
  *  打开此 URL
  *  会在已注册的 URL -> Handler 中寻找，如果找到，则执行 Handler
  *
@@ -111,15 +120,6 @@ typedef void (^FWRouterErrorHandler)(NSString *URL);
  *  @param userInfo 附加参数
  */
 + (id)objectForURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo;
-
-/**
- *  是否可以打开URL
- *
- *  @param URL 带 Scheme，如 app://beauty/3
- *
- *  @return 返回BOOL值
- */
-+ (BOOL)canOpenURL:(NSString *)URL;
 
 /**
  *  调用此方法来拼接 pattern 和 parameters
