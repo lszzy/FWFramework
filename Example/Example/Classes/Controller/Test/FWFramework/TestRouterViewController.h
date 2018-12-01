@@ -10,6 +10,7 @@
 
 @interface TestRouterResultViewController : BaseViewController
 
+@property (nonatomic, strong) NSDictionary *parameters;
 @property (nonatomic, copy) FWBlockParam completion;
 
 @end

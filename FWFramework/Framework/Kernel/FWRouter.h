@@ -24,6 +24,8 @@ typedef void (^FWRouterHandler)(NSDictionary *parameters);
 /*! @brief 路由对象处理句柄 */
 typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
 
+#pragma mark - FWRouter
+
 /*!
  @brief URL路由
  
@@ -131,5 +133,51 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  @return 返回生成的URL String
  */
 + (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters;
+
+@end
+
+#pragma mark - FWRouter+Rewrite
+
+/*!
+ @brief URL路由Rewrite
+ 
+ @see https://github.com/imlifengfeng/FFRouter
+ */
+@interface FWRouter (Rewrite)
+
+/**
+ According to the set of Rules, go to rewrite URL.
+ 
+ @param url URL to be rewritten
+ @return URL after being rewritten
+ */
++ (NSString *)rewriteURL:(NSString *)url;
+
+/**
+ Add a RewriteRule
+ 
+ @param matchRule Regular matching rule
+ @param targetRule Conversion rules
+ */
++ (void)addRewriteRule:(NSString *)matchRule targetRule:(NSString *)targetRule;
+
+/**
+ Add multiple RewriteRule at the same time, the format must be：@[@{@"matchRule":@"YourMatchRule",@"targetRule":@"YourTargetRule"},...]
+ 
+ @param rules RewriteRules
+ */
++ (void)addRewriteRules:(NSArray<NSDictionary *> *)rules;
+
+/**
+ Remove a RewriteRule
+ 
+ @param matchRule MatchRule to be removed
+ */
++ (void)removeRewriteRule:(NSString *)matchRule;
+
+/**
+ Remove all RewriteRule
+ */
++ (void)removeAllRewriteRules;
 
 @end
