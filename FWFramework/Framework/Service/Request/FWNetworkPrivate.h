@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 @class FWHTTPSessionManager;
+@class FWHTTPResponseSerializer;
+@class FWJSONResponseSerializer;
+@class FWXMLParserResponseSerializer;
 
 @interface FWNetworkUtils : NSObject
 
@@ -99,6 +102,10 @@ FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,
 - (void)resetURLSessionManagerWithConfiguration:(NSURLSessionConfiguration *)configuration;
 
 - (NSString *)incompleteDownloadTempCacheFolder;
+
+- (FWHTTPResponseSerializer *)httpResponseSerializer;
+- (FWJSONResponseSerializer *)jsonResponseSerializer;
+- (FWXMLParserResponseSerializer *)xmlParserResponseSerialzier;
 
 @end
 
