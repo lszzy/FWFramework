@@ -358,7 +358,14 @@
     }
 #endif
     
-    // Filter Response if needed when succeed
+    // Filter Response with request when succeed
+    if (succeed) {
+        NSError * __autoreleasing responseError = nil;
+        succeed = [request filterResponse:&responseError];
+        requestError = responseError;
+    }
+    
+    // Filter Response with filters if needed when succeed
     if (succeed) {
         NSArray *filters = [_config urlFilters];
         if (filters.count > 0) {
@@ -485,7 +492,10 @@
         urlRequest = [requestSerializer requestWithMethod:method URLString:URLString parameters:parameters error:error];
     }
     
-    // Filter URLRequest if needed
+    // Filter URLRequest with request
+    [request filterUrlRequest:urlRequest];
+    
+    // Filter URLRequest with filters if needed
     NSArray *filters = [_config urlFilters];
     for (id<FWUrlFilterProtocol> f in filters) {
         if ([f respondsToSelector:@selector(filterUrlRequest:withRequest:)]) {
@@ -512,7 +522,10 @@
     // add parameters to URL;
     NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:@"GET" URLString:URLString parameters:parameters error:error];
     
-    // Filter URLRequest if needed
+    // Filter URLRequest with request
+    [request filterUrlRequest:urlRequest];
+    
+    // Filter URLRequest with filters if needed
     NSArray *filters = [_config urlFilters];
     for (id<FWUrlFilterProtocol> f in filters) {
         if ([f respondsToSelector:@selector(filterUrlRequest:withRequest:)]) {
