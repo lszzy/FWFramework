@@ -73,6 +73,10 @@
     return self;
 }
 
+- (FWHTTPResponseSerializer *)httpResponseSerializer {
+    return _manager.responseSerializer;
+}
+
 - (FWJSONResponseSerializer *)jsonResponseSerializer {
     if (!_jsonResponseSerializer) {
         _jsonResponseSerializer = [FWJSONResponseSerializer serializer];
