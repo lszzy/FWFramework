@@ -262,6 +262,12 @@ typedef void(^FWRequestCompletionBlock)(__kindof FWBaseRequest *request);
 ///  This validator will be used to test whether to mock response in debug mode. Default is YES if 404.
 - (BOOL)responseMockValidator;
 
+///  Preprocess URLRequest before actually sending them.
+- (void)filterUrlRequest:(NSMutableURLRequest *)urlRequest;
+
+///  Postprocess request before actually run callback. Default is YES.
+- (BOOL)filterResponse:(NSError * _Nullable __autoreleasing *)error;
+
 ///  Called on background thread after request succeded but before switching to main thread. Note if
 ///  cache is loaded, this method WILL be called on the main thread, just like `requestCompleteFilter`.
 - (void)requestCompletePreprocessor;

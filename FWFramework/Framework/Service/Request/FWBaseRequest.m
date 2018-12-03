@@ -129,6 +129,13 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validatio
     return [self responseStatusCode] == 404;
 }
 
+- (void)filterUrlRequest:(NSMutableURLRequest *)urlRequest {
+}
+
+- (BOOL)filterResponse:(NSError *__autoreleasing  _Nullable *)error {
+    return YES;
+}
+
 - (void)requestCompletePreprocessor {
 }
 

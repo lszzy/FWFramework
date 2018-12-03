@@ -57,12 +57,15 @@
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
                                              @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
+                                             @[@"UIScrollView(FWEmptyView)", @"TestEmptyViewController"],
                                              @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
                                              @[@"FWIndicatorControl", @"FWTestIndicatorControlViewController"],
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
+                                             @[@"NestScrollView", @"TestNestScrollViewController"],
+                                             @[@"FWRouter", @"TestRouterViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

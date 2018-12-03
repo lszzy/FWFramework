@@ -10,25 +10,6 @@
 
 @implementation UIWindow (FWFramework)
 
-+ (BOOL)fwHasSafeAreaInsets
-{
-    return [self fwSafeAreaInsets].bottom > 0;
-}
-
-+ (UIEdgeInsets)fwSafeAreaInsets
-{
-    static UIEdgeInsets safeAreaInsets;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (@available(iOS 11.0, *)) {
-            safeAreaInsets = [self fwMainWindow].safeAreaInsets;
-        } else {
-            safeAreaInsets = UIEdgeInsetsZero;
-        }
-    });
-    return safeAreaInsets;
-}
-
 + (UIWindow *)fwMainWindow
 {
     UIApplication *application = [UIApplication sharedApplication];

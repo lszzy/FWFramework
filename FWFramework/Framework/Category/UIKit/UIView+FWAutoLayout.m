@@ -358,9 +358,16 @@ static void *kUIViewFWConstraintsKey = &kUIViewFWConstraintsKey;
     return [self.fwInnerAllConstraints copy];
 }
 
+- (void)fwRemoveConstraint:(NSLayoutConstraint *)constraint
+{
+    constraint.active = NO;
+    // 移除约束对象
+    [self.fwInnerAllConstraints removeObject:constraint];
+}
+
 - (void)fwRemoveAllConstraints
 {
-    // 禁用当前约束
+    // 禁用当前所有约束
     [NSLayoutConstraint deactivateConstraints:self.fwInnerAllConstraints];
     // 清空约束对象
     [self.fwInnerAllConstraints removeAllObjects];

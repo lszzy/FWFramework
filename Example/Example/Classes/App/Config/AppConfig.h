@@ -6,8 +6,7 @@
 //  Copyright © 2016年 ocphp.com. All rights reserved.
 //
 
-#ifndef AppConfig_h
-#define AppConfig_h
+#import <Foundation/Foundation.h>
 
 #pragma mark - ENV
 
@@ -49,4 +48,9 @@
 
 #endif
 
-#endif /* AppConfig_h */
+#pragma mark - AppConfig
+
+// 动态配置
+@interface AppConfig : NSObject
+
+@end

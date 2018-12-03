@@ -43,7 +43,7 @@
 }
 
 - (void)onClose {
-    [self fwOnClose];
+    [self fwCloseViewControllerAnimated:YES];
 }
 
 @end
