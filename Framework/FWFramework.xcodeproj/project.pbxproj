@@ -191,6 +191,8 @@
 		2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */; };
+		2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */; };
 		2F1D8B8321B02ED400E0F820 /* FWRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1D8B8121B02ED400E0F820 /* FWRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B8221B02ED400E0F820 /* FWRouter.m */; };
 		2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39362178F0B80051A6BB /* FWProgressView.m */; };
@@ -392,6 +394,8 @@
 		2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
 		2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
 		2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISearchBar+FWFramework.m"; sourceTree = "<group>"; };
+		2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
+		2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWFramework.m"; sourceTree = "<group>"; };
 		2F1D8B8121B02ED400E0F820 /* FWRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWRouter.h; sourceTree = "<group>"; };
 		2F1D8B8221B02ED400E0F820 /* FWRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWRouter.m; sourceTree = "<group>"; };
 		2F1E39362178F0B80051A6BB /* FWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWProgressView.m; sourceTree = "<group>"; };
@@ -569,6 +573,8 @@
 				2F03A53D216CF4B9001965A1 /* NSThread+FWFramework.m */,
 				2F03A54F216CF4B9001965A1 /* NSTimer+FWFramework.h */,
 				2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */,
+				2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */,
+				2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */,
 				2F03A538216CF4B9001965A1 /* NSUserDefaults+FWFramework.h */,
 				2F03A54A216CF4B9001965A1 /* NSUserDefaults+FWFramework.m */,
 			);
@@ -761,6 +767,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */,
 				2F1D8B8321B02ED400E0F820 /* FWRouter.h in Headers */,
 				2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */,
 				2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */,
@@ -964,6 +971,7 @@
 				2F03A5D5216CF4B9001965A1 /* NSString+FWEncode.m in Sources */,
 				2F03A651216CF882001965A1 /* FWNetworkReachabilityManager.m in Sources */,
 				2F03A640216CF882001965A1 /* FWNetworkAgent.m in Sources */,
+				2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */,
 				2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */,
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
