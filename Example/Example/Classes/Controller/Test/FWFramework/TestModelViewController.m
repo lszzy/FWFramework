@@ -184,6 +184,12 @@
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
     NSLog(@"obj: %@", obj);
     NSLog(@"dict: %@", [obj fwModelToJsonObject]);
+    
+    NSString *str = @"http://test.com?id=我是中文";
+    NSURL *url = [NSURL URLWithString:str];
+    NSLog(@"str: %@ =>\nurl: %@", str, url);
+    url = [NSURL fwURLWithString:str];
+    NSLog(@"str: %@ =>\nurl: %@", str, url);
 }
 
 @end
