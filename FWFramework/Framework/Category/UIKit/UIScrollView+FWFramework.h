@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIScrollView+FWEmptyView.h"
 
 /*!
  @brief UIScrollView分类
@@ -47,11 +48,14 @@
 
 #pragma mark - Scroll
 
+// 是否已滚动到指定边
+- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
+
 // 滚动到指定边
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
 
-// 当前滚动方向
-- (UIRectEdge)fwScrollEdge;
+// 当前滚动方向，失败返回0
+- (UISwipeGestureRecognizerDirection)fwScrollDirection;
 
 #pragma mark - Content
 
@@ -60,6 +64,11 @@
 
 // 单独禁用内边距适应，同上。如果iOS7-10的ScrollView占不满导航栏，需设置viewController.automaticallyAdjustsScrollViewInsets为NO即可
 - (void)fwContentInsetNever;
+
+#pragma mark - Gesture
+
+// 是否允许同时识别多个手势
+@property (nonatomic, copy) BOOL (^fwShouldRecognizeSimultaneously)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
 
 #pragma mark - Hover
 
