@@ -678,10 +678,10 @@ static NSString * const kEmptyViewImageAnimationKey = @"emptyViewImageAnimation"
     
     objc_setAssociatedObject(self, kEmptyViewDataSource, [[FWEmptyViewWeakTarget alloc] initWithWeakObject:dataSource], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // We add method sizzling for injecting -dzn_reloadData implementation to the native -reloadData implementation
+    // We add method sizzling for injecting -fw_reloadData implementation to the native -reloadData implementation
     [self fwEmptySwizzleIfPossible:@selector(reloadData)];
     
-    // Exclusively for UITableView, we also inject -dzn_reloadData to -endUpdates
+    // Exclusively for UITableView, we also inject -fw_reloadData to -endUpdates
     if ([self isKindOfClass:[UITableView class]]) {
         [self fwEmptySwizzleIfPossible:@selector(endUpdates)];
     }

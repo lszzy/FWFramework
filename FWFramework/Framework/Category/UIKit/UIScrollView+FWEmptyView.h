@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A drop-in UITableView/UICollectionView superclass category for showing empty datasets whenever the view has no content to display.
- @discussion It will work automatically, by just conforming to DZNEmptyViewSource, and returning the data you want to show.
+ @discussion It will work automatically, by just conforming to FWEmptyViewDataSource, and returning the data you want to show.
  
  @see https://github.com/dzenbot/DZNEmptyView
  */
@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The object that acts as the data source of the empty datasets.
- @discussion The data source must adopt the DZNEmptyViewSource protocol. The data source is not retained. All data source methods are optional.
+ @discussion The data source must adopt the FWEmptyViewDataSource protocol. The data source is not retained. All data source methods are optional.
  */
 @protocol FWEmptyViewDataSource <NSObject>
 @optional
@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The object that acts as the delegate of the empty datasets.
- @discussion The delegate can adopt the DZNEmptyViewDelegate protocol. The delegate is not retained. All delegate methods are optional.
+ @discussion The delegate can adopt the FWEmptyViewDelegate protocol. The delegate is not retained. All delegate methods are optional.
  
  @discussion All delegate methods are optional. Use this delegate for receiving action callbacks.
  */
