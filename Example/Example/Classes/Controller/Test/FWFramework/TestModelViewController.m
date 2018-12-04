@@ -190,6 +190,15 @@
     NSLog(@"str: %@ =>\nurl: %@", str, url);
     url = [NSURL fwURLWithString:str];
     NSLog(@"str: %@ =>\nurl: %@", str, url);
+    
+    NSString *urlStr = [FWRouter generateURL:@"app://test/:id" parameters:nil];
+    NSLog(@"url: %@", urlStr);
+    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@[@1]];
+    NSLog(@"url: %@", urlStr);
+    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@{@"id": @2}];
+    NSLog(@"url: %@", urlStr);
+    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@3];
+    NSLog(@"url: %@", urlStr);
 }
 
 @end

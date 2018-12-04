@@ -126,14 +126,14 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *
  *  #define APP_ROUTE_BEAUTY @"beauty/:id"
  *  [FWRouter generateURL:APP_ROUTE_BEAUTY, @[@13]];
- *
+ *  [FWRouter generateURL:APP_ROUTE_BEAUTY, @{@"id":@13}];
  *
  *  @param pattern    url pattern 比如 @"beauty/:id"
- *  @param parameters 一个数组，数量要跟 pattern 里的变量一致
+ *  @param parameters 一个数组(数量和变量一致)或一个字典(key为变量名称)或单个值(替换所有参数)
  *
  *  @return 返回生成的URL String
  */
-+ (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters;
++ (NSString *)generateURL:(NSString *)pattern parameters:(id)parameters;
 
 @end
 
