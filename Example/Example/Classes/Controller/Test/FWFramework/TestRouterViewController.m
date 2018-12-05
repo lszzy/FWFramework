@@ -53,6 +53,8 @@
                                          @[@"RewriteUrl", @"onRewrite1"],
                                          @[@"RewriteUrl URLEncode", @"onRewrite2"],
                                          @[@"RewriteUrl URLDecode", @"onRewrite3"],
+                                         @[@"不匹配的openUrl", @"onOpenUnmatch"],
+                                         @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
                                          ]];
 }
 
@@ -122,6 +124,16 @@
 - (void)onRewrite3
 {
     [FWRouter openURL:@"https://www.baidu.com/wildcard2/%E5%8E%9F%E5%AD%90%E5%BC%B9"];
+}
+
+- (void)onOpenUnmatch
+{
+    [FWRouter openURL:@"object://test2"];
+}
+
+- (void)onOpenUnmatch2
+{
+    [FWRouter objectForURL:@"app://test/1"];
 }
 
 @end

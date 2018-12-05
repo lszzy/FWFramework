@@ -17,14 +17,20 @@ static NSString * FWRouterSpecialCharacters = @"/?&.";
 
 static NSString * const FWRouterCoreKey = @"FWRouterCore";
 static NSString * const FWRouterBlockKey = @"FWRouterBlock";
+static NSString * const FWRouterTypeKey = @"FWRouterType";
 
 NSString * const FWRouterURLKey = @"FWRouterURL";
 NSString * const FWRouterCompletionKey = @"FWRouterCompletion";
 NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 
+typedef NS_ENUM(NSInteger, FWRouterType) {
+    FWRouterTypeDefault = 0,
+    FWRouterTypeObject = 1,
+};
+
 @interface FWRouter ()
 
-// 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey, [block copy]}}}
+// 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy], FWRouterTypeKey: @(FWRouterTypeDefault)}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
 // 错误URL Handler，未注册时调用
@@ -76,7 +82,11 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:rewriteURL];
-    return parameters[FWRouterBlockKey] ? YES : NO;
+    if (parameters[FWRouterBlockKey]) {
+        return [parameters[FWRouterTypeKey] integerValue] == FWRouterTypeDefault;
+    } else {
+        return NO;
+    }
 }
 
 + (void)openURL:(NSString *)URL
@@ -84,12 +94,17 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     [self openURL:URL completion:nil];
 }
 
-+ (void)openURL:(NSString *)URL completion:(void (^)(id result))completion
++ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
 {
-    [self openURL:URL withUserInfo:nil completion:completion];
+    [self openURL:URL userInfo:userInfo completion:nil];
 }
 
-+ (void)openURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion
++ (void)openURL:(NSString *)URL completion:(void (^)(id result))completion
+{
+    [self openURL:URL userInfo:nil completion:completion];
+}
+
++ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     URL = [rewriteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -109,20 +124,33 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     }
     
     FWRouterHandler handler = parameters[FWRouterBlockKey];
-    if (handler) {
-        [parameters removeObjectForKey:FWRouterBlockKey];
+    FWRouterType type = [parameters[FWRouterTypeKey] integerValue];
+    [parameters removeObjectForKey:FWRouterBlockKey];
+    [parameters removeObjectForKey:FWRouterTypeKey];
+    if (handler && type == FWRouterTypeDefault) {
         handler(parameters);
     } else {
         [[self sharedInstance] handleError:parameters];
     }
 }
 
-+ (id)objectForURL:(NSString *)URL
++ (BOOL)isObjectURL:(NSString *)URL
 {
-    return [self objectForURL:URL withUserInfo:nil];
+    NSString *rewriteURL = [self rewriteURL:URL];
+    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:rewriteURL];
+    if (parameters[FWRouterBlockKey]) {
+        return [parameters[FWRouterTypeKey] integerValue] == FWRouterTypeObject;
+    } else {
+        return NO;
+    }
 }
 
-+ (id)objectForURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo
++ (id)objectForURL:(NSString *)URL
+{
+    return [self objectForURL:URL userInfo:nil];
+}
+
++ (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
 {
     FWRouter *router = [FWRouter sharedInstance];
     
@@ -141,8 +169,10 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     }
     
     FWRouterObjectHandler handler = parameters[FWRouterBlockKey];
-    if (handler) {
-        [parameters removeObjectForKey:FWRouterBlockKey];
+    FWRouterType type = [parameters[FWRouterTypeKey] integerValue];
+    [parameters removeObjectForKey:FWRouterBlockKey];
+    [parameters removeObjectForKey:FWRouterTypeKey];
+    if (handler && type == FWRouterTypeObject) {
         return handler(parameters);
     } else {
         [[self sharedInstance] handleError:parameters];
@@ -235,6 +265,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     NSMutableDictionary *subRoutes = [self addRoute:pattern];
     if (handler && subRoutes) {
         subRoutes[FWRouterCoreKey] = [handler copy];
+        subRoutes[FWRouterTypeKey] = @(FWRouterTypeDefault);
     }
 }
 
@@ -243,6 +274,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     NSMutableDictionary *subRoutes = [self addRoute:pattern];
     if (handler && subRoutes) {
         subRoutes[FWRouterCoreKey] = [handler copy];
+        subRoutes[FWRouterTypeKey] = @(FWRouterTypeObject);
     }
 }
 
@@ -359,6 +391,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     
     if (subRoutes[FWRouterCoreKey]) {
         parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
+        parameters[FWRouterTypeKey] = subRoutes[FWRouterTypeKey];
     }
     
     return parameters;
