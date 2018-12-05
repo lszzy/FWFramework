@@ -22,6 +22,7 @@
 #import "NSString+FWFramework.h"
 #import "NSThread+FWFramework.h"
 #import "NSTimer+FWFramework.h"
+#import "NSURL+FWFramework.h"
 #import "NSUserDefaults+FWFramework.h"
 
 #endif /* Foundation_FWFramework_h */

@@ -150,7 +150,7 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     }
 }
 
-+ (NSString *)generateURL:(NSString *)pattern parameters:(NSArray *)parameters
++ (NSString *)generateURL:(NSString *)pattern parameters:(id)parameters
 {
     NSInteger startIndexOfColon = 0;
     
@@ -182,10 +182,25 @@ NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
     
     __block NSString *parsedResult = pattern;
     
-    [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        idx = parameters.count > idx ? idx : parameters.count - 1;
-        parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:parameters[idx]];
-    }];
+    if ([parameters isKindOfClass:[NSArray class]]) {
+        [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (idx < [parameters count]) {
+                id value = [parameters objectAtIndex:[parameters count] - 1];
+                parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:[NSString stringWithFormat:@"%@", value]];
+            }
+        }];
+    } else if ([parameters isKindOfClass:[NSDictionary class]]) {
+        [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            id value = [parameters objectForKey:[obj stringByReplacingOccurrencesOfString:@":" withString:@""]];
+            if (value) {
+                parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:[NSString stringWithFormat:@"%@", value]];
+            }
+        }];
+    } else if (parameters) {
+        [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:[NSString stringWithFormat:@"%@", parameters]];
+        }];
+    }
     
     return parsedResult;
 }
