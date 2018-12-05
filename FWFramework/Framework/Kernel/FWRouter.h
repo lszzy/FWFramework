@@ -73,7 +73,7 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
 + (void)unregisterAllURLs;
 
 /**
- *  是否可以打开URL
+ *  是否可以打开URL，不含object
  *
  *  @param URL 带 Scheme，如 app://beauty/3
  *
@@ -93,6 +93,14 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  打开此 URL，同时当操作完成时，执行额外的代码
  *
  *  @param URL        带 Scheme 的 URL，如 app://beauty/4
+ *  @param userInfo   附加参数
+ */
++ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo;
+
+/**
+ *  打开此 URL，同时当操作完成时，执行额外的代码
+ *
+ *  @param URL        带 Scheme 的 URL，如 app://beauty/4
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
 + (void)openURL:(NSString *)URL completion:(void (^)(id result))completion;
@@ -104,7 +112,14 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  @param userInfo   附加参数
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion;
++ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion;
+
+/**
+ * 检测是否已注册object
+ *
+ *  @param URL 带 Scheme，如 app://beauty/3
+ */
++ (BOOL)isObjectURL:(NSString *)URL;
 
 /**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object
@@ -119,7 +134,7 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  @param URL 带 Scheme，如 app://beauty/3
  *  @param userInfo 附加参数
  */
-+ (id)objectForURL:(NSString *)URL withUserInfo:(NSDictionary *)userInfo;
++ (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo;
 
 /**
  *  调用此方法来拼接 pattern 和 parameters
