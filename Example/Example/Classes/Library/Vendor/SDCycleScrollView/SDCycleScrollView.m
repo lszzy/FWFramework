@@ -31,7 +31,6 @@
 
 #import "SDCycleScrollView.h"
 #import "SDCollectionViewCell.h"
-#import "TAPageControl.h"
 
 #define kCycleScrollViewInitialPageControlDotSize CGSizeMake(10, 10)
 
@@ -45,7 +44,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 @property (nonatomic, strong) NSArray *imagePathsGroup;
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
-@property (nonatomic, weak) UIControl *pageControl;
+@property (nonatomic, weak) UIPageControl *pageControl;
 
 @property (nonatomic, strong) UIImageView *backgroundImageView; // 当imageURLs为空时的背景图
 
@@ -91,7 +90,6 @@ NSString * const ID = @"SDCycleScrollViewCell";
     _bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     
     self.backgroundColor = [UIColor lightGrayColor];
-    
 }
 
 + (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup
@@ -165,7 +163,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 {
     _placeholderImage = placeholderImage;
     
-    if (self.backgroundImageView) {
+    if (!self.backgroundImageView) {
         UIImageView *bgImageView = [UIImageView new];
         bgImageView.contentMode = self.bannerImageViewContentMode;
         bgImageView.layer.masksToBounds = YES;
@@ -176,14 +174,18 @@ NSString * const ID = @"SDCycleScrollViewCell";
     self.backgroundImageView.image = placeholderImage;
 }
 
+- (void)setBannerImageViewContentMode:(UIViewContentMode)bannerImageViewContentMode
+{
+    _bannerImageViewContentMode = bannerImageViewContentMode;
+    if (self.backgroundImageView) {
+        self.backgroundImageView.contentMode = bannerImageViewContentMode;
+    }
+}
+
 - (void)setPageControlDotSize:(CGSize)pageControlDotSize
 {
     _pageControlDotSize = pageControlDotSize;
     [self setupPageControl];
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageContol = (TAPageControl *)_pageControl;
-        pageContol.dotSize = pageControlDotSize;
-    }
 }
 
 - (void)setShowPageControl:(BOOL)showPageControl
@@ -196,60 +198,15 @@ NSString * const ID = @"SDCycleScrollViewCell";
 - (void)setCurrentPageDotColor:(UIColor *)currentPageDotColor
 {
     _currentPageDotColor = currentPageDotColor;
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        pageControl.dotColor = currentPageDotColor;
-    } else {
-        UIPageControl *pageControl = (UIPageControl *)_pageControl;
-        pageControl.currentPageIndicatorTintColor = currentPageDotColor;
-    }
     
+    _pageControl.currentPageIndicatorTintColor = currentPageDotColor;
 }
 
 - (void)setPageDotColor:(UIColor *)pageDotColor
 {
     _pageDotColor = pageDotColor;
     
-    if ([self.pageControl isKindOfClass:[UIPageControl class]]) {
-        UIPageControl *pageControl = (UIPageControl *)_pageControl;
-        pageControl.pageIndicatorTintColor = pageDotColor;
-    }
-}
-
-- (void)setCurrentPageDotImage:(UIImage *)currentPageDotImage
-{
-    _currentPageDotImage = currentPageDotImage;
-    
-    if (self.pageControlStyle != SDCycleScrollViewPageContolStyleAnimated) {
-        self.pageControlStyle = SDCycleScrollViewPageContolStyleAnimated;
-    }
-    
-    [self setCustomPageControlDotImage:currentPageDotImage isCurrentPageDot:YES];
-}
-
-- (void)setPageDotImage:(UIImage *)pageDotImage
-{
-    _pageDotImage = pageDotImage;
-    
-    if (self.pageControlStyle != SDCycleScrollViewPageContolStyleAnimated) {
-        self.pageControlStyle = SDCycleScrollViewPageContolStyleAnimated;
-    }
-    
-    [self setCustomPageControlDotImage:pageDotImage isCurrentPageDot:NO];
-}
-
-- (void)setCustomPageControlDotImage:(UIImage *)image isCurrentPageDot:(BOOL)isCurrentPageDot
-{
-    if (!image || !self.pageControl) return;
-    
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        if (isCurrentPageDot) {
-            pageControl.currentDotImage = image;
-        } else {
-            pageControl.dotImage = image;
-        }
-    }
+    _pageControl.pageIndicatorTintColor = pageDotColor;
 }
 
 - (void)setInfiniteLoop:(BOOL)infiniteLoop
@@ -388,18 +345,6 @@ NSString * const ID = @"SDCycleScrollViewCell";
     int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
     
     switch (self.pageControlStyle) {
-        case SDCycleScrollViewPageContolStyleAnimated:
-        {
-            TAPageControl *pageControl = [[TAPageControl alloc] init];
-            pageControl.numberOfPages = self.imagePathsGroup.count;
-            pageControl.dotColor = self.currentPageDotColor;
-            pageControl.userInteractionEnabled = NO;
-            pageControl.currentPage = indexOnPageControl;
-            [self addSubview:pageControl];
-            _pageControl = pageControl;
-        }
-            break;
-            
         case SDCycleScrollViewPageContolStyleClassic:
         {
             UIPageControl *pageControl = [[UIPageControl alloc] init];
@@ -408,6 +353,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
             pageControl.pageIndicatorTintColor = self.pageDotColor;
             pageControl.userInteractionEnabled = NO;
             pageControl.currentPage = indexOnPageControl;
+            pageControl.fwIndicatorSize = self.pageControlDotSize;
             [self addSubview:pageControl];
             _pageControl = pageControl;
         }
@@ -415,14 +361,6 @@ NSString * const ID = @"SDCycleScrollViewCell";
             
         default:
             break;
-    }
-    
-    // 重设pagecontroldot图片
-    if (self.currentPageDotImage) {
-        self.currentPageDotImage = self.currentPageDotImage;
-    }
-    if (self.pageDotImage) {
-        self.pageDotImage = self.pageDotImage;
     }
 }
 
@@ -489,26 +427,12 @@ NSString * const ID = @"SDCycleScrollViewCell";
         [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
     
-    CGSize size = CGSizeZero;
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(kCycleScrollViewInitialPageControlDotSize, self.pageControlDotSize))) {
-            pageControl.dotSize = self.pageControlDotSize;
-        }
-        size = [pageControl sizeForNumberOfPages:self.imagePathsGroup.count];
-    } else {
-        size = CGSizeMake(self.imagePathsGroup.count * self.pageControlDotSize.width * 1.5, self.pageControlDotSize.height);
-    }
+    CGSize size = CGSizeMake(self.imagePathsGroup.count * self.pageControlDotSize.width * 1.5, self.pageControlDotSize.height);
     CGFloat x = (self.frame.size.width - size.width) * 0.5;
     if (self.pageControlAliment == SDCycleScrollViewPageContolAlimentRight) {
         x = self.mainView.frame.size.width - size.width - 10;
     }
     CGFloat y = self.mainView.frame.size.height - size.height - 10;
-    
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        [pageControl sizeToFit];
-    }
     
     CGRect pageControlFrame = CGRectMake(x, y, size.width, size.height);
     pageControlFrame.origin.y -= self.pageControlBottomOffset;
@@ -624,13 +548,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
     int itemIndex = [self currentIndex];
     int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        pageControl.currentPage = indexOnPageControl;
-    } else {
-        UIPageControl *pageControl = (UIPageControl *)_pageControl;
-        pageControl.currentPage = indexOnPageControl;
-    }
+    _pageControl.currentPage = indexOnPageControl;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
