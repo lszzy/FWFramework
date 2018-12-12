@@ -31,7 +31,6 @@
 
 #import "SDCycleScrollView.h"
 #import "SDCollectionViewCell.h"
-#import "UIView+SDExtension.h"
 #import "TAPageControl.h"
 
 #define kCycleScrollViewInitialPageControlDotSize CGSizeMake(10, 10)
@@ -166,7 +165,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 {
     _placeholderImage = placeholderImage;
     
-    if (!self.backgroundImageView) {
+    if (self.backgroundImageView) {
         UIImageView *bgImageView = [UIImageView new];
         bgImageView.contentMode = self.bannerImageViewContentMode;
         bgImageView.layer.masksToBounds = YES;
@@ -450,7 +449,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 
 - (int)currentIndex
 {
-    if (_mainView.sd_width == 0 || _mainView.sd_height == 0) {
+    if (_mainView.frame.size.width == 0 || _mainView.frame.size.height == 0) {
         return 0;
     }
     
@@ -500,11 +499,11 @@ NSString * const ID = @"SDCycleScrollViewCell";
     } else {
         size = CGSizeMake(self.imagePathsGroup.count * self.pageControlDotSize.width * 1.5, self.pageControlDotSize.height);
     }
-    CGFloat x = (self.sd_width - size.width) * 0.5;
+    CGFloat x = (self.frame.size.width - size.width) * 0.5;
     if (self.pageControlAliment == SDCycleScrollViewPageContolAlimentRight) {
-        x = self.mainView.sd_width - size.width - 10;
+        x = self.mainView.frame.size.width - size.width - 10;
     }
-    CGFloat y = self.mainView.sd_height - size.height - 10;
+    CGFloat y = self.mainView.frame.size.height - size.height - 10;
     
     if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
         TAPageControl *pageControl = (TAPageControl *)_pageControl;
@@ -581,7 +580,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
             if (!image) {
                 image = [UIImage imageWithContentsOfFile:imagePath];
             }
-            cell.imageView.image = image;
+            cell.imageView.image = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
         cell.imageView.image = (UIImage *)imagePath;
