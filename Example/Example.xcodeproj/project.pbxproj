@@ -56,7 +56,6 @@
 		2FB7CB7721BF6651002E5412 /* TTGTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */; };
 		2FB7CB7821BF6651002E5412 /* TTGTextTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */; };
 		2FB7CB7921BF6651002E5412 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6021BF6651002E5412 /* SDCycleScrollView.m */; };
-		2FB7CB7A21BF6651002E5412 /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6121BF6651002E5412 /* UIView+SDExtension.m */; };
 		2FB7CB7B21BF6651002E5412 /* SDCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6221BF6651002E5412 /* SDCollectionViewCell.m */; };
 		2FB7CB7C21BF6651002E5412 /* TADotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6521BF6651002E5412 /* TADotView.m */; };
 		2FB7CB7D21BF6651002E5412 /* TAPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6621BF6651002E5412 /* TAPageControl.m */; };
@@ -197,11 +196,9 @@
 		2FB7CB5821BF6651002E5412 /* TTGTextTagCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTGTextTagCollectionView.h; sourceTree = "<group>"; };
 		2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTGTagCollectionView.m; sourceTree = "<group>"; };
 		2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTGTextTagCollectionView.m; sourceTree = "<group>"; };
-		2FB7CB5D21BF6651002E5412 /* UIView+SDExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SDExtension.h"; sourceTree = "<group>"; };
 		2FB7CB5E21BF6651002E5412 /* SDCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDCycleScrollView.h; sourceTree = "<group>"; };
 		2FB7CB5F21BF6651002E5412 /* SDCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDCollectionViewCell.h; sourceTree = "<group>"; };
 		2FB7CB6021BF6651002E5412 /* SDCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDCycleScrollView.m; sourceTree = "<group>"; };
-		2FB7CB6121BF6651002E5412 /* UIView+SDExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDExtension.m"; sourceTree = "<group>"; };
 		2FB7CB6221BF6651002E5412 /* SDCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDCollectionViewCell.m; sourceTree = "<group>"; };
 		2FB7CB6421BF6651002E5412 /* TAAbstractDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAAbstractDotView.h; sourceTree = "<group>"; };
 		2FB7CB6521BF6651002E5412 /* TADotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TADotView.m; sourceTree = "<group>"; };
@@ -630,8 +627,6 @@
 				2FB7CB6221BF6651002E5412 /* SDCollectionViewCell.m */,
 				2FB7CB5E21BF6651002E5412 /* SDCycleScrollView.h */,
 				2FB7CB6021BF6651002E5412 /* SDCycleScrollView.m */,
-				2FB7CB5D21BF6651002E5412 /* UIView+SDExtension.h */,
-				2FB7CB6121BF6651002E5412 /* UIView+SDExtension.m */,
 			);
 			path = SDCycleScrollView;
 			sourceTree = "<group>";
@@ -882,7 +877,6 @@
 				2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */,
 				2F0D298A215DFFEF005F1466 /* FMResultSet.m in Sources */,
 				2FB7CB8121BF6651002E5412 /* M80AttributedLabel.m in Sources */,
-				2FB7CB7A21BF6651002E5412 /* UIView+SDExtension.m in Sources */,
 				2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */,
 				2F0D298D215DFFEF005F1466 /* JQFMDB.m in Sources */,
 				2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */,

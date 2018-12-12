@@ -31,7 +31,6 @@
 
 
 #import "SDCollectionViewCell.h"
-#import "UIView+SDExtension.h"
 
 @implementation SDCollectionViewCell
 {
@@ -105,10 +104,10 @@
         _titleLabel.frame = self.bounds;
     } else {
         _imageView.frame = self.bounds;
-        CGFloat titleLabelW = self.sd_width;
+        CGFloat titleLabelW = self.frame.size.width;
         CGFloat titleLabelH = _titleLabelHeight;
         CGFloat titleLabelX = 0;
-        CGFloat titleLabelY = self.sd_height - titleLabelH;
+        CGFloat titleLabelY = self.frame.size.height - titleLabelH;
         _titleLabel.frame = CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH);
     }
 }
