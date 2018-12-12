@@ -33,8 +33,6 @@
 #import "SDCollectionViewCell.h"
 #import "UIView+SDExtension.h"
 #import "TAPageControl.h"
-#import "SDWebImageManager.h"
-#import "UIImageView+WebCache.h"
 
 #define kCycleScrollViewInitialPageControlDotSize CGSizeMake(10, 10)
 
@@ -91,7 +89,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
     _pageDotColor = [UIColor lightGrayColor];
-    _bannerImageViewContentMode = UIViewContentModeScaleToFill;
+    _bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     
     self.backgroundColor = [UIColor lightGrayColor];
     
@@ -170,7 +168,8 @@ NSString * const ID = @"SDCycleScrollViewCell";
     
     if (!self.backgroundImageView) {
         UIImageView *bgImageView = [UIImageView new];
-        bgImageView.contentMode = UIViewContentModeScaleAspectFit;
+        bgImageView.contentMode = self.bannerImageViewContentMode;
+        bgImageView.layer.masksToBounds = YES;
         [self insertSubview:bgImageView belowSubview:self.mainView];
         self.backgroundImageView = bgImageView;
     }
@@ -470,16 +469,6 @@ NSString * const ID = @"SDCycleScrollViewCell";
     return (int)index % self.imagePathsGroup.count;
 }
 
-- (void)clearCache
-{
-    [[self class] clearImagesCache];
-}
-
-+ (void)clearImagesCache
-{
-    [[[SDWebImageManager sharedManager] imageCache] clearDiskOnCompletion:nil];
-}
-
 #pragma mark - life circles
 
 - (void)layoutSubviews
@@ -586,7 +575,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
     
     if (!self.onlyDisplayText && [imagePath isKindOfClass:[NSString class]]) {
         if ([imagePath hasPrefix:@"http"]) {
-            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
+            [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
         } else {
             UIImage *image = [UIImage imageNamed:imagePath];
             if (!image) {
