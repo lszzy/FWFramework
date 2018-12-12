@@ -139,7 +139,7 @@ typedef enum {
 
 //////////////////////  自定义样式API  //////////////////////
 
-/** 轮播图片的ContentMode，默认为 UIViewContentModeScaleToFill */
+/** 轮播图片的ContentMode，默认为 UIViewContentModeScaleAspectFill */
 @property (nonatomic, assign) UIViewContentMode bannerImageViewContentMode;
 
 /** 占位图，用于网络未加载到图片时 */
@@ -198,14 +198,5 @@ typedef enum {
 
 /** 滚动手势禁用（文字轮播较实用） */
 - (void)disableScrollGesture;
-
-
-//////////////////////  清除缓存API  //////////////////////
-
-/** 清除图片缓存（此次升级后统一使用SDWebImage管理图片加载和缓存）  */
-+ (void)clearImagesCache;
-
-/** 清除图片缓存（兼容旧版本方法） */
-- (void)clearCache;
 
 @end
