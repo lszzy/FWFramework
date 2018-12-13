@@ -54,6 +54,7 @@
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
+                                             @[@"FWScroll", @"TestTableScrollViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
                                              @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
