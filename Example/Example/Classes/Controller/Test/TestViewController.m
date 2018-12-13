@@ -66,6 +66,7 @@
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
+                                             @[@"FWBannerView", @"TestBannerViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

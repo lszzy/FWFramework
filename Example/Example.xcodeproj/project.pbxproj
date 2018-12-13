@@ -61,10 +61,7 @@
 		2FB7CB8121BF6651002E5412 /* M80AttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7221BF6651002E5412 /* M80AttributedLabel.m */; };
 		2FB7CB8221BF6651002E5412 /* M80AttributedLabelURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7321BF6651002E5412 /* M80AttributedLabelURL.m */; };
 		2FB7CB8321BF6651002E5412 /* NSMutableAttributedString+M80.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7521BF6651002E5412 /* NSMutableAttributedString+M80.m */; };
-		2FB7CB8D21BF6679002E5412 /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB8521BF6679002E5412 /* WebViewJavascriptBridgeBase.m */; };
-		2FB7CB8E21BF6679002E5412 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB8621BF6679002E5412 /* WKWebViewJavascriptBridge.m */; };
-		2FB7CB8F21BF6679002E5412 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB8721BF6679002E5412 /* WebViewJavascriptBridge.m */; };
-		2FB7CB9021BF6679002E5412 /* WebViewJavascriptBridge_JS.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB8A21BF6679002E5412 /* WebViewJavascriptBridge_JS.m */; };
+		2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -205,14 +202,8 @@
 		2FB7CB7321BF6651002E5412 /* M80AttributedLabelURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M80AttributedLabelURL.m; sourceTree = "<group>"; };
 		2FB7CB7421BF6651002E5412 /* M80AttributedLabelAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelAttachment.h; sourceTree = "<group>"; };
 		2FB7CB7521BF6651002E5412 /* NSMutableAttributedString+M80.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+M80.m"; sourceTree = "<group>"; };
-		2FB7CB8521BF6679002E5412 /* WebViewJavascriptBridgeBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeBase.m; sourceTree = "<group>"; };
-		2FB7CB8621BF6679002E5412 /* WKWebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKWebViewJavascriptBridge.m; sourceTree = "<group>"; };
-		2FB7CB8721BF6679002E5412 /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge.m; sourceTree = "<group>"; };
-		2FB7CB8821BF6679002E5412 /* WebViewJavascriptBridge_JS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge_JS.h; sourceTree = "<group>"; };
-		2FB7CB8921BF6679002E5412 /* WebViewJavascriptBridgeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeBase.h; sourceTree = "<group>"; };
-		2FB7CB8A21BF6679002E5412 /* WebViewJavascriptBridge_JS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge_JS.m; sourceTree = "<group>"; };
-		2FB7CB8B21BF6679002E5412 /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.h; sourceTree = "<group>"; };
-		2FB7CB8C21BF6679002E5412 /* WKWebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKWebViewJavascriptBridge.h; sourceTree = "<group>"; };
+		2FB7CBC321C21F44002E5412 /* TestBannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBannerViewController.h; sourceTree = "<group>"; };
+		2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBannerViewController.m; sourceTree = "<group>"; };
 		2FE533E72181645300CA54E6 /* TestTableBackgroundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableBackgroundViewController.h; sourceTree = "<group>"; };
 		2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableBackgroundViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -253,7 +244,6 @@
 				2FB7CB5C21BF6651002E5412 /* SDCycleScrollView */,
 				2F0D2959215DFFEF005F1466 /* SVPullToRefresh */,
 				2FB7CB5521BF6651002E5412 /* TTGTagCollectionView */,
-				2FB7CB8421BF6679002E5412 /* WebViewJavascriptBridge */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -444,6 +434,8 @@
 				2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */,
 				2FA32CCA21B0572900C230EA /* TestRouterViewController.h */,
 				2FA32CCB21B0572900C230EA /* TestRouterViewController.m */,
+				2FB7CBC321C21F44002E5412 /* TestBannerViewController.h */,
+				2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -634,21 +626,6 @@
 			path = M80AttributedLabel;
 			sourceTree = "<group>";
 		};
-		2FB7CB8421BF6679002E5412 /* WebViewJavascriptBridge */ = {
-			isa = PBXGroup;
-			children = (
-				2FB7CB8821BF6679002E5412 /* WebViewJavascriptBridge_JS.h */,
-				2FB7CB8A21BF6679002E5412 /* WebViewJavascriptBridge_JS.m */,
-				2FB7CB8B21BF6679002E5412 /* WebViewJavascriptBridge.h */,
-				2FB7CB8721BF6679002E5412 /* WebViewJavascriptBridge.m */,
-				2FB7CB8921BF6679002E5412 /* WebViewJavascriptBridgeBase.h */,
-				2FB7CB8521BF6679002E5412 /* WebViewJavascriptBridgeBase.m */,
-				2FB7CB8C21BF6679002E5412 /* WKWebViewJavascriptBridge.h */,
-				2FB7CB8621BF6679002E5412 /* WKWebViewJavascriptBridge.m */,
-			);
-			path = WebViewJavascriptBridge;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -811,16 +788,14 @@
 				2FB7CB8021BF6651002E5412 /* M80AttributedLabelAttachment.m in Sources */,
 				2FB7CB7921BF6651002E5412 /* SDCycleScrollView.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
-				2FB7CB8E21BF6679002E5412 /* WKWebViewJavascriptBridge.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
-				2FB7CB8D21BF6679002E5412 /* WebViewJavascriptBridgeBase.m in Sources */,
 				2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */,
 				2F06BE6520971483000F8587 /* SwiftController.swift in Sources */,
 				2F1E39412178F3710051A6BB /* FWTestIndicatorControlViewController.m in Sources */,
+				2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */,
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
-				2FB7CB8F21BF6679002E5412 /* WebViewJavascriptBridge.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2FB7CB7B21BF6651002E5412 /* SDCollectionViewCell.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
@@ -829,7 +804,6 @@
 				2F0D297C215DFFEF005F1466 /* DZNPolyActivity.m in Sources */,
 				2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */,
 				2F4CFA5A2155302E00203A37 /* TestTableLayoutViewController.m in Sources */,
-				2FB7CB9021BF6679002E5412 /* WebViewJavascriptBridge_JS.m in Sources */,
 				2F0D2986215DFFEF005F1466 /* FMDatabaseQueue.m in Sources */,
 				2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */,
 				2FB7CB8321BF6651002E5412 /* NSMutableAttributedString+M80.m in Sources */,
