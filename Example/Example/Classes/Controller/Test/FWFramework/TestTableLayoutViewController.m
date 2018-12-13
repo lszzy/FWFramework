@@ -108,7 +108,13 @@
 - (void)renderView
 {
     FWWeakifySelf();
-    [self fwSetRightBarItem:@"More" block:^(UIBarButtonItem *sender) {
+    [self.tableView fwSetPullRefreshBlock:^{
+        FWStrongifySelf();
+        
+        [self onRefreshing];
+    }];
+    
+    [self.tableView fwSetInfiniteScrollBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
@@ -117,7 +123,7 @@
 
 - (void)renderData
 {
-    [self onLoading];
+    [self.tableView fwBeginPullRefresh];
 }
 
 #pragma mark - TableView
@@ -180,16 +186,35 @@
     return object;
 }
 
+- (void)onRefreshing
+{
+    NSLog(@"开始刷新");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"刷新完成");
+        
+        for (int i = 0; i < 10; i++) {
+            [self.dataList addObject:[self randomObject]];
+        }
+        [self.tableView reloadData];
+        
+        self.tableView.fwCanPullRefresh = self.dataList.count < 50 ? YES : NO;
+        [self.tableView fwEndPullRefresh];
+    });
+}
+
 - (void)onLoading
 {
     NSLog(@"开始加载");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
         for (int i = 0; i < 10; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
+        
+        self.tableView.fwCanInfiniteScroll = self.dataList.count < 50 ? YES : NO;
+        [self.tableView fwEndInfiniteScroll];
     });
 }
 
