@@ -55,8 +55,6 @@
 		2FB7CB7621BF6651002E5412 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5721BF6651002E5412 /* .gitkeep */; };
 		2FB7CB7721BF6651002E5412 /* TTGTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */; };
 		2FB7CB7821BF6651002E5412 /* TTGTextTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */; };
-		2FB7CB7921BF6651002E5412 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6021BF6651002E5412 /* SDCycleScrollView.m */; };
-		2FB7CB7B21BF6651002E5412 /* SDCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB6221BF6651002E5412 /* SDCollectionViewCell.m */; };
 		2FB7CB8021BF6651002E5412 /* M80AttributedLabelAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7021BF6651002E5412 /* M80AttributedLabelAttachment.m */; };
 		2FB7CB8121BF6651002E5412 /* M80AttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7221BF6651002E5412 /* M80AttributedLabel.m */; };
 		2FB7CB8221BF6651002E5412 /* M80AttributedLabelURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7321BF6651002E5412 /* M80AttributedLabelURL.m */; };
@@ -189,10 +187,6 @@
 		2FB7CB5821BF6651002E5412 /* TTGTextTagCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTGTextTagCollectionView.h; sourceTree = "<group>"; };
 		2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTGTagCollectionView.m; sourceTree = "<group>"; };
 		2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTGTextTagCollectionView.m; sourceTree = "<group>"; };
-		2FB7CB5E21BF6651002E5412 /* SDCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDCycleScrollView.h; sourceTree = "<group>"; };
-		2FB7CB5F21BF6651002E5412 /* SDCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDCollectionViewCell.h; sourceTree = "<group>"; };
-		2FB7CB6021BF6651002E5412 /* SDCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDCycleScrollView.m; sourceTree = "<group>"; };
-		2FB7CB6221BF6651002E5412 /* SDCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDCollectionViewCell.m; sourceTree = "<group>"; };
 		2FB7CB6D21BF6651002E5412 /* M80AttributedLabelDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelDefines.h; sourceTree = "<group>"; };
 		2FB7CB6E21BF6651002E5412 /* M80AttributedLabelURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelURL.h; sourceTree = "<group>"; };
 		2FB7CB6F21BF6651002E5412 /* M80AttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabel.h; sourceTree = "<group>"; };
@@ -241,7 +235,6 @@
 				2F0D294D215DFFEF005F1466 /* FMDB */,
 				2F0D295F215DFFEF005F1466 /* JQFMDB */,
 				2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */,
-				2FB7CB5C21BF6651002E5412 /* SDCycleScrollView */,
 				2F0D2959215DFFEF005F1466 /* SVPullToRefresh */,
 				2FB7CB5521BF6651002E5412 /* TTGTagCollectionView */,
 			);
@@ -599,17 +592,6 @@
 			path = TTGTagCollectionView;
 			sourceTree = "<group>";
 		};
-		2FB7CB5C21BF6651002E5412 /* SDCycleScrollView */ = {
-			isa = PBXGroup;
-			children = (
-				2FB7CB5F21BF6651002E5412 /* SDCollectionViewCell.h */,
-				2FB7CB6221BF6651002E5412 /* SDCollectionViewCell.m */,
-				2FB7CB5E21BF6651002E5412 /* SDCycleScrollView.h */,
-				2FB7CB6021BF6651002E5412 /* SDCycleScrollView.m */,
-			);
-			path = SDCycleScrollView;
-			sourceTree = "<group>";
-		};
 		2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */ = {
 			isa = PBXGroup;
 			children = (
@@ -786,7 +768,6 @@
 			files = (
 				2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */,
 				2FB7CB8021BF6651002E5412 /* M80AttributedLabelAttachment.m in Sources */,
-				2FB7CB7921BF6651002E5412 /* SDCycleScrollView.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */,
@@ -797,7 +778,6 @@
 				2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */,
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
-				2FB7CB7B21BF6651002E5412 /* SDCollectionViewCell.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
 				2FB7CB7721BF6651002E5412 /* TTGTagCollectionView.m in Sources */,
 				2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */,
