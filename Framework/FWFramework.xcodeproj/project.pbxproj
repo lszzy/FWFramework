@@ -213,6 +213,8 @@
 		2FB7CBCA21C23728002E5412 /* FWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC821C23728002E5412 /* FWBannerView.m */; };
 		2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */; };
+		2FB7CBD321C24E8A002E5412 /* UIScrollView+FWRefreshControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBD121C24E8A002E5412 /* UIScrollView+FWRefreshControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB7CBD421C24E8A002E5412 /* UIScrollView+FWRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD221C24E8A002E5412 /* UIScrollView+FWRefreshControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -423,6 +425,8 @@
 		2FB7CBC821C23728002E5412 /* FWBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBannerView.m; sourceTree = "<group>"; };
 		2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTagCollectionView.h; sourceTree = "<group>"; };
 		2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTagCollectionView.m; sourceTree = "<group>"; };
+		2FB7CBD121C24E8A002E5412 /* UIScrollView+FWRefreshControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWRefreshControl.h"; sourceTree = "<group>"; };
+		2FB7CBD221C24E8A002E5412 /* UIScrollView+FWRefreshControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWRefreshControl.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -497,6 +501,8 @@
 				2F03A518216CF4B9001965A1 /* UIScrollView+FWFramework.m */,
 				2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */,
 				2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */,
+				2FB7CBD121C24E8A002E5412 /* UIScrollView+FWRefreshControl.h */,
+				2FB7CBD221C24E8A002E5412 /* UIScrollView+FWRefreshControl.m */,
 				2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */,
 				2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */,
 				2F03A519216CF4B9001965A1 /* UITableView+FWFramework.h */,
@@ -785,6 +791,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB7CBD321C24E8A002E5412 /* UIScrollView+FWRefreshControl.h in Headers */,
 				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
 				2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */,
 				2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */,
@@ -1038,6 +1045,7 @@
 				2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
 				2F03A634216CF882001965A1 /* FWChainRequest.m in Sources */,
+				2FB7CBD421C24E8A002E5412 /* UIScrollView+FWRefreshControl.m in Sources */,
 				2F03A64E216CF882001965A1 /* FWURLSessionManager.m in Sources */,
 				2F03A5FB216CF4B9001965A1 /* FWProxy.m in Sources */,
 				2F03A5BA216CF4B9001965A1 /* UIView+FWLayer.m in Sources */,
