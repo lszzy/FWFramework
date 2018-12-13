@@ -9,51 +9,51 @@
 
 #import <UIKit/UIKit.h>
 
-@class TTGTagCollectionView;
+@class FWTagCollectionView;
 
 /**
  * Tags scroll direction
  */
-typedef NS_ENUM(NSInteger, TTGTagCollectionScrollDirection) {
-    TTGTagCollectionScrollDirectionVertical = 0, // Default
-    TTGTagCollectionScrollDirectionHorizontal = 1
+typedef NS_ENUM(NSInteger, FWTagCollectionScrollDirection) {
+    FWTagCollectionScrollDirectionVertical = 0, // Default
+    FWTagCollectionScrollDirectionHorizontal = 1
 };
 
 /**
  * Tags alignment
  */
-typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
-    TTGTagCollectionAlignmentLeft = 0,                           // Default
-    TTGTagCollectionAlignmentCenter,                             // Center
-    TTGTagCollectionAlignmentRight,                              // Right
-    TTGTagCollectionAlignmentFillByExpandingSpace,               // Expand horizontal spacing and fill
-    TTGTagCollectionAlignmentFillByExpandingWidth,               // Expand width and fill
-    TTGTagCollectionAlignmentFillByExpandingWidthExceptLastLine  // Expand width and fill, except last line
+typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
+    FWTagCollectionAlignmentLeft = 0,                           // Default
+    FWTagCollectionAlignmentCenter,                             // Center
+    FWTagCollectionAlignmentRight,                              // Right
+    FWTagCollectionAlignmentFillByExpandingSpace,               // Expand horizontal spacing and fill
+    FWTagCollectionAlignmentFillByExpandingWidth,               // Expand width and fill
+    FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine  // Expand width and fill, except last line
 };
 
 /**
  * Tags delegate
  */
-@protocol TTGTagCollectionViewDelegate <NSObject>
+@protocol FWTagCollectionViewDelegate <NSObject>
 @required
-- (CGSize)tagCollectionView:(TTGTagCollectionView *)tagCollectionView sizeForTagAtIndex:(NSUInteger)index;
+- (CGSize)tagCollectionView:(FWTagCollectionView *)tagCollectionView sizeForTagAtIndex:(NSUInteger)index;
 
 @optional
-- (BOOL)tagCollectionView:(TTGTagCollectionView *)tagCollectionView shouldSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
+- (BOOL)tagCollectionView:(FWTagCollectionView *)tagCollectionView shouldSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
 
-- (void)tagCollectionView:(TTGTagCollectionView *)tagCollectionView didSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
+- (void)tagCollectionView:(FWTagCollectionView *)tagCollectionView didSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
 
-- (void)tagCollectionView:(TTGTagCollectionView *)tagCollectionView updateContentSize:(CGSize)contentSize;
+- (void)tagCollectionView:(FWTagCollectionView *)tagCollectionView updateContentSize:(CGSize)contentSize;
 @end
 
 /**
  * Tags dataSource
  */
-@protocol TTGTagCollectionViewDataSource <NSObject>
+@protocol FWTagCollectionViewDataSource <NSObject>
 @required
-- (NSUInteger)numberOfTagsInTagCollectionView:(TTGTagCollectionView *)tagCollectionView;
+- (NSUInteger)numberOfTagsInTagCollectionView:(FWTagCollectionView *)tagCollectionView;
 
-- (UIView *)tagCollectionView:(TTGTagCollectionView *)tagCollectionView tagViewForIndex:(NSUInteger)index;
+- (UIView *)tagCollectionView:(FWTagCollectionView *)tagCollectionView tagViewForIndex:(NSUInteger)index;
 @end
 
 /*!
@@ -61,18 +61,18 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
  
  @see https://github.com/zekunyan/TTGTagCollectionView
  */
-@interface TTGTagCollectionView : UIView
-@property (nonatomic, weak) id <TTGTagCollectionViewDataSource> dataSource;
-@property (nonatomic, weak) id <TTGTagCollectionViewDelegate> delegate;
+@interface FWTagCollectionView : UIView
+@property (nonatomic, weak) id <FWTagCollectionViewDataSource> dataSource;
+@property (nonatomic, weak) id <FWTagCollectionViewDelegate> delegate;
 
 // Inside scrollView
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 
 // Tags scroll direction, default is vertical.
-@property (nonatomic, assign) TTGTagCollectionScrollDirection scrollDirection;
+@property (nonatomic, assign) FWTagCollectionScrollDirection scrollDirection;
 
 // Tags layout alignment, default is left.
-@property (nonatomic, assign) TTGTagCollectionAlignment alignment;
+@property (nonatomic, assign) FWTagCollectionAlignment alignment;
 
 // Number of lines. 0 means no limit, default is 0 for vertical and 1 for horizontal.
 @property (nonatomic, assign) NSUInteger numberOfLines;
@@ -119,7 +119,7 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 
 /// TTGTextTagConfig
 
-@interface TTGTextTagConfig : NSObject;
+@interface FWTextTagConfig : NSObject;
 // Text font
 @property (strong, nonatomic) UIFont *tagTextFont;
 
@@ -174,40 +174,40 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 
 /// TTGTextTagCollectionView
 
-@class TTGTextTagCollectionView;
+@class FWTextTagCollectionView;
 
-@protocol TTGTextTagCollectionViewDelegate <NSObject>
+@protocol FWTextTagCollectionViewDelegate <NSObject>
 @optional
 
-- (BOOL)textTagCollectionView:(TTGTextTagCollectionView *)textTagCollectionView
+- (BOOL)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
                     canTapTag:(NSString *)tagText
                       atIndex:(NSUInteger)index
               currentSelected:(BOOL)currentSelected
-                    tagConfig:(TTGTextTagConfig *)config;
+                    tagConfig:(FWTextTagConfig *)config;
 
-- (void)textTagCollectionView:(TTGTextTagCollectionView *)textTagCollectionView
+- (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
                     didTapTag:(NSString *)tagText
                       atIndex:(NSUInteger)index
                      selected:(BOOL)selected
-                    tagConfig:(TTGTextTagConfig *)config;
+                    tagConfig:(FWTextTagConfig *)config;
 
-- (void)textTagCollectionView:(TTGTextTagCollectionView *)textTagCollectionView
+- (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
             updateContentSize:(CGSize)contentSize;
 
 // Deprecated
-- (BOOL)textTagCollectionView:(TTGTextTagCollectionView *)textTagCollectionView
+- (BOOL)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
                     canTapTag:(NSString *)tagText
                       atIndex:(NSUInteger)index
               currentSelected:(BOOL)currentSelected __attribute__((deprecated("Use the new method")));
-- (void)textTagCollectionView:(TTGTextTagCollectionView *)textTagCollectionView
+- (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
                     didTapTag:(NSString *)tagText
                       atIndex:(NSUInteger)index
                      selected:(BOOL)selected __attribute__((deprecated("Use the new method")));
 @end
 
-@interface TTGTextTagCollectionView : UIView
+@interface FWTextTagCollectionView : UIView
 // Delegate
-@property (weak, nonatomic) id <TTGTextTagCollectionViewDelegate> delegate;
+@property (weak, nonatomic) id <FWTextTagCollectionViewDelegate> delegate;
 
 // Inside scrollView
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
@@ -216,13 +216,13 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 @property (assign, nonatomic) BOOL enableTagSelection;
 
 // Default tag config
-@property (nonatomic, strong) TTGTextTagConfig *defaultConfig;
+@property (nonatomic, strong) FWTextTagConfig *defaultConfig;
 
 // Tags scroll direction, default is vertical.
-@property (nonatomic, assign) TTGTagCollectionScrollDirection scrollDirection;
+@property (nonatomic, assign) FWTagCollectionScrollDirection scrollDirection;
 
 // Tags layout alignment, default is left.
-@property (nonatomic, assign) TTGTagCollectionAlignment alignment;
+@property (nonatomic, assign) FWTagCollectionAlignment alignment;
 
 // Number of lines. 0 means no limit, default is 0 for vertical and 1 for horizontal.
 @property (nonatomic, assign) NSUInteger numberOfLines;
@@ -266,9 +266,9 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 - (void)addTags:(NSArray <NSString *> *)tags;
 
 // Add tag with custom config
-- (void)addTag:(NSString *)tag withConfig:(TTGTextTagConfig *)config;
+- (void)addTag:(NSString *)tag withConfig:(FWTextTagConfig *)config;
 
-- (void)addTags:(NSArray <NSString *> *)tags withConfig:(TTGTextTagConfig *)config;
+- (void)addTags:(NSArray <NSString *> *)tags withConfig:(FWTextTagConfig *)config;
 
 // Insert tag with default config
 - (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index;
@@ -276,9 +276,9 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 - (void)insertTags:(NSArray <NSString *> *)tags atIndex:(NSUInteger)index;
 
 // Insert tag with custom config
-- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index withConfig:(TTGTextTagConfig *)config;
+- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config;
 
-- (void)insertTags:(NSArray <NSString *> *)tags atIndex:(NSUInteger)index withConfig:(TTGTextTagConfig *)config;
+- (void)insertTags:(NSArray <NSString *> *)tags atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config;
 
 // Remove tag
 - (void)removeTag:(NSString *)tag;
@@ -291,9 +291,9 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 - (void)setTagAtIndex:(NSUInteger)index selected:(BOOL)selected;
 
 // Update tag config
-- (void)setTagAtIndex:(NSUInteger)index withConfig:(TTGTextTagConfig *)config;
+- (void)setTagAtIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config;
 
-- (void)setTagsInRange:(NSRange)range withConfig:(TTGTextTagConfig *)config;
+- (void)setTagsInRange:(NSRange)range withConfig:(FWTextTagConfig *)config;
 
 // Get tag
 - (NSString *)getTagAtIndex:(NSUInteger)index;
@@ -301,9 +301,9 @@ typedef NS_ENUM(NSInteger, TTGTagCollectionAlignment) {
 - (NSArray <NSString *> *)getTagsInRange:(NSRange)range;
 
 // Get tag config
-- (TTGTextTagConfig *)getConfigAtIndex:(NSUInteger)index;
+- (FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index;
 
-- (NSArray <TTGTextTagConfig *> *)getConfigsInRange:(NSRange)range;
+- (NSArray <FWTextTagConfig *> *)getConfigsInRange:(NSRange)range;
 
 // Get all
 - (NSArray <NSString *> *)allTags;

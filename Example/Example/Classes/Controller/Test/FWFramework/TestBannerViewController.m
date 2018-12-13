@@ -11,7 +11,7 @@
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
-@property (nonatomic, strong) TTGTextTagCollectionView *tagCollectionView;
+@property (nonatomic, strong) FWTextTagCollectionView *tagCollectionView;
 
 @end
 
@@ -59,7 +59,7 @@
     [label appendImage:image maxSize:image.size margin:UIEdgeInsetsZero alignment:M80ImageAlignmentCenter];
     [label appendText:@" 结束"];
     
-    TTGTextTagCollectionView *tagCollectionView = [TTGTextTagCollectionView new];
+    FWTextTagCollectionView *tagCollectionView = [FWTextTagCollectionView new];
     _tagCollectionView = tagCollectionView;
     tagCollectionView.verticalSpacing = 5;
     tagCollectionView.horizontalSpacing = 5;
@@ -76,9 +76,9 @@
     }
 }
 
-- (TTGTextTagConfig *)textTagConfig
+- (FWTextTagConfig *)textTagConfig
 {
-    TTGTextTagConfig *tagConfig = [[TTGTextTagConfig alloc] init];
+    FWTextTagConfig *tagConfig = [[FWTextTagConfig alloc] init];
     tagConfig.tagTextFont = [UIFont systemFontOfSize:10];
     tagConfig.tagTextColor = [UIColor blackColor];
     tagConfig.tagSelectedTextColor = [UIColor blackColor];
