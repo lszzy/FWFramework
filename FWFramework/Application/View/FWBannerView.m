@@ -1,43 +1,21 @@
-//
-//  SDCycleScrollView.m
-//  SDCycleScrollView
-//
-//  Created by aier on 15-3-22.
-//  Copyright (c) 2015年 GSD. All rights reserved.
-//
-
-/*
- 
- *********************************************************************************
- *
- * 🌟🌟🌟 新建SDCycleScrollView交流QQ群：185534916 🌟🌟🌟
- *
- * 在您使用此自动轮播库的过程中如果出现bug请及时以以下任意一种方式联系我们，我们会及时修复bug并
- * 帮您解决问题。
- * 新浪微博:GSD_iOS
- * Email : gsdios@126.com
- * GitHub: https://github.com/gsdios
- *
- * 另（我的自动布局库SDAutoLayout）：
- *  一行代码搞定自动布局！支持Cell和Tableview高度自适应，Label和ScrollView内容自适应，致力于
- *  做最简单易用的AutoLayout库。
- * 视频教程：http://www.letv.com/ptv/vplay/24038772.html
- * 用法示例：https://github.com/gsdios/SDAutoLayout/blob/master/README.md
- * GitHub：https://github.com/gsdios/SDAutoLayout
- *********************************************************************************
- 
+/*!
+ @header     FWBannerView.m
+ @indexgroup FWFramework
+ @brief      FWBannerView
+ @author     wuyong
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/12/13
  */
 
+#import "FWBannerView.h"
+#import "UIPageControl+FWFramework.h"
+#import "UIImageView+FWNetwork.h"
 
-#import "SDCycleScrollView.h"
-#import "SDCollectionViewCell.h"
+#define kFWBannerViewInitialPageControlDotSize CGSizeMake(10, 10)
 
-#define kCycleScrollViewInitialPageControlDotSize CGSizeMake(10, 10)
+NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
-NSString * const ID = @"SDCycleScrollViewCell";
-
-@interface SDCycleScrollView () <UICollectionViewDataSource, UICollectionViewDelegate>
-
+@interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, weak) UICollectionView *mainView; // 显示图片的collectionView
 @property (nonatomic, weak) UICollectionViewFlowLayout *flowLayout;
@@ -50,7 +28,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 
 @end
 
-@implementation SDCycleScrollView
+@implementation FWBannerView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -70,7 +48,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 
 - (void)initialization
 {
-    _pageControlAliment = SDCycleScrollViewPageContolAlimentCenter;
+    _pageControlAlignment = FWBannerViewPageContolAlignmentCenter;
     _autoScrollTimeInterval = 2.0;
     _titleLabelTextColor = [UIColor whiteColor];
     _titleLabelTextFont= [UIFont systemFontOfSize:14];
@@ -80,10 +58,9 @@ NSString * const ID = @"SDCycleScrollViewCell";
     _autoScroll = YES;
     _infiniteLoop = YES;
     _showPageControl = YES;
-    _pageControlDotSize = kCycleScrollViewInitialPageControlDotSize;
+    _pageControlDotSize = kFWBannerViewInitialPageControlDotSize;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
-    _pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
     _pageDotColor = [UIColor lightGrayColor];
@@ -92,35 +69,34 @@ NSString * const ID = @"SDCycleScrollViewCell";
     self.backgroundColor = [UIColor lightGrayColor];
 }
 
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup
++ (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup
 {
-    SDCycleScrollView *cycleScrollView = [[self alloc] initWithFrame:frame];
-    cycleScrollView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
-    return cycleScrollView;
+    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    bannerView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
+    return bannerView;
 }
 
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup
++ (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup
 {
-    SDCycleScrollView *cycleScrollView = [[self alloc] initWithFrame:frame];
-    cycleScrollView.infiniteLoop = infiniteLoop;
-    cycleScrollView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
-    return cycleScrollView;
+    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    bannerView.infiniteLoop = infiniteLoop;
+    bannerView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
+    return bannerView;
 }
 
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLsGroup
++ (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup
 {
-    SDCycleScrollView *cycleScrollView = [[self alloc] initWithFrame:frame];
-    cycleScrollView.imageURLStringsGroup = [NSMutableArray arrayWithArray:imageURLsGroup];
-    return cycleScrollView;
+    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    bannerView.imageURLStringsGroup = [NSMutableArray arrayWithArray:imageURLStringsGroup];
+    return bannerView;
 }
 
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame delegate:(id<SDCycleScrollViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage
++ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(id<FWBannerViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage
 {
-    SDCycleScrollView *cycleScrollView = [[self alloc] initWithFrame:frame];
-    cycleScrollView.delegate = delegate;
-    cycleScrollView.placeholderImage = placeholderImage;
-    
-    return cycleScrollView;
+    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    bannerView.delegate = delegate;
+    bannerView.placeholderImage = placeholderImage;
+    return bannerView;
 }
 
 // 设置显示图片的collectionView
@@ -136,7 +112,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
     mainView.pagingEnabled = YES;
     mainView.showsHorizontalScrollIndicator = NO;
     mainView.showsVerticalScrollIndicator = NO;
-    [mainView registerClass:[SDCollectionViewCell class] forCellWithReuseIdentifier:ID];
+    [mainView registerClass:[FWBannerViewCell class] forCellWithReuseIdentifier:FWBannerViewCellID];
     
     mainView.dataSource = self;
     mainView.delegate = self;
@@ -145,17 +121,16 @@ NSString * const ID = @"SDCycleScrollViewCell";
     _mainView = mainView;
 }
 
-
 #pragma mark - properties
 
-- (void)setDelegate:(id<SDCycleScrollViewDelegate>)delegate
+- (void)setDelegate:(id<FWBannerViewDelegate>)delegate
 {
     _delegate = delegate;
     
-    if ([self.delegate respondsToSelector:@selector(customCollectionViewCellClassForCycleScrollView:)] && [self.delegate customCollectionViewCellClassForCycleScrollView:self]) {
-        [self.mainView registerClass:[self.delegate customCollectionViewCellClassForCycleScrollView:self] forCellWithReuseIdentifier:ID];
-    }else if ([self.delegate respondsToSelector:@selector(customCollectionViewCellNibForCycleScrollView:)] && [self.delegate customCollectionViewCellNibForCycleScrollView:self]) {
-        [self.mainView registerNib:[self.delegate customCollectionViewCellNibForCycleScrollView:self] forCellWithReuseIdentifier:ID];
+    if ([self.delegate respondsToSelector:@selector(customCollectionViewCellClassForBannerView:)] && [self.delegate customCollectionViewCellClassForBannerView:self]) {
+        [self.mainView registerClass:[self.delegate customCollectionViewCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
+    }else if ([self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
+        [self.mainView registerNib:[self.delegate customCollectionViewCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
     }
 }
 
@@ -240,13 +215,6 @@ NSString * const ID = @"SDCycleScrollViewCell";
     _autoScrollTimeInterval = autoScrollTimeInterval;
     
     [self setAutoScroll:self.autoScroll];
-}
-
-- (void)setPageControlStyle:(SDCycleScrollViewPageContolStyle)pageControlStyle
-{
-    _pageControlStyle = pageControlStyle;
-    
-    [self setupPageControl];
 }
 
 - (void)setImagePathsGroup:(NSArray *)imagePathsGroup
@@ -344,26 +312,16 @@ NSString * const ID = @"SDCycleScrollViewCell";
     
     int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
     
-    switch (self.pageControlStyle) {
-        case SDCycleScrollViewPageContolStyleClassic:
-        {
-            UIPageControl *pageControl = [[UIPageControl alloc] init];
-            pageControl.numberOfPages = self.imagePathsGroup.count;
-            pageControl.currentPageIndicatorTintColor = self.currentPageDotColor;
-            pageControl.pageIndicatorTintColor = self.pageDotColor;
-            pageControl.userInteractionEnabled = NO;
-            pageControl.currentPage = indexOnPageControl;
-            pageControl.fwIndicatorSize = self.pageControlDotSize;
-            [self addSubview:pageControl];
-            _pageControl = pageControl;
-        }
-            break;
-            
-        default:
-            break;
-    }
+    UIPageControl *pageControl = [[UIPageControl alloc] init];
+    pageControl.numberOfPages = self.imagePathsGroup.count;
+    pageControl.currentPageIndicatorTintColor = self.currentPageDotColor;
+    pageControl.pageIndicatorTintColor = self.pageDotColor;
+    pageControl.userInteractionEnabled = NO;
+    pageControl.currentPage = indexOnPageControl;
+    pageControl.fwIndicatorSize = self.pageControlDotSize;
+    [self addSubview:pageControl];
+    _pageControl = pageControl;
 }
-
 
 - (void)automaticScroll
 {
@@ -429,7 +387,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
     
     CGSize size = CGSizeMake(self.imagePathsGroup.count * self.pageControlDotSize.width * 1.5, self.pageControlDotSize.height);
     CGFloat x = (self.frame.size.width - size.width) * 0.5;
-    if (self.pageControlAliment == SDCycleScrollViewPageContolAlimentRight) {
+    if (self.pageControlAlignment == FWBannerViewPageContolAlignmentRight) {
         x = self.mainView.frame.size.width - size.width - 10;
     }
     CGFloat y = self.mainView.frame.size.height - size.height - 10;
@@ -462,14 +420,13 @@ NSString * const ID = @"SDCycleScrollViewCell";
 
 #pragma mark - public actions
 
-- (void)adjustWhenControllerViewWillAppera
+- (void)adjustWhenControllerViewWillAppear
 {
     long targetIndex = [self currentIndex];
     if (targetIndex < _totalItemsCount) {
         [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }
-
 
 #pragma mark - UICollectionViewDataSource
 
@@ -480,17 +437,17 @@ NSString * const ID = @"SDCycleScrollViewCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SDCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ID forIndexPath:indexPath];
+    FWBannerViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FWBannerViewCellID forIndexPath:indexPath];
     
     long itemIndex = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     
-    if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:cycleScrollView:)] &&
-        [self.delegate respondsToSelector:@selector(customCollectionViewCellClassForCycleScrollView:)] && [self.delegate customCollectionViewCellClassForCycleScrollView:self]) {
-        [self.delegate setupCustomCell:cell forIndex:itemIndex cycleScrollView:self];
+    if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:bannerView:)] &&
+        [self.delegate respondsToSelector:@selector(customCollectionViewCellClassForBannerView:)] && [self.delegate customCollectionViewCellClassForBannerView:self]) {
+        [self.delegate setupCustomCell:cell forIndex:itemIndex bannerView:self];
         return cell;
-    }else if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:cycleScrollView:)] &&
-              [self.delegate respondsToSelector:@selector(customCollectionViewCellNibForCycleScrollView:)] && [self.delegate customCollectionViewCellNibForCycleScrollView:self]) {
-        [self.delegate setupCustomCell:cell forIndex:itemIndex cycleScrollView:self];
+    }else if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:bannerView:)] &&
+              [self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
+        [self.delegate setupCustomCell:cell forIndex:itemIndex bannerView:self];
         return cell;
     }
     
@@ -531,8 +488,8 @@ NSString * const ID = @"SDCycleScrollViewCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(cycleScrollView:didSelectItemAtIndex:)]) {
-        [self.delegate cycleScrollView:self didSelectItemAtIndex:[self pageControlIndexWithCurrentCellIndex:indexPath.item]];
+    if ([self.delegate respondsToSelector:@selector(bannerView:didSelectItemAtIndex:)]) {
+        [self.delegate bannerView:self didSelectItemAtIndex:[self pageControlIndexWithCurrentCellIndex:indexPath.item]];
     }
     if (self.clickItemOperationBlock) {
         self.clickItemOperationBlock([self pageControlIndexWithCurrentCellIndex:indexPath.item]);
@@ -576,8 +533,8 @@ NSString * const ID = @"SDCycleScrollViewCell";
     int itemIndex = [self currentIndex];
     int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
-    if ([self.delegate respondsToSelector:@selector(cycleScrollView:didScrollToIndex:)]) {
-        [self.delegate cycleScrollView:self didScrollToIndex:indexOnPageControl];
+    if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
+        [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
     } else if (self.itemDidScrollOperationBlock) {
         self.itemDidScrollOperationBlock(indexOnPageControl);
     }
@@ -593,6 +550,87 @@ NSString * const ID = @"SDCycleScrollViewCell";
     
     if (self.autoScroll) {
         [self setupTimer];
+    }
+}
+
+@end
+
+@implementation FWBannerViewCell
+{
+    __weak UILabel *_titleLabel;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self setupImageView];
+        [self setupTitleLabel];
+    }
+    
+    return self;
+}
+
+- (void)setTitleLabelBackgroundColor:(UIColor *)titleLabelBackgroundColor
+{
+    _titleLabelBackgroundColor = titleLabelBackgroundColor;
+    _titleLabel.backgroundColor = titleLabelBackgroundColor;
+}
+
+- (void)setTitleLabelTextColor:(UIColor *)titleLabelTextColor
+{
+    _titleLabelTextColor = titleLabelTextColor;
+    _titleLabel.textColor = titleLabelTextColor;
+}
+
+- (void)setTitleLabelTextFont:(UIFont *)titleLabelTextFont
+{
+    _titleLabelTextFont = titleLabelTextFont;
+    _titleLabel.font = titleLabelTextFont;
+}
+
+- (void)setupImageView
+{
+    UIImageView *imageView = [[UIImageView alloc] init];
+    _imageView = imageView;
+    [self.contentView addSubview:imageView];
+}
+
+- (void)setupTitleLabel
+{
+    UILabel *titleLabel = [[UILabel alloc] init];
+    _titleLabel = titleLabel;
+    _titleLabel.hidden = YES;
+    [self.contentView addSubview:titleLabel];
+}
+
+- (void)setTitle:(NSString *)title
+{
+    _title = [title copy];
+    _titleLabel.text = [NSString stringWithFormat:@"   %@", title];
+    if (_titleLabel.hidden) {
+        _titleLabel.hidden = NO;
+    }
+}
+
+-(void)setTitleLabelTextAlignment:(NSTextAlignment)titleLabelTextAlignment
+{
+    _titleLabelTextAlignment = titleLabelTextAlignment;
+    _titleLabel.textAlignment = titleLabelTextAlignment;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    if (self.onlyDisplayText) {
+        _titleLabel.frame = self.bounds;
+    } else {
+        _imageView.frame = self.bounds;
+        CGFloat titleLabelW = self.frame.size.width;
+        CGFloat titleLabelH = _titleLabelHeight;
+        CGFloat titleLabelX = 0;
+        CGFloat titleLabelY = self.frame.size.height - titleLabelH;
+        _titleLabel.frame = CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH);
     }
 }
 

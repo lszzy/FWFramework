@@ -7,10 +7,9 @@
 //
 
 #import "TestBannerViewController.h"
-#import "SDCycleScrollView.h"
 #import "M80AttributedLabel.h"
 
-@interface TestBannerViewController () <SDCycleScrollViewDelegate>
+@interface TestBannerViewController () <FWBannerViewDelegate>
 
 @end
 
@@ -18,11 +17,11 @@
 
 - (void)renderView
 {
-    SDCycleScrollView *cycleView = [SDCycleScrollView new];
+    FWBannerView *cycleView = [FWBannerView new];
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_picture"];
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_picture"];
     cycleView.pageControlDotSize = CGSizeMake(6, 6);
     cycleView.pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     cycleView.currentPageDotColor = [UIColor whiteColor];
@@ -61,7 +60,7 @@
 
 #pragma mark - SDCycleScrollViewDelegate
 
-- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
+- (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index
 {
     FWLogDebug(@"index: %@", index);
 }

@@ -1,99 +1,57 @@
-//
-//  SDCycleScrollView.h
-//  SDCycleScrollView
-//
-//  Created by aier on 15-3-22.
-//  Copyright (c) 2015年 GSD. All rights reserved.
-//
-
-/*
- 
- *********************************************************************************
- *
- * 🌟🌟🌟 新建SDCycleScrollView交流QQ群：185534916 🌟🌟🌟
- *
- * 在您使用此自动轮播库的过程中如果出现bug请及时以以下任意一种方式联系我们，我们会及时修复bug并
- * 帮您解决问题。
- * 新浪微博:GSD_iOS
- * Email : gsdios@126.com
- * GitHub: https://github.com/gsdios
- *
- * 另（我的自动布局库SDAutoLayout）：
- *  一行代码搞定自动布局！支持Cell和Tableview高度自适应，Label和ScrollView内容自适应，致力于
- *  做最简单易用的AutoLayout库。
- * 视频教程：http://www.letv.com/ptv/vplay/24038772.html
- * 用法示例：https://github.com/gsdios/SDAutoLayout/blob/master/README.md
- * GitHub：https://github.com/gsdios/SDAutoLayout
- *********************************************************************************
- 
- */
-
-/*
- * 当前版本为1.62
- * 更新日期：2016.04.21
+/*!
+ @header     FWBannerView.h
+ @indexgroup FWFramework
+ @brief      FWBannerView
+ @author     wuyong
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/12/13
  */
 
 #import <UIKit/UIKit.h>
 
-typedef enum {
-    SDCycleScrollViewPageContolAlimentRight,
-    SDCycleScrollViewPageContolAlimentCenter
-} SDCycleScrollViewPageContolAliment;
+typedef NS_ENUM(NSInteger, FWBannerViewPageContolAlignment) {
+    FWBannerViewPageContolAlignmentRight,
+    FWBannerViewPageContolAlignmentCenter,
+};
 
-typedef enum {
-    SDCycleScrollViewPageContolStyleClassic,        // 系统自带经典样式
-    SDCycleScrollViewPageContolStyleNone            // 不显示pagecontrol
-} SDCycleScrollViewPageContolStyle;
+@class FWBannerView;
 
-@class SDCycleScrollView;
-
-@protocol SDCycleScrollViewDelegate <NSObject>
+@protocol FWBannerViewDelegate <NSObject>
 
 @optional
 
-/** 点击图片回调 */
-- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index;
+- (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index;
 
-/** 图片滚动回调 */
-- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didScrollToIndex:(NSInteger)index;
-
-
-
-
-
-
-// 不需要自定义轮播cell的请忽略以下两个的代理方法
-
-// ========== 轮播自定义cell ==========
+- (void)bannerView:(FWBannerView *)bannerView didScrollToIndex:(NSInteger)index;
 
 /** 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的class。 */
-- (Class)customCollectionViewCellClassForCycleScrollView:(SDCycleScrollView *)view;
+- (Class)customCollectionViewCellClassForBannerView:(FWBannerView *)view;
 
 /** 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的Nib。 */
-- (UINib *)customCollectionViewCellNibForCycleScrollView:(SDCycleScrollView *)view;
+- (UINib *)customCollectionViewCellNibForBannerView:(FWBannerView *)view;
 
 /** 如果你自定义了cell样式，请在实现此代理方法为你的cell填充数据以及其它一系列设置 */
-- (void)setupCustomCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index cycleScrollView:(SDCycleScrollView *)view;
+- (void)setupCustomCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index bannerView:(FWBannerView *)view;
 
 @end
 
-@interface SDCycleScrollView : UIView
-
+/*!
+ @brief FWBannerView
+ 
+ @see https://github.com/gsdios/SDCycleScrollView
+ */
+@interface FWBannerView : UIView
 
 /** 初始轮播图（推荐使用） */
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame delegate:(id<SDCycleScrollViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage;
++ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(id<FWBannerViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage;
 
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup;
-
++ (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup;
 
 /** 本地图片轮播初始化方式 */
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup;
++ (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup;
 
 /** 本地图片轮播初始化方式2,infiniteLoop:是否无限循环 */
-+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup;
-
-
-//////////////////////  数据源API //////////////////////
++ (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup;
 
 /** 网络图片 url string 数组 */
 @property (nonatomic, strong) NSArray *imageURLStringsGroup;
@@ -103,12 +61,6 @@ typedef enum {
 
 /** 本地图片数组 */
 @property (nonatomic, strong) NSArray *localizationImageNamesGroup;
-
-
-
-
-
-//////////////////////  滚动控制API //////////////////////
 
 /** 自动滚动间隔时间,默认2s */
 @property (nonatomic, assign) CGFloat autoScrollTimeInterval;
@@ -122,7 +74,7 @@ typedef enum {
 /** 图片滚动方向，默认为水平滚动 */
 @property (nonatomic, assign) UICollectionViewScrollDirection scrollDirection;
 
-@property (nonatomic, weak) id<SDCycleScrollViewDelegate> delegate;
+@property (nonatomic, weak) id<FWBannerViewDelegate> delegate;
 
 /** block方式监听点击 */
 @property (nonatomic, copy) void (^clickItemOperationBlock)(NSInteger currentIndex);
@@ -134,9 +86,7 @@ typedef enum {
 - (void)makeScrollViewScrollToIndex:(NSInteger)index;
 
 /** 解决viewWillAppear时出现时轮播图卡在一半的问题，在控制器viewWillAppear时调用此方法 */
-- (void)adjustWhenControllerViewWillAppera;
-
-//////////////////////  自定义样式API  //////////////////////
+- (void)adjustWhenControllerViewWillAppear;
 
 /** 轮播图片的ContentMode，默认为 UIViewContentModeScaleAspectFill */
 @property (nonatomic, assign) UIViewContentMode bannerImageViewContentMode;
@@ -153,11 +103,8 @@ typedef enum {
 /** 只展示文字轮播 */
 @property (nonatomic, assign) BOOL onlyDisplayText;
 
-/** pagecontrol 样式，默认为动画样式 */
-@property (nonatomic, assign) SDCycleScrollViewPageContolStyle pageControlStyle;
-
 /** 分页控件位置 */
-@property (nonatomic, assign) SDCycleScrollViewPageContolAliment pageControlAliment;
+@property (nonatomic, assign) FWBannerViewPageContolAlignment pageControlAlignment;
 
 /** 分页控件距离轮播图的底部间距（在默认间距基础上）的偏移量 */
 @property (nonatomic, assign) CGFloat pageControlBottomOffset;
@@ -191,5 +138,23 @@ typedef enum {
 
 /** 滚动手势禁用（文字轮播较实用） */
 - (void)disableScrollGesture;
+
+@end
+
+@interface FWBannerViewCell : UICollectionViewCell
+
+@property (weak, nonatomic) UIImageView *imageView;
+@property (copy, nonatomic) NSString *title;
+
+@property (nonatomic, strong) UIColor *titleLabelTextColor;
+@property (nonatomic, strong) UIFont *titleLabelTextFont;
+@property (nonatomic, strong) UIColor *titleLabelBackgroundColor;
+@property (nonatomic, assign) CGFloat titleLabelHeight;
+@property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;
+
+@property (nonatomic, assign) BOOL hasConfigured;
+
+/** 只展示文字轮播 */
+@property (nonatomic, assign) BOOL onlyDisplayText;
 
 @end
