@@ -11,6 +11,8 @@
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
+@property (nonatomic, strong) TTGTextTagCollectionView *tagCollectionView;
+
 @end
 
 @implementation TestBannerViewController
@@ -56,6 +58,41 @@
     UIImage *image = [UIImage fwImageWithColor:[UIColor blueColor] size:CGSizeMake(30, 30)];
     [label appendImage:image maxSize:image.size margin:UIEdgeInsetsZero alignment:M80ImageAlignmentCenter];
     [label appendText:@" 结束"];
+    
+    TTGTextTagCollectionView *tagCollectionView = [TTGTextTagCollectionView new];
+    _tagCollectionView = tagCollectionView;
+    tagCollectionView.verticalSpacing = 5;
+    tagCollectionView.horizontalSpacing = 5;
+    tagCollectionView.contentInset = UIEdgeInsetsZero;
+    [self.view addSubview:tagCollectionView];
+    [tagCollectionView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
+    [tagCollectionView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
+    [tagCollectionView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:label withOffset:10];
+    
+    [self.tagCollectionView removeAllTags];
+    NSArray *testTags = @[@"80减12", @"首单减15", @"在线支付", @"支持自提", @"26减3", @"80减12", @"首单减15", @"在线支付", @"支持自提", @"26减3"];
+    for (NSString *tagName in testTags) {
+        [self.tagCollectionView addTag:tagName withConfig:self.textTagConfig];
+    }
+}
+
+- (TTGTextTagConfig *)textTagConfig
+{
+    TTGTextTagConfig *tagConfig = [[TTGTextTagConfig alloc] init];
+    tagConfig.tagTextFont = [UIFont systemFontOfSize:10];
+    tagConfig.tagTextColor = [UIColor blackColor];
+    tagConfig.tagSelectedTextColor = [UIColor blackColor];
+    tagConfig.tagBackgroundColor = [UIColor appColorBg];
+    tagConfig.tagSelectedBackgroundColor = [UIColor appColorBg];
+    tagConfig.tagCornerRadius = 2;
+    tagConfig.tagSelectedCornerRadius = 2;
+    tagConfig.tagBorderWidth = 1;
+    tagConfig.tagSelectedBorderWidth = 1;
+    tagConfig.tagBorderColor = [UIColor appColorHex:0xF3B2AF];
+    tagConfig.tagSelectedBorderColor = [UIColor appColorHex:0xF3B2AF];
+    tagConfig.tagExtraSpace = CGSizeMake(10, 6);
+    tagConfig.tagShouldUseGradientBackgrounds = NO;
+    return tagConfig;
 }
 
 #pragma mark - SDCycleScrollViewDelegate

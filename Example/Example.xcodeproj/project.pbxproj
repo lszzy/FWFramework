@@ -52,9 +52,6 @@
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
-		2FB7CB7621BF6651002E5412 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5721BF6651002E5412 /* .gitkeep */; };
-		2FB7CB7721BF6651002E5412 /* TTGTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */; };
-		2FB7CB7821BF6651002E5412 /* TTGTextTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */; };
 		2FB7CB8021BF6651002E5412 /* M80AttributedLabelAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7021BF6651002E5412 /* M80AttributedLabelAttachment.m */; };
 		2FB7CB8121BF6651002E5412 /* M80AttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7221BF6651002E5412 /* M80AttributedLabel.m */; };
 		2FB7CB8221BF6651002E5412 /* M80AttributedLabelURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7321BF6651002E5412 /* M80AttributedLabelURL.m */; };
@@ -182,11 +179,6 @@
 		2FA32CCB21B0572900C230EA /* TestRouterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterViewController.m; sourceTree = "<group>"; };
 		2FB38DBF215B7058009F0450 /* TestModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestModelViewController.h; sourceTree = "<group>"; };
 		2FB38DC0215B7058009F0450 /* TestModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestModelViewController.m; sourceTree = "<group>"; };
-		2FB7CB5621BF6651002E5412 /* TTGTagCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTGTagCollectionView.h; sourceTree = "<group>"; };
-		2FB7CB5721BF6651002E5412 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		2FB7CB5821BF6651002E5412 /* TTGTextTagCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTGTextTagCollectionView.h; sourceTree = "<group>"; };
-		2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTGTagCollectionView.m; sourceTree = "<group>"; };
-		2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTGTextTagCollectionView.m; sourceTree = "<group>"; };
 		2FB7CB6D21BF6651002E5412 /* M80AttributedLabelDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelDefines.h; sourceTree = "<group>"; };
 		2FB7CB6E21BF6651002E5412 /* M80AttributedLabelURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelURL.h; sourceTree = "<group>"; };
 		2FB7CB6F21BF6651002E5412 /* M80AttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabel.h; sourceTree = "<group>"; };
@@ -236,7 +228,6 @@
 				2F0D295F215DFFEF005F1466 /* JQFMDB */,
 				2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */,
 				2F0D2959215DFFEF005F1466 /* SVPullToRefresh */,
-				2FB7CB5521BF6651002E5412 /* TTGTagCollectionView */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -580,18 +571,6 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
-		2FB7CB5521BF6651002E5412 /* TTGTagCollectionView */ = {
-			isa = PBXGroup;
-			children = (
-				2FB7CB5721BF6651002E5412 /* .gitkeep */,
-				2FB7CB5621BF6651002E5412 /* TTGTagCollectionView.h */,
-				2FB7CB5921BF6651002E5412 /* TTGTagCollectionView.m */,
-				2FB7CB5821BF6651002E5412 /* TTGTextTagCollectionView.h */,
-				2FB7CB5A21BF6651002E5412 /* TTGTextTagCollectionView.m */,
-			);
-			path = TTGTagCollectionView;
-			sourceTree = "<group>";
-		};
 		2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */ = {
 			isa = PBXGroup;
 			children = (
@@ -739,7 +718,6 @@
 			files = (
 				2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */,
 				2F4CFA5721552E9D00203A37 /* Images.xcassets in Resources */,
-				2FB7CB7621BF6651002E5412 /* .gitkeep in Resources */,
 				2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */,
 				2F30D8982153775E000F0A1D /* Localizable.strings in Resources */,
 			);
@@ -779,7 +757,6 @@
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
-				2FB7CB7721BF6651002E5412 /* TTGTagCollectionView.m in Sources */,
 				2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */,
 				2F0D297C215DFFEF005F1466 /* DZNPolyActivity.m in Sources */,
 				2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */,
@@ -803,7 +780,6 @@
 				2F0D298D215DFFEF005F1466 /* JQFMDB.m in Sources */,
 				2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */,
 				2F0D2987215DFFEF005F1466 /* FMDatabaseAdditions.m in Sources */,
-				2FB7CB7821BF6651002E5412 /* TTGTextTagCollectionView.m in Sources */,
 				2F0D297B215DFFEF005F1466 /* DZNWebViewController.m in Sources */,
 				2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */,
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,

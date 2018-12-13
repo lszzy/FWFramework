@@ -211,6 +211,8 @@
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBCA21C23728002E5412 /* FWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC821C23728002E5412 /* FWBannerView.m */; };
+		2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -419,6 +421,8 @@
 		2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+FWFramework.m"; sourceTree = "<group>"; };
 		2FB7CBC721C23728002E5412 /* FWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
 		2FB7CBC821C23728002E5412 /* FWBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBannerView.m; sourceTree = "<group>"; };
+		2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTagCollectionView.h; sourceTree = "<group>"; };
+		2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTagCollectionView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -687,6 +691,8 @@
 				2F1E39362178F0B80051A6BB /* FWProgressView.m */,
 				2FB7CBC721C23728002E5412 /* FWBannerView.h */,
 				2FB7CBC821C23728002E5412 /* FWBannerView.m */,
+				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
+				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
 				2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */,
 			);
@@ -779,6 +785,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
 				2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */,
 				2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */,
 				2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */,
@@ -1016,6 +1023,7 @@
 				2F03A5D0216CF4B9001965A1 /* NSData+FWFramework.m in Sources */,
 				2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */,
 				2F03A5BE216CF4B9001965A1 /* NSObject+FWModel.m in Sources */,
+				2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */,
 				2F03A656216CF882001965A1 /* FWImageDownloader.m in Sources */,
 				2F03A581216CF4B9001965A1 /* UIButton+FWFramework.m in Sources */,
 				2F03A5B6216CF4B9001965A1 /* UIView+FWBadge.m in Sources */,
