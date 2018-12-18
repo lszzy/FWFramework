@@ -112,7 +112,7 @@
     }
     
     // 十六进制
-    return [UIColor fwColorWithString:string alpha:alpha];
+    return [UIColor fwColorWithHexString:string alpha:alpha];
 }
 
 #pragma mark - Image

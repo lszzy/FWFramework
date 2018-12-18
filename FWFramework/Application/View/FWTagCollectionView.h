@@ -117,62 +117,68 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 
 @end
 
-/// TTGTextTagConfig
+/// FWTextTagConfig
 
 @interface FWTextTagConfig : NSObject;
 // Text font
-@property (strong, nonatomic) UIFont *tagTextFont;
+@property (strong, nonatomic) UIFont *textFont;
 
 // Text color
-@property (strong, nonatomic) UIColor *tagTextColor;
-@property (strong, nonatomic) UIColor *tagSelectedTextColor;
+@property (strong, nonatomic) UIColor *textColor;
+@property (strong, nonatomic) UIColor *selectedTextColor;
 
 // Background color
-@property (strong, nonatomic) UIColor *tagBackgroundColor;
-@property (strong, nonatomic) UIColor *tagSelectedBackgroundColor;
+@property (strong, nonatomic) UIColor *backgroundColor;
+@property (strong, nonatomic) UIColor *selectedBackgroundColor;
 
 // Gradient background color
-@property (assign, nonatomic) BOOL tagShouldUseGradientBackgrounds;
-@property (strong, nonatomic) UIColor *tagGradientBackgroundStartColor;
-@property (strong, nonatomic) UIColor *tagGradientBackgroundEndColor;
-@property (strong, nonatomic) UIColor *tagSelectedGradientBackgroundStartColor;
-@property (strong, nonatomic) UIColor *tagSelectedGradientBackgroundEndColor;
-@property (assign, nonatomic) CGPoint tagGradientStartPoint;
-@property (assign, nonatomic) CGPoint tagGradientEndPoint;
+@property (assign, nonatomic) BOOL enableGradientBackground;
+@property (strong, nonatomic) UIColor *gradientBackgroundStartColor;
+@property (strong, nonatomic) UIColor *gradientBackgroundEndColor;
+@property (strong, nonatomic) UIColor *selectedGradientBackgroundStartColor;
+@property (strong, nonatomic) UIColor *selectedGradientBackgroundEndColor;
+@property (assign, nonatomic) CGPoint gradientBackgroundStartPoint;
+@property (assign, nonatomic) CGPoint gradientBackgroundEndPoint;
 
 // Corner radius
-@property (assign, nonatomic) CGFloat tagCornerRadius;
-@property (assign, nonatomic) CGFloat tagSelectedCornerRadius;
-@property (assign, nonatomic) Boolean roundTopRight;
-@property (assign, nonatomic) Boolean roundTopLeft;
-@property (assign, nonatomic) Boolean roundBottomRight;
-@property (assign, nonatomic) Boolean roundBottomLeft;
+@property (assign, nonatomic) CGFloat cornerRadius;
+@property (assign, nonatomic) CGFloat selectedCornerRadius;
+@property (assign, nonatomic) Boolean cornerTopRight;
+@property (assign, nonatomic) Boolean cornerTopLeft;
+@property (assign, nonatomic) Boolean cornerBottomRight;
+@property (assign, nonatomic) Boolean cornerBottomLeft;
 
 // Border
-@property (assign, nonatomic) CGFloat tagBorderWidth;
-@property (assign, nonatomic) CGFloat tagSelectedBorderWidth;
-@property (strong, nonatomic) UIColor *tagBorderColor;
-@property (strong, nonatomic) UIColor *tagSelectedBorderColor;
+@property (assign, nonatomic) CGFloat borderWidth;
+@property (assign, nonatomic) CGFloat selectedBorderWidth;
+@property (strong, nonatomic) UIColor *borderColor;
+@property (strong, nonatomic) UIColor *selectedBorderColor;
 
-// Tag shadow.
-@property (nonatomic, copy) UIColor *tagShadowColor;    // Default is [UIColor clear]
-@property (nonatomic, assign) CGSize tagShadowOffset;   // Default is (0, 0)
-@property (nonatomic, assign) CGFloat tagShadowRadius;  // Default is 0f
-@property (nonatomic, assign) CGFloat tagShadowOpacity; // Default is 0.0f
+// Shadow.
+@property (nonatomic, copy) UIColor *shadowColor;    // Default is [UIColor clear]
+@property (nonatomic, assign) CGSize shadowOffset;   // Default is (0, 0)
+@property (nonatomic, assign) CGFloat shadowRadius;  // Default is 0f
+@property (nonatomic, assign) CGFloat shadowOpacity; // Default is 0.0f
 
-// Tag extra space in width and height, will expand each tag's size
-@property (assign, nonatomic) CGSize tagExtraSpace;
-// Tag max width for a text tag. 0 and below means no max width.
-@property (assign, nonatomic) CGFloat tagMaxWidth;
-// Tag min width for a text tag. 0 and below means no min width.
-@property (assign, nonatomic) CGFloat tagMinWidth;
+// Extra space in width and height, will expand each tag's size
+@property (assign, nonatomic) CGSize extraSpace;
+
+// Max width for a text tag. 0 and below means no max width.
+@property (assign, nonatomic) CGFloat maxWidth;
+// Min width for a text tag. 0 and below means no min width.
+@property (assign, nonatomic) CGFloat minWidth;
+
+// Exact width. 0 and below means no work
+@property (nonatomic, assign) CGFloat exactWidth;
+// Exact height. 0 and below means no work
+@property (nonatomic, assign) CGFloat exactHeight;
 
 // Extra data. You can use this to bind any object you want to each tag.
 @property (nonatomic, strong) NSObject *extraData;
 
 @end
 
-/// TTGTextTagCollectionView
+/// FWTextTagCollectionView
 
 @class FWTextTagCollectionView;
 
@@ -193,16 +199,6 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 
 - (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
             updateContentSize:(CGSize)contentSize;
-
-// Deprecated
-- (BOOL)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
-                    canTapTag:(NSString *)tagText
-                      atIndex:(NSUInteger)index
-              currentSelected:(BOOL)currentSelected __attribute__((deprecated("Use the new method")));
-- (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
-                    didTapTag:(NSString *)tagText
-                      atIndex:(NSUInteger)index
-                     selected:(BOOL)selected __attribute__((deprecated("Use the new method")));
 @end
 
 @interface FWTextTagCollectionView : UIView
