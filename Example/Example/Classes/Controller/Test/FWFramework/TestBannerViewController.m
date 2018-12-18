@@ -79,19 +79,19 @@
 - (FWTextTagConfig *)textTagConfig
 {
     FWTextTagConfig *tagConfig = [[FWTextTagConfig alloc] init];
-    tagConfig.tagTextFont = [UIFont systemFontOfSize:10];
-    tagConfig.tagTextColor = [UIColor blackColor];
-    tagConfig.tagSelectedTextColor = [UIColor blackColor];
-    tagConfig.tagBackgroundColor = [UIColor appColorBg];
-    tagConfig.tagSelectedBackgroundColor = [UIColor appColorBg];
-    tagConfig.tagCornerRadius = 2;
-    tagConfig.tagSelectedCornerRadius = 2;
-    tagConfig.tagBorderWidth = 1;
-    tagConfig.tagSelectedBorderWidth = 1;
-    tagConfig.tagBorderColor = [UIColor appColorHex:0xF3B2AF];
-    tagConfig.tagSelectedBorderColor = [UIColor appColorHex:0xF3B2AF];
-    tagConfig.tagExtraSpace = CGSizeMake(10, 6);
-    tagConfig.tagShouldUseGradientBackgrounds = NO;
+    tagConfig.textFont = [UIFont systemFontOfSize:10];
+    tagConfig.textColor = [UIColor blackColor];
+    tagConfig.selectedTextColor = [UIColor blackColor];
+    tagConfig.backgroundColor = [UIColor appColorBg];
+    tagConfig.selectedBackgroundColor = [UIColor appColorBg];
+    tagConfig.cornerRadius = 2;
+    tagConfig.selectedCornerRadius = 2;
+    tagConfig.borderWidth = 1;
+    tagConfig.selectedBorderWidth = 1;
+    tagConfig.borderColor = [UIColor appColorHex:0xF3B2AF];
+    tagConfig.selectedBorderColor = [UIColor appColorHex:0xF3B2AF];
+    tagConfig.extraSpace = CGSizeMake(10, 6);
+    tagConfig.enableGradientBackground = NO;
     return tagConfig;
 }
 
