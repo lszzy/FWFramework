@@ -63,7 +63,6 @@
     _tagCollectionView = tagCollectionView;
     tagCollectionView.verticalSpacing = 5;
     tagCollectionView.horizontalSpacing = 5;
-    tagCollectionView.contentInset = UIEdgeInsetsZero;
     [self.view addSubview:tagCollectionView];
     [tagCollectionView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
     [tagCollectionView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
