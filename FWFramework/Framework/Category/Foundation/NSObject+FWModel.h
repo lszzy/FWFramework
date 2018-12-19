@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Model转换协议
+ *  数组类映射支持两种方式：
+ *  1. 实现fwModelClassMapper方法，返回类映射字典。示例：@{@"books" : [Book class]}
+ *  2. 声明Model类同名协议，同时定义数组属性时也声明协议。示例：NSArray<Book> *books
  */
 @protocol FWModel <NSObject>
 
