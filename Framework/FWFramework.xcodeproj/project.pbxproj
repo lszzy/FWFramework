@@ -207,6 +207,8 @@
 		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
+		2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -420,6 +422,8 @@
 		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
+		2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCalendar+FWFramework.h"; sourceTree = "<group>"; };
+		2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSCalendar+FWFramework.m"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
 		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
@@ -565,6 +569,8 @@
 				2F03A549216CF4B9001965A1 /* NSArray+FWFramework.m */,
 				2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */,
 				2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */,
+				2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */,
+				2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */,
 				2F03A550216CF4B9001965A1 /* NSData+FWFramework.h */,
 				2F03A53A216CF4B9001965A1 /* NSData+FWFramework.m */,
 				2F03A54E216CF4B9001965A1 /* NSDate+FWFramework.h */,
@@ -797,6 +803,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */,
 				2F176EC621C94E1700B35FA4 /* UIView+FWEvent.h in Headers */,
 				2FB7CBD321C24E8A002E5412 /* UIScrollView+FWRefreshControl.h in Headers */,
 				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
@@ -1051,6 +1058,7 @@
 				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
 				2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */,
+				2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
 				2F03A634216CF882001965A1 /* FWChainRequest.m in Sources */,
 				2FB7CBD421C24E8A002E5412 /* UIScrollView+FWRefreshControl.m in Sources */,

@@ -166,7 +166,3 @@
 @interface NSDateComponents (FWFramework)
 
 @end
-
-@interface NSCalendar (FWFramework)
-
-@end

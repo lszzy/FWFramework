@@ -273,7 +273,3 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 @implementation NSDateComponents (FWFramework)
 
 @end
-
-@implementation NSCalendar (FWFramework)
-
-@end
