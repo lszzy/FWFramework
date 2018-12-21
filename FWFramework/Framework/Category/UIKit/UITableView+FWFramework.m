@@ -42,6 +42,13 @@
     }];
 }
 
+- (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths
+{
+    [UIView performWithoutAnimation:^{
+        [self reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
 @end
 
 @implementation UITableViewCell (FWFramework)
