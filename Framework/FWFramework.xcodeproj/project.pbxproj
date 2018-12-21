@@ -209,6 +209,8 @@
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
 		2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */; };
+		2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -424,6 +426,8 @@
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
 		2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCalendar+FWFramework.h"; sourceTree = "<group>"; };
 		2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSCalendar+FWFramework.m"; sourceTree = "<group>"; };
+		2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWAppearance.h"; sourceTree = "<group>"; };
+		2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWAppearance.m"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
 		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
@@ -473,6 +477,8 @@
 				2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */,
 				2F03A501216CF4B9001965A1 /* UIApplication+FWFramework.h */,
 				2F03A521216CF4B9001965A1 /* UIApplication+FWFramework.m */,
+				2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */,
+				2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */,
 				2F03A508216CF4B9001965A1 /* UIBezierPath+FWFramework.h */,
 				2F03A4E5216CF4B9001965A1 /* UIBezierPath+FWFramework.m */,
 				2F03A503216CF4B9001965A1 /* UIButton+FWFramework.h */,
@@ -803,6 +809,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */,
 				2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */,
 				2F176EC621C94E1700B35FA4 /* UIView+FWEvent.h in Headers */,
 				2FB7CBD321C24E8A002E5412 /* UIScrollView+FWRefreshControl.h in Headers */,
@@ -1017,6 +1024,7 @@
 				2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */,
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
+				2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
 				2F03A586216CF4B9001965A1 /* UIImage+FWGif.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,

@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "UIApplication+FWAppearance.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 

@@ -22,6 +22,23 @@
 
 @interface UIView (FWAnimation)
 
+#pragma mark - Block
+
+/*!
+ @brief 取消动画效果执行block
+ 
+ @param block 动画代码块
+ */
++ (void)fwAnimateNoneWithBlock:(void (^)(void))block;
+
+/*!
+ @brief 取消动画效果执行block
+ 
+ @param block 动画代码块
+ @param completion 完成事件
+ */
++ (void)fwAnimateNoneWithBlock:(void (^)(void))block completion:(void (^)(void))completion;
+
 #pragma mark - Animation
 
 /**

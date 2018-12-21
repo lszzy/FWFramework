@@ -21,6 +21,9 @@
 // reloadData完成回调
 - (void)fwReloadDataWithCompletion:(void (^)(void))completion;
 
+// reloadRows禁用动画
+- (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
+
 @end
 
 @interface UITableViewCell (FWFramework)

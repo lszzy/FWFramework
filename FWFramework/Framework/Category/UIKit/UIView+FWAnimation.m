@@ -79,6 +79,22 @@
 
 @implementation UIView (FWAnimation)
 
+#pragma mark - Block
+
++ (void)fwAnimateNoneWithBlock:(void (^)(void))block
+{
+    [UIView performWithoutAnimation:block];
+}
+
++ (void)fwAnimateNoneWithBlock:(void (^)(void))block completion:(void (^)(void))completion
+{
+    [UIView animateWithDuration:0 animations:block completion:^(BOOL finished) {
+        if (completion) {
+            completion();
+        }
+    }];
+}
+
 #pragma mark - Animation
 
 - (void)fwAddAnimationWithBlock:(void (^)(void))block
