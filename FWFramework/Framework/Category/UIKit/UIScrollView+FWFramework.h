@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UIScrollView+FWEmptyView.h"
-#import "UIScrollView+FWRefreshControl.h"
+#import "UIScrollView+FWInfiniteScroll.h"
+#import "UIScrollView+FWPullRefresh.h"
 
 /*!
  @brief UIScrollView分类

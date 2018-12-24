@@ -108,13 +108,13 @@
 - (void)renderView
 {
     FWWeakifySelf();
-    [self.tableView fwSetPullRefreshBlock:^{
+    [self.tableView fwAddPullRefreshWithBlock:^{
         FWStrongifySelf();
         
         [self onRefreshing];
     }];
     
-    [self.tableView fwSetInfiniteScrollBlock:^{
+    [self.tableView fwAddInfiniteScrollWithBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
@@ -123,7 +123,7 @@
 
 - (void)renderData
 {
-    [self.tableView fwBeginPullRefresh];
+    [self.tableView fwTriggerPullRefresh];
 }
 
 #pragma mark - TableView
@@ -197,8 +197,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwCanPullRefresh = self.dataList.count < 50 ? YES : NO;
-        [self.tableView fwEndPullRefresh];
+        self.tableView.fwShowPullRefresh = self.dataList.count < 50 ? YES : NO;
+        [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
 
@@ -213,8 +213,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwCanInfiniteScroll = self.dataList.count < 50 ? YES : NO;
-        [self.tableView fwEndInfiniteScroll];
+        self.tableView.fwShowInfiniteScroll = self.dataList.count < 50 ? YES : NO;
+        [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }
 
