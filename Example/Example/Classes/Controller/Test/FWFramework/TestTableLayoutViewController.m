@@ -197,7 +197,7 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.dataList.count < 50 ? YES : NO;
+        self.tableView.fwShowPullRefresh = self.dataList.count < 5000 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
@@ -213,7 +213,7 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.dataList.count < 50 ? YES : NO;
+        self.tableView.fwShowInfiniteScroll = self.dataList.count < 5000 ? YES : NO;
         [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }

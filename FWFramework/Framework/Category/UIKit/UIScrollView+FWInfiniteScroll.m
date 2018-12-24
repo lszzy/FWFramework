@@ -211,6 +211,9 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
             case FWInfiniteScrollStateLoading:
                 [self.activityIndicatorView startAnimating];
                 break;
+                
+            default:
+                break;
         }
     }
     
