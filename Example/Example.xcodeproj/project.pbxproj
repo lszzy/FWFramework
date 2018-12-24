@@ -17,8 +17,6 @@
 		2F0D2988215DFFEF005F1466 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2953215DFFEF005F1466 /* FMDatabase.m */; };
 		2F0D2989215DFFEF005F1466 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2957215DFFEF005F1466 /* FMDatabasePool.m */; };
 		2F0D298A215DFFEF005F1466 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2958215DFFEF005F1466 /* FMResultSet.m */; };
-		2F0D298B215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D295B215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.m */; };
-		2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D295C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m */; };
 		2F0D298D215DFFEF005F1466 /* JQFMDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2960215DFFEF005F1466 /* JQFMDB.m */; };
 		2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */; };
 		2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B8521B039E600E0F820 /* AppConfig.m */; };
@@ -107,11 +105,6 @@
 		2F0D2956215DFFEF005F1466 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
 		2F0D2957215DFFEF005F1466 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
 		2F0D2958215DFFEF005F1466 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
-		2F0D295A215DFFEF005F1466 /* SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVPullToRefresh.h; sourceTree = "<group>"; };
-		2F0D295B215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
-		2F0D295C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
-		2F0D295D215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVInfiniteScrolling.h"; sourceTree = "<group>"; };
-		2F0D295E215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
 		2F0D2960215DFFEF005F1466 /* JQFMDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JQFMDB.m; sourceTree = "<group>"; };
 		2F0D2961215DFFEF005F1466 /* JQFMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JQFMDB.h; sourceTree = "<group>"; };
 		2F1D8B7E21B021A000E0F820 /* TestEmptyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyViewController.h; sourceTree = "<group>"; };
@@ -230,7 +223,6 @@
 				2F0D294D215DFFEF005F1466 /* FMDB */,
 				2F0D295F215DFFEF005F1466 /* JQFMDB */,
 				2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */,
-				2F0D2959215DFFEF005F1466 /* SVPullToRefresh */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -264,18 +256,6 @@
 				2F0D2958215DFFEF005F1466 /* FMResultSet.m */,
 			);
 			path = FMDB;
-			sourceTree = "<group>";
-		};
-		2F0D2959215DFFEF005F1466 /* SVPullToRefresh */ = {
-			isa = PBXGroup;
-			children = (
-				2F0D295A215DFFEF005F1466 /* SVPullToRefresh.h */,
-				2F0D295D215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.h */,
-				2F0D295B215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.m */,
-				2F0D295E215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.h */,
-				2F0D295C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m */,
-			);
-			path = SVPullToRefresh;
 			sourceTree = "<group>";
 		};
 		2F0D295F215DFFEF005F1466 /* JQFMDB */ = {
@@ -753,7 +733,6 @@
 				2FB7CB8021BF6651002E5412 /* M80AttributedLabelAttachment.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
-				2F0D298C215DFFEF005F1466 /* UIScrollView+SVPullToRefresh.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
 				2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */,
 				2F06BE6520971483000F8587 /* SwiftController.swift in Sources */,
@@ -774,7 +753,6 @@
 				2F0D2988215DFFEF005F1466 /* FMDatabase.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
-				2F0D298B215DFFEF005F1466 /* UIScrollView+SVInfiniteScrolling.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,

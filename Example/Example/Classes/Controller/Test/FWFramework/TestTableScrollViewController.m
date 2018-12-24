@@ -7,8 +7,6 @@
 //
 
 #import "TestTableScrollViewController.h"
-#import "UIScrollView+SVPullToRefresh.h"
-#import "UIScrollView+SVInfiniteScrolling.h"
 
 @interface TestTableScrollObject : NSObject
 
@@ -109,13 +107,13 @@
 - (void)renderView
 {
     FWWeakifySelf();
-    [self.tableView addPullToRefreshWithActionHandler:^{
+    [self.tableView fwAddPullRefreshWithBlock:^{
         FWStrongifySelf();
         
         [self onRefreshing];
     }];
     
-    [self.tableView addInfiniteScrollingWithActionHandler:^{
+    [self.tableView fwAddInfiniteScrollWithBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
@@ -124,7 +122,7 @@
 
 - (void)renderData
 {
-    [self.tableView triggerPullToRefresh];
+    [self.tableView fwTriggerPullRefresh];
 }
 
 #pragma mark - TableView
@@ -198,8 +196,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.showsPullToRefresh = self.dataList.count < 50 ? YES : NO;
-        [self.tableView.pullToRefreshView stopAnimating];
+        self.tableView.fwShowPullRefresh = self.dataList.count < 50 ? YES : NO;
+        [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
 
@@ -214,8 +212,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.showsInfiniteScrolling = self.dataList.count < 50 ? YES : NO;
-        [self.tableView.infiniteScrollingView stopAnimating];
+        self.tableView.fwShowInfiniteScroll = self.dataList.count < 50 ? YES : NO;
+        [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }
 
