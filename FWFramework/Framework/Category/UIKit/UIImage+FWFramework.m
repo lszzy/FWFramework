@@ -13,6 +13,41 @@
 
 @implementation UIImage (FWFramework)
 
+#pragma mark - Make
+
++ (UIImage *)fwImageWithName:(NSString *)name
+{
+    return [self fwImageWithName:name inBundle:nil];
+}
+
++ (UIImage *)fwImageWithName:(NSString *)name inBundle:(NSBundle *)bundle
+{
+    return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+}
+
++ (UIImage *)fwImageWithFile:(NSString *)path
+{
+    return [UIImage imageWithContentsOfFile:path];
+}
+
++ (UIImage *)fwImageWithResource:(NSString *)path
+{
+    return [self fwImageWithResource:path ofType:nil];
+}
+
++ (UIImage *)fwImageWithResource:(NSString *)path ofType:(NSString *)type
+{
+    NSString *resourceFile = [[NSBundle mainBundle] pathForResource:path ofType:type];
+    return [UIImage imageWithContentsOfFile:resourceFile];
+}
+
++ (UIImage *)fwImageWithResource:(NSString *)path ofType:(NSString *)type inBundle:(NSBundle *)bundle
+{
+    NSBundle *resourceBundle = bundle ? bundle : [NSBundle mainBundle];
+    NSString *resourceFile = [resourceBundle pathForResource:path ofType:type];
+    return [UIImage imageWithContentsOfFile:resourceFile];
+}
+
 #pragma mark - View
 
 + (UIImage *)fwImageWithView:(UIView *)view

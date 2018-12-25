@@ -12,6 +12,13 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
+// 是否是调试模式
+#ifdef DEBUG
+    #define FW_DEBUG 1
+#else
+    #define FW_DEBUG 0
+#endif
+
 /*!
  @brief UIApplication+FWFramework
  */

@@ -141,6 +141,9 @@
 // 获取安全区域距离
 + (UIEdgeInsets)fwSafeAreaInsets;
 
+// 获取一像素的大小
++ (CGFloat)fwPixelOne;
+
 @end
 
 @interface UIViewController (FWScreen)
