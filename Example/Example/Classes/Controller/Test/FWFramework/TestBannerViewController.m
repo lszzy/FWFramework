@@ -49,6 +49,37 @@
     [activityView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:cycleView withOffset:10];
     [activityView fwSetDimensionsToSize:activitySize];
     
+    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:nil];
+    textLabel.numberOfLines = 0;
+    textLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:textLabel];
+    [textLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+    [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:10];
+    
+    NSMutableAttributedString *attrStr = [NSMutableAttributedString new];
+    UIFont *attrFont = [UIFont fwLightSystemFontOfSize:16];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"细体16 " withFont:attrFont]];
+    attrFont = [UIFont fwSystemFontOfSize:16];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"常规16 " withFont:attrFont]];
+    attrFont = [UIFont fwBoldSystemFontOfSize:16];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗体16 " withFont:attrFont]];
+    attrFont = [UIFont fwItalicSystemFontOfSize:16];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"斜体16 " withFont:attrFont]];
+    attrFont = [[UIFont fwItalicSystemFontOfSize:16] fwBoldFont];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗斜体16 " withFont:attrFont]];
+    
+    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightLight];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"\n细体16 " withFont:attrFont]];
+    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightNormal];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"常规16 " withFont:attrFont]];
+    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightBold];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗体16 " withFont:attrFont]];
+    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightNormal italic:YES];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"斜体16 " withFont:attrFont]];
+    attrFont = [[[[[UIFont fwSystemFontOfSize:16 weight:FWFontWeightBold italic:YES] fwNormalFont] fwBoldFont] fwRegularFont] fwItalicFont];
+    [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗斜体16 " withFont:attrFont]];
+    textLabel.attributedText = attrStr;
+    
     FWAttributedLabel *label = [FWAttributedLabel new];
     label.font = [UIFont systemFontOfSize:15];
     label.textColor = [UIColor fwColorWithHex:0x111111];
@@ -56,7 +87,7 @@
     [self.view addSubview:label];
     [label fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [label fwPinEdgeToSuperview:NSLayoutAttributeRight];
-    [label fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:10];
+    [label fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:10];
     [label fwSetDimension:NSLayoutAttributeHeight toSize:30];
     
     [label setText:@"文本 "];
