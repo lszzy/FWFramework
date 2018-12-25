@@ -59,10 +59,16 @@
 // 以指定模式添加混合颜色
 - (UIColor *)fwAddColor:(UIColor *)color blendMode:(CGBlendMode)blendMode;
 
+// 当前颜色的反色。http://stackoverflow.com/questions/5893261/how-to-get-inverse-color-from-uicolor
+- (UIColor *)fwInverseColor;
+
+// 判断当前颜色是否为深色。http://stackoverflow.com/questions/19456288/text-color-based-on-background-image
+- (BOOL)fwIsDarkColor;
+
 #pragma mark - Value
 
 // 读取颜色的十六进制值，不含透明度
-- (long)fwHex;
+- (long)fwHexValue;
 
 // 读取颜色的十六进制字符串，不含透明度
 - (NSString *)fwHexString;

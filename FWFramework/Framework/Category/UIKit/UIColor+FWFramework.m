@@ -180,9 +180,30 @@
     return [UIColor colorWithRed:pixel[0] / 255.0f green:pixel[1] / 255.0f blue:pixel[2] / 255.0f alpha:pixel[3] / 255.0f];
 }
 
+- (UIColor *)fwInverseColor
+{
+    const CGFloat *componentColors = CGColorGetComponents(self.CGColor);
+    UIColor *newColor = [[UIColor alloc] initWithRed:(1.0 - componentColors[0])
+                                               green:(1.0 - componentColors[1])
+                                                blue:(1.0 - componentColors[2])
+                                               alpha:componentColors[3]];
+    return newColor;
+}
+
+- (BOOL)fwIsDarkColor
+{
+    CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
+    [self getRed:&red green:&green blue:&blue alpha:&alpha];
+    
+    float referenceValue = 0.411;
+    float colorDelta = ((red * 0.299) + (green * 0.587) + (blue * 0.114));
+    
+    return 1.0 - colorDelta > referenceValue;
+}
+
 #pragma mark - Value
 
-- (long)fwHex
+- (long)fwHexValue
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;
     [self getRed:&r green:&g blue:&b alpha:&a];

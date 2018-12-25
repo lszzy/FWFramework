@@ -11,6 +11,10 @@
 
 #pragma mark - Macro
 
+// 快速创建细字体
+#define FWFontLight( size ) \
+    [UIFont fontWithName:([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) ? @".SFUIText-Light" : @"HelveticaNeue-Light" size:size]
+
 // 快速创建普通字体
 #define FWFontNormal( size ) \
     [UIFont systemFontOfSize:size]
@@ -23,13 +27,43 @@
 #define FWFontItalic( size ) \
     [UIFont italicSystemFontOfSize:size]
 
+#pragma mark - UIFont+FWFramework
+
+// 字体weight枚举
+typedef NS_ENUM(NSUInteger, FWFontWeight) {
+    FWFontWeightLight,
+    FWFontWeightNormal,
+    FWFontWeightBold,
+};
+
 /*!
  @brief UIFont+FWFramework
  */
 @interface UIFont (FWFramework)
 
-// 是否是普通字体
-- (BOOL)fwIsNormal;
+#pragma mark - Static
+
+// 返回系统字体的细体
++ (UIFont *)fwLightSystemFontOfSize:(CGFloat)fontSize;
+
+// 返回系统字体的普通体
++ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize;
+
+// 返回系统字体的粗体
++ (UIFont *)fwBoldSystemFontOfSize:(CGFloat)fontSize;
+
+// 返回系统字体的斜体
++ (UIFont *)fwItalicSystemFontOfSize:(CGFloat)fontSize;
+
+#pragma mark - Weight
+
+// 创建指定尺寸和weight的系统字体
++ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize weight:(FWFontWeight)weight;
+
+// 创建指定尺寸和weight和倾斜的系统字体
++ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize weight:(FWFontWeight)weight italic:(BOOL)italic;
+
+#pragma mark - Font
 
 // 是否是粗体
 - (BOOL)fwIsBold;
@@ -37,20 +71,17 @@
 // 是否是斜体
 - (BOOL)fwIsItalic;
 
-// 是否是粗斜体
-- (BOOL)fwIsBoldItalic;
-
 // 当前字体的普通字体
 - (UIFont *)fwNormalFont;
 
 // 当前字体的粗体字体
 - (UIFont *)fwBoldFont;
 
+// 当前字体的常规字体(非斜体)
+- (UIFont *)fwRegularFont;
+
 // 当前字体的斜体字体
 - (UIFont *)fwItalicFont;
-
-// 当前字体的粗斜体字体
-- (UIFont *)fwBoldItalicFont;
 
 #pragma mark - Height
 

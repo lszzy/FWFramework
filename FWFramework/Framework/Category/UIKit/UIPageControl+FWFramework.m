@@ -18,7 +18,7 @@
         initialSize = CGSizeMake(10, 10);
     }
     
-    CGFloat scale = indicatorSize.width / initialSize.width;
+    CGFloat scale = indicatorSize.height / initialSize.height;
     self.transform = CGAffineTransformMakeScale(scale, scale);
 }
 
