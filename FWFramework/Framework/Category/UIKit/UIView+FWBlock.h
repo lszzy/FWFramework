@@ -16,7 +16,7 @@
 @property (nonatomic, weak, readonly) UIView *fwTargetView;
 
 // 从事件句柄初始化
-- (instancetype)initWithFWBlock:(void (^)(id sender))block;
++ (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;
 
 // 添加事件句柄
 - (void)fwAddBlock:(void (^)(id sender))block;
@@ -67,9 +67,9 @@
 @interface UIBarButtonItem (FWBlock)
 
 // 使用指定对象和事件创建Item
-- (instancetype)initWithFWObject:(id)object target:(id)target action:(SEL)action;
++ (instancetype)fwBarItemWithObject:(id)object target:(id)target action:(SEL)action;
 
 // 使用指定对象和句柄创建Item
-- (instancetype)initWithFWObject:(id)object block:(void (^)(id sender))block;
++ (instancetype)fwBarItemWithObject:(id)object block:(void (^)(id sender))block;
 
 @end

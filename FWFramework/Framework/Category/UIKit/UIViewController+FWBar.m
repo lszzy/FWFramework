@@ -100,25 +100,25 @@
 
 - (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object target:target action:action];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
     self.navigationItem.leftBarButtonItem = item;
 }
 
 - (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object block:block];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:block];
     self.navigationItem.leftBarButtonItem = item;
 }
 
 - (void)fwSetRightBarItem:(id)object target:(id)target action:(SEL)action
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object target:target action:action];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
     self.navigationItem.rightBarButtonItem = item;
 }
 
 - (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object block:block];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:block];
     self.navigationItem.rightBarButtonItem = item;
 }
 
