@@ -20,4 +20,7 @@
 // 生成URL，中文自动URL编码
 + (instancetype)fwURLWithString:(NSString *)URLString relativeToURL:(NSURL *)baseURL;
 
+// 获取当前query的参数列表，不含空值
+- (NSDictionary *)fwQueryParams;
+
 @end

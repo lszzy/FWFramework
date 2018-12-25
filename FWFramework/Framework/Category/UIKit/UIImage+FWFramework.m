@@ -259,6 +259,12 @@
     }
 }
 
+- (CGSize)fwPixelSize
+{
+    CGSize size = CGSizeMake(self.size.width * self.scale, self.size.height * self.scale);
+    return size;
+}
+
 #pragma mark - Icon
 
 + (UIImage *)fwImageWithAppIcon

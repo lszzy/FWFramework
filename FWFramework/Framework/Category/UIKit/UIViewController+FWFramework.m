@@ -11,6 +11,19 @@
 
 @implementation UIViewController (FWFramework)
 
+- (BOOL)fwIsPresented
+{
+    UIViewController *viewController = self;
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.firstObject != self) {
+            return NO;
+        }
+        viewController = self.navigationController;
+    }
+    BOOL result = viewController.presentingViewController.presentedViewController == viewController;
+    return result;
+}
+
 - (BOOL)fwIsViewVisible
 {
     return self.isViewLoaded && self.view.window;
@@ -89,6 +102,19 @@
     [view addSubview:viewController.view];
     // viewController.view.frame = view.bounds;
     [viewController.view fwPinEdgesToSuperview];
+}
+
+#pragma mark - Previous
+
+- (UIViewController *)fwPreviousViewController
+{
+    if (self.navigationController.viewControllers &&
+        self.navigationController.viewControllers.count > 1 &&
+        self.navigationController.topViewController == self) {
+        NSUInteger count = self.navigationController.viewControllers.count;
+        return (UIViewController *)[self.navigationController.viewControllers objectAtIndex:count - 2];
+    }
+    return nil;
 }
 
 @end
