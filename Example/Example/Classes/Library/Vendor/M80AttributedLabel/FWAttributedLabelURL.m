@@ -6,17 +6,17 @@
 //  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
 //
 
-#import "M80AttributedLabelURL.h"
+#import "FWAttributedLabelURL.h"
 
-static M80CustomDetectLinkBlock customDetectBlock = nil;
+static FWCustomDetectLinkBlock customDetectBlock = nil;
 
-@implementation M80AttributedLabelURL
+@implementation FWAttributedLabelURL
 
-+ (M80AttributedLabelURL *)urlWithLinkData:(id)linkData
++ (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
                                      range:(NSRange)range
                                      color:(UIColor *)color
 {
-    M80AttributedLabelURL *url  = [[M80AttributedLabelURL alloc]init];
+    FWAttributedLabelURL *url  = [[FWAttributedLabelURL alloc]init];
     url.linkData                = linkData;
     url.range                   = range;
     url.color                   = color;
@@ -37,14 +37,14 @@ static M80CustomDetectLinkBlock customDetectBlock = nil;
         if ([plainText length])
         {
             links = [NSMutableArray array];
-            NSDataDetector *detector = [M80AttributedLabelURL linkDetector];
+            NSDataDetector *detector = [FWAttributedLabelURL linkDetector];
             [detector enumerateMatchesInString:plainText
                                        options:0
                                          range:NSMakeRange(0, [plainText length])
                                     usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
                                         NSRange range = result.range;
                                         NSString *text = [plainText substringWithRange:range];
-                                        M80AttributedLabelURL *link = [M80AttributedLabelURL urlWithLinkData:text
+                                        FWAttributedLabelURL *link = [FWAttributedLabelURL urlWithLinkData:text
                                                                                                        range:range
                                                                                                        color:nil];
                                         [links addObject:link];
@@ -73,7 +73,7 @@ static M80CustomDetectLinkBlock customDetectBlock = nil;
 }
 
 
-+ (void)setCustomDetectMethod:(M80CustomDetectLinkBlock)block
++ (void)setCustomDetectMethod:(FWCustomDetectLinkBlock)block
 {
     customDetectBlock = [block copy];
 }

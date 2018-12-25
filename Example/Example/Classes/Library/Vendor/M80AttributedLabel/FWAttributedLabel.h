@@ -11,10 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class M80AttributedLabelURL;
+@class FWAttributedLabelURL;
 
-@interface M80AttributedLabel : UIView
-@property (nonatomic,weak,nullable)         id<M80AttributedLabelDelegate> delegate;
+@interface FWAttributedLabel : UIView
+@property (nonatomic,weak,nullable)         id<FWAttributedLabelDelegate> delegate;
 @property (nonatomic,strong,nullable)       UIFont *font;                          //字体
 @property (nonatomic,strong,nullable)       UIColor *textColor;                    //文字颜色
 @property (nonatomic,strong,nullable)       UIColor *highlightColor;               //链接点击时背景高亮色
@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)appendImage:(UIImage *)image
             maxSize:(CGSize)maxSize
              margin:(UIEdgeInsets)margin
-          alignment:(M80ImageAlignment)alignment;
+          alignment:(FWAttributedAlignment)alignment;
 
 //UI控件
 - (void)appendView:(UIView *)view;
@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
             margin:(UIEdgeInsets)margin;
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin
-         alignment:(M80ImageAlignment)alignment;
+         alignment:(FWAttributedAlignment)alignment;
 
 
 //添加自定义链接
@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGSize)sizeThatFits:(CGSize)size;
 
 //设置全局的自定义Link检测Block(详见M80AttributedLabelURL)
-+ (void)setCustomDetectMethod:(nullable M80CustomDetectLinkBlock)block;
++ (void)setCustomDetectMethod:(nullable FWCustomDetectLinkBlock)block;
 
 @end
 

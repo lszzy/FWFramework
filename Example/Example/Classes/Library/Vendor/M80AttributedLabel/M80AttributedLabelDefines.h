@@ -15,21 +15,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSUInteger, M80ImageAlignment) {
-    M80ImageAlignmentTop,
-    M80ImageAlignmentCenter,
-    M80ImageAlignmentBottom
+typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
+    FWAttributedAlignmentTop,
+    FWAttributedAlignmentCenter,
+    FWAttributedAlignmentBottom
 };
 
-@class M80AttributedLabel;
+@class FWAttributedLabel;
 
-@protocol M80AttributedLabelDelegate <NSObject>
-- (void)m80AttributedLabel:(M80AttributedLabel *)label
+@protocol FWAttributedLabelDelegate <NSObject>
+- (void)attributedLabel:(FWAttributedLabel *)label
              clickedOnLink:(id)linkData;
 
 @end
 
-typedef NSArray * _Nullable (^M80CustomDetectLinkBlock)(NSString * _Nullable text);
+typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text);
 
 NS_ASSUME_NONNULL_END
 
