@@ -7,6 +7,7 @@
 //
 
 #import "TestBannerViewController.h"
+#import "DZNWebViewController.h"
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
@@ -19,6 +20,7 @@
 - (void)renderView
 {
     FWBannerView *cycleView = [FWBannerView new];
+    cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
@@ -97,7 +99,10 @@
 
 - (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index
 {
-    FWLogDebug(@"index: %@", index);
+    FWLogDebug(@"index: %@", @(index));
+    
+    DZNWebViewController *viewController = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.baidu.com"]];
+    [self fwOpenViewController:viewController animated:YES];
 }
 
 @end
