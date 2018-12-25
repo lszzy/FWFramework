@@ -6,24 +6,24 @@
 //  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
 //
 
-#import "M80AttributedLabelAttachment.h"
+#import "FWAttributedLabelAttachment.h"
 
-void deallocCallback(void* ref)
+void fwAttributedDeallocCallback(void* ref)
 {
     
 }
 
-CGFloat ascentCallback(void *ref)
+CGFloat fwAttributedAscentCallback(void *ref)
 {
-    M80AttributedLabelAttachment *image = (__bridge M80AttributedLabelAttachment *)ref;
+    FWAttributedLabelAttachment *image = (__bridge FWAttributedLabelAttachment *)ref;
     CGFloat ascent = 0;
     CGFloat height = [image boxSize].height;
     switch (image.alignment)
     {
-        case M80ImageAlignmentTop:
+        case FWAttributedAlignmentTop:
             ascent = image.fontAscent;
             break;
-        case M80ImageAlignmentCenter:
+        case FWAttributedAlignmentCenter:
         {
             CGFloat fontAscent  = image.fontAscent;
             CGFloat fontDescent = image.fontDescent;
@@ -31,7 +31,7 @@ CGFloat ascentCallback(void *ref)
             ascent = height / 2 + baseLine;
         }
             break;
-        case M80ImageAlignmentBottom:
+        case FWAttributedAlignmentBottom:
             ascent = height - image.fontDescent;
             break;
         default:
@@ -40,19 +40,19 @@ CGFloat ascentCallback(void *ref)
     return ascent;
 }
 
-CGFloat descentCallback(void *ref)
+CGFloat fwAttributedDescentCallback(void *ref)
 {
-    M80AttributedLabelAttachment *image = (__bridge M80AttributedLabelAttachment *)ref;
+    FWAttributedLabelAttachment *image = (__bridge FWAttributedLabelAttachment *)ref;
     CGFloat descent = 0;
     CGFloat height = [image boxSize].height;
     switch (image.alignment)
     {
-        case M80ImageAlignmentTop:
+        case FWAttributedAlignmentTop:
         {
             descent = height - image.fontAscent;
             break;
         }
-        case M80ImageAlignmentCenter:
+        case FWAttributedAlignmentCenter:
         {
             CGFloat fontAscent  = image.fontAscent;
             CGFloat fontDescent = image.fontDescent;
@@ -60,7 +60,7 @@ CGFloat descentCallback(void *ref)
             descent = height / 2 - baseLine;
         }
             break;
-        case M80ImageAlignmentBottom:
+        case FWAttributedAlignmentBottom:
         {
             descent = image.fontDescent;
             break;
@@ -73,29 +73,29 @@ CGFloat descentCallback(void *ref)
 
 }
 
-CGFloat widthCallback(void* ref)
+CGFloat fwAttributedWidthCallback(void* ref)
 {
-    M80AttributedLabelAttachment *image  = (__bridge M80AttributedLabelAttachment *)ref;
+    FWAttributedLabelAttachment *image  = (__bridge FWAttributedLabelAttachment *)ref;
     return [image boxSize].width;
 }
 
 #pragma mark - M80AttributedLabelImage
-@interface M80AttributedLabelAttachment ()
+@interface FWAttributedLabelAttachment ()
 - (CGSize)calculateContentSize;
 - (CGSize)attachmentSize;
 @end
 
-@implementation M80AttributedLabelAttachment
+@implementation FWAttributedLabelAttachment
 
 
 
 
-+ (M80AttributedLabelAttachment *)attachmentWith:(id)content
++ (FWAttributedLabelAttachment *)attachmentWith:(id)content
                                           margin:(UIEdgeInsets)margin
-                                       alignment:(M80ImageAlignment)alignment
+                                       alignment:(FWAttributedAlignment)alignment
                                          maxSize:(CGSize)maxSize
 {
-    M80AttributedLabelAttachment *attachment    = [[M80AttributedLabelAttachment alloc]init];
+    FWAttributedLabelAttachment *attachment    = [[FWAttributedLabelAttachment alloc]init];
     attachment.content                          = content;
     attachment.margin                           = margin;
     attachment.alignment                        = alignment;

@@ -10,12 +10,12 @@
 
 @implementation NSMutableAttributedString (M80)
 
-- (void)m80_setTextColor:(UIColor*)color
+- (void)fwSetTextColor:(UIColor*)color
 {
-    [self m80_setTextColor:color range:NSMakeRange(0, [self length])];
+    [self fwSetTextColor:color range:NSMakeRange(0, [self length])];
 }
 
-- (void)m80_setTextColor:(UIColor*)color range:(NSRange)range
+- (void)fwSetTextColor:(UIColor*)color range:(NSRange)range
 {
     [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
     if (color.CGColor)
@@ -29,12 +29,12 @@
 }
 
 
-- (void)m80_setFont:(UIFont*)font
+- (void)fwSetFont:(UIFont*)font
 {
-    [self m80_setFont:font range:NSMakeRange(0, [self length])];
+    [self fwSetFont:font range:NSMakeRange(0, [self length])];
 }
 
-- (void)m80_setFont:(UIFont*)font range:(NSRange)range
+- (void)fwSetFont:(UIFont*)font range:(NSRange)range
 {
     if (font)
     {
@@ -49,15 +49,15 @@
     }
 }
 
-- (void)m80_setUnderlineStyle:(CTUnderlineStyle)style
+- (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
                  modifier:(CTUnderlineStyleModifiers)modifier
 {
-    [self m80_setUnderlineStyle:style
+    [self fwSetUnderlineStyle:style
                    modifier:modifier
                       range:NSMakeRange(0, self.length)];
 }
 
-- (void)m80_setUnderlineStyle:(CTUnderlineStyle)style
+- (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
                  modifier:(CTUnderlineStyleModifiers)modifier
                     range:(NSRange)range
 {

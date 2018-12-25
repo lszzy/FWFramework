@@ -6,22 +6,22 @@
 //  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
 //
 
-#import "M80AttributedLabel.h"
-#import "M80AttributedLabelAttachment.h"
-#import "M80AttributedLabelURL.h"
+#import "FWAttributedLabel.h"
+#import "FWAttributedLabelAttachment.h"
+#import "FWAttributedLabelURL.h"
 
-static NSString* const M80EllipsesCharacter = @"\u2026";
+static NSString* const FWEllipsesCharacter = @"\u2026";
 
-static dispatch_queue_t m80_attributed_label_parse_queue;
-static dispatch_queue_t get_m80_attributed_label_parse_queue() \
+static dispatch_queue_t static_attributed_label_parse_queue;
+static dispatch_queue_t get_static_attributed_label_parse_queue() \
 {
-    if (m80_attributed_label_parse_queue == NULL) {
-        m80_attributed_label_parse_queue = dispatch_queue_create("com.m80.parse_queue", 0);
+    if (static_attributed_label_parse_queue == NULL) {
+        static_attributed_label_parse_queue = dispatch_queue_create("site.wuyong.parse_queue", 0);
     }
-    return m80_attributed_label_parse_queue;
+    return static_attributed_label_parse_queue;
 }
 
-@interface M80AttributedLabel ()
+@interface FWAttributedLabel ()
 {
     NSMutableArray              *_attachments;
     NSMutableArray              *_linkLocations;
@@ -31,12 +31,12 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     CGFloat                     _fontHeight;
 }
 @property (nonatomic,strong)    NSMutableAttributedString *attributedString;
-@property (nonatomic,strong)    M80AttributedLabelURL *touchedLink;
+@property (nonatomic,strong)    FWAttributedLabelURL *touchedLink;
 @property (nonatomic,assign)    BOOL linkDetected;
 @property (nonatomic,assign)    BOOL ignoreRedraw;
 @end
 
-@implementation M80AttributedLabel
+@implementation FWAttributedLabel
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -144,9 +144,9 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     {
         _font = font;
         
-        [_attributedString m80_setFont:_font];
+        [_attributedString fwSetFont:_font];
         [self resetFont];
-        for (M80AttributedLabelAttachment *attachment in _attachments)
+        for (FWAttributedLabelAttachment *attachment in _attachments)
         {
             attachment.fontAscent = _fontAscent;
             attachment.fontDescent = _fontDescent;
@@ -160,7 +160,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     if (textColor && _textColor != textColor)
     {
         _textColor = textColor;
-        [_attributedString m80_setTextColor:textColor];
+        [_attributedString fwSetTextColor:textColor];
         [self resetTextFrame];
     }
 }
@@ -302,8 +302,8 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     if ([text length])
     {
         NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:text];
-        [string m80_setFont:self.font];
-        [string m80_setTextColor:self.textColor];
+        [string fwSetFont:self.font];
+        [string fwSetTextColor:self.textColor];
         return string;
     }
     else
@@ -351,15 +351,15 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
 
         
         
-        for (M80AttributedLabelURL *url in _linkLocations)
+        for (FWAttributedLabelURL *url in _linkLocations)
         {
             if (url.range.location + url.range.length >[_attributedString length])
             {
                 continue;
             }
             UIColor *drawLinkColor = url.color ? : self.linkColor;
-            [drawString m80_setTextColor:drawLinkColor range:url.range];
-            [drawString m80_setUnderlineStyle:_underLineForLink ? kCTUnderlineStyleSingle : kCTUnderlineStyleNone
+            [drawString fwSetTextColor:drawLinkColor range:url.range];
+            [drawString fwSetUnderlineStyle:_underLineForLink ? kCTUnderlineStyleSingle : kCTUnderlineStyleNone
                                  modifier:kCTUnderlinePatternSolid
                                     range:url.range];
         }
@@ -371,7 +371,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     }
 }
 
-- (M80AttributedLabelURL *)urlForPoint:(CGPoint)point
+- (FWAttributedLabelURL *)urlForPoint:(CGPoint)point
 {
     static const CGFloat kVMargin = 5;
     if (!CGRectContainsPoint(CGRectInset(self.bounds, 0, -kVMargin), point)
@@ -407,7 +407,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
             CGPoint relativePoint = CGPointMake(point.x-CGRectGetMinX(rect),
                                                 point.y-CGRectGetMinY(rect));
             CFIndex idx = CTLineGetStringIndexForPosition(line, relativePoint);
-            M80AttributedLabelURL *url = [self linkAtIndex:idx];
+            FWAttributedLabelURL *url = [self linkAtIndex:idx];
             if (url)
             {
                 return url;
@@ -420,7 +420,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
 
 - (id)linkDataForPoint:(CGPoint)point
 {
-    M80AttributedLabelURL *url = [self urlForPoint:point];
+    FWAttributedLabelURL *url = [self urlForPoint:point];
     return url ? url.linkData : nil;
 }
 
@@ -440,9 +440,9 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     return CGRectMake(point.x, point.y - descent, width, height);
 }
 
-- (M80AttributedLabelURL *)linkAtIndex:(CFIndex)index
+- (FWAttributedLabelURL *)linkAtIndex:(CFIndex)index
 {
-    for (M80AttributedLabelURL *url in _linkLocations)
+    for (FWAttributedLabelURL *url in _linkLocations)
     {
         if (NSLocationInRange(index, url.range))
         {
@@ -500,7 +500,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     return rectForRange;
 }
 
-- (void)appendAttachment:(M80AttributedLabelAttachment *)attachment
+- (void)appendAttachment:(FWAttributedLabelAttachment *)attachment
 {
     attachment.fontAscent                   = _fontAscent;
     attachment.fontDescent                  = _fontDescent;
@@ -510,10 +510,10 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     
     CTRunDelegateCallbacks callbacks;
     callbacks.version       = kCTRunDelegateVersion1;
-    callbacks.getAscent     = ascentCallback;
-    callbacks.getDescent    = descentCallback;
-    callbacks.getWidth      = widthCallback;
-    callbacks.dealloc       = deallocCallback;
+    callbacks.getAscent     = fwAttributedAscentCallback;
+    callbacks.getDescent    = fwAttributedDescentCallback;
+    callbacks.getWidth      = fwAttributedWidthCallback;
+    callbacks.dealloc       = fwAttributedDeallocCallback;
     
     CTRunDelegateRef delegate = CTRunDelegateCreate(&callbacks, (void *)attachment);
     NSDictionary *attr = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)delegate,kCTRunDelegateAttributeName, nil];
@@ -584,15 +584,15 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     [self appendImage:image
               maxSize:maxSize
                margin:margin
-            alignment:M80ImageAlignmentBottom];
+            alignment:FWAttributedAlignmentBottom];
 }
 
 - (void)appendImage:(UIImage *)image
             maxSize:(CGSize)maxSize
              margin:(UIEdgeInsets)margin
-          alignment:(M80ImageAlignment)alignment
+          alignment:(FWAttributedAlignment)alignment
 {
-    M80AttributedLabelAttachment *attachment = [M80AttributedLabelAttachment attachmentWith:image
+    FWAttributedLabelAttachment *attachment = [FWAttributedLabelAttachment attachmentWith:image
                                                                                      margin:margin
                                                                              alignment:alignment
                                                                                maxSize:maxSize];
@@ -611,15 +611,15 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
 {
     [self appendView:view
               margin:margin
-           alignment:M80ImageAlignmentBottom];
+           alignment:FWAttributedAlignmentBottom];
 }
 
 
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin
-         alignment:(M80ImageAlignment)alignment
+         alignment:(FWAttributedAlignment)alignment
 {
-    M80AttributedLabelAttachment *attachment = [M80AttributedLabelAttachment attachmentWith:view
+    FWAttributedLabelAttachment *attachment = [FWAttributedLabelAttachment attachmentWith:view
                                                                                      margin:margin
                                                                                   alignment:alignment
                                                                                     maxSize:CGSizeZero];
@@ -640,7 +640,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
              forRange:(NSRange)range
             linkColor:(UIColor *)color
 {
-    M80AttributedLabelURL *url = [M80AttributedLabelURL urlWithLinkData:linkData
+    FWAttributedLabelURL *url = [FWAttributedLabelURL urlWithLinkData:linkData
                                                                   range:range
                                                                   color:color];
     [_linkLocations addObject:url];
@@ -833,7 +833,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
                         
                         NSDictionary *tokenAttributes = [attributedString attributesAtIndex:truncationAttributePosition
                                                                              effectiveRange:NULL];
-                        NSAttributedString *tokenString = [[NSAttributedString alloc] initWithString:M80EllipsesCharacter
+                        NSAttributedString *tokenString = [[NSAttributedString alloc] initWithString:FWEllipsesCharacter
                                                                                           attributes:tokenAttributes];
                         CTLineRef truncationToken = CTLineCreateWithAttributedString((CFAttributedStringRef)tokenString);
                         
@@ -917,7 +917,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
             {
                 continue;
             }
-            M80AttributedLabelAttachment* attributedImage = (M80AttributedLabelAttachment *)CTRunDelegateGetRefCon(delegate);
+            FWAttributedLabelAttachment* attributedImage = (FWAttributedLabelAttachment *)CTRunDelegateGetRefCon(delegate);
             
             CGFloat ascent = 0.0f;
             CGFloat descent = 0.0f;
@@ -933,13 +933,13 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
             CGFloat imageBoxOriginY = 0.0f;
             switch (attributedImage.alignment)
             {
-                case M80ImageAlignmentTop:
+                case FWAttributedAlignmentTop:
                     imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight);
                     break;
-                case M80ImageAlignmentCenter:
+                case FWAttributedAlignmentCenter:
                     imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight) / 2.0;
                     break;
-                case M80ImageAlignmentBottom:
+                case FWAttributedAlignmentBottom:
                     imageBoxOriginY = lineBottomY;
                     break;
             }
@@ -1001,9 +1001,9 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     id linkData = [self linkDataForPoint:point];
     if (linkData)
     {
-        if (_delegate && [_delegate respondsToSelector:@selector(m80AttributedLabel:clickedOnLink:)])
+        if (_delegate && [_delegate respondsToSelector:@selector(attributedLabel:clickedOnLink:)])
         {
-            [_delegate m80AttributedLabel:self clickedOnLink:linkData];
+            [_delegate attributedLabel:self clickedOnLink:linkData];
         }
         else
         {
@@ -1057,7 +1057,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
         weakSelf.linkDetected = YES;
         if ([links count])
         {
-            for (M80AttributedLabelURL *link in links)
+            for (FWAttributedLabelURL *link in links)
             {
                 [weakSelf addAutoDetectedLink:link];
             }
@@ -1068,15 +1068,15 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     if (sync)
     {
         _ignoreRedraw = YES;
-        NSArray *links = [M80AttributedLabelURL detectLinks:text];
+        NSArray *links = [FWAttributedLabelURL detectLinks:text];
         block(links);
         _ignoreRedraw = NO;
     }
     else
     {
-        dispatch_async(get_m80_attributed_label_parse_queue(), ^{
+        dispatch_async(get_static_attributed_label_parse_queue(), ^{
         
-            NSArray *links = [M80AttributedLabelURL detectLinks:text];
+            NSArray *links = [FWAttributedLabelURL detectLinks:text];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *plainText = [[weakSelf attributedString] string];
@@ -1089,10 +1089,10 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     }
 }
 
-- (void)addAutoDetectedLink:(M80AttributedLabelURL *)link
+- (void)addAutoDetectedLink:(FWAttributedLabelURL *)link
 {
     NSRange range = link.range;
-    for (M80AttributedLabelURL *url in _linkLocations)
+    for (FWAttributedLabelURL *url in _linkLocations)
     {
         if (NSIntersectionRange(range, url.range).length != 0)
         {
@@ -1130,7 +1130,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
     
-    M80AttributedLabelURL *touchedLink = [self urlForPoint:point];
+    FWAttributedLabelURL *touchedLink = [self urlForPoint:point];
     if (self.touchedLink != touchedLink)
     {
         self.touchedLink = touchedLink;
@@ -1165,7 +1165,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    M80AttributedLabelURL *touchedLink = [self urlForPoint:point];
+    FWAttributedLabelURL *touchedLink = [self urlForPoint:point];
     if (touchedLink == nil)
     {
         NSArray *subViews = [self subviews];
@@ -1190,9 +1190,9 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
 }
 
 #pragma mark - 设置自定义的连接检测block
-+ (void)setCustomDetectMethod:(M80CustomDetectLinkBlock)block
++ (void)setCustomDetectMethod:(FWCustomDetectLinkBlock)block
 {
-    [M80AttributedLabelURL setCustomDetectMethod:block];
+    [FWAttributedLabelURL setCustomDetectMethod:block];
 }
 
 

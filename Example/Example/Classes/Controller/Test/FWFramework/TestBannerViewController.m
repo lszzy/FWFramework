@@ -7,7 +7,7 @@
 //
 
 #import "TestBannerViewController.h"
-#import "M80AttributedLabel.h"
+#import "FWAttributedLabel.h"
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
@@ -39,7 +39,7 @@
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
     
-    M80AttributedLabel *label = [M80AttributedLabel new];
+    FWAttributedLabel *label = [FWAttributedLabel new];
     label.font = [UIFont systemFontOfSize:15];
     label.textColor = [UIColor fwColorWithHex:0x111111];
     label.textAlignment = kCTTextAlignmentCenter;
@@ -53,10 +53,10 @@
     UIView *labelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     labelView.backgroundColor = [UIColor redColor];
     [labelView fwSetCornerRadius:15];
-    [label appendView:labelView margin:UIEdgeInsetsZero alignment:M80ImageAlignmentCenter];
+    [label appendView:labelView margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter];
     [label appendText:@" "];
     UIImage *image = [UIImage fwImageWithColor:[UIColor blueColor] size:CGSizeMake(30, 30)];
-    [label appendImage:image maxSize:image.size margin:UIEdgeInsetsZero alignment:M80ImageAlignmentCenter];
+    [label appendImage:image maxSize:image.size margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter];
     [label appendText:@" 结束"];
     
     FWTextTagCollectionView *tagCollectionView = [FWTextTagCollectionView new];
