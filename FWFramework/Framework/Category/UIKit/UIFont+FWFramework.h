@@ -9,6 +9,20 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma mark - Macro
+
+// 快速创建普通字体
+#define FWFontNormal( size ) \
+    [UIFont systemFontOfSize:size]
+
+// 快速创建粗体字体
+#define FWFontBold( size ) \
+    [UIFont boldSystemFontOfSize:size]
+
+// 快速创建斜体字体
+#define FWFontItalic( size ) \
+    [UIFont italicSystemFontOfSize:size]
+
 /*!
  @brief UIFont+FWFramework
  */

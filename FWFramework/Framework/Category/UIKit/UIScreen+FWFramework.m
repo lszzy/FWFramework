@@ -127,6 +127,15 @@
     return safeAreaInsets;
 }
 
++ (CGFloat)fwPixelOne
+{
+    static CGFloat pixelOne = -1.0;
+    if (pixelOne < 0) {
+        pixelOne = 1 / [[UIScreen mainScreen] scale];
+    }
+    return pixelOne;
+}
+
 @end
 
 @implementation UIViewController (FWScreen)
