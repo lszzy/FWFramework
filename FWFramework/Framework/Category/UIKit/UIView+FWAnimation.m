@@ -81,18 +81,30 @@
 
 #pragma mark - Block
 
-+ (void)fwAnimateNoneWithBlock:(void (^)(void))block
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block
 {
     [UIView performWithoutAnimation:block];
 }
 
-+ (void)fwAnimateNoneWithBlock:(void (^)(void))block completion:(void (^)(void))completion
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion
 {
     [UIView animateWithDuration:0 animations:block completion:^(BOOL finished) {
         if (completion) {
             completion();
         }
     }];
+}
+
++ (void)fwAnimateWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion
+{
+    if (!block) {
+        return;
+    }
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:completion];
+    block();
+    [CATransaction commit];
 }
 
 #pragma mark - Animation
