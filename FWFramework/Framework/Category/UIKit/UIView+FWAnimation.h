@@ -29,7 +29,7 @@
  
  @param block 动画代码块
  */
-+ (void)fwAnimateNoneWithBlock:(void (^)(void))block;
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block;
 
 /*!
  @brief 取消动画效果执行block
@@ -37,7 +37,15 @@
  @param block 动画代码块
  @param completion 完成事件
  */
-+ (void)fwAnimateNoneWithBlock:(void (^)(void))block completion:(void (^)(void))completion;
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion;
+
+/*!
+ @brief 执行block动画完成后执行指定回调
+ 
+ @param block 动画代码块
+ @param completion 完成事件
+ */
++ (void)fwAnimateWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion;
 
 #pragma mark - Animation
 

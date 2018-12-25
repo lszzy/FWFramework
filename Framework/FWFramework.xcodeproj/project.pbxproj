@@ -197,6 +197,8 @@
 		2F0FFF1F21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF1D21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m */; };
 		2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */; };
+		2F0FFF3021D20EA800049383 /* NSAttributedString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0FFF2E21D20EA800049383 /* NSAttributedString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F0FFF3121D20EA800049383 /* NSAttributedString+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF2F21D20EA800049383 /* NSAttributedString+FWFramework.m */; };
 		2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */; };
 		2F176EC621C94E1700B35FA4 /* UIView+FWEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F176EC421C94E1700B35FA4 /* UIView+FWEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -418,6 +420,8 @@
 		2F0FFF1D21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWInfiniteScroll.m"; sourceTree = "<group>"; };
 		2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAttributedLabel.h; sourceTree = "<group>"; };
 		2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAttributedLabel.m; sourceTree = "<group>"; };
+		2F0FFF2E21D20EA800049383 /* NSAttributedString+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+FWFramework.h"; sourceTree = "<group>"; };
+		2F0FFF2F21D20EA800049383 /* NSAttributedString+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+FWFramework.m"; sourceTree = "<group>"; };
 		2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
 		2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWFramework.m"; sourceTree = "<group>"; };
 		2F176EC421C94E1700B35FA4 /* UIView+FWEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWEvent.h"; sourceTree = "<group>"; };
@@ -583,6 +587,8 @@
 				2F03A52F216CF4B9001965A1 /* Foundation+FWFramework.h */,
 				2F03A539216CF4B9001965A1 /* NSArray+FWFramework.h */,
 				2F03A549216CF4B9001965A1 /* NSArray+FWFramework.m */,
+				2F0FFF2E21D20EA800049383 /* NSAttributedString+FWFramework.h */,
+				2F0FFF2F21D20EA800049383 /* NSAttributedString+FWFramework.m */,
 				2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */,
 				2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */,
 				2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */,
@@ -821,6 +827,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F0FFF3021D20EA800049383 /* NSAttributedString+FWFramework.h in Headers */,
 				2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */,
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
 				2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */,
@@ -1092,6 +1099,7 @@
 				2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */,
 				2F03A587216CF4B9001965A1 /* UIViewController+FWBar.m in Sources */,
 				2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */,
+				2F0FFF3121D20EA800049383 /* NSAttributedString+FWFramework.m in Sources */,
 				2F03A5B8216CF4B9001965A1 /* UIApplication+FWFramework.m in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F03A578216CF4B9001965A1 /* UINavigationController+FWTransition.m in Sources */,

@@ -11,6 +11,7 @@
 #define Foundation_FWFramework_h
 
 #import "NSArray+FWFramework.h"
+#import "NSAttributedString+FWFramework.h"
 #import "NSDictionary+FWFramework.h"
 #import "NSBundle+FWFramework.h"
 #import "NSCalendar+FWFramework.h"
