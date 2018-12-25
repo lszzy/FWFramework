@@ -80,10 +80,10 @@ Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下�
 		fwMethodName
 		fwPropertyName
 
-* 框架OC分类的类初始化方法必须以fw开头，实例初始化方法必须以init开头，且包含FW前缀，示例：
+* 框架OC分类的类初始化方法必须以fw开头，示例：
 
 		 fwColorWithString
-		 initWithFWString
+		 fwImageWithView
 
 * 框架C方法必须以fw_开头，内部c方法必须以fw_inner_开头，内部c全局静态变量必须以fw_static_开头，下划线分隔，示例：
 

@@ -18,6 +18,28 @@
     [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUIViewIntrinsicContentSize)];
 }
 
+#pragma mark - Transform
+
+- (CGFloat)fwScaleX
+{
+    return self.transform.a;
+}
+
+- (CGFloat)fwScaleY
+{
+    return self.transform.d;
+}
+
+- (CGFloat)fwTranslationX
+{
+    return self.transform.tx;
+}
+
+- (CGFloat)fwTranslationY
+{
+    return self.transform.ty;
+}
+
 #pragma mark - Size
 
 - (void)fwSetIntrinsicContentSize:(CGSize)size
@@ -54,6 +76,11 @@
 }
 
 #pragma mark - Subview
+
+- (void)fwRemoveAllSubviews
+{
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
 
 - (UIView *)fwSubviewOfClass:(Class)clazz
 {

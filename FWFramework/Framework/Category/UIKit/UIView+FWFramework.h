@@ -26,6 +26,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWFramework)
 
+#pragma mark - Transform
+
+// 获取当前view的transform scale x
+@property(nonatomic, assign, readonly) CGFloat fwScaleX;
+
+// 获取当前view的transform scale y
+@property(nonatomic, assign, readonly) CGFloat fwScaleY;
+
+// 获取当前view的transform translation x
+@property(nonatomic, assign, readonly) CGFloat fwTranslationX;
+
+// 获取当前view的transform translation y
+@property(nonatomic, assign, readonly) CGFloat fwTranslationY;
+
 #pragma mark - Size
 
 // 设置自定义估算尺寸，CGSizeZero为清空自定义设置
@@ -37,6 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable UIViewController *)fwViewController;
 
 #pragma mark - Subview
+
+// 移除所有子视图
+- (void)fwRemoveAllSubviews;
 
 // 递归查找指定子类的第一个视图
 - (nullable __kindof UIView *)fwSubviewOfClass:(Class)clazz;

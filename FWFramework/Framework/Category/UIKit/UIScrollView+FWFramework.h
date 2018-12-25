@@ -19,6 +19,9 @@
 
 #pragma mark - Frame
 
+// UIScrollView的真正inset，在iOS11以后需要用到adjustedContentInset而在iOS11以前只需要用contentInset
+@property (nonatomic, assign, readonly) UIEdgeInsets fwContentInset;
+
 // contentSize.width
 @property (nonatomic, assign) CGFloat fwContentWidth;
 
@@ -49,6 +52,9 @@
 - (BOOL)fwIsLastPage;
 
 #pragma mark - Scroll
+
+// 判断当前的scrollView内容是否足够滚动
+- (BOOL)fwCanScroll;
 
 // 是否已滚动到指定边
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;

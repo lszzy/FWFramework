@@ -12,6 +12,9 @@
 
 @interface UIGestureRecognizer (FWBlock)
 
+// 获取手势直接作用的view，不同于view，此处是view的subview
+@property (nonatomic, weak, readonly) UIView *fwTargetView;
+
 // 从事件句柄初始化
 - (instancetype)initWithFWBlock:(void (^)(id sender))block;
 

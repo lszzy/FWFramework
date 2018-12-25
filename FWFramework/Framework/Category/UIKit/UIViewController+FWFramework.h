@@ -13,6 +13,12 @@
 
 @interface UIViewController (FWFramework)
 
+/*!
+ @brief 当前viewController是否是被以present的方式显示的，是则返回YES，否则返回NO
+ @discussion 如果self是self.navigationController的第一个viewController，则如果self.navigationController是被present起来的，那么self.fwIsPresented为YES，可以方便地给navigationController的第一个界面的左上角添加关闭按钮
+ */
+- (BOOL)fwIsPresented;
+
 /**
  *  视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
  */
@@ -52,5 +58,10 @@
 
 // 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
 - (void)fwAddChildViewController:(UIViewController *)viewController inView:(UIView *)view;
+
+#pragma mark - Previous
+
+// 获取和自身处于同一个UINavigationController里的上一个UIViewController
+@property(nullable, nonatomic, weak, readonly) UIViewController *fwPreviousViewController;
 
 @end

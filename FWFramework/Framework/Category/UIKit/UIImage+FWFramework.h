@@ -75,6 +75,9 @@
 // 获取图片的平均颜色
 - (UIColor *)fwAverageColor;
 
+// 获取当前图片的像素大小，多倍图会放大到一倍
+- (CGSize)fwPixelSize;
+
 #pragma mark - Icon
 
 // 获取AppIcon图片

@@ -36,6 +36,13 @@
 
 @implementation UIGestureRecognizer (FWBlock)
 
+- (UIView *)fwTargetView
+{
+    CGPoint location = [self locationInView:self.view];
+    UIView *targetView = [self.view hitTest:location withEvent:nil];
+    return targetView;
+}
+
 - (instancetype)initWithFWBlock:(void (^)(id sender))block
 {
     self = [self init];
