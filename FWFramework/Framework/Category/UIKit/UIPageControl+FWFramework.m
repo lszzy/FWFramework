@@ -8,38 +8,29 @@
  */
 
 #import "UIPageControl+FWFramework.h"
-#import "NSObject+FWRuntime.h"
-#import <objc/runtime.h>
 
 @implementation UIPageControl (FWFramework)
 
-+ (void)load
+- (void)fwSetIndicatorSize:(CGSize)indicatorSize
 {
-    [self fwSwizzleInstanceMethod:@selector(setCurrentPage:) with:@selector(fwInnerSetCurrentPage:)];
-}
-
-- (CGSize)fwIndicatorSize
-{
-    return [objc_getAssociatedObject(self, @selector(fwIndicatorSize)) CGSizeValue];
-}
-
-- (void)setFwIndicatorSize:(CGSize)fwIndicatorSize
-{
-    objc_setAssociatedObject(self, @selector(fwIndicatorSize), [NSValue valueWithCGSize:fwIndicatorSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwInnerSetCurrentPage:(NSInteger)currentPage
-{
-    [self fwInnerSetCurrentPage:currentPage];
-    
-    // 自定义尺寸时才生效
-    NSValue *sizeValue = objc_getAssociatedObject(self, @selector(fwIndicatorSize));
-    if (sizeValue) {
-        CGSize size = [sizeValue CGSizeValue];
-        for (UIView *subview in self.subviews) {
-            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, size.width, size.height)];
-        }
+    CGSize initialSize = self.bounds.size;
+    if (CGSizeEqualToSize(initialSize, CGSizeZero)) {
+        initialSize = CGSizeMake(10, 10);
     }
+    
+    CGFloat scale = indicatorSize.width / initialSize.width;
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+}
+
+@end
+
+@implementation UIActivityIndicatorView (FWFramework)
+
+- (void)fwSetIndicatorSize:(CGSize)indicatorSize
+{
+    CGSize initialSize = self.bounds.size;
+    CGFloat scale = indicatorSize.width / initialSize.width;
+    self.transform = CGAffineTransformMakeScale(scale, scale);
 }
 
 @end
