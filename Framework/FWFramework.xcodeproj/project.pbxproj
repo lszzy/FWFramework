@@ -195,6 +195,8 @@
 		2F0FFF1A21D0ACFA00049383 /* UIScrollView+FWPullRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF1821D0ACFA00049383 /* UIScrollView+FWPullRefresh.m */; };
 		2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0FFF1C21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0FFF1F21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF1D21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m */; };
+		2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */; };
 		2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */; };
 		2F176EC621C94E1700B35FA4 /* UIView+FWEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F176EC421C94E1700B35FA4 /* UIView+FWEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -414,6 +416,8 @@
 		2F0FFF1821D0ACFA00049383 /* UIScrollView+FWPullRefresh.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWPullRefresh.m"; sourceTree = "<group>"; };
 		2F0FFF1C21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWInfiniteScroll.h"; sourceTree = "<group>"; };
 		2F0FFF1D21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWInfiniteScroll.m"; sourceTree = "<group>"; };
+		2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAttributedLabel.h; sourceTree = "<group>"; };
+		2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAttributedLabel.m; sourceTree = "<group>"; };
 		2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
 		2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWFramework.m"; sourceTree = "<group>"; };
 		2F176EC421C94E1700B35FA4 /* UIView+FWEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWEvent.h"; sourceTree = "<group>"; };
@@ -715,6 +719,8 @@
 		2F03A576216CF4B9001965A1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */,
+				2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */,
 				2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */,
 				2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */,
 				2F1E39382178F0B80051A6BB /* FWProgressView.h */,
@@ -815,6 +821,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */,
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
 				2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */,
 				2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */,
@@ -1117,6 +1124,7 @@
 				2F0FFF1A21D0ACFA00049383 /* UIScrollView+FWPullRefresh.m in Sources */,
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
+				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
 				2F03A5BC216CF4B9001965A1 /* UIView+FWIndicator.m in Sources */,
 				2F03A5ED216CF4B9001965A1 /* FWKeychainManager.m in Sources */,
 			);

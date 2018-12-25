@@ -1,18 +1,43 @@
-//
-//  M80AttributedLabel.h
-//  M80AttributedLabel
-//
-//  Created by amao on 13-9-1.
-//  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
-//
+/*!
+ @header     FWAttributedLabel.h
+ @indexgroup FWFramework
+ @brief      FWAttributedLabel
+ @author     wuyong
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/12/13
+ */
 
-#import "M80AttributedLabelDefines.h"
-#import "NSMutableAttributedString+M80.h"
+#import <UIKit/UIKit.h>
+#import <CoreText/CoreText.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
+    FWAttributedAlignmentTop,
+    FWAttributedAlignmentCenter,
+    FWAttributedAlignmentBottom
+};
+
+@class FWAttributedLabel;
+
+@protocol FWAttributedLabelDelegate <NSObject>
+- (void)attributedLabel:(FWAttributedLabel *)label
+          clickedOnLink:(id)linkData;
+
+@end
+
+typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text);
+
 @class FWAttributedLabelURL;
 
+#pragma mark - FWAttributedLabel
+
+/*!
+ @brief FWAttributedLabel
+ 
+ @see https://github.com/xiangwangfeng/M80AttributedLabel
+ */
 @interface FWAttributedLabel : UIView
 @property (nonatomic,weak,nullable)         id<FWAttributedLabelDelegate> delegate;
 @property (nonatomic,strong,nullable)       UIFont *font;                          //字体
@@ -74,6 +99,66 @@ NS_ASSUME_NONNULL_BEGIN
 
 //设置全局的自定义Link检测Block(详见M80AttributedLabelURL)
 + (void)setCustomDetectMethod:(nullable FWCustomDetectLinkBlock)block;
+
+@end
+
+#pragma mark - FWAttributedLabelURL
+
+@interface FWAttributedLabelURL : NSObject
+@property (nonatomic,strong)                id      linkData;
+@property (nonatomic,assign)                NSRange range;
+@property (nonatomic,strong,nullable)       UIColor *color;
+
++ (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
+                                    range:(NSRange)range
+                                    color:(nullable UIColor *)color;
+
+
++ (nullable NSArray *)detectLinks:(nullable NSString *)plainText;
+
++ (void)setCustomDetectMethod:(nullable FWCustomDetectLinkBlock)block;
+@end
+
+#pragma mark - FWAttributedLabelAttachment
+
+void fwAttributedDeallocCallback(void* ref);
+CGFloat fwAttributedAscentCallback(void *ref);
+CGFloat fwAttributedDescentCallback(void *ref);
+CGFloat fwAttributedWidthCallback(void* ref);
+
+@interface FWAttributedLabelAttachment : NSObject
+@property (nonatomic,strong)    id                  content;
+@property (nonatomic,assign)    UIEdgeInsets        margin;
+@property (nonatomic,assign)    FWAttributedAlignment   alignment;
+@property (nonatomic,assign)    CGFloat             fontAscent;
+@property (nonatomic,assign)    CGFloat             fontDescent;
+@property (nonatomic,assign)    CGSize              maxSize;
+
+
++ (FWAttributedLabelAttachment *)attachmentWith:(id)content
+                                         margin:(UIEdgeInsets)margin
+                                      alignment:(FWAttributedAlignment)alignment
+                                        maxSize:(CGSize)maxSize;
+
+- (CGSize)boxSize;
+
+@end
+
+#pragma mark - NSMutableAttributedString+FWAttributedLabel
+
+@interface NSMutableAttributedString (FWAttributedLabel)
+
+- (void)fwSetTextColor:(UIColor*)color;
+- (void)fwSetTextColor:(UIColor*)color range:(NSRange)range;
+
+- (void)fwSetFont:(UIFont*)font;
+- (void)fwSetFont:(UIFont*)font range:(NSRange)range;
+
+- (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
+                   modifier:(CTUnderlineStyleModifiers)modifier;
+- (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
+                   modifier:(CTUnderlineStyleModifiers)modifier
+                      range:(NSRange)range;
 
 @end
 

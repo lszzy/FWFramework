@@ -1,14 +1,15 @@
-//
-//  M80AttributedLabel.m
-//  M80AttributedLabel
-//
-//  Created by amao on 13-9-1.
-//  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
-//
+/*!
+ @header     FWAttributedLabel.m
+ @indexgroup FWFramework
+ @brief      FWAttributedLabel
+ @author     wuyong
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/12/13
+ */
 
 #import "FWAttributedLabel.h"
-#import "FWAttributedLabelAttachment.h"
-#import "FWAttributedLabelURL.h"
+
+#pragma mark - FWAttributedLabel
 
 static NSString* const FWEllipsesCharacter = @"\u2026";
 
@@ -1195,5 +1196,294 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [FWAttributedLabelURL setCustomDetectMethod:block];
 }
 
+
+@end
+
+#pragma mark - FWAttributedLabelURL
+
+static FWCustomDetectLinkBlock customDetectBlock = nil;
+
+@implementation FWAttributedLabelURL
+
++ (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
+                                    range:(NSRange)range
+                                    color:(UIColor *)color
+{
+    FWAttributedLabelURL *url  = [[FWAttributedLabelURL alloc]init];
+    url.linkData                = linkData;
+    url.range                   = range;
+    url.color                   = color;
+    return url;
+    
+}
+
+
++ (NSArray *)detectLinks:(NSString *)plainText
+{
+    if (customDetectBlock)
+        {
+        return customDetectBlock(plainText);
+        }
+    else
+        {
+        NSMutableArray *links = nil;
+        if ([plainText length])
+            {
+            links = [NSMutableArray array];
+            NSDataDetector *detector = [FWAttributedLabelURL linkDetector];
+            [detector enumerateMatchesInString:plainText
+                                       options:0
+                                         range:NSMakeRange(0, [plainText length])
+                                    usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+                                        NSRange range = result.range;
+                                        NSString *text = [plainText substringWithRange:range];
+                                        FWAttributedLabelURL *link = [FWAttributedLabelURL urlWithLinkData:text
+                                                                                                     range:range
+                                                                                                     color:nil];
+                                        [links addObject:link];
+                                    }];
+            }
+        return links;
+        }
+}
+
++ (NSDataDetector *)linkDetector
+{
+    static NSString *M80LinkDetectorKey = @"M80LinkDetectorKey";
+    
+    NSMutableDictionary *dict = [[NSThread currentThread] threadDictionary];
+    NSDataDetector *detector = dict[M80LinkDetectorKey];
+    if (detector == nil)
+        {
+        detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber
+                                                   error:nil];
+        if (detector)
+            {
+            dict[M80LinkDetectorKey] = detector;
+            }
+        }
+    return detector;
+}
+
+
++ (void)setCustomDetectMethod:(FWCustomDetectLinkBlock)block
+{
+    customDetectBlock = [block copy];
+}
+
+@end
+
+#pragma mark - FWAttributedLabelAttachment
+
+void fwAttributedDeallocCallback(void* ref)
+{
+    
+}
+
+CGFloat fwAttributedAscentCallback(void *ref)
+{
+    FWAttributedLabelAttachment *image = (__bridge FWAttributedLabelAttachment *)ref;
+    CGFloat ascent = 0;
+    CGFloat height = [image boxSize].height;
+    switch (image.alignment)
+    {
+        case FWAttributedAlignmentTop:
+        ascent = image.fontAscent;
+        break;
+        case FWAttributedAlignmentCenter:
+        {
+        CGFloat fontAscent  = image.fontAscent;
+        CGFloat fontDescent = image.fontDescent;
+        CGFloat baseLine = (fontAscent + fontDescent) / 2 - fontDescent;
+        ascent = height / 2 + baseLine;
+        }
+        break;
+        case FWAttributedAlignmentBottom:
+        ascent = height - image.fontDescent;
+        break;
+        default:
+        break;
+    }
+    return ascent;
+}
+
+CGFloat fwAttributedDescentCallback(void *ref)
+{
+    FWAttributedLabelAttachment *image = (__bridge FWAttributedLabelAttachment *)ref;
+    CGFloat descent = 0;
+    CGFloat height = [image boxSize].height;
+    switch (image.alignment)
+    {
+        case FWAttributedAlignmentTop:
+        {
+        descent = height - image.fontAscent;
+        break;
+        }
+        case FWAttributedAlignmentCenter:
+        {
+        CGFloat fontAscent  = image.fontAscent;
+        CGFloat fontDescent = image.fontDescent;
+        CGFloat baseLine = (fontAscent + fontDescent) / 2 - fontDescent;
+        descent = height / 2 - baseLine;
+        }
+        break;
+        case FWAttributedAlignmentBottom:
+        {
+        descent = image.fontDescent;
+        break;
+        }
+        default:
+        break;
+    }
+    
+    return descent;
+    
+}
+
+CGFloat fwAttributedWidthCallback(void* ref)
+{
+    FWAttributedLabelAttachment *image  = (__bridge FWAttributedLabelAttachment *)ref;
+    return [image boxSize].width;
+}
+
+#pragma mark - M80AttributedLabelImage
+@interface FWAttributedLabelAttachment ()
+- (CGSize)calculateContentSize;
+- (CGSize)attachmentSize;
+@end
+
+@implementation FWAttributedLabelAttachment
+
+
+
+
++ (FWAttributedLabelAttachment *)attachmentWith:(id)content
+                                         margin:(UIEdgeInsets)margin
+                                      alignment:(FWAttributedAlignment)alignment
+                                        maxSize:(CGSize)maxSize
+{
+    FWAttributedLabelAttachment *attachment    = [[FWAttributedLabelAttachment alloc]init];
+    attachment.content                          = content;
+    attachment.margin                           = margin;
+    attachment.alignment                        = alignment;
+    attachment.maxSize                          = maxSize;
+    return attachment;
+}
+
+
+- (CGSize)boxSize
+{
+    CGSize contentSize = [self attachmentSize];
+    if (_maxSize.width > 0 &&_maxSize.height > 0 &&
+        contentSize.width > 0 && contentSize.height > 0)
+        {
+        contentSize = [self calculateContentSize];
+        }
+    return CGSizeMake(contentSize.width + _margin.left + _margin.right,
+                      contentSize.height+ _margin.top  + _margin.bottom);
+}
+
+
+#pragma mark - 辅助方法
+- (CGSize)calculateContentSize
+{
+    CGSize attachmentSize   = [self attachmentSize];
+    CGFloat width           = attachmentSize.width;
+    CGFloat height          = attachmentSize.height;
+    CGFloat newWidth        = _maxSize.width;
+    CGFloat newHeight       = _maxSize.height;
+    if (width <= newWidth &&
+        height<= newHeight)
+        {
+        return attachmentSize;
+        }
+    CGSize size;
+    if (width / height > newWidth / newHeight)
+        {
+        size = CGSizeMake(newWidth, newWidth * height / width);
+        }
+    else
+        {
+        size = CGSizeMake(newHeight * width / height, newHeight);
+        }
+    return size;
+}
+
+- (CGSize)attachmentSize
+{
+    CGSize size = CGSizeZero;
+    if ([_content isKindOfClass:[UIImage class]])
+        {
+        size = [((UIImage *)_content) size];
+        }
+    else if ([_content isKindOfClass:[UIView class]])
+        {
+        size = [((UIView *)_content) bounds].size;
+        }
+    return size;
+}
+@end
+
+#pragma mark - NSMutableAttributedString+FWAttributedLabel
+
+@implementation NSMutableAttributedString (FWAttributedLabel)
+
+- (void)fwSetTextColor:(UIColor*)color
+{
+    [self fwSetTextColor:color range:NSMakeRange(0, [self length])];
+}
+
+- (void)fwSetTextColor:(UIColor*)color range:(NSRange)range
+{
+    [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
+    if (color.CGColor)
+        {
+        
+        
+        [self addAttribute:(NSString *)kCTForegroundColorAttributeName
+                     value:(id)color.CGColor
+                     range:range];
+        }
+}
+
+
+- (void)fwSetFont:(UIFont*)font
+{
+    [self fwSetFont:font range:NSMakeRange(0, [self length])];
+}
+
+- (void)fwSetFont:(UIFont*)font range:(NSRange)range
+{
+    if (font)
+        {
+        [self removeAttribute:(NSString*)kCTFontAttributeName range:range];
+        
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)font.fontName, font.pointSize, nil);
+        if (nil != fontRef)
+            {
+            [self addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)fontRef range:range];
+            CFRelease(fontRef);
+            }
+        }
+}
+
+- (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
+                   modifier:(CTUnderlineStyleModifiers)modifier
+{
+    [self fwSetUnderlineStyle:style
+                     modifier:modifier
+                        range:NSMakeRange(0, self.length)];
+}
+
+- (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
+                   modifier:(CTUnderlineStyleModifiers)modifier
+                      range:(NSRange)range
+{
+    [self removeAttribute:(NSString *)kCTUnderlineColorAttributeName range:range];
+    [self addAttribute:(NSString *)kCTUnderlineStyleAttributeName
+                 value:[NSNumber numberWithInt:(style|modifier)]
+                 range:range];
+    
+}
 
 @end
