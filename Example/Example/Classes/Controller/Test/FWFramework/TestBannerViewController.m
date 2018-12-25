@@ -7,7 +7,6 @@
 //
 
 #import "TestBannerViewController.h"
-#import "FWAttributedLabel.h"
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 

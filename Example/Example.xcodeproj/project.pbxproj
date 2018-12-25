@@ -50,10 +50,6 @@
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
-		2FB7CB8021BF6651002E5412 /* FWAttributedLabelAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7021BF6651002E5412 /* FWAttributedLabelAttachment.m */; };
-		2FB7CB8121BF6651002E5412 /* FWAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7221BF6651002E5412 /* FWAttributedLabel.m */; };
-		2FB7CB8221BF6651002E5412 /* FWAttributedLabelURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7321BF6651002E5412 /* FWAttributedLabelURL.m */; };
-		2FB7CB8321BF6651002E5412 /* NSMutableAttributedString+M80.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CB7521BF6651002E5412 /* NSMutableAttributedString+M80.m */; };
 		2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */; };
 		2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
@@ -173,15 +169,6 @@
 		2FA32CCB21B0572900C230EA /* TestRouterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterViewController.m; sourceTree = "<group>"; };
 		2FB38DBF215B7058009F0450 /* TestModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestModelViewController.h; sourceTree = "<group>"; };
 		2FB38DC0215B7058009F0450 /* TestModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestModelViewController.m; sourceTree = "<group>"; };
-		2FB7CB6D21BF6651002E5412 /* M80AttributedLabelDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelDefines.h; sourceTree = "<group>"; };
-		2FB7CB6E21BF6651002E5412 /* FWAttributedLabelURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAttributedLabelURL.h; sourceTree = "<group>"; };
-		2FB7CB6F21BF6651002E5412 /* FWAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAttributedLabel.h; sourceTree = "<group>"; };
-		2FB7CB7021BF6651002E5412 /* FWAttributedLabelAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAttributedLabelAttachment.m; sourceTree = "<group>"; };
-		2FB7CB7121BF6651002E5412 /* NSMutableAttributedString+M80.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+M80.h"; sourceTree = "<group>"; };
-		2FB7CB7221BF6651002E5412 /* FWAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAttributedLabel.m; sourceTree = "<group>"; };
-		2FB7CB7321BF6651002E5412 /* FWAttributedLabelURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAttributedLabelURL.m; sourceTree = "<group>"; };
-		2FB7CB7421BF6651002E5412 /* FWAttributedLabelAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAttributedLabelAttachment.h; sourceTree = "<group>"; };
-		2FB7CB7521BF6651002E5412 /* NSMutableAttributedString+M80.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+M80.m"; sourceTree = "<group>"; };
 		2FB7CBC321C21F44002E5412 /* TestBannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBannerViewController.h; sourceTree = "<group>"; };
 		2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBannerViewController.m; sourceTree = "<group>"; };
 		2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableScrollViewController.h; sourceTree = "<group>"; };
@@ -222,7 +209,6 @@
 				2F0D2930215DFFEF005F1466 /* DZNWebViewController */,
 				2F0D294D215DFFEF005F1466 /* FMDB */,
 				2F0D295F215DFFEF005F1466 /* JQFMDB */,
-				2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -556,22 +542,6 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
-		2FB7CB6C21BF6651002E5412 /* M80AttributedLabel */ = {
-			isa = PBXGroup;
-			children = (
-				2FB7CB6F21BF6651002E5412 /* FWAttributedLabel.h */,
-				2FB7CB7221BF6651002E5412 /* FWAttributedLabel.m */,
-				2FB7CB7421BF6651002E5412 /* FWAttributedLabelAttachment.h */,
-				2FB7CB7021BF6651002E5412 /* FWAttributedLabelAttachment.m */,
-				2FB7CB6D21BF6651002E5412 /* M80AttributedLabelDefines.h */,
-				2FB7CB6E21BF6651002E5412 /* FWAttributedLabelURL.h */,
-				2FB7CB7321BF6651002E5412 /* FWAttributedLabelURL.m */,
-				2FB7CB7121BF6651002E5412 /* NSMutableAttributedString+M80.h */,
-				2FB7CB7521BF6651002E5412 /* NSMutableAttributedString+M80.m */,
-			);
-			path = M80AttributedLabel;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -730,7 +700,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */,
-				2FB7CB8021BF6651002E5412 /* FWAttributedLabelAttachment.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
@@ -748,7 +717,6 @@
 				2F4CFA5A2155302E00203A37 /* TestTableLayoutViewController.m in Sources */,
 				2F0D2986215DFFEF005F1466 /* FMDatabaseQueue.m in Sources */,
 				2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */,
-				2FB7CB8321BF6651002E5412 /* NSMutableAttributedString+M80.m in Sources */,
 				2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */,
 				2F0D2988215DFFEF005F1466 /* FMDatabase.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
@@ -759,7 +727,6 @@
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
 				2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */,
 				2F0D298A215DFFEF005F1466 /* FMResultSet.m in Sources */,
-				2FB7CB8121BF6651002E5412 /* FWAttributedLabel.m in Sources */,
 				2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */,
 				2F0D298D215DFFEF005F1466 /* JQFMDB.m in Sources */,
 				2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */,
@@ -767,7 +734,6 @@
 				2F0D297B215DFFEF005F1466 /* DZNWebViewController.m in Sources */,
 				2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */,
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,
-				2FB7CB8221BF6651002E5412 /* FWAttributedLabelURL.m in Sources */,
 				2F0D2989215DFFEF005F1466 /* FMDatabasePool.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
