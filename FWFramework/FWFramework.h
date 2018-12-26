@@ -42,6 +42,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWVersionManager.h>
 #import <FWFramework/FWNetwork.h>
 #import <FWFramework/FWRequest.h>
+#import <FWFramework/FWDatabase.h>
+#import <FWFramework/FWDatabaseManager.h>
 
 // Application
 #import <FWFramework/FWAttributedLabel.h>
@@ -74,6 +76,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWVersionManager.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
+#import "FWDatabase.h"
+#import "FWDatabaseManager.h"
 
 // Application
 #import "FWAttributedLabel.h"

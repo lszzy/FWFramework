@@ -1,12 +1,12 @@
 //
-//  JQFMDB.m
+//  FWDatabaseManager.m
 //
 //  Created by Joker on 17/3/7.
 //  GitHub: https://github.com/gaojunquan/JQFMDB
 //
 
-#import "JQFMDB.h"
-#import "FMDB.h"
+#import "FWDatabaseManager.h"
+#import "FWDatabase.h"
 #import <objc/runtime.h>
 
 // 数据库中常见的几种类型
@@ -15,7 +15,7 @@
 #define SQL_REAL     @"REAL" //浮点
 #define SQL_BLOB     @"BLOB" //data
 
-@interface JQFMDB ()
+@interface FWDatabaseManager ()
 
 @property (nonatomic, strong)NSString *dbPath;
 @property (nonatomic, strong)FWDatabaseQueue *dbQueue;
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation JQFMDB
+@implementation FWDatabaseManager
 
 - (FWDatabaseQueue *)dbQueue
 {
@@ -36,24 +36,23 @@
     return _dbQueue;
 }
 
-static JQFMDB *jqdb = nil;
 + (instancetype)shareDatabase
 {
-    return [JQFMDB shareDatabase:nil];
+    return [FWDatabaseManager shareDatabase:nil];
 }
 
 + (instancetype)shareDatabase:(NSString *)dbName
 {
-    return [JQFMDB shareDatabase:dbName path:nil];
+    return [FWDatabaseManager shareDatabase:dbName path:nil];
 }
 
 + (instancetype)shareDatabase:(NSString *)dbName path:(NSString *)dbPath
 {
-    if (!jqdb) {
-        
+    static FWDatabaseManager *fwdb = nil;
+    if (!fwdb) {
         NSString *path;
         if (!dbName) {
-            dbName = @"JQFMDB.sqlite";
+            dbName = @"FWDB.sqlite";
         }
         if (!dbPath) {
             path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:dbName];
@@ -63,16 +62,16 @@ static JQFMDB *jqdb = nil;
         
         FWDatabase *fmdb = [FWDatabase databaseWithPath:path];
         if ([fmdb open]) {
-            jqdb = JQFMDB.new;
-            jqdb.db = fmdb;
-            jqdb.dbPath = path;
+            fwdb = [[FWDatabaseManager alloc] init];
+            fwdb.db = fmdb;
+            fwdb.dbPath = path;
         }
     }
-    if (![jqdb.db open]) {
+    if (![fwdb.db open]) {
         NSLog(@"database can not open !");
         return nil;
     };
-    return jqdb;
+    return fwdb;
 }
 
 - (instancetype)initWithDBName:(NSString *)dbName
@@ -83,7 +82,7 @@ static JQFMDB *jqdb = nil;
 - (instancetype)initWithDBName:(NSString *)dbName path:(NSString *)dbPath
 {
     if (!dbName) {
-        dbName = @"JQFMDB.sqlite";
+        dbName = @"FWDB.sqlite";
     }
     NSString *path;
     if (!dbPath) {
@@ -105,12 +104,12 @@ static JQFMDB *jqdb = nil;
     return nil;
 }
 
-- (BOOL)jq_createTable:(NSString *)tableName dicOrModel:(id)parameters
+- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters
 {
-    return [self jq_createTable:tableName dicOrModel:parameters excludeName:nil];
+    return [self createTable:tableName dicOrModel:parameters excludeName:nil];
 }
 
-- (BOOL)jq_createTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr
+- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr
 {
     
     NSDictionary *dic;
@@ -280,7 +279,7 @@ static JQFMDB *jqdb = nil;
 }
 
 #pragma mark - *************** 增删改查
-- (BOOL)jq_insertTable:(NSString *)tableName dicOrModel:(id)parameters
+- (BOOL)insertTable:(NSString *)tableName dicOrModel:(id)parameters
 {
     NSArray *columnArr = [self getColumnArr:tableName db:_db];
     return [self insertTable:tableName dicOrModel:parameters columnArr:columnArr];
@@ -321,7 +320,7 @@ static JQFMDB *jqdb = nil;
     return flag;
 }
 
-- (BOOL)jq_deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...
+- (BOOL)deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...
 {
     va_list args;
     va_start(args, format);
@@ -334,7 +333,7 @@ static JQFMDB *jqdb = nil;
     return flag;
 }
 
-- (BOOL)jq_updateTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...
+- (BOOL)updateTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...
 {
     va_list args;
     va_start(args, format);
@@ -370,7 +369,7 @@ static JQFMDB *jqdb = nil;
     return flag;
 }
 
-- (NSArray *)jq_lookupTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...
+- (NSArray *)queryTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...
 {
     va_list args;
     va_start(args, format);
@@ -457,7 +456,7 @@ static JQFMDB *jqdb = nil;
 }
 
 // 直接传一个array插入
-- (NSArray *)jq_insertTable:(NSString *)tableName dicOrModelArray:(NSArray *)dicOrModelArray
+- (NSArray *)insertTable:(NSString *)tableName dicOrModelArray:(NSArray *)dicOrModelArray
 {
     
     int errorIndex = 0;
@@ -475,7 +474,7 @@ static JQFMDB *jqdb = nil;
     return resultMArr;
 }
 
-- (BOOL)jq_deleteTable:(NSString *)tableName
+- (BOOL)deleteTable:(NSString *)tableName
 {
     
     NSString *sqlstr = [NSString stringWithFormat:@"DROP TABLE %@", tableName];
@@ -486,7 +485,7 @@ static JQFMDB *jqdb = nil;
     return YES;
 }
 
-- (BOOL)jq_deleteAllDataFromTable:(NSString *)tableName
+- (BOOL)deleteAllDataFromTable:(NSString *)tableName
 {
     
     NSString *sqlstr = [NSString stringWithFormat:@"DELETE FROM %@", tableName];
@@ -498,7 +497,7 @@ static JQFMDB *jqdb = nil;
     return YES;
 }
 
-- (BOOL)jq_isExistTable:(NSString *)tableName
+- (BOOL)isExistTable:(NSString *)tableName
 {
     
     FWResultSet *set = [_db executeQuery:@"SELECT count(*) as 'count' FROM sqlite_master WHERE type ='table' and name = ?", tableName];
@@ -514,12 +513,12 @@ static JQFMDB *jqdb = nil;
     return NO;
 }
 
-- (NSArray *)jq_columnNameArray:(NSString *)tableName
+- (NSArray *)columnNameArray:(NSString *)tableName
 {
     return [self getColumnArr:tableName db:_db];
 }
 
-- (int)jq_tableItemCount:(NSString *)tableName
+- (int)tableItemCount:(NSString *)tableName
 {
     
     NSString *sqlstr = [NSString stringWithFormat:@"SELECT count(*) as 'count' FROM %@", tableName];
@@ -552,21 +551,23 @@ static JQFMDB *jqdb = nil;
     return 0;
 }
 
-- (BOOL)jq_alterTable:(NSString *)tableName dicOrModel:(id)parameters
+- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters
 {
-    return [self jq_alterTable:tableName dicOrModel:parameters excludeName:nil];
+    return [self alterTable:tableName dicOrModel:parameters excludeName:nil];
 }
 
-- (BOOL)jq_alterTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr
+- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr
 {
     __block BOOL flag;
-    [self jq_inTransaction:^(BOOL *rollback) {
+    __weak __typeof__(self) self_weak_ = self;
+    [self inTransaction:^(BOOL *rollback) {
+        __typeof__(self) self = self_weak_;
         if ([parameters isKindOfClass:[NSDictionary class]]) {
             for (NSString *key in parameters) {
                 if ([nameArr containsObject:key]) {
                     continue;
                 }
-                flag = [_db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ %@", tableName, key, parameters[key]]];
+                flag = [self.db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ %@", tableName, key, parameters[key]]];
                 if (!flag) {
                     *rollback = YES;
                     return;
@@ -587,10 +588,10 @@ static JQFMDB *jqdb = nil;
                 CLS = parameters;
             }
             NSDictionary *modelDic = [self modelToDictionary:CLS excludePropertyName:nameArr];
-            NSArray *columnArr = [self getColumnArr:tableName db:_db];
+            NSArray *columnArr = [self getColumnArr:tableName db:self.db];
             for (NSString *key in modelDic) {
                 if (![columnArr containsObject:key] && ![nameArr containsObject:key]) {
-                    flag = [_db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ %@", tableName, key, modelDic[key]]];
+                    flag = [self.db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ %@", tableName, key, modelDic[key]]];
                     if (!flag) {
                         *rollback = YES;
                         return;
@@ -605,7 +606,7 @@ static JQFMDB *jqdb = nil;
 
 // =============================   线程安全操作    ===============================
 
-- (void)jq_inDatabase:(void(^)(void))block
+- (void)inDatabase:(void(^)(void))block
 {
     
     [[self dbQueue] inDatabase:^(FWDatabase *db) {
@@ -613,7 +614,7 @@ static JQFMDB *jqdb = nil;
     }];
 }
 
-- (void)jq_inTransaction:(void(^)(BOOL *rollback))block
+- (void)inTransaction:(void(^)(BOOL *rollback))block
 {
     
     [[self dbQueue] inTransaction:^(FWDatabase *db, BOOL *rollback) {
