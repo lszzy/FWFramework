@@ -14,7 +14,6 @@
  */
 @interface FWDatabaseManager : NSObject
 
-
 /**
  (主键id,自动创建) 返回最后插入的primary key id
  @param tableName 表的名称
@@ -47,14 +46,14 @@
  @param parameters 设置表的字段,可以传model(runtime自动生成字段)或字典(格式:@{@"name":@"TEXT"})
  @return 是否创建成功
  */
-- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters;
+- (BOOL)createTable:(NSString *)tableName withModel:(id)parameters;
 
 /**
  同上,
  @param nameArr 不允许model或dic里的属性/key生成表的字段,如:nameArr = @[@"name"],则不允许名为name的属性/key 生成表的字段
  
  */
-- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr;
+- (BOOL)createTable:(NSString *)tableName withModel:(id)parameters excludeName:(NSArray *)nameArr;
 
 /**
  增加: 向表中插入数据
@@ -63,7 +62,7 @@
  @param parameters 要插入的数据,可以是model或dictionary(格式:@{@"name":@"小李"})
  @return 是否插入成功
  */
-- (BOOL)insertTable:(NSString *)tableName dicOrModel:(id)parameters;
+- (BOOL)insertTable:(NSString *)tableName withModel:(id)parameters;
 
 /**
  删除: 根据条件删除表中数据
@@ -82,7 +81,7 @@
  @param format 条件语句, 如:@"where name = '小李'"
  @return 是否更改成功
  */
-- (BOOL)updateTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...;
+- (BOOL)updateTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...;
 
 /**
  查找: 根据条件查找表中数据
@@ -92,15 +91,15 @@
  @param format 条件语句, 如:@"where name = '小李'",
  @return 将结果存入array,数组中的元素的类型为parameters的类型
  */
-- (NSArray *)queryTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...;
+- (NSArray *)queryTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...;
 
 /**
  批量插入或更改
 
- @param dicOrModelArray 要insert/update数据的数组,也可以将model和dictionary混合装入array
+ @param modelArray 要insert/update数据的数组,也可以将model和dictionary混合装入array
  @return 返回的数组存储未插入成功的下标,数组中元素类型为NSNumber
  */
-- (NSArray *)insertTable:(NSString *)tableName dicOrModelArray:(NSArray *)dicOrModelArray;
+- (NSArray *)insertTable:(NSString *)tableName withModelArray:(NSArray *)modelArray;
 
 // `删除表
 - (BOOL)deleteTable:(NSString *)tableName;
@@ -126,9 +125,8 @@
  @param nameArr 不允许生成字段的属性名的数组
  @return 是否成功
  */
-- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr;
-- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters;
-
+- (BOOL)alterTable:(NSString *)tableName withModel:(id)parameters excludeName:(NSArray *)nameArr;
+- (BOOL)alterTable:(NSString *)tableName withModel:(id)parameters;
 
 // =============================   线程安全操作    ===============================
 
@@ -137,12 +135,11 @@
  
  Person *p = [[Person alloc] init];
  p.name = @"小李";
- [jqdb jq_inDatabase:^{
- [jqdb jq_insertTable:@"users" dicOrModel:p];
+ [jqdb inDatabase:^{
+    [jqdb insertTable:@"users" withModel:p];
  }];
  */
 - (void)inDatabase:(void (^)(void))block;
-
 
 /**
  事务: 将操作语句放入block中可执行回滚操作(*rollback = YES;)
@@ -151,18 +148,16 @@
  p.name = @"小李";
  
  for (int i=0,i < 1000,i++) {
- [jq jq_inTransaction:^(BOOL *rollback) {
- BOOL flag = [jq jq_insertTable:@"users" dicOrModel:p];
- if (!flag) {
- *rollback = YES; //只要有一次不成功,则进行回滚操作
- return;
+    [jq inTransaction:^(BOOL *rollback) {
+        BOOL flag = [jq insertTable:@"users" withModel:p];
+        if (!flag) {
+            *rollback = YES; //只要有一次不成功,则进行回滚操作
+            return;
+        }
+    }];
  }
- }];
- }
-
  */
 - (void)inTransaction:(void(^)(BOOL *rollback))block;
-
 
 @end
 
