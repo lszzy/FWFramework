@@ -40,9 +40,10 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWKeychainManager.h>
 #import <FWFramework/FWTaskManager.h>
 #import <FWFramework/FWVersionManager.h>
+#import <FWFramework/FWLocationManager.h>
+#import <FWFramework/FWStorekitManager.h>
 #import <FWFramework/FWNetwork.h>
 #import <FWFramework/FWRequest.h>
-#import <FWFramework/FWDatabase.h>
 #import <FWFramework/FWDatabaseManager.h>
 
 // Application
@@ -74,9 +75,10 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWKeychainManager.h"
 #import "FWTaskManager.h"
 #import "FWVersionManager.h"
+#import "FWLocationManager.h"
+#import "FWStorekitManager.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
-#import "FWDatabase.h"
 #import "FWDatabaseManager.h"
 
 // Application

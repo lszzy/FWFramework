@@ -239,6 +239,10 @@
 		2FCE514421D3A457009EA65E /* FWResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE514221D3A457009EA65E /* FWResultSet.m */; };
 		2FCE514721D3A6A5009EA65E /* FWDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE514521D3A6A5009EA65E /* FWDatabaseAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE514821D3A6A5009EA65E /* FWDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE514621D3A6A5009EA65E /* FWDatabaseAdditions.m */; };
+		2FCE514F21D3B14A009EA65E /* FWStorekitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE514B21D3B149009EA65E /* FWStorekitManager.m */; };
+		2FCE515021D3B14A009EA65E /* FWLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE514C21D3B149009EA65E /* FWLocationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FCE515121D3B14A009EA65E /* FWLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE514D21D3B149009EA65E /* FWLocationManager.m */; };
+		2FCE515221D3B14A009EA65E /* FWStorekitManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE514E21D3B14A009EA65E /* FWStorekitManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -475,6 +479,10 @@
 		2FCE514221D3A457009EA65E /* FWResultSet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWResultSet.m; sourceTree = "<group>"; };
 		2FCE514521D3A6A5009EA65E /* FWDatabaseAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabaseAdditions.h; sourceTree = "<group>"; };
 		2FCE514621D3A6A5009EA65E /* FWDatabaseAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDatabaseAdditions.m; sourceTree = "<group>"; };
+		2FCE514B21D3B149009EA65E /* FWStorekitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWStorekitManager.m; sourceTree = "<group>"; };
+		2FCE514C21D3B149009EA65E /* FWLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWLocationManager.h; sourceTree = "<group>"; };
+		2FCE514D21D3B149009EA65E /* FWLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWLocationManager.m; sourceTree = "<group>"; };
+		2FCE514E21D3B14A009EA65E /* FWStorekitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWStorekitManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -682,6 +690,10 @@
 				2F03A557216CF4B9001965A1 /* FWTaskManager.m */,
 				2F03A556216CF4B9001965A1 /* FWVersionManager.h */,
 				2F03A558216CF4B9001965A1 /* FWVersionManager.m */,
+				2FCE514C21D3B149009EA65E /* FWLocationManager.h */,
+				2FCE514D21D3B149009EA65E /* FWLocationManager.m */,
+				2FCE514E21D3B14A009EA65E /* FWStorekitManager.h */,
+				2FCE514B21D3B149009EA65E /* FWStorekitManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -871,6 +883,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FCE515021D3B14A009EA65E /* FWLocationManager.h in Headers */,
+				2FCE515221D3B14A009EA65E /* FWStorekitManager.h in Headers */,
 				2FCE513F21D3A43E009EA65E /* FWDatabaseQueue.h in Headers */,
 				2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */,
 				2FCE514721D3A6A5009EA65E /* FWDatabaseAdditions.h in Headers */,
@@ -1083,9 +1097,11 @@
 				2F03A58C216CF4B9001965A1 /* UITableView+FWFramework.m in Sources */,
 				2F03A5DF216CF4B9001965A1 /* NSArray+FWFramework.m in Sources */,
 				2F03A666216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m in Sources */,
+				2FCE514F21D3B14A009EA65E /* FWStorekitManager.m in Sources */,
 				2F03A641216CF882001965A1 /* FWChainRequestAgent.m in Sources */,
 				2F03A5AD216CF4B9001965A1 /* UIViewController+FWFramework.m in Sources */,
 				2F03A5FF216CF4B9001965A1 /* FWTest.m in Sources */,
+				2FCE515121D3B14A009EA65E /* FWLocationManager.m in Sources */,
 				2F03A5FC216CF4B9001965A1 /* FWPromise.m in Sources */,
 				2F03A579216CF4B9001965A1 /* UIView+FWAutoLayout.m in Sources */,
 				2F03A5D5216CF4B9001965A1 /* NSString+FWEncode.m in Sources */,
