@@ -7,6 +7,8 @@
 
 #import "FWDatabaseManager.h"
 #import "FWDatabase.h"
+#import "FWDatabaseAdditions.h"
+#import "FWDatabaseQueue.h"
 #import <objc/runtime.h>
 
 // 数据库中常见的几种类型
@@ -48,8 +50,8 @@
 
 + (instancetype)shareDatabase:(NSString *)dbName path:(NSString *)dbPath
 {
-    static FWDatabaseManager *fwdb = nil;
-    if (!fwdb) {
+    static FWDatabaseManager *manager = nil;
+    if (!manager) {
         NSString *path;
         if (!dbName) {
             dbName = @"FWDB.sqlite";
@@ -62,16 +64,16 @@
         
         FWDatabase *fmdb = [FWDatabase databaseWithPath:path];
         if ([fmdb open]) {
-            fwdb = [[FWDatabaseManager alloc] init];
-            fwdb.db = fmdb;
-            fwdb.dbPath = path;
+            manager = [[FWDatabaseManager alloc] init];
+            manager.db = fmdb;
+            manager.dbPath = path;
         }
     }
-    if (![fwdb.db open]) {
+    if (![manager.db open]) {
         NSLog(@"database can not open !");
         return nil;
     };
-    return fwdb;
+    return manager;
 }
 
 - (instancetype)initWithDBName:(NSString *)dbName
@@ -104,12 +106,12 @@
     return nil;
 }
 
-- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters
+- (BOOL)createTable:(NSString *)tableName withModel:(id)parameters
 {
-    return [self createTable:tableName dicOrModel:parameters excludeName:nil];
+    return [self createTable:tableName withModel:parameters excludeName:nil];
 }
 
-- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr
+- (BOOL)createTable:(NSString *)tableName withModel:(id)parameters excludeName:(NSArray *)nameArr
 {
     
     NSDictionary *dic;
@@ -279,13 +281,13 @@
 }
 
 #pragma mark - *************** 增删改查
-- (BOOL)insertTable:(NSString *)tableName dicOrModel:(id)parameters
+- (BOOL)insertTable:(NSString *)tableName withModel:(id)parameters
 {
     NSArray *columnArr = [self getColumnArr:tableName db:_db];
-    return [self insertTable:tableName dicOrModel:parameters columnArr:columnArr];
+    return [self insertTable:tableName withModel:parameters columnArr:columnArr];
 }
 
-- (BOOL)insertTable:(NSString *)tableName dicOrModel:(id)parameters columnArr:(NSArray *)columnArr
+- (BOOL)insertTable:(NSString *)tableName withModel:(id)parameters columnArr:(NSArray *)columnArr
 {
     BOOL flag;
     NSDictionary *dic;
@@ -333,7 +335,7 @@
     return flag;
 }
 
-- (BOOL)updateTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...
+- (BOOL)updateTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...
 {
     va_list args;
     va_start(args, format);
@@ -369,7 +371,7 @@
     return flag;
 }
 
-- (NSArray *)queryTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...
+- (NSArray *)queryTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...
 {
     va_list args;
     va_start(args, format);
@@ -456,15 +458,15 @@
 }
 
 // 直接传一个array插入
-- (NSArray *)insertTable:(NSString *)tableName dicOrModelArray:(NSArray *)dicOrModelArray
+- (NSArray *)insertTable:(NSString *)tableName withModelArray:(NSArray *)modelArray
 {
     
     int errorIndex = 0;
     NSMutableArray *resultMArr = [NSMutableArray arrayWithCapacity:0];
     NSArray *columnArr = [self getColumnArr:tableName db:_db];
-    for (id parameters in dicOrModelArray) {
+    for (id parameters in modelArray) {
         
-        BOOL flag = [self insertTable:tableName dicOrModel:parameters columnArr:columnArr];
+        BOOL flag = [self insertTable:tableName withModel:parameters columnArr:columnArr];
         if (!flag) {
             [resultMArr addObject:@(errorIndex)];
         }
@@ -551,12 +553,12 @@
     return 0;
 }
 
-- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters
+- (BOOL)alterTable:(NSString *)tableName withModel:(id)parameters
 {
-    return [self alterTable:tableName dicOrModel:parameters excludeName:nil];
+    return [self alterTable:tableName withModel:parameters excludeName:nil];
 }
 
-- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr
+- (BOOL)alterTable:(NSString *)tableName withModel:(id)parameters excludeName:(NSArray *)nameArr
 {
     __block BOOL flag;
     __weak __typeof__(self) self_weak_ = self;
@@ -608,7 +610,6 @@
 
 - (void)inDatabase:(void(^)(void))block
 {
-    
     [[self dbQueue] inDatabase:^(FWDatabase *db) {
         block();
     }];
@@ -616,13 +617,10 @@
 
 - (void)inTransaction:(void(^)(BOOL *rollback))block
 {
-    
     [[self dbQueue] inTransaction:^(FWDatabase *db, BOOL *rollback) {
         block(rollback);
     }];
-    
 }
-
 
 @end
 
