@@ -380,6 +380,7 @@ typedef NS_ENUM(int, FWDBCheckpointMode) {
  */
 
 - (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arguments;
+- (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arguments andVAList:(va_list)args;
 
 /** Execute single update statement
  
@@ -585,6 +586,7 @@ typedef NS_ENUM(int, FWDBCheckpointMode) {
  */
 
 - (FWResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments andVAList:(va_list)args;
 
 /** Execute select statement
  
