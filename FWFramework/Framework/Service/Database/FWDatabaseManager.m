@@ -374,7 +374,7 @@
     if (where.length) [finalStr appendFormat:@" %@", where];
     
     
-    flag =  [_db executeUpdate:finalStr withArgumentsInArray:argumentsArr];
+    flag =  [_db executeUpdate:finalStr withArgumentsInArray:argumentsArr andVAList:args];
     
     return flag;
 }
@@ -393,7 +393,7 @@
     va_end(args);
     BOOL flag;
     NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"DELETE FROM %@  %@", tableName,where];
-    flag = [_db executeUpdate:finalStr];
+    flag = [_db executeUpdate:finalStr withVAList:args];
     
     return flag;
 }
@@ -409,7 +409,7 @@
     NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"SELECT * FROM %@ %@", tableName, where?where:@""];
     NSArray *clomnArr = [self getColumnArr:tableName db:_db];
     
-    FWResultSet *set = [_db executeQuery:finalStr];
+    FWResultSet *set = [_db executeQuery:finalStr withVAList:args];
     
     if ([parameters isKindOfClass:[NSDictionary class]]) {
         dic = parameters;

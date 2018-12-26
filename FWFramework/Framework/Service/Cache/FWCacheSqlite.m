@@ -65,7 +65,7 @@
 {
     NSArray *objectDatas = [_manager queryTable:@"FWCache" withModel:@{@"value": @"BLOB"} whereFormat:@"WHERE key = ?", key];
     if (objectDatas.count > 0) {
-        NSData *objectData = objectDatas.firstObject;
+        NSData *objectData = [objectDatas.firstObject objectForKey:@"value"];
         return [NSKeyedUnarchiver unarchiveObjectWithData:objectData];
     }
     return nil;
