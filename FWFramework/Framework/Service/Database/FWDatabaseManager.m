@@ -130,7 +130,7 @@
         dic = [self modelToDictionary:CLS excludePropertyName:nameArr];
     }
     
-    NSMutableString *fieldStr = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE %@ (pkid  INTEGER PRIMARY KEY,", tableName];
+    NSMutableString *fieldStr = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (pkid INTEGER PRIMARY KEY,", tableName];
     
     int keyCount = 0;
     for (NSString *key in dic) {
@@ -155,7 +155,7 @@
 
 - (NSString *)createTable:(NSString *)tableName dictionary:(NSDictionary *)dic excludeName:(NSArray *)nameArr
 {
-    NSMutableString *fieldStr = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE %@ (pkid  INTEGER PRIMARY KEY,", tableName];
+    NSMutableString *fieldStr = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (pkid INTEGER PRIMARY KEY,", tableName];
     
     int keyCount = 0;
     for (NSString *key in dic) {
@@ -177,7 +177,7 @@
 
 - (NSString *)createTable:(NSString *)tableName model:(Class)cls excludeName:(NSArray *)nameArr
 {
-    NSMutableString *fieldStr = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE %@ (pkid INTEGER PRIMARY KEY,", tableName];
+    NSMutableString *fieldStr = [[NSMutableString alloc] initWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (pkid INTEGER PRIMARY KEY,", tableName];
     
     NSDictionary *dic = [self modelToDictionary:cls excludePropertyName:nameArr];
     int keyCount = 0;
@@ -286,6 +286,11 @@
 
 - (BOOL)insertTable:(NSString *)tableName withModel:(id)parameters columnArr:(NSArray *)columnArr
 {
+    return [self insertTable:tableName withModel:parameters columnArr:columnArr isReplace:NO];
+}
+
+- (BOOL)insertTable:(NSString *)tableName withModel:(id)parameters columnArr:(NSArray *)columnArr isReplace:(BOOL)isReplace
+{
     BOOL flag;
     NSDictionary *dic;
     if ([parameters isKindOfClass:[NSDictionary class]]) {
@@ -294,7 +299,7 @@
         dic = [self getModelPropertyKeyValue:parameters tableName:tableName clomnArr:columnArr];
     }
     
-    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"INSERT INTO %@ (", tableName];
+    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"%@ INTO %@ (", (isReplace ? @"REPLACE" : @"INSERT") , tableName];
     NSMutableString *tempStr = [NSMutableString stringWithCapacity:0];
     NSMutableArray *argumentsArr = [NSMutableArray arrayWithCapacity:0];
     
@@ -313,23 +318,29 @@
     if (tempStr.length)
         [tempStr deleteCharactersInRange:NSMakeRange(tempStr.length-1, 1)];
     
-    [finalStr appendFormat:@") values (%@)", tempStr];
+    [finalStr appendFormat:@") VALUES (%@)", tempStr];
     
     flag = [_db executeUpdate:finalStr withArgumentsInArray:argumentsArr];
     return flag;
 }
 
-- (BOOL)deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...
+// 直接传一个array插入
+- (NSArray *)insertTable:(NSString *)tableName withModelArray:(NSArray *)modelArray
 {
-    va_list args;
-    va_start(args, format);
-    NSString *where = format?[[NSString alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:args]:format;
-    va_end(args);
-    BOOL flag;
-    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"delete from %@  %@", tableName,where];
-    flag = [_db executeUpdate:finalStr];
     
-    return flag;
+    int errorIndex = 0;
+    NSMutableArray *resultMArr = [NSMutableArray arrayWithCapacity:0];
+    NSArray *columnArr = [self getColumnArr:tableName db:_db];
+    for (id parameters in modelArray) {
+        
+        BOOL flag = [self insertTable:tableName withModel:parameters columnArr:columnArr];
+        if (!flag) {
+            [resultMArr addObject:@(errorIndex)];
+        }
+        errorIndex++;
+    }
+    
+    return resultMArr;
 }
 
 - (BOOL)updateTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...
@@ -347,7 +358,7 @@
         dic = [self getModelPropertyKeyValue:parameters tableName:tableName clomnArr:clomnArr];
     }
     
-    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"update %@ set ", tableName];
+    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"UPDATE %@ SET ", tableName];
     NSMutableArray *argumentsArr = [NSMutableArray arrayWithCapacity:0];
     
     for (NSString *key in dic) {
@@ -368,6 +379,25 @@
     return flag;
 }
 
+- (BOOL)replaceTable:(NSString *)tableName withModel:(id)parameters
+{
+    NSArray *columnArr = [self getColumnArr:tableName db:_db];
+    return [self insertTable:tableName withModel:parameters columnArr:columnArr isReplace:YES];
+}
+
+- (BOOL)deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...
+{
+    va_list args;
+    va_start(args, format);
+    NSString *where = format?[[NSString alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:args]:format;
+    va_end(args);
+    BOOL flag;
+    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"DELETE FROM %@  %@", tableName,where];
+    flag = [_db executeUpdate:finalStr];
+    
+    return flag;
+}
+
 - (NSArray *)queryTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...
 {
     va_list args;
@@ -376,7 +406,7 @@
     va_end(args);
     NSMutableArray *resultMArr = [NSMutableArray arrayWithCapacity:0];
     NSDictionary *dic;
-    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"select * from %@ %@", tableName, where?where:@""];
+    NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"SELECT * FROM %@ %@", tableName, where?where:@""];
     NSArray *clomnArr = [self getColumnArr:tableName db:_db];
     
     FWResultSet *set = [_db executeQuery:finalStr];
@@ -454,25 +484,6 @@
     return resultMArr;
 }
 
-// 直接传一个array插入
-- (NSArray *)insertTable:(NSString *)tableName withModelArray:(NSArray *)modelArray
-{
-    
-    int errorIndex = 0;
-    NSMutableArray *resultMArr = [NSMutableArray arrayWithCapacity:0];
-    NSArray *columnArr = [self getColumnArr:tableName db:_db];
-    for (id parameters in modelArray) {
-        
-        BOOL flag = [self insertTable:tableName withModel:parameters columnArr:columnArr];
-        if (!flag) {
-            [resultMArr addObject:@(errorIndex)];
-        }
-        errorIndex++;
-    }
-    
-    return resultMArr;
-}
-
 - (BOOL)deleteTable:(NSString *)tableName
 {
     
@@ -499,7 +510,7 @@
 - (BOOL)isExistTable:(NSString *)tableName
 {
     
-    FWResultSet *set = [_db executeQuery:@"SELECT count(*) as 'count' FROM sqlite_master WHERE type ='table' and name = ?", tableName];
+    FWResultSet *set = [_db executeQuery:@"SELECT count(*) AS 'count' FROM sqlite_master WHERE type ='table' AND name = ?", tableName];
     while ([set next])
     {
         NSInteger count = [set intForColumn:@"count"];
@@ -520,7 +531,7 @@
 - (int)tableItemCount:(NSString *)tableName
 {
     
-    NSString *sqlstr = [NSString stringWithFormat:@"SELECT count(*) as 'count' FROM %@", tableName];
+    NSString *sqlstr = [NSString stringWithFormat:@"SELECT count(*) AS 'count' FROM %@", tableName];
     FWResultSet *set = [_db executeQuery:sqlstr];
     while ([set next])
     {
@@ -541,7 +552,7 @@
 
 - (NSInteger)lastInsertPrimaryKeyId:(NSString *)tableName
 {
-    NSString *sqlstr = [NSString stringWithFormat:@"SELECT * FROM %@ where pkid = (SELECT max(pkid) FROM %@)", tableName, tableName];
+    NSString *sqlstr = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE pkid = (SELECT max(pkid) FROM %@)", tableName, tableName];
     FWResultSet *set = [_db executeQuery:sqlstr];
     while ([set next])
     {
