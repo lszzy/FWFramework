@@ -1,5 +1,5 @@
-#import "FMResultSet.h"
-#import "FMDatabase.h"
+#import "FWResultSet.h"
+#import "FWDatabase.h"
 #import <unistd.h>
 
 #if FMDB_SQLITE_STANDALONE
@@ -8,20 +8,20 @@
 #import <sqlite3.h>
 #endif
 
-@interface FMDatabase ()
-- (void)resultSetDidClose:(FMResultSet *)resultSet;
+@interface FWDatabase ()
+- (void)resultSetDidClose:(FWResultSet *)resultSet;
 @end
 
-@interface FMResultSet () {
+@interface FWResultSet () {
     NSMutableDictionary *_columnNameToIndexMap;
 }
 @end
 
-@implementation FMResultSet
+@implementation FWResultSet
 
-+ (instancetype)resultSetWithStatement:(FMStatement *)statement usingParentDatabase:(FMDatabase*)aDB {
++ (instancetype)resultSetWithStatement:(FWStatement *)statement usingParentDatabase:(FWDatabase*)aDB {
     
-    FMResultSet *rs = [[FMResultSet alloc] init];
+    FWResultSet *rs = [[FWResultSet alloc] init];
     
     [rs setStatement:statement];
     [rs setParentDB:aDB];
@@ -98,34 +98,6 @@
         }
     }
 }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-
-- (NSDictionary *)resultDict {
-    
-    NSUInteger num_cols = (NSUInteger)sqlite3_data_count([_statement statement]);
-    
-    if (num_cols > 0) {
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:num_cols];
-        
-        NSEnumerator *columnNames = [[self columnNameToIndexMap] keyEnumerator];
-        NSString *columnName = nil;
-        while ((columnName = [columnNames nextObject])) {
-            id objectValue = [self objectForColumnName:columnName];
-            [dict setObject:objectValue forKey:columnName];
-        }
-        
-        return FMDBReturnAutoreleased([dict copy]);
-    }
-    else {
-        NSLog(@"Warning: There seem to be no columns in this set.");
-    }
-    
-    return nil;
-}
-
-#pragma clang diagnostic pop
 
 - (NSDictionary*)resultDictionary {
     
@@ -373,10 +345,6 @@
     return [self UTF8StringForColumnIndex:[self columnIndexForName:columnName]];
 }
 
-- (const unsigned char *)UTF8StringForColumnName:(NSString*)columnName {
-    return [self UTF8StringForColumn:columnName];
-}
-
 - (id)objectForColumnIndex:(int)columnIdx {
     if (columnIdx < 0 || columnIdx >= sqlite3_column_count([_statement statement])) {
         return nil;
@@ -405,10 +373,6 @@
     }
     
     return returnValue;
-}
-
-- (id)objectForColumnName:(NSString*)columnName {
-    return [self objectForColumn:columnName];
 }
 
 - (id)objectForColumn:(NSString*)columnName {

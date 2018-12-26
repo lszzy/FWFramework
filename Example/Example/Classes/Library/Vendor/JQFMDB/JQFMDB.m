@@ -18,17 +18,17 @@
 @interface JQFMDB ()
 
 @property (nonatomic, strong)NSString *dbPath;
-@property (nonatomic, strong)FMDatabaseQueue *dbQueue;
-@property (nonatomic, strong)FMDatabase *db;
+@property (nonatomic, strong)FWDatabaseQueue *dbQueue;
+@property (nonatomic, strong)FWDatabase *db;
 
 @end
 
 @implementation JQFMDB
 
-- (FMDatabaseQueue *)dbQueue
+- (FWDatabaseQueue *)dbQueue
 {
     if (!_dbQueue) {
-        FMDatabaseQueue *fmdb = [FMDatabaseQueue databaseQueueWithPath:_dbPath];
+        FWDatabaseQueue *fmdb = [FWDatabaseQueue databaseQueueWithPath:_dbPath];
         self.dbQueue = fmdb;
         [_db close];
         self.db = [fmdb valueForKey:@"_db"];
@@ -61,7 +61,7 @@ static JQFMDB *jqdb = nil;
             path = [dbPath stringByAppendingPathComponent:dbName];
         }
         
-        FMDatabase *fmdb = [FMDatabase databaseWithPath:path];
+        FWDatabase *fmdb = [FWDatabase databaseWithPath:path];
         if ([fmdb open]) {
             jqdb = JQFMDB.new;
             jqdb.db = fmdb;
@@ -92,7 +92,7 @@ static JQFMDB *jqdb = nil;
         path = [dbPath stringByAppendingPathComponent:dbName];
     }
     
-    FMDatabase *fmdb = [FMDatabase databaseWithPath:path];
+    FWDatabase *fmdb = [FWDatabase databaseWithPath:path];
     
     if ([fmdb open]) {
         self = [self init];
@@ -266,11 +266,11 @@ static JQFMDB *jqdb = nil;
 }
 
 // 得到表里的字段名称
-- (NSArray *)getColumnArr:(NSString *)tableName db:(FMDatabase *)db
+- (NSArray *)getColumnArr:(NSString *)tableName db:(FWDatabase *)db
 {    
     NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:0];
     
-    FMResultSet *resultSet = [db getTableSchema:tableName];
+    FWResultSet *resultSet = [db getTableSchema:tableName];
     
     while ([resultSet next]) {
         [mArr addObject:[resultSet stringForColumn:@"name"]];
@@ -381,7 +381,7 @@ static JQFMDB *jqdb = nil;
     NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"select * from %@ %@", tableName, where?where:@""];
     NSArray *clomnArr = [self getColumnArr:tableName db:_db];
     
-    FMResultSet *set = [_db executeQuery:finalStr];
+    FWResultSet *set = [_db executeQuery:finalStr];
     
     if ([parameters isKindOfClass:[NSDictionary class]]) {
         dic = parameters;
@@ -501,7 +501,7 @@ static JQFMDB *jqdb = nil;
 - (BOOL)jq_isExistTable:(NSString *)tableName
 {
     
-    FMResultSet *set = [_db executeQuery:@"SELECT count(*) as 'count' FROM sqlite_master WHERE type ='table' and name = ?", tableName];
+    FWResultSet *set = [_db executeQuery:@"SELECT count(*) as 'count' FROM sqlite_master WHERE type ='table' and name = ?", tableName];
     while ([set next])
     {
         NSInteger count = [set intForColumn:@"count"];
@@ -523,7 +523,7 @@ static JQFMDB *jqdb = nil;
 {
     
     NSString *sqlstr = [NSString stringWithFormat:@"SELECT count(*) as 'count' FROM %@", tableName];
-    FMResultSet *set = [_db executeQuery:sqlstr];
+    FWResultSet *set = [_db executeQuery:sqlstr];
     while ([set next])
     {
         return [set intForColumn:@"count"];
@@ -544,7 +544,7 @@ static JQFMDB *jqdb = nil;
 - (NSInteger)lastInsertPrimaryKeyId:(NSString *)tableName
 {
     NSString *sqlstr = [NSString stringWithFormat:@"SELECT * FROM %@ where pkid = (SELECT max(pkid) FROM %@)", tableName, tableName];
-    FMResultSet *set = [_db executeQuery:sqlstr];
+    FWResultSet *set = [_db executeQuery:sqlstr];
     while ([set next])
     {
         return [set longLongIntForColumn:@"pkid"];
@@ -608,7 +608,7 @@ static JQFMDB *jqdb = nil;
 - (void)jq_inDatabase:(void(^)(void))block
 {
     
-    [[self dbQueue] inDatabase:^(FMDatabase *db) {
+    [[self dbQueue] inDatabase:^(FWDatabase *db) {
         block();
     }];
 }
@@ -616,7 +616,7 @@ static JQFMDB *jqdb = nil;
 - (void)jq_inTransaction:(void(^)(BOOL *rollback))block
 {
     
-    [[self dbQueue] inTransaction:^(FMDatabase *db, BOOL *rollback) {
+    [[self dbQueue] inTransaction:^(FWDatabase *db, BOOL *rollback) {
         block(rollback);
     }];
     

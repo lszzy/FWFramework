@@ -1,4 +1,4 @@
-#import "FMDatabase.h"
+#import "FWDatabase.h"
 #import <unistd.h>
 #import <objc/runtime.h>
 
@@ -8,7 +8,7 @@
 #import <sqlite3.h>
 #endif
 
-@interface FMDatabase () {
+@interface FWDatabase () {
     void*               _db;
     BOOL                _isExecutingStatement;
     NSTimeInterval      _startBusyRetryTime;
@@ -21,14 +21,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-- (FMResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args;
 - (BOOL)executeUpdate:(NSString *)sql error:(NSError * _Nullable *)outErr withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args;
 
 NS_ASSUME_NONNULL_END
 
 @end
 
-@implementation FMDatabase
+@implementation FWDatabase
 
 // Because these two properties have all of their accessor methods implemented,
 // we have to synthesize them to get the corresponding ivars. The rest of the
@@ -279,7 +279,7 @@ NS_ASSUME_NONNULL_END
 //       files with appledoc will prevent this problem from occurring.
 
 static int FMDBDatabaseBusyHandler(void *f, int count) {
-    FMDatabase *self = (__bridge FMDatabase*)f;
+    FWDatabase *self = (__bridge FWDatabase*)f;
     
     if (count == 0) {
         self->_startBusyRetryTime = [NSDate timeIntervalSinceReferenceDate];
@@ -348,7 +348,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     //Copy the set so we don't get mutation errors
     NSSet *openSetCopy = FMDBReturnAutoreleased([_openResultSets copy]);
     for (NSValue *rsInWrappedInATastyValueMeal in openSetCopy) {
-        FMResultSet *rs = (FMResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
+        FWResultSet *rs = (FWResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
         
         [rs setParentDB:nil];
         [rs close];
@@ -357,7 +357,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     }
 }
 
-- (void)resultSetDidClose:(FMResultSet *)resultSet {
+- (void)resultSetDidClose:(FWResultSet *)resultSet {
     NSValue *setValue = [NSValue valueWithNonretainedObject:resultSet];
     
     [_openResultSets removeObject:setValue];
@@ -368,7 +368,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 - (void)clearCachedStatements {
     
     for (NSMutableSet *statements in [_cachedStatements objectEnumerator]) {
-        for (FMStatement *statement in [statements allObjects]) {
+        for (FWStatement *statement in [statements allObjects]) {
             [statement close];
         }
     }
@@ -376,11 +376,11 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     [_cachedStatements removeAllObjects];
 }
 
-- (FMStatement*)cachedStatementForQuery:(NSString*)query {
+- (FWStatement*)cachedStatementForQuery:(NSString*)query {
     
     NSMutableSet* statements = [_cachedStatements objectForKey:query];
     
-    return [[statements objectsPassingTest:^BOOL(FMStatement* statement, BOOL *stop) {
+    return [[statements objectsPassingTest:^BOOL(FWStatement* statement, BOOL *stop) {
         
         *stop = ![statement inUse];
         return *stop;
@@ -389,7 +389,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 }
 
 
-- (void)setCachedStatement:(FMStatement*)statement forQuery:(NSString*)query {
+- (void)setCachedStatement:(FWStatement*)statement forQuery:(NSString*)query {
     NSParameterAssert(query);
     if (!query) {
         NSLog(@"API misuse, -[FMDatabase setCachedStatement:forQuery:] query must not be nil");
@@ -497,7 +497,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
         return NO;
     }
     
-    FMResultSet *rs = [self executeQuery:@"select name from sqlite_master where type='table'"];
+    FWResultSet *rs = [self executeQuery:@"select name from sqlite_master where type='table'"];
     
     if (rs) {
         [rs close];
@@ -796,11 +796,11 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 
 #pragma mark Execute queries
 
-- (FMResultSet *)executeQuery:(NSString *)sql withParameterDictionary:(NSDictionary *)arguments {
+- (FWResultSet *)executeQuery:(NSString *)sql withParameterDictionary:(NSDictionary *)arguments {
     return [self executeQuery:sql withArgumentsInArray:nil orDictionary:arguments orVAList:nil];
 }
 
-- (FMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args {
+- (FWResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args {
     
     if (![self databaseExists]) {
         return 0x00;
@@ -815,8 +815,8 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     
     int rc                  = 0x00;
     sqlite3_stmt *pStmt     = 0x00;
-    FMStatement *statement  = 0x00;
-    FMResultSet *rs         = 0x00;
+    FWStatement *statement  = 0x00;
+    FWResultSet *rs         = 0x00;
     
     if (_traceExecution && sql) {
         NSLog(@"%@ executeQuery: %@", self, sql);
@@ -922,7 +922,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     FMDBRetain(statement); // to balance the release below
     
     if (!statement) {
-        statement = [[FMStatement alloc] init];
+        statement = [[FWStatement alloc] init];
         [statement setStatement:pStmt];
         
         if (_shouldCacheStatements && sql) {
@@ -931,7 +931,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     }
     
     // the statement gets closed in rs's dealloc or [rs close];
-    rs = [FMResultSet resultSetWithStatement:statement usingParentDatabase:self];
+    rs = [FWResultSet resultSetWithStatement:statement usingParentDatabase:self];
     [rs setQuery:sql];
     
     NSValue *openResultSet = [NSValue valueWithNonretainedObject:rs];
@@ -946,7 +946,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return rs;
 }
 
-- (FMResultSet *)executeQuery:(NSString*)sql, ... {
+- (FWResultSet *)executeQuery:(NSString*)sql, ... {
     va_list args;
     va_start(args, sql);
     
@@ -956,7 +956,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return result;
 }
 
-- (FMResultSet *)executeQueryWithFormat:(NSString*)format, ... {
+- (FWResultSet *)executeQueryWithFormat:(NSString*)format, ... {
     va_list args;
     va_start(args, format);
     
@@ -969,19 +969,19 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return [self executeQuery:sql withArgumentsInArray:arguments];
 }
 
-- (FMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments {
+- (FWResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments {
     return [self executeQuery:sql withArgumentsInArray:arguments orDictionary:nil orVAList:nil];
 }
 
-- (FMResultSet *)executeQuery:(NSString *)sql values:(NSArray *)values error:(NSError * __autoreleasing *)error {
-    FMResultSet *rs = [self executeQuery:sql withArgumentsInArray:values orDictionary:nil orVAList:nil];
+- (FWResultSet *)executeQuery:(NSString *)sql values:(NSArray *)values error:(NSError * __autoreleasing *)error {
+    FWResultSet *rs = [self executeQuery:sql withArgumentsInArray:values orDictionary:nil orVAList:nil];
     if (!rs && error) {
         *error = [self lastError];
     }
     return rs;
 }
 
-- (FMResultSet *)executeQuery:(NSString*)sql withVAList:(va_list)args {
+- (FWResultSet *)executeQuery:(NSString*)sql withVAList:(va_list)args {
     return [self executeQuery:sql withArgumentsInArray:nil orDictionary:nil orVAList:args];
 }
 
@@ -1002,7 +1002,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     
     int rc                   = 0x00;
     sqlite3_stmt *pStmt      = 0x00;
-    FMStatement *cachedStmt  = 0x00;
+    FWStatement *cachedStmt  = 0x00;
     
     if (_traceExecution && sql) {
         NSLog(@"%@ executeUpdate: %@", self, sql);
@@ -1177,7 +1177,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     }
     
     if (_shouldCacheStatements && !cachedStmt) {
-        cachedStmt = [[FMStatement alloc] init];
+        cachedStmt = [[FWStatement alloc] init];
         
         [cachedStmt setStatement:pStmt];
         
@@ -1633,7 +1633,7 @@ void FMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3
 
 
 
-@implementation FMStatement
+@implementation FWStatement
 
 #if ! __has_feature(objc_arc)
 - (void)finalize {
