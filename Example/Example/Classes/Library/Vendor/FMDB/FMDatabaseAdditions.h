@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FMDatabase.h"
+#import "FWDatabase.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  - `<FMDatabase>`
  */
 
-@interface FMDatabase (FMDatabaseAdditions)
+@interface FWDatabase (FMDatabaseAdditions)
 
 ///----------------------------------------
 /// @name Return results of SQL to variable
@@ -142,7 +142,7 @@ NS_ASSUME_NONNULL_BEGIN
  @see [SQLite File Format](http://www.sqlite.org/fileformat.html)
  */
 
-- (FMResultSet * _Nullable)getSchema;
+- (FWResultSet * _Nullable)getSchema;
 
 /** The schema of the database.
 
@@ -166,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
  @see [table_info](http://www.sqlite.org/pragma.html#pragma_table_info)
  */
 
-- (FMResultSet * _Nullable)getTableSchema:(NSString*)tableName;
+- (FWResultSet * _Nullable)getTableSchema:(NSString*)tableName;
 
 /** Test to see if particular column exists for particular table in database
  
@@ -178,21 +178,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 - (BOOL)columnExists:(NSString*)columnName inTableWithName:(NSString*)tableName;
-
-/** Test to see if particular column exists for particular table in database
-
- @param columnName The name of the column.
-
- @param tableName The name of the table.
-
- @return `YES` if column exists in table in question; `NO` otherwise.
- 
- @see columnExists:inTableWithName:
- 
- @warning Deprecated - use `<columnExists:inTableWithName:>` instead.
- */
-
-- (BOOL)columnExists:(NSString*)tableName columnName:(NSString*)columnName __deprecated_msg("Use columnExists:inTableWithName: instead");
 
 
 /** Validate SQL statement

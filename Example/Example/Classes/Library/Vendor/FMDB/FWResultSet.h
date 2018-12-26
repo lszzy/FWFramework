@@ -2,20 +2,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#ifndef __has_feature      // Optional.
-#define __has_feature(x) 0 // Compatibility with non-clang compilers.
-#endif
-
-#ifndef NS_RETURNS_NOT_RETAINED
-#if __has_feature(attribute_ns_returns_not_retained)
-#define NS_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
-#else
-#define NS_RETURNS_NOT_RETAINED
-#endif
-#endif
-
-@class FMDatabase;
-@class FMStatement;
+@class FWDatabase;
+@class FWStatement;
 
 /** Represents the results of executing a query on an `<FMDatabase>`.
  
@@ -24,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
  - `<FMDatabase>`
  */
 
-@interface FMResultSet : NSObject
+@interface FWResultSet : NSObject
 
-@property (nonatomic, retain, nullable) FMDatabase *parentDB;
+@property (nonatomic, retain, nullable) FWDatabase *parentDB;
 
 ///-----------------
 /// @name Properties
@@ -42,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** `FMStatement` used by result set. */
 
-@property (atomic, retain, nullable) FMStatement *statement;
+@property (atomic, retain, nullable) FWStatement *statement;
 
 ///------------------------------------
 /// @name Creating and closing a result set
@@ -57,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return A `FMResultSet` on success; `nil` on failure
  */
 
-+ (instancetype)resultSetWithStatement:(FMStatement *)statement usingParentDatabase:(FMDatabase*)aDB;
++ (instancetype)resultSetWithStatement:(FWStatement *)statement usingParentDatabase:(FWDatabase*)aDB;
 
 /** Close result set */
 
@@ -309,8 +297,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (const unsigned char * _Nullable)UTF8StringForColumn:(NSString*)columnName;
 
-- (const unsigned char * _Nullable)UTF8StringForColumnName:(NSString*)columnName __deprecated_msg("Use UTF8StringForColumn instead");
-
 /** Result set `(const unsigned char *)` value for column.
 
  @param columnIdx Zero-based index for column.
@@ -330,8 +316,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 - (id _Nullable)objectForColumn:(NSString*)columnName;
-
-- (id _Nullable)objectForColumnName:(NSString*)columnName __deprecated_msg("Use objectForColumn instead");
 
 /** Result set object for column.
 
@@ -398,7 +382,7 @@ If you don't, you're going to be in a world of hurt when you try and use the dat
  
  */
 
-- (NSData * _Nullable)dataNoCopyForColumn:(NSString *)columnName NS_RETURNS_NOT_RETAINED;
+- (NSData * _Nullable)dataNoCopyForColumn:(NSString *)columnName;
 
 /** Result set `NSData` value for column.
 
@@ -412,7 +396,7 @@ If you don't, you're going to be in a world of hurt when you try and use the dat
 
  */
 
-- (NSData * _Nullable)dataNoCopyForColumnIndex:(int)columnIdx NS_RETURNS_NOT_RETAINED;
+- (NSData * _Nullable)dataNoCopyForColumnIndex:(int)columnIdx;
 
 /** Is the column `NULL`?
  
@@ -439,15 +423,6 @@ If you don't, you're going to be in a world of hurt when you try and use the dat
  */
 
 @property (nonatomic, readonly, nullable) NSDictionary *resultDictionary;
- 
-/** Returns a dictionary of the row results
- 
- @see resultDictionary
- 
- @warning **Deprecated**: Please use `<resultDictionary>` instead.  Also, beware that `<resultDictionary>` is case sensitive! 
- */
-
-- (NSDictionary * _Nullable)resultDict __deprecated_msg("Use resultDictionary instead");
 
 ///-----------------------------
 /// @name Key value coding magic

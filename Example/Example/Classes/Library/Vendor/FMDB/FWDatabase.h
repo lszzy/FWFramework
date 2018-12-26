@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "FMResultSet.h"
-#import "FMDatabasePool.h"
+#import "FWResultSet.h"
+#import "FWDatabasePool.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -77,7 +77,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
 #pragma clang diagnostic ignored "-Wobjc-interface-ivars"
 
 
-@interface FMDatabase : NSObject
+@interface FWDatabase : NSObject
 
 ///-----------------
 /// @name Properties
@@ -575,7 +575,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
  @note You cannot use this method from Swift due to incompatibilities between Swift and Objective-C variadic implementations. Consider using `<executeQuery:values:>` instead.
  */
 
-- (FMResultSet * _Nullable)executeQuery:(NSString*)sql, ...;
+- (FWResultSet * _Nullable)executeQuery:(NSString*)sql, ...;
 
 /** Execute select statement
 
@@ -605,7 +605,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
  
  */
 
-- (FMResultSet * _Nullable)executeQueryWithFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
+- (FWResultSet * _Nullable)executeQueryWithFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 
 /** Execute select statement
 
@@ -624,7 +624,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
  @see [`FMResultSet next`](<[FMResultSet next]>)
  */
 
-- (FMResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments;
 
 /** Execute select statement
  
@@ -653,7 +653,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
 
  */
 
-- (FMResultSet * _Nullable)executeQuery:(NSString *)sql values:(NSArray * _Nullable)values error:(NSError * _Nullable __autoreleasing *)error;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql values:(NSArray * _Nullable)values error:(NSError * _Nullable __autoreleasing *)error;
 
 /** Execute select statement
 
@@ -671,11 +671,11 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
  @see [`FMResultSet next`](<[FMResultSet next]>)
  */
 
-- (FMResultSet * _Nullable)executeQuery:(NSString *)sql withParameterDictionary:(NSDictionary * _Nullable)arguments;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql withParameterDictionary:(NSDictionary * _Nullable)arguments;
 
 
 // Documentation forthcoming.
-- (FMResultSet * _Nullable)executeQuery:(NSString *)sql withVAList:(va_list)args;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql withVAList:(va_list)args;
 
 ///-------------------
 /// @name Transactions
@@ -1387,7 +1387,7 @@ typedef NS_ENUM(int, SqliteValueType) {
  - [`sqlite3_stmt`](http://www.sqlite.org/c3ref/stmt.html)
  */
 
-@interface FMStatement : NSObject {
+@interface FWStatement : NSObject {
     void *_statement;
     NSString *_query;
     long _useCount;

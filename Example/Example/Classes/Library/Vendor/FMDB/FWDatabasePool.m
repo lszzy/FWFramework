@@ -12,8 +12,8 @@
 #import <sqlite3.h>
 #endif
 
-#import "FMDatabasePool.h"
-#import "FMDatabase.h"
+#import "FWDatabasePool.h"
+#import "FWDatabase.h"
 
 typedef NS_ENUM(NSInteger, FMDBTransaction) {
     FMDBTransactionExclusive,
@@ -21,20 +21,20 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
     FMDBTransactionImmediate,
 };
 
-@interface FMDatabasePool () {
+@interface FWDatabasePool () {
     dispatch_queue_t    _lockQueue;
     
     NSMutableArray      *_databaseInPool;
     NSMutableArray      *_databaseOutPool;
 }
 
-- (void)pushDatabaseBackInPool:(FMDatabase*)db;
-- (FMDatabase*)db;
+- (void)pushDatabaseBackInPool:(FWDatabase*)db;
+- (FWDatabase*)db;
 
 @end
 
 
-@implementation FMDatabasePool
+@implementation FWDatabasePool
 @synthesize path=_path;
 @synthesize delegate=_delegate;
 @synthesize maximumNumberOfDatabasesToCreate=_maximumNumberOfDatabasesToCreate;
@@ -99,7 +99,7 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
 }
 
 + (Class)databaseClass {
-    return [FMDatabase class];
+    return [FWDatabase class];
 }
 
 - (void)dealloc {
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
     dispatch_sync(_lockQueue, aBlock);
 }
 
-- (void)pushDatabaseBackInPool:(FMDatabase*)db {
+- (void)pushDatabaseBackInPool:(FWDatabase*)db {
     
     if (!db) { // db can be null if we set an upper bound on the # of databases to create.
         return;
@@ -142,9 +142,9 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
     }];
 }
 
-- (FMDatabase*)db {
+- (FWDatabase*)db {
     
-    __block FMDatabase *db;
+    __block FWDatabase *db;
     
     
     [self executeLocked:^() {
@@ -241,20 +241,20 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
     }];
 }
 
-- (void)inDatabase:(__attribute__((noescape)) void (^)(FMDatabase *db))block {
+- (void)inDatabase:(__attribute__((noescape)) void (^)(FWDatabase *db))block {
     
-    FMDatabase *db = [self db];
+    FWDatabase *db = [self db];
     
     block(db);
     
     [self pushDatabaseBackInPool:db];
 }
 
-- (void)beginTransaction:(FMDBTransaction)transaction withBlock:(void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)beginTransaction:(FMDBTransaction)transaction withBlock:(void (^)(FWDatabase *db, BOOL *rollback))block {
     
     BOOL shouldRollback = NO;
     
-    FMDatabase *db = [self db];
+    FWDatabase *db = [self db];
     
     switch (transaction) {
         case FMDBTransactionExclusive:
@@ -281,23 +281,23 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
     [self pushDatabaseBackInPool:db];
 }
 
-- (void)inTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionExclusive withBlock:block];
 }
 
-- (void)inDeferredTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inDeferredTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionDeferred withBlock:block];
 }
 
-- (void)inExclusiveTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inExclusiveTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionExclusive withBlock:block];
 }
 
-- (void)inImmediateTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inImmediateTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionImmediate withBlock:block];
 }
 
-- (NSError*)inSavePoint:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (NSError*)inSavePoint:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
 #if SQLITE_VERSION_NUMBER >= 3007000
     static unsigned long savePointIdx = 0;
     
@@ -305,7 +305,7 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
     
     BOOL shouldRollback = NO;
     
-    FMDatabase *db = [self db];
+    FWDatabase *db = [self db];
     
     NSError *err = 0x00;
     

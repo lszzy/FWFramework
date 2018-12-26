@@ -6,8 +6,8 @@
 //  Copyright 2011 Flying Meat Inc. All rights reserved.
 //
 
-#import "FMDatabaseQueue.h"
-#import "FMDatabase.h"
+#import "FWDatabaseQueue.h"
+#import "FWDatabase.h"
 
 #if FMDB_SQLITE_STANDALONE
 #import <sqlite3/sqlite3.h>
@@ -36,16 +36,16 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
  */
 static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey;
 
-@interface FMDatabaseQueue () {
+@interface FWDatabaseQueue () {
     dispatch_queue_t    _queue;
-    FMDatabase          *_db;
+    FWDatabase          *_db;
 }
 @end
 
-@implementation FMDatabaseQueue
+@implementation FWDatabaseQueue
 
 + (instancetype)databaseQueueWithPath:(NSString *)aPath {
-    FMDatabaseQueue *q = [[self alloc] initWithPath:aPath];
+    FWDatabaseQueue *q = [[self alloc] initWithPath:aPath];
     
     FMDBAutorelease(q);
     
@@ -57,7 +57,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 }
 
 + (instancetype)databaseQueueWithPath:(NSString *)aPath flags:(int)openFlags {
-    FMDatabaseQueue *q = [[self alloc] initWithPath:aPath flags:openFlags];
+    FWDatabaseQueue *q = [[self alloc] initWithPath:aPath flags:openFlags];
     
     FMDBAutorelease(q);
     
@@ -69,7 +69,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 }
 
 + (Class)databaseClass {
-    return [FMDatabase class];
+    return [FWDatabase class];
 }
 
 - (instancetype)initWithURL:(NSURL *)url flags:(int)openFlags vfs:(NSString *)vfsName {
@@ -155,7 +155,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     [[self database] interrupt];
 }
 
-- (FMDatabase*)database {
+- (FWDatabase*)database {
     if (![_db isOpen]) {
         if (!_db) {
            _db = FMDBReturnRetained([[[self class] databaseClass] databaseWithPath:_path]);
@@ -177,11 +177,11 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     return _db;
 }
 
-- (void)inDatabase:(__attribute__((noescape)) void (^)(FMDatabase *db))block {
+- (void)inDatabase:(__attribute__((noescape)) void (^)(FWDatabase *db))block {
 #ifndef NDEBUG
     /* Get the currently executing queue (which should probably be nil, but in theory could be another DB queue
      * and then check it against self to make sure we're not about to deadlock. */
-    FMDatabaseQueue *currentSyncQueue = (__bridge id)dispatch_get_specific(kDispatchQueueSpecificKey);
+    FWDatabaseQueue *currentSyncQueue = (__bridge id)dispatch_get_specific(kDispatchQueueSpecificKey);
     assert(currentSyncQueue != self && "inDatabase: was called reentrantly on the same queue, which would lead to a deadlock");
 #endif
     
@@ -189,7 +189,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     
     dispatch_sync(_queue, ^() {
         
-        FMDatabase *db = [self database];
+        FWDatabase *db = [self database];
         
         block(db);
         
@@ -199,7 +199,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 #if defined(DEBUG) && DEBUG
             NSSet *openSetCopy = FMDBReturnAutoreleased([[db valueForKey:@"_openResultSets"] copy]);
             for (NSValue *rsInWrappedInATastyValueMeal in openSetCopy) {
-                FMResultSet *rs = (FMResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
+                FWResultSet *rs = (FWResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
                 NSLog(@"query: '%@'", [rs query]);
             }
 #endif
@@ -209,7 +209,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     FMDBRelease(self);
 }
 
-- (void)beginTransaction:(FMDBTransaction)transaction withBlock:(void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)beginTransaction:(FMDBTransaction)transaction withBlock:(void (^)(FWDatabase *db, BOOL *rollback))block {
     FMDBRetain(self);
     dispatch_sync(_queue, ^() { 
         
@@ -240,23 +240,23 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     FMDBRelease(self);
 }
 
-- (void)inTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionExclusive withBlock:block];
 }
 
-- (void)inDeferredTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inDeferredTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionDeferred withBlock:block];
 }
 
-- (void)inExclusiveTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (void)inExclusiveTransaction:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionExclusive withBlock:block];
 }
 
-- (void)inImmediateTransaction:(__attribute__((noescape)) void (^)(FMDatabase * _Nonnull, BOOL * _Nonnull))block {
+- (void)inImmediateTransaction:(__attribute__((noescape)) void (^)(FWDatabase * _Nonnull, BOOL * _Nonnull))block {
     [self beginTransaction:FMDBTransactionImmediate withBlock:block];
 }
 
-- (NSError*)inSavePoint:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
+- (NSError*)inSavePoint:(__attribute__((noescape)) void (^)(FWDatabase *db, BOOL *rollback))block {
 #if SQLITE_VERSION_NUMBER >= 3007000
     static unsigned long savePointIdx = 0;
     __block NSError *err = 0x00;
