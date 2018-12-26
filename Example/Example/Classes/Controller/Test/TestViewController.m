@@ -60,6 +60,7 @@
                                              @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
                                              @[@"UIScrollView(FWEmptyView)", @"TestEmptyViewController"],
                                              @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
+                                             @[@"FWCache", @"TestCacheViewController"],
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
