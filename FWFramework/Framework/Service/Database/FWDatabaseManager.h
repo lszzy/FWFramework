@@ -6,6 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FWDatabase.h"
+#import "FWDatabaseAdditions.h"
+#import "FWDatabaseQueue.h"
 
 /*!
  @brief FWDatabaseManager

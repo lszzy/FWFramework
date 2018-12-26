@@ -6,9 +6,6 @@
 //
 
 #import "FWDatabaseManager.h"
-#import "FWDatabase.h"
-#import "FWDatabaseAdditions.h"
-#import "FWDatabaseQueue.h"
 #import <objc/runtime.h>
 
 // 数据库中常见的几种类型
