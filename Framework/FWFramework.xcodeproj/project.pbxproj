@@ -255,6 +255,8 @@
 		2FCE516921D3BA32009EA65E /* FWCacheAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE515F21D3BA32009EA65E /* FWCacheAbstract.m */; };
 		2FCE516D21D3BD1B009EA65E /* FWCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE516B21D3BD1B009EA65E /* FWCacheManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE516E21D3BD1B009EA65E /* FWCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */; };
+		2FCE517521D3C574009EA65E /* FWCacheSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE517321D3C574009EA65E /* FWCacheSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517421D3C574009EA65E /* FWCacheSqlite.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -507,6 +509,8 @@
 		2FCE515F21D3BA32009EA65E /* FWCacheAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCacheAbstract.m; sourceTree = "<group>"; };
 		2FCE516B21D3BD1B009EA65E /* FWCacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWCacheManager.h; sourceTree = "<group>"; };
 		2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWCacheManager.m; sourceTree = "<group>"; };
+		2FCE517321D3C574009EA65E /* FWCacheSqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheSqlite.h; sourceTree = "<group>"; };
+		2FCE517421D3C574009EA65E /* FWCacheSqlite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCacheSqlite.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -914,6 +918,8 @@
 				2FCE515721D3BA31009EA65E /* FWCacheKeychain.m */,
 				2FCE515D21D3BA32009EA65E /* FWCacheMemory.h */,
 				2FCE515821D3BA31009EA65E /* FWCacheMemory.m */,
+				2FCE517321D3C574009EA65E /* FWCacheSqlite.h */,
+				2FCE517421D3C574009EA65E /* FWCacheSqlite.m */,
 				2FCE516B21D3BD1B009EA65E /* FWCacheManager.h */,
 				2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */,
 			);
@@ -927,6 +933,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FCE517521D3C574009EA65E /* FWCacheSqlite.h in Headers */,
 				2FCE516D21D3BD1B009EA65E /* FWCacheManager.h in Headers */,
 				2FCE516721D3BA32009EA65E /* FWCacheMemory.h in Headers */,
 				2FCE516021D3BA32009EA65E /* FWCacheDefaults.h in Headers */,
@@ -1251,6 +1258,7 @@
 				2F03A580216CF4B9001965A1 /* UIView+FWBlock.m in Sources */,
 				2F03A589216CF4B9001965A1 /* UIView+FWAnimation.m in Sources */,
 				2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */,
+				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
 				2F03A590216CF4B9001965A1 /* UITableView+FWTemplateLayout.m in Sources */,
 				2F03A63F216CF882001965A1 /* FWBatchRequest.m in Sources */,
 				2F03A64C216CF882001965A1 /* FWHTTPSessionManager.m in Sources */,

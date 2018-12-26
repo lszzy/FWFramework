@@ -12,6 +12,7 @@
 #import "FWCacheFile.h"
 #import "FWCacheKeychain.h"
 #import "FWCacheMemory.h"
+#import "FWCacheSqlite.h"
 
 /*!
  @brief FWCacheManager

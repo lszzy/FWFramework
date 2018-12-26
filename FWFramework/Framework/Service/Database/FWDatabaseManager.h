@@ -68,13 +68,12 @@
 - (BOOL)insertTable:(NSString *)tableName withModel:(id)parameters;
 
 /**
- 删除: 根据条件删除表中数据
-
- @param tableName 表的名称
- @param format 条件语句, 如:@"where name = '小李'"
- @return 是否删除成功
+ 批量插入或更改
+ 
+ @param modelArray 要insert/update数据的数组,也可以将model和dictionary混合装入array
+ @return 返回的数组存储未插入成功的下标,数组中元素类型为NSNumber
  */
-- (BOOL)deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...;
+- (NSArray *)insertTable:(NSString *)tableName withModelArray:(NSArray *)modelArray;
 
 /**
  更改: 根据条件更改表中数据
@@ -87,6 +86,24 @@
 - (BOOL)updateTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...;
 
 /**
+ 替换: 向表中插入或替换数据，仅支持主键替换
+ 
+ @param tableName 表的名称
+ @param parameters 要替换的数据,可以是model或dictionary(格式:@{@"name":@"小李"})
+ @return 是否替换成功
+ */
+- (BOOL)replaceTable:(NSString *)tableName withModel:(id)parameters;
+
+/**
+ 删除: 根据条件删除表中数据
+ 
+ @param tableName 表的名称
+ @param format 条件语句, 如:@"where name = '小李'"
+ @return 是否删除成功
+ */
+- (BOOL)deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...;
+
+/**
  查找: 根据条件查找表中数据
 
  @param tableName 表的名称
@@ -95,14 +112,6 @@
  @return 将结果存入array,数组中的元素的类型为parameters的类型
  */
 - (NSArray *)queryTable:(NSString *)tableName withModel:(id)parameters whereFormat:(NSString *)format, ...;
-
-/**
- 批量插入或更改
-
- @param modelArray 要insert/update数据的数组,也可以将model和dictionary混合装入array
- @return 返回的数组存储未插入成功的下标,数组中元素类型为NSNumber
- */
-- (NSArray *)insertTable:(NSString *)tableName withModelArray:(NSArray *)modelArray;
 
 // `删除表
 - (BOOL)deleteTable:(NSString *)tableName;
