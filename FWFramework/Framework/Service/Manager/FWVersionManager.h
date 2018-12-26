@@ -49,10 +49,10 @@ typedef NS_ENUM(NSInteger, FWVersionStatus) {
 - (void)checkVersion:(NSInteger)interval completion:(void (^)(void))completion;
 
 // 跳转AppStore更新页
-- (void)openStore;
+- (void)openAppStore;
 
-// 设置数据指定版本更新句柄，调用updateData之前生效，仅会调用一次
-- (void)dataHandler:(NSString *)version handler:(void (^)(void))handler;
+// 检查数据指定版本更新句柄，调用updateData之前生效，仅会调用一次
+- (void)checkDataVersion:(NSString *)version handler:(void (^)(void))handler;
 
 // 比较数据版本号并依次进行数据更新，更新成功时回调
 - (void)updateData:(void (^)(void))completion;

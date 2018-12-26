@@ -227,6 +227,10 @@
 		2FB7CBCA21C23728002E5412 /* FWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC821C23728002E5412 /* FWBannerView.m */; };
 		2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */; };
+		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
+		2FCE513521D3746B009EA65E /* FWDatabaseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513121D3746B009EA65E /* FWDatabaseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513221D3746B009EA65E /* FWDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FCE513721D3746B009EA65E /* FWDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513321D3746B009EA65E /* FWDatabaseManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -451,6 +455,10 @@
 		2FB7CBC821C23728002E5412 /* FWBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBannerView.m; sourceTree = "<group>"; };
 		2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTagCollectionView.h; sourceTree = "<group>"; };
 		2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTagCollectionView.m; sourceTree = "<group>"; };
+		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
+		2FCE513121D3746B009EA65E /* FWDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabaseManager.h; sourceTree = "<group>"; };
+		2FCE513221D3746B009EA65E /* FWDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabase.h; sourceTree = "<group>"; };
+		2FCE513321D3746B009EA65E /* FWDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabaseManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -642,6 +650,7 @@
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
+				2FCE512F21D3746B009EA65E /* Database */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -820,6 +829,17 @@
 			path = ../FWFramework;
 			sourceTree = "<group>";
 		};
+		2FCE512F21D3746B009EA65E /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				2FCE513221D3746B009EA65E /* FWDatabase.h */,
+				2FCE513021D3746B009EA65E /* FWDatabase.m */,
+				2FCE513121D3746B009EA65E /* FWDatabaseManager.h */,
+				2FCE513321D3746B009EA65E /* FWDatabaseManager.m */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -827,6 +847,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */,
+				2FCE513521D3746B009EA65E /* FWDatabaseManager.h in Headers */,
 				2F0FFF3021D20EA800049383 /* NSAttributedString+FWFramework.h in Headers */,
 				2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */,
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
@@ -1042,6 +1064,7 @@
 				2F03A651216CF882001965A1 /* FWNetworkReachabilityManager.m in Sources */,
 				2F03A640216CF882001965A1 /* FWNetworkAgent.m in Sources */,
 				2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */,
+				2FCE513721D3746B009EA65E /* FWDatabaseManager.m in Sources */,
 				2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */,
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
@@ -1061,6 +1084,7 @@
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
 				2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */,
 				2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */,
+				2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */,
 				2F03A5D4216CF4B9001965A1 /* NSObject+FWFramework.m in Sources */,
 				2F03A5E8216CF4B9001965A1 /* FWAuthorizeManager.m in Sources */,
 				2F03A5D2216CF4B9001965A1 /* NSDate+FWFramework.m in Sources */,

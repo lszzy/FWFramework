@@ -66,7 +66,7 @@
     }
 }
 
-- (void)openStore
+- (void)openAppStore
 {
     NSString *storeString = [NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", self.appId];
     NSURL *storeUrl = [NSURL URLWithString:storeString];
@@ -80,7 +80,7 @@
     });
 }
 
-- (void)dataHandler:(NSString *)version handler:(void (^)(void))handler
+- (void)checkDataVersion:(NSString *)version handler:(void (^)(void))handler
 {
     // 需要执行时才放到队列中
     if ([self isDataVersion:version]) {

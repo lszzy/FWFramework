@@ -1,5 +1,5 @@
 //
-//  JQFMDB.h
+//  FWDatabaseManager.h
 //
 //  Created by Joker on 17/3/7.
 //  GitHub: https://github.com/gaojunquan/JQFMDB
@@ -7,7 +7,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface JQFMDB : NSObject
+/*!
+ @brief FWDatabaseManager
+ 
+ @see https://github.com/gaojunquan/JQFMDB
+ */
+@interface FWDatabaseManager : NSObject
 
 
 /**
@@ -42,14 +47,14 @@
  @param parameters 设置表的字段,可以传model(runtime自动生成字段)或字典(格式:@{@"name":@"TEXT"})
  @return 是否创建成功
  */
-- (BOOL)jq_createTable:(NSString *)tableName dicOrModel:(id)parameters;
+- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters;
 
 /**
  同上,
  @param nameArr 不允许model或dic里的属性/key生成表的字段,如:nameArr = @[@"name"],则不允许名为name的属性/key 生成表的字段
  
  */
-- (BOOL)jq_createTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr;
+- (BOOL)createTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr;
 
 /**
  增加: 向表中插入数据
@@ -58,7 +63,7 @@
  @param parameters 要插入的数据,可以是model或dictionary(格式:@{@"name":@"小李"})
  @return 是否插入成功
  */
-- (BOOL)jq_insertTable:(NSString *)tableName dicOrModel:(id)parameters;
+- (BOOL)insertTable:(NSString *)tableName dicOrModel:(id)parameters;
 
 /**
  删除: 根据条件删除表中数据
@@ -67,7 +72,7 @@
  @param format 条件语句, 如:@"where name = '小李'"
  @return 是否删除成功
  */
-- (BOOL)jq_deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...;
+- (BOOL)deleteTable:(NSString *)tableName whereFormat:(NSString *)format, ...;
 
 /**
  更改: 根据条件更改表中数据
@@ -77,7 +82,7 @@
  @param format 条件语句, 如:@"where name = '小李'"
  @return 是否更改成功
  */
-- (BOOL)jq_updateTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...;
+- (BOOL)updateTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...;
 
 /**
  查找: 根据条件查找表中数据
@@ -87,7 +92,7 @@
  @param format 条件语句, 如:@"where name = '小李'",
  @return 将结果存入array,数组中的元素的类型为parameters的类型
  */
-- (NSArray *)jq_lookupTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...;
+- (NSArray *)queryTable:(NSString *)tableName dicOrModel:(id)parameters whereFormat:(NSString *)format, ...;
 
 /**
  批量插入或更改
@@ -95,18 +100,18 @@
  @param dicOrModelArray 要insert/update数据的数组,也可以将model和dictionary混合装入array
  @return 返回的数组存储未插入成功的下标,数组中元素类型为NSNumber
  */
-- (NSArray *)jq_insertTable:(NSString *)tableName dicOrModelArray:(NSArray *)dicOrModelArray;
+- (NSArray *)insertTable:(NSString *)tableName dicOrModelArray:(NSArray *)dicOrModelArray;
 
 // `删除表
-- (BOOL)jq_deleteTable:(NSString *)tableName;
+- (BOOL)deleteTable:(NSString *)tableName;
 // `清空表
-- (BOOL)jq_deleteAllDataFromTable:(NSString *)tableName;
+- (BOOL)deleteAllDataFromTable:(NSString *)tableName;
 // `是否存在表
-- (BOOL)jq_isExistTable:(NSString *)tableName;
+- (BOOL)isExistTable:(NSString *)tableName;
 // `表中共有多少条数据
-- (int)jq_tableItemCount:(NSString *)tableName;
+- (int)tableItemCount:(NSString *)tableName;
 // `返回表中的字段名
-- (NSArray *)jq_columnNameArray:(NSString *)tableName;
+- (NSArray *)columnNameArray:(NSString *)tableName;
 
 // `关闭数据库
 - (void)close;
@@ -121,8 +126,8 @@
  @param nameArr 不允许生成字段的属性名的数组
  @return 是否成功
  */
-- (BOOL)jq_alterTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr;
-- (BOOL)jq_alterTable:(NSString *)tableName dicOrModel:(id)parameters;
+- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters excludeName:(NSArray *)nameArr;
+- (BOOL)alterTable:(NSString *)tableName dicOrModel:(id)parameters;
 
 
 // =============================   线程安全操作    ===============================
@@ -136,7 +141,7 @@
  [jqdb jq_insertTable:@"users" dicOrModel:p];
  }];
  */
-- (void)jq_inDatabase:(void (^)(void))block;
+- (void)inDatabase:(void (^)(void))block;
 
 
 /**
@@ -156,7 +161,7 @@
  }
 
  */
-- (void)jq_inTransaction:(void(^)(BOOL *rollback))block;
+- (void)inTransaction:(void(^)(BOOL *rollback))block;
 
 
 @end
