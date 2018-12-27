@@ -14,6 +14,10 @@
 #define SQL_REAL     @"REAL" //浮点
 #define SQL_BLOB     @"BLOB" //data
 
+@interface FWDatabase ()
+- (BOOL)executeUpdate:(NSString *)sql error:(NSError * _Nullable *)outErr withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args;
+@end
+
 @interface FWDatabaseManager ()
 
 @property (nonatomic, strong)NSString *dbPath;
@@ -348,7 +352,6 @@
     va_list args;
     va_start(args, format);
     NSString *where = format?[[NSString alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:args]:format;
-    va_end(args);
     BOOL flag;
     NSDictionary *dic;
     NSArray *clomnArr = [self getColumnArr:tableName db:_db];
@@ -374,7 +377,8 @@
     if (where.length) [finalStr appendFormat:@" %@", where];
     
     
-    flag =  [_db executeUpdate:finalStr withArgumentsInArray:argumentsArr andVAList:args];
+    flag =  [_db executeUpdate:finalStr error:nil withArgumentsInArray:argumentsArr orDictionary:nil orVAList:args];
+    va_end(args);
     
     return flag;
 }
@@ -390,10 +394,11 @@
     va_list args;
     va_start(args, format);
     NSString *where = format?[[NSString alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:args]:format;
-    va_end(args);
+
     BOOL flag;
     NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"DELETE FROM %@  %@", tableName,where];
     flag = [_db executeUpdate:finalStr withVAList:args];
+    va_end(args);
     
     return flag;
 }
@@ -403,13 +408,14 @@
     va_list args;
     va_start(args, format);
     NSString *where = format?[[NSString alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:args]:format;
-    va_end(args);
+    
     NSMutableArray *resultMArr = [NSMutableArray arrayWithCapacity:0];
     NSDictionary *dic;
     NSMutableString *finalStr = [[NSMutableString alloc] initWithFormat:@"SELECT * FROM %@ %@", tableName, where?where:@""];
     NSArray *clomnArr = [self getColumnArr:tableName db:_db];
     
     FWResultSet *set = [_db executeQuery:finalStr withVAList:args];
+    va_end(args);
     
     if ([parameters isKindOfClass:[NSDictionary class]]) {
         dic = parameters;

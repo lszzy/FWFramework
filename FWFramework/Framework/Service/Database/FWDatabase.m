@@ -943,10 +943,6 @@ static int FWDBDatabaseBusyHandler(void *f, int count) {
     return [self executeQuery:sql withArgumentsInArray:arguments orDictionary:nil orVAList:nil];
 }
 
-- (FWResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments andVAList:(va_list)args {
-    return [self executeQuery:sql withArgumentsInArray:arguments orDictionary:nil orVAList:args];
-}
-
 - (FWResultSet *)executeQuery:(NSString *)sql values:(NSArray *)values error:(NSError * __autoreleasing *)error {
     FWResultSet *rs = [self executeQuery:sql withArgumentsInArray:values orDictionary:nil orVAList:nil];
     if (!rs && error) {
@@ -1193,10 +1189,6 @@ static int FWDBDatabaseBusyHandler(void *f, int count) {
 
 - (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arguments {
     return [self executeUpdate:sql error:nil withArgumentsInArray:arguments orDictionary:nil orVAList:nil];
-}
-
-- (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arguments andVAList:(va_list)args {
-    return [self executeUpdate:sql error:nil withArgumentsInArray:arguments orDictionary:nil orVAList:args];
 }
 
 - (BOOL)executeUpdate:(NSString*)sql values:(NSArray *)values error:(NSError * __autoreleasing *)error {
