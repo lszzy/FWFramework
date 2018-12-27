@@ -47,22 +47,22 @@
 
 #pragma mark - Protect
 
-- (id)innerCacheForKey:(NSString *)key
+- (id)innerObjectForKey:(NSString *)key
 {
     return [self.keychainManager passwordObjectForService:@"FWCache" account:key];
 }
 
-- (void)innerSetCache:(id)object forKey:(NSString *)key
+- (void)innerSetObject:(id)object forKey:(NSString *)key
 {
     [self.keychainManager setPasswordObject:object forService:@"FWCache" account:key];
 }
 
-- (void)innerRemoveCacheForKey:(NSString *)key
+- (void)innerRemoveObjectForKey:(NSString *)key
 {
     [self.keychainManager deletePasswordForService:@"FWCache" account:key];
 }
 
-- (void)innerRemoveAllCaches
+- (void)innerRemoveAllObjects
 {
     [self.keychainManager deletePasswordForService:@"FWCache" account:nil];
 }

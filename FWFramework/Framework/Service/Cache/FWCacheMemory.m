@@ -37,22 +37,22 @@
 
 #pragma mark - Protect
 
-- (id)innerCacheForKey:(NSString *)key
+- (id)innerObjectForKey:(NSString *)key
 {
     return [self.cachePool objectForKey:key];
 }
 
-- (void)innerSetCache:(id)object forKey:(NSString *)key
+- (void)innerSetObject:(id)object forKey:(NSString *)key
 {
     [self.cachePool setObject:object forKey:key];
 }
 
-- (void)innerRemoveCacheForKey:(NSString *)key
+- (void)innerRemoveObjectForKey:(NSString *)key
 {
     [self.cachePool removeObjectForKey:key];
 }
 
-- (void)innerRemoveAllCaches
+- (void)innerRemoveAllObjects
 {
     [self.cachePool removeAllObjects];
 }

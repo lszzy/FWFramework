@@ -68,7 +68,7 @@
 
 #pragma mark - Protect
 
-- (id)innerCacheForKey:(NSString *)key
+- (id)innerObjectForKey:(NSString *)key
 {
     NSString *filePath = [self filePath:key];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
@@ -77,7 +77,7 @@
     return nil;
 }
 
-- (void)innerSetCache:(id)object forKey:(NSString *)key
+- (void)innerSetObject:(id)object forKey:(NSString *)key
 {
     NSString *filePath = [self filePath:key];
     // 自动创建目录
@@ -89,13 +89,13 @@
     [NSKeyedArchiver archiveRootObject:object toFile:filePath];
 }
 
-- (void)innerRemoveCacheForKey:(NSString *)key
+- (void)innerRemoveObjectForKey:(NSString *)key
 {
     NSString *filePath = [self filePath:key];
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
 }
 
-- (void)innerRemoveAllCaches
+- (void)innerRemoveAllObjects
 {
     NSString *filePath = self.path;
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];

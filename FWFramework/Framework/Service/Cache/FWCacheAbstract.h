@@ -18,19 +18,19 @@
 @required
 
 // 读取某个缓存
-- (id)cacheForKey:(NSString *)key;
+- (id)objectForKey:(NSString *)key;
 
 // 设置某个缓存
-- (void)setCache:(id)object forKey:(NSString *)key;
+- (void)setObject:(id)object forKey:(NSString *)key;
 
 // 设置某个缓存，支持缓存有效期，小于等于0为永久有效
-- (void)setCache:(id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire;
+- (void)setObject:(id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire;
 
 // 移除某个缓存
-- (void)removeCacheForKey:(NSString *)key;
+- (void)removeObjectForKey:(NSString *)key;
 
 // 清空所有缓存
-- (void)removeAllCaches;
+- (void)removeAllObjects;
 
 @end
 
@@ -44,15 +44,15 @@
 #pragma mark - Protect
 
 // 读取某个缓存，内部方法，子类重写
-- (id)innerCacheForKey:(NSString *)key;
+- (id)innerObjectForKey:(NSString *)key;
 
 // 设置某个缓存，内部方法，子类重写
-- (void)innerSetCache:(id)object forKey:(NSString *)key;
+- (void)innerSetObject:(id)object forKey:(NSString *)key;
 
 // 移除某个缓存，内部方法，子类重写
-- (void)innerRemoveCacheForKey:(NSString *)key;
+- (void)innerRemoveObjectForKey:(NSString *)key;
 
 // 清空所有缓存，内部方法，子类重写
-- (void)innerRemoveAllCaches;
+- (void)innerRemoveAllObjects;
 
 @end
