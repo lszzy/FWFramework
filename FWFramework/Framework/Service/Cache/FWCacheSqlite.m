@@ -7,11 +7,11 @@
 //
 
 #import "FWCacheSqlite.h"
-#import "FWDatabaseManager.h"
+#import "FWDatabaseQueue.h"
 
 @interface FWCacheSqlite ()
 
-@property (nonatomic, strong) FWDatabaseManager *manager;
+@property (nonatomic, strong) FWDatabaseQueue *queue;
 
 @end
 
@@ -50,44 +50,58 @@
         if (![[NSFileManager defaultManager] fileExistsAtPath:fileDir]) {
             [[NSFileManager defaultManager] createDirectoryAtPath:fileDir withIntermediateDirectories:YES attributes:nil error:nil];
         }
-        _manager = [[FWDatabaseManager alloc] initWithDBName:[dbPath lastPathComponent] path:[dbPath stringByDeletingLastPathComponent]];
         
-        if (![_manager isExistTable:@"FWCache"]) {
-            [_manager createTable:@"FWCache" withModel:@{@"key": @"TEXT", @"value": @"BLOB"}];
-        }
+        // 初始化数据库和创建缓存表
+        _queue = [FWDatabaseQueue databaseQueueWithPath:dbPath];
+        [_queue inDatabase:^(FWDatabase * _Nonnull db) {
+            [db executeUpdate:@"CREATE TABLE IF NOT EXISTS FWCache (key TEXT PRIMARY KEY, object BLOB);"];
+        }];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [_queue close];
 }
 
 #pragma mark - Protect
 
 - (id)innerCacheForKey:(NSString *)key
 {
-    NSArray *objectDatas = [_manager queryTable:@"FWCache" withModel:@{@"value": @"BLOB"} whereFormat:@"WHERE key = ?", key];
-    if (objectDatas.count > 0) {
-        NSData *objectData = [objectDatas.firstObject objectForKey:@"value"];
-        return [NSKeyedUnarchiver unarchiveObjectWithData:objectData];
-    }
-    return nil;
+    __block id object = nil;
+    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
+        FWResultSet *rs = [db executeQuery:@"SELECT object FROM FWCache WHERE key = ?", key];
+        if ([rs next]) {
+            object = [NSKeyedUnarchiver unarchiveObjectWithData:[rs dataForColumn:@"object"]];
+        }
+        [rs close];
+    }];
+    return object;
 }
 
 - (void)innerSetCache:(id)object forKey:(NSString *)key
 {
     NSData *objectData = [NSKeyedArchiver archivedDataWithRootObject:object];
-    NSMutableDictionary *model = [NSMutableDictionary dictionary];
-    [model setObject:key forKey:@"key"];
-    [model setObject:objectData forKey:@"value"];
-    [_manager replaceTable:@"FWCache" withModel:model];
+    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
+        [db executeUpdate:@"REPLACE INTO FWCache (key, object) VALUES (?, ?)", key, objectData];
+    }];
 }
 
 - (void)innerRemoveCacheForKey:(NSString *)key
 {
-    [_manager deleteTable:@"FWCache" whereFormat:@"WHERE key = ?", key];
+    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
+        [db executeUpdate:@"DELETE FROM FWCache WHERE key = ?", key];
+    }];
 }
 
 - (void)innerRemoveAllCaches
 {
-    [_manager deleteAllDataFromTable:@"FWCache"];
+    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
+        [db executeUpdate:@"DELETE FROM FWCache"];
+        // 释放数据库空间
+        [db executeUpdate:@"VACUUM"];
+    }];
 }
 
 @end
