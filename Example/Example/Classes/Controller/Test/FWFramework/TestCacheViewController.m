@@ -49,7 +49,7 @@
     [cacheButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
         
-        [self.cache setCache:[NSString fwUUIDString] forKey:TestCacheKey];
+        [self.cache setObject:[NSString fwUUIDString] forKey:TestCacheKey];
         [self refreshCache];
     }];
     [self.view addSubview:cacheButton]; {
@@ -62,7 +62,7 @@
     [expireButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
         
-        [self.cache setCache:[NSString fwUUIDString] forKey:TestCacheKey withExpire:10];
+        [self.cache setObject:[NSString fwUUIDString] forKey:TestCacheKey withExpire:10];
         [self refreshCache];
     }];
     [self.view addSubview:expireButton]; {
@@ -75,7 +75,7 @@
     [deleteButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
         
-        [self.cache removeCacheForKey:TestCacheKey];
+        [self.cache removeObjectForKey:TestCacheKey];
         [self refreshCache];
     }];
     [self.view addSubview:deleteButton]; {
@@ -88,7 +88,7 @@
     [clearButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
         
-        [self.cache removeAllCaches];
+        [self.cache removeAllObjects];
         [self refreshCache];
     }];
     [self.view addSubview:clearButton]; {
@@ -136,14 +136,14 @@
     NSMutableString *statusStr = [[NSMutableString alloc] init];
     [statusStr appendString:NSStringFromClass([self.cache class])];
     [statusStr appendString:@"\n"];
-    NSString *cacheStr = [self.cache cacheForKey:TestCacheKey];
+    NSString *cacheStr = [self.cache objectForKey:TestCacheKey];
     if ([cacheStr fwIsNotEmpty]) {
         [statusStr appendString:cacheStr];
     } else {
         [statusStr appendString:@"缓存不存在"];
     }
     [statusStr appendString:@"\n"];
-    NSNumber *expireNum = [self.cache cacheForKey:TestExpireKey];
+    NSNumber *expireNum = [self.cache objectForKey:TestExpireKey];
     if ([expireNum fwIsNotEmpty]) {
         [statusStr appendString:[NSString stringWithFormat:@"%.1fs有效", [expireNum doubleValue] - [[NSDate date] timeIntervalSince1970]]];
     } else {

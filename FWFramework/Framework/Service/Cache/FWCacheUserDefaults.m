@@ -54,24 +54,24 @@
 
 #pragma mark - Protect
 
-- (id)innerCacheForKey:(NSString *)key
+- (id)innerObjectForKey:(NSString *)key
 {
     return [self.userDefaults objectForKey:[self cacheKey:key]];
 }
 
-- (void)innerSetCache:(id)object forKey:(NSString *)key
+- (void)innerSetObject:(id)object forKey:(NSString *)key
 {
     [self.userDefaults setObject:object forKey:[self cacheKey:key]];
     [self.userDefaults synchronize];
 }
 
-- (void)innerRemoveCacheForKey:(NSString *)key
+- (void)innerRemoveObjectForKey:(NSString *)key
 {
     [self.userDefaults removeObjectForKey:[self cacheKey:key]];
     [self.userDefaults synchronize];
 }
 
-- (void)innerRemoveAllCaches
+- (void)innerRemoveAllObjects
 {
     NSDictionary *dict = [self.userDefaults dictionaryRepresentation];
     for (NSString *key in dict) {

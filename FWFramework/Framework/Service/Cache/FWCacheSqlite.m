@@ -67,7 +67,7 @@
 
 #pragma mark - Protect
 
-- (id)innerCacheForKey:(NSString *)key
+- (id)innerObjectForKey:(NSString *)key
 {
     __block id object = nil;
     [_queue inDatabase:^(FWDatabase * _Nonnull db) {
@@ -80,7 +80,7 @@
     return object;
 }
 
-- (void)innerSetCache:(id)object forKey:(NSString *)key
+- (void)innerSetObject:(id)object forKey:(NSString *)key
 {
     NSData *objectData = [NSKeyedArchiver archivedDataWithRootObject:object];
     [_queue inDatabase:^(FWDatabase * _Nonnull db) {
@@ -88,14 +88,14 @@
     }];
 }
 
-- (void)innerRemoveCacheForKey:(NSString *)key
+- (void)innerRemoveObjectForKey:(NSString *)key
 {
     [_queue inDatabase:^(FWDatabase * _Nonnull db) {
         [db executeUpdate:@"DELETE FROM FWCache WHERE key = ?", key];
     }];
 }
 
-- (void)innerRemoveAllCaches
+- (void)innerRemoveAllObjects
 {
     [_queue inDatabase:^(FWDatabase * _Nonnull db) {
         [db executeUpdate:@"DELETE FROM FWCache"];

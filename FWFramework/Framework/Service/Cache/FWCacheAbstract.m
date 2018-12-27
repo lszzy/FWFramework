@@ -12,23 +12,23 @@
 
 #pragma mark - Public
 
-- (id)cacheForKey:(NSString *)key
+- (id)objectForKey:(NSString *)key
 {
     if (!key) {
         return nil;
     }
     
-    id object = [self innerCacheForKey:key];
+    id object = [self innerObjectForKey:key];
     if (!object) {
         return nil;
     }
     
     // 检查缓存有效期
-    NSNumber *expire = [self innerCacheForKey:[self expireKey:key]];
+    NSNumber *expire = [self innerObjectForKey:[self expireKey:key]];
     if (expire) {
         // 检查是否过期，大于0为过期
         if ([[NSDate date] timeIntervalSince1970] > [expire doubleValue]) {
-            [self removeCacheForKey:key];
+            [self removeObjectForKey:key];
             return nil;
         }
     }
@@ -36,40 +36,40 @@
     return object;
 }
 
-- (void)setCache:(id)object forKey:(NSString *)key
+- (void)setObject:(id)object forKey:(NSString *)key
 {
-    [self setCache:object forKey:key withExpire:0];
+    [self setObject:object forKey:key withExpire:0];
 }
 
-- (void)setCache:(id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire
+- (void)setObject:(id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire
 {
     if (!key) {
         return;
     }
     
     if (nil != object) {
-        [self innerSetCache:object forKey:key];
+        [self innerSetObject:object forKey:key];
         
         // 小于等于0为永久有效
         if (expire <= 0) {
-            [self innerRemoveCacheForKey:[self expireKey:key]];
+            [self innerRemoveObjectForKey:[self expireKey:key]];
         } else {
-            [self innerSetCache:@([[NSDate date] timeIntervalSince1970] + expire) forKey:[self expireKey:key]];
+            [self innerSetObject:@([[NSDate date] timeIntervalSince1970] + expire) forKey:[self expireKey:key]];
         }
     } else {
-        [self removeCacheForKey:key];
+        [self removeObjectForKey:key];
     }
 }
 
-- (void)removeCacheForKey:(NSString *)key
+- (void)removeObjectForKey:(NSString *)key
 {
-    [self innerRemoveCacheForKey:key];
-    [self innerRemoveCacheForKey:[self expireKey:key]];
+    [self innerRemoveObjectForKey:key];
+    [self innerRemoveObjectForKey:[self expireKey:key]];
 }
 
-- (void)removeAllCaches
+- (void)removeAllObjects
 {
-    [self innerRemoveAllCaches];
+    [self innerRemoveAllObjects];
 }
 
 #pragma mark - Private
@@ -81,23 +81,23 @@
 
 #pragma mark - Protect
 
-- (id)innerCacheForKey:(NSString *)key
+- (id)innerObjectForKey:(NSString *)key
 {
     // 子类重写
     return nil;
 }
 
-- (void)innerSetCache:(id)object forKey:(NSString *)key
+- (void)innerSetObject:(id)object forKey:(NSString *)key
 {
     // 子类重写
 }
 
-- (void)innerRemoveCacheForKey:(NSString *)key
+- (void)innerRemoveObjectForKey:(NSString *)key
 {
     // 子类重写
 }
 
-- (void)innerRemoveAllCaches
+- (void)innerRemoveAllObjects
 {
     // 子类重写
 }
