@@ -1,16 +1,18 @@
-//
-//  FWDatabaseManager.m
-//
-//  Created by Joker on 17/3/7.
-//  GitHub: https://github.com/gaojunquan/JQFMDB
-//
+/*!
+ @header     FWDatabaseManager.m
+ @indexgroup FWFramework
+ @brief      FWDatabaseManager
+ @author     wuyong
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/12/26
+ */
 
 #import "FWDatabaseManager.h"
 #import <objc/runtime.h>
 
 // 数据库中常见的几种类型
 #define SQL_TEXT     @"TEXT" //文本
-#define SQL_INTEGER  @"INTEGER" //int long integer ...
+#define SQL_INTEGER  @"INTEGER" //整数
 #define SQL_REAL     @"REAL" //浮点
 #define SQL_BLOB     @"BLOB" //data
 
