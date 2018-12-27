@@ -48,6 +48,11 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWCacheManager.h>
 
 // Application
+#import <FWFramework/FWModel.h>
+#import <FWFramework/FWDBModel.h>
+#import <FWFramework/FWView.h>
+#import <FWFramework/FWViewController.h>
+#import <FWFramework/FWScrollViewController.h>
 #import <FWFramework/FWAttributedLabel.h>
 #import <FWFramework/FWIndicatorControl.h>
 #import <FWFramework/FWProgressView.h>
@@ -84,6 +89,11 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWCacheManager.h"
 
 // Application
+#import "FWModel.h"
+#import "FWDBModel.h"
+#import "FWView.h"
+#import "FWViewController.h"
+#import "FWScrollViewController.h"
 #import "FWAttributedLabel.h"
 #import "FWIndicatorControl.h"
 #import "FWProgressView.h"
