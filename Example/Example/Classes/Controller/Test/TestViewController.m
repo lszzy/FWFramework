@@ -69,6 +69,7 @@
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
+                                             @[@"FWViewController", @"TestControllerViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

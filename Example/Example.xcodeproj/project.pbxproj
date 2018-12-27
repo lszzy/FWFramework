@@ -47,6 +47,7 @@
 		2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */; };
 		2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */; };
 		2FCE517121D3BE02009EA65E /* TestCacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517021D3BE02009EA65E /* TestCacheViewController.m */; };
+		2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -157,6 +158,8 @@
 		2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableScrollViewController.m; sourceTree = "<group>"; };
 		2FCE516F21D3BE02009EA65E /* TestCacheViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCacheViewController.h; sourceTree = "<group>"; };
 		2FCE517021D3BE02009EA65E /* TestCacheViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCacheViewController.m; sourceTree = "<group>"; };
+		2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestControllerViewController.h; sourceTree = "<group>"; };
+		2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestControllerViewController.m; sourceTree = "<group>"; };
 		2FE533E72181645300CA54E6 /* TestTableBackgroundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableBackgroundViewController.h; sourceTree = "<group>"; };
 		2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableBackgroundViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -348,6 +351,8 @@
 				2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */,
 				2FCE516F21D3BE02009EA65E /* TestCacheViewController.h */,
 				2FCE517021D3BE02009EA65E /* TestCacheViewController.m */,
+				2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */,
+				2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -677,6 +682,7 @@
 				2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
+				2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,

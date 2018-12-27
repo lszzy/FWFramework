@@ -1,13 +1,13 @@
 /*!
- @header     UIView+FWEvent.m
+ @header     FWView.m
  @indexgroup FWFramework
- @brief      UIView+FWEvent
+ @brief      FWView
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/18
+ @updated    2018/12/27
  */
 
-#import "UIView+FWEvent.h"
+#import "FWView.h"
 #import <objc/runtime.h>
 
 @implementation FWViewEvent

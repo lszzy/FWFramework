@@ -1,13 +1,13 @@
 /*!
- @header     NSObject+FWModel.m
+ @header     FWModel.m
  @indexgroup FWFramework
- @brief      NSObject+FWModel
+ @brief      FWModel
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
  @updated    2018/9/26
  */
 
-#import "NSObject+FWModel.h"
+#import "FWModel.h"
 #import <objc/message.h>
 
 #define force_inline __inline__ __attribute__((always_inline))
