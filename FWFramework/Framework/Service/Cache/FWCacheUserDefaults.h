@@ -3,13 +3,13 @@
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/10.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "FWCacheAbstract.h"
 
 // NSUserDefaults缓存
-@interface FWCacheDefaults : FWCacheAbstract
+@interface FWCacheUserDefaults : FWCacheAbstract
 
 // 单例对象
 + (instancetype)sharedInstance;

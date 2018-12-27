@@ -111,19 +111,19 @@
     [self fwSetRightBarItem:@"切换" block:^(id sender) {
         FWStrongifySelf();
         
-        [self fwShowSheetWithTitle:@"选择缓存类型" cancel:@"取消" actions:@[@"FWCacheMemory", @"FWCacheDefaults", @"FWCacheKeychain", @"FWCacheFile", @"FWCacheSqlite"] actionBlock:^(NSInteger index) {
+        [self fwShowSheetWithTitle:@"选择缓存类型" cancel:@"取消" actions:@[@"FWCacheMemory", @"FWCacheUserDefaults", @"FWCacheKeychain", @"FWCacheFile", @"FWCacheSqlite"] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
             if (index == 0) {
-                self.cache = [FWCacheMemory sharedInstance];
+                self.cache = [FWCacheManager managerWithType:FWCacheTypeMemory];
             } else if (index == 1) {
-                self.cache = [FWCacheDefaults sharedInstance];
+                self.cache = [FWCacheManager managerWithType:FWCacheTypeUserDefaults];
             } else if (index == 2) {
-                self.cache = [FWCacheKeychain sharedInstance];
+                self.cache = [FWCacheManager managerWithType:FWCacheTypeKeychain];
             } else if (index == 3) {
-                self.cache = [FWCacheFile sharedInstance];
+                self.cache = [FWCacheManager managerWithType:FWCacheTypeFile];
             } else if (index == 4) {
-                self.cache = [FWCacheSqlite sharedInstance];
+                self.cache = [FWCacheManager managerWithType:FWCacheTypeSqlite];
             }
             
             [self refreshCache];
