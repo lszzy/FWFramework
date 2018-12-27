@@ -3,25 +3,25 @@
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/10.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "FWCacheDefaults.h"
+#import "FWCacheUserDefaults.h"
 
-@interface FWCacheDefaults ()
+@interface FWCacheUserDefaults ()
 
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 
 @end
 
-@implementation FWCacheDefaults
+@implementation FWCacheUserDefaults
 
 + (instancetype)sharedInstance
 {
-    static FWCacheDefaults *instance = nil;
+    static FWCacheUserDefaults *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWCacheDefaults alloc] init];
+        instance = [[FWCacheUserDefaults alloc] init];
     });
     return instance;
 }
