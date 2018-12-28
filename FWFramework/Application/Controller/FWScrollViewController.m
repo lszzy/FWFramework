@@ -12,18 +12,18 @@
 #import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
 
-@interface UIViewController (FWScrollViewController) <FWScrollViewController>
+@interface UIViewController (FWScrollViewController)
 
 @end
 
 @implementation UIViewController (FWScrollViewController)
 
-- (UIScrollView *)fwScrollView
+- (UIScrollView *)fwInnerScrollView
 {
     return objc_getAssociatedObject(self, @selector(fwScrollView));
 }
 
-- (UIView *)fwContentView
+- (UIView *)fwInnerContentView
 {
     return objc_getAssociatedObject(self, @selector(fwContentView));
 }

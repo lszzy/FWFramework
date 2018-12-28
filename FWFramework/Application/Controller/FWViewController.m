@@ -8,8 +8,54 @@
  */
 
 #import "FWViewController.h"
-#import "FWScrollViewController.h"
+#import "NSObject+FWRuntime.h"
 #import "FWAspect.h"
+#import "FWScrollViewController.h"
+
+@interface UIViewController (FWViewController)
+
+@end
+
+@implementation UIViewController (FWViewController)
+
++ (void)load
+{
+    [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
+    [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
+}
+
+- (NSMethodSignature *)fwInnerMethodSignatureForSelector:(SEL)aSelector
+{
+    NSMethodSignature *methodSignature = [self fwInnerMethodSignatureForSelector:aSelector];
+    // 挂钩处理FWViewController
+    if (![self respondsToSelector:aSelector] && [self conformsToProtocol:@protocol(FWViewController)]) {
+        // 替换实现fwXXX为fwInnerXXX
+        SEL hookSelector = NSSelectorFromString([NSStringFromSelector(aSelector) stringByReplacingOccurrencesOfString:@"fw" withString:@"fwInner"]);
+        if ([self respondsToSelector:hookSelector]) {
+            methodSignature = [self.class instanceMethodSignatureForSelector:hookSelector];
+        }
+    }
+    return methodSignature;
+}
+
+- (void)fwInnerForwardInvocation:(NSInvocation *)anInvocation
+{
+    // 挂钩处理FWViewController
+    if (![self respondsToSelector:anInvocation.selector] && [self conformsToProtocol:@protocol(FWViewController)]) {
+        // 替换实现fwXXX为fwInnerXXX
+        SEL hookSelector = NSSelectorFromString([NSStringFromSelector(anInvocation.selector) stringByReplacingOccurrencesOfString:@"fw" withString:@"fwInner"]);
+        if ([self respondsToSelector:hookSelector]) {
+            anInvocation.selector = hookSelector;
+            [anInvocation invoke];
+        } else {
+            [self fwInnerForwardInvocation:anInvocation];
+        }
+    } else {
+        [self fwInnerForwardInvocation:anInvocation];
+    }
+}
+
+@end
 
 @implementation FWViewControllerIntercepter
 
@@ -32,16 +78,16 @@
 {
     self = [super init];
     if (self) {
-        [UIViewController fwHookSelector:@selector(initWithNibName:bundle:) withBlock:^(id<FWAspectInfo>aspectInfo, NSString *nibNameOrNil, NSBundle *nibBundleOrNil){
-            [self loadInit:aspectInfo.instance];
+        [UIViewController fwHookSelector:@selector(initWithNibName:bundle:) withBlock:^(id<FWAspectInfo>aspectInfo){
+            [self hookInit:aspectInfo.instance];
         } options:FWAspectPositionAfter error:NULL];
         
         [UIViewController fwHookSelector:@selector(loadView) withBlock:^(id<FWAspectInfo>aspectInfo){
-            [self loadView:aspectInfo.instance];
+            [self hookLoadView:aspectInfo.instance];
         } options:FWAspectPositionAfter error:NULL];
         
         [UIViewController fwHookSelector:@selector(viewDidLoad) withBlock:^(id<FWAspectInfo>aspectInfo){
-            [self viewDidLoad:aspectInfo.instance];
+            [self hookViewDidLoad:aspectInfo.instance];
         } options:FWAspectPositionAfter error:NULL];
     }
     return self;
@@ -49,7 +95,7 @@
 
 #pragma mark - Hook
 
-- (void)loadInit:(UIViewController *)viewController
+- (void)hookInit:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
         if ([viewController respondsToSelector:@selector(fwRenderInit)]) {
@@ -58,11 +104,8 @@
     }
 }
 
-- (void)loadView:(UIViewController *)viewController
+- (void)hookLoadView:(UIViewController *)viewController
 {
-    if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        [self setupViewController:viewController];
-    }
     if ([viewController conformsToProtocol:@protocol(FWScrollViewController)]) {
         [self setupScrollViewController:viewController];
     }
@@ -74,7 +117,7 @@
     }
 }
 
-- (void)viewDidLoad:(UIViewController *)viewController
+- (void)hookViewDidLoad:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
         if ([viewController respondsToSelector:@selector(fwRenderModel)]) {
@@ -84,13 +127,6 @@
             [viewController performSelector:@selector(fwRenderData)];
         }
     }
-}
-
-#pragma mark - Private
-
-- (void)setupViewController:(UIViewController *)viewController
-{
-    // 不做任何处理
 }
 
 @end
