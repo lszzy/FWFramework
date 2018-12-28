@@ -20,38 +20,52 @@
 
 + (void)load
 {
+    [UIViewController fwSwizzleInstanceMethod:@selector(respondsToSelector:) with:@selector(fwInnerRespondsToSelector:)];
     [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
     [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
 }
 
-- (NSMethodSignature *)fwInnerMethodSignatureForSelector:(SEL)aSelector
+- (SEL)fwInnerForwardSelector:(SEL)aSelector
 {
-    NSMethodSignature *methodSignature = [self fwInnerMethodSignatureForSelector:aSelector];
     // 挂钩处理FWViewController
-    if (![self respondsToSelector:aSelector] && [self conformsToProtocol:@protocol(FWViewController)]) {
+    if (![self fwInnerRespondsToSelector:aSelector] && [self conformsToProtocol:@protocol(FWViewController)]) {
         // 替换实现fwXXX为fwInnerXXX
-        SEL hookSelector = NSSelectorFromString([NSStringFromSelector(aSelector) stringByReplacingOccurrencesOfString:@"fw" withString:@"fwInner"]);
-        if ([self respondsToSelector:hookSelector]) {
-            methodSignature = [self.class instanceMethodSignatureForSelector:hookSelector];
+        SEL forwardSelector = NSSelectorFromString([NSStringFromSelector(aSelector) stringByReplacingOccurrencesOfString:@"fw" withString:@"fwInner"]);
+        if ([self fwInnerRespondsToSelector:forwardSelector]) {
+            return forwardSelector;
         }
     }
-    return methodSignature;
+    return NULL;
+}
+
+- (BOOL)fwInnerRespondsToSelector:(SEL)aSelector
+{
+    SEL forwardSelector = [self fwInnerForwardSelector:aSelector];
+    if (!forwardSelector) {
+        return [self fwInnerRespondsToSelector:aSelector];
+    } else {
+        return YES;
+    }
+}
+
+- (NSMethodSignature *)fwInnerMethodSignatureForSelector:(SEL)aSelector
+{
+    SEL forwardSelector = [self fwInnerForwardSelector:aSelector];
+    if (!forwardSelector) {
+        return [self fwInnerMethodSignatureForSelector:aSelector];
+    } else {
+        return [self.class instanceMethodSignatureForSelector:forwardSelector];
+    }
 }
 
 - (void)fwInnerForwardInvocation:(NSInvocation *)anInvocation
 {
-    // 挂钩处理FWViewController
-    if (![self respondsToSelector:anInvocation.selector] && [self conformsToProtocol:@protocol(FWViewController)]) {
-        // 替换实现fwXXX为fwInnerXXX
-        SEL hookSelector = NSSelectorFromString([NSStringFromSelector(anInvocation.selector) stringByReplacingOccurrencesOfString:@"fw" withString:@"fwInner"]);
-        if ([self respondsToSelector:hookSelector]) {
-            anInvocation.selector = hookSelector;
-            [anInvocation invoke];
-        } else {
-            [self fwInnerForwardInvocation:anInvocation];
-        }
-    } else {
+    SEL forwardSelector = [self fwInnerForwardSelector:anInvocation.selector];
+    if (!forwardSelector) {
         [self fwInnerForwardInvocation:anInvocation];
+    } else {
+        anInvocation.selector = forwardSelector;
+        [anInvocation invoke];
     }
 }
 
