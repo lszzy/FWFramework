@@ -9,6 +9,9 @@
 
 #import <UIKit/UIKit.h>
 
+/*!
+ @brief 视图控制器挂钩协议
+ */
 @protocol FWViewController <NSObject>
 
 @optional
@@ -27,8 +30,9 @@
 
 @end
 
+/*!
+ @brief 视图控制器拦截器
+ */
 @interface FWViewControllerIntercepter : NSObject
-
-- (void)setupViewController:(UIViewController *)viewController;
 
 @end
