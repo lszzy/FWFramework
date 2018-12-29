@@ -9,6 +9,9 @@
 
 #import "FWViewController.h"
 
+/*!
+ @brief 滚动视图控制器协议，可覆写
+ */
 @protocol FWScrollViewController <FWViewController>
 
 @optional
@@ -19,16 +22,14 @@
 // 内容容器视图，自动撑开，子视图需要添加到此视图上
 @property (nonatomic, readonly) UIView *fwContentView;
 
-// 渲染滚动视图，loadView自动调用
-- (UIScrollView *)fwRenderScrollView;
-
-// 渲染滚动视图布局，默认铺满，loadView自动调用
-- (void)fwRenderScrollLayout;
+// 渲染滚动视图和布局等，默认铺满
+- (void)fwRenderScrollView;
 
 @end
 
+/*!
+ @brief 拦截器滚动视图控制器分类
+ */
 @interface FWViewControllerIntercepter (FWScrollViewController)
-
-- (void)setupScrollViewController:(UIViewController *)viewController;
 
 @end

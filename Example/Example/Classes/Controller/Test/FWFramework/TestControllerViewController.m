@@ -17,7 +17,7 @@
 
 - (void)fwRenderView
 {
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     UIImageView *imageView = [UIImageView fwAutoLayoutView];
     imageView.image = [UIImage imageNamed:@"public_picture"];
