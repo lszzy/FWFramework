@@ -8,9 +8,10 @@
  */
 
 #import "FWScrollViewController.h"
-#import "FWAspect.h"
 #import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
+
+#pragma mark - UIViewController+FWScrollViewController
 
 @interface UIViewController (FWScrollViewController)
 
@@ -20,41 +21,56 @@
 
 - (UIScrollView *)fwInnerScrollView
 {
-    return objc_getAssociatedObject(self, @selector(fwScrollView));
-}
-
-- (UIView *)fwInnerContentView
-{
-    return objc_getAssociatedObject(self, @selector(fwContentView));
-}
-
-@end
-
-@implementation FWViewControllerIntercepter (FWScrollViewController)
-
-- (void)setupScrollViewController:(UIViewController *)viewController
-{
-    UIScrollView *scrollView = nil;
-    if ([viewController respondsToSelector:@selector(fwRenderScrollView)]) {
-        scrollView = [viewController performSelector:@selector(fwRenderScrollView)];
-    } else {
+    UIScrollView *scrollView = objc_getAssociatedObject(self, @selector(fwScrollView));
+    if (!scrollView) {
         scrollView = [[UIScrollView alloc] init];
         scrollView.showsVerticalScrollIndicator = NO;
         scrollView.showsHorizontalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
             scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
+        objc_setAssociatedObject(self, @selector(fwScrollView), scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    objc_setAssociatedObject(viewController, @selector(fwScrollView), scrollView, OBJC_ASSOCIATION_ASSIGN);
+    return scrollView;
+}
+
+- (UIView *)fwInnerContentView
+{
+    UIView *contentView = objc_getAssociatedObject(self, @selector(fwContentView));
+    if (!contentView) {
+        contentView = [[UIView alloc] init];
+        objc_setAssociatedObject(self, @selector(fwContentView), contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return contentView;
+}
+
+@end
+
+#pragma mark - FWViewControllerIntercepter+FWScrollViewController
+
+@implementation FWViewControllerIntercepter (FWScrollViewController)
+
++ (void)load
+{
+    [[FWViewControllerIntercepter sharedInstance] registerProtocol:@protocol(FWScrollViewController)
+                                                   withIntercepter:@selector(setupScrollViewController:)
+                                                  forwardSelectors:@{
+                                                                     @"fwScrollView" : @"fwInnerScrollView",
+                                                                     @"fwContentView" : @"fwInnerContentView",
+                                                                     }];
+}
+
+- (void)setupScrollViewController:(UIViewController *)viewController
+{
+    UIScrollView *scrollView = [viewController performSelector:@selector(fwScrollView)];
     [viewController.view addSubview:scrollView];
     
-    UIView *contentView = [[UIView alloc] init];
-    objc_setAssociatedObject(viewController, @selector(fwContentView), contentView, OBJC_ASSOCIATION_ASSIGN);
+    UIView *contentView = [viewController performSelector:@selector(fwContentView)];
     [scrollView addSubview:contentView];
     [contentView fwPinEdgesToSuperview];
     
-    if ([viewController respondsToSelector:@selector(fwRenderScrollLayout)]) {
-        [viewController performSelector:@selector(fwRenderScrollLayout)];
+    if ([viewController respondsToSelector:@selector(fwRenderScrollView)]) {
+        [viewController performSelector:@selector(fwRenderScrollView)];
     } else {
         [scrollView fwPinEdgesToSuperview];
     }

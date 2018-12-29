@@ -35,4 +35,12 @@
  */
 @interface FWViewControllerIntercepter : NSObject
 
+// 单例对象
++ (FWViewControllerIntercepter *)sharedInstance;
+
+// 注册协议拦截器，提供拦截和跳转方法
+- (void)registerProtocol:(Protocol *)protocol
+         withIntercepter:(SEL)intercepter
+        forwardSelectors:(NSDictionary *)forwardSelectors;
+
 @end
