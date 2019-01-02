@@ -30,6 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
         [self fwModelEncodeWithCoder:aCoder]; \
     }
 
+// 定义数组类型模型
+#define FWModelArray( class ) \
+    @protocol class <NSObject> \
+    @end
+
 /**
  *  Model转换协议
  *  数组类映射支持两种方式：
