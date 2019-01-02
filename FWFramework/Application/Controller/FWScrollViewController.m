@@ -46,21 +46,19 @@
 
 @end
 
-#pragma mark - FWViewControllerIntercepter+FWScrollViewController
+#pragma mark - FWViewControllerManager+FWScrollViewController
 
-@implementation FWViewControllerIntercepter (FWScrollViewController)
+@implementation FWViewControllerManager (FWScrollViewController)
 
 + (void)load
 {
-    [[FWViewControllerIntercepter sharedInstance] registerProtocol:@protocol(FWScrollViewController)
-                                                   withIntercepter:@selector(setupScrollViewController:)
-                                                  forwardSelectors:@{
-                                                                     @"fwScrollView" : @"fwInnerScrollView",
-                                                                     @"fwContentView" : @"fwInnerContentView",
-                                                                     }];
+    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
+    intercepter.forwardSelectors = @{@"fwScrollView" : @"fwInnerScrollView", @"fwContentView" : @"fwInnerContentView"};
+    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
 }
 
-- (void)setupScrollViewController:(UIViewController *)viewController
+- (void)scrollViewControllerLoadView:(UIViewController *)viewController
 {
     UIScrollView *scrollView = [viewController performSelector:@selector(fwScrollView)];
     [viewController.view addSubview:scrollView];
