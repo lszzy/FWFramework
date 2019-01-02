@@ -28,8 +28,8 @@
 @end
 
 /*!
- @brief 拦截器滚动视图控制器分类
+ @brief 管理器滚动视图控制器分类
  */
-@interface FWViewControllerIntercepter (FWScrollViewController)
+@interface FWViewControllerManager (FWScrollViewController)
 
 @end

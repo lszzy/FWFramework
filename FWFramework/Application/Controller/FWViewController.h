@@ -35,12 +35,23 @@
  */
 @interface FWViewControllerIntercepter : NSObject
 
+@property (nonatomic, assign) SEL initIntercepter;
+@property (nonatomic, assign) SEL loadViewIntercepter;
+@property (nonatomic, assign) SEL viewDidLoadIntercepter;
+
+@property (nonatomic, copy) NSDictionary *forwardSelectors;
+
+@end
+
+/*!
+ @brief 视图控制器管理器
+ */
+@interface FWViewControllerManager : NSObject
+
 // 单例对象
-+ (FWViewControllerIntercepter *)sharedInstance;
++ (FWViewControllerManager *)sharedInstance;
 
 // 注册协议拦截器，提供拦截和跳转方法
-- (void)registerProtocol:(Protocol *)protocol
-         withIntercepter:(SEL)intercepter
-        forwardSelectors:(NSDictionary *)forwardSelectors;
+- (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
 
 @end

@@ -14,26 +14,31 @@
 
 #pragma mark - FWViewControllerIntercepter
 
-@interface FWViewControllerIntercepter ()
-
-@property (nonatomic, strong) NSMutableDictionary *intercepters;
-@property (nonatomic, strong) NSMutableDictionary *forwardSelectors;
+@implementation FWViewControllerIntercepter
 
 @end
 
-@implementation FWViewControllerIntercepter
+#pragma mark - FWViewControllerManager
+
+@interface FWViewControllerManager ()
+
+@property (nonatomic, strong) NSMutableDictionary *intercepters;
+
+@end
+
+@implementation FWViewControllerManager
 
 + (void)load
 {
-    [FWViewControllerIntercepter sharedInstance];
+    [FWViewControllerManager sharedInstance];
 }
 
-+ (FWViewControllerIntercepter *)sharedInstance
++ (FWViewControllerManager *)sharedInstance
 {
-    static FWViewControllerIntercepter *instance = nil;
+    static FWViewControllerManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWViewControllerIntercepter alloc] init];
+        instance = [[FWViewControllerManager alloc] init];
     });
     return instance;
 }
@@ -43,7 +48,6 @@
     self = [super init];
     if (self) {
         _intercepters = [NSMutableDictionary dictionary];
-        _forwardSelectors = [NSMutableDictionary dictionary];
         
         [UIViewController fwHookSelector:@selector(initWithNibName:bundle:) withBlock:^(id<FWAspectInfo>aspectInfo){
             [self hookInit:aspectInfo.instance];
@@ -62,17 +66,9 @@
 
 #pragma mark - Public
 
-- (void)registerProtocol:(Protocol *)protocol
-         withIntercepter:(SEL)intercepter
-        forwardSelectors:(NSDictionary *)forwardSelectors
+- (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter
 {
-    NSString *protocolName = NSStringFromProtocol(protocol);
-    [self.intercepters setObject:NSStringFromSelector(intercepter) forKey:protocolName];
-    if (forwardSelectors) {
-        [self.forwardSelectors setObject:forwardSelectors forKey:protocolName];
-    } else {
-        [self.forwardSelectors removeObjectForKey:protocolName];
-    }
+    [self.intercepters setObject:intercepter forKey:NSStringFromProtocol(protocol)];
 }
 
 - (NSArray *)protocolsWithClass:(Class)clazz
@@ -113,8 +109,8 @@
     NSString *forwardName = nil;
     NSArray *protocolNames = [self protocolsWithClass:clazz];
     for (NSString *protocolName in protocolNames) {
-        NSDictionary *forwardSelectors = [self.forwardSelectors objectForKey:protocolName];
-        forwardName = forwardSelectors ? [forwardSelectors objectForKey:selectorName] : nil;
+        FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+        forwardName = intercepter ? [intercepter.forwardSelectors objectForKey:selectorName] : nil;
         if (forwardName) {
             break;
         }
@@ -127,8 +123,20 @@
 - (void)hookInit:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 统一设置视图控制器
-        [self setupViewController:viewController];
+        // 统一初始化视图控制器
+        [self viewControllerInit:viewController];
+        
+        // 调用init拦截器
+        NSArray *protocolNames = [self protocolsWithClass:viewController.class];
+        for (NSString *protocolName in protocolNames) {
+            FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+            if (intercepter.initIntercepter && [self respondsToSelector:intercepter.initIntercepter]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                [self performSelector:intercepter.initIntercepter withObject:viewController];
+#pragma clang diagnostic pop
+            }
+        }
         
         if ([viewController respondsToSelector:@selector(fwRenderInit)]) {
             [viewController performSelector:@selector(fwRenderInit)];
@@ -139,15 +147,14 @@
 - (void)hookLoadView:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 调用对应拦截器
+        // 调用loadView拦截器
         NSArray *protocolNames = [self protocolsWithClass:viewController.class];
         for (NSString *protocolName in protocolNames) {
-            NSString *intercepter = [self.intercepters objectForKey:protocolName];
-            SEL intercepterSelector = intercepter ? NSSelectorFromString(intercepter) : NULL;
-            if (intercepterSelector && [self respondsToSelector:intercepterSelector]) {
+            FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+            if (intercepter.loadViewIntercepter && [self respondsToSelector:intercepter.loadViewIntercepter]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                [self performSelector:intercepterSelector withObject:viewController];
+                [self performSelector:intercepter.loadViewIntercepter withObject:viewController];
 #pragma clang diagnostic pop
             }
         }
@@ -161,6 +168,18 @@
 - (void)hookViewDidLoad:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
+        // 调用viewDidLoad拦截器
+        NSArray *protocolNames = [self protocolsWithClass:viewController.class];
+        for (NSString *protocolName in protocolNames) {
+            FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+            if (intercepter.viewDidLoadIntercepter && [self respondsToSelector:intercepter.viewDidLoadIntercepter]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                [self performSelector:intercepter.viewDidLoadIntercepter withObject:viewController];
+#pragma clang diagnostic pop
+            }
+        }
+        
         if ([viewController respondsToSelector:@selector(fwRenderModel)]) {
             [viewController performSelector:@selector(fwRenderModel)];
         }
@@ -172,7 +191,7 @@
 
 #pragma mark - FWViewController
 
-- (void)setupViewController:(UIViewController *)viewController
+- (void)viewControllerInit:(UIViewController *)viewController
 {
     // 默认不被导航栏等遮挡，隐藏TabBar；如果不同，覆盖即可
     viewController.edgesForExtendedLayout = UIRectEdgeNone;
@@ -214,7 +233,7 @@
         NSString *forwardName = [[self fwInnerForwardSelectors] objectForKey:selectorName];
         if (!forwardName) {
             // 如果缓存不存在，查找一次并生成缓存
-            forwardName = [[FWViewControllerIntercepter sharedInstance] forwardSelector:selectorName withClass:self.class];
+            forwardName = [[FWViewControllerManager sharedInstance] forwardSelector:selectorName withClass:self.class];
             [[self fwInnerForwardSelectors] setObject:(forwardName ?: @"") forKey:selectorName];
         }
         
