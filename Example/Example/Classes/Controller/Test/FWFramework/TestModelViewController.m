@@ -9,10 +9,6 @@
 
 #import "TestModelViewController.h"
 
-@protocol TestModelUser <NSObject>
-
-@end
-
 @interface TestModelUser : NSObject
 
 @property (nonatomic, assign) NSInteger userId;
@@ -24,6 +20,8 @@
 @implementation TestModelUser
 
 @end
+
+FWModelArray(TestModelUser);
 
 @interface TestModelObj : NSObject
 
