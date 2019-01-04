@@ -8,6 +8,10 @@
  */
 
 #import "UIWebView+FWFramework.h"
+#import "FWMessage.h"
+#import <objc/runtime.h>
+
+#pragma mark - UIWebView
 
 NSString *completeRPCURLPath = @"/fwwebviewprogressproxy/complete";
 
@@ -266,6 +270,36 @@ const float FWFinalProgressValue = 0.9f;
             self.progressBarView.alpha = 1.0;
         } completion:nil];
     }
+}
+
+@end
+
+#pragma mark - WKWebView
+
+@implementation WKWebView (FWFramework)
+
+- (id<FWWebViewNavigationDelegate>)fwNavigationDelegate
+{
+    return objc_getAssociatedObject(self, @selector(fwNavigationDelegate));
+}
+
+- (void)setFwNavigationDelegate:(id<FWWebViewNavigationDelegate>)fwNavigationDelegate
+{
+    if (!fwNavigationDelegate || (self.fwNavigationDelegate && ![self.fwNavigationDelegate isEqual:fwNavigationDelegate])) {
+        [self fwUnobserveProperty:@"estimatedProgress"];
+    }
+    
+    if (fwNavigationDelegate) {
+        [self fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {
+            if (webView.fwNavigationDelegate && [webView.fwNavigationDelegate respondsToSelector:@selector(webView:updateProgress:)]) {
+                [webView.fwNavigationDelegate webView:webView updateProgress:webView.estimatedProgress];
+            }
+        }];
+    }
+    
+    objc_setAssociatedObject(self, @selector(fwNavigationDelegate), fwNavigationDelegate, OBJC_ASSOCIATION_ASSIGN);
+    
+    self.navigationDelegate = fwNavigationDelegate;
 }
 
 @end
