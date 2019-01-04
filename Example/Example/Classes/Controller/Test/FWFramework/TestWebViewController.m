@@ -40,7 +40,7 @@
     
     _progressView2 = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
     _progressView2.trackTintColor = [UIColor clearColor];
-    _progressView2.alpha = 0.0f;
+    [_progressView2 fwSetProgress:0];
     [self.webView2 addSubview:_progressView2];
     
     [self loadBaidu];
@@ -67,19 +67,7 @@
 
 - (void)webView:(WKWebView *)webView updateProgress:(CGFloat)progress
 {
-    if (self.progressView2.alpha == 0 && progress > 0) {
-        self.progressView2.progress = 0;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.progressView2.alpha = 1.0;
-        }];
-    } else if (self.progressView2.alpha == 1.0 && progress == 1.0) {
-        [UIView animateWithDuration:0.2 animations:^{
-            self.progressView2.alpha = 0.0;
-        } completion:^(BOOL finished) {
-            self.progressView2.progress = 0;
-        }];
-    }
-    [self.progressView2 setProgress:progress animated:YES];
+    [self.progressView2 fwSetProgress:progress];
 }
 
 @end
