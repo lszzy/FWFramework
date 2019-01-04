@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE5E2097137C000F8587 /* ObjcController.m */; };
 		2F06BE6520971483000F8587 /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE6420971483000F8587 /* SwiftController.swift */; };
+		2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B7021DF387000F47DFD /* TestWebViewController.m */; };
 		2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2932215DFFEF005F1466 /* DZNWebView.m */; };
 		2F0D297B215DFFEF005F1466 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2933215DFFEF005F1466 /* DZNWebViewController.m */; };
 		2F0D297C215DFFEF005F1466 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2934215DFFEF005F1466 /* DZNPolyActivity.m */; };
@@ -80,6 +81,8 @@
 		2F06BE5E2097137C000F8587 /* ObjcController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcController.m; sourceTree = "<group>"; };
 		2F06BE6420971483000F8587 /* SwiftController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftController.swift; sourceTree = "<group>"; };
 		2F06BE672097152C000F8587 /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
+		2F071B6F21DF387000F47DFD /* TestWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestWebViewController.h; sourceTree = "<group>"; };
+		2F071B7021DF387000F47DFD /* TestWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestWebViewController.m; sourceTree = "<group>"; };
 		2F0D2931215DFFEF005F1466 /* DZNPolyActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNPolyActivity.h; sourceTree = "<group>"; };
 		2F0D2932215DFFEF005F1466 /* DZNWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNWebView.m; sourceTree = "<group>"; };
 		2F0D2933215DFFEF005F1466 /* DZNWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNWebViewController.m; sourceTree = "<group>"; };
@@ -353,6 +356,8 @@
 				2FCE517021D3BE02009EA65E /* TestCacheViewController.m */,
 				2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */,
 				2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */,
+				2F071B6F21DF387000F47DFD /* TestWebViewController.h */,
+				2F071B7021DF387000F47DFD /* TestWebViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -684,6 +689,7 @@
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
 				2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
+				2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
