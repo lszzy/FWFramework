@@ -189,6 +189,8 @@
 		2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F071B6D21DF321500F47DFD /* UIWebView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F071B6E21DF321500F47DFD /* UIWebView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B6C21DF321500F47DFD /* UIWebView+FWFramework.m */; };
+		2F071B7721DF666A00F47DFD /* FWDbModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F071B7521DF666A00F47DFD /* FWDbModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F071B7821DF666A00F47DFD /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B7621DF666A00F47DFD /* FWDbModel.m */; };
 		2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */; };
 		2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0FFF1721D0ACFA00049383 /* UIScrollView+FWPullRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -255,8 +257,6 @@
 		2FCE516E21D3BD1B009EA65E /* FWCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */; };
 		2FCE517521D3C574009EA65E /* FWCacheSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE517321D3C574009EA65E /* FWCacheSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517421D3C574009EA65E /* FWCacheSqlite.m */; };
-		2FD1A51321D4B3CD00A215C2 /* FWDBModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD1A51121D4B3CD00A215C2 /* FWDBModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FD1A51421D4B3CD00A215C2 /* FWDBModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A51221D4B3CD00A215C2 /* FWDBModel.m */; };
 		2FD1A51721D4B41D00A215C2 /* FWModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD1A51521D4B41D00A215C2 /* FWModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FD1A51821D4B41D00A215C2 /* FWModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A51621D4B41D00A215C2 /* FWModel.m */; };
 		2FD1A51C21D4B5EA00A215C2 /* FWViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -450,6 +450,8 @@
 		2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
 		2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIWebView+FWFramework.h"; sourceTree = "<group>"; };
 		2F071B6C21DF321500F47DFD /* UIWebView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+FWFramework.m"; sourceTree = "<group>"; };
+		2F071B7521DF666A00F47DFD /* FWDbModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDbModel.h; sourceTree = "<group>"; };
+		2F071B7621DF666A00F47DFD /* FWDbModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDbModel.m; sourceTree = "<group>"; };
 		2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
 		2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISearchBar+FWFramework.m"; sourceTree = "<group>"; };
 		2F0FFF1721D0ACFA00049383 /* UIScrollView+FWPullRefresh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWPullRefresh.h"; sourceTree = "<group>"; };
@@ -517,8 +519,6 @@
 		2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWCacheManager.m; sourceTree = "<group>"; };
 		2FCE517321D3C574009EA65E /* FWCacheSqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheSqlite.h; sourceTree = "<group>"; };
 		2FCE517421D3C574009EA65E /* FWCacheSqlite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCacheSqlite.m; sourceTree = "<group>"; };
-		2FD1A51121D4B3CD00A215C2 /* FWDBModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDBModel.h; sourceTree = "<group>"; };
-		2FD1A51221D4B3CD00A215C2 /* FWDBModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDBModel.m; sourceTree = "<group>"; };
 		2FD1A51521D4B41D00A215C2 /* FWModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWModel.h; sourceTree = "<group>"; };
 		2FD1A51621D4B41D00A215C2 /* FWModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWModel.m; sourceTree = "<group>"; };
 		2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWViewController.h; sourceTree = "<group>"; };
@@ -804,8 +804,8 @@
 			children = (
 				2FD1A51521D4B41D00A215C2 /* FWModel.h */,
 				2FD1A51621D4B41D00A215C2 /* FWModel.m */,
-				2FD1A51121D4B3CD00A215C2 /* FWDBModel.h */,
-				2FD1A51221D4B3CD00A215C2 /* FWDBModel.m */,
+				2F071B7521DF666A00F47DFD /* FWDbModel.h */,
+				2F071B7621DF666A00F47DFD /* FWDbModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -965,11 +965,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F071B7721DF666A00F47DFD /* FWDbModel.h in Headers */,
 				2F071B6D21DF321500F47DFD /* UIWebView+FWFramework.h in Headers */,
 				2FD1A52621D4BD4100A215C2 /* FWScrollViewController.h in Headers */,
 				2FD1A51C21D4B5EA00A215C2 /* FWViewController.h in Headers */,
 				2FD1A52021D4B71600A215C2 /* FWView.h in Headers */,
-				2FD1A51321D4B3CD00A215C2 /* FWDBModel.h in Headers */,
 				2FD1A51721D4B41D00A215C2 /* FWModel.h in Headers */,
 				2FCE517521D3C574009EA65E /* FWCacheSqlite.h in Headers */,
 				2FCE516D21D3BD1B009EA65E /* FWCacheManager.h in Headers */,
@@ -1253,6 +1253,7 @@
 				2F03A5DD216CF4B9001965A1 /* NSFileManager+FWFramework.m in Sources */,
 				2F03A632216CF882001965A1 /* FWNetworkConfig.m in Sources */,
 				2F03A5E0216CF4B9001965A1 /* NSUserDefaults+FWFramework.m in Sources */,
+				2F071B7821DF666A00F47DFD /* FWDbModel.m in Sources */,
 				2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */,
 				2F03A593216CF4B9001965A1 /* UIImage+FWFramework.m in Sources */,
 				2F03A5A8216CF4B9001965A1 /* UIWindow+FWFramework.m in Sources */,
@@ -1262,7 +1263,6 @@
 				2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */,
 				2FCE516121D3BA32009EA65E /* FWCacheKeychain.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
-				2FD1A51421D4B3CD00A215C2 /* FWDBModel.m in Sources */,
 				2F03A634216CF882001965A1 /* FWChainRequest.m in Sources */,
 				2FD1A51D21D4B5EA00A215C2 /* FWViewController.m in Sources */,
 				2F03A64E216CF882001965A1 /* FWURLSessionManager.m in Sources */,

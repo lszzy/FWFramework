@@ -1,14 +1,14 @@
 /*!
- @header     FWDBModel.m
+ @header     FWDbModel.m
  @indexgroup FWFramework
- @brief      FWDBModel
+ @brief      FWDbModel
  @author     wuyong
- @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/27
+ @copyright  Copyright © 2019 wuyong.site. All rights reserved.
+ @updated    2019/1/4
  */
 
-#import "FWDBModel.h"
+#import "FWDbModel.h"
 
-@implementation FWDBModel
+@implementation NSObject (FWDbModel)
 
 @end

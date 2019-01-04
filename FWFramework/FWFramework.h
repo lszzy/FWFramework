@@ -49,7 +49,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
 // Application
 #import <FWFramework/FWModel.h>
-#import <FWFramework/FWDBModel.h>
+#import <FWFramework/FWDbModel.h>
 #import <FWFramework/FWView.h>
 #import <FWFramework/FWViewController.h>
 #import <FWFramework/FWScrollViewController.h>
@@ -90,7 +90,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
 // Application
 #import "FWModel.h"
-#import "FWDBModel.h"
+#import "FWDbModel.h"
 #import "FWView.h"
 #import "FWViewController.h"
 #import "FWScrollViewController.h"
