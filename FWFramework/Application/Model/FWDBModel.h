@@ -1,17 +1,33 @@
 /*!
- @header     FWDBModel.h
+ @header     FWDbModel.h
  @indexgroup FWFramework
- @brief      FWDBModel
+ @brief      FWDbModel
  @author     wuyong
- @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/27
+ @copyright  Copyright © 2019 wuyong.site. All rights reserved.
+ @updated    2019/1/4
  */
 
-#import <Foundation/Foundation.h>
+#import "FWModel.h"
 
-/*!
- @brief FWDBModel
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ *  DBModel协议，继承FWModel
  */
-@interface FWDBModel : NSObject
+@protocol FWDbModel <FWModel>
+
+@optional
+
+// 定义主键字段，默认pkid
++ (nullable NSString *)fwDbModelPrimaryKey;
+
+// 定义表名，默认类名
++ (nullable NSString *)fwDbModelTableName;
 
 @end
+
+@interface NSObject (FWDbModel)
+
+@end
+
+NS_ASSUME_NONNULL_END
