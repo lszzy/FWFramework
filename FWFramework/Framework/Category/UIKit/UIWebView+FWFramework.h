@@ -8,6 +8,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
+
+#pragma mark - UIWebView
 
 extern const float FWInitialProgressValue;
 extern const float FWInteractiveProgressValue;
@@ -48,5 +51,19 @@ typedef void (^FWWebViewProgressBlock)(float progress);
 @property (nonatomic) NSTimeInterval fadeOutDelay;
 
 - (void)setProgress:(float)progress animated:(BOOL)animated;
+
+@end
+
+#pragma mark - WKWebView
+
+@protocol FWWebViewNavigationDelegate <WKNavigationDelegate>
+
+- (void)webView:(WKWebView *)webView updateProgress:(CGFloat)progress;
+
+@end
+
+@interface WKWebView (FWFramework)
+
+@property (nonatomic, weak) id <FWWebViewNavigationDelegate> fwNavigationDelegate;
 
 @end
