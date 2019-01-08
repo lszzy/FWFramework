@@ -15,6 +15,14 @@
 @interface NSArray<__covariant ObjectType> (FWFramework)
 
 /*!
+ @brief 过滤数组元素
+ 
+ @param block 返回YES的obj重新组装成一个数组
+ @return 新的数组
+ */
+- (instancetype)fwFilterWithBlock:(BOOL (^)(id obj))block;
+
+/*!
  @brief 从数组中随机取出对象
  
  @return 随机对象

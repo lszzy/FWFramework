@@ -18,6 +18,7 @@
 #import "UIFont+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "UIImageView+FWFramework.h"
+#import "UIImagePickerController+FWFramework.h"
 #import "UILabel+FWFramework.h"
 #import "UIPageControl+FWFramework.h"
 #import "UIScreen+FWFramework.h"
@@ -29,6 +30,7 @@
 #import "UIView+FWFramework.h"
 #import "UIViewController+FWFramework.h"
 #import "UINavigationController+FWFramework.h"
+#import "UIWebView+FWFramework.h"
 #import "UIWindow+FWFramework.h"
 
 #endif /* UIKit_FWFramework_h */

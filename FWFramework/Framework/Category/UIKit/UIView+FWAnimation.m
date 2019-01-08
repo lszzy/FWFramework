@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/27.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "UIView+FWAnimation.h"
@@ -78,6 +78,34 @@
 #pragma mark - UIView+FWAnimation
 
 @implementation UIView (FWAnimation)
+
+#pragma mark - Block
+
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block
+{
+    [UIView performWithoutAnimation:block];
+}
+
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion
+{
+    [UIView animateWithDuration:0 animations:block completion:^(BOOL finished) {
+        if (completion) {
+            completion();
+        }
+    }];
+}
+
++ (void)fwAnimateWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion
+{
+    if (!block) {
+        return;
+    }
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:completion];
+    block();
+    [CATransaction commit];
+}
 
 #pragma mark - Animation
 

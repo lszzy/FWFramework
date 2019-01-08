@@ -74,6 +74,21 @@
     [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil];
 }
 
+- (void)fwSetImageWithURL:(NSURL *)url
+         placeholderImage:(UIImage *)placeholderImage
+                  success:(void (^)(UIImage *image))success
+                  failure:(void (^)(NSError *error))failure
+{
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+    
+    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:(success ? ^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+        success(image);
+    } : nil) failure:(failure ? ^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+        failure(error);
+    } : nil)];
+}
+
 - (void)fwSetImageWithURLRequest:(NSURLRequest *)urlRequest
                 placeholderImage:(UIImage *)placeholderImage
                          success:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *image))success

@@ -21,12 +21,17 @@
 
 @end
 
+FWModelArray(TestModelUser);
+
 @interface TestModelObj : NSObject
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) TestModelUser *user;
-@property (nonatomic, strong) NSArray *users;
+// 非协议方式配置，需实现fwModelClassMapper
+@property (nonatomic, strong) NSArray<TestModelUser *> *users;
+// 协议方式配置，无需实现fwModelClassMapper
+@property (nonatomic, strong) NSArray<TestModelUser *><TestModelUser> *pusers;
 
 @end
 
@@ -164,6 +169,23 @@
                                        @"userName": @"userName",
                                        },
                                @"users": @[
+                                       @{
+                                           @"userId": @2,
+                                           @"userAge": @20,
+                                           @"userName": @"userName",
+                                           },
+                                       @{
+                                           @"userId": @3,
+                                           @"userAge": @20,
+                                           @"userName": @"userName",
+                                           },
+                                       @{
+                                           @"userId": @4,
+                                           @"userAge": @20,
+                                           @"userName": @"userName",
+                                           },
+                                       ],
+                               @"pusers": @[
                                        @{
                                            @"userId": @2,
                                            @"userAge": @20,

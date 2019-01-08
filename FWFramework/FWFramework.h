@@ -40,12 +40,24 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWKeychainManager.h>
 #import <FWFramework/FWTaskManager.h>
 #import <FWFramework/FWVersionManager.h>
+#import <FWFramework/FWLocationManager.h>
+#import <FWFramework/FWStorekitManager.h>
 #import <FWFramework/FWNetwork.h>
 #import <FWFramework/FWRequest.h>
+#import <FWFramework/FWDatabaseManager.h>
+#import <FWFramework/FWCacheManager.h>
 
 // Application
+#import <FWFramework/FWModel.h>
+#import <FWFramework/FWDbModel.h>
+#import <FWFramework/FWView.h>
+#import <FWFramework/FWViewController.h>
+#import <FWFramework/FWScrollViewController.h>
+#import <FWFramework/FWAttributedLabel.h>
 #import <FWFramework/FWIndicatorControl.h>
 #import <FWFramework/FWProgressView.h>
+#import <FWFramework/FWBannerView.h>
+#import <FWFramework/FWTagCollectionView.h>
 #import <FWFramework/FWCollectionViewFlowLayout.h>
 
 #else
@@ -69,12 +81,24 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWKeychainManager.h"
 #import "FWTaskManager.h"
 #import "FWVersionManager.h"
+#import "FWLocationManager.h"
+#import "FWStorekitManager.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
+#import "FWDatabaseManager.h"
+#import "FWCacheManager.h"
 
 // Application
+#import "FWModel.h"
+#import "FWDbModel.h"
+#import "FWView.h"
+#import "FWViewController.h"
+#import "FWScrollViewController.h"
+#import "FWAttributedLabel.h"
 #import "FWIndicatorControl.h"
 #import "FWProgressView.h"
+#import "FWBannerView.h"
+#import "FWTagCollectionView.h"
 #import "FWCollectionViewFlowLayout.h"
 
 #endif

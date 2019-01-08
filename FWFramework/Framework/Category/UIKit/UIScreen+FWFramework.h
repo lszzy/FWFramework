@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -140,6 +140,9 @@
 
 // 获取安全区域距离
 + (UIEdgeInsets)fwSafeAreaInsets;
+
+// 获取一像素的大小
++ (CGFloat)fwPixelOne;
 
 @end
 

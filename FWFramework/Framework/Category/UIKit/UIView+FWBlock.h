@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -12,8 +12,11 @@
 
 @interface UIGestureRecognizer (FWBlock)
 
+// 获取手势直接作用的view，不同于view，此处是view的subview
+@property (nonatomic, weak, readonly) UIView *fwTargetView;
+
 // 从事件句柄初始化
-- (instancetype)initWithFWBlock:(void (^)(id sender))block;
++ (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;
 
 // 添加事件句柄
 - (void)fwAddBlock:(void (^)(id sender))block;
@@ -64,9 +67,9 @@
 @interface UIBarButtonItem (FWBlock)
 
 // 使用指定对象和事件创建Item
-- (instancetype)initWithFWObject:(id)object target:(id)target action:(SEL)action;
++ (instancetype)fwBarItemWithObject:(id)object target:(id)target action:(SEL)action;
 
 // 使用指定对象和句柄创建Item
-- (instancetype)initWithFWObject:(id)object block:(void (^)(id sender))block;
++ (instancetype)fwBarItemWithObject:(id)object block:(void (^)(id sender))block;
 
 @end

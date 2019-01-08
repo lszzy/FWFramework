@@ -10,15 +10,15 @@
 #import <UIKit/UIKit.h>
 #import "UIImage+FWGif.h"
 
-// 系统缓存方式加载UIImage
+// 使用文件名方式加载UIImage。会被系统缓存，适用于大量复用的小资源图
 #define FWImageName( name ) \
     [UIImage imageNamed:name]
 
-// 从图片文件加载UIImage
+// 从图片文件加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
 #define FWImageFile( file ) \
     [UIImage imageWithContentsOfFile:file]
 
-// 从应用资源路径加载UIImage，后缀可选，默认nil
+// 从应用资源路径加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
 #define FWImageResource( path, ... ) \
     FWImageFile( [[NSBundle mainBundle] pathForResource:path ofType:fw_macro_default(nil, ##__VA_ARGS__)] )
 
@@ -26,6 +26,26 @@
  @brief UIImage+FWFramework
  */
 @interface UIImage (FWFramework)
+
+#pragma mark - Make
+
+// 使用文件名方式加载UIImage。会被系统缓存，适用于大量复用的小资源图
++ (UIImage *)fwImageWithName:(NSString *)name;
+
+// 使用文件名方式从bundle加载UIImage。会被系统缓存，适用于大量复用的小资源图
++ (UIImage *)fwImageWithName:(NSString *)name inBundle:(NSBundle *)bundle;
+
+// 从图片文件加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (UIImage *)fwImageWithFile:(NSString *)path;
+
+// 从应用资源路径加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (UIImage *)fwImageWithResource:(NSString *)path;
+
+// 从应用资源路径加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (UIImage *)fwImageWithResource:(NSString *)path ofType:(NSString *)type;
+
+// 从应用资源路径从bundle加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (UIImage *)fwImageWithResource:(NSString *)path ofType:(NSString *)type inBundle:(NSBundle *)bundle;
 
 #pragma mark - View
 
@@ -54,6 +74,9 @@
 
 // 获取图片的平均颜色
 - (UIColor *)fwAverageColor;
+
+// 获取当前图片的像素大小，多倍图会放大到一倍
+- (CGSize)fwPixelSize;
 
 #pragma mark - Icon
 

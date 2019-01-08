@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "UIView+FWBlock.h"
@@ -36,13 +36,18 @@
 
 @implementation UIGestureRecognizer (FWBlock)
 
-- (instancetype)initWithFWBlock:(void (^)(id sender))block
+- (UIView *)fwTargetView
 {
-    self = [self init];
-    if (self) {
-        [self fwAddBlock:block];
-    }
-    return self;
+    CGPoint location = [self locationInView:self.view];
+    UIView *targetView = [self.view hitTest:location withEvent:nil];
+    return targetView;
+}
+
++ (instancetype)fwGestureRecognizerWithBlock:(void (^)(id))block
+{
+    UIGestureRecognizer *gestureRecognizer = [[self alloc] init];
+    [gestureRecognizer fwAddBlock:block];
+    return gestureRecognizer;
 }
 
 - (void)fwAddBlock:(void (^)(id sender))block
@@ -87,7 +92,7 @@
 
 - (void)fwAddTapGestureWithBlock:(void (^)(id sender))block
 {
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithFWBlock:block];
+    UITapGestureRecognizer *gesture = [UITapGestureRecognizer fwGestureRecognizerWithBlock:block];
     [self addGestureRecognizer:gesture];
 }
 
@@ -168,50 +173,53 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
 
 @implementation UIBarButtonItem (FWBlock)
 
-- (instancetype)initWithFWObject:(id)object target:(id)target action:(SEL)action
++ (instancetype)fwBarItemWithObject:(id)object target:(id)target action:(SEL)action
 {
+    UIBarButtonItem *barItem = nil;
     // NSString
     if ([object isKindOfClass:[NSString class]]) {
-        self = [self initWithTitle:object style:UIBarButtonItemStylePlain target:target action:action];
+        barItem = [[self alloc] initWithTitle:object style:UIBarButtonItemStylePlain target:target action:action];
     // UIImage
     } else if ([object isKindOfClass:[UIImage class]]) {
-        self = [self initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];
+        barItem = [[self alloc] initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];
     // NSNumber
     } else if ([object isKindOfClass:[NSNumber class]]) {
-        self = [self initWithBarButtonSystemItem:[object integerValue] target:target action:action];
+        barItem = [[self alloc] initWithBarButtonSystemItem:[object integerValue] target:target action:action];
     // UIView
     } else if ([object isKindOfClass:[UIView class]]) {
-        self = [self initWithCustomView:object];
-        self.target = target;
-        self.action = action;
+        barItem = [[self alloc] initWithCustomView:object];
+        barItem.target = target;
+        barItem.action = action;
         // 目标动作存在，则添加点击手势，可设置target为空取消响应
-        if (self.target && self.action) {
+        if (barItem.target && barItem.action) {
             // 进行self转发，模拟实际action回调参数
-            [(UIView *)object fwAddTapGestureWithTarget:self action:@selector(fwInnerTargetAction:)];
+            [(UIView *)object fwAddTapGestureWithTarget:barItem action:@selector(fwInnerTargetAction:)];
         }
     // Other
     } else {
-        self = [self init];
-        self.target = target;
-        self.action = action;
+        barItem = [[self alloc] init];
+        barItem.target = target;
+        barItem.action = action;
     }
-    return self;
+    return barItem;
 }
 
-- (instancetype)initWithFWObject:(id)object block:(void (^)(id))block
++ (instancetype)fwBarItemWithObject:(id)object block:(void (^)(id))block
 {
     FWInnerBlockTarget *target = nil;
     SEL action = NULL;
-    
     if (block) {
         target = [[FWInnerBlockTarget alloc] init];
         target.block = block;
         action = @selector(invoke:);
-        // 设置target为强引用，因为self.target为弱引用
-        objc_setAssociatedObject(self, kUIBarButtonItemFWBlockKey, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
-    return [self initWithFWObject:object target:target action:action];
+    UIBarButtonItem *barItem = [self fwBarItemWithObject:object target:target action:action];
+    if (target) {
+        // 设置target为强引用，因为self.target为弱引用
+        objc_setAssociatedObject(barItem, kUIBarButtonItemFWBlockKey, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return barItem;
 }
 
 - (void)fwInnerTargetAction:(id)sender

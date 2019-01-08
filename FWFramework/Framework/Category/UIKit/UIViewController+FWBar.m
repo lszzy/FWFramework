@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "UIViewController+FWBar.h"
@@ -100,25 +100,25 @@
 
 - (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object target:target action:action];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
     self.navigationItem.leftBarButtonItem = item;
 }
 
 - (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object block:block];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:block];
     self.navigationItem.leftBarButtonItem = item;
 }
 
 - (void)fwSetRightBarItem:(id)object target:(id)target action:(SEL)action
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object target:target action:action];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
     self.navigationItem.rightBarButtonItem = item;
 }
 
 - (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithFWObject:object block:block];
+    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:block];
     self.navigationItem.rightBarButtonItem = item;
 }
 

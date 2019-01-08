@@ -3,7 +3,7 @@
 //  Example
 //
 //  Created by wuyong on 17/2/16.
-//  Copyright © 2017年 wuyong.site. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -22,6 +22,12 @@
     
     self.window.rootViewController = [self tabBarController];
     [self.window makeKeyAndVisible];
+    
+#if TARGET_OS_SIMULATOR
+    // https://itunes.apple.com/cn/app/injectioniii/id1380446739?mt=12
+    [[NSBundle bundleWithPath:@"/Applications/InjectionIII.app/Contents/Resources/iOSInjection10.bundle"] load];
+#endif
+    
     return YES;
 }
 

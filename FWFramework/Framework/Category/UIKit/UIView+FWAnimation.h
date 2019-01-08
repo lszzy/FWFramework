@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/27.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -21,6 +21,31 @@
 #pragma mark - UIView+FWAnimation
 
 @interface UIView (FWAnimation)
+
+#pragma mark - Block
+
+/*!
+ @brief 取消动画效果执行block
+ 
+ @param block 动画代码块
+ */
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block;
+
+/*!
+ @brief 取消动画效果执行block
+ 
+ @param block 动画代码块
+ @param completion 完成事件
+ */
++ (void)fwAnimateNoneWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion;
+
+/*!
+ @brief 执行block动画完成后执行指定回调
+ 
+ @param block 动画代码块
+ @param completion 完成事件
+ */
++ (void)fwAnimateWithBlock:(nonnull __attribute__((noescape)) void (^)(void))block completion:(nullable __attribute__((noescape)) void (^)(void))completion;
 
 #pragma mark - Animation
 

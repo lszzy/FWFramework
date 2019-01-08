@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 2017/10/24.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -49,12 +49,12 @@ typedef NS_ENUM(NSInteger, FWVersionStatus) {
 - (void)checkVersion:(NSInteger)interval completion:(void (^)(void))completion;
 
 // 跳转AppStore更新页
-- (void)openStore;
+- (void)openAppStore;
 
-// 设置数据指定版本更新句柄，调用updateData之前生效，仅会调用一次
-- (void)dataHandler:(NSString *)version handler:(void (^)(void))handler;
+// 检查数据版本号并指定版本迁移方法，调用migrateData之前生效，仅会调用一次
+- (void)checkDataVersion:(NSString *)version migrator:(void (^)(void))migrator;
 
-// 比较数据版本号并依次进行数据更新，更新成功时回调
-- (void)updateData:(void (^)(void))completion;
+// 比较数据版本号并依次进行数据迁移，迁移完成时回调
+- (void)migrateData:(void (^)(void))completion;
 
 @end

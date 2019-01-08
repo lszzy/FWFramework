@@ -54,11 +54,14 @@
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
+                                             @[@"FWScroll", @"TestTableScrollViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
                                              @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
                                              @[@"UIScrollView(FWEmptyView)", @"TestEmptyViewController"],
                                              @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
+                                             @[@"UIWebView(FWFramework)", @"TestWebViewController"],
+                                             @[@"FWCache", @"TestCacheViewController"],
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"UIView+FWIndicator", @"TestIndicatorViewController"],
@@ -66,6 +69,8 @@
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
+                                             @[@"FWBannerView", @"TestBannerViewController"],
+                                             @[@"FWViewController", @"TestControllerViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];
