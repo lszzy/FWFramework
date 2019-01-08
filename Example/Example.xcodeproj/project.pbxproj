@@ -10,6 +10,8 @@
 		2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE5E2097137C000F8587 /* ObjcController.m */; };
 		2F06BE6520971483000F8587 /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE6420971483000F8587 /* SwiftController.swift */; };
 		2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B7021DF387000F47DFD /* TestWebViewController.m */; };
+		2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3821E496B30018FA87 /* FWDbModel.m */; };
+		2F0CCE3C21E496B30018FA87 /* FWDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */; };
 		2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2932215DFFEF005F1466 /* DZNWebView.m */; };
 		2F0D297B215DFFEF005F1466 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2933215DFFEF005F1466 /* DZNWebViewController.m */; };
 		2F0D297C215DFFEF005F1466 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D2934215DFFEF005F1466 /* DZNPolyActivity.m */; };
@@ -83,6 +85,10 @@
 		2F06BE672097152C000F8587 /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		2F071B6F21DF387000F47DFD /* TestWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestWebViewController.h; sourceTree = "<group>"; };
 		2F071B7021DF387000F47DFD /* TestWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestWebViewController.m; sourceTree = "<group>"; };
+		2F0CCE3621E496B30018FA87 /* FWDbModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDbModel.h; sourceTree = "<group>"; };
+		2F0CCE3821E496B30018FA87 /* FWDbModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDbModel.m; sourceTree = "<group>"; };
+		2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabaseManager.m; sourceTree = "<group>"; };
+		2F0CCE3A21E496B30018FA87 /* FWDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabaseManager.h; sourceTree = "<group>"; };
 		2F0D2931215DFFEF005F1466 /* DZNPolyActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNPolyActivity.h; sourceTree = "<group>"; };
 		2F0D2932215DFFEF005F1466 /* DZNWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNWebView.m; sourceTree = "<group>"; };
 		2F0D2933215DFFEF005F1466 /* DZNWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNWebViewController.m; sourceTree = "<group>"; };
@@ -196,6 +202,10 @@
 		2F0D292F215DFFEF005F1466 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				2F0CCE3A21E496B30018FA87 /* FWDatabaseManager.h */,
+				2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */,
+				2F0CCE3621E496B30018FA87 /* FWDbModel.h */,
+				2F0CCE3821E496B30018FA87 /* FWDbModel.m */,
 				2F0D2930215DFFEF005F1466 /* DZNWebViewController */,
 			);
 			path = Vendor;
@@ -676,6 +686,7 @@
 				2F1E39412178F3710051A6BB /* FWTestIndicatorControlViewController.m in Sources */,
 				2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */,
 				2F51D7731E5C1330009FD40F /* main.m in Sources */,
+				2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
 				2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */,
@@ -690,6 +701,7 @@
 				2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */,
+				2F0CCE3C21E496B30018FA87 /* FWDatabaseManager.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
