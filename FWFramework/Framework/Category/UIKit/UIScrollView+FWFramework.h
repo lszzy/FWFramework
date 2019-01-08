@@ -3,11 +3,13 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "UIScrollView+FWEmptyView.h"
+#import "UIScrollView+FWInfiniteScroll.h"
+#import "UIScrollView+FWPullRefresh.h"
 
 /*!
  @brief UIScrollView分类
@@ -16,6 +18,9 @@
 @interface UIScrollView (FWFramework)
 
 #pragma mark - Frame
+
+// UIScrollView的真正inset，在iOS11以后需要用到adjustedContentInset而在iOS11以前只需要用contentInset
+@property (nonatomic, assign, readonly) UIEdgeInsets fwContentInset;
 
 // contentSize.width
 @property (nonatomic, assign) CGFloat fwContentWidth;
@@ -47,6 +52,9 @@
 - (BOOL)fwIsLastPage;
 
 #pragma mark - Scroll
+
+// 判断当前的scrollView内容是否足够滚动
+- (BOOL)fwCanScroll;
 
 // 是否已滚动到指定边
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;

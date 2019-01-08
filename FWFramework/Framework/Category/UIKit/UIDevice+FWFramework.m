@@ -84,6 +84,18 @@
     return NO;
 }
 
+#pragma mark - Landscape
+
++ (BOOL)fwIsInterfaceLandscape
+{
+    return UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
+}
+
++ (BOOL)fwIsDeviceLandscape
+{
+    return UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]);
+}
+
 #pragma mark - Version
 
 + (float)fwIosVersion

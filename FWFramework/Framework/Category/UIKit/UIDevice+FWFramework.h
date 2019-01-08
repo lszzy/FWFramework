@@ -11,6 +11,13 @@
 
 #pragma mark - Macro
 
+// 是否是模拟器
+#if TARGET_OS_SIMULATOR
+    #define FW_SIMULATOR 1
+#else
+    #define FW_SIMULATOR 0
+#endif
+
 // 是否是iPhone设备
 #define FWIsIphone \
     (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
@@ -31,6 +38,14 @@
 #define FWIsIosLater( version ) \
     (FWIosVersion >= version ? YES : NO)
 
+// 界面是否横屏
+#define FWIsInterfaceLandscape \
+    UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])
+
+// 设备是否横屏，无论支不支持横屏
+#define FWIsDeviceLandscape \
+    UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])
+
 /*!
  @brief UIDevice+FWFramework
  */
@@ -49,6 +64,14 @@
 
 // 是否越狱
 + (BOOL)fwIsJailbroken;
+
+#pragma mark - Landscape
+
+// 界面是否横屏
++ (BOOL)fwIsInterfaceLandscape;
+
+// 设备是否横屏，无论支不支持横屏
++ (BOOL)fwIsDeviceLandscape;
 
 #pragma mark - Version
 

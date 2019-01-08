@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "UIScreen+FWFramework.h"
@@ -125,6 +125,15 @@
         }
     });
     return safeAreaInsets;
+}
+
++ (CGFloat)fwPixelOne
+{
+    static CGFloat pixelOne = -1.0;
+    if (pixelOne < 0) {
+        pixelOne = 1 / [[UIScreen mainScreen] scale];
+    }
+    return pixelOne;
 }
 
 @end

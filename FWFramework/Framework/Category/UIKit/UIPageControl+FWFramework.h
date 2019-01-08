@@ -14,7 +14,17 @@
  */
 @interface UIPageControl (FWFramework)
 
-// 自定义圆点大小
-@property (nonatomic, assign) CGSize fwIndicatorSize;
+// 自定义圆点大小，默认{10, 10}
+- (void)fwSetIndicatorSize:(CGSize)indicatorSize;
+
+@end
+
+/*!
+ @brief UIActivityIndicatorView分类
+ */
+@interface UIActivityIndicatorView (FWFramework)
+
+// 自定义指示器大小
+- (void)fwSetIndicatorSize:(CGSize)indicatorSize;
 
 @end

@@ -162,3 +162,7 @@
 + (NSTimeInterval)fwFormatTimestamp:(NSTimeInterval)timestamp;
 
 @end
+
+@interface NSDateComponents (FWFramework)
+
+@end

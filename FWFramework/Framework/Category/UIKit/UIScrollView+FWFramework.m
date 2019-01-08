@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "UIScrollView+FWFramework.h"
@@ -19,6 +19,15 @@
 }
 
 #pragma mark - Frame
+
+- (UIEdgeInsets)fwContentInset
+{
+    if (@available(iOS 11, *)) {
+        return self.adjustedContentInset;
+    } else {
+        return self.contentInset;
+    }
+}
 
 - (CGFloat)fwContentWidth
 {
@@ -91,6 +100,17 @@
 }
 
 #pragma mark - Scroll
+
+- (BOOL)fwCanScroll
+{
+    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) {
+        return NO;
+    }
+    
+    BOOL canVerticalScroll = self.contentSize.height + self.contentInset.top + self.contentInset.bottom > CGRectGetHeight(self.bounds);
+    BOOL canHorizontalScoll = self.contentSize.width + self.contentInset.left + self.contentInset.right > CGRectGetWidth(self.bounds);
+    return canVerticalScroll || canHorizontalScoll;
+}
 
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge
 {

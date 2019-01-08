@@ -32,6 +32,7 @@
 - (void)loadView
 {
     [super loadView];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     // 初始化内部视图
     [self setupView];

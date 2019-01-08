@@ -74,12 +74,12 @@
     return controlPoint;
 }
 
-+ (CGFloat)fwDegreeToRadian:(CGFloat)degree
++ (CGFloat)fwRadianWithDegree:(CGFloat)degree
 {
     return (M_PI * degree) / 180.f;
 }
 
-+ (CGFloat)fwRadianToDegree:(CGFloat)radian
++ (CGFloat)fwDegreeWithRadian:(CGFloat)radian
 {
     return (180.f * radian) / M_PI;
 }

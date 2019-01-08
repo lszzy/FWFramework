@@ -3,7 +3,7 @@
 //  FWFramework
 //
 //  Created by wuyong on 2017/10/24.
-//  Copyright © 2017年 ocphp.com. All rights reserved.
+//  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
 #import "FWVersionManager.h"
@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) NSDate *checkDate;
 
-@property (nonatomic, strong) NSMutableDictionary *dataHandlers;
+@property (nonatomic, strong) NSMutableDictionary *dataMigrators;
 
 @property (nonatomic, assign) BOOL hasResult;
 
@@ -42,6 +42,7 @@
         _status = FWVersionStatusPublish;
         _delayDays = 1;
         _checkDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWVersionManagerCheckDate"];
+        _dataMigrators = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -66,7 +67,7 @@
     }
 }
 
-- (void)openStore
+- (void)openAppStore
 {
     NSString *storeString = [NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", self.appId];
     NSURL *storeUrl = [NSURL URLWithString:storeString];
@@ -80,37 +81,29 @@
     });
 }
 
-- (void)dataHandler:(NSString *)version handler:(void (^)(void))handler
+- (void)checkDataVersion:(NSString *)version migrator:(void (^)(void))migrator
 {
     // 需要执行时才放到队列中
-    if ([self isDataVersion:version]) {
-        if (!self.dataHandlers) {
-            self.dataHandlers = [[NSMutableDictionary alloc] init];
-        }
-        [self.dataHandlers setObject:handler forKey:version];
+    if ([self checkDataVersion:version]) {
+        [self.dataMigrators setObject:migrator forKey:version];
     }
 }
 
-- (void)updateData:(void (^)(void))completion
+- (void)migrateData:(void (^)(void))completion
 {
-    // 队列为空时不回调
-    if (self.dataHandlers.count < 1) {
-        return;
-    }
-    
     // 版本号从低到高排序
-    NSArray *versions = [self.dataHandlers.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+    NSArray *versions = [self.dataMigrators.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         return [obj1 compare:obj2 options:NSNumericSearch];
     }];
     for (NSString *version in versions) {
         // 判断是否需要执行
-        if ([self isDataVersion:version]) {
-            void (^handler)(void) = [self.dataHandlers objectForKey:version];
-            if (handler) {
-                handler();
+        if ([self checkDataVersion:version]) {
+            void (^migrator)(void) = [self.dataMigrators objectForKey:version];
+            if (migrator) {
+                migrator();
                 
                 // 执行完成从队列移除
-                [self.dataHandlers removeObjectForKey:version];
+                [self.dataMigrators removeObjectForKey:version];
                 
                 // 保存当前数据版本
                 _dataVersion = version;
@@ -247,7 +240,7 @@
     return NO;
 }
 
-- (BOOL)isDataVersion:(NSString *)version
+- (BOOL)checkDataVersion:(NSString *)version
 {
     // 指定版本大于当前版本不执行
     if ([version compare:self.currentVersion options:NSNumericSearch] == NSOrderedDescending) {

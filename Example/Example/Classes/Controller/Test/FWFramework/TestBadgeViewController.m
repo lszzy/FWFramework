@@ -22,17 +22,17 @@
     
     self.fwTabBarHidden = NO;
     
-    [self fwSetLeftBarItem:[UIImage imageNamed:@"public_back"] target:self action:@selector(fwOnClose)];
+    [self fwSetLeftBarItem:[UIImage imageNamed:@"public_back"] target:self action:@selector(onClose)];
     FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
     [self.navigationItem.leftBarButtonItem fwShowBadgeView:badgeView badgeValue:nil];
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithFWObject:[UIImage imageNamed:@"public_back"] target:self action:@selector(onClick:)];
+    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:[UIImage imageNamed:@"public_back"] target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [rightItem fwShowBadgeView:badgeView badgeValue:@"1"];
     
     UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     customView.backgroundColor = [UIColor grayColor];
-    UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithFWObject:customView target:self action:@selector(onClick:)];
+    UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:customView target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [customItem fwShowBadgeView:badgeView badgeValue:@"1"];
     self.navigationItem.rightBarButtonItems = @[rightItem, customItem];
@@ -102,6 +102,11 @@
 }
 
 #pragma mark - Action
+
+- (void)onClose
+{
+    [self fwCloseViewControllerAnimated:YES];
+}
 
 - (void)onClick:(UIBarButtonItem *)sender
 {

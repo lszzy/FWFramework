@@ -12,6 +12,22 @@
 
 @implementation NSArray (FWFramework)
 
+- (instancetype)fwFilterWithBlock:(BOOL (^)(id))block
+{
+    if (!block) {
+        return self;
+    }
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < self.count; i++) {
+        id obj = self[i];
+        if (block(obj)) {
+            [result addObject:obj];
+        }
+    }
+    return [result copy];
+}
+
 - (id)fwRandomObject
 {
     if (self.count > 0) {
