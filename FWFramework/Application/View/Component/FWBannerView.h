@@ -9,9 +9,18 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, FWBannerViewPageContolAlignment) {
-    FWBannerViewPageContolAlignmentRight,
-    FWBannerViewPageContolAlignmentCenter,
+typedef NS_ENUM(NSInteger, FWBannerViewPageControlAlignment) {
+    FWBannerViewPageControlAlignmentRight,
+    FWBannerViewPageControlAlignmentCenter,
+};
+
+typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
+    // 系统样式
+    FWBannerViewPageControlStyleSystem,
+    // 自定义样式，可设置图片等
+    FWBannerViewPageControlStyleCustom,
+    // 不显示
+    FWBannerViewPageControlStyleNone,
 };
 
 @class FWBannerView;
@@ -103,8 +112,11 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageContolAlignment) {
 /** 只展示文字轮播 */
 @property (nonatomic, assign) BOOL onlyDisplayText;
 
+/** pageControl 样式，默认为系统样式 */
+@property (nonatomic, assign) FWBannerViewPageControlStyle pageControlStyle;
+
 /** 分页控件位置 */
-@property (nonatomic, assign) FWBannerViewPageContolAlignment pageControlAlignment;
+@property (nonatomic, assign) FWBannerViewPageControlAlignment pageControlAlignment;
 
 /** 分页控件距离轮播图的底部间距（在默认间距基础上）的偏移量 */
 @property (nonatomic, assign) CGFloat pageControlBottomOffset;
@@ -120,6 +132,15 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageContolAlignment) {
 
 /** 其他分页控件小圆标颜色 */
 @property (nonatomic, strong) UIColor *pageDotColor;
+
+/** 当前分页控件小圆标图片 */
+@property (nonatomic, strong) UIImage *currentPageDotImage;
+
+/** 其他分页控件小圆标图片 */
+@property (nonatomic, strong) UIImage *pageDotImage;
+
+/** 其他分页控件自定义视图类，默认FWDotView */
+@property (nonatomic) Class pageDotViewClass;
 
 /** 轮播文字label字体颜色 */
 @property (nonatomic, strong) UIColor *titleLabelTextColor;
