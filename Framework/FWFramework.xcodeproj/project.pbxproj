@@ -207,6 +207,8 @@
 		2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */; };
 		2F1D8B8321B02ED400E0F820 /* FWRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1D8B8121B02ED400E0F820 /* FWRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B8221B02ED400E0F820 /* FWRouter.m */; };
+		2F1D984721E6FD2800769651 /* FWPageControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1D984521E6FD2800769651 /* FWPageControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1D984821E6FD2800769651 /* FWPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D984621E6FD2800769651 /* FWPageControl.m */; };
 		2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39362178F0B80051A6BB /* FWProgressView.m */; };
 		2F1E393B2178F0B90051A6BB /* FWIndicatorControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1E393C2178F0B90051A6BB /* FWProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39382178F0B80051A6BB /* FWProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -468,6 +470,8 @@
 		2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWFramework.m"; sourceTree = "<group>"; };
 		2F1D8B8121B02ED400E0F820 /* FWRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWRouter.h; sourceTree = "<group>"; };
 		2F1D8B8221B02ED400E0F820 /* FWRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWRouter.m; sourceTree = "<group>"; };
+		2F1D984521E6FD2800769651 /* FWPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPageControl.h; sourceTree = "<group>"; };
+		2F1D984621E6FD2800769651 /* FWPageControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPageControl.m; sourceTree = "<group>"; };
 		2F1E39362178F0B80051A6BB /* FWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWProgressView.m; sourceTree = "<group>"; };
 		2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWIndicatorControl.h; sourceTree = "<group>"; };
 		2F1E39382178F0B80051A6BB /* FWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWProgressView.h; sourceTree = "<group>"; };
@@ -950,6 +954,8 @@
 				2F1E39362178F0B80051A6BB /* FWProgressView.m */,
 				2FB7CBC721C23728002E5412 /* FWBannerView.h */,
 				2FB7CBC821C23728002E5412 /* FWBannerView.m */,
+				2F1D984521E6FD2800769651 /* FWPageControl.h */,
+				2F1D984621E6FD2800769651 /* FWPageControl.m */,
 				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
 				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
@@ -965,6 +971,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1D984721E6FD2800769651 /* FWPageControl.h in Headers */,
 				2F0CCE3F21E496EE0018FA87 /* FWDbModel.h in Headers */,
 				2F0CCE4321E4973C0018FA87 /* FWDatabaseManager.h in Headers */,
 				2F071B6D21DF321500F47DFD /* UIWebView+FWFramework.h in Headers */,
@@ -1286,6 +1293,7 @@
 				2F03A5BF216CF4B9001965A1 /* NSObject+FWBlock.m in Sources */,
 				2F03A5D3216CF4B9001965A1 /* NSThread+FWFramework.m in Sources */,
 				2F03A5EB216CF4B9001965A1 /* FWTaskManager.m in Sources */,
+				2F1D984821E6FD2800769651 /* FWPageControl.m in Sources */,
 				2F03A5B9216CF4B9001965A1 /* UIView+FWFrame.m in Sources */,
 				2F03A59E216CF4B9001965A1 /* UIImageView+FWFramework.m in Sources */,
 				2F03A5EC216CF4B9001965A1 /* FWVersionManager.m in Sources */,
