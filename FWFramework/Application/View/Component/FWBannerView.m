@@ -10,8 +10,9 @@
 #import "FWBannerView.h"
 #import "UIPageControl+FWFramework.h"
 #import "UIImageView+FWNetwork.h"
+#import "FWPageControl.h"
 
-#define kFWBannerViewInitialPageControlDotSize CGSizeMake(10, 10)
+#define FWBannerViewInitialPageControlDotSize CGSizeMake(10, 10)
 
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
@@ -22,7 +23,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, strong) NSArray *imagePathsGroup;
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
-@property (nonatomic, weak) UIPageControl *pageControl;
+@property (nonatomic, weak) UIControl *pageControl;
 
 @property (nonatomic, strong) UIImageView *backgroundImageView; // 当imageURLs为空时的背景图
 
@@ -48,7 +49,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)initialization
 {
-    _pageControlAlignment = FWBannerViewPageContolAlignmentCenter;
+    _pageControlAlignment = FWBannerViewPageControlAlignmentCenter;
     _autoScrollTimeInterval = 2.0;
     _titleLabelTextColor = [UIColor whiteColor];
     _titleLabelTextFont= [UIFont systemFontOfSize:14];
@@ -58,9 +59,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _autoScroll = YES;
     _infiniteLoop = YES;
     _showPageControl = YES;
-    _pageControlDotSize = kFWBannerViewInitialPageControlDotSize;
+    _pageControlDotSize = FWBannerViewInitialPageControlDotSize;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
+    _pageControlStyle = FWBannerViewPageControlStyleSystem;
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
     _pageDotColor = [UIColor lightGrayColor];
@@ -161,6 +163,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _pageControlDotSize = pageControlDotSize;
     [self setupPageControl];
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageContol = (FWPageControl *)_pageControl;
+        pageContol.dotSize = pageControlDotSize;
+    }
 }
 
 - (void)setShowPageControl:(BOOL)showPageControl
@@ -173,15 +179,73 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)setCurrentPageDotColor:(UIColor *)currentPageDotColor
 {
     _currentPageDotColor = currentPageDotColor;
-    
-    _pageControl.currentPageIndicatorTintColor = currentPageDotColor;
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        pageControl.dotColor = currentPageDotColor;
+    } else {
+        UIPageControl *pageControl = (UIPageControl *)_pageControl;
+        pageControl.currentPageIndicatorTintColor = currentPageDotColor;
+    }
 }
 
 - (void)setPageDotColor:(UIColor *)pageDotColor
 {
     _pageDotColor = pageDotColor;
     
-    _pageControl.pageIndicatorTintColor = pageDotColor;
+    if ([self.pageControl isKindOfClass:[UIPageControl class]]) {
+        UIPageControl *pageControl = (UIPageControl *)_pageControl;
+        pageControl.pageIndicatorTintColor = pageDotColor;
+    }
+}
+
+- (void)setCurrentPageDotImage:(UIImage *)currentPageDotImage
+{
+    _currentPageDotImage = currentPageDotImage;
+    
+    if (self.pageControlStyle != FWBannerViewPageControlStyleCustom) {
+        self.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    }
+    
+    [self setCustomPageControlDotImage:currentPageDotImage isCurrentPageDot:YES];
+}
+
+- (void)setPageDotImage:(UIImage *)pageDotImage
+{
+    _pageDotImage = pageDotImage;
+    
+    if (self.pageControlStyle != FWBannerViewPageControlStyleCustom) {
+        self.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    }
+    
+    [self setCustomPageControlDotImage:pageDotImage isCurrentPageDot:NO];
+}
+
+- (void)setCustomPageControlDotImage:(UIImage *)image isCurrentPageDot:(BOOL)isCurrentPageDot
+{
+    if (!image || !self.pageControl) return;
+    
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        if (isCurrentPageDot) {
+            pageControl.currentDotImage = image;
+        } else {
+            pageControl.dotImage = image;
+        }
+    }
+}
+
+- (void)setPageDotViewClass:(Class)pageDotViewClass
+{
+    _pageDotViewClass = pageDotViewClass;
+    
+    if (self.pageControlStyle != FWBannerViewPageControlStyleCustom) {
+        self.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    }
+    
+    if (self.pageControl && [self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        pageControl.dotViewClass = pageDotViewClass;
+    }
 }
 
 - (void)setInfiniteLoop:(BOOL)infiniteLoop
@@ -312,15 +376,45 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
     
-    UIPageControl *pageControl = [[UIPageControl alloc] init];
-    pageControl.numberOfPages = self.imagePathsGroup.count;
-    pageControl.currentPageIndicatorTintColor = self.currentPageDotColor;
-    pageControl.pageIndicatorTintColor = self.pageDotColor;
-    pageControl.userInteractionEnabled = NO;
-    pageControl.currentPage = indexOnPageControl;
-    [pageControl fwSetIndicatorSize:self.pageControlDotSize];
-    [self addSubview:pageControl];
-    _pageControl = pageControl;
+    switch (self.pageControlStyle) {
+        case FWBannerViewPageControlStyleCustom: {
+            FWPageControl *pageControl = [[FWPageControl alloc] init];
+            pageControl.numberOfPages = self.imagePathsGroup.count;
+            pageControl.dotColor = self.currentPageDotColor;
+            pageControl.userInteractionEnabled = NO;
+            pageControl.currentPage = indexOnPageControl;
+            if (self.pageDotViewClass != NULL) {
+                pageControl.dotViewClass = self.pageDotViewClass;
+            }
+            [self addSubview:pageControl];
+            _pageControl = pageControl;
+        }
+            break;
+            
+        case FWBannerViewPageControlStyleSystem: {
+            UIPageControl *pageControl = [[UIPageControl alloc] init];
+            pageControl.numberOfPages = self.imagePathsGroup.count;
+            pageControl.currentPageIndicatorTintColor = self.currentPageDotColor;
+            pageControl.pageIndicatorTintColor = self.pageDotColor;
+            pageControl.userInteractionEnabled = NO;
+            pageControl.currentPage = indexOnPageControl;
+            [pageControl fwSetIndicatorSize:self.pageControlDotSize];
+            [self addSubview:pageControl];
+            _pageControl = pageControl;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    // 重设pagecontroldot图片
+    if (self.currentPageDotImage) {
+        self.currentPageDotImage = self.currentPageDotImage;
+    }
+    if (self.pageDotImage) {
+        self.pageDotImage = self.pageDotImage;
+    }
 }
 
 - (void)automaticScroll
@@ -385,12 +479,26 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
     
-    CGSize size = CGSizeMake(self.imagePathsGroup.count * self.pageControlDotSize.width * 1.5, self.pageControlDotSize.height);
+    CGSize size = CGSizeZero;
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(FWBannerViewInitialPageControlDotSize, self.pageControlDotSize))) {
+            pageControl.dotSize = self.pageControlDotSize;
+        }
+        size = [pageControl sizeForNumberOfPages:self.imagePathsGroup.count];
+    } else {
+        size = CGSizeMake(self.imagePathsGroup.count * self.pageControlDotSize.width * 1.5, self.pageControlDotSize.height);
+    }
     CGFloat x = (self.frame.size.width - size.width) * 0.5;
-    if (self.pageControlAlignment == FWBannerViewPageContolAlignmentRight) {
+    if (self.pageControlAlignment == FWBannerViewPageControlAlignmentRight) {
         x = self.mainView.frame.size.width - size.width - 10;
     }
     CGFloat y = self.mainView.frame.size.height - size.height - 10;
+    
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        [pageControl sizeToFit];
+    }
     
     CGRect pageControlFrame = CGRectMake(x, y, size.width, size.height);
     pageControlFrame.origin.y -= self.pageControlBottomOffset;
@@ -505,7 +613,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     int itemIndex = [self currentIndex];
     int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
-    _pageControl.currentPage = indexOnPageControl;
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        pageControl.currentPage = indexOnPageControl;
+    } else {
+        UIPageControl *pageControl = (UIPageControl *)_pageControl;
+        pageControl.currentPage = indexOnPageControl;
+    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
