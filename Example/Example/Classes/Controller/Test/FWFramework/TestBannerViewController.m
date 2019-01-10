@@ -25,6 +25,8 @@
     cycleView.autoScrollTimeInterval = 6;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_picture"];
+    cycleView.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    cycleView.pageDotViewClass = [FWAnimatedDotView class];
     cycleView.pageControlDotSize = CGSizeMake(15, 15);
     cycleView.pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     cycleView.currentPageDotColor = [UIColor whiteColor];
