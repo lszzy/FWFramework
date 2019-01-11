@@ -180,6 +180,18 @@
     }
 }
 
+#pragma mark - Keyboard
+
+- (BOOL)fwDismissKeyboardOnDrag
+{
+    return self.keyboardDismissMode == UIScrollViewKeyboardDismissModeOnDrag;
+}
+
+- (void)setFwDismissKeyboardOnDrag:(BOOL)fwDismissKeyboardOnDrag
+{
+    self.keyboardDismissMode = fwDismissKeyboardOnDrag ? UIScrollViewKeyboardDismissModeOnDrag : UIScrollViewKeyboardDismissModeNone;
+}
+
 #pragma mark - Gesture
 
 - (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRecognizeSimultaneously

@@ -17,7 +17,7 @@
 // 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat fwKeyboardSpacing;
 
-// 是否启用点击背景关闭键盘，默认NO
+// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign;
 
 // 设置键盘弹出时移动到键盘上方的视图，如底部输入框视图
@@ -34,7 +34,7 @@
 // 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat fwKeyboardSpacing;
 
-// 是否启用点击背景关闭键盘，默认NO
+// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign;
 
 // 设置键盘弹出时移动到键盘上方的视图，如底部输入框视图
