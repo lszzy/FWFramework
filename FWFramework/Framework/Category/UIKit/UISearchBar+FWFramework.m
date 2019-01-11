@@ -84,12 +84,14 @@
 
 - (UITextField *)fwTextField
 {
-    return [self fwSubviewOfClass:[UITextField class]];
+    // return [self fwSubviewOfClass:[UITextField class]];
+    return [self valueForKey:@"searchField"];
 }
 
 - (UIButton *)fwCancelButton
 {
-    return [self fwSubviewOfClass:[UIButton class]];
+    // return [self fwSubviewOfClass:[UIButton class]];
+    return [self valueForKey:@"cancelButton"];
 }
 
 #pragma mark - Navigation
