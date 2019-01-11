@@ -104,6 +104,8 @@ static CGFloat globalOffset = 0.0;
     // 初始化手势
     if (!self.touchGesture) {
         self.touchGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchGestureAction:)];
+        // 继续响应其它touch事件
+        self.touchGesture.cancelsTouchesInView = NO;
     }
     
     // 启用或禁用手势
