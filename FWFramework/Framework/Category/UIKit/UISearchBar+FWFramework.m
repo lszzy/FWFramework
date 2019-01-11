@@ -54,14 +54,27 @@
     // 自定义了才处理
     NSNumber *isCenterNumber = objc_getAssociatedObject(self, @selector(fwSetSearchIconCenter:));
     if (isCenterNumber) {
-        if (![isCenterNumber boolValue]) {
-            [self setPositionAdjustment:UIOffsetMake(0, 0) forSearchBarIcon:UISearchBarIconSearch];
+        if (@available(iOS 11.0, *)) {
+            if (![isCenterNumber boolValue]) {
+                [self setPositionAdjustment:UIOffsetMake(0, 0) forSearchBarIcon:UISearchBarIconSearch];
+            } else {
+                UITextField *textField = [self fwTextField];
+                CGFloat placeholdWidth = [self.placeholder fwSizeWithFont:textField.font].width;
+                CGFloat leftWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
+                CGFloat position = (textField.frame.size.width - placeholdWidth) / 2 - leftWidth;
+                [self setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
+            }
         } else {
-            UITextField *textField = [self fwTextField];
-            CGFloat placeholdWidth = [self.placeholder fwSizeWithFont:textField.font].width;
-            CGFloat leftWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
-            CGFloat position = (textField.frame.size.width - placeholdWidth) / 2 - leftWidth;
-            [self setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
+            SEL centerSelector = NSSelectorFromString([NSString stringWithFormat:@"%@%@", @"setCenter", @"Placeholder:"]);
+            if ([self respondsToSelector:centerSelector]) {
+                BOOL centerPlaceholder = [isCenterNumber boolValue];
+                NSMethodSignature *signature = [[UISearchBar class] instanceMethodSignatureForSelector:centerSelector];
+                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+                [invocation setTarget:self];
+                [invocation setSelector:centerSelector];
+                [invocation setArgument:&centerPlaceholder atIndex:2];
+                [invocation invoke];
+            }
         }
     }
 }
