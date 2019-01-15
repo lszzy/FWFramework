@@ -44,6 +44,7 @@
 		2F593FF42157E7D30022137F /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FF32157E7D30022137F /* ExampleTests.m */; };
 		2F5940032157E8BF0022137F /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5940022157E8BF0022137F /* ExampleUITests.m */; };
 		2F5A5BE61FB1B18B00EA39D0 /* FWFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5A5BE51FB1B18600EA39D0 /* FWFramework.framework */; };
+		2F8EB34221ED881900BB24AB /* TestNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */; };
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
@@ -155,6 +156,8 @@
 		2F5940042157E8BF0022137F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F5A5BE01FB1B18500EA39D0 /* FWFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FWFramework.xcodeproj; path = ../Framework/FWFramework.xcodeproj; sourceTree = "<group>"; };
 		2F7E423220FC327D00CE3E2F /* SwiftHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
+		2F8EB34021ED881900BB24AB /* TestNavigationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNavigationViewController.h; sourceTree = "<group>"; };
+		2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNavigationViewController.m; sourceTree = "<group>"; };
 		2FA32CC721B03B5B00C230EA /* AppRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppRouter.h; sourceTree = "<group>"; };
 		2FA32CC821B03B5B00C230EA /* AppRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppRouter.m; sourceTree = "<group>"; };
 		2FA32CCA21B0572900C230EA /* TestRouterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRouterViewController.h; sourceTree = "<group>"; };
@@ -368,6 +371,8 @@
 				2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */,
 				2F071B6F21DF387000F47DFD /* TestWebViewController.h */,
 				2F071B7021DF387000F47DFD /* TestWebViewController.m */,
+				2F8EB34021ED881900BB24AB /* TestNavigationViewController.h */,
+				2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -698,6 +703,7 @@
 				2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
+				2F8EB34221ED881900BB24AB /* TestNavigationViewController.m in Sources */,
 				2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */,
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */,

@@ -9,7 +9,6 @@
 #import "UIViewController+FWBar.h"
 #import "UIView+FWBlock.h"
 #import "UIScreen+FWFramework.h"
-#import "UIImage+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
@@ -68,6 +67,24 @@
 - (void)setFwNavigationBarHidden:(BOOL)fwNavigationBarHidden
 {
     self.navigationController.navigationBarHidden = fwNavigationBarHidden;
+}
+
+- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:hidden animated:animated];
+}
+
+- (void)fwSetNavigationBarAlpha:(CGFloat)alpha completion:(void (^)(void))completion
+{
+    __weak __typeof__(self) self_weak_ = self;
+    [self.transitionCoordinator animateAlongsideTransitionInView:self.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        __typeof__(self) self = self_weak_;
+        self.navigationController.navigationBar.alpha = alpha;
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        if (completion) {
+            completion();
+        }
+    }];
 }
 
 - (BOOL)fwTabBarHidden
@@ -197,9 +214,7 @@
 
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    // barTintColor在iOS10以下无法隐藏底部线条
-    // self.barTintColor = color;
-    [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
+    self.barTintColor = color;
 }
 
 - (void)fwSetBackgroundImage:(UIImage *)image
