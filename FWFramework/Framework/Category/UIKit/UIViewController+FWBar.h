@@ -26,6 +26,12 @@
 // 导航栏是否隐藏，默认为NO
 @property (nonatomic, assign) BOOL fwNavigationBarHidden;
 
+// animated方式设置导航栏是否隐藏。优先使用此方法，颜色变化不突兀。在viewWillAppear中调用，animated参数相同
+- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
+
+// 设置整个导航栏透明度，执行动画，不影响返回手势。建议在viewWillAppear中调用，颜色变化不突兀
+- (void)fwSetNavigationBarAlpha:(CGFloat)alpha completion:(void (^)(void))completion;
+
 // 标签栏是否隐藏，默认为NO。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
 
@@ -82,7 +88,7 @@
 // 设置标题样式属性
 - (void)fwSetTitleAttributes:(NSDictionary *)attributes;
 
-// 设置背景颜色图片。系统barTintColor在iOS10以下无法隐藏底部线条
+// 设置背景颜色。注意Default样式下barTintColor在iOS10以下无法隐藏底部线条
 - (void)fwSetBackgroundColor:(UIColor *)color;
 
 // 设置背景图片

@@ -61,6 +61,7 @@
                                              @[@"UIScrollView(FWEmptyView)", @"TestEmptyViewController"],
                                              @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
                                              @[@"UIWebView(FWFramework)", @"TestWebViewController"],
+                                             @[@"UINavigationController(FWFramework)", @"TestNavigationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              ]],
                                        @[@"FWApplication", @[
