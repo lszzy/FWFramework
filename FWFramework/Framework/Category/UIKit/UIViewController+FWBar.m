@@ -9,9 +9,16 @@
 #import "UIViewController+FWBar.h"
 #import "UIView+FWBlock.h"
 #import "UIScreen+FWFramework.h"
+#import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
+
++ (void)load
+{
+    [self fwSwizzleInstanceMethod:@selector(prefersStatusBarHidden) with:@selector(fwInnerPrefersStatusBarHidden)];
+    [self fwSwizzleInstanceMethod:@selector(preferredStatusBarStyle) with:@selector(fwInnerPreferredStatusBarStyle)];
+}
 
 #pragma mark - Bar
 
@@ -49,14 +56,24 @@
     }
 }
 
-- (BOOL)prefersStatusBarHidden
+- (BOOL)fwInnerPrefersStatusBarHidden
 {
-    return self.fwStatusBarHidden;
+    NSNumber *hiddenValue = objc_getAssociatedObject(self, @selector(fwStatusBarHidden));
+    if (hiddenValue) {
+        return [hiddenValue boolValue];
+    } else {
+        return [self fwInnerPrefersStatusBarHidden];
+    }
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle
+- (UIStatusBarStyle)fwInnerPreferredStatusBarStyle
 {
-    return self.fwStatusBarStyle;
+    NSNumber *styleValue = objc_getAssociatedObject(self, @selector(fwStatusBarStyle));
+    if (styleValue) {
+        return [styleValue integerValue];
+    } else {
+        return [self fwInnerPreferredStatusBarStyle];
+    }
 }
 
 - (BOOL)fwNavigationBarHidden
@@ -363,50 +380,56 @@
 
 @implementation UINavigationController (FWBar)
 
-- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
++ (void)load
 {
-    if (self.viewControllers.count < navigationBar.items.count) {
-        return YES;
-    }
-    
+    [self fwSwizzleInstanceMethod:@selector(navigationBar:shouldPopItem:) with:@selector(fwInnerNavigationBar:shouldPopItem:)];
+    [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarHidden) with:@selector(fwInnerChildViewControllerForStatusBarHidden)];
+    [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarStyle) with:@selector(fwInnerChildViewControllerForStatusBarStyle)];
+}
+
+- (BOOL)fwInnerNavigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
+{
     // 检查返回按钮点击事件钩子
-    BOOL shouldPop = YES;
     if ([self.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
-        // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
-        shouldPop = [self.topViewController fwPopBackBarItem];
-    }
-    
-    if (shouldPop) {
-        // 关闭当前页面
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self popViewControllerAnimated:YES];
-        });
-    } else {
-        // 处理iOS7.1导航栏透明度bug
-        for (UIView *subview in [navigationBar subviews]) {
-            if (0. < subview.alpha && subview.alpha < 1.) {
-                [UIView animateWithDuration:.25 animations:^{
-                    subview.alpha = 1.;
-                }];
+        // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用原始方式
+        if (![self.topViewController fwPopBackBarItem]) {
+            // 处理iOS7.1导航栏透明度bug
+            for (UIView *subview in [navigationBar subviews]) {
+                if (0. < subview.alpha && subview.alpha < 1.) {
+                    [UIView animateWithDuration:.25 animations:^{
+                        subview.alpha = 1.;
+                    }];
+                }
             }
+            // 不执行pop操作
+            return NO;
         }
     }
     
-    return NO;
+    // 调用原始方法
+    return [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
 }
 
 /**
  * 调用setNeedsStatusBarAppearanceUpdate时，系统会调用window的rootViewController的preferredStatusBarStyle方法。
  * 如果root为导航栏，会导致视图控制器的preferredStatusBarStyle不调用。重写此方法使视图控制器的状态栏样式生效
  */
-- (UIViewController *)childViewControllerForStatusBarStyle
+- (UIViewController *)fwInnerChildViewControllerForStatusBarStyle
 {
-    return self.topViewController;
+    if (self.topViewController) {
+        return self.topViewController;
+    } else {
+        return [self fwInnerChildViewControllerForStatusBarStyle];
+    }
 }
 
-- (UIViewController *)childViewControllerForStatusBarHidden
+- (UIViewController *)fwInnerChildViewControllerForStatusBarHidden
 {
-    return self.topViewController;
+    if (self.topViewController) {
+        return self.topViewController;
+    } else {
+        return [self fwInnerChildViewControllerForStatusBarHidden];
+    }
 }
 
 @end
