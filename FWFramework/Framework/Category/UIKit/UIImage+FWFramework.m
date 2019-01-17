@@ -583,48 +583,50 @@
 - (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength maxWidth:(NSInteger)maxWidth
 {
     NSAssert(maxLength > 0, @"maxLength must > 0");
-    NSAssert(maxWidth > 0, @"maxWidth must > 0");
     
     // 压缩尺寸
-    CGSize newSize = [self fwScaleSizeWithMaxLength:maxLength];
+    CGSize newSize = [self fwScaleSizeWithMaxWidth:maxWidth];
     UIGraphicsBeginImageContext(newSize);
     [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
     // 压缩大小
-    CGFloat compress = 0.9f;
+    CGFloat compress = 1.f;
+    CGFloat stepCompress = 0.05f;
     NSData *data = UIImageJPEGRepresentation(newImage, compress);
-    while (data.length > maxLength && compress > 0.01) {
-        compress -= 0.02f;
+    while (data.length > maxLength && compress > stepCompress) {
+        compress -= stepCompress;
         data = UIImageJPEGRepresentation(newImage, compress);
     }
     return data;
 }
 
-- (CGSize)fwScaleSizeWithMaxLength:(CGFloat)maxLength
+- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth
 {
-    CGFloat newWidth = 0.0f;
-    CGFloat newHeight = 0.0f;
+    if (maxWidth <= 0) {
+        return self.size;
+    }
+    
     CGFloat width = self.size.width;
     CGFloat height = self.size.height;
-    
-    if (width > maxLength || height > maxLength) {
+    if (width > maxWidth || height > maxWidth) {
+        CGFloat newWidth = 0.0f;
+        CGFloat newHeight = 0.0f;
         if (width > height) {
-            newWidth = maxLength;
+            newWidth = maxWidth;
             newHeight = newWidth * height / width;
         } else if (height > width) {
-            newHeight = maxLength;
+            newHeight = maxWidth;
             newWidth = newHeight * width / height;
         } else {
-            newWidth = maxLength;
-            newHeight = maxLength;
+            newWidth = maxWidth;
+            newHeight = maxWidth;
         }
+        return CGSizeMake(newWidth, newHeight);
     } else {
         return CGSizeMake(width, height);
     }
-    
-    return CGSizeMake(newWidth, newHeight);
 }
 
 #pragma mark - Effect
