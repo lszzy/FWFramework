@@ -143,11 +143,11 @@
 
 #pragma mark - Compress
 
-// 压缩图片到指定字节
+// 压缩图片到指定字节，maxWidth为0时不压缩尺寸
 - (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength maxWidth:(NSInteger)maxWidth;
 
 // 通过指定图片最长边，获取等比例的图片size
-- (CGSize)fwScaleSizeWithMaxLength:(CGFloat)maxLength;
+- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
 
 #pragma mark - Effect
 
