@@ -38,7 +38,7 @@
  */
 @property(nonatomic, assign) IBInspectable BOOL automaticallyValidateVisibleFrame;
 
-/// 在文字滚动到左右边缘时，是否要显示一个阴影渐变遮罩，默认为 YES。
+/// 在文字滚动到左右边缘时，是否要显示一个阴影渐变遮罩，默认为 NO。
 @property(nonatomic, assign) IBInspectable BOOL shouldFadeAtEdge;
 
 /// YES 表示文字会在打开 shouldFadeAtEdge 的情况下，从左边的渐隐区域之后显示，NO 表示不管有没有打开 shouldFadeAtEdge，都会从 label 的边缘开始显示。默认为 NO。
