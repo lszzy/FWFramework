@@ -120,6 +120,16 @@
         [self.tagCollectionView addTag:tagName withConfig:self.textTagConfig];
     }
     
+    FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontNormal(16) textColor:[UIColor blackColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
+    [self.view addSubview:marqueeLabel];
+    [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
+    [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
+    [marqueeLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.tagCollectionView withOffset:10];
+    [marqueeLabel fwSetDimension:NSLayoutAttributeHeight toSize:20];
+    // 自动布局需调用此方法初始化frame
+    [marqueeLabel setNeedsLayout];
+    [marqueeLabel layoutIfNeeded];
+    
     self.segmentedControl = [FWSegmentedControl new];
     self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
     self.segmentedControl.selectedSegmentIndex = 1;
@@ -128,7 +138,7 @@
     [self.view addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
-    [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.tagCollectionView withOffset:10];
+    [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
     [self.segmentedControl fwSetDimension:NSLayoutAttributeHeight toSize:50];
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSInteger index) {

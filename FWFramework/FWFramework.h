@@ -59,6 +59,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWBannerView.h>
 #import <FWFramework/FWPageControl.h>
 #import <FWFramework/FWSegmentedControl.h>
+#import <FWFramework/FWMarqueeLabel.h>
 #import <FWFramework/FWTagCollectionView.h>
 #import <FWFramework/FWCollectionViewFlowLayout.h>
 
@@ -102,6 +103,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWBannerView.h"
 #import "FWPageControl.h"
 #import "FWSegmentedControl.h"
+#import "FWMarqueeLabel.h"
 #import "FWTagCollectionView.h"
 #import "FWCollectionViewFlowLayout.h"
 
