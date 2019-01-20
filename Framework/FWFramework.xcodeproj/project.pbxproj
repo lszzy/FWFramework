@@ -231,6 +231,8 @@
 		2FB7CBCA21C23728002E5412 /* FWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC821C23728002E5412 /* FWBannerView.m */; };
 		2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */; };
+		2FB90F0921F48AAB00084D76 /* FWSegmentedControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB90F0721F48AAB00084D76 /* FWSegmentedControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
 		2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513221D3746B009EA65E /* FWDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513921D3A41D009EA65E /* FWDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -495,6 +497,8 @@
 		2FB7CBC821C23728002E5412 /* FWBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBannerView.m; sourceTree = "<group>"; };
 		2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTagCollectionView.h; sourceTree = "<group>"; };
 		2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTagCollectionView.m; sourceTree = "<group>"; };
+		2FB90F0721F48AAB00084D76 /* FWSegmentedControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSegmentedControl.h; sourceTree = "<group>"; };
+		2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSegmentedControl.m; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FCE513221D3746B009EA65E /* FWDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabase.h; sourceTree = "<group>"; };
 		2FCE513921D3A41D009EA65E /* FWDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabasePool.h; sourceTree = "<group>"; };
@@ -956,6 +960,8 @@
 				2FB7CBC821C23728002E5412 /* FWBannerView.m */,
 				2F1D984521E6FD2800769651 /* FWPageControl.h */,
 				2F1D984621E6FD2800769651 /* FWPageControl.m */,
+				2FB90F0721F48AAB00084D76 /* FWSegmentedControl.h */,
+				2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */,
 				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
 				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
@@ -971,6 +977,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB90F0921F48AAB00084D76 /* FWSegmentedControl.h in Headers */,
 				2F1D984721E6FD2800769651 /* FWPageControl.h in Headers */,
 				2F0CCE3F21E496EE0018FA87 /* FWDbModel.h in Headers */,
 				2F0CCE4321E4973C0018FA87 /* FWDatabaseManager.h in Headers */,
@@ -1265,6 +1272,7 @@
 				2F03A5A8216CF4B9001965A1 /* UIWindow+FWFramework.m in Sources */,
 				2F0CCE4021E496EE0018FA87 /* FWDbModel.m in Sources */,
 				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
+				2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
 				2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */,
 				2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */,
