@@ -53,7 +53,7 @@
     self.pauseDurationWhenMoveToEdge = 2.5;
     self.spacingBetweenHeadToTail = 40;
     self.automaticallyValidateVisibleFrame = YES;
-    self.shouldFadeAtEdge = YES;
+    self.shouldFadeAtEdge = NO;
     self.textStartAfterFade = NO;
     
     self.isFirstDisplay = YES;
