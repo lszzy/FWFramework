@@ -113,7 +113,7 @@
         AVMetadataMachineReadableCodeObject *obj = metadataObjects[0];
         resultString = [obj stringValue];
         if (_scanResultBlock) {
-            _scanResultBlock(self, resultString);
+            _scanResultBlock(resultString);
         }
     }
 }
@@ -128,7 +128,7 @@
     NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
     CGFloat brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
     if (_scanBrightnessBlock) {
-        _scanBrightnessBlock(self, brightnessValue);
+        _scanBrightnessBlock(brightnessValue);
     }
 }
 

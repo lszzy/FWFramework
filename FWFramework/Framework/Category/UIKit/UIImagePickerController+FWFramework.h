@@ -18,9 +18,9 @@
  @brief 快速创建照片选择器，自动设置delegate
  
  @param sourceType 选择器类型
- @param completion 完成回调，取消时返回nil
+ @param completion 完成回调。参数1为回调数据，参数2为是否取消
  @return 照片选择器，不支持的返回nil
  */
-+ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(void(^)(NSDictionary *info))completion;
++ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(void(^)(NSDictionary *info, BOOL cancel))completion;
 
 @end

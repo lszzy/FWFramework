@@ -363,10 +363,9 @@
 - (void)authorize:(void (^)(FWAuthorizeStatus))completion
 {
     [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-        FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(status);
+                completion(self.authorizeStatus);
             });
         }
     }];
