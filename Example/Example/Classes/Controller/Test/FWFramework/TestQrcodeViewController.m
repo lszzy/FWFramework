@@ -25,11 +25,6 @@
 {
     [super viewWillAppear:animated];
     [self.manager startRunning];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     [self.scanView addTimer];
 }
 
@@ -51,31 +46,37 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.view.backgroundColor = [UIColor blackColor];
+    self.navigationItem.title = @"扫一扫";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:(UIBarButtonItemStyleDone) target:self action:@selector(openPhotoLibrary)];
     
-    self.manager = [FWQrcodeScanManager new];
     [self setupQRCodeScan];
-    [self setupNavigationBar];
     [self.view addSubview:self.scanView];
     [self.view addSubview:self.promptLabel];
-    /// 为了 UI 效果
     [self.view addSubview:self.bottomView];
+    
+    [[FWAuthorizeManager managerWithType:FWAuthorizeTypeCamera] authorize:^(FWAuthorizeStatus status) {
+        if (status != FWAuthorizeStatusAuthorized) {
+            [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:@"确定" cancelBlock:NULL];
+        }
+    }];
 }
 
 - (void)setupQRCodeScan
 {
     __weak typeof(self) weakSelf = self;
     
+    self.manager = [FWQrcodeScanManager new];
     self.manager.sampleBufferDelegate = YES;
     [self.manager scanQrcodeWithView:self.view];
-    [self.manager setScanResultBlock:^(FWQrcodeScanManager *manager, NSString *result) {
+    [self.manager setScanResultBlock:^(NSString *result) {
         if (result) {
-            [manager stopRunning];
+            [weakSelf.manager stopRunning];
             [UIApplication fwPlayAlert:@"QrcodeSound.caf"];
             
-            NSLog(@"Result: %@", result);
+            [weakSelf showResult:result];
         }
     }];
-    [self.manager setScanBrightnessBlock:^(FWQrcodeScanManager *manager, CGFloat brightness) {
+    [self.manager setScanBrightnessBlock:^(CGFloat brightness) {
         if (brightness < - 1) {
             [weakSelf.view addSubview:weakSelf.flashlightBtn];
         } else {
@@ -86,32 +87,30 @@
     }];
 }
 
-- (void)setupNavigationBar {
-    self.navigationItem.title = @"扫一扫";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:(UIBarButtonItemStyleDone) target:self action:@selector(rightBarButtonItenAction)];
-}
-
-- (void)rightBarButtonItenAction
+- (void)openPhotoLibrary
 {
     [self.scanView removeTimer];
     __weak typeof(self) weakSelf = self;
-    [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary completion:^(NSDictionary *info) {
-        if (!info) {
+    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary completion:^(NSDictionary *info, BOOL cancel) {
+        if (cancel) {
             [weakSelf.view addSubview:weakSelf.scanView];
         } else {
             UIImage *image = info[UIImagePickerControllerOriginalImage];
             NSString *result = [FWQrcodeScanManager scanQrcodeWithImage:image];
-            NSLog(@"Result: %@", result);
+            [weakSelf showResult:result];
         }
     }];
+    [self presentViewController:pickerController animated:YES completion:nil];
 }
 
 - (FWQrcodeScanView *)scanView {
     if (!_scanView) {
         _scanView = [[FWQrcodeScanView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0.9 * self.view.frame.size.height)];
+        _scanView.scanImageName = @"qrcode_line";
     }
     return _scanView;
 }
+
 - (void)removeScanningView {
     [self.scanView removeTimer];
     [self.scanView removeFromSuperview];
@@ -177,6 +176,19 @@
         self.flashlightBtn.selected = NO;
         [self.flashlightBtn removeFromSuperview];
     });
+}
+
+#pragma mark - Result
+
+- (void)showResult:(NSString *)result
+{
+    [self.scanView removeTimer];
+    [self removeFlashlightBtn];
+    [self.manager stopRunning];
+    [self fwShowAlertWithTitle:@"扫描结果" message:result cancel:@"确定" cancelBlock:^{
+        [self.manager startRunning];
+        [self.scanView addTimer];
+    }];
 }
 
 @end

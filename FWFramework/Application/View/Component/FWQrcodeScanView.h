@@ -28,9 +28,9 @@
 /** 是否需要样本缓冲代理（光线强弱），默认为：NO */
 @property (nonatomic, assign) BOOL sampleBufferDelegate;
 // 扫描二维码回调方法
-@property (nonatomic, copy) void(^scanResultBlock)(FWQrcodeScanManager *manager, NSString *result);
+@property (nonatomic, copy) void(^scanResultBlock)(NSString *result);
 // 扫描二维码光线强弱回调方法；调用之前配置属性 sampleBufferDelegate 必须为 YES
-@property (nonatomic, copy) void(^scanBrightnessBlock)(FWQrcodeScanManager *manager, CGFloat brightness);
+@property (nonatomic, copy) void(^scanBrightnessBlock)(CGFloat brightness);
 
 /** 创建扫描二维码方法 */
 - (void)scanQrcodeWithView:(UIView *)view;
