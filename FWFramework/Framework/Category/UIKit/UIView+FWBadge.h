@@ -13,7 +13,7 @@
 // 自带提醒灯样式
 typedef NS_ENUM(NSInteger, FWBadgeStyle) {
     // 小红点
-    FWBadgeStyleDot = 0,
+    FWBadgeStyleDot = 1,
     // 小提醒灯，同系统标签，(18+)*(18)，12号字体
     FWBadgeStyleSmall,
     // 大提醒灯，同系统桌面，(24+)*(24)，14号字体
@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, FWBadgeStyle) {
 // 提醒灯视图
 @interface FWBadgeView : UIView
 
+// 提醒灯样式，默认0自定义
+@property (nonatomic, readonly) FWBadgeStyle badgeStyle;
 // 提醒灯文本标签。可自定义样式
 @property (nonatomic, readonly) UILabel *badgeLabel;
 // 提醒灯右上偏移值
@@ -33,7 +35,7 @@ typedef NS_ENUM(NSInteger, FWBadgeStyle) {
 
 // 初始化自定义提醒灯。宽高自动布局，其它手工布局
 - (instancetype)initWithBadgeHeight:(CGFloat)badgeHeight
-                        badgeOffset:(CGFloat)badgeOffset
+                        badgeOffset:(CGPoint)badgeOffset
                           textInset:(CGFloat)textInset
                            fontSize:(CGFloat)fontSize;
 
@@ -44,7 +46,7 @@ typedef NS_ENUM(NSInteger, FWBadgeStyle) {
 // 视图提醒灯分类
 @interface UIView (FWBadge)
 
-// 显示右上角提醒灯
+// 显示右上角提醒灯，上右偏移指定距离
 - (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue;
 
 // 隐藏提醒灯
@@ -57,7 +59,7 @@ typedef NS_ENUM(NSInteger, FWBadgeStyle) {
 // 导航栏项提醒灯分类
 @interface UIBarButtonItem (FWBadge)
 
-// 显示右上角提醒灯
+// 显示右上角提醒灯，上右偏移指定距离
 - (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue;
 
 // 隐藏提醒灯
@@ -70,7 +72,7 @@ typedef NS_ENUM(NSInteger, FWBadgeStyle) {
 // 标签栏项提醒灯分类
 @interface UITabBarItem (FWBadge)
 
-// 显示右上角提醒灯
+// 显示右上角提醒灯，上右偏移指定距离
 - (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue;
 
 // 隐藏提醒灯
