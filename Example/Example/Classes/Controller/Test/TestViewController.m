@@ -73,6 +73,7 @@
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
+                                             @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

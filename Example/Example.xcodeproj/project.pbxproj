@@ -51,6 +51,8 @@
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
 		2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */; };
 		2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */; };
+		2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2FB90F1C21F5716800084D76 /* QrcodeSound.caf */; };
+		2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */; };
 		2FCE517121D3BE02009EA65E /* TestCacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517021D3BE02009EA65E /* TestCacheViewController.m */; };
 		2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
@@ -171,6 +173,9 @@
 		2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBannerViewController.m; sourceTree = "<group>"; };
 		2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableScrollViewController.h; sourceTree = "<group>"; };
 		2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableScrollViewController.m; sourceTree = "<group>"; };
+		2FB90F1C21F5716800084D76 /* QrcodeSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = QrcodeSound.caf; sourceTree = "<group>"; };
+		2FB90F1F21F571EA00084D76 /* TestQrcodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestQrcodeViewController.h; sourceTree = "<group>"; };
+		2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestQrcodeViewController.m; sourceTree = "<group>"; };
 		2FCE516F21D3BE02009EA65E /* TestCacheViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCacheViewController.h; sourceTree = "<group>"; };
 		2FCE517021D3BE02009EA65E /* TestCacheViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCacheViewController.m; sourceTree = "<group>"; };
 		2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestControllerViewController.h; sourceTree = "<group>"; };
@@ -378,6 +383,8 @@
 				2F071B7021DF387000F47DFD /* TestWebViewController.m */,
 				2F8EB34021ED881900BB24AB /* TestNavigationViewController.h */,
 				2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */,
+				2FB90F1F21F571EA00084D76 /* TestQrcodeViewController.h */,
+				2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -488,6 +495,7 @@
 			children = (
 				2F51D7E71E5C2357009FD40F /* Assets.xcassets */,
 				2F4CFA5621552E9D00203A37 /* Images.xcassets */,
+				2FB90F1C21F5716800084D76 /* QrcodeSound.caf */,
 				2F30D8972153775B000F0A1D /* InfoPlist.strings */,
 				2F30D89A2153775E000F0A1D /* Localizable.strings */,
 			);
@@ -659,6 +667,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */,
+				2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */,
 				2F4CFA5721552E9D00203A37 /* Images.xcassets in Resources */,
 				2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */,
 				2F30D8982153775E000F0A1D /* Localizable.strings in Resources */,
@@ -723,6 +732,7 @@
 				2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */,
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
+				2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */,
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
 				2F8EB35321F0211500BB24AB /* TestBarViewController.m in Sources */,
 				2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */,
