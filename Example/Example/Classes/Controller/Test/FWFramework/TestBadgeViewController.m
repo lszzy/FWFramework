@@ -30,7 +30,7 @@
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [rightItem fwShowBadgeView:badgeView badgeValue:@"1"];
     
-    UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    UIButton *customView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     customView.backgroundColor = [UIColor grayColor];
     UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:customView target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];

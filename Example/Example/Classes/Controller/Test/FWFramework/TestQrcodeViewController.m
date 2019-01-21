@@ -49,14 +49,14 @@
     self.navigationItem.title = @"扫一扫";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:(UIBarButtonItemStyleDone) target:self action:@selector(openPhotoLibrary)];
     
-    [self setupQRCodeScan];
-    [self.view addSubview:self.scanView];
-    [self.view addSubview:self.promptLabel];
-    [self.view addSubview:self.bottomView];
-    
     [[FWAuthorizeManager managerWithType:FWAuthorizeTypeCamera] authorize:^(FWAuthorizeStatus status) {
         if (status != FWAuthorizeStatusAuthorized) {
             [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:@"确定" cancelBlock:NULL];
+        } else {
+            [self setupQRCodeScan];
+            [self.view addSubview:self.scanView];
+            [self.view addSubview:self.promptLabel];
+            [self.view addSubview:self.bottomView];
         }
     }];
 }
