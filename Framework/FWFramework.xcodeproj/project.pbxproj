@@ -235,6 +235,8 @@
 		2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */; };
 		2FB90F0F21F4A00C00084D76 /* FWMarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB90F0D21F4A00C00084D76 /* FWMarqueeLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB90F1021F4A00C00084D76 /* FWMarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */; };
+		2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
 		2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513221D3746B009EA65E /* FWDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513921D3A41D009EA65E /* FWDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -503,6 +505,8 @@
 		2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSegmentedControl.m; sourceTree = "<group>"; };
 		2FB90F0D21F4A00C00084D76 /* FWMarqueeLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWMarqueeLabel.h; sourceTree = "<group>"; };
 		2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWMarqueeLabel.m; sourceTree = "<group>"; };
+		2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWQrcodeScanView.h; sourceTree = "<group>"; };
+		2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWQrcodeScanView.m; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FCE513221D3746B009EA65E /* FWDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabase.h; sourceTree = "<group>"; };
 		2FCE513921D3A41D009EA65E /* FWDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabasePool.h; sourceTree = "<group>"; };
@@ -968,6 +972,8 @@
 				2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */,
 				2FB90F0D21F4A00C00084D76 /* FWMarqueeLabel.h */,
 				2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */,
+				2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */,
+				2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */,
 				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
 				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
@@ -983,6 +989,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */,
 				2FB90F0F21F4A00C00084D76 /* FWMarqueeLabel.h in Headers */,
 				2FB90F0921F48AAB00084D76 /* FWSegmentedControl.h in Headers */,
 				2F1D984721E6FD2800769651 /* FWPageControl.h in Headers */,
@@ -1234,6 +1241,7 @@
 				2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
 				2F03A586216CF4B9001965A1 /* UIImage+FWGif.m in Sources */,
+				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,
 				2F03A588216CF4B9001965A1 /* UITextView+FWPlaceholder.m in Sources */,
 				2F03A5AF216CF4B9001965A1 /* UIScrollView+FWFramework.m in Sources */,

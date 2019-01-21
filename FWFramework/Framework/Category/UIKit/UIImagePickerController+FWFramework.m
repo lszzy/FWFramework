@@ -41,7 +41,12 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+    void (^completion)(NSDictionary *info) = objc_getAssociatedObject(picker, @selector(imagePickerController:didFinishPickingMediaWithInfo:));
+    [picker dismissViewControllerAnimated:YES completion:^{
+        if (completion) {
+            completion(nil);
+        }
+    }];
 }
 
 @end
