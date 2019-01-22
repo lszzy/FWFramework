@@ -9,9 +9,12 @@
 #import "TestBannerViewController.h"
 #import "DZNWebViewController.h"
 
-@interface TestBannerViewController () <FWBannerViewDelegate>
+@interface TestBannerViewController () <FWBannerViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) FWTextTagCollectionView *tagCollectionView;
+
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 
 @end
 
@@ -116,6 +119,56 @@
     for (NSString *tagName in testTags) {
         [self.tagCollectionView addTag:tagName withConfig:self.textTagConfig];
     }
+    
+    FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontNormal(16) textColor:[UIColor blackColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
+    [self.view addSubview:marqueeLabel];
+    [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
+    [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
+    [marqueeLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.tagCollectionView withOffset:10];
+    [marqueeLabel fwSetDimension:NSLayoutAttributeHeight toSize:20];
+    // 自动布局需调用此方法初始化frame
+    [marqueeLabel setNeedsLayout];
+    [marqueeLabel layoutIfNeeded];
+    
+    self.segmentedControl = [FWSegmentedControl new];
+    self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
+    self.segmentedControl.selectedSegmentIndex = 1;
+    self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
+    self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
+    [self.view addSubview:self.segmentedControl];
+    [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
+    [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
+    [self.segmentedControl fwSetDimension:NSLayoutAttributeHeight toSize:50];
+    FWWeakifySelf();
+    self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
+        FWStrongifySelf();
+        [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth * index, 0, FWScreenWidth, 100) animated:YES];
+    };
+    
+    self.scrollView = [[UIScrollView alloc] init];
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.contentSize = CGSizeMake(FWScreenWidth * 3, 100);
+    self.scrollView.delegate = self;
+    [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth, 0, FWScreenWidth, 100) animated:NO];
+    [self.view addSubview:self.scrollView];
+    [self.scrollView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [self.scrollView fwPinEdgeToSuperview:NSLayoutAttributeRight];
+    [self.scrollView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.segmentedControl];
+    [self.scrollView fwSetDimension:NSLayoutAttributeHeight toSize:100];
+    
+    UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 100)];
+    label1.text = @"Worldwide Text";
+    [self.scrollView addSubview:label1];
+    
+    UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(FWScreenWidth, 0, FWScreenWidth, 100)];
+    label2.text = @"Local Long Text";
+    [self.scrollView addSubview:label2];
+    
+    UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(FWScreenWidth * 2, 0, FWScreenWidth, 100)];
+    label3.text = @"Headlines Long Text";
+    [self.scrollView addSubview:label3];
 }
 
 - (FWTextTagConfig *)textTagConfig
@@ -145,6 +198,16 @@
     
     DZNWebViewController *viewController = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.baidu.com"]];
     [self fwOpenViewController:viewController animated:YES];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGFloat pageWidth = scrollView.frame.size.width;
+    NSInteger page = scrollView.contentOffset.x / pageWidth;
+    
+    [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
 }
 
 @end
