@@ -133,7 +133,7 @@ typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
 
 /** 扫描样式，默认 ScanAnimationStyleDefault */
 @property (nonatomic, assign) FWQrcodeScanAnimationStyle scanAnimationStyle;
-/** 扫描线名 */
+/** 扫描线名，默认无 */
 @property (nonatomic, copy) NSString *scanImageName;
 /** 边框颜色，默认白色 */
 @property (nonatomic, strong) UIColor *borderColor;
