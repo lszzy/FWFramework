@@ -19,13 +19,14 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         // 根据样式处理
+        _badgeStyle = badgeStyle;
         switch (badgeStyle) {
             case FWBadgeStyleSmall: {
-                [self setupWithBadgeHeight:18.f badgeOffset:7.f textInset:5.f fontSize:12.f];
+                [self setupWithBadgeHeight:18.f badgeOffset:CGPointMake(7.f, 7.f) textInset:5.f fontSize:12.f];
                 break;
             }
             case FWBadgeStyleBig: {
-                [self setupWithBadgeHeight:24.f badgeOffset:9.f textInset:6.f fontSize:14.f];
+                [self setupWithBadgeHeight:24.f badgeOffset:CGPointMake(9.f, 9.f) textInset:6.f fontSize:14.f];
                 break;
             }
             case FWBadgeStyleDot:
@@ -43,7 +44,7 @@
     return self;
 }
 
-- (instancetype)initWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGFloat)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize
+- (instancetype)initWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGPoint)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
@@ -52,9 +53,9 @@
     return self;
 }
 
-- (void)setupWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGFloat)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize
+- (void)setupWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGPoint)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize
 {
-    _badgeOffset = CGPointMake(badgeOffset, badgeOffset);
+    _badgeOffset = badgeOffset;
     
     self.backgroundColor = [UIColor redColor];
     self.layer.cornerRadius = badgeHeight / 2.0;
@@ -117,8 +118,8 @@
         [view bringSubviewToFront:badgeView];
         
         // 自定义视图时默认偏移，否则固定偏移
-        [badgeView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.customView ? -badgeView.badgeOffset.y : -3.f];
-        [badgeView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.customView ? -badgeView.badgeOffset.x : -2.f];
+        [badgeView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 0];
+        [badgeView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : 0];
     }];
 }
 
@@ -186,8 +187,8 @@
         [view bringSubviewToFront:badgeView];
         
         // x轴默认偏移，y轴固定偏移，类似系统布局
-        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:view.superview withOffset:2.f];
-        [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:badgeView.superview withOffset:-badgeView.badgeOffset.x];
+        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:view.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
+        [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:badgeView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
     }];
 }
 

@@ -12,7 +12,7 @@
 
 @implementation UIImagePickerController (FWFramework)
 
-+ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(void (^)(NSDictionary *))completion
++ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(void (^)(NSDictionary *, BOOL))completion
 {
     if (![UIImagePickerController isSourceTypeAvailable:sourceType]) {
         return nil;
@@ -31,17 +31,22 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info
 {
-    void (^completion)(NSDictionary *info) = objc_getAssociatedObject(picker, @selector(imagePickerController:didFinishPickingMediaWithInfo:));
+    void (^completion)(NSDictionary *info, BOOL cancel) = objc_getAssociatedObject(picker, @selector(imagePickerController:didFinishPickingMediaWithInfo:));
     [picker dismissViewControllerAnimated:YES completion:^{
         if (completion) {
-            completion(info);
+            completion(info, NO);
         }
     }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+    void (^completion)(NSDictionary *info, BOOL cancel) = objc_getAssociatedObject(picker, @selector(imagePickerController:didFinishPickingMediaWithInfo:));
+    [picker dismissViewControllerAnimated:YES completion:^{
+        if (completion) {
+            completion(nil, YES);
+        }
+    }];
 }
 
 @end
