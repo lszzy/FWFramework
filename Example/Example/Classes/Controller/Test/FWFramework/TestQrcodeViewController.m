@@ -38,6 +38,9 @@
             [self setupScanManager];
             [self.view addSubview:self.scanView];
             [self.view addSubview:self.promptLabel];
+            
+            // 由于异步授权，viewWillAppear时可能未完成，此处调用start
+            [self startScanManager];
         }
     }];
 }

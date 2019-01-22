@@ -94,7 +94,9 @@
 - (void)startRunning
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self.captureSession startRunning];
+        if (!self.captureSession.isRunning) {
+            [self.captureSession startRunning];
+        }
     });
 }
 
@@ -445,6 +447,8 @@
 
 - (void)addTimer
 {
+    [self removeTimer];
+    
     CGFloat scanninglineX = 0;
     CGFloat scanninglineY = 0;
     CGFloat scanninglineW = 0;
@@ -457,7 +461,6 @@
         scanninglineX = 0;
         scanninglineY = - FWQrcodeScanBorderW;
         _scanningline.frame = CGRectMake(scanninglineX, scanninglineY, scanninglineW, scanninglineH);
-        
     } else {
         [self addSubview:self.scanningline];
         scanninglineW = FWQrcodeScanBorderW;
