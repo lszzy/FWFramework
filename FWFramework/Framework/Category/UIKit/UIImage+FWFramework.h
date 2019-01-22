@@ -143,8 +143,14 @@
 
 #pragma mark - Compress
 
-// 压缩图片到指定字节，maxWidth为0时不压缩尺寸
-- (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength maxWidth:(NSInteger)maxWidth;
+// 压缩图片到指定字节，图片改为JPG格式。不保证图片大小一定小于该大小
+- (UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
+
+// 压缩图片到指定字节，图片改为JPG格式，可设置递减压缩率，默认0.05。不保证图片大小一定小于该大小
+- (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
+
+// 长边压缩图片尺寸，获取等比例的图片
+- (UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth;
 
 // 通过指定图片最长边，获取等比例的图片size
 - (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
