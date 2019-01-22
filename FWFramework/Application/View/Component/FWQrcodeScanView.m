@@ -97,6 +97,7 @@
         [self.captureSession startRunning];
     });
 }
+
 - (void)stopRunning
 {
     if (self.captureSession.isRunning) {
@@ -282,7 +283,8 @@
 
 @implementation FWQrcodeScanView
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
         
@@ -291,12 +293,14 @@
     return self;
 }
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [super awakeFromNib];
     [self initialization];
 }
 
-- (void)initialization {
+- (void)initialization
+{
     _scanAnimationStyle = FWQrcodeScanAnimationStyleDefault;
     _borderColor = [UIColor whiteColor];
     _cornerLocation = FWQrcodeCornerLoactionDefault;
@@ -304,10 +308,11 @@
     _cornerWidth = 2.0;
     _backgroundAlpha = 0.5;
     _animationTimeInterval = 0.02;
-    _scanImageName = @"QRCodeScanLine";
+    _scanImageName = nil;
 }
 
-- (UIView *)contentView {
+- (UIView *)contentView
+{
     if (!_contentView) {
         _contentView = [[UIView alloc] init];
         _contentView.frame = CGRectMake(FWQrcodeScanBorderX, FWQrcodeScanBorderY, FWQrcodeScanBorderW, FWQrcodeScanBorderW);
@@ -317,7 +322,8 @@
     return _contentView;
 }
 
-- (void)drawRect:(CGRect)rect {
+- (void)drawRect:(CGRect)rect
+{
     [super drawRect:rect];
     
     /// 边框 frame
@@ -437,7 +443,8 @@
 
 #pragma mark - Timer
 
-- (void)addTimer {
+- (void)addTimer
+{
     CGFloat scanninglineX = 0;
     CGFloat scanninglineY = 0;
     CGFloat scanninglineW = 0;
@@ -463,19 +470,20 @@
     [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)removeTimer {
+- (void)removeTimer
+{
     [self.timer invalidate];
     self.timer = nil;
     [_scanningline removeFromSuperview];
     _scanningline = nil;
 }
 
-- (void)beginRefreshUI {
+- (void)beginRefreshUI
+{
     __block CGRect frame = _scanningline.frame;
     static BOOL flag = YES;
     
     __weak typeof(self) weakSelf = self;
-    
     if (self.scanAnimationStyle == FWQrcodeScanAnimationStyleGrid) {
         if (flag) {
             frame.origin.y = - FWQrcodeScanBorderW;
@@ -531,11 +539,11 @@
     }
 }
 
-- (UIImageView *)scanningline {
+- (UIImageView *)scanningline
+{
     if (!_scanningline) {
         _scanningline = [[UIImageView alloc] init];
-        UIImage *image = [UIImage imageNamed:self.scanImageName];
-        _scanningline.image = image;
+        _scanningline.image = self.scanImageName ? [UIImage imageNamed:self.scanImageName] : nil;
     }
     return _scanningline;
 }
