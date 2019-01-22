@@ -94,9 +94,12 @@
 - (void)startRunning
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self.captureSession startRunning];
+        if (!self.captureSession.isRunning) {
+            [self.captureSession startRunning];
+        }
     });
 }
+
 - (void)stopRunning
 {
     if (self.captureSession.isRunning) {
@@ -163,7 +166,8 @@
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
     
     // 识别结果为空
-    NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
+    CIImage *ciImage = [[CIImage alloc] initWithImage:image];
+    NSArray *features = [detector featuresInImage:ciImage];
     if (features.count == 0) {
         return nil;
     }
@@ -282,7 +286,8 @@
 
 @implementation FWQrcodeScanView
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
         
@@ -291,12 +296,14 @@
     return self;
 }
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [super awakeFromNib];
     [self initialization];
 }
 
-- (void)initialization {
+- (void)initialization
+{
     _scanAnimationStyle = FWQrcodeScanAnimationStyleDefault;
     _borderColor = [UIColor whiteColor];
     _cornerLocation = FWQrcodeCornerLoactionDefault;
@@ -304,10 +311,11 @@
     _cornerWidth = 2.0;
     _backgroundAlpha = 0.5;
     _animationTimeInterval = 0.02;
-    _scanImageName = @"QRCodeScanLine";
+    _scanImageName = nil;
 }
 
-- (UIView *)contentView {
+- (UIView *)contentView
+{
     if (!_contentView) {
         _contentView = [[UIView alloc] init];
         _contentView.frame = CGRectMake(FWQrcodeScanBorderX, FWQrcodeScanBorderY, FWQrcodeScanBorderW, FWQrcodeScanBorderW);
@@ -317,7 +325,8 @@
     return _contentView;
 }
 
-- (void)drawRect:(CGRect)rect {
+- (void)drawRect:(CGRect)rect
+{
     [super drawRect:rect];
     
     /// 边框 frame
@@ -437,7 +446,10 @@
 
 #pragma mark - Timer
 
-- (void)addTimer {
+- (void)addTimer
+{
+    [self removeTimer];
+    
     CGFloat scanninglineX = 0;
     CGFloat scanninglineY = 0;
     CGFloat scanninglineW = 0;
@@ -450,7 +462,6 @@
         scanninglineX = 0;
         scanninglineY = - FWQrcodeScanBorderW;
         _scanningline.frame = CGRectMake(scanninglineX, scanninglineY, scanninglineW, scanninglineH);
-        
     } else {
         [self addSubview:self.scanningline];
         scanninglineW = FWQrcodeScanBorderW;
@@ -463,19 +474,20 @@
     [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)removeTimer {
+- (void)removeTimer
+{
     [self.timer invalidate];
     self.timer = nil;
     [_scanningline removeFromSuperview];
     _scanningline = nil;
 }
 
-- (void)beginRefreshUI {
+- (void)beginRefreshUI
+{
     __block CGRect frame = _scanningline.frame;
     static BOOL flag = YES;
     
     __weak typeof(self) weakSelf = self;
-    
     if (self.scanAnimationStyle == FWQrcodeScanAnimationStyleGrid) {
         if (flag) {
             frame.origin.y = - FWQrcodeScanBorderW;
@@ -531,11 +543,11 @@
     }
 }
 
-- (UIImageView *)scanningline {
+- (UIImageView *)scanningline
+{
     if (!_scanningline) {
         _scanningline = [[UIImageView alloc] init];
-        UIImage *image = [UIImage imageNamed:self.scanImageName];
-        _scanningline.image = image;
+        _scanningline.image = self.scanImageName ? [UIImage imageNamed:self.scanImageName] : nil;
     }
     return _scanningline;
 }

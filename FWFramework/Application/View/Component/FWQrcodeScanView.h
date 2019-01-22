@@ -49,7 +49,7 @@
 
 #pragma mark - Image
 
-// 扫描图片二维码，识别失败返回nil
+// 扫描图片二维码，识别失败返回nil。图片过大可能导致闪退，建议先压缩再识别
 + (NSString *)scanQrcodeWithImage:(UIImage *)image;
 
 #pragma mark - Generate
@@ -133,7 +133,7 @@ typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
 
 /** 扫描样式，默认 ScanAnimationStyleDefault */
 @property (nonatomic, assign) FWQrcodeScanAnimationStyle scanAnimationStyle;
-/** 扫描线名 */
+/** 扫描线名，默认无 */
 @property (nonatomic, copy) NSString *scanImageName;
 /** 边框颜色，默认白色 */
 @property (nonatomic, strong) UIColor *borderColor;
