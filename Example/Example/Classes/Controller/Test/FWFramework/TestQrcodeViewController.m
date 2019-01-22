@@ -188,6 +188,8 @@
             [self startScanManager];
         } else {
             UIImage *image = info[UIImagePickerControllerOriginalImage];
+            image = [image fwCompressImageWithMaxWidth:1200];
+            image = [image fwCompressImageWithMaxLength:300 * 1024];
             NSString *result = [FWQrcodeScanManager scanQrcodeWithImage:image];
             
             [self onScanResult:result];
