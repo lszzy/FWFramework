@@ -580,26 +580,32 @@
 
 #pragma mark - Compress
 
-- (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength maxWidth:(NSInteger)maxWidth
+- (UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength
 {
-    NSAssert(maxLength > 0, @"maxLength must > 0");
-    
-    // 压缩尺寸
+    NSData *data = [self fwCompressDataWithMaxLength:maxLength compressRatio:0];
+    return [[UIImage alloc] initWithData:data];
+}
+
+- (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
+{
+    CGFloat compress = 1.f;
+    CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.05f;
+    NSData *data = UIImageJPEGRepresentation(self, compress);
+    while (data.length > maxLength && compress > stepCompress) {
+        compress -= stepCompress;
+        data = UIImageJPEGRepresentation(self, compress);
+    }
+    return data;
+}
+
+- (UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth
+{
     CGSize newSize = [self fwScaleSizeWithMaxWidth:maxWidth];
     UIGraphicsBeginImageContext(newSize);
     [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
-    // 压缩大小
-    CGFloat compress = 1.f;
-    CGFloat stepCompress = 0.05f;
-    NSData *data = UIImageJPEGRepresentation(newImage, compress);
-    while (data.length > maxLength && compress > stepCompress) {
-        compress -= stepCompress;
-        data = UIImageJPEGRepresentation(newImage, compress);
-    }
-    return data;
+    return newImage;
 }
 
 - (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth
