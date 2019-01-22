@@ -166,7 +166,8 @@
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
     
     // 识别结果为空
-    NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
+    CIImage *ciImage = [[CIImage alloc] initWithImage:image];
+    NSArray *features = [detector featuresInImage:ciImage];
     if (features.count == 0) {
         return nil;
     }

@@ -49,7 +49,7 @@
 
 #pragma mark - Image
 
-// 扫描图片二维码，识别失败返回nil
+// 扫描图片二维码，识别失败返回nil。图片过大可能导致闪退，建议先压缩再识别
 + (NSString *)scanQrcodeWithImage:(UIImage *)image;
 
 #pragma mark - Generate
