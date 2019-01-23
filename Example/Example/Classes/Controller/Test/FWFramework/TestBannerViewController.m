@@ -35,7 +35,9 @@
     [progressView fwSetDimensionsToSize:CGSizeMake(40, 40)];
     [progressView fwAlignCenterToSuperview];
     
-    NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif?t=%@", @([NSDate fwCurrentTime])];
+    BOOL useTimestamp = NO;
+    NSString *timestampStr = useTimestamp ? [NSString stringWithFormat:@"?t=%@", @([NSDate fwCurrentTime])] : @"";
+    NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
     progressView.progress = 0;
     progressView.hidden = NO;
     [imageView fwSetImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:gifImageUrl]] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
@@ -68,7 +70,7 @@
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     [imageUrls addObject:@"not_exist.jpg"];
-    [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
     
     CGSize activitySize = CGSizeMake(30, 30);
