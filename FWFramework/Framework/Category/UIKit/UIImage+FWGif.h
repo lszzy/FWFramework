@@ -28,7 +28,13 @@
 // 从图片数组创建Gif图片
 + (UIImage *)fwGifImageWithImages:(NSArray<UIImage *> *)images duration:(NSTimeInterval)duration;
 
+// 保存Gif图片数据到相册，保存成功时error为nil
++ (void)fwSaveGifImageData:(NSData *)data completion:(void (^)(NSError *error))completion;
+
 // 缩放Gif图片到指定大小
 - (UIImage *)fwGifImageWithScaleSize:(CGSize)size;
+
+// 是否是Gif图片
+- (BOOL)fwIsGifImage;
 
 @end

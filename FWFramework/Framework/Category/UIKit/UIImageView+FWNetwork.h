@@ -81,23 +81,6 @@ NS_ASSUME_NONNULL_BEGIN
          placeholderImage:(nullable UIImage *)placeholderImage;
 
 /**
- Asynchronously downloads an image from the specified URL, and sets it once the request is finished. Any previous image request for the receiver will be cancelled.
- 
- If the image is cached locally, the image is set immediately, otherwise the specified placeholder image will be set immediately, and then the remote image will be set once the request is finished.
- 
- By default, URL requests have a `Accept` header field value of "image / *", a cache policy of `NSURLCacheStorageAllowed` and a timeout interval of 30 seconds, and are set not handle cookies. To configure URL requests differently, use `setImageWithURLRequest:placeholderImage:success:failure:`
- 
- @param url The URL used for the image request.
- @param placeholderImage The image to be set initially, until the image request finishes. If `nil`, the image view will not change its image until the image request finishes.
- @param success A block to be executed when the image data task finishes successfully. This block has no return value and takes one argument: the image created from the response data of request or returned from cache.
- @param failure A block object to be executed when the image data task finishes unsuccessfully, or that finishes successfully. This block has no return value and takes one argument: the error object describing the network or parsing error that occurred.
- */
-- (void)fwSetImageWithURL:(NSURL *)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-                  success:(nullable void (^)(UIImage *image))success
-                  failure:(nullable void (^)(NSError *error))failure;
-
-/**
  Asynchronously downloads an image from the specified URL request, and sets it once the request is finished. Any previous image request for the receiver will be cancelled.
 
  If the image is cached locally, the image is set immediately, otherwise the specified placeholder image will be set immediately, and then the remote image will be set once the request is finished.
@@ -112,7 +95,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwSetImageWithURLRequest:(NSURLRequest *)urlRequest
                 placeholderImage:(nullable UIImage *)placeholderImage
                          success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *image))success
-                         failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure;
+                         failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                         progress:(nullable void (^)(NSProgress *downloadProgress))progress;
 
 /**
  Cancels any executing image operation for the receiver, if one exists.

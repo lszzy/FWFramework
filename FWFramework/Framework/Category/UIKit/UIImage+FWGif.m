@@ -8,6 +8,8 @@
 
 #import "UIImage+FWGif.h"
 #import <ImageIO/ImageIO.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation UIImage (FWGif)
 
@@ -144,6 +146,17 @@
     return [UIImage animatedImageWithImages:images duration:duration];
 }
 
++ (void)fwSaveGifImageData:(NSData *)data completion:(void (^)(NSError *))completion
+{
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    NSDictionary *metadata = @{@"UTI":(__bridge NSString *)kUTTypeImage};
+    [library writeImageDataToSavedPhotosAlbum:data metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
+        if (completion) {
+            completion(error);
+        }
+    }];
+}
+
 - (UIImage *)fwGifImageWithScaleSize:(CGSize)size
 {
     if (CGSizeEqualToSize(self.size, size) || CGSizeEqualToSize(size, CGSizeZero)) {
@@ -180,6 +193,11 @@
     }
     
     return [UIImage animatedImageWithImages:scaledImages duration:self.duration];
+}
+
+- (BOOL)fwIsGifImage
+{
+    return (self.images != nil);
 }
 
 @end
