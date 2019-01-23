@@ -22,6 +22,20 @@
 
 - (void)renderView
 {
+    UIImageView *imageView = [UIImageView new];
+    [self.view addSubview:imageView];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.layer.masksToBounds = YES;
+    [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+    [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
+    
+    NSString *gifImageUrl = @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif";
+    [imageView fwSetImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:gifImageUrl]] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+        imageView.image = image;
+    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+        imageView.image = nil;
+    }];
+    
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
@@ -34,7 +48,7 @@
     cycleView.pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     cycleView.currentPageDotColor = [UIColor whiteColor];
     [self.view addSubview:cycleView];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+    [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
     [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
