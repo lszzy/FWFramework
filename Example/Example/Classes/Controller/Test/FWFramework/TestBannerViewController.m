@@ -23,19 +23,29 @@
 - (void)renderView
 {
     UIImageView *imageView = [UIImageView new];
+    imageView.backgroundColor = [UIColor grayColor];
     [self.view addSubview:imageView];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.layer.masksToBounds = YES;
     [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
     
+    FWProgressView *progressView = [FWProgressView new];
+    [imageView addSubview:progressView];
+    [progressView fwSetDimensionsToSize:CGSizeMake(40, 40)];
+    [progressView fwAlignCenterToSuperview];
+    
     NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif?t=%@", @([NSDate fwCurrentTime])];
+    progressView.progress = 0;
+    progressView.hidden = NO;
     [imageView fwSetImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:gifImageUrl]] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+        progressView.hidden = YES;
         imageView.image = image;
     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+        progressView.hidden = YES;
         imageView.image = nil;
     } progress:^(NSProgress * _Nonnull downloadProgress) {
-        NSLog(@"progress: %@", downloadProgress);
+        progressView.progress = downloadProgress.fractionCompleted;
     }];
     
     FWBannerView *cycleView = [FWBannerView new];

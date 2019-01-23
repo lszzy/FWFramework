@@ -49,7 +49,7 @@
     _progressBackgroundColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
     _backgroundTintColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
     
-    _percentShow = YES;
+    _percentShow = NO;
     _percentTextColor =[UIColor whiteColor];
     _percentFont = [UIFont boldSystemFontOfSize:12.f];
     
