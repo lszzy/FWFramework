@@ -29,11 +29,13 @@
     [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
     
-    NSString *gifImageUrl = @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif";
+    NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif?t=%@", @([NSDate fwCurrentTime])];
     [imageView fwSetImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:gifImageUrl]] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
         imageView.image = image;
     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
         imageView.image = nil;
+    } progress:^(NSProgress * _Nonnull downloadProgress) {
+        NSLog(@"progress: %@", downloadProgress);
     }];
     
     FWBannerView *cycleView = [FWBannerView new];

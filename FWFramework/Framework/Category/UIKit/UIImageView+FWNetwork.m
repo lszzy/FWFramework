@@ -71,28 +71,14 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
 
-    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil];
-}
-
-- (void)fwSetImageWithURL:(NSURL *)url
-         placeholderImage:(UIImage *)placeholderImage
-                  success:(void (^)(UIImage *image))success
-                  failure:(void (^)(NSError *error))failure
-{
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-    
-    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:(success ? ^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-        success(image);
-    } : nil) failure:(failure ? ^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-        failure(error);
-    } : nil)];
+    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil progress:nil];
 }
 
 - (void)fwSetImageWithURLRequest:(NSURLRequest *)urlRequest
                 placeholderImage:(UIImage *)placeholderImage
                          success:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *image))success
                          failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                        progress:(void (^)(NSProgress *downloadProgress))progress
 {
     
     if ([urlRequest URL] == nil) {
@@ -143,7 +129,6 @@
                            }
                            [strongSelf clearActiveDownloadInformation];
                        }
-
                    }
                    failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
@@ -153,6 +138,14 @@
                             }
                             [strongSelf clearActiveDownloadInformation];
                         }
+                   }
+                   progress:^(NSProgress * _Nonnull downloadProgress) {
+                       __strong __typeof(weakSelf)strongSelf = weakSelf;
+                       if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                           if (progress) {
+                               progress(downloadProgress);
+                           }
+                       }
                    }];
 
         self.af_activeImageDownloadReceipt = receipt;

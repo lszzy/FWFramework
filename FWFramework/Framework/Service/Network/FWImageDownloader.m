@@ -30,17 +30,20 @@
 @property (nonatomic, strong) NSUUID *uuid;
 @property (nonatomic, copy) void (^successBlock)(NSURLRequest *, NSHTTPURLResponse *, UIImage *);
 @property (nonatomic, copy) void (^failureBlock)(NSURLRequest *, NSHTTPURLResponse *, NSError *);
+@property (nonatomic, copy) void (^progressBlock)(NSProgress *);
 @end
 
 @implementation FWImageDownloaderResponseHandler
 
 - (instancetype)initWithUUID:(NSUUID *)uuid
                      success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *responseObject))success
-                     failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure {
+                     failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                    progress:(nullable void (^)(NSProgress *downloadProgress))progress {
     if (self = [self init]) {
         self.uuid = uuid;
         self.successBlock = success;
         self.failureBlock = failure;
+        self.progressBlock = progress;
     }
     return self;
 }
@@ -192,14 +195,16 @@
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
                                                         success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
-                                                        failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure {
-    return [self downloadImageForURLRequest:request withReceiptID:[NSUUID UUID] success:success failure:failure];
+                                                        failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
+                                                       progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+    return [self downloadImageForURLRequest:request withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
 }
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
                                                   withReceiptID:(nonnull NSUUID *)receiptID
                                                         success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
-                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure {
+                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                                                       progress:(nullable void (^)(NSProgress * _Nonnull))progress {
     __block NSURLSessionDataTask *task = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = request.URL.absoluteString;
@@ -216,7 +221,7 @@
         // 1) Append the success and failure blocks to a pre-existing request if it already exists
         FWImageDownloaderMergedTask *existingMergedTask = self.mergedTasks[URLIdentifier];
         if (existingMergedTask != nil) {
-            FWImageDownloaderResponseHandler *handler = [[FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID success:success failure:failure];
+            FWImageDownloaderResponseHandler *handler = [[FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID success:success failure:failure progress:progress];
             [existingMergedTask addResponseHandler:handler];
             task = existingMergedTask.task;
             return;
@@ -250,7 +255,21 @@
         createdTask = [self.sessionManager
                        dataTaskWithRequest:request
                        uploadProgress:nil
-                       downloadProgress:nil
+                       downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
+                           dispatch_async(self.responseQueue, ^{
+                               __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                               FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
+                               if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
+                                   for (FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
+                                       if (handler.progressBlock) {
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               handler.progressBlock(downloadProgress);
+                                           });
+                                       }
+                                   }
+                               }
+                           });
+                       }
                        completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
                            dispatch_async(self.responseQueue, ^{
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;
@@ -288,7 +307,8 @@
         // 4) Store the response handler for use when the request completes
         FWImageDownloaderResponseHandler *handler = [[FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID
                                                                                                    success:success
-                                                                                                   failure:failure];
+                                                                                                   failure:failure
+                                                                                                  progress:progress];
         FWImageDownloaderMergedTask *mergedTask = [[FWImageDownloaderMergedTask alloc]
                                                    initWithURLIdentifier:URLIdentifier
                                                    identifier:mergedTaskIdentifier
