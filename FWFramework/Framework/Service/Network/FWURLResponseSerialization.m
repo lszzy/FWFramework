@@ -542,7 +542,7 @@ static NSLock* imageLock = nil;
     });
     
     [imageLock lock];
-    if ([UIImage fwIsGifImageData:data]) {
+    if ([UIImage fwIsGifData:data]) {
         image = [UIImage fwGifImageWithData:data];
     } else {
         image = [UIImage imageWithData:data];

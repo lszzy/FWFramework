@@ -16,13 +16,29 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 
+@property (nonatomic, strong) UIImageView *gifImageView;
+
 @end
 
 @implementation TestBannerViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"Save" block:^(id sender) {
+        FWStrongifySelf();
+        NSData *imageData = [UIImage fwGifDataWithImage:self.gifImageView.image];
+        if (imageData) {
+            [UIImage fwSaveGifData:imageData completion:NULL];
+        }
+    }];
+}
+
 - (void)renderView
 {
     UIImageView *imageView = [UIImageView new];
+    _gifImageView = imageView;
     imageView.backgroundColor = [UIColor grayColor];
     [self.view addSubview:imageView];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -35,7 +51,7 @@
     [progressView fwSetDimensionsToSize:CGSizeMake(40, 40)];
     [progressView fwAlignCenterToSuperview];
     
-    BOOL useTimestamp = NO;
+    BOOL useTimestamp = YES;
     NSString *timestampStr = useTimestamp ? [NSString stringWithFormat:@"?t=%@", @([NSDate fwCurrentTime])] : @"";
     NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
     progressView.progress = 0;
