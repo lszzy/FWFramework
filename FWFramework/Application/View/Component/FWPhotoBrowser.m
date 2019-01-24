@@ -57,6 +57,9 @@
     
     // 初始化 scrollView
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(-_betweenImagesSpacing * 0.5, 0, self.frame.size.width + _betweenImagesSpacing, self.frame.size.height)];
+    if (@available(iOS 11.0, *)) {
+        scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     scrollView.showsVerticalScrollIndicator = false;
     scrollView.showsHorizontalScrollIndicator = false;
     scrollView.pagingEnabled = true;
@@ -381,6 +384,9 @@
     self.delegate = self;
     self.alwaysBounceVertical = true;
     self.backgroundColor = [UIColor clearColor];
+    if (@available(iOS 11.0, *)) {
+        self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     self.showsHorizontalScrollIndicator = false;
     self.showsVerticalScrollIndicator = false;
     self.maximumZoomScale = 2;
