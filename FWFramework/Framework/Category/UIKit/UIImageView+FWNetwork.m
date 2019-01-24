@@ -68,10 +68,27 @@
 - (void)fwSetImageWithURL:(NSURL *)url
          placeholderImage:(UIImage *)placeholderImage
 {
+    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:nil];
+}
+
+- (void)fwSetImageWithURL:(NSURL *)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+{
+    if ([url isKindOfClass:[NSString class]]) {
+        url = [NSURL URLWithString:(NSString *)url];
+    }
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-
-    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil progress:nil];
+    
+    if (completion) {
+        [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+            completion(image, nil);
+        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+            completion(nil, error);
+        } progress:nil];
+    } else {
+        [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil progress:nil];
+    }
 }
 
 - (void)fwSetImageWithURLRequest:(NSURLRequest *)urlRequest
@@ -80,7 +97,6 @@
                          failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                         progress:(void (^)(NSProgress *downloadProgress))progress
 {
-    
     if ([urlRequest URL] == nil) {
         self.image = placeholderImage;
         if (failure) {
