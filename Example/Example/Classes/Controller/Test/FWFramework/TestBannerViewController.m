@@ -56,7 +56,7 @@
     [progressView fwSetDimensionsToSize:CGSizeMake(40, 40)];
     [progressView fwAlignCenterToSuperview];
     
-    BOOL useTimestamp = YES;
+    BOOL useTimestamp = NO;
     NSString *timestampStr = useTimestamp ? [NSString stringWithFormat:@"?t=%@", @([NSDate fwCurrentTime])] : @"";
     NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
     progressView.progress = 0;
@@ -264,8 +264,8 @@
 - (void)onPhotoBrowser:(UIGestureRecognizer *)gesture
 {
     // 移除所有缓存
-    [[FWImageDownloader defaultInstance].imageCache removeAllImages];
-    [[FWImageDownloader defaultURLCache] removeAllCachedResponses];
+    //[[FWImageDownloader defaultInstance].imageCache removeAllImages];
+    //[[FWImageDownloader defaultURLCache] removeAllCachedResponses];
     
     self.browserImages = @[
                            @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
