@@ -9,7 +9,7 @@
 #import "TestBannerViewController.h"
 #import "DZNWebViewController.h"
 
-@interface TestBannerViewController () <FWBannerViewDelegate, UIScrollViewDelegate>
+@interface TestBannerViewController () <FWBannerViewDelegate, UIScrollViewDelegate, FWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) FWTextTagCollectionView *tagCollectionView;
 
@@ -17,6 +17,8 @@
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 
 @property (nonatomic, strong) UIImageView *gifImageView;
+
+@property (nonatomic, strong) NSArray *browserImages;
 
 @end
 
@@ -45,6 +47,8 @@
     imageView.layer.masksToBounds = YES;
     [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
+    imageView.userInteractionEnabled = YES;
+    [imageView fwAddTapGestureWithTarget:self action:@selector(onPhotoBrowser:)];
     
     FWProgressView *progressView = [FWProgressView new];
     [imageView addSubview:progressView];
@@ -61,7 +65,6 @@
         imageView.image = image;
     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
         progressView.hidden = YES;
-        imageView.image = nil;
     } progress:^(NSProgress * _Nonnull downloadProgress) {
         progressView.progress = downloadProgress.fractionCompleted;
     }];
@@ -71,7 +74,7 @@
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_picture"];
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleCustom;
     cycleView.pageDotViewClass = [FWAnimatedDotView class];
     cycleView.pageControlDotSize = CGSizeMake(15, 15);
@@ -84,6 +87,8 @@
     [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
     
     NSMutableArray *imageUrls = [NSMutableArray array];
+    [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls addObject:@"public_picture"];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
@@ -251,6 +256,93 @@
     NSInteger page = scrollView.contentOffset.x / pageWidth;
     
     [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
+}
+
+#pragma mark - FWPhotoBrowserDelegate
+
+- (void)onPhotoBrowser:(UIGestureRecognizer *)gesture
+{
+    // 移除所有缓存
+    [[FWImageDownloader defaultInstance].imageCache removeAllImages];
+    [[FWImageDownloader defaultURLCache] removeAllCachedResponses];
+    
+    self.browserImages = @[
+                           @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
+                           @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
+                           @"http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
+                           @"public_picture",
+                           @"http://ww2.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr2n1jjj20gy0o9tcc.jpg",
+                           @"http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
+                           @"http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
+                           @"http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
+                           @"http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+                           ];
+    
+    FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
+    photoBrowser.delegate = self;
+    photoBrowser.longPressBlock = ^(NSInteger index) {
+        NSLog(@"%zd", index);
+    };
+    [photoBrowser showFromView:gesture.view picturesCount:9 currentPictureIndex:0];
+}
+
+#pragma mark - FWPhotoBrowserDelegate
+
+/**
+ 获取对应索引的视图
+ 
+ @param pictureBrowser 图片浏览器
+ @param index          索引
+ 
+ @return 视图
+ */
+- (UIView *)pictureView:(FWPhotoBrowser *)pictureBrowser viewForIndex:(NSInteger)index {
+    return self.gifImageView;
+}
+
+/**
+ 获取对应索引的图片大小
+ 
+ @param pictureBrowser 图片浏览器
+ @param index          索引
+ 
+ @return 图片大小
+ */
+/*
+- (CGSize)pictureView:(FWPhotoBrowser *)pictureBrowser imageSizeForIndex:(NSInteger)index {
+    
+    ESPictureModel *model = self.pictureModels[index];
+    CGSize size = CGSizeMake(model.width, model.height);
+    return size;
+}*/
+
+/**
+ 获取对应索引默认图片，可以是占位图片，可以是缩略图
+ 
+ @param pictureBrowser 图片浏览器
+ @param index          索引
+ 
+ @return 图片
+ */
+- (UIImage *)pictureView:(FWPhotoBrowser *)pictureBrowser defaultImageForIndex:(NSInteger)index {
+    return [UIImage imageNamed:@"public_icon"];
+}
+
+/**
+ 获取对应索引的高质量图片地址字符串
+ 
+ @param pictureBrowser 图片浏览器
+ @param index          索引
+ 
+ @return 图片的 url 字符串
+ */
+- (NSString *)pictureView:(FWPhotoBrowser *)pictureBrowser highQualityUrlStringForIndex:(NSInteger)index {
+    NSString *urlStr = [self.browserImages[index] stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
+    return urlStr;
+}
+
+- (void)pictureView:(FWPhotoBrowser *)pictureBrowser scrollToIndex:(NSInteger)index {
+    NSLog(@"%ld", index);
 }
 
 @end

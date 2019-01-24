@@ -37,10 +37,10 @@
 // 是否显示环形线条样式，默认YES，NO为圆形
 @property (nonatomic, assign) BOOL annular;
 
-// 环形进度样式，默认kCGLineCapButt
+// 环形进度样式，默认kCGLineCapRound
 @property (nonatomic, assign) CGLineCap annularLineCapStyle;
 
-// 环形线条宽度，默认2.0f
+// 环形线条宽度，默认4.0f
 @property (nonatomic, assign) CGFloat annularLineWidth;
 
 @end

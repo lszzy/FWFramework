@@ -237,6 +237,8 @@
 		2FB90F1021F4A00C00084D76 /* FWMarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */; };
 		2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */; };
+		2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
 		2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513221D3746B009EA65E /* FWDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513921D3A41D009EA65E /* FWDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -507,6 +509,8 @@
 		2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWMarqueeLabel.m; sourceTree = "<group>"; };
 		2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWQrcodeScanView.h; sourceTree = "<group>"; };
 		2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWQrcodeScanView.m; sourceTree = "<group>"; };
+		2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPhotoBrowser.h; sourceTree = "<group>"; };
+		2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPhotoBrowser.m; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FCE513221D3746B009EA65E /* FWDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabase.h; sourceTree = "<group>"; };
 		2FCE513921D3A41D009EA65E /* FWDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabasePool.h; sourceTree = "<group>"; };
@@ -966,6 +970,8 @@
 				2F1E39362178F0B80051A6BB /* FWProgressView.m */,
 				2FB7CBC721C23728002E5412 /* FWBannerView.h */,
 				2FB7CBC821C23728002E5412 /* FWBannerView.m */,
+				2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */,
+				2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */,
 				2F1D984521E6FD2800769651 /* FWPageControl.h */,
 				2F1D984621E6FD2800769651 /* FWPageControl.m */,
 				2FB90F0721F48AAB00084D76 /* FWSegmentedControl.h */,
@@ -989,6 +995,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */,
 				2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */,
 				2FB90F0F21F4A00C00084D76 /* FWMarqueeLabel.h in Headers */,
 				2FB90F0921F48AAB00084D76 /* FWSegmentedControl.h in Headers */,
@@ -1257,6 +1264,7 @@
 				2F03A5E3216CF4B9001965A1 /* NSObject+FWSafeType.m in Sources */,
 				2FD1A51821D4B41D00A215C2 /* FWModel.m in Sources */,
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
+				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
 				2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */,
 				2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */,
 				2FD1A52121D4B71600A215C2 /* FWView.m in Sources */,
