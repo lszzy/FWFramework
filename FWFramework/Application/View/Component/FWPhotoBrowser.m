@@ -100,7 +100,7 @@
     // 设置第1个 view 的位置以及大小
     FWPhotoBrowserView *pictureView = [self setPictureViewForIndex:currentPictureIndex fromView: fromView];
     // 获取来源图片在屏幕上的位置
-    CGRect rect = [fromView convertRect:fromView.bounds toView:nil];
+    CGRect rect = fromView ? [fromView convertRect:fromView.bounds toView:nil] : CGRectMake([UIScreen mainScreen].bounds.size.width * 0.5, [UIScreen mainScreen].bounds.size.height * 0.5, 0, 0);
     
     [pictureView animationShowWithFromRect:rect animationBlock:^{
         self.backgroundColor = [UIColor blackColor];
@@ -120,7 +120,6 @@
 }
 
 - (void)dismiss {
-    
     CGFloat x = [UIScreen mainScreen].bounds.size.width * 0.5;
     CGFloat y = [UIScreen mainScreen].bounds.size.height * 0.5;
     CGRect rect = CGRectMake(x, y, 0, 0);
@@ -128,7 +127,7 @@
         UIView *endView = [_delegate pictureView:self viewForIndex:_currentPage];
         if (endView.superview != nil) {
             rect = [endView convertRect:endView.bounds toView:nil];
-        }else {
+        } else if (endView != nil) {
             rect = endView.frame;
         }
     }
