@@ -19,6 +19,7 @@
 @property (nonatomic, strong) UIImageView *gifImageView;
 
 @property (nonatomic, strong) NSArray *browserImages;
+@property (nonatomic, strong) UIView *fromView;
 
 @end
 
@@ -283,7 +284,8 @@
     photoBrowser.longPressBlock = ^(NSInteger index) {
         NSLog(@"%zd", index);
     };
-    [photoBrowser showFromView:gesture.view picturesCount:9 currentPictureIndex:0];
+    self.fromView = self.fromView ? nil : gesture.view;
+    [photoBrowser showFromView:self.fromView picturesCount:9 currentPictureIndex:0];
 }
 
 #pragma mark - FWPhotoBrowserDelegate
@@ -297,7 +299,7 @@
  @return 视图
  */
 - (UIView *)pictureView:(FWPhotoBrowser *)pictureBrowser viewForIndex:(NSInteger)index {
-    return self.gifImageView;
+    return self.fromView;
 }
 
 /**
