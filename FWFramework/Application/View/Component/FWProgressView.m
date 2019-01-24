@@ -54,8 +54,8 @@
     _percentFont = [UIFont boldSystemFontOfSize:12.f];
     
     _annular = YES;
-    _annularLineCapStyle = kCGLineCapButt;
-    _annularLineWidth = 2.f;
+    _annularLineCapStyle = kCGLineCapRound;
+    _annularLineWidth = 4.f;
     
     _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
     _percentLabel.adjustsFontSizeToFitWidth = NO;
