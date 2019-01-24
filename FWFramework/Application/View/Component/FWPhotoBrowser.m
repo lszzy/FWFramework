@@ -467,40 +467,57 @@
 - (void)setUrlString:(NSString *)urlString {
     _urlString = urlString;
     [self.imageView fwCancelImageDownloadTask];
-    self.progressView.progress = 0.01;
-    // 如果没有在执行动画，那么就显示出来
-    if (self.isShowAnim == false) {
-        // 显示出来
-        self.progressView.hidden = false;
+    if ([urlString hasPrefix:@"http"]) {
+        self.progressView.progress = 0.01;
+        // 如果没有在执行动画，那么就显示出来
+        if (self.isShowAnim == false) {
+            // 显示出来
+            self.progressView.hidden = false;
+        }
+        // 取消上一次的下载
+        self.userInteractionEnabled = false;
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+        [urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        __weak __typeof__(self) self_weak_ = self;
+        [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+            __typeof__(self) self = self_weak_;
+            self.imageView.image = image;
+            self.progressView.hidden = true;
+            self.userInteractionEnabled = true;
+            // 计算图片的大小
+            [self setPictureSize:image.size];
+            // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
+            // 解决在执行动画完毕之后根据值去判断是否要隐藏
+            // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
+            self.progressView.progress = 1;
+        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+            __typeof__(self) self = self_weak_;
+            self.progressView.hidden = true;
+            self.userInteractionEnabled = true;
+            // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
+            // 解决在执行动画完毕之后根据值去判断是否要隐藏
+            // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
+            self.progressView.progress = 1;
+        } progress:^(NSProgress * _Nonnull downloadProgress) {
+            __typeof__(self) self = self_weak_;
+            self.progressView.progress = downloadProgress.fractionCompleted;
+        }];
+    } else {
+        UIImage *image = [UIImage imageNamed:urlString];
+        if (!image) {
+            image = [UIImage imageWithContentsOfFile:urlString];
+        }
+        if (image) {
+            self.imageView.image = image;
+            // 计算图片的大小
+            [self setPictureSize:image.size];
+        } else {
+            self.imageView.image = self.placeholderImage;
+        }
+        self.progressView.hidden = true;
+        self.userInteractionEnabled = true;
+        self.progressView.progress = 1;
     }
-    // 取消上一次的下载
-    self.userInteractionEnabled = false;
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    [urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-    __weak __typeof__(self) self_weak_ = self;
-    [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-        __typeof__(self) self = self_weak_;
-        self.imageView.image = image;
-        self.progressView.hidden = true;
-        self.userInteractionEnabled = true;
-        // 计算图片的大小
-        [self setPictureSize:image.size];
-        // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-        // 解决在执行动画完毕之后根据值去判断是否要隐藏
-        // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-        self.progressView.progress = 1;
-    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-        __typeof__(self) self = self_weak_;
-        self.progressView.hidden = true;
-        self.userInteractionEnabled = true;
-        // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-        // 解决在执行动画完毕之后根据值去判断是否要隐藏
-        // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-        self.progressView.progress = 1;
-    } progress:^(NSProgress * _Nonnull downloadProgress) {
-        __typeof__(self) self = self_weak_;
-        self.progressView.progress = downloadProgress.fractionCompleted;
-    }];
 }
 
 - (void)setContentSize:(CGSize)contentSize {
