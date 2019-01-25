@@ -273,7 +273,7 @@
                            ];
     
     FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
-    //photoBrowser.delegate = self;
+    photoBrowser.delegate = self;
     photoBrowser.pictureUrls = self.browserImages;
     photoBrowser.longPressBlock = ^(NSInteger index) {
         NSLog(@"%zd", index);
@@ -286,62 +286,30 @@
 
 #pragma mark - FWPhotoBrowserDelegate
 
-/**
- 获取对应索引的视图
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 视图
- */
 /*
-- (UIView *)pictureView:(FWPhotoBrowser *)pictureBrowser viewForIndex:(NSInteger)index {
+- (UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index {
     return self.fromView;
 }*/
 
-/**
- 获取对应索引的图片大小
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 图片大小
- */
 /*
- - (CGSize)pictureView:(FWPhotoBrowser *)pictureBrowser imageSizeForIndex:(NSInteger)index {
+ - (CGSize)photoBrowser:(FWPhotoBrowser *)photoBrowser imageSizeForIndex:(NSInteger)index {
  
  ESPictureModel *model = self.pictureModels[index];
  CGSize size = CGSizeMake(model.width, model.height);
  return size;
  }*/
 
-/**
- 获取对应索引默认图片，可以是占位图片，可以是缩略图
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 图片
- */
 /*
- - (UIImage *)pictureView:(FWPhotoBrowser *)pictureBrowser defaultImageForIndex:(NSInteger)index {
+ - (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser defaultImageForIndex:(NSInteger)index {
  return [UIImage imageNamed:@"public_icon"];
  }*/
 
-/**
- 获取对应索引的高质量图片地址字符串
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 图片的 url 字符串
- */
 /*
-- (NSString *)pictureView:(FWPhotoBrowser *)pictureBrowser highQualityUrlStringForIndex:(NSInteger)index {
+- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser highQualityUrlStringForIndex:(NSInteger)index {
     return self.browserImages[index];
 }*/
 
-- (void)pictureView:(FWPhotoBrowser *)pictureBrowser scrollToIndex:(NSInteger)index {
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index {
     NSLog(@"%ld", index);
 }
 
