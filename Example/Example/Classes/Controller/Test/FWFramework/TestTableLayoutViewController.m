@@ -300,12 +300,12 @@
  }*/
 
 /*
- - (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser defaultImageForIndex:(NSInteger)index {
+ - (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser placeholderImageForIndex:(NSInteger)index {
  return [UIImage imageNamed:@"public_icon"];
  }*/
 
 /*
-- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser highQualityUrlStringForIndex:(NSInteger)index {
+- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index {
     return self.browserImages[index];
 }*/
 

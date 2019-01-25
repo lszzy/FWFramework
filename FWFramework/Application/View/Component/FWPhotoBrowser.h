@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 
 @class FWPhotoBrowser;
+@class FWPhotoView;
 
 @protocol FWPhotoBrowserDelegate <NSObject>
 
@@ -23,7 +24,7 @@
  
  @return 图片的 url 字符串
  */
-- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser highQualityUrlStringForIndex:(NSInteger)index;
+- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
 
 /**
  获取对应索引的视图
@@ -53,7 +54,7 @@
  
  @return 图片
  */
-- (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser defaultImageForIndex:(NSInteger)index;
+- (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser placeholderImageForIndex:(NSInteger)index;
 
 /**
  滚动到指定页时会调用该方法
@@ -62,6 +63,22 @@
  @param index          索引
  */
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index;
+
+/**
+ 自定义图片视图，注意图片视图可重用
+ 
+ @param photoBrowser 图片浏览器
+ @param photoView 图片视图，索引为index属性
+ */
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser customPhotoView:(FWPhotoView *)photoView;
+
+/**
+ 图片视图加载完成回调，注意加载失败时也会回调
+ 
+ @param photoBrowser 图片浏览器
+ @param photoView 图片视图，索引为index属性
+ */
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadedPhotoView:(FWPhotoView *)photoView;
 
 @end
 
@@ -73,7 +90,7 @@
 @interface FWPhotoBrowser : UIView
 
 /**
- 必须参数，与pictureUrls二选一，图片张数。使用此参数必须实现代理highQualityUrlStringForIndex
+ 必须参数，与pictureUrls二选一，图片张数。使用此参数必须实现代理photoUrlForIndex
  */
 @property (nonatomic, assign) NSInteger picturesCount;
 
@@ -149,6 +166,8 @@
 
 - (void)photoView:(FWPhotoView *)photoView scale:(CGFloat)scale;
 
+- (void)photoViewLoaded:(FWPhotoView *)photoView withImage:(UIImage *)image;
+
 @end
 
 @interface FWPhotoView : UIScrollView
@@ -174,7 +193,6 @@
  @param completionBlock 结束的回调
  */
 - (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void(^)(void))animationBlock completionBlock:(void(^)(void))completionBlock;
-
 
 /**
  动画消失
