@@ -18,50 +18,50 @@
 /**
  获取对应索引的高质量图片地址字符串
  
- @param pictureBrowser 图片浏览器
+ @param photoBrowser 图片浏览器
  @param index          索引
  
  @return 图片的 url 字符串
  */
-- (NSString *)pictureView:(FWPhotoBrowser *)pictureBrowser highQualityUrlStringForIndex:(NSInteger)index;
+- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser highQualityUrlStringForIndex:(NSInteger)index;
 
 /**
  获取对应索引的视图
  
- @param pictureBrowser 图片浏览器
+ @param photoBrowser 图片浏览器
  @param index          索引
  
  @return 视图
  */
-- (UIView *)pictureView:(FWPhotoBrowser *)pictureBrowser viewForIndex:(NSInteger)index;
+- (UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index;
 
 /**
  获取对应索引的图片大小
  
- @param pictureBrowser 图片浏览器
+ @param photoBrowser 图片浏览器
  @param index          索引
  
  @return 图片大小
  */
-- (CGSize)pictureView:(FWPhotoBrowser *)pictureBrowser imageSizeForIndex:(NSInteger)index;
+- (CGSize)photoBrowser:(FWPhotoBrowser *)photoBrowser imageSizeForIndex:(NSInteger)index;
 
 /**
  获取对应索引默认图片，可以是占位图片，可以是缩略图
  
- @param pictureBrowser 图片浏览器
+ @param photoBrowser 图片浏览器
  @param index          索引
  
  @return 图片
  */
-- (UIImage *)pictureView:(FWPhotoBrowser *)pictureBrowser defaultImageForIndex:(NSInteger)index;
+- (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser defaultImageForIndex:(NSInteger)index;
 
 /**
  滚动到指定页时会调用该方法
  
- @param pictureBrowser 图片浏览器
+ @param photoBrowser 图片浏览器
  @param index          索引
  */
-- (void)pictureView:(FWPhotoBrowser *)pictureBrowser scrollToIndex:(NSInteger)index;
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index;
 
 @end
 
@@ -141,17 +141,17 @@
 
 @end
 
-@class FWPhotoBrowserView;
+@class FWPhotoView;
 
-@protocol FWPhotoBrowserViewDelegate <NSObject>
+@protocol FWPhotoViewDelegate <NSObject>
 
-- (void)pictureViewTouch:(FWPhotoBrowserView *)pictureView;
+- (void)photoViewTouch:(FWPhotoView *)photoView;
 
-- (void)pictureView:(FWPhotoBrowserView *)pictureView scale:(CGFloat)scale;
+- (void)photoView:(FWPhotoView *)photoView scale:(CGFloat)scale;
 
 @end
 
-@interface FWPhotoBrowserView : UIScrollView
+@interface FWPhotoView : UIScrollView
 
 // 当前视图所在的索引
 @property (nonatomic, assign) NSInteger index;
@@ -164,7 +164,7 @@
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 代理
-@property (nonatomic, weak) id<FWPhotoBrowserViewDelegate> pictureDelegate;
+@property (nonatomic, weak) id<FWPhotoViewDelegate> pictureDelegate;
 
 /**
  动画显示
