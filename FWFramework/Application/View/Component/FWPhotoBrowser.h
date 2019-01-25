@@ -13,7 +13,7 @@
 
 @protocol FWPhotoBrowserDelegate <NSObject>
 
-@required
+@optional
 
 /**
  获取对应索引的高质量图片地址字符串
@@ -24,8 +24,6 @@
  @return 图片的 url 字符串
  */
 - (NSString *)pictureView:(FWPhotoBrowser *)pictureBrowser highQualityUrlStringForIndex:(NSInteger)index;
-
-@optional
 
 /**
  获取对应索引的视图
@@ -46,8 +44,6 @@
  @return 图片大小
  */
 - (CGSize)pictureView:(FWPhotoBrowser *)pictureBrowser imageSizeForIndex:(NSInteger)index;
-
-// 以下两个代理方法必须要实现一个
 
 /**
  获取对应索引默认图片，可以是占位图片，可以是缩略图
@@ -76,7 +72,30 @@
  */
 @interface FWPhotoBrowser : UIView
 
+/**
+ 必须参数，与pictureUrls二选一，图片张数。使用此参数必须实现代理highQualityUrlStringForIndex
+ */
+@property (nonatomic, assign) NSInteger picturesCount;
+
+/**
+ 必须参数，与picturesCount二选一，图片地址列表，自动设置图片张数
+ */
+@property (nonatomic, copy) NSArray<NSString *> *pictureUrls;
+
+/**
+ 当前选中索引，默认0
+ */
+@property (nonatomic, assign) NSInteger currentIndex;
+
+/**
+ 事件代理，可选
+ */
 @property (nonatomic, weak) id<FWPhotoBrowserDelegate> delegate;
+
+/**
+ 是否隐藏状态栏，默认YES
+ */
+@property (nonatomic, assign) BOOL statusBarHidden;
 
 /**
  图片之间的间距，默认： 20
@@ -106,11 +125,14 @@
 /**
  显示图片浏览器
  
- @param fromView            用户点击的视图
- @param picturesCount       图片的张数
- @param currentPictureIndex 当前用户点击的图片索引
+ @param fromView 用户点击的视图
  */
-- (void)showFromView:(UIView *)fromView picturesCount:(NSInteger)picturesCount currentPictureIndex:(NSInteger)currentPictureIndex;
+- (void)showFromView:(UIView *)fromView;
+
+/**
+ 显示图片浏览器，居中显示
+ */
+- (void)show;
 
 /**
  让图片浏览器消失
