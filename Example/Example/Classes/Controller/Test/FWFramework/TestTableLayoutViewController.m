@@ -255,8 +255,8 @@
 - (void)onPhotoBrowser:(TestTableLayoutCell *)cell
 {
     // 移除所有缓存
-    // [[FWImageDownloader defaultInstance].imageCache removeAllImages];
-    // [[FWImageDownloader defaultURLCache] removeAllCachedResponses];
+    [[FWImageDownloader defaultInstance].imageCache removeAllImages];
+    [[FWImageDownloader defaultURLCache] removeAllCachedResponses];
     
     self.browserImages = @[
                            @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
@@ -308,6 +308,25 @@
 - (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index {
     return self.browserImages[index];
 }*/
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser customPhotoView:(FWPhotoView *)photoView {
+    UIButton *button = [photoView viewWithTag:101];
+    if (!button) {
+        button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = 101;
+        [button setTitle:@"保存" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [photoView addSubview:button]; {
+            [button fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:15];
+            [button fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:FWStatusBarHeight + FWNavigationBarHeight / 2.0];
+            [button fwSetDimensionsToSize:CGSizeMake(80, 40)];
+        }
+    }
+}
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadedPhotoView:(FWPhotoView *)photoView withImage:(UIImage *)image {
+    
+}
 
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index {
     NSLog(@"%ld", index);
