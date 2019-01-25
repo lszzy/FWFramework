@@ -191,7 +191,7 @@
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)ges {
-    if (ges.state == UIGestureRecognizerStateEnded) {
+    if (ges.state == UIGestureRecognizerStateBegan) {
         if (self.longPressBlock) {
             self.longPressBlock(_currentPage);
         }
@@ -263,8 +263,8 @@
     // 1. 判断是否实现图片大小的方法
     if ([_delegate respondsToSelector:@selector(photoBrowser:imageSizeForIndex:)]) {
         view.pictureSize = [_delegate photoBrowser:self imageSizeForIndex:index];
-    }else if ([_delegate respondsToSelector:@selector(photoBrowser:defaultImageForIndex:)]) {
-        UIImage *image = [_delegate photoBrowser:self defaultImageForIndex:index];
+    }else if ([_delegate respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
+        UIImage *image = [_delegate photoBrowser:self placeholderImageForIndex:index];
         // 2. 如果没有实现，判断是否有默认图片，获取默认图片大小
         view.pictureSize = image != nil ? image.size : defaultSize;
     } else if ([_delegate respondsToSelector:@selector(photoBrowser:viewForIndex:)]) {
@@ -283,12 +283,12 @@
     }
     
     // 设置占位图
-    if ([_delegate respondsToSelector:@selector(photoBrowser:defaultImageForIndex:)]) {
-        view.placeholderImage = [_delegate photoBrowser:self defaultImageForIndex:index];
+    if ([_delegate respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
+        view.placeholderImage = [_delegate photoBrowser:self placeholderImageForIndex:index];
     }
     
-    if ([_delegate respondsToSelector:@selector(photoBrowser:highQualityUrlStringForIndex:)]) {
-        view.urlString = [_delegate photoBrowser:self highQualityUrlStringForIndex:index];
+    if ([_delegate respondsToSelector:@selector(photoBrowser:photoUrlForIndex:)]) {
+        view.urlString = [_delegate photoBrowser:self photoUrlForIndex:index];
     } else {
         view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
     }
