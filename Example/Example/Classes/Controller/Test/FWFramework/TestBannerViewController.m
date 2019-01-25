@@ -9,7 +9,7 @@
 #import "TestBannerViewController.h"
 #import "DZNWebViewController.h"
 
-@interface TestBannerViewController () <FWBannerViewDelegate, UIScrollViewDelegate, FWPhotoBrowserDelegate>
+@interface TestBannerViewController () <FWBannerViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) FWTextTagCollectionView *tagCollectionView;
 
@@ -17,9 +17,6 @@
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 
 @property (nonatomic, strong) UIImageView *gifImageView;
-
-@property (nonatomic, strong) NSArray *browserImages;
-@property (nonatomic, strong) UIView *fromView;
 
 @end
 
@@ -49,14 +46,13 @@
     [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
     imageView.userInteractionEnabled = YES;
-    [imageView fwAddTapGestureWithTarget:self action:@selector(onPhotoBrowser:)];
     
     FWProgressView *progressView = [FWProgressView new];
     [imageView addSubview:progressView];
     [progressView fwSetDimensionsToSize:CGSizeMake(40, 40)];
     [progressView fwAlignCenterToSuperview];
     
-    BOOL useTimestamp = NO;
+    BOOL useTimestamp = YES;
     NSString *timestampStr = useTimestamp ? [NSString stringWithFormat:@"?t=%@", @([NSDate fwCurrentTime])] : @"";
     NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
     progressView.progress = 0;
@@ -257,94 +253,6 @@
     NSInteger page = scrollView.contentOffset.x / pageWidth;
     
     [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
-}
-
-#pragma mark - FWPhotoBrowserDelegate
-
-- (void)onPhotoBrowser:(UIGestureRecognizer *)gesture
-{
-    // 移除所有缓存
-    //[[FWImageDownloader defaultInstance].imageCache removeAllImages];
-    //[[FWImageDownloader defaultURLCache] removeAllCachedResponses];
-    
-    self.browserImages = @[
-                           @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-                           @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
-                           @"http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-                           @"public_picture",
-                           @"http://ww2.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr2n1jjj20gy0o9tcc.jpg",
-                           @"http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-                           @"http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-                           @"http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                           @"http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
-                           ];
-    
-    FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
-    photoBrowser.delegate = self;
-    photoBrowser.longPressBlock = ^(NSInteger index) {
-        NSLog(@"%zd", index);
-    };
-    self.fromView = self.fromView ? nil : gesture.view;
-    [photoBrowser showFromView:self.fromView picturesCount:9 currentPictureIndex:0];
-}
-
-#pragma mark - FWPhotoBrowserDelegate
-
-/**
- 获取对应索引的视图
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 视图
- */
-- (UIView *)pictureView:(FWPhotoBrowser *)pictureBrowser viewForIndex:(NSInteger)index {
-    return self.fromView;
-}
-
-/**
- 获取对应索引的图片大小
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 图片大小
- */
-/*
-- (CGSize)pictureView:(FWPhotoBrowser *)pictureBrowser imageSizeForIndex:(NSInteger)index {
-    
-    ESPictureModel *model = self.pictureModels[index];
-    CGSize size = CGSizeMake(model.width, model.height);
-    return size;
-}*/
-
-/**
- 获取对应索引默认图片，可以是占位图片，可以是缩略图
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 图片
- */
-- (UIImage *)pictureView:(FWPhotoBrowser *)pictureBrowser defaultImageForIndex:(NSInteger)index {
-    return [UIImage imageNamed:@"public_icon"];
-}
-
-/**
- 获取对应索引的高质量图片地址字符串
- 
- @param pictureBrowser 图片浏览器
- @param index          索引
- 
- @return 图片的 url 字符串
- */
-- (NSString *)pictureView:(FWPhotoBrowser *)pictureBrowser highQualityUrlStringForIndex:(NSInteger)index {
-    NSString *urlStr = [self.browserImages[index] stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
-    return urlStr;
-}
-
-- (void)pictureView:(FWPhotoBrowser *)pictureBrowser scrollToIndex:(NSInteger)index {
-    NSLog(@"%ld", index);
 }
 
 @end

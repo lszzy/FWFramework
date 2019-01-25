@@ -17,8 +17,6 @@
 @property (nonatomic, strong) NSMutableArray<FWPhotoBrowserView *> *pictureViews;
 /// 准备待用的图片视图（缓存）
 @property (nonatomic, strong) NSMutableArray<FWPhotoBrowserView *> *readyToUsePictureViews;
-/// 图片张数
-@property (nonatomic, assign) NSInteger picturesCount;
 /// 当前页数
 @property (nonatomic, assign) NSInteger currentPage;
 /// 界面子控件
@@ -27,7 +25,8 @@
 @property (nonatomic, weak) UILabel *pageTextLabel;
 /// 消失的 tap 手势
 @property (nonatomic, weak) UITapGestureRecognizer *dismissTapGes;
-
+/// 来源视图，默认dismiss位置，delegate可覆盖
+@property (nonatomic, weak) UIView *fromView;
 
 @end
 
@@ -47,6 +46,7 @@
     self.backgroundColor = [UIColor clearColor];
     
     // 设置默认属性
+    self.statusBarHidden = YES;
     self.betweenImagesSpacing = 20;
     self.pageTextFont = [UIFont systemFontOfSize:16];
     self.pageTextCenter = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - 20);
@@ -84,55 +84,79 @@
     self.dismissTapGes = tapGes;
 }
 
-- (void)showFromView:(UIView *)fromView picturesCount:(NSInteger)picturesCount currentPictureIndex:(NSInteger)currentPictureIndex {
-    
-    NSString *errorStr = [NSString stringWithFormat:@"Parameter is not correct, pictureCount is %zd, currentPictureIndex is %zd", picturesCount, currentPictureIndex];
-    NSAssert(picturesCount > 0 && currentPictureIndex < picturesCount, errorStr);
-    NSAssert(self.delegate != nil, @"Please set up delegate for pictureBrowser");
-    
+- (void)setPictureUrls:(NSArray<NSString *> *)pictureUrls {
+    _pictureUrls = pictureUrls;
+    self.picturesCount = pictureUrls.count;
+}
+
+- (NSInteger)currentIndex {
+    return _currentPage;
+}
+
+- (void)setCurrentIndex:(NSInteger)currentIndex {
+    _currentPage = currentIndex;
+}
+
+- (void)showFromView:(UIView *)fromView {
     // 记录值并设置位置
-    _currentPage = currentPictureIndex;
-    self.picturesCount = picturesCount;
-    [self setPageText:currentPictureIndex];
+    _fromView = fromView;
+    [self setPageText:_currentPage];
     // 添加到 window 上
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    // 隐藏状态栏
+    if (self.statusBarHidden) {
+        window.windowLevel = UIWindowLevelStatusBar + 10.f;
+    }
     [[UIApplication sharedApplication].keyWindow addSubview:self];
     // 计算 scrollView 的 contentSize
-    self.scrollView.contentSize = CGSizeMake(picturesCount * _scrollView.frame.size.width, _scrollView.frame.size.height);
+    self.scrollView.contentSize = CGSizeMake(_picturesCount * _scrollView.frame.size.width, _scrollView.frame.size.height);
     // 滚动到指定位置
-    [self.scrollView setContentOffset:CGPointMake(currentPictureIndex * _scrollView.frame.size.width, 0) animated:false];
+    [self.scrollView setContentOffset:CGPointMake(_currentPage * _scrollView.frame.size.width, 0) animated:false];
     // 设置第1个 view 的位置以及大小
-    FWPhotoBrowserView *pictureView = [self setPictureViewForIndex:currentPictureIndex fromView: fromView];
+    FWPhotoBrowserView *pictureView = nil;
     // 获取来源图片在屏幕上的位置
-    CGRect rect = fromView ? [fromView convertRect:fromView.bounds toView:nil] : CGRectMake([UIScreen mainScreen].bounds.size.width * 0.5, [UIScreen mainScreen].bounds.size.height * 0.5, 0, 0);
+    CGRect rect = CGRectZero;
+    if (fromView) {
+        pictureView = [self setPictureViewForIndex:_currentPage defaultSize:fromView.bounds.size];
+        rect = [fromView convertRect:fromView.bounds toView:nil];
+    } else {
+        pictureView = [self setPictureViewForIndex:_currentPage defaultSize:CGSizeMake(0.01, 0.01)];
+        rect = CGRectMake([UIScreen mainScreen].bounds.size.width * 0.5, [UIScreen mainScreen].bounds.size.height * 0.5, 0, 0);
+    }
     
     [pictureView animationShowWithFromRect:rect animationBlock:^{
         self.backgroundColor = [UIColor blackColor];
         self.pageTextLabel.alpha = 1;
     } completionBlock:^{
         // 设置左边与右边的 pictureView
-        if (currentPictureIndex != 0 && picturesCount > 1) {
+        if (self.currentPage != 0 && self.picturesCount > 1) {
             // 设置左边
-            [self setPictureViewForIndex:currentPictureIndex - 1 fromView: nil];
+            [self setPictureViewForIndex:self.currentPage - 1 defaultSize:CGSizeZero];
         }
         
-        if (currentPictureIndex < picturesCount - 1) {
+        if (self.currentPage < self.picturesCount - 1) {
             // 设置右边
-            [self setPictureViewForIndex:currentPictureIndex + 1 fromView: nil];
+            [self setPictureViewForIndex:self.currentPage + 1 defaultSize:CGSizeZero];
         }
     }];
+}
+
+- (void)show {
+    [self showFromView:nil];
 }
 
 - (void)dismiss {
     CGFloat x = [UIScreen mainScreen].bounds.size.width * 0.5;
     CGFloat y = [UIScreen mainScreen].bounds.size.height * 0.5;
     CGRect rect = CGRectMake(x, y, 0, 0);
+    UIView *endView = _fromView;
     if ([_delegate respondsToSelector:@selector(pictureView:viewForIndex:)]) {
-        UIView *endView = [_delegate pictureView:self viewForIndex:_currentPage];
-        if (endView.superview != nil) {
-            rect = [endView convertRect:endView.bounds toView:nil];
-        } else if (endView != nil) {
-            rect = endView.frame;
-        }
+        endView = [_delegate pictureView:self viewForIndex:_currentPage];
+    }
+    if (endView.superview != nil) {
+        rect = [endView convertRect:endView.bounds toView:nil];
+    } else if (endView != nil) {
+        rect = endView.frame;
     }
     
     // 取到当前显示的 pictureView
@@ -144,6 +168,11 @@
     
     for (FWPhotoBrowserView *pictureView in _readyToUsePictureViews) {
         [pictureView.imageView fwCancelImageDownloadTask];
+    }
+    
+    // 显示状态栏
+    if (self.statusBarHidden) {
+        [UIApplication sharedApplication].keyWindow.windowLevel = UIWindowLevelNormal;
     }
     
     // 执行关闭动画
@@ -204,12 +233,12 @@
     if (currentPage > oldValue) {
         // 往右滑，设置右边的视图
         if (currentPage + 1 < _picturesCount) {
-            [self setPictureViewForIndex:currentPage + 1 fromView: nil];
+            [self setPictureViewForIndex:currentPage + 1 defaultSize:CGSizeZero];
         }
     }else {
         // 往左滑，设置左边的视图
         if (currentPage > 0) {
-            [self setPictureViewForIndex:currentPage - 1 fromView: nil];
+            [self setPictureViewForIndex:currentPage - 1 defaultSize:CGSizeZero];
         }
     }
     
@@ -219,11 +248,11 @@
  设置pitureView到指定位置
  
  @param index 索引
- @param fromView 从哪个控件显示
+ @param defaultSize 默认图片大小，在下载完毕之后会根据下载的图片计算大小
  
  @return 当前设置的控件
  */
-- (FWPhotoBrowserView *)setPictureViewForIndex:(NSInteger)index fromView:(UIView *)fromView {
+- (FWPhotoBrowserView *)setPictureViewForIndex:(NSInteger)index defaultSize:(CGSize)defaultSize {
     [self removeViewToReUse];
     FWPhotoBrowserView *view = [self getPhotoView];
     view.index = index;
@@ -231,31 +260,18 @@
     frame.size = self.frame.size;
     view.frame = frame;
     
-    // 设置图片的大小<在下载完毕之后会根据下载的图片计算大小>
-    CGSize defaultSize = fromView.bounds.size;
-    
-    void(^setImageSizeBlock)(UIImage *) = ^(UIImage *image) {
-        if (image != nil) {
-            if (image != nil) {
-                view.pictureSize = image.size;
-            }else {
-                view.pictureSize = defaultSize;
-            }
-        }
-    };
-    
     // 1. 判断是否实现图片大小的方法
     if ([_delegate respondsToSelector:@selector(pictureView:imageSizeForIndex:)]) {
         view.pictureSize = [_delegate pictureView:self imageSizeForIndex:index];
     }else if ([_delegate respondsToSelector:@selector(pictureView:defaultImageForIndex:)]) {
         UIImage *image = [_delegate pictureView:self defaultImageForIndex:index];
         // 2. 如果没有实现，判断是否有默认图片，获取默认图片大小
-        setImageSizeBlock(image);
+        view.pictureSize = image != nil ? image.size : defaultSize;
     } else if ([_delegate respondsToSelector:@selector(pictureView:viewForIndex:)]) {
         UIView *v = [_delegate pictureView:self viewForIndex:index];
         if ([v isKindOfClass:[UIImageView class]]) {
             UIImage *image = ((UIImageView *)v).image;
-            setImageSizeBlock(image);
+            view.pictureSize = image != nil ? image.size : defaultSize;
             // 并且设置占位图片
             view.placeholderImage = image;
         }else {
@@ -271,7 +287,11 @@
         view.placeholderImage = [_delegate pictureView:self defaultImageForIndex:index];
     }
     
-    view.urlString = [_delegate pictureView:self highQualityUrlStringForIndex:index];
+    if ([_delegate respondsToSelector:@selector(pictureView:highQualityUrlStringForIndex:)]) {
+        view.urlString = [_delegate pictureView:self highQualityUrlStringForIndex:index];
+    } else {
+        view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
+    }
     
     CGPoint center = view.center;
     center.x = index * _scrollView.frame.size.width + _scrollView.frame.size.width * 0.5;
