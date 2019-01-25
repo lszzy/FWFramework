@@ -259,6 +259,14 @@
     CGRect frame = view.frame;
     frame.size = self.frame.size;
     view.frame = frame;
+    CGPoint center = view.center;
+    center.x = index * _scrollView.frame.size.width + _scrollView.frame.size.width * 0.5;
+    view.center = center;
+    
+    // 加载自定义视图
+    if ([_delegate respondsToSelector:@selector(photoBrowser:customPhotoView:)]) {
+        [_delegate photoBrowser:self customPhotoView:view];
+    }
     
     // 1. 判断是否实现图片大小的方法
     if ([_delegate respondsToSelector:@selector(photoBrowser:imageSizeForIndex:)]) {
@@ -292,10 +300,6 @@
     } else {
         view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
     }
-    
-    CGPoint center = view.center;
-    center.x = index * _scrollView.frame.size.width + _scrollView.frame.size.width * 0.5;
-    view.center = center;
     return view;
 }
 
@@ -326,7 +330,6 @@
  移动到超出屏幕的视图到可重用数组里面去
  */
 - (void)removeViewToReUse {
-    
     NSMutableArray *tempArray = [NSMutableArray array];
     for (FWPhotoView *view in self.photoViews) {
         // 判断某个view的页数与当前页数相差值为2的话，那么让这个view从视图上移除
@@ -365,8 +368,15 @@
 - (void)photoViewTouch:(FWPhotoView *)photoView {
     [self dismiss];
 }
+
 - (void)photoView:(FWPhotoView *)photoView scale:(CGFloat)scale {
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1 - scale];
+}
+
+- (void)photoViewLoaded:(FWPhotoView *)photoView withImage:(UIImage *)image {
+    if ([_delegate respondsToSelector:@selector(photoBrowser:loadedPhotoView:withImage:)]) {
+        [_delegate photoBrowser:self loadedPhotoView:photoView withImage:image];
+    }
 }
 
 @end
@@ -516,6 +526,8 @@
             // 解决在执行动画完毕之后根据值去判断是否要隐藏
             // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
             self.progressView.progress = 1;
+            
+            [self.pictureDelegate photoViewLoaded:self withImage:image];
         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
             __typeof__(self) self = self_weak_;
             self.progressView.hidden = true;
@@ -524,6 +536,8 @@
             // 解决在执行动画完毕之后根据值去判断是否要隐藏
             // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
             self.progressView.progress = 1;
+            
+            [self.pictureDelegate photoViewLoaded:self withImage:nil];
         } progress:^(NSProgress * _Nonnull downloadProgress) {
             __typeof__(self) self = self_weak_;
             self.progressView.progress = downloadProgress.fractionCompleted;
@@ -543,6 +557,8 @@
         self.progressView.hidden = true;
         self.userInteractionEnabled = true;
         self.progressView.progress = 1;
+        
+        [_pictureDelegate photoViewLoaded:self withImage:image];
     }
 }
 

@@ -77,8 +77,9 @@
  
  @param photoBrowser 图片浏览器
  @param photoView 图片视图，索引为index属性
+ @param image 图片image，可能为nil
  */
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadedPhotoView:(FWPhotoView *)photoView;
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadedPhotoView:(FWPhotoView *)photoView withImage:(UIImage *)image;
 
 @end
 
