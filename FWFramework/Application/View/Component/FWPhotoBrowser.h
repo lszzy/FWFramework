@@ -65,21 +65,20 @@
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index;
 
 /**
- 自定义图片视图，注意图片视图可重用
+ 图片视图开始加载回调，可自定义子视图等
  
  @param photoBrowser 图片浏览器
  @param photoView 图片视图，索引为index属性
  */
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser customPhotoView:(FWPhotoView *)photoView;
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser startLoadPhotoView:(FWPhotoView *)photoView;
 
 /**
- 图片视图加载完成回调，注意加载失败时也会回调
+ 图片视图加载完成回调，图片加载失败时也会回调。视图加载成功时，可通过imageView获取图片
  
  @param photoBrowser 图片浏览器
  @param photoView 图片视图，索引为index属性
- @param image 图片image，可能为nil
  */
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadedPhotoView:(FWPhotoView *)photoView withImage:(UIImage *)image;
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser finishLoadPhotoView:(FWPhotoView *)photoView;
 
 @end
 
@@ -118,7 +117,7 @@
 /**
  图片之间的间距，默认： 20
  */
-@property (nonatomic, assign) CGFloat betweenImagesSpacing;
+@property (nonatomic, assign) CGFloat imagesSpacing;
 
 /**
  页数文字中心点，默认：居中，中心 y 距离底部 20
@@ -167,7 +166,7 @@
 
 - (void)photoView:(FWPhotoView *)photoView scale:(CGFloat)scale;
 
-- (void)photoViewLoaded:(FWPhotoView *)photoView withImage:(UIImage *)image;
+- (void)photoViewLoad:(FWPhotoView *)photoView;
 
 @end
 
@@ -183,7 +182,9 @@
 @property (nonatomic, strong) NSString *urlString;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
-// 代理
+// 图片是否加载成功，加载成功可获取imageView.image
+@property (nonatomic, assign) BOOL imageLoaded;
+// 图片事件代理
 @property (nonatomic, weak) id<FWPhotoViewDelegate> pictureDelegate;
 
 /**

@@ -309,31 +309,25 @@
     return self.browserImages[index];
 }*/
 
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser customPhotoView:(FWPhotoView *)photoView {
-    // 创建重用子视图
-    UIButton *button = [photoView viewWithTag:101];
-    if (!button) {
-        button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.tag = 101;
-        [button setTitle:@"保存" forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
-        // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
-        [photoView addSubview:button];
-        // 布局必须相对于父视图，如photoBrowser，才能固定。默认会滚动
-        [button fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:photoBrowser withOffset:FWStatusBarHeight];
-        [button fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:photoBrowser withOffset:-15];
-        [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
-    }
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser startLoadPhotoView:(FWPhotoView *)photoView {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.tag = 101;
+    [button setTitle:@"保存" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
+    // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
+    [photoView addSubview:button];
+    // 布局必须相对于父视图，如photoBrowser，才能固定。默认会滚动
+    [button fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:photoBrowser withOffset:FWStatusBarHeight];
+    [button fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:photoBrowser withOffset:-15];
+    [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
     
-    // 默认隐藏按钮
     button.hidden = YES;
 }
 
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadedPhotoView:(FWPhotoView *)photoView withImage:(UIImage *)image {
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser finishLoadPhotoView:(FWPhotoView *)photoView {
     UIButton *button = [photoView viewWithTag:101];
-    button.hidden = image ? NO : YES;
-    button.fwTempObject = image;
+    button.hidden = !photoView.imageLoaded;
 }
 
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index {
@@ -343,7 +337,8 @@
 #pragma mark - Action
 
 - (void)onSaveImage:(UIButton *)button {
-    UIImage *image = button.fwTempObject;
+    FWPhotoView *photoView = (FWPhotoView *)button.superview;
+    UIImage *image = photoView.imageView.image;
     if ([image fwIsGifImage]) {
         [UIImage fwSaveGifData:[UIImage fwGifDataWithImage:image] completion:^(NSError *error) {
             FWLogDebug(@"save gif image: %@", error);
