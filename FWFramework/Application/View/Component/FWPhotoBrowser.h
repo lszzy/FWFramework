@@ -65,7 +65,7 @@
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index;
 
 /**
- 图片视图开始加载回调，可自定义子视图等
+ 图片视图开始加载回调，可自定义子视图等。注意photoView可重用
  
  @param photoBrowser 图片浏览器
  @param photoView 图片视图，索引为index属性
@@ -73,7 +73,7 @@
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser startLoadPhotoView:(FWPhotoView *)photoView;
 
 /**
- 图片视图加载完成回调，图片加载失败时也会回调。视图加载成功时，可通过imageView获取图片
+ 图片视图加载完成回调，图片加载失败时也会回调。视图加载成功时，可通过imageView获取图片。注意photoView可重用
  
  @param photoBrowser 图片浏览器
  @param photoView 图片视图，索引为index属性

@@ -310,18 +310,23 @@
 }*/
 
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser startLoadPhotoView:(FWPhotoView *)photoView {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.tag = 101;
-    [button setTitle:@"保存" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
-    // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
-    [photoView addSubview:button];
-    // 布局必须相对于父视图，如photoBrowser，才能固定。默认会滚动
-    [button fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:photoBrowser withOffset:FWStatusBarHeight];
-    [button fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:photoBrowser withOffset:-15];
-    [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
+    // 创建可重用子视图
+    UIButton *button = [photoView viewWithTag:101];
+    if (!button) {
+        button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = 101;
+        [button setTitle:@"保存" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
+        // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
+        [photoView addSubview:button];
+        // 布局必须相对于父视图，如photoBrowser，才能固定。默认会滚动
+        [button fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:photoBrowser withOffset:FWStatusBarHeight];
+        [button fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:photoBrowser withOffset:-15];
+        [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
+    }
     
+    // 默认隐藏按钮
     button.hidden = YES;
 }
 
