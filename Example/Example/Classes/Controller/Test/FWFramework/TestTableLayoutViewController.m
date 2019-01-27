@@ -344,13 +344,16 @@
 - (void)onSaveImage:(UIButton *)button {
     FWPhotoView *photoView = (FWPhotoView *)button.superview;
     UIImage *image = photoView.imageView.image;
+    FWWeakifySelf();
     if ([image fwIsGifImage]) {
         [UIImage fwSaveGifData:[UIImage fwGifDataWithImage:image] completion:^(NSError *error) {
-            FWLogDebug(@"save gif image: %@", error);
+            FWStrongifySelf();
+            [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
         }];
     } else {
         [image fwSaveImageWithBlock:^(NSError *error) {
-            FWLogDebug(@"save jpeg image: %@", error);
+            FWStrongifySelf();
+            [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
         }];
     }
 }
