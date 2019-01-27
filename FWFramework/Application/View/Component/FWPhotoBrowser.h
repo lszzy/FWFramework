@@ -162,11 +162,11 @@
 
 @protocol FWPhotoViewDelegate <NSObject>
 
-- (void)photoViewTouch:(FWPhotoView *)photoView;
+- (void)photoViewClicked:(FWPhotoView *)photoView;
 
 - (void)photoView:(FWPhotoView *)photoView scale:(CGFloat)scale;
 
-- (void)photoViewLoad:(FWPhotoView *)photoView;
+- (void)photoViewLoaded:(FWPhotoView *)photoView;
 
 @end
 
