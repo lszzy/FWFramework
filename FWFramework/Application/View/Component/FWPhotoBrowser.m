@@ -365,7 +365,7 @@
 
 #pragma mark - FWPhotoViewDelegate
 
-- (void)photoViewTouch:(FWPhotoView *)photoView {
+- (void)photoViewClicked:(FWPhotoView *)photoView {
     [self dismiss];
 }
 
@@ -373,7 +373,7 @@
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1 - scale];
 }
 
-- (void)photoViewLoad:(FWPhotoView *)photoView {
+- (void)photoViewLoaded:(FWPhotoView *)photoView {
     if ([_delegate respondsToSelector:@selector(photoBrowser:finishLoadPhotoView:)]) {
         [_delegate photoBrowser:self finishLoadPhotoView:photoView];
     }
@@ -529,7 +529,7 @@
             self.progressView.progress = 1;
             self.imageLoaded = YES;
             
-            [self.pictureDelegate photoViewLoad:self];
+            [self.pictureDelegate photoViewLoaded:self];
         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
             __typeof__(self) self = self_weak_;
             self.progressView.hidden = true;
@@ -540,7 +540,7 @@
             self.progressView.progress = 1;
             self.imageLoaded = NO;
             
-            [self.pictureDelegate photoViewLoad:self];
+            [self.pictureDelegate photoViewLoaded:self];
         } progress:^(NSProgress * _Nonnull downloadProgress) {
             __typeof__(self) self = self_weak_;
             self.progressView.progress = downloadProgress.fractionCompleted;
@@ -562,7 +562,7 @@
         self.progressView.progress = 1;
         self.imageLoaded = image ? YES : NO;
         
-        [_pictureDelegate photoViewLoad:self];
+        [_pictureDelegate photoViewLoaded:self];
     }
 }
 
@@ -682,7 +682,7 @@
     if (scrollView.dragging == false) {
         if (_scale > 0.15 && _scale <= 1) {
             // 关闭
-            [_pictureDelegate photoViewTouch:self];
+            [_pictureDelegate photoViewClicked:self];
             // 设置 contentOffset
             [scrollView setContentOffset:_lastContentOffset animated:false];
         }
