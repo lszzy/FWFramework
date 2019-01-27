@@ -13,10 +13,8 @@
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
 
-/// 图片数组，3个 UIImageView。进行复用
+/// 图片数组
 @property (nonatomic, strong) NSMutableArray<FWPhotoView *> *photoViews;
-/// 准备待用的图片视图（缓存）
-@property (nonatomic, strong) NSMutableArray<FWPhotoView *> *reusePhotoViews;
 /// 当前页数
 @property (nonatomic, assign) NSInteger currentPage;
 /// 界面子控件
@@ -53,7 +51,6 @@
     self.pageTextColor = [UIColor whiteColor];
     // 初始化数组
     self.photoViews = [NSMutableArray array];
-    self.reusePhotoViews = [NSMutableArray array];
     
     // 初始化 scrollView
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(-_imagesSpacing * 0.5, 0, self.frame.size.width + _imagesSpacing, self.frame.size.height)];
@@ -166,10 +163,6 @@
         [photoView.imageView fwCancelImageDownloadTask];
     }
     
-    for (FWPhotoView *photoView in _reusePhotoViews) {
-        [photoView.imageView fwCancelImageDownloadTask];
-    }
-    
     // 显示状态栏
     if (self.statusBarHidden) {
         [UIApplication sharedApplication].keyWindow.windowLevel = UIWindowLevelNormal;
@@ -227,7 +220,6 @@
     }
     NSUInteger oldValue = _currentPage;
     _currentPage = currentPage;
-    [self moveToReuseView];
     [self setPageText:currentPage];
     // 如果新值大于旧值
     if (currentPage > oldValue) {
@@ -241,7 +233,6 @@
             [self setPictureViewForIndex:currentPage - 1 defaultSize:CGSizeZero];
         }
     }
-    
 }
 
 /**
@@ -253,9 +244,7 @@
  @return 当前设置的控件
  */
 - (FWPhotoView *)setPictureViewForIndex:(NSInteger)index defaultSize:(CGSize)defaultSize {
-    [self moveToReuseView];
-    FWPhotoView *view = [self getPhotoView];
-    view.index = index;
+    FWPhotoView *view = [self getPhotoView:index];
     CGRect frame = view.frame;
     frame.size = self.frame.size;
     view.frame = frame;
@@ -309,37 +298,21 @@
  
  @return 图片控件
  */
-- (FWPhotoView *)getPhotoView {
-    FWPhotoView *view;
-    if (_reusePhotoViews.count == 0) {
-        view = [FWPhotoView new];
-        // 手势事件冲突处理
-        [self.dismissTapGes requireGestureRecognizerToFail:view.imageView.gestureRecognizers.firstObject];
-        view.pictureDelegate = self;
-    }else {
-        view = [_reusePhotoViews firstObject];
-        [_reusePhotoViews removeObjectAtIndex:0];
+- (FWPhotoView *)getPhotoView:(NSInteger)index {
+    for (FWPhotoView *photoView in self.photoViews) {
+        if (photoView.index == index) {
+            return photoView;
+        }
     }
+    
+    FWPhotoView *view = [FWPhotoView new];
+    view.index = index;
+    // 手势事件冲突处理
+    [self.dismissTapGes requireGestureRecognizerToFail:view.imageView.gestureRecognizers.firstObject];
+    view.pictureDelegate = self;
     [_scrollView addSubview:view];
     [_photoViews addObject:view];
     return view;
-}
-
-
-/**
- 移动到超出屏幕的视图到可重用数组里面去
- */
-- (void)moveToReuseView {
-    NSMutableArray *tempArray = [NSMutableArray array];
-    for (FWPhotoView *view in self.photoViews) {
-        // 判断某个view的页数与当前页数相差值为2的话，那么让这个view从视图上移除
-        if (abs((int)view.index - (int)_currentPage) == 2){
-            [tempArray addObject:view];
-            [view removeFromSuperview];
-            [_reusePhotoViews addObject:view];
-        }
-    }
-    [self.photoViews removeObjectsInArray:tempArray];
 }
 
 /**
