@@ -47,7 +47,7 @@
     
     // 设置默认属性
     self.statusBarHidden = YES;
-    self.betweenImagesSpacing = 20;
+    self.imagesSpacing = 20;
     self.pageTextFont = [UIFont systemFontOfSize:16];
     self.pageTextCenter = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - 20);
     self.pageTextColor = [UIColor whiteColor];
@@ -56,7 +56,7 @@
     self.readyToUsePictureViews = [NSMutableArray array];
     
     // 初始化 scrollView
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(-_betweenImagesSpacing * 0.5, 0, self.frame.size.width + _betweenImagesSpacing, self.frame.size.height)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(-_imagesSpacing * 0.5, 0, self.frame.size.width + _imagesSpacing, self.frame.size.height)];
     if (@available(iOS 11.0, *)) {
         scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
@@ -216,9 +216,9 @@
     self.pageTextLabel.center = pageTextCenter;
 }
 
-- (void)setBetweenImagesSpacing:(CGFloat)betweenImagesSpacing {
-    _betweenImagesSpacing = betweenImagesSpacing;
-    self.scrollView.frame = CGRectMake(-_betweenImagesSpacing * 0.5, 0, self.frame.size.width + _betweenImagesSpacing, self.frame.size.height);
+- (void)setImagesSpacing:(CGFloat)imagesSpacing {
+    _imagesSpacing = imagesSpacing;
+    self.scrollView.frame = CGRectMake(-_imagesSpacing * 0.5, 0, self.frame.size.width + _imagesSpacing, self.frame.size.height);
 }
 
 - (void)setCurrentPage:(NSInteger)currentPage {
@@ -264,8 +264,8 @@
     view.center = center;
     
     // 加载自定义视图
-    if ([_delegate respondsToSelector:@selector(photoBrowser:customPhotoView:)]) {
-        [_delegate photoBrowser:self customPhotoView:view];
+    if ([_delegate respondsToSelector:@selector(photoBrowser:startLoadPhotoView:)]) {
+        [_delegate photoBrowser:self startLoadPhotoView:view];
     }
     
     // 1. 判断是否实现图片大小的方法
@@ -373,9 +373,9 @@
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1 - scale];
 }
 
-- (void)photoViewLoaded:(FWPhotoView *)photoView withImage:(UIImage *)image {
-    if ([_delegate respondsToSelector:@selector(photoBrowser:loadedPhotoView:withImage:)]) {
-        [_delegate photoBrowser:self loadedPhotoView:photoView withImage:image];
+- (void)photoViewLoad:(FWPhotoView *)photoView {
+    if ([_delegate respondsToSelector:@selector(photoBrowser:finishLoadPhotoView:)]) {
+        [_delegate photoBrowser:self finishLoadPhotoView:photoView];
     }
 }
 
@@ -395,7 +395,7 @@
 
 @property (nonatomic, weak) FWProgressView *progressView;
 
-@property (nonatomic, assign, getter=isShowAnim) BOOL showAnim;
+@property (nonatomic, assign) BOOL showAnimation;
 
 @end
 
@@ -445,7 +445,7 @@
 
 - (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
     _imageView.frame = rect;
-    self.showAnim = true;
+    self.showAnimation = true;
     [self.progressView setHidden:true];
     [UIView animateWithDuration:0.25 animations:^{
         if (animationBlock != nil) {
@@ -458,7 +458,7 @@
                 completionBlock();
             }
         }
-        self.showAnim = false;
+        self.showAnimation = false;
     }];
 }
 
@@ -491,9 +491,9 @@
     self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
 }
 
-- (void)setShowAnim:(BOOL)showAnim {
-    _showAnim = showAnim;
-    if (showAnim == true) {
+- (void)setShowAnimation:(BOOL)showAnimation {
+    _showAnimation = showAnimation;
+    if (showAnimation == true) {
         self.progressView.hidden = true;
     }else {
         self.progressView.hidden = self.progressView.progress == 1;
@@ -503,10 +503,11 @@
 - (void)setUrlString:(NSString *)urlString {
     _urlString = urlString;
     [self.imageView fwCancelImageDownloadTask];
+    self.imageLoaded = NO;
     if ([urlString hasPrefix:@"http"]) {
         self.progressView.progress = 0.01;
         // 如果没有在执行动画，那么就显示出来
-        if (self.isShowAnim == false) {
+        if (self.showAnimation == false) {
             // 显示出来
             self.progressView.hidden = false;
         }
@@ -526,8 +527,9 @@
             // 解决在执行动画完毕之后根据值去判断是否要隐藏
             // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
             self.progressView.progress = 1;
+            self.imageLoaded = YES;
             
-            [self.pictureDelegate photoViewLoaded:self withImage:image];
+            [self.pictureDelegate photoViewLoad:self];
         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
             __typeof__(self) self = self_weak_;
             self.progressView.hidden = true;
@@ -536,8 +538,9 @@
             // 解决在执行动画完毕之后根据值去判断是否要隐藏
             // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
             self.progressView.progress = 1;
+            self.imageLoaded = NO;
             
-            [self.pictureDelegate photoViewLoaded:self withImage:nil];
+            [self.pictureDelegate photoViewLoad:self];
         } progress:^(NSProgress * _Nonnull downloadProgress) {
             __typeof__(self) self = self_weak_;
             self.progressView.progress = downloadProgress.fractionCompleted;
@@ -557,8 +560,9 @@
         self.progressView.hidden = true;
         self.userInteractionEnabled = true;
         self.progressView.progress = 1;
+        self.imageLoaded = image ? YES : NO;
         
-        [_pictureDelegate photoViewLoaded:self withImage:image];
+        [_pictureDelegate photoViewLoad:self];
     }
 }
 
