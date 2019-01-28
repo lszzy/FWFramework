@@ -281,7 +281,7 @@
         };
     }
     
-    // 设置打开Index，TODO: 修复重用打开自动关闭bug
+    // 设置打开Index
     NSString *fromImageUrl = [cell.object.imageUrl stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
     NSInteger currentIndex = [self.photoBrowser.pictureUrls indexOfObject:fromImageUrl];
     self.photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
