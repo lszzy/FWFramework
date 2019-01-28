@@ -16,33 +16,78 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 
+@property (nonatomic, strong) UIImageView *gifImageView;
+
 @end
 
 @implementation TestBannerViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"Save" block:^(id sender) {
+        FWStrongifySelf();
+        NSData *imageData = [UIImage fwGifDataWithImage:self.gifImageView.image];
+        if (imageData) {
+            [UIImage fwSaveGifData:imageData completion:NULL];
+        }
+    }];
+}
+
 - (void)renderView
 {
+    UIImageView *imageView = [UIImageView new];
+    _gifImageView = imageView;
+    imageView.backgroundColor = [UIColor grayColor];
+    [self.view addSubview:imageView];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.layer.masksToBounds = YES;
+    [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+    [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
+    imageView.userInteractionEnabled = YES;
+    
+    FWProgressView *progressView = [FWProgressView new];
+    [imageView addSubview:progressView];
+    [progressView fwSetDimensionsToSize:CGSizeMake(40, 40)];
+    [progressView fwAlignCenterToSuperview];
+    
+    BOOL useTimestamp = YES;
+    NSString *timestampStr = useTimestamp ? [NSString stringWithFormat:@"?t=%@", @([NSDate fwCurrentTime])] : @"";
+    NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
+    progressView.progress = 0;
+    progressView.hidden = NO;
+    [imageView fwSetImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:gifImageUrl]] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+        progressView.hidden = YES;
+        imageView.image = image;
+    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+        progressView.hidden = YES;
+    } progress:^(NSProgress * _Nonnull downloadProgress) {
+        progressView.progress = downloadProgress.fractionCompleted;
+    }];
+    
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_picture"];
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleCustom;
     cycleView.pageDotViewClass = [FWAnimatedDotView class];
     cycleView.pageControlDotSize = CGSizeMake(15, 15);
     cycleView.pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     cycleView.currentPageDotColor = [UIColor whiteColor];
     [self.view addSubview:cycleView];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+    [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
     [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
     
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls addObject:@"not_exist.jpg"];
+    [imageUrls addObject:@"public_picture"];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
     
     CGSize activitySize = CGSizeMake(30, 30);

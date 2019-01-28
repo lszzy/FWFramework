@@ -7,37 +7,39 @@
 //
 
 #import "UIImage+FWGif.h"
+#import <objc/runtime.h>
 #import <ImageIO/ImageIO.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @implementation UIImage (FWGif)
 
-+ (BOOL)fwIsGifImageData:(NSData *)data
+#pragma mark - Judge
+
++ (BOOL)fwIsGifData:(NSData *)data
 {
-    if (data.length < 16) return NO;
-    UInt32 magic = *(UInt32 *)data.bytes;
-    // http://www.w3.org/Graphics/GIF/spec-gif89a.txt
-    if ((magic & 0xFFFFFF) != '\0FIG') return NO;
-    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFTypeRef)data, NULL);
-    if (!source) return NO;
-    size_t count = CGImageSourceGetCount(source);
-    CFRelease(source);
-    return count > 1;
+    if (data.length > 4) {
+        const unsigned char * bytes = [data bytes];
+        return bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46;
+    }
+    return NO;
 }
 
-+ (BOOL)fwIsGifImageFile:(NSString *)path
+- (BOOL)fwIsGifImage
 {
-    if (path.length == 0) return NO;
-    const char *cpath = path.UTF8String;
-    FILE *fd = fopen(cpath, "rb");
-    if (!fd) return NO;
-    
-    BOOL isGIF = NO;
-    UInt32 magic = 0;
-    if (fread(&magic, sizeof(UInt32), 1, fd) == 1) {
-        if ((magic & 0xFFFFFF) == '\0FIG') isGIF = YES;
-    }
-    fclose(fd);
-    return isGIF;
+    return (self.images != nil);
+}
+
+#pragma mark - Coder
+
+- (NSUInteger)fwImageLoopCount
+{
+    return [objc_getAssociatedObject(self, @selector(fwImageLoopCount)) unsignedIntegerValue];
+}
+
+- (void)setFwImageLoopCount:(NSUInteger)fwImageLoopCount
+{
+    objc_setAssociatedObject(self, @selector(fwImageLoopCount), @(fwImageLoopCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 + (UIImage *)fwGifImageWithData:(NSData *)data
@@ -49,7 +51,6 @@
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     size_t count = CGImageSourceGetCount(source);
     UIImage *animatedImage;
-    
     if (count <= 1) {
         animatedImage = [[UIImage alloc] initWithData:data];
     } else {
@@ -62,17 +63,31 @@
             }
             
             duration += [self fwFrameDurationAtIndex:i source:source];
-            [images addObject:[UIImage imageWithCGImage:image scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp]];
+            CGFloat scale = 1;
+            scale = [UIScreen mainScreen].scale;
+            [images addObject:[UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp]];
             CGImageRelease(image);
         }
         
         if (!duration) {
             duration = (1.0f / 10.0f) * count;
         }
+        
         animatedImage = [UIImage animatedImageWithImages:images duration:duration];
+        
+        NSUInteger loopCount = 0;
+        NSDictionary *imageProperties = (__bridge_transfer NSDictionary *)CGImageSourceCopyProperties(source, nil);
+        NSDictionary *gifProperties = [imageProperties valueForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary];
+        if (gifProperties) {
+            NSNumber *gifLoopCount = [gifProperties valueForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFLoopCount];
+            if (gifLoopCount) {
+                loopCount = gifLoopCount.unsignedIntegerValue;
+            }
+        }
+        animatedImage.fwImageLoopCount = loopCount;
     }
-    
     CFRelease(source);
+    
     return animatedImage;
 }
 
@@ -80,6 +95,9 @@
 {
     float frameDuration = 0.1f;
     CFDictionaryRef cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil);
+    if (!cfFrameProperties) {
+        return frameDuration;
+    }
     NSDictionary *frameProperties = (__bridge NSDictionary *)cfFrameProperties;
     NSDictionary *gifProperties = frameProperties[(NSString *)kCGImagePropertyGIFDictionary];
     
@@ -100,6 +118,53 @@
     CFRelease(cfFrameProperties);
     return frameDuration;
 }
+
++ (NSData *)fwGifDataWithImage:(UIImage *)image
+{
+    if (!image) {
+        return nil;
+    }
+    
+    NSMutableData *imageData = [NSMutableData data];
+    NSUInteger frameCount = 0; // assume static images by default
+    CFStringRef imageUTType = kUTTypeGIF;
+    frameCount = image.images.count;
+    
+    // Create an image destination. GIF does not support EXIF image orientation
+    CGImageDestinationRef imageDestination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)imageData, imageUTType, frameCount, NULL);
+    if (!imageDestination) {
+        // Handle failure.
+        return nil;
+    }
+    
+    if (frameCount == 0) {
+        // for static single GIF images
+        CGImageDestinationAddImage(imageDestination, image.CGImage, nil);
+    } else {
+        // for animated GIF images
+        NSUInteger loopCount = image.fwImageLoopCount;
+        NSDictionary *gifProperties = @{(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary: @{(__bridge_transfer NSString *)kCGImagePropertyGIFLoopCount : @(loopCount)}};
+        CGImageDestinationSetProperties(imageDestination, (__bridge CFDictionaryRef)gifProperties);
+        for (size_t i = 0; i < frameCount; i++) {
+            @autoreleasepool {
+                float frameDuration = image.duration / frameCount;
+                CGImageRef frameImageRef = image.images[i].CGImage;
+                NSDictionary *frameProperties = @{(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary : @{(__bridge_transfer NSString *)kCGImagePropertyGIFUnclampedDelayTime : @(frameDuration)}};
+                CGImageDestinationAddImage(imageDestination, frameImageRef, (__bridge CFDictionaryRef)frameProperties);
+            }
+        }
+    }
+    // Finalize the destination.
+    if (CGImageDestinationFinalize(imageDestination) == NO) {
+        // Handle failure.
+        imageData = nil;
+    }
+    CFRelease(imageDestination);
+    
+    return [imageData copy];
+}
+
+#pragma mark - File
 
 + (UIImage *)fwGifImageWithFile:(NSString *)path
 {
@@ -139,10 +204,7 @@
     return [UIImage imageNamed:name];
 }
 
-+ (UIImage *)fwGifImageWithImages:(NSArray<UIImage *> *)images duration:(NSTimeInterval)duration
-{
-    return [UIImage animatedImageWithImages:images duration:duration];
-}
+#pragma mark - Scale
 
 - (UIImage *)fwGifImageWithScaleSize:(CGSize)size
 {
@@ -180,6 +242,19 @@
     }
     
     return [UIImage animatedImageWithImages:scaledImages duration:self.duration];
+}
+
+#pragma mark - Save
+
++ (void)fwSaveGifData:(NSData *)data completion:(void (^)(NSError *))completion
+{
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    NSDictionary *metadata = @{@"UTI":(__bridge NSString *)kUTTypeImage};
+    [library writeImageDataToSavedPhotosAlbum:data metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
+        if (completion) {
+            completion(error);
+        }
+    }];
 }
 
 @end
