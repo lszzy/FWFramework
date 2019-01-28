@@ -49,13 +49,13 @@
     _progressBackgroundColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
     _backgroundTintColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
     
-    _percentShow = YES;
+    _percentShow = NO;
     _percentTextColor =[UIColor whiteColor];
     _percentFont = [UIFont boldSystemFontOfSize:12.f];
     
     _annular = YES;
-    _annularLineCapStyle = kCGLineCapButt;
-    _annularLineWidth = 2.f;
+    _annularLineCapStyle = kCGLineCapRound;
+    _annularLineWidth = 4.f;
     
     _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
     _percentLabel.adjustsFontSizeToFitWidth = NO;

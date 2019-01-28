@@ -68,33 +68,35 @@
 - (void)fwSetImageWithURL:(NSURL *)url
          placeholderImage:(UIImage *)placeholderImage
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-
-    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil];
+    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:nil];
 }
 
-- (void)fwSetImageWithURL:(NSURL *)url
-         placeholderImage:(UIImage *)placeholderImage
-                  success:(void (^)(UIImage *image))success
-                  failure:(void (^)(NSError *error))failure
+- (void)fwSetImageWithURL:(NSURL *)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
 {
+    if ([url isKindOfClass:[NSString class]]) {
+        url = [NSURL URLWithString:(NSString *)url];
+    }
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
     
-    [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:(success ? ^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-        success(image);
-    } : nil) failure:(failure ? ^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-        failure(error);
-    } : nil)];
+    if (completion) {
+        [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+            completion(image, nil);
+        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+            completion(nil, error);
+        } progress:nil];
+    } else {
+        [self fwSetImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil progress:nil];
+    }
 }
 
 - (void)fwSetImageWithURLRequest:(NSURLRequest *)urlRequest
                 placeholderImage:(UIImage *)placeholderImage
                          success:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *image))success
                          failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                        progress:(void (^)(NSProgress *downloadProgress))progress
 {
-    
     if ([urlRequest URL] == nil) {
         self.image = placeholderImage;
         if (failure) {
@@ -143,7 +145,6 @@
                            }
                            [strongSelf clearActiveDownloadInformation];
                        }
-
                    }
                    failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
@@ -153,6 +154,14 @@
                             }
                             [strongSelf clearActiveDownloadInformation];
                         }
+                   }
+                   progress:^(NSProgress * _Nonnull downloadProgress) {
+                       __strong __typeof(weakSelf)strongSelf = weakSelf;
+                       if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                           if (progress) {
+                               progress(downloadProgress);
+                           }
+                       }
                    }];
 
         self.af_activeImageDownloadReceipt = receipt;

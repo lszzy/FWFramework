@@ -15,7 +15,7 @@
 
 @property (nonatomic, copy) NSString *text;
 
-@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, copy) NSString *imageUrl;
 
 @end
 
@@ -33,6 +33,8 @@
 
 @property (nonatomic, strong) UIImageView *myImageView;
 
+@property (nonatomic, copy) void (^imageClicked)(TestTableLayoutObject *object);
+
 @end
 
 @implementation TestTableLayoutCell
@@ -42,6 +44,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
@@ -70,6 +73,8 @@
         
         UIImageView *imageView = [UIImageView fwAutoLayoutView];
         self.myImageView = imageView;
+        imageView.userInteractionEnabled = YES;
+        [imageView fwAddTapGestureWithTarget:self action:@selector(onImageClick:)];
         [self.contentView addSubview:imageView]; {
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge relation:NSLayoutRelationGreaterThanOrEqual];
@@ -87,7 +92,11 @@
     _object = object;
     // 自动收缩
     self.myTitleLabel.text = object.title;
-    self.myImageView.image = object.image;
+    if ([object.imageUrl fwIsFormatUrl]) {
+        [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
+    } else {
+        self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+    }
     // 手工收缩
     self.myTextLabel.text = object.text;
     if (object.text.length > 0) {
@@ -97,9 +106,18 @@
     }
 }
 
+- (void)onImageClick:(UIGestureRecognizer *)gesture
+{
+    if (self.imageClicked) {
+        self.imageClicked(self.object);
+    }
+}
+
 @end
 
-@interface TestTableLayoutViewController ()
+@interface TestTableLayoutViewController () <FWPhotoBrowserDelegate>
+
+@property (nonatomic, strong) NSArray *browserImages;
 
 @end
 
@@ -139,6 +157,13 @@
 {
     // 渲染可重用Cell
     TestTableLayoutCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    FWWeakifySelf();
+    FWWeakify(cell);
+    cell.imageClicked = ^(TestTableLayoutObject *object) {
+        FWStrongifySelf();
+        FWStrongify(cell);
+        [self onPhotoBrowser:cell];
+    };
     TestTableLayoutObject *object = [self.dataList objectAtIndex:indexPath.row];
     cell.object = object;
     return cell;
@@ -171,8 +196,15 @@
                                  @"",
                                  @"public_icon",
                                  @"tabbar_home",
-                                 @"tabbar_settings",
                                  @"public_picture",
+                                 @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
+                                 @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
+                                 @"http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
+                                 @"https://pic3.zhimg.com/b471eb23a_im.jpg",
+                                 @"http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
+                                 @"http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
+                                 @"http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
+                                 @"http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
                                  ]];
     });
     
@@ -181,7 +213,7 @@
     object.text = [[randomArray objectAtIndex:1] fwRandomObject];
     NSString *imageName =[[randomArray objectAtIndex:2] fwRandomObject];
     if (imageName.length > 0) {
-        object.image = [UIImage imageNamed:imageName];
+        object.imageUrl = imageName;
     }
     return object;
 }
@@ -216,6 +248,114 @@
         self.tableView.fwShowInfiniteScroll = self.dataList.count < 5000 ? YES : NO;
         [self.tableView.fwInfiniteScrollView stopAnimating];
     });
+}
+
+#pragma mark - FWPhotoBrowserDelegate
+
+- (void)onPhotoBrowser:(TestTableLayoutCell *)cell
+{
+    // 移除所有缓存
+    [[FWImageDownloader defaultInstance].imageCache removeAllImages];
+    [[FWImageDownloader defaultURLCache] removeAllCachedResponses];
+    
+    self.browserImages = @[
+                           @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
+                           @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
+                           @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
+                           @"public_picture",
+                           @"https://pic3.zhimg.com/b471eb23a_im.jpg",
+                           @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
+                           @"public_icon",
+                           @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
+                           @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
+                           @"tabbar_home",
+                           @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+                           ];
+    
+    FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
+    photoBrowser.delegate = self;
+    photoBrowser.pictureUrls = self.browserImages;
+    photoBrowser.longPressBlock = ^(NSInteger index) {
+        NSLog(@"%zd", index);
+    };
+    NSString *fromImageUrl = [cell.object.imageUrl stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
+    NSInteger currentIndex = [self.browserImages indexOfObject:fromImageUrl];
+    photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
+    [photoBrowser showFromView:cell.myImageView];
+}
+
+#pragma mark - FWPhotoBrowserDelegate
+
+/*
+- (UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index {
+    return self.fromView;
+}*/
+
+/*
+ - (CGSize)photoBrowser:(FWPhotoBrowser *)photoBrowser imageSizeForIndex:(NSInteger)index {
+ 
+ ESPictureModel *model = self.pictureModels[index];
+ CGSize size = CGSizeMake(model.width, model.height);
+ return size;
+ }*/
+
+/*
+ - (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser placeholderImageForIndex:(NSInteger)index {
+ return [UIImage imageNamed:@"public_icon"];
+ }*/
+
+/*
+- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index {
+    return self.browserImages[index];
+}*/
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser startLoadPhotoView:(FWPhotoView *)photoView {
+    // 创建可重用子视图
+    UIButton *button = [photoView viewWithTag:101];
+    if (!button) {
+        button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = 101;
+        [button setTitle:@"保存" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
+        // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
+        [photoView addSubview:button];
+        // 布局必须相对于父视图，如photoBrowser，才能固定。默认会滚动
+        [button fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:photoBrowser withOffset:FWStatusBarHeight];
+        [button fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:photoBrowser withOffset:-15];
+        [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
+    }
+    
+    // 默认隐藏按钮
+    button.hidden = YES;
+}
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser finishLoadPhotoView:(FWPhotoView *)photoView {
+    UIButton *button = [photoView viewWithTag:101];
+    button.hidden = !photoView.imageLoaded;
+}
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index {
+    NSLog(@"%ld", index);
+}
+
+#pragma mark - Action
+
+- (void)onSaveImage:(UIButton *)button {
+    FWPhotoView *photoView = (FWPhotoView *)button.superview;
+    UIImage *image = photoView.imageView.image;
+    FWWeakifySelf();
+    if ([image fwIsGifImage]) {
+        [UIImage fwSaveGifData:[UIImage fwGifDataWithImage:image] completion:^(NSError *error) {
+            FWStrongifySelf();
+            [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
+        }];
+    } else {
+        [image fwSaveImageWithBlock:^(NSError *error) {
+            FWStrongifySelf();
+            [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
+        }];
+    }
 }
 
 @end

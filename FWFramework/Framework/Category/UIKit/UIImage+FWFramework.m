@@ -912,12 +912,8 @@
 
 - (void)fwSaveImageWithBlock:(void (^)(NSError *error))block
 {
-    if (block) {
-        objc_setAssociatedObject(self, @selector(fwSaveImageWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        UIImageWriteToSavedPhotosAlbum(self, self, @selector(fwInnerImage:didFinishSavingWithError:contextInfo:), NULL);
-    } else {
-        UIImageWriteToSavedPhotosAlbum(self, nil, nil, NULL);
-    }
+    objc_setAssociatedObject(self, @selector(fwSaveImageWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    UIImageWriteToSavedPhotosAlbum(self, self, @selector(fwInnerImage:didFinishSavingWithError:contextInfo:), NULL);
 }
 
 - (void)fwInnerImage:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
