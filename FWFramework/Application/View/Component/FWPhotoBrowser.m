@@ -173,6 +173,8 @@
         self.backgroundColor = [UIColor clearColor];
         self.pageTextLabel.alpha = 0;
     } completionBlock:^{
+        [self.photoViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self.photoViews removeAllObjects];
         [self removeFromSuperview];
     }];
 }
@@ -332,8 +334,8 @@
         if ([_delegate respondsToSelector:@selector(photoBrowser:scrollToIndex:)]) {
             [_delegate photoBrowser:self scrollToIndex: page];
         }
+        self.currentPage = page;
     }
-    self.currentPage = page;
 }
 
 #pragma mark - FWPhotoViewDelegate
