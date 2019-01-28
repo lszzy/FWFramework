@@ -117,7 +117,7 @@
 
 @interface TestTableLayoutViewController () <FWPhotoBrowserDelegate>
 
-@property (nonatomic, strong) NSArray *browserImages;
+@property (nonatomic, strong) FWPhotoBrowser *photoBrowser;
 
 @end
 
@@ -258,30 +258,34 @@
     [[FWImageDownloader defaultInstance].imageCache removeAllImages];
     [[FWImageDownloader defaultURLCache] removeAllCachedResponses];
     
-    self.browserImages = @[
-                           @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-                           @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
-                           @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-                           @"public_picture",
-                           @"https://pic3.zhimg.com/b471eb23a_im.jpg",
-                           @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-                           @"public_icon",
-                           @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-                           @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                           @"tabbar_home",
-                           @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
-                           ];
+    // 初始化浏览器
+    if (!self.photoBrowser) {
+        FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
+        self.photoBrowser = photoBrowser;
+        photoBrowser.delegate = self;
+        photoBrowser.pictureUrls = @[
+                                     @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
+                                     @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
+                                     @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
+                                     @"public_picture",
+                                     @"https://pic3.zhimg.com/b471eb23a_im.jpg",
+                                     @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
+                                     @"public_icon",
+                                     @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
+                                     @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
+                                     @"tabbar_home",
+                                     @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+                                     ];
+        photoBrowser.longPressBlock = ^(NSInteger index) {
+            NSLog(@"%zd", index);
+        };
+    }
     
-    FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
-    photoBrowser.delegate = self;
-    photoBrowser.pictureUrls = self.browserImages;
-    photoBrowser.longPressBlock = ^(NSInteger index) {
-        NSLog(@"%zd", index);
-    };
+    // 设置打开Index，TODO: 修复重用打开自动关闭bug
     NSString *fromImageUrl = [cell.object.imageUrl stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
-    NSInteger currentIndex = [self.browserImages indexOfObject:fromImageUrl];
-    photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
-    [photoBrowser showFromView:cell.myImageView];
+    NSInteger currentIndex = [self.photoBrowser.pictureUrls indexOfObject:fromImageUrl];
+    self.photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
+    [self.photoBrowser showFromView:cell.myImageView];
 }
 
 #pragma mark - FWPhotoBrowserDelegate
