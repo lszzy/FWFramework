@@ -63,6 +63,7 @@
                                              @[@"UIWebView(FWFramework)", @"TestWebViewController"],
                                              @[@"UINavigationController(FWFramework)", @"TestNavigationViewController"],
                                              @[@"UIViewController(FWBar)", @"TestBarViewController"],
+                                             @[@"NSURL(FWVendor)", @"TestUrlViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              ]],
                                        @[@"FWApplication", @[
