@@ -35,7 +35,7 @@
 	<string>1.0.0.1</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>comgooglemaps-x-callback</string>
+		<string>baidumap</string>
 		<string>comgooglemaps</string>
 		<string>weixin</string>
 		<string>wechat</string>
