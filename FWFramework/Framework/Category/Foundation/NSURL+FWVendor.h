@@ -18,23 +18,62 @@
 #pragma mark - Map
 
 /*!
- @brief 生成谷歌地图外部URL，URL SCHEME为：comgooglemaps|comgooglemaps-x-callback
+ @brief 生成苹果地图地址外部URL
  
- @param query 搜索地址，自动URL编码
- @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"x-source": @"应用名称", @"x-success": @"回调地址"}
+ @param addr 显示地址，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
  @return NSURL
  */
-+ (instancetype)fwGoogleMapsURLWithQuery:(NSString *)query options:(NSDictionary *)options;
++ (instancetype)fwAppleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
 
 /*!
- @brief 生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps|comgooglemaps-x-callback
+ @brief 生成苹果地图导航外部URL
  
  @param saddr 导航起始点，格式latitude,longitude或搜索地址
  @param daddr 导航结束点，格式latitude,longitude或搜索地址
- @param directionsmode 导航模式，支持driving|transit|bicycling|walking，默认walking
- @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"x-source": @"应用名称", @"x-success": @"回调地址"}
+ @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
  @return NSURL
  */
-+ (instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr directionsmode:(NSString *)directionsmode options:(NSDictionary *)options;
++ (instancetype)fwAppleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr options:(NSDictionary *)options;
+
+/*!
+ @brief 生成谷歌地图外部URL，URL SCHEME为：comgooglemaps
+ 
+ @param addr 显示地址，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
+ @return NSURL
+ */
++ (instancetype)fwGoogleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
+
+/*!
+ @brief 生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps
+ 
+ @param saddr 导航起始点，格式latitude,longitude或搜索地址
+ @param daddr 导航结束点，格式latitude,longitude或搜索地址
+ @param mode 导航模式，支持driving|transit|bicycling|walking，默认driving
+ @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
+ @return NSURL
+ */
++ (instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
+
+/*!
+ @brief 生成百度地图外部URL，URL SCHEME为：baidumap
+ 
+ @param addr 显示地址，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"src": @"site.wuyong.Example", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+ @return NSURL
+ */
++ (instancetype)fwBaiduMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
+
+/*!
+ @brief 生成百度地图导航外部URL，URL SCHEME为：baidumap
+ 
+ @param saddr 导航起始点，格式latitude,longitude或搜索地址
+ @param daddr 导航结束点，格式latitude,longitude或搜索地址
+ @param mode 导航模式，支持driving|transit|navigation|riding|walking，默认driving
+ @param options 可选附加参数，如@{@"src": @"site.wuyong.Example", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+ @return NSURL
+ */
++ (instancetype)fwBaiduMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
 
 @end

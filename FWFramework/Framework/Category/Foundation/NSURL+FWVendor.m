@@ -8,39 +8,100 @@
  */
 
 #import "NSURL+FWVendor.h"
-#import "NSURL+FWFramework.h"
+#import "NSString+FWFormat.h"
 
 @implementation NSURL (FWVendor)
 
-+ (instancetype)fwGoogleMapsURLWithQuery:(NSString *)query options:(NSDictionary *)options
++ (instancetype)fwMapsURLWithString:(NSString *)string params:(NSDictionary *)params
 {
-    NSMutableString *urlString = [[NSMutableString alloc] initWithFormat:@"comgooglemaps://"];
-    // q
-    NSString *queryStr = query.length > 0 ? [[query stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] : @"";
-    [urlString appendFormat:@"?q=%@", queryStr];
-    // options
-    [options enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [urlString appendFormat:@"&%@=%@", key, obj];
+    NSMutableString *urlString = [[NSMutableString alloc] initWithString:string];
+    [urlString appendString:@"?"];
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+        NSString *valueStr = [[[NSString stringWithFormat:@"%@", value] stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        [urlString appendFormat:@"%@=%@&", key, valueStr];
     }];
-    return [NSURL fwURLWithString:urlString];
+    return [self URLWithString:[urlString substringToIndex:urlString.length - 1]];
 }
 
-+ (instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr directionsmode:(NSString *)directionsmode options:(NSDictionary *)options
++ (instancetype)fwAppleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options
 {
-    NSMutableString *urlString = [[NSMutableString alloc] initWithFormat:@"comgooglemaps://"];
-    // saddr
-    NSString *saddrStr = saddr.length > 0 ? [[saddr stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] : @"";
-    [urlString appendFormat:@"?saddr=%@", saddrStr];
-    // daddr
-    NSString *daddrStr = daddr.length > 0 ? [[daddr stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] : @"";
-    [urlString appendFormat:@"&daddr=%@", daddrStr];
-    // directionsmode
-    [urlString appendFormat:@"&directionsmode=%@", (directionsmode.length > 0 ? directionsmode : @"walking")];
-    // options
-    [options enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [urlString appendFormat:@"&%@=%@", key, obj];
-    }];
-    return [NSURL fwURLWithString:urlString];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:options];
+    if (addr.length > 0) {
+        [params setObject:addr forKey:@"q"];
+    }
+    return [self fwMapsURLWithString:@"http://maps.apple.com/" params:params];
+}
+
++ (instancetype)fwAppleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr options:(NSDictionary *)options
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:options];
+    if (saddr.length > 0) {
+        [params setObject:saddr forKey:@"saddr"];
+    }
+    if (daddr.length > 0) {
+        [params setObject:daddr forKey:@"daddr"];
+    }
+    return [self fwMapsURLWithString:@"http://maps.apple.com/" params:params];
+}
+
++ (instancetype)fwGoogleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:options];
+    if (addr.length > 0) {
+        [params setObject:addr forKey:@"q"];
+    }
+    return [self fwMapsURLWithString:@"comgooglemaps://" params:params];
+}
+
++ (instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:options];
+    if (saddr.length > 0) {
+        [params setObject:saddr forKey:@"saddr"];
+    }
+    if (daddr.length > 0) {
+        [params setObject:daddr forKey:@"daddr"];
+    }
+    [params setObject:(mode.length > 0 ? mode : @"driving") forKey:@"directionsmode"];
+    return [self fwMapsURLWithString:@"comgooglemaps://" params:params];
+}
+
++ (instancetype)fwBaiduMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:options];
+    if (addr.length > 0) {
+        if ([addr fwIsFormatCoordinate]) {
+            [params setObject:addr forKey:@"location"];
+        } else {
+            [params setObject:addr forKey:@"address"];
+        }
+    }
+    if (![params objectForKey:@"coord_type"]) {
+        [params setObject:@"gcj02" forKey:@"coord_type"];
+    }
+    if (![params objectForKey:@"src"]) {
+        [params setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] forKey:@"src"];
+    }
+    return [self fwMapsURLWithString:@"baidumap://map/geocoder" params:params];
+}
+
++ (instancetype)fwBaiduMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:options];
+    if (saddr.length > 0) {
+        [params setObject:saddr forKey:@"origin"];
+    }
+    if (daddr.length > 0) {
+        [params setObject:daddr forKey:@"destination"];
+    }
+    [params setObject:(mode.length > 0 ? mode : @"driving") forKey:@"mode"];
+    if (![params objectForKey:@"coord_type"]) {
+        [params setObject:@"gcj02" forKey:@"coord_type"];
+    }
+    if (![params objectForKey:@"src"]) {
+        [params setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] forKey:@"src"];
+    }
+    return [self fwMapsURLWithString:@"baidumap://map/direction" params:params];
 }
 
 @end

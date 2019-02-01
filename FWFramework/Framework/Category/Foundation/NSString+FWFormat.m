@@ -301,4 +301,9 @@
     return [self fwIsFormatRegex:@"^\\d{10}$"];
 }
 
+- (BOOL)fwIsFormatCoordinate
+{
+    return [self fwIsFormatRegex:@"^\\-?\\d+\\.?\\d*,\\-?\\d+\\.?\\d*$"];
+}
+
 @end
