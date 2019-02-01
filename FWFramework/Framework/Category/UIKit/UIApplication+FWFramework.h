@@ -54,6 +54,9 @@
 
 #pragma mark - URL
 
+// 能否打开URL
++ (BOOL)fwCanOpenURL:(NSURL *)url;
+
 // 打开URL
 + (void)fwOpenURL:(NSURL *)url;
 
