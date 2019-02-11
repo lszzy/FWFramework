@@ -66,7 +66,12 @@
     return NO;
 }
 
-- (void)fwAddFullscreenPopGesture
+- (BOOL)fwFullscreenPopGestureEnabled
+{
+    return self.fwFullscreenPopGestureRecognizer.enabled;
+}
+
+- (void)setFwFullscreenPopGestureEnabled:(BOOL)enabled
 {
     if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.fwFullscreenPopGestureRecognizer]) {
         // Add our own gesture recognizer to where the onboard screen edge pan gesture recognizer is attached to.
@@ -78,10 +83,12 @@
         SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
         self.fwFullscreenPopGestureRecognizer.delegate = self.fwPopGestureRecognizerDelegate;
         [self.fwFullscreenPopGestureRecognizer addTarget:internalTarget action:internalAction];
-        
-        // Disable the onboard gesture recognizer.
-        self.interactivePopGestureRecognizer.enabled = NO;
     }
+    
+    // Enable/Disable our own gesture recognizer.
+    self.fwFullscreenPopGestureRecognizer.enabled = enabled;
+    // Disable/Enable the onboard gesture recognizer.
+    self.interactivePopGestureRecognizer.enabled = !enabled;
 }
 
 - (FWFullscreenPopGestureRecognizerDelegate *)fwPopGestureRecognizerDelegate

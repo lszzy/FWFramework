@@ -19,14 +19,14 @@
  */
 @interface UINavigationController (FWFramework)
 
+// 是否启用导航栏全屏返回手势，默认NO。启用时系统返回手势失效，禁用时还原系统手势。如果只禁用系统手势，设置interactivePopGestureRecognizer.enabled即可
+@property (nonatomic, assign) BOOL fwFullscreenPopGestureEnabled;
+
 // 导航栏全屏返回手势对象
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *fwFullscreenPopGestureRecognizer;
 
 // 判断手势是否是全局返回手势对象
 + (BOOL)fwIsFullscreenPopGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;
-
-// 添加导航栏全屏返回手势，同时系统返回手势失效
-- (void)fwAddFullscreenPopGesture;
 
 @end
 
