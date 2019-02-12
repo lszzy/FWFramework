@@ -66,12 +66,6 @@
 // 设置导航栏返回按钮透明(只显示返回箭头)，下个页面生效
 - (void)fwSetBackBarClear;
 
-// 导航栏返回按钮点击事件(pop不会触发)，当前页面生效。返回YES关闭页面，NO不关闭，子类可重写。默认调用已设置的block事件
-- (BOOL)fwPopBackBarItem;
-
-// 设置导航栏返回按钮点击block事件，默认fwPopBackBarItem自动调用。逻辑同上
-- (void)fwSetBackBarBlock:(BOOL (^)(void))block;
-
 @end
 
 #pragma mark - UINavigationBar+FWBar
