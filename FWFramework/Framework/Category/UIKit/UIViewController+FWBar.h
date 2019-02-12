@@ -43,10 +43,10 @@
 // 快捷设置导航栏标题文字或视图
 - (void)fwSetBarTitle:(id)title;
 
-// 快捷设置导航栏左侧按钮
+// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action;
 
-// 快捷设置导航栏左侧按钮，block事件
+// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block;
 
 // 快捷设置导航栏右侧按钮
