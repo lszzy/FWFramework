@@ -105,7 +105,11 @@
 
 - (void)onClose
 {
-    [self fwCloseViewControllerAnimated:YES];
+    FWWeakifySelf();
+    [self fwShowConfirmWithTitle:nil message:@"是否关闭" cancel:@"否" confirm:@"是" confirmBlock:^{
+        FWStrongifySelf();
+        [self fwCloseViewControllerAnimated:YES];
+    }];
 }
 
 - (void)onClick:(UIBarButtonItem *)sender
