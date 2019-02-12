@@ -9,7 +9,10 @@
 
 #import "UIViewController+FWBack.h"
 #import "NSObject+FWRuntime.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
+
+#pragma mark - UIViewController+FWBack
 
 @implementation UIViewController (FWBack)
 
@@ -33,58 +36,162 @@
     }
 }
 
+- (BOOL)fwForcePopGesture
+{
+    return [objc_getAssociatedObject(self, @selector(fwForcePopGesture)) boolValue];
+}
+
+- (void)setFwForcePopGesture:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwForcePopGesture), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
+
+#pragma mark - UINavigationController+FWBack
+
+@interface UINavigationController (FWBack)
+
+@property (nonatomic, weak) UIViewController *fwTmpTopViewController;
+
+@end
+
+#pragma mark - FWGestureRecognizerDelegateProxy
+
+@interface FWGestureRecognizerDelegateProxy : FWDelegateProxy <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+
+@end
+
+@implementation FWGestureRecognizerDelegateProxy
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        self.navigationController.fwTmpTopViewController = self.navigationController.topViewController;
+        BOOL shouldPop = YES;
+        if ([self.navigationController.fwTmpTopViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+            // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
+            shouldPop = [self.navigationController.fwTmpTopViewController fwPopBackBarItem];
+        }
+        BOOL forcePop = self.navigationController.viewControllers.count > 1 && self.navigationController.interactivePopGestureRecognizer.enabled && self.navigationController.topViewController.fwForcePopGesture;
+        if (forcePop) {
+            self.navigationController.fwTmpTopViewController = nil;
+        }
+        if (shouldPop) {
+            if ([self.delegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
+                return [self.delegate gestureRecognizerShouldBegin:gestureRecognizer];
+            }
+        }
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+            BOOL shouldReceive = [self.delegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
+            if (!shouldReceive) {
+                BOOL forcePop = self.navigationController.viewControllers.count > 1 && self.navigationController.interactivePopGestureRecognizer.enabled && self.navigationController.topViewController.fwForcePopGesture;
+                if (forcePop) {
+                    return YES;
+                }
+            }
+            return shouldReceive;
+        }
+    }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
+            return [self.delegate gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
+        }
+    }
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        return YES;
+    }
+    return NO;
+}
+
+@end
+
+#pragma mark - UINavigationController+FWBack
 
 /**
  * UINavigationController默认为UINavigationBar的事件代理(UINavigationBarDelegate)。
  * 运行时替换navigationBar:shouldPopItem:方法可以处理全局返回按钮点击事件，也可使用子类重写。
  * 注意：分类重写原方法时，只有最后加载的方法会被调用，如果冲突，可使用swizzle实现
  */
-@interface UINavigationController (FWBack)
-
-@end
-
 @implementation UINavigationController (FWBack)
 
 + (void)load
 {
+    [self fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerNavigationViewDidLoad)];
     [self fwSwizzleInstanceMethod:@selector(navigationBar:shouldPopItem:) with:@selector(fwInnerNavigationBar:shouldPopItem:)];
     [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarHidden) with:@selector(fwInnerChildViewControllerForStatusBarHidden)];
     [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarStyle) with:@selector(fwInnerChildViewControllerForStatusBarStyle)];
 }
 
+#pragma mark - Swizzle
+
+- (void)fwInnerNavigationViewDidLoad
+{
+    [self fwInnerNavigationViewDidLoad];
+    
+    // 拦截系统返回手势事件代理，加载自定义代理方法
+    if (self.interactivePopGestureRecognizer.delegate != self.fwDelegateProxy) {
+        self.fwDelegateProxy.delegate = self.interactivePopGestureRecognizer.delegate;
+        self.fwDelegateProxy.navigationController = self;
+        self.interactivePopGestureRecognizer.delegate = self.fwDelegateProxy;
+    }
+}
+
 - (BOOL)fwInnerNavigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
 {
-    if (self.viewControllers.count < navigationBar.items.count) {
-        return YES;
-    }
+    // 判断是否是代码pop，代码pop时顶层vc为root
+    BOOL isCodePop = (item != self.topViewController.navigationItem);
     
     // 检查返回按钮点击事件钩子
-    BOOL shouldPop = YES;
-    if ([self.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
-        // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
-        shouldPop = [self.topViewController fwPopBackBarItem];
-    }
-    
-    if (shouldPop) {
-        // 关闭当前页面
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self popViewControllerAnimated:YES];
-        });
-    } else {
-        if (@available(iOS 11, *)) {
-        } else {
-            // 处理iOS7.1导航栏透明度bug
-            for (UIView *subview in [navigationBar subviews]) {
-                if (0. < subview.alpha && subview.alpha < 1.) {
-                    [UIView animateWithDuration:.25 animations:^{
-                        subview.alpha = 1.;
-                    }];
-                }
-            }
+    BOOL shouldPop = !isCodePop;
+    if (!isCodePop) {
+        UIViewController *topViewController = self.fwTmpTopViewController ?: self.topViewController;
+        if ([topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+            // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+            shouldPop = [topViewController fwPopBackBarItem];
         }
     }
-    return NO;
+    
+    if (shouldPop || isCodePop) {
+        self.fwTmpTopViewController = nil;
+        // 调用原始方法
+        BOOL result = [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
+        return result;
+    } else {
+        self.fwTmpTopViewController = nil;
+        // 处理iOS7.1导航栏透明度bug
+        if (@available(iOS 11, *)) {
+        } else {
+            [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                if (subview.alpha < 1.0) {
+                    [UIView animateWithDuration:.25 animations:^{
+                        subview.alpha = 1.0;
+                    }];
+                }
+            }];
+        }
+        return NO;
+    }
 }
 
 /**
@@ -107,6 +214,28 @@
     } else {
         return [self fwInnerChildViewControllerForStatusBarHidden];
     }
+}
+
+#pragma mark - Private
+
+- (FWGestureRecognizerDelegateProxy *)fwDelegateProxy
+{
+    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
+    if (!proxy) {
+        proxy = [[FWGestureRecognizerDelegateProxy alloc] init];
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return proxy;
+}
+
+- (UIViewController *)fwTmpTopViewController
+{
+    return objc_getAssociatedObject(self, @selector(fwTmpTopViewController));
+}
+
+- (void)setFwTmpTopViewController:(UIViewController *)fwTmpTopViewController
+{
+    objc_setAssociatedObject(self, @selector(fwTmpTopViewController), fwTmpTopViewController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end
