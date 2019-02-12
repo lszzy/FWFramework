@@ -108,7 +108,6 @@
 
 + (void)load
 {
-    // 动态替换方法
     [self fwSwizzleInstanceMethod:@selector(updateConstraints) with:@selector(fwInnerUIViewUpdateConstraints)];
 }
 
