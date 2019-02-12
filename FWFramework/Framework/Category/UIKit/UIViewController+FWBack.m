@@ -9,7 +9,6 @@
 
 #import "UIViewController+FWBack.h"
 #import "NSObject+FWRuntime.h"
-#import "FWAspect.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBack)
