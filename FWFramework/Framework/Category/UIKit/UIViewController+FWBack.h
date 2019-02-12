@@ -14,6 +14,9 @@
  */
 @interface UIViewController (FWBack)
 
+// 当自定义left按钮之后，系统返回手势失效，可通过此方法强制加回手势。当interactivePopGestureRecognizer.enabled为NO时不生效
+@property (nonatomic, assign) BOOL fwForcePopGesture;
+
 // 导航栏返回按钮点击事件(pop不会触发)，当前页面生效。返回YES关闭页面，NO不关闭，子类可重写。默认调用已设置的block事件
 - (BOOL)fwPopBackBarItem;
 

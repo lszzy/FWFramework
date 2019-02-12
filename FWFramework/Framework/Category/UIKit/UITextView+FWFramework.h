@@ -24,13 +24,13 @@
 
 #pragma mark - Return
 
-// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。会自动设置delegate为fwDelegateProxy
+// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
 @property (nonatomic, assign) BOOL fwReturnResign;
 
-// 设置点击键盘完成按钮自动切换的下一个输入框，二选一。会自动设置delegate为fwDelegateProxy
+// 设置点击键盘完成按钮自动切换的下一个输入框，二选一
 @property (nonatomic, weak) UIResponder *fwReturnResponder;
 
-// 设置点击键盘完成按钮的事件句柄。会自动设置delegate为fwDelegateProxy
+// 设置点击键盘完成按钮的事件句柄
 @property (nonatomic, copy) void (^fwReturnBlock)(UITextView *textView);
 
 #pragma mark - Menu
