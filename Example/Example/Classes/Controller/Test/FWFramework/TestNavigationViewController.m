@@ -28,6 +28,30 @@
             viewController.fullscreenPop = YES;
             [self.navigationController pushViewController:viewController animated:YES];
         }];
+    } else {
+        FWWeakifySelf();
+        [self fwSetBackBarBlock:^BOOL{
+            FWStrongifySelf();
+            [self fwShowConfirmWithTitle:nil message:@"是否关闭" cancel:@"否" confirm:@"是" confirmBlock:^{
+                FWStrongifySelf();
+                [self fwCloseViewControllerAnimated:YES];
+            }];
+            return NO;
+        }];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.fullscreenPop) {
+        if (!self.fwTempObject) {
+            self.fwTempObject = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
+        }
+        [self.navigationController.navigationBar fwSetBackgroundImage:self.fwTempObject];
+    } else {
+        [self.navigationController.navigationBar fwResetBackground];
     }
 }
 

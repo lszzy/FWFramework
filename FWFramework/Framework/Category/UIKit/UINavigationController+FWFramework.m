@@ -8,6 +8,7 @@
  */
 
 #import "UINavigationController+FWFramework.h"
+#import "UIViewController+FWBack.h"
 #import <objc/runtime.h>
 
 @interface FWFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
@@ -28,6 +29,12 @@
     // Ignore when the active view controller doesn't allow interactive pop.
     UIViewController *topViewController = self.navigationController.viewControllers.lastObject;
     if (topViewController.fwFullscreenPopGestureDisabled) {
+        return NO;
+    }
+    
+    // Compatible with UIViewController+FWBack protocol
+    if ([topViewController respondsToSelector:@selector(fwPopBackBarItem)] &&
+        ![topViewController fwPopBackBarItem]) {
         return NO;
     }
     

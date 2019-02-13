@@ -12,7 +12,7 @@
 #import "UINavigationController+FWWorkflow.h"
 
 /*!
- @brief 导航栏全屏返回手势分类
+ @brief 导航栏全屏返回手势分类，兼容fwPopBackBarItem返回拦截方法
  @discussion present带导航栏webview，如果存在input[type=file]，会dismiss两次，无法选择照片。解决方法：1.使用push 2.重写dismiss方法仅当presentedViewController存在时才调用dismiss
  
  @see https://github.com/forkingdog/FDFullscreenPopGesture
