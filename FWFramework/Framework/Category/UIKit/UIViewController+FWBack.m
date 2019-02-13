@@ -16,6 +16,16 @@
 
 @implementation UIViewController (FWBack)
 
+- (BOOL)fwForcePopGesture
+{
+    return [objc_getAssociatedObject(self, @selector(fwForcePopGesture)) boolValue];
+}
+
+- (void)setFwForcePopGesture:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwForcePopGesture), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (BOOL)fwPopBackBarItem
 {
     BOOL shouldPop = YES;
@@ -34,16 +44,6 @@
     } else {
         objc_setAssociatedObject(self, @selector(fwPopBackBarItem), nil, OBJC_ASSOCIATION_ASSIGN);
     }
-}
-
-- (BOOL)fwForcePopGesture
-{
-    return [objc_getAssociatedObject(self, @selector(fwForcePopGesture)) boolValue];
-}
-
-- (void)setFwForcePopGesture:(BOOL)enabled
-{
-    objc_setAssociatedObject(self, @selector(fwForcePopGesture), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
@@ -75,7 +75,9 @@
             // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
             shouldPop = [self.navigationController.fwTmpTopViewController fwPopBackBarItem];
         }
-        BOOL forcePop = self.navigationController.viewControllers.count > 1 && self.navigationController.interactivePopGestureRecognizer.enabled && self.navigationController.topViewController.fwForcePopGesture;
+        BOOL forcePop = self.navigationController.viewControllers.count > 1 &&
+            self.navigationController.interactivePopGestureRecognizer.enabled &&
+            self.navigationController.topViewController.fwForcePopGesture;
         if (forcePop) {
             self.navigationController.fwTmpTopViewController = nil;
         }
@@ -175,8 +177,7 @@
     if (shouldPop || isCodePop) {
         self.fwTmpTopViewController = nil;
         // 调用原始方法
-        BOOL result = [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
-        return result;
+        return [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
     } else {
         self.fwTmpTopViewController = nil;
         // 处理iOS7.1导航栏透明度bug

@@ -103,6 +103,17 @@
 
 #pragma mark - Action
 
+- (BOOL)fwForcePopGesture
+{
+    return YES;
+}
+
+- (BOOL)fwPopBackBarItem
+{
+    [self onClose];
+    return NO;
+}
+
 - (void)onClose
 {
     FWWeakifySelf();
