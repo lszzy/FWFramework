@@ -9,6 +9,24 @@
 
 #import "TestIndicatorViewController.h"
 
+@interface TestIndicatorPushViewController : BaseViewController
+
+@end
+
+@implementation TestIndicatorPushViewController
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (!self.fwTempObject) {
+        self.fwTempObject = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
+    }
+    [self.navigationController.navigationBar fwSetBackgroundImage:self.fwTempObject];
+}
+
+@end
+
 @implementation TestIndicatorViewController
 
 - (void)viewDidLoad
@@ -24,6 +42,13 @@
         }];
         return NO;
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.navigationController.navigationBar fwResetBackground];
 }
 
 - (void)renderData
@@ -183,7 +208,7 @@
 
 - (void)onPush
 {
-    BaseViewController *viewController = [BaseViewController new];
+    TestIndicatorPushViewController *viewController = [TestIndicatorPushViewController new];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
