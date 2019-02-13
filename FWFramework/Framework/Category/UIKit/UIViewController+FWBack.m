@@ -48,14 +48,6 @@
 
 @end
 
-#pragma mark - UINavigationController+FWBack
-
-@interface UINavigationController (FWBack)
-
-@property (nonatomic, weak) UIViewController *fwTmpTopViewController;
-
-@end
-
 #pragma mark - FWGestureRecognizerDelegateProxy
 
 @interface FWGestureRecognizerDelegateProxy : FWDelegateProxy <UIGestureRecognizerDelegate>
@@ -69,17 +61,10 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
-        self.navigationController.fwTmpTopViewController = self.navigationController.topViewController;
         BOOL shouldPop = YES;
-        if ([self.navigationController.fwTmpTopViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+        if ([self.navigationController.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
             // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
-            shouldPop = [self.navigationController.fwTmpTopViewController fwPopBackBarItem];
-        }
-        BOOL forcePop = self.navigationController.viewControllers.count > 1 &&
-            self.navigationController.interactivePopGestureRecognizer.enabled &&
-            self.navigationController.topViewController.fwForcePopGesture;
-        if (forcePop) {
-            self.navigationController.fwTmpTopViewController = nil;
+            shouldPop = [self.navigationController.topViewController fwPopBackBarItem];
         }
         if (shouldPop) {
             if ([self.delegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
@@ -96,34 +81,16 @@
     if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
         if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
             BOOL shouldReceive = [self.delegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
-            if (!shouldReceive) {
-                BOOL forcePop = self.navigationController.viewControllers.count > 1 && self.navigationController.interactivePopGestureRecognizer.enabled && self.navigationController.topViewController.fwForcePopGesture;
-                if (forcePop) {
-                    return YES;
-                }
+            if (!shouldReceive &&
+                self.navigationController.viewControllers.count > 1 &&
+                self.navigationController.interactivePopGestureRecognizer.enabled &&
+                self.navigationController.topViewController.fwForcePopGesture) {
+                return YES;
             }
             return shouldReceive;
         }
     }
     return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
-{
-    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
-        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
-            return [self.delegate gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
-        }
-    }
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
-{
-    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
-        return YES;
-    }
-    return NO;
 }
 
 @end
@@ -135,6 +102,10 @@
  * 运行时替换navigationBar:shouldPopItem:方法可以处理全局返回按钮点击事件，也可使用子类重写。
  * 注意：分类重写原方法时，只有最后加载的方法会被调用，如果冲突，可使用swizzle实现
  */
+@interface UINavigationController (FWBack)
+
+@end
+
 @implementation UINavigationController (FWBack)
 
 + (void)load
@@ -144,8 +115,6 @@
     [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarHidden) with:@selector(fwInnerChildViewControllerForStatusBarHidden)];
     [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarStyle) with:@selector(fwInnerChildViewControllerForStatusBarStyle)];
 }
-
-#pragma mark - Swizzle
 
 - (void)fwInnerNavigationViewDidLoad
 {
@@ -159,33 +128,38 @@
     }
 }
 
+- (FWGestureRecognizerDelegateProxy *)fwDelegateProxy
+{
+    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
+    if (!proxy) {
+        proxy = [[FWGestureRecognizerDelegateProxy alloc] init];
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return proxy;
+}
+
 - (BOOL)fwInnerNavigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
 {
-    // 判断是否是代码pop，代码pop时顶层vc为root
-    BOOL isCodePop = (item != self.topViewController.navigationItem);
-    
-    // 检查返回按钮点击事件钩子
-    BOOL shouldPop = !isCodePop;
-    if (!isCodePop) {
-        UIViewController *topViewController = self.fwTmpTopViewController ?: self.topViewController;
-        if ([topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
-            // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
-            shouldPop = [topViewController fwPopBackBarItem];
-        }
+    if (self.viewControllers.count < navigationBar.items.count) {
+        return YES;
     }
     
-    if (shouldPop || isCodePop) {
-        self.fwTmpTopViewController = nil;
-        // 关闭当前页面，不调用原始方法(导航栏还原有bug)
+    // 检查返回按钮点击事件钩子
+    BOOL shouldPop = YES;
+    if ([self.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+        // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+        shouldPop = [self.topViewController fwPopBackBarItem];
+    }
+    
+    if (shouldPop) {
+        // 关闭当前页面
         dispatch_async(dispatch_get_main_queue(), ^{
             [self popViewControllerAnimated:YES];
         });
-        return NO;
     } else {
-        self.fwTmpTopViewController = nil;
-        // 处理iOS7.1导航栏透明度bug
         if (@available(iOS 11, *)) {
         } else {
+            // 处理iOS7.1导航栏透明度bug
             [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
                 if (subview.alpha < 1.0) {
                     [UIView animateWithDuration:.25 animations:^{
@@ -194,8 +168,8 @@
                 }
             }];
         }
-        return NO;
     }
+    return NO;
 }
 
 /**
@@ -218,28 +192,6 @@
     } else {
         return [self fwInnerChildViewControllerForStatusBarHidden];
     }
-}
-
-#pragma mark - Private
-
-- (FWGestureRecognizerDelegateProxy *)fwDelegateProxy
-{
-    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
-    if (!proxy) {
-        proxy = [[FWGestureRecognizerDelegateProxy alloc] init];
-        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return proxy;
-}
-
-- (UIViewController *)fwTmpTopViewController
-{
-    return objc_getAssociatedObject(self, @selector(fwTmpTopViewController));
-}
-
-- (void)setFwTmpTopViewController:(UIViewController *)fwTmpTopViewController
-{
-    objc_setAssociatedObject(self, @selector(fwTmpTopViewController), fwTmpTopViewController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end

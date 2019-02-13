@@ -39,6 +39,7 @@
                                          @[@"进度动画(window)", @"onProgressWindow"],
                                          @[@"单行吐司", @"onToast"],
                                          @[@"多行吐司", @"onToast2"],
+                                         @[@"新开界面", @"onPush"],
                                          ]];
 }
 
@@ -178,6 +179,12 @@
         
         [self onToast];
     }];
+}
+
+- (void)onPush
+{
+    BaseViewController *viewController = [BaseViewController new];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end
