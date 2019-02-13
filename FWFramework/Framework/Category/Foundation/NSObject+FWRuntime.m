@@ -80,12 +80,17 @@
 {
     Method originalMethod = class_getInstanceMethod(self, originalSelector);
     Method swizzleMethod = class_getInstanceMethod(self, swizzleSelector);
-    if (!originalMethod || !swizzleMethod) {
+    if (!swizzleMethod) {
         return NO;
     }
     
     // 添加当前类方法实现，防止影响到父类方法
-    class_addMethod(self, originalSelector, class_getMethodImplementation(self, originalSelector), method_getTypeEncoding(originalMethod));
+    if (originalMethod) {
+        class_addMethod(self, originalSelector, class_getMethodImplementation(self, originalSelector), method_getTypeEncoding(originalMethod));
+    // 当前类方法不存在，添加空实现
+    } else {
+        class_addMethod(self, originalSelector, imp_implementationWithBlock(^(id selfObject){}), "v@:");
+    }
     class_addMethod(self, swizzleSelector, class_getMethodImplementation(self, swizzleSelector), method_getTypeEncoding(swizzleMethod));
     
     method_exchangeImplementations(class_getInstanceMethod(self, originalSelector), class_getInstanceMethod(self, swizzleSelector));
