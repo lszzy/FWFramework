@@ -176,8 +176,11 @@
     
     if (shouldPop || isCodePop) {
         self.fwTmpTopViewController = nil;
-        // 调用原始方法
-        return [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
+        // 关闭当前页面，不调用原始方法(导航栏还原有bug)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self popViewControllerAnimated:YES];
+        });
+        return NO;
     } else {
         self.fwTmpTopViewController = nil;
         // 处理iOS7.1导航栏透明度bug
