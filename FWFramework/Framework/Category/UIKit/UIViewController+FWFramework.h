@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIViewController+FWAlert.h"
 #import "UIViewController+FWBar.h"
+#import "UIViewController+FWBack.h"
 #import "UIViewController+FWTransition.h"
 
 @interface UIViewController (FWFramework)

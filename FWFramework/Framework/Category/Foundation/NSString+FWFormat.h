@@ -175,4 +175,9 @@
  */
 - (BOOL)fwIsFormatTimestamp;
 
+/**
+ *  是否是坐标点字符串，格式：latitude,longitude
+ */
+- (BOOL)fwIsFormatCoordinate;
+
 @end

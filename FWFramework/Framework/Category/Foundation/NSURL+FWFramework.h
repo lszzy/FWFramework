@@ -8,6 +8,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSURL+FWVendor.h"
 
 /*!
  @brief NSURL+FWFramework

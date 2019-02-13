@@ -43,10 +43,10 @@
 // 快捷设置导航栏标题文字或视图
 - (void)fwSetBarTitle:(id)title;
 
-// 快捷设置导航栏左侧按钮
+// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action;
 
-// 快捷设置导航栏左侧按钮，block事件
+// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block;
 
 // 快捷设置导航栏右侧按钮
@@ -65,12 +65,6 @@
 
 // 设置导航栏返回按钮透明(只显示返回箭头)，下个页面生效
 - (void)fwSetBackBarClear;
-
-// 导航栏返回按钮点击事件(pop不会触发)，当前页面生效。返回YES关闭页面，NO不关闭，子类可重写。默认调用已设置的block事件
-- (BOOL)fwPopBackBarItem;
-
-// 设置导航栏返回按钮点击block事件，默认fwPopBackBarItem自动调用。逻辑同上
-- (void)fwSetBackBarBlock:(BOOL (^)(void))block;
 
 @end
 

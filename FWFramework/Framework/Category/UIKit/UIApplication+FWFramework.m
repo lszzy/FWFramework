@@ -91,6 +91,11 @@
 
 #pragma mark - URL
 
++ (BOOL)fwCanOpenURL:(NSURL *)url
+{
+    return [[UIApplication sharedApplication] canOpenURL:url];
+}
+
 + (void)fwOpenURL:(NSURL *)url
 {
     [self fwOpenURL:url completionHandler:nil];

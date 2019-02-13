@@ -12,21 +12,21 @@
 #import "UINavigationController+FWWorkflow.h"
 
 /*!
- @brief 导航栏全屏返回手势分类
+ @brief 导航栏全屏返回手势分类，兼容fwPopBackBarItem返回拦截方法
  @discussion present带导航栏webview，如果存在input[type=file]，会dismiss两次，无法选择照片。解决方法：1.使用push 2.重写dismiss方法仅当presentedViewController存在时才调用dismiss
  
  @see https://github.com/forkingdog/FDFullscreenPopGesture
  */
 @interface UINavigationController (FWFramework)
 
+// 是否启用导航栏全屏返回手势，默认NO。启用时系统返回手势失效，禁用时还原系统手势。如果只禁用系统手势，设置interactivePopGestureRecognizer.enabled即可
+@property (nonatomic, assign) BOOL fwFullscreenPopGestureEnabled;
+
 // 导航栏全屏返回手势对象
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *fwFullscreenPopGestureRecognizer;
 
 // 判断手势是否是全局返回手势对象
 + (BOOL)fwIsFullscreenPopGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;
-
-// 添加导航栏全屏返回手势，同时系统返回手势失效
-- (void)fwAddFullscreenPopGesture;
 
 @end
 
