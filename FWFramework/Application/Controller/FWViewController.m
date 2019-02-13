@@ -9,7 +9,6 @@
 
 #import "FWViewController.h"
 #import "NSObject+FWRuntime.h"
-#import "FWAspect.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerIntercepter
@@ -48,18 +47,6 @@
     self = [super init];
     if (self) {
         _intercepters = [NSMutableDictionary dictionary];
-        
-        [UIViewController fwHookSelector:@selector(initWithNibName:bundle:) withBlock:^(id<FWAspectInfo>aspectInfo){
-            [self hookInit:aspectInfo.instance];
-        } options:FWAspectPositionAfter error:NULL];
-        
-        [UIViewController fwHookSelector:@selector(loadView) withBlock:^(id<FWAspectInfo>aspectInfo){
-            [self hookLoadView:aspectInfo.instance];
-        } options:FWAspectPositionAfter error:NULL];
-        
-        [UIViewController fwHookSelector:@selector(viewDidLoad) withBlock:^(id<FWAspectInfo>aspectInfo){
-            [self hookViewDidLoad:aspectInfo.instance];
-        } options:FWAspectPositionAfter error:NULL];
     }
     return self;
 }
@@ -210,10 +197,37 @@
 
 + (void)load
 {
+    [UIViewController fwSwizzleInstanceMethod:@selector(initWithNibName:bundle:) with:@selector(fwInnerInitWithNibName:bundle:)];
+    [UIViewController fwSwizzleInstanceMethod:@selector(loadView) with:@selector(fwInnerLoadView)];
+    [UIViewController fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerViewDidLoad)];
+    
     [UIViewController fwSwizzleInstanceMethod:@selector(respondsToSelector:) with:@selector(fwInnerRespondsToSelector:)];
     [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
     [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
 }
+
+#pragma mark - Hook
+
+- (instancetype)fwInnerInitWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    id instance = [self fwInnerInitWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    [[FWViewControllerManager sharedInstance] hookInit:instance];
+    return instance;
+}
+
+- (void)fwInnerLoadView
+{
+    [self fwInnerLoadView];
+    [[FWViewControllerManager sharedInstance] hookLoadView:self];
+}
+
+- (void)fwInnerViewDidLoad
+{
+    [self fwInnerViewDidLoad];
+    [[FWViewControllerManager sharedInstance] hookViewDidLoad:self];
+}
+
+#pragma mark - Forward
 
 - (NSMutableDictionary *)fwInnerForwardSelectors
 {

@@ -10,7 +10,7 @@
 
 @interface TestNavigationViewController ()
 
-@property (nonatomic, assign) BOOL isPush;
+@property (nonatomic, assign) BOOL fullscreenPop;
 
 @end
 
@@ -20,41 +20,67 @@
 {
     [super viewDidLoad];
     
-    FWWeakifySelf();
-    [self fwSetRightBarItem:@"Push" block:^(id sender) {
-        FWStrongifySelf();
-        TestNavigationViewController *viewController = [TestNavigationViewController new];
-        viewController.isPush = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
-    }];
+    if (!self.fullscreenPop) {
+        FWWeakifySelf();
+        [self fwSetRightBarItem:@"Push" block:^(id sender) {
+            FWStrongifySelf();
+            TestNavigationViewController *viewController = [TestNavigationViewController new];
+            viewController.fullscreenPop = YES;
+            [self.navigationController pushViewController:viewController animated:YES];
+        }];
+    } else {
+        FWWeakifySelf();
+        [self fwSetBackBarBlock:^BOOL{
+            FWStrongifySelf();
+            [self fwShowConfirmWithTitle:nil message:@"是否关闭" cancel:@"否" confirm:@"是" confirmBlock:^{
+                FWStrongifySelf();
+                [self fwCloseViewControllerAnimated:YES];
+            }];
+            return NO;
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (!self.isPush) {
-        [self.navigationController fwAddFullscreenPopGesture];
-        self.navigationController.navigationBarHidden = NO;
-        [self.navigationController.navigationBar fwResetBackground];
+    
+    if (self.fullscreenPop) {
+        if (!self.fwTempObject) {
+            self.fwTempObject = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
+        }
+        [self.navigationController.navigationBar fwSetBackgroundImage:self.fwTempObject];
     } else {
-        [self.navigationController setNavigationBarHidden:[[@[@0, @1] fwRandomObject] boolValue] animated:animated];
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
+        [self.navigationController.navigationBar fwResetBackground];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.fullscreenPop) {
+        self.navigationController.fwFullscreenPopGestureEnabled = YES;
+    } else {
+        self.navigationController.fwFullscreenPopGestureEnabled = NO;
     }
 }
 
 - (void)renderView
 {
     // 允许同时识别手势处理
-    FWWeakifySelf();
-    self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
-        FWStrongifySelf();
-        if (self.scrollView.contentOffset.x <= 0) {
-            if ([UINavigationController fwIsFullscreenPopGestureRecognizer:otherGestureRecognizer]) {
-                return YES;
+    if (self.fullscreenPop) {
+        FWWeakifySelf();
+        self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
+            FWStrongifySelf();
+            if (self.scrollView.contentOffset.x <= 0) {
+                if ([UINavigationController fwIsFullscreenPopGestureRecognizer:otherGestureRecognizer]) {
+                    return YES;
+                }
             }
-        }
-        return NO;
-    };
+            return NO;
+        };
+    }
     
     // 添加内容
     UIImageView *imageView = [UIImageView fwAutoLayoutView];

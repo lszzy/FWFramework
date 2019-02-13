@@ -19,7 +19,6 @@
 
 + (void)load
 {
-    // 动态替换方法
     [self fwSwizzleInstanceMethod:@selector(layoutSubviews) with:@selector(fwInnerUISearchBarLayoutSubviews)];
 }
 
