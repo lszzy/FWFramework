@@ -106,6 +106,12 @@
 // 设置返回箭头图片，值为nil则还原默认，支持图片偏移
 - (void)fwSetIndicatorImage:(UIImage *)image insets:(UIEdgeInsets)insets;
 
+// 背景view，可能显示磨砂、背景图，顶部有一部分溢出到UINavigationBar外。在iOS10及以后是私有的_UIBarBackground类，在iOS9及以前是私有的_UINavigationBarBackground类
+- (UIView *)fwBackgroundView;
+
+// 用于显示底部分隔线shadowImage，注意这个view是溢出到backgroundView外的。若shadowImage为[UIImage new]，则这个view的高度为0
+- (UIImageView *)fwShadowImageView;
+
 @end
 
 #pragma mark - UITabBar+FWBar
@@ -134,5 +140,11 @@
 - (void)fwSetShadowColor:(UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius;
+
+// UITabBar 的背景 view，可能显示磨砂、背景图，顶部有一部分溢出到 UITabBar 外。在 iOS 10 及以后是私有的 _UIBarBackground 类，在 iOS 9 及以前是私有的 _UITabBarBackgroundView 类
+- (UIView *)fwBackgroundView;
+
+// 用于显示顶部分隔线 shadowImage，注意这个 view 是溢出到 backgroundView 外的。若 shadowImage 为 [UIImage new]，则这个 view 的高度为 0
+- (UIImageView *)fwShadowImageView;
 
 @end
