@@ -108,7 +108,10 @@
 
 + (void)load
 {
-    [self fwSwizzleInstanceMethod:@selector(updateConstraints) with:@selector(fwInnerUIViewUpdateConstraints)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(updateConstraints) with:@selector(fwInnerUIViewUpdateConstraints)];
+    });
 }
 
 - (BOOL)fwCollapsed
