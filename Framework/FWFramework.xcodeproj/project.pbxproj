@@ -239,6 +239,8 @@
 		2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */; };
 		2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */; };
+		2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
 		2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513221D3746B009EA65E /* FWDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513921D3A41D009EA65E /* FWDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -515,6 +517,8 @@
 		2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWQrcodeScanView.m; sourceTree = "<group>"; };
 		2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPhotoBrowser.h; sourceTree = "<group>"; };
 		2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPhotoBrowser.m; sourceTree = "<group>"; };
+		2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWBar.h"; sourceTree = "<group>"; };
+		2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWBar.m"; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FCE513221D3746B009EA65E /* FWDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabase.h; sourceTree = "<group>"; };
 		2FCE513921D3A41D009EA65E /* FWDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabasePool.h; sourceTree = "<group>"; };
@@ -619,6 +623,8 @@
 				2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */,
 				2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */,
 				2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */,
+				2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */,
+				2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */,
 				2F03A50C216CF4B9001965A1 /* UINavigationController+FWTransition.h */,
 				2F03A4E1216CF4B9001965A1 /* UINavigationController+FWTransition.m */,
 				2F03A506216CF4B9001965A1 /* UINavigationController+FWWorkflow.h */,
@@ -1007,6 +1013,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
 				2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */,
 				2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */,
@@ -1266,6 +1273,7 @@
 				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,
 				2F03A588216CF4B9001965A1 /* UITextView+FWPlaceholder.m in Sources */,
+				2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */,
 				2F03A5AF216CF4B9001965A1 /* UIScrollView+FWFramework.m in Sources */,
 				2F0FFF1F21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m in Sources */,
 				2FCE513C21D3A41D009EA65E /* FWDatabasePool.m in Sources */,
