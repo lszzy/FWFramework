@@ -16,8 +16,11 @@
 
 + (void)load
 {
-    [self fwSwizzleInstanceMethod:@selector(prefersStatusBarHidden) with:@selector(fwInnerPrefersStatusBarHidden)];
-    [self fwSwizzleInstanceMethod:@selector(preferredStatusBarStyle) with:@selector(fwInnerPreferredStatusBarStyle)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(prefersStatusBarHidden) with:@selector(fwInnerPrefersStatusBarHidden)];
+        [self fwSwizzleInstanceMethod:@selector(preferredStatusBarStyle) with:@selector(fwInnerPreferredStatusBarStyle)];
+    });
 }
 
 #pragma mark - Bar
