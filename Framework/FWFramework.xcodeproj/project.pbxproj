@@ -180,7 +180,6 @@
 		2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A62A216CF882001965A1 /* FWURLRequestSerialization.m */; };
 		2F03A651216CF882001965A1 /* FWNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A62C216CF882001965A1 /* FWNetworkReachabilityManager.m */; };
 		2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A62D216CF882001965A1 /* FWSecurityPolicy.m */; };
-		2F03A653216CF882001965A1 /* FWCompatibilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A62E216CF882001965A1 /* FWCompatibilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A654216CF882001965A1 /* FWHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A655216CF882001965A1 /* FWAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */; };
 		2F03A656216CF882001965A1 /* FWImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A631216CF882001965A1 /* FWImageDownloader.m */; };
@@ -457,7 +456,6 @@
 		2F03A62A216CF882001965A1 /* FWURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWURLRequestSerialization.m; sourceTree = "<group>"; };
 		2F03A62C216CF882001965A1 /* FWNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		2F03A62D216CF882001965A1 /* FWSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWSecurityPolicy.m; sourceTree = "<group>"; };
-		2F03A62E216CF882001965A1 /* FWCompatibilityMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCompatibilityMacros.h; sourceTree = "<group>"; };
 		2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWHTTPSessionManager.h; sourceTree = "<group>"; };
 		2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAutoPurgingImageCache.m; sourceTree = "<group>"; };
 		2F03A631216CF882001965A1 /* FWImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImageDownloader.m; sourceTree = "<group>"; };
@@ -887,7 +885,6 @@
 			isa = PBXGroup;
 			children = (
 				2F03A657216D0049001965A1 /* FWNetwork.h */,
-				2F03A62E216CF882001965A1 /* FWCompatibilityMacros.h */,
 				2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */,
 				2F03A627216CF882001965A1 /* FWHTTPSessionManager.m */,
 				2F03A621216CF882001965A1 /* FWNetworkReachabilityManager.h */,
@@ -1070,7 +1067,6 @@
 				2F03A64D216CF882001965A1 /* FWURLResponseSerialization.h in Headers */,
 				2F03A63E216CF882001965A1 /* FWChainRequest.h in Headers */,
 				2F03A63A216CF882001965A1 /* FWBatchRequestAgent.h in Headers */,
-				2F03A653216CF882001965A1 /* FWCompatibilityMacros.h in Headers */,
 				2F03A637216CF882001965A1 /* FWNetworkAgent.h in Headers */,
 				2F03A636216CF882001965A1 /* FWBatchRequest.h in Headers */,
 				2F03A63B216CF882001965A1 /* FWChainRequestAgent.h in Headers */,
