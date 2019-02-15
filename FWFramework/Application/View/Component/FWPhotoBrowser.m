@@ -321,7 +321,7 @@
  设置文字，并设置位置
  */
 - (void)setPageText:(NSUInteger)index {
-    _pageTextLabel.text = [NSString stringWithFormat:@"%zd / %zd", index + 1, self.picturesCount];
+    _pageTextLabel.text = [NSString stringWithFormat:@"%@ / %@", @(index + 1), @(self.picturesCount)];
     [_pageTextLabel sizeToFit];
     _pageTextLabel.center = self.pageTextCenter;
 }

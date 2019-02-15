@@ -245,6 +245,14 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return _routes;
 }
 
+- (NSMutableArray *)rewriteRules
+{
+    if (!_rewriteRules) {
+        _rewriteRules = [[NSMutableArray alloc] init];
+    }
+    return _rewriteRules;
+}
+
 - (NSMutableDictionary *)addRoute:(NSString *)pattern
 {
     NSArray *pathComponents = [self pathComponentsFromURL:pattern];
@@ -488,14 +496,6 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 }
 
 #pragma mark - Private
-
-- (NSMutableArray *)rewriteRules
-{
-    if (!_rewriteRules) {
-        _rewriteRules = [[NSMutableArray alloc] init];
-    }
-    return _rewriteRules;
-}
 
 + (NSString *)rewriteCaptureGroupsWithOriginalURL:(NSString *)originalURL
 {
