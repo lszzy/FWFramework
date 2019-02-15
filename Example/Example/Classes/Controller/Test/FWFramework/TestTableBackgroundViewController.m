@@ -26,16 +26,10 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewWillAppear:animated];
+    [super viewDidLoad];
     [self.navigationController.navigationBar fwSetBackgroundClear];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self.navigationController.navigationBar fwResetBackground];
 }
 
 - (UITableView *)renderTableView

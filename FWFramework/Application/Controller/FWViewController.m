@@ -197,13 +197,16 @@
 
 + (void)load
 {
-    [UIViewController fwSwizzleInstanceMethod:@selector(initWithNibName:bundle:) with:@selector(fwInnerInitWithNibName:bundle:)];
-    [UIViewController fwSwizzleInstanceMethod:@selector(loadView) with:@selector(fwInnerLoadView)];
-    [UIViewController fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerViewDidLoad)];
-    
-    [UIViewController fwSwizzleInstanceMethod:@selector(respondsToSelector:) with:@selector(fwInnerRespondsToSelector:)];
-    [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
-    [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [UIViewController fwSwizzleInstanceMethod:@selector(initWithNibName:bundle:) with:@selector(fwInnerInitWithNibName:bundle:)];
+        [UIViewController fwSwizzleInstanceMethod:@selector(loadView) with:@selector(fwInnerLoadView)];
+        [UIViewController fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerViewDidLoad)];
+        
+        [UIViewController fwSwizzleInstanceMethod:@selector(respondsToSelector:) with:@selector(fwInnerRespondsToSelector:)];
+        [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
+        [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
+    });
 }
 
 #pragma mark - Hook

@@ -359,6 +359,8 @@
 
 /*!
  @brief NSObject运行时分类
+ @discussion 注意load可能被子类super调用导致调用多次，需dispatch_once避免；
+    而initialize如果子类不实现，默认会调用父类initialize，也会导致调用多次，可判断class或dispatch_once避免
  */
 @interface NSObject (FWRuntime)
 

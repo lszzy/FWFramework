@@ -7,6 +7,7 @@
 //
 
 #import "UITextView+FWFramework.h"
+#import "NSObject+FWRuntime.h"
 #import "FWMessage.h"
 #import "FWProxy.h"
 #import "NSString+FWEncode.h"
@@ -54,6 +55,54 @@
 #pragma mark - UITextView+FWFramework
 
 @implementation UITextView (FWFramework)
+
+#pragma mark - Delegate
+
+- (id<UITextViewDelegate>)fwDelegate
+{
+    if (!self.fwDelegateProxyEnabled) {
+        return self.delegate;
+    } else {
+        return self.fwDelegateProxy.delegate;
+    }
+}
+
+- (void)setFwDelegate:(id<UITextViewDelegate>)fwDelegate
+{
+    if (!self.fwDelegateProxyEnabled) {
+        self.delegate = fwDelegate;
+    } else {
+        self.fwDelegateProxy.delegate = fwDelegate;
+    }
+}
+
+- (BOOL)fwDelegateProxyEnabled
+{
+    return self.delegate == self.fwDelegateProxy;
+}
+
+- (void)setFwDelegateProxyEnabled:(BOOL)enabled
+{
+    if (enabled != self.fwDelegateProxyEnabled) {
+        if (enabled) {
+            self.fwDelegateProxy.delegate = self.delegate;
+            self.delegate = self.fwDelegateProxy;
+        } else {
+            self.delegate = self.fwDelegateProxy.delegate;
+            self.fwDelegateProxy.delegate = nil;
+        }
+    }
+}
+
+- (__kindof FWDelegateProxy *)fwDelegateProxy
+{
+    FWDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
+    if (!proxy) {
+        proxy = [[FWTextViewDelegateProxy alloc] init];
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return proxy;
+}
 
 #pragma mark - Length
 
@@ -139,7 +188,7 @@
 - (void)setFwReturnResign:(BOOL)fwReturnResign
 {
     objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerReturnEvent];
+    self.fwDelegateProxyEnabled = YES;
 }
 
 - (UIResponder *)fwReturnResponder
@@ -151,7 +200,7 @@
 {
     // 此处weak引用responder
     objc_setAssociatedObject(self, @selector(fwReturnResponder), fwReturnResponder, OBJC_ASSOCIATION_ASSIGN);
-    [self fwInnerReturnEvent];
+    self.fwDelegateProxyEnabled = YES;
 }
 
 - (void (^)(UITextView *textView))fwReturnBlock
@@ -162,30 +211,7 @@
 - (void)setFwReturnBlock:(void (^)(UITextView *textView))fwReturnBlock
 {
     objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fwInnerReturnEvent];
-}
-
-- (void)fwInnerReturnEvent
-{
-    id object = objc_getAssociatedObject(self, _cmd);
-    if (!object) {
-        // 设置delegate代理
-        if (self.delegate != self.fwDelegateProxy) {
-            self.fwDelegateProxy.delegate = self.delegate;
-            self.delegate = self.fwDelegateProxy;
-        }
-        objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-- (__kindof FWDelegateProxy *)fwDelegateProxy
-{
-    FWDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
-    if (!proxy) {
-        proxy = [[FWTextViewDelegateProxy alloc] init];
-        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return proxy;
+    self.fwDelegateProxyEnabled = YES;
 }
 
 #pragma mark - Menu
