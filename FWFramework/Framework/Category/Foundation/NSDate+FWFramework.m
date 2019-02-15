@@ -250,8 +250,8 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         
         return [NSString stringWithFormat:@"%02d:%02d:%02d", (int)hour, (int)minute, (int)seconds];
     } else {
-        NSInteger minute = seconds / 60;
-        NSInteger second = seconds % 60;
+        long long minute = seconds / 60;
+        long long second = seconds % 60;
         return [NSString stringWithFormat:@"%02ld:%02ld", (long)minute, (long)second];
     }
 }
