@@ -10,14 +10,18 @@
 #import "UIView+FWBlock.h"
 #import "UIScreen+FWFramework.h"
 #import "NSObject+FWRuntime.h"
+#import "UIImage+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
 
 + (void)load
 {
-    [self fwSwizzleInstanceMethod:@selector(prefersStatusBarHidden) with:@selector(fwInnerPrefersStatusBarHidden)];
-    [self fwSwizzleInstanceMethod:@selector(preferredStatusBarStyle) with:@selector(fwInnerPreferredStatusBarStyle)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(prefersStatusBarHidden) with:@selector(fwInnerPrefersStatusBarHidden)];
+        [self fwSwizzleInstanceMethod:@selector(preferredStatusBarStyle) with:@selector(fwInnerPreferredStatusBarStyle)];
+    });
 }
 
 #pragma mark - Bar
@@ -211,7 +215,8 @@
 
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    self.barTintColor = color;
+    // 不使用barTintColor。在iOS8.2或者之前的版本，如果导航栏的translucent值为true时，用barTintColor去设置导航栏的背景样式，然后改变barTintColor的颜色，那么当边缘左滑返回手势取消的时候导航栏的背景色会闪烁。
+    [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)fwSetBackgroundImage:(UIImage *)image
@@ -298,6 +303,16 @@
     return newImage;
 }
 
+- (UIView *)fwBackgroundView
+{
+    return [self valueForKey:@"_backgroundView"];
+}
+
+- (UIImageView *)fwShadowImageView
+{
+    return [self.fwBackgroundView valueForKey:@"_shadowView"];
+}
+
 @end
 
 #pragma mark - UITabBar+FWBar
@@ -343,6 +358,28 @@
     self.layer.shadowOffset = offset;
     self.layer.shadowRadius = radius;
     self.layer.shadowOpacity = 1.0;
+}
+
+- (UIView *)fwBackgroundView
+{
+    return [self valueForKey:@"_backgroundView"];
+}
+
+- (UIImageView *)fwShadowImageView
+{
+    if (@available(iOS 10, *)) {
+        // iOS 10 及以后，在 UITabBar 初始化之后就能获取到 backgroundView 和 shadowView 了
+        return [self.fwBackgroundView valueForKey:@"_shadowView"];
+    } else {
+        // iOS 9 及以前，shadowView 要在 UITabBar 第一次 layoutSubviews 之后才会被创建，直至 UITabBarController viewWillAppear: 时仍未能获取到 shadowView，所以为了省去调用时机的考虑，这里获取不到的时候会主动触发一次 tabBar 的布局
+        UIImageView *shadowView = [self valueForKey:@"_shadowView"];
+        if (!shadowView) {
+            [self setNeedsLayout];
+            [self layoutIfNeeded];
+            shadowView = [self valueForKey:@"_shadowView"];
+        }
+        return shadowView;
+    }
 }
 
 @end

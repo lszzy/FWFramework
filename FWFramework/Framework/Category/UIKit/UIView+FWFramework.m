@@ -15,7 +15,10 @@
 
 + (void)load
 {
-    [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUIViewIntrinsicContentSize)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUIViewIntrinsicContentSize)];
+    });
 }
 
 #pragma mark - Transform

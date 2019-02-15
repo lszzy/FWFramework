@@ -12,6 +12,10 @@
 #import "UIViewController+FWBack.h"
 #import "UIViewController+FWTransition.h"
 
+/*!
+ @brief UIViewController+FWFramework
+ @discussion 注意modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置
+ */
 @interface UIViewController (FWFramework)
 
 /*!

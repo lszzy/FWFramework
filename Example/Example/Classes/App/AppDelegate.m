@@ -53,6 +53,8 @@
 
 - (UITabBarController *)tabBarController
 {
+    [UINavigationController fwEnableTransitionNavigationBar];
+    
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];

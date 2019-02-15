@@ -9,6 +9,20 @@
 
 #import "TestIndicatorViewController.h"
 
+@interface TestIndicatorPushViewController : BaseViewController
+
+@end
+
+@implementation TestIndicatorPushViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
+}
+
+@end
+
 @implementation TestIndicatorViewController
 
 - (void)viewDidLoad
@@ -183,7 +197,7 @@
 
 - (void)onPush
 {
-    BaseViewController *viewController = [BaseViewController new];
+    TestIndicatorPushViewController *viewController = [TestIndicatorPushViewController new];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

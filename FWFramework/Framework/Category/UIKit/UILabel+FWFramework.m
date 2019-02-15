@@ -16,8 +16,11 @@
 
 + (void)load
 {
-    [self fwSwizzleInstanceMethod:@selector(drawTextInRect:) with:@selector(fwInnerDrawTextInRect:)];
-    [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUILabelIntrinsicContentSize)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(drawTextInRect:) with:@selector(fwInnerDrawTextInRect:)];
+        [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUILabelIntrinsicContentSize)];
+    });
 }
 
 - (UIEdgeInsets)fwContentInset

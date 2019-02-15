@@ -19,7 +19,10 @@
 
 + (void)load
 {
-    [self fwSwizzleInstanceMethod:@selector(layoutSubviews) with:@selector(fwInnerUISearchBarLayoutSubviews)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(layoutSubviews) with:@selector(fwInnerUISearchBarLayoutSubviews)];
+    });
 }
 
 - (UIEdgeInsets)fwContentInset

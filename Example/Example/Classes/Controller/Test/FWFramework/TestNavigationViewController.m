@@ -29,6 +29,8 @@
             [self.navigationController pushViewController:viewController animated:YES];
         }];
     } else {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
+        
         FWWeakifySelf();
         [self fwSetBackBarBlock:^BOOL{
             FWStrongifySelf();
@@ -38,20 +40,6 @@
             }];
             return NO;
         }];
-    }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if (self.fullscreenPop) {
-        if (!self.fwTempObject) {
-            self.fwTempObject = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
-        }
-        [self.navigationController.navigationBar fwSetBackgroundImage:self.fwTempObject];
-    } else {
-        [self.navigationController.navigationBar fwResetBackground];
     }
 }
 

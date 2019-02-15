@@ -24,14 +24,17 @@
 
 #pragma mark - Return
 
-// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
+// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
 @property (nonatomic, assign) BOOL fwReturnResign;
 
-// 设置点击键盘完成按钮自动切换的下一个输入框，二选一
+// 设置点击键盘完成按钮自动切换的下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
 @property (nonatomic, weak) UIResponder *fwReturnResponder;
 
-// 设置点击键盘完成按钮的事件句柄
+// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
 @property (nonatomic, copy) void (^fwReturnBlock)(UITextView *textView);
+
+// 调用上面三个方法后会修改delegate，此方法始终访问外部delegate
+@property (nonatomic, weak) id<UITextViewDelegate> fwDelegate;
 
 #pragma mark - Menu
 

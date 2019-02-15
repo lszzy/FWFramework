@@ -53,6 +53,7 @@
 		2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */; };
 		2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2FB90F1C21F5716800084D76 /* QrcodeSound.caf */; };
 		2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */; };
+		2FC5DFDD2213FE09008A56A7 /* TestKeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */; };
 		2FCE517121D3BE02009EA65E /* TestCacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517021D3BE02009EA65E /* TestCacheViewController.m */; };
 		2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
@@ -177,6 +178,8 @@
 		2FB90F1C21F5716800084D76 /* QrcodeSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = QrcodeSound.caf; sourceTree = "<group>"; };
 		2FB90F1F21F571EA00084D76 /* TestQrcodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestQrcodeViewController.h; sourceTree = "<group>"; };
 		2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestQrcodeViewController.m; sourceTree = "<group>"; };
+		2FC5DFDA2213FE08008A56A7 /* TestKeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestKeyboardViewController.h; sourceTree = "<group>"; };
+		2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestKeyboardViewController.m; sourceTree = "<group>"; };
 		2FCE516F21D3BE02009EA65E /* TestCacheViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCacheViewController.h; sourceTree = "<group>"; };
 		2FCE517021D3BE02009EA65E /* TestCacheViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCacheViewController.m; sourceTree = "<group>"; };
 		2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestControllerViewController.h; sourceTree = "<group>"; };
@@ -390,6 +393,8 @@
 				2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */,
 				2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */,
 				2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */,
+				2FC5DFDA2213FE08008A56A7 /* TestKeyboardViewController.h */,
+				2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -721,6 +726,7 @@
 				2F4CFA5A2155302E00203A37 /* TestTableLayoutViewController.m in Sources */,
 				2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */,
 				2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */,
+				2FC5DFDD2213FE09008A56A7 /* TestKeyboardViewController.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
 				2F8EB34221ED881900BB24AB /* TestNavigationViewController.m in Sources */,
