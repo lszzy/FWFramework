@@ -44,6 +44,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWStorekitManager.h>
 #import <FWFramework/FWNetwork.h>
 #import <FWFramework/FWRequest.h>
+#import <FWFramework/FWNetworkPrivate.h>
 #import <FWFramework/FWDatabaseManager.h>
 #import <FWFramework/FWCacheManager.h>
 
@@ -90,6 +91,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWStorekitManager.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
+#import "FWNetworkPrivate.h"
 #import "FWDatabaseManager.h"
 #import "FWCacheManager.h"
 
