@@ -15,14 +15,10 @@
 
 @implementation TestIndicatorPushViewController
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewWillAppear:animated];
-    
-    if (!self.fwTempObject) {
-        self.fwTempObject = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
-    }
-    [self.navigationController.navigationBar fwSetBackgroundImage:self.fwTempObject];
+    [super viewDidLoad];
+    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
 }
 
 @end
@@ -42,13 +38,6 @@
         }];
         return NO;
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self.navigationController.navigationBar fwResetBackground];
 }
 
 - (void)renderData
