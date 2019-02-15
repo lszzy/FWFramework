@@ -50,8 +50,7 @@
 {
 #if TARGET_OS_SIMULATOR
     return NO;
-#endif
-    
+#else
     // 1
     NSArray *paths = @[@"/Applications/Cydia.app",
                        @"/private/var/lib/apt/",
@@ -82,6 +81,7 @@
     }
     
     return NO;
+#endif
 }
 
 #pragma mark - Landscape

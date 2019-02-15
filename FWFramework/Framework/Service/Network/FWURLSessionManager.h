@@ -25,7 +25,6 @@
 #import "FWURLResponseSerialization.h"
 #import "FWURLRequestSerialization.h"
 #import "FWSecurityPolicy.h"
-#import "FWCompatibilityMacros.h"
 #if !TARGET_OS_WATCH
 #import "FWNetworkReachabilityManager.h"
 #endif
@@ -192,13 +191,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 /**
- Invalidates the managed session, optionally canceling pending tasks.
-
- @param cancelPendingTasks Whether or not to cancel pending tasks.
- */
-- (void)invalidateSessionCancelingTasks:(BOOL)cancelPendingTasks DEPRECATED_ATTRIBUTE;
-
-/**
  Invalidates the managed session, optionally canceling pending tasks and optionally resets given session.
  
  @param cancelPendingTasks  Whether or not to cancel pending tasks.
@@ -209,15 +201,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///-------------------------
 /// @name Running Data Tasks
 ///-------------------------
-
-/**
- Creates an `NSURLSessionDataTask` with the specified request.
-
- @param request The HTTP request for the request.
- @param completionHandler A block object to be executed when the task finishes. This block has no return value and takes three arguments: the server response, the response object created by that serializer, and the error that occurred, if any.
- */
-- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
-                            completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler DEPRECATED_ATTRIBUTE;
 
 /**
  Creates an `NSURLSessionDataTask` with the specified request.
@@ -391,9 +374,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param block A block object to be executed when a session task is completed. The block has no return value, and takes three arguments: the session, the task, and any metrics that were collected in the process of executing the task.
  */
-#if FW_CAN_INCLUDE_SESSION_TASK_METRICS
-- (void)setTaskDidFinishCollectingMetricsBlock:(nullable void (^)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * _Nullable metrics))block;
-#endif
+- (void)setTaskDidFinishCollectingMetricsBlock:(nullable void (^)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * _Nullable metrics))block NS_AVAILABLE_IOS(10_0);
 ///-------------------------------------------
 /// @name Setting Data Task Delegate Callbacks
 ///-------------------------------------------
@@ -431,7 +412,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param block A block object to be executed once all messages enqueued for a session have been delivered. The block has no return value and takes a single argument: the session.
  */
-- (void)setDidFinishEventsForBackgroundURLSessionBlock:(nullable void (^)(NSURLSession *session))block FW_API_UNAVAILABLE(macos);
+- (void)setDidFinishEventsForBackgroundURLSessionBlock:(nullable void (^)(NSURLSession *session))block;
 
 ///-----------------------------------------------
 /// @name Setting Download Task Delegate Callbacks
