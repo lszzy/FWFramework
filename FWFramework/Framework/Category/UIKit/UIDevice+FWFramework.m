@@ -191,7 +191,7 @@
     char hostName[256];
     int success = gethostname(hostName, 255);
     if (success != 0) return nil;
-    hostName[255] = '/0';
+    hostName[255] = '\0';
     
 #if TARGET_OS_SIMULATOR
     return [NSString stringWithFormat:@"%s", hostName];
