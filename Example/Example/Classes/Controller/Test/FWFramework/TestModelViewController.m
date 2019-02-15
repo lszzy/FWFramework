@@ -80,6 +80,8 @@ FWModelArray(TestModelUser);
 {
     [super viewDidLoad];
     
+    [self.navigationController.navigationBar fwSetBackgroundClear];
+    
     FWWeakifySelf();
     [self fwSetRightBarItem:@"切换" block:^(id sender) {
         FWStrongifySelf();
@@ -88,18 +90,6 @@ FWModelArray(TestModelUser);
         viewController.isTop = !self.isTop;
         [self fwOpenViewController:viewController animated:YES];
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController.navigationBar fwSetBackgroundClear];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self.navigationController.navigationBar fwResetBackground];
 }
 
 - (void)renderView
