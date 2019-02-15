@@ -65,6 +65,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     [self commonInit];
 }
 
@@ -866,11 +867,6 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
 }
 
 - (void)dealloc
