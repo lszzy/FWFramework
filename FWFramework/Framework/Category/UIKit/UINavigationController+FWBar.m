@@ -36,6 +36,8 @@
 
 @property (nonatomic, assign) BOOL fwIsFakeBar;
 
+- (void)fwReplaceStyleWithNavigationBar:(UINavigationBar *)navigationBar;
+
 @end
 
 @implementation UINavigationBar (FWBarTransition)
@@ -65,6 +67,16 @@
 - (void)setFwIsFakeBar:(BOOL)fwIsFakeBar
 {
     objc_setAssociatedObject(self, @selector(fwIsFakeBar), @(fwIsFakeBar), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fwReplaceStyleWithNavigationBar:(UINavigationBar *)navigationBar
+{
+    self.barTintColor = navigationBar.barTintColor;
+    [self setBackgroundImage:[navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault] forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:navigationBar.shadowImage];
+    
+    self.tintColor = navigationBar.tintColor;
+    self.titleTextAttributes = navigationBar.titleTextAttributes;
 }
 
 @end
@@ -185,9 +197,7 @@
     [self fwRestoreScrollViewContentInsetAdjustmentBehaviorIfNeeded];
     UIViewController *transitionViewController = self.navigationController.fwTransitionContextToViewController;
     if (self.fwTransitionNavigationBar) {
-        self.navigationController.navigationBar.barTintColor = self.fwTransitionNavigationBar.barTintColor;
-        [self.navigationController.navigationBar setBackgroundImage:[self.fwTransitionNavigationBar backgroundImageForBarMetrics:UIBarMetricsDefault] forBarMetrics:UIBarMetricsDefault];
-        [self.navigationController.navigationBar setShadowImage:self.fwTransitionNavigationBar.shadowImage];
+        [self.navigationController.navigationBar fwReplaceStyleWithNavigationBar:self.fwTransitionNavigationBar];
         if (!transitionViewController || [transitionViewController isEqual:self]) {
             [self.fwTransitionNavigationBar removeFromSuperview];
             self.fwTransitionNavigationBar = nil;
@@ -249,9 +259,7 @@
     if (bar.translucent != self.navigationController.navigationBar.translucent) {
         bar.translucent = self.navigationController.navigationBar.translucent;
     }
-    bar.barTintColor = self.navigationController.navigationBar.barTintColor;
-    [bar setBackgroundImage:[self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault] forBarMetrics:UIBarMetricsDefault];
-    bar.shadowImage = self.navigationController.navigationBar.shadowImage;
+    [bar fwReplaceStyleWithNavigationBar:self.navigationController.navigationBar];
     [self.fwTransitionNavigationBar removeFromSuperview];
     self.fwTransitionNavigationBar = bar;
     [self fwResizeTransitionNavigationBarFrame];
@@ -405,9 +413,7 @@
     UIViewController *appearingViewController = self.viewControllers[self.viewControllers.count - 2];
     if (appearingViewController.fwTransitionNavigationBar) {
         UINavigationBar *appearingNavigationBar = appearingViewController.fwTransitionNavigationBar;
-        self.navigationBar.barTintColor = appearingNavigationBar.barTintColor;
-        [self.navigationBar setBackgroundImage:[appearingNavigationBar backgroundImageForBarMetrics:UIBarMetricsDefault] forBarMetrics:UIBarMetricsDefault];
-        self.navigationBar.shadowImage = appearingNavigationBar.shadowImage;
+        [self.navigationBar fwReplaceStyleWithNavigationBar:appearingNavigationBar];
     }
     if (animated) {
         disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
@@ -424,9 +430,7 @@
     [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     if (viewController.fwTransitionNavigationBar) {
         UINavigationBar *appearingNavigationBar = viewController.fwTransitionNavigationBar;
-        self.navigationBar.barTintColor = appearingNavigationBar.barTintColor;
-        [self.navigationBar setBackgroundImage:[appearingNavigationBar backgroundImageForBarMetrics:UIBarMetricsDefault] forBarMetrics:UIBarMetricsDefault];
-        self.navigationBar.shadowImage = appearingNavigationBar.shadowImage;
+        [self.navigationBar fwReplaceStyleWithNavigationBar:appearingNavigationBar];
     }
     if (animated) {
         disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
@@ -444,9 +448,7 @@
     UIViewController *rootViewController = self.viewControllers.firstObject;
     if (rootViewController.fwTransitionNavigationBar) {
         UINavigationBar *appearingNavigationBar = rootViewController.fwTransitionNavigationBar;
-        self.navigationBar.barTintColor = appearingNavigationBar.barTintColor;
-        [self.navigationBar setBackgroundImage:[appearingNavigationBar backgroundImageForBarMetrics:UIBarMetricsDefault] forBarMetrics:UIBarMetricsDefault];
-        self.navigationBar.shadowImage = appearingNavigationBar.shadowImage;
+        [self.navigationBar fwReplaceStyleWithNavigationBar:appearingNavigationBar];
     }
     if (animated) {
         disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
