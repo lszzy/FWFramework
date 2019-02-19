@@ -20,8 +20,6 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     
-    [self configInterface];
-    
     self.window.rootViewController = [self tabBarController];
     [self.window makeKeyAndVisible];
     
@@ -51,19 +49,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     
-}
-
-- (void)configInterface
-{
-    UINavigationBar *navigationBar = [UINavigationBar appearance];
-    [navigationBar setTintColor:[UIColor fwColorWithHex:0x111111]];
-    NSDictionary *titleAttrs = @{
-                                 NSFontAttributeName: [UIFont fwBoldSystemFontOfSize:18],
-                                 NSForegroundColorAttributeName: [UIColor fwColorWithHex:0x111111],
-                                 };
-    [navigationBar setTitleTextAttributes:titleAttrs];
-    
-    [UINavigationController fwEnableTransitionNavigationBar];
 }
 
 - (UITabBarController *)tabBarController

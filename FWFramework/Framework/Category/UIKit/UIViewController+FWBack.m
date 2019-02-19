@@ -143,36 +143,27 @@
 
 - (BOOL)fwInnerNavigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
 {
-    if (self.viewControllers.count < navigationBar.items.count) {
-        return YES;
-    }
-    
     // 检查返回按钮点击事件钩子
-    BOOL shouldPop = YES;
-    if ([self.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+    if (self.viewControllers.count >= navigationBar.items.count &&
+        [self.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
         // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
-        shouldPop = [self.topViewController fwPopBackBarItem];
-    }
-    
-    if (shouldPop) {
-        // 关闭当前页面
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self popViewControllerAnimated:YES];
-        });
-    } else {
-        if (@available(iOS 11, *)) {
-        } else {
-            // 处理iOS7.1导航栏透明度bug
-            [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
-                if (subview.alpha < 1.0) {
-                    [UIView animateWithDuration:.25 animations:^{
-                        subview.alpha = 1.0;
-                    }];
-                }
-            }];
+        if (![self.topViewController fwPopBackBarItem]) {
+            if (@available(iOS 11, *)) {
+            } else {
+                // 处理iOS7.1导航栏透明度bug
+                [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                    if (subview.alpha < 1.0) {
+                        [UIView animateWithDuration:.25 animations:^{
+                            subview.alpha = 1.0;
+                        }];
+                    }
+                }];
+            }
+            return NO;
         }
     }
-    return NO;
+    
+    return [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
 }
 
 /**
