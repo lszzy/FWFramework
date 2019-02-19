@@ -9,20 +9,6 @@
 
 #import "TestIndicatorViewController.h"
 
-@interface TestIndicatorPushViewController : BaseViewController
-
-@end
-
-@implementation TestIndicatorPushViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
-}
-
-@end
-
 @implementation TestIndicatorViewController
 
 - (void)viewDidLoad
@@ -53,7 +39,6 @@
                                          @[@"进度动画(window)", @"onProgressWindow"],
                                          @[@"单行吐司", @"onToast"],
                                          @[@"多行吐司", @"onToast2"],
-                                         @[@"新开界面", @"onPush"],
                                          ]];
 }
 
@@ -193,12 +178,6 @@
         
         [self onToast];
     }];
-}
-
-- (void)onPush
-{
-    TestIndicatorPushViewController *viewController = [TestIndicatorPushViewController new];
-    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

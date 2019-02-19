@@ -11,6 +11,11 @@
 
 @implementation BaseViewController
 
++ (void)load
+{
+    [UINavigationController fwEnableTransitionNavigationBar];
+}
+
 #pragma mark - Lifecycle
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -32,6 +37,8 @@
 - (void)loadView
 {
     [super loadView];
+    
+    // 统一设置背景色
     self.view.backgroundColor = [UIColor whiteColor];
     
     // 初始化内部视图
@@ -44,6 +51,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // 通用导航栏样式
+    [self fwSetBackBarImage:[UIImage imageNamed:@"public_back"]];
+    [self.navigationController.navigationBar setTintColor:[UIColor fwColorWithHex:0x111111]];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName: [UIFont fwBoldSystemFontOfSize:18], NSForegroundColorAttributeName: [UIColor fwColorWithHex:0x111111]}];
     
     // 渲染当前模型
     [self renderModel];
