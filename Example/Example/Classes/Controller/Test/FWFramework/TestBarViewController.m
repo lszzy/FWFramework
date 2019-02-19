@@ -8,6 +8,27 @@
 
 #import "TestBarViewController.h"
 
+@interface TestBarSubViewController : BaseViewController
+
+@end
+
+@implementation TestBarSubViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.navigationController.viewControllers.count)];
+    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
+    [self.navigationController.navigationBar setShadowImage:([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
+        FWStrongifySelf();
+        [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
+    }];
+}
+
+@end
+
 @interface TestBarViewController ()
 
 FWPropertyWeak(UILabel *, frameLabel);
@@ -56,6 +77,7 @@ FWPropertyWeak(UILabel *, frameLabel);
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
                                          @[@"标签栏切换", @"onTabBar"],
+                                         @[@"导航栏转场", @"onTransitionBar"],
                                          ]];
     if (self.navigationController) {
         [self.dataList addObject:@[@"Present", @"onPresent"]];
@@ -145,6 +167,11 @@ FWPropertyWeak(UILabel *, frameLabel);
 - (void)onDismiss
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)onTransitionBar
+{
+    [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
 }
 
 @end

@@ -33,6 +33,7 @@
 {
     [super loadView];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self fwSetBackBarImage:[UIImage imageNamed:@"public_back"]];
     
     // 初始化内部视图
     [self setupView];
