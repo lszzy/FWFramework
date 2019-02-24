@@ -363,26 +363,46 @@
         return;
     }
     
-    // 控制当前ViewController的外观样式
-    if ([self respondsToSelector:@selector(fwNavigationBarPreferredHidden)]) {
-        BOOL hidden = [self fwNavigationBarPreferredHidden];
-        if (self.navigationController.navigationBarHidden != hidden) {
-            [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    // 是否自定义导航栏效果
+    if ([self respondsToSelector:@selector(fwCustomTransitionNavigationBar)]) {
+        [self fwCustomTransitionNavigationBar];
+    } else {
+        // 控制当前ViewController的外观样式
+        if ([self respondsToSelector:@selector(fwNavigationBarPreferredHidden)]) {
+            BOOL hidden = [self fwNavigationBarPreferredHidden];
+            if (self.navigationController.navigationBarHidden != hidden) {
+                [self.navigationController setNavigationBarHidden:hidden animated:animated];
+            }
         }
-    }
-    if ([self respondsToSelector:@selector(fwNavigationBarBarTintColor)]) {
-        self.navigationController.navigationBar.barTintColor = [self fwNavigationBarBarTintColor];
-    }
-    if ([self respondsToSelector:@selector(fwNavigationBarBackgroundImage)]) {
-        [self.navigationController.navigationBar setBackgroundImage:[self fwNavigationBarBackgroundImage] forBarMetrics:UIBarMetricsDefault];
-    }
-    if ([self respondsToSelector:@selector(fwNavigationBarShadowImage)]) {
-        self.navigationController.navigationBar.shadowImage = [self fwNavigationBarShadowImage];
+        if ([self respondsToSelector:@selector(fwNavigationBarBarTintColor)]) {
+            self.navigationController.navigationBar.barTintColor = [self fwNavigationBarBarTintColor];
+        }
+        if ([self respondsToSelector:@selector(fwNavigationBarBackgroundImage)]) {
+            [self.navigationController.navigationBar setBackgroundImage:[self fwNavigationBarBackgroundImage] forBarMetrics:UIBarMetricsDefault];
+        }
+        if ([self respondsToSelector:@selector(fwNavigationBarShadowImage)]) {
+            self.navigationController.navigationBar.shadowImage = [self fwNavigationBarShadowImage];
+        }
     }
 }
 
 - (BOOL)fwShouldCustomTransitionWithFirstViewController:(UIViewController *)vc1 secondViewController:(UIViewController *)vc2
 {
+    if ([vc1 respondsToSelector:@selector(fwTransitionNavigationBarKey)] || [vc2 respondsToSelector:@selector(fwTransitionNavigationBarKey)]) {
+        id key1 = [vc1 respondsToSelector:@selector(fwTransitionNavigationBarKey)] ? [vc1 fwTransitionNavigationBarKey] : nil;
+        id key2 = [vc2 respondsToSelector:@selector(fwTransitionNavigationBarKey)] ? [vc2 fwTransitionNavigationBarKey] : nil;
+        if (key1 || key2) {
+            if (![key1 isEqual:key2]) {
+                return YES;
+            }
+            if ([key1 isKindOfClass:[NSString class]] && [key2 isKindOfClass:[NSString class]] &&
+                ![key1 isEqualToString:key2]) {
+                return YES;
+            }
+        }
+        return NO;
+    }
+    
     UIImage *bg1 = [vc1 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc1 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
     UIImage *bg2 = [vc2 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc2 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
     if (bg1 || bg2) {
