@@ -366,7 +366,9 @@
     // 控制当前ViewController的外观样式
     if ([self respondsToSelector:@selector(fwNavigationBarPreferredHidden)]) {
         BOOL hidden = [self fwNavigationBarPreferredHidden];
-        [self.navigationController setNavigationBarHidden:hidden animated:animated];
+        if (self.navigationController.navigationBarHidden != hidden) {
+            [self.navigationController setNavigationBarHidden:hidden animated:animated];
+        }
     }
     if ([self respondsToSelector:@selector(fwNavigationBarBarTintColor)]) {
         self.navigationController.navigationBar.barTintColor = [self fwNavigationBarBarTintColor];

@@ -18,8 +18,15 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.navigationController.viewControllers.count)];
-    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
-    [self.navigationController.navigationBar setShadowImage:([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil];
+    
+    if (self.navigationController.viewControllers.count < 6) {
+        self.fwNavigationBarBackgroundImage = [UIImage fwImageWithColor:[UIColor greenColor]];
+        self.fwNavigationBarShadowImage = nil;
+    } else {
+        self.fwNavigationBarBackgroundImage = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
+        self.fwNavigationBarShadowImage = ([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil;
+    }
+    
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
         FWStrongifySelf();
