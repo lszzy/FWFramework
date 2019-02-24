@@ -10,27 +10,37 @@
 
 @interface TestBarSubViewController : BaseViewController
 
+@property (nonatomic, assign) NSInteger index;
+
 @end
 
 @implementation TestBarSubViewController
 
-- (void)viewDidLoad
+- (void)setIndex:(NSInteger)index
 {
-    [super viewDidLoad];
-    self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.navigationController.viewControllers.count)];
+    _index = index;
     
-    if (self.navigationController.viewControllers.count < 6) {
+    // 需要重写样式方法或者在push之前设置生效
+    if (index < 3) {
         self.fwNavigationBarBackgroundImage = [UIImage fwImageWithColor:[UIColor greenColor]];
         self.fwNavigationBarShadowImage = nil;
     } else {
         self.fwNavigationBarBackgroundImage = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
         self.fwNavigationBarShadowImage = ([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil;
     }
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
         FWStrongifySelf();
-        [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
+        TestBarSubViewController *viewController = [TestBarSubViewController new];
+        viewController.index = self.index + 1;
+        [self.navigationController pushViewController:viewController animated:YES];
     }];
 }
 
@@ -178,7 +188,9 @@ FWPropertyWeak(UILabel *, frameLabel);
 
 - (void)onTransitionBar
 {
-    [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
+    TestBarSubViewController *viewController = [TestBarSubViewController new];
+    viewController.index = 0;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end
