@@ -22,3 +22,18 @@
 + (void)fwEnableTransitionNavigationBar;
 
 @end
+
+/*!
+ @brief UIViewController+FWBarTransition
+ */
+@interface UIViewController (FWBarTransition)
+
+// 自定义navBar效果过程中NavigationController的containerView的背景色，默认白色
+@property (nonatomic, strong) UIColor *fwContainerViewBackgroundColor;
+
+@property (nonatomic, assign) BOOL fwNavigationBarPreferredHidden;
+@property (nonatomic, strong) UIColor *fwNavigationBarBarTintColor;
+@property (nonatomic, strong) UIImage *fwNavigationBarBackgroundImage;
+@property (nonatomic, strong) UIImage *fwNavigationBarShadowImage;
+
+@end
