@@ -30,6 +30,26 @@
     }
 }
 
+- (id)fwTransitionNavigationBarKey
+{
+    if (self.index < 3) {
+        return [UIColor greenColor];
+    } else {
+        return [UIColor fwRandomColor];
+    }
+}
+
+- (void)fwCustomTransitionNavigationBar
+{
+    if (self.index < 3) {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor greenColor]];
+        [self.navigationController.navigationBar fwSetLineHidden:NO];
+    } else {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
+        [self.navigationController.navigationBar fwSetLineHidden:[[@[@0, @1] fwRandomObject] boolValue]];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

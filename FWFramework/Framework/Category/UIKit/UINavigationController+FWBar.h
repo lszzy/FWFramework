@@ -36,4 +36,13 @@
 @property (nonatomic, strong) UIImage *fwNavigationBarBackgroundImage;
 @property (nonatomic, strong) UIImage *fwNavigationBarShadowImage;
 
+// 是否执行转场动画判断依据。不相等才会执行
+- (id)fwTransitionNavigationBarKey;
+// 自定义导航栏效果
+- (void)fwCustomTransitionNavigationBar;
+
+// TODO: 所有的都用协议，可选实现
+
+// TODO: 不影响现有导航栏代码？？？
+
 @end
