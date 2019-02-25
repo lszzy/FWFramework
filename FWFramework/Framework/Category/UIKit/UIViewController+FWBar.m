@@ -95,19 +95,6 @@
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
 }
 
-- (void)fwSetNavigationBarAlpha:(CGFloat)alpha completion:(void (^)(void))completion
-{
-    __weak __typeof__(self) self_weak_ = self;
-    [self.transitionCoordinator animateAlongsideTransitionInView:self.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        __typeof__(self) self = self_weak_;
-        self.navigationController.navigationBar.alpha = alpha;
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        if (completion) {
-            completion();
-        }
-    }];
-}
-
 - (BOOL)fwTabBarHidden
 {
     return self.tabBarController.tabBar.hidden;
@@ -121,8 +108,8 @@
 - (void)fwSetBarExtendEdge:(UIRectEdge)edge
 {
     self.edgesForExtendedLayout = edge;
+    // 开启不透明bar(translucent为NO)情况下延伸包括bar，占满全屏
     self.extendedLayoutIncludesOpaqueBars = YES;
-    self.modalPresentationCapturesStatusBarAppearance = NO;
 }
 
 #pragma mark - Item
@@ -208,14 +195,9 @@
     [self setTitleTextAttributes:@{NSForegroundColorAttributeName: color}];
 }
 
-- (void)fwSetTitleAttributes:(NSDictionary *)attributes
-{
-    [self setTitleTextAttributes:attributes];
-}
-
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    // 不使用barTintColor。在iOS8.2或者之前的版本，如果导航栏的translucent值为true时，用barTintColor去设置导航栏的背景样式，然后改变barTintColor的颜色，那么当边缘左滑返回手势取消的时候导航栏的背景色会闪烁。
+    // 不使用barTintColor。默认Default样式下barTintColor在iOS10以下无法隐藏底部线条；在iOS8.2或者之前的版本，如果导航栏的translucent值为true时，用barTintColor去设置导航栏的背景样式，然后改变barTintColor的颜色，那么当边缘左滑返回手势取消的时候导航栏的背景色会闪烁。
     [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
 }
 
