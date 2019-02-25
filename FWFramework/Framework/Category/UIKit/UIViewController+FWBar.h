@@ -27,11 +27,8 @@
 // 导航栏是否隐藏，默认为NO
 @property (nonatomic, assign) BOOL fwNavigationBarHidden;
 
-// animated方式设置导航栏是否隐藏。切换导航栏显隐状态时需使用此方法，切换动画不突兀。在viewWillAppear中设置，viewWillDisappear时还原，animated参数相同
+// 动态设置导航栏是否隐藏，切换动画不突兀，建议使用此方法。一般在viewWillAppear中设置，viewWillDisappear时还原，animated参数相同
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
-
-// 设置整个导航栏透明度，执行动画，不影响返回手势。建议在viewWillAppear中调用，颜色变化不突兀
-- (void)fwSetNavigationBarAlpha:(CGFloat)alpha completion:(void (^)(void))completion;
 
 // 标签栏是否隐藏，默认为NO。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;

@@ -95,19 +95,6 @@
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
 }
 
-- (void)fwSetNavigationBarAlpha:(CGFloat)alpha completion:(void (^)(void))completion
-{
-    __weak __typeof__(self) self_weak_ = self;
-    [self.transitionCoordinator animateAlongsideTransitionInView:self.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        __typeof__(self) self = self_weak_;
-        self.navigationController.navigationBar.alpha = alpha;
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        if (completion) {
-            completion();
-        }
-    }];
-}
-
 - (BOOL)fwTabBarHidden
 {
     return self.tabBarController.tabBar.hidden;
