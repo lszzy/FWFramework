@@ -16,13 +16,29 @@
 
 @implementation TestBarSubViewController
 
+- (id)fwNavigationBarTransitionKey
+{
+    if (self.index < 3) {
+        return @(1);
+    } else {
+        return @(self.index);
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
+    self.fwForcePopGesture = YES;
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
+        FWStrongifySelf();
+        TestBarSubViewController *viewController = [TestBarSubViewController new];
+        viewController.index = self.index + 1;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }];
+    [self.view fwAddTapGestureWithBlock:^(id sender) {
         FWStrongifySelf();
         TestBarSubViewController *viewController = [TestBarSubViewController new];
         viewController.index = self.index + 1;
@@ -39,10 +55,11 @@
         [self.navigationController.navigationBar fwSetLineHidden:YES];
     } else {
         if (!self.fwTempObject) {
-            self.fwTempObject = @[[UIColor fwRandomColor], [@[@0, @1] fwRandomObject]];
+            self.fwTempObject = @[[UIColor fwRandomColor], [@[@0, @1] fwRandomObject], (self.index < 6 ? @0 : [@[@0, @1] fwRandomObject])];
         }
         [self.navigationController.navigationBar fwSetBackgroundColor:self.fwTempObject[0]];
         [self.navigationController.navigationBar fwSetLineHidden:[self.fwTempObject[1] boolValue]];
+        [self fwSetNavigationBarHidden:[self.fwTempObject[2] boolValue] animated:animated];
     }
 }
 
