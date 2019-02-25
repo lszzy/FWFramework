@@ -121,8 +121,8 @@
 - (void)fwSetBarExtendEdge:(UIRectEdge)edge
 {
     self.edgesForExtendedLayout = edge;
+    // 开启不透明bar(translucent为NO)情况下延伸包括bar，占满全屏
     self.extendedLayoutIncludesOpaqueBars = YES;
-    self.modalPresentationCapturesStatusBarAppearance = NO;
 }
 
 #pragma mark - Item

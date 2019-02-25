@@ -12,6 +12,7 @@
  * 视图控制器Bar分类
  *
  * 备注：需要设置UIViewControllerBasedStatusBarAppearance为YES，视图控制器修改状态栏样式才会生效
+ * modalPresentationCapturesStatusBarAppearance：弹出非UIModalPresentationFullScreen控制器时，该控制器是否控制状态栏样式。默认NO，不控制
  */
 @interface UIViewController (FWBar)
 

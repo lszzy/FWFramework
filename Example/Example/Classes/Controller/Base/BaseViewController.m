@@ -13,7 +13,24 @@
 
 + (void)load
 {
-    [UINavigationController fwEnableTransitionNavigationBar];
+    [UINavigationController fwEnableNavigationBarTransition];
+}
+
+#pragma mark - NavigationBar
+
+- (UIImage *)fwNavigationBarBackgroundImage
+{
+    return [UIImage fwImageWithColor:[UIColor fwColorWithHex:0xFFDA00]];
+}
+
+- (UIImage *)fwNavigationBarShadowImage
+{
+    return nil;
+}
+
+- (id)fwNavigationBarTransitionKey
+{
+    return @(0);
 }
 
 #pragma mark - Lifecycle

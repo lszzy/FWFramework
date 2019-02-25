@@ -16,39 +16,36 @@
 
 @implementation TestBarSubViewController
 
-- (void)setIndex:(NSInteger)index
+#pragma mark - NavigationBar
+
+- (UIImage *)fwNavigationBarBackgroundImage
 {
-    _index = index;
-    
-    // 需要重写样式方法或者在push之前设置生效
-    if (index < 3) {
-        self.fwNavigationBarBackgroundImage = [UIImage fwImageWithColor:[UIColor greenColor]];
-        self.fwNavigationBarShadowImage = nil;
+    if (self.index < 3) {
+        return [UIImage fwImageWithColor:[UIColor greenColor]];
     } else {
-        self.fwNavigationBarBackgroundImage = [UIImage fwImageWithColor:[UIColor fwRandomColor]];
-        self.fwNavigationBarShadowImage = ([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil;
+        return [UIImage fwImageWithColor:[UIColor fwRandomColor]];
     }
 }
 
-- (id)fwTransitionNavigationBarKey
+- (UIImage *)fwNavigationBarShadowImage
 {
     if (self.index < 3) {
-        return [UIColor greenColor];
+        return nil;
     } else {
-        return [UIColor fwRandomColor];
+        return ([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil;
     }
 }
 
-- (void)fwCustomTransitionNavigationBar
+- (id)fwNavigationBarTransitionKey
 {
     if (self.index < 3) {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor greenColor]];
-        [self.navigationController.navigationBar fwSetLineHidden:NO];
+        return [NSString stringWithFormat:@"%@", @(1)];
     } else {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
-        [self.navigationController.navigationBar fwSetLineHidden:[[@[@0, @1] fwRandomObject] boolValue]];
+        return [NSString stringWithFormat:@"%@", @(self.index)];
     }
 }
+
+#pragma mark - Protected
 
 - (void)viewDidLoad
 {
@@ -208,9 +205,7 @@ FWPropertyWeak(UILabel *, frameLabel);
 
 - (void)onTransitionBar
 {
-    TestBarSubViewController *viewController = [TestBarSubViewController new];
-    viewController.index = 0;
-    [self.navigationController pushViewController:viewController animated:YES];
+    [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
 }
 
 @end
