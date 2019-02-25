@@ -16,37 +16,6 @@
 
 @implementation TestBarSubViewController
 
-#pragma mark - NavigationBar
-
-- (UIImage *)fwNavigationBarBackgroundImage
-{
-    if (self.index < 3) {
-        return [UIImage fwImageWithColor:[UIColor greenColor]];
-    } else {
-        return [UIImage fwImageWithColor:[UIColor fwRandomColor]];
-    }
-}
-
-- (UIImage *)fwNavigationBarShadowImage
-{
-    if (self.index < 3) {
-        return nil;
-    } else {
-        return ([[@[@0, @1] fwRandomObject] boolValue]) ? [UIImage new] : nil;
-    }
-}
-
-- (id)fwNavigationBarTransitionKey
-{
-    if (self.index < 3) {
-        return [NSString stringWithFormat:@"%@", @(1)];
-    } else {
-        return [NSString stringWithFormat:@"%@", @(self.index)];
-    }
-}
-
-#pragma mark - Protected
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -59,6 +28,22 @@
         viewController.index = self.index + 1;
         [self.navigationController pushViewController:viewController animated:YES];
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.index < 3) {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor greenColor]];
+        [self.navigationController.navigationBar fwSetLineHidden:YES];
+    } else {
+        if (!self.fwTempObject) {
+            self.fwTempObject = @[[UIColor fwRandomColor], [@[@0, @1] fwRandomObject]];
+        }
+        [self.navigationController.navigationBar fwSetBackgroundColor:self.fwTempObject[0]];
+        [self.navigationController.navigationBar fwSetLineHidden:[self.fwTempObject[1] boolValue]];
+    }
 }
 
 @end
@@ -78,11 +63,8 @@ FWPropertyWeak(UILabel *, frameLabel);
     self.fwTabBarHidden = YES;
     [self refreshBarFrame];
     
-    [self fwSetBackBarBlock:^BOOL{
-        NSLog(@"ddd");
-        static BOOL ret = YES;
-        ret = !ret;
-        return ret;
+    [self fwSetRightBarItem:@"启用" block:^(id sender) {
+        [UINavigationController fwEnableNavigationBarTransition];
     }];
 }
 
