@@ -80,10 +80,7 @@
 // 设置标题和按钮颜色
 - (void)fwSetTextColor:(UIColor *)color;
 
-// 设置标题样式属性
-- (void)fwSetTitleAttributes:(NSDictionary *)attributes;
-
-// 设置背景颜色。注意Default样式下barTintColor在iOS10以下无法隐藏底部线条
+// 设置背景颜色。为避免barTintColor的一些兼容问题，此方法未使用barTintColor，而是使用颜色生成的图片来设置backgroundImage
 - (void)fwSetBackgroundColor:(UIColor *)color;
 
 // 设置背景图片

@@ -208,14 +208,9 @@
     [self setTitleTextAttributes:@{NSForegroundColorAttributeName: color}];
 }
 
-- (void)fwSetTitleAttributes:(NSDictionary *)attributes
-{
-    [self setTitleTextAttributes:attributes];
-}
-
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    // 不使用barTintColor。在iOS8.2或者之前的版本，如果导航栏的translucent值为true时，用barTintColor去设置导航栏的背景样式，然后改变barTintColor的颜色，那么当边缘左滑返回手势取消的时候导航栏的背景色会闪烁。
+    // 不使用barTintColor。默认Default样式下barTintColor在iOS10以下无法隐藏底部线条；在iOS8.2或者之前的版本，如果导航栏的translucent值为true时，用barTintColor去设置导航栏的背景样式，然后改变barTintColor的颜色，那么当边缘左滑返回手势取消的时候导航栏的背景色会闪烁。
     [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
 }
 
