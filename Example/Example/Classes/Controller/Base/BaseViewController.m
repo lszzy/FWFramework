@@ -11,28 +11,6 @@
 
 @implementation BaseViewController
 
-+ (void)load
-{
-    [UINavigationController fwEnableNavigationBarTransition];
-}
-
-#pragma mark - NavigationBar
-
-- (UIImage *)fwNavigationBarBackgroundImage
-{
-    return [UIImage fwImageWithColor:[UIColor fwColorWithHex:0xFFDA00]];
-}
-
-- (UIImage *)fwNavigationBarShadowImage
-{
-    return nil;
-}
-
-- (id)fwNavigationBarTransitionKey
-{
-    return @(0);
-}
-
 #pragma mark - Lifecycle
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -71,14 +49,21 @@
     
     // 通用导航栏样式
     [self fwSetBackBarImage:[UIImage imageNamed:@"public_back"]];
-    [self.navigationController.navigationBar setTintColor:[UIColor fwColorWithHex:0x111111]];
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName: [UIFont fwBoldSystemFontOfSize:18], NSForegroundColorAttributeName: [UIColor fwColorWithHex:0x111111]}];
     
     // 渲染当前模型
     [self renderModel];
     
     // 渲染当前数据
     [self renderData];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // 通用导航栏样式
+    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
+    [self.navigationController.navigationBar fwSetLineHidden:YES];
 }
 
 - (void)dealloc
