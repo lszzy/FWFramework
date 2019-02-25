@@ -53,6 +53,9 @@
 
 - (UITabBarController *)tabBarController
 {
+    // 统一设置导航栏样式
+    [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
+    
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];

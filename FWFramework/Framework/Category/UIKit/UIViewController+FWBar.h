@@ -12,6 +12,7 @@
  * 视图控制器Bar分类
  *
  * 备注：需要设置UIViewControllerBasedStatusBarAppearance为YES，视图控制器修改状态栏样式才会生效
+ * modalPresentationCapturesStatusBarAppearance：弹出非UIModalPresentationFullScreen控制器时，该控制器是否控制状态栏样式。默认NO，不控制
  */
 @interface UIViewController (FWBar)
 
@@ -26,11 +27,8 @@
 // 导航栏是否隐藏，默认为NO
 @property (nonatomic, assign) BOOL fwNavigationBarHidden;
 
-// animated方式设置导航栏是否隐藏。切换导航栏显隐状态时需使用此方法，切换动画不突兀。在viewWillAppear中设置，viewWillDisappear时还原，animated参数相同
+// 动态设置导航栏是否隐藏，切换动画不突兀，建议使用此方法。一般在viewWillAppear中设置，viewWillDisappear时还原，animated参数相同
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
-
-// 设置整个导航栏透明度，执行动画，不影响返回手势。建议在viewWillAppear中调用，颜色变化不突兀
-- (void)fwSetNavigationBarAlpha:(CGFloat)alpha completion:(void (^)(void))completion;
 
 // 标签栏是否隐藏，默认为NO。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
@@ -79,10 +77,7 @@
 // 设置标题和按钮颜色
 - (void)fwSetTextColor:(UIColor *)color;
 
-// 设置标题样式属性
-- (void)fwSetTitleAttributes:(NSDictionary *)attributes;
-
-// 设置背景颜色。注意Default样式下barTintColor在iOS10以下无法隐藏底部线条
+// 设置背景颜色。为避免barTintColor的一些兼容问题，此方法未使用barTintColor，而是使用颜色生成的图片来设置backgroundImage
 - (void)fwSetBackgroundColor:(UIColor *)color;
 
 // 设置背景图片
