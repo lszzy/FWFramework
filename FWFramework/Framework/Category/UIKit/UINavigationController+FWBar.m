@@ -321,20 +321,65 @@
         }
     }
     
+    // 设置导航栏样式
+    if ([self respondsToSelector:@selector(fwNavigationBarBarTintColor)]) {
+        self.navigationController.navigationBar.barTintColor = [self fwNavigationBarBarTintColor];
+    }
+    if ([self respondsToSelector:@selector(fwNavigationBarBackgroundImage)]) {
+        [self.navigationController.navigationBar setBackgroundImage:[self fwNavigationBarBackgroundImage] forBarMetrics:UIBarMetricsDefault];
+    }
+    if ([self respondsToSelector:@selector(fwNavigationBarShadowImage)]) {
+        self.navigationController.navigationBar.shadowImage = [self fwNavigationBarShadowImage];
+    }
+    if ([self respondsToSelector:@selector(fwNavigationBarTintColor)]) {
+        self.navigationController.navigationBar.tintColor = [self fwNavigationBarTintColor];
+    }
+    if ([self respondsToSelector:@selector(fwNavigationBarTitleTextAttributes)]) {
+        self.navigationController.navigationBar.titleTextAttributes = [self fwNavigationBarTitleTextAttributes];
+    }
+    
     // 自定义导航样式
-    if ([self respondsToSelector:@selector(fwCustomNavigationBarTransition)]) {
-        [self fwCustomNavigationBarTransition];
+    if ([self respondsToSelector:@selector(fwCustomNavigationBarStyle)]) {
+        [self fwCustomNavigationBarStyle];
     }
 }
 
 - (BOOL)fwShouldCustomTransitionWithFirstViewController:(UIViewController *)vc1 secondViewController:(UIViewController *)vc2
 {
-    // 依据自定义key是否相等来确定是否执行自定义转场
+    // 如果实现自定义转场key，则依据自定义key是否相等来执行自定义转场，不自动比较导航栏样式
     if ([vc1 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ||
         [vc2 respondsToSelector:@selector(fwNavigationBarTransitionKey)]) {
         id key1 = [vc1 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ? [vc1 fwNavigationBarTransitionKey] : nil;
         id key2 = [vc2 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ? [vc2 fwNavigationBarTransitionKey] : nil;
-        if ((key1 || key2) && ![key1 isEqual:key2]) {
+        BOOL result = (key1 || key2) && ![key1 isEqual:key2];
+        return result;
+    }
+    
+    // 比较自定义背景图片是否相等，不相等执行自定义转场
+    UIImage *bg1 = [vc1 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc1 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
+    UIImage *bg2 = [vc2 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc2 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
+    if (bg1 || bg2) {
+        if (!bg1 || !bg2 || ![bg1.fwAverageColor isEqual:bg2.fwAverageColor]) {
+            return YES;
+        }
+    }
+    
+    // 如果存在backgroundImage，则barTintColor就算存在也不会被显示出来，所以这里只判断两个backgroundImage都不存在的时候
+    if (!bg1 && !bg2) {
+        UIColor *btc1 = [vc1 respondsToSelector:@selector(fwNavigationBarBarTintColor)] ? [vc1 fwNavigationBarBarTintColor] : [UINavigationBar appearance].barTintColor;
+        UIColor *btc2 = [vc2 respondsToSelector:@selector(fwNavigationBarBarTintColor)] ? [vc2 fwNavigationBarBarTintColor] : [UINavigationBar appearance].barTintColor;
+        if (btc1 || btc2) {
+            if (!btc1 || !btc2 || ![btc1 isEqual:btc2]) {
+                return YES;
+            }
+        }
+    }
+    
+    // 比较阴影图片是否相等，不相等执行自定义转场
+    UIImage *si1 = [vc1 respondsToSelector:@selector(fwNavigationBarShadowImage)] ? [vc1 fwNavigationBarShadowImage] : [UINavigationBar appearance].shadowImage;
+    UIImage *si2 = [vc2 respondsToSelector:@selector(fwNavigationBarShadowImage)] ? [vc2 fwNavigationBarShadowImage] : [UINavigationBar appearance].shadowImage;
+    if (si1 || si2) {
+        if (!si1 || !si2 || ![si1.fwAverageColor isEqual:si2.fwAverageColor]) {
             return YES;
         }
     }
