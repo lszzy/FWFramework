@@ -83,7 +83,7 @@
 - (void)fwSetBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state
 {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
-    UIGraphicsBeginImageContext(rect.size);
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSetFillColorWithColor(context, [backgroundColor CGColor]);

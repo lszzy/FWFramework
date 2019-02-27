@@ -601,7 +601,7 @@
 - (UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth
 {
     CGSize newSize = [self fwScaleSizeWithMaxWidth:maxWidth];
-    UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, self.scale);
     [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -817,7 +817,7 @@
     CGFloat secondWidth = CGImageGetWidth(secondImageRef);
     CGFloat secondHeight = CGImageGetHeight(secondImageRef);
     CGSize mergedSize = CGSizeMake(MAX(firstWidth, secondWidth), MAX(firstHeight, secondHeight));
-    UIGraphicsBeginImageContext(mergedSize);
+    UIGraphicsBeginImageContextWithOptions(mergedSize, NO, 0);
     [self drawInRect:CGRectMake(0, 0, firstWidth, firstHeight)];
     [mergeImage drawInRect:CGRectMake(0, 0, secondWidth, secondHeight)];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
