@@ -216,6 +216,11 @@
     UIViewController *fromViewController = [tc viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toViewController = [tc viewControllerForKey:UITransitionContextToViewControllerKey];
     
+    if (![self fwShouldTransitionNavigationBarFrom:fromViewController to:toViewController]) {
+        [self fwInnerViewWillLayoutSubviews];
+        return;
+    }
+    
     if ([self isEqual:self.navigationController.viewControllers.lastObject] && [toViewController isEqual:self] && tc.presentationStyle == UIModalPresentationNone) {
         if (self.navigationController.navigationBar.translucent) {
             [tc containerView].backgroundColor = [self.navigationController fwContainerViewBackgroundColor];
@@ -323,6 +328,56 @@
     }
 }
 
+- (BOOL)fwShouldTransitionNavigationBarFrom:(UIViewController *)vc1 to:(UIViewController *)vc2
+{
+    if (!vc1 || !vc2) {
+        return YES;
+    }
+    
+    // 如果实现自定义转场key，则依据自定义key是否相等来执行自定义转场，不自动比较导航栏样式
+    if ([vc1 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ||
+        [vc2 respondsToSelector:@selector(fwNavigationBarTransitionKey)]) {
+        id key1 = [vc1 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ? [vc1 fwNavigationBarTransitionKey] : nil;
+        id key2 = [vc2 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ? [vc2 fwNavigationBarTransitionKey] : nil;
+        BOOL result = (key1 || key2) && ![key1 isEqual:key2];
+        return result;
+    }
+    
+    /*
+    // 比较自定义背景图片是否相等，不相等执行自定义转场
+    UIImage *bg1 = [vc1 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc1 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
+    UIImage *bg2 = [vc2 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc2 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
+    if (bg1 || bg2) {
+        if (!bg1 || !bg2 || ![bg1.fwAverageColor isEqual:bg2.fwAverageColor]) {
+            return YES;
+        }
+    }
+    
+    // 如果存在backgroundImage，则barTintColor就算存在也不会被显示出来，所以这里只判断两个backgroundImage都不存在的时候
+    if (!bg1 && !bg2) {
+        UIColor *btc1 = [vc1 respondsToSelector:@selector(fwNavigationBarBarTintColor)] ? [vc1 fwNavigationBarBarTintColor] : [UINavigationBar appearance].barTintColor;
+        UIColor *btc2 = [vc2 respondsToSelector:@selector(fwNavigationBarBarTintColor)] ? [vc2 fwNavigationBarBarTintColor] : [UINavigationBar appearance].barTintColor;
+        if (btc1 || btc2) {
+            if (!btc1 || !btc2 || ![btc1 isEqual:btc2]) {
+                return YES;
+            }
+        }
+    }
+    
+    // 比较阴影图片是否相等，不相等执行自定义转场
+    UIImage *si1 = [vc1 respondsToSelector:@selector(fwNavigationBarShadowImage)] ? [vc1 fwNavigationBarShadowImage] : [UINavigationBar appearance].shadowImage;
+    UIImage *si2 = [vc2 respondsToSelector:@selector(fwNavigationBarShadowImage)] ? [vc2 fwNavigationBarShadowImage] : [UINavigationBar appearance].shadowImage;
+    if (si1 || si2) {
+        if (!si1 || !si2 || ![si1.fwAverageColor isEqual:si2.fwAverageColor]) {
+            return YES;
+        }
+    }
+    
+    return NO;*/
+    
+    return NO;
+}
+
 - (UINavigationBar *)fwTransitionNavigationBar
 {
     return objc_getAssociatedObject(self, @selector(fwTransitionNavigationBar));
@@ -397,6 +452,11 @@
     if (!disappearingViewController) {
         return [self fwInnerPushViewController:viewController animated:animated];
     }
+    
+    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:viewController]) {
+        return [self fwInnerPushViewController:viewController animated:animated];
+    }
+    
     if (!self.fwTransitionContextToViewController || !disappearingViewController.fwTransitionNavigationBar) {
         [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     }
@@ -415,8 +475,13 @@
         return [self fwInnerPopViewControllerAnimated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
-    [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     UIViewController *appearingViewController = self.viewControllers[self.viewControllers.count - 2];
+    
+    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:appearingViewController]) {
+        return [self fwInnerPopViewControllerAnimated:animated];
+    }
+    
+    [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     if (appearingViewController.fwTransitionNavigationBar) {
         UINavigationBar *appearingNavigationBar = appearingViewController.fwTransitionNavigationBar;
         [self.navigationBar fwReplaceStyleWithNavigationBar:appearingNavigationBar];
@@ -433,6 +498,11 @@
         return [self fwInnerPopToViewController:viewController animated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
+    
+    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:viewController]) {
+        return [self fwInnerPopToViewController:viewController animated:animated];
+    }
+    
     [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     if (viewController.fwTransitionNavigationBar) {
         UINavigationBar *appearingNavigationBar = viewController.fwTransitionNavigationBar;
@@ -450,8 +520,13 @@
         return [self fwInnerPopToRootViewControllerAnimated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
-    [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     UIViewController *rootViewController = self.viewControllers.firstObject;
+    
+    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:rootViewController]) {
+        return [self fwInnerPopToRootViewControllerAnimated:animated];
+    }
+    
+    [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
     if (rootViewController.fwTransitionNavigationBar) {
         UINavigationBar *appearingNavigationBar = rootViewController.fwTransitionNavigationBar;
         [self.navigationBar fwReplaceStyleWithNavigationBar:appearingNavigationBar];
@@ -465,6 +540,12 @@
 - (void)fwInnerSetViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
 {
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
+    UIViewController *appearingViewController = viewControllers.count > 0 ? viewControllers.lastObject : nil;
+    
+    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:appearingViewController]) {
+        return [self fwInnerSetViewControllers:viewControllers animated:animated];
+    }
+    
     if (animated && disappearingViewController && ![disappearingViewController isEqual:viewControllers.lastObject]) {
         [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
         if (disappearingViewController.fwTransitionNavigationBar) {
