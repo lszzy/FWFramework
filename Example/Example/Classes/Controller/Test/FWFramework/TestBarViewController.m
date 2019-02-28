@@ -16,6 +16,15 @@
 
 @implementation TestBarSubViewController
 
+- (id)fwNavigationBarTransitionKey
+{
+    if (self.index < 3) {
+        return @(1);
+    } else {
+        return @(self.index);
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

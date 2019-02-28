@@ -27,10 +27,15 @@
 
 /*!
  @brief UIViewController+FWBarTransition
+ 
+ @todo 去掉scrollView处理，增加customStyle?或者block?尽量少侵入
  */
 @interface UIViewController (FWBarTransition)
 
 // 如果iOS11+有滚动视图时转场动画不正常，可指定此视图；也可设置滚动视图的contentInsetAdjustmentBehavior为Never
 @property (nonatomic, weak) UIScrollView *fwTransitionScrollView;
+
+// 转场动画自定义判断KEY，不相等才会启用转场。不实现时默认根据导航栏样式自动比较判定，建议实现，提高性能
+- (nullable id)fwNavigationBarTransitionKey;
 
 @end
