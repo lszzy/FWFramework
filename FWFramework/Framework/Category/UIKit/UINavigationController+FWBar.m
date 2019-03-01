@@ -42,7 +42,7 @@
 
 @implementation UINavigationBar (FWBarTransition)
 
-+ (void)fwInnerEnableTransitionNavigationBar
++ (void)fwInnerEnableNavigationBarTransition
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -89,7 +89,7 @@
 
 @implementation NSObject (FWBarTransition)
 
-+ (void)fwInnerEnableTransitionNavigationBar
++ (void)fwInnerEnableNavigationBarTransition
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -129,72 +129,23 @@
 
 @end
 
-#pragma mark - UIScrollView+FWBarTransition
-
-@interface UIScrollView (FWBarTransition)
-
-@property (nonatomic, assign) UIScrollViewContentInsetAdjustmentBehavior fwOriginalContentInsetAdjustmentBehavior NS_AVAILABLE_IOS(11_0);
-@property (nonatomic, assign) BOOL fwShouldRestoreContentInsetAdjustmentBehavior NS_AVAILABLE_IOS(11_0);
-
-@end
-
-@implementation UIScrollView (FWBarTransition)
-
-- (UIScrollViewContentInsetAdjustmentBehavior)fwOriginalContentInsetAdjustmentBehavior
-{
-    return [objc_getAssociatedObject(self, @selector(fwOriginalContentInsetAdjustmentBehavior)) integerValue];
-}
-
-- (void)setFwOriginalContentInsetAdjustmentBehavior:(UIScrollViewContentInsetAdjustmentBehavior)contentInsetAdjustmentBehavior
-{
-    objc_setAssociatedObject(self, @selector(fwOriginalContentInsetAdjustmentBehavior), @(contentInsetAdjustmentBehavior), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fwShouldRestoreContentInsetAdjustmentBehavior
-{
-    return [objc_getAssociatedObject(self, @selector(fwShouldRestoreContentInsetAdjustmentBehavior)) boolValue];
-}
-
-- (void)setFwShouldRestoreContentInsetAdjustmentBehavior:(BOOL)should
-{
-    objc_setAssociatedObject(self, @selector(fwShouldRestoreContentInsetAdjustmentBehavior), @(should), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
 #pragma mark - UIViewController+FWBarTransition
 
 @implementation UIViewController (FWBarTransition)
 
-+ (void)fwInnerEnableTransitionNavigationBar
+#pragma mark - Hook
+
++ (void)fwInnerEnableNavigationBarTransition
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(viewWillLayoutSubviews) with:@selector(fwInnerViewWillLayoutSubviews)];
-        [self fwSwizzleInstanceMethod:@selector(viewWillAppear:) with:@selector(fwInnerViewWillAppear:)];
-        [self fwSwizzleInstanceMethod:@selector(viewDidAppear:) with:@selector(fwInnerViewDidAppear:)];
+        [self fwSwizzleInstanceMethod:@selector(viewDidAppear:) with:@selector(fwInnerTransitionViewDidAppear:)];
+        [self fwSwizzleInstanceMethod:@selector(viewWillLayoutSubviews) with:@selector(fwInnerTransitionViewWillLayoutSubviews)];
     });
 }
 
-- (void)fwInnerViewWillAppear:(BOOL)animated
+- (void)fwInnerTransitionViewDidAppear:(BOOL)animated
 {
-    [self fwInnerViewWillAppear:animated];
-    id<UIViewControllerTransitionCoordinator> tc = self.transitionCoordinator;
-    UIViewController *toViewController = [tc viewControllerForKey:UITransitionContextToViewControllerKey];
-    
-    if ([self isEqual:self.navigationController.viewControllers.lastObject] && [toViewController isEqual:self]  && tc.presentationStyle == UIModalPresentationNone) {
-        [self fwAdjustScrollViewContentInsetAdjustmentBehavior];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.navigationController.navigationBarHidden) {
-                [self fwRestoreScrollViewContentInsetAdjustmentBehaviorIfNeeded];
-            }
-        });
-    }
-}
-
-- (void)fwInnerViewDidAppear:(BOOL)animated
-{
-    [self fwRestoreScrollViewContentInsetAdjustmentBehaviorIfNeeded];
     UIViewController *transitionViewController = self.navigationController.fwTransitionContextToViewController;
     if (self.fwTransitionNavigationBar) {
         [self.navigationController.navigationBar fwReplaceStyleWithNavigationBar:self.fwTransitionNavigationBar];
@@ -207,17 +158,16 @@
         self.navigationController.fwTransitionContextToViewController = nil;
     }
     self.navigationController.fwBackgroundViewHidden = NO;
-    [self fwInnerViewDidAppear:animated];
+    [self fwInnerTransitionViewDidAppear:animated];
 }
 
-- (void)fwInnerViewWillLayoutSubviews
+- (void)fwInnerTransitionViewWillLayoutSubviews
 {
     id<UIViewControllerTransitionCoordinator> tc = self.transitionCoordinator;
     UIViewController *fromViewController = [tc viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toViewController = [tc viewControllerForKey:UITransitionContextToViewControllerKey];
-    
-    if (![self fwShouldTransitionNavigationBarFrom:fromViewController to:toViewController]) {
-        [self fwInnerViewWillLayoutSubviews];
+    if (![self fwShouldCustomTransitionFrom:fromViewController to:toViewController]) {
+        [self fwInnerTransitionViewWillLayoutSubviews];
         return;
     }
     
@@ -236,8 +186,32 @@
     if (self.fwTransitionNavigationBar) {
         [self.view bringSubviewToFront:self.fwTransitionNavigationBar];
     }
-    [self fwInnerViewWillLayoutSubviews];
+    [self fwInnerTransitionViewWillLayoutSubviews];
 }
+
+#pragma mark - Accessor
+
+- (id)fwNavigationBarTransitionIdentifier
+{
+    return objc_getAssociatedObject(self, @selector(fwNavigationBarTransitionIdentifier));
+}
+
+- (void)setFwNavigationBarTransitionIdentifier:(id)identifier
+{
+    objc_setAssociatedObject(self, @selector(fwNavigationBarTransitionIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UINavigationBar *)fwTransitionNavigationBar
+{
+    return objc_getAssociatedObject(self, @selector(fwTransitionNavigationBar));
+}
+
+- (void)setFwTransitionNavigationBar:(UINavigationBar *)navigationBar
+{
+    objc_setAssociatedObject(self, @selector(fwTransitionNavigationBar), navigationBar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+#pragma mark - Private
 
 - (void)fwResizeTransitionNavigationBarFrame
 {
@@ -257,7 +231,6 @@
     if (!self.navigationController.navigationBar) {
         return;
     }
-    [self fwAdjustScrollViewContentOffsetIfNeeded];
     UINavigationBar *bar = [[UINavigationBar alloc] init];
     bar.fwIsFakeBar = YES;
     bar.barStyle = self.navigationController.navigationBar.barStyle;
@@ -273,137 +246,20 @@
     }
 }
 
-- (void)fwAdjustScrollViewContentOffsetIfNeeded
+- (BOOL)fwShouldCustomTransitionFrom:(UIViewController *)from to:(UIViewController *)to
 {
-    UIScrollView *scrollView = self.fwInnerVisibleScrollView;
-    if (scrollView) {
-        UIEdgeInsets contentInset;
-        if (@available(iOS 11.0, *)) {
-            contentInset = scrollView.adjustedContentInset;
-        } else {
-            contentInset = scrollView.contentInset;
-        }
-        const CGFloat topContentOffsetY = -contentInset.top;
-        const CGFloat bottomContentOffsetY = scrollView.contentSize.height - (CGRectGetHeight(scrollView.bounds) - contentInset.bottom);
-        
-        CGPoint adjustedContentOffset = scrollView.contentOffset;
-        if (adjustedContentOffset.y > bottomContentOffsetY) {
-            adjustedContentOffset.y = bottomContentOffsetY;
-        }
-        if (adjustedContentOffset.y < topContentOffsetY) {
-            adjustedContentOffset.y = topContentOffsetY;
-        }
-        [scrollView setContentOffset:adjustedContentOffset animated:NO];
-    }
-}
-
-- (void)fwAdjustScrollViewContentInsetAdjustmentBehavior
-{
-    if (self.navigationController.navigationBar.translucent) {
-        return;
-    }
-    if (@available(iOS 11.0, *)) {
-        UIScrollView *scrollView = self.fwInnerVisibleScrollView;
-        if (scrollView) {
-            UIScrollViewContentInsetAdjustmentBehavior contentInsetAdjustmentBehavior = scrollView.contentInsetAdjustmentBehavior;
-            if (contentInsetAdjustmentBehavior != UIScrollViewContentInsetAdjustmentNever) {
-                scrollView.fwOriginalContentInsetAdjustmentBehavior = contentInsetAdjustmentBehavior;
-                scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-                scrollView.fwShouldRestoreContentInsetAdjustmentBehavior = YES;
-            }
-        }
-    }
-}
-
-- (void)fwRestoreScrollViewContentInsetAdjustmentBehaviorIfNeeded
-{
-    if (@available(iOS 11.0, *)) {
-        UIScrollView *scrollView = self.fwInnerVisibleScrollView;
-        if (scrollView) {
-            if (scrollView.fwShouldRestoreContentInsetAdjustmentBehavior) {
-                scrollView.contentInsetAdjustmentBehavior = scrollView.fwOriginalContentInsetAdjustmentBehavior;
-                scrollView.fwShouldRestoreContentInsetAdjustmentBehavior = NO;
-            }
-        }
-    }
-}
-
-- (BOOL)fwShouldTransitionNavigationBarFrom:(UIViewController *)vc1 to:(UIViewController *)vc2
-{
-    if (!vc1 || !vc2) {
+    if (!from || !to) {
         return YES;
     }
     
-    // 如果实现自定义转场key，则依据自定义key是否相等来执行自定义转场，不自动比较导航栏样式
-    if ([vc1 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ||
-        [vc2 respondsToSelector:@selector(fwNavigationBarTransitionKey)]) {
-        id key1 = [vc1 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ? [vc1 fwNavigationBarTransitionKey] : nil;
-        id key2 = [vc2 respondsToSelector:@selector(fwNavigationBarTransitionKey)] ? [vc2 fwNavigationBarTransitionKey] : nil;
-        BOOL result = (key1 || key2) && ![key1 isEqual:key2];
-        return result;
+    // 如果identifier有值则比较之，不相等才启用转场
+    id fromIdentifier = [from fwNavigationBarTransitionIdentifier];
+    id toIdentifier = [to fwNavigationBarTransitionIdentifier];
+    if (fromIdentifier || toIdentifier) {
+        return ![fromIdentifier isEqual:toIdentifier];
     }
     
-    /*
-    // 比较自定义背景图片是否相等，不相等执行自定义转场
-    UIImage *bg1 = [vc1 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc1 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
-    UIImage *bg2 = [vc2 respondsToSelector:@selector(fwNavigationBarBackgroundImage)] ? [vc2 fwNavigationBarBackgroundImage] : [[UINavigationBar appearance] backgroundImageForBarMetrics:UIBarMetricsDefault];
-    if (bg1 || bg2) {
-        if (!bg1 || !bg2 || ![bg1.fwAverageColor isEqual:bg2.fwAverageColor]) {
-            return YES;
-        }
-    }
-    
-    // 如果存在backgroundImage，则barTintColor就算存在也不会被显示出来，所以这里只判断两个backgroundImage都不存在的时候
-    if (!bg1 && !bg2) {
-        UIColor *btc1 = [vc1 respondsToSelector:@selector(fwNavigationBarBarTintColor)] ? [vc1 fwNavigationBarBarTintColor] : [UINavigationBar appearance].barTintColor;
-        UIColor *btc2 = [vc2 respondsToSelector:@selector(fwNavigationBarBarTintColor)] ? [vc2 fwNavigationBarBarTintColor] : [UINavigationBar appearance].barTintColor;
-        if (btc1 || btc2) {
-            if (!btc1 || !btc2 || ![btc1 isEqual:btc2]) {
-                return YES;
-            }
-        }
-    }
-    
-    // 比较阴影图片是否相等，不相等执行自定义转场
-    UIImage *si1 = [vc1 respondsToSelector:@selector(fwNavigationBarShadowImage)] ? [vc1 fwNavigationBarShadowImage] : [UINavigationBar appearance].shadowImage;
-    UIImage *si2 = [vc2 respondsToSelector:@selector(fwNavigationBarShadowImage)] ? [vc2 fwNavigationBarShadowImage] : [UINavigationBar appearance].shadowImage;
-    if (si1 || si2) {
-        if (!si1 || !si2 || ![si1.fwAverageColor isEqual:si2.fwAverageColor]) {
-            return YES;
-        }
-    }
-    
-    return NO;*/
-    
-    return NO;
-}
-
-- (UINavigationBar *)fwTransitionNavigationBar
-{
-    return objc_getAssociatedObject(self, @selector(fwTransitionNavigationBar));
-}
-
-- (void)setFwTransitionNavigationBar:(UINavigationBar *)navigationBar
-{
-    objc_setAssociatedObject(self, @selector(fwTransitionNavigationBar), navigationBar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIScrollView *)fwTransitionScrollView {
-    return objc_getAssociatedObject(self, @selector(fwTransitionScrollView));
-}
-
-- (void)setFwTransitionScrollView:(UIScrollView *)scrollView
-{
-    objc_setAssociatedObject(self, @selector(fwTransitionScrollView), scrollView, OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (UIScrollView *)fwInnerVisibleScrollView
-{
-    UIScrollView *scrollView = self.fwTransitionScrollView;
-    if (!scrollView && [self.view isKindOfClass:[UIScrollView class]]) {
-        scrollView = (UIScrollView *)self.view;
-    }
-    return scrollView;
+    return YES;
 }
 
 @end
@@ -412,7 +268,20 @@
 
 @implementation UINavigationController (FWBar)
 
-+ (void)fwInnerEnableTransitionNavigationBar
++ (void)fwEnableNavigationBarTransition
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [UINavigationBar fwInnerEnableNavigationBarTransition];
+        [NSObject fwInnerEnableNavigationBarTransition];
+        [UIViewController fwInnerEnableNavigationBarTransition];
+        [UINavigationController fwInnerEnableNavigationBarTransition];
+    });
+}
+
+#pragma mark - Hook
+
++ (void)fwInnerEnableNavigationBarTransition
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -424,36 +293,13 @@
     });
 }
 
-+ (void)fwEnableTransitionNavigationBar
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [UINavigationBar fwInnerEnableTransitionNavigationBar];
-        [NSObject fwInnerEnableTransitionNavigationBar];
-        [UIViewController fwInnerEnableTransitionNavigationBar];
-        [UINavigationController fwInnerEnableTransitionNavigationBar];
-    });
-}
-
-- (UIColor *)fwContainerViewBackgroundColor
-{
-    UIColor *backgroundColor = objc_getAssociatedObject(self, @selector(fwContainerViewBackgroundColor));
-    return backgroundColor ?: [UIColor whiteColor];
-}
-
-- (void)setFwContainerViewBackgroundColor:(UIColor *)backgroundColor
-{
-    objc_setAssociatedObject(self, @selector(fwContainerViewBackgroundColor), backgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (void)fwInnerPushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     if (!disappearingViewController) {
         return [self fwInnerPushViewController:viewController animated:animated];
     }
-    
-    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:viewController]) {
+    if (![self fwShouldCustomTransitionFrom:disappearingViewController to:viewController]) {
         return [self fwInnerPushViewController:viewController animated:animated];
     }
     
@@ -476,8 +322,7 @@
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     UIViewController *appearingViewController = self.viewControllers[self.viewControllers.count - 2];
-    
-    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:appearingViewController]) {
+    if (![self fwShouldCustomTransitionFrom:disappearingViewController to:appearingViewController]) {
         return [self fwInnerPopViewControllerAnimated:animated];
     }
     
@@ -498,8 +343,7 @@
         return [self fwInnerPopToViewController:viewController animated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
-    
-    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:viewController]) {
+    if (![self fwShouldCustomTransitionFrom:disappearingViewController to:viewController]) {
         return [self fwInnerPopToViewController:viewController animated:animated];
     }
     
@@ -521,8 +365,7 @@
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     UIViewController *rootViewController = self.viewControllers.firstObject;
-    
-    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:rootViewController]) {
+    if (![self fwShouldCustomTransitionFrom:disappearingViewController to:rootViewController]) {
         return [self fwInnerPopToRootViewControllerAnimated:animated];
     }
     
@@ -541,8 +384,7 @@
 {
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     UIViewController *appearingViewController = viewControllers.count > 0 ? viewControllers.lastObject : nil;
-    
-    if (![self fwShouldTransitionNavigationBarFrom:disappearingViewController to:appearingViewController]) {
+    if (![self fwShouldCustomTransitionFrom:disappearingViewController to:appearingViewController]) {
         return [self fwInnerSetViewControllers:viewControllers animated:animated];
     }
     
@@ -553,6 +395,19 @@
         }
     }
     return [self fwInnerSetViewControllers:viewControllers animated:animated];
+}
+
+#pragma mark - Accessor
+
+- (UIColor *)fwContainerViewBackgroundColor
+{
+    UIColor *backgroundColor = objc_getAssociatedObject(self, @selector(fwContainerViewBackgroundColor));
+    return backgroundColor ?: [UIColor whiteColor];
+}
+
+- (void)setFwContainerViewBackgroundColor:(UIColor *)backgroundColor
+{
+    objc_setAssociatedObject(self, @selector(fwContainerViewBackgroundColor), backgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)fwBackgroundViewHidden

@@ -16,13 +16,9 @@
 
 @implementation TestBarSubViewController
 
-- (id)fwNavigationBarTransitionKey
+- (id)fwNavigationBarTransitionIdentifier
 {
-    if (self.index < 3) {
-        return @(1);
-    } else {
-        return @(self.index);
-    }
+    return @(self.index < 3 ? 1 : self.index);
 }
 
 - (void)viewDidLoad
@@ -81,7 +77,7 @@ FWPropertyWeak(UILabel *, frameLabel);
     [self refreshBarFrame];
     
     [self fwSetRightBarItem:@"启用" block:^(id sender) {
-        [UINavigationController fwEnableTransitionNavigationBar];
+        [UINavigationController fwEnableNavigationBarTransition];
     }];
 }
 
