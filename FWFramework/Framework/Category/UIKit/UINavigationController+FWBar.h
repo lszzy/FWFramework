@@ -9,12 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
-#pragma mark - UINavigationController+FWBar
-
 /*!
- @brief 优化导航栏转场动画突兀的问题，默认关闭。全局启用后各个ViewController管理自己的导航栏样式，可在viewWillAppear中覆盖设置
+ @brief 优化导航栏转场动画闪烁的问题，默认关闭。全局启用后各个ViewController管理自己的导航栏样式，在viewDidLoad或viewViewAppear中设置即可
  @discussion 方案1：自己实现UINavigationController管理器；方案2：将原有导航栏设置透明，每个控制器添加一个NavigationBar充当导航栏；方案3：转场开始隐藏原有导航栏并添加假的NavigationBar，转场结束后还原。此处采用方案3。更多介绍：https://tech.meituan.com/2018/10/25/navigation-transition-solution-and-best-practice-in-meituan.html
  
  @see https://github.com/MoZhouqi/KMNavigationBarTransition
@@ -22,56 +18,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UINavigationController (FWBar)
 
-// 全局启用NavigationBar转场。启用后各个ViewController管理自己的导航栏样式，可在viewWillAppear中覆盖设置
+// 全局启用NavigationBar转场。启用后各个ViewController管理自己的导航栏样式，在viewDidLoad或viewViewAppear中设置即可
 + (void)fwEnableNavigationBarTransition;
 
-@end
+// 自定义转场过程中containerView的背景色，默认白色
+@property (nonatomic, strong) UIColor *fwContainerViewBackgroundColor;
 
-#pragma mark - FWNavigationBarTransitionDelegate
+@end
 
 /*!
- @brief 导航栏转场代理
+ @brief 视图控制器导航栏转场分类。可设置部分界面不需要自定义转场
+ @discussion 如果iOS11+有scrollView时转场动画不正常，需设置scrollView的contentInsetAdjustmentBehavior为Never。如果iOS11+pop后导航栏按钮变灰，尝试设置navigationBar.tintAdjustmentMode为UIViewTintAdjustmentModeNormal
  */
-@protocol FWNavigationBarTransitionDelegate <NSObject>
+@interface UIViewController (FWBarTransition)
 
-@optional
-
-// 是否隐藏导航栏。不实现时不处理导航栏显示/隐藏
-- (BOOL)fwPrefersNavigationBarHidden;
-
-// 自定义导航栏背景色。为了自动判断转场，请在此方法中设置，不在custom中设置。不实现时不设置
-- (nullable UIColor *)fwNavigationBarBarTintColor;
-
-// 自定义导航栏背景图片。为了自动判断转场，请在此方法中设置，不在custom中设置。不实现时不设置
-- (nullable UIImage *)fwNavigationBarBackgroundImage;
-
-// 自定义导航栏阴影图片。为了自动判断转场，请在此方法中设置，不在custom中设置。不实现时不设置
-- (nullable UIImage *)fwNavigationBarShadowImage;
-
-// 自定义导航栏文字颜色。不实现时不设置
-- (nullable UIColor *)fwNavigationBarTintColor;
-
-// 自定义导航栏标题文字属性。不实现时不设置
-- (nullable NSDictionary *)fwNavigationBarTitleTextAttributes;
-
-// 自定义导航栏样式，可搭配key方式实现自定义转场。不实现时不设置
-- (void)fwCustomNavigationBarStyle;
-
-// 转场动画自定义判断KEY，不相等才会启用转场。不实现时默认根据导航栏样式自动比较判定，建议实现，提高性能
-- (nullable id)fwNavigationBarTransitionKey;
-
-// 自定义转场过程中containerView的背景色，不实现时默认白色
-- (nullable UIColor *)fwContainerViewBackgroundColor;
+// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
+@property (nonatomic, strong) id fwNavigationBarTransitionIdentifier;
 
 @end
-
-#pragma mark - UIViewController+FWNavigationBarTransitionDelegate
-
-/*!
- @brief 视图控制器默认可选实现导航栏转场代理
- */
-@interface UIViewController (FWNavigationBarTransitionDelegate) <FWNavigationBarTransitionDelegate>
-
-@end
-
-NS_ASSUME_NONNULL_END
