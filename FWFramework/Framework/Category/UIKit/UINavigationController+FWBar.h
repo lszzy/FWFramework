@@ -28,7 +28,7 @@
 
 /*!
  @brief 视图控制器导航栏转场分类。可设置部分界面不需要自定义转场
- @discussion 如果iOS11+有scrollView时转场动画不正常，需设置scrollView的contentInsetAdjustmentBehavior为Never。如果iOS11+pop后导航栏按钮变灰，尝试设置navigationBar.tintAdjustmentMode为UIViewTintAdjustmentModeNormal
+ @discussion 如果iOS11+有scrollView时转场动画不正常，需设置scrollView的contentInsetAdjustmentBehavior为Never。如果导航栏push/pop存在黑影(tab.nav.push|present.nav.push|nav.push)，可在对应控制器的viewDidLoad设置视图背景色为白色(tab.view|present.nav.view|vc.view)。
  */
 @interface UIViewController (FWBarTransition)
 

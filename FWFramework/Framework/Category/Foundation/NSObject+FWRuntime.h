@@ -449,7 +449,7 @@
 /*!
  @brief 使用swizzle替换类实例方法
  
- @param originalSelector 原方法
+ @param originalSelector 原始方法
  @param swizzleSelector  替换方法
  @return 是否成功
  */
@@ -458,10 +458,21 @@
 /*!
  @brief 使用swizzle替换类静态方法
  
- @param originalSelector 原方法
+ @param originalSelector 原始方法
  @param swizzleSelector  替换方法
  @return 是否成功
  */
 + (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
+
+/*!
+ @brief 使用swizzle替换类方法为另一类方法
+ 
+ @param originalSelector 原始方法
+ @param originalClass 原始类
+ @param swizzleSelector  替换方法
+ @param swizzleClass 替换类
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
 
 @end
