@@ -13,6 +13,7 @@
 #import "UIImage+FWFramework.h"
 #import "UIScreen+FWFramework.h"
 #import "NSString+FWFramework.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)
@@ -97,15 +98,26 @@
     [self setPositionAdjustment:UIOffsetMake(offset, 0) forSearchBarIcon:UISearchBarIconSearch];
 }
 
+- (void)fwForceCancelButtonEnabled:(BOOL)force
+{
+    if (force) {
+        [self.fwCancelButton fwObserveProperty:@"enabled" block:^(UIButton *object, NSDictionary *change) {
+            if (!object.enabled) {
+                object.enabled = YES;
+            }
+        }];
+    } else {
+        [self.fwCancelButton fwUnobserveProperty:@"enabled"];
+    }
+}
+
 - (UITextField *)fwTextField
 {
-    // return [self fwSubviewOfClass:[UITextField class]];
     return [self valueForKey:@"searchField"];
 }
 
 - (UIButton *)fwCancelButton
 {
-    // return [self fwSubviewOfClass:[UIButton class]];
     return [self valueForKey:@"cancelButton"];
 }
 
