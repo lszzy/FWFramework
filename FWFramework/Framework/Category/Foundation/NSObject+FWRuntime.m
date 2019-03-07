@@ -102,4 +102,29 @@
     return [object_getClass((id)self) fwSwizzleInstanceMethod:originalSelector with:swizzleSelector];
 }
 
++ (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass
+{
+    if (!originalClass || !swizzleClass) {
+        return NO;
+    }
+    
+    Method originalMethod = class_getInstanceMethod(originalClass, originalSelector);
+    Method swizzleMethod = class_getInstanceMethod(swizzleClass, swizzleSelector);
+    if (!swizzleMethod) {
+        return NO;
+    }
+    
+    BOOL addMethod = class_addMethod(originalClass, originalSelector, method_getImplementation(swizzleMethod), method_getTypeEncoding(swizzleMethod));
+    if (addMethod) {
+        if (originalMethod) {
+            class_replaceMethod(swizzleClass, swizzleSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+        } else {
+            class_replaceMethod(swizzleClass, swizzleSelector, imp_implementationWithBlock(^(id selfObject){}), "v@:");
+        }
+    } else {
+        method_exchangeImplementations(originalMethod, swizzleMethod);
+    }
+    return YES;
+}
+
 @end

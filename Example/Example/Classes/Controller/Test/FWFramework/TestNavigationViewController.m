@@ -20,26 +20,24 @@
 {
     [super viewDidLoad];
     
-    if (!self.fullscreenPop) {
-        FWWeakifySelf();
-        [self fwSetRightBarItem:@"Push" block:^(id sender) {
-            FWStrongifySelf();
-            TestNavigationViewController *viewController = [TestNavigationViewController new];
-            viewController.fullscreenPop = YES;
-            [self.navigationController pushViewController:viewController animated:YES];
-        }];
-    } else {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwRandomColor]];
-        
-        FWWeakifySelf();
-        [self fwSetBackBarBlock:^BOOL{
-            FWStrongifySelf();
-            [self fwShowConfirmWithTitle:nil message:@"是否关闭" cancel:@"否" confirm:@"是" confirmBlock:^{
-                FWStrongifySelf();
-                [self fwCloseViewControllerAnimated:YES];
-            }];
-            return NO;
-        }];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"Push" block:^(id sender) {
+        FWStrongifySelf();
+        TestNavigationViewController *viewController = [TestNavigationViewController new];
+        viewController.fullscreenPop = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.fullscreenPop) {
+        if (!self.fwTempObject) {
+            self.fwTempObject = [UIColor fwRandomColor];
+        }
+        [self.navigationController.navigationBar fwSetBackgroundColor:self.fwTempObject];
     }
 }
 

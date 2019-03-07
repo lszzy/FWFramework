@@ -81,33 +81,20 @@
 
 @end
 
-#pragma mark - NSObject+FWBarTransition
+#pragma mark - UIView+FWBarTransition
 
-@interface NSObject (FWBarTransition)
+@interface UIView (FWBarTransition)
 
 @end
 
-@implementation NSObject (FWBarTransition)
+@implementation UIView (FWBarTransition)
 
 + (void)fwInnerEnableNavigationBarTransition
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Class originalCls = objc_getClass("_UIBarBackground");
-        if (originalCls) {
-            SEL originalSelector = @selector(setHidden:);
-            Class swizzledCls = [self class];
-            SEL swizzledSelector = @selector(fwInnerUIBarBackgroundSetHidden:);
-            
-            Method originalMethod = class_getInstanceMethod(originalCls, originalSelector);
-            Method swizzledMethod = class_getInstanceMethod(swizzledCls, swizzledSelector);
-            BOOL isAddMethod = class_addMethod(originalCls, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
-            if (isAddMethod) {
-                class_replaceMethod(originalCls, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-            } else {
-                method_exchangeImplementations(originalMethod, swizzledMethod);
-            }
-        }
+        [NSObject fwSwizzleMethod:@selector(setHidden:) in:objc_getClass("_UIBarBackground") with:@selector(fwInnerUIBarBackgroundSetHidden:) in:[self class]];
+        [NSObject fwSwizzleMethod:@selector(layoutSubviews) in:objc_getClass("_UIParallaxDimmingView") with:@selector(fwInnerUIParallaxDimmingViewLayoutSubviews) in:[self class]];
     });
 }
 
@@ -125,6 +112,21 @@
         responder = responder.nextResponder;
     }
     [self fwInnerUIBarBackgroundSetHidden:hidden];
+}
+
+- (void)fwInnerUIParallaxDimmingViewLayoutSubviews
+{
+    [self fwInnerUIParallaxDimmingViewLayoutSubviews];
+    // 处理导航栏左侧阴影占不满的问题
+    if ([self.subviews.firstObject isKindOfClass:[UIImageView class]]) {
+        UIImageView *imageView = self.subviews.firstObject;
+        if (self.frame.origin.y > 0 && imageView.frame.origin.y == 0) {
+            imageView.frame = CGRectMake(imageView.frame.origin.x,
+                                         imageView.frame.origin.y - self.frame.origin.y,
+                                         imageView.frame.size.width,
+                                         imageView.frame.size.height + self.frame.origin.y);
+        }
+    }
 }
 
 @end
@@ -273,7 +275,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [UINavigationBar fwInnerEnableNavigationBarTransition];
-        [NSObject fwInnerEnableNavigationBarTransition];
+        [UIView fwInnerEnableNavigationBarTransition];
         [UIViewController fwInnerEnableNavigationBarTransition];
         [UINavigationController fwInnerEnableNavigationBarTransition];
     });
