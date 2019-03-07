@@ -29,6 +29,9 @@
 // 设置TextField搜索图标(placeholder)是否居中，否则居左
 - (void)fwSetSearchIconCenter:(BOOL)center;
 
+// 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
+- (void)fwForceCancelButtonEnabled:(BOOL)force;
+
 // 输入框
 - (UITextField *)fwTextField;
 

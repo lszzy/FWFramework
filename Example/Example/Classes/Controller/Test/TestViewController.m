@@ -23,9 +23,11 @@
         _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
         _searchBar.placeholder = @"我是很长很长";
         _searchBar.delegate = self;
+        _searchBar.showsCancelButton = YES;
+        [_searchBar fwForceCancelButtonEnabled:YES];
         [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
         [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
-        _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 15);
+        _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 65);
         [_searchBar fwSetSearchIconCenter:YES];
         [_searchBar fwSetSearchIconPosition:0];
         
