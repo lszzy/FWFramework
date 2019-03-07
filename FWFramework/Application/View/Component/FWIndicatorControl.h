@@ -33,6 +33,9 @@ typedef NS_ENUM(NSInteger, FWIndicatorControlType) {
 // 指示器容器视图，可设置背景色、圆角、添加自定义视图，只读
 @property (nonatomic, readonly) UIView *contentView;
 
+// 指示器容器左右最小内间距，默认10，show之前生效
+@property (nonatomic, assign) CGFloat paddingWidth;
+
 // 指示器容器内边距，非自定义时生效，show之前生效
 @property (nonatomic, assign) UIEdgeInsets contentInsets;
 

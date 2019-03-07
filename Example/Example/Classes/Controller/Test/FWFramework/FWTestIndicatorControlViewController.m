@@ -62,7 +62,7 @@
 - (void)onText2
 {
     self.view.fwIndicatorControl = [[FWIndicatorControl alloc] initWithType:FWIndicatorControlTypeText];
-    self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"手机号码格式不正确，我是好长好长真的很长很长的文本"];
+    self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"手机号码格式不正确，我是好长好长好长好长好长好长真的很长很长的文本\n我是另一行的文本"];
     self.view.fwIndicatorControl.indicatorColor = [UIColor redColor];
     [self.view.fwIndicatorControl show:YES];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -82,7 +82,7 @@
 - (void)onActivity2
 {
     self.view.fwIndicatorControl = [[FWIndicatorControl alloc] initWithType:FWIndicatorControlTypeActivity];
-    self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"正在加载"];
+    self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"正在加载，我是好长好长好长好长好长好长真的很长很长的文本\n我是另一行的文本"];
     self.view.fwIndicatorControl.indicatorColor = [UIColor redColor];
     self.view.fwIndicatorControl.indicatorStyle = UIActivityIndicatorViewStyleWhite;
     [self.view.fwIndicatorControl show:YES];
@@ -104,7 +104,7 @@
 - (void)onImage2
 {
     self.view.fwIndicatorControl = [[FWIndicatorControl alloc] initWithType:FWIndicatorControlTypeImage];
-    self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"正在加载"];
+    self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"正在加载，我是好长好长好长好长好长好长真的很长很长的文本\n我是另一行的文本"];
     self.view.fwIndicatorControl.indicatorImage = [UIImage fwGifImageWithName:@"public_icon"];
     self.view.fwIndicatorControl.indicatorSize = CGSizeMake(20, 20);
     [self.view.fwIndicatorControl show:YES];
@@ -159,7 +159,7 @@
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:finish ? @"上传完成" : @"上传中" attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:12]}];
+            self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:finish ? @"上传完成" : @"上传中，我是好长好长好长好长好长好长真的很长很长的文本\n我是另一行的文本" attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:12]}];
             self.view.fwIndicatorControl.progress = progress;
         });
         usleep(finish ? 2000000 : 50000);
