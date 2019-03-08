@@ -69,14 +69,26 @@
 
 @end
 
+#pragma mark - FWProxyNavigationTransition
+
+// 导航控制器转场代理类，代理到视图控制器
+@interface FWProxyNavigationTransition : NSObject <UINavigationControllerDelegate>
+
+@end
+
+@interface UIViewController (FWProxyNavigationTransition)
+
+// 导航控制器转场代理，仅控制器生效
+@property (nonatomic, strong) FWNavigationTransition *fwProxyNavigationTransition;
+
+@end
+
 #pragma mark - UINavigationController+FWTransition
 
 // 导航控制器转场动画分类
 @interface UINavigationController (FWTransition)
 
-/**
- *  导航控制器转场动画，一直生效直到设置为nil
- */
+// 导航控制器转场动画，一直生效直到设置为nil
 @property (nonatomic, strong) id<UINavigationControllerDelegate> fwNavigationTransition;
 
 @end
