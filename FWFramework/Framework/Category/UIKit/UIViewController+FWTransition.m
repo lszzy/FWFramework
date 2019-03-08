@@ -19,6 +19,79 @@
 
 @implementation FWAnimatedTransition
 
+#pragma mark - Factory
+
++ (instancetype)transitionWithDelegate:(id<FWAnimatedTransitionDelegate>)delegate
+{
+    FWAnimatedTransition *transition = [[self alloc] init];
+    transition.delegate = delegate;
+    return transition;
+}
+
++ (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *))block
+{
+    FWAnimatedTransition *transition = [[self alloc] init];
+    transition.block = block;
+    return transition;
+}
+
++ (instancetype)transition
+{
+    return [[self alloc] init];
+}
+
+#pragma mark - Lifecycle
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _enabled = YES;
+        _duration = -1;
+    }
+    return self;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    self.type = FWAnimatedTransitionTypePresent;
+    return self.enabled ? self : nil;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    self.type = FWAnimatedTransitionTypeDismiss;
+    return self.enabled ? self : nil;
+}
+
+#pragma mark - UINavigationControllerDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+    if (operation == UINavigationControllerOperationPush) {
+        // push时检查toVC的转场代理
+        if (toVC.fwViewTransition.enabled) {
+            toVC.fwViewTransition.type = FWAnimatedTransitionTypePush;
+            return toVC.fwViewTransition;
+        } else {
+            self.type = FWAnimatedTransitionTypePush;
+            return self.enabled ? self : nil;
+        }
+    } else if (operation == UINavigationControllerOperationPop) {
+        // pop时检查fromVC的转场代理
+        if (fromVC.fwViewTransition.enabled) {
+            fromVC.fwViewTransition.type = FWAnimatedTransitionTypePop;
+            return fromVC.fwViewTransition;
+        } else {
+            self.type = FWAnimatedTransitionTypePop;
+            return self.enabled ? self : nil;
+        }
+    }
+    return nil;
+}
+
 #pragma mark - UIViewControllerAnimatedTransitioning
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -27,13 +100,10 @@
         return 0.f;
     }
     
-    NSTimeInterval duration;
+    NSTimeInterval duration = self.duration;
     if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransitionDuration:)]) {
         duration = [self.delegate fwAnimatedTransitionDuration:self];
-    } else {
-        duration = self.duration;
     }
-    // 默认值0.25秒
     return duration > 0 ? duration : -1;
 }
 
@@ -44,18 +114,9 @@
     // 执行转场动画
     if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransition:)]) {
         [self.delegate fwAnimatedTransition:self];
-    } else if (self.transitionBlock) {
-        self.transitionBlock(self);
-    } else {
-        [self transition];
+    } else if (self.block) {
+        self.block(self);
     }
-}
-
-#pragma mark - Protect
-
-- (void)transition
-{
-    // 子类重写
 }
 
 #pragma mark - Public
@@ -114,9 +175,73 @@
 
 @end
 
+#pragma mark - FWSystemAnimationTransition
+
+@implementation FWSystemAnimationTransition
+
++ (instancetype)transition
+{
+    static FWSystemAnimationTransition *transition = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        transition = [[self alloc] init];
+    });
+    return transition;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    self.type = FWAnimatedTransitionTypePresent;
+    return nil;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    self.type = FWAnimatedTransitionTypeDismiss;
+    return nil;
+}
+
+#pragma mark - UINavigationControllerDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+    if (operation == UINavigationControllerOperationPush) {
+        // push时检查toVC的转场代理
+        if (toVC.fwViewTransition.enabled) {
+            toVC.fwViewTransition.type = FWAnimatedTransitionTypePush;
+            return toVC.fwViewTransition;
+        } else {
+            self.type = FWAnimatedTransitionTypePush;
+            return nil;
+        }
+    } else if (operation == UINavigationControllerOperationPop) {
+        // pop时检查fromVC的转场代理
+        if (fromVC.fwViewTransition.enabled) {
+            fromVC.fwViewTransition.type = FWAnimatedTransitionTypePop;
+            return fromVC.fwViewTransition;
+        } else {
+            self.type = FWAnimatedTransitionTypePop;
+            return nil;
+        }
+    }
+    return nil;
+}
+
+@end
+
 #pragma mark - FWSwipeAnimationTransition
 
 @implementation FWSwipeAnimationTransition
+
++ (instancetype)transitionWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection
+{
+    FWSwipeAnimationTransition *transition = [[self alloc] init];
+    transition.inDirection = inDirection;
+    transition.outDirection = outDirection;
+    return transition;
+}
 
 - (instancetype)init
 {
@@ -128,56 +253,14 @@
     return self;
 }
 
-- (instancetype)initWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-    self = [super init];
-    if (self) {
-        _inDirection = inDirection;
-        _outDirection = outDirection;
-    }
-    return self;
-}
+    [super animateTransition:transitionContext];
 
-- (void)transition
-{
-    BOOL isIn = (self.type == FWAnimatedTransitionTypePush || self.type == FWAnimatedTransitionTypePresent);
-    CGVector offset = [self getOffsetWithDirection:isIn ? self.inDirection : self.outDirection];
-    CGRect fromFrame = [self.transitionContext initialFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey]];
-    CGRect toFrame = [self.transitionContext finalFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
-    
-    UIView *topView = nil;
-    UIView *bottomView = nil;
-    if (isIn) {
-        [self.transitionContext.containerView addSubview:self.toView];
-        topView = self.toView;
-        bottomView = self.fromView;
-    } else {
-        [self.transitionContext.containerView insertSubview:self.toView belowSubview:self.fromView];
-        topView = self.fromView;
-        bottomView = self.toView;
-    }
-    if ([topView isEqual:self.toView]) {
-        topView.frame = [self initialFrameWithFrame:toFrame offset:offset isIn:isIn];
-        bottomView.frame = fromFrame;
-    }else{
-        topView.frame = [self initialFrameWithFrame:fromFrame offset:offset isIn:isIn];
-        bottomView.frame = toFrame;
-    }
-    
-    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
-        CGRect frame = [topView isEqual:self.toView] ? toFrame : fromFrame;
-        topView.frame = [self finalFrameWithFrame:frame offset:offset isIn:isIn];
-    } completion:^(BOOL finished) {
-        BOOL cancelled = [self.transitionContext transitionWasCancelled];
-        if (cancelled) {
-            [self.toView removeFromSuperview];
-        }
-        [self.transitionContext completeTransition:!cancelled];
-    }];
-}
-
-- (CGVector)getOffsetWithDirection:(UISwipeGestureRecognizerDirection)direction
-{
+    BOOL inTransition = (self.type == FWAnimatedTransitionTypePush || self.type == FWAnimatedTransitionTypePresent);
+    CGRect fromFrame = [transitionContext initialFrameForViewController:[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey]];
+    CGRect toFrame = [transitionContext finalFrameForViewController:[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
+    UISwipeGestureRecognizerDirection direction = inTransition ? self.inDirection : self.outDirection;
     CGVector offset;
     switch (direction) {
         case UISwipeGestureRecognizerDirectionLeft: {
@@ -198,25 +281,45 @@
             break;
         }
     }
-    return offset;
-}
-
-- (CGRect)initialFrameWithFrame:(CGRect)frame offset:(CGVector)offset isIn:(BOOL)isIn
-{
-    NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
-    vectorValue = vectorValue > 0 ? -vectorValue : vectorValue;
-    NSInteger flag = isIn ? vectorValue : 0;
     
-    CGFloat offsetX = frame.size.width * offset.dx * flag;
-    CGFloat offsetY = frame.size.height * offset.dy * flag;
-    return CGRectOffset(frame, offsetX, offsetY);
+    UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+    if (inTransition) {
+        [transitionContext.containerView addSubview:toView];
+        toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:YES show:inTransition];
+        fromView.frame = fromFrame;
+    } else {
+        [transitionContext.containerView insertSubview:toView belowSubview:fromView];
+        fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:YES show:inTransition];
+        toView.frame = toFrame;
+    }
+    
+    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+        if (inTransition) {
+            toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:NO show:inTransition];
+        } else {
+            fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:NO show:inTransition];
+        }
+    } completion:^(BOOL finished) {
+        BOOL cancelled = [transitionContext transitionWasCancelled];
+        if (cancelled) {
+            [toView removeFromSuperview];
+        }
+        [transitionContext completeTransition:!cancelled];
+    }];
 }
 
-- (CGRect)finalFrameWithFrame:(CGRect)frame offset:(CGVector)offset isIn:(BOOL)isIn
+- (CGRect)animateFrameWithFrame:(CGRect)frame offset:(CGVector)offset initial:(BOOL)initial show:(BOOL)show
 {
     NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
-    vectorValue = vectorValue > 0 ? vectorValue : -vectorValue;
-    NSInteger flag = isIn ? 0 : vectorValue;
+    NSInteger flag = 0;
+    if (initial) {
+        vectorValue = vectorValue > 0 ? -vectorValue : vectorValue;
+        flag = show ? vectorValue : 0;
+    } else {
+        vectorValue = vectorValue > 0 ? vectorValue : -vectorValue;
+        flag = show ? 0 : vectorValue;
+    }
     
     CGFloat offsetX = frame.size.width * offset.dx * flag;
     CGFloat offsetY = frame.size.height * offset.dy * flag;
@@ -225,101 +328,51 @@
 
 @end
 
-#pragma mark - FWViewTransitionDelegate
-
-@implementation FWViewTransitionDelegate
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
-{
-    if (self.animatedTransition) {
-        self.animatedTransition.type = FWAnimatedTransitionTypePresent;
-        return self.animatedTransition;
-    }
-    return nil;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
-{
-    if (self.animatedTransition) {
-        self.animatedTransition.type = FWAnimatedTransitionTypeDismiss;
-        return self.animatedTransition;
-    }
-    return nil;
-}
-
-@end
+#pragma mark - UIViewController+FWTransition
 
 @implementation UIViewController (FWTransition)
 
-- (id<UIViewControllerTransitioningDelegate>)fwViewTransitionDelegate
+- (FWAnimatedTransition *)fwModalTransition
 {
-    return objc_getAssociatedObject(self, @selector(fwViewTransitionDelegate));
+    return objc_getAssociatedObject(self, @selector(fwModalTransition));
 }
 
 // 注意：App退出后台时如果弹出页面，整个present动画不会执行。如果需要设置遮罩层等，需要在viewDidAppear中处理兼容
-- (void)setFwViewTransitionDelegate:(id<UIViewControllerTransitioningDelegate>)fwViewTransitionDelegate
+- (void)setFwModalTransition:(FWAnimatedTransition *)fwModalTransition
 {
     // 设置delegation动画，nil时清除delegate动画
-    self.transitioningDelegate = fwViewTransitionDelegate;
+    self.transitioningDelegate = fwModalTransition;
     // 强引用，防止被自动释放，nil时释放引用
-    objc_setAssociatedObject(self, @selector(fwViewTransitionDelegate), fwViewTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwModalTransition), fwModalTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (FWAnimatedTransition *)fwNavigationAnimatedTransition
+- (FWAnimatedTransition *)fwViewTransition
 {
-    return objc_getAssociatedObject(self, @selector(fwNavigationAnimatedTransition));
+    return objc_getAssociatedObject(self, @selector(fwViewTransition));
 }
 
-- (void)setFwNavigationAnimatedTransition:(FWAnimatedTransition *)fwNavigationAnimatedTransition
+- (void)setFwViewTransition:(FWAnimatedTransition *)fwViewTransition
 {
-    objc_setAssociatedObject(self, @selector(fwNavigationAnimatedTransition), fwNavigationAnimatedTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwViewTransition), fwViewTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
 
-#pragma mark - FWNavigationTransitionDelegate
-
-@implementation FWNavigationTransitionDelegate
-
-- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
-{
-    if (operation == UINavigationControllerOperationPush) {
-        // push时检查toVC的转场代理
-        if (self.viewControllerTransitionEnabled && toVC.fwNavigationAnimatedTransition) {
-            toVC.fwNavigationAnimatedTransition.type = FWAnimatedTransitionTypePush;
-            return toVC.fwNavigationAnimatedTransition;
-        } else if (self.animatedTransition) {
-            self.animatedTransition.type = FWAnimatedTransitionTypePush;
-            return self.animatedTransition;
-        }
-    } else if (operation == UINavigationControllerOperationPop) {
-        // pop时检查fromVC的转场代理
-        if (self.viewControllerTransitionEnabled && fromVC.fwNavigationAnimatedTransition) {
-            fromVC.fwNavigationAnimatedTransition.type = FWAnimatedTransitionTypePop;
-            return fromVC.fwNavigationAnimatedTransition;
-        } else if (self.animatedTransition) {
-            self.animatedTransition.type = FWAnimatedTransitionTypePop;
-            return self.animatedTransition;
-        }
-    }
-    return nil;
-}
-
-@end
+#pragma mark - UINavigationController+FWTransition
 
 @implementation UINavigationController (FWTransition)
 
-- (id<UINavigationControllerDelegate>)fwNavigationTransitionDelegate
+- (FWAnimatedTransition *)fwNavigationTransition
 {
-    return objc_getAssociatedObject(self, @selector(fwNavigationTransitionDelegate));
+    return objc_getAssociatedObject(self, @selector(fwNavigationTransition));
 }
 
-- (void)setFwNavigationTransitionDelegate:(id<UINavigationControllerDelegate>)fwNavigationTransitionDelegate
+- (void)setFwNavigationTransition:(FWAnimatedTransition *)fwNavigationTransition
 {
     // 设置delegate动画，nil时清理delegate动画，无需清理CA动画
-    self.delegate = fwNavigationTransitionDelegate;
+    self.delegate = fwNavigationTransition;
     // 强引用，防止被自动释放，nil时释放引用
-    objc_setAssociatedObject(self, @selector(fwNavigationTransitionDelegate), fwNavigationTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwNavigationTransition), fwNavigationTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
