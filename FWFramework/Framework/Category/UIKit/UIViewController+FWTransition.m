@@ -141,12 +141,45 @@
 
 - (void)transition
 {
-    BOOL isSwipeIn = (self.type == FWAnimatedTransitionTypePush || self.type == FWAnimatedTransitionTypePresent);
+    BOOL isIn = (self.type == FWAnimatedTransitionTypePush || self.type == FWAnimatedTransitionTypePresent);
+    CGVector offset = [self getOffsetWithDirection:isIn ? self.inDirection : self.outDirection];
     CGRect fromFrame = [self.transitionContext initialFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey]];
     CGRect toFrame = [self.transitionContext finalFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
-    CGRect startFrame = isSwipeIn ? toFrame : fromFrame;
+    
+    UIView *topView = nil;
+    UIView *bottomView = nil;
+    if (isIn) {
+        [self.containerView addSubview:self.toView];
+        topView = self.toView;
+        bottomView = self.fromView;
+    } else {
+        [self.containerView insertSubview:self.toView belowSubview:self.fromView];
+        topView = self.fromView;
+        bottomView = self.toView;
+    }
+    if ([topView isEqual:self.toView]) {
+        topView.frame = [self initialFrameWithFrame:toFrame offset:offset isIn:isIn];
+        bottomView.frame = fromFrame;
+    }else{
+        topView.frame = [self initialFrameWithFrame:fromFrame offset:offset isIn:isIn];
+        bottomView.frame = toFrame;
+    }
+    
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
+        CGRect frame = [topView isEqual:self.toView] ? toFrame : fromFrame;
+        topView.frame = [self finalFrameWithFrame:frame offset:offset isIn:isIn];
+    } completion:^(BOOL finished) {
+        BOOL cancelled = [self.transitionContext transitionWasCancelled];
+        if (cancelled) {
+            [self.toView removeFromSuperview];
+        }
+        [self.transitionContext completeTransition:!cancelled];
+    }];
+}
+
+- (CGVector)getOffsetWithDirection:(UISwipeGestureRecognizerDirection)direction
+{
     CGVector offset;
-    UISwipeGestureRecognizerDirection direction = isSwipeIn ? self.inDirection : self.outDirection;
     switch (direction) {
         case UISwipeGestureRecognizerDirectionLeft: {
             offset = CGVectorMake(-1.f, 0.f);
@@ -166,49 +199,29 @@
             break;
         }
     }
-    
-    UIView *topView = nil;
-    UIView *bottomView = nil;
-    if (isSwipeIn) {
-        [self.containerView addSubview:self.toView];
-        topView = self.toView;
-        bottomView = self.fromView;
-    } else {
-        [self.containerView insertSubview:self.toView belowSubview:self.fromView];
-        topView = self.fromView;
-        bottomView = self.toView;
-    }
-    
+    return offset;
+}
+
+- (CGRect)initialFrameWithFrame:(CGRect)frame offset:(CGVector)offset isIn:(BOOL)isIn
+{
     NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
     vectorValue = vectorValue > 0 ? -vectorValue : vectorValue;
-    NSInteger flag = isSwipeIn ? vectorValue : 0;
+    NSInteger flag = isIn ? vectorValue : 0;
     
-    CGFloat offsetX = startFrame.size.width * offset.dx * flag;
-    CGFloat offsetY = startFrame.size.height * offset.dy * flag;
-    CGRect tempFrame = CGRectOffset(startFrame, offsetX, offsetY);
-    if (isSwipeIn) {
-        topView.frame = tempFrame;
-        bottomView.frame = fromFrame;
-    }else{
-        topView.frame = tempFrame;
-        bottomView.frame = toFrame;
-    }
+    CGFloat offsetX = frame.size.width * offset.dx * flag;
+    CGFloat offsetY = frame.size.height * offset.dy * flag;
+    return CGRectOffset(frame, offsetX, offsetY);
+}
+
+- (CGRect)finalFrameWithFrame:(CGRect)frame offset:(CGVector)offset isIn:(BOOL)isIn
+{
+    NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
+    vectorValue = vectorValue > 0 ? vectorValue : -vectorValue;
+    NSInteger flag = isIn ? 0 : vectorValue;
     
-    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
-        NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
-        vectorValue = vectorValue > 0 ? vectorValue : -vectorValue;
-        NSInteger flag = isSwipeIn ? 0 : vectorValue;
-        
-        CGFloat offsetX = startFrame.size.width * offset.dx * flag;
-        CGFloat offsetY = startFrame.size.height * offset.dy * flag;
-        topView.frame = CGRectOffset(startFrame, offsetX, offsetY);
-    } completion:^(BOOL finished) {
-        BOOL cancelled = [self.transitionContext transitionWasCancelled];
-        if (cancelled) {
-            [self.toView removeFromSuperview];
-        }
-        [self.transitionContext completeTransition:!cancelled];
-    }];
+    CGFloat offsetX = frame.size.width * offset.dx * flag;
+    CGFloat offsetY = frame.size.height * offset.dy * flag;
+    return CGRectOffset(frame, offsetX, offsetY);
 }
 
 @end
