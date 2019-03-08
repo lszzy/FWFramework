@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - FWAnimatedTransition
+#pragma mark - FWAnimatedTransitionType
 
 /*!
  @brief 转场动画类型
@@ -25,6 +25,8 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
     FWAnimatedTransitionTypeDismiss,
 };
 
+#pragma mark - FWAnimatedTransitionDelegate
+
 @class FWAnimatedTransition;
 
 // 转场动画代理
@@ -32,36 +34,43 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @optional
 
-// 转场动画持续时间(如果小于等于0，使用默认时间0.25)
-- (NSTimeInterval)fwAnimatedTransitionDuration:(FWAnimatedTransition *)transtion;
-
 // 执行转场动画
 - (void)fwAnimatedTransition:(FWAnimatedTransition *)transition;
 
+// 转场动画持续时间
+- (NSTimeInterval)fwAnimatedTransitionDuration:(FWAnimatedTransition *)transtion;
+
 @end
 
-// 转场动画类
-@interface FWAnimatedTransition : NSObject <UIViewControllerAnimatedTransitioning>
+#pragma mark - FWAnimatedTransition
 
-#pragma mark - Delegate
+// 转场动画类，默认系统动画。实现任一转场方式即可：delegate|block|inherit
+@interface FWAnimatedTransition : NSObject <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
-// 代理方式：动画代理
-@property (nonatomic, weak) id<FWAnimatedTransitionDelegate> delegate;
+#pragma mark - Factory
 
-#pragma mark - Block
+// 创建转场：代理方式
++ (instancetype)transitionWithDelegate:(id<FWAnimatedTransitionDelegate>)delegate;
 
-// 句柄方式：动画持续时间(如果小于等于0，使用默认时间0.25)
-@property (nonatomic, assign) NSTimeInterval duration;
+// 创建转场：句柄方式
++ (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *transition))block;
 
-// 句柄方式：执行转场动画
-@property (nonatomic, copy) void (^transitionBlock)(FWAnimatedTransition *transition);
-
-#pragma mark - Protect
-
-// 继承方式：执行转场动画，子类重写
-- (void)transition;
+// 创建转场：继承方式
++ (instancetype)transition;
 
 #pragma mark - Public
+
+// 设置动画代理
+@property (nonatomic, weak) id<FWAnimatedTransitionDelegate> delegate;
+
+// 设置动画句柄
+@property (nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
+
+// 是否启用转场。默认YES，设为NO可禁用
+@property (nonatomic, assign) BOOL enabled;
+
+// 动画持续时间。默认使用系统时间(大约0.25秒)
+@property (nonatomic, assign) NSTimeInterval duration;
 
 // 转场动画类型
 @property (nonatomic, assign) FWAnimatedTransitionType type;
@@ -86,13 +95,20 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @end
 
+#pragma mark - FWSystemAnimationTransition
+
+// 系统转场动画类，可通过transition方法获取单例
+@interface FWSystemAnimationTransition : FWAnimatedTransition
+
+@end
+
 #pragma mark - FWSwipeAnimationTransition
 
-// 滑动转场动画
+// 滑动转场动画类
 @interface FWSwipeAnimationTransition : FWAnimatedTransition
 
 // 创建滑动转场，指定in(push|present)和out(pop|dismiss)方向
-- (instancetype)initWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection;
++ (instancetype)transitionWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection;
 
 // 指定in(push|present)方向，默认Left
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection inDirection;
@@ -102,44 +118,25 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @end
 
-#pragma mark - FWViewTransitionDelegate
+#pragma mark - UIViewController+FWTransition
 
-// 视图控制器转场动画代理类
-@interface FWViewTransitionDelegate : NSObject <UIViewControllerTransitioningDelegate>
-
-// 视图控制器转场动画
-@property (nonatomic, strong) FWAnimatedTransition *animatedTransition;
-
-@end
-
-// 视图控制器转场动画分类
+// 视图控制器转场动画分类，如需半透明，请在init中设置modalPresentationStyle为UIModalPresentationCustom
 @interface UIViewController (FWTransition)
 
-// 转场动画代理，如需半透明，请在init中设置modalPresentationStyle为UIModalPresentationCustom
-@property (nonatomic, strong) id<UIViewControllerTransitioningDelegate> fwViewTransitionDelegate;
+// 视图控制器present|dismiss转场动画，注意会修改transitioningDelegate
+@property (nonatomic, strong) FWAnimatedTransition *fwModalTransition;
 
-// 代理导航控制器转场动画
-@property (nonatomic, strong) FWAnimatedTransition *fwNavigationAnimatedTransition;
-
-@end
-
-#pragma mark - FWNavigationTransitionDelegate
-
-// 导航控制器转场动画代理类
-@interface FWNavigationTransitionDelegate : NSObject <UINavigationControllerDelegate>
-
-// 导航控制器转场动画
-@property (nonatomic, strong) FWAnimatedTransition *animatedTransition;
-
-// 是否启用视图控制器的导航栏转场动画，会优先调用vc.fwNavigationAnimatedTransition
-@property (nonatomic, assign) BOOL viewControllerTransitionEnabled;
+// 视图控制器push|pop转场动画，代理导航控制器转场动画，fwNavigationTransition设置后生效
+@property (nonatomic, strong) FWAnimatedTransition *fwViewTransition;
 
 @end
+
+#pragma mark - UINavigationController+FWTransition
 
 // 导航控制器转场动画分类
 @interface UINavigationController (FWTransition)
 
-// 导航控制器转场动画代理，一直生效直到设置为nil
-@property (nonatomic, strong) id<UINavigationControllerDelegate> fwNavigationTransitionDelegate;
+// 导航控制器push|pop转场动画，注意会修改delegate，一直生效直到设置为nil
+@property (nonatomic, strong) FWAnimatedTransition *fwNavigationTransition;
 
 @end

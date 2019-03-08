@@ -79,7 +79,7 @@
     [self fwSetNavigationBarHidden:NO animated:animated];
     
     // 自动还原动画
-    self.navigationController.fwNavigationTransitionDelegate = nil;
+    self.navigationController.fwNavigationTransition = nil;
 }
 
 - (void)renderData
@@ -128,7 +128,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePresent) {
             [transition start];
             transition.toView.transform = CGAffineTransformMakeScale(0.0, 0.0);
@@ -156,10 +156,8 @@
         }
     };
     
-    FWViewTransitionDelegate *delegate = [[FWViewTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwViewTransitionDelegate = delegate;
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -167,7 +165,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePresent) {
             [transition start];
             [transition.toView fwAddTransitionWithType:kCATransitionMoveIn
@@ -191,10 +189,8 @@
         }
     };
     
-    FWViewTransitionDelegate *delegate = [[FWViewTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwViewTransitionDelegate = delegate;
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -203,10 +199,8 @@
     FWSwipeAnimationTransition *transition = [[FWSwipeAnimationTransition alloc] init];
     transition.duration = TestTransitinDuration;
     
-    FWViewTransitionDelegate *delegate = [[FWViewTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwViewTransitionDelegate = delegate;
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -220,7 +214,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             [UIView transitionFromView:transition.fromView
@@ -242,10 +236,8 @@
         }
     };
     
-    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -253,7 +245,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
@@ -277,10 +269,8 @@
         }
     };
     
-    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -288,7 +278,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             // 使用navigationController.view做动画，而非containerView做动画，下同
@@ -313,10 +303,8 @@
         }
     };
     
-    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -324,7 +312,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
@@ -346,10 +334,8 @@
         }
     };
     
-    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -360,10 +346,8 @@
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
-    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
-    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -371,7 +355,7 @@
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
-    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+    transition.block = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
@@ -395,11 +379,9 @@
         }
     };
     
-    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
-    delegate.viewControllerTransitionEnabled = YES;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwNavigationAnimatedTransition = transition;
-    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    vc.fwViewTransition = transition;
+    self.navigationController.fwNavigationTransition = [FWSystemAnimationTransition transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
