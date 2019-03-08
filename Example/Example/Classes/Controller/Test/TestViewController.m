@@ -65,6 +65,7 @@
                                              @[@"UIWebView(FWFramework)", @"TestWebViewController"],
                                              @[@"UINavigationController(FWFramework)", @"TestNavigationViewController"],
                                              @[@"UIViewController(FWBar)", @"TestBarViewController"],
+                                             @[@"UIViewController(FWTransition)", @"TestTransitionViewController"],
                                              @[@"UITextField(FWKeyboard)", @"TestKeyboardViewController"],
                                              @[@"NSURL(FWVendor)", @"TestUrlViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
