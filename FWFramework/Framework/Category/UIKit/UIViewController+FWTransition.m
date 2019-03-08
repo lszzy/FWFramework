@@ -23,6 +23,10 @@
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
+    if (!transitionContext.isAnimated) {
+        return 0.f;
+    }
+    
     NSTimeInterval duration;
     if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransitionDuration:)]) {
         duration = [self.delegate fwAnimatedTransitionDuration:self];
@@ -56,11 +60,6 @@
 
 #pragma mark - Public
 
-- (UIView *)containerView
-{
-    return [self.transitionContext containerView];
-}
-
 - (UIView *)fromView
 {
     return [self.transitionContext viewForKey:UITransitionContextFromViewKey];
@@ -76,25 +75,25 @@
     switch (self.type) {
         // push时fromView在下，toView在上
         case FWAnimatedTransitionTypePush: {
-            [self.containerView addSubview:self.fromView];
-            [self.containerView addSubview:self.toView];
+            [self.transitionContext.containerView addSubview:self.fromView];
+            [self.transitionContext.containerView addSubview:self.toView];
             break;
         }
         // pop时fromView在上，toView在下
         case FWAnimatedTransitionTypePop: {
             // 此处后添加fromView，方便做pop动画，可自行移动toView到上面
-            [self.containerView addSubview:self.toView];
-            [self.containerView addSubview:self.fromView];
+            [self.transitionContext.containerView addSubview:self.toView];
+            [self.transitionContext.containerView addSubview:self.fromView];
             break;
         }
         // present时使用toView做动画
         case FWAnimatedTransitionTypePresent: {
-            [self.containerView addSubview:self.toView];
+            [self.transitionContext.containerView addSubview:self.toView];
             break;
         }
         // dismiss时使用fromView做动画
         case FWAnimatedTransitionTypeDismiss: {
-            [self.containerView addSubview:self.fromView];
+            [self.transitionContext.containerView addSubview:self.fromView];
             break;
         }
         default: {
@@ -149,11 +148,11 @@
     UIView *topView = nil;
     UIView *bottomView = nil;
     if (isIn) {
-        [self.containerView addSubview:self.toView];
+        [self.transitionContext.containerView addSubview:self.toView];
         topView = self.toView;
         bottomView = self.fromView;
     } else {
-        [self.containerView insertSubview:self.toView belowSubview:self.fromView];
+        [self.transitionContext.containerView insertSubview:self.toView belowSubview:self.fromView];
         topView = self.fromView;
         bottomView = self.toView;
     }

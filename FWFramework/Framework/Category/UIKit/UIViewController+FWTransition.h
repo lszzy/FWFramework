@@ -69,9 +69,6 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 转场上下文
 @property (nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
 
-// 转场容器视图
-@property (nonatomic, weak, readonly) UIView *containerView;
-
 // 转场来源视图
 @property (nonatomic, weak, readonly) UIView *fromView;
 
