@@ -146,7 +146,7 @@ FWModelArray(TestModelUser);
     }
 }
 
-#pragma mark - Protected
+#pragma mark - Protect
 
 - (void)renderData
 {

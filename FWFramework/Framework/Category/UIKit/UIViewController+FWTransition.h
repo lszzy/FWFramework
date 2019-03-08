@@ -56,6 +56,11 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 句柄方式：执行转场动画
 @property (nonatomic, copy) void (^transitionBlock)(FWAnimatedTransition *transition);
 
+#pragma mark - Protect
+
+// 继承方式：执行转场动画，子类重写
+- (void)transition;
+
 #pragma mark - Public
 
 // 转场动画类型
@@ -63,6 +68,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 转场上下文
 @property (nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
+
+// 转场容器视图
+@property (nonatomic, weak, readonly) UIView *containerView;
 
 // 转场来源视图
 @property (nonatomic, weak, readonly) UIView *fromView;
@@ -78,6 +86,22 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 手工标记动画完成
 - (void)complete:(BOOL)completed;
+
+@end
+
+#pragma mark - FWSwipeAnimationTransition
+
+// 滑动转场动画
+@interface FWSwipeAnimationTransition : FWAnimatedTransition
+
+// 创建滑动转场，指定in(push|present)和out(pop|dismiss)方向
+- (instancetype)initWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection;
+
+// 指定in(push|present)方向，默认Left
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection inDirection;
+
+// 指定out(pop|dismiss)方向，默认Right
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection outDirection;
 
 @end
 
