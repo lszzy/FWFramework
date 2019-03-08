@@ -60,12 +60,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    // 设置导航栏透明
-    [self.navigationController.navigationBar fwSetBackgroundClear];
+    [self fwSetNavigationBarHidden:YES animated:animated];
 }
 
 @end
+
+#define TestTransitinDuration 0
 
 @interface TestTransitionViewController ()
 
@@ -76,6 +76,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self fwSetNavigationBarHidden:NO animated:animated];
     
     // 自动还原动画
     self.navigationController.fwNavigationTransitionDelegate = nil;
@@ -87,11 +88,13 @@
                                           @[@"默认Present", @"onPresent"],
                                           @[@"转场present", @"onPresentTransition"],
                                           @[@"自定义present", @"onPresentAnimation"],
+                                          @[@"swipe present", @"onPresentSwipe"],
                                           @[@"System Push", @"onPush"],
                                           @[@"Block Push", @"onPushBlock"],
                                           @[@"Option Push", @"onPushOption"],
                                           @[@"Animation Push", @"onPushAnimation"],
                                           @[@"Custom Push", @"onPushCustom"],
+                                          @[@"Swipe Push", @"onPushSwipe"],
                                           @[@"Proxy Push", @"onPushProxy"],
                                           ]];
 }
@@ -124,7 +127,7 @@
 - (void)onPresentTransition
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePresent) {
             [transition start];
@@ -163,7 +166,7 @@
 - (void)onPresentAnimation
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePresent) {
             [transition start];
@@ -195,6 +198,18 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
+- (void)onPresentSwipe
+{
+    FWSwipeAnimationTransition *transition = [[FWSwipeAnimationTransition alloc] init];
+    transition.duration = TestTransitinDuration;
+    
+    FWViewTransitionDelegate *delegate = [[FWViewTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.fwViewTransitionDelegate = delegate;
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
 - (void)onPush
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
@@ -204,7 +219,7 @@
 - (void)onPushOption
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
@@ -237,7 +252,7 @@
 - (void)onPushBlock
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
@@ -272,7 +287,7 @@
 - (void)onPushAnimation
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
@@ -308,7 +323,7 @@
 - (void)onPushCustom
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
@@ -338,10 +353,24 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)onPushSwipe
+{
+    FWSwipeAnimationTransition *transition = [[FWSwipeAnimationTransition alloc] init];
+    transition.duration = TestTransitinDuration;
+    transition.inDirection = UISwipeGestureRecognizerDirectionUp;
+    transition.outDirection = UISwipeGestureRecognizerDirectionDown;
+    
+    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    self.navigationController.fwNavigationTransitionDelegate = delegate;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 - (void)onPushProxy
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = TestTransitinDuration;
     transition.transitionBlock = ^(FWAnimatedTransition *transition){
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];

@@ -42,10 +42,24 @@
         [self.delegate fwAnimatedTransition:self];
     } else if (self.transitionBlock) {
         self.transitionBlock(self);
+    } else {
+        [self transition];
     }
 }
 
+#pragma mark - Protect
+
+- (void)transition
+{
+    // 子类重写
+}
+
 #pragma mark - Public
+
+- (UIView *)containerView
+{
+    return [self.transitionContext containerView];
+}
 
 - (UIView *)fromView
 {
@@ -62,29 +76,25 @@
     switch (self.type) {
         // push时fromView在下，toView在上
         case FWAnimatedTransitionTypePush: {
-            UIView *container = [self.transitionContext containerView];
-            [container addSubview:self.fromView];
-            [container addSubview:self.toView];
+            [self.containerView addSubview:self.fromView];
+            [self.containerView addSubview:self.toView];
             break;
         }
         // pop时fromView在上，toView在下
         case FWAnimatedTransitionTypePop: {
             // 此处后添加fromView，方便做pop动画，可自行移动toView到上面
-            UIView *container = [self.transitionContext containerView];
-            [container addSubview:self.toView];
-            [container addSubview:self.fromView];
+            [self.containerView addSubview:self.toView];
+            [self.containerView addSubview:self.fromView];
             break;
         }
         // present时使用toView做动画
         case FWAnimatedTransitionTypePresent: {
-            UIView *container = [self.transitionContext containerView];
-            [container addSubview:self.toView];
+            [self.containerView addSubview:self.toView];
             break;
         }
         // dismiss时使用fromView做动画
         case FWAnimatedTransitionTypeDismiss: {
-            UIView *container = [self.transitionContext containerView];
-            [container addSubview:self.fromView];
+            [self.containerView addSubview:self.fromView];
             break;
         }
         default: {
@@ -101,6 +111,104 @@
 - (void)complete:(BOOL)completed
 {
     [self.transitionContext completeTransition:completed];
+}
+
+@end
+
+#pragma mark - FWSwipeAnimationTransition
+
+@implementation FWSwipeAnimationTransition
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _inDirection = UISwipeGestureRecognizerDirectionLeft;
+        _outDirection = UISwipeGestureRecognizerDirectionRight;
+    }
+    return self;
+}
+
+- (instancetype)initWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection
+{
+    self = [super init];
+    if (self) {
+        _inDirection = inDirection;
+        _outDirection = outDirection;
+    }
+    return self;
+}
+
+- (void)transition
+{
+    BOOL isSwipeIn = (self.type == FWAnimatedTransitionTypePush || self.type == FWAnimatedTransitionTypePresent);
+    CGRect fromFrame = [self.transitionContext initialFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey]];
+    CGRect toFrame = [self.transitionContext finalFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
+    CGRect startFrame = isSwipeIn ? toFrame : fromFrame;
+    CGVector offset;
+    UISwipeGestureRecognizerDirection direction = isSwipeIn ? self.inDirection : self.outDirection;
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionLeft: {
+            offset = CGVectorMake(-1.f, 0.f);
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            offset = CGVectorMake(1.f, 0.f);
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionUp: {
+            offset = CGVectorMake(0.f, -1.f);
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionDown:
+        default: {
+            offset = CGVectorMake(0.f, 1.f);
+            break;
+        }
+    }
+    
+    UIView *topView = nil;
+    UIView *bottomView = nil;
+    if (isSwipeIn) {
+        [self.containerView addSubview:self.toView];
+        topView = self.toView;
+        bottomView = self.fromView;
+    } else {
+        [self.containerView insertSubview:self.toView belowSubview:self.fromView];
+        topView = self.fromView;
+        bottomView = self.toView;
+    }
+    
+    NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
+    vectorValue = vectorValue > 0 ? -vectorValue : vectorValue;
+    NSInteger flag = isSwipeIn ? vectorValue : 0;
+    
+    CGFloat offsetX = startFrame.size.width * offset.dx * flag;
+    CGFloat offsetY = startFrame.size.height * offset.dy * flag;
+    CGRect tempFrame = CGRectOffset(startFrame, offsetX, offsetY);
+    if (isSwipeIn) {
+        topView.frame = tempFrame;
+        bottomView.frame = fromFrame;
+    }else{
+        topView.frame = tempFrame;
+        bottomView.frame = toFrame;
+    }
+    
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
+        NSInteger vectorValue = offset.dx == 0 ? offset.dy : offset.dx;
+        vectorValue = vectorValue > 0 ? vectorValue : -vectorValue;
+        NSInteger flag = isSwipeIn ? 0 : vectorValue;
+        
+        CGFloat offsetX = startFrame.size.width * offset.dx * flag;
+        CGFloat offsetY = startFrame.size.height * offset.dy * flag;
+        topView.frame = CGRectOffset(startFrame, offsetX, offsetY);
+    } completion:^(BOOL finished) {
+        BOOL cancelled = [self.transitionContext transitionWasCancelled];
+        if (cancelled) {
+            [self.toView removeFromSuperview];
+        }
+        [self.transitionContext completeTransition:!cancelled];
+    }];
 }
 
 @end

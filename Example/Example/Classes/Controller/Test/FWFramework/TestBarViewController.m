@@ -134,7 +134,7 @@ FWPropertyWeak(UILabel *, frameLabel);
     }
 }
 
-#pragma mark - Protected
+#pragma mark - Protect
 
 - (BOOL)prefersStatusBarHidden
 {
