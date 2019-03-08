@@ -31,9 +31,8 @@
     } else if (operation == UINavigationControllerOperationPop) {
         self.isPush = NO;
         return self;
-    } else {
-        return nil;
     }
+    return nil;
 }
 
 #pragma mark - UIViewControllerAnimatedTransitioning
@@ -61,7 +60,7 @@
         } else if (self.pushBlock) {
             self.pushBlock(self);
         }
-        // 执行pop动画
+    // 执行pop动画
     } else {
         if (self.delegate && [self.delegate respondsToSelector:@selector(fwPop:)]) {
             [self.delegate fwPop:self];
@@ -90,7 +89,7 @@
         UIView *container = [self.transitionContext containerView];
         [container addSubview:self.fromView];
         [container addSubview:self.toView];
-        // pop时fromView在上，toView在下
+    // pop时fromView在上，toView在下
     } else {
         // 此处后添加fromView，方便做pop动画，可自行移动toView到上面
         UIView *container = [self.transitionContext containerView];
@@ -111,11 +110,47 @@
 
 @end
 
+#pragma mark - FWProxyNavigationTransition
+
+@implementation FWProxyNavigationTransition
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+    // push时检查toVC的转场代理
+    if (operation == UINavigationControllerOperationPush) {
+        if (toVC.fwProxyNavigationTransition) {
+            toVC.fwProxyNavigationTransition.isPush = YES;
+            return toVC.fwProxyNavigationTransition;
+        }
+    // pop时检查fromVC的转场代理
+    } else if (operation == UINavigationControllerOperationPop) {
+        if (fromVC.fwProxyNavigationTransition) {
+            fromVC.fwProxyNavigationTransition.isPush = NO;
+            return fromVC.fwProxyNavigationTransition;
+        }
+    }
+    return nil;
+}
+
+@end
+
+@implementation UIViewController (FWProxyNavigationTransition)
+
+- (FWNavigationTransition *)fwProxyNavigationTransition
+{
+    return objc_getAssociatedObject(self, @selector(fwProxyNavigationTransition));
+}
+
+- (void)setFwProxyNavigationTransition:(FWNavigationTransition *)fwProxyNavigationTransition
+{
+    objc_setAssociatedObject(self, @selector(fwProxyNavigationTransition), fwProxyNavigationTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
 #pragma mark - UINavigationController+FWTransition
 
 @implementation UINavigationController (FWTransition)
-
-@dynamic fwNavigationTransition;
 
 - (id<UINavigationControllerDelegate>)fwNavigationTransition
 {

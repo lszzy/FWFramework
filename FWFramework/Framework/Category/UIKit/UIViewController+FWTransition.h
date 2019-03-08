@@ -69,14 +69,12 @@
 
 @end
 
-#pragma mark - UINavigationController+FWTransition
+#pragma mark - UIViewController+FWTransition
 
 // 视图控制器转场动画分类
 @interface UIViewController (FWTransition)
 
-/**
- *  视图控制器转场动画，如需半透明，请在init中设置modalPresentationStyle为UIModalPresentationCustom
- */
+// 视图控制器转场动画，如需半透明，请在init中设置modalPresentationStyle为UIModalPresentationCustom
 @property (nonatomic, strong) id<UIViewControllerTransitioningDelegate> fwViewTransition;
 
 @end

@@ -60,7 +60,7 @@
         } else if (self.presentBlock) {
             self.presentBlock(self);
         }
-        // 执行dismiss动画
+    // 执行dismiss动画
     } else {
         if (self.delegate && [self.delegate respondsToSelector:@selector(fwDismiss:)]) {
             [self.delegate fwDismiss:self];
@@ -88,7 +88,7 @@
     if (self.isPresent) {
         UIView *container = [self.transitionContext containerView];
         [container addSubview:self.toView];
-        // dismiss时使用fromView做动画
+    // dismiss时使用fromView做动画
     } else {
         UIView *container = [self.transitionContext containerView];
         [container addSubview:self.fromView];
@@ -110,8 +110,6 @@
 #pragma mark - UIViewController+FWTransition
 
 @implementation UIViewController (FWTransition)
-
-@dynamic fwViewTransition;
 
 - (id<UIViewControllerTransitioningDelegate>)fwViewTransition
 {

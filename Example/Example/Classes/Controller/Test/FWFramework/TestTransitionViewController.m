@@ -92,6 +92,7 @@
                                           @[@"Option Push", @"onPushOption"],
                                           @[@"Animation Push", @"onPushAnimation"],
                                           @[@"Custom Push", @"onPushCustom"],
+                                          @[@"Proxy Push", @"onPushProxy"],
                                           ]];
 }
 
@@ -220,9 +221,9 @@
                             [transition complete:finished];
                         }];
     };
-    self.navigationController.fwNavigationTransition = transition;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -252,9 +253,9 @@
                              [transition complete:finished];
                          }];
     };
-    self.navigationController.fwNavigationTransition = transition;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -285,9 +286,9 @@
                                                          [transition complete:finished];
                                                      }];
     };
-    self.navigationController.fwNavigationTransition = transition;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -315,9 +316,42 @@
                                                          [transition complete:finished];
                                                      }];
     };
-    self.navigationController.fwNavigationTransition = transition;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    self.navigationController.fwNavigationTransition = transition;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onPushProxy
+{
+    FWNavigationTransition *transition = [[FWNavigationTransition alloc] init];
+    transition.duration = 0.5;
+    transition.pushBlock = ^(FWNavigationTransition *transition){
+        [transition start];
+        transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+        [UIView animateWithDuration:transition.duration
+                         animations:^{
+                             transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+                         }
+                         completion:^(BOOL finished) {
+                             [transition complete:finished];
+                         }];
+    };
+    transition.popBlock = ^(FWNavigationTransition *transition){
+        [transition start];
+        transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+        [UIView animateWithDuration:transition.duration
+                         animations:^{
+                             transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+                         }
+                         completion:^(BOOL finished) {
+                             [transition complete:finished];
+                         }];
+    };
+    
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.fwProxyNavigationTransition = transition;
+    self.navigationController.fwNavigationTransition = [[FWProxyNavigationTransition alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
