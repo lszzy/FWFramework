@@ -133,7 +133,7 @@
             [transition start];
             transition.toView.transform = CGAffineTransformMakeScale(0.0, 0.0);
             transition.toView.alpha = 0.0;
-            [UIView animateWithDuration:transition.duration
+            [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
                                  transition.toView.transform = CGAffineTransformMakeScale(1.0, 1.0);
                                  transition.toView.alpha = 1.0;
@@ -145,7 +145,7 @@
             [transition start];
             transition.fromView.transform = CGAffineTransformMakeScale(1.0, 1.0);
             transition.fromView.alpha = 1.0;
-            [UIView animateWithDuration:transition.duration
+            [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
                                  transition.fromView.transform = CGAffineTransformMakeScale(0.01, 0.01);
                                  transition.fromView.alpha = 0.0;
@@ -173,7 +173,7 @@
             [transition.toView fwAddTransitionWithType:kCATransitionMoveIn
                                                subtype:kCATransitionFromTop
                                         timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                              duration:transition.duration
+                                              duration:[transition transitionDuration:transition.transitionContext]
                                             completion:^(BOOL finished) {
                                                 [transition complete:finished];
                                             }];
@@ -184,7 +184,7 @@
             [transition.fromView fwAddTransitionWithType:kCATransitionReveal
                                                  subtype:kCATransitionFromBottom
                                           timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                                duration:transition.duration
+                                                duration:[transition transitionDuration:transition.transitionContext]
                                               completion:^(BOOL finished) {
                                                   [transition complete:finished];
                                               }];
@@ -225,7 +225,7 @@
             [transition start];
             [UIView transitionFromView:transition.fromView
                                 toView:transition.toView
-                              duration:transition.duration
+                              duration:[transition transitionDuration:transition.transitionContext]
                                options:UIViewAnimationOptionTransitionCurlUp
                             completion:^(BOOL finished) {
                                 [transition complete:finished];
@@ -234,7 +234,7 @@
             [transition start];
             [UIView transitionFromView:transition.fromView
                                 toView:transition.toView
-                              duration:transition.duration
+                              duration:[transition transitionDuration:transition.transitionContext]
                                options:UIViewAnimationOptionTransitionCurlDown
                             completion:^(BOOL finished) {
                                 [transition complete:finished];
@@ -257,7 +257,7 @@
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
-            [UIView animateWithDuration:transition.duration
+            [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
                                  transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
                              }
@@ -267,7 +267,7 @@
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
             transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
-            [UIView animateWithDuration:transition.duration
+            [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
                                  transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
                              }
@@ -295,7 +295,7 @@
             [self.navigationController.view fwAddTransitionWithType:kCATransitionMoveIn
                                                             subtype:kCATransitionFromTop
                                                      timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                                           duration:transition.duration
+                                                           duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished) {
                                                              [transition complete:finished];
                                                          }];
@@ -306,7 +306,7 @@
             [self.navigationController.view fwAddTransitionWithType:kCATransitionReveal
                                                             subtype:kCATransitionFromBottom
                                                      timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                                           duration:transition.duration
+                                                           duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished) {
                                                              [transition complete:finished];
                                                          }];
@@ -329,7 +329,7 @@
             [transition start];
             [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
                                                          transition:UIViewAnimationTransitionCurlUp
-                                                           duration:transition.duration
+                                                           duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished){
                                                              [transition complete:finished];
                                                          }];
@@ -339,7 +339,7 @@
             transition.fromView.hidden = YES;
             [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
                                                          transition:UIViewAnimationTransitionCurlDown
-                                                           duration:transition.duration
+                                                           duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished){
                                                              [transition complete:finished];
                                                          }];
@@ -375,7 +375,7 @@
         if (transition.type == FWAnimatedTransitionTypePush) {
             [transition start];
             transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
-            [UIView animateWithDuration:transition.duration
+            [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
                                  transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
                              }
@@ -385,7 +385,7 @@
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
             transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
-            [UIView animateWithDuration:transition.duration
+            [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
                                  transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
                              }
