@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2F03A577216CF4B9001965A1 /* UIView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4E0216CF4B9001965A1 /* UIView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A578216CF4B9001965A1 /* UINavigationController+FWTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4E1216CF4B9001965A1 /* UINavigationController+FWTransition.m */; };
 		2F03A579216CF4B9001965A1 /* UIView+FWAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4E2216CF4B9001965A1 /* UIView+FWAutoLayout.m */; };
 		2F03A57A216CF4B9001965A1 /* UIView+FWDrag.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4E3216CF4B9001965A1 /* UIView+FWDrag.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A57B216CF4B9001965A1 /* UINavigationController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */; };
@@ -51,7 +50,6 @@
 		2F03A5A0216CF4B9001965A1 /* UINavigationController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5A1216CF4B9001965A1 /* UIView+FWDrag.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A50A216CF4B9001965A1 /* UIView+FWDrag.m */; };
 		2F03A5A2216CF4B9001965A1 /* UIView+FWAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A50B216CF4B9001965A1 /* UIView+FWAutoLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5A3216CF4B9001965A1 /* UINavigationController+FWTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A50C216CF4B9001965A1 /* UINavigationController+FWTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A50D216CF4B9001965A1 /* UIView+FWFramework.m */; };
 		2F03A5A5216CF4B9001965A1 /* UIViewController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5A6216CF4B9001965A1 /* UIKit+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -284,7 +282,6 @@
 
 /* Begin PBXFileReference section */
 		2F03A4E0216CF4B9001965A1 /* UIView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWFramework.h"; sourceTree = "<group>"; };
-		2F03A4E1216CF4B9001965A1 /* UINavigationController+FWTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWTransition.m"; sourceTree = "<group>"; };
 		2F03A4E2216CF4B9001965A1 /* UIView+FWAutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWAutoLayout.m"; sourceTree = "<group>"; };
 		2F03A4E3216CF4B9001965A1 /* UIView+FWDrag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWDrag.h"; sourceTree = "<group>"; };
 		2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWFramework.m"; sourceTree = "<group>"; };
@@ -327,7 +324,6 @@
 		2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A50A216CF4B9001965A1 /* UIView+FWDrag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWDrag.m"; sourceTree = "<group>"; };
 		2F03A50B216CF4B9001965A1 /* UIView+FWAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWAutoLayout.h"; sourceTree = "<group>"; };
-		2F03A50C216CF4B9001965A1 /* UINavigationController+FWTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWTransition.h"; sourceTree = "<group>"; };
 		2F03A50D216CF4B9001965A1 /* UIView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBar.h"; sourceTree = "<group>"; };
 		2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+FWFramework.h"; sourceTree = "<group>"; };
@@ -623,8 +619,6 @@
 				2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */,
 				2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */,
 				2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */,
-				2F03A50C216CF4B9001965A1 /* UINavigationController+FWTransition.h */,
-				2F03A4E1216CF4B9001965A1 /* UINavigationController+FWTransition.m */,
 				2F03A506216CF4B9001965A1 /* UINavigationController+FWWorkflow.h */,
 				2F03A4E6216CF4B9001965A1 /* UINavigationController+FWWorkflow.m */,
 				2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */,
@@ -1137,7 +1131,6 @@
 				2F03A591216CF4B9001965A1 /* UIView+FWIndicator.h in Headers */,
 				2F03A5B7216CF4B9001965A1 /* UIColor+FWFramework.h in Headers */,
 				2F03A5BB216CF4B9001965A1 /* UIImage+FWFramework.h in Headers */,
-				2F03A5A3216CF4B9001965A1 /* UINavigationController+FWTransition.h in Headers */,
 				2F03A5C3216CF4B9001965A1 /* NSThread+FWFramework.h in Headers */,
 				2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */,
 				2F03A604216CF4B9001965A1 /* FWFramework.h in Headers */,
@@ -1335,7 +1328,6 @@
 				2F0FFF3121D20EA800049383 /* NSAttributedString+FWFramework.m in Sources */,
 				2F03A5B8216CF4B9001965A1 /* UIApplication+FWFramework.m in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
-				2F03A578216CF4B9001965A1 /* UINavigationController+FWTransition.m in Sources */,
 				2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */,
 				2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */,
 				2F03A57B216CF4B9001965A1 /* UINavigationController+FWFramework.m in Sources */,

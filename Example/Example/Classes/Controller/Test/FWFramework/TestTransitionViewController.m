@@ -78,7 +78,7 @@
     [super viewWillAppear:animated];
     
     // 自动还原动画
-    self.navigationController.fwNavigationTransition = nil;
+    self.navigationController.fwNavigationTransitionDelegate = nil;
 }
 
 - (void)renderData
@@ -123,71 +123,75 @@
 
 - (void)onPresentTransition
 {
-    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    
-    FWViewTransition *transition = [[FWViewTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.presentBlock = ^(FWViewTransition *transition){
-        [transition start];
-        transition.toView.transform = CGAffineTransformMakeScale(0.0, 0.0);
-        transition.toView.alpha = 0.0;
-        [UIView animateWithDuration:transition.duration
-                         animations:^{
-                             transition.toView.transform = CGAffineTransformMakeScale(1.0, 1.0);
-                             transition.toView.alpha = 1.0;
-                         }
-                         completion:^(BOOL finished) {
-                             [transition complete:finished];
-                         }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePresent) {
+            [transition start];
+            transition.toView.transform = CGAffineTransformMakeScale(0.0, 0.0);
+            transition.toView.alpha = 0.0;
+            [UIView animateWithDuration:transition.duration
+                             animations:^{
+                                 transition.toView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                                 transition.toView.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [transition complete:finished];
+                             }];
+        } else if (transition.type == FWAnimatedTransitionTypeDismiss) {
+            [transition start];
+            transition.fromView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+            transition.fromView.alpha = 1.0;
+            [UIView animateWithDuration:transition.duration
+                             animations:^{
+                                 transition.fromView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+                                 transition.fromView.alpha = 0.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [transition complete:finished];
+                             }];
+        }
     };
-    transition.dismissBlock = ^(FWViewTransition *transition){
-        [transition start];
-        transition.fromView.transform = CGAffineTransformMakeScale(1.0, 1.0);
-        transition.fromView.alpha = 1.0;
-        [UIView animateWithDuration:transition.duration
-                         animations:^{
-                             transition.fromView.transform = CGAffineTransformMakeScale(0.01, 0.01);
-                             transition.fromView.alpha = 0.0;
-                         }
-                         completion:^(BOOL finished) {
-                             [transition complete:finished];
-                         }];
-    };
-    vc.fwViewTransition = transition;
     
+    FWViewTransitionDelegate *delegate = [[FWViewTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.fwViewTransitionDelegate = delegate;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)onPresentAnimation
 {
-    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    
-    FWViewTransition *transition = [[FWViewTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.presentBlock = ^(FWViewTransition *transition){
-        [transition start];
-        [transition.toView fwAddTransitionWithType:kCATransitionMoveIn
-                                           subtype:kCATransitionFromTop
-                                    timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                          duration:transition.duration
-                                        completion:^(BOOL finished) {
-                                            [transition complete:finished];
-                                        }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePresent) {
+            [transition start];
+            [transition.toView fwAddTransitionWithType:kCATransitionMoveIn
+                                               subtype:kCATransitionFromTop
+                                        timingFunction:kCAMediaTimingFunctionEaseInEaseOut
+                                              duration:transition.duration
+                                            completion:^(BOOL finished) {
+                                                [transition complete:finished];
+                                            }];
+        } else if (transition.type == FWAnimatedTransitionTypeDismiss) {
+            [transition start];
+            // 这种转场动画需要先隐藏目标视图
+            transition.fromView.hidden = YES;
+            [transition.fromView fwAddTransitionWithType:kCATransitionReveal
+                                                 subtype:kCATransitionFromBottom
+                                          timingFunction:kCAMediaTimingFunctionEaseInEaseOut
+                                                duration:transition.duration
+                                              completion:^(BOOL finished) {
+                                                  [transition complete:finished];
+                                              }];
+        }
     };
-    transition.dismissBlock = ^(FWViewTransition *transition){
-        [transition start];
-        // 这种转场动画需要先隐藏目标视图
-        transition.fromView.hidden = YES;
-        [transition.fromView fwAddTransitionWithType:kCATransitionReveal
-                                             subtype:kCATransitionFromBottom
-                                      timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                            duration:transition.duration
-                                          completion:^(BOOL finished) {
-                                              [transition complete:finished];
-                                          }];
-    };
-    vc.fwViewTransition = transition;
     
+    FWViewTransitionDelegate *delegate = [[FWViewTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.fwViewTransitionDelegate = delegate;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -199,159 +203,174 @@
 
 - (void)onPushOption
 {
-    FWNavigationTransition *transition = [[FWNavigationTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.pushBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        [UIView transitionFromView:transition.fromView
-                            toView:transition.toView
-                          duration:transition.duration
-                           options:UIViewAnimationOptionTransitionCurlUp
-                        completion:^(BOOL finished) {
-                            [transition complete:finished];
-                        }];
-    };
-    transition.popBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        [UIView transitionFromView:transition.fromView
-                            toView:transition.toView
-                          duration:transition.duration
-                           options:UIViewAnimationOptionTransitionCurlDown
-                        completion:^(BOOL finished) {
-                            [transition complete:finished];
-                        }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePush) {
+            [transition start];
+            [UIView transitionFromView:transition.fromView
+                                toView:transition.toView
+                              duration:transition.duration
+                               options:UIViewAnimationOptionTransitionCurlUp
+                            completion:^(BOOL finished) {
+                                [transition complete:finished];
+                            }];
+        } else if (transition.type == FWAnimatedTransitionTypePop) {
+            [transition start];
+            [UIView transitionFromView:transition.fromView
+                                toView:transition.toView
+                              duration:transition.duration
+                               options:UIViewAnimationOptionTransitionCurlDown
+                            completion:^(BOOL finished) {
+                                [transition complete:finished];
+                            }];
+        }
     };
     
+    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationTransitionDelegate = delegate;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onPushBlock
 {
-    FWNavigationTransition *transition = [[FWNavigationTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.pushBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
-        [UIView animateWithDuration:transition.duration
-                         animations:^{
-                             transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
-                         }
-                         completion:^(BOOL finished) {
-                             [transition complete:finished];
-                         }];
-    };
-    transition.popBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
-        [UIView animateWithDuration:transition.duration
-                         animations:^{
-                             transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
-                         }
-                         completion:^(BOOL finished) {
-                             [transition complete:finished];
-                         }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePush) {
+            [transition start];
+            transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+            [UIView animateWithDuration:transition.duration
+                             animations:^{
+                                 transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+                             }
+                             completion:^(BOOL finished) {
+                                 [transition complete:finished];
+                             }];
+        } else if (transition.type == FWAnimatedTransitionTypePop) {
+            [transition start];
+            transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+            [UIView animateWithDuration:transition.duration
+                             animations:^{
+                                 transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+                             }
+                             completion:^(BOOL finished) {
+                                 [transition complete:finished];
+                             }];
+        }
     };
     
+    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationTransitionDelegate = delegate;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onPushAnimation
 {
-    FWNavigationTransition *transition = [[FWNavigationTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.pushBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        // 使用navigationController.view做动画，而非containerView做动画，下同
-        [self.navigationController.view fwAddTransitionWithType:kCATransitionMoveIn
-                                                        subtype:kCATransitionFromTop
-                                                 timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                                       duration:transition.duration
-                                                     completion:^(BOOL finished) {
-                                                         [transition complete:finished];
-                                                     }];
-    };
-    transition.popBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        // 这种转场动画需要先隐藏目标视图
-        transition.fromView.hidden = YES;
-        [self.navigationController.view fwAddTransitionWithType:kCATransitionReveal
-                                                        subtype:kCATransitionFromBottom
-                                                 timingFunction:kCAMediaTimingFunctionEaseInEaseOut
-                                                       duration:transition.duration
-                                                     completion:^(BOOL finished) {
-                                                         [transition complete:finished];
-                                                     }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePush) {
+            [transition start];
+            // 使用navigationController.view做动画，而非containerView做动画，下同
+            [self.navigationController.view fwAddTransitionWithType:kCATransitionMoveIn
+                                                            subtype:kCATransitionFromTop
+                                                     timingFunction:kCAMediaTimingFunctionEaseInEaseOut
+                                                           duration:transition.duration
+                                                         completion:^(BOOL finished) {
+                                                             [transition complete:finished];
+                                                         }];
+        } else if (transition.type == FWAnimatedTransitionTypePop) {
+            [transition start];
+            // 这种转场动画需要先隐藏目标视图
+            transition.fromView.hidden = YES;
+            [self.navigationController.view fwAddTransitionWithType:kCATransitionReveal
+                                                            subtype:kCATransitionFromBottom
+                                                     timingFunction:kCAMediaTimingFunctionEaseInEaseOut
+                                                           duration:transition.duration
+                                                         completion:^(BOOL finished) {
+                                                             [transition complete:finished];
+                                                         }];
+        }
     };
     
+    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationTransitionDelegate = delegate;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onPushCustom
 {
-    FWNavigationTransition *transition = [[FWNavigationTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.pushBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
-                                                     transition:UIViewAnimationTransitionCurlUp
-                                                       duration:transition.duration
-                                                     completion:^(BOOL finished){
-                                                         [transition complete:finished];
-                                                     }];
-    };
-    transition.popBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        // 这种转场动画需要先隐藏目标视图
-        transition.fromView.hidden = YES;
-        [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
-                                                     transition:UIViewAnimationTransitionCurlDown
-                                                       duration:transition.duration
-                                                     completion:^(BOOL finished){
-                                                         [transition complete:finished];
-                                                     }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePush) {
+            [transition start];
+            [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
+                                                         transition:UIViewAnimationTransitionCurlUp
+                                                           duration:transition.duration
+                                                         completion:^(BOOL finished){
+                                                             [transition complete:finished];
+                                                         }];
+        } else if (transition.type == FWAnimatedTransitionTypePop) {
+            [transition start];
+            // 这种转场动画需要先隐藏目标视图
+            transition.fromView.hidden = YES;
+            [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
+                                                         transition:UIViewAnimationTransitionCurlDown
+                                                           duration:transition.duration
+                                                         completion:^(BOOL finished){
+                                                             [transition complete:finished];
+                                                         }];
+        }
     };
     
+    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
+    delegate.animatedTransition = transition;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationTransitionDelegate = delegate;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onPushProxy
 {
-    FWNavigationTransition *transition = [[FWNavigationTransition alloc] init];
+    FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
     transition.duration = 0.5;
-    transition.pushBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
-        [UIView animateWithDuration:transition.duration
-                         animations:^{
-                             transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
-                         }
-                         completion:^(BOOL finished) {
-                             [transition complete:finished];
-                         }];
-    };
-    transition.popBlock = ^(FWNavigationTransition *transition){
-        [transition start];
-        transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
-        [UIView animateWithDuration:transition.duration
-                         animations:^{
-                             transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
-                         }
-                         completion:^(BOOL finished) {
-                             [transition complete:finished];
-                         }];
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.type == FWAnimatedTransitionTypePush) {
+            [transition start];
+            transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+            [UIView animateWithDuration:transition.duration
+                             animations:^{
+                                 transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+                             }
+                             completion:^(BOOL finished) {
+                                 [transition complete:finished];
+                             }];
+        } else if (transition.type == FWAnimatedTransitionTypePop) {
+            [transition start];
+            transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+            [UIView animateWithDuration:transition.duration
+                             animations:^{
+                                 transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+                             }
+                             completion:^(BOOL finished) {
+                                 [transition complete:finished];
+                             }];
+        }
     };
     
+    FWNavigationTransitionDelegate *delegate = [[FWNavigationTransitionDelegate alloc] init];
+    delegate.viewControllerTransitionEnabled = YES;
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwProxyNavigationTransition = transition;
-    self.navigationController.fwNavigationTransition = [[FWProxyNavigationTransition alloc] init];
+    vc.fwNavigationAnimatedTransition = transition;
+    self.navigationController.fwNavigationTransitionDelegate = delegate;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

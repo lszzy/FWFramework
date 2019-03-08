@@ -9,39 +9,23 @@
 #import "UIViewController+FWTransition.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWViewTransition
+#pragma mark - FWAnimatedTransition
 
-@interface FWViewTransition ()
+@interface FWAnimatedTransition ()
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
-@property (nonatomic, assign) BOOL isPresent;
-
 @end
 
-@implementation FWViewTransition
-
-#pragma mark - UIViewControllerTransitioningDelegate
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
-{
-    self.isPresent = YES;
-    return self;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
-{
-    self.isPresent = NO;
-    return self;
-}
+@implementation FWAnimatedTransition
 
 #pragma mark - UIViewControllerAnimatedTransitioning
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
     NSTimeInterval duration;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(fwViewDuration:)]) {
-        duration = [self.delegate fwViewDuration:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransitionDuration:)]) {
+        duration = [self.delegate fwAnimatedTransitionDuration:self];
     } else {
         duration = self.duration;
     }
@@ -53,20 +37,11 @@
 {
     self.transitionContext = transitionContext;
     
-    // 执行present动画
-    if (self.isPresent) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(fwPresent:)]) {
-            [self.delegate fwPresent:self];
-        } else if (self.presentBlock) {
-            self.presentBlock(self);
-        }
-    // 执行dismiss动画
-    } else {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(fwDismiss:)]) {
-            [self.delegate fwDismiss:self];
-        } else if (self.dismissBlock) {
-            self.dismissBlock(self);
-        }
+    // 执行转场动画
+    if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransition:)]) {
+        [self.delegate fwAnimatedTransition:self];
+    } else if (self.transitionBlock) {
+        self.transitionBlock(self);
     }
 }
 
@@ -84,14 +59,37 @@
 
 - (void)start
 {
-    // present时使用toView做动画
-    if (self.isPresent) {
-        UIView *container = [self.transitionContext containerView];
-        [container addSubview:self.toView];
-    // dismiss时使用fromView做动画
-    } else {
-        UIView *container = [self.transitionContext containerView];
-        [container addSubview:self.fromView];
+    switch (self.type) {
+        // push时fromView在下，toView在上
+        case FWAnimatedTransitionTypePush: {
+            UIView *container = [self.transitionContext containerView];
+            [container addSubview:self.fromView];
+            [container addSubview:self.toView];
+            break;
+        }
+        // pop时fromView在上，toView在下
+        case FWAnimatedTransitionTypePop: {
+            // 此处后添加fromView，方便做pop动画，可自行移动toView到上面
+            UIView *container = [self.transitionContext containerView];
+            [container addSubview:self.toView];
+            [container addSubview:self.fromView];
+            break;
+        }
+        // present时使用toView做动画
+        case FWAnimatedTransitionTypePresent: {
+            UIView *container = [self.transitionContext containerView];
+            [container addSubview:self.toView];
+            break;
+        }
+        // dismiss时使用fromView做动画
+        case FWAnimatedTransitionTypeDismiss: {
+            UIView *container = [self.transitionContext containerView];
+            [container addSubview:self.fromView];
+            break;
+        }
+        default: {
+            break;
+        }
     }
 }
 
@@ -107,29 +105,101 @@
 
 @end
 
-#pragma mark - UIViewController+FWTransition
+#pragma mark - FWViewTransitionDelegate
+
+@implementation FWViewTransitionDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    if (self.animatedTransition) {
+        self.animatedTransition.type = FWAnimatedTransitionTypePresent;
+        return self.animatedTransition;
+    }
+    return nil;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    if (self.animatedTransition) {
+        self.animatedTransition.type = FWAnimatedTransitionTypeDismiss;
+        return self.animatedTransition;
+    }
+    return nil;
+}
+
+@end
 
 @implementation UIViewController (FWTransition)
 
-- (id<UIViewControllerTransitioningDelegate>)fwViewTransition
+- (id<UIViewControllerTransitioningDelegate>)fwViewTransitionDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwViewTransition));
+    return objc_getAssociatedObject(self, @selector(fwViewTransitionDelegate));
 }
 
-- (void)setFwViewTransition:(id<UIViewControllerTransitioningDelegate>)fwViewTransition
+// 注意：App退出后台时如果弹出页面，整个present动画不会执行。如果需要设置遮罩层等，需要在viewDidAppear中处理兼容
+- (void)setFwViewTransitionDelegate:(id<UIViewControllerTransitioningDelegate>)fwViewTransitionDelegate
 {
-    // 注意：App退出后台时如果弹出页面，整个present动画不会执行。如果需要设置遮罩层等，需要在viewDidAppear中处理兼容
-    if (fwViewTransition) {
-        // 设置delegation动画
-        self.transitioningDelegate = fwViewTransition;
-        // 强引用，防止被自动释放
-        objc_setAssociatedObject(self, @selector(fwViewTransition), fwViewTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    } else {
-        // 清除delegate动画
-        self.transitioningDelegate = nil;
-        // 释放引用
-        objc_setAssociatedObject(self, @selector(fwViewTransition), nil, OBJC_ASSOCIATION_ASSIGN);
+    // 设置delegation动画，nil时清除delegate动画
+    self.transitioningDelegate = fwViewTransitionDelegate;
+    // 强引用，防止被自动释放，nil时释放引用
+    objc_setAssociatedObject(self, @selector(fwViewTransitionDelegate), fwViewTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (FWAnimatedTransition *)fwNavigationAnimatedTransition
+{
+    return objc_getAssociatedObject(self, @selector(fwNavigationAnimatedTransition));
+}
+
+- (void)setFwNavigationAnimatedTransition:(FWAnimatedTransition *)fwNavigationAnimatedTransition
+{
+    objc_setAssociatedObject(self, @selector(fwNavigationAnimatedTransition), fwNavigationAnimatedTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+#pragma mark - FWNavigationTransitionDelegate
+
+@implementation FWNavigationTransitionDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+    if (operation == UINavigationControllerOperationPush) {
+        // push时检查toVC的转场代理
+        if (self.viewControllerTransitionEnabled && toVC.fwNavigationAnimatedTransition) {
+            toVC.fwNavigationAnimatedTransition.type = FWAnimatedTransitionTypePush;
+            return toVC.fwNavigationAnimatedTransition;
+        } else if (self.animatedTransition) {
+            self.animatedTransition.type = FWAnimatedTransitionTypePush;
+            return self.animatedTransition;
+        }
+    } else if (operation == UINavigationControllerOperationPop) {
+        // pop时检查fromVC的转场代理
+        if (self.viewControllerTransitionEnabled && fromVC.fwNavigationAnimatedTransition) {
+            fromVC.fwNavigationAnimatedTransition.type = FWAnimatedTransitionTypePop;
+            return fromVC.fwNavigationAnimatedTransition;
+        } else if (self.animatedTransition) {
+            self.animatedTransition.type = FWAnimatedTransitionTypePop;
+            return self.animatedTransition;
+        }
     }
+    return nil;
+}
+
+@end
+
+@implementation UINavigationController (FWTransition)
+
+- (id<UINavigationControllerDelegate>)fwNavigationTransitionDelegate
+{
+    return objc_getAssociatedObject(self, @selector(fwNavigationTransitionDelegate));
+}
+
+- (void)setFwNavigationTransitionDelegate:(id<UINavigationControllerDelegate>)fwNavigationTransitionDelegate
+{
+    // 设置delegate动画，nil时清理delegate动画，无需清理CA动画
+    self.delegate = fwNavigationTransitionDelegate;
+    // 强引用，防止被自动释放，nil时释放引用
+    objc_setAssociatedObject(self, @selector(fwNavigationTransitionDelegate), fwNavigationTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
