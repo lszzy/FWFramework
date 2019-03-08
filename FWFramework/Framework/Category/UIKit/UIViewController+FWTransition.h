@@ -77,6 +77,6 @@
 /**
  *  视图控制器转场动画，如需半透明，请在init中设置modalPresentationStyle为UIModalPresentationCustom
  */
-@property (nonatomic, strong) FWViewTransition *fwViewTransition;
+@property (nonatomic, strong) id<UIViewControllerTransitioningDelegate> fwViewTransition;
 
 @end

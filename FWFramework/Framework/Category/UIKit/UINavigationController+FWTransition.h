@@ -77,6 +77,6 @@
 /**
  *  导航控制器转场动画，一直生效直到设置为nil
  */
-@property (nonatomic, strong) FWNavigationTransition *fwNavigationTransition;
+@property (nonatomic, strong) id<UINavigationControllerDelegate> fwNavigationTransition;
 
 @end
