@@ -117,12 +117,12 @@
 
 @dynamic fwNavigationTransition;
 
-- (FWNavigationTransition *)fwNavigationTransition
+- (id<UINavigationControllerDelegate>)fwNavigationTransition
 {
     return objc_getAssociatedObject(self, @selector(fwNavigationTransition));
 }
 
-- (void)setFwNavigationTransition:(FWNavigationTransition *)fwNavigationTransition
+- (void)setFwNavigationTransition:(id<UINavigationControllerDelegate>)fwNavigationTransition
 {
     if (fwNavigationTransition) {
         // 设置delegate动画

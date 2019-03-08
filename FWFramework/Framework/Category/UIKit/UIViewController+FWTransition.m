@@ -113,19 +113,17 @@
 
 @dynamic fwViewTransition;
 
-- (FWViewTransition *)fwViewTransition
+- (id<UIViewControllerTransitioningDelegate>)fwViewTransition
 {
     return objc_getAssociatedObject(self, @selector(fwViewTransition));
 }
 
-- (void)setFwViewTransition:(FWViewTransition *)fwViewTransition
+- (void)setFwViewTransition:(id<UIViewControllerTransitioningDelegate>)fwViewTransition
 {
     // 注意：App退出后台时如果弹出页面，整个present动画不会执行。如果需要设置遮罩层等，需要在viewDidAppear中处理兼容
     if (fwViewTransition) {
         // 设置delegation动画
         self.transitioningDelegate = fwViewTransition;
-        // 设置弹出框半透明，需要在init中调用才生效
-        // self.modalPresentationStyle = UIModalPresentationCustom;
         // 强引用，防止被自动释放
         objc_setAssociatedObject(self, @selector(fwViewTransition), fwViewTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     } else {
