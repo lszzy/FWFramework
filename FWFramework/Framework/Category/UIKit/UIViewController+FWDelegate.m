@@ -10,19 +10,19 @@
 #import "UIViewController+FWDelegate.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWTransitionDelegate
+#pragma mark - FWModalTransitionDelegate
 
-@interface FWTransitionDelegate ()
+@interface FWModalTransitionDelegate ()
 
 @property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> transition;
 
 @end
 
-@implementation FWTransitionDelegate
+@implementation FWModalTransitionDelegate
 
 + (instancetype)delegateWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
-    FWTransitionDelegate *delegate = [[self alloc] init];
+    FWModalTransitionDelegate *delegate = [[self alloc] init];
     delegate.transition = transition;
     return delegate;
 }
@@ -45,18 +45,18 @@
 
 @implementation UIViewController (FWDelegate)
 
-- (id<UIViewControllerTransitioningDelegate>)fwTransitionDelegate
+- (id<UIViewControllerTransitioningDelegate>)fwModalTransitionDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwTransitionDelegate));
+    return objc_getAssociatedObject(self, @selector(fwModalTransitionDelegate));
 }
 
 // 注意：App退出后台时如果弹出页面，整个present动画不会执行。如果需要设置遮罩层等，需要在viewDidAppear中处理兼容
-- (void)setFwTransitionDelegate:(id<UIViewControllerTransitioningDelegate>)fwTransitionDelegate
+- (void)setFwModalTransitionDelegate:(id<UIViewControllerTransitioningDelegate>)fwModalTransitionDelegate
 {
     // 设置delegation动画，nil时清除delegate动画
-    self.transitioningDelegate = fwTransitionDelegate;
+    self.transitioningDelegate = fwModalTransitionDelegate;
     // 强引用，防止被自动释放，nil时释放引用
-    objc_setAssociatedObject(self, @selector(fwTransitionDelegate), fwTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwModalTransitionDelegate), fwModalTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)fwNavigationTransition
@@ -71,19 +71,19 @@
 
 @end
 
-#pragma mark - FWNavigationDelegate
+#pragma mark - FWNavigationTransitionDelegate
 
-@interface FWNavigationDelegate ()
+@interface FWNavigationTransitionDelegate ()
 
 @property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> transition;
 
 @end
 
-@implementation FWNavigationDelegate
+@implementation FWNavigationTransitionDelegate
 
 + (instancetype)delegateWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
-    FWNavigationDelegate *delegate = [[self alloc] init];
+    FWNavigationTransitionDelegate *delegate = [[self alloc] init];
     delegate.transition = transition;
     return delegate;
 }
@@ -116,17 +116,17 @@
 
 @implementation UINavigationController (FWDelegate)
 
-- (id<UINavigationControllerDelegate>)fwNavigationDelegate
+- (id<UINavigationControllerDelegate>)fwNavigationTransitionDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwNavigationDelegate));
+    return objc_getAssociatedObject(self, @selector(fwNavigationTransitionDelegate));
 }
 
-- (void)setFwNavigationDelegate:(id<UINavigationControllerDelegate>)fwNavigationDelegate
+- (void)setFwNavigationTransitionDelegate:(id<UINavigationControllerDelegate>)fwNavigationTransitionDelegate
 {
     // 设置delegate动画，nil时清理delegate动画，无需清理CA动画
-    self.delegate = fwNavigationDelegate;
+    self.delegate = fwNavigationTransitionDelegate;
     // 强引用，防止被自动释放，nil时释放引用
-    objc_setAssociatedObject(self, @selector(fwNavigationDelegate), fwNavigationDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwNavigationTransitionDelegate), fwNavigationTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

@@ -9,10 +9,10 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - FWTransitionDelegate
+#pragma mark - FWModalTransitionDelegate
 
 // 视图控制器转场代理
-@interface FWTransitionDelegate : NSObject <UIViewControllerTransitioningDelegate>
+@interface FWModalTransitionDelegate : NSObject <UIViewControllerTransitioningDelegate>
 
 // 创建转场代理对象，nil时为系统转场
 + (instancetype)delegateWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition;
@@ -25,17 +25,17 @@
 @interface UIViewController (FWDelegate)
 
 // 视图控制器present|dismiss转场代理。注意会修改transitioningDelegate，且会强引用之；如需weak引用，请直接设置transitioningDelegate
-@property (nonatomic, strong) id<UIViewControllerTransitioningDelegate> fwTransitionDelegate;
+@property (nonatomic, strong) id<UIViewControllerTransitioningDelegate> fwModalTransitionDelegate;
 
 // 视图控制器push|pop转场，代理导航控制器转场，fwNavigationDelegate设置后生效
 @property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> fwNavigationTransition;
 
 @end
 
-#pragma mark - FWNavigationDelegate
+#pragma mark - FWNavigationTransitionDelegate
 
 // 导航控制器转场代理
-@interface FWNavigationDelegate : NSObject <UINavigationControllerDelegate>
+@interface FWNavigationTransitionDelegate : NSObject <UINavigationControllerDelegate>
 
 // 创建转场代理对象，nil时为系统转场
 + (instancetype)delegateWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition;
@@ -48,6 +48,6 @@
 @interface UINavigationController (FWDelegate)
 
 // 导航控制器push|pop转场代理。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate
-@property (nonatomic, strong) id<UINavigationControllerDelegate> fwNavigationDelegate;
+@property (nonatomic, strong) id<UINavigationControllerDelegate> fwNavigationTransitionDelegate;
 
 @end
