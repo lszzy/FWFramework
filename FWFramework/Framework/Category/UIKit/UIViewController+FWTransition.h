@@ -115,3 +115,25 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection outDirection;
 
 @end
+
+#pragma mark - FWPercentInteractiveTransition
+
+// 百分比交互转场
+@interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
+
+// 初始化交互转场，指定手势和拖动边缘
+- (instancetype)initWithGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer draggingEdge:(UIRectEdge)edge NS_DESIGNATED_INITIALIZER;
+
+// 禁用默认初始化方法
+- (instancetype)init NS_UNAVAILABLE;
+
+// 动画完成多少百分比后，释放手指可以完成转场，少于该值将取消转场。取值范围：[0 ，1），默认：0.5
+@property(nonatomic, assign) CGFloat percentOfInteractive;
+
+// 动画完成多少百分比后，直接完成转场（默认：0 表示不启用）（0 ，1]
+@property(nonatomic, assign) CGFloat percentOfFinished;
+
+// 用来调节完成完成百分比，数值越大越快（默认：0，小于0.5 表示不启用）
+@property(nonatomic, assign) CGFloat speedOfPercent;
+
+@end
