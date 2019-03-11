@@ -78,7 +78,7 @@
         self.block(self);
     // 3. inherit
     } else {
-        [self transition];
+        [self animate];
     }
 }
 
@@ -163,7 +163,7 @@
     }
 }
 
-- (void)transition
+- (void)animate
 {
     // 子类重写
 }
@@ -197,7 +197,7 @@
     return self;
 }
 
-- (void)transition
+- (void)animate
 {
     FWAnimatedTransitionType type = [self type];
     BOOL swipeIn = (type == FWAnimatedTransitionTypePush || type == FWAnimatedTransitionTypePresent);
