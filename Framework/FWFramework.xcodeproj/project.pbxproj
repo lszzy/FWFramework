@@ -274,6 +274,8 @@
 		2FD1A52121D4B71600A215C2 /* FWView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A51F21D4B71600A215C2 /* FWView.m */; };
 		2FD1A52621D4BD4100A215C2 /* FWScrollViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */; };
+		2FDBDCB2223601240048607A /* UIViewController+FWDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDBDCB0223601240048607A /* UIViewController+FWDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FDBDCB3223601240048607A /* UIViewController+FWDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDBDCB1223601240048607A /* UIViewController+FWDelegate.m */; };
 		2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -549,6 +551,8 @@
 		2FD1A51F21D4B71600A215C2 /* FWView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWView.m; sourceTree = "<group>"; };
 		2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWScrollViewController.h; sourceTree = "<group>"; };
 		2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWScrollViewController.m; sourceTree = "<group>"; };
+		2FDBDCB0223601240048607A /* UIViewController+FWDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWDelegate.h"; sourceTree = "<group>"; };
+		2FDBDCB1223601240048607A /* UIViewController+FWDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWDelegate.m"; sourceTree = "<group>"; };
 		2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBack.h"; sourceTree = "<group>"; };
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
@@ -677,6 +681,8 @@
 				2F03A516216CF4B9001965A1 /* UIViewController+FWFramework.m */,
 				2F03A4F3216CF4B9001965A1 /* UIViewController+FWTransition.h */,
 				2F03A51B216CF4B9001965A1 /* UIViewController+FWTransition.m */,
+				2FDBDCB0223601240048607A /* UIViewController+FWDelegate.h */,
+				2FDBDCB1223601240048607A /* UIViewController+FWDelegate.m */,
 				2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */,
 				2F071B6C21DF321500F47DFD /* UIWebView+FWFramework.m */,
 				2F03A4EE216CF4B9001965A1 /* UIWindow+FWFramework.h */,
@@ -1004,6 +1010,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FDBDCB2223601240048607A /* UIViewController+FWDelegate.h in Headers */,
 				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
 				2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */,
@@ -1348,6 +1355,7 @@
 				2F03A57C216CF4B9001965A1 /* UIBezierPath+FWFramework.m in Sources */,
 				2F03A5FA216CF4B9001965A1 /* FWMessage.m in Sources */,
 				2F03A580216CF4B9001965A1 /* UIView+FWBlock.m in Sources */,
+				2FDBDCB3223601240048607A /* UIViewController+FWDelegate.m in Sources */,
 				2F03A589216CF4B9001965A1 /* UIView+FWAnimation.m in Sources */,
 				2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */,
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,

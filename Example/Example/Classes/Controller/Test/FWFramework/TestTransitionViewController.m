@@ -139,7 +139,7 @@
                                  transition.toView.alpha = 1.0;
                              }
                              completion:^(BOOL finished) {
-                                 [transition complete:finished];
+                                 [transition complete];
                              }];
         } else if (transition.type == FWAnimatedTransitionTypeDismiss) {
             [transition start];
@@ -151,13 +151,13 @@
                                  transition.fromView.alpha = 0.0;
                              }
                              completion:^(BOOL finished) {
-                                 [transition complete:finished];
+                                 [transition complete];
                              }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransition = transition;
+    vc.fwTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -173,7 +173,7 @@
                                         timingFunction:kCAMediaTimingFunctionEaseInEaseOut
                                               duration:[transition transitionDuration:transition.transitionContext]
                                             completion:^(BOOL finished) {
-                                                [transition complete:finished];
+                                                [transition complete];
                                             }];
         } else if (transition.type == FWAnimatedTransitionTypeDismiss) {
             [transition start];
@@ -184,13 +184,13 @@
                                           timingFunction:kCAMediaTimingFunctionEaseInEaseOut
                                                 duration:[transition transitionDuration:transition.transitionContext]
                                               completion:^(BOOL finished) {
-                                                  [transition complete:finished];
+                                                  [transition complete];
                                               }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransition = transition;
+    vc.fwTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -200,7 +200,7 @@
     transition.duration = TestTransitinDuration;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransition = transition;
+    vc.fwTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -222,7 +222,7 @@
                               duration:[transition transitionDuration:transition.transitionContext]
                                options:UIViewAnimationOptionTransitionCurlUp
                             completion:^(BOOL finished) {
-                                [transition complete:finished];
+                                [transition complete];
                             }];
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
@@ -231,13 +231,13 @@
                               duration:[transition transitionDuration:transition.transitionContext]
                                options:UIViewAnimationOptionTransitionCurlDown
                             completion:^(BOOL finished) {
-                                [transition complete:finished];
+                                [transition complete];
                             }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationDelegate = [FWNavigationDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -254,7 +254,7 @@
                                  transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
-                                 [transition complete:finished];
+                                 [transition complete];
                              }];
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
@@ -264,13 +264,13 @@
                                  transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
-                                 [transition complete:finished];
+                                 [transition complete];
                              }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationDelegate = [FWNavigationDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -287,7 +287,7 @@
                                                      timingFunction:kCAMediaTimingFunctionEaseInEaseOut
                                                            duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished) {
-                                                             [transition complete:finished];
+                                                             [transition complete];
                                                          }];
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
@@ -298,13 +298,13 @@
                                                      timingFunction:kCAMediaTimingFunctionEaseInEaseOut
                                                            duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished) {
-                                                             [transition complete:finished];
+                                                             [transition complete];
                                                          }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationDelegate = [FWNavigationDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -319,7 +319,7 @@
                                                          transition:UIViewAnimationTransitionCurlUp
                                                            duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished){
-                                                             [transition complete:finished];
+                                                             [transition complete];
                                                          }];
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
@@ -329,13 +329,13 @@
                                                          transition:UIViewAnimationTransitionCurlDown
                                                            duration:[transition transitionDuration:transition.transitionContext]
                                                          completion:^(BOOL finished){
-                                                             [transition complete:finished];
+                                                             [transition complete];
                                                          }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationDelegate = [FWNavigationDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -347,7 +347,7 @@
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationDelegate = [FWNavigationDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -364,7 +364,7 @@
                                  transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
-                                 [transition complete:finished];
+                                 [transition complete];
                              }];
         } else if (transition.type == FWAnimatedTransitionTypePop) {
             [transition start];
@@ -374,14 +374,14 @@
                                  transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
-                                 [transition complete:finished];
+                                 [transition complete];
                              }];
         }
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwViewTransition = transition;
-    self.navigationController.fwNavigationTransition = [FWSystemAnimationTransition transition];
+    vc.fwTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationDelegate = [FWNavigationDelegate delegateWithTransition:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
