@@ -10,9 +10,30 @@
 
 @interface TestFullScreenViewController : BaseViewController
 
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+
 @end
 
 @implementation TestFullScreenViewController
+
+- (UIPanGestureRecognizer *)panGesture
+{
+    if (!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureAction:)];
+    }
+    return _panGesture;
+}
+
+- (void)panGestureAction:(UIPanGestureRecognizer *)gesture
+{
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan:
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+        default:
+            break;
+    }
+}
 
 - (void)renderInit
 {
@@ -40,11 +61,15 @@
     // 设置背景(present时透明，push时不透明)
     self.view.backgroundColor = self.navigationController ? [UIColor appColorBlack] : [UIColor appColorCover];
     
-    // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
-    [self.view fwAddTapGestureWithBlock:^(id sender) {
-        FWStrongifySelf();
-        [self fwCloseViewControllerAnimated:YES];
-    }];
+    if (_panGesture) {
+        [self.view addGestureRecognizer:_panGesture];
+    } else {
+        // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
+        [self.view fwAddTapGestureWithBlock:^(id sender) {
+            FWStrongifySelf();
+            [self fwCloseViewControllerAnimated:YES];
+        }];
+    }
     
     // 添加视图
     UIButton *button = [UIButton fwAutoLayoutView];
@@ -89,6 +114,7 @@
                                           @[@"转场present", @"onPresentTransition"],
                                           @[@"自定义present", @"onPresentAnimation"],
                                           @[@"swipe present", @"onPresentSwipe"],
+                                          @[@"interactive present", @"onPresentInteractive"],
                                           @[@"System Push", @"onPush"],
                                           @[@"Block Push", @"onPushBlock"],
                                           @[@"Option Push", @"onPushOption"],
@@ -200,6 +226,19 @@
     transition.duration = TestTransitinDuration;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)onPresentInteractive
+{
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    
+    FWSwipeAnimationTransition *transition = [FWSwipeAnimationTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
+    transition.duration = TestTransitinDuration;
+    FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] initWithGestureRecognizer:vc.panGesture draggingEdge:UIRectEdgeTop];
+    transition.interactiveTransition = interactiveTransition;
+    
     vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
