@@ -11,7 +11,6 @@
 #import "UIViewController+FWBar.h"
 #import "UIViewController+FWBack.h"
 #import "UIViewController+FWTransition.h"
-#import "UIViewController+FWDelegate.h"
 
 /*!
  @brief UIViewController+FWFramework

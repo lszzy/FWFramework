@@ -62,6 +62,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - Public
 
+// 设置动画转场交互，如果需要支持交互式转场，设置此属性即可
+@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> interactiveTransition;
+
 // 设置动画代理，方式一
 @property (nonatomic, weak) id<FWAnimatedTransitionDelegate> delegate;
 
@@ -135,5 +138,38 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 用来调节完成完成百分比，数值越大越快（默认：0，小于0.5 表示不启用）
 @property(nonatomic, assign) CGFloat speedOfPercent;
+
+@end
+
+#pragma mark - FWTransitionDelegate
+
+// 视图控制器转场代理
+@interface FWTransitionDelegate : NSObject <UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
+
+// 创建转场代理对象，注意进入和消失为同一转场对象，nil时为系统转场
++ (instancetype)delegateWithTransition:(FWAnimatedTransition *)transition;
+
+@end
+
+#pragma mark - UIViewController+FWTransition
+
+// 视图控制器转场分类，如需半透明，请在init中设置modalPresentationStyle为UIModalPresentationCustom
+@interface UIViewController (FWTransition)
+
+// 视图控制器present|dismiss转场代理。注意会修改transitioningDelegate，且会强引用之；如需weak引用，请直接设置transitioningDelegate
+@property (nonatomic, strong) id<UIViewControllerTransitioningDelegate> fwModalTransitionDelegate;
+
+// 视图控制器push|pop转场，代理导航控制器转场，需在fwNavigationDelegate设置为FWTransitionDelegate后生效
+@property (nonatomic, strong) FWAnimatedTransition *fwNavigationTransition;
+
+@end
+
+#pragma mark - UINavigationController+FWTransition
+
+// 导航控制器转场分类
+@interface UINavigationController (FWTransition)
+
+// 导航控制器push|pop转场代理。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate
+@property (nonatomic, strong) id<UINavigationControllerDelegate> fwNavigationTransitionDelegate;
 
 @end
