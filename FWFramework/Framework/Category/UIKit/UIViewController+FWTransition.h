@@ -62,10 +62,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - Public
 
-// 设置动画代理
+// 设置动画代理，方式一
 @property (nonatomic, weak) id<FWAnimatedTransitionDelegate> delegate;
 
-// 设置动画句柄
+// 设置动画句柄，方式二
 @property (nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
 
 // 动画持续时间。默认使用系统时间(大约0.25秒)
@@ -92,8 +92,8 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 标记动画开始(自动添加视图到容器)
 - (void)start;
 
-// 执行转场动画，子类重写
-- (void)transition;
+// 执行动画，子类重写，方式三
+- (void)animate;
 
 // 自动标记动画完成(根据transitionContext是否被取消判断)
 - (void)complete;
