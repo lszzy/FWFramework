@@ -157,7 +157,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWModalTransitionDelegate delegateWithTransition:transition];
+    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -190,7 +190,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWModalTransitionDelegate delegateWithTransition:transition];
+    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -200,7 +200,7 @@
     transition.duration = TestTransitinDuration;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWModalTransitionDelegate delegateWithTransition:transition];
+    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -237,7 +237,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWNavigationTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -270,7 +270,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWNavigationTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -304,7 +304,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWNavigationTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -335,7 +335,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWNavigationTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -347,7 +347,7 @@
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWNavigationTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -380,8 +380,8 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWModalTransitionDelegate delegateWithTransition:transition];
-    self.navigationController.fwNavigationTransitionDelegate = [FWNavigationTransitionDelegate delegateWithTransition:nil];
+    vc.fwNavigationTransition = transition;
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
