@@ -322,28 +322,29 @@
     // 因为视图控制器将作为动画的一部分在屏幕上或从屏幕上滑动，因此我们希望将计算建立在不移动视图的坐标空间：transitionContext.containerView
     UIView *containerView = self.transitionContext.containerView;
     
-    CGPoint locationInSourceView = [gesture locationInView:containerView];
+    CGPoint panPoint = [gesture translationInView:containerView];
+    CGPoint locationPoint = [gesture locationInView:containerView];
     CGFloat width = CGRectGetWidth(containerView.bounds);
     CGFloat height = CGRectGetHeight(containerView.bounds);
     
     CGFloat percent = 0.f;
     if ([gesture isMemberOfClass: [UIScreenEdgePanGestureRecognizer class]]) {
         if (self.edge == UIRectEdgeRight) {
-            percent = (width - locationInSourceView.x) / width;
+            percent = (width - locationPoint.x) / width;
         } else {
             // 垂直方向的转场以左侧滑作为依据
-            percent = locationInSourceView.x / width;
+            percent = locationPoint.x / width;
         }
     } else {
         if (self.edge == UIRectEdgeRight) {
-            percent = (width - locationInSourceView.x) / width;
+            percent = (width - locationPoint.x) / width;
         } else if (self.edge == UIRectEdgeLeft) {
             // 垂直方向的转场以左侧滑作为依据
-            percent = locationInSourceView.x / width;
+            percent = locationPoint.x / width;
         } else if (self.edge == UIRectEdgeBottom) {
-            percent = (height - locationInSourceView.y) / height;
+            percent = (height - locationPoint.y) / height;
         } else if (self.edge == UIRectEdgeTop) {
-            percent = locationInSourceView.y / height;
+            percent = locationPoint.y / height;
         }
     }
     
@@ -375,9 +376,11 @@
             else
                 [self cancelInteractiveTransition];
             break;
-        default:
+        case UIGestureRecognizerStateCancelled:
             // 手势被打断，取消转场
             [self cancelInteractiveTransition];
+            break;
+        default:
             break;
     }
 }
@@ -401,6 +404,16 @@
     return delegate;
 }
 
+#pragma mark - Private
+
+- (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition
+{
+    if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
+        return ((FWAnimatedTransition *)transition).interactiveTransition;
+    }
+    return nil;
+}
+
 #pragma mark - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
@@ -415,18 +428,13 @@
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    if ([animator isKindOfClass:[FWAnimatedTransition class]]) {
-        return ((FWAnimatedTransition *)animator).interactiveTransition;
-    }
     return nil;
+    return [self interactiveTransitionWithTransition:animator];
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    if ([animator isKindOfClass:[FWAnimatedTransition class]]) {
-        return ((FWAnimatedTransition *)animator).interactiveTransition;
-    }
-    return nil;
+    return [self interactiveTransitionWithTransition:animator];
 }
 
 #pragma mark - UINavigationControllerDelegate
@@ -454,10 +462,7 @@
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>) animationController
 {
-    if ([animationController isKindOfClass:[FWAnimatedTransition class]]) {
-        return ((FWAnimatedTransition *)animationController).interactiveTransition;
-    }
-    return nil;
+    return [self interactiveTransitionWithTransition:animationController];
 }
 
 @end
