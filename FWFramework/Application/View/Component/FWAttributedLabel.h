@@ -39,6 +39,7 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
  @see https://github.com/xiangwangfeng/M80AttributedLabel
  */
 @interface FWAttributedLabel : UIView
+
 @property (nonatomic,weak,nullable)         id<FWAttributedLabelDelegate> delegate;
 @property (nonatomic,strong,nullable)       UIFont *font;                          //字体
 @property (nonatomic,strong,nullable)       UIColor *textColor;                    //文字颜色
@@ -58,7 +59,8 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
 @property (nonatomic,copy,nullable)         NSAttributedString *attributedText;     //属性文本
 @property (nonatomic,assign)                NSUInteger maxSyncDetectLength;         //UI 线程做 link 检查的文字最大长度
 
-
+//重置标签
+- (void)resetAll;
 
 //添加文本
 - (void)appendText:(NSString *)text;

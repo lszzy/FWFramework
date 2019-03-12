@@ -98,7 +98,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [self resetFont];
 }
 
-- (void)cleanAll
+- (void)resetLabel
 {
     _ignoreRedraw = NO;
     _linkDetected = NO;
@@ -525,6 +525,11 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [self appendAttributedText:attachText];
 }
 
+#pragma mark - 重置标签
+- (void)resetAll
+{
+    [self setText:nil];
+}
 
 #pragma mark - 设置文本
 - (void)setText:(NSString *)text
@@ -536,7 +541,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
     _attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:attributedText];
-    [self cleanAll];
+    [self resetLabel];
 }
 
 - (NSString *)text
