@@ -15,6 +15,8 @@
 
 /*!
  @brief NSBundle分类
+ @discussion 如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。
+ 如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value
  */
 @interface NSBundle (FWFramework)
 
@@ -26,11 +28,5 @@
 
 // 设置自定义本地化语言，为空时清空自定义。系统组件下次启动生效
 + (void)fwSetLocalizedLanguage:(NSString *)language;
-
-// 读取本地化字符串(默认Localizable.strings)
-+ (NSString *)fwLocalizedString:(NSString *)key;
-
-// 读取指定本地化字符串(默认Localizable.strings)
-+ (NSString *)fwLocalizedString:(NSString *)key table:(NSString *)table;
 
 @end
