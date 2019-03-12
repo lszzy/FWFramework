@@ -274,6 +274,8 @@
 		2FD1A52121D4B71600A215C2 /* FWView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A51F21D4B71600A215C2 /* FWView.m */; };
 		2FD1A52621D4BD4100A215C2 /* FWScrollViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */; };
+		2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */; };
 		2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -549,6 +551,8 @@
 		2FD1A51F21D4B71600A215C2 /* FWView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWView.m; sourceTree = "<group>"; };
 		2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWScrollViewController.h; sourceTree = "<group>"; };
 		2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWScrollViewController.m; sourceTree = "<group>"; };
+		2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+FWFramework.h"; sourceTree = "<group>"; };
+		2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+FWFramework.m"; sourceTree = "<group>"; };
 		2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBack.h"; sourceTree = "<group>"; };
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
@@ -603,6 +607,8 @@
 				2F03A513216CF4B9001965A1 /* UIDevice+FWFramework.m */,
 				2F03A4E8216CF4B9001965A1 /* UIFont+FWFramework.h */,
 				2F03A505216CF4B9001965A1 /* UIFont+FWFramework.m */,
+				2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */,
+				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
 				2F03A4FC216CF4B9001965A1 /* UIImage+FWFramework.m */,
 				2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */,
@@ -1004,6 +1010,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */,
 				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
 				2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */,
@@ -1259,6 +1266,7 @@
 				2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
 				2F03A586216CF4B9001965A1 /* UIImage+FWGif.m in Sources */,
+				2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,
 				2F03A588216CF4B9001965A1 /* UITextView+FWPlaceholder.m in Sources */,
