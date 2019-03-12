@@ -10,6 +10,8 @@
 #import "NSBundle+FWFramework.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWInnerBundle
+
 static const char FWInnerBundleKey = 0;
 
 @interface FWInnerBundle : NSBundle
@@ -30,23 +32,28 @@ static const char FWInnerBundleKey = 0;
 
 @end
 
+#pragma mark - NSBundle+FWFramework
+
 @implementation NSBundle (FWFramework)
 
 + (void)load
 {
-    NSString *localizedLanguage = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
-    if (localizedLanguage) {
-        [self fwApplyLocalizedLanguage:localizedLanguage];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if ([self fwLocalizedLanguage]) {
+            [self fwLoadLocalizedLanguage];
+        }
+    });
 }
 
-+ (void)fwApplyLocalizedLanguage:(NSString *)language
++ (void)fwLoadLocalizedLanguage
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         object_setClass([NSBundle mainBundle], [FWInnerBundle class]);
     });
     
+    NSString *language = [self fwLocalizedLanguage];
     id value = language ? [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:language ofType:@"lproj"]] : nil;
     objc_setAssociatedObject([NSBundle mainBundle], &FWInnerBundleKey, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -63,28 +70,16 @@ static const char FWInnerBundleKey = 0;
 
 + (void)fwSetLocalizedLanguage:(NSString *)language
 {
-    if (!language) {
+    if (language) {
+        [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"FWLocalizedLanguage"];
+        [[NSUserDefaults standardUserDefaults] setObject:@[language] forKey:@"AppleLanguages"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWLocalizedLanguage"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AppleLanguages"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        [self fwApplyLocalizedLanguage:nil];
-        return;
     }
-    
-    [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"FWLocalizedLanguage"];
-    [[NSUserDefaults standardUserDefaults] setObject:@[language] forKey:@"AppleLanguages"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    [self fwApplyLocalizedLanguage:language];
-}
-
-+ (NSString *)fwLocalizedString:(NSString *)key
-{
-    return [NSBundle fwLocalizedString:key table:nil];
-}
-
-+ (NSString *)fwLocalizedString:(NSString *)key table:(NSString *)table
-{
-    return [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:table];
+    [self fwLoadLocalizedLanguage];
 }
 
 @end
