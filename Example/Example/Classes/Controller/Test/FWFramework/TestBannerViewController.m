@@ -140,7 +140,7 @@
     [label fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:10];
     [label fwSetDimension:NSLayoutAttributeHeight toSize:30];
     
-    [label setText:@"文本 "];
+    [label appendText:@"文本 "];
     UIView *labelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     labelView.backgroundColor = [UIColor redColor];
     [labelView fwSetCornerRadius:15];

@@ -86,6 +86,12 @@
 
 - (FWAnimatedTransitionType)type
 {
+    // 1. 手工设置type
+    if (_type != FWAnimatedTransitionTypeNone) {
+        return _type;
+    }
+    
+    // 2. 自动判断type
     if (!self.transitionContext) {
         return FWAnimatedTransitionTypeNone;
     }
@@ -179,7 +185,8 @@
 
 @implementation FWSwipeAnimationTransition
 
-+ (instancetype)transitionWithInDirection:(UISwipeGestureRecognizerDirection)inDirection outDirection:(UISwipeGestureRecognizerDirection)outDirection
++ (instancetype)transitionWithInDirection:(UISwipeGestureRecognizerDirection)inDirection
+                             outDirection:(UISwipeGestureRecognizerDirection)outDirection
 {
     FWSwipeAnimationTransition *transition = [[self alloc] init];
     transition.inDirection = inDirection;
@@ -285,7 +292,8 @@
 
 @implementation FWPercentInteractiveTransition
 
-- (instancetype)initWithGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer draggingEdge:(UIRectEdge)edge
+- (instancetype)initWithGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer
+                             draggingEdge:(UIRectEdge)edge
 {
     self = [super init];
     if (self) {
@@ -294,7 +302,7 @@
         _percentOfInteractive = 0.5;
         
         // 添加self作为手势识别器的观察者，以便该对象在用户移动手指时接收更新
-        [_gestureRecognizer addTarget:self action:@selector(gestureRecognizeAction:)];
+        [_gestureRecognizer addTarget:self action:@selector(gestureRecognizeHandler:)];
     }
     return self;
 }
@@ -307,7 +315,7 @@
 
 - (void)dealloc
 {
-    [self.gestureRecognizer removeTarget:self action:@selector(gestureRecognizeAction:)];
+    [self.gestureRecognizer removeTarget:self action:@selector(gestureRecognizeHandler:)];
 }
 
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -316,46 +324,37 @@
     [super startInteractiveTransition:transitionContext];
 }
 
-// 返回交互过渡完成的百分比
 - (CGFloat)percentForGesture:(UIPanGestureRecognizer *)gesture
 {
     // 因为视图控制器将作为动画的一部分在屏幕上或从屏幕上滑动，因此我们希望将计算建立在不移动视图的坐标空间：transitionContext.containerView
     UIView *containerView = self.transitionContext.containerView;
-    
+    // 根据移动距离计算
     CGPoint panPoint = [gesture translationInView:containerView];
-    CGPoint locationPoint = [gesture locationInView:containerView];
+    // 根据坐标位置计算
+    // CGPoint panPoint = [gesture locationInView:containerView];
     CGFloat width = CGRectGetWidth(containerView.bounds);
     CGFloat height = CGRectGetHeight(containerView.bounds);
     
     CGFloat percent = 0.f;
-    if ([gesture isMemberOfClass: [UIScreenEdgePanGestureRecognizer class]]) {
-        if (self.edge == UIRectEdgeRight) {
-            percent = (width - locationPoint.x) / width;
-        } else {
-            // 垂直方向的转场以左侧滑作为依据
-            percent = locationPoint.x / width;
-        }
-    } else {
-        if (self.edge == UIRectEdgeRight) {
-            percent = (width - locationPoint.x) / width;
-        } else if (self.edge == UIRectEdgeLeft) {
-            // 垂直方向的转场以左侧滑作为依据
-            percent = locationPoint.x / width;
-        } else if (self.edge == UIRectEdgeBottom) {
-            percent = (height - locationPoint.y) / height;
-        } else if (self.edge == UIRectEdgeTop) {
-            percent = locationPoint.y / height;
-        }
+    if (self.edge == UIRectEdgeRight) {
+        percent = (width - panPoint.x) / width;
+    } else if (self.edge == UIRectEdgeLeft) {
+        percent = panPoint.x / width;
+    } else if (self.edge == UIRectEdgeBottom) {
+        percent = (height - panPoint.y) / height;
+    } else if (self.edge == UIRectEdgeTop) {
+        percent = panPoint.y / height;
     }
     
-    if (_speedOfPercent >= 0.2) {
+    percent = fmaxf(percent, 0.0);
+    percent = fminf(percent, 1.0);
+    if (_speedOfPercent > 0.f) {
         percent *= _speedOfPercent;
     }
-    
     return percent;
 }
 
-- (void)gestureRecognizeAction:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
+- (void)gestureRecognizeHandler:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:
@@ -376,11 +375,9 @@
             else
                 [self cancelInteractiveTransition];
             break;
-        case UIGestureRecognizerStateCancelled:
+        default:
             // 手势被打断，取消转场
             [self cancelInteractiveTransition];
-            break;
-        default:
             break;
     }
 }
@@ -391,16 +388,24 @@
 
 @interface FWTransitionDelegate ()
 
-@property (nonatomic, strong) FWAnimatedTransition *transition;
+@property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> inTransition;
+
+@property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> outTransition;
 
 @end
 
 @implementation FWTransitionDelegate
 
-+ (instancetype)delegateWithTransition:(FWAnimatedTransition *)transition
++ (instancetype)delegateWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition
+{
+    return [self delegateWithInTransition:transition outTransition:transition];
+}
+
++ (instancetype)delegateWithInTransition:(id<UIViewControllerAnimatedTransitioning>)inTransition outTransition:(id<UIViewControllerAnimatedTransitioning>)outTransition
 {
     FWTransitionDelegate *delegate = [[self alloc] init];
-    delegate.transition = transition;
+    delegate.inTransition = inTransition;
+    delegate.outTransition = outTransition;
     return delegate;
 }
 
@@ -416,20 +421,30 @@
 
 #pragma mark - UIViewControllerTransitioningDelegate
 
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
+                                                                  presentingController:(UIViewController *)presenting
+                                                                      sourceController:(UIViewController *)source
 {
-    return self.transition;
+    if ([self.inTransition isKindOfClass:[FWAnimatedTransition class]]) {
+        ((FWAnimatedTransition *)self.inTransition).type = FWAnimatedTransitionTypePresent;
+    }
+    return self.inTransition;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    return self.transition;
+    if ([self.outTransition isKindOfClass:[FWAnimatedTransition class]]) {
+        ((FWAnimatedTransition *)self.outTransition).type = FWAnimatedTransitionTypeDismiss;
+    }
+    return self.outTransition;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
 {
+    if ([animator isKindOfClass:[FWAnimatedTransition class]]) {
+        return ((FWAnimatedTransition *)animator).interactiveTransition;
+    }
     return nil;
-    return [self interactiveTransitionWithTransition:animator];
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
@@ -443,17 +458,17 @@
 {
     if (operation == UINavigationControllerOperationPush) {
         // push时检查toVC的转场代理
-        if (toVC.fwNavigationTransition) {
-            return toVC.fwNavigationTransition;
+        if (toVC.fwViewTransitionDelegate.inTransition) {
+            return toVC.fwViewTransitionDelegate.inTransition;
         } else {
-            return self.transition;
+            return self.inTransition;
         }
     } else if (operation == UINavigationControllerOperationPop) {
         // pop时检查fromVC的转场代理
-        if (fromVC.fwNavigationTransition) {
-            return fromVC.fwNavigationTransition;
+        if (fromVC.fwViewTransitionDelegate.outTransition) {
+            return fromVC.fwViewTransitionDelegate.outTransition;
         } else {
-            return self.transition;
+            return self.outTransition;
         }
     }
     return nil;
@@ -485,14 +500,14 @@
     objc_setAssociatedObject(self, @selector(fwModalTransitionDelegate), fwModalTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (FWAnimatedTransition *)fwNavigationTransition
+- (FWTransitionDelegate *)fwViewTransitionDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwNavigationTransition));
+    return objc_getAssociatedObject(self, @selector(fwViewTransitionDelegate));
 }
 
-- (void)setFwNavigationTransition:(FWAnimatedTransition *)fwNavigationTransition
+- (void)setFwViewTransitionDelegate:(FWTransitionDelegate *)fwViewTransitionDelegate
 {
-    objc_setAssociatedObject(self, @selector(fwNavigationTransition), fwNavigationTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwViewTransitionDelegate), fwViewTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

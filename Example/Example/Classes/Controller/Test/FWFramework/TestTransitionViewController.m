@@ -104,7 +104,7 @@
     [self fwSetNavigationBarHidden:NO animated:animated];
     
     // 自动还原动画
-    self.navigationController.fwNavigationTransition = nil;
+    self.navigationController.fwNavigationTransitionDelegate = nil;
 }
 
 - (void)renderData
@@ -419,7 +419,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwNavigationTransition = transition;
+    vc.fwViewTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
