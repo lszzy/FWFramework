@@ -11,6 +11,7 @@
 
 /*!
  @brief NSArray分类
+ @discussion 如果需要数组weak引用元素，使用[NSValue valueWithNonretainedObject:object]即可
  */
 @interface NSArray<__covariant ObjectType> (FWFramework)
 
