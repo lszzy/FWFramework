@@ -260,6 +260,7 @@
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;
                                FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
                                if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
+                                   mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
                                    for (FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
                                        if (handler.progressBlock) {
                                            dispatch_async(dispatch_get_main_queue(), ^{
