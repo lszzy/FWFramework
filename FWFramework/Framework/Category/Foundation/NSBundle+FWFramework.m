@@ -92,39 +92,44 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
 
 @end
 
-#pragma mark - NSBundle+FWCustom
+#pragma mark - NSBundle+FWBundle
 
-@implementation NSBundle (FWCustom)
+@implementation NSBundle (FWBundle)
 
-+ (void)fwSetCustomDetectorBlock:(BOOL (^)(NSBundle *))detector
++ (void)fwSetBundleFilter:(BOOL (^)(NSBundle *))filter
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 动态替换initWithPath:拦截处理。如果不需要处理三方SDK和系统组件，则不替换
-        [self fwSwizzleInstanceMethod:@selector(initWithPath:) with:@selector(fwCustomInitWithPath:)];
+        [self fwSwizzleInstanceMethod:@selector(initWithPath:) with:@selector(fwInnerInitWithPath:)];
     });
     
-    // 保存自定义检测block到mainBundle
-    objc_setAssociatedObject(NSBundle.mainBundle, @selector(fwSetCustomDetectorBlock:), detector, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    // 保存自定义过滤block到mainBundle
+    objc_setAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFilter:), filter, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-+ (void)fwSetCustomFinderBlock:(NSString *(^)(NSBundle *, NSString *))finder
++ (void)fwSetBundleFinder:(NSString *(^)(NSBundle *, NSString *))finder
 {
     // 保存自定义查找block到mainBundle
-    objc_setAssociatedObject(NSBundle.mainBundle, @selector(fwSetCustomFinderBlock:), finder, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFinder:), finder, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (instancetype)fwCustomInitWithPath:(NSString *)path
+- (NSBundle *)fwLocalizedBundle:(NSString *)language
+{
+    return language ? [NSBundle bundleWithPath:[self pathForResource:language ofType:@"lproj"]] : nil;
+}
+
+- (instancetype)fwInnerInitWithPath:(NSString *)path
 {
     // bundle不存在或者已经处理过，直接返回
-    NSBundle *bundle = [self fwCustomInitWithPath:path];
+    NSBundle *bundle = [self fwInnerInitWithPath:path];
     if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {
         return bundle;
     }
     
-    // 检测bundle是否需要查找本地化语言
-    BOOL (^detector)(NSBundle *bundle) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetCustomDetectorBlock:));
-    if (detector && detector(bundle)) {
+    // 过滤bundle是否需要查找本地化语言
+    BOOL (^filter)(NSBundle *bundle) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFilter:));
+    if (filter && filter(bundle)) {
         if (![bundle isKindOfClass:[FWInnerBundle class]]) {
             // 处理bundle语言，使用通知方式
             object_setClass(bundle, [FWInnerBundle class]);
@@ -132,25 +137,25 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
             // 自动加载上一次语言设置
             NSString *language = [NSBundle fwLocalizedLanguage];
             if (language) {
-                [bundle fwCustomLoadLocalizedLanguage:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
+                [bundle fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
             }
             
             // 监听语言改变通知，切换bundle语言
-            [[NSNotificationCenter defaultCenter] addObserver:bundle selector:@selector(fwCustomLoadLocalizedLanguage:) name:FWLocalizedLanguageChangedNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:bundle selector:@selector(fwLocalizedLanguageChanged:) name:FWLocalizedLanguageChangedNotification object:nil];
         }
     }
     return bundle;
 }
 
-- (void)fwCustomLoadLocalizedLanguage:(NSNotification *)notification
+- (void)fwLocalizedLanguageChanged:(NSNotification *)notification
 {
     NSString *language = [notification.object isKindOfClass:[NSString class]] ? notification.object : nil;
-    NSBundle *bundle = language ? [NSBundle bundleWithPath:[self pathForResource:language ofType:@"lproj"]] : nil;
+    NSBundle *bundle = [self fwLocalizedBundle:language];
     if (!bundle) {
-        NSString * (^finder)(NSBundle *bundle, NSString *language) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetCustomFinderBlock:));
+        NSString * (^finder)(NSBundle *bundle, NSString *language) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFinder:));
         if (finder) {
             NSString *bundleName = finder(self, language);
-            bundle = bundleName ? [NSBundle bundleWithPath:[self pathForResource:bundleName ofType:@"lproj"]] : nil;
+            bundle = [self fwLocalizedBundle:bundleName];
         }
     }
     objc_setAssociatedObject(self, @selector(localizedStringForKey:value:table:), bundle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
