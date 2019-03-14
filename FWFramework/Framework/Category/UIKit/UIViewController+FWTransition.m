@@ -82,7 +82,7 @@
     }
 }
 
-#pragma mark - Public
+#pragma mark - Animate
 
 - (FWAnimatedTransitionType)type
 {
@@ -282,40 +282,26 @@
 
 @interface FWPercentInteractiveTransition ()
 
-@property (nonatomic, weak, readonly) UIPanGestureRecognizer *gestureRecognizer;
-
-@property (nonatomic, readonly) UIRectEdge edge;
-
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
 @end
 
 @implementation FWPercentInteractiveTransition
 
-- (instancetype)initWithGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer
-                             draggingEdge:(UIRectEdge)edge
+- (instancetype)init
 {
     self = [super init];
     if (self) {
-        _gestureRecognizer = gestureRecognizer;
-        _edge = edge;
+        _interactiveEdge = UIRectEdgeTop;
         _percentOfInteractive = 0.5;
-        
-        // 添加self作为手势识别器的观察者，以便该对象在用户移动手指时接收更新
-        [_gestureRecognizer addTarget:self action:@selector(gestureRecognizeHandler:)];
     }
     return self;
 }
 
-- (instancetype)init
+- (void)addGestureToViewController:(UIViewController *)viewController
 {
-    NSString *reason = @"Use -initWithGestureRecognizer:draggingEdge:";
-    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
-}
-
-- (void)dealloc
-{
-    [self.gestureRecognizer removeTarget:self action:@selector(gestureRecognizeHandler:)];
+    UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeHandler:)];
+    [viewController.view addGestureRecognizer:gestureRecognizer];
 }
 
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -336,18 +322,17 @@
     CGFloat height = CGRectGetHeight(containerView.bounds);
     
     CGFloat percent = 0.f;
-    if (self.edge == UIRectEdgeRight) {
+    if (self.interactiveEdge == UIRectEdgeRight) {
         percent = (width - panPoint.x) / width;
-    } else if (self.edge == UIRectEdgeLeft) {
+    } else if (self.interactiveEdge == UIRectEdgeLeft) {
         percent = panPoint.x / width;
-    } else if (self.edge == UIRectEdgeBottom) {
+    } else if (self.interactiveEdge == UIRectEdgeBottom) {
         percent = (height - panPoint.y) / height;
-    } else if (self.edge == UIRectEdgeTop) {
+    } else if (self.interactiveEdge == UIRectEdgeTop) {
         percent = panPoint.y / height;
     }
     
-    percent = fmaxf(percent, 0.0);
-    percent = fminf(percent, 1.0);
+    percent = fminf(fmaxf(percent, 0.0), 1.0);
     if (_speedOfPercent > 0.f) {
         percent *= _speedOfPercent;
     }
@@ -357,28 +342,41 @@
 - (void)gestureRecognizeHandler:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
-        case UIGestureRecognizerStateBegan:
+        case UIGestureRecognizerStateBegan: {
             // 开始状态由视图控制器处理，可触发dismiss等。一般began初始化transition，cancelled|ended清空transition
+            _isInteractive = YES;
+            if (self.interactiveBlock) {
+                self.interactiveBlock();
+            }
             break;
-        case UIGestureRecognizerStateChanged:
+        }
+        case UIGestureRecognizerStateChanged: {
             if (_percentOfFinished > 0 && [self percentForGesture:gestureRecognizer] >= _percentOfFinished) {
+                _isInteractive = NO;
                 [self finishInteractiveTransition];
             } else {
                 // 拖动中,更新百分比
                 [self updateInteractiveTransition:[self percentForGesture:gestureRecognizer]];
             }
             break;
-        case UIGestureRecognizerStateEnded:
+        }
+        case UIGestureRecognizerStateEnded: {
             // 根据拖动比例决定是否转场
-            if ([self percentForGesture:gestureRecognizer] >= _percentOfInteractive)
+            if ([self percentForGesture:gestureRecognizer] >= _percentOfInteractive) {
+                _isInteractive = NO;
                 [self finishInteractiveTransition];
-            else
+            } else {
+                _isInteractive = NO;
                 [self cancelInteractiveTransition];
+            }
             break;
-        default:
+        }
+        default: {
             // 手势被打断，取消转场
+            _isInteractive = NO;
             [self cancelInteractiveTransition];
             break;
+        }
     }
 }
 
@@ -409,47 +407,28 @@
     return delegate;
 }
 
-#pragma mark - Private
-
-- (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition
-{
-    if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
-        return ((FWAnimatedTransition *)transition).interactiveTransition;
-    }
-    return nil;
-}
-
 #pragma mark - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
                                                                   presentingController:(UIViewController *)presenting
                                                                       sourceController:(UIViewController *)source
 {
-    if ([self.inTransition isKindOfClass:[FWAnimatedTransition class]]) {
-        ((FWAnimatedTransition *)self.inTransition).type = FWAnimatedTransitionTypePresent;
-    }
     return self.inTransition;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    if ([self.outTransition isKindOfClass:[FWAnimatedTransition class]]) {
-        ((FWAnimatedTransition *)self.outTransition).type = FWAnimatedTransitionTypeDismiss;
-    }
     return self.outTransition;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    if ([animator isKindOfClass:[FWAnimatedTransition class]]) {
-        return ((FWAnimatedTransition *)animator).interactiveTransition;
-    }
-    return nil;
+    return self.inInteractiveTransition;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    return [self interactiveTransitionWithTransition:animator];
+    return ((FWPercentInteractiveTransition *)self.outInteractiveTransition).isInteractive ? self.outInteractiveTransition : nil;
 }
 
 #pragma mark - UINavigationControllerDelegate
@@ -477,7 +456,7 @@
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>) animationController
 {
-    return [self interactiveTransitionWithTransition:animationController];
+    return nil;
 }
 
 @end

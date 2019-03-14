@@ -10,30 +10,11 @@
 
 @interface TestFullScreenViewController : BaseViewController
 
-@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, assign) BOOL interactive;
 
 @end
 
 @implementation TestFullScreenViewController
-
-- (UIPanGestureRecognizer *)panGesture
-{
-    if (!_panGesture) {
-        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureAction:)];
-    }
-    return _panGesture;
-}
-
-- (void)panGestureAction:(UIPanGestureRecognizer *)gesture
-{
-    switch (gesture.state) {
-        case UIGestureRecognizerStateBegan:
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
-        default:
-            break;
-    }
-}
 
 - (void)renderInit
 {
@@ -61,8 +42,15 @@
     // 设置背景(present时透明，push时不透明)
     self.view.backgroundColor = self.navigationController ? [UIColor appColorBlack] : [UIColor appColorCover];
     
-    if (_panGesture) {
-        [self.view addGestureRecognizer:_panGesture];
+    if (self.interactive) {
+        FWPercentInteractiveTransition *transition = [[FWPercentInteractiveTransition alloc] init];
+        FWWeakifySelf();
+        transition.interactiveBlock = ^{
+            FWStrongifySelf();
+            [self fwCloseViewControllerAnimated:YES];
+        };
+        [transition addGestureToViewController:self];
+        ((FWTransitionDelegate *)self.fwModalTransitionDelegate).outInteractiveTransition = transition;
     } else {
         // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
         [self.view fwAddTapGestureWithBlock:^(id sender) {
@@ -233,12 +221,10 @@
 - (void)onPresentInteractive
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.interactive = YES;
     
     FWSwipeAnimationTransition *transition = [FWSwipeAnimationTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
-    FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] initWithGestureRecognizer:vc.panGesture draggingEdge:UIRectEdgeTop];
-    transition.interactiveTransition = interactiveTransition;
-    
     vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self presentViewController:vc animated:YES completion:nil];
 }
