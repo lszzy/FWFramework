@@ -71,12 +71,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 动画持续时间。默认使用系统时间(大约0.25秒)
 @property (nonatomic, assign) NSTimeInterval duration;
 
-#pragma mark - Interactive
-
-// 设置动画转场交互，如果需要支持交互式转场，设置此属性即可。如果类型为FWPercentInteractiveTransition，自动设置参数
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> interactiveTransition;
-
-#pragma mark - Transition
+#pragma mark - Animate
 
 // 转场动画类型。默认自动根据上下文判断
 @property (nonatomic, assign) FWAnimatedTransitionType type;
@@ -129,22 +124,14 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 百分比交互转场
 @interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
-// 初始化交互转场，指定控制器和拖动边缘。自动添加pan手势到vc.view
-- (instancetype)initWithViewController:(UIViewController *)viewController
-                          draggingEdge:(UIRectEdge)edge NS_DESIGNATED_INITIALIZER;
+// 设置交互边缘方向，默认UIRectEdgeTop
+@property (nonatomic, assign) UIRectEdge interactiveEdge;
 
-// 初始化交互转场，指定pan手势和拖动边缘。pan手势需手工添加到view
-- (instancetype)initWithGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer
-                             draggingEdge:(UIRectEdge)edge NS_DESIGNATED_INITIALIZER;
+// 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
+@property (nonatomic, copy) void(^interactiveBlock)(void);
 
-// 禁用默认初始化方法
-- (instancetype)init NS_UNAVAILABLE;
-
-// 转场动画类型，如果设置此值，会自动调用push|pop|present|dismiss
-@property (nonatomic, assign) FWAnimatedTransitionType type;
-
-// 如果type为push(必须)|pop(可选)，需指定对应的navigationController
-@property (nonatomic, weak) UINavigationController *navigationController;
+// 是否正在交互中
+@property (nonatomic, assign, readonly) BOOL isInteractive;
 
 // 动画完成多少百分比后，释放手指可以完成转场，少于该值将取消转场。取值范围：[0 ，1），默认：0.5
 @property (nonatomic, assign) CGFloat percentOfInteractive;
@@ -154,6 +141,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 用来调节完成完成百分比，数值越大越快（默认：0 表示不启用）
 @property (nonatomic, assign) CGFloat speedOfPercent;
+
+// 绑定交互控制器，自动添加pan手势。需要vc.view存在后调用生效
+-(void)addGestureToViewController:(UIViewController *)viewController;
 
 @end
 
@@ -168,6 +158,12 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 创建转场代理对象，分别设置进入和消失转场对象，nil时为系统转场
 + (instancetype)delegateWithInTransition:(id<UIViewControllerAnimatedTransitioning>)inTransition
                            outTransition:(id<UIViewControllerAnimatedTransitioning>)outTransition;
+
+// 设置进入时交互转场
+@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
+
+// 设置消失时交互转场
+@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
 
 @end
 
