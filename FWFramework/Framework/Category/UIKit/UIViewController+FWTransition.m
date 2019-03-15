@@ -86,12 +86,6 @@
 
 - (FWAnimatedTransitionType)type
 {
-    // 1. 手工设置type
-    if (_type != FWAnimatedTransitionTypeNone) {
-        return _type;
-    }
-    
-    // 2. 自动判断type
     if (!self.transitionContext) {
         return FWAnimatedTransitionTypeNone;
     }
@@ -386,10 +380,6 @@
 
 @interface FWTransitionDelegate ()
 
-@property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> inTransition;
-
-@property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> outTransition;
-
 @end
 
 @implementation FWTransitionDelegate
@@ -405,6 +395,16 @@
     delegate.inTransition = inTransition;
     delegate.outTransition = outTransition;
     return delegate;
+}
+
+#pragma mark - Private
+
+- (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
+{
+    if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
+        return ((FWAnimatedTransition *)transition).interactiveTransition;
+    }
+    return nil;
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
@@ -423,12 +423,12 @@
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    return self.inInteractiveTransition;
+    return [self interactiveTransitionForTransition:animator];
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    return ((FWPercentInteractiveTransition *)self.outInteractiveTransition).isInteractive ? self.outInteractiveTransition : nil;
+    return [self interactiveTransitionForTransition:animator];
 }
 
 #pragma mark - UINavigationControllerDelegate
@@ -456,7 +456,7 @@
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>) animationController
 {
-    return nil;
+    return [self interactiveTransitionForTransition:animationController];
 }
 
 @end

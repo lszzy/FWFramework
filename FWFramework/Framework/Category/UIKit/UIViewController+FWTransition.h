@@ -68,13 +68,16 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 设置动画句柄，方式二
 @property (nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
 
-// 动画持续时间。默认使用系统时间(大约0.25秒)
+// 动画持续时间，默认使用系统时间(大约0.25秒)
 @property (nonatomic, assign) NSTimeInterval duration;
+
+// 设置动画的交互转场
+@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> interactiveTransition;
 
 #pragma mark - Animate
 
-// 转场动画类型。默认自动根据上下文判断
-@property (nonatomic, assign) FWAnimatedTransitionType type;
+// 设置动画类型，默认自动根据上下文判断
+@property (nonatomic, assign, readonly) FWAnimatedTransitionType type;
 
 // 转场上下文，只读
 @property (nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
@@ -159,11 +162,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 + (instancetype)delegateWithInTransition:(id<UIViewControllerAnimatedTransitioning>)inTransition
                            outTransition:(id<UIViewControllerAnimatedTransitioning>)outTransition;
 
-// 设置进入时交互转场
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
+@property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> inTransition;
 
-// 设置消失时交互转场
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
+@property (nonatomic, strong) id<UIViewControllerAnimatedTransitioning> outTransition;
 
 @end
 

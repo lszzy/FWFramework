@@ -50,7 +50,9 @@
             [self fwCloseViewControllerAnimated:YES];
         };
         [transition addGestureToViewController:self];
-        ((FWTransitionDelegate *)self.fwModalTransitionDelegate).outInteractiveTransition = transition;
+        FWTransitionDelegate *delegate = self.fwModalTransitionDelegate;
+        FWAnimatedTransition *animated = delegate.outTransition;
+        animated.interactiveTransition = transition;
     } else {
         // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
         [self.view fwAddTapGestureWithBlock:^(id sender) {
