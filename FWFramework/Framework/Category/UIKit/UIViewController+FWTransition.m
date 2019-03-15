@@ -44,8 +44,8 @@
                                                                       sourceController:(UIViewController *)source
 {
     self.type = FWAnimatedTransitionTypePresent;
-    if ([self.fromInteractiveTransition isKindOfClass:[FWInteractiveTransition class]]) {
-        FWInteractiveTransition *interactiveTransition = (FWInteractiveTransition *)self.fromInteractiveTransition;
+    if ([self.fromInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
+        FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.fromInteractiveTransition;
         interactiveTransition.interactiveBlock = ^{
             [presenting presentViewController:presented animated:YES completion:nil];
         };
@@ -57,8 +57,8 @@
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
     self.type = FWAnimatedTransitionTypeDismiss;
-    if ([self.toInteractiveTransition isKindOfClass:[FWInteractiveTransition class]]) {
-        FWInteractiveTransition *interactiveTransition = (FWInteractiveTransition *)self.toInteractiveTransition;
+    if ([self.toInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
+        FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.toInteractiveTransition;
         interactiveTransition.interactiveBlock = ^{
             [dismissed dismissViewControllerAnimated:YES completion:nil];
         };
@@ -74,8 +74,8 @@
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    if ([self.toInteractiveTransition isKindOfClass:[FWInteractiveTransition class]]) {
-        FWInteractiveTransition *interactiveTransition = (FWInteractiveTransition *)self.toInteractiveTransition;
+    if ([self.toInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
+        FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.toInteractiveTransition;
         return interactiveTransition.isInteractive ? interactiveTransition : nil;
     }
     return self.toInteractiveTransition;
@@ -343,15 +343,15 @@
 
 @end
 
-#pragma mark - FWInteractiveTransition
+#pragma mark - FWPercentInteractiveTransition
 
-@interface FWInteractiveTransition ()
+@interface FWPercentInteractiveTransition ()
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
 @end
 
-@implementation FWInteractiveTransition
+@implementation FWPercentInteractiveTransition
 
 - (instancetype)init
 {

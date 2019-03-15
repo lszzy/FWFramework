@@ -210,7 +210,7 @@
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
-    transition.toInteractiveTransition = [[FWInteractiveTransition alloc] init];
+    transition.toInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
     vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
