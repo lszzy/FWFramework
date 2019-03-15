@@ -51,10 +51,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - Interactive
 
-// 设置来源交互转场，可选，需要在调用push|present之前设置并绑定控制器
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> fromInteractiveTransition;
-// 设置目标交互转场，可选，需要在调用pop|dismiss之前设置并绑定控制器。当设置为FWPercentInteractiveTransition时，会自动绑定
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> toInteractiveTransition;
+// 设置进入交互转场，可选，需要在调用push|present之前设置并绑定控制器
+@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
+// 设置消失交互转场，可选，需要在调用pop|dismiss之前设置并绑定控制器。当设置为FWPercentInteractiveTransition时，会自动绑定
+@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
 
 #pragma mark - Animate
 

@@ -13,7 +13,7 @@
 
 @interface FWAnimatedTransition ()
 
-@property (nonatomic, assign) BOOL enabled;
+@property (nonatomic, assign) BOOL isSystem;
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
@@ -29,7 +29,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[FWAnimatedTransition alloc] init];
-        instance.enabled = NO;
+        instance.isSystem = YES;
     });
     return instance;
 }
@@ -45,7 +45,6 @@
 {
     self = [super init];
     if (self) {
-        _enabled = YES;
         _duration = 0.35;
     }
     return self;
@@ -57,8 +56,8 @@
 {
     if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
         FWAnimatedTransition *animatedTransition = (FWAnimatedTransition *)transition;
-        BOOL isFrom = (animatedTransition.type == FWAnimatedTransitionTypePresent || animatedTransition.type == FWAnimatedTransitionTypePush);
-        id<UIViewControllerInteractiveTransitioning> interactiveTransition = isFrom ? animatedTransition.fromInteractiveTransition : animatedTransition.toInteractiveTransition;
+        BOOL transitionIn = (animatedTransition.type == FWAnimatedTransitionTypePresent || animatedTransition.type == FWAnimatedTransitionTypePush);
+        id<UIViewControllerInteractiveTransitioning> interactiveTransition = transitionIn ? animatedTransition.inInteractiveTransition : animatedTransition.outInteractiveTransition;
         if ([interactiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
             return ((FWPercentInteractiveTransition *)interactiveTransition).isInteractive ? interactiveTransition : nil;
         }
@@ -74,21 +73,21 @@
                                                                       sourceController:(UIViewController *)source
 {
     self.type = FWAnimatedTransitionTypePresent;
-    // 自动设置和绑定to交互转场，在dismiss前设置生效。from交互转场需要在present之前设置才能生效
-    if (self.enabled && [self.toInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-        FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.toInteractiveTransition;
+    // 自动设置和绑定out交互转场，在dismiss前设置生效。in交互转场需要在present之前设置才能生效
+    if (!self.isSystem && [self.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
+        FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.outInteractiveTransition;
         interactiveTransition.interactiveBlock = ^{
             [presented dismissViewControllerAnimated:YES completion:nil];
         };
         [interactiveTransition interactWithViewController:presented];
     }
-    return self.enabled ? self : nil;
+    return !self.isSystem ? self : nil;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
     self.type = FWAnimatedTransitionTypeDismiss;
-    return self.enabled ? self : nil;
+    return !self.isSystem ? self : nil;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
@@ -112,20 +111,20 @@
         // push时检查toVC的转场代理
         FWAnimatedTransition *transition = toVC.fwViewTransition ?: self;
         transition.type = FWAnimatedTransitionTypePush;
-        // 自动设置和绑定to交互转场，在pop前设置生效。from交互转场需要在push之前设置才能生效
-        if (transition.enabled && [transition.toInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-            FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)transition.toInteractiveTransition;
+        // 自动设置和绑定in交互转场，在pop前设置生效。out交互转场需要在push之前设置才能生效
+        if (!transition.isSystem && [transition.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
+            FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)transition.outInteractiveTransition;
             interactiveTransition.interactiveBlock = ^{
                 [navigationController popViewControllerAnimated:YES];
             };
             [interactiveTransition interactWithViewController:toVC];
         }
-        return transition.enabled ? transition : nil;
+        return !transition.isSystem ? transition : nil;
     } else if (operation == UINavigationControllerOperationPop) {
         // pop时检查fromVC的转场代理
         FWAnimatedTransition *transition = fromVC.fwViewTransition ?: self;
         transition.type = FWAnimatedTransitionTypePop;
-        return transition.enabled ? transition : nil;
+        return !transition.isSystem ? transition : nil;
     }
     return nil;
 }
