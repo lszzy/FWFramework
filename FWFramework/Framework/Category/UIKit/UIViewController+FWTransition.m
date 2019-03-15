@@ -19,14 +19,7 @@
 
 @implementation FWAnimatedTransition
 
-#pragma mark - Factory
-
-+ (instancetype)transitionWithDelegate:(id<FWAnimatedTransitionDelegate>)delegate
-{
-    FWAnimatedTransition *transition = [[self alloc] init];
-    transition.delegate = delegate;
-    return transition;
-}
+#pragma mark - Lifecycle
 
 + (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *))block
 {
@@ -35,18 +28,11 @@
     return transition;
 }
 
-+ (instancetype)transition
-{
-    return [[self alloc] init];
-}
-
-#pragma mark - Lifecycle
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        _duration = -1;
+        _duration = 0.35;
     }
     return self;
 }
@@ -55,28 +41,15 @@
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-    if (!transitionContext.isAnimated) {
-        return 0.f;
-    }
-    
-    NSTimeInterval duration = self.duration;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransitionDuration:)]) {
-        duration = [self.delegate fwAnimatedTransitionDuration:self];
-    }
-    return duration > 0 ? duration : -1;
+    return transitionContext.isAnimated ? self.duration : 0.f;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
     self.transitionContext = transitionContext;
     
-    // 1. delegate
-    if (self.delegate && [self.delegate respondsToSelector:@selector(fwAnimatedTransition:)]) {
-        [self.delegate fwAnimatedTransition:self];
-    // 2. block
-    } else if (self.block) {
+    if (self.block) {
         self.block(self);
-    // 3. inherit
     } else {
         [self animate];
     }
@@ -365,10 +338,13 @@
             }
             break;
         }
-        default: {
+        case UIGestureRecognizerStateCancelled: {
             // 手势被打断，取消转场
             _isInteractive = NO;
             [self cancelInteractiveTransition];
+            break;
+        }
+        default: {
             break;
         }
     }
@@ -402,7 +378,12 @@
 - (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
     if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
-        return ((FWAnimatedTransition *)transition).interactiveTransition;
+        id<UIViewControllerInteractiveTransitioning> interactiveTransition = ((FWAnimatedTransition *)transition).interactiveTransition;
+        if ([interactiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
+            FWPercentInteractiveTransition *percentTransition = (FWPercentInteractiveTransition *)interactiveTransition;
+            return percentTransition.isInteractive ? percentTransition : nil;
+        }
+        return interactiveTransition;
     }
     return nil;
 }

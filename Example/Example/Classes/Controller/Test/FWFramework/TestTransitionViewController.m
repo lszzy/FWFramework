@@ -50,7 +50,12 @@
             [self fwCloseViewControllerAnimated:YES];
         };
         [transition addGestureToViewController:self];
-        FWTransitionDelegate *delegate = self.fwModalTransitionDelegate;
+        FWTransitionDelegate *delegate;
+        if (self.fwIsPresented) {
+            delegate = self.fwModalTransitionDelegate;
+        } else {
+            delegate = self.navigationController.fwNavigationTransitionDelegate;
+        }
         FWAnimatedTransition *animated = delegate.outTransition;
         animated.interactiveTransition = transition;
     } else {
@@ -80,7 +85,7 @@
 
 @end
 
-#define TestTransitinDuration 0
+#define TestTransitinDuration 0.35
 
 @interface TestTransitionViewController ()
 
@@ -373,8 +378,14 @@
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
+    FWSwipeAnimationTransition *outTransition = [[FWSwipeAnimationTransition alloc] init];
+    outTransition.duration = TestTransitinDuration;
+    outTransition.inDirection = UISwipeGestureRecognizerDirectionUp;
+    outTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
+    
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    vc.interactive = YES;
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithInTransition:transition outTransition:outTransition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
