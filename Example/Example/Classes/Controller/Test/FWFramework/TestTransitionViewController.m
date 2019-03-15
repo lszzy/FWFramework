@@ -10,8 +10,6 @@
 
 @interface TestFullScreenViewController : BaseViewController
 
-@property (nonatomic, assign) BOOL interactiveEnabled;
-
 @end
 
 @implementation TestFullScreenViewController
@@ -42,23 +40,11 @@
     // 设置背景(present时透明，push时不透明)
     self.view.backgroundColor = self.navigationController ? [UIColor appColorBlack] : [UIColor appColorCover];
     
-    if (self.interactiveEnabled) {
-        FWInteractiveTransition *transition = [[FWInteractiveTransition alloc] init];
-        FWWeakifySelf();
-        transition.interactiveBlock = ^{
-            FWStrongifySelf();
-            [self fwCloseViewControllerAnimated:YES];
-        };
-        [transition interactWithViewController:self];
-        // 设置交互控制器
-        FWTransitionDelegate *delegate = (FWTransitionDelegate *)(self.fwModalTransitionDelegate ?: (self.fwViewTransitionDelegate ?: self.self.navigationController.fwNavigationTransitionDelegate));
-    } else {
-        // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
-        [self.view fwAddTapGestureWithBlock:^(id sender) {
-            FWStrongifySelf();
-            [self fwCloseViewControllerAnimated:YES];
-        }];
-    }
+    // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
+    [self.view fwAddTapGestureWithBlock:^(id sender) {
+        FWStrongifySelf();
+        [self fwCloseViewControllerAnimated:YES];
+    }];
     
     // 添加视图
     UIButton *button = [UIButton fwAutoLayoutView];
@@ -93,7 +79,7 @@
     [self fwSetNavigationBarHidden:NO animated:animated];
     
     // 自动还原动画
-    self.navigationController.fwNavigationTransitionDelegate = nil;
+    self.navigationController.fwNavigationTransition = nil;
 }
 
 - (void)renderData
@@ -172,7 +158,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -205,28 +191,27 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)onPresentSwipe
 {
-    FWSwipeAnimationTransition *transition = [[FWSwipeAnimationTransition alloc] init];
+    FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)onPresentInteractive
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.interactiveEnabled = YES;
-    
-    FWSwipeAnimationTransition *transition = [FWSwipeAnimationTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
+    FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
-    vc.fwModalTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    transition.toInteractiveTransition = [[FWInteractiveTransition alloc] init];
+    vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -263,7 +248,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -296,7 +281,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -330,7 +315,7 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -361,20 +346,19 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onPushSwipe
 {
-    FWSwipeAnimationTransition *transition = [[FWSwipeAnimationTransition alloc] init];
+    FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.interactiveEnabled = YES;
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -407,8 +391,8 @@
     };
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.fwViewTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:nil];
+    vc.fwViewTransition = transition;
+    self.navigationController.fwNavigationTransition = [FWSystemAnimatedTransition sharedInstance];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
