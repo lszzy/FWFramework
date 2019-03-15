@@ -97,6 +97,7 @@
                                           @[@"Custom Push", @"onPushCustom"],
                                           @[@"Swipe Push", @"onPushSwipe"],
                                           @[@"Proxy Push", @"onPushProxy"],
+                                          @[@"interactive Push", @"onPushInteractive"],
                                           ]];
 }
 
@@ -392,7 +393,20 @@
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     vc.fwViewTransition = transition;
-    self.navigationController.fwNavigationTransition = [FWSystemAnimatedTransition sharedInstance];
+    self.navigationController.fwNavigationTransition = [FWAnimatedTransition systemTransition];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onPushInteractive
+{
+    FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
+    transition.duration = TestTransitinDuration;
+    transition.inDirection = UISwipeGestureRecognizerDirectionUp;
+    transition.outDirection = UISwipeGestureRecognizerDirectionDown;
+    transition.toInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
