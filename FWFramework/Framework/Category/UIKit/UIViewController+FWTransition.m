@@ -270,8 +270,8 @@
 {
     self = [super init];
     if (self) {
-        _inDirection = UISwipeGestureRecognizerDirectionLeft;
-        _outDirection = UISwipeGestureRecognizerDirectionRight;
+        _inDirection = UISwipeGestureRecognizerDirectionUp;
+        _outDirection = UISwipeGestureRecognizerDirectionDown;
     }
     return self;
 }
@@ -366,7 +366,7 @@
 {
     self = [super init];
     if (self) {
-        _interactiveEdge = UIRectEdgeTop;
+        _direction = UISwipeGestureRecognizerDirectionDown;
     }
     return self;
 }
@@ -387,18 +387,18 @@
     CGFloat width = gestureRecognizer.view.bounds.size.width;
     CGFloat height = gestureRecognizer.view.bounds.size.height;
     CGPoint point = [gestureRecognizer translationInView:gestureRecognizer.view];
-    switch (self.interactiveEdge) {
-        case UIRectEdgeTop:
-            _percent = point.y / height;
-            break;
-        case UIRectEdgeBottom:
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionUp:
             _percent = -point.y / height;
             break;
-        case UIRectEdgeLeft:
-            _percent = point.x / width;
+        case UISwipeGestureRecognizerDirectionDown:
+            _percent = point.y / height;
             break;
-        case UIRectEdgeRight:
+        case UISwipeGestureRecognizerDirectionLeft:
             _percent = -point.x / width;
+            break;
+        case UISwipeGestureRecognizerDirectionRight:
+            _percent = point.x / width;
             break;
         default:
             break;

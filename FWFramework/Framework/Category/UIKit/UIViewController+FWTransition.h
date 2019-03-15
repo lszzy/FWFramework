@@ -87,9 +87,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 + (instancetype)transitionWithInDirection:(UISwipeGestureRecognizerDirection)inDirection
                              outDirection:(UISwipeGestureRecognizerDirection)outDirection;
 
-// 指定进入(push|present)方向，默认Left
+// 指定进入(push|present)方向，默认上滑Up
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection inDirection;
-// 指定消失(pop|dismiss)方向，默认Right
+// 指定消失(pop|dismiss)方向，默认下滑Down
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection outDirection;
 
 @end
@@ -99,8 +99,8 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 百分比交互转场
 @interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
-// 设置交互边缘方向，默认UIRectEdgeTop
-@property (nonatomic, assign) UIRectEdge interactiveEdge;
+// 设置交互方向，默认下滑Down
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
 // 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
 @property (nonatomic, copy) void(^interactiveBlock)(void);
