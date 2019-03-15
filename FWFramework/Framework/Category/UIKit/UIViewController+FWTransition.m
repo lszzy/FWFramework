@@ -59,6 +59,12 @@
 
 - (FWAnimatedTransitionType)type
 {
+    // 如果自定义type，优先使用之
+    if (_type != FWAnimatedTransitionTypeNone) {
+        return _type;
+    }
+    
+    // 自动根据上下文获取type
     if (!self.transitionContext) {
         return FWAnimatedTransitionTypeNone;
     }
@@ -245,15 +251,15 @@
 
 @end
 
-#pragma mark - FWPercentInteractiveTransition
+#pragma mark - FWInteractiveTransition
 
-@interface FWPercentInteractiveTransition ()
+@interface FWInteractiveTransition ()
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
 @end
 
-@implementation FWPercentInteractiveTransition
+@implementation FWInteractiveTransition
 
 - (instancetype)init
 {
@@ -265,9 +271,9 @@
     return self;
 }
 
-- (void)addGestureToViewController:(UIViewController *)viewController
+- (void)interactWithViewController:(UIViewController *)viewController
 {
-    UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeHandler:)];
+    UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
     [viewController.view addGestureRecognizer:gestureRecognizer];
 }
 
@@ -282,9 +288,9 @@
     // 因为视图控制器将作为动画的一部分在屏幕上或从屏幕上滑动，因此我们希望将计算建立在不移动视图的坐标空间：transitionContext.containerView
     UIView *containerView = self.transitionContext.containerView;
     // 根据移动距离计算
-    CGPoint panPoint = [gesture translationInView:containerView];
+    // CGPoint panPoint = [gesture translationInView:containerView];
     // 根据坐标位置计算
-    // CGPoint panPoint = [gesture locationInView:containerView];
+    CGPoint panPoint = [gesture locationInView:containerView];
     CGFloat width = CGRectGetWidth(containerView.bounds);
     CGFloat height = CGRectGetHeight(containerView.bounds);
     
@@ -306,7 +312,7 @@
     return percent;
 }
 
-- (void)gestureRecognizeHandler:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
+- (void)gestureRecognizeAction:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
@@ -360,32 +366,11 @@
 
 @implementation FWTransitionDelegate
 
-+ (instancetype)delegateWithTransition:(id<UIViewControllerAnimatedTransitioning>)transition
-{
-    return [self delegateWithInTransition:transition outTransition:transition];
-}
-
-+ (instancetype)delegateWithInTransition:(id<UIViewControllerAnimatedTransitioning>)inTransition outTransition:(id<UIViewControllerAnimatedTransitioning>)outTransition
++ (instancetype)delegateWithTransition:(FWAnimatedTransition *)transition
 {
     FWTransitionDelegate *delegate = [[self alloc] init];
-    delegate.inTransition = inTransition;
-    delegate.outTransition = outTransition;
+    delegate.transition = transition;
     return delegate;
-}
-
-#pragma mark - Private
-
-- (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
-{
-    if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
-        id<UIViewControllerInteractiveTransitioning> interactiveTransition = ((FWAnimatedTransition *)transition).interactiveTransition;
-        if ([interactiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-            FWPercentInteractiveTransition *percentTransition = (FWPercentInteractiveTransition *)interactiveTransition;
-            return percentTransition.isInteractive ? percentTransition : nil;
-        }
-        return interactiveTransition;
-    }
-    return nil;
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
@@ -394,22 +379,24 @@
                                                                   presentingController:(UIViewController *)presenting
                                                                       sourceController:(UIViewController *)source
 {
-    return self.inTransition;
+    self.transition.type = FWAnimatedTransitionTypePresent;
+    return self.transition;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    return self.outTransition;
+    self.transition.type = FWAnimatedTransitionTypeDismiss;
+    return self.transition;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    return [self interactiveTransitionForTransition:animator];
+    return nil;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-    return [self interactiveTransitionForTransition:animator];
+    return nil;
 }
 
 #pragma mark - UINavigationControllerDelegate
@@ -418,17 +405,21 @@
 {
     if (operation == UINavigationControllerOperationPush) {
         // push时检查toVC的转场代理
-        if (toVC.fwViewTransitionDelegate.inTransition) {
-            return toVC.fwViewTransitionDelegate.inTransition;
+        if (toVC.fwViewTransitionDelegate.transition) {
+            toVC.fwViewTransitionDelegate.transition.type = FWAnimatedTransitionTypePush;
+            return toVC.fwViewTransitionDelegate.transition;
         } else {
-            return self.inTransition;
+            self.transition.type = FWAnimatedTransitionTypePush;
+            return self.transition;
         }
     } else if (operation == UINavigationControllerOperationPop) {
         // pop时检查fromVC的转场代理
-        if (fromVC.fwViewTransitionDelegate.outTransition) {
-            return fromVC.fwViewTransitionDelegate.outTransition;
+        if (fromVC.fwViewTransitionDelegate.transition) {
+            fromVC.fwViewTransitionDelegate.transition.type = FWAnimatedTransitionTypePop;
+            return fromVC.fwViewTransitionDelegate.transition;
         } else {
-            return self.outTransition;
+            self.transition.type = FWAnimatedTransitionTypePop;
+            return self.transition;
         }
     }
     return nil;
@@ -437,7 +428,7 @@
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>) animationController
 {
-    return [self interactiveTransitionForTransition:animationController];
+    return nil;
 }
 
 @end
