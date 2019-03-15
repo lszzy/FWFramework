@@ -77,7 +77,11 @@
 {
     [super viewWillAppear:animated];
     [self fwSetNavigationBarHidden:NO animated:animated];
-    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     // 自动还原动画
     self.navigationController.fwNavigationTransition = nil;
 }
