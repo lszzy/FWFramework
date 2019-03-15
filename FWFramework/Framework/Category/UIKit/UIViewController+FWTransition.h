@@ -50,9 +50,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - Interactive
 
-// 设置来源交互转场，可选。如果类型为FWInteractiveTransition，会自动绑定控制器和interactiveBlock
+// 设置来源交互转场，可选。如果类型为FWPercentInteractiveTransition，会自动绑定控制器和interactiveBlock
 @property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> fromInteractiveTransition;
-// 设置目标交互转场，可选。如果类型为FWInteractiveTransition，会自动绑定控制器和interactiveBlock
+// 设置目标交互转场，可选。如果类型为FWPercentInteractiveTransition，会自动绑定控制器和interactiveBlock
 @property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> toInteractiveTransition;
 
 #pragma mark - Animate
@@ -102,10 +102,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @end
 
-#pragma mark - FWInteractiveTransition
+#pragma mark - FWPercentInteractiveTransition
 
 // 百分比交互转场
-@interface FWInteractiveTransition : UIPercentDrivenInteractiveTransition
+@interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
 // 设置交互边缘方向，默认UIRectEdgeTop
 @property (nonatomic, assign) UIRectEdge interactiveEdge;
