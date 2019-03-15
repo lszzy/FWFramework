@@ -10,7 +10,7 @@
 
 @interface TestFullScreenViewController : BaseViewController
 
-@property (nonatomic, assign) BOOL interactive;
+@property (nonatomic, assign) BOOL interactiveEnabled;
 
 @end
 
@@ -42,22 +42,16 @@
     // 设置背景(present时透明，push时不透明)
     self.view.backgroundColor = self.navigationController ? [UIColor appColorBlack] : [UIColor appColorCover];
     
-    if (self.interactive) {
-        FWPercentInteractiveTransition *transition = [[FWPercentInteractiveTransition alloc] init];
+    if (self.interactiveEnabled) {
+        FWInteractiveTransition *transition = [[FWInteractiveTransition alloc] init];
         FWWeakifySelf();
         transition.interactiveBlock = ^{
             FWStrongifySelf();
             [self fwCloseViewControllerAnimated:YES];
         };
-        [transition addGestureToViewController:self];
-        FWTransitionDelegate *delegate;
-        if (self.fwIsPresented) {
-            delegate = self.fwModalTransitionDelegate;
-        } else {
-            delegate = self.navigationController.fwNavigationTransitionDelegate;
-        }
-        FWAnimatedTransition *animated = delegate.outTransition;
-        animated.interactiveTransition = transition;
+        [transition interactWithViewController:self];
+        // 设置交互控制器
+        FWTransitionDelegate *delegate = (FWTransitionDelegate *)(self.fwModalTransitionDelegate ?: (self.fwViewTransitionDelegate ?: self.self.navigationController.fwNavigationTransitionDelegate));
     } else {
         // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
         [self.view fwAddTapGestureWithBlock:^(id sender) {
@@ -228,7 +222,7 @@
 - (void)onPresentInteractive
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.interactive = YES;
+    vc.interactiveEnabled = YES;
     
     FWSwipeAnimationTransition *transition = [FWSwipeAnimationTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
@@ -378,14 +372,9 @@
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
-    FWSwipeAnimationTransition *outTransition = [[FWSwipeAnimationTransition alloc] init];
-    outTransition.duration = TestTransitinDuration;
-    outTransition.inDirection = UISwipeGestureRecognizerDirectionUp;
-    outTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
-    
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
-    vc.interactive = YES;
-    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithInTransition:transition outTransition:outTransition];
+    vc.interactiveEnabled = YES;
+    self.navigationController.fwNavigationTransitionDelegate = [FWTransitionDelegate delegateWithTransition:transition];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
