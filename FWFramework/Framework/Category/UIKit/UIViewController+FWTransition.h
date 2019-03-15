@@ -27,56 +27,28 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
     FWAnimatedTransitionTypeDismiss,
 };
 
-#pragma mark - FWAnimatedTransitionDelegate
-
-@class FWAnimatedTransition;
-
-// 转场动画代理
-@protocol FWAnimatedTransitionDelegate <NSObject>
-
-@optional
-
-// 执行转场动画
-- (void)fwAnimatedTransition:(FWAnimatedTransition *)transition;
-
-// 转场动画持续时间
-- (NSTimeInterval)fwAnimatedTransitionDuration:(FWAnimatedTransition *)transtion;
-
-@end
-
 #pragma mark - FWAnimatedTransition
 
-// 转场动画类。实现任一转场方式即可：delegate|block|inherit
+// 转场动画类
 @interface FWAnimatedTransition : NSObject <UIViewControllerAnimatedTransitioning>
-
-#pragma mark - Factory
-
-// 1. 创建转场：代理方式
-+ (instancetype)transitionWithDelegate:(id<FWAnimatedTransitionDelegate>)delegate;
-
-// 2. 创建转场：句柄方式
-+ (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *transition))block;
-
-// 3. 创建转场：继承方式
-+ (instancetype)transition;
 
 #pragma mark - Public
 
-// 设置动画代理，方式一
-@property (nonatomic, weak) id<FWAnimatedTransitionDelegate> delegate;
+// 快速创建句柄转场
++ (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *transition))block;
 
-// 设置动画句柄，方式二
+// 设置动画句柄
 @property (nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
 
-// 动画持续时间，默认使用系统时间(大约0.25秒)
+// 动画持续时间，必须大于0，默认0.35秒
 @property (nonatomic, assign) NSTimeInterval duration;
 
-// 设置动画的交互转场
+// 设置动画的交互转场，可选
 @property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> interactiveTransition;
 
 #pragma mark - Animate
 
-// 设置动画类型，默认自动根据上下文判断
+// 获取动画类型，自动根据上下文判断，只读
 @property (nonatomic, assign, readonly) FWAnimatedTransitionType type;
 
 // 转场上下文，只读
@@ -84,22 +56,17 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 转场来源视图控制器，只读
 @property (nonatomic, weak, readonly) UIViewController *fromViewController;
-
 // 转场目标视图控制器，只读
 @property (nonatomic, weak, readonly) UIViewController *toViewController;
-
 // 转场来源视图，只读
 @property (nonatomic, weak, readonly) UIView *fromView;
-
 // 转场目标视图，只读
 @property (nonatomic, weak, readonly) UIView *toView;
 
 // 标记动画开始(自动添加视图到容器)
 - (void)start;
-
-// 执行动画，子类重写，方式三
+// 执行动画，子类重写，可选
 - (void)animate;
-
 // 自动标记动画完成(根据transitionContext是否被取消判断)
 - (void)complete;
 
@@ -142,7 +109,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 动画完成多少百分比后，直接完成转场（默认：0 表示不启用）（0 ，1]
 @property (nonatomic, assign) CGFloat percentOfFinished;
 
-// 用来调节完成完成百分比，数值越大越快（默认：0 表示不启用）
+// 用来调节完成百分比，数值越大越快（默认：0 表示不启用）
 @property (nonatomic, assign) CGFloat speedOfPercent;
 
 // 绑定交互控制器，自动添加pan手势。需要vc.view存在后调用生效
