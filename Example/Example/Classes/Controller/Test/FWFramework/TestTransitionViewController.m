@@ -204,6 +204,8 @@
 {
     FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
     transition.duration = TestTransitinDuration;
+    transition.inDirection = UISwipeGestureRecognizerDirectionLeft;
+    transition.outDirection = UISwipeGestureRecognizerDirectionRight;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     vc.fwModalTransition = transition;
