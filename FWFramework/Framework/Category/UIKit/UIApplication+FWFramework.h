@@ -21,6 +21,7 @@
 
 /*!
  @brief UIApplication+FWFramework
+ @discussion 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
  */
 @interface UIApplication (FWFramework)
 
@@ -54,13 +55,13 @@
 
 #pragma mark - URL
 
-// 能否打开URL
+// 能否打开URL，需配置对应URL SCHEME到Info.plist才能返回YES
 + (BOOL)fwCanOpenURL:(NSURL *)url;
 
-// 打开URL
+// 打开URL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
 + (void)fwOpenURL:(NSURL *)url;
 
-// 打开URL，完成时回调
+// 打开URL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
 + (void)fwOpenURL:(NSURL *)url completionHandler:(void (^)(BOOL success))completion;
 
 // 打开浏览器

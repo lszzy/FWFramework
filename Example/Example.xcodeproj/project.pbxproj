@@ -40,6 +40,7 @@
 		2F51D7731E5C1330009FD40F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51D7721E5C1330009FD40F /* main.m */; };
 		2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51D78B1E5C2357009FD40F /* AppDelegate.m */; };
 		2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F51D7E71E5C2357009FD40F /* Assets.xcassets */; };
+		2F54B9BF223208AD008411EF /* TestTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54B9BE223208AD008411EF /* TestTransitionViewController.m */; };
 		2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FDC21560B000022137F /* TestIndicatorViewController.m */; };
 		2F593FF42157E7D30022137F /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FF32157E7D30022137F /* ExampleTests.m */; };
 		2F5940032157E8BF0022137F /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5940022157E8BF0022137F /* ExampleUITests.m */; };
@@ -151,6 +152,8 @@
 		2F51D78A1E5C2357009FD40F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2F51D78B1E5C2357009FD40F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2F51D7E71E5C2357009FD40F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2F54B9BC223208AD008411EF /* TestTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTransitionViewController.h; sourceTree = "<group>"; };
+		2F54B9BE223208AD008411EF /* TestTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTransitionViewController.m; sourceTree = "<group>"; };
 		2F593FDB21560B000022137F /* TestIndicatorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestIndicatorViewController.h; sourceTree = "<group>"; };
 		2F593FDC21560B000022137F /* TestIndicatorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestIndicatorViewController.m; sourceTree = "<group>"; };
 		2F593FF12157E7D30022137F /* ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -391,6 +394,8 @@
 				2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */,
 				2FB90F1F21F571EA00084D76 /* TestQrcodeViewController.h */,
 				2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */,
+				2F54B9BC223208AD008411EF /* TestTransitionViewController.h */,
+				2F54B9BE223208AD008411EF /* TestTransitionViewController.m */,
 				2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */,
 				2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */,
 				2FC5DFDA2213FE08008A56A7 /* TestKeyboardViewController.h */,
@@ -720,6 +725,7 @@
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
 				2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */,
+				2F54B9BF223208AD008411EF /* TestTransitionViewController.m in Sources */,
 				2FCE517121D3BE02009EA65E /* TestCacheViewController.m in Sources */,
 				2F0D297C215DFFEF005F1466 /* DZNPolyActivity.m in Sources */,
 				2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */,

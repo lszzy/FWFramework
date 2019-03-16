@@ -52,7 +52,7 @@
     [super viewDidDisappear:animated];
     
     // 立即隐藏不移除队列，正常隐藏移除队列
-    NSMutableArray *alertControllers = [self alertControllers];
+    NSMutableArray *alertControllers = [self alertControllers:NO];
     if (self.dismissState > 0) {
         self.dismissState = 0;
     } else {
@@ -70,7 +70,7 @@
     self.parentController = viewController;
     
     // 加入队列并按优先级排序
-    NSMutableArray *alertControllers = [self alertControllers];
+    NSMutableArray *alertControllers = [self alertControllers:YES];
     if (![alertControllers containsObject:self]) {
         [alertControllers addObject:self];
     }
@@ -99,11 +99,11 @@
     }
 }
 
-- (NSMutableArray *)alertControllers
+- (NSMutableArray *)alertControllers:(BOOL)create
 {
     // parentController强引用弹出框数组，内部使用弱引用
     NSMutableArray *array = objc_getAssociatedObject(self.parentController, _cmd);
-    if (!array) {
+    if (!array && create) {
         array = [NSMutableArray array];
         objc_setAssociatedObject(self.parentController, _cmd, array, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
