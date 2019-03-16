@@ -99,6 +99,7 @@
         
         // 设置默认参数
         _type = type;
+        _paddingWidth = 10.f;
         _contentInsets = UIEdgeInsetsMake(10.f, 20.f, 10.f, 20.f);
         _contentSpacing = 5.f;
         _indicatorSize = CGSizeMake(37.f, 37.f);
@@ -194,11 +195,17 @@
 
 - (void)setupTypeView
 {
+    // 设置左右最小间距
+    [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.paddingWidth relation:NSLayoutRelationGreaterThanOrEqual];
+    [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.paddingWidth relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    // 根据类型创建子视图
     switch (self.type) {
         case FWIndicatorControlTypeText: {
             self.titleLabel = [UILabel fwAutoLayoutView];
             self.titleLabel.textColor = self.indicatorColor;
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            self.titleLabel.numberOfLines = 0;
             [self.contentView addSubview:self.titleLabel];
             [self.titleLabel fwPinEdgesToSuperviewWithInsets:self.contentInsets];
             [self updateTitleLabel];
@@ -224,6 +231,7 @@
             self.titleLabel = [UILabel fwAutoLayoutView];
             self.titleLabel.textColor = self.indicatorColor;
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            self.titleLabel.numberOfLines = 0;
             [centerView addSubview:self.titleLabel];
             [self.titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
             [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom];
@@ -251,6 +259,7 @@
             self.titleLabel = [UILabel fwAutoLayoutView];
             self.titleLabel.textColor = self.indicatorColor;
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            self.titleLabel.numberOfLines = 0;
             [centerView addSubview:self.titleLabel];
             [self.titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
             [self.titleLabel fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
@@ -282,6 +291,7 @@
             self.titleLabel = [UILabel fwAutoLayoutView];
             self.titleLabel.textColor = self.indicatorColor;
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            self.titleLabel.numberOfLines = 0;
             [centerView addSubview:self.titleLabel];
             [self.titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
             [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom];

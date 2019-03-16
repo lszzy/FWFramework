@@ -9,7 +9,6 @@
 
 #import <UIKit/UIKit.h>
 #import "UINavigationController+FWBar.h"
-#import "UINavigationController+FWTransition.h"
 #import "UINavigationController+FWWorkflow.h"
 
 /*!

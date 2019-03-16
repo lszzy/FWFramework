@@ -13,8 +13,16 @@
 #define FWLocalizedString( key, ... ) \
     [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:fw_macro_default(nil, ##__VA_ARGS__)]
 
+// 本地化语言改变通知，object为本地化语言名称
+extern NSString *const FWLocalizedLanguageChangedNotification;
+
+#pragma mark - NSBundle+FWFramework
+
 /*!
- @brief NSBundle分类
+ @brief NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SDK和系统组件语言，详见Bundle分类
+ @discussion 如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。
+ 如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value
+ 当前使用修改bundle类方式实现，也可以使用动态替换localizedStringForKey方法来实现，但需注意此方式的性能
  */
 @interface NSBundle (FWFramework)
 
@@ -24,13 +32,25 @@
 // 读取自定义本地化语言，未自定义时返回空
 + (NSString *)fwLocalizedLanguage;
 
-// 设置自定义本地化语言，为空时清空自定义。系统组件下次启动生效
+// 设置自定义本地化语言，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
 + (void)fwSetLocalizedLanguage:(NSString *)language;
 
-// 读取本地化字符串(默认Localizable.strings)
-+ (NSString *)fwLocalizedString:(NSString *)key;
+@end
 
-// 读取指定本地化字符串(默认Localizable.strings)
-+ (NSString *)fwLocalizedString:(NSString *)key table:(NSString *)table;
+#pragma mark - NSBundle+FWBundle
+
+/*!
+ @brief NSBundle自定义语言分类，处理三方SDK和系统组件语言
+ */
+@interface NSBundle (FWBundle)
+
+// 设置全局bundle过滤器，返回YES代表当前bundle需要加载本地化语言。用于处理三方SDK和系统组件等
++ (void)fwSetBundleFilter:(BOOL (^)(NSBundle *bundle))filter;
+
+// 设置全局bundle查找器，返回当前bundle实际使用语言，language为nil表示默认语言。需设置全局过滤器后才会生效
++ (void)fwSetBundleFinder:(NSString * (^)(NSBundle *bundle, NSString *language))finder;
+
+// 根据语言加载当前bundle指定语言文件的bundle，加载失败返回nil
+- (NSBundle *)fwLocalizedBundle:(NSString *)language;
 
 @end

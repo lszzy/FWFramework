@@ -155,14 +155,12 @@
                             [strongSelf clearActiveDownloadInformation];
                         }
                    }
-                   progress:^(NSProgress * _Nonnull downloadProgress) {
+                   progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
-                           if (progress) {
-                               progress(downloadProgress);
-                           }
+                           progress(downloadProgress);
                        }
-                   }];
+                   } : nil)];
 
         self.af_activeImageDownloadReceipt = receipt;
     }

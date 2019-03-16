@@ -14,6 +14,7 @@
 
 /*!
  @brief NSObject分类
+ @discussion 可使用NS_UNAVAILABLE标记方法不可用，NS_DESIGNATED_INITIALIZER标记默认init方法
  */
 @interface NSObject (FWFramework)
 
