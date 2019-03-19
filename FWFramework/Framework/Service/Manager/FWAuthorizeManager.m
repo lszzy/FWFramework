@@ -470,12 +470,50 @@
         return status;
     }
     
+    FWAuthorizeStatus status = FWAuthorizeStatusAuthorized;
     UIUserNotificationType types = [[UIApplication sharedApplication] currentUserNotificationSettings].types;
     if (types == UIUserNotificationTypeNone) {
         NSNumber *isAuthorized = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWAuthorizeNotifications"];
-        return isAuthorized != nil ? FWAuthorizeStatusDenied : FWAuthorizeStatusNotDetermined;
+        status = (isAuthorized != nil) ? FWAuthorizeStatusDenied : FWAuthorizeStatusNotDetermined;
     }
-    return FWAuthorizeStatusAuthorized;
+    return status;
+}
+
+- (void)authorizeStatus:(void (^)(FWAuthorizeStatus))completion
+{
+    if (@available(iOS 10.0, *)) {
+        [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+            FWAuthorizeStatus status;
+            switch (settings.authorizationStatus) {
+                case UNAuthorizationStatusDenied:
+                    status = FWAuthorizeStatusDenied;
+                    break;
+                case UNAuthorizationStatusAuthorized:
+                case UNAuthorizationStatusProvisional:
+                    status = FWAuthorizeStatusAuthorized;
+                    break;
+                case UNAuthorizationStatusNotDetermined:
+                default:
+                    status = FWAuthorizeStatusNotDetermined;
+                    break;
+            }
+            
+            if (completion) {
+                completion(status);
+            }
+        }];
+        return;
+    }
+    
+    FWAuthorizeStatus status = FWAuthorizeStatusAuthorized;
+    UIUserNotificationType types = [[UIApplication sharedApplication] currentUserNotificationSettings].types;
+    if (types == UIUserNotificationTypeNone) {
+        NSNumber *isAuthorized = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWAuthorizeNotifications"];
+        status = (isAuthorized != nil) ? FWAuthorizeStatusDenied : FWAuthorizeStatusNotDetermined;
+    }
+    if (completion) {
+        completion(status);
+    }
 }
 
 - (void)authorize:(void (^)(FWAuthorizeStatus status))completion
@@ -620,6 +658,19 @@
         return [self.object authorizeStatus];
     }
     return FWAuthorizeStatusNotDetermined;
+}
+
+- (void)authorizeStatus:(void (^)(FWAuthorizeStatus))completion
+{
+    if (self.object) {
+        if ([self.object respondsToSelector:@selector(authorizeStatus:)]) {
+            [self.object authorizeStatus:completion];
+        } else {
+            if (completion) {
+                completion([self.object authorizeStatus]);
+            }
+        }
+    }
 }
 
 - (void)authorize:(void (^)(FWAuthorizeStatus status))completion
