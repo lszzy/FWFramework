@@ -8,52 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
-#pragma mark - Macro
-
-/*! @brief 由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明 */
-// 定位
-#ifndef FWAuthorizeLocationEnabled
-    #define FWAuthorizeLocationEnabled 0
-#endif
-// 麦克风
-#ifndef FWAuthorizeMicrophoneEnabled
-    #define FWAuthorizeMicrophoneEnabled 0
-#endif
-// 联系人
-#ifndef FWAuthorizeContactsEnabled
-    #define FWAuthorizeContactsEnabled 0
-#endif
-// 日历
-#ifndef FWAuthorizeCalendarEnabled
-    #define FWAuthorizeCalendarEnabled 0
-#endif
-// 音乐
-#ifndef FWAuthorizeAppleMusicEnabled
-    #define FWAuthorizeAppleMusicEnabled 0
-#endif
-
 #pragma mark - Enum
 
-// 权限状态枚举
-typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
-    // 未确认
-    FWAuthorizeStatusNotDetermined = 0,
-    // 受限制
-    FWAuthorizeStatusRestricted,
-    // 被拒绝
-    FWAuthorizeStatusDenied,
-    // 已授权
-    FWAuthorizeStatusAuthorized,
-};
-
-// 权限类型枚举
+/*!
+ @brief 权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
+ @discussion 开启指定权限方法：
+ 1. 主项目：GCC_PREPROCESSOR_DEFINITIONS添加配置：FWAuthorizeContactsEnabled=1
+ 2. Pod项目：在Podfile最后添加：
+ post_install do |installer_representation|
+    installer_representation.pods_project.targets.each do |target|
+        if target.name == 'FWFramework'
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FWAuthorizeContactsEnabled=1'
+            end
+        end
+    end
+ end
+ */
 typedef NS_ENUM(NSInteger, FWAuthorizeType) {
-#if FWAuthorizeLocationEnabled
     // 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
     FWAuthorizeTypeLocationWhenInUse = 1,
     // 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription，iOS7需配置NSLocationUsageDescription
     FWAuthorizeTypeLocationAlways = 2,
-#endif
 #if FWAuthorizeMicrophoneEnabled
     // 麦克风，Info.plst需配置NSMicrophoneUsageDescription
     FWAuthorizeTypeMicrophone = 3,
@@ -78,6 +55,18 @@ typedef NS_ENUM(NSInteger, FWAuthorizeType) {
 #endif
     // 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
     FWAuthorizeTypeNotifications = 10,
+};
+
+// 权限状态枚举
+typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
+    // 未确认
+    FWAuthorizeStatusNotDetermined = 0,
+    // 受限制
+    FWAuthorizeStatusRestricted,
+    // 被拒绝
+    FWAuthorizeStatusDenied,
+    // 已授权
+    FWAuthorizeStatusAuthorized,
 };
 
 #pragma mark - FWAuthorizeProtocol
