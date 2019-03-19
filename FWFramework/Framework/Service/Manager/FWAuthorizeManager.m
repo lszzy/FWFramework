@@ -456,6 +456,7 @@
                         status = FWAuthorizeStatusDenied;
                         break;
                     case UNAuthorizationStatusAuthorized:
+                    case UNAuthorizationStatusProvisional:
                         status = FWAuthorizeStatusAuthorized;
                         break;
                     case UNAuthorizationStatusNotDetermined:
@@ -558,7 +559,8 @@
         manager = [[FWAuthorizeManager alloc] initWithType:type];
         [managers setObject:manager forKey:@(type)];
     }
-    return manager;
+    // 内部object对象不存在时返回nil
+    return manager.object ? manager : nil;
 }
 
 - (instancetype)initWithType:(FWAuthorizeType)type
