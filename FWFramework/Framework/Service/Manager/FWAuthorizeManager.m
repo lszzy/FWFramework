@@ -142,8 +142,6 @@
 
 #pragma mark - FWAuthorizeLocation
 
-#if FWAuthorizeLocationEnabled
-
 #import <CoreLocation/CoreLocation.h>
 
 @interface FWAuthorizeLocation : NSObject <FWAuthorizeProtocol, CLLocationManagerDelegate>
@@ -242,8 +240,6 @@
 }
 
 @end
-
-#endif
 
 #pragma mark - FWAuthorizeMicrophone
 
@@ -578,14 +574,12 @@
 {
     id<FWAuthorizeProtocol> object = nil;
     switch (type) {
-#if FWAuthorizeLocationEnabled
         case FWAuthorizeTypeLocationWhenInUse:
             object = [[FWAuthorizeLocation alloc] initWithIsAlways:NO];
             break;
         case FWAuthorizeTypeLocationAlways:
             object = [[FWAuthorizeLocation alloc] initWithIsAlways:YES];
             break;
-#endif
 #if FWAuthorizeMicrophoneEnabled
         case FWAuthorizeTypeMicrophone:
             object = [[FWAuthorizeMicrophone alloc] init];
