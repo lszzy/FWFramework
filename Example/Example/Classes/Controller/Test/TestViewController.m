@@ -79,6 +79,7 @@
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
+                                             @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];
