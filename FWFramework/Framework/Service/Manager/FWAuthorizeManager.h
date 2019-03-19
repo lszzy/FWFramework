@@ -29,7 +29,7 @@
 typedef NS_ENUM(NSInteger, FWAuthorizeType) {
     // 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
     FWAuthorizeTypeLocationWhenInUse = 1,
-    // 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription，iOS7需配置NSLocationUsageDescription
+    // 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
     FWAuthorizeTypeLocationAlways = 2,
 #if FWAuthorizeMicrophoneEnabled
     // 麦克风，Info.plst需配置NSMicrophoneUsageDescription

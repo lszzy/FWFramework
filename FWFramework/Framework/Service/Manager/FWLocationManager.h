@@ -18,7 +18,8 @@ extern NSString *const FWHeadingUpdatedNotification;
 
 /**
  @brief 位置服务
- @discussion 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项或NSLocationAlwaysUsageDescription项
+ @discussion 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项
+ 如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项
  */
 @interface FWLocationManager : NSObject
 
