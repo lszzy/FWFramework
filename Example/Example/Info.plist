@@ -49,6 +49,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>请点击“允许”以允许访问。</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>请点击“允许”以允许访问。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
