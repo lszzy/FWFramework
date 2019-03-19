@@ -13,17 +13,29 @@
 extern NSString *const FWLocationUpdatedNotification;
 // 定位失败通知
 extern NSString *const FWLocationFailedNotification;
+// 方向改变通知
+extern NSString *const FWHeadingUpdatedNotification;
 
 /**
- *  位置服务。注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项
+ @brief 位置服务
+ @discussion 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项或NSLocationAlwaysUsageDescription项
  */
 @interface FWLocationManager : NSObject
+
+// 是否请求Always定位，默认NO，请求WhenInUse定位
+@property (nonatomic, assign) BOOL alwaysLocation;
+
+// 是否监听方向，默认NO。如果设备不支持方向，则不能启用
+@property (nonatomic, assign) BOOL headingEnabled;
 
 // 位置管理对象
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 
 // 当前位置
 @property (nonatomic, readonly) CLLocation *location;
+
+// 当前方向，headingEnabled启用后生效
+@property (nonatomic, readonly) CLHeading *heading;
 
 // 单例模式
 + (instancetype)sharedInstance;
