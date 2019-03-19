@@ -68,11 +68,16 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
 
 @required
 
-// 获取权限状态，子类重写
+// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
 - (FWAuthorizeStatus)authorizeStatus;
 
-// 执行权限授权，子类重写
+// 执行权限授权，主线程回调，必须实现
 - (void)authorize:(void (^)(FWAuthorizeStatus status))completion;
+
+@optional
+
+// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
+- (void)authorizeStatus:(void (^)(FWAuthorizeStatus status))completion;
 
 @end
 

@@ -63,6 +63,12 @@
 #define FWDispatchSemaphoreWait( ) \
     dispatch_semaphore_wait(fwSemaphore, DISPATCH_TIME_FOREVER);
 
+// 同步信号量执行异步block。阻塞当前线程，同步返回异步结果，block中需调用：dispatch_semaphore_signal(fwSemaphore); 可赋值__block变量等
+#define FWDispatchSemaphoreSync( block ) \
+    dispatch_semaphore_t fwSemaphore = dispatch_semaphore_create(0); \
+    block(); \
+    dispatch_semaphore_wait(fwSemaphore, DISPATCH_TIME_FOREVER);
+
 // GCD队列创建和同步异步执行
 #define FWDispatchQueueCreate( name, type ) \
     dispatch_queue_t fwQueue = dispatch_queue_create(name, type);
