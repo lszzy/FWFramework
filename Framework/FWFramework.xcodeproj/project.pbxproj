@@ -1507,6 +1507,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+					"FWAuthorizeMicrophoneEnabled=1",
+					"FWAuthorizeContactsEnabled=1",
+					"FWAuthorizeCalendarEnabled=1",
+					"FWAuthorizeAppleMusicEnabled=1",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1535,6 +1543,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FWAuthorizeMicrophoneEnabled=1",
+					"FWAuthorizeContactsEnabled=1",
+					"FWAuthorizeCalendarEnabled=1",
+					"FWAuthorizeAppleMusicEnabled=1",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

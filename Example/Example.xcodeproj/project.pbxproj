@@ -936,10 +936,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"FWAuthorizeMicrophoneEnabled=1",
-					"FWAuthorizeContactsEnabled=1",
-					"FWAuthorizeCalendarEnabled=1",
-					"FWAuthorizeAppleMusicEnabled=1",
 				);
 				INFOPLIST_FILE = Example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -965,13 +961,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = Example/PrefixHeader.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"FWAuthorizeMicrophoneEnabled=1",
-					"FWAuthorizeContactsEnabled=1",
-					"FWAuthorizeCalendarEnabled=1",
-					"FWAuthorizeAppleMusicEnabled=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = Example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
