@@ -50,7 +50,7 @@
  
  @param rect 绘制区域
  @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
- @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
  @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
  */
 - (void)fwDrawGradient:(CGRect)rect
@@ -63,7 +63,7 @@
  
  @param rect 绘制区域
  @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
- @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
  @param startPoint 渐变开始点，需要根据rect计算
  @param endPoint 渐变结束点，需要根据rect计算
  */
