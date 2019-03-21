@@ -84,6 +84,40 @@
     return (180.f * radian) / M_PI;
 }
 
++ (NSArray<NSValue *> *)fwLinePointsWithRect:(CGRect)rect direction:(UISwipeGestureRecognizerDirection)direction
+{
+    CGPoint startPoint;
+    CGPoint endPoint;
+    switch (direction) {
+        // 从左到右
+        case UISwipeGestureRecognizerDirectionRight: {
+            startPoint = CGPointMake(CGRectGetMinX(rect), CGRectGetMidY(rect));
+            endPoint = CGPointMake(CGRectGetMaxX(rect), CGRectGetMidY(rect));
+            break;
+        }
+        // 从下到上
+        case UISwipeGestureRecognizerDirectionUp: {
+            startPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
+            endPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
+            break;
+        }
+        // 从右到左
+        case UISwipeGestureRecognizerDirectionLeft: {
+            startPoint = CGPointMake(CGRectGetMaxX(rect), CGRectGetMidY(rect));
+            endPoint = CGPointMake(CGRectGetMinX(rect), CGRectGetMidY(rect));
+            break;
+        }
+        // 从上到下
+        case UISwipeGestureRecognizerDirectionDown:
+        default: {
+            startPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
+            endPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
+            break;
+        }
+    }
+    return [NSArray arrayWithObjects:[NSValue valueWithCGPoint:startPoint], [NSValue valueWithCGPoint:endPoint], nil];
+}
+
 #pragma mark - Shape
 
 + (CGRect)fwInnerSquareFrame:(CGRect)frame;
