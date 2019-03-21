@@ -8,6 +8,7 @@
  */
 
 #import "UIImage+FWFramework.h"
+#import "UIBezierPath+FWFramework.h"
 #import <CoreText/CoreText.h>
 #import <objc/runtime.h>
 
@@ -371,6 +372,43 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (!context) return nil;
     block(context);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+#pragma mark - Gradient
+
++ (UIImage *)fwGradientImageWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                           direction:(UISwipeGestureRecognizerDirection)direction
+{
+    NSArray<NSValue *> *linePoints = [UIBezierPath fwLinePointsWithRect:CGRectMake(0, 0, size.width, size.height) direction:direction];
+    CGPoint startPoint = [linePoints.firstObject CGPointValue];
+    CGPoint endPoint = [linePoints.lastObject CGPointValue];
+    return [self fwGradientImageWithSize:size colors:colors locations:locations startPoint:startPoint endPoint:endPoint];
+}
+
++ (UIImage *)fwGradientImageWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint
+{
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    if (!ctx) return nil;
+    
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    CGContextAddRect(ctx, rect);
+    CGContextClip(ctx);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)colors, locations);
+    CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0);
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(colorSpace);
+    
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;

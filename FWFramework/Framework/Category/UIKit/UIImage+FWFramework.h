@@ -104,6 +104,36 @@
 // 执行block创建指定大小UIImage
 + (UIImage *)fwImageWithBlock:(void (^)(CGContextRef context))block size:(CGSize)size;
 
+#pragma mark - Gradient
+
+/*!
+ @brief 创建渐变颜色UIImage，支持四个方向，默认向下Down
+ 
+ @param size 图片大小
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
+ */
++ (UIImage *)fwGradientImageWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                           direction:(UISwipeGestureRecognizerDirection)direction;
+
+/*!
+ @brief 创建渐变颜色UIImage
+ 
+ @param size 图片大小
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param startPoint 渐变开始点，需要根据rect计算
+ @param endPoint 渐变结束点，需要根据rect计算
+ */
++ (UIImage *)fwGradientImageWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint;
+
 #pragma mark - Blend
 
 // 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标

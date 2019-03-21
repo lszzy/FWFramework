@@ -45,11 +45,33 @@
                           startPoint:(CGPoint)startPoint
                             endPoint:(CGPoint)endPoint;
 
-// 绘制渐变颜色，需要在drawRect中调用，只支持四个方向，默认从上到下
+/*!
+ @brief 绘制渐变颜色，需要在drawRect中调用，支持四个方向，默认向下Down
+ 
+ @param rect 绘制区域
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
+ */
 - (void)fwDrawGradient:(CGRect)rect
-             startEdge:(UIRectEdge)startEdge
-            startColor:(UIColor *)startColor
-              endColor:(UIColor *)endColor;
+                colors:(NSArray *)colors
+             locations:(const CGFloat *)locations
+             direction:(UISwipeGestureRecognizerDirection)direction;
+
+/*!
+ @brief 绘制渐变颜色，需要在drawRect中调用
+ 
+ @param rect 绘制区域
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param startPoint 渐变开始点，需要根据rect计算
+ @param endPoint 渐变结束点，需要根据rect计算
+ */
+- (void)fwDrawGradient:(CGRect)rect
+                colors:(NSArray *)colors
+             locations:(const CGFloat *)locations
+            startPoint:(CGPoint)startPoint
+              endPoint:(CGPoint)endPoint;
 
 #pragma mark - Circle
 
