@@ -11,6 +11,33 @@
 #import "UIView+FWAnimation.h"
 #import "UIBezierPath+FWFramework.h"
 
+#pragma mark - CAGradientLayer+FWLayer
+
+@implementation CAGradientLayer (FWLayer)
+
++ (CAGradientLayer *)fwGradientLayer:(CGRect)frame
+                              colors:(NSArray *)colors
+                           locations:(NSArray<NSNumber *> *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint
+{
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    // 渐变区域
+    gradientLayer.frame = frame;
+    // CGColor颜色
+    gradientLayer.colors = colors;
+    // 颜色变化点，取值范围0~1
+    gradientLayer.locations = locations;
+    // 渐变颜色方向，左上点为(0,0), 右下点为(1,1)
+    gradientLayer.startPoint = startPoint;
+    gradientLayer.endPoint = endPoint;
+    return gradientLayer;
+}
+
+@end
+
+#pragma mark - UIView+FWLayer
+
 @implementation UIView (FWLayer)
 
 #pragma mark - Effect
@@ -50,26 +77,6 @@
 
 #pragma mark - Gradient
 
-- (CAGradientLayer *)fwGradientLayer:(CGRect)frame
-                              colors:(NSArray *)colors
-                           locations:(NSArray<NSNumber *> *)locations
-                          startPoint:(CGPoint)startPoint
-                            endPoint:(CGPoint)endPoint
-{
-    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-    // 渐变区域
-    gradientLayer.frame = frame;
-    // CGColor颜色
-    gradientLayer.colors = colors;
-    // 颜色变化点，取值范围0~1
-    gradientLayer.locations = locations;
-    // 渐变颜色方向，左上点为(0,0), 右下点为(1,1)
-    gradientLayer.startPoint = startPoint;
-    gradientLayer.endPoint = endPoint;
-    
-    return gradientLayer;
-}
-
 - (void)fwDrawGradient:(CGRect)rect
                 colors:(NSArray *)colors
              locations:(const CGFloat *)locations
@@ -99,6 +106,27 @@
     CGColorSpaceRelease(colorSpace);
     
     CGContextRestoreGState(ctx);
+}
+
+- (CAGradientLayer *)fwAddGradientLayer:(CGRect)frame
+                                 colors:(NSArray *)colors
+                              locations:(NSArray<NSNumber *> *)locations
+                             startPoint:(CGPoint)startPoint
+                               endPoint:(CGPoint)endPoint
+{
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    // 渐变区域
+    gradientLayer.frame = frame;
+    // CGColor颜色
+    gradientLayer.colors = colors;
+    // 颜色变化点，取值范围0~1
+    gradientLayer.locations = locations;
+    // 渐变颜色方向，左上点为(0,0), 右下点为(1,1)
+    gradientLayer.startPoint = startPoint;
+    gradientLayer.endPoint = endPoint;
+    
+    [self.layer addSublayer:gradientLayer];
+    return gradientLayer;
 }
 
 #pragma mark - Circle
