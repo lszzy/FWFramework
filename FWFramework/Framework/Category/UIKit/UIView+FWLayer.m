@@ -9,6 +9,7 @@
 #import "UIView+FWLayer.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIView+FWAnimation.h"
+#import "UIBezierPath+FWFramework.h"
 
 @implementation UIView (FWLayer)
 
@@ -70,65 +71,29 @@
 }
 
 - (void)fwDrawGradient:(CGRect)rect
-             startEdge:(UIRectEdge)startEdge
-            startColor:(UIColor *)startColor
-              endColor:(UIColor *)endColor
+                colors:(NSArray *)colors
+             locations:(const CGFloat *)locations
+             direction:(UISwipeGestureRecognizerDirection)direction
+{
+    NSArray<NSValue *> *linePoints = [UIBezierPath fwLinePointsWithRect:rect direction:direction];
+    CGPoint startPoint = [linePoints.firstObject CGPointValue];
+    CGPoint endPoint = [linePoints.lastObject CGPointValue];
+    [self fwDrawGradient:rect colors:colors locations:locations startPoint:startPoint endPoint:endPoint];
+}
+
+- (void)fwDrawGradient:(CGRect)rect
+                colors:(NSArray *)colors
+             locations:(const CGFloat *)locations
+            startPoint:(CGPoint)startPoint
+              endPoint:(CGPoint)endPoint
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
     
     CGContextAddRect(ctx, rect);
     CGContextClip(ctx);
-    
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGFloat locations[] = {0.0, 1.0};
-    
-    CGColorRef startCGColor = startColor.CGColor;
-    CGColorRef endCGColor = endColor.CGColor;
-    NSArray *colors = @[(__bridge id)startCGColor, (__bridge id)endCGColor];
-    
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)colors, locations);
-    
-    // 计算开始和结束点
-    CGFloat startX, startY, endX, endY;
-    switch (startEdge) {
-        // 从左到右
-        case UIRectEdgeLeft: {
-            startX = CGRectGetMinX(rect);
-            startY = CGRectGetMidY(rect);
-            endX = CGRectGetMaxX(rect);
-            endY = CGRectGetMidY(rect);
-            break;
-        }
-        // 从下到上
-        case UIRectEdgeBottom: {
-            startX = CGRectGetMidX(rect);
-            startY = CGRectGetMaxY(rect);
-            endX = CGRectGetMidX(rect);
-            endY = CGRectGetMinY(rect);
-            break;
-        }
-        // 从右到左
-        case UIRectEdgeRight: {
-            startX = CGRectGetMaxX(rect);
-            startY = CGRectGetMidY(rect);
-            endX = CGRectGetMinX(rect);
-            endY = CGRectGetMidY(rect);
-            break;
-        }
-        // 从上到下
-        default: {
-            startX = CGRectGetMidX(rect);
-            startY = CGRectGetMinY(rect);
-            endX = CGRectGetMidX(rect);
-            endY = CGRectGetMaxY(rect);
-            break;
-        }
-    }
-    
-    CGPoint startPoint = CGPointMake(startX, startY);
-    CGPoint endPoint = CGPointMake(endX, endY);
-    
     CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0);
     CGGradientRelease(gradient);
     CGColorSpaceRelease(colorSpace);

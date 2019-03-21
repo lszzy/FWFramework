@@ -8,6 +8,7 @@
  */
 
 #import "UIColor+FWFramework.h"
+#import "UIBezierPath+FWFramework.h"
 
 @implementation UIColor (FWFramework)
 
@@ -247,17 +248,29 @@
 
 #pragma mark - Gradient
 
-+ (UIColor *)fwGradientColorFrom:(UIColor *)c1 to:(UIColor *)c2 height:(int)height
++ (UIColor *)fwGradientColorWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                           direction:(UISwipeGestureRecognizerDirection)direction
 {
-    CGSize size = CGSizeMake(1, height);
+    NSArray<NSValue *> *linePoints = [UIBezierPath fwLinePointsWithRect:CGRectMake(0, 0, size.width, size.height) direction:direction];
+    CGPoint startPoint = [linePoints.firstObject CGPointValue];
+    CGPoint endPoint = [linePoints.lastObject CGPointValue];
+    return [self fwGradientColorWithSize:size colors:colors locations:locations startPoint:startPoint endPoint:endPoint];
+}
+
++ (UIColor *)fwGradientColorWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint
+{
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     
-    NSArray* colors = [NSArray arrayWithObjects:(id)c1.CGColor, (id)c2.CGColor, nil];
-    CGGradientRef gradient = CGGradientCreateWithColors(colorspace, (__bridge CFArrayRef)colors, NULL);
-    CGContextDrawLinearGradient(context, gradient, CGPointMake(0, 0), CGPointMake(0, size.height), 0);
-    
+    CGGradientRef gradient = CGGradientCreateWithColors(colorspace, (__bridge CFArrayRef)colors, locations);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     
     CGGradientRelease(gradient);
