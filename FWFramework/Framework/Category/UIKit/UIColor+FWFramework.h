@@ -84,8 +84,33 @@
 
 #pragma mark - Gradient
 
-// 渐变颜色，设置渐变高度
-+ (UIColor *)fwGradientColorFrom:(UIColor *)c1 to:(UIColor *)c2 height:(int)height;
+/*!
+ @brief 创建渐变颜色，支持四个方向，默认向下Down
+ 
+ @param size 渐变尺寸，非渐变边可以设置为1。如CGSizeMake(1, 50)
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
+ */
++ (UIColor *)fwGradientColorWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                           direction:(UISwipeGestureRecognizerDirection)direction;
+
+/*!
+ @brief 创建渐变颜色
+ 
+ @param size 渐变尺寸，非渐变边可以设置为1。如CGSizeMake(1, 50)
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param startPoint 渐变开始点，需要根据rect计算
+ @param endPoint 渐变结束点，需要根据rect计算
+ */
++ (UIColor *)fwGradientColorWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint;
 
 #pragma mark - Random
 

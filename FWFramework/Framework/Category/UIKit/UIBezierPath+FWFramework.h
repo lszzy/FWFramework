@@ -44,6 +44,9 @@
 // 将弧度转换为角度(0~360)
 + (CGFloat)fwDegreeWithRadian:(CGFloat)radian;
 
+// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
++ (NSArray<NSValue *> *)fwLinePointsWithRect:(CGRect)rect direction:(UISwipeGestureRecognizerDirection)direction;
+
 #pragma mark - Shape
 
 // 圆的形状，0~1，degree为起始角度，如-90度

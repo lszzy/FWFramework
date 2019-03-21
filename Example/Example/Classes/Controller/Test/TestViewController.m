@@ -67,6 +67,7 @@
                                              @[@"UIViewController(FWBar)", @"TestBarViewController"],
                                              @[@"UIViewController(FWTransition)", @"TestTransitionViewController"],
                                              @[@"UITextField(FWKeyboard)", @"TestKeyboardViewController"],
+                                             @[@"UIView+FWLayer", @"TestGradientViewController"],
                                              @[@"NSURL(FWVendor)", @"TestUrlViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              ]],

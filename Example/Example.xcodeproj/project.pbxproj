@@ -25,6 +25,7 @@
 		2F1E39412178F3710051A6BB /* FWTestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* FWTestIndicatorControlViewController.m */; };
 		2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */; };
 		2F2FBDC222410BB30037830E /* TestAuthorizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */; };
+		2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDD522432BF90037830E /* TestGradientViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
 		2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5BE217AC3CE00BAEB59 /* SimpleViewController.m */; };
@@ -122,6 +123,8 @@
 		2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNestScrollViewController.m; sourceTree = "<group>"; };
 		2F2FBDC022410BB30037830E /* TestAuthorizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAuthorizeViewController.h; sourceTree = "<group>"; };
 		2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAuthorizeViewController.m; sourceTree = "<group>"; };
+		2F2FBDD422432BF90037830E /* TestGradientViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestGradientViewController.h; sourceTree = "<group>"; };
+		2F2FBDD522432BF90037830E /* TestGradientViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestGradientViewController.m; sourceTree = "<group>"; };
 		2F30D8962153775B000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -405,6 +408,8 @@
 				2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */,
 				2F2FBDC022410BB30037830E /* TestAuthorizeViewController.h */,
 				2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */,
+				2F2FBDD422432BF90037830E /* TestGradientViewController.h */,
+				2F2FBDD522432BF90037830E /* TestGradientViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -757,6 +762,7 @@
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
 				2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */,
+				2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */,
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
 				2F8EB35321F0211500BB24AB /* TestBarViewController.m in Sources */,
 				2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */,
