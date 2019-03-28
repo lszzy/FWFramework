@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CAAnimation (FWAnimation)
 
 // 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
@@ -58,7 +60,7 @@
  */
 - (void)fwAddAnimationWithBlock:(void (^)(void))block
                        duration:(NSTimeInterval)duration
-                     completion:(void (^)(BOOL finished))completion;
+                     completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  添加UIView动画
@@ -71,7 +73,7 @@
 - (void)fwAddAnimationWithCurve:(UIViewAnimationCurve)curve
                      transition:(UIViewAnimationTransition)transition
                        duration:(NSTimeInterval)duration
-                     completion:(void (^)(BOOL finished))completion;
+                     completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  添加CABasicAnimation动画
@@ -86,7 +88,7 @@
                         fromValue:(id)fromValue
                           toValue:(id)toValue
                          duration:(CFTimeInterval)duration
-                       completion:(void (^)(BOOL finished))completion;
+                       completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  添加转场动画
@@ -99,7 +101,7 @@
 - (void)fwAddTransitionWithOption:(UIViewAnimationOptions)option
                             block:(void (^)(void))block
                          duration:(NSTimeInterval)duration
-                       completion:(void (^)(BOOL finished))completion;
+                       completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  添加转场动画
@@ -112,7 +114,7 @@
 - (void)fwAddTransitionToView:(UIView *)toView
                    withOption:(UIViewAnimationOptions)option
                      duration:(NSTimeInterval)duration
-                   completion:(void (^)(BOOL finished))completion;
+                   completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  添加CATransition转场动画
@@ -128,7 +130,7 @@
                         subtype:(NSString *)subtype
                  timingFunction:(NSString *)timingFunction
                        duration:(CFTimeInterval)duration
-                     completion:(void (^)(BOOL finished))completion;
+                     completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  移除所有视图动画
@@ -146,7 +148,7 @@
  */
 - (void)fwStrokeWithLayer:(CAShapeLayer *)layer
                  duration:(NSTimeInterval)duration
-               completion:(void (^)(BOOL finished))completion;
+               completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  水平摇摆动画
@@ -159,7 +161,7 @@
 - (void)fwShakeWithTimes:(int)times
                    delta:(CGFloat)delta
                 duration:(NSTimeInterval)duration
-              completion:(void (^)(BOOL finished))completion;
+              completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  渐显隐动画
@@ -170,7 +172,7 @@
  */
 - (void)fwFadeWithAlpha:(float)alpha
                duration:(NSTimeInterval)duration
-             completion:(void (^)(BOOL finished))completion;
+             completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  旋转动画
@@ -181,7 +183,7 @@
  */
 - (void)fwRotateWithDegree:(CGFloat)degree
                   duration:(NSTimeInterval)duration
-                completion:(void (^)(BOOL finished))completion;
+                completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  缩放动画
@@ -194,7 +196,7 @@
 - (void)fwScaleWithScaleX:(float)scaleX
                    scaleY:(float)scaleY
                  duration:(NSTimeInterval)duration
-               completion:(void (^)(BOOL finished))completion;
+               completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  移动动画
@@ -205,7 +207,7 @@
  */
 - (void)fwMoveWithPoint:(CGPoint)point
                duration:(NSTimeInterval)duration
-             completion:(void (^)(BOOL finished))completion;
+             completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  移动变化动画
@@ -216,6 +218,8 @@
  */
 - (void)fwMoveWithFrame:(CGRect)frame
                duration:(NSTimeInterval)duration
-             completion:(void (^)(BOOL finished))completion;
+             completion:(nullable void (^)(BOOL finished))completion;
 
 @end
+
+NS_ASSUME_NONNULL_END
