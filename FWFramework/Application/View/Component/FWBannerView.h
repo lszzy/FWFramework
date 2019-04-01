@@ -127,6 +127,9 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 /** 分页控件小圆标大小 */
 @property (nonatomic, assign) CGSize pageControlDotSize;
 
+/** 分页空间小圆标间隔 */
+@property (nonatomic, assign) CGFloat pageControlDotSpacing;
+
 /** 当前分页控件小圆标颜色 */
 @property (nonatomic, strong) UIColor *currentPageDotColor;
 

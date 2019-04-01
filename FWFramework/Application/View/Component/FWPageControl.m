@@ -9,14 +9,14 @@
 
 #import "FWPageControl.h"
 
-@interface FWPageControl()
+#pragma mark - FWPageControl
 
+@interface FWPageControl()
 
 /**
  *  Array of dot views for reusability and touch events.
  */
 @property (strong, nonatomic) NSMutableArray *dots;
-
 
 @end
 
@@ -24,17 +24,14 @@
 
 #pragma mark - Lifecycle
 
-
 - (id)init
 {
     self = [super init];
     if (self) {
         [self initialization];
     }
-    
     return self;
 }
-
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -45,17 +42,14 @@
     return self;
 }
 
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self initialization];
     }
-    
     return self;
 }
-
 
 /**
  *  Default setup when initiating control
@@ -69,7 +63,6 @@
     self.hidesForSinglePage     = NO;
     self.shouldResizeFromCenter = YES;
 }
-
 
 #pragma mark - Touch event
 
@@ -86,7 +79,6 @@
 
 #pragma mark - Layout
 
-
 /**
  *  Resizes and moves the receiver view so it just encloses its subviews.
  */
@@ -95,12 +87,10 @@
     [self updateFrame:YES];
 }
 
-
 - (CGSize)sizeForNumberOfPages:(NSInteger)pageCount
 {
     return CGSizeMake((self.dotSize.width + self.spacingBetweenDots) * pageCount - self.spacingBetweenDots , self.dotSize.height);
 }
-
 
 /**
  *  Will update dots display and frame. Reuse existing views or instantiate one if required. Update their position in case frame changed.
@@ -112,14 +102,12 @@
     }
     
     for (NSInteger i = 0; i < self.numberOfPages; i++) {
-        
         UIView *dot;
         if (i < self.dots.count) {
             dot = [self.dots objectAtIndex:i];
         } else {
             dot = [self generateDotView];
         }
-        
         [self updateDotFrame:dot atIndex:i];
     }
     
@@ -127,7 +115,6 @@
     
     [self hideForSinglePage];
 }
-
 
 /**
  *  Update frame control to fit current number of pages. It will apply required size if authorize and required.
@@ -150,7 +137,6 @@
     [self resetDotViews];
 }
 
-
 /**
  *  Update the frame of a specific dot at a specific index
  *
@@ -166,9 +152,7 @@
     dot.frame = CGRectMake(x, y, self.dotSize.width, self.dotSize.height);
 }
 
-
 #pragma mark - Utils
-
 
 /**
  *  Generate a dot view and add it to the collection
@@ -181,8 +165,13 @@
     
     if (self.dotViewClass) {
         dotView = [[self.dotViewClass alloc] initWithFrame:CGRectMake(0, 0, self.dotSize.width, self.dotSize.height)];
-        if ([dotView isKindOfClass:[FWDotView class]] && self.dotColor) {
-            ((FWDotView *)dotView).dotColor = self.dotColor;
+        if ([dotView isKindOfClass:[FWDotView class]]) {
+            if (self.dotColor) {
+                ((FWDotView *)dotView).dotColor = self.dotColor;
+            }
+            if (self.currentDotColor) {
+                ((FWDotView *)dotView).currentDotColor = self.currentDotColor;
+            }
         }
     } else {
         dotView = [[UIImageView alloc] initWithImage:self.dotImage];
@@ -198,7 +187,6 @@
     return dotView;
 }
 
-
 /**
  *  Change activity state of a dot view. Current/not currrent.
  *
@@ -208,18 +196,17 @@
 - (void)changeActivity:(BOOL)active atIndex:(NSInteger)index
 {
     if (self.dotViewClass) {
-        FWAbstractDotView *abstractDotView = (FWAbstractDotView *)[self.dots objectAtIndex:index];
-        if ([abstractDotView respondsToSelector:@selector(changeActivityState:)]) {
-            [abstractDotView changeActivityState:active];
+        id<FWDotViewProtocol> dotView = (id<FWDotViewProtocol>)[self.dots objectAtIndex:index];
+        if ([dotView respondsToSelector:@selector(changeActivityState:)]) {
+            [dotView changeActivityState:active];
         } else {
-            NSLog(@"Custom view : %@ must implement an 'changeActivityState' method or you can subclass %@ to help you.", self.dotViewClass, [FWAbstractDotView class]);
+            NSLog(@"Custom view : %@ must implement an 'changeActivityState' method for protocol %@", self.dotViewClass, NSStringFromProtocol(@protocol(FWDotViewProtocol)));
         }
     } else if (self.dotImage && self.currentDotImage) {
         UIImageView *dotView = (UIImageView *)[self.dots objectAtIndex:index];
         dotView.image = (active) ? self.currentDotImage : self.dotImage;
     }
 }
-
 
 - (void)resetDotViews
 {
@@ -230,7 +217,6 @@
     [self.dots removeAllObjects];
     [self updateDots];
 }
-
 
 - (void)hideForSinglePage
 {
@@ -243,7 +229,6 @@
 
 #pragma mark - Setters
 
-
 - (void)setNumberOfPages:(NSInteger)numberOfPages
 {
     _numberOfPages = numberOfPages;
@@ -252,14 +237,12 @@
     [self resetDotViews];
 }
 
-
 - (void)setSpacingBetweenDots:(NSInteger)spacingBetweenDots
 {
     _spacingBetweenDots = spacingBetweenDots;
     
     [self resetDotViews];
 }
-
 
 - (void)setCurrentPage:(NSInteger)currentPage
 {
@@ -276,14 +259,12 @@
     [self changeActivity:YES atIndex:_currentPage];
 }
 
-
 - (void)setDotImage:(UIImage *)dotImage
 {
     _dotImage = dotImage;
     [self resetDotViews];
     self.dotViewClass = nil;
 }
-
 
 - (void)setCurrentDotImage:(UIImage *)currentDotimage
 {
@@ -292,7 +273,6 @@
     self.dotViewClass = nil;
 }
 
-
 - (void)setDotViewClass:(Class)dotViewClass
 {
     _dotViewClass = dotViewClass;
@@ -300,19 +280,15 @@
     [self resetDotViews];
 }
 
-
 #pragma mark - Getters
-
 
 - (NSMutableArray *)dots
 {
     if (!_dots) {
         _dots = [[NSMutableArray alloc] init];
     }
-    
     return _dots;
 }
-
 
 - (CGSize)dotSize
 {
@@ -323,31 +299,12 @@
         _dotSize = CGSizeMake(8, 8);
         return _dotSize;
     }
-    
     return _dotSize;
 }
 
 @end
 
-@implementation FWAbstractDotView
-
-
-- (id)init
-{
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in %@", NSStringFromSelector(_cmd), self.class]
-                                 userInfo:nil];
-}
-
-
-- (void)changeActivityState:(BOOL)active
-{
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in %@", NSStringFromSelector(_cmd), self.class]
-                                 userInfo:nil];
-}
-
-@end
+#pragma mark - FWDotView
 
 @implementation FWDotView
 
@@ -355,7 +312,7 @@
 {
     self = [super init];
     if (self) {
-        [self initialization];
+        [self setupView];
     }
     return self;
 }
@@ -364,7 +321,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self initialization];
+        [self setupView];
     }
     return self;
 }
@@ -373,62 +330,74 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        [self initialization];
+        [self setupView];
     }
     return self;
 }
 
-- (void)initialization
+#pragma mark - Protect
+
+- (void)setupView
 {
-    _dotColor = [UIColor whiteColor];
-    self.backgroundColor    = [UIColor clearColor];
-    self.layer.cornerRadius = CGRectGetWidth(self.frame) / 2;
-    self.layer.borderColor  = [UIColor whiteColor].CGColor;
-    self.layer.borderWidth  = 2;
+    _dotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
+    _currentDotColor = [UIColor whiteColor];
+    self.layer.cornerRadius = MIN(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) / 2;
+    self.backgroundColor = self.dotColor;
 }
 
-- (void)setDotColor:(UIColor *)dotColor
-{
-    _dotColor = dotColor;
-    self.layer.borderColor  = dotColor.CGColor;
-}
+#pragma mark - FWDotViewProtocol
 
 - (void)changeActivityState:(BOOL)active
 {
-    if (active) {
-        self.backgroundColor = self.dotColor;
+    if (!self.isAnimated) {
+        if (active) {
+            self.backgroundColor = self.currentDotColor;
+        } else {
+            self.backgroundColor = self.dotColor;
+        }
     } else {
-        self.backgroundColor = [UIColor clearColor];
+        if (active) {
+            [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:.5 initialSpringVelocity:-20 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.backgroundColor = self.currentDotColor;
+                self.transform = CGAffineTransformMakeScale(1.4, 1.4);
+            } completion:nil];
+        } else {
+            [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:.5 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.backgroundColor = self.dotColor;
+                self.transform = CGAffineTransformIdentity;
+            } completion:nil];
+        }
     }
 }
 
 @end
 
-@implementation FWAnimatedDotView
+@implementation FWBorderDotView
 
-- (void)changeActivityState:(BOOL)active
+#pragma mark - Setter
+
+- (void)setDotColor:(UIColor *)dotColor
 {
-    if (active) {
-        [self animateToActiveState];
-    } else {
-        [self animateToDeactiveState];
-    }
+    [super setDotColor:dotColor];
+    self.backgroundColor = dotColor;
 }
 
-- (void)animateToActiveState
+- (void)setCurrentDotColor:(UIColor *)currentDotColor
 {
-    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:.5 initialSpringVelocity:-20 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.backgroundColor = self.dotColor;
-        self.transform = CGAffineTransformMakeScale(1.4, 1.4);
-    } completion:nil];
+    [super setCurrentDotColor:currentDotColor];
+    self.layer.borderColor = currentDotColor.CGColor;
 }
 
-- (void)animateToDeactiveState
+#pragma mark - Protect
+
+- (void)setupView
 {
-    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:.5 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.backgroundColor = [UIColor clearColor];
-        self.transform = CGAffineTransformIdentity;
-    } completion:nil];
+    self.dotColor = [UIColor clearColor];
+    self.currentDotColor = [UIColor whiteColor];
+    self.layer.cornerRadius = MIN(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) / 2;
+    self.layer.borderWidth = 2;
+    self.backgroundColor = self.dotColor;
+    self.layer.borderColor = self.currentDotColor.CGColor;
 }
 
 @end

@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma mark - FWPageControl
+
 @class FWPageControl;
 
 @protocol FWPageControlDelegate <NSObject>
@@ -27,75 +29,64 @@
 @interface FWPageControl : UIControl
 
 /**
- * Dot view customization properties
- */
-
-/**
- *  The Class of your custom UIView, make sure to respect the FWAbstractDotView class, default FWDotView.
+ *  The Class of your custom UIView, make sure to implement FWDotViewProtocol, default FWDotView.
  */
 @property (nonatomic) Class dotViewClass;
-
 
 /**
  *  UIImage to represent a dot.
  */
 @property (nonatomic) UIImage *dotImage;
 
-
 /**
  *  UIImage to represent current page dot.
  */
 @property (nonatomic) UIImage *currentDotImage;
-
 
 /**
  *  Dot size for dot views. Default is 8 by 8.
  */
 @property (nonatomic) CGSize dotSize;
 
-
+/**
+ *  UIColor to represent a dot.
+ */
 @property (nonatomic, strong) UIColor *dotColor;
+
+/**
+ *  UIColor to represent current page dot.
+ */
+@property (nonatomic, strong) UIColor *currentDotColor;
 
 /**
  *  Spacing between two dot views. Default is 8.
  */
 @property (nonatomic) NSInteger spacingBetweenDots;
 
-
-/**
- * Page control setup properties
- */
-
-
 /**
  * Delegate for FWPageControl
  */
 @property(nonatomic,assign) id<FWPageControlDelegate> delegate;
-
 
 /**
  *  Number of pages for control. Default is 0.
  */
 @property (nonatomic) NSInteger numberOfPages;
 
-
 /**
  *  Current page on which control is active. Default is 0.
  */
 @property (nonatomic) NSInteger currentPage;
-
 
 /**
  *  Hide the control if there is only one page. Default is NO.
  */
 @property (nonatomic) BOOL hidesForSinglePage;
 
-
 /**
  *  Let the control know if should grow bigger by keeping center, or just get longer (right side expanding). By default YES.
  */
 @property (nonatomic) BOOL shouldResizeFromCenter;
-
 
 /**
  *  Return the minimum size required to display control properly for the given page count.
@@ -108,8 +99,11 @@
 
 @end
 
-@interface FWAbstractDotView : UIView
+#pragma mark - FWDotView
 
+@protocol FWDotViewProtocol <NSObject>
+
+@required
 
 /**
  *  A method call let view know which state appearance it should take. Active meaning it's current page. Inactive not the current page.
@@ -118,15 +112,18 @@
  */
 - (void)changeActivityState:(BOOL)active;
 
-
 @end
 
-@interface FWDotView : FWAbstractDotView
+@interface FWDotView : UIView <FWDotViewProtocol>
 
 @property (nonatomic, strong) UIColor *dotColor;
 
+@property (nonatomic, strong) UIColor *currentDotColor;
+
+@property (nonatomic, assign) BOOL isAnimated;
+
 @end
 
-@interface FWAnimatedDotView : FWDotView
+@interface FWBorderDotView : FWDotView
 
 @end
