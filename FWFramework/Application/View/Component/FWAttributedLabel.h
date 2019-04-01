@@ -66,7 +66,7 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
 - (void)appendText:(NSString *)text;
 - (void)appendAttributedText:(NSAttributedString *)attributedText;
 
-//图片
+//图片，默认居中
 - (void)appendImage:(UIImage *)image;
 - (void)appendImage:(UIImage *)image
             maxSize:(CGSize)maxSize;
@@ -78,7 +78,7 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
              margin:(UIEdgeInsets)margin
           alignment:(FWAttributedAlignment)alignment;
 
-//UI控件
+//UI控件，默认居中
 - (void)appendView:(UIView *)view;
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin;
