@@ -590,7 +590,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [self appendImage:image
               maxSize:maxSize
                margin:margin
-            alignment:FWAttributedAlignmentBottom];
+            alignment:FWAttributedAlignmentCenter];
 }
 
 - (void)appendImage:(UIImage *)image
@@ -617,7 +617,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
 {
     [self appendView:view
               margin:margin
-           alignment:FWAttributedAlignmentBottom];
+           alignment:FWAttributedAlignmentCenter];
 }
 
 
