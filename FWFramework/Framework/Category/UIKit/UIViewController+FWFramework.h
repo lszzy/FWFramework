@@ -12,6 +12,8 @@
 #import "UIViewController+FWBack.h"
 #import "UIViewController+FWTransition.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIViewController+FWFramework
  @discussion 注意modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置
@@ -70,3 +72,5 @@
 @property(nullable, nonatomic, weak, readonly) UIViewController *fwPreviousViewController;
 
 @end
+
+NS_ASSUME_NONNULL_END

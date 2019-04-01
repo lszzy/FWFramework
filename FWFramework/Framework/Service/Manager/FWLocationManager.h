@@ -20,6 +20,7 @@ extern NSString *const FWHeadingUpdatedNotification;
  @brief 位置服务
  @discussion 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项
  如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项
+ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器
  */
 @interface FWLocationManager : NSObject
 
