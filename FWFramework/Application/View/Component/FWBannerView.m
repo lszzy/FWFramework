@@ -60,6 +60,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _infiniteLoop = YES;
     _showPageControl = YES;
     _pageControlDotSize = FWBannerViewInitialPageControlDotSize;
+    _pageControlDotSpacing = 0;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
     _pageControlStyle = FWBannerViewPageControlStyleSystem;
@@ -169,6 +170,16 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
+- (void)setPageControlDotSpacing:(CGFloat)pageControlDotSpacing
+{
+    _pageControlDotSpacing = pageControlDotSpacing;
+    
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageContol = (FWPageControl *)_pageControl;
+        pageContol.spacingBetweenDots = pageControlDotSpacing;
+    }
+}
+
 - (void)setShowPageControl:(BOOL)showPageControl
 {
     _showPageControl = showPageControl;
@@ -179,9 +190,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)setCurrentPageDotColor:(UIColor *)currentPageDotColor
 {
     _currentPageDotColor = currentPageDotColor;
+    
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageControl = (FWPageControl *)_pageControl;
-        pageControl.dotColor = currentPageDotColor;
+        pageControl.currentDotColor = currentPageDotColor;
     } else {
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
         pageControl.currentPageIndicatorTintColor = currentPageDotColor;
@@ -192,7 +204,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _pageDotColor = pageDotColor;
     
-    if ([self.pageControl isKindOfClass:[UIPageControl class]]) {
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+        pageControl.dotColor = pageDotColor;
+    } else {
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
         pageControl.pageIndicatorTintColor = pageDotColor;
     }
@@ -380,11 +395,15 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         case FWBannerViewPageControlStyleCustom: {
             FWPageControl *pageControl = [[FWPageControl alloc] init];
             pageControl.numberOfPages = self.imagePathsGroup.count;
-            pageControl.dotColor = self.currentPageDotColor;
+            pageControl.dotColor = self.pageDotColor;
+            pageControl.currentDotColor = self.currentPageDotColor;
             pageControl.userInteractionEnabled = NO;
             pageControl.currentPage = indexOnPageControl;
             if (self.pageDotViewClass != NULL) {
                 pageControl.dotViewClass = self.pageDotViewClass;
+            }
+            if (self.pageControlDotSpacing > 0) {
+                pageControl.spacingBetweenDots = self.pageControlDotSpacing;
             }
             [self addSubview:pageControl];
             _pageControl = pageControl;
@@ -509,7 +528,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (self.backgroundImageView) {
         self.backgroundImageView.frame = self.bounds;
     }
-    
 }
 
 //解决当父View释放时，当前视图因为被Timer强引用而不能释放的问题

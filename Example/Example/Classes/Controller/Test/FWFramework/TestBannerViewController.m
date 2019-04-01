@@ -73,8 +73,9 @@
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleCustom;
-    cycleView.pageDotViewClass = [FWAnimatedDotView class];
-    cycleView.pageControlDotSize = CGSizeMake(15, 15);
+    cycleView.pageDotViewClass = [FWDotView class];
+    cycleView.pageControlDotSize = CGSizeMake(10, 1);
+    cycleView.pageControlDotSpacing = 4;
     cycleView.pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     cycleView.currentPageDotColor = [UIColor whiteColor];
     [self.view addSubview:cycleView];
