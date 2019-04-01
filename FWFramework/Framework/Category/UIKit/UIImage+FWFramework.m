@@ -60,7 +60,6 @@
     [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
     // iOS6+：截取当前状态，效率低
     // [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;

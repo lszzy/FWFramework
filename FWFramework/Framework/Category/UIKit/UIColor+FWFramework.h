@@ -89,8 +89,9 @@
  
  @param size 渐变尺寸，非渐变边可以设置为1。如CGSizeMake(1, 50)
  @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
- @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
  @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
+ @return 渐变色
  */
 + (UIColor *)fwGradientColorWithSize:(CGSize)size
                               colors:(NSArray *)colors
@@ -102,9 +103,10 @@
  
  @param size 渐变尺寸，非渐变边可以设置为1。如CGSizeMake(1, 50)
  @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
- @param locations 渐变位置，如：CGFloat locations[] = {0.0, 1.0};
+ @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
  @param startPoint 渐变开始点，需要根据rect计算
  @param endPoint 渐变结束点，需要根据rect计算
+ @return 渐变色
  */
 + (UIColor *)fwGradientColorWithSize:(CGSize)size
                               colors:(NSArray *)colors
