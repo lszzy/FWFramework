@@ -24,10 +24,10 @@ extern NSString *const FWHeadingUpdatedNotification;
  */
 @interface FWLocationManager : NSObject
 
-// 是否请求Always定位，默认NO，请求WhenInUse定位
-@property (nonatomic, assign) BOOL alwaysLocation;
+// 是否启用Always定位，默认NO，请求WhenInUse定位
+@property (nonatomic, assign) BOOL alwaysEnabled;
 
-// 是否监听方向，默认NO。如果设备不支持方向，则不能启用
+// 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
 @property (nonatomic, assign) BOOL headingEnabled;
 
 // 位置管理对象
@@ -42,10 +42,10 @@ extern NSString *const FWHeadingUpdatedNotification;
 // 单例模式
 + (instancetype)sharedInstance;
 
-// 开始位置监听
-- (void)startNotifier;
+// 开始更新位置
+- (void)startUpdateLocation;
 
-// 停止位置监听
-- (void)stopNotifier;
+// 停止更新位置
+- (void)stopUpdateLocation;
 
 @end
