@@ -53,9 +53,9 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 #pragma mark - Public
 
-- (void)startNotifier
+- (void)startUpdateLocation
 {
-    if (self.alwaysLocation) {
+    if (self.alwaysEnabled) {
         if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
             [self.locationManager requestAlwaysAuthorization];
         }
@@ -74,9 +74,9 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
     }
 }
 
-- (void)stopNotifier
+- (void)stopUpdateLocation
 {
-    if (self.alwaysLocation) {
+    if (self.alwaysEnabled) {
         if (@available(iOS 9.0, *)) {
             [self.locationManager setAllowsBackgroundLocationUpdates:NO];
         }
