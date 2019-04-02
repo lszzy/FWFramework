@@ -14,19 +14,23 @@
 
 @implementation TestVersionViewController
 
-- (void)viewDidLoad
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewDidAppear:animated];
     
     // 数据更新
     FWWeakifySelf();
     [[FWVersionManager sharedInstance] checkDataVersion:@"1.2.1" migrator:^{
         FWStrongifySelf();
-        [self fwShowAlertWithTitle:nil message:@"数据更新至1.6.1版本" cancel:@"确定" cancelBlock:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self fwShowAlertWithTitle:nil message:@"数据更新至1.2.1版本" cancel:@"确定" cancelBlock:nil];
+        });
     }];
     [[FWVersionManager sharedInstance] checkDataVersion:@"1.0.0" migrator:^{
         FWStrongifySelf();
-        [self fwShowAlertWithTitle:nil message:@"数据更新至1.0.0版本" cancel:@"确定" cancelBlock:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self fwShowAlertWithTitle:nil message:@"数据更新至1.0.0版本" cancel:@"确定" cancelBlock:nil];
+        });
     }];
     [[FWVersionManager sharedInstance] migrateData:^{
         FWStrongifySelf();
@@ -35,7 +39,7 @@
     
     // 版本更新
     [FWVersionManager sharedInstance].appId = @"1439986536";
-    [[FWVersionManager sharedInstance] checkVersion:1 completion:^() {
+    [[FWVersionManager sharedInstance] checkVersion:0 completion:^() {
         FWStrongifySelf();
         NSLog(@"version status: %@", @([FWVersionManager sharedInstance].status));
         
@@ -45,7 +49,7 @@
             BOOL isForce = NO;
             if (isForce) {
                 // 强制更新
-                NSString *message = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"呜呜练声", [FWVersionManager sharedInstance].latestVersion];
+                NSString *message = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
                 [self fwShowAlertWithTitle:nil message:message cancel:@"更新" actions:nil actionBlock:nil cancelBlock:^{
                     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", [FWVersionManager sharedInstance].appId]];
                     [UIApplication fwOpenURL:url completionHandler:^(BOOL success) {
@@ -56,7 +60,7 @@
                 } priority:FWAlertPrioritySuper];
             } else {
                 // 非强制更新
-                NSString *message = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"呜呜练声", [FWVersionManager sharedInstance].latestVersion];
+                NSString *message = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
                 [self fwShowConfirmWithTitle:nil message:message cancel:@"取消" confirm:@"更新" confirmBlock:^{
                     [[FWVersionManager sharedInstance] openAppStore];
                 } cancelBlock:nil priority:FWAlertPriorityHigh];
