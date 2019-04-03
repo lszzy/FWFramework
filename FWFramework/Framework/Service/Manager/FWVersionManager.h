@@ -35,10 +35,13 @@ typedef NS_ENUM(NSInteger, FWVersionStatus) {
 // 当前版本状态。可自定义。根据最新版本号和当前版本号比较获得
 @property (nonatomic, assign) FWVersionStatus status;
 
+// 最新版本更新备注。可自定义。默认从AppStore获取
+@property (nonatomic, copy) NSString *releaseNotes;
+
 // 应用Id，可选，默认自动根据BundleId获取
 @property (nonatomic, copy) NSString *appId;
 
-// 地区码，可选，仅当app不能在美区访问时提供
+// 地区码，可选，仅当app不能在美区访问时提供。示例：中国-cn
 @property (nonatomic, copy) NSString *countryCode;
 
 // 版本发布延迟检测天数，可选，默认1天，防止上架后AppStore缓存用户无法立即更新
