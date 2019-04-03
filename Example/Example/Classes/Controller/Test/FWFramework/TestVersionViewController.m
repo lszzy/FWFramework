@@ -39,6 +39,7 @@
     
     // 版本更新
     [FWVersionManager sharedInstance].appId = @"1439986536";
+    [FWVersionManager sharedInstance].countryCode = @"cn";
     [[FWVersionManager sharedInstance] checkVersion:0 completion:^() {
         FWStrongifySelf();
         NSLog(@"version status: %@", @([FWVersionManager sharedInstance].status));
@@ -49,8 +50,8 @@
             BOOL isForce = NO;
             if (isForce) {
                 // 强制更新
-                NSString *message = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
-                [self fwShowAlertWithTitle:nil message:message cancel:@"更新" actions:nil actionBlock:nil cancelBlock:^{
+                NSString *title = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
+                [self fwShowAlertWithTitle:title message:[FWVersionManager sharedInstance].releaseNotes cancel:@"更新" actions:nil actionBlock:nil cancelBlock:^{
                     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", [FWVersionManager sharedInstance].appId]];
                     [UIApplication fwOpenURL:url completionHandler:^(BOOL success) {
                         if (success) {
@@ -60,8 +61,8 @@
                 } priority:FWAlertPrioritySuper];
             } else {
                 // 非强制更新
-                NSString *message = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
-                [self fwShowConfirmWithTitle:nil message:message cancel:@"取消" confirm:@"更新" confirmBlock:^{
+                NSString *title = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
+                [self fwShowConfirmWithTitle:title message:[FWVersionManager sharedInstance].releaseNotes cancel:@"取消" confirm:@"更新" confirmBlock:^{
                     [[FWVersionManager sharedInstance] openAppStore];
                 } cancelBlock:nil priority:FWAlertPriorityHigh];
             }

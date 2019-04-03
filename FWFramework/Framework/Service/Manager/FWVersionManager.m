@@ -200,6 +200,9 @@
     if (self.latestVersion.length < 1) {
         _latestVersion = appData[@"version"];
     }
+    if (self.releaseNotes.length < 1) {
+        _releaseNotes = appData[@"releaseNotes"];
+    }
     if (self.appId.length < 1) {
         self.appId = appData[@"trackId"];
     }
