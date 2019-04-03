@@ -77,7 +77,7 @@
                                              @[@"NSURL(FWVendor)", @"TestUrlViewController"],
                                              ]],
                                        @[@"FWApplication", @[
-                                             @[@"FWIndicatorControl", @"FWTestIndicatorControlViewController"],
+                                             @[@"FWIndicatorControl", @"TestIndicatorControlViewController"],
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
