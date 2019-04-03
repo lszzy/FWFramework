@@ -8,6 +8,6 @@
 
 #import "BaseTableViewController.h"
 
-@interface FWTestIndicatorControlViewController : BaseTableViewController
+@interface TestIndicatorControlViewController : BaseTableViewController
 
 @end
