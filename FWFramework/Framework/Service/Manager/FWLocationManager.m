@@ -9,21 +9,21 @@
 #import "FWLocationManager.h"
 #import <tgmath.h>
 
-NSString * FWStringWithCoordinate(CLLocationCoordinate2D coordinate) {
+NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate) {
     return [NSString stringWithFormat:@"%@,%@", @(coordinate.latitude), @(coordinate.longitude)];
 }
 
-CLLocationCoordinate2D FWCoordinateWithString(NSString *string) {
+CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string) {
     NSArray<NSString *> *degrees = [string componentsSeparatedByString:@","];
     return CLLocationCoordinate2DMake(degrees.firstObject.doubleValue, degrees.lastObject.doubleValue);
 }
 
-CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D from, CLLocationCoordinate2D to) {
+CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D origin, CLLocationCoordinate2D destination) {
     // Taken from http://www.movable-type.co.uk/scripts/latlong.html the "Bearing" section
-    double fromLat = from.latitude * M_PI / 180;
-    double fromLon = from.longitude * M_PI / 180;
-    double toLat = to.latitude * M_PI / 180;
-    double toLon = to.longitude * M_PI / 180;
+    double fromLat = origin.latitude * M_PI / 180;
+    double fromLon = origin.longitude * M_PI / 180;
+    double toLat = destination.latitude * M_PI / 180;
+    double toLon = destination.longitude * M_PI / 180;
     
     double y = sin(toLon - fromLon) * cos(toLat);
     double x = cos(fromLat) * sin(toLat) - sin(fromLat) * cos(toLat) * cos(toLon - fromLon);
@@ -31,14 +31,14 @@ CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D from, C
     return fmod(degree + 360, 360.0);
 }
 
-CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D from, CLLocationDistance distance, CLLocationDegrees degree) {
+CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D origin, CLLocationDistance distance, CLLocationDegrees degree) {
     // Taken from http://www.movable-type.co.uk/scripts/latlong.html the "Destination point given distance and bearing from start point" section
     const int radius = 6371000;
     double radian = degree * M_PI / 180;
     double scale = distance / radius;
     
-    double currentLat = from.latitude * M_PI / 180;
-    double currentLon = from.longitude * M_PI / 180;
+    double currentLat = origin.latitude * M_PI / 180;
+    double currentLon = origin.longitude * M_PI / 180;
     double toLat = asin(sin(currentLat) * cos(scale) + cos(currentLat) * sin(scale) * cos(radian));
     double toLon = currentLon + atan2(sin(radian) * sin(scale) * cos(currentLat), cos(scale) - sin(currentLat) * sin(toLat));
     return CLLocationCoordinate2DMake(toLat * 180 / M_PI, toLon * 180 / M_PI);
