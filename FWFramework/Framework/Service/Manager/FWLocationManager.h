@@ -9,6 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+// 坐标转"纬度,经度"字符串
+FOUNDATION_EXPORT NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate);
+
+// "纬度,经度"字符串转坐标
+FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string);
+
+// 计算起点经纬度到终点经纬度的角度(0~360)
+FOUNDATION_EXPORT CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D from, CLLocationCoordinate2D to);
+
+// 计算起点经纬度朝指定角度移动指定距离(米)的终点经纬度
+FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D from, CLLocationDistance distance, CLLocationDegrees degree);
+
+#pragma mark - FWLocationManager
+
 // 定位更新通知
 extern NSString *const FWLocationUpdatedNotification;
 // 定位失败通知
