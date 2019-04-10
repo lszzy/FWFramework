@@ -16,10 +16,10 @@ FOUNDATION_EXPORT NSString * FWLocationStringWithCoordinate(CLLocationCoordinate
 FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string);
 
 // 计算起点经纬度到终点经纬度的角度(0~360)
-FOUNDATION_EXPORT CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D from, CLLocationCoordinate2D to);
+FOUNDATION_EXPORT CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D origin, CLLocationCoordinate2D destination);
 
 // 计算起点经纬度朝指定角度移动指定距离(米)的终点经纬度
-FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D from, CLLocationDistance distance, CLLocationDegrees degree);
+FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D origin, CLLocationDistance distance, CLLocationDegrees degree);
 
 #pragma mark - FWLocationManager
 
