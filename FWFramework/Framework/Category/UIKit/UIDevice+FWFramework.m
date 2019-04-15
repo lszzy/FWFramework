@@ -8,6 +8,8 @@
  */
 
 #import "UIDevice+FWFramework.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
 #import <sys/sysctl.h>
 #import <arpa/inet.h>
 #import <ifaddrs.h>
@@ -198,6 +200,12 @@
 #else
     return [NSString stringWithFormat:@"%s.local", hostName];
 #endif
+}
+
++ (NSString *)fwCarrierName
+{
+    CTCarrier *carrier = [[CTTelephonyNetworkInfo new] subscriberCellularProvider];
+    return carrier.isoCountryCode ? carrier.carrierName : nil;
 }
 
 @end
