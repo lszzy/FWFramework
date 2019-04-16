@@ -316,13 +316,16 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     [self.routes removeAllObjects];
 }
 
-- (NSArray *)pathComponentsFromURL:(NSString*)URL
+- (NSArray *)pathComponentsFromURL:(NSString *)URL
 {
     NSMutableArray *pathComponents = [NSMutableArray array];
     if ([URL rangeOfString:@"://"].location != NSNotFound) {
         NSArray *pathSegments = [URL componentsSeparatedByString:@"://"];
         // 如果 URL 包含协议，那么把协议作为第一个元素放进去
-        [pathComponents addObject:pathSegments[0]];
+        NSString *pathScheme = pathSegments.firstObject;
+        if (pathScheme.length > 0) {
+            [pathComponents addObject:pathScheme];
+        }
         
         // 如果只有协议，那么放一个占位符
         URL = pathSegments.lastObject;
