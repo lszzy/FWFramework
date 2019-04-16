@@ -261,7 +261,8 @@
                                FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
                                if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
                                    mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
-                                   for (FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
+                                   NSArray *responseHandlers = [mergedTask.responseHandlers copy];
+                                   for (FWImageDownloaderResponseHandler *handler in responseHandlers) {
                                        if (handler.progressBlock) {
                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                handler.progressBlock(downloadProgress);
