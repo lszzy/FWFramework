@@ -6,13 +6,13 @@
 //  Copyright © 2018 wuyong.site. All rights reserved.
 //
 
-#import "FWTestIndicatorControlViewController.h"
+#import "TestIndicatorControlViewController.h"
 
-@interface FWTestIndicatorControlViewController ()
+@interface TestIndicatorControlViewController ()
 
 @end
 
-@implementation FWTestIndicatorControlViewController
+@implementation TestIndicatorControlViewController
 
 - (void)renderData
 {

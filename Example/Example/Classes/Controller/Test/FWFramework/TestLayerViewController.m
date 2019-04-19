@@ -1,0 +1,231 @@
+//
+//  TestLayerViewController.m
+//  Example
+//
+//  Created by wuyong on 16/11/13.
+//  Copyright © 2016年 ocphp.com. All rights reserved.
+//
+
+#import "TestLayerViewController.h"
+
+@interface TestLayerView : UIView
+
+@end
+
+@implementation TestLayerView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor appColorClear];
+        
+        [self testLayer];
+        [self progressLayer];
+    }
+    return self;
+}
+
+- (void)testLayer
+{
+    // 宿主图层显示图片
+    UIImage *image = [UIImage imageNamed:@"public_icon"];
+    CALayer *imageLayer = [[CALayer alloc] init];
+    imageLayer.frame = CGRectMake(90, 70, 20, 40);
+    imageLayer.contents = (__bridge id)image.CGImage;
+    // 设置图片显示模式
+    imageLayer.contentsGravity = kCAGravityCenter;
+    // 需要设置为屏幕Scale，默认1.0
+    // imageLayer.contentsScale = image.scale;
+    imageLayer.contentsScale = [UIScreen mainScreen].scale;
+    // 不超过边界
+    imageLayer.masksToBounds = YES;
+    // 单位
+    imageLayer.contentsRect = CGRectMake(0, 0, 0.5, 0.5);
+    // 固定边框和拉伸区域，类似resizableImageWithCapInsets
+    imageLayer.contentsCenter = CGRectMake(0.25, 0.25, 0.5, 0.5);
+    // delegate，仅当自定义Layer时使用，默认UIView为CALayer的代理
+    // imageLayer.delegate = self;
+    [self.layer addSublayer:imageLayer];
+    
+    // 拼接图片
+    imageLayer = [[CALayer alloc] init];
+    imageLayer.frame = CGRectMake(110, 70, 20, 40);
+    imageLayer.contents = (__bridge id)image.CGImage;
+    imageLayer.contentsGravity = kCAGravityCenter;
+    imageLayer.contentsScale = [UIScreen mainScreen].scale;
+    imageLayer.masksToBounds = YES;
+    imageLayer.contentsRect = CGRectMake(0.5, 0.5, 0.5, 0.5);
+    [self.layer addSublayer:imageLayer];
+}
+
+- (void)progressLayer
+{
+    // 单色进度
+    CAShapeLayer *layer = [self fwAddCircleLayer:CGRectMake(20, 330, 50, 50) degree:-90 progress:1.0 strokeColor:[UIColor orangeColor] strokeWidth:4];
+    [self fwStrokeWithLayer:layer duration:2.0 completion:NULL];
+    
+    // 双色进度
+    layer = [self fwAddCircleLayer:CGRectMake(90, 330, 50, 50) degree:-90 progress:0.6 progressColor:[UIColor redColor] strokeColor:[UIColor orangeColor] strokeWidth:4];
+    [self fwStrokeWithLayer:layer duration:2.0 completion:NULL];
+    
+    // 渐变进度
+    CALayer *gradientLayer = [self fwAddCircleLayer:CGRectMake(160, 330, 50, 50) degree:-90 progress:1.0 gradientBlock:^(CALayer *layer) {
+        CAGradientLayer *subLayer = [CAGradientLayer layer];
+        subLayer.frame = CGRectMake(0, 0, 50, 50);
+        subLayer.colors = @[(id)[UIColor redColor].CGColor, (id)[UIColor greenColor].CGColor, (id)[UIColor blueColor].CGColor];
+        subLayer.locations = @[@0.25, @0.5, @0.75];
+        subLayer.startPoint = CGPointMake(0, 0);
+        subLayer.endPoint = CGPointMake(0, 1);
+        [layer addSublayer:subLayer];
+    } strokeColor:[UIColor orangeColor] strokeWidth:4];
+    [self fwStrokeWithLayer:(CAShapeLayer *)gradientLayer.mask duration:2.0 completion:NULL];
+    
+    [self fwAddCircleLayer:CGRectMake(230, 330, 50, 50) degree:-90 progress:1.0 strokeColor:[UIColor orangeColor] strokeWidth:4];
+    gradientLayer = [self fwAddCircleLayer:CGRectMake(230, 330, 50, 50) degree:-90 progress:1.0 gradientBlock:NULL strokeColor:[UIColor orangeColor] strokeWidth:4];
+    CAGradientLayer *leftLayer = [CAGradientLayer fwGradientLayer:CGRectMake(0, 0, 25, 50) colors:@[(id)[UIColor yellowColor].CGColor, (id)[UIColor redColor].CGColor] locations:@[@0.33, @0.66] startPoint:CGPointMake(0, 0) endPoint:CGPointMake(0, 1)];
+    [gradientLayer addSublayer:leftLayer];
+    CAGradientLayer *rightLayer = [CAGradientLayer fwGradientLayer:CGRectMake(25, 0, 25, 50) colors:@[(id)[UIColor yellowColor].CGColor, (id)[UIColor blueColor].CGColor] locations:@[@0.33, @0.66] startPoint:CGPointMake(0, 0) endPoint:CGPointMake(0, 1)];
+    [gradientLayer addSublayer:rightLayer];
+    [self fwStrokeWithLayer:(CAShapeLayer *)gradientLayer.mask duration:2.0 completion:NULL];
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // 绘制曲线
+    {
+        // 三次贝塞尔控制点
+        CGContextSetLineWidth(context, 2);
+        [[UIColor orangeColor] setStroke];
+        CGContextMoveToPoint(context, 10, 60);
+        CGContextAddCurveToPoint(context, 30, 30, 50, 90, 70, 30);
+        CGContextStrokePath(context);
+        
+        // 二次贝塞尔控制点
+        CGContextMoveToPoint(context, 90, 60);
+        CGContextAddQuadCurveToPoint(context, 110, 30, 130, 60);
+        CGContextStrokePath(context);
+        
+        // 折线
+        NSArray *points = @[
+                            [NSValue valueWithCGPoint:CGPointMake(150, 30)],
+                            [NSValue valueWithCGPoint:CGPointMake(170, 60)],
+                            [NSValue valueWithCGPoint:CGPointMake(190, 30)],
+                            ];
+        UIBezierPath *path = [UIBezierPath fwLinesWithPoints:points];
+        CGContextAddPath(context, path.CGPath);
+        CGContextStrokePath(context);
+        
+        // 贝塞尔曲线
+        points = @[
+                   [NSValue valueWithCGPoint:CGPointMake(210, 30)],
+                   [NSValue valueWithCGPoint:CGPointMake(230, 60)],
+                   [NSValue valueWithCGPoint:CGPointMake(250, 30)],
+                   ];
+        path = [UIBezierPath fwQuadCurvedPathWithPoints:points];
+        CGContextAddPath(context, path.CGPath);
+        CGContextStrokePath(context);
+        
+    }
+    
+    // 画文字
+    {
+        NSString *string = @"我是文字";
+        [string drawAtPoint:CGPointMake(20, 80) withAttributes:@{
+                                                                 NSFontAttributeName: [UIFont boldSystemFontOfSize:16],
+                                                                 NSForegroundColorAttributeName: [[UIColor blackColor] colorWithAlphaComponent:0.75],
+                                                                 }];
+    }
+    
+    // 画图片
+    {
+        UIImage *image = [UIImage imageNamed:@"public_close"];
+        [image drawInRect:CGRectMake(20, 120, 50, 50)];
+        
+        [[image fwImageWithTintColor:[UIColor orangeColor] blendMode:kCGBlendModeNormal] drawInRect:CGRectMake(90, 120, 50, 50)];
+        
+        [[image fwImageWithTintColor:[UIColor orangeColor] blendMode:kCGBlendModeDestinationIn] drawInRect:CGRectMake(160, 120, 50, 50)];
+        
+        [[image fwImageWithTintColor:[UIColor orangeColor] blendMode:kCGBlendModeMultiply] drawInRect:CGRectMake(230, 120, 50, 50)];
+    }
+    
+    // 颜色渐变
+    {
+        [self fwDrawGradient:CGRectMake(20, 190, 50, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionDown];
+        [self fwDrawGradient:CGRectMake(90, 190, 50, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionRight];
+    
+        UIColor *gradientColor = [UIColor fwGradientColorWithSize:CGSizeMake(1, 50) colors:@[(id)[UIColor blueColor].CGColor, (id)[UIColor redColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionDown];
+        UIView *gradientView = [[UIView alloc] initWithFrame:CGRectMake(160, 190, 50, 50)];
+        gradientView.backgroundColor = gradientColor;
+        [self addSubview:gradientView];
+    
+        gradientColor = [UIColor fwGradientColorWithSize:CGSizeMake(1, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionDown];
+        UIImage *gradientImage = [UIImage fwImageWithColor:gradientColor size:CGSizeMake(50, 50)];
+        [gradientImage drawInRect:CGRectMake(230, 190, 50, 50)];
+    }
+    
+    // 形状
+    {
+        CGContextSetLineWidth(context, 2);
+        [[UIColor orangeColor] setStroke];
+        UIBezierPath *path = [UIBezierPath fwShapeHeart:CGRectMake(0, 0, 50, 50)];
+        [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 20, 260)];
+        CGContextAddPath(context, path.CGPath);
+        CGContextStrokePath(context);
+        
+        path = [UIBezierPath fwShapeAvatar:CGRectMake(0, 0, 50, 50)];
+        [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 90, 260)];
+        CGContextAddPath(context, path.CGPath);
+        CGContextStrokePath(context);
+        [[UIColor orangeColor] setFill];
+        CGContextAddPath(context, path.CGPath);
+        CGContextFillPath(context);
+        
+        path = [UIBezierPath fwShapeStar:CGRectMake(0, 0, 50, 50)];
+        UIImage *image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:[UIColor orangeColor]];
+        [image drawInRect:CGRectMake(160, 260, 50, 50)];
+        
+        path = [UIBezierPath fwShapeStars:2 frame:CGRectMake(0, 0, 50, 50)];
+        image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+        [image drawInRect:CGRectMake(230, 260, 50, 50)];
+    }
+}
+
+@end
+
+@interface TestLayerViewController ()
+
+FWPropertyWeak(UIButton *, snapshotButton);
+
+@end
+
+@implementation TestLayerViewController
+
+- (void)renderView
+{
+    TestLayerView *layerView = [[TestLayerView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:layerView];
+    
+    UIButton *button = [AppStandard buttonWithStyle:kAppButtonStyleDefault];
+    self.snapshotButton = button;
+    [button setTitle:@"截屏" forState:UIControlStateNormal];
+    // TouchDown事件，按钮还未highlighted
+    [button addTarget:self action:@selector(onSnapshot) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:button];
+    [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
+    [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+}
+
+#pragma mark - Action
+
+- (void)onSnapshot
+{
+    UIImage *image = [[UIApplication sharedApplication].keyWindow fwSnapshotImage];
+    [image fwSaveImageWithBlock:^(NSError *error){
+        NSLog(@"%@", error == nil ? @"保存成功" : @"保存失败");
+    }];
+}
+
+@end

@@ -13,15 +13,13 @@
 
 @property (nonatomic, strong) NSDate *checkDate;
 
-@property (nonatomic, strong) NSMutableDictionary *dataMigrators;
-
 @property (nonatomic, assign) BOOL hasResult;
+
+@property (nonatomic, strong) NSMutableDictionary *dataMigrators;
 
 @end
 
 @implementation FWVersionManager
-
-#pragma mark - Lifecycle
 
 + (instancetype)sharedInstance
 {
@@ -38,33 +36,38 @@
     self = [super init];
     if (self) {
         _currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-        _dataVersion = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWVersionManagerDataVersion"];
         _status = FWVersionStatusPublish;
         _delayDays = 1;
         _checkDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWVersionManagerCheckDate"];
+        
+        _dataVersion = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWVersionManagerDataVersion"];
         _dataMigrators = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-#pragma mark - Public
+#pragma mark - Store
 
-- (void)checkVersion:(NSInteger)interval completion:(void (^)(void))completion
+- (BOOL)checkVersion:(NSInteger)interval completion:(void (^)(void))completion
 {
     if (interval > 0) {
         if (!self.checkDate) {
             self.checkDate = [self toCheckDate:[NSDate date]];
             [self requestVersion:completion];
+            return YES;
         } else {
             // 根据当天0点时间和缓存0点时间计算间隔天数，大于等于interval需要请求。效果为每隔N天第一次运行时检查更新
             NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:self.checkDate toDate:[self toCheckDate:[NSDate date]] options:0];
             if (components.day >= interval) {
                 [self requestVersion:completion];
+                return YES;
             }
         }
     } else {
         [self requestVersion:completion];
+        return YES;
     }
+    return NO;
 }
 
 - (void)openAppStore
@@ -81,29 +84,35 @@
     });
 }
 
-- (void)checkDataVersion:(NSString *)version migrator:(void (^)(void))migrator
+#pragma mark - Data
+
+- (BOOL)checkDataVersion:(NSString *)version migrator:(void (^)(void))migrator
 {
     // 需要执行时才放到队列中
     if ([self checkDataVersion:version]) {
         [self.dataMigrators setObject:migrator forKey:version];
+        return YES;
     }
+    return NO;
 }
 
-- (void)migrateData:(void (^)(void))completion
+- (BOOL)migrateData:(void (^)(void))completion
 {
     // 版本号从低到高排序
     NSArray *versions = [self.dataMigrators.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         return [obj1 compare:obj2 options:NSNumericSearch];
     }];
+    
+    // 是否需要执行迁移
+    BOOL result = NO;
     for (NSString *version in versions) {
-        // 判断是否需要执行
         if ([self checkDataVersion:version]) {
             void (^migrator)(void) = [self.dataMigrators objectForKey:version];
             if (migrator) {
+                // 执行并从队列移除
                 migrator();
-                
-                // 执行完成从队列移除
                 [self.dataMigrators removeObjectForKey:version];
+                result = YES;
                 
                 // 保存当前数据版本
                 _dataVersion = version;
@@ -113,10 +122,11 @@
         }
     }
     
-    // 执行完成主线程回调
-    if (completion) {
+    // 执行迁移完成主线程回调
+    if (result && completion) {
         dispatch_async(dispatch_get_main_queue(), completion);
     }
+    return result;
 }
 
 #pragma mark - Private
@@ -189,6 +199,9 @@
     // 间隔day大于等于delayDays说明满足条件则获取版本信息
     if (self.latestVersion.length < 1) {
         _latestVersion = appData[@"version"];
+    }
+    if (self.releaseNotes.length < 1) {
+        _releaseNotes = appData[@"releaseNotes"];
     }
     if (self.appId.length < 1) {
         self.appId = appData[@"trackId"];

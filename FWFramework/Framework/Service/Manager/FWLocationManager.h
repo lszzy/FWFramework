@@ -9,6 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+// 坐标转"纬度,经度"字符串
+FOUNDATION_EXPORT NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate);
+
+// "纬度,经度"字符串转坐标
+FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string);
+
+// 计算起点经纬度到终点经纬度的角度(0~360)
+FOUNDATION_EXPORT CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D origin, CLLocationCoordinate2D destination);
+
+// 计算起点经纬度朝指定角度移动指定距离(米)的终点经纬度
+FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D origin, CLLocationDistance distance, CLLocationDegrees degree);
+
+#pragma mark - FWLocationManager
+
 // 定位更新通知
 extern NSString *const FWLocationUpdatedNotification;
 // 定位失败通知
@@ -24,10 +38,13 @@ extern NSString *const FWHeadingUpdatedNotification;
  */
 @interface FWLocationManager : NSObject
 
-// 是否请求Always定位，默认NO，请求WhenInUse定位
+// 是否启用Always定位，默认NO，请求WhenInUse定位
 @property (nonatomic, assign) BOOL alwaysLocation;
 
-// 是否监听方向，默认NO。如果设备不支持方向，则不能启用
+// 是否启用后台定位，默认NO。如果需要后台定位，设为YES即可
+@property (nonatomic, assign) BOOL backgroundLocation;
+
+// 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
 @property (nonatomic, assign) BOOL headingEnabled;
 
 // 位置管理对象
@@ -42,10 +59,10 @@ extern NSString *const FWHeadingUpdatedNotification;
 // 单例模式
 + (instancetype)sharedInstance;
 
-// 开始位置监听
-- (void)startNotifier;
+// 开始更新位置
+- (void)startUpdateLocation;
 
-// 停止位置监听
-- (void)stopNotifier;
+// 停止更新位置
+- (void)stopUpdateLocation;
 
 @end

@@ -108,4 +108,7 @@
 // 本地主机名称
 + (NSString *)fwHostName;
 
+// 手机运营商名称
++ (NSString *)fwCarrierName;
+
 @end
