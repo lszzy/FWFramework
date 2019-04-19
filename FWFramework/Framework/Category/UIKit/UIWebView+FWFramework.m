@@ -13,7 +13,7 @@
 
 #pragma mark - UIWebView
 
-NSString *completeRPCURLPath = @"/fwwebviewprogressproxy/complete";
+NSString *FWCompleteRPCURLPath = @"/fwwebviewprogressproxy/complete";
 
 const float FWInitialProgressValue = 0.1f;
 const float FWInteractiveProgressValue = 0.5f;
@@ -85,7 +85,7 @@ const float FWFinalProgressValue = 0.9f;
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if ([request.URL.path isEqualToString:completeRPCURLPath]) {
+    if ([request.URL.path isEqualToString:FWCompleteRPCURLPath]) {
         [self completeProgress];
         return NO;
     }
@@ -137,7 +137,7 @@ const float FWFinalProgressValue = 0.9f;
     BOOL interactive = [readyState isEqualToString:@"interactive"];
     if (interactive) {
         _interactive = YES;
-        NSString *waitForCompleteJS = [NSString stringWithFormat:@"window.addEventListener('load',function() { var iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.src = '%@://%@%@'; document.body.appendChild(iframe);  }, false);", webView.request.mainDocumentURL.scheme, webView.request.mainDocumentURL.host, completeRPCURLPath];
+        NSString *waitForCompleteJS = [NSString stringWithFormat:@"window.addEventListener('load',function() { var iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.src = '%@://%@%@'; document.body.appendChild(iframe);  }, false);", webView.request.mainDocumentURL.scheme, webView.request.mainDocumentURL.host, FWCompleteRPCURLPath];
         [webView stringByEvaluatingJavaScriptFromString:waitForCompleteJS];
     }
     
@@ -162,7 +162,7 @@ const float FWFinalProgressValue = 0.9f;
     BOOL interactive = [readyState isEqualToString:@"interactive"];
     if (interactive) {
         _interactive = YES;
-        NSString *waitForCompleteJS = [NSString stringWithFormat:@"window.addEventListener('load',function() { var iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.src = '%@://%@%@'; document.body.appendChild(iframe);  }, false);", webView.request.mainDocumentURL.scheme, webView.request.mainDocumentURL.host, completeRPCURLPath];
+        NSString *waitForCompleteJS = [NSString stringWithFormat:@"window.addEventListener('load',function() { var iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.src = '%@://%@%@'; document.body.appendChild(iframe);  }, false);", webView.request.mainDocumentURL.scheme, webView.request.mainDocumentURL.host, FWCompleteRPCURLPath];
         [webView stringByEvaluatingJavaScriptFromString:waitForCompleteJS];
     }
     
