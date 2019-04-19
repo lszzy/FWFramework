@@ -93,16 +93,14 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 - (void)startUpdateLocation
 {
-    if (self.alwaysEnabled) {
-        if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            [self.locationManager requestAlwaysAuthorization];
-        }
+    if (self.alwaysLocation) {
+        [self.locationManager requestAlwaysAuthorization];
+    } else {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    if (self.backgroundLocation) {
         if (@available(iOS 9.0, *)) {
             [self.locationManager setAllowsBackgroundLocationUpdates:YES];
-        }
-    } else {
-        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-            [self.locationManager requestWhenInUseAuthorization];
         }
     }
     
@@ -114,7 +112,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 - (void)stopUpdateLocation
 {
-    if (self.alwaysEnabled) {
+    if (self.backgroundLocation) {
         if (@available(iOS 9.0, *)) {
             [self.locationManager setAllowsBackgroundLocationUpdates:NO];
         }

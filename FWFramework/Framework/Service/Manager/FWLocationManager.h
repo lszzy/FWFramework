@@ -39,7 +39,10 @@ extern NSString *const FWHeadingUpdatedNotification;
 @interface FWLocationManager : NSObject
 
 // 是否启用Always定位，默认NO，请求WhenInUse定位
-@property (nonatomic, assign) BOOL alwaysEnabled;
+@property (nonatomic, assign) BOOL alwaysLocation;
+
+// 是否启用后台定位，默认NO。如果需要后台定位，设为YES即可
+@property (nonatomic, assign) BOOL backgroundLocation;
 
 // 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
 @property (nonatomic, assign) BOOL headingEnabled;
