@@ -46,7 +46,18 @@
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 1000)];
     _contentView = contentView;
-    [contentView fwAddGradientLayer:contentView.bounds colors:@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor greenColor].CGColor, (__bridge id)[UIColor blueColor].CGColor] locations:@[@0, @0.5, @1] startPoint:CGPointMake(0, 0) endPoint:CGPointMake(0, 1)];
+    UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 50)];
+    topLabel.textAlignment = NSTextAlignmentCenter;
+    topLabel.text = @"I am top";
+    [contentView addSubview:topLabel];
+    UILabel *middleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 475, self.view.fwWidth, 50)];
+    middleLabel.textAlignment = NSTextAlignmentCenter;
+    middleLabel.text = @"I am middle";
+    [contentView addSubview:middleLabel];
+    UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 950, self.view.fwWidth, 50)];
+    bottomLabel.textAlignment = NSTextAlignmentCenter;
+    bottomLabel.text = @"I am bottom";
+    [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
 }
 
