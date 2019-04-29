@@ -29,9 +29,12 @@
 @property (nonatomic, assign) BOOL fwDragVertical;
 
 // 开始拖动回调
-@property (nonatomic, copy) void (^fwDragStartedBlock)(void);
+@property (nonatomic, copy) void (^fwDragStartedBlock)(UIView *);
+
+// 拖动移动回调
+@property (nonatomic, copy) void (^fwDragMovedBlock)(UIView *);
 
 // 结束拖动回调
-@property (nonatomic, copy) void (^fwDragEndedBlock)(void);
+@property (nonatomic, copy) void (^fwDragEndedBlock)(UIView *);
 
 @end
