@@ -10,11 +10,13 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 
-@interface TestMapViewController () <MKMapViewDelegate>
+@interface TestMapViewController () <MKMapViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 @property (nonatomic, weak) MKMapView *mapView;
+@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, weak) UIView *contentView;
 
 @end
 
@@ -22,25 +24,42 @@
 
 - (void)renderView
 {
-    CLLocationManager *locationManager = [CLLocationManager new];
-    _locationManager = locationManager;
-    [locationManager requestWhenInUseAuthorization];
+    _locationManager = [CLLocationManager new];
+    [_locationManager requestWhenInUseAuthorization];
     
     MKMapView *mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
     _mapView = mapView;
     mapView.delegate = self;
-    mapView.userTrackingMode = MKUserTrackingModeFollow;
     mapView.showsUserLocation = YES;
-    mapView.showsCompass = YES;
     [self.view addSubview:mapView];
     
-    MKCoordinateRegion region = MKCoordinateRegionMake(CLLocationCoordinate2DMake(29.602118, 106.502537), MKCoordinateSpanMake(0.01, 0.01));
-    [mapView setRegion:region animated:YES];
+    CGFloat viewHeight = FWScreenHeight - FWStatusBarHeight - FWNavigationBarHeight;
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, viewHeight / 4 * 3, self.view.fwWidth, viewHeight / 4)];
+    _scrollView = scrollView;
+    [scrollView fwContentInsetNever];
+    scrollView.delegate = self;
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.showsVerticalScrollIndicator = NO;
+    scrollView.backgroundColor = [UIColor whiteColor];
+    scrollView.contentSize = CGSizeMake(self.view.fwWidth, 1000);
+    [self.view addSubview:scrollView];
+    
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 1000)];
+    _contentView = contentView;
+    [contentView fwAddGradientLayer:contentView.bounds colors:@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor greenColor].CGColor, (__bridge id)[UIColor blueColor].CGColor] locations:@[@0, @0.5, @1] startPoint:CGPointMake(0, 0) endPoint:CGPointMake(0, 1)];
+    [scrollView addSubview:contentView];
 }
+
+#pragma mark - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
-    self.mapView.centerCoordinate = userLocation.location.coordinate;
+    if (!mapView.fwTempObject) {
+        mapView.fwTempObject = @(YES);
+        
+        MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.location.coordinate, MKCoordinateSpanMake(0.01, 0.01));
+        mapView.region = region;
+    }
 }
 
 @end
