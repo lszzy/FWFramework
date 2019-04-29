@@ -80,6 +80,7 @@
                                              @[@"FWIndicatorControl", @"TestIndicatorControlViewController"],
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
+                                             @[@"MapView", @"TestMapViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
