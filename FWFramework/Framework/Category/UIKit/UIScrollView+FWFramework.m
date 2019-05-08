@@ -8,6 +8,8 @@
 
 #import "UIScrollView+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
+#import "UIView+FWBlock.h"
+#import "UIGestureRecognizer+FWFramework.h"
 #import <objc/runtime.h>
 #import "NSObject+FWRuntime.h"
 
@@ -249,6 +251,29 @@
         }
     }
     return -1;
+}
+
+- (void)fwDrawerPosition:(CGFloat)topPosition
+          bottomPosition:(CGFloat)bottomPosition
+          kickbackHeight:(CGFloat)kickbackHeight
+                callback:(void (^)(CGFloat))callback
+{
+    // 禁用拖拽回弹效果
+    self.bounces = NO;
+    
+    // 添加拖拽手势
+    UIPanGestureRecognizer *panGesture = [UIPanGestureRecognizer fwGestureRecognizerWithBlock:^(UIPanGestureRecognizer *sender) {
+        [sender fwDrawerView:sender.view topPosition:topPosition bottomPosition:bottomPosition kickbackHeight:kickbackHeight callback:callback];
+    }];
+    [self addGestureRecognizer:panGesture];
+    
+    // 视图在顶部时允许识别多个手势
+    self.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
+        if ([otherGestureRecognizer isEqual:panGesture] && [panGesture fwPositionWithDrawerView:panGesture.view] == topPosition) {
+            return YES;
+        }
+        return NO;
+    };
 }
 
 @end

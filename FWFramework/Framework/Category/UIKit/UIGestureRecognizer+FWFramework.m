@@ -26,10 +26,11 @@
     return 0;
 }
 
-- (CGFloat)fwDrawerView:(UIView *)view
-           fromPosition:(CGFloat)fromPosition
-             toPosition:(CGFloat)toPosition
-         kickbackHeight:(CGFloat)kickbackHeight
+- (void)fwDrawerView:(UIView *)view
+         topPosition:(CGFloat)topPosition
+      bottomPosition:(CGFloat)bottomPosition
+      kickbackHeight:(CGFloat)kickbackHeight
+            callback:(void (^)(CGFloat))callback
 {
     // 默认self.view
     if (!view) {
@@ -38,32 +39,61 @@
     
     // 拖动开始时记录起始位置
     if (self.state == UIGestureRecognizerStateBegan) {
-        objc_setAssociatedObject(self, _cmd, @(view.frame.origin.y), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(view, @selector(fwPositionWithDrawerView:), @(view.frame.origin.y), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
     // 记录并清空相对父视图的移动距离
     CGPoint transition = [self translationInView:view.superview];
     [self setTranslation:CGPointZero inView:view.superview];
     
-    // 视图跟随拖动移动指定距离
+    // 视图跟随拖动移动指定距离，如果是滚动视图，还需计算contentOffset.y
     CGFloat targetY = view.frame.origin.y + transition.y;
-    if (targetY < fromPosition) {
-        targetY = fromPosition;
+    if ([view isKindOfClass:[UIScrollView class]]) {
+        targetY -= ((UIScrollView *)view).contentOffset.y;
+    }
+    if (targetY < topPosition) {
+        targetY = topPosition;
     }
     view.frame = CGRectMake(view.frame.origin.x, targetY, view.frame.size.width, view.frame.size.height);
     
+    // 执行位移回调
+    if (callback) {
+        callback(targetY);
+    }
+    
     // 拖动结束时停留指定位置
     if (self.state == UIGestureRecognizerStateEnded) {
-        CGFloat beganY = [objc_getAssociatedObject(self, _cmd) doubleValue];
-        CGFloat baselineY = (beganY == fromPosition) ? (fromPosition + kickbackHeight) : (toPosition - kickbackHeight);
-        targetY = view.frame.origin.y < baselineY ? fromPosition : toPosition;
+        CGFloat baselineY = ([self fwPositionWithDrawerView:view] == topPosition) ? (topPosition + kickbackHeight) : (bottomPosition - kickbackHeight);
+        targetY = view.frame.origin.y < baselineY ? topPosition : bottomPosition;
         
-        // 执行动画移动到指定位置
+        // 执行动画移动到指定位置，动画完成标记拖拽位置
         [UIView animateWithDuration:0.2 animations:^{
             view.frame = CGRectMake(view.frame.origin.x, targetY, view.frame.size.width, view.frame.size.height);
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            objc_setAssociatedObject(view, @selector(fwPositionWithDrawerView:), @(targetY), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            
+            // 执行位移回调
+            if (callback) {
+                callback(targetY);
+            }
+        }];
     }
-    return targetY;
+}
+
+- (CGFloat)fwPositionWithDrawerView:(UIView *)view
+{
+    // 默认self.view
+    if (!view) {
+        view = self.view;
+    }
+    
+    // 获取抽屉视图拖拽的位置，没有则初始化
+    NSNumber *position = objc_getAssociatedObject(view, @selector(fwPositionWithDrawerView:));
+    if (!position) {
+        position = @(view.frame.origin.y);
+        objc_setAssociatedObject(view, @selector(fwPositionWithDrawerView:), position, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return [position doubleValue];
 }
 
 @end
