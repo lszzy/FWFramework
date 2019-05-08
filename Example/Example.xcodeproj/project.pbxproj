@@ -24,7 +24,6 @@
 		2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */; };
 		2F1E39412178F3710051A6BB /* TestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */; };
 		2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */; };
-		2F20E3C922768BB2005D1F46 /* Location.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 2F20E3C722768BB2005D1F46 /* Location.gpx */; };
 		2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F20E3CF22769156005D1F46 /* TestMapViewController.m */; };
 		2F2FBDC222410BB30037830E /* TestAuthorizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */; };
 		2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDD522432BF90037830E /* TestGradientViewController.m */; };
@@ -133,7 +132,6 @@
 		2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestIndicatorControlViewController.m; sourceTree = "<group>"; };
 		2F203D43219E76BB00DA83D9 /* TestNestScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNestScrollViewController.h; sourceTree = "<group>"; };
 		2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNestScrollViewController.m; sourceTree = "<group>"; };
-		2F20E3C722768BB2005D1F46 /* Location.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Location.gpx; sourceTree = "<group>"; };
 		2F20E3CE22769156005D1F46 /* TestMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMapViewController.h; sourceTree = "<group>"; };
 		2F20E3CF22769156005D1F46 /* TestMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestMapViewController.m; sourceTree = "<group>"; };
 		2F2FBDC022410BB30037830E /* TestAuthorizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAuthorizeViewController.h; sourceTree = "<group>"; };
@@ -578,7 +576,6 @@
 				2F51D7E71E5C2357009FD40F /* Assets.xcassets */,
 				2F4CFA5621552E9D00203A37 /* Images.xcassets */,
 				2FB90F1C21F5716800084D76 /* QrcodeSound.caf */,
-				2F20E3C722768BB2005D1F46 /* Location.gpx */,
 				2F30D8972153775B000F0A1D /* InfoPlist.strings */,
 				2F30D89A2153775E000F0A1D /* Localizable.strings */,
 			);
@@ -753,7 +750,6 @@
 				2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */,
 				2F4CFA5721552E9D00203A37 /* Images.xcassets in Resources */,
 				2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */,
-				2F20E3C922768BB2005D1F46 /* Location.gpx in Resources */,
 				2F30D8982153775E000F0A1D /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
