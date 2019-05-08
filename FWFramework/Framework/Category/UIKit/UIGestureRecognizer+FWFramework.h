@@ -24,7 +24,7 @@
  @param fromPosition 相对于view父视图的起始originY位置
  @param toPosition 相对于view父视图的目标originY位置
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
- @return 当前状态停留位置
+ @return 当前状态停留位置，Ended时返回为目标位置
  */
 - (CGFloat)fwDrawerView:(UIView *)view
            fromPosition:(CGFloat)fromPosition
