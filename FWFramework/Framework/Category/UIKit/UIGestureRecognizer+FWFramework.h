@@ -18,7 +18,7 @@
 - (UISwipeGestureRecognizerDirection)fwSwipeDirection;
 
 /*!
- @brief 抽屉拖拽效果，在action中调用即可
+ @brief 设置抽屉拖拽效果
  
  @param view 抽屉视图，默认为self.view
  @param topPosition 相对于view父视图的顶部originY位置
@@ -31,13 +31,5 @@
       bottomPosition:(CGFloat)bottomPosition
       kickbackHeight:(CGFloat)kickbackHeight
             callback:(void (^)(CGFloat position))callback;
-
-/*!
- @brief 获取当前抽屉视图拖拽的位置
- 
- @param view 抽屉视图，默认为self.view
- @return 当前抽屉视图拖拽的位置
- */
-- (CGFloat)fwPositionWithDrawerView:(UIView *)view;
 
 @end
