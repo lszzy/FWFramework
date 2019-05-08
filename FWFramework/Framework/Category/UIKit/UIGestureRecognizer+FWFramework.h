@@ -21,14 +21,23 @@
  @brief 抽屉拖拽效果，在action中调用即可
  
  @param view 抽屉视图，默认为self.view
- @param fromPosition 相对于view父视图的起始originY位置
- @param toPosition 相对于view父视图的目标originY位置
+ @param topPosition 相对于view父视图的顶部originY位置
+ @param bottomPosition 相对于view父视图的底部originY位置
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
- @return 当前状态停留位置，Ended时返回为目标位置
+ @param callback 抽屉视图位移回调，参数为相对view父视图的originY位置
  */
-- (CGFloat)fwDrawerView:(UIView *)view
-           fromPosition:(CGFloat)fromPosition
-             toPosition:(CGFloat)toPosition
-         kickbackHeight:(CGFloat)kickbackHeight;
+- (void)fwDrawerView:(UIView *)view
+         topPosition:(CGFloat)topPosition
+      bottomPosition:(CGFloat)bottomPosition
+      kickbackHeight:(CGFloat)kickbackHeight
+            callback:(void (^)(CGFloat position))callback;
+
+/*!
+ @brief 获取当前抽屉视图拖拽的位置
+ 
+ @param view 抽屉视图，默认为self.view
+ @return 当前抽屉视图拖拽的位置
+ */
+- (CGFloat)fwPositionWithDrawerView:(UIView *)view;
 
 @end
