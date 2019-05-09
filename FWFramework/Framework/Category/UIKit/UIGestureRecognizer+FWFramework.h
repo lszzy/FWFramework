@@ -34,4 +34,7 @@
       kickbackHeight:(CGFloat)kickbackHeight
             callback:(void (^)(CGFloat position))callback;
 
+// 交换抽屉效果视图位置，会触发抽屉callback回调
+- (void)fwDrawerViewTogglePosition;
+
 @end
