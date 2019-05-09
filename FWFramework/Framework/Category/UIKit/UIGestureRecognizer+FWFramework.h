@@ -18,7 +18,7 @@
 - (UISwipeGestureRecognizerDirection)fwSwipeDirection;
 
 /*!
- @brief 设置抽屉拖拽效果
+ @brief 设置抽屉拖拽效果。如果view为滚动视图，自动设置delegate处理与滚动视图pan手势冲突的问题
  
  @param view 抽屉视图，默认为self.view
  @param topPosition 相对于view父视图的顶部originY位置
