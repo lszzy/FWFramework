@@ -218,6 +218,4 @@
     [scrollView addGestureRecognizer:panGesture];
 }
 
-
 @end
-
