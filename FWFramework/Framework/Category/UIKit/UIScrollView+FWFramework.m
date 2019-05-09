@@ -252,17 +252,18 @@
     return -1;
 }
 
-- (void)fwDrawerPosition:(CGFloat)topPosition
-          bottomPosition:(CGFloat)bottomPosition
-          kickbackHeight:(CGFloat)kickbackHeight
-                callback:(void (^)(CGFloat))callback
+- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
+        fromPosition:(CGFloat)fromPosition
+          toPosition:(CGFloat)toPosition
+      kickbackHeight:(CGFloat)kickbackHeight
+            callback:(void (^)(CGFloat))callback
 {
     // 禁用拖拽回弹效果
     self.bounces = NO;
     
     // 添加拖拽手势
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
-    [panGesture fwDrawerView:self topPosition:topPosition bottomPosition:bottomPosition kickbackHeight:kickbackHeight callback:callback];
+    [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
     [self addGestureRecognizer:panGesture];
 }
 

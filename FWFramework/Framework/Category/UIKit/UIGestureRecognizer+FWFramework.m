@@ -13,13 +13,15 @@
 @interface FWInnerDrawerViewTarget : NSObject <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UIView *view;
-
-@property (nonatomic, assign) CGFloat position;
-@property (nonatomic, assign) CGFloat topPosition;
-@property (nonatomic, assign) CGFloat bottomPosition;
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
+@property (nonatomic, assign) CGFloat fromPosition;
+@property (nonatomic, assign) CGFloat toPosition;
 @property (nonatomic, assign) CGFloat kickbackHeight;
-
 @property (nonatomic, copy) void (^callback)(CGFloat position);
+
+@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, assign) BOOL vertical;
+@property (nonatomic, assign) CGFloat position;
 
 @end
 
@@ -29,42 +31,87 @@
 {
     // 拖动开始时记录起始位置
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        self.position = self.view.frame.origin.y;
+        self.position = self.vertical ? self.view.frame.origin.y : self.view.frame.origin.x;
     }
     
     // 记录并清空相对父视图的移动距离
     CGPoint transition = [gestureRecognizer translationInView:self.view.superview];
     [gestureRecognizer setTranslation:CGPointZero inView:self.view.superview];
     
-    // 视图跟随拖动移动指定距离，如果是滚动视图，还需计算contentOffset.y
-    CGFloat targetY = self.view.frame.origin.y + transition.y;
-    if ([self.view isKindOfClass:[UIScrollView class]]) {
-        targetY -= ((UIScrollView *)self.view).contentOffset.y;
+    // 视图跟随拖动移动指定距离，如果是滚动视图且可滚动，还需计算contentOffset和contentInset
+    CGFloat target;
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionLeft: {
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionDown: {
+            target = self.view.frame.origin.y + transition.y;
+            if (self.scrollView && (self.scrollView.contentSize.height + self.scrollView.contentInset.top + self.scrollView.contentInset.bottom > self.scrollView.frame.size.height)) {
+                target += (self.scrollView.contentSize.height - self.scrollView.frame.size.height - self.scrollView.contentOffset.y + self.scrollView.contentInset.bottom);
+            }
+            if (target > self.toPosition) {
+                target = self.toPosition;
+            }
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionUp:
+        default: {
+            target = self.view.frame.origin.y + transition.y;
+            if (self.scrollView && (self.scrollView.contentSize.height + self.scrollView.contentInset.top + self.scrollView.contentInset.bottom > self.scrollView.frame.size.height)) {
+                target -= (self.scrollView.contentOffset.y + self.scrollView.contentInset.top);
+            }
+            if (target < self.fromPosition) {
+                target = self.fromPosition;
+            }
+            break;
+        }
     }
-    if (targetY < self.topPosition) {
-        targetY = self.topPosition;
-    }
-    self.view.frame = CGRectMake(self.view.frame.origin.x, targetY, self.view.frame.size.width, self.view.frame.size.height);
     
-    // 执行位移回调
+    // 执行位移并回调
+    self.view.frame = CGRectMake(self.vertical ? self.view.frame.origin.x : target,
+                                 self.vertical ? target : self.view.frame.origin.y,
+                                 self.view.frame.size.width,
+                                 self.view.frame.size.height);
     if (self.callback) {
-        self.callback(targetY);
+        self.callback(target);
     }
     
     // 拖动结束时停留指定位置
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        CGFloat baselineY = (self.position == self.topPosition) ? (self.topPosition + self.kickbackHeight) : (self.bottomPosition - self.kickbackHeight);
-        targetY = self.view.frame.origin.y < baselineY ? self.topPosition : self.bottomPosition;
+        switch (self.direction) {
+            case UISwipeGestureRecognizerDirectionLeft: {
+                break;
+            }
+            case UISwipeGestureRecognizerDirectionRight: {
+                break;
+            }
+            case UISwipeGestureRecognizerDirectionDown: {
+                CGFloat baseline = (self.position == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
+                target = self.view.frame.origin.y < baseline ? self.fromPosition : self.toPosition;
+                break;
+            }
+            case UISwipeGestureRecognizerDirectionUp:
+            default: {
+                CGFloat baseline = (self.position == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
+                target = self.view.frame.origin.y < baseline ? self.fromPosition : self.toPosition;
+                break;
+            }
+        }
         
-        // 执行动画移动到指定位置，动画完成标记拖拽位置
+        // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
         [UIView animateWithDuration:0.2 animations:^{
-            self.view.frame = CGRectMake(self.view.frame.origin.x, targetY, self.view.frame.size.width, self.view.frame.size.height);
+            self.view.frame = CGRectMake(
+                                         self.vertical ? self.view.frame.origin.x : target,
+                                         self.vertical ? target : self.view.frame.origin.y,
+                                         self.view.frame.size.width,
+                                         self.view.frame.size.height);
         } completion:^(BOOL finished) {
-            self.position = targetY;
-            
-            // 执行位移回调
+            self.position = target;
             if (self.callback) {
-                self.callback(targetY);
+                self.callback(target);
             }
         }];
     }
@@ -72,10 +119,15 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    // 视图在顶部时允许同时识别滚动视图pan手势
-    if ([self.view isKindOfClass:[UIScrollView class]] &&
-        [otherGestureRecognizer isEqual:((UIScrollView *)self.view).panGestureRecognizer]) {
-        if (self.position == self.topPosition) {
+    // 视图在终点时允许同时识别滚动视图pan手势
+    if ([otherGestureRecognizer isEqual:self.scrollView.panGestureRecognizer]) {
+        CGFloat targetPosition;
+        if (self.direction == UISwipeGestureRecognizerDirectionRight || self.direction == UISwipeGestureRecognizerDirectionUp) {
+            targetPosition = self.fromPosition;
+        } else {
+            targetPosition = self.toPosition;
+        }
+        if (self.position == targetPosition) {
             return YES;
         }
     }
@@ -101,19 +153,23 @@
 }
 
 - (void)fwDrawerView:(UIView *)view
-         topPosition:(CGFloat)topPosition
-      bottomPosition:(CGFloat)bottomPosition
+           direction:(UISwipeGestureRecognizerDirection)direction
+        fromPosition:(CGFloat)fromPosition
+          toPosition:(CGFloat)toPosition
       kickbackHeight:(CGFloat)kickbackHeight
             callback:(void (^)(CGFloat))callback
 {
     // 生成内部事件绑定target
     FWInnerDrawerViewTarget *target = [[FWInnerDrawerViewTarget alloc] init];
     target.view = view ?: self.view;
-    target.position = target.view.frame.origin.y;
-    target.topPosition = topPosition;
-    target.bottomPosition = bottomPosition;
+    target.direction = direction;
+    target.fromPosition = fromPosition;
+    target.toPosition = toPosition;
     target.kickbackHeight = kickbackHeight;
     target.callback = callback;
+    target.scrollView = [target.view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)target.view : nil;
+    target.vertical = (direction == UISwipeGestureRecognizerDirectionUp || direction == UISwipeGestureRecognizerDirectionDown);
+    target.position = target.vertical ? target.view.frame.origin.y : target.view.frame.origin.x;
     
     // 强引用target并添加事件绑定
     NSMutableArray *targets = objc_getAssociatedObject(self, _cmd);
