@@ -42,9 +42,23 @@
     CGFloat target;
     switch (self.direction) {
         case UISwipeGestureRecognizerDirectionLeft: {
+            target = self.view.frame.origin.x + transition.x;
+            if (self.scrollView && (self.scrollView.contentSize.width + self.scrollView.contentInset.left + self.scrollView.contentInset.right > self.scrollView.frame.size.width)) {
+                target -= (self.scrollView.contentOffset.x + self.scrollView.contentInset.left);
+            }
+            if (target < self.fromPosition) {
+                target = self.fromPosition;
+            }
             break;
         }
         case UISwipeGestureRecognizerDirectionRight: {
+            target = self.view.frame.origin.x + transition.x;
+            if (self.scrollView && (self.scrollView.contentSize.width + self.scrollView.contentInset.left + self.scrollView.contentInset.right > self.scrollView.frame.size.width)) {
+                target += (self.scrollView.contentSize.width - self.scrollView.frame.size.width - self.scrollView.contentOffset.x + self.scrollView.contentInset.right);
+            }
+            if (target > self.toPosition) {
+                target = self.toPosition;
+            }
             break;
         }
         case UISwipeGestureRecognizerDirectionDown: {
@@ -83,9 +97,13 @@
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         switch (self.direction) {
             case UISwipeGestureRecognizerDirectionLeft: {
+                CGFloat baseline = (self.position == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
+                target = self.view.frame.origin.x < baseline ? self.fromPosition : self.toPosition;
                 break;
             }
             case UISwipeGestureRecognizerDirectionRight: {
+                CGFloat baseline = (self.position == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
+                target = self.view.frame.origin.x < baseline ? self.fromPosition : self.toPosition;
                 break;
             }
             case UISwipeGestureRecognizerDirectionDown: {
@@ -122,7 +140,7 @@
     // 视图在终点时允许同时识别滚动视图pan手势
     if ([otherGestureRecognizer isEqual:self.scrollView.panGestureRecognizer]) {
         CGFloat targetPosition;
-        if (self.direction == UISwipeGestureRecognizerDirectionRight || self.direction == UISwipeGestureRecognizerDirectionUp) {
+        if (self.direction == UISwipeGestureRecognizerDirectionLeft || self.direction == UISwipeGestureRecognizerDirectionUp) {
             targetPosition = self.fromPosition;
         } else {
             targetPosition = self.toPosition;
