@@ -32,6 +32,8 @@
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.backgroundColor = [UIColor whiteColor];
     scrollView.contentSize = CGSizeMake(self.view.fwWidth, 2000);
+    scrollView.contentInset = UIEdgeInsetsMake(50, 0, 100, 0);
+    scrollView.contentOffset = CGPointMake(0, -50);
     [self.view addSubview:scrollView];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 2000)];
@@ -52,7 +54,7 @@
     scrollView.bounces = NO;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView topPosition:0 bottomPosition:ViewHeight / 4 * 3 kickbackHeight:25 callback:^(CGFloat position) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp fromPosition:0 toPosition:ViewHeight / 4 * 3 kickbackHeight:25 callback:^(CGFloat position) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
@@ -72,10 +74,12 @@
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.backgroundColor = [UIColor redColor];
     scrollView.contentSize = CGSizeMake(self.view.fwWidth, 2000);
+    scrollView.contentInset = UIEdgeInsetsMake(100, 0, 50, 0);
+    scrollView.contentOffset = CGPointMake(0, 2000 - ViewHeight + 50);
     [self.view addSubview:scrollView];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 2000)];
-    UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 50)];
+    UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 1950, self.view.fwWidth, 50)];
     topLabel.textAlignment = NSTextAlignmentCenter;
     topLabel.text = @"I am top";
     [contentView addSubview:topLabel];
@@ -83,7 +87,7 @@
     middleLabel.textAlignment = NSTextAlignmentCenter;
     middleLabel.text = @"I am middle";
     [contentView addSubview:middleLabel];
-    UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 1950, self.view.fwWidth, 50)];
+    UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 50)];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
     bottomLabel.text = @"I am bottom";
     [contentView addSubview:bottomLabel];
@@ -92,7 +96,7 @@
     scrollView.bounces = NO;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView topPosition:-ViewHeight / 4 * 3 bottomPosition:0 kickbackHeight:25 callback:^(CGFloat position) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown fromPosition:-ViewHeight / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {

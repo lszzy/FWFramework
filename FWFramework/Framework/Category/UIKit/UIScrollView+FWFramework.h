@@ -102,16 +102,18 @@
             toPosition:(CGFloat)toPosition;
 
 /*!
- @brief 设置抽屉拖拽效果，底部时只移动位置，顶部时可拖拽内容
+ @brief 设置抽屉拖拽效果，起点时只移动位置，终点时可拖拽内容
  
- @param topPosition 相对于父视图的顶部originY位置
- @param bottomPosition 相对于父视图的底部originY位置
+ @param direction 拖拽方向，如向上拖动视图时为Up
+ @param fromPosition 相对于父视图的起点originY位置
+ @param toPosition 相对于父视图的终点originY位置
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
  @param callback 抽屉视图位移回调，参数为相对父视图的originY位置
  */
-- (void)fwDrawerPosition:(CGFloat)topPosition
-          bottomPosition:(CGFloat)bottomPosition
-          kickbackHeight:(CGFloat)kickbackHeight
-                callback:(void (^)(CGFloat position))callback;
+- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
+        fromPosition:(CGFloat)fromPosition
+          toPosition:(CGFloat)toPosition
+      kickbackHeight:(CGFloat)kickbackHeight
+            callback:(void (^)(CGFloat position))callback;
 
 @end
