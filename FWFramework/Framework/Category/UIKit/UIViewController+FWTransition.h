@@ -105,6 +105,12 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
 @property (nonatomic, copy) void(^interactiveBlock)(void);
 
+// 自定义进度计算方法，默认根据translation计算进度
+@property (nonatomic, copy) CGFloat(^percentBlock)(UIPanGestureRecognizer *sender);
+
+// 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.3
+@property (nonatomic, assign) CGFloat completionPercent;
+
 // 是否正在交互中，手势开始才会标记YES，手势结束标记NO
 @property (nonatomic, assign, readonly) BOOL isInteractive;
 
