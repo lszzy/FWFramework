@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = "FWFramework"
-  spec.version             = "0.2.3"
+  spec.version             = "0.2.4"
   spec.summary             = "ios develop framework"
   spec.homepage            = "http://wuyong.site"
   spec.license             = "MIT"
@@ -11,10 +11,16 @@ Pod::Spec.new do |spec|
   spec.requires_arc        = true
   spec.frameworks          = [ "Foundation", "UIKit" ]
   spec.library             = [ "sqlite3" ]
-  spec.default_subspecs    = 'FWFramework'
+  spec.default_subspecs    = [ "Framework", "Application" ]
 
-  spec.subspec 'FWFramework' do |subspec|
-    subspec.source_files = 'FWFramework/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/**/*.h'
+  spec.subspec 'Framework' do |subspec|
+    subspec.source_files = 'FWFramework/Framework/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Framework/**/*.h'
+  end
+  
+  spec.subspec 'Application' do |subspec|
+    subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/**/*.h'
+    subspec.dependency "FWFramework/Framework"
   end
 end
