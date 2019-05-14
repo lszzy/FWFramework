@@ -44,6 +44,21 @@
 
 - (void)renderData
 {
+    NSString *str = @"http://test.com?id=我是中文";
+    NSURL *url = [NSURL URLWithString:str];
+    NSLog(@"str: %@ =>\nurl: %@", str, url);
+    url = [NSURL fwURLWithString:str];
+    NSLog(@"str: %@ =>\nurl: %@", str, url);
+    
+    NSString *urlStr = [FWRouter generateURL:@"app://test/:id" parameters:nil];
+    NSLog(@"url: %@", urlStr);
+    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@[@1]];
+    NSLog(@"url: %@", urlStr);
+    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@{@"id": @2}];
+    NSLog(@"url: %@", urlStr);
+    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@3];
+    NSLog(@"url: %@", urlStr);
+    
     [self.dataList addObjectsFromArray:@[
                                          @[@"打开Url", @"onOpen"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],

@@ -9,15 +9,51 @@
 
 #import "TestControllerViewController.h"
 
-@interface TestControllerViewController () <FWScrollViewController>
+@interface TestControllerViewController () <FWScrollViewController, UIScrollViewDelegate>
+
+@property (nonatomic, strong) UIView *redView;
+@property (nonatomic, strong) UIView *hoverView;
+
+@property (nonatomic, assign) BOOL isTop;
 
 @end
 
 @implementation TestControllerViewController
 
+- (void)setIsTop:(BOOL)isTop
+{
+    _isTop = isTop;
+    
+    if (isTop) {
+        [self fwSetBarExtendEdge:UIRectEdgeTop];
+    }
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self.navigationController.navigationBar fwSetBackgroundClear];
+    
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"切换" block:^(id sender) {
+        FWStrongifySelf();
+        
+        TestControllerViewController *viewController = [TestControllerViewController new];
+        viewController.isTop = !self.isTop;
+        [self fwOpenViewController:viewController animated:YES];
+    }];
+}
+
+- (void)fwRenderInit
+{
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    [self fwSetBackBarTitle:@""];
+}
+
 - (void)fwRenderView
 {
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.fwScrollView.delegate = self;
     
     UIImageView *imageView = [UIImageView fwAutoLayoutView];
     imageView.image = [UIImage imageNamed:@"public_picture"];
@@ -28,6 +64,7 @@
     }
     
     UIView *redView = [UIView fwAutoLayoutView];
+    _redView = redView;
     redView.backgroundColor = [UIColor redColor];
     [self.fwContentView addSubview:redView]; {
         [redView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -37,6 +74,7 @@
     }
     
     UIView *hoverView = [UIView fwAutoLayoutView];
+    _hoverView = hoverView;
     hoverView.backgroundColor = [UIColor redColor];
     [redView addSubview:hoverView]; {
         [hoverView fwPinEdgesToSuperview];
@@ -48,6 +86,22 @@
         [blueView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
         [blueView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:redView];
         [blueView fwSetDimension:NSLayoutAttributeHeight toSize:FWScreenHeight];
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.isTop) {
+        CGFloat progress = [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:(FWStatusBarHeight + FWNavigationBarHeight)];
+        if (progress == 1) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
+        } else if (progress >= 0 && progress < 1) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+        }
+    } else {
+        [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:0];
     }
 }
 
