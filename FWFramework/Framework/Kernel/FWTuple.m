@@ -86,15 +86,25 @@ id FWTupleSentinel() {
 
 - (id)objectAtIndexedSubscript:(NSUInteger)index
 {
-    return [self objectAtIndex:(int)index];
+    return [self objectAtIndex:index];
 }
 
-- (id)objectAtIndex:(int)index
+- (id)objectAtIndex:(NSInteger)index
 {
-    if (index < 0 || index >= (int)[_storage count]) {
+    if (index < 0 || index >= [_storage count]) {
         return nil;
     }
     return (__strong id)[_storage pointerAtIndex:index];
+}
+
+- (id)firstObject
+{
+    return [self objectAtIndex:0];
+}
+
+- (id)lastObject
+{
+    return [self objectAtIndex:([_storage count] - 1)];
 }
 
 - (void)unpack:(id*)pointers, ...
@@ -110,6 +120,17 @@ id FWTupleSentinel() {
         i++;
     }
     va_end(ap);
+}
+
+- (FWTuple *)map:(id (^)(id))block
+{
+    FWTuple *newTuple = [self copy];
+    NSPointerArray *newStorage = [newTuple storage];
+    for (NSInteger i = 0, n = [newStorage count]; i != n; i++) {
+        id obj = (__strong id)[_storage pointerAtIndex:i];
+        [newStorage replacePointerAtIndex:i withPointer:((__bridge void*)block(obj))];
+    }
+    return newTuple;
 }
 
 @end
