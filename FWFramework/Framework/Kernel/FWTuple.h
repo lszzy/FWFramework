@@ -27,12 +27,16 @@ id FWTupleSentinel(void);
 @interface FWTuple : NSObject <NSCopying, NSFastEnumeration>
 
 - (id)init;
-- (id)initWithArray:(NSArray*)array;
+- (id)initWithArray:(NSArray *)array;
 - (id)initWithObjects:(id)objects, ...;
 
 - (id)objectAtIndexedSubscript:(NSUInteger)index;
-- (id)objectAtIndex:(int)index;
+- (id)objectAtIndex:(NSInteger)index;
+- (id)firstObject;
+- (id)lastObject;
 
 - (void)unpack:(id*)pointers, ...;
+
+- (FWTuple *)map:(id (^)(id obj))block;
 
 @end
