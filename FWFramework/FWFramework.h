@@ -18,11 +18,17 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #endif
 
 #import <FWFramework/FWFramework+Framework.h>
+
+#if __has_include(<FWFramework/FWFramework+Application.h>)
 #import <FWFramework/FWFramework+Application.h>
+#endif
 
 #else
 
 #import "FWFramework+Framework.h"
+
+#if __has_include("FWFramework+Application.h")
 #import "FWFramework+Application.h"
+#endif
 
 #endif
