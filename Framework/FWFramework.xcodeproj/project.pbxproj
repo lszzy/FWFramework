@@ -144,7 +144,6 @@
 		2F03A601216CF4B9001965A1 /* FWAspect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A56F216CF4B9001965A1 /* FWAspect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A570216CF4B9001965A1 /* FWPlugin.m */; };
 		2F03A603216CF4B9001965A1 /* FWMacro.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A571216CF4B9001965A1 /* FWMacro.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A604216CF4B9001965A1 /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A572216CF4B9001965A1 /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A609216CF850001965A1 /* UIImageView+FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A60A216CF850001965A1 /* UIImageView+FWNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */; };
 		2F03A632216CF882001965A1 /* FWNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A60C216CF882001965A1 /* FWNetworkConfig.m */; };
@@ -222,6 +221,11 @@
 		2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
+		2FA99D9D228A753B0059DFDB /* FWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FA99D9E228A753B0059DFDB /* FWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */; };
+		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FA99DBB228AAB660059DFDB /* FWFramework+Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DBA228AAB660059DFDB /* FWFramework+Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FA99DBD228AAB8F0059DFDB /* FWFramework+Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DBC228AAB8F0059DFDB /* FWFramework+Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -420,7 +424,6 @@
 		2F03A56F216CF4B9001965A1 /* FWAspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAspect.h; sourceTree = "<group>"; };
 		2F03A570216CF4B9001965A1 /* FWPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWPlugin.m; sourceTree = "<group>"; };
 		2F03A571216CF4B9001965A1 /* FWMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMacro.h; sourceTree = "<group>"; };
-		2F03A572216CF4B9001965A1 /* FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 		2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FWNetwork.h"; sourceTree = "<group>"; };
 		2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FWNetwork.m"; sourceTree = "<group>"; };
 		2F03A60C216CF882001965A1 /* FWNetworkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNetworkConfig.m; sourceTree = "<group>"; };
@@ -499,6 +502,11 @@
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
 		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
+		2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppDelegate.h; sourceTree = "<group>"; };
+		2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppDelegate.m; sourceTree = "<group>"; };
+		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
+		2FA99DBA228AAB660059DFDB /* FWFramework+Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Framework.h"; sourceTree = "<group>"; };
+		2FA99DBC228AAB8F0059DFDB /* FWFramework+Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Application.h"; sourceTree = "<group>"; };
 		2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+FWFramework.h"; sourceTree = "<group>"; };
 		2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+FWFramework.m"; sourceTree = "<group>"; };
 		2FB7CBC721C23728002E5412 /* FWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
@@ -573,6 +581,7 @@
 		2F03A4DD216CF4B9001965A1 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				2FA99DBA228AAB660059DFDB /* FWFramework+Framework.h */,
 				2F03A4DE216CF4B9001965A1 /* Category */,
 				2F03A560216CF4B9001965A1 /* Kernel */,
 				2F03A551216CF4B9001965A1 /* Service */,
@@ -817,6 +826,8 @@
 		2F03A573216CF4B9001965A1 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				2FA99DBC228AAB8F0059DFDB /* FWFramework+Application.h */,
+				2FA99D9A228A74DF0059DFDB /* App */,
 				2F03A574216CF4B9001965A1 /* Controller */,
 				2F03A575216CF4B9001965A1 /* Model */,
 				2F03A576216CF4B9001965A1 /* View */,
@@ -926,12 +937,21 @@
 		2F7E420A20FC2EA500CE3E2F /* FWFramework */ = {
 			isa = PBXGroup;
 			children = (
-				2F03A572216CF4B9001965A1 /* FWFramework.h */,
+				2FA99DA3228AA9CF0059DFDB /* FWFramework.h */,
 				2F03A4DD216CF4B9001965A1 /* Framework */,
 				2F03A573216CF4B9001965A1 /* Application */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
+			sourceTree = "<group>";
+		};
+		2FA99D9A228A74DF0059DFDB /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */,
+				2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		2FCE512F21D3746B009EA65E /* Database */ = {
@@ -1010,6 +1030,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FA99DBD228AAB8F0059DFDB /* FWFramework+Application.h in Headers */,
+				2FA99DBB228AAB660059DFDB /* FWFramework+Framework.h in Headers */,
+				2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */,
+				2FA99D9D228A753B0059DFDB /* FWAppDelegate.h in Headers */,
 				2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */,
 				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
@@ -1140,7 +1164,6 @@
 				2F03A5BB216CF4B9001965A1 /* UIImage+FWFramework.h in Headers */,
 				2F03A5C3216CF4B9001965A1 /* NSThread+FWFramework.h in Headers */,
 				2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */,
-				2F03A604216CF4B9001965A1 /* FWFramework.h in Headers */,
 				2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */,
 				2F03A5E7216CF4B9001965A1 /* FWTaskManager.h in Headers */,
 				2F03A598216CF4B9001965A1 /* UIApplication+FWFramework.h in Headers */,
@@ -1195,6 +1218,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 2F7E41F420FC2DCF00CE3E2F;
 			productRefGroup = 2F7E41FF20FC2DCF00CE3E2F /* Products */;
@@ -1272,6 +1296,7 @@
 				2F03A588216CF4B9001965A1 /* UITextView+FWPlaceholder.m in Sources */,
 				2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */,
 				2F03A5AF216CF4B9001965A1 /* UIScrollView+FWFramework.m in Sources */,
+				2FA99D9E228A753B0059DFDB /* FWAppDelegate.m in Sources */,
 				2F0FFF1F21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m in Sources */,
 				2FCE513C21D3A41D009EA65E /* FWDatabasePool.m in Sources */,
 				2F03A5B5216CF4B9001965A1 /* UITextView+FWFramework.m in Sources */,
