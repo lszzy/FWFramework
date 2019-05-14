@@ -9,7 +9,7 @@
 
 #import "TestModelViewController.h"
 
-@interface TestModelUser : NSObject
+@interface TestModelUser : NSObject <FWModel>
 
 @property (nonatomic, assign) NSInteger userId;
 @property (nonatomic, strong) NSNumber *userAge;
@@ -19,11 +19,20 @@
 
 @implementation TestModelUser
 
++ (NSDictionary<NSString *,id> *)fwModelPropertyMapper
+{
+    return @{
+             @"userId": @[@"userId", @"user_id"],
+             @"userAge": @[@"userAge", @"user_age"],
+             @"userName": @[@"userName", @"user_name"],
+             };
+}
+
 @end
 
 FWModelArray(TestModelUser);
 
-@interface TestModelObj : NSObject
+@interface TestModelObj : NSObject <FWModel>
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSDate *date;
@@ -37,7 +46,7 @@ FWModelArray(TestModelUser);
 
 @implementation TestModelObj
 
-+ (NSDictionary *)fwModelClassMapper
++ (NSDictionary<NSString *,id> *)fwModelClassMapper
 {
     return @{
              @"users": [TestModelUser class],
@@ -78,9 +87,9 @@ FWPropertyStrong(UITextView *, textView);
                                            @"userName": @"userName",
                                            },
                                        @{
-                                           @"userId": @3,
-                                           @"userAge": @20,
-                                           @"userName": @"userName",
+                                           @"user_id": @3,
+                                           @"user_age": @20,
+                                           @"user_name": @"userName",
                                            },
                                        ],
                                @"users2": @[
@@ -90,9 +99,9 @@ FWPropertyStrong(UITextView *, textView);
                                            @"userName": @"userName",
                                            },
                                        @{
-                                           @"userId": @5,
-                                           @"userAge": @20,
-                                           @"userName": @"userName",
+                                           @"user_id": @5,
+                                           @"user_age": @20,
+                                           @"user_name": @"userName",
                                            },
                                        ],
                                };
