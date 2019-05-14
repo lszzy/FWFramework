@@ -10,23 +10,29 @@
 
 #if __has_include(<FWFramework/FWFramework.h>)
 
+// Version
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
+// Swift
 #if __has_include(<FWFramework/FWFramework-Swift.h>)
 #import <FWFramework/FWFramework-Swift.h>
 #endif
 
+// FWFramework
 #import <FWFramework/FWFramework+Framework.h>
 
+// Application
 #if __has_include(<FWFramework/FWFramework+Application.h>)
 #import <FWFramework/FWFramework+Application.h>
 #endif
 
 #else
 
+// FWFramework
 #import "FWFramework+Framework.h"
 
+// Application
 #if __has_include("FWFramework+Application.h")
 #import "FWFramework+Application.h"
 #endif
