@@ -52,4 +52,9 @@
 // 选中所有文字
 - (void)fwSelectAllText;
 
+#pragma mark - Toolbar
+
+// 添加完成Toolbar
+- (void)fwAddDoneButton:(UIBarStyle)barStyle title:(NSString *)title;
+
 @end

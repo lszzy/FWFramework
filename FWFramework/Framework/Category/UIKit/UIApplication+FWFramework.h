@@ -53,6 +53,9 @@
 // 是否是盗版(不是从AppStore安装)
 + (BOOL)fwIsPirated;
 
+// 是否是Testflight版本
++ (BOOL)fwIsTestflight;
+
 #pragma mark - URL
 
 // 能否打开URL，需配置对应URL SCHEME到Info.plist才能返回YES
