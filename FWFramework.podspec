@@ -5,10 +5,15 @@ Pod::Spec.new do |spec|
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
   spec.author              = { 'Wu Yong' => 'admin@wuyong.site' }
+  spec.platform            = :ios, '8.0'
   spec.source              = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => spec.version, :submodules => true }
 
-  spec.platform            = :ios, '8.0'
-  spec.requires_arc        = true
+  spec_mrr_files           = [ 'FWFramework/Framework/Kernel/FWTuple.m' ]
+  spec_arc_files           = Pathname.glob('FWFramework/**/*.{h,m,swift}')
+  spec_arc_files           = spec_arc_files.map {|file| file.to_path}
+  spec_arc_files           = spec_arc_files.reject {|file| spec_mrr_files.include?(file)}
+  spec.requires_arc        = spec_arc_files
+
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
   spec.source_files        = 'FWFramework/FWFramework.h'
