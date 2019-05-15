@@ -16,15 +16,21 @@
     [[FWTuple alloc] initWithObjects:__VA_ARGS__, FWTupleSentinel()]
 
 // 快速元组解包
-#define FWUnpack(tuple, ...) \
-    [tuple unpack:__VA_ARGS__, NULL]
+#define FWUnpack(...) \
+    [[FWTupleUnpack alloc] initWithPointers:0, __VA_ARGS__, FWUnpackSentinel()].tuple
 
 id FWTupleSentinel(void);
 
+void** FWUnpackSentinel(void);
+
 #pragma mark - FWTuple
 
-// 元组
-@interface FWTuple : NSObject <NSCopying, NSFastEnumeration>
+/*!
+ @brief 元组，参考自coobjc
+ 
+ @see https://github.com/alibaba/coobjc
+ */
+@interface FWTuple<Value1, Value2> : NSObject <NSFastEnumeration>
 
 - (id)init;
 - (id)initWithArray:(NSArray *)array;
@@ -32,11 +38,16 @@ id FWTupleSentinel(void);
 
 - (id)objectAtIndexedSubscript:(NSUInteger)index;
 - (id)objectAtIndex:(NSInteger)index;
+
 - (id)firstObject;
 - (id)lastObject;
 
-- (void)unpack:(id*)pointers, ...;
+@end
 
-- (FWTuple *)map:(id (^)(id obj))block;
+@interface FWTupleUnpack : NSObject
+
+@property(nonatomic, strong) FWTuple *tuple;
+
+- (instancetype)initWithPointers:(int)startIndex, ...;
 
 @end
