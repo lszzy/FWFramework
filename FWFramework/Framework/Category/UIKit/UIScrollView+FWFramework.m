@@ -8,6 +8,7 @@
 
 #import "UIScrollView+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
+#import "UIGestureRecognizer+FWFramework.h"
 #import <objc/runtime.h>
 #import "NSObject+FWRuntime.h"
 
@@ -249,6 +250,21 @@
         }
     }
     return -1;
+}
+
+- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
+        fromPosition:(CGFloat)fromPosition
+          toPosition:(CGFloat)toPosition
+      kickbackHeight:(CGFloat)kickbackHeight
+            callback:(void (^)(CGFloat))callback
+{
+    // 禁用拖拽回弹效果
+    self.bounces = NO;
+    
+    // 添加拖拽手势
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
+    [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
+    [self addGestureRecognizer:panGesture];
 }
 
 @end

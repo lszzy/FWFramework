@@ -69,22 +69,32 @@
     objc_setAssociatedObject(self, @selector(fwDragHorizontal), [NSNumber numberWithBool:fwDragHorizontal], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void (^)(void))fwDragStartedBlock
+- (void (^)(UIView *))fwDragStartedBlock
 {
     return objc_getAssociatedObject(self, @selector(fwDragStartedBlock));
 }
 
-- (void)setFwDragStartedBlock:(void (^)(void))fwDragStartedBlock
+- (void)setFwDragStartedBlock:(void (^)(UIView *))fwDragStartedBlock
 {
     objc_setAssociatedObject(self, @selector(fwDragStartedBlock), fwDragStartedBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (void (^)(void))fwDragEndedBlock
+- (void (^)(UIView *))fwDragMovedBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwDragMovedBlock));
+}
+
+- (void)setFwDragMovedBlock:(void (^)(UIView *))fwDragMovedBlock
+{
+    objc_setAssociatedObject(self, @selector(fwDragMovedBlock), fwDragMovedBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (void (^)(UIView *))fwDragEndedBlock
 {
     return objc_getAssociatedObject(self, @selector(fwDragEndedBlock));
 }
 
-- (void)setFwDragEndedBlock:(void (^)(void))fwDragEndedBlock
+- (void)setFwDragEndedBlock:(void (^)(UIView *))fwDragEndedBlock
 {
     objc_setAssociatedObject(self, @selector(fwDragEndedBlock), fwDragEndedBlock, OBJC_ASSOCIATION_COPY);
 }
@@ -111,7 +121,8 @@
 {
     // 检查是否能够在拖动区域拖动
     CGPoint locationInView = [sender locationInView:self];
-    if (!CGRectContainsPoint(self.fwDragArea, locationInView)) {
+    if (!CGRectContainsPoint(self.fwDragArea, locationInView) &&
+        sender.state == UIGestureRecognizerStateBegan) {
         return;
     }
     
@@ -124,11 +135,15 @@
     }
     
     if (sender.state == UIGestureRecognizerStateBegan && self.fwDragStartedBlock) {
-        self.fwDragStartedBlock();
+        self.fwDragStartedBlock(self);
+    }
+    
+    if (sender.state == UIGestureRecognizerStateChanged && self.fwDragMovedBlock) {
+        self.fwDragMovedBlock(self);
     }
     
     if (sender.state == UIGestureRecognizerStateEnded && self.fwDragEndedBlock) {
-        self.fwDragEndedBlock();
+        self.fwDragEndedBlock(self);
     }
     
     CGPoint translation = [sender translationInView:[self superview]];
@@ -147,11 +162,12 @@
     if (!CGRectEqualToRect(cagingArea, CGRectZero)) {
         // 确保视图在限制区域内
         if (newXOrigin <= cagingAreaOriginX ||
-            newYOrigin <= cagingAreaOriginY ||
-            newXOrigin + CGRectGetWidth(self.frame) >= cagingAreaRightSide ||
-            newYOrigin + CGRectGetHeight(self.frame) >= cagingAreaBottomSide) {
-            // 不移动
+            newXOrigin + CGRectGetWidth(self.frame) >= cagingAreaRightSide) {
             newXOrigin = CGRectGetMinX(self.frame);
+        }
+        
+        if (newYOrigin <= cagingAreaOriginY ||
+            newYOrigin + CGRectGetHeight(self.frame) >= cagingAreaBottomSide) {
             newYOrigin = CGRectGetMinY(self.frame);
         }
     }

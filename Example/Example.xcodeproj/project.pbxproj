@@ -24,6 +24,7 @@
 		2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */; };
 		2F1E39412178F3710051A6BB /* TestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */; };
 		2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */; };
+		2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F20E3CF22769156005D1F46 /* TestMapViewController.m */; };
 		2F2FBDC222410BB30037830E /* TestAuthorizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */; };
 		2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDD522432BF90037830E /* TestGradientViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
@@ -47,6 +48,7 @@
 		2F593FF42157E7D30022137F /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FF32157E7D30022137F /* ExampleTests.m */; };
 		2F5940032157E8BF0022137F /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5940022157E8BF0022137F /* ExampleUITests.m */; };
 		2F5A5BE61FB1B18B00EA39D0 /* FWFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5A5BE51FB1B18600EA39D0 /* FWFramework.framework */; };
+		2F8901B92284228E00EDC7D4 /* TestMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8901B82284228E00EDC7D4 /* TestMenuViewController.m */; };
 		2F8EB34221ED881900BB24AB /* TestNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */; };
 		2F8EB35321F0211500BB24AB /* TestBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8EB35221F0211500BB24AB /* TestBarViewController.m */; };
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
@@ -57,6 +59,7 @@
 		2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2FB90F1C21F5716800084D76 /* QrcodeSound.caf */; };
 		2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */; };
 		2FC5DFDD2213FE09008A56A7 /* TestKeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */; };
+		2FCA005E228020BE00611399 /* TestDrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA005D228020BE00611399 /* TestDrawerViewController.m */; };
 		2FCD374D22533825001E81DB /* TestAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD374C22533825001E81DB /* TestAlertViewController.m */; };
 		2FCD375222533AB6001E81DB /* TestVersionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375122533AB6001E81DB /* TestVersionViewController.m */; };
 		2FCD375522533B1F001E81DB /* TestWorkflowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375322533B1F001E81DB /* TestWorkflowViewController.m */; };
@@ -130,6 +133,8 @@
 		2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestIndicatorControlViewController.m; sourceTree = "<group>"; };
 		2F203D43219E76BB00DA83D9 /* TestNestScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNestScrollViewController.h; sourceTree = "<group>"; };
 		2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNestScrollViewController.m; sourceTree = "<group>"; };
+		2F20E3CE22769156005D1F46 /* TestMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMapViewController.h; sourceTree = "<group>"; };
+		2F20E3CF22769156005D1F46 /* TestMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestMapViewController.m; sourceTree = "<group>"; };
 		2F2FBDC022410BB30037830E /* TestAuthorizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAuthorizeViewController.h; sourceTree = "<group>"; };
 		2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAuthorizeViewController.m; sourceTree = "<group>"; };
 		2F2FBDD422432BF90037830E /* TestGradientViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestGradientViewController.h; sourceTree = "<group>"; };
@@ -179,6 +184,8 @@
 		2F5940042157E8BF0022137F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F5A5BE01FB1B18500EA39D0 /* FWFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FWFramework.xcodeproj; path = ../Framework/FWFramework.xcodeproj; sourceTree = "<group>"; };
 		2F7E423220FC327D00CE3E2F /* SwiftHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
+		2F8901B72284228E00EDC7D4 /* TestMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMenuViewController.h; sourceTree = "<group>"; };
+		2F8901B82284228E00EDC7D4 /* TestMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestMenuViewController.m; sourceTree = "<group>"; };
 		2F8EB34021ED881900BB24AB /* TestNavigationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNavigationViewController.h; sourceTree = "<group>"; };
 		2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNavigationViewController.m; sourceTree = "<group>"; };
 		2F8EB35121F0211500BB24AB /* TestBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBarViewController.h; sourceTree = "<group>"; };
@@ -198,6 +205,8 @@
 		2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestQrcodeViewController.m; sourceTree = "<group>"; };
 		2FC5DFDA2213FE08008A56A7 /* TestKeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestKeyboardViewController.h; sourceTree = "<group>"; };
 		2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestKeyboardViewController.m; sourceTree = "<group>"; };
+		2FCA005C228020BE00611399 /* TestDrawerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestDrawerViewController.h; sourceTree = "<group>"; };
+		2FCA005D228020BE00611399 /* TestDrawerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestDrawerViewController.m; sourceTree = "<group>"; };
 		2FCD374B22533825001E81DB /* TestAlertViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertViewController.h; sourceTree = "<group>"; };
 		2FCD374C22533825001E81DB /* TestAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertViewController.m; sourceTree = "<group>"; };
 		2FCD375022533AB6001E81DB /* TestVersionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVersionViewController.h; sourceTree = "<group>"; };
@@ -455,6 +464,12 @@
 				2FCD376722533C10001E81DB /* TestStateViewController.m */,
 				2FCD376622533C10001E81DB /* TestStorekitViewController.h */,
 				2FCD376822533C10001E81DB /* TestStorekitViewController.m */,
+				2F20E3CE22769156005D1F46 /* TestMapViewController.h */,
+				2F20E3CF22769156005D1F46 /* TestMapViewController.m */,
+				2FCA005C228020BE00611399 /* TestDrawerViewController.h */,
+				2FCA005D228020BE00611399 /* TestDrawerViewController.m */,
+				2F8901B72284228E00EDC7D4 /* TestMenuViewController.h */,
+				2F8901B82284228E00EDC7D4 /* TestMenuViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -770,6 +785,7 @@
 				2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
+				2F8901B92284228E00EDC7D4 /* TestMenuViewController.m in Sources */,
 				2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */,
 				2F06BE6520971483000F8587 /* SwiftController.swift in Sources */,
 				2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */,
@@ -804,6 +820,7 @@
 				2FCD375D22533B5A001E81DB /* TestBorderViewController.m in Sources */,
 				2F0CCE3C21E496B30018FA87 /* FWDatabaseManager.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
+				2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
 				2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */,
@@ -819,6 +836,7 @@
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
 				2FCD375522533B1F001E81DB /* TestWorkflowViewController.m in Sources */,
 				2F8EB35321F0211500BB24AB /* TestBarViewController.m in Sources */,
+				2FCA005E228020BE00611399 /* TestDrawerViewController.m in Sources */,
 				2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
