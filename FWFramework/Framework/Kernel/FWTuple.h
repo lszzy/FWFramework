@@ -30,7 +30,7 @@ void** FWUnpackSentinel(void);
  
  @see https://github.com/alibaba/coobjc
  */
-@interface FWTuple<Value1, Value2> : NSObject <NSFastEnumeration>
+@interface FWTuple : NSObject <NSFastEnumeration>
 
 - (id)init;
 - (id)initWithArray:(NSArray *)array;
@@ -41,6 +41,38 @@ void** FWUnpackSentinel(void);
 
 - (id)firstObject;
 - (id)lastObject;
+
+@end
+
+@interface FWTuple1<Value1>: FWTuple
+
+@end
+
+@interface FWTuple2<Value1, Value2>: FWTuple
+
+@end
+
+@interface FWTuple3<Value1, Value2, Value3>: FWTuple
+
+@end
+
+@interface FWTuple4<Value1, Value2, Value3, Value4>: FWTuple
+
+@end
+
+@interface FWTuple5<Value1, Value2, Value3, Value4, Value5>: FWTuple
+
+@end
+
+@interface FWTuple6<Value1, Value2, Value3, Value4, Value5, Value6>: FWTuple
+
+@end
+
+@interface FWTuple7<Value1, Value2, Value3, Value4, Value5, Value6, Value7>: FWTuple
+
+@end
+
+@interface FWTuple8<Value1, Value2, Value3, Value4, Value5, Value6, Value7, Value8>: FWTuple
 
 @end
 

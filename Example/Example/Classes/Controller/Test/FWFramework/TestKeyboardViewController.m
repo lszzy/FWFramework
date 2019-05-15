@@ -82,6 +82,7 @@ FWPropertyStrong(UIButton *, submitButton);
     inputView.fwTouchResign = YES;
     inputView.fwKeyboardManager = YES;
     inputView.fwDelegate = self;
+    [inputView fwAddDoneButton:UIBarStyleDefault title:@"完成"];
     [self.view addSubview:inputView];
     [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:kAppPaddingLarge];
     [inputView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];

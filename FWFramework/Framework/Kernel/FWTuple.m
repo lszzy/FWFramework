@@ -116,6 +116,38 @@ void** FWUnpackSentinel() {
 
 @end
 
+@implementation FWTuple1
+
+@end
+
+@implementation FWTuple2
+
+@end
+
+@implementation FWTuple3
+
+@end
+
+@implementation FWTuple4
+
+@end
+
+@implementation FWTuple5
+
+@end
+
+@implementation FWTuple6
+
+@end
+
+@implementation FWTuple7
+
+@end
+
+@implementation FWTuple8
+
+@end
+
 @implementation FWTupleUnpack
 {
     NSMutableArray *storage;

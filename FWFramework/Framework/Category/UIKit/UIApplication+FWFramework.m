@@ -89,6 +89,11 @@
 #endif
 }
 
++ (BOOL)fwIsTestflight
+{
+    return [[NSBundle mainBundle].appStoreReceiptURL.path containsString:@"sandboxReceipt"];
+}
+
 #pragma mark - URL
 
 + (BOOL)fwCanOpenURL:(NSURL *)url
