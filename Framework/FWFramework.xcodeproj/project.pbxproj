@@ -227,7 +227,7 @@
 		2FA99DBB228AAB660059DFDB /* FWFramework+Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DBA228AAB660059DFDB /* FWFramework+Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA99DBD228AAB8F0059DFDB /* FWFramework+Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DBC228AAB8F0059DFDB /* FWFramework+Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA99E45228AFB290059DFDB /* FWTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99E43228AFB290059DFDB /* FWTuple.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FA99E46228AFB290059DFDB /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99E44228AFB290059DFDB /* FWTuple.m */; };
+		2FA99E46228AFB290059DFDB /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99E44228AFB290059DFDB /* FWTuple.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };

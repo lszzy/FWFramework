@@ -18,27 +18,27 @@ id FWTupleSentinel() {
     return sentinel;
 }
 
+void** FWUnpackSentinel() {
+    static id sentinel;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sentinel = [[NSObject alloc] init];
+    });
+    return (void**)&sentinel;
+}
+
 #pragma mark - FWTuple
 
-@implementation FWTuple {
-    NSPointerArray *_storage;
-}
-
-- (NSPointerArray *)storage
+@implementation FWTuple
 {
-    return _storage;
-}
-
-- (void)setStorage:(NSPointerArray *)storage
-{
-    _storage = storage;
+    NSPointerArray *storage;
 }
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        _storage = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
+        storage = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality];
     }
     return self;
 }
@@ -48,7 +48,7 @@ id FWTupleSentinel() {
     self = [self init];
     if (self) {
         for (id obj in array) {
-            [_storage addPointer:((__bridge void*)obj)];
+            [storage addPointer:((__bridge void*)obj)];
         }
     }
     return self;
@@ -62,9 +62,9 @@ id FWTupleSentinel() {
         va_start(ap, objects);
         
         id obj = objects;
-        id sentin = FWTupleSentinel();
-        while (obj != sentin) {
-            [_storage addPointer:((__bridge void*)obj)];
+        id sentinel = FWTupleSentinel();
+        while (obj != sentinel) {
+            [storage addPointer:((__bridge void*)obj)];
             obj = va_arg(ap, id);
         }
         va_end(ap);
@@ -72,16 +72,14 @@ id FWTupleSentinel() {
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (NSUInteger)count
 {
-    id copyTuple = [[[self class] alloc] init];
-    [copyTuple setStorage:[[self storage] copy]];
-    return copyTuple;
+    return storage.count;
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len
 {
-    return [_storage countByEnumeratingWithState:state objects:buffer count:len];
+    return [storage countByEnumeratingWithState:state objects:buffer count:len];
 }
 
 - (id)objectAtIndexedSubscript:(NSUInteger)index
@@ -91,10 +89,10 @@ id FWTupleSentinel() {
 
 - (id)objectAtIndex:(NSInteger)index
 {
-    if (index < 0 || index >= [_storage count]) {
+    if (index < 0 || index >= [storage count]) {
         return nil;
     }
-    return (__strong id)[_storage pointerAtIndex:index];
+    return (__strong id)[storage pointerAtIndex:index];
 }
 
 - (id)firstObject
@@ -104,33 +102,83 @@ id FWTupleSentinel() {
 
 - (id)lastObject
 {
-    return [self objectAtIndex:([_storage count] - 1)];
+    return [self objectAtIndex:([storage count] - 1)];
 }
 
-- (void)unpack:(id*)pointers, ...
+- (void)dealloc
 {
-    va_list ap;
-    va_start(ap, pointers);
-    
-    __autoreleasing id* pp = pointers;
-    int i = 0;
-    while (pp != NULL) {
-        *pp = [self objectAtIndex:i];
-        pp = va_arg(ap, __autoreleasing id*);
-        i++;
+    if (storage) {
+        [storage release];
+        storage = nil;
     }
-    va_end(ap);
+    [super dealloc];
 }
 
-- (FWTuple *)map:(id (^)(id))block
+@end
+
+@implementation FWTupleUnpack
 {
-    FWTuple *newTuple = [self copy];
-    NSPointerArray *newStorage = [newTuple storage];
-    for (NSInteger i = 0, n = [newStorage count]; i != n; i++) {
-        id obj = (__strong id)[_storage pointerAtIndex:i];
-        [newStorage replacePointerAtIndex:i withPointer:((__bridge void*)block(obj))];
+    NSMutableArray *storage;
+}
+
+- (instancetype)initWithPointers:(int)startIndex, ...
+{
+    self = [super init];
+    if (self) {
+        storage = [[NSMutableArray alloc] init];
+        va_list ap;
+        va_start(ap, startIndex);
+        
+        if (startIndex <= 0) {
+            startIndex = 0;
+        }
+        int i = 0;
+        id *sentinel = (id*)FWUnpackSentinel();
+        do {
+            __autoreleasing id* pp = va_arg(ap, __autoreleasing id*);
+            if (pp == sentinel) {
+                break;
+            }
+            if (i >= startIndex) {
+                uintptr_t pointer = (uintptr_t)pp;
+                [storage addObject:@(pointer)];
+            }
+            i++;
+        } while (1);
+        va_end(ap);
     }
-    return newTuple;
+    return self;
+}
+
+- (void)setTuple:(FWTuple *)tuple
+{
+    if (tuple == NULL || ![tuple isKindOfClass:[FWTuple class]]) {
+        return;
+    }
+    _tuple = [tuple retain];
+    int index = 0;
+    for (NSNumber *number in storage) {
+        if (index >= [tuple count]) {
+            break;
+        }
+        uintptr_t p = [number unsignedLongValue];
+        if (p > 0) {
+            __autoreleasing id* pointer = (id*)p;
+            *pointer = [[tuple objectAtIndex:index] retain];
+        }
+        index++;
+    }
+}
+
+- (void)dealloc
+{
+    [storage removeAllObjects];
+    storage = nil;
+    if (_tuple) {
+        [_tuple release];
+        _tuple = nil;
+    }
+    [super dealloc];
 }
 
 @end
