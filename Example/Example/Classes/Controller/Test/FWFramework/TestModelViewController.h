@@ -12,6 +12,6 @@
 /*!
  @brief TestModelViewController
  */
-@interface TestModelViewController : BaseScrollViewController
+@interface TestModelViewController : BaseViewController
 
 @end

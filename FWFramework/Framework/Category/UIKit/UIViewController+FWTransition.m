@@ -366,6 +366,7 @@
     self = [super init];
     if (self) {
         _direction = UISwipeGestureRecognizerDirectionDown;
+        _completionPercent = 0.3;
     }
     return self;
 }
@@ -382,25 +383,26 @@
 
 - (void)gestureRecognizeAction:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    _percent = 0.0;
-    CGFloat width = gestureRecognizer.view.bounds.size.width;
-    CGFloat height = gestureRecognizer.view.bounds.size.height;
-    CGPoint point = [gestureRecognizer translationInView:gestureRecognizer.view];
-    switch (self.direction) {
-        case UISwipeGestureRecognizerDirectionUp:
-            _percent = -point.y / height;
-            break;
-        case UISwipeGestureRecognizerDirectionDown:
-            _percent = point.y / height;
-            break;
-        case UISwipeGestureRecognizerDirectionLeft:
-            _percent = -point.x / width;
-            break;
-        case UISwipeGestureRecognizerDirectionRight:
-            _percent = point.x / width;
-            break;
-        default:
-            break;
+    // 自定义percent计算规则
+    if (self.percentBlock) {
+        _percent = self.percentBlock(gestureRecognizer);
+    } else {
+        CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
+        switch (self.direction) {
+            case UISwipeGestureRecognizerDirectionLeft:
+                _percent = -transition.x / gestureRecognizer.view.bounds.size.width;
+                break;
+            case UISwipeGestureRecognizerDirectionRight:
+                _percent = transition.x / gestureRecognizer.view.bounds.size.width;
+                break;
+            case UISwipeGestureRecognizerDirectionUp:
+                _percent = -transition.y / gestureRecognizer.view.bounds.size.height;
+                break;
+            case UISwipeGestureRecognizerDirectionDown:
+            default:
+                _percent = transition.y / gestureRecognizer.view.bounds.size.height;
+                break;
+        }
     }
     
     switch (gestureRecognizer.state) {
@@ -431,12 +433,8 @@
 
 - (void)displayLinkAction
 {
-    CGFloat timeDistance = 2.0 / 60;
-    if (_percent > 0.4) {
-        _percent += timeDistance;
-    } else {
-        _percent -= timeDistance;
-    }
+    CGFloat timePercent = 2.0 / 60;
+    _percent = (_percent > _completionPercent) ? (_percent + timePercent) : (_percent - timePercent);
     [self updateInteractiveTransition:_percent];
     
     if (_percent >= 1.0) {

@@ -9,7 +9,7 @@
 
 #import "TestModelViewController.h"
 
-@interface TestModelUser : NSObject
+@interface TestModelUser : NSObject <FWModel>
 
 @property (nonatomic, assign) NSInteger userId;
 @property (nonatomic, strong) NSNumber *userAge;
@@ -19,11 +19,20 @@
 
 @implementation TestModelUser
 
++ (NSDictionary<NSString *,id> *)fwModelPropertyMapper
+{
+    return @{
+             @"userId": @[@"userId", @"user_id"],
+             @"userAge": @[@"userAge", @"user_age"],
+             @"userName": @[@"userName", @"user_name"],
+             };
+}
+
 @end
 
 FWModelArray(TestModelUser);
 
-@interface TestModelObj : NSObject
+@interface TestModelObj : NSObject <FWModel>
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSDate *date;
@@ -31,13 +40,13 @@ FWModelArray(TestModelUser);
 // 非协议方式配置，需实现fwModelClassMapper
 @property (nonatomic, strong) NSArray<TestModelUser *> *users;
 // 协议方式配置，无需实现fwModelClassMapper
-@property (nonatomic, strong) NSArray<TestModelUser *><TestModelUser> *pusers;
+@property (nonatomic, strong) NSArray<TestModelUser *><TestModelUser> *users2;
 
 @end
 
 @implementation TestModelObj
 
-+ (NSDictionary *)fwModelClassMapper
++ (NSDictionary<NSString *,id> *)fwModelClassMapper
 {
     return @{
              @"users": [TestModelUser class],
@@ -46,107 +55,20 @@ FWModelArray(TestModelUser);
 
 @end
 
-@interface TestModelViewController () <UIScrollViewDelegate>
+@interface TestModelViewController ()
 
-@property (nonatomic, strong) UIView *redView;
-@property (nonatomic, strong) UIView *hoverView;
-
-@property (nonatomic, assign) BOOL isTop;
+FWPropertyStrong(UITextView *, textView);
 
 @end
 
 @implementation TestModelViewController
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-        [self fwSetBackBarTitle:@""];
-    }
-    return self;
-}
-
-- (void)setIsTop:(BOOL)isTop
-{
-    _isTop = isTop;
-    
-    if (isTop) {
-        [self fwSetBarExtendEdge:UIRectEdgeTop];
-    }
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    [self.navigationController.navigationBar fwSetBackgroundClear];
-    
-    FWWeakifySelf();
-    [self fwSetRightBarItem:@"切换" block:^(id sender) {
-        FWStrongifySelf();
-        
-        TestModelViewController *viewController = [TestModelViewController new];
-        viewController.isTop = !self.isTop;
-        [self fwOpenViewController:viewController animated:YES];
-    }];
-}
-
 - (void)renderView
 {
-    self.scrollView.delegate = self;
-    
-    UIImageView *imageView = [UIImageView fwAutoLayoutView];
-    imageView.image = [UIImage imageNamed:@"public_picture"];
-    [self.contentView addSubview:imageView]; {
-        [imageView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-        [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-        [imageView fwSetDimension:NSLayoutAttributeHeight toSize:150];
-    }
-    
-    UIView *redView = [UIView fwAutoLayoutView];
-    _redView = redView;
-    redView.backgroundColor = [UIColor redColor];
-    [self.contentView addSubview:redView]; {
-        [redView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-        [redView fwPinEdgeToSuperview:NSLayoutAttributeRight];
-        [redView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView];
-        [redView fwSetDimension:NSLayoutAttributeHeight toSize:50];
-    }
-    
-    UIView *hoverView = [UIView fwAutoLayoutView];
-    _hoverView = hoverView;
-    hoverView.backgroundColor = [UIColor redColor];
-    [redView addSubview:hoverView]; {
-        [hoverView fwPinEdgesToSuperview];
-    }
-    
-    UIView *blueView = [UIView fwAutoLayoutView];
-    blueView.backgroundColor = [UIColor blueColor];
-    [self.contentView addSubview:blueView]; {
-        [blueView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-        [blueView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:redView];
-        [blueView fwSetDimension:NSLayoutAttributeHeight toSize:FWScreenHeight];
-    }
+    self.textView = [[UITextView alloc] initWithFrame:self.view.bounds];
+    self.textView.editable = NO;
+    [self.view addSubview:self.textView];
 }
-
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (self.isTop) {
-        CGFloat progress = [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:(FWStatusBarHeight + FWNavigationBarHeight)];
-        if (progress == 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
-        } else if (progress >= 0 && progress < 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
-        }
-    } else {
-        [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:0];
-    }
-}
-
-#pragma mark - Protect
 
 - (void)renderData
 {
@@ -165,31 +87,21 @@ FWModelArray(TestModelUser);
                                            @"userName": @"userName",
                                            },
                                        @{
-                                           @"userId": @3,
-                                           @"userAge": @20,
-                                           @"userName": @"userName",
-                                           },
-                                       @{
-                                           @"userId": @4,
-                                           @"userAge": @20,
-                                           @"userName": @"userName",
+                                           @"user_id": @3,
+                                           @"user_age": @20,
+                                           @"user_name": @"userName",
                                            },
                                        ],
-                               @"pusers": @[
-                                       @{
-                                           @"userId": @2,
-                                           @"userAge": @20,
-                                           @"userName": @"userName",
-                                           },
-                                       @{
-                                           @"userId": @3,
-                                           @"userAge": @20,
-                                           @"userName": @"userName",
-                                           },
+                               @"users2": @[
                                        @{
                                            @"userId": @4,
                                            @"userAge": @20,
                                            @"userName": @"userName",
+                                           },
+                                       @{
+                                           @"user_id": @5,
+                                           @"user_age": @20,
+                                           @"user_name": @"userName",
                                            },
                                        ],
                                };
@@ -197,20 +109,11 @@ FWModelArray(TestModelUser);
     NSLog(@"obj: %@", obj);
     NSLog(@"dict: %@", [obj fwModelToJsonObject]);
     
-    NSString *str = @"http://test.com?id=我是中文";
-    NSURL *url = [NSURL URLWithString:str];
-    NSLog(@"str: %@ =>\nurl: %@", str, url);
-    url = [NSURL fwURLWithString:str];
-    NSLog(@"str: %@ =>\nurl: %@", str, url);
+    FWTuple *tuple = FWTuple(nil, @"tuple");
+    NSString *text;
+    FWUnpack(nil, &text) = tuple;
     
-    NSString *urlStr = [FWRouter generateURL:@"app://test/:id" parameters:nil];
-    NSLog(@"url: %@", urlStr);
-    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@[@1]];
-    NSLog(@"url: %@", urlStr);
-    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@{@"id": @2}];
-    NSLog(@"url: %@", urlStr);
-    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@3];
-    NSLog(@"url: %@", urlStr);
+    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@\ntuple: %@", obj, [obj fwModelToJsonObject], text];
 }
 
 @end

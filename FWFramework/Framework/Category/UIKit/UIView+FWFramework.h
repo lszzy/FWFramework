@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UIView+FWFramework
+ @discussion 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
  */
 @interface UIView (FWFramework)
 
