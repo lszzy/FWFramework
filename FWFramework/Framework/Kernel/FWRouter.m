@@ -53,6 +53,8 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return instance;
 }
 
+#pragma mark - Router
+
 + (void)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler
 {
     [[self sharedInstance] addRoute:pattern withHandler:handler];
@@ -134,6 +136,8 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     }
 }
 
+#pragma mark - Object
+
 + (BOOL)isObjectURL:(NSString *)URL
 {
     NSString *rewriteURL = [self rewriteURL:URL];
@@ -179,6 +183,8 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         return nil;
     }
 }
+
+#pragma mark - Generator
 
 + (NSString *)generateURL:(NSString *)pattern parameters:(id)parameters
 {
