@@ -33,11 +33,17 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 // 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy], FWRouterTypeKey: @(FWRouterTypeDefault)}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
+// 过滤器URL Handler，打开时优先调用
+@property (nonatomic, copy) FWRouterFilterHandler filterHandler;
+
 // 错误URL Handler，未注册时调用
 @property (nonatomic, copy) FWRouterHandler errorHandler;
 
+// rewrite过滤器，优先调用
+@property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
+
 // rewrite规格列表，声明到扩展
-@property(nonatomic, strong) NSMutableArray *rewriteRules;
+@property (nonatomic, strong) NSMutableArray *rewriteRules;
 
 @end
 
@@ -63,6 +69,11 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
 {
     [[self sharedInstance] addRoute:pattern withObjectHandler:handler];
+}
+
++ (void)registerFilterHandler:(FWRouterFilterHandler)handler
+{
+    [[self sharedInstance] setFilterHandler:handler];
 }
 
 + (void)registerErrorHandler:(FWRouterHandler)handler
@@ -179,7 +190,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     if (handler && type == FWRouterTypeObject) {
         return handler(parameters);
     } else {
-        [[self sharedInstance] handleError:parameters];
         return nil;
     }
 }
@@ -441,11 +451,22 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 + (NSString *)rewriteURL:(NSString *)URL
 {
     if (!URL) return nil;
-    if ([[self sharedInstance] rewriteRules].count == 0 ) return URL;
     
-    NSString *rewriteCaptureGroupsURL = [self rewriteCaptureGroupsWithOriginalURL:URL];
-    NSString *rewrittenURL = [self rewriteComponentsWithOriginalURL:URL targetRule:rewriteCaptureGroupsURL];
-    return rewrittenURL;
+    NSString *rewriteURL = URL;
+    if ([[self sharedInstance] rewriteFilter]) {
+        rewriteURL = [[self sharedInstance] rewriteFilter](rewriteURL);
+    }
+    if (!rewriteURL) return nil;
+    if ([[self sharedInstance] rewriteRules].count == 0) return rewriteURL;
+    
+    NSString *rewriteCaptureGroupsURL = [self rewriteCaptureGroupsWithOriginalURL:rewriteURL];
+    rewriteURL = [self rewriteComponentsWithOriginalURL:rewriteURL targetRule:rewriteCaptureGroupsURL];
+    return rewriteURL;
+}
+
++ (void)setRewriteFilter:(NSString *(^)(NSString *))filter
+{
+    [[self sharedInstance] setRewriteFilter:filter];
 }
 
 + (void)addRewriteRule:(NSString *)matchRule targetRule:(NSString *)targetRule

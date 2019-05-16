@@ -7,7 +7,6 @@
  @updated    2018/11/29
  */
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 /*! @brief 路由URL */
@@ -24,6 +23,9 @@ typedef void (^FWRouterHandler)(NSDictionary *parameters);
 
 /*! @brief 路由对象处理句柄 */
 typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
+
+/*! @brief 路由过滤器处理句柄 */
+typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 
 #pragma mark - FWRouter
 
@@ -51,12 +53,20 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  *  @param pattern    带上 scheme，如 app://beauty/:id
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
- *                    自带的 key 为 @"url" 和 @"completion" (如果有的话)
  */
 + (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler;
 
 /**
- *  注册 错误 对应的 Handler，URL 未注册时触发
+ *  注册 过滤器 对应的 Handler，URL 打开时优先触发，不含object
+ *
+ *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
+ *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
+ *                    如果 block 返回YES，停止解析；如果返回NO，则继续解析pattern
+ */
++ (void)registerFilterHandler:(FWRouterFilterHandler)handler;
+
+/**
+ *  注册 错误 对应的 Handler，URL 未注册时触发，不含object
  *
  *  @param handler    该 block 回传不支持的URL参数
  */
@@ -126,14 +136,14 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
 + (BOOL)isObjectURL:(NSString *)URL;
 
 /**
- * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object
+ * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
  *
  *  @param URL 带 Scheme，如 app://beauty/3
  */
 + (id)objectForURL:(NSString *)URL;
 
 /**
- * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object
+ * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
  *
  *  @param URL 带 Scheme，如 app://beauty/3
  *  @param userInfo 附加参数
@@ -174,6 +184,13 @@ typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
  @return URL after being rewritten
  */
 + (NSString *)rewriteURL:(NSString *)url;
+
+/**
+ Set custom rewrite filter block
+ 
+ @param filter Custom filter block
+ */
++ (void)setRewriteFilter:(NSString * (^)(NSString *url))filter;
 
 /**
  Add a RewriteRule
