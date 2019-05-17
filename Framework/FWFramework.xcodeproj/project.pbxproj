@@ -229,6 +229,8 @@
 		2FA99E45228AFB290059DFDB /* FWTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99E43228AFB290059DFDB /* FWTuple.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA99E46228AFB290059DFDB /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99E44228AFB290059DFDB /* FWTuple.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FA99E90228BF2890059DFDB /* UISwitch+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99E8F228BF2890059DFDB /* UISwitch+FWFramework.swift */; };
+		2FA99E98228E71DA0059DFDB /* FWNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99E96228E71DA0059DFDB /* FWNotificationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FA99E99228E71DA0059DFDB /* FWNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -513,6 +515,8 @@
 		2FA99E43228AFB290059DFDB /* FWTuple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTuple.h; sourceTree = "<group>"; };
 		2FA99E44228AFB290059DFDB /* FWTuple.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTuple.m; sourceTree = "<group>"; };
 		2FA99E8F228BF2890059DFDB /* UISwitch+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISwitch+FWFramework.swift"; sourceTree = "<group>"; };
+		2FA99E96228E71DA0059DFDB /* FWNotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWNotificationManager.h; sourceTree = "<group>"; };
+		2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWNotificationManager.m; sourceTree = "<group>"; };
 		2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+FWFramework.h"; sourceTree = "<group>"; };
 		2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+FWFramework.m"; sourceTree = "<group>"; };
 		2FB7CBC721C23728002E5412 /* FWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
@@ -789,6 +793,8 @@
 				2FCE514D21D3B149009EA65E /* FWLocationManager.m */,
 				2FCE514E21D3B14A009EA65E /* FWStorekitManager.h */,
 				2FCE514B21D3B149009EA65E /* FWStorekitManager.m */,
+				2FA99E96228E71DA0059DFDB /* FWNotificationManager.h */,
+				2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -1039,6 +1045,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FA99E98228E71DA0059DFDB /* FWNotificationManager.h in Headers */,
 				2FA99E45228AFB290059DFDB /* FWTuple.h in Headers */,
 				2FA99DBD228AAB8F0059DFDB /* FWFramework+Application.h in Headers */,
 				2FA99DBB228AAB660059DFDB /* FWFramework+Framework.h in Headers */,
@@ -1338,6 +1345,7 @@
 				2F03A5D0216CF4B9001965A1 /* NSData+FWFramework.m in Sources */,
 				2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */,
 				2F0CCE4421E4973C0018FA87 /* FWDatabaseManager.m in Sources */,
+				2FA99E99228E71DA0059DFDB /* FWNotificationManager.m in Sources */,
 				2FA99E46228AFB290059DFDB /* FWTuple.m in Sources */,
 				2FCE514821D3A6A5009EA65E /* FWDatabaseAdditions.m in Sources */,
 				2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */,
