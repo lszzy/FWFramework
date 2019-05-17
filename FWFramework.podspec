@@ -8,7 +8,6 @@ Pod::Spec.new do |spec|
   spec.source              = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => spec.version, :submodules => true }
 
   spec.platform            = :ios, '8.0'
-  spec.swift_version       = '4.2'
   spec_mrr_files           = [ 'FWFramework/Framework/Kernel/FWTuple.m' ]
   spec_arc_files           = Pathname.glob('FWFramework/**/*.{h,m,swift}')
   spec_arc_files           = spec_arc_files.map {|file| file.to_path}
