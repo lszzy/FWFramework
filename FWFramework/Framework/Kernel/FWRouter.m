@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 
 @implementation FWRouter
 
-+ (instancetype)sharedInstance
++ (FWRouter *)sharedInstance
 {
     static FWRouter *instance = nil;
     static dispatch_once_t onceToken;
@@ -59,36 +59,73 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return instance;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _routes = [[NSMutableDictionary alloc] init];
+        _rewriteRules = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
 #pragma mark - Register
 
 + (void)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler
 {
-    [[self sharedInstance] addRoute:pattern withHandler:handler];
+    NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
+    if (handler && subRoutes) {
+        subRoutes[FWRouterCoreKey] = [handler copy];
+        subRoutes[FWRouterTypeKey] = @(FWRouterTypeDefault);
+    }
 }
 
 + (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
 {
-    [[self sharedInstance] addRoute:pattern withObjectHandler:handler];
+    NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
+    if (handler && subRoutes) {
+        subRoutes[FWRouterCoreKey] = [handler copy];
+        subRoutes[FWRouterTypeKey] = @(FWRouterTypeObject);
+    }
 }
 
 + (void)unregisterURL:(NSString *)pattern
 {
-    [[self sharedInstance] removeRoute:pattern];
+    NSMutableArray *pathComponents = [NSMutableArray arrayWithArray:[[self sharedInstance] pathComponentsFromURL:pattern]];
+    // 只删除该 pattern 的最后一级
+    if (pathComponents.count >= 1) {
+        // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
+        NSString *components = [pathComponents componentsJoinedByString:@"."];
+        NSMutableDictionary *route = [[self sharedInstance].routes valueForKeyPath:components];
+        
+        if (route.count >= 1) {
+            NSString *lastComponent = [pathComponents lastObject];
+            [pathComponents removeLastObject];
+            
+            // 有可能是根 key，这样就是 self.routes 了
+            route = [self sharedInstance].routes;
+            if (pathComponents.count) {
+                NSString *componentsWithoutLast = [pathComponents componentsJoinedByString:@"."];
+                route = [[self sharedInstance].routes valueForKeyPath:componentsWithoutLast];
+            }
+            [route removeObjectForKey:lastComponent];
+        }
+    }
 }
 
 + (void)unregisterAllURLs
 {
-    [[self sharedInstance] removeAllRoutes];
+    [[self sharedInstance].routes removeAllObjects];
 }
 
 + (void)setFilterHandler:(FWRouterFilterHandler)handler
 {
-    [[self sharedInstance] setFilterHandler:handler];
+    [self sharedInstance].filterHandler = handler;
 }
 
 + (void)setErrorHandler:(FWRouterHandler)handler
 {
-    [[self sharedInstance] setErrorHandler:handler];
+    [self sharedInstance].errorHandler = handler;
 }
 
 #pragma mark - Open
@@ -143,13 +180,15 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     [parameters removeObjectForKey:FWRouterBlockKey];
     [parameters removeObjectForKey:FWRouterTypeKey];
     
-    if (![[self sharedInstance] handleFilter:parameters]) {
-        return;
+    if ([self sharedInstance].filterHandler) {
+        if (![self sharedInstance].filterHandler(parameters)) return;
     }
     if (handler && type == FWRouterTypeDefault) {
         handler(parameters);
     } else {
-        [[self sharedInstance] handleError:parameters];
+        if ([self sharedInstance].errorHandler) {
+            [self sharedInstance].errorHandler(parameters);
+        }
     }
 }
 
@@ -192,13 +231,15 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     [parameters removeObjectForKey:FWRouterBlockKey];
     [parameters removeObjectForKey:FWRouterTypeKey];
     
-    if (![[self sharedInstance] handleFilter:parameters]) {
-        return nil;
+    if ([self sharedInstance].filterHandler) {
+        if (![self sharedInstance].filterHandler(parameters)) return nil;
     }
     if (handler && type == FWRouterTypeObject) {
         return handler(parameters);
     } else {
-        [[self sharedInstance] handleError:parameters];
+        if ([self sharedInstance].errorHandler) {
+            [self sharedInstance].errorHandler(parameters);
+        }
         return nil;
     }
 }
@@ -262,23 +303,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 
 #pragma mark - Private
 
-- (NSMutableDictionary *)routes
-{
-    if (!_routes) {
-        _routes = [[NSMutableDictionary alloc] init];
-    }
-    return _routes;
-}
-
-- (NSMutableArray *)rewriteRules
-{
-    if (!_rewriteRules) {
-        _rewriteRules = [[NSMutableArray alloc] init];
-    }
-    return _rewriteRules;
-}
-
-- (NSMutableDictionary *)addRoute:(NSString *)pattern
+- (NSMutableDictionary *)registerRoute:(NSString *)pattern
 {
     NSArray *pathComponents = [self pathComponentsFromURL:pattern];
     
@@ -291,54 +316,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         subRoutes = subRoutes[pathComponent];
     }
     return subRoutes;
-}
-
-- (void)addRoute:(NSString *)pattern withHandler:(FWRouterHandler)handler
-{
-    NSMutableDictionary *subRoutes = [self addRoute:pattern];
-    if (handler && subRoutes) {
-        subRoutes[FWRouterCoreKey] = [handler copy];
-        subRoutes[FWRouterTypeKey] = @(FWRouterTypeDefault);
-    }
-}
-
-- (void)addRoute:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
-{
-    NSMutableDictionary *subRoutes = [self addRoute:pattern];
-    if (handler && subRoutes) {
-        subRoutes[FWRouterCoreKey] = [handler copy];
-        subRoutes[FWRouterTypeKey] = @(FWRouterTypeObject);
-    }
-}
-
-- (void)removeRoute:(NSString *)pattern
-{
-    NSMutableArray *pathComponents = [NSMutableArray arrayWithArray:[self pathComponentsFromURL:pattern]];
-    
-    // 只删除该 pattern 的最后一级
-    if (pathComponents.count >= 1) {
-        // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
-        NSString *components = [pathComponents componentsJoinedByString:@"."];
-        NSMutableDictionary *route = [self.routes valueForKeyPath:components];
-        
-        if (route.count >= 1) {
-            NSString *lastComponent = [pathComponents lastObject];
-            [pathComponents removeLastObject];
-            
-            // 有可能是根 key，这样就是 self.routes 了
-            route = self.routes;
-            if (pathComponents.count) {
-                NSString *componentsWithoutLast = [pathComponents componentsJoinedByString:@"."];
-                route = [self.routes valueForKeyPath:componentsWithoutLast];
-            }
-            [route removeObjectForKey:lastComponent];
-        }
-    }
-}
-
-- (void)removeAllRoutes
-{
-    [self.routes removeAllObjects];
 }
 
 - (NSArray *)pathComponentsFromURL:(NSString *)URL
@@ -433,21 +410,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return parameters;
 }
 
-- (BOOL)handleFilter:(NSDictionary *)parameters
-{
-    if (self.filterHandler) {
-        return self.filterHandler(parameters);
-    }
-    return YES;
-}
-
-- (void)handleError:(NSDictionary *)parameters
-{
-    if (self.errorHandler) {
-        self.errorHandler(parameters);
-    }
-}
-
 @end
 
 #pragma mark - FWRouter+Rewrite
@@ -470,12 +432,12 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     if (!URL) return nil;
     
     NSString *rewriteURL = URL;
-    if ([[self sharedInstance] rewriteFilter]) {
-        rewriteURL = [[self sharedInstance] rewriteFilter](rewriteURL);
+    if ([self sharedInstance].rewriteFilter) {
+        rewriteURL = [self sharedInstance].rewriteFilter(rewriteURL);
+        if (!rewriteURL) return nil;
     }
-    if (!rewriteURL) return nil;
-    if ([[self sharedInstance] rewriteRules].count == 0) return rewriteURL;
     
+    if ([self sharedInstance].rewriteRules.count == 0) return rewriteURL;
     NSString *rewriteCaptureGroupsURL = [self rewriteCaptureGroupsWithOriginalURL:rewriteURL];
     rewriteURL = [self rewriteComponentsWithOriginalURL:rewriteURL targetRule:rewriteCaptureGroupsURL];
     return rewriteURL;
@@ -483,24 +445,23 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 
 + (void)setRewriteFilter:(NSString *(^)(NSString *))filter
 {
-    [[self sharedInstance] setRewriteFilter:filter];
+    [self sharedInstance].rewriteFilter = filter;
 }
 
 + (void)addRewriteRule:(NSString *)matchRule targetRule:(NSString *)targetRule
 {
     if (!matchRule || !targetRule) return;
     
-    NSArray *rules = [[[self sharedInstance] rewriteRules] copy];
-    
+    NSArray *rules = [[self sharedInstance].rewriteRules copy];
     for (int idx = 0; idx < rules.count; idx ++) {
         NSDictionary *ruleDic = [rules objectAtIndex:idx];
         if ([[ruleDic objectForKey:FFRouterRewriteMatchRuleKey] isEqualToString:matchRule]) {
-            [[[self sharedInstance] rewriteRules] removeObject:ruleDic];
+            [[self sharedInstance].rewriteRules removeObject:ruleDic];
         }
     }
     
     NSDictionary *ruleDic = @{FFRouterRewriteMatchRuleKey:matchRule,FFRouterRewriteTargetRuleKey:targetRule};
-    [[[self sharedInstance] rewriteRules] addObject:ruleDic];
+    [[self sharedInstance].rewriteRules addObject:ruleDic];
     
 }
 
@@ -526,12 +487,11 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 
 + (void)removeRewriteRule:(NSString *)matchRule
 {
-    NSArray *rules = [[[self sharedInstance] rewriteRules] copy];
-    
+    NSArray *rules = [[self sharedInstance].rewriteRules copy];
     for (int idx = 0; idx < rules.count; idx ++) {
         NSDictionary *ruleDic = [rules objectAtIndex:idx];
         if ([[ruleDic objectForKey:FFRouterRewriteMatchRuleKey] isEqualToString:matchRule]) {
-            [[[self sharedInstance] rewriteRules] removeObject:ruleDic];
+            [[self sharedInstance].rewriteRules removeObject:ruleDic];
             break;
         }
     }
@@ -539,15 +499,14 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 
 + (void)removeAllRewriteRules
 {
-    [[[self sharedInstance] rewriteRules] removeAllObjects];
+    [[self sharedInstance].rewriteRules removeAllObjects];
 }
 
 #pragma mark - Private
 
 + (NSString *)rewriteCaptureGroupsWithOriginalURL:(NSString *)originalURL
 {
-    NSArray *rules = [[self sharedInstance] rewriteRules];
-    
+    NSArray *rules = [self sharedInstance].rewriteRules;
     if ([rules isKindOfClass:[NSArray class]] && rules.count > 0) {
         NSString *targetURL = originalURL;
         NSRegularExpression *replaceRx = [NSRegularExpression regularExpressionWithPattern:@"[$]([$|#]?)(\\d+)" options:0 error:NULL];
