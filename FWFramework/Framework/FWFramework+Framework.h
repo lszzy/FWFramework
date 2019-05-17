@@ -40,5 +40,6 @@
 #import "FWNetworkPrivate.h"
 #import "FWDatabaseManager.h"
 #import "FWCacheManager.h"
+#import "FWNotificationManager.h"
 
 #endif /* FWFramework_Framework_h */
