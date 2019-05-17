@@ -36,7 +36,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  */
 @interface FWRouter : NSObject
 
-#pragma mark - Router
+#pragma mark - Register
 
 /**
  *  注册 pattern 对应的 Handler，在 handler 中可以初始化 VC，然后对 VC 做各种操作
@@ -57,22 +57,6 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 + (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler;
 
 /**
- *  注册 过滤器 对应的 Handler，URL 打开时优先触发，不含object
- *
- *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
- *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
- *                    如果 block 返回YES，停止解析；如果返回NO，则继续解析pattern
- */
-+ (void)registerFilterHandler:(FWRouterFilterHandler)handler;
-
-/**
- *  注册 错误 对应的 Handler，URL 未注册时触发，不含object
- *
- *  @param handler    该 block 回传不支持的URL参数
- */
-+ (void)registerErrorHandler:(FWRouterHandler)handler;
-
-/**
  *  取消注册某个 pattern
  *
  *  @param pattern pattern
@@ -83,6 +67,24 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  取消注册所有 pattern
  */
 + (void)unregisterAllURLs;
+
+/**
+ *  设置 过滤器 对应的 Handler，URL 调用时触发
+ *
+ *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
+ *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
+ *                    如果 block 返回YES，则继续解析pattern；如果返回NO，则停止解析
+ */
++ (void)setFilterHandler:(FWRouterFilterHandler)handler;
+
+/**
+ *  设置 错误 对应的 Handler，URL 未注册时触发
+ *
+ *  @param handler    该 block 回传不支持的URL参数
+ */
++ (void)setErrorHandler:(FWRouterHandler)handler;
+
+#pragma mark - Open
 
 /**
  *  是否可以打开URL，不含object

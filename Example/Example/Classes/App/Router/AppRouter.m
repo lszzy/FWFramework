@@ -20,16 +20,19 @@
 
 + (void)registerFilters
 {
-    [FWRouter registerFilterHandler:^BOOL(NSDictionary *parameters) {
+    [FWRouter setFilterHandler:^BOOL(NSDictionary *parameters) {
         NSString *url = parameters[FWRouterURLKey];
         if ([url hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
             viewController.parameters = parameters;
             viewController.title = url;
             [FWRouter pushViewController:viewController animated:YES];
-            return YES;
+            return NO;
         }
-        return NO;
+        return YES;
+    }];
+    [FWRouter setErrorHandler:^(NSDictionary *parameters) {
+        [[[UIWindow fwMainWindow] fwTopPresentedController] fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", parameters] message:nil cancel:@"OK" cancelBlock:nil];
     }];
 }
 
@@ -73,10 +76,6 @@
         viewController.parameters = parameters;
         viewController.title = @"object://test2";
         return viewController;
-    }];
-    
-    [FWRouter registerErrorHandler:^(NSDictionary *parameters) {
-        [[[UIWindow fwMainWindow] fwTopPresentedController] fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", parameters] message:nil cancel:@"OK" cancelBlock:nil];
     }];
 }
 

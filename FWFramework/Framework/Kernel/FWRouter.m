@@ -33,10 +33,10 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 // 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy], FWRouterTypeKey: @(FWRouterTypeDefault)}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
-// 过滤器URL Handler，打开时优先调用
+// 过滤器URL Handler，URL调用时优先触发
 @property (nonatomic, copy) FWRouterFilterHandler filterHandler;
 
-// 错误URL Handler，未注册时调用
+// 错误URL Handler，URL未注册时触发
 @property (nonatomic, copy) FWRouterHandler errorHandler;
 
 // rewrite过滤器，优先调用
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return instance;
 }
 
-#pragma mark - Router
+#pragma mark - Register
 
 + (void)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler
 {
@@ -71,16 +71,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     [[self sharedInstance] addRoute:pattern withObjectHandler:handler];
 }
 
-+ (void)registerFilterHandler:(FWRouterFilterHandler)handler
-{
-    [[self sharedInstance] setFilterHandler:handler];
-}
-
-+ (void)registerErrorHandler:(FWRouterHandler)handler
-{
-    [[self sharedInstance] setErrorHandler:handler];
-}
-
 + (void)unregisterURL:(NSString *)pattern
 {
     [[self sharedInstance] removeRoute:pattern];
@@ -90,6 +80,18 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 {
     [[self sharedInstance] removeAllRoutes];
 }
+
++ (void)setFilterHandler:(FWRouterFilterHandler)handler
+{
+    [[self sharedInstance] setFilterHandler:handler];
+}
+
++ (void)setErrorHandler:(FWRouterHandler)handler
+{
+    [[self sharedInstance] setErrorHandler:handler];
+}
+
+#pragma mark - Open
 
 + (BOOL)canOpenURL:(NSString *)URL
 {
@@ -140,6 +142,10 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     FWRouterType type = [parameters[FWRouterTypeKey] integerValue];
     [parameters removeObjectForKey:FWRouterBlockKey];
     [parameters removeObjectForKey:FWRouterTypeKey];
+    
+    if (![[self sharedInstance] handleFilter:parameters]) {
+        return;
+    }
     if (handler && type == FWRouterTypeDefault) {
         handler(parameters);
     } else {
@@ -167,11 +173,9 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 
 + (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
 {
-    FWRouter *router = [FWRouter sharedInstance];
-    
     NSString *rewriteURL = [self rewriteURL:URL];
     URL = [rewriteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
+    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
@@ -187,9 +191,14 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     FWRouterType type = [parameters[FWRouterTypeKey] integerValue];
     [parameters removeObjectForKey:FWRouterBlockKey];
     [parameters removeObjectForKey:FWRouterTypeKey];
+    
+    if (![[self sharedInstance] handleFilter:parameters]) {
+        return nil;
+    }
     if (handler && type == FWRouterTypeObject) {
         return handler(parameters);
     } else {
+        [[self sharedInstance] handleError:parameters];
         return nil;
     }
 }
@@ -422,6 +431,14 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     }
     
     return parameters;
+}
+
+- (BOOL)handleFilter:(NSDictionary *)parameters
+{
+    if (self.filterHandler) {
+        return self.filterHandler(parameters);
+    }
+    return YES;
 }
 
 - (void)handleError:(NSDictionary *)parameters
