@@ -10,6 +10,8 @@
 
 @interface TestWebViewController () <UIWebViewDelegate, FWWebViewProgressDelegate, FWWebViewNavigationDelegate>
 
+@property (nonatomic, assign) BOOL isWKWebView;
+
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) FWWebViewProgress *progressProxy;
 @property (nonatomic, strong) FWWebViewProgressView *progressView;
@@ -23,36 +25,53 @@
 
 - (void)renderView
 {
-    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWScreenHeight / 2.0)];
-    [self.view addSubview:self.webView];
-    
-    self.progressProxy = [[FWWebViewProgress alloc] init];
-    self.webView.delegate = self.progressProxy;
-    self.progressProxy.webViewProxyDelegate = self;
-    self.progressProxy.progressDelegate = self;
-    
-    _progressView = [[FWWebViewProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
-    [self.webView addSubview:_progressView];
-    
-    self.webView2 = [[WKWebView alloc] initWithFrame:CGRectMake(0, FWScreenHeight / 2.0, FWScreenWidth, FWScreenHeight / 2.0)];
-    self.webView2.fwNavigationDelegate = self;
-    [self.view addSubview:self.webView2];
-    
-    _progressView2 = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
-    _progressView2.trackTintColor = [UIColor clearColor];
-    [_progressView2 fwSetProgress:0];
-    [self.webView2 addSubview:_progressView2];
-    
-    [self loadBaidu];
+    if (!self.isWKWebView) {
+        self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:self.webView];
+        
+        self.progressProxy = [[FWWebViewProgress alloc] init];
+        self.webView.delegate = self.progressProxy;
+        self.progressProxy.webViewProxyDelegate = self;
+        self.progressProxy.progressDelegate = self;
+        
+        _progressView = [[FWWebViewProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
+        [self.webView addSubview:_progressView];
+        
+        NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.sydsc.com.au/courier/invite/reg"]];
+        [_webView loadRequest:req];
+    } else {
+        self.webView2 = [[WKWebView alloc] initWithFrame:self.view.bounds];
+        self.webView2.fwNavigationDelegate = self;
+        [self.view addSubview:self.webView2];
+        
+        _progressView2 = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
+        _progressView2.trackTintColor = [UIColor clearColor];
+        [_progressView2 fwSetProgress:0];
+        [self.webView2 addSubview:_progressView2];
+        
+        NSURLRequest *req2 = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.sydsc.com.au/courier/invite/reg"]];
+        [_webView2 loadRequest:req2];
+    }
 }
 
--(void)loadBaidu
+- (void)viewDidLoad
 {
-    NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://baidu.com/"]];
-    [_webView loadRequest:req];
+    [super viewDidLoad];
     
-    NSURLRequest *req2 = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://baidu.com/"]];
-    [_webView2 loadRequest:req2];
+    if (!self.isWKWebView) {
+        self.title = @"UIWebView";
+        
+        FWWeakifySelf();
+        [self fwSetRightBarItem:@"WKWebView" block:^(id sender) {
+            FWStrongifySelf();
+            
+            TestWebViewController *viewController = [TestWebViewController new];
+            viewController.isWKWebView = YES;
+            [self fwOpenViewController:viewController animated:YES];
+        }];
+    } else {
+        self.title = @"WKWebView";
+    }
 }
 
 #pragma mark - FWWebViewProgressDelegate
@@ -68,6 +87,11 @@
 - (void)webView:(WKWebView *)webView updateProgress:(CGFloat)progress
 {
     [self.progressView2 fwSetProgress:progress];
+    FWWeakifySelf();
+    [_webView2 evaluateJavaScript:@"document.title" completionHandler:^(id title, NSError * _Nullable error) {
+        FWStrongifySelf();
+        self.title = [title fwAsNSString];
+    }];
 }
 
 @end
