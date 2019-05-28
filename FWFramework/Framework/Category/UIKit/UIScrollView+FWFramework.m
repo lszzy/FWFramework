@@ -223,11 +223,10 @@
 - (CGFloat)fwHoverView:(UIView *)view
          fromSuperview:(UIView *)fromSuperview
            toSuperview:(UIView *)toSuperview
-          fromPosition:(CGFloat)fromPosition
             toPosition:(CGFloat)toPosition
 {
-    CGFloat hoverRatio = self.contentOffset.y / (fromPosition - toPosition);
-    if (hoverRatio >= 1) {
+    CGFloat distance = [fromSuperview convertPoint:view.frame.origin toView:toSuperview].y - toPosition;
+    if (distance <= 0) {
         if (view.superview != toSuperview) {
             [view removeFromSuperview];
             [toSuperview addSubview:view]; {
@@ -235,7 +234,6 @@
                 [view fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:toPosition];
                 [view fwSetDimensionsToSize:view.bounds.size];
             }
-            return 1;
         }
     } else {
         if (view.superview != fromSuperview) {
@@ -243,13 +241,9 @@
             [fromSuperview addSubview:view]; {
                 [view fwPinEdgesToSuperview];
             }
-            return 0;
-        }
-        if (hoverRatio > 0 & hoverRatio < 1) {
-            return hoverRatio;
         }
     }
-    return -1;
+    return distance;
 }
 
 - (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
