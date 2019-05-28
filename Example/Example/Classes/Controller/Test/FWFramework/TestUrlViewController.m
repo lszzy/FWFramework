@@ -83,7 +83,7 @@
 
 - (void)onGoogleMaps3
 {
-    NSURL *url = [NSURL fwGoogleMapsURLWithSaddr:self.from daddr:self.to mode:nil options:nil];
+    NSURL *url = [NSURL fwGoogleMapsURLWithSaddr:self.from daddr:self.to mode:nil options:@{@"dirflg": @"t,h"}];
     if ([UIApplication fwCanOpenURL:url]) {
         [UIApplication fwOpenURL:url];
     }
@@ -91,7 +91,7 @@
 
 - (void)onGoogleMaps4
 {
-    NSURL *url = [NSURL fwGoogleMapsURLWithSaddr:nil daddr:self.target mode:@"walking" options:nil];
+    NSURL *url = [NSURL fwGoogleMapsURLWithSaddr:nil daddr:self.target mode:@"driving" options:@{@"dirflg": @"th"}];
     if ([UIApplication fwCanOpenURL:url]) {
         [UIApplication fwOpenURL:url];
     }
