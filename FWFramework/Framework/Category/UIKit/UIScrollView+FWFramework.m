@@ -225,7 +225,7 @@
            toSuperview:(UIView *)toSuperview
             toPosition:(CGFloat)toPosition
 {
-    CGFloat distance = [fromSuperview convertPoint:view.frame.origin toView:toSuperview].y - toPosition;
+    CGFloat distance = [self convertPoint:fromSuperview.frame.origin toView:toSuperview].y - toPosition;
     if (distance <= 0) {
         if (view.superview != toSuperview) {
             [view removeFromSuperview];
