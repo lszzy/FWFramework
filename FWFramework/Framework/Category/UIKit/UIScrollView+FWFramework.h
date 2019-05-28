@@ -89,16 +89,14 @@
  @brief 设置自动布局视图悬停到指定父视图固定位置，在scrollViewDidScroll:中调用即可
  
  @param view 需要悬停的视图，必须占满fromSuperview
- @param fromSuperview 起始父视图，view铺满的容器
+ @param fromSuperview 起始的父视图，fromSuperview必须是toSuperview的子视图
  @param toSuperview 悬停的目标视图，一般控制器self.view
- @param fromPosition 相对于toSuperview的起始originY位置
- @param toPosition 相对于toSuperview的目标originY位置
- @return 悬停进度。1:开始悬停;0:停止悬停;0-1:悬停动画;-1非悬停。可用来设置导航栏透明度等
+ @param toPosition 需要悬停的目标位置，相对于toSuperview的originY位置
+ @return 相对于悬浮位置的距离，可用来设置导航栏透明度等
  */
 - (CGFloat)fwHoverView:(UIView *)view
          fromSuperview:(UIView *)fromSuperview
            toSuperview:(UIView *)toSuperview
-          fromPosition:(CGFloat)fromPosition
             toPosition:(CGFloat)toPosition;
 
 /*!

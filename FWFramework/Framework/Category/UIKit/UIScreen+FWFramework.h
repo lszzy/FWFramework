@@ -79,6 +79,12 @@
 // 标签栏高度
 #define FWTabBarHeight (FWIsScreenX ? 83.0 : 49.0)
 
+// 顶部栏高度，包含状态栏、导航栏
+#define FWTopBarHeight (FWStatusBarHeight + FWNavigationBarHeight)
+
+// 底部栏高度，包含标签栏
+#define FWBottomBarHeight FWTabBarHeight
+
 @interface UIScreen (FWFramework)
 
 // 屏幕尺寸
@@ -135,6 +141,12 @@
 // 标签栏高度，与是否隐藏无关
 + (CGFloat)fwTabBarHeight;
 
+// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
++ (CGFloat)fwTopBarHeight;
+
+// 底部栏高度，包含标签栏，与是否隐藏无关
++ (CGFloat)fwBottomBarHeight;
+
 // 检查是否含有安全区域，可用来判断iPhoneX
 + (BOOL)fwHasSafeAreaInsets;
 
@@ -156,5 +168,11 @@
 
 // 当前标签栏高度，隐藏为0
 - (CGFloat)fwTabBarHeight;
+
+// 顶部栏高度，包含状态栏、导航栏，隐藏为0
+- (CGFloat)fwTopBarHeight;
+
+// 底部栏高度，包含标签栏，隐藏为0
+- (CGFloat)fwBottomBarHeight;
 
 @end
