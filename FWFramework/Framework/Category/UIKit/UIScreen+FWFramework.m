@@ -103,6 +103,16 @@
     return [self fwIsScreenX] ? 83.0 : 49.0;
 }
 
++ (CGFloat)fwTopBarHeight
+{
+    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+}
+
++ (CGFloat)fwBottomBarHeight
+{
+    return [self fwTabBarHeight];
+}
+
 + (BOOL)fwHasSafeAreaInsets
 {
     return [self fwSafeAreaInsets].bottom > 0;
@@ -165,6 +175,16 @@
     } else {
         return self.tabBarController.tabBar.frame.size.height;
     }
+}
+
+- (CGFloat)fwTopBarHeight
+{
+    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+}
+
+- (CGFloat)fwBottomBarHeight
+{
+    return [self fwTabBarHeight];
 }
 
 @end

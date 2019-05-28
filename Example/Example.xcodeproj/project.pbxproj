@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE5E2097137C000F8587 /* ObjcController.m */; };
-		2F06BE6520971483000F8587 /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE6420971483000F8587 /* SwiftController.swift */; };
 		2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B7021DF387000F47DFD /* TestWebViewController.m */; };
 		2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3821E496B30018FA87 /* FWDbModel.m */; };
 		2F0CCE3C21E496B30018FA87 /* FWDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */; };
@@ -787,7 +786,6 @@
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
 				2F8901B92284228E00EDC7D4 /* TestMenuViewController.m in Sources */,
 				2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */,
-				2F06BE6520971483000F8587 /* SwiftController.swift in Sources */,
 				2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */,
 				2F1E39412178F3710051A6BB /* TestIndicatorControlViewController.m in Sources */,
 				2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */,
@@ -1058,7 +1056,6 @@
 		2F593FF82157E7D30022137F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1082,7 +1079,6 @@
 		2F593FF92157E7D30022137F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1105,7 +1101,6 @@
 		2F5940082157E8BF0022137F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1128,7 +1123,6 @@
 		2F5940092157E8BF0022137F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;

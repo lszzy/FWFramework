@@ -13,8 +13,27 @@
 
 + (void)load
 {
+    [self registerFilters];
     [self registerRouters];
     [self registerRewrites];
+}
+
++ (void)registerFilters
+{
+    [FWRouter setFilterHandler:^BOOL(NSDictionary *parameters) {
+        NSString *url = parameters[FWRouterURLKey];
+        if ([url hasPrefix:@"app://filter/"]) {
+            TestRouterResultViewController *viewController = [TestRouterResultViewController new];
+            viewController.parameters = parameters;
+            viewController.title = url;
+            [FWRouter pushViewController:viewController animated:YES];
+            return NO;
+        }
+        return YES;
+    }];
+    [FWRouter setErrorHandler:^(NSDictionary *parameters) {
+        [[[UIWindow fwMainWindow] fwTopPresentedController] fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", parameters] message:nil cancel:@"OK" cancelBlock:nil];
+    }];
 }
 
 + (void)registerRouters
@@ -58,14 +77,14 @@
         viewController.title = @"object://test2";
         return viewController;
     }];
-    
-    [FWRouter registerErrorHandler:^(NSDictionary *parameters) {
-        NSLog(@"not supported: %@", parameters);
-    }];
 }
 
 + (void)registerRewrites
 {
+    [FWRouter setRewriteFilter:^NSString *(NSString *url) {
+        url = [url stringByReplacingOccurrencesOfString:@"https://www.baidu.com/filter/" withString:@"app://filter/"];
+        return url;
+    }];
     [FWRouter addRewriteRule:@"(?:https://)?www.baidu.com/test/(\\d+)" targetRule:@"app://test/$1"];
     [FWRouter addRewriteRule:@"(?:https://)?www.baidu.com/wildcard/(.*)" targetRule:@"wildcard://$$1"];
     [FWRouter addRewriteRule:@"(?:https://)?www.baidu.com/wildcard2/(.*)" targetRule:@"wildcard://$#1"];

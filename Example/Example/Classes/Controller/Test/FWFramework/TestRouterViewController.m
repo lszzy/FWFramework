@@ -64,10 +64,12 @@
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
                                          @[@"解析Url，获取Object", @"onOpenObject"],
+                                         @[@"过滤Url", @"onOpenFilter"],
                                          @[@"不支持的Url", @"onOpenFailed"],
                                          @[@"RewriteUrl", @"onRewrite1"],
                                          @[@"RewriteUrl URLEncode", @"onRewrite2"],
                                          @[@"RewriteUrl URLDecode", @"onRewrite3"],
+                                         @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
                                          ]];
@@ -149,6 +151,16 @@
 - (void)onOpenUnmatch2
 {
     [FWRouter objectForURL:@"app://test/1"];
+}
+
+- (void)onOpenFilter
+{
+    [FWRouter openURL:@"app://filter/1"];
+}
+
+- (void)onRewriteFilter
+{
+    [FWRouter openURL:@"https://www.baidu.com/filter/1"];
 }
 
 @end

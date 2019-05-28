@@ -94,14 +94,14 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (self.isTop) {
-        CGFloat progress = [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:(FWStatusBarHeight + FWNavigationBarHeight)];
-        if (progress == 1) {
+        CGFloat distance = [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view toPosition:FWTopBarHeight];
+        if (distance <= 0) {
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
-        } else if (progress >= 0 && progress < 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+        } else if (distance <= FWTopBarHeight) {
+            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:1 - distance / FWTopBarHeight]];
         }
     } else {
-        [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view fromPosition:150 toPosition:0];
+        [scrollView fwHoverView:self.hoverView fromSuperview:self.redView toSuperview:self.view toPosition:0];
     }
 }
 
