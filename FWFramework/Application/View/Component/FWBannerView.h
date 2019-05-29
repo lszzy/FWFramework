@@ -33,14 +33,14 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 
 - (void)bannerView:(FWBannerView *)bannerView didScrollToIndex:(NSInteger)index;
 
-/** 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的class。 */
-- (Class)customCollectionViewCellClassForBannerView:(FWBannerView *)view;
+/** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法，默认的FWBannerViewCell也会调用。 */
+- (void)bannerView:(FWBannerView *)bannerView customCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index;
 
-/** 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的Nib。 */
-- (UINib *)customCollectionViewCellNibForBannerView:(FWBannerView *)view;
+/** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法返回你的自定义UICollectionViewCell的class。 */
+- (Class)customCellClassForBannerView:(FWBannerView *)view;
 
-/** 如果你自定义了cell样式，请在实现此代理方法为你的cell填充数据以及其它一系列设置 */
-- (void)setupCustomCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index bannerView:(FWBannerView *)view;
+/** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法返回你的自定义UICollectionViewCell的Nib。 */
+- (UINib *)customCellNibForBannerView:(FWBannerView *)view;
 
 @end
 
