@@ -128,10 +128,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _delegate = delegate;
     
-    if ([self.delegate respondsToSelector:@selector(customCollectionViewCellClassForBannerView:)] && [self.delegate customCollectionViewCellClassForBannerView:self]) {
-        [self.mainView registerClass:[self.delegate customCollectionViewCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
-    }else if ([self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
-        [self.mainView registerNib:[self.delegate customCollectionViewCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
+    if ([self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
+        [self.mainView registerClass:[self.delegate customCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
+    }else if ([self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
+        [self.mainView registerNib:[self.delegate customCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
     }
 }
 
@@ -538,13 +538,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     long itemIndex = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     
-    if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:bannerView:)] &&
-        [self.delegate respondsToSelector:@selector(customCollectionViewCellClassForBannerView:)] && [self.delegate customCollectionViewCellClassForBannerView:self]) {
-        [self.delegate setupCustomCell:cell forIndex:itemIndex bannerView:self];
+    if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)] &&
+        [self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
+        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
         return cell;
-    }else if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:bannerView:)] &&
-              [self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
-        [self.delegate setupCustomCell:cell forIndex:itemIndex bannerView:self];
+    }else if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)] &&
+              [self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
+        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
         return cell;
     }
     
@@ -566,6 +566,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     if (_titlesGroup.count && itemIndex < _titlesGroup.count) {
         cell.title = _titlesGroup[itemIndex];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
+        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
     }
     
     if (!cell.hasConfigured) {

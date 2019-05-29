@@ -67,6 +67,8 @@
     }];
     
     FWBannerView *cycleView = [FWBannerView new];
+    cycleView.tag = 1;
+    [cycleView fwSetCornerRadius:5];
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
@@ -80,8 +82,8 @@
     cycleView.currentPageDotColor = [UIColor whiteColor];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 20];
     [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
     NSMutableArray *imageUrls = [NSMutableArray array];
@@ -92,6 +94,7 @@
     cycleView.imageURLStringsGroup = [imageUrls copy];
     
     FWBannerView *cycleView2 = [FWBannerView new];
+    cycleView2.tag = 2;
     cycleView2.delegate = self;
     cycleView2.autoScroll = YES;
     cycleView2.autoScrollTimeInterval = 6;
@@ -100,8 +103,8 @@
     cycleView2.pageControlStyle = FWBannerViewPageControlStyleNone;
     [self.view addSubview:cycleView2];
     [cycleView2 fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:cycleView withOffset:10];
-    [cycleView2 fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-    [cycleView2 fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView2 fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
+    [cycleView2 fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 10];
     [cycleView2 fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
     NSMutableArray *imageUrls2 = [NSMutableArray array];
@@ -266,6 +269,13 @@
     
     DZNWebViewController *viewController = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.baidu.com"]];
     [self fwOpenViewController:viewController animated:YES];
+}
+
+- (void)bannerView:(FWBannerView *)bannerView customCell:(FWBannerViewCell *)cell forIndex:(NSInteger)index
+{
+    if (bannerView.tag == 2) {
+        [cell.imageView fwSetCornerRadius:5];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
