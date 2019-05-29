@@ -25,8 +25,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
 
-@property (nonatomic, strong) UIImageView *backgroundImageView; // 当imageURLs为空时的背景图
-
 @end
 
 @implementation FWBannerView
@@ -134,29 +132,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         [self.mainView registerClass:[self.delegate customCollectionViewCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
     }else if ([self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
         [self.mainView registerNib:[self.delegate customCollectionViewCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
-    }
-}
-
-- (void)setPlaceholderImage:(UIImage *)placeholderImage
-{
-    _placeholderImage = placeholderImage;
-    
-    if (!self.backgroundImageView) {
-        UIImageView *bgImageView = [UIImageView new];
-        bgImageView.contentMode = self.bannerImageViewContentMode;
-        bgImageView.layer.masksToBounds = YES;
-        [self insertSubview:bgImageView belowSubview:self.mainView];
-        self.backgroundImageView = bgImageView;
-    }
-    
-    self.backgroundImageView.image = placeholderImage;
-}
-
-- (void)setBannerImageViewContentMode:(UIViewContentMode)bannerImageViewContentMode
-{
-    _bannerImageViewContentMode = bannerImageViewContentMode;
-    if (self.backgroundImageView) {
-        self.backgroundImageView.contentMode = bannerImageViewContentMode;
     }
 }
 
@@ -524,10 +499,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     pageControlFrame.origin.x -= self.pageControlRightOffset;
     self.pageControl.frame = pageControlFrame;
     self.pageControl.hidden = !_showPageControl;
-    
-    if (self.backgroundImageView) {
-        self.backgroundImageView.frame = self.bounds;
-    }
 }
 
 //解决当父View释放时，当前视图因为被Timer强引用而不能释放的问题
