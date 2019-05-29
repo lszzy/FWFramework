@@ -51,7 +51,7 @@
  @param saddr 导航起始点，格式latitude,longitude或搜索地址
  @param daddr 导航结束点，格式latitude,longitude或搜索地址
  @param mode 导航模式，支持driving|transit|bicycling|walking，默认driving
- @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
+ @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
  @return NSURL
  */
 + (instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
