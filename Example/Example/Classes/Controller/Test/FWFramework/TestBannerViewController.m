@@ -44,7 +44,7 @@
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.layer.masksToBounds = YES;
     [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-    [imageView fwSetDimension:NSLayoutAttributeHeight toSize:130];
+    [imageView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     imageView.userInteractionEnabled = YES;
     
     FWProgressView *progressView = [FWProgressView new];
@@ -82,7 +82,7 @@
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
@@ -91,13 +91,33 @@
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
     
+    FWBannerView *cycleView2 = [FWBannerView new];
+    cycleView2.delegate = self;
+    cycleView2.autoScroll = YES;
+    cycleView2.autoScrollTimeInterval = 6;
+    cycleView2.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    cycleView2.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView2.pageControlStyle = FWBannerViewPageControlStyleNone;
+    [self.view addSubview:cycleView2];
+    [cycleView2 fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:cycleView withOffset:10];
+    [cycleView2 fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView2 fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView2 fwSetDimension:NSLayoutAttributeHeight toSize:100];
+    
+    NSMutableArray *imageUrls2 = [NSMutableArray array];
+    [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"not_found.jpg"];
+    [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    cycleView2.imageURLStringsGroup = [imageUrls2 copy];
+    
     CGSize activitySize = CGSizeMake(30, 30);
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [activityView fwSetIndicatorSize:activitySize];
     [activityView startAnimating];
     [self.view addSubview:activityView];
     [activityView fwAlignAxis:NSLayoutAttributeCenterX toView:self.view];
-    [activityView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:cycleView withOffset:10];
+    [activityView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:cycleView2 withOffset:10];
     [activityView fwSetDimensionsToSize:activitySize];
     
     UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:nil];
