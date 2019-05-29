@@ -180,6 +180,8 @@
     self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
     self.segmentedControl.selectedSegmentIndex = 1;
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
+    self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 30);
+    self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
     [self.view addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
