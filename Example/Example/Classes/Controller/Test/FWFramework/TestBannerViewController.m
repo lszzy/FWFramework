@@ -22,7 +22,6 @@
     [self renderCycleView1];
     [self renderCycleView2];
     [self renderCycleView3];
-    [self renderCycleView4];
 }
 
 - (void)renderCycleView1
@@ -82,32 +81,6 @@
 {
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.contentViewInset = UIEdgeInsetsMake(0, 10, 0, 10);
-    cycleView.contentViewCornerRadius = 5;
-    cycleView.delegate = self;
-    cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
-    cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
-    cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
-    [self.view addSubview:cycleView];
-    [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
-    
-    NSMutableArray *imageUrls2 = [NSMutableArray array];
-    [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls2 addObject:@"public_picture"];
-    [imageUrls2 addObject:@"not_found.jpg"];
-    [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
-    cycleView.imageURLStringsGroup = [imageUrls2 copy];
-    
-    self.previousView = cycleView;
-}
-
-- (void)renderCycleView4
-{
-    FWBannerView *cycleView = [FWBannerView new];
     cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
