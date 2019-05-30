@@ -66,7 +66,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _pageControlStyle = FWBannerViewPageControlStyleSystem;
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
-    _pageDotColor = [UIColor lightGrayColor];
+    _pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     _bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     
     self.backgroundColor = [UIColor clearColor];

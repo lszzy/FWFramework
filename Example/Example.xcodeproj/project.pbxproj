@@ -28,6 +28,7 @@
 		2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDD522432BF90037830E /* TestGradientViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
+		2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */; };
 		2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5BE217AC3CE00BAEB59 /* SimpleViewController.m */; };
 		2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C2217AC3E700BAEB59 /* ComplexViewController.m */; };
 		2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C5217AC40B00BAEB59 /* ComplexModel.m */; };
@@ -142,6 +143,8 @@
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2F30D89C2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2F41A733229F9F3B0008E4E2 /* TestSegmentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSegmentViewController.h; sourceTree = "<group>"; };
+		2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSegmentViewController.m; sourceTree = "<group>"; };
 		2F43E5BD217AC3CE00BAEB59 /* SimpleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleViewController.h; sourceTree = "<group>"; };
 		2F43E5BE217AC3CE00BAEB59 /* SimpleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SimpleViewController.m; sourceTree = "<group>"; };
 		2F43E5C1217AC3E700BAEB59 /* ComplexViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComplexViewController.h; sourceTree = "<group>"; };
@@ -425,6 +428,8 @@
 				2FA32CCB21B0572900C230EA /* TestRouterViewController.m */,
 				2FB7CBC321C21F44002E5412 /* TestBannerViewController.h */,
 				2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */,
+				2F41A733229F9F3B0008E4E2 /* TestSegmentViewController.h */,
+				2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */,
 				2FCE516F21D3BE02009EA65E /* TestCacheViewController.h */,
 				2FCE517021D3BE02009EA65E /* TestCacheViewController.m */,
 				2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */,
@@ -781,6 +786,7 @@
 			files = (
 				2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
+				2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */,
 				2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
