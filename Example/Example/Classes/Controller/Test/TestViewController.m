@@ -85,6 +85,7 @@
                                              @[@"MenuView", @"TestMenuViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
+                                             @[@"FWSegmentedControl", @"TestSegmentViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
