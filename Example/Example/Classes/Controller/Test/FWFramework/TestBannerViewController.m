@@ -108,10 +108,6 @@
 - (void)renderCycleView4
 {
     FWBannerView *cycleView = [FWBannerView new];
-    cycleView.tag = 2;
-    // 不裁剪边界，可以看到超出元素，从而达到效果
-    cycleView.clipsToBounds = NO;
-    cycleView.contentViewInset = UIEdgeInsetsMake(0, 0, 0, 10);
     cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
@@ -121,8 +117,8 @@
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
-    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 10];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
     [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
     
     NSMutableArray *imageUrls2 = [NSMutableArray array];
