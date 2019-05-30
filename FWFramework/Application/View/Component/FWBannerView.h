@@ -160,6 +160,12 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 /** 轮播文字label对齐方式 */
 @property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;
 
+/** 内容视图间距设置，默认全部0 */
+@property (nonatomic, assign) UIEdgeInsets contentViewInset;
+
+/** 内容视图圆角设置，默认0 */
+@property (nonatomic, assign) CGFloat contentViewCornerRadius;
+
 /** 滚动手势禁用（文字轮播较实用） */
 - (void)disableScrollGesture;
 
@@ -175,6 +181,8 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 @property (nonatomic, strong) UIColor *titleLabelBackgroundColor;
 @property (nonatomic, assign) CGFloat titleLabelHeight;
 @property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;
+@property (nonatomic, assign) UIEdgeInsets contentViewInset;
+@property (nonatomic, assign) CGFloat contentViewCornerRadius;
 
 @property (nonatomic, assign) BOOL hasConfigured;
 

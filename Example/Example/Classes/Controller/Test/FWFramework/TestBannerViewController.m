@@ -68,7 +68,8 @@
     
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.tag = 1;
-    [cycleView fwSetCornerRadius:5];
+    cycleView.contentViewInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
@@ -82,8 +83,8 @@
     cycleView.currentPageDotColor = [UIColor whiteColor];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
-    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 20];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
     [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
     NSMutableArray *imageUrls = [NSMutableArray array];
@@ -95,6 +96,10 @@
     
     FWBannerView *cycleView2 = [FWBannerView new];
     cycleView2.tag = 2;
+    // 不裁剪边界，可以看到超出元素，从而达到效果
+    cycleView2.clipsToBounds = NO;
+    cycleView2.contentViewInset = UIEdgeInsetsMake(0, 0, 0, 10);
+    cycleView2.contentViewCornerRadius = 5;
     cycleView2.delegate = self;
     cycleView2.autoScroll = YES;
     cycleView2.autoScrollTimeInterval = 6;
@@ -269,13 +274,6 @@
     
     DZNWebViewController *viewController = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.baidu.com"]];
     [self fwOpenViewController:viewController animated:YES];
-}
-
-- (void)bannerView:(FWBannerView *)bannerView customCell:(FWBannerViewCell *)cell forIndex:(NSInteger)index
-{
-    if (bannerView.tag == 2) {
-        [cell.imageView fwSetCornerRadius:5];
-    }
 }
 
 #pragma mark - UIScrollViewDelegate
