@@ -12,8 +12,6 @@
 #import "UIImageView+FWNetwork.h"
 #import "FWPageControl.h"
 
-#define FWBannerViewInitialPageControlDotSize CGSizeMake(10, 10)
-
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -59,7 +57,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _autoScroll = YES;
     _infiniteLoop = YES;
     _showPageControl = YES;
-    _pageControlDotSize = FWBannerViewInitialPageControlDotSize;
+    _pageControlDotSize = CGSizeMake(10, 10);
     _pageControlDotSpacing = 0;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
@@ -478,7 +476,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     CGSize size = CGSizeZero;
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageControl = (FWPageControl *)_pageControl;
-        if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(FWBannerViewInitialPageControlDotSize, self.pageControlDotSize))) {
+        if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(CGSizeMake(10, 10), self.pageControlDotSize))) {
             pageControl.dotSize = self.pageControlDotSize;
         }
         size = [pageControl sizeForNumberOfPages:self.imagePathsGroup.count];
