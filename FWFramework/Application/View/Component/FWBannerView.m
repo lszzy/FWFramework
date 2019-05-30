@@ -12,8 +12,6 @@
 #import "UIImageView+FWNetwork.h"
 #import "FWPageControl.h"
 
-#define FWBannerViewInitialPageControlDotSize CGSizeMake(10, 10)
-
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -24,8 +22,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
-
-@property (nonatomic, strong) UIImageView *backgroundImageView; // 当imageURLs为空时的背景图
 
 @end
 
@@ -56,20 +52,22 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _titleLabelBackgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     _titleLabelHeight = 30;
     _titleLabelTextAlignment = NSTextAlignmentLeft;
+    _contentViewInset = UIEdgeInsetsZero;
+    _contentViewCornerRadius = 0;
     _autoScroll = YES;
     _infiniteLoop = YES;
     _showPageControl = YES;
-    _pageControlDotSize = FWBannerViewInitialPageControlDotSize;
+    _pageControlDotSize = CGSizeMake(10, 10);
     _pageControlDotSpacing = 0;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
     _pageControlStyle = FWBannerViewPageControlStyleSystem;
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
-    _pageDotColor = [UIColor lightGrayColor];
+    _pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     _bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     
-    self.backgroundColor = [UIColor lightGrayColor];
+    self.backgroundColor = [UIColor clearColor];
 }
 
 + (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup
@@ -130,33 +128,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _delegate = delegate;
     
-    if ([self.delegate respondsToSelector:@selector(customCollectionViewCellClassForBannerView:)] && [self.delegate customCollectionViewCellClassForBannerView:self]) {
-        [self.mainView registerClass:[self.delegate customCollectionViewCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
-    }else if ([self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
-        [self.mainView registerNib:[self.delegate customCollectionViewCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
-    }
-}
-
-- (void)setPlaceholderImage:(UIImage *)placeholderImage
-{
-    _placeholderImage = placeholderImage;
-    
-    if (!self.backgroundImageView) {
-        UIImageView *bgImageView = [UIImageView new];
-        bgImageView.contentMode = self.bannerImageViewContentMode;
-        bgImageView.layer.masksToBounds = YES;
-        [self insertSubview:bgImageView belowSubview:self.mainView];
-        self.backgroundImageView = bgImageView;
-    }
-    
-    self.backgroundImageView.image = placeholderImage;
-}
-
-- (void)setBannerImageViewContentMode:(UIViewContentMode)bannerImageViewContentMode
-{
-    _bannerImageViewContentMode = bannerImageViewContentMode;
-    if (self.backgroundImageView) {
-        self.backgroundImageView.contentMode = bannerImageViewContentMode;
+    if ([self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
+        [self.mainView registerClass:[self.delegate customCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
+    }else if ([self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
+        [self.mainView registerNib:[self.delegate customCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
     }
 }
 
@@ -501,7 +476,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     CGSize size = CGSizeZero;
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageControl = (FWPageControl *)_pageControl;
-        if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(FWBannerViewInitialPageControlDotSize, self.pageControlDotSize))) {
+        if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(CGSizeMake(10, 10), self.pageControlDotSize))) {
             pageControl.dotSize = self.pageControlDotSize;
         }
         size = [pageControl sizeForNumberOfPages:self.imagePathsGroup.count];
@@ -524,10 +499,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     pageControlFrame.origin.x -= self.pageControlRightOffset;
     self.pageControl.frame = pageControlFrame;
     self.pageControl.hidden = !_showPageControl;
-    
-    if (self.backgroundImageView) {
-        self.backgroundImageView.frame = self.bounds;
-    }
 }
 
 //解决当父View释放时，当前视图因为被Timer强引用而不能释放的问题
@@ -567,13 +538,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     long itemIndex = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     
-    if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:bannerView:)] &&
-        [self.delegate respondsToSelector:@selector(customCollectionViewCellClassForBannerView:)] && [self.delegate customCollectionViewCellClassForBannerView:self]) {
-        [self.delegate setupCustomCell:cell forIndex:itemIndex bannerView:self];
+    if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)] &&
+        [self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
+        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
         return cell;
-    }else if ([self.delegate respondsToSelector:@selector(setupCustomCell:forIndex:bannerView:)] &&
-              [self.delegate respondsToSelector:@selector(customCollectionViewCellNibForBannerView:)] && [self.delegate customCollectionViewCellNibForBannerView:self]) {
-        [self.delegate setupCustomCell:cell forIndex:itemIndex bannerView:self];
+    }else if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)] &&
+              [self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
+        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
         return cell;
     }
     
@@ -597,15 +568,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         cell.title = _titlesGroup[itemIndex];
     }
     
+    if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
+        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+    }
+    
     if (!cell.hasConfigured) {
         cell.titleLabelBackgroundColor = self.titleLabelBackgroundColor;
         cell.titleLabelHeight = self.titleLabelHeight;
         cell.titleLabelTextAlignment = self.titleLabelTextAlignment;
         cell.titleLabelTextColor = self.titleLabelTextColor;
         cell.titleLabelTextFont = self.titleLabelTextFont;
+        cell.contentViewInset = self.contentViewInset;
+        cell.contentViewCornerRadius = self.contentViewCornerRadius;
         cell.hasConfigured = YES;
         cell.imageView.contentMode = self.bannerImageViewContentMode;
-        cell.clipsToBounds = YES;
         cell.onlyDisplayText = self.onlyDisplayText;
     }
     
@@ -689,16 +665,17 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @implementation FWBannerViewCell
 {
+    __weak UIView *_insetView;
     __weak UILabel *_titleLabel;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        [self setupInsetView];
         [self setupImageView];
         [self setupTitleLabel];
     }
-    
     return self;
 }
 
@@ -720,11 +697,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _titleLabel.font = titleLabelTextFont;
 }
 
+- (void)setupInsetView
+{
+    UIView *insetView = [[UIView alloc] init];
+    _insetView = insetView;
+    insetView.layer.masksToBounds = YES;
+    [self.contentView addSubview:insetView];
+}
+
 - (void)setupImageView
 {
     UIImageView *imageView = [[UIImageView alloc] init];
     _imageView = imageView;
-    [self.contentView addSubview:imageView];
+    imageView.layer.masksToBounds = YES;
+    [_insetView addSubview:imageView];
 }
 
 - (void)setupTitleLabel
@@ -732,7 +718,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     UILabel *titleLabel = [[UILabel alloc] init];
     _titleLabel = titleLabel;
     _titleLabel.hidden = YES;
-    [self.contentView addSubview:titleLabel];
+    [_insetView addSubview:titleLabel];
 }
 
 - (void)setTitle:(NSString *)title
@@ -750,19 +736,24 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _titleLabel.textAlignment = titleLabelTextAlignment;
 }
 
+- (void)setContentViewCornerRadius:(CGFloat)contentViewCornerRadius
+{
+    _contentViewCornerRadius = contentViewCornerRadius;
+    _insetView.layer.cornerRadius = contentViewCornerRadius;
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
+    CGRect frame = CGRectMake(self.contentViewInset.left, self.contentViewInset.top, self.bounds.size.width - self.contentViewInset.left - self.contentViewInset.right, self.bounds.size.height - self.contentViewInset.top - self.contentViewInset.bottom);
+    _insetView.frame = frame;
+    
     if (self.onlyDisplayText) {
-        _titleLabel.frame = self.bounds;
+        _titleLabel.frame = _insetView.bounds;
     } else {
-        _imageView.frame = self.bounds;
-        CGFloat titleLabelW = self.frame.size.width;
-        CGFloat titleLabelH = _titleLabelHeight;
-        CGFloat titleLabelX = 0;
-        CGFloat titleLabelY = self.frame.size.height - titleLabelH;
-        _titleLabel.frame = CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH);
+        _imageView.frame = _insetView.bounds;
+        _titleLabel.frame = CGRectMake(0, _insetView.frame.size.height - _titleLabelHeight, _insetView.frame.size.width, _titleLabelHeight);
     }
 }
 
