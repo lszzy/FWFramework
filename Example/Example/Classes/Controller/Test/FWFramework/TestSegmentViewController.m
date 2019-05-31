@@ -154,9 +154,12 @@
     self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
     self.segmentedControl.selectedSegmentIndex = 1;
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
-    self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 30);
+    self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
+    self.segmentedControl.titleAlignmentMode = kCAAlignmentRight;
+    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
     [self.view addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
