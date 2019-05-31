@@ -12,12 +12,91 @@
 #import "UIImageView+FWNetwork.h"
 #import "FWPageControl.h"
 
+@interface FWBannerViewFlowLayout : UICollectionViewFlowLayout
+
+// 是否启用分页滚动itemSize，需禁用collectionView的pagingEnabled属性
+@property (nonatomic, assign) BOOL pagingEnabled;
+
+@property (nonatomic, assign) CGPoint lastProposedContentOffset;
+
+@end
+
+@implementation FWBannerViewFlowLayout
+
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
+{
+    if (!self.pagingEnabled) {
+        return [super shouldInvalidateLayoutForBoundsChange:newBounds];
+    }
+    
+    return YES;
+}
+
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+{
+    return [super layoutAttributesForElementsInRect:rect];
+}
+
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
+{
+    if (!self.pagingEnabled) {
+        return [super targetContentOffsetForProposedContentOffset:proposedContentOffset withScrollingVelocity:velocity];
+    }
+    
+    CGRect pagingFrame = CGRectMake(proposedContentOffset.x, proposedContentOffset.y, self.itemSize.width, self.itemSize.height);
+    NSArray *layoutAttrs = [self layoutAttributesForElementsInRect:pagingFrame];
+    
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        CGFloat minCenter = CGFLOAT_MAX;
+        CGFloat collectionCenter = proposedContentOffset.x + self.itemSize.width * 0.5;
+        for (UICollectionViewLayoutAttributes *attrs in layoutAttrs) {
+            if (ABS(attrs.center.x - collectionCenter) < ABS(minCenter)) {
+                minCenter = attrs.center.x - collectionCenter;
+            }
+        }
+        
+        CGFloat proposedValue = proposedContentOffset.x + minCenter;
+        CGFloat pagingBounds = self.itemSize.width;
+        if (proposedValue - self.lastProposedContentOffset.x >= pagingBounds) {
+            proposedValue = pagingBounds + self.lastProposedContentOffset.x;
+        }
+        if (proposedValue - self.lastProposedContentOffset.x <= -pagingBounds) {
+            proposedValue = -pagingBounds + self.lastProposedContentOffset.x;
+        }
+        
+        self.lastProposedContentOffset = CGPointMake(proposedValue, proposedContentOffset.y);
+        return self.lastProposedContentOffset;
+    } else {
+        CGFloat minCenter = CGFLOAT_MAX;
+        CGFloat collectionCenter = proposedContentOffset.y + self.itemSize.height * 0.5;
+        for (UICollectionViewLayoutAttributes *attrs in layoutAttrs) {
+            if (ABS(attrs.center.y - collectionCenter) < ABS(minCenter)) {
+                minCenter = attrs.center.y - collectionCenter;
+            }
+        }
+        
+        CGFloat proposedValue = proposedContentOffset.y + minCenter;
+        CGFloat pagingBounds = self.itemSize.height;
+        if (proposedValue - self.lastProposedContentOffset.y >= pagingBounds) {
+            proposedValue = pagingBounds + self.lastProposedContentOffset.y;
+        }
+        if (proposedValue - self.lastProposedContentOffset.y <= -pagingBounds) {
+            proposedValue = -pagingBounds + self.lastProposedContentOffset.y;
+        }
+        
+        self.lastProposedContentOffset = CGPointMake(proposedContentOffset.x, proposedValue);
+        return self.lastProposedContentOffset;
+    }
+}
+
+@end
+
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, weak) UICollectionView *mainView; // 显示图片的collectionView
-@property (nonatomic, weak) UICollectionViewFlowLayout *flowLayout;
+@property (nonatomic, weak) UICollectionView *mainView;
+@property (nonatomic, weak) FWBannerViewFlowLayout *flowLayout;
 @property (nonatomic, strong) NSArray *imagePathsGroup;
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
@@ -103,7 +182,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 // 设置显示图片的collectionView
 - (void)setupMainView
 {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    FWBannerViewFlowLayout *flowLayout = [[FWBannerViewFlowLayout alloc] init];
     flowLayout.minimumLineSpacing = 0;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _flowLayout = flowLayout;
@@ -262,6 +341,40 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _scrollDirection = scrollDirection;
     
     _flowLayout.scrollDirection = scrollDirection;
+}
+
+- (void)setSectionInset:(UIEdgeInsets)sectionInset
+{
+    _sectionInset = sectionInset;
+    
+    _flowLayout.sectionInset = sectionInset;
+}
+
+- (void)setItemSize:(CGSize)itemSize
+{
+    _itemSize = itemSize;
+    
+    _flowLayout.itemSize = itemSize;
+}
+
+- (void)setItemSpacing:(CGFloat)itemSpacing
+{
+    _itemSpacing = itemSpacing;
+    
+    _flowLayout.minimumLineSpacing = itemSpacing;
+}
+
+- (void)setItemPagingEnabled:(BOOL)itemPagingEnabled
+{
+    _itemPagingEnabled = itemPagingEnabled;
+    
+    if (itemPagingEnabled) {
+        self.mainView.pagingEnabled = NO;
+        self.flowLayout.pagingEnabled = YES;
+    } else {
+        self.flowLayout.pagingEnabled = NO;
+        self.mainView.pagingEnabled = YES;
+    }
 }
 
 - (void)setAutoScrollTimeInterval:(CGFloat)autoScrollTimeInterval
