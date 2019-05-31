@@ -12,6 +12,178 @@
 #import "UIImageView+FWNetwork.h"
 #import "FWPageControl.h"
 
+@interface FWBannerViewFlowLayout : UICollectionViewFlowLayout
+
+@property (nonatomic, assign) CGSize lastCollectionViewSize;
+@property (nonatomic, assign) UICollectionViewScrollDirection lastScrollDirection;
+@property (nonatomic, assign) CGSize lastItemSize;
+@property (nonatomic, assign, readonly) CGFloat pageWidth;
+@property (nonatomic, assign, readonly) NSInteger currentPage;
+
+@end
+
+@implementation FWBannerViewFlowLayout
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _lastScrollDirection = self.scrollDirection;
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _lastScrollDirection = self.scrollDirection;
+    }
+    return self;
+}
+
+- (CGFloat)pageWidth
+{
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        return self.itemSize.width + self.minimumLineSpacing;
+    } else {
+        return self.itemSize.height + self.minimumLineSpacing;
+    }
+}
+
+- (NSInteger)currentPage
+{
+    if (!self.collectionView) return 0;
+    
+    CGPoint currentPoint = CGPointMake(self.collectionView.contentOffset.x + self.collectionView.bounds.size.width / 2, self.collectionView.contentOffset.y + self.collectionView.bounds.size.height / 2);
+    return [self.collectionView indexPathForItemAtPoint:currentPoint].row;
+}
+
+- (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context
+{
+    [super invalidateLayoutWithContext:context];
+    if (!self.collectionView) return;
+    
+    CGSize currentCollectionViewSize = self.collectionView.bounds.size;
+    if (!CGSizeEqualToSize(currentCollectionViewSize, self.lastCollectionViewSize) ||
+        self.lastScrollDirection != self.scrollDirection ||
+        !CGSizeEqualToSize(self.lastItemSize, self.itemSize)) {
+        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            CGFloat inset = (currentCollectionViewSize.width - self.itemSize.width) / 2;
+            self.collectionView.contentInset = UIEdgeInsetsMake(0, inset, 0, inset);
+            self.collectionView.contentOffset = CGPointMake(-inset, 0);
+        } else {
+            CGFloat inset = (currentCollectionViewSize.height - self.itemSize.height) / 2;
+            self.collectionView.contentInset = UIEdgeInsetsMake(inset, 0, inset, 0);
+            self.collectionView.contentOffset = CGPointMake(0, -inset);
+        }
+        self.lastCollectionViewSize = currentCollectionViewSize;
+        self.lastScrollDirection = self.scrollDirection;
+        self.lastItemSize = self.itemSize;
+    }
+}
+
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
+{
+    if (!self.collectionView) return proposedContentOffset;
+    
+    CGRect proposedRect = [self determineProposedRect:proposedContentOffset];
+    NSArray *layoutAttributes = [self layoutAttributesForElementsInRect:proposedRect];
+    if (!layoutAttributes) {
+        return proposedContentOffset;
+    }
+    UICollectionViewLayoutAttributes *candidateAttributesForRect = [self attributesForRect:layoutAttributes proposedContentOffset:proposedContentOffset];
+    if (!candidateAttributesForRect) {
+        return proposedContentOffset;
+    }
+    
+    CGFloat newOffset;
+    CGFloat offset;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        newOffset = candidateAttributesForRect.center.x - self.collectionView.bounds.size.width / 2;
+        offset = newOffset - self.collectionView.contentOffset.x;
+        if ((velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0)) {
+            CGFloat pageWidth = self.itemSize.width + self.minimumLineSpacing;
+            newOffset += velocity.x > 0 ? pageWidth : -pageWidth;
+        }
+        return CGPointMake(newOffset, proposedContentOffset.y);
+    } else {
+        newOffset = candidateAttributesForRect.center.y - self.collectionView.bounds.size.height / 2;
+        offset = newOffset - self.collectionView.contentOffset.y;
+        if ((velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0)) {
+            CGFloat pageHeight = self.itemSize.height + self.minimumLineSpacing;
+            newOffset += velocity.y > 0 ? pageHeight : -pageHeight;
+        }
+        return CGPointMake(proposedContentOffset.x, newOffset);
+    }
+}
+
+- (void)scrollToPage:(NSInteger)index animated:(BOOL)animated
+{
+    if (!self.collectionView) return;
+    
+    CGPoint proposedContentOffset;
+    BOOL shouldAnimate;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        CGFloat pageOffset = self.pageWidth * index - self.collectionView.contentInset.left;
+        proposedContentOffset = CGPointMake(pageOffset, self.collectionView.contentOffset.y);
+        shouldAnimate = fabs(self.collectionView.contentOffset.x - pageOffset) > 1 ? animated : NO;
+    } else {
+        CGFloat pageOffset = self.pageWidth * index - self.collectionView.contentInset.top;
+        proposedContentOffset = CGPointMake(self.collectionView.contentOffset.x, pageOffset);
+        shouldAnimate = fabs(self.collectionView.contentOffset.y - pageOffset) > 1 ? animated : NO;
+    }
+    [self.collectionView setContentOffset:proposedContentOffset animated:shouldAnimate];
+}
+
+- (CGRect)determineProposedRect:(CGPoint)proposedContentOffset
+{
+    CGSize size = self.collectionView.bounds.size;
+    CGPoint origin = CGPointZero;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        origin = CGPointMake(proposedContentOffset.x, self.collectionView.contentOffset.y);
+    } else {
+        origin = CGPointMake(self.collectionView.contentOffset.x, proposedContentOffset.y);
+    }
+    return CGRectMake(origin.x, origin.y, size.width, size.height);
+}
+
+- (UICollectionViewLayoutAttributes *)attributesForRect:(NSArray *)layoutAttributes proposedContentOffset:(CGPoint)proposedContentOffset
+{
+    UICollectionViewLayoutAttributes *candidateAttributes = nil;
+    CGFloat proposedCenterOffset = 0;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        proposedCenterOffset = proposedContentOffset.x + self.collectionView.bounds.size.width / 2;
+    } else {
+        proposedCenterOffset = proposedContentOffset.y + self.collectionView.bounds.size.height / 2;
+    }
+    
+    for (UICollectionViewLayoutAttributes *attributes in layoutAttributes) {
+        if (attributes.representedElementCategory != UICollectionElementCategoryCell) {
+            continue;
+        }
+        if (!candidateAttributes) {
+            candidateAttributes = attributes;
+            continue;
+        }
+        
+        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            if (fabs(attributes.center.x - proposedCenterOffset) < fabs(candidateAttributes.center.x - proposedCenterOffset)) {
+                candidateAttributes = attributes;
+            }
+        } else {
+            if (fabs(attributes.center.y - proposedCenterOffset) < fabs(candidateAttributes.center.y - proposedCenterOffset)) {
+                candidateAttributes = attributes;
+            }
+        }
+    }
+    return candidateAttributes;
+}
+
+@end
+
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -113,6 +285,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     mainView.pagingEnabled = YES;
     mainView.showsHorizontalScrollIndicator = NO;
     mainView.showsVerticalScrollIndicator = NO;
+    // mainView.decelerationRate = UIScrollViewDecelerationRateFast;
     [mainView registerClass:[FWBannerViewCell class] forCellWithReuseIdentifier:FWBannerViewCellID];
     
     mainView.dataSource = self;
