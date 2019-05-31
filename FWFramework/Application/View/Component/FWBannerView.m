@@ -573,7 +573,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     [super layoutSubviews];
     
-    _flowLayout.itemSize = self.frame.size;
+    if (CGSizeEqualToSize(self.itemSize, CGSizeZero)) {
+        _flowLayout.itemSize = self.frame.size;
+    }
     
     _mainView.frame = self.bounds;
     if (_mainView.contentOffset.x == 0 &&  _totalItemsCount) {
