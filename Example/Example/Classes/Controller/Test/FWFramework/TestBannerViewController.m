@@ -144,7 +144,7 @@
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
-    cycleView.itemSize = CGSizeMake(FWScreenWidth - 10, 100);
+    cycleView.itemSize = CGSizeMake(FWScreenWidth - 20, 100);
     cycleView.itemPagingEnabled = YES;
     cycleView.sectionInset = UIEdgeInsetsMake(0, 0, 0, 10);
     cycleView.contentViewInset = UIEdgeInsetsMake(0, 10, 0, 0);
