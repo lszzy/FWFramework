@@ -17,11 +17,24 @@
 // 是否启用分页滚动itemSize，需禁用collectionView的pagingEnabled属性
 @property (nonatomic, assign) BOOL pagingEnabled;
 
-@property (nonatomic, assign) CGPoint lastProposedContentOffset;
+@property (nonatomic, assign) CGFloat proposedContentOffset;
 
 @end
 
 @implementation FWBannerViewFlowLayout
+
+- (void)updateProprosedContentOffsetWithItemIndex:(NSInteger)itemIndex
+{
+    if (!self.pagingEnabled) {
+        return;
+    }
+    
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        self.proposedContentOffset = self.itemSize.width * itemIndex;
+    } else {
+        self.proposedContentOffset = self.itemSize.height * itemIndex;
+    }
+}
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
 {
@@ -30,11 +43,6 @@
     }
     
     return YES;
-}
-
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
-{
-    return [super layoutAttributesForElementsInRect:rect];
 }
 
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
@@ -57,15 +65,15 @@
         
         CGFloat proposedValue = proposedContentOffset.x + minCenter;
         CGFloat pagingBounds = self.itemSize.width;
-        if (proposedValue - self.lastProposedContentOffset.x >= pagingBounds) {
-            proposedValue = pagingBounds + self.lastProposedContentOffset.x;
+        if (proposedValue - self.proposedContentOffset >= pagingBounds) {
+            proposedValue = pagingBounds + self.proposedContentOffset;
         }
-        if (proposedValue - self.lastProposedContentOffset.x <= -pagingBounds) {
-            proposedValue = -pagingBounds + self.lastProposedContentOffset.x;
+        if (proposedValue - self.proposedContentOffset <= -pagingBounds) {
+            proposedValue = -pagingBounds + self.proposedContentOffset;
         }
         
-        self.lastProposedContentOffset = CGPointMake(proposedValue, proposedContentOffset.y);
-        return self.lastProposedContentOffset;
+        self.proposedContentOffset = proposedValue;
+        return CGPointMake(proposedValue, proposedContentOffset.y);
     } else {
         CGFloat minCenter = CGFLOAT_MAX;
         CGFloat collectionCenter = proposedContentOffset.y + self.itemSize.height * 0.5;
@@ -77,15 +85,15 @@
         
         CGFloat proposedValue = proposedContentOffset.y + minCenter;
         CGFloat pagingBounds = self.itemSize.height;
-        if (proposedValue - self.lastProposedContentOffset.y >= pagingBounds) {
-            proposedValue = pagingBounds + self.lastProposedContentOffset.y;
+        if (proposedValue - self.proposedContentOffset >= pagingBounds) {
+            proposedValue = pagingBounds + self.proposedContentOffset;
         }
-        if (proposedValue - self.lastProposedContentOffset.y <= -pagingBounds) {
-            proposedValue = -pagingBounds + self.lastProposedContentOffset.y;
+        if (proposedValue - self.proposedContentOffset <= -pagingBounds) {
+            proposedValue = -pagingBounds + self.proposedContentOffset;
         }
         
-        self.lastProposedContentOffset = CGPointMake(proposedContentOffset.x, proposedValue);
-        return self.lastProposedContentOffset;
+        self.proposedContentOffset = proposedValue;
+        return CGPointMake(proposedContentOffset.x, proposedValue);
     }
 }
 
@@ -537,10 +545,12 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
+            [_flowLayout updateProprosedContentOffsetWithItemIndex:targetIndex];
             [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         }
         return;
     }
+    [_flowLayout updateProprosedContentOffsetWithItemIndex:targetIndex];
     [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
 }
 
@@ -585,6 +595,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }else{
             targetIndex = 0;
         }
+        [_flowLayout updateProprosedContentOffsetWithItemIndex:targetIndex];
         [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
     
@@ -636,6 +647,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     long targetIndex = [self currentIndex];
     if (targetIndex < _totalItemsCount) {
+        [_flowLayout updateProprosedContentOffsetWithItemIndex:targetIndex];
         [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }
