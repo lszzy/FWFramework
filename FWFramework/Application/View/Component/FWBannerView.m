@@ -660,11 +660,16 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
-            [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+            [self scrollToItemIndex:targetIndex animated:NO];
         }
         return;
     }
-    [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+    [self scrollToItemIndex:targetIndex animated:YES];
+}
+
+- (void)scrollToItemIndex:(int)targetIndex animated:(BOOL)animated
+{
+    [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
 }
 
 - (int)currentIndex
@@ -712,7 +717,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }else{
             targetIndex = 0;
         }
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [self scrollToItemIndex:targetIndex animated:NO];
     }
     
     CGSize size = CGSizeZero;
@@ -761,9 +766,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)adjustWhenControllerViewWillAppear
 {
-    long targetIndex = [self currentIndex];
+    int targetIndex = [self currentIndex];
     if (targetIndex < _totalItemsCount) {
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [self scrollToItemIndex:targetIndex animated:NO];
     }
 }
 
