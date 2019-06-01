@@ -55,6 +55,7 @@
 - (NSInteger)currentPage
 {
     if (!self.collectionView) return 0;
+    if (self.collectionView.frame.size.width == 0 || self.collectionView.frame.size.height == 0) return 0;
     
     CGPoint currentPoint = CGPointMake(self.collectionView.contentOffset.x + self.collectionView.bounds.size.width / 2, self.collectionView.contentOffset.y + self.collectionView.bounds.size.height / 2);
     return [self.collectionView indexPathForItemAtPoint:currentPoint].row;
@@ -292,7 +293,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     return bannerView;
 }
 
-// 设置显示图片的collectionView
 - (void)setupMainView
 {
     FWBannerViewFlowLayout *flowLayout = [[FWBannerViewFlowLayout alloc] init];
@@ -513,7 +513,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     _totalItemsCount = self.infiniteLoop ? self.imagePathsGroup.count * 100 : self.imagePathsGroup.count;
     
-    if (imagePathsGroup.count > 1) { // 由于 !=1 包含count == 0等情况
+    if (imagePathsGroup.count > 1) {
         self.mainView.scrollEnabled = YES;
         [self setAutoScroll:self.autoScroll];
     } else {
@@ -564,7 +564,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
-- (void)disableScrollGesture {
+- (void)disableScrollGesture
+{
     self.mainView.canCancelContentTouches = NO;
     for (UIGestureRecognizer *gesture in self.mainView.gestureRecognizers) {
         if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
@@ -577,7 +578,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupTimer
 {
-    [self invalidateTimer]; // 创建定时器前先停止定时器，不然会出现僵尸定时器，导致轮播频率错误
+    [self invalidateTimer];
     
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:self.autoScrollTimeInterval target:self selector:@selector(automaticScroll) userInfo:nil repeats:YES];
     _timer = timer;
@@ -592,13 +593,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupPageControl
 {
-    if (_pageControl) [_pageControl removeFromSuperview]; // 重新加载数据时调整
+    if (_pageControl) [_pageControl removeFromSuperview];
     
     if (self.imagePathsGroup.count == 0 || self.onlyDisplayText) return;
     
     if ((self.imagePathsGroup.count == 1) && self.hidesForSinglePage) return;
     
-    int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
     
     switch (self.pageControlStyle) {
         case FWBannerViewPageControlStyleCustom: {
@@ -636,7 +637,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             break;
     }
     
-    // 重设pagecontroldot图片
     if (self.currentPageDotImage) {
         self.currentPageDotImage = self.currentPageDotImage;
     }
@@ -648,12 +648,12 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)automaticScroll
 {
     if (0 == _totalItemsCount) return;
-    int currentIndex = [self currentIndex];
-    int targetIndex = currentIndex + 1;
+    NSInteger currentIndex = [self currentIndex];
+    NSInteger targetIndex = currentIndex + 1;
     [self scrollToIndex:targetIndex];
 }
 
-- (void)scrollToIndex:(int)targetIndex
+- (void)scrollToIndex:(NSInteger)targetIndex
 {
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
@@ -665,7 +665,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     [self scrollToItemIndex:targetIndex animated:YES];
 }
 
-- (void)scrollToItemIndex:(int)targetIndex animated:(BOOL)animated
+- (void)scrollToItemIndex:(NSInteger)targetIndex animated:(BOOL)animated
 {
     if (_itemPagingEnabled) {
         [_flowLayout scrollToPage:targetIndex animated:animated];
@@ -674,13 +674,17 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
-- (int)currentIndex
+- (NSInteger)currentIndex
 {
     if (_mainView.frame.size.width == 0 || _mainView.frame.size.height == 0) {
         return 0;
     }
     
-    int index = 0;
+    if (_itemPagingEnabled) {
+        return [_flowLayout currentPage];
+    }
+    
+    NSInteger index = 0;
     if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
         index = (_mainView.contentOffset.x + _flowLayout.itemSize.width * 0.5) / _flowLayout.itemSize.width;
     } else {
@@ -690,9 +694,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     return MAX(0, index);
 }
 
-- (int)pageControlIndexWithCurrentCellIndex:(NSInteger)index
+- (NSInteger)pageControlIndexWithCurrentCellIndex:(NSInteger)index
 {
-    return (int)index % self.imagePathsGroup.count;
+    return index % self.imagePathsGroup.count;
 }
 
 #pragma mark - life circles
@@ -774,7 +778,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)adjustWhenControllerViewWillAppear
 {
-    int targetIndex = [self currentIndex];
+    NSInteger targetIndex = [self currentIndex];
     if (targetIndex < _totalItemsCount) {
         [self scrollToItemIndex:targetIndex animated:NO];
     }
@@ -859,8 +863,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
-    int itemIndex = [self currentIndex];
-    int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
+    NSInteger itemIndex = [self currentIndex];
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageControl = (FWPageControl *)_pageControl;
@@ -893,8 +897,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
-    int itemIndex = [self currentIndex];
-    int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
+    NSInteger itemIndex = [self currentIndex];
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
     if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
         [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
@@ -909,7 +913,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
     if (0 == _totalItemsCount) return;
     
-    [self scrollToIndex:(int)(_totalItemsCount * 0.5 + index)];
+    [self scrollToIndex:(NSInteger)(_totalItemsCount * 0.5 + index)];
     
     if (self.autoScroll) {
         [self setupTimer];
