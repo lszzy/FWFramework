@@ -52,6 +52,15 @@
 
 #pragma mark - Public
 
+- (CGFloat)pageWidth
+{
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        return self.itemSize.width + self.minimumLineSpacing;
+    } else {
+        return self.itemSize.height + self.minimumLineSpacing;
+    }
+}
+
 - (NSInteger)currentPage
 {
     if (!self.collectionView) return 0;
@@ -68,13 +77,11 @@
     CGPoint proposedContentOffset;
     BOOL shouldAnimate;
     if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        CGFloat pageWidth = self.itemSize.width + self.minimumLineSpacing;
-        CGFloat pageOffset = pageWidth * index - self.collectionView.contentInset.left;
+        CGFloat pageOffset = [self pageWidth] * index - self.collectionView.contentInset.left;
         proposedContentOffset = CGPointMake(pageOffset, self.collectionView.contentOffset.y);
         shouldAnimate = fabs(self.collectionView.contentOffset.x - pageOffset) > 1 ? animated : NO;
     } else {
-        CGFloat pageWidth = self.itemSize.height + self.minimumLineSpacing;
-        CGFloat pageOffset = pageWidth * index - self.collectionView.contentInset.top;
+        CGFloat pageOffset = [self pageWidth] * index - self.collectionView.contentInset.top;
         proposedContentOffset = CGPointMake(self.collectionView.contentOffset.x, pageOffset);
         shouldAnimate = fabs(self.collectionView.contentOffset.y - pageOffset) > 1 ? animated : NO;
     }
@@ -128,16 +135,14 @@
         newOffset = self.pagingCenter ? (candidateAttributesForRect.center.x - self.collectionView.bounds.size.width / 2) : (candidateAttributesForRect.frame.origin.x - self.minimumLineSpacing);
         offset = newOffset - self.collectionView.contentOffset.x;
         if ((velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0)) {
-            CGFloat pageWidth = self.itemSize.width + self.minimumLineSpacing;
-            newOffset += velocity.x > 0 ? pageWidth : -pageWidth;
+            newOffset += velocity.x > 0 ? [self pageWidth] : -[self pageWidth];
         }
         return CGPointMake(newOffset, proposedContentOffset.y);
     } else {
         newOffset = self.pagingCenter ? (candidateAttributesForRect.center.y - self.collectionView.bounds.size.height / 2) : (candidateAttributesForRect.frame.origin.y - self.minimumLineSpacing);
         offset = newOffset - self.collectionView.contentOffset.y;
         if ((velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0)) {
-            CGFloat pageHeight = self.itemSize.height + self.minimumLineSpacing;
-            newOffset += velocity.y > 0 ? pageHeight : -pageHeight;
+            newOffset += velocity.y > 0 ? [self pageWidth] : -[self pageWidth];
         }
         return CGPointMake(proposedContentOffset.x, newOffset);
     }
@@ -147,14 +152,13 @@
 
 - (CGRect)determineProposedRect:(CGPoint)proposedContentOffset
 {
-    CGSize size = self.collectionView.bounds.size;
     CGPoint origin = CGPointZero;
     if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
         origin = CGPointMake(proposedContentOffset.x, self.collectionView.contentOffset.y);
     } else {
         origin = CGPointMake(self.collectionView.contentOffset.x, proposedContentOffset.y);
     }
-    return CGRectMake(origin.x, origin.y, size.width, size.height);
+    return CGRectMake(origin.x, origin.y, self.collectionView.bounds.size.width, self.collectionView.bounds.size.height);
 }
 
 - (UICollectionViewLayoutAttributes *)attributesForRect:(NSArray *)layoutAttributes proposedContentOffset:(CGPoint)proposedContentOffset
@@ -510,7 +514,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     [self invalidateTimer];
     
     _imagePathsGroup = imagePathsGroup;
-    
     _totalItemsCount = self.infiniteLoop ? self.imagePathsGroup.count * 100 : self.imagePathsGroup.count;
     
     if (imagePathsGroup.count > 1) {
@@ -596,11 +599,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (_pageControl) [_pageControl removeFromSuperview];
     
     if (self.imagePathsGroup.count == 0 || self.onlyDisplayText) return;
-    
     if ((self.imagePathsGroup.count == 1) && self.hidesForSinglePage) return;
     
-    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
-    
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[_flowLayout currentPage]];
+
     switch (self.pageControlStyle) {
         case FWBannerViewPageControlStyleCustom: {
             FWPageControl *pageControl = [[FWPageControl alloc] init];
@@ -648,8 +650,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)automaticScroll
 {
     if (0 == _totalItemsCount) return;
-    NSInteger currentIndex = [self currentIndex];
-    NSInteger targetIndex = currentIndex + 1;
+    NSInteger targetIndex = [_flowLayout currentPage] + 1;;
     [self scrollToIndex:targetIndex];
 }
 
@@ -658,40 +659,11 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
-            [self scrollToItemIndex:targetIndex animated:NO];
+            [_flowLayout scrollToPage:targetIndex animated:NO];
         }
         return;
     }
-    [self scrollToItemIndex:targetIndex animated:YES];
-}
-
-- (void)scrollToItemIndex:(NSInteger)targetIndex animated:(BOOL)animated
-{
-    if (_itemPagingEnabled) {
-        [_flowLayout scrollToPage:targetIndex animated:animated];
-    } else {
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
-    }
-}
-
-- (NSInteger)currentIndex
-{
-    if (_mainView.frame.size.width == 0 || _mainView.frame.size.height == 0) {
-        return 0;
-    }
-    
-    if (_itemPagingEnabled) {
-        return [_flowLayout currentPage];
-    }
-    
-    NSInteger index = 0;
-    if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        index = (_mainView.contentOffset.x + _flowLayout.itemSize.width * 0.5) / _flowLayout.itemSize.width;
-    } else {
-        index = (_mainView.contentOffset.y + _flowLayout.itemSize.height * 0.5) / _flowLayout.itemSize.height;
-    }
-    
-    return MAX(0, index);
+    [_flowLayout scrollToPage:targetIndex animated:YES];
 }
 
 - (NSInteger)pageControlIndexWithCurrentCellIndex:(NSInteger)index
@@ -729,7 +701,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }else{
             targetIndex = 0;
         }
-        [self scrollToItemIndex:targetIndex animated:NO];
+        [_flowLayout scrollToPage:targetIndex animated:NO];
     }
     
     CGSize size = CGSizeZero;
@@ -778,9 +750,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)adjustWhenControllerViewWillAppear
 {
-    NSInteger targetIndex = [self currentIndex];
+    NSInteger targetIndex = [_flowLayout currentPage];
     if (targetIndex < _totalItemsCount) {
-        [self scrollToItemIndex:targetIndex animated:NO];
+        [_flowLayout scrollToPage:targetIndex animated:NO];
     }
 }
 
@@ -863,7 +835,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
-    NSInteger itemIndex = [self currentIndex];
+    NSInteger itemIndex = [_flowLayout currentPage];
     NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
@@ -897,7 +869,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
-    NSInteger itemIndex = [self currentIndex];
+    NSInteger itemIndex = [_flowLayout currentPage];
     NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
     if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
