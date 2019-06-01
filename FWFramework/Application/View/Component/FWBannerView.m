@@ -673,7 +673,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
     
     _mainView.frame = self.bounds;
-    if (_mainView.contentOffset.x == 0 &&  _totalItemsCount) {
+    BOOL needScroll = NO;
+    if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        needScroll = _mainView.contentOffset.x <= 0;
+    } else {
+        needScroll = _mainView.contentOffset.y <= 0;
+    }
+    if (needScroll &&  _totalItemsCount) {
         int targetIndex = 0;
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
