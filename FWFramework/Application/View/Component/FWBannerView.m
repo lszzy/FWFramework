@@ -669,7 +669,11 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)scrollToItemIndex:(int)targetIndex animated:(BOOL)animated
 {
-    [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+    if (_itemPagingEnabled) {
+        [_flowLayout scrollToPage:targetIndex animated:animated];
+    } else {
+        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+    }
 }
 
 - (int)currentIndex
