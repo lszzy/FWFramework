@@ -696,8 +696,12 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     [super layoutSubviews];
     
-    if (CGSizeEqualToSize(self.itemSize, CGSizeZero)) {
-        _flowLayout.itemSize = self.frame.size;
+    if (CGSizeEqualToSize(_itemSize, CGSizeZero)) {
+        if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            _flowLayout.itemSize = CGSizeMake(self.frame.size.width - _flowLayout.minimumLineSpacing * 2, self.frame.size.height);
+        } else {
+            _flowLayout.itemSize = CGSizeMake(self.frame.size.width, self.frame.size.height - _flowLayout.minimumLineSpacing * 2);
+        }
     }
     
     _mainView.frame = self.bounds;
