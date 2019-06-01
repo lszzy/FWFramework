@@ -50,6 +50,36 @@
     return self;
 }
 
+#pragma mark - Public
+
+- (NSInteger)currentPage
+{
+    if (!self.collectionView) return 0;
+    
+    CGPoint currentPoint = CGPointMake(self.collectionView.contentOffset.x + self.collectionView.bounds.size.width / 2, self.collectionView.contentOffset.y + self.collectionView.bounds.size.height / 2);
+    return [self.collectionView indexPathForItemAtPoint:currentPoint].row;
+}
+
+- (void)scrollToPage:(NSInteger)index animated:(BOOL)animated
+{
+    if (!self.collectionView) return;
+    
+    CGPoint proposedContentOffset;
+    BOOL shouldAnimate;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        CGFloat pageWidth = self.itemSize.width + self.minimumLineSpacing;
+        CGFloat pageOffset = pageWidth * index - self.collectionView.contentInset.left;
+        proposedContentOffset = CGPointMake(pageOffset, self.collectionView.contentOffset.y);
+        shouldAnimate = fabs(self.collectionView.contentOffset.x - pageOffset) > 1 ? animated : NO;
+    } else {
+        CGFloat pageWidth = self.itemSize.height + self.minimumLineSpacing;
+        CGFloat pageOffset = pageWidth * index - self.collectionView.contentInset.top;
+        proposedContentOffset = CGPointMake(self.collectionView.contentOffset.x, pageOffset);
+        shouldAnimate = fabs(self.collectionView.contentOffset.y - pageOffset) > 1 ? animated : NO;
+    }
+    [self.collectionView setContentOffset:proposedContentOffset animated:shouldAnimate];
+}
+
 #pragma mark - Protected
 
 - (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context
@@ -628,11 +658,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
-            [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+            [self scrollToItemIndex:targetIndex animated:NO];
         }
         return;
     }
-    [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+    [self scrollToItemIndex:targetIndex animated:YES];
+}
+
+- (void)scrollToItemIndex:(int)targetIndex animated:(BOOL)animated
+{
+    if (_itemPagingEnabled) {
+        [_flowLayout scrollToPage:targetIndex animated:animated];
+    } else {
+        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+    }
 }
 
 - (int)currentIndex
@@ -686,7 +725,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }else{
             targetIndex = 0;
         }
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [self scrollToItemIndex:targetIndex animated:NO];
     }
     
     CGSize size = CGSizeZero;
@@ -737,7 +776,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     int targetIndex = [self currentIndex];
     if (targetIndex < _totalItemsCount) {
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [self scrollToItemIndex:targetIndex animated:NO];
     }
 }
 
