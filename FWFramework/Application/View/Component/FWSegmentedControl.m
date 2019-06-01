@@ -150,6 +150,7 @@
     _verticalDividerColor = [UIColor blackColor];
     self.borderColor = [UIColor blackColor];
     self.borderWidth = 1.0f;
+    self.titleAlignmentMode = kCAAlignmentCenter;
     
     self.shouldAnimateUserSelection = YES;
     
@@ -318,7 +319,13 @@
                 }
                 
                 CGFloat widthForIndex = [[self.segmentWidthsArray objectAtIndex:idx] floatValue];
-                rect = CGRectMake(xOffset + self.segmentEdgeInset.left, y, widthForIndex - self.segmentEdgeInset.left - self.segmentEdgeInset.right, stringHeight);
+                if ([self.titleAlignmentMode isEqualToString:kCAAlignmentLeft]) {
+                    rect = CGRectMake(xOffset + self.segmentEdgeInset.left, y, widthForIndex - self.segmentEdgeInset.left, stringHeight);
+                } else if ([self.titleAlignmentMode isEqualToString:kCAAlignmentRight]) {
+                    rect = CGRectMake(xOffset, y, widthForIndex - self.segmentEdgeInset.right, stringHeight);
+                } else {
+                    rect = CGRectMake(xOffset, y, widthForIndex, stringHeight);
+                }
                 fullRect = CGRectMake(self.segmentWidth * idx, 0, widthForIndex, oldRect.size.height);
                 rectDiv = CGRectMake(xOffset - (self.verticalDividerWidth / 2), self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
             }
@@ -328,7 +335,7 @@
             
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = rect;
-            titleLayer.alignmentMode = kCAAlignmentCenter;
+            titleLayer.alignmentMode = self.titleAlignmentMode;
             if ([UIDevice currentDevice].systemVersion.floatValue < 10.0 ) {
                 titleLayer.truncationMode = kCATruncationEnd;
             }
@@ -466,7 +473,7 @@
             
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = textRect;
-            titleLayer.alignmentMode = kCAAlignmentCenter;
+            titleLayer.alignmentMode = self.titleAlignmentMode;
             titleLayer.string = [self attributedTitleAtIndex:idx];
             if ([UIDevice currentDevice].systemVersion.floatValue < 10.0 ) {
                 titleLayer.truncationMode = kCATruncationEnd;
