@@ -83,6 +83,18 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 /** 图片滚动方向，默认为水平滚动 */
 @property (nonatomic, assign) UICollectionViewScrollDirection scrollDirection;
 
+/** 整体布局尺寸，默认占满视图 */
+@property (nonatomic, assign) CGSize itemSize;
+
+/** 整体布局间隔，默认0 */
+@property (nonatomic, assign) CGFloat itemSpacing;
+
+/** 是否启用根据item分页滚动，默认NO，根据frame大小滚动 */
+@property (nonatomic, assign) BOOL itemPagingEnabled;
+
+/** 是否设置item分页停留位置居中，默认NO，停留左侧 */
+@property (nonatomic, assign) BOOL itemPagingCenter;
+
 /** 设置事件代理 */
 @property (nonatomic, weak) id<FWBannerViewDelegate> delegate;
 
