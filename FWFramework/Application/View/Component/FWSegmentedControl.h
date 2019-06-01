@@ -84,6 +84,11 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
 @property (nonatomic, copy) FWTitleFormatterBlock titleFormatter;
 
 /**
+ Alignment mode to apply to item title text, default center.
+ */
+@property (nonatomic, copy) CATextLayerAlignmentMode titleAlignmentMode;
+
+/**
  Text attributes to apply to item title text.
  */
 @property (nonatomic, strong) NSDictionary *titleTextAttributes UI_APPEARANCE_SELECTOR;

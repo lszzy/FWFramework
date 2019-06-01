@@ -8,16 +8,228 @@
  */
 
 #import "FWBannerView.h"
+#import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
 #import "UIImageView+FWNetwork.h"
 #import "FWPageControl.h"
+
+#pragma mark - FWBannerViewFlowLayout
+
+@interface FWBannerViewFlowLayout : UICollectionViewFlowLayout
+
+@property (nonatomic, assign) BOOL pagingEnabled;
+@property (nonatomic, assign) BOOL pagingCenter;
+
+@property (nonatomic, assign) CGSize lastCollectionViewSize;
+@property (nonatomic, assign) UICollectionViewScrollDirection lastScrollDirection;
+@property (nonatomic, assign) CGSize lastItemSize;
+
+@end
+
+@implementation FWBannerViewFlowLayout
+
+#pragma mark - Lifecycle
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _lastScrollDirection = self.scrollDirection;
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _lastScrollDirection = self.scrollDirection;
+    }
+    return self;
+}
+
+#pragma mark - Public
+
+- (CGFloat)pageWidth
+{
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        return self.itemSize.width + self.minimumLineSpacing;
+    } else {
+        return self.itemSize.height + self.minimumLineSpacing;
+    }
+}
+
+- (NSInteger)currentPage
+{
+    if (!self.collectionView) return 0;
+    if (self.collectionView.frame.size.width == 0 || self.collectionView.frame.size.height == 0) return 0;
+    
+    if (!self.pagingEnabled) {
+        NSInteger currentPage = 0;
+        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            currentPage = (self.collectionView.contentOffset.x + self.itemSize.width * 0.5) / self.itemSize.width;
+        } else {
+            currentPage = (self.collectionView.contentOffset.y + self.itemSize.height * 0.5) / self.itemSize.height;
+        }
+        return MAX(0, currentPage);
+    }
+    
+    CGPoint currentPoint = CGPointMake(self.collectionView.contentOffset.x + self.collectionView.bounds.size.width / 2, self.collectionView.contentOffset.y + self.collectionView.bounds.size.height / 2);
+    return [self.collectionView indexPathForItemAtPoint:currentPoint].row;
+}
+
+- (void)scrollToPage:(NSInteger)index animated:(BOOL)animated
+{
+    if (!self.collectionView) return;
+    
+    if (!self.pagingEnabled) {
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+        return;
+    }
+    
+    CGPoint proposedContentOffset;
+    BOOL shouldAnimate;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        CGFloat pageOffset = [self pageWidth] * index - self.collectionView.contentInset.left;
+        proposedContentOffset = CGPointMake(pageOffset, self.collectionView.contentOffset.y);
+        shouldAnimate = fabs(self.collectionView.contentOffset.x - pageOffset) > 1 ? animated : NO;
+    } else {
+        CGFloat pageOffset = [self pageWidth] * index - self.collectionView.contentInset.top;
+        proposedContentOffset = CGPointMake(self.collectionView.contentOffset.x, pageOffset);
+        shouldAnimate = fabs(self.collectionView.contentOffset.y - pageOffset) > 1 ? animated : NO;
+    }
+    [self.collectionView setContentOffset:proposedContentOffset animated:shouldAnimate];
+}
+
+#pragma mark - Protected
+
+- (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context
+{
+    [super invalidateLayoutWithContext:context];
+    if (!self.pagingEnabled || !self.collectionView) return;
+    
+    CGSize currentCollectionViewSize = self.collectionView.bounds.size;
+    if (!CGSizeEqualToSize(currentCollectionViewSize, self.lastCollectionViewSize) ||
+        self.lastScrollDirection != self.scrollDirection ||
+        !CGSizeEqualToSize(self.lastItemSize, self.itemSize)) {
+        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            CGFloat inset = self.pagingCenter ? (currentCollectionViewSize.width - self.itemSize.width) / 2 : self.minimumLineSpacing;
+            self.collectionView.contentInset = UIEdgeInsetsMake(0, inset, 0, inset);
+            self.collectionView.contentOffset = CGPointMake(-inset, 0);
+        } else {
+            CGFloat inset = self.pagingCenter ? (currentCollectionViewSize.height - self.itemSize.height) / 2 : self.minimumLineSpacing;
+            self.collectionView.contentInset = UIEdgeInsetsMake(inset, 0, inset, 0);
+            self.collectionView.contentOffset = CGPointMake(0, -inset);
+        }
+        self.lastCollectionViewSize = currentCollectionViewSize;
+        self.lastScrollDirection = self.scrollDirection;
+        self.lastItemSize = self.itemSize;
+    }
+}
+
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
+{
+    if (!self.pagingEnabled) return [super targetContentOffsetForProposedContentOffset:proposedContentOffset withScrollingVelocity:velocity];
+    if (!self.collectionView) return proposedContentOffset;
+    
+    CGRect proposedRect = [self determineProposedRect:proposedContentOffset];
+    NSArray *layoutAttributes = [self layoutAttributesForElementsInRect:proposedRect];
+    if (!layoutAttributes) {
+        return proposedContentOffset;
+    }
+    UICollectionViewLayoutAttributes *candidateAttributesForRect = [self attributesForRect:layoutAttributes proposedContentOffset:proposedContentOffset];
+    if (!candidateAttributesForRect) {
+        return proposedContentOffset;
+    }
+    
+    CGFloat newOffset;
+    CGFloat offset;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        newOffset = self.pagingCenter ? (candidateAttributesForRect.center.x - self.collectionView.bounds.size.width / 2) : (candidateAttributesForRect.frame.origin.x - self.minimumLineSpacing);
+        offset = newOffset - self.collectionView.contentOffset.x;
+        if ((velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0)) {
+            newOffset += velocity.x > 0 ? [self pageWidth] : -[self pageWidth];
+        }
+        return CGPointMake(newOffset, proposedContentOffset.y);
+    } else {
+        newOffset = self.pagingCenter ? (candidateAttributesForRect.center.y - self.collectionView.bounds.size.height / 2) : (candidateAttributesForRect.frame.origin.y - self.minimumLineSpacing);
+        offset = newOffset - self.collectionView.contentOffset.y;
+        if ((velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0)) {
+            newOffset += velocity.y > 0 ? [self pageWidth] : -[self pageWidth];
+        }
+        return CGPointMake(proposedContentOffset.x, newOffset);
+    }
+}
+
+#pragma mark - Private
+
+- (CGRect)determineProposedRect:(CGPoint)proposedContentOffset
+{
+    CGPoint origin = CGPointZero;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        origin = CGPointMake(proposedContentOffset.x, self.collectionView.contentOffset.y);
+    } else {
+        origin = CGPointMake(self.collectionView.contentOffset.x, proposedContentOffset.y);
+    }
+    return CGRectMake(origin.x, origin.y, self.collectionView.bounds.size.width, self.collectionView.bounds.size.height);
+}
+
+- (UICollectionViewLayoutAttributes *)attributesForRect:(NSArray *)layoutAttributes proposedContentOffset:(CGPoint)proposedContentOffset
+{
+    UICollectionViewLayoutAttributes *candidateAttributes = nil;
+    CGFloat proposedCenterOffset = 0;
+    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        proposedCenterOffset = self.pagingCenter ? (proposedContentOffset.x + self.collectionView.bounds.size.width / 2) : (proposedContentOffset.x + self.minimumLineSpacing);
+    } else {
+        proposedCenterOffset = self.pagingCenter ? (proposedContentOffset.y + self.collectionView.bounds.size.height / 2) : (proposedContentOffset.y + self.minimumLineSpacing);
+    }
+    
+    for (UICollectionViewLayoutAttributes *attributes in layoutAttributes) {
+        if (attributes.representedElementCategory != UICollectionElementCategoryCell) {
+            continue;
+        }
+        if (!candidateAttributes) {
+            candidateAttributes = attributes;
+            continue;
+        }
+        
+        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            if (self.pagingCenter) {
+                if (fabs(attributes.center.x - proposedCenterOffset) < fabs(candidateAttributes.center.x - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
+            } else {
+                if (fabs(attributes.frame.origin.x - proposedCenterOffset) < fabs(candidateAttributes.frame.origin.x - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
+            }
+        } else {
+            if (self.pagingCenter) {
+                if (fabs(attributes.center.y - proposedCenterOffset) < fabs(candidateAttributes.center.y - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
+            } else {
+                if (fabs(attributes.frame.origin.y - proposedCenterOffset) < fabs(candidateAttributes.frame.origin.y - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
+            }
+        }
+    }
+    return candidateAttributes;
+}
+
+@end
+
+#pragma mark - FWBannerView
 
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, weak) UICollectionView *mainView; // 显示图片的collectionView
-@property (nonatomic, weak) UICollectionViewFlowLayout *flowLayout;
+@property (nonatomic, weak) UICollectionView *mainView;
+@property (nonatomic, weak) FWBannerViewFlowLayout *flowLayout;
 @property (nonatomic, strong) NSArray *imagePathsGroup;
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
@@ -100,15 +312,15 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     return bannerView;
 }
 
-// 设置显示图片的collectionView
 - (void)setupMainView
 {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    FWBannerViewFlowLayout *flowLayout = [[FWBannerViewFlowLayout alloc] init];
+    _flowLayout = flowLayout;
     flowLayout.minimumLineSpacing = 0;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    _flowLayout = flowLayout;
     
     UICollectionView *mainView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:flowLayout];
+    _mainView = mainView;
     mainView.backgroundColor = [UIColor clearColor];
     mainView.pagingEnabled = YES;
     mainView.showsHorizontalScrollIndicator = NO;
@@ -119,7 +331,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     mainView.delegate = self;
     mainView.scrollsToTop = NO;
     [self addSubview:mainView];
-    _mainView = mainView;
+    [mainView fwPinEdgesToSuperview];
 }
 
 #pragma mark - properties
@@ -264,6 +476,56 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _flowLayout.scrollDirection = scrollDirection;
 }
 
+- (void)setItemPagingEnabled:(BOOL)itemPagingEnabled
+{
+    _itemPagingEnabled = itemPagingEnabled;
+    
+    if (itemPagingEnabled) {
+        _mainView.pagingEnabled = NO;
+        _mainView.decelerationRate = UIScrollViewDecelerationRateFast;
+        _flowLayout.pagingEnabled = YES;
+        
+        // 兼容自动布局，避免_mainView的frame为0
+        if (CGSizeEqualToSize(_mainView.bounds.size, CGSizeZero)) {
+            [self setNeedsLayout];
+            [self layoutIfNeeded];
+        }
+    } else {
+        _mainView.pagingEnabled = YES;
+        _flowLayout.pagingEnabled = NO;
+    }
+}
+
+- (void)setItemSize:(CGSize)itemSize
+{
+    _itemSize = itemSize;
+    
+    _flowLayout.itemSize = itemSize;
+    if (!self.itemPagingEnabled) {
+        self.itemPagingEnabled = YES;
+    }
+}
+
+- (void)setItemSpacing:(CGFloat)itemSpacing
+{
+    _itemSpacing = itemSpacing;
+    
+    _flowLayout.minimumLineSpacing = itemSpacing;
+    if (!self.itemPagingEnabled) {
+        self.itemPagingEnabled = YES;
+    }
+}
+
+- (void)setItemPagingCenter:(BOOL)itemPagingCenter
+{
+    _itemPagingCenter = itemPagingCenter;
+    
+    _flowLayout.pagingCenter = itemPagingCenter;
+    if (!self.itemPagingEnabled) {
+        self.itemPagingEnabled = YES;
+    }
+}
+
 - (void)setAutoScrollTimeInterval:(CGFloat)autoScrollTimeInterval
 {
     _autoScrollTimeInterval = autoScrollTimeInterval;
@@ -276,10 +538,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     [self invalidateTimer];
     
     _imagePathsGroup = imagePathsGroup;
-    
     _totalItemsCount = self.infiniteLoop ? self.imagePathsGroup.count * 100 : self.imagePathsGroup.count;
     
-    if (imagePathsGroup.count > 1) { // 由于 !=1 包含count == 0等情况
+    if (imagePathsGroup.count > 1) {
         self.mainView.scrollEnabled = YES;
         [self setAutoScroll:self.autoScroll];
     } else {
@@ -330,7 +591,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
-- (void)disableScrollGesture {
+- (void)disableScrollGesture
+{
     self.mainView.canCancelContentTouches = NO;
     for (UIGestureRecognizer *gesture in self.mainView.gestureRecognizers) {
         if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
@@ -343,7 +605,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupTimer
 {
-    [self invalidateTimer]; // 创建定时器前先停止定时器，不然会出现僵尸定时器，导致轮播频率错误
+    [self invalidateTimer];
     
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:self.autoScrollTimeInterval target:self selector:@selector(automaticScroll) userInfo:nil repeats:YES];
     _timer = timer;
@@ -358,14 +620,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupPageControl
 {
-    if (_pageControl) [_pageControl removeFromSuperview]; // 重新加载数据时调整
+    if (_pageControl) [_pageControl removeFromSuperview];
     
     if (self.imagePathsGroup.count == 0 || self.onlyDisplayText) return;
-    
     if ((self.imagePathsGroup.count == 1) && self.hidesForSinglePage) return;
     
-    int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[self currentIndex]];
-    
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[_flowLayout currentPage]];
+
     switch (self.pageControlStyle) {
         case FWBannerViewPageControlStyleCustom: {
             FWPageControl *pageControl = [[FWPageControl alloc] init];
@@ -402,7 +663,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             break;
     }
     
-    // 重设pagecontroldot图片
     if (self.currentPageDotImage) {
         self.currentPageDotImage = self.currentPageDotImage;
     }
@@ -414,42 +674,25 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)automaticScroll
 {
     if (0 == _totalItemsCount) return;
-    int currentIndex = [self currentIndex];
-    int targetIndex = currentIndex + 1;
+    NSInteger targetIndex = [_flowLayout currentPage] + 1;;
     [self scrollToIndex:targetIndex];
 }
 
-- (void)scrollToIndex:(int)targetIndex
+- (void)scrollToIndex:(NSInteger)targetIndex
 {
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
-            [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+            [_flowLayout scrollToPage:targetIndex animated:NO];
         }
         return;
     }
-    [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+    [_flowLayout scrollToPage:targetIndex animated:YES];
 }
 
-- (int)currentIndex
+- (NSInteger)pageControlIndexWithCurrentCellIndex:(NSInteger)index
 {
-    if (_mainView.frame.size.width == 0 || _mainView.frame.size.height == 0) {
-        return 0;
-    }
-    
-    int index = 0;
-    if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        index = (_mainView.contentOffset.x + _flowLayout.itemSize.width * 0.5) / _flowLayout.itemSize.width;
-    } else {
-        index = (_mainView.contentOffset.y + _flowLayout.itemSize.height * 0.5) / _flowLayout.itemSize.height;
-    }
-    
-    return MAX(0, index);
-}
-
-- (int)pageControlIndexWithCurrentCellIndex:(NSInteger)index
-{
-    return (int)index % self.imagePathsGroup.count;
+    return index % self.imagePathsGroup.count;
 }
 
 #pragma mark - life circles
@@ -460,17 +703,29 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     [super layoutSubviews];
     
-    _flowLayout.itemSize = self.frame.size;
+    if (CGSizeEqualToSize(_itemSize, CGSizeZero)) {
+        if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            _flowLayout.itemSize = CGSizeMake(self.frame.size.width - _flowLayout.minimumLineSpacing * 2, self.frame.size.height);
+        } else {
+            _flowLayout.itemSize = CGSizeMake(self.frame.size.width, self.frame.size.height - _flowLayout.minimumLineSpacing * 2);
+        }
+    }
     
     _mainView.frame = self.bounds;
-    if (_mainView.contentOffset.x == 0 &&  _totalItemsCount) {
+    BOOL needScroll = NO;
+    if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        needScroll = _mainView.contentOffset.x <= 0;
+    } else {
+        needScroll = _mainView.contentOffset.y <= 0;
+    }
+    if (needScroll &&  _totalItemsCount) {
         int targetIndex = 0;
         if (self.infiniteLoop) {
             targetIndex = _totalItemsCount * 0.5;
         }else{
             targetIndex = 0;
         }
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [_flowLayout scrollToPage:targetIndex animated:NO];
     }
     
     CGSize size = CGSizeZero;
@@ -519,9 +774,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)adjustWhenControllerViewWillAppear
 {
-    long targetIndex = [self currentIndex];
+    NSInteger targetIndex = [_flowLayout currentPage];
     if (targetIndex < _totalItemsCount) {
-        [_mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [_flowLayout scrollToPage:targetIndex animated:NO];
     }
 }
 
@@ -604,8 +859,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
-    int itemIndex = [self currentIndex];
-    int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
+    NSInteger itemIndex = [_flowLayout currentPage];
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageControl = (FWPageControl *)_pageControl;
@@ -638,8 +893,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
-    int itemIndex = [self currentIndex];
-    int indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
+    NSInteger itemIndex = [_flowLayout currentPage];
+    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
     if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
         [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
@@ -654,7 +909,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
     if (0 == _totalItemsCount) return;
     
-    [self scrollToIndex:(int)(_totalItemsCount * 0.5 + index)];
+    [self scrollToIndex:(NSInteger)(_totalItemsCount * 0.5 + index)];
     
     if (self.autoScroll) {
         [self setupTimer];
@@ -662,6 +917,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 }
 
 @end
+
+#pragma mark - FWBannerViewCell
 
 @implementation FWBannerViewCell
 {

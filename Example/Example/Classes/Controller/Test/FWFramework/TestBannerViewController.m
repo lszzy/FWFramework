@@ -22,6 +22,9 @@
     [self renderCycleView1];
     [self renderCycleView2];
     [self renderCycleView3];
+    [self renderCycleView4];
+    [self renderCycleView5];
+    [self renderCycleView6];
 }
 
 - (void)renderCycleView1
@@ -35,7 +38,7 @@
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
@@ -43,6 +46,7 @@
     [imageUrls addObject:@"not_found.jpg"];
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
@@ -61,7 +65,7 @@
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     // 看起来不会连在一起
     cycleView.contentViewInset = UIEdgeInsetsMake(0, 0, 0, 10);
     [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth + 10];
@@ -92,7 +96,7 @@
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:135];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
@@ -100,6 +104,97 @@
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
+    
+    self.previousView = cycleView;
+}
+
+- (void)renderCycleView4
+{
+    FWBannerView *cycleView = [FWBannerView new];
+    cycleView.contentViewCornerRadius = 5;
+    cycleView.delegate = self;
+    cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
+    cycleView.itemPagingEnabled = YES;
+    cycleView.itemSpacing = 10;
+    cycleView.autoScroll = YES;
+    cycleView.autoScrollTimeInterval = 6;
+    [self.view addSubview:cycleView];
+    [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
+    
+    NSMutableArray *imageUrls2 = [NSMutableArray array];
+    [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"not_found.jpg"];
+    [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
+    
+    self.previousView = cycleView;
+}
+
+- (void)renderCycleView5
+{
+    FWBannerView *cycleView = [FWBannerView new];
+    cycleView.contentViewCornerRadius = 5;
+    cycleView.delegate = self;
+    cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
+    cycleView.itemSpacing = 10;
+    cycleView.itemPagingEnabled = YES;
+    cycleView.itemSize = CGSizeMake(FWScreenWidth - 30, 100);
+    cycleView.autoScroll = YES;
+    cycleView.autoScrollTimeInterval = 6;
+    [self.view addSubview:cycleView];
+    [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
+    
+    NSMutableArray *imageUrls2 = [NSMutableArray array];
+    [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"not_found.jpg"];
+    [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
+    
+    self.previousView = cycleView;
+}
+
+- (void)renderCycleView6
+{
+    FWBannerView *cycleView = [FWBannerView new];
+    cycleView.contentViewCornerRadius = 5;
+    cycleView.delegate = self;
+    cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
+    cycleView.itemSpacing = 10;
+    cycleView.itemPagingEnabled = YES;
+    cycleView.itemPagingCenter = YES;
+    cycleView.itemSize = CGSizeMake(FWScreenWidth - 40, 100);
+    cycleView.autoScroll = YES;
+    cycleView.autoScrollTimeInterval = 6;
+    [self.view addSubview:cycleView];
+    [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:100];
+    
+    NSMutableArray *imageUrls2 = [NSMutableArray array];
+    [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"not_found.jpg"];
+    [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
