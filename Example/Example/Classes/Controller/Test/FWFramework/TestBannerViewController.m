@@ -46,6 +46,7 @@
     [imageUrls addObject:@"not_found.jpg"];
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
@@ -103,6 +104,7 @@
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
@@ -131,6 +133,7 @@
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
@@ -160,6 +163,7 @@
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
@@ -190,6 +194,7 @@
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     self.previousView = cycleView;
 }
