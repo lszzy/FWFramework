@@ -17,6 +17,7 @@
 @property (nonatomic, assign) CGSize lastCollectionViewSize;
 @property (nonatomic, assign) UICollectionViewScrollDirection lastScrollDirection;
 @property (nonatomic, assign) CGSize lastItemSize;
+@property (nonatomic, assign) BOOL scrollCenter;
 @property (nonatomic, assign, readonly) CGFloat pageWidth;
 @property (nonatomic, assign, readonly) NSInteger currentPage;
 
@@ -71,11 +72,11 @@
         self.lastScrollDirection != self.scrollDirection ||
         !CGSizeEqualToSize(self.lastItemSize, self.itemSize)) {
         if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-            CGFloat inset = (currentCollectionViewSize.width - self.itemSize.width) / 2;
+            CGFloat inset = self.scrollCenter ? (currentCollectionViewSize.width - self.itemSize.width) / 2 : self.minimumLineSpacing;
             self.collectionView.contentInset = UIEdgeInsetsMake(0, inset, 0, inset);
             self.collectionView.contentOffset = CGPointMake(-inset, 0);
         } else {
-            CGFloat inset = (currentCollectionViewSize.height - self.itemSize.height) / 2;
+            CGFloat inset = self.scrollCenter ? (currentCollectionViewSize.height - self.itemSize.height) / 2 : self.minimumLineSpacing;
             self.collectionView.contentInset = UIEdgeInsetsMake(inset, 0, inset, 0);
             self.collectionView.contentOffset = CGPointMake(0, -inset);
         }
@@ -102,7 +103,7 @@
     CGFloat newOffset;
     CGFloat offset;
     if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        newOffset = candidateAttributesForRect.center.x - self.collectionView.bounds.size.width / 2;
+        newOffset = self.scrollCenter ? (candidateAttributesForRect.center.x - self.collectionView.bounds.size.width / 2) : (candidateAttributesForRect.frame.origin.x - self.minimumLineSpacing);
         offset = newOffset - self.collectionView.contentOffset.x;
         if ((velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0)) {
             CGFloat pageWidth = self.itemSize.width + self.minimumLineSpacing;
@@ -110,7 +111,7 @@
         }
         return CGPointMake(newOffset, proposedContentOffset.y);
     } else {
-        newOffset = candidateAttributesForRect.center.y - self.collectionView.bounds.size.height / 2;
+        newOffset = self.scrollCenter ? (candidateAttributesForRect.center.y - self.collectionView.bounds.size.height / 2) : (candidateAttributesForRect.frame.origin.y - self.minimumLineSpacing);
         offset = newOffset - self.collectionView.contentOffset.y;
         if ((velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0)) {
             CGFloat pageHeight = self.itemSize.height + self.minimumLineSpacing;
@@ -155,9 +156,9 @@
     UICollectionViewLayoutAttributes *candidateAttributes = nil;
     CGFloat proposedCenterOffset = 0;
     if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        proposedCenterOffset = proposedContentOffset.x + self.collectionView.bounds.size.width / 2;
+        proposedCenterOffset = self.scrollCenter ? (proposedContentOffset.x + self.collectionView.bounds.size.width / 2) : (proposedContentOffset.x + self.minimumLineSpacing);
     } else {
-        proposedCenterOffset = proposedContentOffset.y + self.collectionView.bounds.size.height / 2;
+        proposedCenterOffset = self.scrollCenter ? (proposedContentOffset.y + self.collectionView.bounds.size.height / 2) : (proposedContentOffset.y + self.minimumLineSpacing);
     }
     
     for (UICollectionViewLayoutAttributes *attributes in layoutAttributes) {
@@ -170,12 +171,24 @@
         }
         
         if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-            if (fabs(attributes.center.x - proposedCenterOffset) < fabs(candidateAttributes.center.x - proposedCenterOffset)) {
-                candidateAttributes = attributes;
+            if (self.scrollCenter) {
+                if (fabs(attributes.center.x - proposedCenterOffset) < fabs(candidateAttributes.center.x - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
+            } else {
+                if (fabs(attributes.frame.origin.x - proposedCenterOffset) < fabs(candidateAttributes.frame.origin.x - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
             }
         } else {
-            if (fabs(attributes.center.y - proposedCenterOffset) < fabs(candidateAttributes.center.y - proposedCenterOffset)) {
-                candidateAttributes = attributes;
+            if (self.scrollCenter) {
+                if (fabs(attributes.center.y - proposedCenterOffset) < fabs(candidateAttributes.center.y - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
+            } else {
+                if (fabs(attributes.frame.origin.y - proposedCenterOffset) < fabs(candidateAttributes.frame.origin.y - proposedCenterOffset)) {
+                    candidateAttributes = attributes;
+                }
             }
         }
     }
