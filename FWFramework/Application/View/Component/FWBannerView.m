@@ -66,6 +66,16 @@
     if (!self.collectionView) return 0;
     if (self.collectionView.frame.size.width == 0 || self.collectionView.frame.size.height == 0) return 0;
     
+    if (!self.pagingEnabled) {
+        NSInteger currentPage = 0;
+        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+            currentPage = (self.collectionView.contentOffset.x + self.itemSize.width * 0.5) / self.itemSize.width;
+        } else {
+            currentPage = (self.collectionView.contentOffset.y + self.itemSize.height * 0.5) / self.itemSize.height;
+        }
+        return MAX(0, currentPage);
+    }
+    
     CGPoint currentPoint = CGPointMake(self.collectionView.contentOffset.x + self.collectionView.bounds.size.width / 2, self.collectionView.contentOffset.y + self.collectionView.bounds.size.height / 2);
     return [self.collectionView indexPathForItemAtPoint:currentPoint].row;
 }
@@ -73,6 +83,11 @@
 - (void)scrollToPage:(NSInteger)index animated:(BOOL)animated
 {
     if (!self.collectionView) return;
+    
+    if (!self.pagingEnabled) {
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+        return;
+    }
     
     CGPoint proposedContentOffset;
     BOOL shouldAnimate;
@@ -461,20 +476,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _flowLayout.scrollDirection = scrollDirection;
 }
 
-- (void)setItemSize:(CGSize)itemSize
-{
-    _itemSize = itemSize;
-    
-    _flowLayout.itemSize = itemSize;
-}
-
-- (void)setItemSpacing:(CGFloat)itemSpacing
-{
-    _itemSpacing = itemSpacing;
-    
-    _flowLayout.minimumLineSpacing = itemSpacing;
-}
-
 - (void)setItemPagingEnabled:(BOOL)itemPagingEnabled
 {
     _itemPagingEnabled = itemPagingEnabled;
@@ -495,11 +496,34 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
+- (void)setItemSize:(CGSize)itemSize
+{
+    _itemSize = itemSize;
+    
+    _flowLayout.itemSize = itemSize;
+    if (!self.itemPagingEnabled) {
+        self.itemPagingEnabled = YES;
+    }
+}
+
+- (void)setItemSpacing:(CGFloat)itemSpacing
+{
+    _itemSpacing = itemSpacing;
+    
+    _flowLayout.minimumLineSpacing = itemSpacing;
+    if (!self.itemPagingEnabled) {
+        self.itemPagingEnabled = YES;
+    }
+}
+
 - (void)setItemPagingCenter:(BOOL)itemPagingCenter
 {
     _itemPagingCenter = itemPagingCenter;
     
     _flowLayout.pagingCenter = itemPagingCenter;
+    if (!self.itemPagingEnabled) {
+        self.itemPagingEnabled = YES;
+    }
 }
 
 - (void)setAutoScrollTimeInterval:(CGFloat)autoScrollTimeInterval
