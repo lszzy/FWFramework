@@ -18,6 +18,8 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 @interface FWInfiniteScrollView ()
 
 @property (nonatomic, copy) void (^infiniteScrollBlock)(void);
+@property (nonatomic, weak) id target;
+@property (nonatomic) SEL action;
 
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, readwrite) FWInfiniteScrollState state;
@@ -217,8 +219,17 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
         }
     }
     
-    if(previousState == FWInfiniteScrollStateTriggered && newState == FWInfiniteScrollStateLoading && self.infiniteScrollBlock && self.enabled)
-        self.infiniteScrollBlock();
+    if(previousState == FWInfiniteScrollStateTriggered && newState == FWInfiniteScrollStateLoading && self.enabled) {
+        if(self.infiniteScrollBlock) {
+            self.infiniteScrollBlock();
+        }
+        else if(self.target && self.action && [self.target respondsToSelector:self.action]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            [self.target performSelector:self.action];
+#pragma clang diagnostic pop
+        }
+    }
 }
 
 @end
@@ -232,10 +243,19 @@ static char UIScrollViewFWInfiniteScrollView;
 @dynamic fwInfiniteScrollView;
 
 - (void)fwAddInfiniteScrollWithBlock:(void (^)(void))block {
-    
+    [self fwAddInfiniteScrollWithBlock:block target:nil action:NULL];
+}
+
+- (void)fwAddInfiniteScrollWithTarget:(id)target action:(SEL)action {
+    [self fwAddInfiniteScrollWithBlock:nil target:target action:action];
+}
+
+- (void)fwAddInfiniteScrollWithBlock:(void (^)(void))block target:(id)target action:(SEL)action {
     if(!self.fwInfiniteScrollView) {
         FWInfiniteScrollView *view = [[FWInfiniteScrollView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.bounds.size.width, FWInfiniteScrollViewHeight)];
         view.infiniteScrollBlock = block;
+        view.target = target;
+        view.action = action;
         view.scrollView = self;
         [self addSubview:view];
         
