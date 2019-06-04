@@ -51,6 +51,8 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 - (void)fwAddPullRefreshWithBlock:(void (^)(void))block;
 - (void)fwAddPullRefreshWithBlock:(void (^)(void))block position:(FWPullRefreshPosition)position;
+- (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action;
+- (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action position:(FWPullRefreshPosition)position;
 - (void)fwTriggerPullRefresh;
 
 @property (nonatomic, strong, readonly) FWPullRefreshView *fwPullRefreshView;
