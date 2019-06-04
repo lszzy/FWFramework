@@ -106,18 +106,8 @@
 
 - (void)renderView
 {
-    FWWeakifySelf();
-    [self.tableView fwAddPullRefreshWithBlock:^{
-        FWStrongifySelf();
-        
-        [self onRefreshing];
-    }];
-    
-    [self.tableView fwAddInfiniteScrollWithBlock:^{
-        FWStrongifySelf();
-        
-        [self onLoading];
-    }];
+    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     pullView.image = [UIImage imageNamed:@"public_icon"];

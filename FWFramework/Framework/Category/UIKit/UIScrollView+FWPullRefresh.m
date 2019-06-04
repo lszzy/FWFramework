@@ -58,6 +58,8 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 @interface FWPullRefreshView ()
 
 @property (nonatomic, copy) void (^pullRefreshBlock)(void);
+@property (nonatomic, weak) id target;
+@property (nonatomic) SEL action;
 
 @property (nonatomic, strong) FWPullRefreshArrow *arrow;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
@@ -548,8 +550,16 @@ static CGFloat const FWPullRefreshViewHeight = 54;
         case FWPullRefreshStateLoading:
             [self setScrollViewContentInsetForLoading];
             
-            if(previousState == FWPullRefreshStateTriggered && pullRefreshBlock)
-                pullRefreshBlock();
+            if(previousState == FWPullRefreshStateTriggered) {
+                if(pullRefreshBlock) {
+                    pullRefreshBlock();
+                }else if(self.target && self.action && [self.target respondsToSelector:self.action]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    [self.target performSelector:self.action];
+#pragma clang diagnostic pop
+                }
+            }
             
             break;
     }
@@ -573,8 +583,23 @@ static char UIScrollViewFWPullRefreshView;
 
 @dynamic fwPullRefreshView, fwShowPullRefresh;
 
+- (void)fwAddPullRefreshWithBlock:(void (^)(void))block {
+    [self fwAddPullRefreshWithBlock:block position:FWPullRefreshPositionTop];
+}
+
 - (void)fwAddPullRefreshWithBlock:(void (^)(void))block position:(FWPullRefreshPosition)position {
-    
+    [self fwAddPullRefreshWithBlock:block target:nil action:NULL position:position];
+}
+
+- (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action {
+    [self fwAddPullRefreshWithTarget:target action:action position:FWPullRefreshPositionTop];
+}
+
+- (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action position:(FWPullRefreshPosition)position {
+    [self fwAddPullRefreshWithBlock:nil target:target action:action position:position];
+}
+
+- (void)fwAddPullRefreshWithBlock:(void (^)(void))block target:(id)target action:(SEL)action position:(FWPullRefreshPosition)position {
     if(!self.fwPullRefreshView) {
         CGFloat yOrigin;
         switch (position) {
@@ -589,6 +614,8 @@ static char UIScrollViewFWPullRefreshView;
         }
         FWPullRefreshView *view = [[FWPullRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight)];
         view.pullRefreshBlock = block;
+        view.target = target;
+        view.action = action;
         view.scrollView = self;
         [self addSubview:view];
         
@@ -598,11 +625,6 @@ static char UIScrollViewFWPullRefreshView;
         self.fwPullRefreshView = view;
         self.fwShowPullRefresh = YES;
     }
-    
-}
-
-- (void)fwAddPullRefreshWithBlock:(void (^)(void))block {
-    [self fwAddPullRefreshWithBlock:block position:FWPullRefreshPositionTop];
 }
 
 - (void)fwTriggerPullRefresh {
