@@ -213,9 +213,9 @@ static CGFloat const FWPullRefreshViewHeight = 54;
                                                               context:nil].size;
         
         CGSize subtitleSize = [self.subtitleLabel.text boundingRectWithSize:CGSizeMake(labelMaxWidth,self.subtitleLabel.font.lineHeight)
-                                                              options:(NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin)
-                                                           attributes:@{NSFontAttributeName: self.subtitleLabel.font}
-                                                              context:nil].size;
+                                                                    options:(NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin)
+                                                                 attributes:@{NSFontAttributeName: self.subtitleLabel.font}
+                                                                    context:nil].size;
         
         CGFloat maxLabelWidth = MAX(titleSize.width,subtitleSize.width);
         
@@ -440,6 +440,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
         [self.titles replaceObjectAtIndex:state withObject:title];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setSubtitle:(NSString *)subtitle forState:(FWPullRefreshState)state {
@@ -452,6 +453,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
         [self.subtitles replaceObjectAtIndex:state withObject:subtitle];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setCustomView:(UIView *)view forState:(FWPullRefreshState)state {
@@ -466,6 +468,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
         [self.viewForState replaceObjectAtIndex:state withObject:viewPlaceholder];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setTextColor:(UIColor *)newTextColor {
@@ -600,31 +603,31 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)fwAddPullRefreshWithBlock:(void (^)(void))block target:(id)target action:(SEL)action position:(FWPullRefreshPosition)position {
-    if(!self.fwPullRefreshView) {
-        CGFloat yOrigin;
-        switch (position) {
-            case FWPullRefreshPositionTop:
-                yOrigin = -FWPullRefreshViewHeight;
-                break;
-            case FWPullRefreshPositionBottom:
-                yOrigin = self.contentSize.height;
-                break;
-            default:
-                return;
-        }
-        FWPullRefreshView *view = [[FWPullRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight)];
-        view.pullRefreshBlock = block;
-        view.target = target;
-        view.action = action;
-        view.scrollView = self;
-        [self addSubview:view];
-        
-        view.originalTopInset = self.contentInset.top;
-        view.originalBottomInset = self.contentInset.bottom;
-        view.position = position;
-        self.fwPullRefreshView = view;
-        self.fwShowPullRefresh = YES;
+    [self.fwPullRefreshView removeFromSuperview];
+    
+    CGFloat yOrigin;
+    switch (position) {
+        case FWPullRefreshPositionTop:
+            yOrigin = -FWPullRefreshViewHeight;
+            break;
+        case FWPullRefreshPositionBottom:
+            yOrigin = self.contentSize.height;
+            break;
+        default:
+            return;
     }
+    FWPullRefreshView *view = [[FWPullRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight)];
+    view.pullRefreshBlock = block;
+    view.target = target;
+    view.action = action;
+    view.scrollView = self;
+    [self addSubview:view];
+    
+    view.originalTopInset = self.contentInset.top;
+    view.originalBottomInset = self.contentInset.bottom;
+    view.position = position;
+    self.fwPullRefreshView = view;
+    self.fwShowPullRefresh = YES;
 }
 
 - (void)fwTriggerPullRefresh {
@@ -645,8 +648,9 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)setFwShowPullRefresh:(BOOL)fwShowPullRefresh {
-    self.fwPullRefreshView.hidden = !fwShowPullRefresh;
+    if(!self.fwPullRefreshView)return;
     
+    self.fwPullRefreshView.hidden = !fwShowPullRefresh;
     if(!fwShowPullRefresh) {
         if (self.fwPullRefreshView.isObserving) {
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"contentOffset"];
@@ -673,6 +677,8 @@ static char UIScrollViewFWPullRefreshView;
                     break;
             }
             
+            [self.fwPullRefreshView setNeedsLayout];
+            [self.fwPullRefreshView layoutIfNeeded];
             self.fwPullRefreshView.frame = CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight);
         }
     }

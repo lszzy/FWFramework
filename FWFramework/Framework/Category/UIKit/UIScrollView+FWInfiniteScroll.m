@@ -251,18 +251,18 @@ static char UIScrollViewFWInfiniteScrollView;
 }
 
 - (void)fwAddInfiniteScrollWithBlock:(void (^)(void))block target:(id)target action:(SEL)action {
-    if(!self.fwInfiniteScrollView) {
-        FWInfiniteScrollView *view = [[FWInfiniteScrollView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.bounds.size.width, FWInfiniteScrollViewHeight)];
-        view.infiniteScrollBlock = block;
-        view.target = target;
-        view.action = action;
-        view.scrollView = self;
-        [self addSubview:view];
-        
-        view.originalBottomInset = self.contentInset.bottom;
-        self.fwInfiniteScrollView = view;
-        self.fwShowInfiniteScroll = YES;
-    }
+    [self.fwInfiniteScrollView removeFromSuperview];
+    
+    FWInfiniteScrollView *view = [[FWInfiniteScrollView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.bounds.size.width, FWInfiniteScrollViewHeight)];
+    view.infiniteScrollBlock = block;
+    view.target = target;
+    view.action = action;
+    view.scrollView = self;
+    [self addSubview:view];
+    
+    view.originalBottomInset = self.contentInset.bottom;
+    self.fwInfiniteScrollView = view;
+    self.fwShowInfiniteScroll = YES;
 }
 
 - (void)fwTriggerInfiniteScroll {
@@ -283,8 +283,9 @@ static char UIScrollViewFWInfiniteScrollView;
 }
 
 - (void)setFwShowInfiniteScroll:(BOOL)fwShowInfiniteScroll {
-    self.fwInfiniteScrollView.hidden = !fwShowInfiniteScroll;
+    if(!self.fwInfiniteScrollView)return;
     
+    self.fwInfiniteScrollView.hidden = !fwShowInfiniteScroll;
     if(!fwShowInfiniteScroll) {
         if (self.fwInfiniteScrollView.isObserving) {
             [self removeObserver:self.fwInfiniteScrollView forKeyPath:@"contentOffset"];
@@ -301,6 +302,7 @@ static char UIScrollViewFWInfiniteScrollView;
             self.fwInfiniteScrollView.isObserving = YES;
             
             [self.fwInfiniteScrollView setNeedsLayout];
+            [self.fwInfiniteScrollView layoutIfNeeded];
             self.fwInfiniteScrollView.frame = CGRectMake(0, self.contentSize.height, self.fwInfiniteScrollView.bounds.size.width, FWInfiniteScrollViewHeight);
         }
     }
