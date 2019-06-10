@@ -211,6 +211,10 @@
 		2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */; };
 		2F1E39682178F9E00051A6BB /* FWCollectionViewFlowLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1E39692178F9E00051A6BB /* FWCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */; };
+		2F1E61F822AE90F400A1AB49 /* FWAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E61F422AE90F300A1AB49 /* FWAsyncUdpSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1E61F922AE90F400A1AB49 /* FWAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */; };
+		2F1E61FA22AE90F400A1AB49 /* FWAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */; };
+		2F1E61FB22AE90F400A1AB49 /* FWAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
 		2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -499,6 +503,10 @@
 		2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWIndicatorControl.m; sourceTree = "<group>"; };
 		2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		2F1E61F422AE90F300A1AB49 /* FWAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncUdpSocket.h; sourceTree = "<group>"; };
+		2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncSocket.m; sourceTree = "<group>"; };
+		2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncUdpSocket.m; sourceTree = "<group>"; };
+		2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncSocket.h; sourceTree = "<group>"; };
 		2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIPageControl+FWFramework.h"; sourceTree = "<group>"; };
 		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+FWFramework.h"; sourceTree = "<group>"; };
@@ -781,6 +789,7 @@
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
+				2F1E61F322AE905400A1AB49 /* Socket */,
 				2FCE512F21D3746B009EA65E /* Database */,
 				2FCE515421D3B90F009EA65E /* Cache */,
 			);
@@ -942,6 +951,17 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		2F1E61F322AE905400A1AB49 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */,
+				2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */,
+				2F1E61F422AE90F300A1AB49 /* FWAsyncUdpSocket.h */,
+				2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */,
+			);
+			path = Socket;
+			sourceTree = "<group>";
+		};
 		2F7E41F420FC2DCF00CE3E2F = {
 			isa = PBXGroup;
 			children = (
@@ -1054,6 +1074,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1E61F822AE90F400A1AB49 /* FWAsyncUdpSocket.h in Headers */,
+				2F1E61FB22AE90F400A1AB49 /* FWAsyncSocket.h in Headers */,
 				2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */,
 				2FA99EA7228E80810059DFDB /* UISwitch+FWFramework.h in Headers */,
 				2FA99E98228E71DA0059DFDB /* FWNotificationManager.h in Headers */,
@@ -1311,6 +1333,7 @@
 				2FCE514021D3A43E009EA65E /* FWDatabaseQueue.m in Sources */,
 				2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */,
 				2FA99EA8228E80810059DFDB /* UISwitch+FWFramework.m in Sources */,
+				2F1E61F922AE90F400A1AB49 /* FWAsyncSocket.m in Sources */,
 				2F03A640216CF882001965A1 /* FWNetworkAgent.m in Sources */,
 				2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */,
 				2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */,
@@ -1391,6 +1414,7 @@
 				2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */,
 				2F0FFF3121D20EA800049383 /* NSAttributedString+FWFramework.m in Sources */,
 				2F03A5B8216CF4B9001965A1 /* UIApplication+FWFramework.m in Sources */,
+				2F1E61FA22AE90F400A1AB49 /* FWAsyncUdpSocket.m in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */,
 				2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */,
