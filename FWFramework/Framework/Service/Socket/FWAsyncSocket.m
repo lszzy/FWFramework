@@ -874,10 +874,6 @@ enum FWAsyncSocketConfig
 		delegate = aDelegate;
 		delegateQueue = dq;
 		
-		#if !OS_OBJECT_USE_OBJC
-		if (dq) dispatch_retain(dq);
-		#endif
-		
 		socket4FD = SOCKET_NULL;
 		socket6FD = SOCKET_NULL;
 		socketUN = SOCKET_NULL;
@@ -894,9 +890,6 @@ enum FWAsyncSocketConfig
 			         @"The given socketQueue parameter must not be a concurrent queue.");
 			
 			socketQueue = sq;
-			#if !OS_OBJECT_USE_OBJC
-			dispatch_retain(sq);
-			#endif
 		}
 		else
 		{
@@ -958,14 +951,8 @@ enum FWAsyncSocketConfig
 	
 	delegate = nil;
 	
-	#if !OS_OBJECT_USE_OBJC
-	if (delegateQueue) dispatch_release(delegateQueue);
-	#endif
 	delegateQueue = NULL;
 	
-	#if !OS_OBJECT_USE_OBJC
-	if (socketQueue) dispatch_release(socketQueue);
-	#endif
 	socketQueue = NULL;
 	
 	LogInfo(@"%@ - %@ (finish)", NSStringFromSelector(_cmd), self);
@@ -1105,11 +1092,6 @@ enum FWAsyncSocketConfig
 {
 	dispatch_block_t block = ^{
 		
-		#if !OS_OBJECT_USE_OBJC
-        if (self->delegateQueue) dispatch_release(self->delegateQueue);
-		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
-		#endif
-		
         self->delegateQueue = newDelegateQueue;
 	};
 	
@@ -1161,11 +1143,6 @@ enum FWAsyncSocketConfig
 	dispatch_block_t block = ^{
 		
         self->delegate = newDelegate;
-		
-		#if !OS_OBJECT_USE_OBJC
-        if (self->delegateQueue) dispatch_release(self->delegateQueue);
-		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
-		#endif
 		
         self->delegateQueue = newDelegateQueue;
 	};
@@ -1603,11 +1580,6 @@ enum FWAsyncSocketConfig
 			#pragma clang diagnostic push
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
 				
-				#if !OS_OBJECT_USE_OBJC
-				LogVerbose(@"dispatch_release(accept4Source)");
-				dispatch_release(acceptSource);
-				#endif
-				
 				LogVerbose(@"close(socket4FD)");
 				close(socketFD);
 			
@@ -1649,11 +1621,6 @@ enum FWAsyncSocketConfig
             dispatch_source_set_cancel_handler(self->accept6Source, ^{
 			#pragma clang diagnostic push
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
-				
-				#if !OS_OBJECT_USE_OBJC
-				LogVerbose(@"dispatch_release(accept6Source)");
-				dispatch_release(acceptSource);
-				#endif
 				
 				LogVerbose(@"close(socket6FD)");
 				close(socketFD);
@@ -2010,11 +1977,6 @@ enum FWAsyncSocketConfig
 			{
 				[theDelegate socket:self didAcceptNewSocket:acceptedSocket];
 			}
-			
-			// Release the socket queue returned from the delegate (it was retained by acceptedSocket)
-			#if !OS_OBJECT_USE_OBJC
-			if (childSocketQueue) dispatch_release(childSocketQueue);
-			#endif
 			
 			// The accepted socket should have been retained by the delegate.
 			// Otherwise it gets properly released when exiting the block.
@@ -3043,19 +3005,6 @@ enum FWAsyncSocketConfig
 			
 		#pragma clang diagnostic pop
 		}});
-		
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_source_t theConnectTimer = connectTimer;
-		dispatch_source_set_cancel_handler(connectTimer, ^{
-		#pragma clang diagnostic push
-		#pragma clang diagnostic warning "-Wimplicit-retain-self"
-			
-			LogVerbose(@"dispatch_release(connectTimer)");
-			dispatch_release(theConnectTimer);
-			
-		#pragma clang diagnostic pop
-		});
-		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC));
 		dispatch_source_set_timer(connectTimer, tt, DISPATCH_TIME_FOREVER, 0);
@@ -4201,21 +4150,11 @@ enum FWAsyncSocketConfig
 	
 	__block int socketFDRefCount = 2;
 	
-	#if !OS_OBJECT_USE_OBJC
-	dispatch_source_t theReadSource = readSource;
-	dispatch_source_t theWriteSource = writeSource;
-	#endif
-	
 	dispatch_source_set_cancel_handler(readSource, ^{
 	#pragma clang diagnostic push
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		LogVerbose(@"readCancelBlock");
-		
-		#if !OS_OBJECT_USE_OBJC
-		LogVerbose(@"dispatch_release(readSource)");
-		dispatch_release(theReadSource);
-		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -4231,11 +4170,6 @@ enum FWAsyncSocketConfig
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		LogVerbose(@"writeCancelBlock");
-		
-		#if !OS_OBJECT_USE_OBJC
-		LogVerbose(@"dispatch_release(writeSource)");
-		dispatch_release(theWriteSource);
-		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -5704,19 +5638,6 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic pop
 		}});
 		
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_source_t theReadTimer = readTimer;
-		dispatch_source_set_cancel_handler(readTimer, ^{
-		#pragma clang diagnostic push
-		#pragma clang diagnostic warning "-Wimplicit-retain-self"
-			
-			LogVerbose(@"dispatch_release(readTimer)");
-			dispatch_release(theReadTimer);
-			
-		#pragma clang diagnostic pop
-		});
-		#endif
-		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC));
 		
 		dispatch_source_set_timer(readTimer, tt, DISPATCH_TIME_FOREVER, 0);
@@ -6346,19 +6267,6 @@ enum FWAsyncSocketConfig
 			
 		#pragma clang diagnostic pop
 		}});
-		
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_source_t theWriteTimer = writeTimer;
-		dispatch_source_set_cancel_handler(writeTimer, ^{
-		#pragma clang diagnostic push
-		#pragma clang diagnostic warning "-Wimplicit-retain-self"
-			
-			LogVerbose(@"dispatch_release(writeTimer)");
-			dispatch_release(theWriteTimer);
-			
-		#pragma clang diagnostic pop
-		});
-		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC));
 		
