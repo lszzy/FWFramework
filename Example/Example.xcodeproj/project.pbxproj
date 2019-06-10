@@ -22,6 +22,7 @@
 		2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E392E2178DFDF0051A6BB /* BaseCollectionViewController.m */; };
 		2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */; };
 		2F1E39412178F3710051A6BB /* TestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */; };
+		2F1E620C22AEAC2000A1AB49 /* TestSocketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */; };
 		2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */; };
 		2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F20E3CF22769156005D1F46 /* TestMapViewController.m */; };
 		2F2FBDC222410BB30037830E /* TestAuthorizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */; };
@@ -131,6 +132,8 @@
 		2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionViewController.m; sourceTree = "<group>"; };
 		2F1E393F2178F3710051A6BB /* TestIndicatorControlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestIndicatorControlViewController.h; sourceTree = "<group>"; };
 		2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestIndicatorControlViewController.m; sourceTree = "<group>"; };
+		2F1E620A22AEAC2000A1AB49 /* TestSocketViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSocketViewController.h; sourceTree = "<group>"; };
+		2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSocketViewController.m; sourceTree = "<group>"; };
 		2F203D43219E76BB00DA83D9 /* TestNestScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNestScrollViewController.h; sourceTree = "<group>"; };
 		2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNestScrollViewController.m; sourceTree = "<group>"; };
 		2F20E3CE22769156005D1F46 /* TestMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMapViewController.h; sourceTree = "<group>"; };
@@ -474,6 +477,8 @@
 				2FCA005D228020BE00611399 /* TestDrawerViewController.m */,
 				2F8901B72284228E00EDC7D4 /* TestMenuViewController.h */,
 				2F8901B82284228E00EDC7D4 /* TestMenuViewController.m */,
+				2F1E620A22AEAC2000A1AB49 /* TestSocketViewController.h */,
+				2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -825,6 +830,7 @@
 				2F0CCE3C21E496B30018FA87 /* FWDatabaseManager.m in Sources */,
 				2F1E392C2178D3140051A6BB /* BaseScrollViewController.m in Sources */,
 				2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */,
+				2F1E620C22AEAC2000A1AB49 /* TestSocketViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
 				2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */,
