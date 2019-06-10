@@ -314,9 +314,6 @@ enum FWAsyncUdpSocketConfig
 		if (dq)
 		{
 			delegateQueue = dq;
-			#if !OS_OBJECT_USE_OBJC
-			dispatch_retain(delegateQueue);
-			#endif
 		}
 		
 		max4ReceiveSize = 65535;
@@ -337,9 +334,6 @@ enum FWAsyncUdpSocketConfig
 			         @"The given socketQueue parameter must not be a concurrent queue.");
 			
 			socketQueue = sq;
-			#if !OS_OBJECT_USE_OBJC
-			dispatch_retain(socketQueue);
-			#endif
 		}
 		else
 		{
@@ -401,14 +395,9 @@ enum FWAsyncUdpSocketConfig
 	}
 	
 	delegate = nil;
-	#if !OS_OBJECT_USE_OBJC
-	if (delegateQueue) dispatch_release(delegateQueue);
-	#endif
+
 	delegateQueue = NULL;
 	
-	#if !OS_OBJECT_USE_OBJC
-	if (socketQueue) dispatch_release(socketQueue);
-	#endif
 	socketQueue = NULL;
 	
 	LogInfo(@"%@ - %@ (finish)", NSStringFromSelector(_cmd), self);
@@ -485,11 +474,6 @@ enum FWAsyncUdpSocketConfig
 {
 	dispatch_block_t block = ^{
 		
-		#if !OS_OBJECT_USE_OBJC
-        if (self->delegateQueue) dispatch_release(self->delegateQueue);
-		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
-		#endif
-		
         self->delegateQueue = newDelegateQueue;
 	};
 	
@@ -541,11 +525,6 @@ enum FWAsyncUdpSocketConfig
 	dispatch_block_t block = ^{
 		
         self->delegate = newDelegate;
-		
-		#if !OS_OBJECT_USE_OBJC
-        if (self->delegateQueue) dispatch_release(self->delegateQueue);
-		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
-		#endif
 		
         self->delegateQueue = newDelegateQueue;
 	};
@@ -1747,19 +1726,9 @@ enum FWAsyncUdpSocketConfig
 	
 	int theSocketFD = socket4FD;
 	
-	#if !OS_OBJECT_USE_OBJC
-	dispatch_source_t theSendSource = send4Source;
-	dispatch_source_t theReceiveSource = receive4Source;
-	#endif
-	
 	dispatch_source_set_cancel_handler(send4Source, ^{
 		
 		LogVerbose(@"send4CancelBlock");
-		
-		#if !OS_OBJECT_USE_OBJC
-		LogVerbose(@"dispatch_release(send4Source)");
-		dispatch_release(theSendSource);
-		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -1771,11 +1740,6 @@ enum FWAsyncUdpSocketConfig
 	dispatch_source_set_cancel_handler(receive4Source, ^{
 		
 		LogVerbose(@"receive4CancelBlock");
-		
-		#if !OS_OBJECT_USE_OBJC
-		LogVerbose(@"dispatch_release(receive4Source)");
-		dispatch_release(theReceiveSource);
-		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -1858,19 +1822,9 @@ enum FWAsyncUdpSocketConfig
 	
 	int theSocketFD = socket6FD;
 	
-	#if !OS_OBJECT_USE_OBJC
-	dispatch_source_t theSendSource = send6Source;
-	dispatch_source_t theReceiveSource = receive6Source;
-	#endif
-	
 	dispatch_source_set_cancel_handler(send6Source, ^{
 		
 		LogVerbose(@"send6CancelBlock");
-		
-		#if !OS_OBJECT_USE_OBJC
-		LogVerbose(@"dispatch_release(send6Source)");
-		dispatch_release(theSendSource);
-		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -1882,11 +1836,6 @@ enum FWAsyncUdpSocketConfig
 	dispatch_source_set_cancel_handler(receive6Source, ^{
 		
 		LogVerbose(@"receive6CancelBlock");
-		
-		#if !OS_OBJECT_USE_OBJC
-		LogVerbose(@"dispatch_release(receive6Source)");
-		dispatch_release(theReceiveSource);
-		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -3700,16 +3649,9 @@ enum FWAsyncUdpSocketConfig
 		
 		newFilterBlock = [filterBlock copy];
 		newFilterQueue = filterQueue;
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_retain(newFilterQueue);
-		#endif
 	}
 	
 	dispatch_block_t block = ^{
-		
-		#if !OS_OBJECT_USE_OBJC
-        if (self->sendFilterQueue) dispatch_release(self->sendFilterQueue);
-		#endif
 		
         self->sendFilterBlock = newFilterBlock;
         self->sendFilterQueue = newFilterQueue;
@@ -4073,9 +4015,6 @@ enum FWAsyncUdpSocketConfig
 	if (sendTimer)
 	{
 		dispatch_source_cancel(sendTimer);
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_release(sendTimer);
-		#endif
 		sendTimer = NULL;
 	}
 	
@@ -4255,16 +4194,9 @@ enum FWAsyncUdpSocketConfig
 		
 		newFilterBlock = [filterBlock copy];
 		newFilterQueue = filterQueue;
-		#if !OS_OBJECT_USE_OBJC
-		dispatch_retain(newFilterQueue);
-		#endif
 	}
 	
 	dispatch_block_t block = ^{
-		
-		#if !OS_OBJECT_USE_OBJC
-        if (self->receiveFilterQueue) dispatch_release(self->receiveFilterQueue);
-		#endif
 		
         self->receiveFilterBlock = newFilterBlock;
         self->receiveFilterQueue = newFilterQueue;
