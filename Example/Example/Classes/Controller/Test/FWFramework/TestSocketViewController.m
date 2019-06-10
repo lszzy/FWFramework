@@ -38,8 +38,10 @@
     [self.label fwPinEdgesToSuperview];
 }
 
-- (void)renderModel
+- (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
     
     asyncSocket = [[FWAsyncSocket alloc] initWithDelegate:self delegateQueue:mainQueue];
@@ -84,6 +86,14 @@
     
     }
 #endif
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    FWLogInfo(@"socket:%p disconnect", asyncSocket);
+    [asyncSocket disconnect];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
