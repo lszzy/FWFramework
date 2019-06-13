@@ -252,6 +252,11 @@
         return;
     }
     
+    // Less than max page
+    if (currentPage > self.numberOfPages - 1) {
+        currentPage = self.numberOfPages - 1;
+    }
+    
     // Pre set
     [self changeActivity:NO atIndex:_currentPage];
     _currentPage = currentPage;
