@@ -109,8 +109,8 @@
             dot = [self generateDotView];
         }
         [self updateDotFrame:dot atIndex:i];
+        [self changeActivity:NO atIndex:i];
     }
-    
     [self changeActivity:YES atIndex:self.currentPage];
     
     [self hideForSinglePage];
