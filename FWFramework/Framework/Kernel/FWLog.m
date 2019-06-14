@@ -26,6 +26,11 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 #pragma mark - Public
 
++ (FWLogLevel)level
+{
+    return fwStaticLogLevel;
+}
+
 + (void)setLevel:(FWLogLevel)level
 {
     fwStaticLogLevel = level;
@@ -33,6 +38,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)verbose:(NSString *)format, ...
 {
+    if (!(fwStaticLogLevel & FWLogTypeVerbose)) return;
+    
     va_list args;
     if (format) {
         va_start(args, format);
@@ -44,6 +51,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)debug:(NSString *)format, ...
 {
+    if (!(fwStaticLogLevel & FWLogTypeDebug)) return;
+    
     va_list args;
     if (format) {
         va_start(args, format);
@@ -55,6 +64,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)info:(NSString *)format, ...
 {
+    if (!(fwStaticLogLevel & FWLogTypeInfo)) return;
+    
     va_list args;
     if (format) {
         va_start(args, format);
@@ -66,6 +77,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)warn:(NSString *)format, ...
 {
+    if (!(fwStaticLogLevel & FWLogTypeWarn)) return;
+    
     va_list args;
     if (format) {
         va_start(args, format);
@@ -77,6 +90,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)error:(NSString *)format, ...
 {
+    if (!(fwStaticLogLevel & FWLogTypeError)) return;
+    
     va_list args;
     if (format) {
         va_start(args, format);
@@ -90,9 +105,6 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)log:(FWLogType)type withMessage:(NSString *)message
 {
-    // 过滤级别
-    if (!(fwStaticLogLevel & type)) return;
-    
     // 插件存在，调用插件
     id<FWLogPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWLogPlugin)];
     if (plugin) {

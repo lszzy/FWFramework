@@ -74,6 +74,11 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
         _locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         // _locationManager.distanceFilter = 50;
+        /*
+        if (@available(iOS 11.0, *)) {
+            _locationManager.showsBackgroundLocationIndicator = YES;
+        }
+        */
     }
     return self;
 }
