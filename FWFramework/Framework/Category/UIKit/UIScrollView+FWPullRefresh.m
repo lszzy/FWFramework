@@ -137,6 +137,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 }
 
 - (void)layoutSubviews {
+    [super layoutSubviews];
     
     for(id otherView in self.viewForState) {
         if([otherView isKindOfClass:[UIView class]])
