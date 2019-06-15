@@ -210,6 +210,25 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
             CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
             [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
         }
+        
+        switch (newState) {
+            case FWInfiniteScrollStateStopped:
+                [self resetScrollViewContentInset];
+                // remove current custom view if not changed
+                if (!customViewChanged) {
+                    [self.currentCustomView removeFromSuperview];
+                    self.currentCustomView = nil;
+                }
+                break;
+                
+            case FWInfiniteScrollStateTriggered:
+                [self setScrollViewContentInsetForInfiniteScrolling];
+                break;
+                
+            case FWInfiniteScrollStateLoading:
+            default:
+                break;
+        }
     }
     else {
         CGRect viewBounds = [self.activityIndicatorView bounds];
