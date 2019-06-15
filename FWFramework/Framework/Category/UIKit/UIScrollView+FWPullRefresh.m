@@ -299,7 +299,9 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint newPoint = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
-        if (newPoint.y <= 0) {
+        if(self.position == FWPullRefreshPositionTop && newPoint.y <= 0) {
+            [self scrollViewDidScroll:newPoint];
+        }else if (self.position == FWPullRefreshPositionBottom && newPoint.y >= 0) {
             [self scrollViewDidScroll:newPoint];
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
