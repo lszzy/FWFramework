@@ -24,6 +24,7 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, readwrite) FWInfiniteScrollState state;
 @property (nonatomic, strong) NSMutableArray *viewForState;
+@property (nonatomic, weak) UIView *currentCustomView;
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, readwrite) CGFloat originalBottomInset;
 @property (nonatomic, assign) BOOL wasTriggeredByUser;
@@ -193,19 +194,22 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
     FWInfiniteScrollState previousState = _state;
     _state = newState;
     
-    for(id otherView in self.viewForState) {
-        if([otherView isKindOfClass:[UIView class]])
-            [otherView removeFromSuperview];
-    }
-    
     id customView = [self.viewForState objectAtIndex:newState];
     BOOL hasCustomView = [customView isKindOfClass:[UIView class]];
+    BOOL customViewChanged = customView != self.currentCustomView;
+    if (customViewChanged || !hasCustomView) {
+        [self.currentCustomView removeFromSuperview];
+        self.currentCustomView = nil;
+    }
     
     if(hasCustomView) {
-        [self addSubview:customView];
-        CGRect viewBounds = [customView bounds];
-        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
-        [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
+        if (customViewChanged) {
+            self.currentCustomView = customView;
+            [self addSubview:customView];
+            CGRect viewBounds = [customView bounds];
+            CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
+            [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
+        }
     }
     else {
         CGRect viewBounds = [self.activityIndicatorView bounds];

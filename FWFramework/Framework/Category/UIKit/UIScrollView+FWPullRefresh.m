@@ -71,6 +71,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 @property (nonatomic, strong) NSMutableArray *titles;
 @property (nonatomic, strong) NSMutableArray *subtitles;
 @property (nonatomic, strong) NSMutableArray *viewForState;
+@property (nonatomic, weak) UIView *currentCustomView;
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, readwrite) CGFloat originalTopInset;
@@ -139,23 +140,26 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    for(id otherView in self.viewForState) {
-        if([otherView isKindOfClass:[UIView class]])
-            [otherView removeFromSuperview];
-    }
-    
     id customView = [self.viewForState objectAtIndex:self.state];
     BOOL hasCustomView = [customView isKindOfClass:[UIView class]];
+    BOOL customViewChanged = customView != self.currentCustomView;
+    if (customViewChanged || !hasCustomView) {
+        [self.currentCustomView removeFromSuperview];
+        self.currentCustomView = nil;
+    }
     
     self.titleLabel.hidden = hasCustomView;
     self.subtitleLabel.hidden = hasCustomView;
     self.arrow.hidden = hasCustomView;
     
     if(hasCustomView) {
-        [self addSubview:customView];
-        CGRect viewBounds = [customView bounds];
-        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
-        [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
+        if (customViewChanged) {
+            self.currentCustomView = customView;
+            [self addSubview:customView];
+            CGRect viewBounds = [customView bounds];
+            CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
+            [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
+        }
     }
     else {
         switch (self.state) {
