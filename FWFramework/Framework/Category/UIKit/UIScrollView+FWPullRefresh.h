@@ -9,11 +9,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, FWPullRefreshPosition) {
-    FWPullRefreshPositionTop = 0,
-    FWPullRefreshPositionBottom,
-};
-
 typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
     FWPullRefreshStateStopped = 0,
     FWPullRefreshStateTriggered,
@@ -31,7 +26,6 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
-@property (nonatomic, readonly) FWPullRefreshPosition position;
 
 - (void)setTitle:(NSString *)title forState:(FWPullRefreshState)state;
 - (void)setSubtitle:(NSString *)subtitle forState:(FWPullRefreshState)state;
@@ -50,9 +44,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @interface UIScrollView (FWPullRefresh)
 
 - (void)fwAddPullRefreshWithBlock:(void (^)(void))block;
-- (void)fwAddPullRefreshWithBlock:(void (^)(void))block position:(FWPullRefreshPosition)position;
 - (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action;
-- (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action position:(FWPullRefreshPosition)position;
 - (void)fwTriggerPullRefresh;
 
 @property (nonatomic, strong, readonly) FWPullRefreshView *fwPullRefreshView;
