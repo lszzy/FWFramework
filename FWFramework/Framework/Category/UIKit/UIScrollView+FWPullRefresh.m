@@ -582,7 +582,6 @@ static CGFloat const FWPullRefreshViewHeight = 54;
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
         self.arrow.layer.transform = CATransform3DMakeRotation(degrees, 0, 0, 1);
         self.arrow.layer.opacity = !hide;
-        //[self.arrow setNeedsDisplay];//ios 4
     } completion:NULL];
 }
 
