@@ -74,6 +74,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, readwrite) CGFloat originalTopInset;
+@property (nonatomic, readwrite) CGFloat pullingPercent;
 
 @property (nonatomic, assign) BOOL wasTriggeredByUser;
 @property (nonatomic, assign) BOOL showsPullToRefresh;
@@ -81,8 +82,6 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 
 - (void)resetScrollViewContentInset;
 - (void)setScrollViewContentInsetForLoading;
-- (void)setScrollViewContentInset:(UIEdgeInsets)insets;
-- (void)rotateArrow:(float)degrees hide:(BOOL)hide;
 
 @end
 
@@ -105,6 +104,7 @@ static CGFloat const FWPullRefreshViewHeight = 54;
         self.textColor = [UIColor darkGrayColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.state = FWPullRefreshStateStopped;
+        self.pullingPercent = 0;
         
         self.titles = [NSMutableArray arrayWithObjects:NSLocalizedString(@"下拉可以刷新   ",),
                        NSLocalizedString(@"松开立即刷新   ",),
@@ -240,24 +240,26 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 - (void)resetScrollViewContentInset {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = self.originalTopInset;
-    [self setScrollViewContentInset:currentInsets];
+    [self setScrollViewContentInset:currentInsets pullingPercent:0];
 }
 
 - (void)setScrollViewContentInsetForLoading {
     CGFloat offset = MAX(self.scrollView.contentOffset.y * -1, 0);
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = MIN(offset, self.originalTopInset + self.bounds.size.height);
-    [self setScrollViewContentInset:currentInsets];
+    [self setScrollViewContentInset:currentInsets pullingPercent:1];
 }
 
-- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset {
+- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent {
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          self.scrollView.contentInset = contentInset;
                      }
-                     completion:NULL];
+                     completion:^(BOOL finished) {
+                         self.pullingPercent = pullingPercent;
+                     }];
 }
 
 #pragma mark - Observing
@@ -289,6 +291,8 @@ static CGFloat const FWPullRefreshViewHeight = 54;
             self.state = FWPullRefreshStateTriggered;
         else if(contentOffset.y >= scrollOffsetThreshold && self.state != FWPullRefreshStateStopped)
             self.state = FWPullRefreshStateStopped;
+        else if(contentOffset.y >= scrollOffsetThreshold && self.state == FWPullRefreshStateStopped)
+            self.pullingPercent = MAX(1.f - (contentOffset.y - scrollOffsetThreshold) / FWPullRefreshViewHeight, 0);
     } else {
         CGFloat offset = MAX(self.scrollView.contentOffset.y * -1, 0.0f);
         offset = MIN(offset, self.originalTopInset + self.bounds.size.height);
@@ -415,6 +419,13 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)viewStyle {
     self.activityIndicatorView.activityIndicatorViewStyle = viewStyle;
+}
+
+- (void)setPullingPercent:(CGFloat)pullingPercent
+{
+    _pullingPercent = pullingPercent;
+    // change alpha with pullingPercent
+    self.alpha = pullingPercent;
 }
 
 #pragma mark -
