@@ -109,8 +109,8 @@
             dot = [self generateDotView];
         }
         [self updateDotFrame:dot atIndex:i];
+        [self changeActivity:NO atIndex:i];
     }
-    
     [self changeActivity:YES atIndex:self.currentPage];
     
     [self hideForSinglePage];
@@ -250,6 +250,11 @@
     if (self.numberOfPages == 0 || currentPage == _currentPage) {
         _currentPage = currentPage;
         return;
+    }
+    
+    // Less than max page
+    if (currentPage > self.numberOfPages - 1) {
+        currentPage = self.numberOfPages - 1;
     }
     
     // Pre set
