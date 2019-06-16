@@ -538,7 +538,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     [self invalidateTimer];
     
     _imagePathsGroup = imagePathsGroup;
-    _totalItemsCount = self.infiniteLoop ? self.imagePathsGroup.count * 100 : self.imagePathsGroup.count;
+    _totalItemsCount = self.infiniteLoop && imagePathsGroup.count > 1 ? self.imagePathsGroup.count * 100 : self.imagePathsGroup.count;
     
     if (imagePathsGroup.count > 1) {
         self.mainView.scrollEnabled = YES;

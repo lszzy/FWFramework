@@ -15,11 +15,12 @@
  @brief 记录日志内部宏
  
  @parseOnly
- @param type 日志方法名
+ @param method 日志方法名
+ @param type 日志类型
  @param format 日志格式，同NSLog
  */
-#define FWLogType_( type, format, ... ) \
-    [FWLog type:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+#define FWLogType_( method, type, format, ... ) \
+    if (FWLog.level & type) [FWLog method:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /*!
  @brief 记录详细日志
@@ -27,7 +28,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogVerbose( format, ... ) \
-    FWLogType_( verbose, format, ##__VA_ARGS__ );
+    FWLogType_( verbose, FWLogTypeVerbose, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录调试日志
@@ -35,7 +36,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogDebug( format, ... ) \
-    FWLogType_( debug, format, ##__VA_ARGS__ );
+    FWLogType_( debug, FWLogTypeDebug, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录信息日志
@@ -43,7 +44,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogInfo( format, ... ) \
-    FWLogType_( info, format, ##__VA_ARGS__ );
+    FWLogType_( info, FWLogTypeInfo, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录警告日志
@@ -51,7 +52,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogWarn( format, ... ) \
-    FWLogType_( warn, format, ##__VA_ARGS__ );
+    FWLogType_( warn, FWLogTypeWarn, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录错误日志
@@ -59,7 +60,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogError( format, ... ) \
-    FWLogType_( error, format, ##__VA_ARGS__ );
+    FWLogType_( error, FWLogTypeError, format, ##__VA_ARGS__ );
 
 #pragma mark - FWLog
 
@@ -108,12 +109,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWLog : NSObject
 
-/*!
- @brief 设置全局日志级别
-
- @param level 日志级别
- */
-+ (void)setLevel:(FWLogLevel)level;
+/*! @brief 全局日志级别，默认调试为All，正式为Off */
+@property (class, nonatomic, assign) FWLogLevel level;
 
 /*!
  @brief 详细日志
