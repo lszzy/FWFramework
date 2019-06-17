@@ -240,18 +240,18 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 - (void)resetScrollViewContentInset {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = self.originalTopInset;
-    [self setScrollViewContentInset:currentInsets pullingPercent:0];
+    [self setScrollViewContentInset:currentInsets pullingPercent:0 animated:YES];
 }
 
 - (void)setScrollViewContentInsetForLoading {
     CGFloat offset = MAX(self.scrollView.contentOffset.y * -1, 0);
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = MIN(offset, self.originalTopInset + self.bounds.size.height);
-    [self setScrollViewContentInset:currentInsets pullingPercent:1];
+    [self setScrollViewContentInset:currentInsets pullingPercent:1 animated:YES];
 }
 
-- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent {
-    [UIView animateWithDuration:0.3
+- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent animated:(BOOL)animated {
+    [UIView animateWithDuration:animated ? 0.3 : 0.0
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
