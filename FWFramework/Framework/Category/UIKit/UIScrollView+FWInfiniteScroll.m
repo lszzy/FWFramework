@@ -32,7 +32,6 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 
 - (void)resetScrollViewContentInset;
 - (void)setScrollViewContentInsetForInfiniteScrolling;
-- (void)setScrollViewContentInset:(UIEdgeInsets)insets;
 
 @end
 
