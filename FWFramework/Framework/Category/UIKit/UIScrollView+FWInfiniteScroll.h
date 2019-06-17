@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 
 - (void)startAnimating;
 - (void)stopAnimating;
+- (BOOL)isAnimating;
 
 @end
 
