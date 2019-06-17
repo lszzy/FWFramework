@@ -181,6 +181,10 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
     self.state = FWInfiniteScrollStateStopped;
 }
 
+- (BOOL)isAnimating {
+    return self.state != FWInfiniteScrollStateStopped;
+}
+
 - (void)setState:(FWInfiniteScrollState)newState {
     
     if(_state == newState)
@@ -298,6 +302,8 @@ static char UIScrollViewFWInfiniteScrollView;
 }
 
 - (void)fwTriggerInfiniteScroll {
+    if ([self.fwInfiniteScrollView isAnimating]) return;
+    
     self.fwInfiniteScrollView.state = FWInfiniteScrollStateTriggered;
     [self.fwInfiniteScrollView startAnimating];
 }

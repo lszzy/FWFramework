@@ -448,6 +448,10 @@ static CGFloat const FWPullRefreshViewHeight = 54;
         [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -self.originalTopInset) animated:YES];
 }
 
+- (BOOL)isAnimating {
+    return self.state != FWPullRefreshStateStopped;
+}
+
 - (void)setState:(FWPullRefreshState)newState {
     
     if(_state == newState)
@@ -528,6 +532,8 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)fwTriggerPullRefresh {
+    if ([self.fwPullRefreshView isAnimating]) return;
+    
     self.fwPullRefreshView.state = FWPullRefreshStateTriggered;
     [self.fwPullRefreshView startAnimating];
 }

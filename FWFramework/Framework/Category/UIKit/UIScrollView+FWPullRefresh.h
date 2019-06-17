@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 - (void)startAnimating;
 - (void)stopAnimating;
+- (BOOL)isAnimating;
 
 @end
 
