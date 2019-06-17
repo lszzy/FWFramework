@@ -33,7 +33,6 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 - (void)resetScrollViewContentInset;
 - (void)setScrollViewContentInsetForInfiniteScrolling;
 - (void)setScrollViewContentInset:(UIEdgeInsets)insets;
-- (void)scrollViewPanGestureUpdate:(UIPanGestureRecognizer *)gesture;
 
 @end
 
@@ -67,7 +66,6 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
             if (self.isObserving) {
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
                 [scrollView removeObserver:self forKeyPath:@"contentSize"];
-                [scrollView.panGestureRecognizer removeTarget:self action:@selector(scrollViewPanGestureUpdate:)];
                 self.isObserving = NO;
             }
         }
@@ -121,18 +119,13 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
     if(self.state != FWInfiniteScrollStateLoading && self.enabled) {
         CGFloat scrollViewContentHeight = self.scrollView.contentSize.height;
         CGFloat scrollOffsetThreshold = scrollViewContentHeight-self.scrollView.bounds.size.height;
-        CGFloat yVelocity = [self.scrollView.panGestureRecognizer velocityInView:self.scrollView].y;
         
-        if(yVelocity < 0 && contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging)
+        if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
+            self.state = FWInfiniteScrollStateLoading;
+        else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging)
             self.state = FWInfiniteScrollStateTriggered;
         else if(contentOffset.y < scrollOffsetThreshold  && self.state != FWInfiniteScrollStateStopped)
             self.state = FWInfiniteScrollStateStopped;
-    }
-}
-
-- (void)scrollViewPanGestureUpdate:(UIPanGestureRecognizer *)gesture {
-    if (gesture.state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
-        self.state = FWInfiniteScrollStateLoading;
     }
 }
 
@@ -212,7 +205,6 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
         
         switch (newState) {
             case FWInfiniteScrollStateStopped:
-                [self resetScrollViewContentInset];
                 // remove current custom view if not changed
                 if (!customViewChanged) {
                     [self.currentCustomView removeFromSuperview];
@@ -221,9 +213,6 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
                 break;
                 
             case FWInfiniteScrollStateTriggered:
-                [self setScrollViewContentInsetForInfiniteScrolling];
-                break;
-                
             case FWInfiniteScrollStateLoading:
             default:
                 break;
@@ -236,12 +225,10 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
         
         switch (newState) {
             case FWInfiniteScrollStateStopped:
-                [self resetScrollViewContentInset];
                 [self.activityIndicatorView stopAnimating];
                 break;
                 
             case FWInfiniteScrollStateTriggered:
-                [self setScrollViewContentInsetForInfiniteScrolling];
                 [self.activityIndicatorView startAnimating];
                 break;
                 
@@ -298,7 +285,6 @@ static char UIScrollViewFWInfiniteScrollView;
     view.originalBottomInset = self.contentInset.bottom;
     self.fwInfiniteScrollView = view;
     self.fwShowInfiniteScroll = YES;
-    [view resetScrollViewContentInset];
 }
 
 - (void)fwTriggerInfiniteScroll {
@@ -328,7 +314,6 @@ static char UIScrollViewFWInfiniteScrollView;
         if (self.fwInfiniteScrollView.isObserving) {
             [self removeObserver:self.fwInfiniteScrollView forKeyPath:@"contentOffset"];
             [self removeObserver:self.fwInfiniteScrollView forKeyPath:@"contentSize"];
-            [self.panGestureRecognizer removeTarget:self.fwInfiniteScrollView action:NSSelectorFromString(@"scrollViewPanGestureUpdate:")];
             [self.fwInfiniteScrollView resetScrollViewContentInset];
             self.fwInfiniteScrollView.isObserving = NO;
         }
@@ -337,7 +322,6 @@ static char UIScrollViewFWInfiniteScrollView;
         if (!self.fwInfiniteScrollView.isObserving) {
             [self addObserver:self.fwInfiniteScrollView forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
             [self addObserver:self.fwInfiniteScrollView forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
-            [self.panGestureRecognizer addTarget:self.fwInfiniteScrollView action:NSSelectorFromString(@"scrollViewPanGestureUpdate:")];
             [self.fwInfiniteScrollView setScrollViewContentInsetForInfiniteScrolling];
             self.fwInfiniteScrollView.isObserving = YES;
             
