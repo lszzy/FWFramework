@@ -82,17 +82,17 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 - (void)resetScrollViewContentInset {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.bottom = self.originalBottomInset;
-    [self setScrollViewContentInset:currentInsets];
+    [self setScrollViewContentInset:currentInsets animated:YES];
 }
 
 - (void)setScrollViewContentInsetForInfiniteScrolling {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.bottom = self.originalBottomInset + FWInfiniteScrollViewHeight;
-    [self setScrollViewContentInset:currentInsets];
+    [self setScrollViewContentInset:currentInsets animated:NO];
 }
 
-- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset {
-    [UIView animateWithDuration:0.3
+- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset animated:(BOOL)animated {
+    [UIView animateWithDuration:animated ? 0.3 : 0.0
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
