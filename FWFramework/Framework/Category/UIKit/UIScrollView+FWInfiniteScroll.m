@@ -173,11 +173,6 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 
 #pragma mark -
 
-- (void)triggerRefresh {
-    self.state = FWInfiniteScrollStateTriggered;
-    self.state = FWInfiniteScrollStateLoading;
-}
-
 - (void)startAnimating{
     self.state = FWInfiniteScrollStateLoading;
 }
