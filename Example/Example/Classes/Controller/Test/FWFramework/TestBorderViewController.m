@@ -42,12 +42,27 @@
     
     frameView = [[UIView alloc] initWithFrame:CGRectMake(120, 300, 80, 36)];
     frameView.backgroundColor = bgColor;
-    [frameView fwSetBorderColor:[UIColor redColor] width:kAppBorderHeightNormal cornerRadius:25];
+    [frameView fwSetBorderColor:[UIColor redColor] width:kAppBorderHeightNormal cornerRadius:36];
     [self.view addSubview:frameView];
     
     frameView = [[UIView alloc] initWithFrame:CGRectMake(220, 300, 80, 36)];
     frameView.backgroundColor = bgColor;
-    [frameView fwSetCornerLayer:UIRectCornerAllCorners radius:25 borderColor:[UIColor redColor] width:kAppBorderHeightNormal];
+    [frameView fwSetBorderColor:[UIColor redColor] width:kAppBorderHeightNormal cornerRadius:9];
+    [self.view addSubview:frameView];
+    
+    frameView = [[UIView alloc] initWithFrame:CGRectMake(20, 370, 80, 36)];
+    frameView.backgroundColor = bgColor;
+    [frameView fwSetCornerLayer:UIRectCornerAllCorners radius:18 borderColor:[UIColor redColor] width:kAppBorderHeightNormal];
+    [self.view addSubview:frameView];
+    
+    frameView = [[UIView alloc] initWithFrame:CGRectMake(120, 370, 80, 36)];
+    frameView.backgroundColor = bgColor;
+    [frameView fwSetCornerLayer:UIRectCornerAllCorners radius:36 borderColor:[UIColor redColor] width:kAppBorderHeightNormal];
+    [self.view addSubview:frameView];
+    
+    frameView = [[UIView alloc] initWithFrame:CGRectMake(220, 370, 80, 36)];
+    frameView.backgroundColor = bgColor;
+    [frameView fwSetCornerLayer:UIRectCornerAllCorners radius:9 borderColor:[UIColor redColor] width:kAppBorderHeightNormal];
     [self.view addSubview:frameView];
     
     // Layer
