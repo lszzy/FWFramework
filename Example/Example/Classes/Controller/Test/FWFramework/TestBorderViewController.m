@@ -34,6 +34,22 @@
     [self.view addSubview:frameView];
     [frameView fwSetBorderColor:[UIColor redColor] width:kAppBorderHeightNormal cornerRadius:kAppCornerRadiusNormal];
     
+    // Corener
+    frameView = [[UIView alloc] initWithFrame:CGRectMake(20, 300, 80, 36)];
+    frameView.backgroundColor = bgColor;
+    [frameView fwSetBorderColor:[UIColor redColor] width:kAppBorderHeightNormal cornerRadius:18];
+    [self.view addSubview:frameView];
+    
+    frameView = [[UIView alloc] initWithFrame:CGRectMake(120, 300, 80, 36)];
+    frameView.backgroundColor = bgColor;
+    [frameView fwSetBorderColor:[UIColor redColor] width:kAppBorderHeightNormal cornerRadius:25];
+    [self.view addSubview:frameView];
+    
+    frameView = [[UIView alloc] initWithFrame:CGRectMake(220, 300, 80, 36)];
+    frameView.backgroundColor = bgColor;
+    [frameView fwSetCornerLayer:UIRectCornerAllCorners radius:25 borderColor:[UIColor redColor] width:kAppBorderHeightNormal];
+    [self.view addSubview:frameView];
+    
     // Layer
     frameView = [[UIView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
     frameView.backgroundColor = bgColor;
