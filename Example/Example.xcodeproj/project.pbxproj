@@ -23,6 +23,7 @@
 		2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39312178E02C0051A6BB /* TestCollectionViewController.m */; };
 		2F1E39412178F3710051A6BB /* TestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */; };
 		2F1E620C22AEAC2000A1AB49 /* TestSocketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */; };
+		2F1E623D22BA32DA00A1AB49 /* TestChainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E623C22BA32D900A1AB49 /* TestChainViewController.m */; };
 		2F203D45219E76BB00DA83D9 /* TestNestScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */; };
 		2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F20E3CF22769156005D1F46 /* TestMapViewController.m */; };
 		2F2FBDC222410BB30037830E /* TestAuthorizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDC122410BB30037830E /* TestAuthorizeViewController.m */; };
@@ -134,6 +135,8 @@
 		2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestIndicatorControlViewController.m; sourceTree = "<group>"; };
 		2F1E620A22AEAC2000A1AB49 /* TestSocketViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSocketViewController.h; sourceTree = "<group>"; };
 		2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSocketViewController.m; sourceTree = "<group>"; };
+		2F1E623B22BA32D900A1AB49 /* TestChainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestChainViewController.h; sourceTree = "<group>"; };
+		2F1E623C22BA32D900A1AB49 /* TestChainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestChainViewController.m; sourceTree = "<group>"; };
 		2F203D43219E76BB00DA83D9 /* TestNestScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNestScrollViewController.h; sourceTree = "<group>"; };
 		2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNestScrollViewController.m; sourceTree = "<group>"; };
 		2F20E3CE22769156005D1F46 /* TestMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMapViewController.h; sourceTree = "<group>"; };
@@ -405,6 +408,8 @@
 				2F8EB35221F0211500BB24AB /* TestBarViewController.m */,
 				2F4CFA5321552CFE00203A37 /* TestBadgeViewController.h */,
 				2F4CFA5421552CFE00203A37 /* TestBadgeViewController.m */,
+				2F1E623B22BA32D900A1AB49 /* TestChainViewController.h */,
+				2F1E623C22BA32D900A1AB49 /* TestChainViewController.m */,
 				2F4CFA582155302E00203A37 /* TestTableLayoutViewController.h */,
 				2F4CFA592155302E00203A37 /* TestTableLayoutViewController.m */,
 				2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */,
@@ -819,6 +824,7 @@
 				2FCD374D22533825001E81DB /* TestAlertViewController.m in Sources */,
 				2FCD376922533C10001E81DB /* TestStateViewController.m in Sources */,
 				2F0D297A215DFFEF005F1466 /* DZNWebView.m in Sources */,
+				2F1E623D22BA32DA00A1AB49 /* TestChainViewController.m in Sources */,
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
 				2FCD375222533AB6001E81DB /* TestVersionViewController.m in Sources */,
 				2F8EB34221ED881900BB24AB /* TestNavigationViewController.m in Sources */,

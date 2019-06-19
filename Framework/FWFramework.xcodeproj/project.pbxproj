@@ -215,6 +215,8 @@
 		2F1E61F922AE90F400A1AB49 /* FWAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */; };
 		2F1E61FA22AE90F400A1AB49 /* FWAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */; };
 		2F1E61FB22AE90F400A1AB49 /* FWAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1E623922BA2C3200A1AB49 /* UIView+FWChain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E623722BA2C3200A1AB49 /* UIView+FWChain.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1E623A22BA2C3200A1AB49 /* UIView+FWChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E623822BA2C3200A1AB49 /* UIView+FWChain.m */; };
 		2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
 		2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -507,6 +509,8 @@
 		2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncSocket.m; sourceTree = "<group>"; };
 		2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncUdpSocket.m; sourceTree = "<group>"; };
 		2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncSocket.h; sourceTree = "<group>"; };
+		2F1E623722BA2C3200A1AB49 /* UIView+FWChain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWChain.h"; sourceTree = "<group>"; };
+		2F1E623822BA2C3200A1AB49 /* UIView+FWChain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWChain.m"; sourceTree = "<group>"; };
 		2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIPageControl+FWFramework.h"; sourceTree = "<group>"; };
 		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+FWFramework.h"; sourceTree = "<group>"; };
@@ -700,6 +704,8 @@
 				2F03A4E9216CF4B9001965A1 /* UIView+FWBlock.m */,
 				2F03A51A216CF4B9001965A1 /* UIView+FWBorder.h */,
 				2F03A4F4216CF4B9001965A1 /* UIView+FWBorder.m */,
+				2F1E623722BA2C3200A1AB49 /* UIView+FWChain.h */,
+				2F1E623822BA2C3200A1AB49 /* UIView+FWChain.m */,
 				2F03A4E3216CF4B9001965A1 /* UIView+FWDrag.h */,
 				2F03A50A216CF4B9001965A1 /* UIView+FWDrag.m */,
 				2F03A4FD216CF4B9001965A1 /* UIView+FWFrame.h */,
@@ -1074,6 +1080,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1E623922BA2C3200A1AB49 /* UIView+FWChain.h in Headers */,
 				2F1E61F822AE90F400A1AB49 /* FWAsyncUdpSocket.h in Headers */,
 				2F1E61FB22AE90F400A1AB49 /* FWAsyncSocket.h in Headers */,
 				2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */,
@@ -1430,6 +1437,7 @@
 				2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */,
 				2F03A59E216CF4B9001965A1 /* UIImageView+FWFramework.m in Sources */,
 				2F03A5EC216CF4B9001965A1 /* FWVersionManager.m in Sources */,
+				2F1E623A22BA2C3200A1AB49 /* UIView+FWChain.m in Sources */,
 				2F03A5BD216CF4B9001965A1 /* UIScreen+FWFramework.m in Sources */,
 				2F03A5F1216CF4B9001965A1 /* FWMutableDictionary.m in Sources */,
 				2F03A5E2216CF4B9001965A1 /* NSString+FWFramework.m in Sources */,

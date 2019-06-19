@@ -57,6 +57,7 @@
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UIView(FWBorder)", @"TestBorderViewController"],
+                                             @[@"UIView(FWChain)", @"TestChainViewController"],
                                              @[@"UIView(FWLayer)", @"TestLayerViewController"],
                                              @[@"UIImageView(FWFace)", @"TestFaceViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],

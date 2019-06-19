@@ -13,6 +13,7 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWBlock.h"
 #import "UIView+FWBorder.h"
+#import "UIView+FWChain.h"
 #import "UIView+FWDrag.h"
 #import "UIView+FWFrame.h"
 #import "UIView+FWIndicator.h"
@@ -60,6 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 递归查找指定条件的第一个视图
 - (nullable __kindof UIView *)fwSubviewOfBlock:(BOOL (^)(UIView *view))block;
+
+// 添加到父视图，nil时为从父视图移除
+- (void)fwMoveToSuperview:(nullable UIView *)view;
 
 #pragma mark - Snapshot
 
