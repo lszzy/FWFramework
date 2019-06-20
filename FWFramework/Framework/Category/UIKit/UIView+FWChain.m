@@ -62,6 +62,38 @@
     };
 }
 
+- (FWViewChain *(^)(CGAffineTransform))transform
+{
+    return ^id(CGAffineTransform transform) {
+        self.view.transform = transform;
+        return self;
+    };
+}
+
+- (FWViewChain *(^)(CGFloat))contentScaleFactor
+{
+    return ^id(CGFloat contentScaleFactor) {
+        self.view.contentScaleFactor = contentScaleFactor;
+        return self;
+    };
+}
+
+- (FWViewChain *(^)(BOOL))autoresizesSubviews
+{
+    return ^id(BOOL autoresizesSubviews) {
+        self.view.autoresizesSubviews = autoresizesSubviews;
+        return self;
+    };
+}
+
+- (FWViewChain *(^)(UIViewAutoresizing))autoresizingMask
+{
+    return ^id(UIViewAutoresizing autoresizingMask) {
+        self.view.autoresizingMask = autoresizingMask;
+        return self;
+    };
+}
+
 - (FWViewChain *(^)(void))removeFromSuperview
 {
     return ^id(void) {
