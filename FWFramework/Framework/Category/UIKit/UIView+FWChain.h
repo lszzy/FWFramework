@@ -53,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWViewChain)
 
+@property (class, nonatomic, strong, readonly) __kindof UIView *(^fwNew)(void);
+@property (class, nonatomic, strong, readonly) __kindof UIView *(^fwNewWithFrame)(CGRect frame);
+
 @property (nonatomic, strong, readonly) FWViewChain *fwViewChain;
 
 @end

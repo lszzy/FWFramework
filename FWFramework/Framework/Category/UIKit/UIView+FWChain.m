@@ -172,6 +172,20 @@
 
 @implementation UIView (FWViewChain)
 
++ (__kindof UIView *(^)(void))fwNew
+{
+    return ^id(void) {
+        return [[self alloc] init];
+    };
+}
+
++ (__kindof UIView *(^)(CGRect))fwNewWithFrame
+{
+    return ^id(CGRect frame) {
+        return [[self alloc] initWithFrame:frame];
+    };
+}
+
 - (FWViewChain *)fwViewChain
 {
     FWViewChain *viewChain = objc_getAssociatedObject(self, _cmd);
