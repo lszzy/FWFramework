@@ -53,6 +53,7 @@
 {
     [self.dataList addObjectsFromArray:@[
                                        @[@"FWFramework", @[
+                                             @[@"UIButton(FWFramework)", @"TestButtonViewController"],
                                              @[@"UIView(FWAnimation)", @"TestAnimationViewController"],
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
