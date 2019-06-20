@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) FWViewChain *(^frame)(CGRect frame);
 @property (nonatomic, copy, readonly) FWViewChain *(^bounds)(CGRect bounds);
 @property (nonatomic, copy, readonly) FWViewChain *(^center)(CGPoint center);
+@property (nonatomic, copy, readonly) FWViewChain *(^transform)(CGAffineTransform transform);
+@property (nonatomic, copy, readonly) FWViewChain *(^contentScaleFactor)(CGFloat contentScaleFactor);
+@property (nonatomic, copy, readonly) FWViewChain *(^autoresizesSubviews)(BOOL autoresizesSubviews);
+@property (nonatomic, copy, readonly) FWViewChain *(^autoresizingMask)(UIViewAutoresizing autoresizingMask);
 
 @property (nonatomic, copy, readonly) FWViewChain *(^removeFromSuperview)(void);
 @property (nonatomic, copy, readonly) FWViewChain *(^addSubview)(UIView *view);
@@ -42,7 +46,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UILabel
 
-@property (nonatomic, copy, readonly) FWViewChain *(^text)(NSString *text);
+@property (nonatomic, copy, readonly) FWViewChain *(^text)(NSString * _Nullable text);
+@property (nonatomic, copy, readonly) FWViewChain *(^font)(UIFont * _Nullable font);
+@property (nonatomic, copy, readonly) FWViewChain *(^textColor)(UIColor * _Nullable textColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^shadowColor)(UIColor * _Nullable shadowColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^shadowOffset)(CGSize shadowOffset);
+@property (nonatomic, copy, readonly) FWViewChain *(^textAlignment)(NSTextAlignment textAlignment);
+@property (nonatomic, copy, readonly) FWViewChain *(^lineBreakMode)(NSLineBreakMode lineBreakMode);
+@property (nonatomic, copy, readonly) FWViewChain *(^attributedText)(NSAttributedString * _Nullable attributedText);
+@property (nonatomic, copy, readonly) FWViewChain *(^highlightedTextColor)(UIColor * _Nullable highlightedTextColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^highlighted)(BOOL highlighted);
+@property (nonatomic, copy, readonly) FWViewChain *(^enabled)(BOOL enabled);
+@property (nonatomic, copy, readonly) FWViewChain *(^numberOfLines)(NSInteger numberOfLines);
+@property (nonatomic, copy, readonly) FWViewChain *(^adjustsFontSizeToFitWidth)(BOOL adjustsFontSizeToFitWidth);
+@property (nonatomic, copy, readonly) FWViewChain *(^baselineAdjustment)(UIBaselineAdjustment baselineAdjustment);
+@property (nonatomic, copy, readonly) FWViewChain *(^minimumScaleFactor)(CGFloat minimumScaleFactor);
+@property (nonatomic, copy, readonly) FWViewChain *(^preferredMaxLayoutWidth)(CGFloat preferredMaxLayoutWidth);
 
 @end
 
