@@ -8,54 +8,63 @@
  */
 
 #import "UIView+FWChain.h"
+#import <objc/runtime.h>
 
-@implementation UIView (FWChain)
+#pragma mark - FWViewChain
 
-+ (__kindof UIView *(^)(void))fwChain
+@interface FWViewChain ()
+
+@property (nonatomic, weak) __kindof UIView *view;
+
+@end
+
+@implementation FWViewChain
+
+#pragma mark - UIView
+
+- (FWViewChain *(^)(CGRect))frame
 {
-    return ^id(void) {
-        return [[self alloc] init];
-    };
-}
-
-+ (__kindof UIView *(^)(CGRect frame))fwChainFrame
-{
-    return ^id(CGRect frame) {
-        return [[self alloc] initWithFrame:frame];
-    };
-}
-
-- (__kindof UIView *(^)(CGRect frame))fwChainFrame
-{
-    return ^id(CGRect frame) {
-        self.frame = frame;
+    return ^FWViewChain *(CGRect frame) {
+        self.view.frame = frame;
         return self;
     };
 }
 
-- (__kindof UIView *(^)(UIColor *backgroundColor))fwChainBackgroundColor
+- (FWViewChain *(^)(UIColor *))backgroundColor
 {
-    return ^id(UIColor *backgroundColor) {
-        self.backgroundColor = backgroundColor;
+    return ^FWViewChain *(UIColor *backgroundColor) {
+        self.view.backgroundColor = backgroundColor;
         return self;
     };
 }
 
-- (__kindof UIView *(^)(UIView *view))fwChainAddSubview
+- (FWViewChain *(^)(UIView *))addSubview
 {
-    return ^id(UIView *view) {
-        [self addSubview:view];
+    return ^FWViewChain *(UIView *view) {
+        [self.view addSubview:view];
         return self;
     };
 }
 
-- (__kindof UIView *(^)(UIView *view))fwChainMoveToSuperview
+- (FWViewChain *(^)(UIView *))moveToSuperview
 {
-    return ^id(UIView *view) {
+    return ^FWViewChain *(UIView *view) {
         if (view) {
-            [view addSubview:self];
+            [view addSubview:self.view];
         } else {
-            [self removeFromSuperview];
+            [self.view removeFromSuperview];
+        }
+        return self;
+    };
+}
+
+#pragma mark - UILabel
+
+- (FWViewChain *(^)(NSString *))text
+{
+    return ^FWViewChain *(NSString *text) {
+        if ([self.view respondsToSelector:@selector(setText:)]) {
+            ((UILabel *)self.view).text = text;
         }
         return self;
     };
@@ -63,14 +72,17 @@
 
 @end
 
-@implementation UILabel (FWChain)
+@implementation UIView (FWViewChain)
 
-- (__kindof UILabel *(^)(NSString *text))fwChainText
+- (FWViewChain *)fwViewChain
 {
-    return ^id(NSString *text) {
-        self.text = text;
-        return self;
-    };
+    FWViewChain *viewChain = objc_getAssociatedObject(self, _cmd);
+    if (!viewChain) {
+        viewChain = [[FWViewChain alloc] init];
+        viewChain.view = self;
+        objc_setAssociatedObject(self, _cmd, viewChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return viewChain;
 }
 
 @end

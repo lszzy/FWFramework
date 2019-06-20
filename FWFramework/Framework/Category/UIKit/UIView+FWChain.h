@@ -9,36 +9,31 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - Macro
+#pragma mark - FWViewChain
 
 /*!
- @brief 定义类链式声明
- 
- @param clazz 类名称
+ @brief UIView链式调用协议，不支持的属性不会生效
  */
-#define FWDefChain( clazz ) \
-    @property (class, nonatomic, copy, readonly) __kindof clazz *(^fwChain)(void); \
-    @property (class, nonatomic, copy, readonly) __kindof clazz *(^fwChainFrame)(CGRect frame); \
-    @property (nonatomic, copy, readonly) __kindof clazz *(^fwChainFrame)(CGRect frame); \
-    @property (nonatomic, copy, readonly) __kindof clazz *(^fwChainBackgroundColor)(UIColor *backgroundColor); \
-    @property (nonatomic, copy, readonly) __kindof clazz *(^fwChainAddSubview)(UIView *view); \
-    @property (nonatomic, copy, readonly) __kindof clazz *(^fwChainMoveToSuperview)(UIView *view);
+@interface FWViewChain : NSObject
 
-#pragma mark - UIView+FWChain
+// UIView
+@property (nonatomic, copy, readonly) FWViewChain *(^frame)(CGRect frame);
+@property (nonatomic, copy, readonly) FWViewChain *(^backgroundColor)(UIColor *backgroundColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^addSubview)(UIView *view);
+@property (nonatomic, copy, readonly) FWViewChain *(^moveToSuperview)(UIView *view);
 
-/*!
- @brief UIView常用链式调用分类
- */
-@interface UIView (FWChain)
-
-FWDefChain(UIView);
+// UILabel
+@property (nonatomic, copy, readonly) FWViewChain *(^text)(NSString *text);
 
 @end
 
-@interface UILabel (FWChain)
+#pragma mark - UIView+FWViewChain
 
-FWDefChain(UILabel);
+/*!
+ @brief UIView链式调用协议，不支持的属性不会生效
+ */
+@interface UIView (FWViewChain)
 
-@property (nonatomic, copy, readonly) __kindof UILabel *(^fwChainText)(NSString *text);
+@property (nonatomic, strong, readonly) FWViewChain *fwViewChain;
 
 @end
