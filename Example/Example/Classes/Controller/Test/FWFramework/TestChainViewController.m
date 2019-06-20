@@ -13,16 +13,11 @@
 
 - (void)renderView
 {
-    UIView
-    .fwChainFrame(CGRectMake(20, 20, 50, 50))
-    .fwChainBackgroundColor(UIColor.redColor)
-    .fwChainMoveToSuperview(self.view);
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
+    view.fwViewChain.backgroundColor(UIColor.redColor).moveToSuperview(self.view);
     
-    UILabel
-    .fwChain()
-    .fwChainFrame(CGRectMake(90, 20, 50, 50))
-    .fwChainText(@"text")
-    .fwChainMoveToSuperview(self.view);
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(90, 20, 50, 50)];
+    label.fwViewChain.text(@"text").moveToSuperview(self.view);
 }
 
 @end
