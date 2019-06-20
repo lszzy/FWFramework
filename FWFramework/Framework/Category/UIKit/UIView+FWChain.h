@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWViewChain
 
 /*!
@@ -16,13 +18,30 @@
  */
 @interface FWViewChain : NSObject
 
-// UIView
-@property (nonatomic, copy, readonly) FWViewChain *(^frame)(CGRect frame);
-@property (nonatomic, copy, readonly) FWViewChain *(^backgroundColor)(UIColor *backgroundColor);
-@property (nonatomic, copy, readonly) FWViewChain *(^addSubview)(UIView *view);
-@property (nonatomic, copy, readonly) FWViewChain *(^moveToSuperview)(UIView *view);
+#pragma mark - UIView
 
-// UILabel
+@property (nonatomic, copy, readonly) FWViewChain *(^userInteractionEnabled)(BOOL enabled);
+@property (nonatomic, copy, readonly) FWViewChain *(^tag)(NSInteger tag);
+
+@property (nonatomic, copy, readonly) FWViewChain *(^frame)(CGRect frame);
+@property (nonatomic, copy, readonly) FWViewChain *(^bounds)(CGRect bounds);
+@property (nonatomic, copy, readonly) FWViewChain *(^center)(CGPoint center);
+
+@property (nonatomic, copy, readonly) FWViewChain *(^removeFromSuperview)(void);
+@property (nonatomic, copy, readonly) FWViewChain *(^addSubview)(UIView *view);
+@property (nonatomic, copy, readonly) FWViewChain *(^moveToSuperview)(UIView * _Nullable view);
+
+@property (nonatomic, copy, readonly) FWViewChain *(^clipsToBounds)(BOOL clipsToBounds);
+@property (nonatomic, copy, readonly) FWViewChain *(^backgroundColor)(UIColor * _Nullable backgroundColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^alpha)(CGFloat alpha);
+@property (nonatomic, copy, readonly) FWViewChain *(^opaque)(BOOL opaque);
+@property (nonatomic, copy, readonly) FWViewChain *(^hidden)(BOOL hidden);
+@property (nonatomic, copy, readonly) FWViewChain *(^contentMode)(UIViewContentMode contentMode);
+@property (nonatomic, copy, readonly) FWViewChain *(^tintColor)(UIColor * _Nullable tintColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^tintAdjustmentMode)(UIViewTintAdjustmentMode tintAdjustmentMode);
+
+#pragma mark - UILabel
+
 @property (nonatomic, copy, readonly) FWViewChain *(^text)(NSString *text);
 
 @end
@@ -37,3 +56,5 @@
 @property (nonatomic, strong, readonly) FWViewChain *fwViewChain;
 
 @end
+
+NS_ASSUME_NONNULL_END
