@@ -13,6 +13,7 @@
 #import "UIApplication+FWFramework.h"
 #import "UIBezierPath+FWFramework.h"
 #import "UIButton+FWFramework.h"
+#import "UIControl+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
 #import "UIColor+FWFramework.h"
 #import "UIDevice+FWFramework.h"

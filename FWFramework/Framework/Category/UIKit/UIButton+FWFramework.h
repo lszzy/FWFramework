@@ -14,8 +14,6 @@
  */
 @interface UIButton (FWFramework)
 
-#pragma mark - Touch
-
 // 设置额外热区
 @property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
 
