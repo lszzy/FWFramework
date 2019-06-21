@@ -409,6 +409,14 @@
     };
 }
 
+- (id<FWButtonChain> (^)(UIFont *))titleLabelFont
+{
+    return ^id(UIFont *font) {
+        ((UIButton *)self.view).titleLabel.font = font;
+        return self;
+    };
+}
+
 #pragma mark - FWImageViewChain
 
 - (id<FWImageViewChain> (^)(UIImage *))image

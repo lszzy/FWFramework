@@ -113,6 +113,7 @@ FWDefControlChain(FWButtonChain);
 @property (nonatomic, copy, readonly) id<FWButtonChain> (^imageForStateNormal)(UIImage * _Nullable image);
 @property (nonatomic, copy, readonly) id<FWButtonChain> (^backgroundImageForStateNormal)(UIImage * _Nullable backgroundImage);
 @property (nonatomic, copy, readonly) id<FWButtonChain> (^attributedTitleForStateNormal)(NSAttributedString * _Nullable attributedTitle);
+@property (nonatomic, copy, readonly) id<FWButtonChain> (^titleLabelFont)(UIFont * _Nullable font);
 
 @end
 
