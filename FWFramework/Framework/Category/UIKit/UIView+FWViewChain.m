@@ -317,6 +317,36 @@
 
 #pragma mark - FWButtonChain
 
+- (id<FWButtonChain> (^)(UIEdgeInsets))contentEdgeInsets
+{
+    return ^id(UIEdgeInsets contentEdgeInsets) {
+        if ([self.view respondsToSelector:@selector(setContentEdgeInsets:)]) {
+            ((UIButton *)self.view).contentEdgeInsets = contentEdgeInsets;
+        }
+        return self;
+    };
+}
+
+- (id<FWButtonChain> (^)(UIEdgeInsets))titleEdgeInsets
+{
+    return ^id(UIEdgeInsets titleEdgeInsets) {
+        if ([self.view respondsToSelector:@selector(setTitleEdgeInsets:)]) {
+            ((UIButton *)self.view).titleEdgeInsets = titleEdgeInsets;
+        }
+        return self;
+    };
+}
+
+- (id<FWButtonChain> (^)(UIEdgeInsets))imageEdgeInsets
+{
+    return ^id(UIEdgeInsets imageEdgeInsets) {
+        if ([self.view respondsToSelector:@selector(setImageEdgeInsets:)]) {
+            ((UIButton *)self.view).imageEdgeInsets = imageEdgeInsets;
+        }
+        return self;
+    };
+}
+
 - (id<FWButtonChain> (^)(BOOL))selected
 {
     return ^id(BOOL selected) {
