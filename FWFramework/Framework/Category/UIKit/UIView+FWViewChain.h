@@ -22,6 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, copy, readonly) id<protocol> (^frame)(CGRect frame); \
     @property (nonatomic, copy, readonly) id<protocol> (^bounds)(CGRect bounds); \
     @property (nonatomic, copy, readonly) id<protocol> (^center)(CGPoint center); \
+    @property (nonatomic, copy, readonly) id<protocol> (^origin)(CGPoint origin); \
+    @property (nonatomic, copy, readonly) id<protocol> (^size)(CGSize size); \
+    @property (nonatomic, copy, readonly) id<protocol> (^x)(CGFloat x); \
+    @property (nonatomic, copy, readonly) id<protocol> (^y)(CGFloat y); \
+    @property (nonatomic, copy, readonly) id<protocol> (^width)(CGFloat width); \
+    @property (nonatomic, copy, readonly) id<protocol> (^height)(CGFloat height); \
     @property (nonatomic, copy, readonly) id<protocol> (^transform)(CGAffineTransform transform); \
     @property (nonatomic, copy, readonly) id<protocol> (^autoresizingMask)(UIViewAutoresizing autoresizingMask); \
     @property (nonatomic, copy, readonly) id<protocol> (^backgroundColor)(UIColor * _Nullable backgroundColor); \
@@ -67,6 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, copy, readonly) id<protocol> (^showsVerticalScrollIndicator)(BOOL showsVerticalScrollIndicator); \
     @property (nonatomic, copy, readonly) id<protocol> (^keyboardDismissModeOnDrag)(void); \
     @property (nonatomic, copy, readonly) id<protocol> (^contentInsetAdjustmentNever)(void);
+
+#define FWDefInputChain( protocol ) \
+    @property (nonatomic, copy, readonly) id<protocol> (^placeholder)(NSString * _Nullable placeholder); \
+    @property (nonatomic, copy, readonly) id<protocol> (^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder); \
+    @property (nonatomic, copy, readonly) id<protocol> (^maxLength)(NSInteger maxLength); \
+    @property (nonatomic, copy, readonly) id<protocol> (^maxUnicodeLength)(NSInteger maxUnicodeLength);
 
 #pragma mark - FWViewChain
 
@@ -144,9 +156,7 @@ FWDefScrollViewChain(FWScrollViewChain);
 FWDefViewChain(FWTextFieldChain);
 FWDefControlChain(FWTextFieldChain);
 FWDefLabelChain(FWTextFieldChain);
-
-@property (nonatomic, copy, readonly) id<FWTextFieldChain> (^placeholder)(NSString * _Nullable placeholder);
-@property (nonatomic, copy, readonly) id<FWTextFieldChain> (^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder);
+FWDefInputChain(FWTextFieldChain);
 
 @end
 
@@ -156,10 +166,9 @@ FWDefLabelChain(FWTextFieldChain);
 FWDefViewChain(FWTextViewChain);
 FWDefLabelChain(FWTextViewChain);
 FWDefScrollViewChain(FWTextViewChain);
+FWDefInputChain(FWTextViewChain);
 
 @property (nonatomic, copy, readonly) id<FWTextViewChain> (^editable)(BOOL editable);
-@property (nonatomic, copy, readonly) id<FWTextViewChain> (^placeholder)(NSString * _Nullable placeholder);
-@property (nonatomic, copy, readonly) id<FWTextViewChain> (^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder);
 
 @end
 

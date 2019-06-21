@@ -9,7 +9,8 @@
 
 #import "UIView+FWViewChain.h"
 #import "UIImageView+FWNetwork.h"
-#import "UITextView+FWPlaceholder.h"
+#import "UITextField+FWFramework.h"
+#import "UITextView+FWFramework.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewChain
@@ -60,6 +61,66 @@
 {
     return ^id(CGPoint center) {
         self.view.center = center;
+        return self;
+    };
+}
+
+- (id<FWViewChain> (^)(CGPoint))origin
+{
+    return ^id(CGPoint origin) {
+        CGRect frame = self.view.frame;
+        frame.origin = origin;
+        self.view.frame = frame;
+        return self;
+    };
+}
+
+- (id<FWViewChain> (^)(CGSize))size
+{
+    return ^id(CGSize size) {
+        CGRect frame = self.view.frame;
+        frame.size = size;
+        self.view.frame = frame;
+        return self;
+    };
+}
+
+- (id<FWViewChain> (^)(CGFloat))x
+{
+    return ^id(CGFloat x) {
+        CGRect frame = self.view.frame;
+        frame.origin.x = x;
+        self.view.frame = frame;
+        return self;
+    };
+}
+
+- (id<FWViewChain> (^)(CGFloat))y
+{
+    return ^id(CGFloat y) {
+        CGRect frame = self.view.frame;
+        frame.origin.y = y;
+        self.view.frame = frame;
+        return self;
+    };
+}
+
+- (id<FWViewChain> (^)(CGFloat))width
+{
+    return ^id(CGFloat width) {
+        CGRect frame = self.view.frame;
+        frame.size.width = width;
+        self.view.frame = frame;
+        return self;
+    };
+}
+
+- (id<FWViewChain> (^)(CGFloat))height
+{
+    return ^id(CGFloat height) {
+        CGRect frame = self.view.frame;
+        frame.size.height = height;
+        self.view.frame = frame;
         return self;
     };
 }
@@ -589,6 +650,30 @@
             ((UITextField *)self.view).attributedPlaceholder = attributedPlaceholder;
         } else if ([self.view isKindOfClass:[UITextView class]]) {
             ((UITextView *)self.view).fwAttributedPlaceholder = attributedPlaceholder;
+        }
+        return self;
+    };
+}
+
+- (id<FWTextFieldChain> (^)(NSInteger))maxLength
+{
+    return ^id(NSInteger maxLength) {
+        if ([self.view isKindOfClass:[UITextField class]]) {
+            ((UITextField *)self.view).fwMaxLength = maxLength;
+        } else if ([self.view isKindOfClass:[UITextView class]]) {
+            ((UITextView *)self.view).fwMaxLength = maxLength;
+        }
+        return self;
+    };
+}
+
+- (id<FWTextFieldChain> (^)(NSInteger))maxUnicodeLength
+{
+    return ^id(NSInteger maxUnicodeLength) {
+        if ([self.view isKindOfClass:[UITextField class]]) {
+            ((UITextField *)self.view).fwMaxUnicodeLength = maxUnicodeLength;
+        } else if ([self.view isKindOfClass:[UITextView class]]) {
+            ((UITextView *)self.view).fwMaxUnicodeLength = maxUnicodeLength;
         }
         return self;
     };
