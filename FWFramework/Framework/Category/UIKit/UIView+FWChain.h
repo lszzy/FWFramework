@@ -18,39 +18,39 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWViewChain : NSObject
 
-#pragma mark - UIView
-
+// UIView
 @property (nonatomic, copy, readonly) FWViewChain *(^userInteractionEnabled)(BOOL enabled);
 @property (nonatomic, copy, readonly) FWViewChain *(^tag)(NSInteger tag);
-
 @property (nonatomic, copy, readonly) FWViewChain *(^frame)(CGRect frame);
 @property (nonatomic, copy, readonly) FWViewChain *(^bounds)(CGRect bounds);
 @property (nonatomic, copy, readonly) FWViewChain *(^center)(CGPoint center);
 @property (nonatomic, copy, readonly) FWViewChain *(^transform)(CGAffineTransform transform);
-@property (nonatomic, copy, readonly) FWViewChain *(^contentScaleFactor)(CGFloat contentScaleFactor);
-@property (nonatomic, copy, readonly) FWViewChain *(^autoresizesSubviews)(BOOL autoresizesSubviews);
 @property (nonatomic, copy, readonly) FWViewChain *(^autoresizingMask)(UIViewAutoresizing autoresizingMask);
-
-@property (nonatomic, copy, readonly) FWViewChain *(^removeFromSuperview)(void);
-@property (nonatomic, copy, readonly) FWViewChain *(^addSubview)(UIView *view);
-@property (nonatomic, copy, readonly) FWViewChain *(^moveToSuperview)(UIView * _Nullable view);
-
-@property (nonatomic, copy, readonly) FWViewChain *(^clipsToBounds)(BOOL clipsToBounds);
 @property (nonatomic, copy, readonly) FWViewChain *(^backgroundColor)(UIColor * _Nullable backgroundColor);
 @property (nonatomic, copy, readonly) FWViewChain *(^alpha)(CGFloat alpha);
 @property (nonatomic, copy, readonly) FWViewChain *(^opaque)(BOOL opaque);
 @property (nonatomic, copy, readonly) FWViewChain *(^hidden)(BOOL hidden);
 @property (nonatomic, copy, readonly) FWViewChain *(^contentMode)(UIViewContentMode contentMode);
 @property (nonatomic, copy, readonly) FWViewChain *(^tintColor)(UIColor * _Nullable tintColor);
-@property (nonatomic, copy, readonly) FWViewChain *(^tintAdjustmentMode)(UIViewTintAdjustmentMode tintAdjustmentMode);
 
-#pragma mark - UILabel
+@property (nonatomic, copy, readonly) FWViewChain *(^addSubview)(UIView *view);
+@property (nonatomic, copy, readonly) FWViewChain *(^moveToSuperview)(UIView * _Nullable view);
+@property (nonatomic, copy, readonly) FWViewChain *(^becomeFirstResponder)(void);
+@property (nonatomic, copy, readonly) FWViewChain *(^resignFirstResponder)(void);
 
+@property (nonatomic, copy, readonly) FWViewChain *(^masksToBounds)(BOOL masksToBounds);
+@property (nonatomic, copy, readonly) FWViewChain *(^cornerRadius)(CGFloat cornerRadius);
+@property (nonatomic, copy, readonly) FWViewChain *(^borderWidth)(CGFloat borderWidth);
+@property (nonatomic, copy, readonly) FWViewChain *(^borderColor)(UIColor * _Nullable borderColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^shadowColor)(UIColor * _Nullable shadowColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^shadowOpacity)(float shadowOpacity);
+@property (nonatomic, copy, readonly) FWViewChain *(^shadowOffset)(CGSize shadowOffset);
+@property (nonatomic, copy, readonly) FWViewChain *(^shadowRadius)(CGFloat shadowRadius);
+
+// UILabel
 @property (nonatomic, copy, readonly) FWViewChain *(^text)(NSString * _Nullable text);
 @property (nonatomic, copy, readonly) FWViewChain *(^font)(UIFont * _Nullable font);
 @property (nonatomic, copy, readonly) FWViewChain *(^textColor)(UIColor * _Nullable textColor);
-@property (nonatomic, copy, readonly) FWViewChain *(^shadowColor)(UIColor * _Nullable shadowColor);
-@property (nonatomic, copy, readonly) FWViewChain *(^shadowOffset)(CGSize shadowOffset);
 @property (nonatomic, copy, readonly) FWViewChain *(^textAlignment)(NSTextAlignment textAlignment);
 @property (nonatomic, copy, readonly) FWViewChain *(^lineBreakMode)(NSLineBreakMode lineBreakMode);
 @property (nonatomic, copy, readonly) FWViewChain *(^attributedText)(NSAttributedString * _Nullable attributedText);
@@ -58,10 +58,48 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) FWViewChain *(^highlighted)(BOOL highlighted);
 @property (nonatomic, copy, readonly) FWViewChain *(^enabled)(BOOL enabled);
 @property (nonatomic, copy, readonly) FWViewChain *(^numberOfLines)(NSInteger numberOfLines);
-@property (nonatomic, copy, readonly) FWViewChain *(^adjustsFontSizeToFitWidth)(BOOL adjustsFontSizeToFitWidth);
-@property (nonatomic, copy, readonly) FWViewChain *(^baselineAdjustment)(UIBaselineAdjustment baselineAdjustment);
-@property (nonatomic, copy, readonly) FWViewChain *(^minimumScaleFactor)(CGFloat minimumScaleFactor);
-@property (nonatomic, copy, readonly) FWViewChain *(^preferredMaxLayoutWidth)(CGFloat preferredMaxLayoutWidth);
+
+// UIButton
+@property (nonatomic, copy, readonly) FWViewChain *(^selected)(BOOL selected);
+@property (nonatomic, copy, readonly) FWViewChain *(^titleForState)(NSString * _Nullable title, UIControlState state);
+@property (nonatomic, copy, readonly) FWViewChain *(^titleColorForState)(UIColor * _Nullable titleColor, UIControlState state);
+@property (nonatomic, copy, readonly) FWViewChain *(^imageForState)(UIImage * _Nullable image, UIControlState state);
+@property (nonatomic, copy, readonly) FWViewChain *(^backgroundImageForState)(UIImage * _Nullable backgroundImage, UIControlState state);
+@property (nonatomic, copy, readonly) FWViewChain *(^attributedTitleForState)(NSAttributedString * _Nullable attributedTitle, UIControlState state);
+@property (nonatomic, copy, readonly) FWViewChain *(^titleForStateNormal)(NSString * _Nullable title);
+@property (nonatomic, copy, readonly) FWViewChain *(^titleColorForStateNormal)(UIColor * _Nullable titleColor);
+@property (nonatomic, copy, readonly) FWViewChain *(^imageForStateNormal)(UIImage * _Nullable image);
+@property (nonatomic, copy, readonly) FWViewChain *(^backgroundImageForStateNormal)(UIImage * _Nullable backgroundImage);
+@property (nonatomic, copy, readonly) FWViewChain *(^attributedTitleForStateNormal)(NSAttributedString * _Nullable attributedTitle);
+
+// UIImageView
+@property (nonatomic, copy, readonly) FWViewChain *(^image)(UIImage * _Nullable image);
+@property (nonatomic, copy, readonly) FWViewChain *(^highlightedImage)(UIImage * _Nullable highlightedImage);
+@property (nonatomic, copy, readonly) FWViewChain *(^contentModeAspectFill)(void);
+@property (nonatomic, copy, readonly) FWViewChain *(^imageUrl)(NSURL * _Nullable imageUrl);
+@property (nonatomic, copy, readonly) FWViewChain *(^imageUrlWithPlaceholder)(NSURL * _Nullable imageUrl, UIImage * _Nullable placeholderImage);
+
+// UIScrollView
+@property (nonatomic, copy, readonly) FWViewChain *(^contentOffset)(CGPoint contentOffset);
+@property (nonatomic, copy, readonly) FWViewChain *(^contentSize)(CGSize contentSize);
+@property (nonatomic, copy, readonly) FWViewChain *(^contentInset)(UIEdgeInsets contentInset);
+@property (nonatomic, copy, readonly) FWViewChain *(^directionalLockEnabled)(BOOL directionalLockEnabled);
+@property (nonatomic, copy, readonly) FWViewChain *(^bounces)(BOOL bounces);
+@property (nonatomic, copy, readonly) FWViewChain *(^alwaysBounceVertical)(BOOL alwaysBounceVertical);
+@property (nonatomic, copy, readonly) FWViewChain *(^alwaysBounceHorizontal)(BOOL alwaysBounceHorizontal);
+@property (nonatomic, copy, readonly) FWViewChain *(^pagingEnabled)(BOOL pagingEnabled);
+@property (nonatomic, copy, readonly) FWViewChain *(^scrollEnabled)(BOOL scrollEnabled);
+@property (nonatomic, copy, readonly) FWViewChain *(^showsHorizontalScrollIndicator)(BOOL showsHorizontalScrollIndicator);
+@property (nonatomic, copy, readonly) FWViewChain *(^showsVerticalScrollIndicator)(BOOL showsVerticalScrollIndicator);
+@property (nonatomic, copy, readonly) FWViewChain *(^keyboardDismissMode)(UIScrollViewKeyboardDismissMode keyboardDismissMode);
+@property (nonatomic, copy, readonly) FWViewChain *(^contentInsetAdjustmentNever)(void);
+
+// UITextField
+@property (nonatomic, copy, readonly) FWViewChain *(^placeholder)(NSString * _Nullable placeholder);
+@property (nonatomic, copy, readonly) FWViewChain *(^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder);
+
+// UITextView
+@property (nonatomic, copy, readonly) FWViewChain *(^editable)(BOOL editable);
 
 @end
 
