@@ -14,20 +14,12 @@
 @interface UITableView (FWTemplateLayout)
 
 /*!
- @brief 全局启用或禁用高度估算
- @discussion 启用高度估算，需要子视图布局完整，无需实现heightForRow方法；禁用高度估算(iOS11默认启用，会先cellForRow再heightForRow)
- 
- @param enabled 是否启用
- */
-+ (void)fwSetTemplateLayout:(BOOL)enabled;
-
-/*!
  @brief 单独启用或禁用高度估算
  @discussion 启用高度估算，需要子视图布局完整，无需实现heightForRow方法；禁用高度估算(iOS11默认启用，会先cellForRow再heightForRow)
  
  @param enabled 是否启用
  */
-- (void)fwSetTemplateLayout:(BOOL)enabled;
+- (void)fwSetTemplateLayout:(BOOL)enabled UI_APPEARANCE_SELECTOR;
 
 // 缓存方式获取估算高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
 - (CGFloat)fwTemplateHeightAtIndexPath:(NSIndexPath *)indexPath;
