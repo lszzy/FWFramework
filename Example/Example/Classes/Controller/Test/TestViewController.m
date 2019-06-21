@@ -114,7 +114,7 @@
 {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.fwDismissKeyboardOnDrag = YES;
+    tableView.fwKeyboardDismissOnDrag = YES;
     return tableView;
 }
 
