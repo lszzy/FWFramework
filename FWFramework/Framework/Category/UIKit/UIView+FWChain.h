@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) FWViewChain *(^scrollEnabled)(BOOL scrollEnabled);
 @property (nonatomic, copy, readonly) FWViewChain *(^showsHorizontalScrollIndicator)(BOOL showsHorizontalScrollIndicator);
 @property (nonatomic, copy, readonly) FWViewChain *(^showsVerticalScrollIndicator)(BOOL showsVerticalScrollIndicator);
-@property (nonatomic, copy, readonly) FWViewChain *(^keyboardDismissMode)(UIScrollViewKeyboardDismissMode keyboardDismissMode);
+@property (nonatomic, copy, readonly) FWViewChain *(^keyboardDismissModeOnDrag)(void);
 @property (nonatomic, copy, readonly) FWViewChain *(^contentInsetAdjustmentNever)(void);
 
 // UITextField
