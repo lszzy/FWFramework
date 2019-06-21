@@ -11,10 +11,11 @@
 
 /*!
  @brief UIControl+FWFramework
+ @discussion 防重复点击可以手工控制enabled或userInteractionEnabled，如request开始时禁用，结束时启用等
  */
 @interface UIControl (FWFramework)
 
-// 设置Touch事件触发间隔，防止短时间多次触发事件，默认0。也可以手工控制enabled或userInteractionEnabled
+// 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
 @property (nonatomic, assign) NSTimeInterval fwTouchEventInterval UI_APPEARANCE_SELECTOR;
 
 @end
