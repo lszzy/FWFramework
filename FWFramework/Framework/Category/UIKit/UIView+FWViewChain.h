@@ -41,6 +41,33 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, copy, readonly) id<protocol> (^shadowOffset)(CGSize shadowOffset); \
     @property (nonatomic, copy, readonly) id<protocol> (^shadowRadius)(CGFloat shadowRadius);
 
+#define FWDefLabelChain( protocol ) \
+    @property (nonatomic, copy, readonly) id<protocol> (^text)(NSString * _Nullable text); \
+    @property (nonatomic, copy, readonly) id<protocol> (^font)(UIFont * _Nullable font); \
+    @property (nonatomic, copy, readonly) id<protocol> (^textColor)(UIColor * _Nullable textColor); \
+    @property (nonatomic, copy, readonly) id<protocol> (^textAlignment)(NSTextAlignment textAlignment); \
+    @property (nonatomic, copy, readonly) id<protocol> (^attributedText)(NSAttributedString * _Nullable attributedText);
+
+#define FWDefControlChain( protocol ) \
+    @property (nonatomic, copy, readonly) id<protocol> (^enabled)(BOOL enabled); \
+    @property (nonatomic, copy, readonly) id<protocol> (^selected)(BOOL selected); \
+    @property (nonatomic, copy, readonly) id<protocol> (^highlighted)(BOOL highlighted);
+
+#define FWDefScrollViewChain( protocol ) \
+    @property (nonatomic, copy, readonly) id<protocol> (^contentOffset)(CGPoint contentOffset); \
+    @property (nonatomic, copy, readonly) id<protocol> (^contentSize)(CGSize contentSize); \
+    @property (nonatomic, copy, readonly) id<protocol> (^contentInset)(UIEdgeInsets contentInset); \
+    @property (nonatomic, copy, readonly) id<protocol> (^directionalLockEnabled)(BOOL directionalLockEnabled); \
+    @property (nonatomic, copy, readonly) id<protocol> (^bounces)(BOOL bounces); \
+    @property (nonatomic, copy, readonly) id<protocol> (^alwaysBounceVertical)(BOOL alwaysBounceVertical); \
+    @property (nonatomic, copy, readonly) id<protocol> (^alwaysBounceHorizontal)(BOOL alwaysBounceHorizontal); \
+    @property (nonatomic, copy, readonly) id<protocol> (^pagingEnabled)(BOOL pagingEnabled); \
+    @property (nonatomic, copy, readonly) id<protocol> (^scrollEnabled)(BOOL scrollEnabled); \
+    @property (nonatomic, copy, readonly) id<protocol> (^showsHorizontalScrollIndicator)(BOOL showsHorizontalScrollIndicator); \
+    @property (nonatomic, copy, readonly) id<protocol> (^showsVerticalScrollIndicator)(BOOL showsVerticalScrollIndicator); \
+    @property (nonatomic, copy, readonly) id<protocol> (^keyboardDismissModeOnDrag)(void); \
+    @property (nonatomic, copy, readonly) id<protocol> (^contentInsetAdjustmentNever)(void);
+
 #pragma mark - FWViewChain
 
 /*!
@@ -48,20 +75,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol FWViewChain <NSObject>
 
-@required FWDefViewChain(FWViewChain);
+@required
+FWDefViewChain(FWViewChain);
 
 @end
 
 @protocol FWLabelChain <NSObject>
 
-@required FWDefViewChain(FWLabelChain);
+@required
+FWDefViewChain(FWLabelChain);
+FWDefLabelChain(FWLabelChain);
 
-@property (nonatomic, copy, readonly) id<FWLabelChain> (^text)(NSString * _Nullable text);
-@property (nonatomic, copy, readonly) id<FWLabelChain> (^font)(UIFont * _Nullable font);
-@property (nonatomic, copy, readonly) id<FWLabelChain> (^textColor)(UIColor * _Nullable textColor);
-@property (nonatomic, copy, readonly) id<FWLabelChain> (^textAlignment)(NSTextAlignment textAlignment);
 @property (nonatomic, copy, readonly) id<FWLabelChain> (^lineBreakMode)(NSLineBreakMode lineBreakMode);
-@property (nonatomic, copy, readonly) id<FWLabelChain> (^attributedText)(NSAttributedString * _Nullable attributedText);
 @property (nonatomic, copy, readonly) id<FWLabelChain> (^highlightedTextColor)(UIColor * _Nullable highlightedTextColor);
 @property (nonatomic, copy, readonly) id<FWLabelChain> (^highlighted)(BOOL highlighted);
 @property (nonatomic, copy, readonly) id<FWLabelChain> (^enabled)(BOOL enabled);
@@ -71,9 +96,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FWButtonChain <NSObject>
 
-@required FWDefViewChain(FWButtonChain);
+@required
+FWDefViewChain(FWButtonChain);
+FWDefControlChain(FWButtonChain);
 
-@property (nonatomic, copy, readonly) id<FWButtonChain> (^selected)(BOOL selected);
+@property (nonatomic, copy, readonly) id<FWButtonChain> (^contentEdgeInsets)(UIEdgeInsets contentEdgeInsets);
+@property (nonatomic, copy, readonly) id<FWButtonChain> (^titleEdgeInsets)(UIEdgeInsets titleEdgeInsets);
+@property (nonatomic, copy, readonly) id<FWButtonChain> (^imageEdgeInsets)(UIEdgeInsets imageEdgeInsets);
 @property (nonatomic, copy, readonly) id<FWButtonChain> (^titleForState)(NSString * _Nullable title, UIControlState state);
 @property (nonatomic, copy, readonly) id<FWButtonChain> (^titleColorForState)(UIColor * _Nullable titleColor, UIControlState state);
 @property (nonatomic, copy, readonly) id<FWButtonChain> (^imageForState)(UIImage * _Nullable image, UIControlState state);
@@ -89,7 +118,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FWImageViewChain <NSObject>
 
-@required FWDefViewChain(FWImageViewChain);
+@required
+FWDefViewChain(FWImageViewChain);
 
 @property (nonatomic, copy, readonly) id<FWImageViewChain> (^image)(UIImage * _Nullable image);
 @property (nonatomic, copy, readonly) id<FWImageViewChain> (^highlightedImage)(UIImage * _Nullable highlightedImage);
@@ -101,27 +131,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FWScrollViewChain <NSObject>
 
-@required FWDefViewChain(FWScrollViewChain);
-
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^contentOffset)(CGPoint contentOffset);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^contentSize)(CGSize contentSize);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^contentInset)(UIEdgeInsets contentInset);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^directionalLockEnabled)(BOOL directionalLockEnabled);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^bounces)(BOOL bounces);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^alwaysBounceVertical)(BOOL alwaysBounceVertical);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^alwaysBounceHorizontal)(BOOL alwaysBounceHorizontal);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^pagingEnabled)(BOOL pagingEnabled);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^scrollEnabled)(BOOL scrollEnabled);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^showsHorizontalScrollIndicator)(BOOL showsHorizontalScrollIndicator);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^showsVerticalScrollIndicator)(BOOL showsVerticalScrollIndicator);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^keyboardDismissModeOnDrag)(void);
-@property (nonatomic, copy, readonly) id<FWScrollViewChain> (^contentInsetAdjustmentNever)(void);
+@required
+FWDefViewChain(FWScrollViewChain);
+FWDefScrollViewChain(FWScrollViewChain);
 
 @end
 
 @protocol FWTextFieldChain <NSObject>
 
-@required FWDefViewChain(FWTextFieldChain);
+@required
+FWDefViewChain(FWTextFieldChain);
+FWDefControlChain(FWTextFieldChain);
+FWDefLabelChain(FWTextFieldChain);
 
 @property (nonatomic, copy, readonly) id<FWTextFieldChain> (^placeholder)(NSString * _Nullable placeholder);
 @property (nonatomic, copy, readonly) id<FWTextFieldChain> (^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder);
@@ -130,9 +151,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FWTextViewChain <NSObject>
 
-@required FWDefViewChain(FWTextViewChain);
+@required
+FWDefViewChain(FWTextViewChain);
+FWDefLabelChain(FWTextViewChain);
+FWDefScrollViewChain(FWTextViewChain);
 
 @property (nonatomic, copy, readonly) id<FWTextViewChain> (^editable)(BOOL editable);
+@property (nonatomic, copy, readonly) id<FWTextViewChain> (^placeholder)(NSString * _Nullable placeholder);
+@property (nonatomic, copy, readonly) id<FWTextViewChain> (^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder);
 
 @end
 
