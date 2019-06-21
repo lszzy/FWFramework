@@ -13,7 +13,7 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWBlock.h"
 #import "UIView+FWBorder.h"
-#import "UIView+FWChain.h"
+#import "UIView+FWViewChain.h"
 #import "UIView+FWDrag.h"
 #import "UIView+FWFrame.h"
 #import "UIView+FWIndicator.h"
