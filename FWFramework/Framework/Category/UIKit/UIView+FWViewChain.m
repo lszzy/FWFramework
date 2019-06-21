@@ -218,9 +218,7 @@
 - (id<FWLabelChain> (^)(NSString *))text
 {
     return ^id(NSString *text) {
-        if ([self.view respondsToSelector:@selector(setText:)]) {
-            ((UILabel *)self.view).text = text;
-        }
+        ((UILabel *)self.view).text = text;
         return self;
     };
 }
@@ -228,9 +226,7 @@
 - (id<FWLabelChain> (^)(UIFont *))font
 {
     return ^id(UIFont *font) {
-        if ([self.view respondsToSelector:@selector(setFont:)]) {
-            ((UILabel *)self.view).font = font;
-        }
+        ((UILabel *)self.view).font = font;
         return self;
     };
 }
@@ -238,9 +234,7 @@
 - (id<FWLabelChain> (^)(UIColor *))textColor
 {
     return ^id(UIColor *textColor) {
-        if ([self.view respondsToSelector:@selector(setTextColor:)]) {
-            ((UILabel *)self.view).textColor = textColor;
-        }
+        ((UILabel *)self.view).textColor = textColor;
         return self;
     };
 }
@@ -248,19 +242,7 @@
 - (id<FWLabelChain> (^)(NSTextAlignment))textAlignment
 {
     return ^id(NSTextAlignment textAlignment) {
-        if ([self.view respondsToSelector:@selector(setTextAlignment:)]) {
-            ((UILabel *)self.view).textAlignment = textAlignment;
-        }
-        return self;
-    };
-}
-
-- (id<FWLabelChain> (^)(NSLineBreakMode))lineBreakMode
-{
-    return ^id(NSLineBreakMode lineBreakMode) {
-        if ([self.view respondsToSelector:@selector(setLineBreakMode:)]) {
-            ((UILabel *)self.view).lineBreakMode = lineBreakMode;
-        }
+        ((UILabel *)self.view).textAlignment = textAlignment;
         return self;
     };
 }
@@ -268,9 +250,15 @@
 - (id<FWLabelChain> (^)(NSAttributedString *))attributedText
 {
     return ^id(NSAttributedString *attributedText) {
-        if ([self.view respondsToSelector:@selector(setAttributedText:)]) {
-            ((UILabel *)self.view).attributedText = attributedText;
-        }
+        ((UILabel *)self.view).attributedText = attributedText;
+        return self;
+    };
+}
+
+- (id<FWLabelChain> (^)(NSLineBreakMode))lineBreakMode
+{
+    return ^id(NSLineBreakMode lineBreakMode) {
+        ((UILabel *)self.view).lineBreakMode = lineBreakMode;
         return self;
     };
 }
@@ -278,9 +266,7 @@
 - (id<FWLabelChain> (^)(UIColor *))highlightedTextColor
 {
     return ^id(UIColor *highlightedTextColor) {
-        if ([self.view respondsToSelector:@selector(setHighlightedTextColor:)]) {
-            ((UILabel *)self.view).highlightedTextColor = highlightedTextColor;
-        }
+        ((UILabel *)self.view).highlightedTextColor = highlightedTextColor;
         return self;
     };
 }
@@ -288,9 +274,7 @@
 - (id<FWLabelChain> (^)(BOOL))highlighted
 {
     return ^id(BOOL highlighted) {
-        if ([self.view respondsToSelector:@selector(setHighlighted:)]) {
-            ((UILabel *)self.view).highlighted = highlighted;
-        }
+        ((UILabel *)self.view).highlighted = highlighted;
         return self;
     };
 }
@@ -298,9 +282,7 @@
 - (id<FWLabelChain> (^)(BOOL))enabled
 {
     return ^id(BOOL enabled) {
-        if ([self.view respondsToSelector:@selector(setEnabled:)]) {
-            ((UILabel *)self.view).enabled = enabled;
-        }
+        ((UILabel *)self.view).enabled = enabled;
         return self;
     };
 }
@@ -308,9 +290,7 @@
 - (id<FWLabelChain> (^)(NSInteger))numberOfLines
 {
     return ^id(NSInteger numberOfLines) {
-        if ([self.view respondsToSelector:@selector(setNumberOfLines:)]) {
-            ((UILabel *)self.view).numberOfLines = numberOfLines;
-        }
+        ((UILabel *)self.view).numberOfLines = numberOfLines;
         return self;
     };
 }
@@ -320,9 +300,7 @@
 - (id<FWButtonChain> (^)(UIEdgeInsets))contentEdgeInsets
 {
     return ^id(UIEdgeInsets contentEdgeInsets) {
-        if ([self.view respondsToSelector:@selector(setContentEdgeInsets:)]) {
-            ((UIButton *)self.view).contentEdgeInsets = contentEdgeInsets;
-        }
+        ((UIButton *)self.view).contentEdgeInsets = contentEdgeInsets;
         return self;
     };
 }
@@ -330,9 +308,7 @@
 - (id<FWButtonChain> (^)(UIEdgeInsets))titleEdgeInsets
 {
     return ^id(UIEdgeInsets titleEdgeInsets) {
-        if ([self.view respondsToSelector:@selector(setTitleEdgeInsets:)]) {
-            ((UIButton *)self.view).titleEdgeInsets = titleEdgeInsets;
-        }
+        ((UIButton *)self.view).titleEdgeInsets = titleEdgeInsets;
         return self;
     };
 }
@@ -340,9 +316,7 @@
 - (id<FWButtonChain> (^)(UIEdgeInsets))imageEdgeInsets
 {
     return ^id(UIEdgeInsets imageEdgeInsets) {
-        if ([self.view respondsToSelector:@selector(setImageEdgeInsets:)]) {
-            ((UIButton *)self.view).imageEdgeInsets = imageEdgeInsets;
-        }
+        ((UIButton *)self.view).imageEdgeInsets = imageEdgeInsets;
         return self;
     };
 }
@@ -350,9 +324,7 @@
 - (id<FWButtonChain> (^)(BOOL))selected
 {
     return ^id(BOOL selected) {
-        if ([self.view respondsToSelector:@selector(setSelected:)]) {
-            ((UIButton *)self.view).selected = selected;
-        }
+        ((UIButton *)self.view).selected = selected;
         return self;
     };
 }
@@ -360,9 +332,7 @@
 - (id<FWButtonChain> (^)(NSString *, UIControlState))titleForState
 {
     return ^id(NSString *title, UIControlState state) {
-        if ([self.view respondsToSelector:@selector(setTitle:forState:)]) {
-            [(UIButton *)self.view setTitle:title forState:state];
-        }
+        [(UIButton *)self.view setTitle:title forState:state];
         return self;
     };
 }
@@ -370,9 +340,7 @@
 - (id<FWButtonChain> (^)(UIColor *, UIControlState))titleColorForState
 {
     return ^id(UIColor *titleColor, UIControlState state) {
-        if ([self.view respondsToSelector:@selector(setTitleColor:forState:)]) {
-            [(UIButton *)self.view setTitleColor:titleColor forState:state];
-        }
+        [(UIButton *)self.view setTitleColor:titleColor forState:state];
         return self;
     };
 }
@@ -380,9 +348,7 @@
 - (id<FWButtonChain> (^)(UIImage *, UIControlState))imageForState
 {
     return ^id(UIImage *image, UIControlState state) {
-        if ([self.view respondsToSelector:@selector(setImage:forState:)]) {
-            [(UIButton *)self.view setImage:image forState:state];
-        }
+        [(UIButton *)self.view setImage:image forState:state];
         return self;
     };
 }
@@ -390,9 +356,7 @@
 - (id<FWButtonChain> (^)(UIImage *, UIControlState))backgroundImageForState
 {
     return ^id(UIImage *backgroundImage, UIControlState state) {
-        if ([self.view respondsToSelector:@selector(setBackgroundImage:forState:)]) {
-            [(UIButton *)self.view setBackgroundImage:backgroundImage forState:state];
-        }
+        [(UIButton *)self.view setBackgroundImage:backgroundImage forState:state];
         return self;
     };
 }
@@ -400,9 +364,7 @@
 - (id<FWButtonChain> (^)(NSAttributedString *, UIControlState))attributedTitleForState
 {
     return ^id(NSAttributedString *attributedTitle, UIControlState state) {
-        if ([self.view respondsToSelector:@selector(setAttributedTitle:forState:)]) {
-            [(UIButton *)self.view setAttributedTitle:attributedTitle forState:state];
-        }
+        [(UIButton *)self.view setAttributedTitle:attributedTitle forState:state];
         return self;
     };
 }
@@ -410,9 +372,7 @@
 - (id<FWButtonChain> (^)(NSString *))titleForStateNormal
 {
     return ^id(NSString *title) {
-        if ([self.view respondsToSelector:@selector(setTitle:forState:)]) {
-            [(UIButton *)self.view setTitle:title forState:UIControlStateNormal];
-        }
+        [(UIButton *)self.view setTitle:title forState:UIControlStateNormal];
         return self;
     };
 }
@@ -420,9 +380,7 @@
 - (id<FWButtonChain> (^)(UIColor *))titleColorForStateNormal
 {
     return ^id(UIColor *titleColor) {
-        if ([self.view respondsToSelector:@selector(setTitleColor:forState:)]) {
-            [(UIButton *)self.view setTitleColor:titleColor forState:UIControlStateNormal];
-        }
+        [(UIButton *)self.view setTitleColor:titleColor forState:UIControlStateNormal];
         return self;
     };
 }
@@ -430,9 +388,7 @@
 - (id<FWButtonChain> (^)(UIImage *))imageForStateNormal
 {
     return ^id(UIImage *image) {
-        if ([self.view respondsToSelector:@selector(setImage:forState:)]) {
-            [(UIButton *)self.view setImage:image forState:UIControlStateNormal];
-        }
+        [(UIButton *)self.view setImage:image forState:UIControlStateNormal];
         return self;
     };
 }
@@ -440,9 +396,7 @@
 - (id<FWButtonChain> (^)(UIImage *))backgroundImageForStateNormal
 {
     return ^id(UIImage *backgroundImage) {
-        if ([self.view respondsToSelector:@selector(setBackgroundImage:forState:)]) {
-            [(UIButton *)self.view setBackgroundImage:backgroundImage forState:UIControlStateNormal];
-        }
+        [(UIButton *)self.view setBackgroundImage:backgroundImage forState:UIControlStateNormal];
         return self;
     };
 }
@@ -450,9 +404,7 @@
 - (id<FWButtonChain> (^)(NSAttributedString *))attributedTitleForStateNormal
 {
     return ^id(NSAttributedString *attributedTitle) {
-        if ([self.view respondsToSelector:@selector(setAttributedTitle:forState:)]) {
-            [(UIButton *)self.view setAttributedTitle:attributedTitle forState:UIControlStateNormal];
-        }
+        [(UIButton *)self.view setAttributedTitle:attributedTitle forState:UIControlStateNormal];
         return self;
     };
 }
@@ -462,9 +414,7 @@
 - (id<FWImageViewChain> (^)(UIImage *))image
 {
     return ^id(UIImage *image) {
-        if ([self.view respondsToSelector:@selector(setImage:)]) {
-            ((UIImageView *)self.view).image = image;
-        }
+        ((UIImageView *)self.view).image = image;
         return self;
     };
 }
@@ -472,9 +422,7 @@
 - (id<FWImageViewChain> (^)(UIImage *))highlightedImage
 {
     return ^id(UIImage *highlightedImage) {
-        if ([self.view respondsToSelector:@selector(setHighlightedImage:)]) {
-            ((UIImageView *)self.view).highlightedImage = highlightedImage;
-        }
+        ((UIImageView *)self.view).highlightedImage = highlightedImage;
         return self;
     };
 }
@@ -491,9 +439,7 @@
 - (id<FWImageViewChain> (^)(NSURL *))imageUrl
 {
     return ^id(NSURL *imageUrl) {
-        if ([self.view respondsToSelector:@selector(fwSetImageWithURL:)]) {
-            [((UIImageView *)self.view) fwSetImageWithURL:imageUrl];
-        }
+        [((UIImageView *)self.view) fwSetImageWithURL:imageUrl];
         return self;
     };
 }
@@ -501,9 +447,7 @@
 - (id<FWImageViewChain> (^)(NSURL *, UIImage *))imageUrlWithPlaceholder
 {
     return ^id(NSURL *imageUrl, UIImage *placeholderImage) {
-        if ([self.view respondsToSelector:@selector(fwSetImageWithURL:placeholderImage:)]) {
-            [((UIImageView *)self.view) fwSetImageWithURL:imageUrl placeholderImage:placeholderImage];
-        }
+        [((UIImageView *)self.view) fwSetImageWithURL:imageUrl placeholderImage:placeholderImage];
         return self;
     };
 }
@@ -513,9 +457,7 @@
 - (id<FWScrollViewChain> (^)(CGPoint))contentOffset
 {
     return ^id(CGPoint contentOffset) {
-        if ([self.view respondsToSelector:@selector(setContentOffset:)]) {
-            ((UIScrollView *)self.view).contentOffset = contentOffset;
-        }
+        ((UIScrollView *)self.view).contentOffset = contentOffset;
         return self;
     };
 }
@@ -523,9 +465,7 @@
 - (id<FWScrollViewChain> (^)(CGSize))contentSize
 {
     return ^id(CGSize contentSize) {
-        if ([self.view respondsToSelector:@selector(setContentSize:)]) {
-            ((UIScrollView *)self.view).contentSize = contentSize;
-        }
+        ((UIScrollView *)self.view).contentSize = contentSize;
         return self;
     };
 }
@@ -533,9 +473,7 @@
 - (id<FWScrollViewChain> (^)(UIEdgeInsets))contentInset
 {
     return ^id(UIEdgeInsets contentInset) {
-        if ([self.view respondsToSelector:@selector(setContentInset:)]) {
-            ((UIScrollView *)self.view).contentInset = contentInset;
-        }
+        ((UIScrollView *)self.view).contentInset = contentInset;
         return self;
     };
 }
@@ -543,9 +481,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))directionalLockEnabled
 {
     return ^id(BOOL directionalLockEnabled) {
-        if ([self.view respondsToSelector:@selector(setDirectionalLockEnabled:)]) {
-            ((UIScrollView *)self.view).directionalLockEnabled = directionalLockEnabled;
-        }
+        ((UIScrollView *)self.view).directionalLockEnabled = directionalLockEnabled;
         return self;
     };
 }
@@ -553,9 +489,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))bounces
 {
     return ^id(BOOL bounces) {
-        if ([self.view respondsToSelector:@selector(setBounces:)]) {
-            ((UIScrollView *)self.view).bounces = bounces;
-        }
+        ((UIScrollView *)self.view).bounces = bounces;
         return self;
     };
 }
@@ -563,9 +497,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))alwaysBounceVertical
 {
     return ^id(BOOL alwaysBounceVertical) {
-        if ([self.view respondsToSelector:@selector(setAlwaysBounceVertical:)]) {
-            ((UIScrollView *)self.view).alwaysBounceVertical = alwaysBounceVertical;
-        }
+        ((UIScrollView *)self.view).alwaysBounceVertical = alwaysBounceVertical;
         return self;
     };
 }
@@ -573,9 +505,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))alwaysBounceHorizontal
 {
     return ^id(BOOL alwaysBounceHorizontal) {
-        if ([self.view respondsToSelector:@selector(setAlwaysBounceHorizontal:)]) {
-            ((UIScrollView *)self.view).alwaysBounceHorizontal = alwaysBounceHorizontal;
-        }
+        ((UIScrollView *)self.view).alwaysBounceHorizontal = alwaysBounceHorizontal;
         return self;
     };
 }
@@ -583,9 +513,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))pagingEnabled
 {
     return ^id(BOOL pagingEnabled) {
-        if ([self.view respondsToSelector:@selector(setPagingEnabled:)]) {
-            ((UIScrollView *)self.view).pagingEnabled = pagingEnabled;
-        }
+        ((UIScrollView *)self.view).pagingEnabled = pagingEnabled;
         return self;
     };
 }
@@ -593,9 +521,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))scrollEnabled
 {
     return ^id(BOOL scrollEnabled) {
-        if ([self.view respondsToSelector:@selector(setScrollEnabled:)]) {
-            ((UIScrollView *)self.view).scrollEnabled = scrollEnabled;
-        }
+        ((UIScrollView *)self.view).scrollEnabled = scrollEnabled;
         return self;
     };
 }
@@ -603,9 +529,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))showsHorizontalScrollIndicator
 {
     return ^id(BOOL showsHorizontalScrollIndicator) {
-        if ([self.view respondsToSelector:@selector(setShowsHorizontalScrollIndicator:)]) {
-            ((UIScrollView *)self.view).showsHorizontalScrollIndicator = showsHorizontalScrollIndicator;
-        }
+        ((UIScrollView *)self.view).showsHorizontalScrollIndicator = showsHorizontalScrollIndicator;
         return self;
     };
 }
@@ -613,9 +537,7 @@
 - (id<FWScrollViewChain> (^)(BOOL))showsVerticalScrollIndicator
 {
     return ^id(BOOL showsVerticalScrollIndicator) {
-        if ([self.view respondsToSelector:@selector(setShowsVerticalScrollIndicator:)]) {
-            ((UIScrollView *)self.view).showsVerticalScrollIndicator = showsVerticalScrollIndicator;
-        }
+        ((UIScrollView *)self.view).showsVerticalScrollIndicator = showsVerticalScrollIndicator;
         return self;
     };
 }
@@ -623,9 +545,7 @@
 - (id<FWScrollViewChain> (^)(void))keyboardDismissModeOnDrag
 {
     return ^id(void) {
-        if ([self.view respondsToSelector:@selector(setKeyboardDismissMode:)]) {
-            ((UIScrollView *)self.view).keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-        }
+        ((UIScrollView *)self.view).keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
         return self;
     };
 }
@@ -634,9 +554,7 @@
 {
     return ^id(void) {
         if (@available(iOS 11.0, *)) {
-            if ([self.view isKindOfClass:[UIScrollView class]]) {
-                ((UIScrollView *)self.view).contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-            }
+            ((UIScrollView *)self.view).contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         return self;
     };
@@ -673,9 +591,7 @@
 - (id<FWTextViewChain> (^)(BOOL))editable
 {
     return ^id(BOOL editable) {
-        if ([self.view respondsToSelector:@selector(setEditable:)]) {
-            ((UITextView *)self.view).editable = editable;
-        }
+        ((UITextView *)self.view).editable = editable;
         return self;
     };
 }
@@ -700,7 +616,7 @@
     };
 }
 
-- (FWViewChain *)fwViewChain
+- (id<FWViewChain>)fwViewChain
 {
     FWViewChain *viewChain = objc_getAssociatedObject(self, _cmd);
     if (!viewChain) {
