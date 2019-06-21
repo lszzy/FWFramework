@@ -11,30 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Macro
-
-#define FWDefChain( chain ) \
-    @property (nonatomic, copy, readonly) chain (^userInteractionEnabled)(BOOL enabled); \
-    @property (nonatomic, copy, readonly) chain (^tag)(NSInteger tag); \
-    @property (nonatomic, copy, readonly) chain (^frame)(CGRect frame); \
-    @property (nonatomic, copy, readonly) chain (^bounds)(CGRect bounds); \
-    @property (nonatomic, copy, readonly) chain (^center)(CGPoint center); \
-    @property (nonatomic, copy, readonly) chain (^transform)(CGAffineTransform transform); \
-    @property (nonatomic, copy, readonly) chain (^contentScaleFactor)(CGFloat contentScaleFactor); \
-    @property (nonatomic, copy, readonly) chain (^autoresizesSubviews)(BOOL autoresizesSubviews); \
-    @property (nonatomic, copy, readonly) chain (^autoresizingMask)(UIViewAutoresizing autoresizingMask); \
-    @property (nonatomic, copy, readonly) chain (^removeFromSuperview)(void); \
-    @property (nonatomic, copy, readonly) chain (^addSubview)(UIView *view); \
-    @property (nonatomic, copy, readonly) chain (^moveToSuperview)(UIView * _Nullable view); \
-    @property (nonatomic, copy, readonly) chain (^clipsToBounds)(BOOL clipsToBounds); \
-    @property (nonatomic, copy, readonly) chain (^backgroundColor)(UIColor * _Nullable backgroundColor); \
-    @property (nonatomic, copy, readonly) chain (^alpha)(CGFloat alpha); \
-    @property (nonatomic, copy, readonly) chain (^opaque)(BOOL opaque); \
-    @property (nonatomic, copy, readonly) chain (^hidden)(BOOL hidden); \
-    @property (nonatomic, copy, readonly) chain (^contentMode)(UIViewContentMode contentMode); \
-    @property (nonatomic, copy, readonly) chain (^tintColor)(UIColor * _Nullable tintColor); \
-    @property (nonatomic, copy, readonly) chain (^tintAdjustmentMode)(UIViewTintAdjustmentMode tintAdjustmentMode);
-
 #pragma mark - FWViewChain
 
 /*!
