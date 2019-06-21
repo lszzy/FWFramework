@@ -36,6 +36,12 @@
     label.frame = CGRectMake(20, 230, 200, 50);
     [label fwAddTapGestureWithTarget:self action:@selector(onClick4:)];
     [self.view addSubview:label];
+    
+    button = [UIButton fwButtonWithFont:[UIFont appFontNormal] titleColor:[UIColor appColorBlack] title:@"Button1秒内不可重复点击"];
+    button.fwTouchEventInterval = 1;
+    button.frame = CGRectMake(20, 300, 200, 50);
+    [button fwAddTouchTarget:self action:@selector(onClick5:)];
+    [self.view addSubview:button];
 }
 
 #pragma mark - Action
@@ -69,6 +75,13 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"Label不可重复点击触发事件");
         gesture.view.userInteractionEnabled = YES;
+    });
+}
+
+- (void)onClick5:(UIButton *)sender
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"Button1秒内不可重复点击触发事件");
     });
 }
 
