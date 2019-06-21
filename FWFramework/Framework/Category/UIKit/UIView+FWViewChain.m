@@ -7,14 +7,14 @@
  @updated    2019/6/19
  */
 
-#import "UIView+FWChain.h"
+#import "UIView+FWViewChain.h"
 #import "UIImageView+FWNetwork.h"
 #import "UITextView+FWPlaceholder.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewChain
 
-@interface FWViewChain ()
+@interface FWViewChain : NSObject <FWViewChain, FWLabelChain, FWButtonChain, FWImageViewChain, FWScrollViewChain, FWTextFieldChain, FWTextViewChain>
 
 @property (nonatomic, weak) __kindof UIView *view;
 
@@ -22,8 +22,9 @@
 
 @implementation FWViewChain
 
-// UIView
-- (FWViewChain *(^)(BOOL))userInteractionEnabled
+#pragma mark - FWViewChain
+
+- (id<FWViewChain> (^)(BOOL))userInteractionEnabled
 {
     return ^id(BOOL enabled) {
         self.view.userInteractionEnabled = enabled;
@@ -31,7 +32,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSInteger))tag
+- (id<FWViewChain> (^)(NSInteger))tag
 {
     return ^id(NSInteger tag) {
         self.view.tag = tag;
@@ -39,7 +40,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGRect))frame
+- (id<FWViewChain> (^)(CGRect))frame
 {
     return ^id(CGRect frame) {
         self.view.frame = frame;
@@ -47,7 +48,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGRect))bounds
+- (id<FWViewChain> (^)(CGRect))bounds
 {
     return ^id(CGRect bounds) {
         self.view.bounds = bounds;
@@ -55,7 +56,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGPoint))center
+- (id<FWViewChain> (^)(CGPoint))center
 {
     return ^id(CGPoint center) {
         self.view.center = center;
@@ -63,7 +64,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGAffineTransform))transform
+- (id<FWViewChain> (^)(CGAffineTransform))transform
 {
     return ^id(CGAffineTransform transform) {
         self.view.transform = transform;
@@ -71,7 +72,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIViewAutoresizing))autoresizingMask
+- (id<FWViewChain> (^)(UIViewAutoresizing))autoresizingMask
 {
     return ^id(UIViewAutoresizing autoresizingMask) {
         self.view.autoresizingMask = autoresizingMask;
@@ -79,7 +80,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))backgroundColor
+- (id<FWViewChain> (^)(UIColor *))backgroundColor
 {
     return ^id(UIColor *backgroundColor) {
         self.view.backgroundColor = backgroundColor;
@@ -87,7 +88,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGFloat))alpha
+- (id<FWViewChain> (^)(CGFloat))alpha
 {
     return ^id(CGFloat alpha) {
         self.view.alpha = alpha;
@@ -95,7 +96,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))opaque
+- (id<FWViewChain> (^)(BOOL))opaque
 {
     return ^id(BOOL opaque) {
         self.view.opaque = opaque;
@@ -103,7 +104,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))hidden
+- (id<FWViewChain> (^)(BOOL))hidden
 {
     return ^id(BOOL hidden) {
         self.view.hidden = hidden;
@@ -111,7 +112,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIViewContentMode))contentMode
+- (id<FWViewChain> (^)(UIViewContentMode))contentMode
 {
     return ^id(UIViewContentMode contentMode) {
         self.view.contentMode = contentMode;
@@ -119,7 +120,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))tintColor
+- (id<FWViewChain> (^)(UIColor *))tintColor
 {
     return ^id(UIColor *tintColor) {
         self.view.tintColor = tintColor;
@@ -127,7 +128,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIView *))addSubview
+- (id<FWViewChain> (^)(UIView *))addSubview
 {
     return ^id(UIView *view) {
         [self.view addSubview:view];
@@ -135,7 +136,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIView *))moveToSuperview
+- (id<FWViewChain> (^)(UIView *))moveToSuperview
 {
     return ^id(UIView *view) {
         if (view) {
@@ -147,23 +148,7 @@
     };
 }
 
-- (FWViewChain *(^)(void))becomeFirstResponder
-{
-    return ^id(void) {
-        [self.view becomeFirstResponder];
-        return self;
-    };
-}
-
-- (FWViewChain *(^)(void))resignFirstResponder
-{
-    return ^id(void) {
-        [self.view resignFirstResponder];
-        return self;
-    };
-}
-
-- (FWViewChain *(^)(BOOL))masksToBounds
+- (id<FWViewChain> (^)(BOOL))masksToBounds
 {
     return ^id(BOOL masksToBounds) {
         self.view.layer.masksToBounds = masksToBounds;
@@ -171,7 +156,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGFloat))cornerRadius
+- (id<FWViewChain> (^)(CGFloat))cornerRadius
 {
     return ^id(CGFloat cornerRadius) {
         self.view.layer.cornerRadius = cornerRadius;
@@ -180,7 +165,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGFloat))borderWidth
+- (id<FWViewChain> (^)(CGFloat))borderWidth
 {
     return ^id(CGFloat borderWidth) {
         self.view.layer.borderWidth = borderWidth;
@@ -188,7 +173,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))borderColor
+- (id<FWViewChain> (^)(UIColor *))borderColor
 {
     return ^id(UIColor *borderColor) {
         self.view.layer.borderColor = borderColor.CGColor;
@@ -196,7 +181,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))shadowColor
+- (id<FWViewChain> (^)(UIColor *))shadowColor
 {
     return ^id(UIColor *shadowColor) {
         self.view.layer.shadowColor = shadowColor.CGColor;
@@ -204,7 +189,7 @@
     };
 }
 
-- (FWViewChain *(^)(float))shadowOpacity
+- (id<FWViewChain> (^)(float))shadowOpacity
 {
     return ^id(float shadowOpacity) {
         self.view.layer.shadowOpacity = shadowOpacity;
@@ -212,7 +197,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGSize))shadowOffset
+- (id<FWViewChain> (^)(CGSize))shadowOffset
 {
     return ^id(CGSize shadowOffset) {
         self.view.layer.shadowOffset = shadowOffset;
@@ -220,7 +205,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGFloat))shadowRadius
+- (id<FWViewChain> (^)(CGFloat))shadowRadius
 {
     return ^id(CGFloat shadowRadius) {
         self.view.layer.shadowRadius = shadowRadius;
@@ -228,8 +213,9 @@
     };
 }
 
-// UILabel
-- (FWViewChain *(^)(NSString *))text
+#pragma mark - FWLabelChain
+
+- (id<FWLabelChain> (^)(NSString *))text
 {
     return ^id(NSString *text) {
         if ([self.view respondsToSelector:@selector(setText:)]) {
@@ -239,7 +225,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIFont *))font
+- (id<FWLabelChain> (^)(UIFont *))font
 {
     return ^id(UIFont *font) {
         if ([self.view respondsToSelector:@selector(setFont:)]) {
@@ -249,7 +235,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))textColor
+- (id<FWLabelChain> (^)(UIColor *))textColor
 {
     return ^id(UIColor *textColor) {
         if ([self.view respondsToSelector:@selector(setTextColor:)]) {
@@ -259,7 +245,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSTextAlignment))textAlignment
+- (id<FWLabelChain> (^)(NSTextAlignment))textAlignment
 {
     return ^id(NSTextAlignment textAlignment) {
         if ([self.view respondsToSelector:@selector(setTextAlignment:)]) {
@@ -269,7 +255,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSLineBreakMode))lineBreakMode
+- (id<FWLabelChain> (^)(NSLineBreakMode))lineBreakMode
 {
     return ^id(NSLineBreakMode lineBreakMode) {
         if ([self.view respondsToSelector:@selector(setLineBreakMode:)]) {
@@ -279,7 +265,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSAttributedString *))attributedText
+- (id<FWLabelChain> (^)(NSAttributedString *))attributedText
 {
     return ^id(NSAttributedString *attributedText) {
         if ([self.view respondsToSelector:@selector(setAttributedText:)]) {
@@ -289,7 +275,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))highlightedTextColor
+- (id<FWLabelChain> (^)(UIColor *))highlightedTextColor
 {
     return ^id(UIColor *highlightedTextColor) {
         if ([self.view respondsToSelector:@selector(setHighlightedTextColor:)]) {
@@ -299,7 +285,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))highlighted
+- (id<FWLabelChain> (^)(BOOL))highlighted
 {
     return ^id(BOOL highlighted) {
         if ([self.view respondsToSelector:@selector(setHighlighted:)]) {
@@ -309,7 +295,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))enabled
+- (id<FWLabelChain> (^)(BOOL))enabled
 {
     return ^id(BOOL enabled) {
         if ([self.view respondsToSelector:@selector(setEnabled:)]) {
@@ -319,7 +305,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSInteger))numberOfLines
+- (id<FWLabelChain> (^)(NSInteger))numberOfLines
 {
     return ^id(NSInteger numberOfLines) {
         if ([self.view respondsToSelector:@selector(setNumberOfLines:)]) {
@@ -329,8 +315,9 @@
     };
 }
 
-// UIButton
-- (FWViewChain *(^)(BOOL))selected
+#pragma mark - FWButtonChain
+
+- (id<FWButtonChain> (^)(BOOL))selected
 {
     return ^id(BOOL selected) {
         if ([self.view respondsToSelector:@selector(setSelected:)]) {
@@ -340,7 +327,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSString *, UIControlState))titleForState
+- (id<FWButtonChain> (^)(NSString *, UIControlState))titleForState
 {
     return ^id(NSString *title, UIControlState state) {
         if ([self.view respondsToSelector:@selector(setTitle:forState:)]) {
@@ -350,7 +337,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *, UIControlState))titleColorForState
+- (id<FWButtonChain> (^)(UIColor *, UIControlState))titleColorForState
 {
     return ^id(UIColor *titleColor, UIControlState state) {
         if ([self.view respondsToSelector:@selector(setTitleColor:forState:)]) {
@@ -360,7 +347,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIImage *, UIControlState))imageForState
+- (id<FWButtonChain> (^)(UIImage *, UIControlState))imageForState
 {
     return ^id(UIImage *image, UIControlState state) {
         if ([self.view respondsToSelector:@selector(setImage:forState:)]) {
@@ -370,7 +357,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIImage *, UIControlState))backgroundImageForState
+- (id<FWButtonChain> (^)(UIImage *, UIControlState))backgroundImageForState
 {
     return ^id(UIImage *backgroundImage, UIControlState state) {
         if ([self.view respondsToSelector:@selector(setBackgroundImage:forState:)]) {
@@ -380,7 +367,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSAttributedString *, UIControlState))attributedTitleForState
+- (id<FWButtonChain> (^)(NSAttributedString *, UIControlState))attributedTitleForState
 {
     return ^id(NSAttributedString *attributedTitle, UIControlState state) {
         if ([self.view respondsToSelector:@selector(setAttributedTitle:forState:)]) {
@@ -390,7 +377,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSString *))titleForStateNormal
+- (id<FWButtonChain> (^)(NSString *))titleForStateNormal
 {
     return ^id(NSString *title) {
         if ([self.view respondsToSelector:@selector(setTitle:forState:)]) {
@@ -400,7 +387,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIColor *))titleColorForStateNormal
+- (id<FWButtonChain> (^)(UIColor *))titleColorForStateNormal
 {
     return ^id(UIColor *titleColor) {
         if ([self.view respondsToSelector:@selector(setTitleColor:forState:)]) {
@@ -410,7 +397,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIImage *))imageForStateNormal
+- (id<FWButtonChain> (^)(UIImage *))imageForStateNormal
 {
     return ^id(UIImage *image) {
         if ([self.view respondsToSelector:@selector(setImage:forState:)]) {
@@ -420,7 +407,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIImage *))backgroundImageForStateNormal
+- (id<FWButtonChain> (^)(UIImage *))backgroundImageForStateNormal
 {
     return ^id(UIImage *backgroundImage) {
         if ([self.view respondsToSelector:@selector(setBackgroundImage:forState:)]) {
@@ -430,7 +417,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSAttributedString *))attributedTitleForStateNormal
+- (id<FWButtonChain> (^)(NSAttributedString *))attributedTitleForStateNormal
 {
     return ^id(NSAttributedString *attributedTitle) {
         if ([self.view respondsToSelector:@selector(setAttributedTitle:forState:)]) {
@@ -440,8 +427,9 @@
     };
 }
 
-// UIImageView
-- (FWViewChain *(^)(UIImage *))image
+#pragma mark - FWImageViewChain
+
+- (id<FWImageViewChain> (^)(UIImage *))image
 {
     return ^id(UIImage *image) {
         if ([self.view respondsToSelector:@selector(setImage:)]) {
@@ -451,7 +439,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIImage *))highlightedImage
+- (id<FWImageViewChain> (^)(UIImage *))highlightedImage
 {
     return ^id(UIImage *highlightedImage) {
         if ([self.view respondsToSelector:@selector(setHighlightedImage:)]) {
@@ -461,7 +449,7 @@
     };
 }
 
-- (FWViewChain *(^)(void))contentModeAspectFill
+- (id<FWImageViewChain> (^)(void))contentModeAspectFill
 {
     return ^id(void) {
         self.view.contentMode = UIViewContentModeScaleAspectFill;
@@ -470,7 +458,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSURL *))imageUrl
+- (id<FWImageViewChain> (^)(NSURL *))imageUrl
 {
     return ^id(NSURL *imageUrl) {
         if ([self.view respondsToSelector:@selector(fwSetImageWithURL:)]) {
@@ -480,7 +468,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSURL *, UIImage *))imageUrlWithPlaceholder
+- (id<FWImageViewChain> (^)(NSURL *, UIImage *))imageUrlWithPlaceholder
 {
     return ^id(NSURL *imageUrl, UIImage *placeholderImage) {
         if ([self.view respondsToSelector:@selector(fwSetImageWithURL:placeholderImage:)]) {
@@ -490,8 +478,9 @@
     };
 }
 
-// UIScrollView
-- (FWViewChain *(^)(CGPoint))contentOffset
+#pragma mark - FWScrollViewChain
+
+- (id<FWScrollViewChain> (^)(CGPoint))contentOffset
 {
     return ^id(CGPoint contentOffset) {
         if ([self.view respondsToSelector:@selector(setContentOffset:)]) {
@@ -501,7 +490,7 @@
     };
 }
 
-- (FWViewChain *(^)(CGSize))contentSize
+- (id<FWScrollViewChain> (^)(CGSize))contentSize
 {
     return ^id(CGSize contentSize) {
         if ([self.view respondsToSelector:@selector(setContentSize:)]) {
@@ -511,7 +500,7 @@
     };
 }
 
-- (FWViewChain *(^)(UIEdgeInsets))contentInset
+- (id<FWScrollViewChain> (^)(UIEdgeInsets))contentInset
 {
     return ^id(UIEdgeInsets contentInset) {
         if ([self.view respondsToSelector:@selector(setContentInset:)]) {
@@ -521,7 +510,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))directionalLockEnabled
+- (id<FWScrollViewChain> (^)(BOOL))directionalLockEnabled
 {
     return ^id(BOOL directionalLockEnabled) {
         if ([self.view respondsToSelector:@selector(setDirectionalLockEnabled:)]) {
@@ -531,7 +520,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))bounces
+- (id<FWScrollViewChain> (^)(BOOL))bounces
 {
     return ^id(BOOL bounces) {
         if ([self.view respondsToSelector:@selector(setBounces:)]) {
@@ -541,7 +530,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))alwaysBounceVertical
+- (id<FWScrollViewChain> (^)(BOOL))alwaysBounceVertical
 {
     return ^id(BOOL alwaysBounceVertical) {
         if ([self.view respondsToSelector:@selector(setAlwaysBounceVertical:)]) {
@@ -551,7 +540,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))alwaysBounceHorizontal
+- (id<FWScrollViewChain> (^)(BOOL))alwaysBounceHorizontal
 {
     return ^id(BOOL alwaysBounceHorizontal) {
         if ([self.view respondsToSelector:@selector(setAlwaysBounceHorizontal:)]) {
@@ -561,7 +550,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))pagingEnabled
+- (id<FWScrollViewChain> (^)(BOOL))pagingEnabled
 {
     return ^id(BOOL pagingEnabled) {
         if ([self.view respondsToSelector:@selector(setPagingEnabled:)]) {
@@ -571,7 +560,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))scrollEnabled
+- (id<FWScrollViewChain> (^)(BOOL))scrollEnabled
 {
     return ^id(BOOL scrollEnabled) {
         if ([self.view respondsToSelector:@selector(setScrollEnabled:)]) {
@@ -581,7 +570,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))showsHorizontalScrollIndicator
+- (id<FWScrollViewChain> (^)(BOOL))showsHorizontalScrollIndicator
 {
     return ^id(BOOL showsHorizontalScrollIndicator) {
         if ([self.view respondsToSelector:@selector(setShowsHorizontalScrollIndicator:)]) {
@@ -591,7 +580,7 @@
     };
 }
 
-- (FWViewChain *(^)(BOOL))showsVerticalScrollIndicator
+- (id<FWScrollViewChain> (^)(BOOL))showsVerticalScrollIndicator
 {
     return ^id(BOOL showsVerticalScrollIndicator) {
         if ([self.view respondsToSelector:@selector(setShowsVerticalScrollIndicator:)]) {
@@ -601,7 +590,7 @@
     };
 }
 
-- (FWViewChain *(^)(void))keyboardDismissModeOnDrag
+- (id<FWScrollViewChain> (^)(void))keyboardDismissModeOnDrag
 {
     return ^id(void) {
         if ([self.view respondsToSelector:@selector(setKeyboardDismissMode:)]) {
@@ -611,7 +600,7 @@
     };
 }
 
-- (FWViewChain *(^)(void))contentInsetAdjustmentNever
+- (id<FWScrollViewChain> (^)(void))contentInsetAdjustmentNever
 {
     return ^id(void) {
         if (@available(iOS 11.0, *)) {
@@ -623,8 +612,9 @@
     };
 }
 
-// UITextField
-- (FWViewChain *(^)(NSString *))placeholder
+#pragma mark - FWTextFieldChain
+
+- (id<FWTextFieldChain> (^)(NSString *))placeholder
 {
     return ^id(NSString *placeholder) {
         if ([self.view isKindOfClass:[UITextField class]]) {
@@ -636,7 +626,7 @@
     };
 }
 
-- (FWViewChain *(^)(NSAttributedString *))attributedPlaceholder
+- (id<FWTextFieldChain> (^)(NSAttributedString *))attributedPlaceholder
 {
     return ^id(NSAttributedString *attributedPlaceholder) {
         if ([self.view isKindOfClass:[UITextField class]]) {
@@ -648,8 +638,9 @@
     };
 }
 
-// UITextView
-- (FWViewChain *(^)(BOOL))editable
+#pragma mark - FWTextViewChain
+
+- (id<FWTextViewChain> (^)(BOOL))editable
 {
     return ^id(BOOL editable) {
         if ([self.view respondsToSelector:@selector(setEditable:)]) {
@@ -665,14 +656,14 @@
 
 @implementation UIView (FWViewChain)
 
-+ (__kindof UIView *(^)(void))fwNew
++ (__kindof UIView *(^)(void))fwView
 {
     return ^id(void) {
         return [[self alloc] init];
     };
 }
 
-+ (__kindof UIView *(^)(CGRect))fwNewWithFrame
++ (__kindof UIView *(^)(CGRect))fwViewWithFrame
 {
     return ^id(CGRect frame) {
         return [[self alloc] initWithFrame:frame];
@@ -688,6 +679,17 @@
         objc_setAssociatedObject(self, _cmd, viewChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return viewChain;
+}
+
+@end
+
+@implementation UIButton (FWViewChain)
+
++ (__kindof UIButton *(^)(UIButtonType))fwButtonWithType
+{
+    return ^id(UIButtonType type) {
+        return [self buttonWithType:type];
+    };
 }
 
 @end

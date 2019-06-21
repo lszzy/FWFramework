@@ -13,10 +13,10 @@
 
 - (void)renderView
 {
-    UIView *view = UIView.fwNew();
+    UIView *view = UIView.fwView();
     view.fwViewChain.frame(CGRectMake(20, 20, 50, 50)).backgroundColor(UIColor.redColor).moveToSuperview(self.view);
     
-    UILabel *label = UILabel.fwNewWithFrame(CGRectMake(90, 20, 50, 50));
+    UILabel *label = UILabel.fwViewWithFrame(CGRectMake(90, 20, 50, 50));
     label.fwViewChain.text(@"text").moveToSuperview(self.view);
 }
 
