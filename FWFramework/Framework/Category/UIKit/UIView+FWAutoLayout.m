@@ -142,6 +142,22 @@ static void *kUIViewFWConstraintsKey = &kUIViewFWConstraintsKey;
     return constraints;
 }
 
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewHorizontal
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeading]];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTrailing]];
+    return constraints;
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewVertical
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTop]];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeBottom]];
+    return constraints;
+}
+
 - (NSLayoutConstraint *)fwPinEdgeToSuperview:(NSLayoutAttribute)edge
 {
     return [self fwPinEdgeToSuperview:edge withInset:0.0];
@@ -221,6 +237,22 @@ static void *kUIViewFWConstraintsKey = &kUIViewFWConstraintsKey;
     if (edge != NSLayoutAttributeTrailing && edge != NSLayoutAttributeRight) {
         [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing withInset:insets.right]];
     }
+    return constraints;
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaHorizontal
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeading]];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing]];
+    return constraints;
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaVertical
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop]];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom]];
     return constraints;
 }
 
