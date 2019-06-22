@@ -13,11 +13,16 @@
 
 - (void)renderView
 {
-    UIView *view = UIView.fwView();
+    UIView *view = [[UIView alloc] init];
     view.fwViewChain.frame(CGRectMake(20, 20, 50, 50)).backgroundColor(UIColor.redColor).moveToSuperview(self.view);
     
     UILabel *label = UILabel.fwViewWithFrame(CGRectMake(90, 20, 50, 50));
-    label.fwViewChain.text(@"text").moveToSuperview(self.view);
+    label.fwViewChain.text(@"text").textAlignment(NSTextAlignmentCenter).moveToSuperview(self.view);
+    
+    UIButton *button = UIButton.fwButtonWithType(UIButtonTypeCustom);
+    button.fwViewChain.frame(CGRectMake(160, 20, 50, 50)).titleColorForStateNormal(UIColor.appColorBlack).titleForStateNormal(@"btn").moveToSuperview(self.view);
+    
+    UIImageView.fwView().fwViewChain.image([UIImage fwImageWithAppIcon]).frame(CGRectMake(230, 20, 50, 50)).moveToSuperview(self.view);
 }
 
 @end
