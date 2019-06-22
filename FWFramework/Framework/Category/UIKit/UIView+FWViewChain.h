@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, copy, readonly) id<protocol> (^height)(CGFloat height); \
     @property (nonatomic, copy, readonly) id<protocol> (^transform)(CGAffineTransform transform); \
     @property (nonatomic, copy, readonly) id<protocol> (^autoresizingMask)(UIViewAutoresizing autoresizingMask); \
+    @property (nonatomic, copy, readonly) id<protocol> (^clipsToBounds)(BOOL clipsToBounds); \
     @property (nonatomic, copy, readonly) id<protocol> (^backgroundColor)(UIColor * _Nullable backgroundColor); \
     @property (nonatomic, copy, readonly) id<protocol> (^alpha)(CGFloat alpha); \
     @property (nonatomic, copy, readonly) id<protocol> (^opaque)(BOOL opaque); \
