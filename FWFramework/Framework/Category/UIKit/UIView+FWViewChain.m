@@ -141,6 +141,14 @@
     };
 }
 
+- (id<FWViewChain> (^)(BOOL))clipsToBounds
+{
+    return ^id(BOOL clipsToBounds) {
+        self.view.clipsToBounds = clipsToBounds;
+        return self;
+    };
+}
+
 - (id<FWViewChain> (^)(UIColor *))backgroundColor
 {
     return ^id(UIColor *backgroundColor) {

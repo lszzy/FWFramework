@@ -9,9 +9,22 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma mark - FWLayoutChain
+
 /*!
- @brief UIView+FWLayoutChain
+ @brief 视图链式布局类
+ */
+@interface FWLayoutChain : NSObject
+
+@end
+
+#pragma mark - UIView+FWLayoutChain
+
+/*!
+ @brief 视图链式布局分类
  */
 @interface UIView (FWLayoutChain)
+
+@property (nonatomic, strong, readonly) FWLayoutChain *fwLayoutChain;
 
 @end
