@@ -26,7 +26,7 @@
     
     view = [UIView new];
     view.fwViewChain.backgroundColor(UIColor.redColor).moveToSuperview(self.view);
-    view.fwLayoutChain.size(CGSizeMake(50, 50)).edgeToSuperviewWithInset(NSLayoutAttributeLeft, 20).edgeToSuperviewWithInset(NSLayoutAttributeTop, 90);
+    view.fwLayoutChain.size(CGSizeMake(50, 50)).leftWithInset(20).topWithInset(90);
 }
 
 @end
