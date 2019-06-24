@@ -14,22 +14,6 @@
 
 @implementation UITableView (FWTemplateLayout)
 
-+ (void)fwSetTemplateLayout:(BOOL)enabled
-{
-    if (enabled) {
-        [UITableView appearance].estimatedRowHeight = UITableViewAutomaticDimension;
-        [UITableView appearance].estimatedSectionHeaderHeight = UITableViewAutomaticDimension;
-        [UITableView appearance].estimatedSectionFooterHeight = UITableViewAutomaticDimension;
-        [UITableView appearance].rowHeight = UITableViewAutomaticDimension;
-        [UITableView appearance].sectionHeaderHeight = UITableViewAutomaticDimension;
-        [UITableView appearance].sectionFooterHeight = UITableViewAutomaticDimension;
-    } else {
-        [UITableView appearance].estimatedRowHeight = 0.f;
-        [UITableView appearance].estimatedSectionHeaderHeight = 0.f;
-        [UITableView appearance].estimatedSectionFooterHeight = 0.f;
-    }
-}
-
 - (void)fwSetTemplateLayout:(BOOL)enabled
 {
     if (enabled) {

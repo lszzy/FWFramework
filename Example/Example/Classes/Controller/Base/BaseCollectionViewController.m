@@ -51,7 +51,7 @@
     // 默认集合背景色
     collectionView.backgroundColor = [UIColor appColorBg];
     // 禁用内边距适应
-    [collectionView fwContentInsetNever];
+    [collectionView fwContentInsetAdjustmentNever];
     return collectionView;
 }
 

@@ -142,6 +142,20 @@
 - (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 /*!
+ @brief 与父视图水平两条边属性相同
+ 
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewHorizontal;
+
+/*!
+ @brief 与父视图纵向两条边属性相同
+ 
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewVertical;
+
+/*!
  @brief 与父视图边属性相同
  
  @param edge 指定边属性
@@ -241,6 +255,20 @@
  @return 约束数组
  */
 - (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+
+/*!
+ @brief 与父视图安全区域水平两条边属性相同
+ 
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaHorizontal;
+
+/*!
+ @brief 与父视图安全区域纵向两条边属性相同
+ 
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaVertical;
 
 /*!
  @brief 与父视图安全区域边属性相同

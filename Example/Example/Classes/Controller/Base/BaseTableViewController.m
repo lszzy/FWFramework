@@ -53,7 +53,7 @@
     // 默认表格底部为空
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     // 兼容TableView
-    [tableView fwContentInsetNever];
+    [tableView fwContentInsetAdjustmentNever];
     // 默认启用估算高度
     [tableView fwSetTemplateLayout:YES];
     return tableView;
