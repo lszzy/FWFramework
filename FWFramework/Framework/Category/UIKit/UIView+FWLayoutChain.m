@@ -8,6 +8,7 @@
  */
 
 #import "UIView+FWLayoutChain.h"
+#import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWLayoutChain
@@ -19,6 +20,46 @@
 @end
 
 @implementation FWLayoutChain
+
+- (FWLayoutChain *(^)(CGSize))size
+{
+    return ^id(CGSize size) {
+        [self.view fwSetDimensionsToSize:size];
+        return self;
+    };
+}
+
+- (FWLayoutChain *(^)(CGFloat))width
+{
+    return ^id(CGFloat width) {
+        [self.view fwSetDimension:NSLayoutAttributeWidth toSize:width];
+        return self;
+    };
+}
+
+- (FWLayoutChain *(^)(CGFloat))height
+{
+    return ^id(CGFloat height) {
+        [self.view fwSetDimension:NSLayoutAttributeHeight toSize:height];
+        return self;
+    };
+}
+
+- (FWLayoutChain *(^)(CGFloat, NSLayoutRelation))widthWithRelation
+{
+    return ^id(CGFloat width, NSLayoutRelation relation) {
+        [self.view fwSetDimension:NSLayoutAttributeWidth toSize:width relation:relation];
+        return self;
+    };
+}
+
+- (FWLayoutChain *(^)(CGFloat, NSLayoutRelation))heightWithRelation
+{
+    return ^id(CGFloat height, NSLayoutRelation relation) {
+        [self.view fwSetDimension:NSLayoutAttributeHeight toSize:height relation:relation];
+        return self;
+    };
+}
 
 @end
 
