@@ -49,10 +49,6 @@
 @property (nonatomic, copy, readonly) FWLayoutChain *(^bottomWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^leftWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^rightWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^topWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^bottomWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^leftWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^rightWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^topToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^bottomToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^leftToView)(id view);
@@ -69,14 +65,6 @@
 @property (nonatomic, copy, readonly) FWLayoutChain *(^bottomToTopOfViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^leftToRightOfViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^rightToLeftOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^topToViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^bottomToViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^leftToViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^rightToViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^topToBottomOfViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^bottomToTopOfViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^leftToRightOfViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^rightToLeftOfViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
 
 #pragma mark - SafeArea
 
@@ -96,29 +84,19 @@
 @property (nonatomic, copy, readonly) FWLayoutChain *(^bottomToSafeAreaWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^leftToSafeAreaWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^rightToSafeAreaWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^topToSafeAreaWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^bottomToSafeAreaWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^leftToSafeAreaWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^rightToSafeAreaWithInsetAndRelation)(CGFloat inset, NSLayoutRelation relation);
 
 #pragma mark - Dimension
 
 @property (nonatomic, copy, readonly) FWLayoutChain *(^size)(CGSize size);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^width)(CGFloat width);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^height)(CGFloat height);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^widthWithRelation)(CGFloat width, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^heightWithRelation)(CGFloat height, NSLayoutRelation relation);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^sizeToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^widthToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^heightToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^widthToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^heightToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^widthToViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^heightToViewWithOffsetAndRelation)(id view, CGFloat offset, NSLayoutRelation relation);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^widthToViewWithMultiplier)(id view, CGFloat multiplier);
 @property (nonatomic, copy, readonly) FWLayoutChain *(^heightToViewWithMultiplier)(id view, CGFloat multiplier);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^widthToViewWithMultiplierAndRelation)(id view, CGFloat multiplier, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain *(^heightToViewWithMultiplierAndRelation)(id view, CGFloat multiplier, NSLayoutRelation relation);
 
 #pragma mark - Attribute
 
