@@ -115,6 +115,15 @@
     return nil;
 }
 
+- (void)fwMoveToSuperview:(UIView *)view
+{
+    if (view) {
+        [view addSubview:self];
+    } else {
+        [self removeFromSuperview];
+    }
+}
+
 #pragma mark - Snapshot
 
 - (UIImage *)fwSnapshotImage

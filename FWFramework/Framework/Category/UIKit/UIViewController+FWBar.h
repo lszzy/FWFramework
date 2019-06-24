@@ -75,19 +75,19 @@
 + (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes;
 
 // 设置标题和按钮颜色
-- (void)fwSetTextColor:(UIColor *)color;
+- (void)fwSetTextColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
 
 // 设置背景颜色。为避免barTintColor的一些兼容问题，此方法未使用barTintColor，而是使用颜色生成的图片来设置backgroundImage
-- (void)fwSetBackgroundColor:(UIColor *)color;
+- (void)fwSetBackgroundColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
 
 // 设置背景图片
-- (void)fwSetBackgroundImage:(UIImage *)image;
+- (void)fwSetBackgroundImage:(UIImage *)image UI_APPEARANCE_SELECTOR;
 
 // 设置透明背景并隐藏底部线条
-- (void)fwSetBackgroundClear;
+- (void)fwSetBackgroundClear UI_APPEARANCE_SELECTOR;
 
 // 设置是否隐藏底部线条
-- (void)fwSetLineHidden:(BOOL)hidden;
+- (void)fwSetLineHidden:(BOOL)hidden UI_APPEARANCE_SELECTOR;
 
 // 添加背景视图，可设置背景色等
 - (UIView *)fwOverlayView;
@@ -96,10 +96,10 @@
 - (void)fwResetBackground;
 
 // 设置返回箭头图片，值为nil则还原默认
-- (void)fwSetIndicatorImage:(UIImage *)image;
+- (void)fwSetIndicatorImage:(UIImage *)image UI_APPEARANCE_SELECTOR;
 
 // 设置返回箭头图片，值为nil则还原默认，支持图片偏移
-- (void)fwSetIndicatorImage:(UIImage *)image insets:(UIEdgeInsets)insets;
+- (void)fwSetIndicatorImage:(UIImage *)image insets:(UIEdgeInsets)insets UI_APPEARANCE_SELECTOR;
 
 // 背景view，可能显示磨砂、背景图，顶部有一部分溢出到UINavigationBar外。在iOS10及以后是私有的_UIBarBackground类，在iOS9及以前是私有的_UINavigationBarBackground类
 - (UIView *)fwBackgroundView;

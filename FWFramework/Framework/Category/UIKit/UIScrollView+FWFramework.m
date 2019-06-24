@@ -170,14 +170,7 @@
 
 #pragma mark - Content
 
-+ (void)fwContentInsetNever
-{
-    if (@available(iOS 11.0, *)) {
-        [UIScrollView appearance].contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-}
-
-- (void)fwContentInsetNever
+- (void)fwContentInsetAdjustmentNever
 {
     if (@available(iOS 11.0, *)) {
         self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -186,14 +179,14 @@
 
 #pragma mark - Keyboard
 
-- (BOOL)fwDismissKeyboardOnDrag
+- (BOOL)fwKeyboardDismissOnDrag
 {
     return self.keyboardDismissMode == UIScrollViewKeyboardDismissModeOnDrag;
 }
 
-- (void)setFwDismissKeyboardOnDrag:(BOOL)fwDismissKeyboardOnDrag
+- (void)setFwKeyboardDismissOnDrag:(BOOL)fwKeyboardDismissOnDrag
 {
-    self.keyboardDismissMode = fwDismissKeyboardOnDrag ? UIScrollViewKeyboardDismissModeOnDrag : UIScrollViewKeyboardDismissModeNone;
+    self.keyboardDismissMode = fwKeyboardDismissOnDrag ? UIScrollViewKeyboardDismissModeOnDrag : UIScrollViewKeyboardDismissModeNone;
 }
 
 #pragma mark - Gesture

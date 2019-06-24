@@ -41,7 +41,7 @@
     // 默认背景色
     scrollView.backgroundColor = [UIColor appColorBg];
     // 禁用内边距适应
-    [scrollView fwContentInsetNever];
+    [scrollView fwContentInsetAdjustmentNever];
     return scrollView;
 }
 

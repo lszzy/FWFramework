@@ -12,8 +12,6 @@
 
 @implementation UIButton (FWFramework)
 
-#pragma mark - Touch
-
 - (UIEdgeInsets)fwTouchInsets
 {
     return [objc_getAssociatedObject(self, @selector(fwTouchInsets)) UIEdgeInsetsValue];

@@ -53,10 +53,12 @@
 {
     [self.dataList addObjectsFromArray:@[
                                        @[@"FWFramework", @[
+                                             @[@"UIButton(FWFramework)", @"TestButtonViewController"],
                                              @[@"UIView(FWAnimation)", @"TestAnimationViewController"],
                                              @[@"UIView(FWBadge)", @"TestBadgeViewController"],
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UIView(FWBorder)", @"TestBorderViewController"],
+                                             @[@"UIView(FWChain)", @"TestChainViewController"],
                                              @[@"UIView(FWLayer)", @"TestLayerViewController"],
                                              @[@"UIImageView(FWFace)", @"TestFaceViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
@@ -112,7 +114,7 @@
 {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.fwDismissKeyboardOnDrag = YES;
+    tableView.fwKeyboardDismissOnDrag = YES;
     return tableView;
 }
 

@@ -67,16 +67,13 @@
 
 #pragma mark - Content
 
-// 全体禁用内边距适应(iOS11默认启用后，会导致显示不正常)
-+ (void)fwContentInsetNever;
-
 // 单独禁用内边距适应，同上。如果iOS7-10的ScrollView占不满导航栏，需设置viewController.automaticallyAdjustsScrollViewInsets为NO即可
-- (void)fwContentInsetNever;
+- (void)fwContentInsetAdjustmentNever UI_APPEARANCE_SELECTOR;
 
 #pragma mark - Keyboard
 
 // 是否滚动时收起键盘，默认NO
-@property (nonatomic, assign) BOOL fwDismissKeyboardOnDrag;
+@property (nonatomic, assign) BOOL fwKeyboardDismissOnDrag UI_APPEARANCE_SELECTOR;
 
 #pragma mark - Gesture
 

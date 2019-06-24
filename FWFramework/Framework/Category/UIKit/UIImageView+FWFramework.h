@@ -17,10 +17,10 @@
 #pragma mark - Mode
 
 // 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置
-- (void)fwSetContentModeAspectFill;
+- (void)fwSetContentModeAspectFill UI_APPEARANCE_SELECTOR;
 
 // 设置指定图片模式，超过区域隐藏。可通过appearance统一设置
-- (void)fwSetContentMode:(UIViewContentMode)contentMode;
+- (void)fwSetContentMode:(UIViewContentMode)contentMode UI_APPEARANCE_SELECTOR;
 
 #pragma mark - Face
 
