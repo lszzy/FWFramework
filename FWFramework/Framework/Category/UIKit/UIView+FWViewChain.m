@@ -703,20 +703,6 @@
 
 @implementation UIView (FWViewChain)
 
-+ (__kindof UIView *(^)(void))fwView
-{
-    return ^id(void) {
-        return [[self alloc] init];
-    };
-}
-
-+ (__kindof UIView *(^)(CGRect))fwViewWithFrame
-{
-    return ^id(CGRect frame) {
-        return [[self alloc] initWithFrame:frame];
-    };
-}
-
 - (id<FWViewChain>)fwViewChain
 {
     FWViewChain *viewChain = objc_getAssociatedObject(self, _cmd);
@@ -726,17 +712,6 @@
         objc_setAssociatedObject(self, _cmd, viewChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return viewChain;
-}
-
-@end
-
-@implementation UIButton (FWViewChain)
-
-+ (__kindof UIButton *(^)(UIButtonType))fwButtonWithType
-{
-    return ^id(UIButtonType type) {
-        return [self buttonWithType:type];
-    };
 }
 
 @end

@@ -16,9 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief 定义View链式调用协议
  */
-#define FWDefViewChain_( clazz, protocol ) \
-    @property (class, nonatomic, strong, readonly) __kindof clazz *(^fwView)(void); \
-    @property (class, nonatomic, strong, readonly) __kindof clazz *(^fwViewWithFrame)(CGRect frame); \
+#define FWDefViewChain_( protocol ) \
     @property (nonatomic, strong, readonly) id<protocol> fwViewChain;
 
 #define FWDefViewChainProtocol_( protocol ) \
@@ -186,45 +184,43 @@ FWDefInputChainProtocol_(FWTextViewChain);
 @interface UIView (FWViewChain)
 
 // 链式调用对象，注意view强引用viewChain，viewChain弱引用view
-FWDefViewChain_(UIView, FWViewChain);
+FWDefViewChain_(FWViewChain);
 
 @end
 
 @interface UILabel (FWViewChain)
 
-FWDefViewChain_(UILabel, FWLabelChain);
+FWDefViewChain_(FWLabelChain);
 
 @end
 
 @interface UIButton (FWViewChain)
 
-@property (class, nonatomic, strong, readonly) __kindof UIButton *(^fwButtonWithType)(UIButtonType type);
-
-FWDefViewChain_(UIButton, FWButtonChain);
+FWDefViewChain_(FWButtonChain);
 
 @end
 
 @interface UIImageView (FWViewChain)
 
-FWDefViewChain_(UIImageView, FWImageViewChain);
+FWDefViewChain_(FWImageViewChain);
 
 @end
 
 @interface UIScrollView (FWViewChain)
 
-FWDefViewChain_(UIScrollView, FWScrollViewChain);
+FWDefViewChain_(FWScrollViewChain);
 
 @end
 
 @interface UITextField (FWViewChain)
 
-FWDefViewChain_(UITextField, FWTextFieldChain);
+FWDefViewChain_(FWTextFieldChain);
 
 @end
 
 @interface UITextView (FWViewChain)
 
-FWDefViewChain_(UITextView, FWTextViewChain);
+FWDefViewChain_(FWTextViewChain);
 
 @end
 
