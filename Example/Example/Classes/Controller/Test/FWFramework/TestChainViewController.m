@@ -23,6 +23,10 @@
     button.fwViewChain.frame(CGRectMake(160, 20, 50, 50)).titleColorForStateNormal(UIColor.appColorBlack).titleForStateNormal(@"btn").moveToSuperview(self.view);
     
     [UIImageView new].fwViewChain.image([UIImage fwImageWithAppIcon]).frame(CGRectMake(230, 20, 50, 50)).moveToSuperview(self.view);
+    
+    view = [UIView new];
+    view.fwViewChain.backgroundColor(UIColor.redColor).moveToSuperview(self.view);
+    view.fwLayoutChain.size(CGSizeMake(50, 50)).edgeToSuperviewWithInset(NSLayoutAttributeLeft, 20).edgeToSuperviewWithInset(NSLayoutAttributeTop, 90);
 }
 
 @end
