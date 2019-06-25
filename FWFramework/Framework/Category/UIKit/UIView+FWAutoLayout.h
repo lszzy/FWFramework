@@ -11,6 +11,7 @@
 
 /*!
  @brief UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
+ @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加
  */
 @interface UIView (FWAutoLayout)
 
@@ -34,24 +35,6 @@
  @brief 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
  */
 - (void)fwAutoLayoutSubviews;
-
-#pragma mark - Key
-
-/*!
- @brief 设置约束保存键名，方便更新约束常量
- 
- @param constraint 布局约束
- @param key 保存key
- */
-- (void)fwSetConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key;
-
-/*!
- @brief 获取键名对应约束
- 
- @param key 保存key
- @return 布局约束
- */
-- (NSLayoutConstraint *)fwConstraintForKey:(id<NSCopying>)key;
 
 #pragma mark - Compression
 
@@ -440,22 +423,40 @@
  */
 - (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
+#pragma mark - Key
+
+/*!
+ @brief 设置约束保存键名，方便更新约束常量
+ 
+ @param constraint 布局约束
+ @param key 保存key
+ */
+- (void)fwSetConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key;
+
+/*!
+ @brief 获取键名对应约束
+ 
+ @param key 保存key
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwConstraintForKey:(id<NSCopying>)key;
+
 #pragma mark - All
 
 /*!
- @brief 获取当前所有约束
+ @brief 获取当前所有约束，不包含Key
  
  @return 约束列表
  */
 - (NSArray<NSLayoutConstraint *> *)fwAllConstraints;
 
 /*!
- @brief 移除当前指定约束
+ @brief 移除当前指定约束，不包含Key
  */
 - (void)fwRemoveConstraint:(NSLayoutConstraint *)constraint;
 
 /*!
- @brief 移除当前所有约束
+ @brief 移除当前所有约束，不包含Key
  */
 - (void)fwRemoveAllConstraints;
 
