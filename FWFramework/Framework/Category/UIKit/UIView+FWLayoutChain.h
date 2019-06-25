@@ -16,6 +16,10 @@
  */
 @interface FWLayoutChain : NSObject
 
+#pragma mark - Install
+
+@property (nonatomic, copy, readonly) FWLayoutChain *(^remake)(void);
+
 #pragma mark - Compression
 
 @property (nonatomic, copy, readonly) FWLayoutChain *(^compressionHorizontal)(UILayoutPriority priority);

@@ -21,6 +21,16 @@
 
 @implementation FWLayoutChain
 
+#pragma mark - Install
+
+- (FWLayoutChain *(^)(void))remake
+{
+    return ^id(void) {
+        [self.view fwRemoveAllConstraints];
+        return self;
+    };
+}
+
 #pragma mark - Compression
 
 - (FWLayoutChain *(^)(UILayoutPriority))compressionHorizontal
