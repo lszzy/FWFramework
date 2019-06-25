@@ -342,7 +342,7 @@
 {
     self.translatesAutoresizingMaskIntoConstraints = NO;
     // 自动生成唯一约束Key，存在则更新，否则添加
-    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%ld-%ld-%@", attribute, relation, [otherView hash], toAttribute, @(multiplier)];
+    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
     NSLayoutConstraint *constraint = [self.fwInnerLayoutConstraints objectForKey:layoutKey];
     if (constraint) {
         constraint.constant = offset;
