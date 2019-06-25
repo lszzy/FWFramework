@@ -35,7 +35,7 @@
 {
     UIView *view = [[UIView alloc] init];
     view.fwViewChain.backgroundColor(UIColor.redColor).moveToSuperview(self.view);
-    view.fwLayoutChain.topWithInset(90).leftWithInset(20).size(CGSizeMake(50, 50));
+    view.fwLayoutChain.remake().topWithInset(90).leftWithInset(20).size(CGSizeMake(100, 100)).width(50).height(50);
     
     UILabel *label = [[UILabel alloc] init];
     label.fwViewChain.text(@"text").textAlignment(NSTextAlignmentCenter).moveToSuperview(self.view);
