@@ -13,6 +13,7 @@
 
 /*!
  @brief 视图链式布局类
+ @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加
  */
 @interface FWLayoutChain : NSObject
 
