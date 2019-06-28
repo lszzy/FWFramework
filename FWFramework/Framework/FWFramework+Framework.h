@@ -22,6 +22,7 @@
 #import "FWProxy.h"
 #import "FWPromise.h"
 #import "FWState.h"
+#import "FWTest.h"
 #import "FWRouter.h"
 
 // Service
