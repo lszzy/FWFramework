@@ -13,9 +13,9 @@
 
 // 是否是模拟器
 #if TARGET_OS_SIMULATOR
-    #define FW_SIMULATOR 1
+    #define FWIsSimulator YES
 #else
-    #define FW_SIMULATOR 0
+    #define FWIsSimulator NO
 #endif
 
 // 是否是iPhone设备
