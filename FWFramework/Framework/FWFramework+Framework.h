@@ -16,7 +16,6 @@
 // Kernel
 #import "FWMacro.h"
 #import "FWLog.h"
-#import "FWTest.h"
 #import "FWPlugin.h"
 #import "FWMessage.h"
 #import "FWAspect.h"
@@ -24,7 +23,6 @@
 #import "FWPromise.h"
 #import "FWState.h"
 #import "FWRouter.h"
-#import "FWTuple.h"
 
 // Service
 #import "FWMutableArray.h"

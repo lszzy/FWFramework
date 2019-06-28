@@ -36,75 +36,36 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     fwStaticLogLevel = level;
 }
 
-+ (void)verbose:(NSString *)format, ...
++ (void)verbose:(NSString *)message
 {
-    if (!(fwStaticLogLevel & FWLogTypeVerbose)) return;
-    
-    va_list args;
-    if (format) {
-        va_start(args, format);
-        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-        [self log:FWLogTypeVerbose withMessage:message];
-        va_end(args);
-    }
+    [self log:FWLogTypeVerbose withMessage:message];
 }
 
-+ (void)debug:(NSString *)format, ...
++ (void)debug:(NSString *)message
 {
-    if (!(fwStaticLogLevel & FWLogTypeDebug)) return;
-    
-    va_list args;
-    if (format) {
-        va_start(args, format);
-        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-        [self log:FWLogTypeDebug withMessage:message];
-        va_end(args);
-    }
+    [self log:FWLogTypeDebug withMessage:message];
 }
 
-+ (void)info:(NSString *)format, ...
++ (void)info:(NSString *)message
 {
-    if (!(fwStaticLogLevel & FWLogTypeInfo)) return;
-    
-    va_list args;
-    if (format) {
-        va_start(args, format);
-        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-        [self log:FWLogTypeInfo withMessage:message];
-        va_end(args);
-    }
+    [self log:FWLogTypeInfo withMessage:message];
 }
 
-+ (void)warn:(NSString *)format, ...
++ (void)warn:(NSString *)message
 {
-    if (!(fwStaticLogLevel & FWLogTypeWarn)) return;
-    
-    va_list args;
-    if (format) {
-        va_start(args, format);
-        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-        [self log:FWLogTypeWarn withMessage:message];
-        va_end(args);
-    }
+    [self log:FWLogTypeWarn withMessage:message];
 }
 
-+ (void)error:(NSString *)format, ...
++ (void)error:(NSString *)message
 {
-    if (!(fwStaticLogLevel & FWLogTypeError)) return;
-    
-    va_list args;
-    if (format) {
-        va_start(args, format);
-        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-        [self log:FWLogTypeError withMessage:message];
-        va_end(args);
-    }
+    [self log:FWLogTypeError withMessage:message];
 }
-
-#pragma mark - Private
 
 + (void)log:(FWLogType)type withMessage:(NSString *)message
 {
+    // 过滤不支持的级别
+    if (!(fwStaticLogLevel & type)) return;
+    
     // 插件存在，调用插件
     id<FWLogPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWLogPlugin)];
     if (plugin) {
