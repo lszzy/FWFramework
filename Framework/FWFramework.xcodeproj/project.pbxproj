@@ -263,6 +263,8 @@
 		2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB70F22C59E6600E669B6 /* NSFileManager+FWFramework.swift */; };
 		2FBFB73122C5B1F600E669B6 /* NSNumber+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73022C5B1F600E669B6 /* NSNumber+FWFramework.swift */; };
 		2FBFB73722C5D98400E669B6 /* UIColor+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */; };
+		2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */; };
+		2FBFB75E22C616BD00E669B6 /* UIApplication+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */; };
 		2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
@@ -567,6 +569,8 @@
 		2FBFB70F22C59E6600E669B6 /* NSFileManager+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFileManager+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB73022C5B1F600E669B6 /* NSNumber+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+FWFramework.swift"; sourceTree = "<group>"; };
+		2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+FWFramework.swift"; sourceTree = "<group>"; };
+		2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+FWFramework.swift"; sourceTree = "<group>"; };
 		2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWBar.h"; sourceTree = "<group>"; };
 		2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWBar.m"; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
@@ -650,6 +654,7 @@
 				2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */,
 				2F03A501216CF4B9001965A1 /* UIApplication+FWFramework.h */,
 				2F03A521216CF4B9001965A1 /* UIApplication+FWFramework.m */,
+				2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */,
 				2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */,
 				2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */,
 				2F03A508216CF4B9001965A1 /* UIBezierPath+FWFramework.h */,
@@ -665,6 +670,7 @@
 				2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */,
 				2F03A4ED216CF4B9001965A1 /* UIDevice+FWFramework.h */,
 				2F03A513216CF4B9001965A1 /* UIDevice+FWFramework.m */,
+				2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */,
 				2F03A4E8216CF4B9001965A1 /* UIFont+FWFramework.h */,
 				2F03A505216CF4B9001965A1 /* UIFont+FWFramework.m */,
 				2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */,
@@ -1444,6 +1450,7 @@
 				2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */,
 				2FCE516121D3BA32009EA65E /* FWCacheKeychain.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
+				2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */,
 				2F03A634216CF882001965A1 /* FWChainRequest.m in Sources */,
 				2FD1A51D21D4B5EA00A215C2 /* FWViewController.m in Sources */,
 				2F03A64E216CF882001965A1 /* FWURLSessionManager.m in Sources */,
@@ -1480,6 +1487,7 @@
 				2F03A57C216CF4B9001965A1 /* UIBezierPath+FWFramework.m in Sources */,
 				2F03A5FA216CF4B9001965A1 /* FWMessage.m in Sources */,
 				2F03A580216CF4B9001965A1 /* UIView+FWBlock.m in Sources */,
+				2FBFB75E22C616BD00E669B6 /* UIApplication+FWFramework.swift in Sources */,
 				2F03A589216CF4B9001965A1 /* UIView+FWAnimation.m in Sources */,
 				2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */,
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
