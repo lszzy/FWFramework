@@ -16,7 +16,6 @@ import Foundation
 ///   - key: 本地化键名
 ///   - table: 本地化表名，默认Localizable.strings
 /// - Returns: 本地化字符串
-public func FWLocalizedString(_ key: String, _ table: String? = nil) -> String
-{
+public func FWLocalizedString(_ key: String, _ table: String? = nil) -> String {
     return Bundle.main.localizedString(forKey: key, value: nil, table: table)
 }

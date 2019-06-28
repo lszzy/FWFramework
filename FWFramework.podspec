@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.2.8'
+  spec.version             = '0.2.9'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -8,6 +8,7 @@ Pod::Spec.new do |spec|
   spec.source              = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => spec.version, :submodules => true }
 
   spec.platform            = :ios, '8.0'
+  spec.swift_version       = '5'
   spec_mrr_files           = [ 'FWFramework/Framework/Kernel/FWTuple.m' ]
   spec_arc_files           = Pathname.glob('FWFramework/**/*.{h,m,swift}')
   spec_arc_files           = spec_arc_files.map {|file| file.to_path}
