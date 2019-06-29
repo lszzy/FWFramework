@@ -12,19 +12,22 @@ import Foundation
 #if DEBUG
 
 // MARK: - FWTestCase
-
 extension FWTestCase {
     
-    public func assertTrue(_ value: Bool, file: String = #file, line: Int = #line) {
-        assertTrue(value, expr: "todo", file: file, line: line)
+    /// 断言方法
+    ///
+    /// - Parameters:
+    ///   - value: 断言表达式
+    ///   - file: 文件名，默认传参
+    ///   - function: 方法名，默认传参
+    ///   - line: 行数，默认传参
+    public func assertTrue(_ value: Bool, file: String = #file, function: String = #function, line: Int = #line) {
+        assertTrue(value, expression: function, file: file, line: line)
     }
     
 }
 
 // MARK: - Test
-
-
-
 class FWTestCase_FWTest_Swift: FWTestCase {
     private var value: Int = 0
     
@@ -42,7 +45,7 @@ class FWTestCase_FWTest_Swift: FWTestCase {
     }
     
     @objc func testMinus() {
-        self.assertTrue(value - 1 == 1)
+        self.assertTrue(value - 1 == -1)
     }
 }
 
