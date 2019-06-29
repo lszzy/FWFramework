@@ -15,8 +15,8 @@ import Foundation
 
 extension FWTestCase {
     
-    public func assert(_ value: Bool, file: String = #file, function: String = #function, line: Int = #line) {
-        assert(value, expr: function, file: file, line: line)
+    public func assertTrue(_ value: Bool, file: String = #file, function: String = #function, line: Int = #line) {
+        assertTrue(value, expr: "false", file: file, line: line)
     }
     
 }
@@ -38,11 +38,11 @@ class FWTestCase_FWTest_Swift: FWTestCase {
     }
     
     @objc func testPlus() {
-        self.assert(value + 1 == 1)
+        self.assertTrue(value + 1 == 1)
     }
     
     @objc func testMinus() {
-        self.assert(value - 1 == 1)
+        self.assertTrue(value - 1 == 1)
     }
 }
 
