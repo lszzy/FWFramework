@@ -12,6 +12,8 @@ import Foundation
 #if DEBUG
 
 // MARK: - FWTestCase
+
+/// FWTestCase扩展，注意测试方法需标记@objc，让OC可以访问
 extension FWTestCase {
     
     /// 断言方法
@@ -27,6 +29,7 @@ extension FWTestCase {
 }
 
 // MARK: - Test
+
 class FWTestCase_FWTest_Swift: FWTestCase {
     private var value: Int = 0
     
