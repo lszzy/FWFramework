@@ -19,9 +19,7 @@
     [formatter setRoundingMode:NSNumberFormatterRoundHalfUp];
     [formatter setMaximumFractionDigits:digit];
     result = [formatter stringFromNumber:self];
-    if (result == nil)
-        return @"";
-    return result;
+    return result ?: @"";
 }
 
 - (NSString *)fwPercentString:(NSInteger)digit
@@ -32,7 +30,7 @@
     [formatter setRoundingMode:NSNumberFormatterRoundHalfUp];
     [formatter setMaximumFractionDigits:digit];
     result = [formatter stringFromNumber:self];
-    return result;
+    return result ?: @"";
 }
 
 - (NSNumber *)fwRoundNumber:(NSUInteger)digit

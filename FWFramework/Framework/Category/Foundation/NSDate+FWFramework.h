@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 标记时间调试开始
 #define FWBenchmarkBegin( x ) \
     NSDate *fwBenchmarkBegin_##x = [NSDate date];
@@ -38,7 +40,7 @@
 + (long long)fwSystemUptime;
 
 // 获取系统启动时间
-+ (NSDate *)fwSystemBoottime;
++ (nullable NSDate *)fwSystemBoottime;
 
 #pragma mark - Convert
 
@@ -49,7 +51,7 @@
  *
  *  @return NSDate
  */
-+ (NSDate *)fwDateWithString:(NSString *)string;
++ (nullable NSDate *)fwDateWithString:(NSString *)string;
 
 /**
  *  从字符串初始化日期，默认当前时区
@@ -59,7 +61,7 @@
  *
  *  @return NSDate
  */
-+ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format;
++ (nullable NSDate *)fwDateWithString:(NSString *)string format:(nullable NSString *)format;
 
 /**
  *  从字符串初始化日期，指定时区
@@ -70,7 +72,7 @@
  *
  *  @return NSDate
  */
-+ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone;
++ (nullable NSDate *)fwDateWithString:(NSString *)string format:(nullable NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
 
 /**
  *  从时间戳初始化日期
@@ -95,7 +97,7 @@
  *
  *  @return 字符串
  */
-- (NSString *)fwStringWithFormat:(NSString *)format;
+- (NSString *)fwStringWithFormat:(nullable NSString *)format;
 
 /**
  *  转化为字符串，指定时区
@@ -105,7 +107,7 @@
  *
  *  @return 字符串
  */
-- (NSString *)fwStringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone;
+- (NSString *)fwStringWithFormat:(nullable NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
 
 /**
  *  计算两个时间差，并格式化为友好的时间字符串(类似微博)
@@ -131,7 +133,7 @@
 - (NSDate *)fwDateWithUTCTimeZone;
 
 // 转换为指定时区时间
-- (NSDate *)fwDateWithTimeZone:(NSTimeZone *)timeZone;
+- (NSDate *)fwDateWithTimeZone:(nullable NSTimeZone *)timeZone;
 
 #pragma mark - Calendar
 
@@ -145,7 +147,7 @@
 - (BOOL)fwIsSameDay:(NSDate *)date;
 
 // 添加指定日期，如year:1|month:-1|day:1等
-- (NSDate *)fwDateByAdding:(NSDateComponents *)components;
+- (nullable NSDate *)fwDateByAdding:(NSDateComponents *)components;
 
 // 与指定日期相隔天数
 - (NSInteger)fwDaysFrom:(NSDate *)date;
@@ -166,3 +168,5 @@
 @interface NSDateComponents (FWFramework)
 
 @end
+
+NS_ASSUME_NONNULL_END

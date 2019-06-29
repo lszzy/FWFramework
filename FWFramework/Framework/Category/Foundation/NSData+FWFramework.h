@@ -9,24 +9,28 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSData+FWFramework
  */
 @interface NSData (FWFramework)
 
 // 使用NSKeyedArchiver压缩对象
-+ (NSData *)fwArchiveObject:(id)object;
++ (nullable NSData *)fwArchiveObject:(id)object;
 
 // 使用NSKeyedUnarchiver解压数据
-- (id)fwUnarchiveObject;
+- (nullable id)fwUnarchiveObject;
 
 // 保存对象归档
 + (void)fwArchiveObject:(id)object toFile:(NSString *)path;
 
 // 读取对象归档
-+ (id)fwUnarchiveObjectWithFile:(NSString *)path;
++ (nullable id)fwUnarchiveObjectWithFile:(NSString *)path;
 
 // 转为UTF8字符串
-- (NSString *)fwUTF8String;
+- (nullable NSString *)fwUTF8String;
 
 @end
+
+NS_ASSUME_NONNULL_END

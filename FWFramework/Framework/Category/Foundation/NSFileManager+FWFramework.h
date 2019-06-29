@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Macro
 
 // 搜索路径，参数为NSSearchPathDirectory
@@ -55,22 +57,22 @@
 #pragma mark - Path
 
 // 搜索路径，参数为NSSearchPathDirectory
-+ (NSString *)fwPathSearch:(NSSearchPathDirectory)directory;
++ (nullable NSString *)fwPathSearch:(NSSearchPathDirectory)directory;
 
 // 沙盒路径
 + (NSString *)fwPathHome;
 
 // 文档路径，iTunes会同步备份
-+ (NSString *)fwPathDocument;
++ (nullable NSString *)fwPathDocument;
 
 // 缓存路径，系统不会删除，iTunes会删除
-+ (NSString *)fwPathCaches;
++ (nullable NSString *)fwPathCaches;
 
 // Library路径
-+ (NSString *)fwPathLibrary;
++ (nullable NSString *)fwPathLibrary;
 
 // 配置路径，配置文件保存位置
-+ (NSString *)fwPathPreference;
++ (nullable NSString *)fwPathPreference;
 
 // 临时路径，App退出后可能会删除
 + (NSString *)fwPathTmp;
@@ -79,7 +81,7 @@
 + (NSString *)fwPathBundle;
 
 // 资源路径，不可写
-+ (NSString *)fwPathResource;
++ (nullable NSString *)fwPathResource;
 
 // 绝对路径缩短为波浪线路径
 + (NSString *)fwAbbreviateTildePath:(NSString *)path;
@@ -106,3 +108,5 @@
 + (void)fwAsyncAudioDuration:(NSString *)audioUrl completion:(void (^)(float duration))completion;
 
 @end
+
+NS_ASSUME_NONNULL_END
