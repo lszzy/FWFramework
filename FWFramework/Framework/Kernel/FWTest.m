@@ -16,7 +16,25 @@
 
 #pragma mark - FWTestCase
 
+@interface FWTestCase ()
+
+@property (nonatomic, strong) NSException *exception;
+
+@end
+
 @implementation FWTestCase
+
++ (void)load
+{
+    if ([[self class] autoLoad]) {
+        [[FWUnitTest sharedInstance] addTestCase:[self class]];
+    }
+}
+
++ (BOOL)autoLoad
+{
+    return NO;
+}
 
 - (void)setUp
 {
@@ -31,15 +49,15 @@
     [self assert:value userInfo:nil];
 }
 
-- (void)assert:(BOOL)value expr:(const char *)expr file:(const char *)file line:(int)line
+- (void)assert:(BOOL)value expr:(NSString *)expr file:(NSString *)file line:(NSInteger)line
 {
-    [self assert:value userInfo:@{@"expr":@(expr), @"file":[@(file) lastPathComponent], @"line":@(line)}];
+    [self assert:value userInfo:@{@"expr":(expr ?: @""), @"file":(file ? [file lastPathComponent] : @""), @"line":@(line)}];
 }
 
 - (void)assert:(BOOL)value userInfo:(NSDictionary *)userInfo
 {
     if (!value) {
-        @throw [NSException exceptionWithName:@"FWFramework" reason:@"Assertion failed" userInfo:userInfo];
+        self.exception = [NSException exceptionWithName:@"FWFramework" reason:@"Assertion failed" userInfo:userInfo];
     }
 }
 
@@ -71,6 +89,12 @@
             [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
             [FWUnitTest sharedInstance].testRunner = nil;
             
+            NSArray *classes = [self subclassesOfClass:[FWTestCase class]];
+            for (NSString *className in classes) {
+                Class classType = NSClassFromString(className);
+                [[FWUnitTest sharedInstance] addTestCase:classType];
+            }
+            
             // 执行框架单元测试
             if ([FWUnitTest sharedInstance].testCases.count > 0) {
                 [[FWUnitTest sharedInstance] run];
@@ -80,6 +104,71 @@
             }
         });
     }];
+}
+
++ (NSArray *)allClasses
+{
+    static NSMutableArray *classNames;
+    
+    if (!classNames) {
+        classNames = [[NSMutableArray alloc] init];
+        
+        unsigned int classesCount = 0;
+        Class *classes = objc_copyClassList(&classesCount);
+        
+        for (unsigned int i = 0; i < classesCount; ++i) {
+            Class classType = classes[i];
+            if (class_isMetaClass(classType)) continue;
+            
+            Class superClass = class_getSuperclass(classType);
+            if (nil == superClass) continue;
+            
+            [classNames addObject:[NSString stringWithUTF8String:class_getName(classType)]];
+        }
+        
+        [classNames sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [obj1 compare:obj2];
+        }];
+        
+        free(classes);
+    }
+    
+    return classNames;
+}
+
++ (NSArray *)subclassesOfClass:(Class)clazz
+{
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    NSArray *allClasses = [self allClasses];
+    for (NSString *className in allClasses) {
+        Class classType = NSClassFromString(className);
+        if (classType == clazz) continue;
+        if (![classType isSubclassOfClass:clazz]) continue;
+        
+        [result addObject:className];
+    }
+    return result;
+}
+
++ (NSArray *)subclassesOfClass:(Class)clazz withPrefix:(NSString *)prefix
+{
+    NSArray *classNames = [self subclassesOfClass:clazz];
+    if (nil == classNames || 0 == classNames.count) {
+        return classNames;
+    }
+    
+    if (nil == prefix) {
+        return classNames;
+    }
+    
+    NSMutableArray *result = [NSMutableArray array];
+    for (NSString *className in classNames) {
+        if (![className hasPrefix:prefix]) continue;
+        
+        [result addObject:className];
+    }
+    
+    return result;
 }
 
 + (instancetype)sharedInstance
@@ -141,6 +230,8 @@
         NSUInteger totalTestCount = selectorNames.count;
         NSUInteger currentTestCount = 0;
         
+        NSException *e = nil;
+        
         @try {
             if (selectorNames && selectorNames.count > 0) {
                 // 执行初始化，同一个对象
@@ -162,10 +253,19 @@
                         
                         // 执行tearDown
                         [testCase tearDown];
+                        
+                        e = testCase.exception;
+                        if (testCase.exception) {
+                            break;
+                        }
                     }
                 }
             }
-        } @catch (NSException *e) {
+        } @catch (NSException *exp) {
+            e = exp;
+        }
+        
+        if (e) {
             NSDictionary *userInfo = e.userInfo && [e.userInfo objectForKey:@"expr"] ? e.userInfo : nil;
             if (userInfo) {
                 formatError = [NSString stringWithFormat:@"- ASSERT ( %@ ); ( %@ - %@ #%@ )", [userInfo objectForKey:@"expr"], formatMethod, [userInfo objectForKey:@"file"], [userInfo objectForKey:@"line"]];
@@ -253,8 +353,6 @@
 @end
 
 @implementation FWTestCase_FWTest_Objc
-
-FWDefTestCase();
 
 - (void)setUp
 {

@@ -266,6 +266,7 @@
 		2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76422C6434300E669B6 /* FWLog.swift */; };
 		2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FBFB76622C6766B00E669B6 /* FWTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FBFB76922C6766B00E669B6 /* FWTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76722C6766B00E669B6 /* FWTest.m */; };
+		2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76B22C680A800E669B6 /* FWTest.swift */; };
 		2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
@@ -573,6 +574,7 @@
 		2FBFB76422C6434300E669B6 /* FWLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWLog.swift; sourceTree = "<group>"; };
 		2FBFB76622C6766B00E669B6 /* FWTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTest.h; sourceTree = "<group>"; };
 		2FBFB76722C6766B00E669B6 /* FWTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTest.m; sourceTree = "<group>"; };
+		2FBFB76B22C680A800E669B6 /* FWTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTest.swift; sourceTree = "<group>"; };
 		2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWBar.h"; sourceTree = "<group>"; };
 		2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWBar.m"; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
@@ -894,6 +896,7 @@
 				2F03A56B216CF4B9001965A1 /* FWState.m */,
 				2FBFB76622C6766B00E669B6 /* FWTest.h */,
 				2FBFB76722C6766B00E669B6 /* FWTest.m */,
+				2FBFB76B22C680A800E669B6 /* FWTest.swift */,
 			);
 			path = Kernel;
 			sourceTree = "<group>";
@@ -1503,6 +1506,7 @@
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
 				2FBFB76122C62AD000E669B6 /* UIImage+FWFramework.swift in Sources */,
+				2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */,
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,
 				2F03A5BC216CF4B9001965A1 /* UIView+FWIndicator.m in Sources */,

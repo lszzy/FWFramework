@@ -12,11 +12,7 @@
 // 调试环境开启，正式环境关闭
 #ifdef DEBUG
 
-/*!
- @brief 自动注册单元测试用例
- */
-#define FWDefTestCase( ) \
-    + (void)load { [[FWUnitTest sharedInstance] addTestCase:[self class]]; }
+NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 测试断言
@@ -24,7 +20,7 @@
  @param ... 断言表达式
  */
 #define FWAssert( ... ) \
-    [self assert:__VA_ARGS__ expr:#__VA_ARGS__ file:__FILE__ line:__LINE__];
+    [self assert:__VA_ARGS__ expr:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
 
 #pragma mark - FWTestCase
 
@@ -33,6 +29,8 @@
  @discussion 按模块单元测试命名格式：FWTestCase_module_name
  */
 @interface FWTestCase : NSObject
+
++ (BOOL)autoLoad;
 
 /*!
  @brief 测试初始化，每次执行测试方法开始都会调用
@@ -49,17 +47,17 @@
  
  @param value 布尔表达式
  */
-- (void)assert:(BOOL)value;
+- (void)assert:(BOOL)value NS_SWIFT_UNAVAILABLE("");
 
 /*!
  @brief 断言，详细版
  
  @param value 布尔表达式
- @param expr 当前表达式，一般使用宏#__VA_ARGS__或__FUNCTION__
- @param file 当前文件，一般使用宏__FILE__
+ @param expr 当前表达式，一般使用宏@(#__VA_ARGS__)或@(__FUNCTION__)
+ @param file 当前文件，一般使用宏@(__FILE__)
  @param line 当前行，一般使用宏__LINE__
  */
-- (void)assert:(BOOL)value expr:(const char *)expr file:(const char *)file line:(int)line;
+- (void)assert:(BOOL)value expr:(NSString *)expr file:(NSString *)file line:(NSInteger)line;
 
 @end
 
@@ -90,5 +88,7 @@
 - (void)run;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
