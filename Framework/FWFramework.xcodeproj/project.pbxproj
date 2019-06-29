@@ -267,6 +267,7 @@
 		2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FBFB76622C6766B00E669B6 /* FWTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FBFB76922C6766B00E669B6 /* FWTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76722C6766B00E669B6 /* FWTest.m */; };
 		2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76B22C680A800E669B6 /* FWTest.swift */; };
+		2FBFB77922C71A3500E669B6 /* UIView+FWLayoutChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */; };
 		2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
@@ -575,6 +576,7 @@
 		2FBFB76622C6766B00E669B6 /* FWTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTest.h; sourceTree = "<group>"; };
 		2FBFB76722C6766B00E669B6 /* FWTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTest.m; sourceTree = "<group>"; };
 		2FBFB76B22C680A800E669B6 /* FWTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTest.swift; sourceTree = "<group>"; };
+		2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+FWLayoutChain.swift"; sourceTree = "<group>"; };
 		2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWBar.h"; sourceTree = "<group>"; };
 		2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWBar.m"; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
@@ -751,6 +753,7 @@
 				2F1E623822BA2C3200A1AB49 /* UIView+FWViewChain.m */,
 				2F1E626622BD4A2B00A1AB49 /* UIView+FWLayoutChain.h */,
 				2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */,
+				2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
 				2F03A4F6216CF4B9001965A1 /* UIViewController+FWAlert.m */,
 				2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */,
@@ -1397,6 +1400,7 @@
 				2F03A5AF216CF4B9001965A1 /* UIScrollView+FWFramework.m in Sources */,
 				2FA99D9E228A753B0059DFDB /* FWAppDelegate.m in Sources */,
 				2F0FFF1F21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m in Sources */,
+				2FBFB77922C71A3500E669B6 /* UIView+FWLayoutChain.swift in Sources */,
 				2FCE513C21D3A41D009EA65E /* FWDatabasePool.m in Sources */,
 				2FBFB73122C5B1F600E669B6 /* NSNumber+FWFramework.swift in Sources */,
 				2F03A5B5216CF4B9001965A1 /* UITextView+FWFramework.m in Sources */,

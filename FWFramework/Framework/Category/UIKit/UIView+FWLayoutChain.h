@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWLayoutChain
 
 /*!
@@ -120,6 +122,8 @@
  */
 @interface UIView (FWLayoutChain)
 
-@property (nonatomic, strong, readonly) FWLayoutChain *fwLayoutChain;
+@property (nonatomic, strong, readonly) FWLayoutChain *fwLayoutChain NS_REFINED_FOR_SWIFT;
 
 @end
+
+NS_ASSUME_NONNULL_END
