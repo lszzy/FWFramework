@@ -23,8 +23,8 @@ import UIKit
         let objcButton = UIButton(type: .system)
         objcButton.setTitle("ObjcController", for: .normal)
         objcButton.addTarget(self, action: #selector(onObjc), for: .touchUpInside)
-        objcButton.frame = CGRect(x: self.view.frame.size.width / 2 - 75, y: 20, width: 150, height: 30)
         self.view.addSubview(objcButton)
+        objcButton.fwLayoutChain.top(20).size(CGSize(width: 150, height: 30)).centerX();
         self.view.fwAddTapGesture(withTarget: self, action: #selector(onClose))
     }
     
