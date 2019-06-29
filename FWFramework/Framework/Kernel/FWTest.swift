@@ -19,10 +19,9 @@ extension FWTestCase {
     /// - Parameters:
     ///   - value: 断言表达式
     ///   - file: 文件名，默认传参
-    ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
-    public func assertTrue(_ value: Bool, file: String = #file, function: String = #function, line: Int = #line) {
-        assertTrue(value, expression: function, file: file, line: line)
+    public func assertTrue(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) {
+        assertTrue(value, expression: expression, file: file, line: line)
     }
     
 }
@@ -31,21 +30,32 @@ extension FWTestCase {
 class FWTestCase_FWTest_Swift: FWTestCase {
     private var value: Int = 0
     
-    public override func setUp() {
+    override func setUp() {
         // 重置资源
         value = 0
     }
     
-    public override func tearDown() {
+    override func tearDown() {
         // 释放资源
     }
     
-    @objc func testPlus() {
-        self.assertTrue(value + 1 == 1)
+    @objc func testSync() {
+        value += 1;
+        self.assertTrue(value == 1)
+        value += 1;
+        self.assertTrue(value == 2)
     }
     
-    @objc func testMinus() {
-        self.assertTrue(value - 1 == -1)
+    @objc func testAsync() {
+        var result = 0
+        fwSyncPerformAsyncBlock { (completionHanlder) in
+            DispatchQueue(label: "FWTestCase_FWTest_Swift").async {
+                sleep(1)
+                result = 1
+                completionHanlder()
+            }
+        }
+        assertTrue(value + result == 1)
     }
 }
 

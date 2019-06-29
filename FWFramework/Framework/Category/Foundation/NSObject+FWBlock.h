@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Block
 
 #ifndef	weakify
@@ -129,4 +131,12 @@ typedef void (^FWBlockInt)(int index);
 // 延迟delay秒后指定线程执行，返回可取消的block
 - (id)fwPerformBlock:(void (^)(id obj))block onQueue:(dispatch_queue_t)queue afterDelay:(NSTimeInterval)delay;
 
+// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler
++ (void)fwSyncPerformAsyncBlock:(void (^)(void (^completionHandler)(void)))asyncBlock;
+
+// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler
+- (void)fwSyncPerformAsyncBlock:(void (^)(void (^completionHandler)(void)))asyncBlock;
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -199,8 +199,8 @@
     for (Class classType in testCases) {
         NSTimeInterval time1 = [[NSDate date] timeIntervalSince1970];
         
-        NSString *className = NSStringFromClass(classType);
-        NSString *formatClass = [className stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
+        NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"FWFramework." withString:@""];
+        formatClass = [formatClass stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"_" withString:@"."];
         NSString *formatMethod = nil;
         NSString *formatError = nil;
@@ -243,7 +243,7 @@
         
         if (assertError) {
             NSDictionary *userInfo = assertError.userInfo;
-            formatError = [NSString stringWithFormat:@"- assertTrue ( %@ ); ( %@ - %@ #%@ )", userInfo[@"expression"], formatMethod, userInfo[@"file"], userInfo[@"line"]];
+            formatError = [NSString stringWithFormat:@"- assertTrue ( %@ ); ( %@ - %@ #%@ )", [userInfo[@"expression"] length] > 0 ? userInfo[@"expression"] : @"false", formatMethod, userInfo[@"file"], userInfo[@"line"]];
             testCasePassed = NO;
         }
         
@@ -277,6 +277,8 @@
 
 #pragma mark - Test
 
+#import "NSObject+FWBlock.h"
+
 @interface FWTestCase_FWTest_Objc : FWTestCase
 
 @property (nonatomic, assign) NSInteger value;
@@ -296,16 +298,24 @@
     // 释放资源
 }
 
-- (void)testPlus
+- (void)testSync
 {
     FWAssertTrue(self.value++ == 0);
     FWAssertTrue(++self.value == 2);
 }
 
-- (void)testMinus
+- (void)testAsync
 {
-    FWAssertTrue(self.value-- == 0);
-    FWAssertTrue(--self.value == -2);
+    __block NSInteger result = 0;
+    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
+        dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
+        dispatch_async(queue, ^{
+            sleep(1);
+            result = 1;
+            completionHandler();
+        });
+    }];
+    FWAssertTrue(self.value + result == 1);
 }
 
 @end
