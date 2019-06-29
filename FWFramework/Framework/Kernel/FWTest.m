@@ -199,8 +199,7 @@
     for (Class classType in testCases) {
         NSTimeInterval time1 = [[NSDate date] timeIntervalSince1970];
         
-        NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"FWFramework." withString:@""];
-        formatClass = [formatClass stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
+        NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"_" withString:@"."];
         NSString *formatMethod = nil;
         NSString *formatError = nil;
@@ -216,7 +215,7 @@
             FWTestCase *testCase = [[classType alloc] init];
             for (NSString *selectorName in selectorNames) {
                 currentTestCount++;
-                formatMethod = [selectorName stringByReplacingOccurrencesOfString:@"test" withString:@""];
+                formatMethod = selectorName;
                 SEL selector = NSSelectorFromString(selectorName);
                 if (selector && [testCase respondsToSelector:selector]) {
                     // 执行setUp
