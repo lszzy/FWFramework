@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSNull分类，解决值为NSNull时调用不存在方法崩溃问题(如JSON中包含null)
  @discussion 默认调试环境不处理崩溃，正式环境才处理崩溃，尽量开发阶段避免此问题
@@ -18,3 +20,5 @@
 @interface NSNull (FWFramework)
 
 @end
+
+NS_ASSUME_NONNULL_END
