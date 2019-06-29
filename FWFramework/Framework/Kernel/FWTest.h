@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param ... 断言表达式
  */
 #define FWAssert( ... ) \
-    [self assert:__VA_ARGS__ expr:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
+    [self assertTrue:__VA_ARGS__ expr:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
 
 #pragma mark - FWTestCase
 
@@ -43,13 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tearDown;
 
 /*!
- @brief 断言，简洁版
- 
- @param value 布尔表达式
- */
-- (void)assert:(BOOL)value NS_SWIFT_UNAVAILABLE("");
-
-/*!
  @brief 断言，详细版
  
  @param value 布尔表达式
@@ -57,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param file 当前文件，一般使用宏@(__FILE__)
  @param line 当前行，一般使用宏__LINE__
  */
-- (void)assert:(BOOL)value expr:(NSString *)expr file:(NSString *)file line:(NSInteger)line;
+- (void)assertTrue:(BOOL)value expr:(NSString *)expr file:(NSString *)file line:(NSInteger)line;
 
 @end
 
