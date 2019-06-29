@@ -15,8 +15,8 @@ import Foundation
 
 extension FWTestCase {
     
-    public func assertTrue(_ value: Bool, file: String = #file, function: String = #function, line: Int = #line) {
-        assertTrue(value, expr: "false", file: file, line: line)
+    public func assertTrue(_ value: Bool, file: String = #file, line: Int = #line) {
+        assertTrue(value, expr: "todo", file: file, line: line)
     }
     
 }
