@@ -46,7 +46,7 @@
 
 - (void)assertTrue:(BOOL)value expr:(NSString *)expr file:(NSString *)file line:(NSInteger)line
 {
-    [self assert:value userInfo:@{@"expr":(expr ?: @""), @"assert": @"assertTrue", @"file":(file ? [file lastPathComponent] : @""), @"line":@(line)}];
+    [self assert:value userInfo:@{@"expr":(expr ?: @""), @"expect": @"true", @"value": @"false", @"assert": @"assertTrue", @"file":(file ? [file lastPathComponent] : @""), @"line":@(line)}];
 }
 
 - (void)assert:(BOOL)value userInfo:(NSDictionary *)userInfo
@@ -263,7 +263,7 @@
         if (e) {
             NSDictionary *userInfo = e.userInfo && [e.userInfo objectForKey:@"expr"] ? e.userInfo : nil;
             if (userInfo) {
-                formatError = [NSString stringWithFormat:@"- %@ ( %@ ); ( %@ - %@ #%@ )", (userInfo[@"assert"] ?: @"ASSERT"), [userInfo objectForKey:@"expr"], formatMethod, [userInfo objectForKey:@"file"], [userInfo objectForKey:@"line"]];
+                formatError = [NSString stringWithFormat:@"- %@ ( %@, %@ : %@ ); ( %@ - %@ #%@ )", (userInfo[@"assert"] ?: @"ASSERT"), userInfo[@"value"], userInfo[@"expect"], [userInfo objectForKey:@"expr"], formatMethod, [userInfo objectForKey:@"file"], [userInfo objectForKey:@"line"]];
             } else {
                 formatError = [NSString stringWithFormat:@"- %@ ( %@ )", e.reason, formatMethod];
             }
@@ -362,14 +362,19 @@
 
 - (void)testPlus
 {
-    FWAssert(self.value++ == 0);
-    FWAssert(++self.value == 2);
+    FWAssertTrue(self.value++ == 0);
+    FWAssertTrue(++self.value == 2);
 }
 
 - (void)testMinus
 {
-    FWAssert(self.value-- == 0);
-    FWAssert(--self.value == -1);
+    FWAssertTrue(self.value-- == 0);
+    FWAssertTrue(--self.value == -1);
+}
+
+- (void)testThree
+{
+    FWAssertTrue(self.value-- == 0);
 }
 
 @end

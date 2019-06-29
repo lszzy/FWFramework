@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param ... 断言表达式
  */
-#define FWAssert( ... ) \
+#define FWAssertTrue( ... ) \
     [self assertTrue:__VA_ARGS__ expr:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
 
 #pragma mark - FWTestCase
