@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSArray分类
  @discussion 如果需要数组weak引用元素，使用[NSValue valueWithNonretainedObject:object]即可
@@ -21,14 +23,14 @@
  @param block 返回YES的obj重新组装成一个数组
  @return 新的数组
  */
-- (instancetype)fwFilterWithBlock:(BOOL (^)(id obj))block;
+- (instancetype)fwFilterWithBlock:(BOOL (^)(ObjectType obj))block;
 
 /*!
  @brief 从数组中随机取出对象
  
  @return 随机对象
  */
-- (ObjectType)fwRandomObject;
+- (nullable ObjectType)fwRandomObject;
 
 /*!
  @brief 获取翻转后的新数组
@@ -86,3 +88,5 @@
 - (void)fwShuffle;
 
 @end
+
+NS_ASSUME_NONNULL_END
