@@ -56,12 +56,29 @@
 - (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperview;
 
 /*!
+ @brief 父视图居中偏移指定距离
+ 
+ @param offset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewWithOffset:(CGPoint)offset;
+
+/*!
  @brief 父视图属性居中
  
  @param axis 居中属性
  @return 布局约束
  */
 - (NSLayoutConstraint *)fwAlignAxisToSuperview:(NSLayoutAttribute)axis;
+
+/*!
+ @brief 父视图属性居中偏移指定距离
+ 
+ @param axis 居中属性
+ @param offset 偏移距离
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwAlignAxisToSuperview:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
 
 /*!
  @brief 与另一视图居中相同
@@ -196,12 +213,29 @@
 - (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewSafeArea;
 
 /*!
+ @brief 父视图安全区域居中偏移指定距离。iOS11以下使用Superview实现，下同
+ 
+ @param offset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewSafeAreaWithOffset:(CGPoint)offset;
+
+/*!
  @brief 父视图安全区域属性居中
  
  @param axis 居中属性
  @return 布局约束
  */
 - (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis;
+
+/*!
+ @brief 父视图安全区域属性居中偏移指定距离
+ 
+ @param axis 居中属性
+ @param offset 偏移距离
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
 
 /*!
  @brief 与父视图安全区域四条边属性相同

@@ -51,15 +51,25 @@
 
 - (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperview
 {
+    return [self fwAlignCenterToSuperviewWithOffset:CGPointZero];
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewWithOffset:(CGPoint)offset
+{
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self fwAlignAxisToSuperview:NSLayoutAttributeCenterX]];
-    [constraints addObject:[self fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+    [constraints addObject:[self fwAlignAxisToSuperview:NSLayoutAttributeCenterX withOffset:offset.x]];
+    [constraints addObject:[self fwAlignAxisToSuperview:NSLayoutAttributeCenterY withOffset:offset.y]];
     return constraints;
 }
 
 - (NSLayoutConstraint *)fwAlignAxisToSuperview:(NSLayoutAttribute)axis
 {
-    return [self fwConstrainAttribute:axis toSuperview:self.superview withOffset:0.0 relation:NSLayoutRelationEqual];
+    return [self fwAlignAxisToSuperview:axis withOffset:0.0];
+}
+
+- (NSLayoutConstraint *)fwAlignAxisToSuperview:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
+{
+    return [self fwConstrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual];
 }
 
 - (NSLayoutConstraint *)fwAlignAxis:(NSLayoutAttribute)axis toView:(id)otherView
@@ -159,18 +169,28 @@
 
 - (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewSafeArea
 {
+    return [self fwAlignCenterToSuperviewSafeAreaWithOffset:CGPointZero];
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewSafeAreaWithOffset:(CGPoint)offset
+{
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX]];
-    [constraints addObject:[self fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY]];
+    [constraints addObject:[self fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX withOffset:offset.x]];
+    [constraints addObject:[self fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY withOffset:offset.y]];
     return constraints;
 }
 
 - (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis
 {
+    return [self fwAlignAxisToSuperview:axis withOffset:0.0];
+}
+
+- (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
+{
     if (@available(iOS 11.0, *)) {
-        return [self fwConstrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:0.0 relation:NSLayoutRelationEqual];
+        return [self fwConstrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual];
     } else {
-        return [self fwConstrainAttribute:axis toSuperview:self.superview withOffset:0.0 relation:NSLayoutRelationEqual];
+        return [self fwConstrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual];
     }
 }
 

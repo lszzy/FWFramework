@@ -67,6 +67,30 @@
     };
 }
 
+- (id<FWLayoutChainProtocol> (^)(CGPoint))centerWithOffset
+{
+    return ^id(CGPoint offset) {
+        [self.view fwAlignCenterToSuperviewWithOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))centerXWithOffset
+{
+    return ^id(CGFloat offset) {
+        [self.view fwAlignAxisToSuperview:NSLayoutAttributeCenterX withOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))centerYWithOffset
+{
+    return ^id(CGFloat offset) {
+        [self.view fwAlignAxisToSuperview:NSLayoutAttributeCenterY withOffset:offset];
+        return self;
+    };
+}
+
 - (id<FWLayoutChainProtocol> (^)(id))centerToView
 {
     return ^id(id view) {
@@ -372,6 +396,30 @@
 {
     return ^id(void) {
         [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGPoint))centerToSafeAreaWithOffset
+{
+    return ^id(CGPoint offset) {
+        [self.view fwAlignCenterToSuperviewSafeAreaWithOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))centerXToSafeAreaWithOffset
+{
+    return ^id(CGFloat offset) {
+        [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX withOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))centerYToSafeAreaWithOffset
+{
+    return ^id(CGFloat offset) {
+        [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY withOffset:offset];
         return self;
     };
 }
