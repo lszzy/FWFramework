@@ -15,13 +15,13 @@
 
 #pragma mark - FWViewChain
 
-@interface FWViewChain : NSObject <FWViewChain, FWLabelChain, FWButtonChain, FWImageViewChain, FWScrollViewChain, FWTextFieldChain, FWTextViewChain>
+@interface FWViewChainObjc : NSObject <FWViewChain, FWLabelChain, FWButtonChain, FWImageViewChain, FWScrollViewChain, FWTextFieldChain, FWTextViewChain>
 
 @property (nonatomic, weak) __kindof UIView *view;
 
 @end
 
-@implementation FWViewChain
+@implementation FWViewChainObjc
 
 #pragma mark - FWViewChain
 
@@ -705,9 +705,9 @@
 
 - (id<FWViewChain>)fwViewChain
 {
-    FWViewChain *viewChain = objc_getAssociatedObject(self, _cmd);
+    FWViewChainObjc *viewChain = objc_getAssociatedObject(self, _cmd);
     if (!viewChain) {
-        viewChain = [[FWViewChain alloc] init];
+        viewChain = [[FWViewChainObjc alloc] init];
         viewChain.view = self;
         objc_setAssociatedObject(self, _cmd, viewChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
