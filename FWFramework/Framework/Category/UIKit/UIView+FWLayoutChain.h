@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^center)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerX)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerY)(void);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerWithOffset)(CGPoint offset);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXWithOffset)(CGFloat offset);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYWithOffset)(CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerToView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToView)(id view);
@@ -78,6 +81,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToSafeArea)(void);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerToSafeAreaWithOffset)(CGPoint offset);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToSafeAreaWithOffset)(CGFloat offset);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToSafeAreaWithOffset)(CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithInsets)(UIEdgeInsets insets);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
