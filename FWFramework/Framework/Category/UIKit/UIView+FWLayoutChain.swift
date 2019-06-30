@@ -22,14 +22,8 @@ public class FWLayoutChain {
     
     // MARK: - Compression
     @discardableResult
-    public func compressionHorizontal(_ priority: UILayoutPriority) -> FWLayoutChain {
-        self.view?.fwSetCompressionHorizontalPriority(priority)
-        return self
-    }
-    
-    @discardableResult
-    public func compressionVertical(_ priority: UILayoutPriority) -> FWLayoutChain {
-        self.view?.fwSetCompressionVerticalPriority(priority)
+    public func contentCompressionResistance(_ axis: NSLayoutConstraint.Axis, priority: UILayoutPriority) -> FWLayoutChain {
+        self.view?.fwSetContentCompressionResistance(axis, priority: priority)
         return self
     }
     
@@ -95,14 +89,8 @@ public class FWLayoutChain {
     }
     
     @discardableResult
-    public func edgesHorizontal() -> FWLayoutChain {
-        self.view?.fwPinEdgesToSuperviewHorizontal()
-        return self
-    }
-    
-    @discardableResult
-    public func edgesVertical() -> FWLayoutChain {
-        self.view?.fwPinEdgesToSuperviewVertical()
+    public func edges(axis: NSLayoutConstraint.Axis) -> FWLayoutChain {
+        self.view?.fwPinEdgesToSuperview(with: axis)
         return self
     }
     
@@ -208,14 +196,8 @@ public class FWLayoutChain {
     }
     
     @discardableResult
-    public func edgesToSafeAreaHorizontal() -> FWLayoutChain {
-        self.view?.fwPinEdgesToSuperviewSafeAreaHorizontal()
-        return self
-    }
-    
-    @discardableResult
-    public func edgesToSafeAreaVertical() -> FWLayoutChain {
-        self.view?.fwPinEdgesToSuperviewSafeAreaVertical()
+    public func edgesToSafeArea(axis: NSLayoutConstraint.Axis) -> FWLayoutChain {
+        self.view?.fwPinEdgesToSuperviewSafeArea(with: axis)
         return self
     }
     
