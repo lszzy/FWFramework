@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 第三方URL生成器，可先判断canOpenURL，再openURL
  @discussion 需添加对应URL SCHEME到LSApplicationQueriesSchemes配置数组
@@ -24,7 +26,7 @@
  @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
  @return NSURL
  */
-+ (instancetype)fwAppleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
++ (nullable instancetype)fwAppleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
 
 /*!
  @brief 生成苹果地图导航外部URL
@@ -34,7 +36,7 @@
  @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
  @return NSURL
  */
-+ (instancetype)fwAppleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr options:(NSDictionary *)options;
++ (nullable instancetype)fwAppleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr options:(NSDictionary *)options;
 
 /*!
  @brief 生成谷歌地图外部URL，URL SCHEME为：comgooglemaps
@@ -43,7 +45,7 @@
  @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
  @return NSURL
  */
-+ (instancetype)fwGoogleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
++ (nullable instancetype)fwGoogleMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
 
 /*!
  @brief 生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps
@@ -54,7 +56,7 @@
  @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
  @return NSURL
  */
-+ (instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
++ (nullable instancetype)fwGoogleMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
 
 /*!
  @brief 生成百度地图外部URL，URL SCHEME为：baidumap
@@ -63,7 +65,7 @@
  @param options 可选附加参数，如@{@"src": @"site.wuyong.Example", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
  @return NSURL
  */
-+ (instancetype)fwBaiduMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
++ (nullable instancetype)fwBaiduMapsURLWithAddr:(NSString *)addr options:(NSDictionary *)options;
 
 /*!
  @brief 生成百度地图导航外部URL，URL SCHEME为：baidumap
@@ -74,6 +76,8 @@
  @param options 可选附加参数，如@{@"src": @"site.wuyong.Example", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
  @return NSURL
  */
-+ (instancetype)fwBaiduMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
++ (nullable instancetype)fwBaiduMapsURLWithSaddr:(NSString *)saddr daddr:(NSString *)daddr mode:(NSString *)mode options:(NSDictionary *)options;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,21 +9,25 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSUserDefaults+FWFramework
  */
 @interface NSUserDefaults (FWFramework)
 
 // 从standard读取对象，支持unarchive对象
-+ (id)fwObjectForKey:(NSString *)key;
++ (nullable id)fwObjectForKey:(NSString *)key;
 
 // 保存对象到standard，支持archive对象
-+ (void)fwSetObject:(id)object forKey:(NSString *)key;
++ (void)fwSetObject:(nullable id)object forKey:(NSString *)key;
 
 // 读取对象，支持unarchive对象
-- (id)fwObjectForKey:(NSString *)key;
+- (nullable id)fwObjectForKey:(NSString *)key;
 
 // 保存对象，支持archive对象
-- (void)fwSetObject:(id)object forKey:(NSString *)key;
+- (void)fwSetObject:(nullable id)object forKey:(NSString *)key;
 
 @end
+
+NS_ASSUME_NONNULL_END
