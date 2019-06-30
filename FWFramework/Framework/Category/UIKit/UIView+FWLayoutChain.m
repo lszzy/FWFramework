@@ -13,13 +13,13 @@
 
 #pragma mark - FWLayoutChain
 
-@interface FWLayoutChain : NSObject <FWLayoutChain>
+@interface FWLayoutChainObjc : NSObject <FWLayoutChain>
 
 @property (nonatomic, weak) __kindof UIView *view;
 
 @end
 
-@implementation FWLayoutChain
+@implementation FWLayoutChainObjc
 
 #pragma mark - Install
 
@@ -629,9 +629,9 @@
 
 - (id<FWLayoutChain>)fwLayoutChain
 {
-    FWLayoutChain *layoutChain = objc_getAssociatedObject(self, _cmd);
+    FWLayoutChainObjc *layoutChain = objc_getAssociatedObject(self, _cmd);
     if (!layoutChain) {
-        layoutChain = [[FWLayoutChain alloc] init];
+        layoutChain = [[FWLayoutChainObjc alloc] init];
         layoutChain.view = self;
         objc_setAssociatedObject(self, _cmd, layoutChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
