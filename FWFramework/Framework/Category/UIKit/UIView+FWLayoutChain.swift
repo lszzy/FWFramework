@@ -8,29 +8,29 @@
 
 import Foundation
 
-public class FWLayoutChainSwift {
+public class FWLayoutChain {
     weak var view: UIView? = nil
     
     @discardableResult
-    public func top(_ inset: CGFloat = 0) -> FWLayoutChainSwift {
+    public func top(_ inset: CGFloat = 0) -> FWLayoutChain {
         self.view?.fwPinEdge(toSuperview: .top, withInset: inset)
         return self
     }
     
     @discardableResult
-    public func centerX() -> FWLayoutChainSwift {
+    public func centerX() -> FWLayoutChain {
         self.view?.fwAlignAxis(toSuperview: .centerX)
         return self
     }
     
     @discardableResult
-    public func centerX(toView view: UIView) -> FWLayoutChainSwift {
+    public func centerX(toView view: UIView) -> FWLayoutChain {
         self.view?.fwAlignAxis(.centerX, toView: view)
         return self
     }
     
     @discardableResult
-    public func size(_ size: CGSize) -> FWLayoutChainSwift {
+    public func size(_ size: CGSize) -> FWLayoutChain {
         self.view?.fwSetDimensions(to: size)
         return self
     }
@@ -41,14 +41,14 @@ extension UIView {
         static var layoutChain: UInt8 = 0
     }
     
-    public var fwLayoutChain: FWLayoutChainSwift {
+    public var fwLayoutChain: FWLayoutChain {
         var layoutChain = objc_getAssociatedObject(self, &FWLayoutChainProperties.layoutChain)
         if layoutChain == nil {
-            let chain = FWLayoutChainSwift()
+            let chain = FWLayoutChain()
             chain.view = self
             layoutChain = chain
             objc_setAssociatedObject(self, &FWLayoutChainProperties.layoutChain, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
-        return layoutChain as! FWLayoutChainSwift
+        return layoutChain as! FWLayoutChain
     }
 }
