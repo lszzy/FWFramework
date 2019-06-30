@@ -88,9 +88,9 @@
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:insets.top]];
-    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeading withInset:insets.left]];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:insets.left]];
     [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:insets.bottom]];
-    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTrailing withInset:insets.right]];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:insets.right]];
     return constraints;
 }
 
@@ -101,13 +101,13 @@
         [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:insets.top]];
     }
     if (edge != NSLayoutAttributeLeading && edge != NSLayoutAttributeLeft) {
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeading withInset:insets.left]];
+        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:insets.left]];
     }
     if (edge != NSLayoutAttributeBottom) {
         [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:insets.bottom]];
     }
     if (edge != NSLayoutAttributeTrailing && edge != NSLayoutAttributeRight) {
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTrailing withInset:insets.right]];
+        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:insets.right]];
     }
     return constraints;
 }
@@ -116,8 +116,8 @@
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     if (axis == UILayoutConstraintAxisHorizontal) {
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeading]];
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTrailing]];
+        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeft]];
+        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeRight]];
     } else {
         [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTop]];
         [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeBottom]];
@@ -183,9 +183,9 @@
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:insets.top]];
-    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeading withInset:insets.left]];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:insets.left]];
     [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:insets.bottom]];
-    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing withInset:insets.right]];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:insets.right]];
     return constraints;
 }
 
@@ -196,13 +196,13 @@
         [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:insets.top]];
     }
     if (edge != NSLayoutAttributeLeading && edge != NSLayoutAttributeLeft) {
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeading withInset:insets.left]];
+        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:insets.left]];
     }
     if (edge != NSLayoutAttributeBottom) {
         [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:insets.bottom]];
     }
     if (edge != NSLayoutAttributeTrailing && edge != NSLayoutAttributeRight) {
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing withInset:insets.right]];
+        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:insets.right]];
     }
     return constraints;
 }
@@ -211,8 +211,8 @@
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     if (axis == UILayoutConstraintAxisHorizontal) {
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeading]];
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing]];
+        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft]];
+        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight]];
     } else {
         [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop]];
         [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom]];
