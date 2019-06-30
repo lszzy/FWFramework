@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Singleton
 
 /*!
@@ -372,7 +374,7 @@
  @param name 属性名称
  @return 属性值
  */
-- (id)fwPropertyForName:(NSString *)name;
+- (nullable id)fwPropertyForName:(NSString *)name;
 
 /*!
  @brief 设置强关联属性，支持KVO
@@ -380,7 +382,7 @@
  @param object 属性值
  @param name   属性名称
  */
-- (void)fwSetProperty:(id)object forName:(NSString *)name;
+- (void)fwSetProperty:(nullable id)object forName:(NSString *)name;
 
 /*!
  @brief 设置弱关联属性，支持KVO
@@ -388,7 +390,7 @@
  @param object 属性值
  @param name   属性名称
  */
-- (void)fwSetPropertyWeak:(id)object forName:(NSString *)name;
+- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
 
 /*!
  @brief 设置拷贝关联属性，支持KVO
@@ -396,7 +398,7 @@
  @param object 属性值
  @param name   属性名称
  */
-- (void)fwSetPropertyCopy:(id)object forName:(NSString *)name;
+- (void)fwSetPropertyCopy:(nullable id)object forName:(NSString *)name;
 
 #pragma mark - Associate
 
@@ -411,7 +413,7 @@
  @param key 键名
  @return 返回关联对象
  */
-- (id)fwAssociatedObjectForKey:(const void *)key;
+- (nullable id)fwAssociatedObjectForKey:(const void *)key;
 
 /*!
  @brief 设置强关联对象，不含KVO
@@ -419,7 +421,7 @@
  @param object 关联对象
  @param key 键名
  */
-- (void)fwSetAssociatedObject:(id)object forKey:(const void *)key;
+- (void)fwSetAssociatedObject:(nullable id)object forKey:(const void *)key;
 
 /*!
  @brief 设置弱关联对象，不含KVO
@@ -427,7 +429,7 @@
  @param object 关联对象
  @param key 键名
  */
-- (void)fwSetAssociatedObjectWeak:(id)object forKey:(const void *)key;
+- (void)fwSetAssociatedObjectWeak:(nullable id)object forKey:(const void *)key;
 
 /*!
  @brief 设置拷贝关联对象，不含KVO
@@ -435,7 +437,7 @@
  @param object 关联对象
  @param key 键名
  */
-- (void)fwSetAssociatedObjectCopy:(id)object forKey:(const void *)key;
+- (void)fwSetAssociatedObjectCopy:(nullable id)object forKey:(const void *)key;
 
 /*!
  @brief 移除关联对象
@@ -476,3 +478,5 @@
 + (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
 
 @end
+
+NS_ASSUME_NONNULL_END

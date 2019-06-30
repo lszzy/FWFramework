@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSTimer分类
  */
@@ -24,7 +26,7 @@
  @param repeats 是否重复
  @return 定时器
  */
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(id)userInfo repeats:(BOOL)repeats;
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
 
 /*!
  @brief 创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -84,3 +86,5 @@
 - (void)fwResumeTimerAfterDelay:(NSTimeInterval)delay;
 
 @end
+
+NS_ASSUME_NONNULL_END

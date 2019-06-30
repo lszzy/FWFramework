@@ -81,7 +81,7 @@
  *  最后是8个数字(\d{8})
  */
 
-#import <Foundation/Foundation.h>
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (FWFormat)
 
@@ -181,3 +181,5 @@
 - (BOOL)fwIsFormatCoordinate;
 
 @end
+
+NS_ASSUME_NONNULL_END
