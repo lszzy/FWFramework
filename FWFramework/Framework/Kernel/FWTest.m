@@ -76,25 +76,19 @@
 {
     // 监听应用启动通知，自动执行框架单元测试
     [FWUnitTest sharedInstance].testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
-        // 并行队列执行框架单元测试
-        dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
-        dispatch_async(queue, ^{
-            // 移除应用启动通知
-            [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
-            [FWUnitTest sharedInstance].testRunner = nil;
-            
-            // 自动添加测试用例
-            NSArray<Class> *testSuite = [self testSuite];
-            for (Class classType in testSuite) {
-                [[FWUnitTest sharedInstance].testCases addObject:classType];
-            }
-            
-            // 执行框架单元测试并打印测试结果
-            if ([FWUnitTest sharedInstance].testCases.count > 0) {
+        // 移除应用启动通知
+        [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
+        [FWUnitTest sharedInstance].testRunner = nil;
+        
+        // 自动添加测试用例，创建队列执行单元测试并打印结果
+        [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
+        if ([FWUnitTest sharedInstance].testCases.count > 0) {
+            dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
+            dispatch_async(queue, ^{
                 [[FWUnitTest sharedInstance] runTests];
                 FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
-            }
-        });
+            });
+        }
     }];
 }
 
