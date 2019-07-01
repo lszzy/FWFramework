@@ -29,11 +29,9 @@ import UIKit
     }
     
     // MARK: - Action
-    @discardableResult
-    @objc func onObjc() -> Bool {
+    @objc func onObjc() {
         let viewController = ObjcController()
         self.navigationController?.pushViewController(viewController, animated: true)
-        return true
     }
     
     @objc func onClose() {
