@@ -15,7 +15,7 @@
 
 #pragma mark - FWViewChainObjc
 
-@interface FWViewChainObjc : NSObject <FWViewChainProtocol, FWLabelChainProtocol, FWButtonChainProtocol, FWImageViewChainProtocol, FWScrollViewChainProtocol, FWTextFieldChainProtocol, FWTextViewChainProtocol>
+@interface FWViewChainObjc : NSObject <FWViewChainProtocols, FWLabelChainProtocols, FWButtonChainProtocols, FWImageViewChainProtocols, FWScrollViewChainProtocols, FWTextFieldChainProtocols, FWTextViewChainProtocols>
 
 @property (nonatomic, weak) __kindof UIView *view;
 
@@ -23,9 +23,9 @@
 
 @implementation FWViewChainObjc
 
-#pragma mark - FWViewChainProtocol
+#pragma mark - FWViewChainProtocols
 
-- (id<FWViewChainProtocol> (^)(BOOL))userInteractionEnabled
+- (id<FWViewChainProtocols> (^)(BOOL))userInteractionEnabled
 {
     return ^id(BOOL enabled) {
         self.view.userInteractionEnabled = enabled;
@@ -33,7 +33,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(NSInteger))tag
+- (id<FWViewChainProtocols> (^)(NSInteger))tag
 {
     return ^id(NSInteger tag) {
         self.view.tag = tag;
@@ -41,7 +41,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGRect))frame
+- (id<FWViewChainProtocols> (^)(CGRect))frame
 {
     return ^id(CGRect frame) {
         self.view.frame = frame;
@@ -49,7 +49,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGRect))bounds
+- (id<FWViewChainProtocols> (^)(CGRect))bounds
 {
     return ^id(CGRect bounds) {
         self.view.bounds = bounds;
@@ -57,7 +57,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGPoint))center
+- (id<FWViewChainProtocols> (^)(CGPoint))center
 {
     return ^id(CGPoint center) {
         self.view.center = center;
@@ -65,7 +65,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGPoint))origin
+- (id<FWViewChainProtocols> (^)(CGPoint))origin
 {
     return ^id(CGPoint origin) {
         CGRect frame = self.view.frame;
@@ -75,7 +75,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGSize))size
+- (id<FWViewChainProtocols> (^)(CGSize))size
 {
     return ^id(CGSize size) {
         CGRect frame = self.view.frame;
@@ -85,7 +85,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))x
+- (id<FWViewChainProtocols> (^)(CGFloat))x
 {
     return ^id(CGFloat x) {
         CGRect frame = self.view.frame;
@@ -95,7 +95,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))y
+- (id<FWViewChainProtocols> (^)(CGFloat))y
 {
     return ^id(CGFloat y) {
         CGRect frame = self.view.frame;
@@ -105,7 +105,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))width
+- (id<FWViewChainProtocols> (^)(CGFloat))width
 {
     return ^id(CGFloat width) {
         CGRect frame = self.view.frame;
@@ -115,7 +115,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))height
+- (id<FWViewChainProtocols> (^)(CGFloat))height
 {
     return ^id(CGFloat height) {
         CGRect frame = self.view.frame;
@@ -125,7 +125,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGAffineTransform))transform
+- (id<FWViewChainProtocols> (^)(CGAffineTransform))transform
 {
     return ^id(CGAffineTransform transform) {
         self.view.transform = transform;
@@ -133,7 +133,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIViewAutoresizing))autoresizingMask
+- (id<FWViewChainProtocols> (^)(UIViewAutoresizing))autoresizingMask
 {
     return ^id(UIViewAutoresizing autoresizingMask) {
         self.view.autoresizingMask = autoresizingMask;
@@ -141,7 +141,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(BOOL))clipsToBounds
+- (id<FWViewChainProtocols> (^)(BOOL))clipsToBounds
 {
     return ^id(BOOL clipsToBounds) {
         self.view.clipsToBounds = clipsToBounds;
@@ -149,7 +149,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIColor *))backgroundColor
+- (id<FWViewChainProtocols> (^)(UIColor *))backgroundColor
 {
     return ^id(UIColor *backgroundColor) {
         self.view.backgroundColor = backgroundColor;
@@ -157,7 +157,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))alpha
+- (id<FWViewChainProtocols> (^)(CGFloat))alpha
 {
     return ^id(CGFloat alpha) {
         self.view.alpha = alpha;
@@ -165,7 +165,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(BOOL))opaque
+- (id<FWViewChainProtocols> (^)(BOOL))opaque
 {
     return ^id(BOOL opaque) {
         self.view.opaque = opaque;
@@ -173,7 +173,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(BOOL))hidden
+- (id<FWViewChainProtocols> (^)(BOOL))hidden
 {
     return ^id(BOOL hidden) {
         self.view.hidden = hidden;
@@ -181,7 +181,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIViewContentMode))contentMode
+- (id<FWViewChainProtocols> (^)(UIViewContentMode))contentMode
 {
     return ^id(UIViewContentMode contentMode) {
         self.view.contentMode = contentMode;
@@ -189,7 +189,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIColor *))tintColor
+- (id<FWViewChainProtocols> (^)(UIColor *))tintColor
 {
     return ^id(UIColor *tintColor) {
         self.view.tintColor = tintColor;
@@ -197,7 +197,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIView *))addSubview
+- (id<FWViewChainProtocols> (^)(UIView *))addSubview
 {
     return ^id(UIView *view) {
         [self.view addSubview:view];
@@ -205,7 +205,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIView *))moveToSuperview
+- (id<FWViewChainProtocols> (^)(UIView *))moveToSuperview
 {
     return ^id(UIView *view) {
         if (view) {
@@ -217,7 +217,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(BOOL))masksToBounds
+- (id<FWViewChainProtocols> (^)(BOOL))masksToBounds
 {
     return ^id(BOOL masksToBounds) {
         self.view.layer.masksToBounds = masksToBounds;
@@ -225,7 +225,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))cornerRadius
+- (id<FWViewChainProtocols> (^)(CGFloat))cornerRadius
 {
     return ^id(CGFloat cornerRadius) {
         self.view.layer.cornerRadius = cornerRadius;
@@ -234,7 +234,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))borderWidth
+- (id<FWViewChainProtocols> (^)(CGFloat))borderWidth
 {
     return ^id(CGFloat borderWidth) {
         self.view.layer.borderWidth = borderWidth;
@@ -242,7 +242,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIColor *))borderColor
+- (id<FWViewChainProtocols> (^)(UIColor *))borderColor
 {
     return ^id(UIColor *borderColor) {
         self.view.layer.borderColor = borderColor.CGColor;
@@ -250,7 +250,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(UIColor *))shadowColor
+- (id<FWViewChainProtocols> (^)(UIColor *))shadowColor
 {
     return ^id(UIColor *shadowColor) {
         self.view.layer.shadowColor = shadowColor.CGColor;
@@ -258,7 +258,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(float))shadowOpacity
+- (id<FWViewChainProtocols> (^)(float))shadowOpacity
 {
     return ^id(float shadowOpacity) {
         self.view.layer.shadowOpacity = shadowOpacity;
@@ -266,7 +266,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGSize))shadowOffset
+- (id<FWViewChainProtocols> (^)(CGSize))shadowOffset
 {
     return ^id(CGSize shadowOffset) {
         self.view.layer.shadowOffset = shadowOffset;
@@ -274,7 +274,7 @@
     };
 }
 
-- (id<FWViewChainProtocol> (^)(CGFloat))shadowRadius
+- (id<FWViewChainProtocols> (^)(CGFloat))shadowRadius
 {
     return ^id(CGFloat shadowRadius) {
         self.view.layer.shadowRadius = shadowRadius;
@@ -282,9 +282,9 @@
     };
 }
 
-#pragma mark - FWLabelChainProtocol
+#pragma mark - FWLabelChainProtocols
 
-- (id<FWLabelChainProtocol> (^)(NSString *))text
+- (id<FWLabelChainProtocols> (^)(NSString *))text
 {
     return ^id(NSString *text) {
         ((UILabel *)self.view).text = text;
@@ -292,7 +292,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(UIFont *))font
+- (id<FWLabelChainProtocols> (^)(UIFont *))font
 {
     return ^id(UIFont *font) {
         ((UILabel *)self.view).font = font;
@@ -300,7 +300,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(UIColor *))textColor
+- (id<FWLabelChainProtocols> (^)(UIColor *))textColor
 {
     return ^id(UIColor *textColor) {
         ((UILabel *)self.view).textColor = textColor;
@@ -308,7 +308,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(NSTextAlignment))textAlignment
+- (id<FWLabelChainProtocols> (^)(NSTextAlignment))textAlignment
 {
     return ^id(NSTextAlignment textAlignment) {
         ((UILabel *)self.view).textAlignment = textAlignment;
@@ -316,7 +316,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(NSAttributedString *))attributedText
+- (id<FWLabelChainProtocols> (^)(NSAttributedString *))attributedText
 {
     return ^id(NSAttributedString *attributedText) {
         ((UILabel *)self.view).attributedText = attributedText;
@@ -324,7 +324,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(NSLineBreakMode))lineBreakMode
+- (id<FWLabelChainProtocols> (^)(NSLineBreakMode))lineBreakMode
 {
     return ^id(NSLineBreakMode lineBreakMode) {
         ((UILabel *)self.view).lineBreakMode = lineBreakMode;
@@ -332,7 +332,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(UIColor *))highlightedTextColor
+- (id<FWLabelChainProtocols> (^)(UIColor *))highlightedTextColor
 {
     return ^id(UIColor *highlightedTextColor) {
         ((UILabel *)self.view).highlightedTextColor = highlightedTextColor;
@@ -340,7 +340,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(BOOL))highlighted
+- (id<FWLabelChainProtocols> (^)(BOOL))highlighted
 {
     return ^id(BOOL highlighted) {
         ((UILabel *)self.view).highlighted = highlighted;
@@ -348,7 +348,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(BOOL))enabled
+- (id<FWLabelChainProtocols> (^)(BOOL))enabled
 {
     return ^id(BOOL enabled) {
         ((UILabel *)self.view).enabled = enabled;
@@ -356,7 +356,7 @@
     };
 }
 
-- (id<FWLabelChainProtocol> (^)(NSInteger))numberOfLines
+- (id<FWLabelChainProtocols> (^)(NSInteger))numberOfLines
 {
     return ^id(NSInteger numberOfLines) {
         ((UILabel *)self.view).numberOfLines = numberOfLines;
@@ -364,9 +364,9 @@
     };
 }
 
-#pragma mark - FWButtonChainProtocol
+#pragma mark - FWButtonChainProtocols
 
-- (id<FWButtonChainProtocol> (^)(UIEdgeInsets))contentEdgeInsets
+- (id<FWButtonChainProtocols> (^)(UIEdgeInsets))contentEdgeInsets
 {
     return ^id(UIEdgeInsets contentEdgeInsets) {
         ((UIButton *)self.view).contentEdgeInsets = contentEdgeInsets;
@@ -374,7 +374,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIEdgeInsets))titleEdgeInsets
+- (id<FWButtonChainProtocols> (^)(UIEdgeInsets))titleEdgeInsets
 {
     return ^id(UIEdgeInsets titleEdgeInsets) {
         ((UIButton *)self.view).titleEdgeInsets = titleEdgeInsets;
@@ -382,7 +382,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIEdgeInsets))imageEdgeInsets
+- (id<FWButtonChainProtocols> (^)(UIEdgeInsets))imageEdgeInsets
 {
     return ^id(UIEdgeInsets imageEdgeInsets) {
         ((UIButton *)self.view).imageEdgeInsets = imageEdgeInsets;
@@ -390,7 +390,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(BOOL))selected
+- (id<FWButtonChainProtocols> (^)(BOOL))selected
 {
     return ^id(BOOL selected) {
         ((UIButton *)self.view).selected = selected;
@@ -398,7 +398,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(NSString *, UIControlState))titleForState
+- (id<FWButtonChainProtocols> (^)(NSString *, UIControlState))titleForState
 {
     return ^id(NSString *title, UIControlState state) {
         [(UIButton *)self.view setTitle:title forState:state];
@@ -406,7 +406,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIColor *, UIControlState))titleColorForState
+- (id<FWButtonChainProtocols> (^)(UIColor *, UIControlState))titleColorForState
 {
     return ^id(UIColor *titleColor, UIControlState state) {
         [(UIButton *)self.view setTitleColor:titleColor forState:state];
@@ -414,7 +414,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIImage *, UIControlState))imageForState
+- (id<FWButtonChainProtocols> (^)(UIImage *, UIControlState))imageForState
 {
     return ^id(UIImage *image, UIControlState state) {
         [(UIButton *)self.view setImage:image forState:state];
@@ -422,7 +422,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIImage *, UIControlState))backgroundImageForState
+- (id<FWButtonChainProtocols> (^)(UIImage *, UIControlState))backgroundImageForState
 {
     return ^id(UIImage *backgroundImage, UIControlState state) {
         [(UIButton *)self.view setBackgroundImage:backgroundImage forState:state];
@@ -430,7 +430,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(NSAttributedString *, UIControlState))attributedTitleForState
+- (id<FWButtonChainProtocols> (^)(NSAttributedString *, UIControlState))attributedTitleForState
 {
     return ^id(NSAttributedString *attributedTitle, UIControlState state) {
         [(UIButton *)self.view setAttributedTitle:attributedTitle forState:state];
@@ -438,7 +438,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(NSString *))titleForStateNormal
+- (id<FWButtonChainProtocols> (^)(NSString *))titleForStateNormal
 {
     return ^id(NSString *title) {
         [(UIButton *)self.view setTitle:title forState:UIControlStateNormal];
@@ -446,7 +446,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIColor *))titleColorForStateNormal
+- (id<FWButtonChainProtocols> (^)(UIColor *))titleColorForStateNormal
 {
     return ^id(UIColor *titleColor) {
         [(UIButton *)self.view setTitleColor:titleColor forState:UIControlStateNormal];
@@ -454,7 +454,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIImage *))imageForStateNormal
+- (id<FWButtonChainProtocols> (^)(UIImage *))imageForStateNormal
 {
     return ^id(UIImage *image) {
         [(UIButton *)self.view setImage:image forState:UIControlStateNormal];
@@ -462,7 +462,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIImage *))backgroundImageForStateNormal
+- (id<FWButtonChainProtocols> (^)(UIImage *))backgroundImageForStateNormal
 {
     return ^id(UIImage *backgroundImage) {
         [(UIButton *)self.view setBackgroundImage:backgroundImage forState:UIControlStateNormal];
@@ -470,7 +470,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(NSAttributedString *))attributedTitleForStateNormal
+- (id<FWButtonChainProtocols> (^)(NSAttributedString *))attributedTitleForStateNormal
 {
     return ^id(NSAttributedString *attributedTitle) {
         [(UIButton *)self.view setAttributedTitle:attributedTitle forState:UIControlStateNormal];
@@ -478,7 +478,7 @@
     };
 }
 
-- (id<FWButtonChainProtocol> (^)(UIFont *))titleLabelFont
+- (id<FWButtonChainProtocols> (^)(UIFont *))titleLabelFont
 {
     return ^id(UIFont *font) {
         ((UIButton *)self.view).titleLabel.font = font;
@@ -486,9 +486,9 @@
     };
 }
 
-#pragma mark - FWImageViewChainProtocol
+#pragma mark - FWImageViewChainProtocols
 
-- (id<FWImageViewChainProtocol> (^)(UIImage *))image
+- (id<FWImageViewChainProtocols> (^)(UIImage *))image
 {
     return ^id(UIImage *image) {
         ((UIImageView *)self.view).image = image;
@@ -496,7 +496,7 @@
     };
 }
 
-- (id<FWImageViewChainProtocol> (^)(UIImage *))highlightedImage
+- (id<FWImageViewChainProtocols> (^)(UIImage *))highlightedImage
 {
     return ^id(UIImage *highlightedImage) {
         ((UIImageView *)self.view).highlightedImage = highlightedImage;
@@ -504,7 +504,7 @@
     };
 }
 
-- (id<FWImageViewChainProtocol> (^)(void))contentModeAspectFill
+- (id<FWImageViewChainProtocols> (^)(void))contentModeAspectFill
 {
     return ^id(void) {
         self.view.contentMode = UIViewContentModeScaleAspectFill;
@@ -513,7 +513,7 @@
     };
 }
 
-- (id<FWImageViewChainProtocol> (^)(NSURL *))imageUrl
+- (id<FWImageViewChainProtocols> (^)(NSURL *))imageUrl
 {
     return ^id(NSURL *imageUrl) {
         [((UIImageView *)self.view) fwSetImageWithURL:imageUrl];
@@ -521,7 +521,7 @@
     };
 }
 
-- (id<FWImageViewChainProtocol> (^)(NSURL *, UIImage *))imageUrlWithPlaceholder
+- (id<FWImageViewChainProtocols> (^)(NSURL *, UIImage *))imageUrlWithPlaceholder
 {
     return ^id(NSURL *imageUrl, UIImage *placeholderImage) {
         [((UIImageView *)self.view) fwSetImageWithURL:imageUrl placeholderImage:placeholderImage];
@@ -529,9 +529,9 @@
     };
 }
 
-#pragma mark - FWScrollViewChainProtocol
+#pragma mark - FWScrollViewChainProtocols
 
-- (id<FWScrollViewChainProtocol> (^)(CGPoint))contentOffset
+- (id<FWScrollViewChainProtocols> (^)(CGPoint))contentOffset
 {
     return ^id(CGPoint contentOffset) {
         ((UIScrollView *)self.view).contentOffset = contentOffset;
@@ -539,7 +539,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(CGSize))contentSize
+- (id<FWScrollViewChainProtocols> (^)(CGSize))contentSize
 {
     return ^id(CGSize contentSize) {
         ((UIScrollView *)self.view).contentSize = contentSize;
@@ -547,7 +547,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(UIEdgeInsets))contentInset
+- (id<FWScrollViewChainProtocols> (^)(UIEdgeInsets))contentInset
 {
     return ^id(UIEdgeInsets contentInset) {
         ((UIScrollView *)self.view).contentInset = contentInset;
@@ -555,7 +555,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))directionalLockEnabled
+- (id<FWScrollViewChainProtocols> (^)(BOOL))directionalLockEnabled
 {
     return ^id(BOOL directionalLockEnabled) {
         ((UIScrollView *)self.view).directionalLockEnabled = directionalLockEnabled;
@@ -563,7 +563,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))bounces
+- (id<FWScrollViewChainProtocols> (^)(BOOL))bounces
 {
     return ^id(BOOL bounces) {
         ((UIScrollView *)self.view).bounces = bounces;
@@ -571,7 +571,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))alwaysBounceVertical
+- (id<FWScrollViewChainProtocols> (^)(BOOL))alwaysBounceVertical
 {
     return ^id(BOOL alwaysBounceVertical) {
         ((UIScrollView *)self.view).alwaysBounceVertical = alwaysBounceVertical;
@@ -579,7 +579,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))alwaysBounceHorizontal
+- (id<FWScrollViewChainProtocols> (^)(BOOL))alwaysBounceHorizontal
 {
     return ^id(BOOL alwaysBounceHorizontal) {
         ((UIScrollView *)self.view).alwaysBounceHorizontal = alwaysBounceHorizontal;
@@ -587,7 +587,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))pagingEnabled
+- (id<FWScrollViewChainProtocols> (^)(BOOL))pagingEnabled
 {
     return ^id(BOOL pagingEnabled) {
         ((UIScrollView *)self.view).pagingEnabled = pagingEnabled;
@@ -595,7 +595,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))scrollEnabled
+- (id<FWScrollViewChainProtocols> (^)(BOOL))scrollEnabled
 {
     return ^id(BOOL scrollEnabled) {
         ((UIScrollView *)self.view).scrollEnabled = scrollEnabled;
@@ -603,7 +603,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))showsHorizontalScrollIndicator
+- (id<FWScrollViewChainProtocols> (^)(BOOL))showsHorizontalScrollIndicator
 {
     return ^id(BOOL showsHorizontalScrollIndicator) {
         ((UIScrollView *)self.view).showsHorizontalScrollIndicator = showsHorizontalScrollIndicator;
@@ -611,7 +611,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(BOOL))showsVerticalScrollIndicator
+- (id<FWScrollViewChainProtocols> (^)(BOOL))showsVerticalScrollIndicator
 {
     return ^id(BOOL showsVerticalScrollIndicator) {
         ((UIScrollView *)self.view).showsVerticalScrollIndicator = showsVerticalScrollIndicator;
@@ -619,7 +619,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(void))keyboardDismissModeOnDrag
+- (id<FWScrollViewChainProtocols> (^)(void))keyboardDismissModeOnDrag
 {
     return ^id(void) {
         ((UIScrollView *)self.view).keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
@@ -627,7 +627,7 @@
     };
 }
 
-- (id<FWScrollViewChainProtocol> (^)(void))contentInsetAdjustmentNever
+- (id<FWScrollViewChainProtocols> (^)(void))contentInsetAdjustmentNever
 {
     return ^id(void) {
         if (@available(iOS 11.0, *)) {
@@ -637,9 +637,9 @@
     };
 }
 
-#pragma mark - FWTextFieldChainProtocol
+#pragma mark - FWTextFieldChainProtocols
 
-- (id<FWTextFieldChainProtocol> (^)(NSString *))placeholder
+- (id<FWTextFieldChainProtocols> (^)(NSString *))placeholder
 {
     return ^id(NSString *placeholder) {
         if ([self.view isKindOfClass:[UITextField class]]) {
@@ -651,7 +651,7 @@
     };
 }
 
-- (id<FWTextFieldChainProtocol> (^)(NSAttributedString *))attributedPlaceholder
+- (id<FWTextFieldChainProtocols> (^)(NSAttributedString *))attributedPlaceholder
 {
     return ^id(NSAttributedString *attributedPlaceholder) {
         if ([self.view isKindOfClass:[UITextField class]]) {
@@ -663,7 +663,7 @@
     };
 }
 
-- (id<FWTextFieldChainProtocol> (^)(NSInteger))maxLength
+- (id<FWTextFieldChainProtocols> (^)(NSInteger))maxLength
 {
     return ^id(NSInteger maxLength) {
         if ([self.view isKindOfClass:[UITextField class]]) {
@@ -675,7 +675,7 @@
     };
 }
 
-- (id<FWTextFieldChainProtocol> (^)(NSInteger))maxUnicodeLength
+- (id<FWTextFieldChainProtocols> (^)(NSInteger))maxUnicodeLength
 {
     return ^id(NSInteger maxUnicodeLength) {
         if ([self.view isKindOfClass:[UITextField class]]) {
@@ -687,9 +687,9 @@
     };
 }
 
-#pragma mark - FWTextViewChainProtocol
+#pragma mark - FWTextViewChainProtocols
 
-- (id<FWTextViewChainProtocol> (^)(BOOL))editable
+- (id<FWTextViewChainProtocols> (^)(BOOL))editable
 {
     return ^id(BOOL editable) {
         ((UITextView *)self.view).editable = editable;
@@ -703,7 +703,7 @@
 
 @implementation UIView (FWViewChain)
 
-- (id<FWViewChainProtocol>)fwViewChain
+- (id<FWViewChainProtocols>)fwViewChain
 {
     FWViewChainObjc *viewChain = objc_getAssociatedObject(self, _cmd);
     if (!viewChain) {

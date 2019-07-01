@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWDefViewChain_( protocol ) \
     @property (nonatomic, strong, readonly) id<protocol> fwViewChain NS_REFINED_FOR_SWIFT;
 
-#define FWDefViewChainProtocol_( protocol ) \
+#define FWDefViewChainProtocols_( protocol ) \
     @property (nonatomic, copy, readonly) id<protocol> (^userInteractionEnabled)(BOOL enabled); \
     @property (nonatomic, copy, readonly) id<protocol> (^tag)(NSInteger tag); \
     @property (nonatomic, copy, readonly) id<protocol> (^frame)(CGRect frame); \
@@ -51,19 +51,19 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, copy, readonly) id<protocol> (^shadowOffset)(CGSize shadowOffset); \
     @property (nonatomic, copy, readonly) id<protocol> (^shadowRadius)(CGFloat shadowRadius);
 
-#define FWDefLabelChainProtocol_( protocol ) \
+#define FWDefLabelChainProtocols_( protocol ) \
     @property (nonatomic, copy, readonly) id<protocol> (^text)(NSString * _Nullable text); \
     @property (nonatomic, copy, readonly) id<protocol> (^font)(UIFont * _Nullable font); \
     @property (nonatomic, copy, readonly) id<protocol> (^textColor)(UIColor * _Nullable textColor); \
     @property (nonatomic, copy, readonly) id<protocol> (^textAlignment)(NSTextAlignment textAlignment); \
     @property (nonatomic, copy, readonly) id<protocol> (^attributedText)(NSAttributedString * _Nullable attributedText);
 
-#define FWDefControlChainProtocol_( protocol ) \
+#define FWDefControlChainProtocols_( protocol ) \
     @property (nonatomic, copy, readonly) id<protocol> (^enabled)(BOOL enabled); \
     @property (nonatomic, copy, readonly) id<protocol> (^selected)(BOOL selected); \
     @property (nonatomic, copy, readonly) id<protocol> (^highlighted)(BOOL highlighted);
 
-#define FWDefScrollViewChainProtocol_( protocol ) \
+#define FWDefScrollViewChainProtocols_( protocol ) \
     @property (nonatomic, copy, readonly) id<protocol> (^contentOffset)(CGPoint contentOffset); \
     @property (nonatomic, copy, readonly) id<protocol> (^contentSize)(CGSize contentSize); \
     @property (nonatomic, copy, readonly) id<protocol> (^contentInset)(UIEdgeInsets contentInset); \
@@ -78,101 +78,101 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, copy, readonly) id<protocol> (^keyboardDismissModeOnDrag)(void); \
     @property (nonatomic, copy, readonly) id<protocol> (^contentInsetAdjustmentNever)(void);
 
-#define FWDefInputChainProtocol_( protocol ) \
+#define FWDefInputChainProtocols_( protocol ) \
     @property (nonatomic, copy, readonly) id<protocol> (^placeholder)(NSString * _Nullable placeholder); \
     @property (nonatomic, copy, readonly) id<protocol> (^attributedPlaceholder)(NSAttributedString * _Nullable attributedPlaceholder); \
     @property (nonatomic, copy, readonly) id<protocol> (^maxLength)(NSInteger maxLength); \
     @property (nonatomic, copy, readonly) id<protocol> (^maxUnicodeLength)(NSInteger maxUnicodeLength);
 
-#pragma mark - FWViewChainProtocol
+#pragma mark - FWViewChainProtocols
 
 /*!
  @brief UIView链式调用协议
  */
-@protocol FWViewChainProtocol <NSObject>
+@protocol FWViewChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWViewChainProtocol);
+FWDefViewChainProtocols_(FWViewChainProtocols);
 
 @end
 
-@protocol FWLabelChainProtocol <NSObject>
+@protocol FWLabelChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWLabelChainProtocol);
-FWDefLabelChainProtocol_(FWLabelChainProtocol);
+FWDefViewChainProtocols_(FWLabelChainProtocols);
+FWDefLabelChainProtocols_(FWLabelChainProtocols);
 
-@property (nonatomic, copy, readonly) id<FWLabelChainProtocol> (^lineBreakMode)(NSLineBreakMode lineBreakMode);
-@property (nonatomic, copy, readonly) id<FWLabelChainProtocol> (^highlightedTextColor)(UIColor * _Nullable highlightedTextColor);
-@property (nonatomic, copy, readonly) id<FWLabelChainProtocol> (^highlighted)(BOOL highlighted);
-@property (nonatomic, copy, readonly) id<FWLabelChainProtocol> (^enabled)(BOOL enabled);
-@property (nonatomic, copy, readonly) id<FWLabelChainProtocol> (^numberOfLines)(NSInteger numberOfLines);
+@property (nonatomic, copy, readonly) id<FWLabelChainProtocols> (^lineBreakMode)(NSLineBreakMode lineBreakMode);
+@property (nonatomic, copy, readonly) id<FWLabelChainProtocols> (^highlightedTextColor)(UIColor * _Nullable highlightedTextColor);
+@property (nonatomic, copy, readonly) id<FWLabelChainProtocols> (^highlighted)(BOOL highlighted);
+@property (nonatomic, copy, readonly) id<FWLabelChainProtocols> (^enabled)(BOOL enabled);
+@property (nonatomic, copy, readonly) id<FWLabelChainProtocols> (^numberOfLines)(NSInteger numberOfLines);
 
 @end
 
-@protocol FWButtonChainProtocol <NSObject>
+@protocol FWButtonChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWButtonChainProtocol);
-FWDefControlChainProtocol_(FWButtonChainProtocol);
+FWDefViewChainProtocols_(FWButtonChainProtocols);
+FWDefControlChainProtocols_(FWButtonChainProtocols);
 
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^contentEdgeInsets)(UIEdgeInsets contentEdgeInsets);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^titleEdgeInsets)(UIEdgeInsets titleEdgeInsets);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^imageEdgeInsets)(UIEdgeInsets imageEdgeInsets);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^titleForState)(NSString * _Nullable title, UIControlState state);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^titleColorForState)(UIColor * _Nullable titleColor, UIControlState state);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^imageForState)(UIImage * _Nullable image, UIControlState state);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^backgroundImageForState)(UIImage * _Nullable backgroundImage, UIControlState state);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^attributedTitleForState)(NSAttributedString * _Nullable attributedTitle, UIControlState state);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^titleForStateNormal)(NSString * _Nullable title);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^titleColorForStateNormal)(UIColor * _Nullable titleColor);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^imageForStateNormal)(UIImage * _Nullable image);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^backgroundImageForStateNormal)(UIImage * _Nullable backgroundImage);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^attributedTitleForStateNormal)(NSAttributedString * _Nullable attributedTitle);
-@property (nonatomic, copy, readonly) id<FWButtonChainProtocol> (^titleLabelFont)(UIFont * _Nullable font);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^contentEdgeInsets)(UIEdgeInsets contentEdgeInsets);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^titleEdgeInsets)(UIEdgeInsets titleEdgeInsets);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^imageEdgeInsets)(UIEdgeInsets imageEdgeInsets);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^titleForState)(NSString * _Nullable title, UIControlState state);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^titleColorForState)(UIColor * _Nullable titleColor, UIControlState state);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^imageForState)(UIImage * _Nullable image, UIControlState state);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^backgroundImageForState)(UIImage * _Nullable backgroundImage, UIControlState state);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^attributedTitleForState)(NSAttributedString * _Nullable attributedTitle, UIControlState state);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^titleForStateNormal)(NSString * _Nullable title);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^titleColorForStateNormal)(UIColor * _Nullable titleColor);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^imageForStateNormal)(UIImage * _Nullable image);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^backgroundImageForStateNormal)(UIImage * _Nullable backgroundImage);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^attributedTitleForStateNormal)(NSAttributedString * _Nullable attributedTitle);
+@property (nonatomic, copy, readonly) id<FWButtonChainProtocols> (^titleLabelFont)(UIFont * _Nullable font);
 
 @end
 
-@protocol FWImageViewChainProtocol <NSObject>
+@protocol FWImageViewChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWImageViewChainProtocol);
+FWDefViewChainProtocols_(FWImageViewChainProtocols);
 
-@property (nonatomic, copy, readonly) id<FWImageViewChainProtocol> (^image)(UIImage * _Nullable image);
-@property (nonatomic, copy, readonly) id<FWImageViewChainProtocol> (^highlightedImage)(UIImage * _Nullable highlightedImage);
-@property (nonatomic, copy, readonly) id<FWImageViewChainProtocol> (^contentModeAspectFill)(void);
-@property (nonatomic, copy, readonly) id<FWImageViewChainProtocol> (^imageUrl)(NSURL * _Nullable imageUrl);
-@property (nonatomic, copy, readonly) id<FWImageViewChainProtocol> (^imageUrlWithPlaceholder)(NSURL * _Nullable imageUrl, UIImage * _Nullable placeholderImage);
+@property (nonatomic, copy, readonly) id<FWImageViewChainProtocols> (^image)(UIImage * _Nullable image);
+@property (nonatomic, copy, readonly) id<FWImageViewChainProtocols> (^highlightedImage)(UIImage * _Nullable highlightedImage);
+@property (nonatomic, copy, readonly) id<FWImageViewChainProtocols> (^contentModeAspectFill)(void);
+@property (nonatomic, copy, readonly) id<FWImageViewChainProtocols> (^imageUrl)(NSURL * _Nullable imageUrl);
+@property (nonatomic, copy, readonly) id<FWImageViewChainProtocols> (^imageUrlWithPlaceholder)(NSURL * _Nullable imageUrl, UIImage * _Nullable placeholderImage);
 
 @end
 
-@protocol FWScrollViewChainProtocol <NSObject>
+@protocol FWScrollViewChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWScrollViewChainProtocol);
-FWDefScrollViewChainProtocol_(FWScrollViewChainProtocol);
+FWDefViewChainProtocols_(FWScrollViewChainProtocols);
+FWDefScrollViewChainProtocols_(FWScrollViewChainProtocols);
 
 @end
 
-@protocol FWTextFieldChainProtocol <NSObject>
+@protocol FWTextFieldChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWTextFieldChainProtocol);
-FWDefControlChainProtocol_(FWTextFieldChainProtocol);
-FWDefLabelChainProtocol_(FWTextFieldChainProtocol);
-FWDefInputChainProtocol_(FWTextFieldChainProtocol);
+FWDefViewChainProtocols_(FWTextFieldChainProtocols);
+FWDefControlChainProtocols_(FWTextFieldChainProtocols);
+FWDefLabelChainProtocols_(FWTextFieldChainProtocols);
+FWDefInputChainProtocols_(FWTextFieldChainProtocols);
 
 @end
 
-@protocol FWTextViewChainProtocol <NSObject>
+@protocol FWTextViewChainProtocols <NSObject>
 
 @required
-FWDefViewChainProtocol_(FWTextViewChainProtocol);
-FWDefLabelChainProtocol_(FWTextViewChainProtocol);
-FWDefScrollViewChainProtocol_(FWTextViewChainProtocol);
-FWDefInputChainProtocol_(FWTextViewChainProtocol);
+FWDefViewChainProtocols_(FWTextViewChainProtocols);
+FWDefLabelChainProtocols_(FWTextViewChainProtocols);
+FWDefScrollViewChainProtocols_(FWTextViewChainProtocols);
+FWDefInputChainProtocols_(FWTextViewChainProtocols);
 
-@property (nonatomic, copy, readonly) id<FWTextViewChainProtocol> (^editable)(BOOL editable);
+@property (nonatomic, copy, readonly) id<FWTextViewChainProtocols> (^editable)(BOOL editable);
 
 @end
 
@@ -184,43 +184,43 @@ FWDefInputChainProtocol_(FWTextViewChainProtocol);
 @interface UIView (FWViewChain)
 
 // 链式调用对象，注意view强引用viewChain，viewChain弱引用view
-FWDefViewChain_(FWViewChainProtocol);
+FWDefViewChain_(FWViewChainProtocols);
 
 @end
 
 @interface UILabel (FWViewChain)
 
-FWDefViewChain_(FWLabelChainProtocol);
+FWDefViewChain_(FWLabelChainProtocols);
 
 @end
 
 @interface UIButton (FWViewChain)
 
-FWDefViewChain_(FWButtonChainProtocol);
+FWDefViewChain_(FWButtonChainProtocols);
 
 @end
 
 @interface UIImageView (FWViewChain)
 
-FWDefViewChain_(FWImageViewChainProtocol);
+FWDefViewChain_(FWImageViewChainProtocols);
 
 @end
 
 @interface UIScrollView (FWViewChain)
 
-FWDefViewChain_(FWScrollViewChainProtocol);
+FWDefViewChain_(FWScrollViewChainProtocols);
 
 @end
 
 @interface UITextField (FWViewChain)
 
-FWDefViewChain_(FWTextFieldChainProtocol);
+FWDefViewChain_(FWTextFieldChainProtocols);
 
 @end
 
 @interface UITextView (FWViewChain)
 
-FWDefViewChain_(FWTextViewChainProtocol);
+FWDefViewChain_(FWTextViewChainProtocols);
 
 @end
 
