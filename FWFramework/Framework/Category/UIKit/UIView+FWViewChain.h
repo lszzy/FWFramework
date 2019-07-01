@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 定义View链式调用协议
  */
 #define FWDefViewChain_( protocol ) \
-    @property (nonatomic, strong, readonly) id<protocol> fwViewChain NS_REFINED_FOR_SWIFT;
+    @property (nonatomic, strong, readonly) id<protocol> fwViewChain;
 
 #define FWDefViewChainProtocols_( protocol ) \
     @property (nonatomic, copy, readonly) id<protocol> (^userInteractionEnabled)(BOOL enabled); \

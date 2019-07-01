@@ -11,7 +11,12 @@ import Foundation
 // MARK: - FWLayoutChain
 public class FWLayoutChain {
     /// weak引用内部视图
-    fileprivate weak var view: UIView? = nil
+    private weak var view: UIView? = nil
+    
+    /// 构造方法
+    public required init(view: UIView?) {
+        self.view = view
+    }
     
     // MARK: - Install
     @discardableResult
@@ -300,9 +305,7 @@ extension UIView {
     public var fwLayoutChain: FWLayoutChain {
         var layoutChain = objc_getAssociatedObject(self, &FWLayoutChainAssociatedKeys.layoutChainKey)
         if layoutChain == nil {
-            let tempChain = FWLayoutChain()
-            tempChain.view = self
-            layoutChain = tempChain
+            layoutChain = FWLayoutChain(view: self)
             objc_setAssociatedObject(self, &FWLayoutChainAssociatedKeys.layoutChainKey, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return layoutChain as! FWLayoutChain
