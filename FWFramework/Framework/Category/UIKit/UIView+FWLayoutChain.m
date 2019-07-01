@@ -33,10 +33,18 @@
 
 #pragma mark - Compression
 
-- (id<FWLayoutChainProtocol> (^)(UILayoutConstraintAxis, UILayoutPriority))contentCompressionResistance
+- (id<FWLayoutChainProtocol> (^)(UILayoutPriority))compressionHorizontal
 {
-    return ^id(UILayoutConstraintAxis axis, UILayoutPriority priority) {
-        [self.view fwSetContentCompressionResistance:axis priority:priority];
+    return ^id(UILayoutPriority priority) {
+        [self.view fwSetCompressionHorizontal:priority];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(UILayoutPriority))compressionVertical
+{
+    return ^id(UILayoutPriority priority) {
+        [self.view fwSetCompressionVertical:priority];
         return self;
     };
 }
@@ -174,10 +182,18 @@
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UILayoutConstraintAxis))edgesWithAxis
+- (id<FWLayoutChainProtocol> (^)(void))edgesHorizontal
 {
-    return ^id(UILayoutConstraintAxis axis) {
-        [self.view fwPinEdgesToSuperviewWithAxis:axis];
+    return ^id(void) {
+        [self.view fwPinEdgesToSuperviewHorizontal];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(void))edgesVertical
+{
+    return ^id(void) {
+        [self.view fwPinEdgesToSuperviewVertical];
         return self;
     };
 }
@@ -448,10 +464,18 @@
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UILayoutConstraintAxis))edgesToSafeAreaWithAxis
+- (id<FWLayoutChainProtocol> (^)(void))edgesToSafeAreaHorizontal
 {
-    return ^id(UILayoutConstraintAxis axis) {
-        [self.view fwPinEdgesToSuperviewSafeAreaWithAxis:axis];
+    return ^id(void) {
+        [self.view fwPinEdgesToSuperviewSafeAreaHorizontal];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(void))edgesToSafeAreaVertical
+{
+    return ^id(void) {
+        [self.view fwPinEdgesToSuperviewSafeAreaVertical];
         return self;
     };
 }

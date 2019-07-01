@@ -27,7 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Compression
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^contentCompressionResistance)(UILayoutConstraintAxis axis, UILayoutPriority priority);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^compressionHorizontal)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^compressionVertical)(UILayoutPriority priority);
 
 #pragma mark - Axis
 
@@ -50,7 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edges)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesWithInsets)(UIEdgeInsets insets);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesWithAxis)(UILayoutConstraintAxis axis);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesHorizontal)(void);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesVertical)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^top)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottom)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^left)(void);
@@ -87,7 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithInsets)(UIEdgeInsets insets);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithAxis)(UILayoutConstraintAxis axis);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaHorizontal)(void);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaVertical)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToSafeArea)(void);

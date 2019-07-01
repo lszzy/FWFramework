@@ -42,9 +42,14 @@
 
 #pragma mark - Compression
 
-- (void)fwSetContentCompressionResistance:(UILayoutConstraintAxis)axis priority:(UILayoutPriority)priority
+- (void)fwSetCompressionHorizontal:(UILayoutPriority)priority
 {
-    [self setContentCompressionResistancePriority:priority forAxis:axis];
+    [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisHorizontal];
+}
+
+- (void)fwSetCompressionVertical:(UILayoutPriority)priority
+{
+    [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisVertical];
 }
 
 #pragma mark - Axis
@@ -122,16 +127,19 @@
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewWithAxis:(UILayoutConstraintAxis)axis
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewHorizontal
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    if (axis == UILayoutConstraintAxisHorizontal) {
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeft]];
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeRight]];
-    } else {
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTop]];
-        [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeBottom]];
-    }
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeLeft]];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeRight]];
+    return constraints;
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewVertical
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeTop]];
+    [constraints addObject:[self fwPinEdgeToSuperview:NSLayoutAttributeBottom]];
     return constraints;
 }
 
@@ -227,16 +235,19 @@
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaWithAxis:(UILayoutConstraintAxis)axis
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaHorizontal
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    if (axis == UILayoutConstraintAxisHorizontal) {
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft]];
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight]];
-    } else {
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop]];
-        [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom]];
-    }
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft]];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight]];
+    return constraints;
+}
+
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaVertical
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop]];
+    [constraints addObject:[self fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom]];
     return constraints;
 }
 
