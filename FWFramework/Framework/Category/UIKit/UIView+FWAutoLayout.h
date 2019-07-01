@@ -39,12 +39,18 @@
 #pragma mark - Compression
 
 /*!
- @brief 设置布局方向抗压缩优先级
+ @brief 设置水平方向抗压缩优先级
  
- @param axis 布局方向
  @param priority 布局优先级
  */
-- (void)fwSetContentCompressionResistance:(UILayoutConstraintAxis)axis priority:(UILayoutPriority)priority;
+- (void)fwSetCompressionHorizontal:(UILayoutPriority)priority;
+
+/*!
+ @brief 设置垂直方向抗压缩优先级
+ 
+ @param priority 布局优先级
+ */
+- (void)fwSetCompressionVertical:(UILayoutPriority)priority;
 
 #pragma mark - Axis
 
@@ -136,12 +142,18 @@
 - (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 /*!
- @brief 与父视图指定方向两条边属性相同
+ @brief 与父视图水平方向两条边属性相同
  
- @param axis 布局方向
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewWithAxis:(UILayoutConstraintAxis)axis;
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewHorizontal;
+
+/*!
+ @brief 与父视图垂直方向两条边属性相同
+ 
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewVertical;
 
 /*!
  @brief 与父视图边属性相同
@@ -262,12 +274,18 @@
 - (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 /*!
- @brief 与父视图安全区域指定方向两条边属性相同
+ @brief 与父视图安全区域水平方向两条边属性相同
  
- @param axis 布局方向
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaWithAxis:(UILayoutConstraintAxis)axis;
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaHorizontal;
+
+/*!
+ @brief 与父视图安全区域垂直方向两条边属性相同
+ 
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaVertical;
 
 /*!
  @brief 与父视图安全区域边属性相同
