@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  字符串编码扩展
  */
@@ -22,14 +24,14 @@
  @param object 编码对象
  @return json字符串
  */
-+ (NSString *)fwJsonEncode:(id)object;
++ (nullable NSString *)fwJsonEncode:(id)object;
 
 /**
  *  json字符串解码为Foundation对象
  *
  *  @return Foundation对象
  */
-- (id)fwJsonDecode;
+- (nullable id)fwJsonDecode;
 
 #pragma mark - Unicode
 
@@ -66,14 +68,14 @@
  *
  *  @return base64字符串
  */
-- (NSString *)fwBase64Encode;
+- (nullable NSString *)fwBase64Encode;
 
 /**
  *  base64解码
  *
  *  @return 原字符串
  */
-- (NSString *)fwBase64Decode;
+- (nullable NSString *)fwBase64Decode;
 
 #pragma mark - Url
 
@@ -96,14 +98,14 @@
  *
  *  @return url编码地址
  */
-- (NSString *)fwUrlEncode;
+- (nullable NSString *)fwUrlEncode;
 
 /**
  *  url解码
  *
  *  @return 原url地址
  */
-- (NSString *)fwUrlDecode;
+- (nullable NSString *)fwUrlDecode;
 
 #pragma mark - Query
 
@@ -118,3 +120,5 @@
 - (NSDictionary *)fwQueryDecode;
 
 @end
+
+NS_ASSUME_NONNULL_END

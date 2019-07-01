@@ -9,23 +9,37 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - Macro
+/*!
+ @brief 快速创建细字体
+ 
+ @param fontSize 字号
+ @return UIFont
+ */
+FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat fontSize);
 
-// 快速创建细字体
-#define FWFontLight( size ) \
-    [UIFont fontWithName:([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) ? @".SFUIText-Light" : @"HelveticaNeue-Light" size:size]
+/*!
+ @brief 快速创建普通字体
+ 
+ @param fontSize 字号
+ @return UIFont
+ */
+FOUNDATION_EXPORT UIFont * FWFontNormal(CGFloat fontSize);
 
-// 快速创建普通字体
-#define FWFontNormal( size ) \
-    [UIFont systemFontOfSize:size]
+/*!
+ @brief 快速创建粗体字体
+ 
+ @param fontSize 字号
+ @return UIFont
+ */
+FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat fontSize);
 
-// 快速创建粗体字体
-#define FWFontBold( size ) \
-    [UIFont boldSystemFontOfSize:size]
-
-// 快速创建斜体字体
-#define FWFontItalic( size ) \
-    [UIFont italicSystemFontOfSize:size]
+/*!
+ @brief 快速创建斜体字体
+ 
+ @param fontSize 字号
+ @return UIFont
+ */
+FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat fontSize);
 
 #pragma mark - UIFont+FWFramework
 

@@ -14,9 +14,9 @@
 
 // 是否是调试模式
 #ifdef DEBUG
-    #define FW_DEBUG 1
+    #define FWIsDebug YES
 #else
-    #define FW_DEBUG 0
+    #define FWIsDebug NO
 #endif
 
 /*!

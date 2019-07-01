@@ -79,9 +79,13 @@
 #define FWDispatchQueueSync( block ) \
     dispatch_sync(fwQueue, block);
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSThread+FWFramework
  */
 @interface NSThread (FWFramework)
 
 @end
+
+NS_ASSUME_NONNULL_END

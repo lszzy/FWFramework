@@ -10,6 +10,13 @@
 #import "NSNull+FWFramework.h"
 #import <objc/runtime.h>
 
+// 是否处理NSNull崩溃
+#ifdef DEBUG
+    #define FWNullEnabled 0
+#else
+    #define FWNullEnabled 1
+#endif
+
 #pragma GCC diagnostic ignored "-Wgnu-conditional-omitted-operand"
 
 @implementation NSNull (FWFramework)

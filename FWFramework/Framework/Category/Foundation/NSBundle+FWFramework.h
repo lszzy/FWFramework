@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 读取本地化字符串
 #define FWLocalizedString( key, ... ) \
     [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:fw_macro_default(nil, ##__VA_ARGS__)]
@@ -27,13 +29,13 @@ extern NSString *const FWLocalizedLanguageChangedNotification;
 @interface NSBundle (FWFramework)
 
 // 读取系统语言
-+ (NSString *)fwSystemLanguage;
++ (nullable NSString *)fwSystemLanguage;
 
 // 读取自定义本地化语言，未自定义时返回空
-+ (NSString *)fwLocalizedLanguage;
++ (nullable NSString *)fwLocalizedLanguage;
 
 // 设置自定义本地化语言，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
-+ (void)fwSetLocalizedLanguage:(NSString *)language;
++ (void)fwSetLocalizedLanguage:(nullable NSString *)language;
 
 @end
 
@@ -48,9 +50,11 @@ extern NSString *const FWLocalizedLanguageChangedNotification;
 + (void)fwSetBundleFilter:(BOOL (^)(NSBundle *bundle))filter;
 
 // 设置全局bundle查找器，返回当前bundle实际使用语言，language为nil表示默认语言。需设置全局过滤器后才会生效
-+ (void)fwSetBundleFinder:(NSString * (^)(NSBundle *bundle, NSString *language))finder;
++ (void)fwSetBundleFinder:(nullable NSString * (^)(NSBundle *bundle, NSString * _Nullable language))finder;
 
 // 根据语言加载当前bundle指定语言文件的bundle，加载失败返回nil
-- (NSBundle *)fwLocalizedBundle:(NSString *)language;
+- (nullable NSBundle *)fwLocalizedBundle:(nullable NSString *)language;
 
 @end
+
+NS_ASSUME_NONNULL_END

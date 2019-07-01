@@ -106,14 +106,7 @@ FWPropertyStrong(UITextView *, textView);
                                        ],
                                };
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
-    NSLog(@"obj: %@", obj);
-    NSLog(@"dict: %@", [obj fwModelToJsonObject]);
-    
-    FWTuple *tuple = FWTuple(nil, @"tuple");
-    NSString *text;
-    FWUnpack(nil, &text) = tuple;
-    
-    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@\ntuple: %@", obj, [obj fwModelToJsonObject], text];
+    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
 }
 
 @end

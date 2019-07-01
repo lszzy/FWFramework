@@ -9,6 +9,24 @@
 
 #import "UIFont+FWFramework.h"
 
+UIFont * FWFontLight(CGFloat fontSize) {
+    return [UIFont fontWithName:([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) ? @".SFUIText-Light" : @"HelveticaNeue-Light" size:fontSize];
+}
+
+UIFont * FWFontNormal(CGFloat fontSize) {
+    return [UIFont systemFontOfSize:fontSize];
+}
+
+UIFont * FWFontBold(CGFloat fontSize) {
+    return [UIFont boldSystemFontOfSize:fontSize];
+}
+
+UIFont * FWFontItalic(CGFloat fontSize) {
+    return [UIFont italicSystemFontOfSize:fontSize];
+}
+
+#pragma mark - UIFont+FWFramework
+
 @implementation UIFont (FWFramework)
 
 #pragma mark - Static

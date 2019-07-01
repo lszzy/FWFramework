@@ -9,6 +9,17 @@
 
 #import "NSObject+FWSafeType.h"
 
+NSString * FWSafeString(id value) {
+    return value ? [NSString stringWithFormat:@"%@", value] : @"";
+}
+
+NSNumber * FWSafeNumber(id value) {
+    if (!value) return @0;
+    if ([value isKindOfClass:[NSNumber class]]) return value;
+    NSString *string = [NSString stringWithFormat:@"%@", value];
+    return [NSNumber numberWithDouble:[string doubleValue]];
+}
+
 #pragma mark - NSObject+FWSafeType
 
 @implementation NSObject (FWSafeType)

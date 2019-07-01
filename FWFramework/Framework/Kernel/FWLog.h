@@ -15,12 +15,11 @@
  @brief 记录日志内部宏
  
  @parseOnly
- @param method 日志方法名
  @param type 日志类型
  @param format 日志格式，同NSLog
  */
-#define FWLogType_( method, type, format, ... ) \
-    if (FWLog.level & type) [FWLog method:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+#define FWLogType_( type, format, ... ) \
+    if (FWLog.level & type) [FWLog log:type withMessage:[NSString stringWithFormat:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 /*!
  @brief 记录详细日志
@@ -28,7 +27,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogVerbose( format, ... ) \
-    FWLogType_( verbose, FWLogTypeVerbose, format, ##__VA_ARGS__ );
+    FWLogType_( FWLogTypeVerbose, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录调试日志
@@ -36,7 +35,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogDebug( format, ... ) \
-    FWLogType_( debug, FWLogTypeDebug, format, ##__VA_ARGS__ );
+    FWLogType_( FWLogTypeDebug, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录信息日志
@@ -44,7 +43,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogInfo( format, ... ) \
-    FWLogType_( info, FWLogTypeInfo, format, ##__VA_ARGS__ );
+    FWLogType_( FWLogTypeInfo, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录警告日志
@@ -52,7 +51,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogWarn( format, ... ) \
-    FWLogType_( warn, FWLogTypeWarn, format, ##__VA_ARGS__ );
+    FWLogType_( FWLogTypeWarn, format, ##__VA_ARGS__ );
 
 /*!
  @brief 记录错误日志
@@ -60,7 +59,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogError( format, ... ) \
-    FWLogType_( error, FWLogTypeError, format, ##__VA_ARGS__ );
+    FWLogType_( FWLogTypeError, format, ##__VA_ARGS__ );
 
 #pragma mark - FWLog
 
@@ -115,37 +114,45 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief 详细日志
 
- @param format 日志格式，同NSLog
+ @param message 日志消息
  */
-+ (void)verbose:(NSString *)format, ...;
++ (void)verbose:(NSString *)message;
 
 /*!
  @brief 调试日志
  
- @param format 日志格式，同NSLog
+ @param message 日志消息
  */
-+ (void)debug:(NSString *)format, ...;
++ (void)debug:(NSString *)message;
 
 /*!
  @brief 信息日志
  
- @param format 日志格式，同NSLog
+ @param message 日志消息
  */
-+ (void)info:(NSString *)format, ...;
++ (void)info:(NSString *)message;
 
 /*!
  @brief 警告日志
  
- @param format 日志格式，同NSLog
+ @param message 日志消息
  */
-+ (void)warn:(NSString *)format, ...;
++ (void)warn:(NSString *)message;
 
 /*!
  @brief 错误日志
  
- @param format 日志格式，同NSLog
+ @param message 日志消息
  */
-+ (void)error:(NSString *)format, ...;
++ (void)error:(NSString *)message;
+
+/*!
+ @brief 记录类型日志
+ 
+ @param type 日志类型
+ @param message 日志消息
+ */
++ (void)log:(FWLogType)type withMessage:(NSString *)message;
 
 @end
 
