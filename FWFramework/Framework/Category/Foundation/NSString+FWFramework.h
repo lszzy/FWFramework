@@ -13,6 +13,8 @@
 #import "NSString+FWEncrypt.h"
 #import "NSString+FWFormat.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSString+FWFramework
  */
@@ -73,7 +75,7 @@
  *
  *  @param regex 正则表达式
  */
-- (NSString *)fwRegexSubstring:(NSString *)regex;
+- (nullable NSString *)fwRegexSubstring:(NSString *)regex;
 
 /**
  *  正则替换字符串
@@ -105,7 +107,7 @@
 #pragma mark - Number
 
 // 字符串转NSNumber
-- (NSNumber *)fwNumberValue;
+- (nullable NSNumber *)fwNumberValue;
 
 #pragma mark - Static
 
@@ -127,3 +129,5 @@
 - (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize lineBreak:(NSLineBreakMode)breakMode;
 
 @end
+
+NS_ASSUME_NONNULL_END

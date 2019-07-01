@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSAttributedString+FWFramework
  */
@@ -19,12 +21,12 @@
 
 // 快速创建NSAttributedString，自定义字体
 + (instancetype)fwAttributedString:(NSString *)string
-                          withFont:(UIFont *)font;
+                          withFont:(nullable UIFont *)font;
 
 // 快速创建NSAttributedString，自定义字体和颜色
 + (instancetype)fwAttributedString:(NSString *)string
-                          withFont:(UIFont *)font
-                         textColor:(UIColor *)textColor;
+                          withFont:(nullable UIFont *)font
+                         textColor:(nullable UIColor *)textColor;
 
 @end
 
@@ -46,3 +48,5 @@
                                  textAlignment:(NSTextAlignment)textAlignment;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -78,4 +78,20 @@
     return [wrapper copy];
 }
 
++ (void)fwSyncPerformAsyncBlock:(void (^)(void (^)(void)))asyncBlock
+{
+    // 使用信号量阻塞当前线程，等待block执行结果
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    void (^completionHandler)(void) = ^{
+        dispatch_semaphore_signal(semaphore);
+    };
+    asyncBlock(completionHandler);
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)fwSyncPerformAsyncBlock:(void (^)(void (^)(void)))asyncBlock
+{
+    [NSObject fwSyncPerformAsyncBlock:asyncBlock];
+}
+
 @end

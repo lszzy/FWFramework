@@ -9,21 +9,23 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 安全数字，不为nil
  
- @param x 参数
+ @param value 参数
+ @return 数字
  */
-#define FWSafeNumber( x ) \
-    (x ? x : @0)
+FOUNDATION_EXPORT NSNumber * FWSafeNumber(_Nullable id value);
 
 /*!
  @brief 安全字符串，不为nil
  
- @param x 参数
+ @param value 参数
+ @return 字符串
  */
-#define FWSafeString( x ) \
-    (x ? [NSString stringWithFormat:@"%@", x] : @"")
+FOUNDATION_EXPORT NSString * FWSafeString(_Nullable id value);
 
 #pragma mark - NSObject+FWSafeType
 
@@ -79,63 +81,63 @@
  
  @return NSNumber
  */
-- (NSNumber *)fwAsNSNumber;
+- (nullable NSNumber *)fwAsNSNumber;
 
 /*!
  @brief 检测并转换为NSString
  
  @return NSString
  */
-- (NSString *)fwAsNSString;
+- (nullable NSString *)fwAsNSString;
 
 /*!
  @brief 检测并转换为NSDate
  
  @return NSDate
  */
-- (NSDate *)fwAsNSDate;
+- (nullable NSDate *)fwAsNSDate;
 
 /*!
  @brief 检测并转换为NSData
  
  @return NSData
  */
-- (NSData *)fwAsNSData;
+- (nullable NSData *)fwAsNSData;
 
 /*!
  @brief 检测并转换为NSArray
  
  @return NSArray
  */
-- (NSArray *)fwAsNSArray;
+- (nullable NSArray *)fwAsNSArray;
 
 /*!
  @brief 检测并转换为NSMutableArray
  
  @return NSMutableArray
  */
-- (NSMutableArray *)fwAsNSMutableArray;
+- (nullable NSMutableArray *)fwAsNSMutableArray;
 
 /*!
  @brief 检测并转换为NSDictionary
  
  @return NSDictionary
  */
-- (NSDictionary *)fwAsNSDictionary;
+- (nullable NSDictionary *)fwAsNSDictionary;
 
 /*!
  @brief 检测并转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-- (NSMutableDictionary *)fwAsNSMutableDictionary;
+- (nullable NSMutableDictionary *)fwAsNSMutableDictionary;
 
 /*!
  @brief 检测并转换为指定Class对象
  
  @return 指定Class对象
  */
-- (id)fwAsClass:(Class)clazz;
+- (nullable id)fwAsClass:(Class)clazz;
 
 @end
 
@@ -152,7 +154,7 @@
  @param from 起始位置
  @return 子串
  */
-- (NSString *)fwSubstringFromIndex:(NSInteger)from;
+- (nullable NSString *)fwSubstringFromIndex:(NSInteger)from;
 
 /*!
  @brief 截取子串到指定位置
@@ -160,7 +162,7 @@
  @param to 结束位置
  @return 子串
  */
-- (NSString *)fwSubstringToIndex:(NSInteger)to;
+- (nullable NSString *)fwSubstringToIndex:(NSInteger)to;
 
 /*!
  @brief 截取指定范围的子串
@@ -168,7 +170,7 @@
  @param range 指定范围
  @return 子串
  */
-- (NSString *)fwSubstringWithRange:(NSRange)range;
+- (nullable NSString *)fwSubstringWithRange:(NSRange)range;
 
 @end
 
@@ -185,7 +187,7 @@
  @param index 索引
  @return 对象
  */
-- (ObjectType)fwObjectAtIndex:(NSInteger)index;
+- (nullable ObjectType)fwObjectAtIndex:(NSInteger)index;
 
 /*!
  @brief 安全获取子数组
@@ -193,7 +195,7 @@
  @param range 范围
  @return 对象数组
  */
-- (NSArray *)fwSubarrayWithRange:(NSRange)range;
+- (nullable NSArray *)fwSubarrayWithRange:(NSRange)range;
 
 @end
 
@@ -209,7 +211,7 @@
  
  @param object 对象
  */
-- (void)fwAddObject:(ObjectType)object;
+- (void)fwAddObject:(nullable ObjectType)object;
 
 /*!
  @brief 安全移除指定索引对象
@@ -224,7 +226,7 @@
  @param object 对象
  @param index 索引
  */
-- (void)fwInsertObject:(ObjectType)object atIndex:(NSInteger)index;
+- (void)fwInsertObject:(nullable ObjectType)object atIndex:(NSInteger)index;
 
 /*!
  @brief 安全替换对象到指定位置
@@ -232,7 +234,7 @@
  @param index 索引
  @param object 对象
  */
-- (void)fwReplaceObjectAtIndex:(NSInteger)index withObject:(ObjectType)object;
+- (void)fwReplaceObjectAtIndex:(NSInteger)index withObject:(nullable ObjectType)object;
 
 /*!
  @brief 安全移除子数组
@@ -247,7 +249,7 @@
  @param objects 要插入的数组
  @param index 索引
  */
-- (void)fwInsertObjects:(NSArray *)objects atIndex:(NSInteger)index;
+- (void)fwInsertObjects:(nullable NSArray *)objects atIndex:(NSInteger)index;
 
 @end
 
@@ -264,7 +266,7 @@
  @param key 键名
  @return 键值
  */
-- (ObjectType)fwObjectForKey:(KeyType)key;
+- (nullable ObjectType)fwObjectForKey:(nullable KeyType)key;
 
 @end
 
@@ -280,7 +282,7 @@
  
  @param key 键名
  */
-- (void)fwRemoveObjectForKey:(KeyType)key;
+- (void)fwRemoveObjectForKey:(nullable KeyType)key;
 
 /*!
  @brief 安全设置对象（过滤NSNull）
@@ -288,6 +290,8 @@
  @param object 键值
  @param key 键名
  */
-- (void)fwSetObject:(ObjectType)object forKey:(KeyType <NSCopying>)key;
+- (void)fwSetObject:(nullable ObjectType)object forKey:(nullable KeyType <NSCopying>)key;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSDictionary分类
  */
@@ -37,3 +39,5 @@
 - (NSDictionary *)fwRemoveNullRecursive:(BOOL)recursive;
 
 @end
+
+NS_ASSUME_NONNULL_END

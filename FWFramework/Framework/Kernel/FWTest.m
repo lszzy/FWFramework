@@ -8,60 +8,71 @@
  */
 
 #import "FWTest.h"
-#import "FWPlugin.h"
 #import "FWLog.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
-#if FW_TEST
+#ifdef DEBUG
 
 #pragma mark - FWTestCase
+
+@interface FWTestCase ()
+
+@property (nonatomic, strong) NSError *assertError;
+
+@end
 
 @implementation FWTestCase
 
 - (void)setUp
 {
+    // 执行初始化
 }
 
 - (void)tearDown
 {
+    // 执行清理
 }
 
-- (void)assert:(BOOL)value
+- (void)assertTrue:(BOOL)value expression:(NSString *)expression file:(NSString *)file line:(NSInteger)line
 {
-    [self assert:value userInfo:nil];
-}
-
-- (void)assert:(BOOL)value expr:(const char *)expr file:(const char *)file line:(int)line
-{
-    [self assert:value userInfo:@{@"expr":@(expr), @"file":[@(file) lastPathComponent], @"line":@(line)}];
-}
-
-- (void)assert:(BOOL)value userInfo:(NSDictionary *)userInfo
-{
-    if (!value) {
-        @throw [NSException exceptionWithName:@"FWFramework" reason:@"Assertion failed" userInfo:userInfo];
-    }
+    // 断言成功
+    if (value) return;
+    
+    // 断言失败
+    NSDictionary *userInfo = @{
+                               @"expression": (expression ?: @""),
+                               @"file": (file ? file.lastPathComponent : @""),
+                               @"line": @(line),
+                               };
+    self.assertError = [NSError errorWithDomain:@"FWFramework" code:0 userInfo:userInfo];
 }
 
 @end
 
 #pragma mark - FWUnitTest
 
-@interface FWUnitTest ()
+@interface FWUnitTest : NSObject
 
 @property (nonatomic, strong) NSMutableArray<Class> *testCases;
 @property (nonatomic, strong) NSString *testLogs;
-
 @property (nonatomic, strong) id testRunner;
 
 @end
 
 @implementation FWUnitTest
 
-#pragma mark - Lifecycle
+#pragma mark - Static
 
 + (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self runTests];
+    });
+}
+
++ (void)runTests
 {
     // 监听应用启动通知，自动执行框架单元测试
     [FWUnitTest sharedInstance].testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
@@ -72,138 +83,47 @@
             [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
             [FWUnitTest sharedInstance].testRunner = nil;
             
-            // 执行框架单元测试
+            // 自动添加测试用例
+            NSArray<Class> *testSuite = [self testSuite];
+            for (Class classType in testSuite) {
+                [[FWUnitTest sharedInstance].testCases addObject:classType];
+            }
+            
+            // 执行框架单元测试并打印测试结果
             if ([FWUnitTest sharedInstance].testCases.count > 0) {
-                [[FWUnitTest sharedInstance] run];
-                
-                // 打印测试结果及插件
+                [[FWUnitTest sharedInstance] runTests];
                 FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
-                FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
             }
         });
     }];
 }
 
-+ (instancetype)sharedInstance
++ (NSArray<Class> *)testSuite
 {
-    static FWUnitTest *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWUnitTest alloc] init];
-    });
-    return instance;
-}
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        self.testCases = [NSMutableArray array];
-    }
-    return self;
-}
-
-#pragma mark - Public
-
-- (void)addTestCase:(Class)testCase
-{
-    if (![testCase isSubclassOfClass:[FWTestCase class]]) {
-        return;
+    NSMutableArray *testCases = [[NSMutableArray alloc] init];
+    
+    Class superClass = [FWTestCase class];
+    unsigned int classesCount = 0;
+    Class *classes = objc_copyClassList(&classesCount);
+    for (unsigned int i = 0; i < classesCount; ++i) {
+        Class classType = classes[i];
+        if (class_isMetaClass(classType)) continue;
+        if (class_getSuperclass(classType) == nil) continue;
+        if (classType == superClass) continue;
+        if (![classType isSubclassOfClass:superClass]) continue;
+        
+        [testCases addObject:classType];
     }
     
-    if (![self.testCases containsObject:testCase]) {
-        [self.testCases addObject:testCase];
-    }
+    [testCases sortUsingComparator:^NSComparisonResult(Class obj1, Class obj2) {
+        return [NSStringFromClass(obj1) compare:NSStringFromClass(obj2)];
+    }];
+    free(classes);
+    
+    return testCases;
 }
 
-- (void)run
-{
-    // 取出测试用例
-    NSArray *testCases = [self.testCases copy];
-    [self.testCases removeAllObjects];
-    
-    // 定义统计数据
-    NSUInteger failedCount = 0;
-    NSUInteger succeedCount = 0;
-    NSMutableString *testLog = [[NSMutableString alloc] init];
-    NSTimeInterval beginTime = [[NSDate date] timeIntervalSince1970];
-    
-    // 依次执行测试
-    for (Class classType in testCases) {
-        NSTimeInterval time1 = [[NSDate date] timeIntervalSince1970];
-        
-        NSString *className = NSStringFromClass(classType);
-        NSString *formatClass = [className stringByReplacingOccurrencesOfString:@"FWTestCase____" withString:@""];
-        formatClass = [formatClass stringByReplacingOccurrencesOfString:@"____" withString:@"."];
-        NSString *formatMethod = nil;
-        NSString *formatError = nil;
-        
-        NSArray *selectorNames = [self testMethods:classType];
-        BOOL testCasePassed = YES;
-        NSUInteger totalTestCount = selectorNames.count;
-        NSUInteger currentTestCount = 0;
-        
-        @try {
-            if (selectorNames && selectorNames.count > 0) {
-                // 执行初始化，同一个对象
-                FWTestCase *testCase = [[classType alloc] init];
-                for (NSString *selectorName in selectorNames) {
-                    currentTestCount++;
-                    formatMethod = [selectorName stringByReplacingOccurrencesOfString:@"test" withString:@""];
-                    SEL selector = NSSelectorFromString(selectorName);
-                    if (selector && [testCase respondsToSelector:selector]) {
-                        // 执行setUp
-                        [testCase setUp];
-                        
-                        // 执行test
-                        NSMethodSignature *signature = [testCase methodSignatureForSelector:selector];
-                        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-                        [invocation setTarget:testCase];
-                        [invocation setSelector:selector];
-                        [invocation invoke];
-                        
-                        // 执行tearDown
-                        [testCase tearDown];
-                    }
-                }
-            }
-        } @catch (NSException *e) {
-            NSDictionary *userInfo = e.userInfo && [e.userInfo objectForKey:@"expr"] ? e.userInfo : nil;
-            if (userInfo) {
-                formatError = [NSString stringWithFormat:@"- ASSERT ( %@ ); ( %@ - %@ #%@ )", [userInfo objectForKey:@"expr"], formatMethod, [userInfo objectForKey:@"file"], [userInfo objectForKey:@"line"]];
-            } else {
-                formatError = [NSString stringWithFormat:@"- %@ ( %@ )", e.reason, formatMethod];
-            }
-            testCasePassed = NO;
-        }
-        
-        NSTimeInterval time2 = [[NSDate date] timeIntervalSince1970];
-        NSTimeInterval time = time2 - time1;
-        NSUInteger succeedTestCount = testCasePassed ? currentTestCount : (currentTestCount - 1);
-        float classPassRate = totalTestCount > 0 ? (succeedTestCount * 1.0f) / (totalTestCount * 1.0f) * 100.0f : 100.0f;
-        
-        if ( testCasePassed ) {
-            succeedCount += 1;
-            [testLog appendFormat:@"[  OK  ] : %@ ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
-        } else {
-            failedCount += 1;
-            [testLog appendFormat:@"[ FAIL ] : %@ ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
-            [testLog appendFormat:@"    %@\n", formatError];
-        }
-    }
-    
-    // 计算统计数据
-    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval totalTime = endTime - beginTime;
-    NSUInteger totalCount = succeedCount + failedCount;
-    float passRate = totalCount > 0 ? (succeedCount * 1.0f) / (totalCount * 1.0f) * 100.0f : 100.0f;
-    
-    // 生成测试日志
-    NSString *totalLog = [NSString stringWithFormat:@"  TOTAL  : [ %@ ] ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", failedCount < 1 ? @"OK" : @"FAIL", (unsigned long)succeedCount, (unsigned long)totalCount, passRate, totalTime];
-    self.testLogs = [NSString stringWithFormat:@"\n========== TEST  ==========\n%@%@========== TEST  ==========", testLog, totalCount > 0 ? totalLog : @""];
-}
-
-- (NSArray *)testMethods:(Class)clazz
++ (NSArray *)testMethods:(Class)clazz
 {
     NSMutableArray *methodNames = [NSMutableArray array];
     
@@ -237,11 +157,164 @@
     return methodNames;
 }
 
-#pragma mark - NSObject
+#pragma mark - Lifecycle
+
++ (instancetype)sharedInstance
+{
+    static FWUnitTest *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWUnitTest alloc] init];
+    });
+    return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.testCases = [NSMutableArray array];
+    }
+    return self;
+}
 
 - (NSString *)debugDescription
 {
     return self.testLogs;
+}
+
+- (void)runTests
+{
+    // 取出测试用例
+    NSArray *testCases = [self.testCases copy];
+    [self.testCases removeAllObjects];
+    
+    // 定义统计数据
+    NSUInteger failedCount = 0;
+    NSUInteger succeedCount = 0;
+    NSMutableString *testLog = [[NSMutableString alloc] init];
+    NSTimeInterval beginTime = [[NSDate date] timeIntervalSince1970];
+    
+    // 依次执行测试
+    for (Class classType in testCases) {
+        NSTimeInterval time1 = [[NSDate date] timeIntervalSince1970];
+        
+        NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
+        formatClass = [formatClass stringByReplacingOccurrencesOfString:@"_" withString:@"."];
+        NSString *formatMethod = nil;
+        NSString *formatError = nil;
+        
+        NSArray *selectorNames = [self.class testMethods:classType];
+        BOOL testCasePassed = YES;
+        NSUInteger totalTestCount = selectorNames.count;
+        NSUInteger currentTestCount = 0;
+        
+        NSError *assertError = nil;
+        if (selectorNames && selectorNames.count > 0) {
+            // 执行初始化，同一个对象
+            FWTestCase *testCase = [[classType alloc] init];
+            for (NSString *selectorName in selectorNames) {
+                currentTestCount++;
+                formatMethod = selectorName;
+                SEL selector = NSSelectorFromString(selectorName);
+                if (selector && [testCase respondsToSelector:selector]) {
+                    // 执行setUp
+                    [testCase setUp];
+                    
+                    // 执行test
+                    NSMethodSignature *signature = [testCase methodSignatureForSelector:selector];
+                    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+                    [invocation setTarget:testCase];
+                    [invocation setSelector:selector];
+                    [invocation invoke];
+                    
+                    // 执行tearDown
+                    [testCase tearDown];
+                    
+                    // 如果失败，当前类测试结束
+                    assertError = testCase.assertError;
+                    if (assertError) {
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (assertError) {
+            NSDictionary *userInfo = assertError.userInfo;
+            formatError = [NSString stringWithFormat:@"- assertTrue ( %@ ); ( %@ - %@ #%@ )", [userInfo[@"expression"] length] > 0 ? userInfo[@"expression"] : @"false", formatMethod, userInfo[@"file"], userInfo[@"line"]];
+            testCasePassed = NO;
+        }
+        
+        NSTimeInterval time2 = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval time = time2 - time1;
+        NSUInteger succeedTestCount = testCasePassed ? currentTestCount : (currentTestCount - 1);
+        float classPassRate = totalTestCount > 0 ? (succeedTestCount * 1.0f) / (totalTestCount * 1.0f) * 100.0f : 100.0f;
+        
+        if ( testCasePassed ) {
+            succeedCount += 1;
+            [testLog appendFormat:@"[  OK  ] : %@ ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
+        } else {
+            failedCount += 1;
+            [testLog appendFormat:@"[ FAIL ] : %@ ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
+            [testLog appendFormat:@"    %@\n", formatError];
+        }
+    }
+    
+    // 计算统计数据
+    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval totalTime = endTime - beginTime;
+    NSUInteger totalCount = succeedCount + failedCount;
+    float passRate = totalCount > 0 ? (succeedCount * 1.0f) / (totalCount * 1.0f) * 100.0f : 100.0f;
+    
+    // 生成测试日志
+    NSString *totalLog = [NSString stringWithFormat:@"  TOTAL  : [ %@ ] ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", failedCount < 1 ? @"OK" : @"FAIL", (unsigned long)succeedCount, (unsigned long)totalCount, passRate, totalTime];
+    self.testLogs = [NSString stringWithFormat:@"\n========== TEST  ==========\n%@%@========== TEST  ==========", testLog, totalCount > 0 ? totalLog : @""];
+}
+
+@end
+
+#pragma mark - Test
+
+#import "NSObject+FWBlock.h"
+
+@interface FWTestCase_FWTest_Objc : FWTestCase
+
+@property (nonatomic, assign) NSInteger value;
+
+@end
+
+@implementation FWTestCase_FWTest_Objc
+
+- (void)setUp
+{
+    // 重置资源
+    self.value = 0;
+}
+
+- (void)tearDown
+{
+    // 释放资源
+}
+
+- (void)testSync
+{
+    FWAssertTrue(self.value++ == 0);
+    FWAssertTrue(++self.value == 2);
+}
+
+- (void)testAsync
+{
+    __block NSInteger result = 0;
+    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
+        dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
+        dispatch_async(queue, ^{
+            sleep(1);
+            result = 1;
+            completionHandler();
+        });
+    }];
+    FWAssertTrue(self.value + result == 1);
 }
 
 @end

@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief NSString+FWEncrypt
  */
@@ -28,7 +30,7 @@
  *
  *  @return md5字符串
  */
-- (NSString *)fwMd5File;
+- (nullable NSString *)fwMd5File;
 
 @end
 
@@ -44,7 +46,7 @@
  *
  *  @return data
  */
-- (NSData *)fwAESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)fwAESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
 /**
  *  @brief  利用AES解密据
  *
@@ -53,7 +55,7 @@
  *
  *  @return 解密后数据
  */
-- (NSData *)fwAESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)fwAESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
 /**
  *  利用3DES加密数据
@@ -63,7 +65,7 @@
  *
  *  @return data
  */
-- (NSData *)fw3DESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)fw3DESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
 /**
  *  @brief   利用3DES解密数据
  *
@@ -72,6 +74,8 @@
  *
  *  @return 解密后数据
  */
-- (NSData *)fw3DESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)fw3DESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
 @end
+
+NS_ASSUME_NONNULL_END

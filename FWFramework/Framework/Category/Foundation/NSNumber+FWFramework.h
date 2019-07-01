@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Macro
 
 // 确保值在固定范围之内
@@ -36,3 +38,5 @@
 - (NSNumber *)fwFloorNumber:(NSUInteger)digit;
 
 @end
+
+NS_ASSUME_NONNULL_END
