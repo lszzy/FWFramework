@@ -292,18 +292,18 @@ public class FWLayoutChain {
 // MARK: - UIView+FWLayoutChain
 extension UIView {
     /// 关联对象Key
-    private struct AssociatedKeys {
+    private struct FWLayoutChainAssociatedKeys {
         static var layoutChainKey = "layoutChainKey"
     }
     
     /// 链式布局对象
     public var fwLayoutChain: FWLayoutChain {
-        var layoutChain = objc_getAssociatedObject(self, &AssociatedKeys.layoutChainKey)
+        var layoutChain = objc_getAssociatedObject(self, &FWLayoutChainAssociatedKeys.layoutChainKey)
         if layoutChain == nil {
             let tempChain = FWLayoutChain()
             tempChain.view = self
             layoutChain = tempChain
-            objc_setAssociatedObject(self, &AssociatedKeys.layoutChainKey, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &FWLayoutChainAssociatedKeys.layoutChainKey, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return layoutChain as! FWLayoutChain
     }
