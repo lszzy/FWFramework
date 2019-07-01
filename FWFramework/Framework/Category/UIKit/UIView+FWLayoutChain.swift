@@ -47,32 +47,32 @@ public class FWLayoutChain {
     }
     
     @discardableResult
-    public func center(toView view: Any) -> FWLayoutChain {
+    public func centerToView(_ view: Any) -> FWLayoutChain {
         self.view?.fwAlignAxis(.centerX, toView: view)
         self.view?.fwAlignAxis(.centerY, toView: view)
         return self
     }
     
     @discardableResult
-    public func centerX(toView view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+    public func centerXToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
         self.view?.fwAlignAxis(.centerX, toView: view, withOffset: offset)
         return self
     }
     
     @discardableResult
-    public func centerY(toView view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+    public func centerYToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
         self.view?.fwAlignAxis(.centerY, toView: view, withOffset:offset)
         return self
     }
     
     @discardableResult
-    public func centerX(toView view: Any, withMultiplier multiplier: CGFloat) -> FWLayoutChain {
+    public func centerXToView(_ view: Any, withMultiplier multiplier: CGFloat) -> FWLayoutChain {
         self.view?.fwAlignAxis(.centerX, toView: view, withMultiplier: multiplier)
         return self
     }
     
     @discardableResult
-    public func centerY(toView view: Any, withMultiplier multiplier: CGFloat) -> FWLayoutChain {
+    public func centerYToView(_ view: Any, withMultiplier multiplier: CGFloat) -> FWLayoutChain {
         self.view?.fwAlignAxis(.centerY, toView: view, withMultiplier: multiplier)
         return self
     }
@@ -119,69 +119,69 @@ public class FWLayoutChain {
     }
     
     @discardableResult
-    public func top(toView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func topToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.top, toEdge: .top, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func bottom(toView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func bottomToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.bottom, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func left(toView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func leftToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.left, toEdge: .left, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func right(toView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func rightToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.right, toEdge: .right, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func top(toBottomOfView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func topToBottomOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.top, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func bottom(toTopOfView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func bottomToTopOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.bottom, toEdge: .top, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func left(toRightOfView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func leftToRightOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.left, toEdge: .right, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func right(toLeftOfView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func rightToLeftOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwPinEdge(.right, toEdge: .left, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     // MARK: - SafeArea
     @discardableResult
-    public func centerToSafeArea() -> FWLayoutChain {
-        self.view?.fwAlignCenterToSuperviewSafeArea()
+    public func centerToSafeArea(_ offset: CGPoint = CGPoint.zero) -> FWLayoutChain {
+        self.view?.fwAlignCenterToSuperviewSafeArea(withOffset: offset)
         return self
     }
     
     @discardableResult
-    public func centerXToSafeArea() -> FWLayoutChain {
-        self.view?.fwAlignAxis(toSuperviewSafeArea: .centerX)
+    public func centerXToSafeArea(_ offset: CGFloat = 0) -> FWLayoutChain {
+        self.view?.fwAlignAxis(toSuperviewSafeArea: .centerX, withOffset: offset)
         return self
     }
     
     @discardableResult
-    public func centerYToSafeArea() -> FWLayoutChain {
-        self.view?.fwAlignAxis(toSuperviewSafeArea: .centerY)
+    public func centerYToSafeArea(_ offset: CGFloat = 0) -> FWLayoutChain {
+        self.view?.fwAlignAxis(toSuperviewSafeArea: .centerY, withOffset: offset)
         return self
     }
     
@@ -245,32 +245,32 @@ public class FWLayoutChain {
     }
     
     @discardableResult
-    public func sizeToView(view: Any) -> FWLayoutChain {
+    public func sizeToView(_ view: Any) -> FWLayoutChain {
         self.view?.fwMatchDimension(.width, toDimension: .width, ofView: view)
         self.view?.fwMatchDimension(.height, toDimension: .height, ofView: view)
         return self
     }
     
     @discardableResult
-    public func widthToView(view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func widthToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwMatchDimension(.width, toDimension: .width, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func heightToView(view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func heightToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwMatchDimension(.height, toDimension: .height, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func widthToView(view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func widthToView(_ view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwMatchDimension(.width, toDimension: .width, ofView: view, withMultiplier: multiplier, relation: relation)
         return self
     }
     
     @discardableResult
-    public func heightToView(view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func heightToView(_ view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwMatchDimension(.height, toDimension: .height, ofView: view, withMultiplier: multiplier, relation: relation)
         return self
     }
