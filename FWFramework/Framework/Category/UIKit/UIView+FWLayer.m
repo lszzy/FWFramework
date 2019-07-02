@@ -226,4 +226,36 @@
     return gradientLayer;
 }
 
+#pragma mark - Dash
+
+- (CALayer *)fwAddDashLayer:(CGRect)rect
+                 lineLength:(CGFloat)lineLength
+                lineSpacing:(CGFloat)lineSpacing
+                  lineColor:(UIColor *)lineColor
+{
+    CAShapeLayer *dashLayer = [CAShapeLayer layer];
+    dashLayer.frame = rect;
+    dashLayer.fillColor = [UIColor clearColor].CGColor;
+    dashLayer.strokeColor = lineColor.CGColor;
+    
+    // 自动根据尺寸计算虚线方向
+    BOOL isVertical = (lineLength + lineSpacing > rect.size.width) ? YES : NO;
+    dashLayer.lineWidth = isVertical ? CGRectGetWidth(rect) : CGRectGetHeight(rect);
+    dashLayer.lineJoin = kCALineJoinRound;
+    dashLayer.lineDashPattern = @[@(lineLength), @(lineSpacing)];
+    
+    // 设置虚线路径
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    if (isVertical) {
+        [path moveToPoint:CGPointMake(CGRectGetWidth(rect) / 2, 0)];
+        [path addLineToPoint:CGPointMake(CGRectGetWidth(rect) / 2, CGRectGetHeight(rect))];
+    } else {
+        [path moveToPoint:CGPointMake(0, CGRectGetHeight(rect) / 2)];
+        [path addLineToPoint:CGPointMake(CGRectGetWidth(rect), CGRectGetHeight(rect) / 2)];
+    }
+    dashLayer.path = path.CGPath;
+    [self.layer addSublayer:dashLayer];
+    return dashLayer;
+}
+
 @end
