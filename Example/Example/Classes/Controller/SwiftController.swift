@@ -9,7 +9,7 @@
 import UIKit
 
 // MARK: - SwiftController
-@objc class SwiftController: UIViewController {
+@objcMembers class SwiftController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,12 +29,12 @@ import UIKit
     }
     
     // MARK: - Action
-    @objc func onObjc() {
+    func onObjc() {
         let viewController = ObjcController()
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
-    @objc func onClose() {
+    func onClose() {
         self.fwClose(animated: true)
     }
 }
