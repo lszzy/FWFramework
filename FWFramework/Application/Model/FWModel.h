@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  数组类映射支持两种方式：
  *  1. 实现fwModelClassMapper方法，返回类映射字典。示例：@{@"books" : [Book class]}
  *  2. 声明Model类同名协议，同时定义数组属性时也声明协议。示例：NSArray<Book> *books
+ *  Swift数组类映射时，需返回AnyClass类型。示例：["books": Book.classForCoder()]
  */
 @protocol FWModel <NSObject>
 
@@ -48,10 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 属性映射，示例：@{@"name" : @"book_name", @"bookId" : [@"book_id", @"book.id"]}
 + (nullable NSDictionary<NSString *, id> *)fwModelPropertyMapper;
 
-// 类映射，示例：@{@"books" : [Book class], @"users" : @"User"}
+// 类映射(Swift需使用AnyClass类型)，示例：@{@"books" : [Book class], @"users" : @"User"}
 + (nullable NSDictionary<NSString *, id> *)fwModelClassMapper;
 
-// 自定义字典解析类
+// 自定义字典解析类(Swift需使用AnyClass类型)
 + (nullable Class)fwModelClassForDictionary:(NSDictionary *)dictionary;
 
 // 属性黑名单列表
