@@ -22,6 +22,7 @@
         
         [self testLayer];
         [self progressLayer];
+        [self dashLayer];
     }
     return self;
 }
@@ -88,6 +89,25 @@
     CAGradientLayer *rightLayer = [CAGradientLayer fwGradientLayer:CGRectMake(25, 0, 25, 50) colors:@[(id)[UIColor yellowColor].CGColor, (id)[UIColor blueColor].CGColor] locations:@[@0.33, @0.66] startPoint:CGPointMake(0, 0) endPoint:CGPointMake(0, 1)];
     [gradientLayer addSublayer:rightLayer];
     [self fwStrokeWithLayer:(CAShapeLayer *)gradientLayer.mask duration:2.0 completion:NULL];
+}
+
+- (void)dashLayer
+{
+    UIView *dashView = [[UIView alloc] initWithFrame:CGRectMake(20, 400, 50, 50)];
+    [self addSubview:dashView];
+    [dashView fwAddDashLayer:CGRectMake(0, 25, 50, 1) lineLength:5 lineSpacing:5 lineColor:[UIColor orangeColor]];
+    
+    dashView = [[UIView alloc] initWithFrame:CGRectMake(90, 400, 50, 50)];
+    [self addSubview:dashView];
+    [dashView fwAddDashLayer:CGRectMake(25, 0, 1, 50) lineLength:5 lineSpacing:5 lineColor:[UIColor orangeColor]];
+    
+    dashView = [[UIView alloc] initWithFrame:CGRectMake(160, 400, 50, 50)];
+    [self addSubview:dashView];
+    [dashView fwAddDashLayer:CGRectMake(12.5, 25, 25, 2) lineLength:5 lineSpacing:5 lineColor:[UIColor orangeColor]];
+    
+    dashView = [[UIView alloc] initWithFrame:CGRectMake(230, 400, 50, 50)];
+    [self addSubview:dashView];
+    [dashView fwAddDashLayer:CGRectMake(25, 12.5, 2, 25) lineLength:5 lineSpacing:5 lineColor:[UIColor orangeColor]];
 }
 
 - (void)drawRect:(CGRect)rect

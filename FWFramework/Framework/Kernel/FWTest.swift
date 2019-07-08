@@ -12,9 +12,9 @@ import Foundation
 #if DEBUG
 
 // MARK: - FWTestCase
+
 /// FWTestCase扩展，注意测试方法需标记@objc，让OC可以访问
 extension FWTestCase {
-    
     /// 断言方法
     ///
     /// - Parameters:
@@ -24,32 +24,32 @@ extension FWTestCase {
     public func assertTrue(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) {
         assertTrue(value, expression: expression, file: file, line: line)
     }
-    
 }
 
 // MARK: - Test
+
 class FWTestCase_FWTest_Swift: FWTestCase {
     private var value: Int = 0
-    
+
     override func setUp() {
         // 重置资源
         value = 0
     }
-    
+
     override func tearDown() {
         // 释放资源
     }
-    
+
     @objc func testSync() {
-        value += 1;
-        self.assertTrue(value == 1)
-        value += 1;
-        self.assertTrue(value == 2)
+        value += 1
+        assertTrue(value == 1)
+        value += 1
+        assertTrue(value == 2)
     }
-    
+
     @objc func testAsync() {
         var result = 0
-        fwSyncPerformAsyncBlock { (completionHanlder) in
+        fwSyncPerformAsyncBlock { completionHanlder in
             DispatchQueue(label: "FWTestCase_FWTest_Swift").async {
                 sleep(1)
                 result = 1

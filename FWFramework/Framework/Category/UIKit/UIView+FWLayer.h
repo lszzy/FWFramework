@@ -127,4 +127,20 @@
                   strokeColor:(UIColor *)strokeColor
                   strokeWidth:(CGFloat)strokeWidth;
 
+#pragma mark - Dash
+
+/*!
+ @brief 添加虚线Layer
+ 
+ @param rect 虚线区域，从中心绘制
+ @param lineLength 虚线的宽度
+ @param lineSpacing 虚线的间距
+ @param lineColor 虚线的颜色
+ @return 虚线Layer
+ */
+- (CALayer *)fwAddDashLayer:(CGRect)rect
+                 lineLength:(CGFloat)lineLength
+                lineSpacing:(CGFloat)lineSpacing
+                  lineColor:(UIColor *)lineColor;
+
 @end
