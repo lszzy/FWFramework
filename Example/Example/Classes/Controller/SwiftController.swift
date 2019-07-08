@@ -9,32 +9,35 @@
 import UIKit
 
 // MARK: - SwiftController
+
 @objcMembers class SwiftController: UIViewController {
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // FIXME: hotfix
-        self.navigationItem.title = String(describing: type(of: self))
-        self.edgesForExtendedLayout = []
-        self.view.backgroundColor = UIColor.white
-        
+        navigationItem.title = String(describing: type(of: self))
+        edgesForExtendedLayout = []
+        view.backgroundColor = UIColor.white
+
         // TODO: feature
         let objcButton = UIButton(type: .system)
         objcButton.setTitle("ObjcController", for: .normal)
         objcButton.addTarget(self, action: #selector(onObjc), for: .touchUpInside)
-        self.view.addSubview(objcButton)
-        objcButton.fwLayoutChain.top(20).size(CGSize(width: 150, height: 30)).centerX();
-        self.view.fwAddTapGesture(withTarget: self, action: #selector(onClose))
+        view.addSubview(objcButton)
+        objcButton.fwLayoutChain.top(20).size(CGSize(width: 150, height: 30)).centerX()
+        view.fwAddTapGesture(withTarget: self, action: #selector(onClose))
     }
-    
+
     // MARK: - Action
+
     func onObjc() {
         let viewController = ObjcController()
-        self.navigationController?.pushViewController(viewController, animated: true)
+        navigationController?.pushViewController(viewController, animated: true)
     }
-    
+
     func onClose() {
-        self.fwClose(animated: true)
+        fwClose(animated: true)
     }
 }
