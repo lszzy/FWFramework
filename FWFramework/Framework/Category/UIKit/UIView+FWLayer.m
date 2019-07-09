@@ -86,6 +86,7 @@
     CGContextSaveGState(ctx);
     
     CGContextSetLineWidth(ctx, strokeWidth);
+    CGContextSetLineCap(ctx, kCGLineCapRound);
     [strokeColor setStroke];
     CGContextAddPath(ctx, bezierPath.CGPath);
     CGContextStrokePath(ctx);
