@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIBezierPath (FWShape)
 
+#pragma mark - Square
+
 // 圆的形状，0~1，degree为起始角度，如-90度
 + (UIBezierPath *)fwShapeCircle:(CGRect)frame percent:(float)percent degree:(CGFloat)degree;
 
@@ -28,8 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 星星的形状
 + (UIBezierPath *)fwShapeStar:(CGRect)frame;
 
+#pragma mark - Polygon
+
 // 几颗星星的形状
-+ (UIBezierPath *)fwShapeStars:(NSUInteger)count frame:(CGRect)frame;
++ (UIBezierPath *)fwShapeStars:(NSUInteger)count frame:(CGRect)frame spacing:(CGFloat)spacing;
 
 @end
 

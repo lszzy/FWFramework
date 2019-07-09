@@ -173,8 +173,8 @@
     
     // 颜色渐变
     {
-        [self fwDrawGradient:CGRectMake(20, 190, 50, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionDown];
-        [self fwDrawGradient:CGRectMake(90, 190, 50, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionRight];
+        [self fwDrawLinearGradient:CGRectMake(20, 190, 50, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionDown];
+        [self fwDrawLinearGradient:CGRectMake(90, 190, 50, 50) colors:@[(id)[UIColor redColor].CGColor, (id)[UIColor blueColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionRight];
     
         UIColor *gradientColor = [UIColor fwGradientColorWithSize:CGSizeMake(1, 50) colors:@[(id)[UIColor blueColor].CGColor, (id)[UIColor redColor].CGColor] locations:NULL direction:UISwipeGestureRecognizerDirectionDown];
         UIView *gradientView = [[UIView alloc] initWithFrame:CGRectMake(160, 190, 50, 50)];
@@ -188,28 +188,26 @@
     
     // 形状
     {
-        CGContextSetLineWidth(context, 2);
-        [[UIColor orangeColor] setStroke];
         UIBezierPath *path = [UIBezierPath fwShapeHeart:CGRectMake(0, 0, 50, 50)];
         [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 20, 260)];
-        CGContextAddPath(context, path.CGPath);
-        CGContextStrokePath(context);
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
         
         path = [UIBezierPath fwShapeAvatar:CGRectMake(0, 0, 50, 50)];
         [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 90, 260)];
         CGContextAddPath(context, path.CGPath);
+        CGContextSetLineWidth(context, 2);
+        [[UIColor orangeColor] setStroke];
         CGContextStrokePath(context);
         [[UIColor orangeColor] setFill];
         CGContextAddPath(context, path.CGPath);
         CGContextFillPath(context);
         
         path = [UIBezierPath fwShapeStar:CGRectMake(0, 0, 50, 50)];
-        UIImage *image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:[UIColor orangeColor]];
+        UIImage *image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor greenColor] fillColor:[UIColor orangeColor]];
         [image drawInRect:CGRectMake(160, 260, 50, 50)];
         
-        path = [UIBezierPath fwShapeStars:2 frame:CGRectMake(0, 0, 50, 50)];
-        image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
-        [image drawInRect:CGRectMake(230, 260, 50, 50)];
+        path = [UIBezierPath fwShapeStars:5 frame:CGRectMake(230, 260, 120, 50) spacing:5];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     }
 }
 
