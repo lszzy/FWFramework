@@ -138,6 +138,7 @@ CGFloat FWDegreeWithRadian(CGFloat radian) {
     if (!context) return nil;
     
     CGContextSetLineWidth(context, strokeWidth);
+    CGContextSetLineCap(context, kCGLineCapRound);
     [strokeColor setStroke];
     CGContextAddPath(context, self.CGPath);
     CGContextStrokePath(context);
