@@ -75,6 +75,31 @@
     self.layer.rasterizationScale = [UIScreen mainScreen].scale;
 }
 
+#pragma mark - Path
+
+- (void)fwDrawPath:(CGRect)rect
+        bezierPath:(UIBezierPath *)bezierPath
+       strokeWidth:(CGFloat)strokeWidth
+       strokeColor:(UIColor *)strokeColor
+         fillColor:(UIColor *)fillColor
+{
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+    
+    CGContextSetLineWidth(ctx, strokeWidth);
+    [strokeColor setStroke];
+    CGContextAddPath(ctx, bezierPath.CGPath);
+    CGContextStrokePath(ctx);
+    
+    if (fillColor) {
+        [fillColor setFill];
+        CGContextAddPath(ctx, bezierPath.CGPath);
+        CGContextFillPath(ctx);
+    }
+    
+    CGContextRestoreGState(ctx);
+}
+
 #pragma mark - Gradient
 
 - (void)fwDrawGradient:(CGRect)rect
