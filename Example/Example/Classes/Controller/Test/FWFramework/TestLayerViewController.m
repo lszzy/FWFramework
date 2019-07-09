@@ -206,7 +206,12 @@
         UIImage *image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor greenColor] fillColor:[UIColor orangeColor]];
         [image drawInRect:CGRectMake(160, 260, 50, 50)];
         
-        path = [UIBezierPath fwShapeStars:5 frame:CGRectMake(230, 260, 120, 50) spacing:5];
+        path = [UIBezierPath fwShapeStars:5 frame:CGRectMake(230, 260, 120, 20) spacing:5];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeStars:3 frame:CGRectMake(230, 290, 70, 20) spacing:5];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:[UIColor orangeColor]];
+        path = [UIBezierPath fwShapeStars:2 frame:CGRectMake(305, 290, 45, 20) spacing:5];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     }
 }
