@@ -75,13 +75,12 @@
     self.layer.rasterizationScale = [UIScreen mainScreen].scale;
 }
 
-#pragma mark - Path
+#pragma mark - Bezier
 
-- (void)fwDrawPath:(CGRect)rect
-        bezierPath:(UIBezierPath *)bezierPath
-       strokeWidth:(CGFloat)strokeWidth
-       strokeColor:(UIColor *)strokeColor
-         fillColor:(UIColor *)fillColor
+- (void)fwDrawBezierPath:(UIBezierPath *)bezierPath
+             strokeWidth:(CGFloat)strokeWidth
+             strokeColor:(UIColor *)strokeColor
+               fillColor:(UIColor *)fillColor
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
@@ -102,22 +101,22 @@
 
 #pragma mark - Gradient
 
-- (void)fwDrawGradient:(CGRect)rect
-                colors:(NSArray *)colors
-             locations:(const CGFloat *)locations
-             direction:(UISwipeGestureRecognizerDirection)direction
+- (void)fwDrawLinearGradient:(CGRect)rect
+                      colors:(NSArray *)colors
+                   locations:(const CGFloat *)locations
+                   direction:(UISwipeGestureRecognizerDirection)direction
 {
     NSArray<NSValue *> *linePoints = [UIBezierPath fwLinePointsWithRect:rect direction:direction];
     CGPoint startPoint = [linePoints.firstObject CGPointValue];
     CGPoint endPoint = [linePoints.lastObject CGPointValue];
-    [self fwDrawGradient:rect colors:colors locations:locations startPoint:startPoint endPoint:endPoint];
+    [self fwDrawLinearGradient:rect colors:colors locations:locations startPoint:startPoint endPoint:endPoint];
 }
 
-- (void)fwDrawGradient:(CGRect)rect
-                colors:(NSArray *)colors
-             locations:(const CGFloat *)locations
-            startPoint:(CGPoint)startPoint
-              endPoint:(CGPoint)endPoint
+- (void)fwDrawLinearGradient:(CGRect)rect
+                      colors:(NSArray *)colors
+                   locations:(const CGFloat *)locations
+                  startPoint:(CGPoint)startPoint
+                    endPoint:(CGPoint)endPoint
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);

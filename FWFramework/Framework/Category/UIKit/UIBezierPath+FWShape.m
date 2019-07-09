@@ -11,10 +11,12 @@
 
 @implementation UIBezierPath (FWShape)
 
+#pragma mark - Square
+
 + (CGRect)fwInnerSquareFrame:(CGRect)frame;
 {
     CGFloat a = MIN(frame.size.width, frame.size.height);
-    return CGRectMake(frame.size.width / 2 - a / 2, frame.size.height / 2 - a / 2, a, a);
+    return CGRectMake(frame.origin.x + frame.size.width / 2 - a / 2, frame.origin.y + frame.size.height / 2 - a / 2, a, a);
 }
 
 + (UIBezierPath *)fwShapeCircle:(CGRect)aFrame percent:(float)percent degree:(CGFloat)degree
@@ -113,15 +115,17 @@
     return bezierPath;
 }
 
-+ (UIBezierPath *)fwShapeStars:(NSUInteger)count frame:(CGRect)aFrame
+#pragma mark - Polygon
+
++ (UIBezierPath *)fwShapeStars:(NSUInteger)count frame:(CGRect)aFrame spacing:(CGFloat)spacing
 {
-    CGFloat w = aFrame.size.width / count;
-    CGRect babyFrame = CGRectMake(0, 0, w, aFrame.size.height);
+    CGFloat width = (aFrame.size.width - spacing * (count - 1)) / count;
+    CGRect babyFrame = CGRectMake(aFrame.origin.x, aFrame.origin.y, width, aFrame.size.height);
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     
     for (int i = 0; i < count; i++) {
         UIBezierPath *startPath = [UIBezierPath fwShapeStar:babyFrame];
-        [startPath applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, i * w, 0)];
+        [startPath applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, i * (width + spacing), 0)];
         [bezierPath appendPath:startPath];
     }
     return bezierPath;
