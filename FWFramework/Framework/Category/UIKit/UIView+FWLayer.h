@@ -56,6 +56,23 @@
                   offset:(CGSize)offset
                   radius:(CGFloat)radius;
 
+#pragma mark - Path
+
+/*!
+ @brief 绘制形状路径，需要在drawRect中调用
+ 
+ @param rect 绘制区域
+ @param bezierPath 绘制路径
+ @param strokeWidth 绘制宽度
+ @param strokeColor 绘制颜色
+ @param fillColor 填充颜色
+ */
+- (void)fwDrawPath:(CGRect)rect
+        bezierPath:(UIBezierPath *)bezierPath
+       strokeWidth:(CGFloat)strokeWidth
+       strokeColor:(UIColor *)strokeColor
+         fillColor:(UIColor *)fillColor;
+
 #pragma mark - Gradient
 
 /*!

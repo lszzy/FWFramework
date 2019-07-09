@@ -8,6 +8,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "UIBezierPath+FWShape.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 // 将角度(0~360)转换为弧度，周长为2*M_PI*r
 FOUNDATION_EXPORT CGFloat FWRadianWithDegree(CGFloat degree);
@@ -45,27 +48,18 @@ FOUNDATION_EXPORT CGFloat FWDegreeWithRadian(CGFloat radian);
 
 #pragma mark - Shape
 
-// 圆的形状，0~1，degree为起始角度，如-90度
-+ (UIBezierPath *)fwShapeCircle:(CGRect)frame percent:(float)percent degree:(CGFloat)degree;
-
-// 心的形状
-+ (UIBezierPath *)fwShapeHeart:(CGRect)frame;
-
-// 头像的形状
-+ (UIBezierPath *)fwShapeAvatar:(CGRect)frame;
-
-// 星星的形状
-+ (UIBezierPath *)fwShapeStar:(CGRect)frame;
-
-// 几颗星星的形状
-+ (UIBezierPath *)fwShapeStars:(NSUInteger)count frame:(CGRect)frame;
-
-#pragma mark - Image
-
 // 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-- (UIImage *)fwShapeImage:(CGSize)size
-              strokeWidth:(CGFloat)strokeWidth
-              strokeColor:(UIColor *)strokeColor
-                fillColor:(UIColor *)fillColor;
+- (nullable UIImage *)fwShapeImage:(CGSize)size
+                       strokeWidth:(CGFloat)strokeWidth
+                       strokeColor:(UIColor *)strokeColor
+                         fillColor:(nullable UIColor *)fillColor;
+
+// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
+- (CAShapeLayer *)fwShapeLayer:(CGRect)rect
+                   strokeWidth:(CGFloat)strokeWidth
+                   strokeColor:(UIColor *)strokeColor
+                     fillColor:(nullable UIColor *)fillColor;
 
 @end
+
+NS_ASSUME_NONNULL_END
