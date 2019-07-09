@@ -190,28 +190,43 @@
     {
         UIBezierPath *path = [UIBezierPath fwShapeHeart:CGRectMake(0, 0, 50, 50)];
         [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 20, 260)];
-        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
-        
-        path = [UIBezierPath fwShapeAvatar:CGRectMake(0, 0, 50, 50)];
-        [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 90, 260)];
         CGContextAddPath(context, path.CGPath);
         CGContextSetLineWidth(context, 2);
         [[UIColor orangeColor] setStroke];
         CGContextStrokePath(context);
-        [[UIColor orangeColor] setFill];
-        CGContextAddPath(context, path.CGPath);
-        CGContextFillPath(context);
+        UIColor *fillColor = nil;
+        if (fillColor) {
+            [fillColor setFill];
+            CGContextAddPath(context, path.CGPath);
+            CGContextFillPath(context);
+        }
         
         path = [UIBezierPath fwShapeStar:CGRectMake(0, 0, 50, 50)];
         UIImage *image = [path fwShapeImage:CGSizeMake(50, 50) strokeWidth:2.0 strokeColor:[UIColor greenColor] fillColor:[UIColor orangeColor]];
-        [image drawInRect:CGRectMake(160, 260, 50, 50)];
+        [image drawInRect:CGRectMake(90, 260, 50, 50)];
         
-        path = [UIBezierPath fwShapeStars:5 frame:CGRectMake(230, 260, 120, 20) spacing:5];
+        path = [UIBezierPath fwShapeStars:5 frame:CGRectMake(0, 0, 120, 20) spacing:5];
+        [path applyTransform:CGAffineTransformTranslate(CGAffineTransformIdentity, 160, 260)];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     
-        path = [UIBezierPath fwShapeStars:3 frame:CGRectMake(230, 290, 70, 20) spacing:5];
+        path = [UIBezierPath fwShapeStars:3 frame:CGRectMake(160, 290, 70, 20) spacing:5];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:[UIColor orangeColor]];
-        path = [UIBezierPath fwShapeStars:2 frame:CGRectMake(305, 290, 45, 20) spacing:5];
+        path = [UIBezierPath fwShapeStars:2 frame:CGRectMake(235, 290, 45, 20) spacing:5];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    }
+    
+    // Shape
+    {
+        UIBezierPath *path = [UIBezierPath fwShapeCircle:CGRectMake(20, 470, 30, 30) percent:1 degree:0];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapePlus:CGRectMake(70, 470, 30, 30)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeMinus:CGRectMake(120, 470, 30, 30)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeCross:CGRectMake(170, 470, 30, 30)];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     }
 }
