@@ -9,6 +9,14 @@
 
 #import "UIBezierPath+FWFramework.h"
 
+CGFloat FWRadianWithDegree(CGFloat degree) {
+    return ((M_PI * degree) / 180.f);
+}
+
+CGFloat FWDegreeWithRadian(CGFloat radian) {
+    return ((180.f * radian) / M_PI);
+}
+
 @implementation UIBezierPath (FWFramework)
 
 #pragma mark - Bezier

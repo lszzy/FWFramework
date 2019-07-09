@@ -9,15 +9,11 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - Macro
-
 // 将角度(0~360)转换为弧度，周长为2*M_PI*r
-#define FWRadianWithDegree( degree ) \
-    ((M_PI * degree) / 180.f)
+FOUNDATION_EXPORT CGFloat FWRadianWithDegree(CGFloat degree);
 
 // 将弧度转换为角度(0~360)
-#define FWDegreeWithRadian( radian ) \
-    ((180.f * radian) / M_PI)
+FOUNDATION_EXPORT CGFloat FWDegreeWithRadian(CGFloat radian);
 
 /*!
  @brief UIBezierPath+FWFramework
