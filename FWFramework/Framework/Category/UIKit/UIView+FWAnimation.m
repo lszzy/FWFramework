@@ -148,11 +148,11 @@
     }
 }
 
-- (void)fwAddAnimationWithKeyPath:(NSString *)keyPath
-                        fromValue:(id)fromValue
-                          toValue:(id)toValue
-                         duration:(CFTimeInterval)duration
-                       completion:(void (^)(BOOL finished))completion
+- (CABasicAnimation *)fwAddAnimationWithKeyPath:(NSString *)keyPath
+                                      fromValue:(id)fromValue
+                                        toValue:(id)toValue
+                                       duration:(CFTimeInterval)duration
+                                     completion:(void (^)(BOOL))completion
 {
     // keyPath支持值如下：
     // transform.rotation[.(x|y|z)]: 轴旋转动画
@@ -172,6 +172,7 @@
     }
     
     [self.layer addAnimation:animation forKey:@"FWAnimation"];
+    return animation;
 }
 
 - (void)fwAddTransitionWithOption:(UIViewAnimationOptions)option
@@ -198,11 +199,11 @@
                     completion:completion];
 }
 
-- (void)fwAddTransitionWithType:(NSString *)type
-                        subtype:(NSString *)subtype
-                 timingFunction:(NSString *)timingFunction
-                       duration:(CFTimeInterval)duration
-                     completion:(void (^)(BOOL finished))completion
+- (CATransition *)fwAddTransitionWithType:(NSString *)type
+                                  subtype:(NSString *)subtype
+                           timingFunction:(NSString *)timingFunction
+                                 duration:(CFTimeInterval)duration
+                               completion:(void (^)(BOOL finished))completion
 {
     // 默认动画完成后自动移除，removedOnCompletion为YES
     CATransition *transition = [CATransition animation];
@@ -278,6 +279,7 @@
     
     // 所有核心动画和特效都是基于CAAnimation(作用于CALayer)
     [self.layer addAnimation:transition forKey:@"FWAnimation"];
+    return transition;
 }
 
 - (void)fwRemoveAllAnimations
@@ -287,9 +289,9 @@
 
 #pragma mark - Custom
 
-- (void)fwStrokeWithLayer:(CAShapeLayer *)layer
-                 duration:(NSTimeInterval)duration
-               completion:(void (^)(BOOL finished))completion
+- (CABasicAnimation *)fwStrokeWithLayer:(CAShapeLayer *)layer
+                               duration:(NSTimeInterval)duration
+                             completion:(void (^)(BOOL finished))completion
 {
     // strokeEnd动画，仅CAShapeLayer支持
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -307,6 +309,7 @@
     }
     
     [layer addAnimation:animation forKey:@"FWAnimation"];
+    return animation;
 }
 
 - (void)fwShakeWithTimes:(int)times
