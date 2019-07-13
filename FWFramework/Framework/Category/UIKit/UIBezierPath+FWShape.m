@@ -84,10 +84,8 @@
     return bezierPath;
 }
 
-+ (UIBezierPath *)fwShapePlus:(CGRect)aFrame
++ (UIBezierPath *)fwShapePlus:(CGRect)frame
 {
-    CGRect frame = [self fwInnerSquareFrame:aFrame];
-    
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
     [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
@@ -96,25 +94,57 @@
     return bezierPath;
 }
 
-+ (UIBezierPath *)fwShapeMinus:(CGRect)aFrame
++ (UIBezierPath *)fwShapeMinus:(CGRect)frame
 {
-    CGRect frame = [self fwInnerSquareFrame:aFrame];
-    
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
     [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
     return bezierPath;
 }
 
-+ (UIBezierPath *)fwShapeCross:(CGRect)aFrame
++ (UIBezierPath *)fwShapeCross:(CGRect)frame
 {
-    CGRect frame = [self fwInnerSquareFrame:aFrame];
-    
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
     [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
     [bezierPath moveToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
     [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeCheck:(CGRect)frame
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeBack:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeArrow:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeFold:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeTriangle:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeLabel:(CGRect)frame arrow:(CGSize)arrow direction:(UISwipeGestureRecognizerDirection)direction
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     return bezierPath;
 }
 

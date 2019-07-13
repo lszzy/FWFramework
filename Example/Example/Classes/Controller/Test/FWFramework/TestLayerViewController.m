@@ -217,16 +217,58 @@
     
     // Shape
     {
-        UIBezierPath *path = [UIBezierPath fwShapeCircle:CGRectMake(20, 470, 30, 30) percent:1 degree:0];
+        UIBezierPath *path = [UIBezierPath fwShapePlus:CGRectMake(20, 470, 30, 30)];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     
-        path = [UIBezierPath fwShapePlus:CGRectMake(70, 470, 30, 30)];
+        path = [UIBezierPath fwShapePlus:CGRectMake(70, 475, 30, 20)];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     
         path = [UIBezierPath fwShapeMinus:CGRectMake(120, 470, 30, 30)];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     
-        path = [UIBezierPath fwShapeCross:CGRectMake(170, 470, 30, 30)];
+        path = [UIBezierPath fwShapeMinus:CGRectMake(170, 475, 30, 20)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeCross:CGRectMake(220, 470, 30, 30)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeCross:CGRectMake(270, 475, 30, 20)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeCheck:CGRectMake(20, 520, 30, 30)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeCheck:CGRectMake(70, 525, 30, 20)];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeBack:CGRectMake(120, 520, 30, 30) direction:UISwipeGestureRecognizerDirectionLeft];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeBack:CGRectMake(170, 525, 30, 20) direction:UISwipeGestureRecognizerDirectionRight];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeArrow:CGRectMake(220, 520, 30, 30) direction:UISwipeGestureRecognizerDirectionLeft];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeArrow:CGRectMake(270, 525, 30, 20) direction:UISwipeGestureRecognizerDirectionRight];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeFold:CGRectMake(20, 570, 30, 30) direction:UISwipeGestureRecognizerDirectionUp];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeFold:CGRectMake(70, 575, 30, 20) direction:UISwipeGestureRecognizerDirectionDown];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeTriangle:CGRectMake(120, 570, 30, 30) direction:UISwipeGestureRecognizerDirectionUp];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeTriangle:CGRectMake(170, 575, 30, 20) direction:UISwipeGestureRecognizerDirectionDown];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeLabel:CGRectMake(220, 570, 30, 30) arrow:CGSizeMake(5, 5) direction:UISwipeGestureRecognizerDirectionUp];
+        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
+    
+        path = [UIBezierPath fwShapeLabel:CGRectMake(270, 575, 30, 20) arrow:CGSizeMake(5, 5) direction:UISwipeGestureRecognizerDirectionDown];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     }
 }
