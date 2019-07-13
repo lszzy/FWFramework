@@ -115,36 +115,177 @@
 + (UIBezierPath *)fwShapeCheck:(CGRect)frame
 {
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
-    return bezierPath;
-}
-
-+ (UIBezierPath *)fwShapeBack:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
-{
-    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
-    return bezierPath;
-}
-
-+ (UIBezierPath *)fwShapeArrow:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
-{
-    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+    [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + CGRectGetWidth(frame) / sqrt(2.0) / 2.f, CGRectGetMaxY(frame))];
+    [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
     return bezierPath;
 }
 
 + (UIBezierPath *)fwShapeFold:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
 {
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionUp: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionDown: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionLeft: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+            break;
+        }
+        default:
+            break;
+    }
+    return bezierPath;
+}
+
++ (UIBezierPath *)fwShapeArrow:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
+{
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionUp: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionDown: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionLeft: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            break;
+        }
+        default:
+            break;
+    }
     return bezierPath;
 }
 
 + (UIBezierPath *)fwShapeTriangle:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction
 {
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionUp: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionDown: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionLeft: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        default:
+            break;
+    }
     return bezierPath;
 }
 
 + (UIBezierPath *)fwShapeLabel:(CGRect)frame arrow:(CGSize)arrow direction:(UISwipeGestureRecognizerDirection)direction
 {
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionUp: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame) - arrow.width / 2.f, CGRectGetMinY(frame) + arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame) + arrow.width / 2.f, CGRectGetMinY(frame) + arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionDown: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame) + arrow.width / 2.f, CGRectGetMaxY(frame) - arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMidX(frame) - arrow.width / 2.f, CGRectGetMaxY(frame) - arrow.height)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - arrow.height)];
+            [bezierPath closePath];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionLeft: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame) + arrow.width, CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + arrow.width, CGRectGetMidY(frame) - arrow.height / 2.f)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + arrow.width, CGRectGetMidY(frame) + arrow.height / 2.f)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + arrow.width, CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            [bezierPath moveToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame) - arrow.width, CGRectGetMaxY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame) - arrow.width, CGRectGetMidY(frame) + arrow.height / 2.f)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame))];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame) - arrow.width, CGRectGetMidY(frame) - arrow.height / 2.f)];
+            [bezierPath addLineToPoint:CGPointMake(CGRectGetMaxX(frame) - arrow.width, CGRectGetMinY(frame))];
+            [bezierPath closePath];
+            break;
+        }
+        default:
+            break;
+    }
     return bezierPath;
 }
 

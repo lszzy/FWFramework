@@ -40,14 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
 // "✔" 检查形状(正确)
 + (UIBezierPath *)fwShapeCheck:(CGRect)frame;
 
-// "<" 返回按钮，可指定方向
-+ (UIBezierPath *)fwShapeBack:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction;
+// "<" 折叠形状，可指定方向
++ (UIBezierPath *)fwShapeFold:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction;
 
 // "⬅" 箭头形状，可指定方向
 + (UIBezierPath *)fwShapeArrow:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction;
-
-// "^" 折叠形状，可指定方向
-+ (UIBezierPath *)fwShapeFold:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction;
 
 // "🔺" 三角形形状，可指定方向
 + (UIBezierPath *)fwShapeTriangle:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction;
