@@ -80,15 +80,18 @@
 
 - (void)fwSetBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state
 {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
-    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [backgroundColor CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage *image = nil;
+    if (backgroundColor) {
+        CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetFillColorWithColor(context, [backgroundColor CGColor]);
+        CGContextFillRect(context, rect);
+        
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
     
     [self setBackgroundImage:image forState:state];
 }
