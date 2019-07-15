@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIView (FWFrame)
 
 // frame.origin.y
@@ -47,3 +49,5 @@
 @property (nonatomic, assign) CGSize fwSize;
 
 @end
+
+NS_ASSUME_NONNULL_END

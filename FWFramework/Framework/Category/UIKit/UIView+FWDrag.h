@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIView (FWDrag)
 
 // 是否启用拖动，默认NO
@@ -29,12 +31,14 @@
 @property (nonatomic, assign) BOOL fwDragVertical;
 
 // 开始拖动回调
-@property (nonatomic, copy) void (^fwDragStartedBlock)(UIView *);
+@property (nullable, nonatomic, copy) void (^fwDragStartedBlock)(UIView *);
 
 // 拖动移动回调
-@property (nonatomic, copy) void (^fwDragMovedBlock)(UIView *);
+@property (nullable, nonatomic, copy) void (^fwDragMovedBlock)(UIView *);
 
 // 结束拖动回调
-@property (nonatomic, copy) void (^fwDragEndedBlock)(UIView *);
+@property (nullable, nonatomic, copy) void (^fwDragEndedBlock)(UIView *);
 
 @end
+
+NS_ASSUME_NONNULL_END
