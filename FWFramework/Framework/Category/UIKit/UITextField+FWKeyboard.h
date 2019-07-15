@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 文本输入框键盘管理分类
 @interface UITextField (FWKeyboard)
 
@@ -21,7 +23,7 @@
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
 
 // 设置键盘弹出时移动到键盘上方的视图，如底部输入框视图
-@property (nonatomic, weak) UIView *fwKeyboardView;
+@property (nullable, nonatomic, weak) UIView *fwKeyboardView;
 
 @end
 
@@ -38,6 +40,8 @@
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
 
 // 设置键盘弹出时移动到键盘上方的视图，如底部输入框视图
-@property (nonatomic, weak) UIView *fwKeyboardView;
+@property (nullable, nonatomic, weak) UIView *fwKeyboardView;
 
 @end
+
+NS_ASSUME_NONNULL_END
