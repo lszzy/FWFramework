@@ -11,6 +11,8 @@
 #import "UIScrollView+FWInfiniteScroll.h"
 #import "UIScrollView+FWPullRefresh.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIScrollView分类
  @discussion 添加顶部下拉图片时，只需将该子view添加到scrollView最底层(如frame方式添加inset视图)，再实现效果即可。
@@ -78,7 +80,7 @@
 #pragma mark - Gesture
 
 // 是否允许同时识别多个手势
-@property (nonatomic, copy) BOOL (^fwShouldRecognizeSimultaneously)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
+@property (nullable, nonatomic, copy) BOOL (^fwShouldRecognizeSimultaneously)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
 
 #pragma mark - Hover
 
@@ -109,6 +111,8 @@
         fromPosition:(CGFloat)fromPosition
           toPosition:(CGFloat)toPosition
       kickbackHeight:(CGFloat)kickbackHeight
-            callback:(void (^)(CGFloat position))callback;
+            callback:(nullable void (^)(CGFloat position))callback;
 
 @end
+
+NS_ASSUME_NONNULL_END
