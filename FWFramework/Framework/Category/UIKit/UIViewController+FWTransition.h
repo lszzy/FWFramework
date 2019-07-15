@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWAnimatedTransitionType
 
 /*!
@@ -38,10 +40,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 + (instancetype)systemTransition;
 
 // 创建动画句柄转场
-+ (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *transition))block;
++ (instancetype)transitionWithBlock:(nullable void (^)(FWAnimatedTransition *transition))block;
 
 // 设置动画句柄
-@property (nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
+@property (nullable, nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
 
 // 动画持续时间，必须大于0，默认0.35秒
 @property (nonatomic, assign) NSTimeInterval duration;
@@ -52,22 +54,22 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 #pragma mark - Interactive
 
 // 设置进入交互转场，可选，需要在调用push|present之前设置并绑定控制器
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
+@property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
 // 设置消失交互转场，可选，需要在调用pop|dismiss之前设置并绑定控制器。当设置为FWPercentInteractiveTransition时，会自动绑定
-@property (nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
+@property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
 
 #pragma mark - Animate
 
 // 转场上下文，只读
-@property (nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
+@property (nullable, nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
 // 转场来源视图控制器，只读
-@property (nonatomic, weak, readonly) UIViewController *fromViewController;
+@property (nullable, nonatomic, weak, readonly) __kindof UIViewController *fromViewController;
 // 转场目标视图控制器，只读
-@property (nonatomic, weak, readonly) UIViewController *toViewController;
+@property (nullable, nonatomic, weak, readonly) __kindof UIViewController *toViewController;
 // 转场来源视图，只读
-@property (nonatomic, weak, readonly) UIView *fromView;
+@property (nullable, nonatomic, weak, readonly) __kindof UIView *fromView;
 // 转场目标视图，只读
-@property (nonatomic, weak, readonly) UIView *toView;
+@property (nullable, nonatomic, weak, readonly) __kindof UIView *toView;
 
 // 标记动画开始(自动添加视图到容器)
 - (void)start;
@@ -103,10 +105,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
 // 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
-@property (nonatomic, copy) void(^interactiveBlock)(void);
+@property (nullable, nonatomic, copy) void(^interactiveBlock)(void);
 
 // 自定义进度计算方法，默认根据translation计算进度
-@property (nonatomic, copy) CGFloat(^percentBlock)(UIPanGestureRecognizer *sender);
+@property (nullable, nonatomic, copy) CGFloat(^percentBlock)(UIPanGestureRecognizer *sender);
 
 // 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.3
 @property (nonatomic, assign) CGFloat completionPercent;
@@ -115,7 +117,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nonatomic, assign, readonly) BOOL isInteractive;
 
 // 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
-- (void)interactWithViewController:(UIViewController *)viewController;
+- (void)interactWithViewController:(nullable UIViewController *)viewController;
 
 @end
 
@@ -125,10 +127,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @interface UIViewController (FWTransition)
 
 // 视图控制器present|dismiss转场。注意会修改transitioningDelegate，且会强引用之；如需weak引用，请直接设置transitioningDelegate
-@property (nonatomic, strong) FWAnimatedTransition *fwModalTransition;
+@property (nullable, nonatomic, strong) FWAnimatedTransition *fwModalTransition;
 
 // 视图控制器push|pop转场，代理导航控制器转场，需在fwNavigationTransition设置后生效
-@property (nonatomic, strong) FWAnimatedTransition *fwViewTransition;
+@property (nullable, nonatomic, strong) FWAnimatedTransition *fwViewTransition;
 
 @end
 
@@ -138,6 +140,8 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @interface UINavigationController (FWTransition)
 
 // 导航控制器push|pop转场。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate
-@property (nonatomic, strong) FWAnimatedTransition *fwNavigationTransition;
+@property (nullable, nonatomic, strong) FWAnimatedTransition *fwNavigationTransition;
 
 @end
+
+NS_ASSUME_NONNULL_END
