@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
     FWInfiniteScrollStateStopped = 0,
     FWInfiniteScrollStateTriggered,
@@ -22,7 +24,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 @property (nonatomic, readonly) FWInfiniteScrollState state;
 @property (nonatomic, readwrite) BOOL enabled;
 
-- (void)setCustomView:(UIView *)view forState:(FWInfiniteScrollState)state;
+- (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
 
 - (void)startAnimating;
 - (void)stopAnimating;
@@ -41,7 +43,9 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 - (void)fwAddInfiniteScrollWithTarget:(id)target action:(SEL)action;
 - (void)fwTriggerInfiniteScroll;
 
-@property (nonatomic, strong, readonly) FWInfiniteScrollView *fwInfiniteScrollView;
+@property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fwInfiniteScrollView;
 @property (nonatomic, assign) BOOL fwShowInfiniteScroll;
 
 @end
+
+NS_ASSUME_NONNULL_END

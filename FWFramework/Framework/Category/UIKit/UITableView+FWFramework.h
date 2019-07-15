@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "UITableView+FWTemplateLayout.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // UITableView分类(Plain有悬停，Group无悬停)
 @interface UITableView (FWFramework)
 
@@ -19,7 +21,7 @@
 - (void)fwFollowWithHeader:(CGFloat)headerHeight footer:(CGFloat)footerHeight;
 
 // reloadData完成回调
-- (void)fwReloadDataWithCompletion:(void (^)(void))completion;
+- (void)fwReloadDataWithCompletion:(nullable void (^)(void))completion;
 
 // reloadRows禁用动画
 - (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
@@ -32,9 +34,11 @@
 @property (nonatomic, assign) UIEdgeInsets fwSeparatorInset;
 
 // 绑定数据模型
-@property (nonatomic, strong) id fwModel;
+@property (nullable, nonatomic, strong) id fwModel;
 
 // 根据数据模型计算cell高度，子类重写
-+ (CGFloat)fwHeightWithModel:(id)model;
++ (CGFloat)fwHeightWithModel:(nullable id)model;
 
 @end
+
+NS_ASSUME_NONNULL_END

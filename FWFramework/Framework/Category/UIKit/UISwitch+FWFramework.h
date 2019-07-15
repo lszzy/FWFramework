@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UISwitch+FWFramework
  */
@@ -20,3 +22,5 @@
 - (void)fwToggle;
 
 @end
+
+NS_ASSUME_NONNULL_END
