@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - UIWebView
 
 extern const float FWInitialProgressValue;
@@ -22,9 +24,9 @@ typedef void (^FWWebViewProgressBlock)(float progress);
 
 @interface FWWebViewProgress : NSObject<UIWebViewDelegate>
 
-@property (nonatomic, weak) id<FWWebViewProgressDelegate> progressDelegate;
-@property (nonatomic, weak) id<UIWebViewDelegate> webViewProxyDelegate;
-@property (nonatomic, copy) FWWebViewProgressBlock progressBlock;
+@property (nullable, nonatomic, weak) id<FWWebViewProgressDelegate> progressDelegate;
+@property (nullable, nonatomic, weak) id<UIWebViewDelegate> webViewProxyDelegate;
+@property (nullable, nonatomic, copy) FWWebViewProgressBlock progressBlock;
 // 0.0..1.0
 @property (nonatomic, readonly) float progress;
 
@@ -64,7 +66,7 @@ typedef void (^FWWebViewProgressBlock)(float progress);
 
 @interface WKWebView (FWFramework)
 
-@property (nonatomic, weak) id <FWWebViewNavigationDelegate> fwNavigationDelegate;
+@property (nullable, nonatomic, weak) id <FWWebViewNavigationDelegate> fwNavigationDelegate;
 
 @end
 
@@ -74,3 +76,5 @@ typedef void (^FWWebViewProgressBlock)(float progress);
 - (void)fwSetProgress:(float)progress;
 
 @end
+
+NS_ASSUME_NONNULL_END

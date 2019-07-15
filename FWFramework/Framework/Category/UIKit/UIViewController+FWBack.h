@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIViewController+FWBack
  */
@@ -21,6 +23,8 @@
 - (BOOL)fwPopBackBarItem;
 
 // 设置导航栏返回按钮点击block事件，默认fwPopBackBarItem自动调用。逻辑同上
-- (void)fwSetBackBarBlock:(BOOL (^)(void))block;
+- (void)fwSetBackBarBlock:(nullable BOOL (^)(void))block;
 
 @end
+
+NS_ASSUME_NONNULL_END

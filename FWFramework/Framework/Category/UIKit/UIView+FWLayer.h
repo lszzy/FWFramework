@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Shadow
 
 // 设置阴影颜色、偏移和半径
-- (void)fwSetShadowColor:(UIColor *)color
+- (void)fwSetShadowColor:(nullable UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius;
 

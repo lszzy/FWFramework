@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * 视图控制器Bar分类
  *
@@ -39,27 +41,27 @@
 #pragma mark - Item
 
 // 快捷设置导航栏标题文字或视图
-- (void)fwSetBarTitle:(id)title;
+- (void)fwSetBarTitle:(nullable id)title;
 
 // 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
-- (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action;
+- (void)fwSetLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
 
 // 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-- (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block;
+- (void)fwSetLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
 
 // 快捷设置导航栏右侧按钮
-- (void)fwSetRightBarItem:(id)object target:(id)target action:(SEL)action;
+- (void)fwSetRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
 
 // 快捷设置导航栏右侧按钮，block事件
-- (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block;
+- (void)fwSetRightBarItem:(nullable id)object block:(void (^)(id sender))block;
 
 #pragma mark - Back
 
 // 设置导航栏返回按钮文字(显示系统返回箭头)，下个页面生效
-- (void)fwSetBackBarTitle:(NSString *)title;
+- (void)fwSetBackBarTitle:(nullable NSString *)title;
 
 // 设置导航栏返回按钮图片(只显示此图片，不显示返回箭头)，下个页面生效
-- (void)fwSetBackBarImage:(UIImage *)image;
+- (void)fwSetBackBarImage:(nullable UIImage *)image;
 
 // 设置导航栏返回按钮透明(只显示返回箭头)，下个页面生效
 - (void)fwSetBackBarClear;
@@ -72,16 +74,16 @@
 @interface UINavigationBar (FWBar)
 
 // 设置全局按钮文字样式(不含图片)，单个设置时详见UIBarButtonItem
-+ (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes;
++ (void)fwSetButtonTitleAttributes:(nullable NSDictionary *)attributes;
 
 // 设置标题和按钮颜色
-- (void)fwSetTextColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
+- (void)fwSetTextColor:(nullable UIColor *)color UI_APPEARANCE_SELECTOR;
 
 // 设置背景颜色。为避免barTintColor的一些兼容问题，此方法未使用barTintColor，而是使用颜色生成的图片来设置backgroundImage
-- (void)fwSetBackgroundColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
+- (void)fwSetBackgroundColor:(nullable UIColor *)color UI_APPEARANCE_SELECTOR;
 
 // 设置背景图片
-- (void)fwSetBackgroundImage:(UIImage *)image UI_APPEARANCE_SELECTOR;
+- (void)fwSetBackgroundImage:(nullable UIImage *)image UI_APPEARANCE_SELECTOR;
 
 // 设置透明背景并隐藏底部线条
 - (void)fwSetBackgroundClear UI_APPEARANCE_SELECTOR;
@@ -96,16 +98,16 @@
 - (void)fwResetBackground;
 
 // 设置返回箭头图片，值为nil则还原默认
-- (void)fwSetIndicatorImage:(UIImage *)image UI_APPEARANCE_SELECTOR;
+- (void)fwSetIndicatorImage:(nullable UIImage *)image UI_APPEARANCE_SELECTOR;
 
 // 设置返回箭头图片，值为nil则还原默认，支持图片偏移
-- (void)fwSetIndicatorImage:(UIImage *)image insets:(UIEdgeInsets)insets UI_APPEARANCE_SELECTOR;
+- (void)fwSetIndicatorImage:(nullable UIImage *)image insets:(UIEdgeInsets)insets UI_APPEARANCE_SELECTOR;
 
 // 背景view，可能显示磨砂、背景图，顶部有一部分溢出到UINavigationBar外。在iOS10及以后是私有的_UIBarBackground类，在iOS9及以前是私有的_UINavigationBarBackground类
-- (UIView *)fwBackgroundView;
+- (nullable UIView *)fwBackgroundView;
 
 // 用于显示底部分隔线shadowImage，注意这个view是溢出到backgroundView外的。若shadowImage为[UIImage new]，则这个view的高度为0
-- (UIImageView *)fwShadowImageView;
+- (nullable UIImageView *)fwShadowImageView;
 
 @end
 
@@ -120,26 +122,28 @@
 @interface UITabBar (FWBar)
 
 // 设置文字颜色(含图标)
-- (void)fwSetTextColor:(UIColor *)color;
+- (void)fwSetTextColor:(nullable UIColor *)color;
 
 // 设置背景颜色
-- (void)fwSetBackgroundColor:(UIColor *)color;
+- (void)fwSetBackgroundColor:(nullable UIColor *)color;
 
 // 设置背景图片
-- (void)fwSetBackgroundImage:(UIImage *)image;
+- (void)fwSetBackgroundImage:(nullable UIImage *)image;
 
 // 设置是否隐藏顶部线条
 - (void)fwSetLineHidden:(BOOL)hidden;
 
 // 设置阴影色，offset示例(0,1)，radius示例6
-- (void)fwSetShadowColor:(UIColor *)color
+- (void)fwSetShadowColor:(nullable UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius;
 
 // UITabBar 的背景 view，可能显示磨砂、背景图，顶部有一部分溢出到 UITabBar 外。在 iOS 10 及以后是私有的 _UIBarBackground 类，在 iOS 9 及以前是私有的 _UITabBarBackgroundView 类
-- (UIView *)fwBackgroundView;
+- (nullable UIView *)fwBackgroundView;
 
 // 用于显示顶部分隔线 shadowImage，注意这个 view 是溢出到 backgroundView 外的。若 shadowImage 为 [UIImage new]，则这个 view 的高度为 0
-- (UIImageView *)fwShadowImageView;
+- (nullable UIImageView *)fwShadowImageView;
 
 @end
+
+NS_ASSUME_NONNULL_END
