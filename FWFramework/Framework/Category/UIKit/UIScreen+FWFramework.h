@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - Screen
+NS_ASSUME_NONNULL_BEGIN
+
+#pragma mark - Macro
 
 // 屏幕尺寸
 #define FWScreenSize \
@@ -176,3 +178,5 @@
 - (CGFloat)fwBottomBarHeight;
 
 @end
+
+NS_ASSUME_NONNULL_END

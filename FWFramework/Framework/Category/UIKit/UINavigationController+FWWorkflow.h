@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 视图控制器工作流分类
  */
@@ -29,7 +31,7 @@
  
  @return 工作流名称
  */
-- (NSString *)fwTopWorkflowName;
+- (nullable NSString *)fwTopWorkflowName;
 
 /*!
  @brief push控制器，并清理最外层工作流（不属于工作流则不清理）
@@ -39,7 +41,7 @@
  @param animated 是否执行动画
  @return pop的控制器数组
  */
-- (NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated;
+- (nullable NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated;
 
 /*!
  @brief push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
@@ -50,7 +52,7 @@
  @param animated 是否执行动画
  @return pop的控制器数组
  */
-- (NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated;
+- (nullable NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
 
 /*!
  @brief pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
@@ -59,7 +61,7 @@
  @param animated 是否执行动画
  @return pop的控制器数组
  */
-- (NSArray<UIViewController *> *)fwPopTopWorkflowAnimated:(BOOL)animated;
+- (nullable NSArray<UIViewController *> *)fwPopTopWorkflowAnimated:(BOOL)animated;
 
 /*!
  @brief pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
@@ -69,6 +71,8 @@
  @param animated  是否执行动画
  @return pop的控制器数组
  */
-- (NSArray<UIViewController *> *)fwPopWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated;
+- (nullable NSArray<UIViewController *> *)fwPopWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
 
 @end
+
+NS_ASSUME_NONNULL_END
