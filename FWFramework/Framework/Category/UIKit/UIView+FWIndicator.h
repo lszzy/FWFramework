@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIView+FWIndicator
  */
@@ -24,7 +26,7 @@
  *  @return 加载吐司视图
  */
 - (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                     attributedTitle:(NSAttributedString *)attributedTitle;
+                     attributedTitle:(nullable NSAttributedString *)attributedTitle;
 
 /**
  *  显示加载吐司，不可点击（详细版）
@@ -39,9 +41,9 @@
  *  @return 加载吐司视图
  */
 - (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                     attributedTitle:(NSAttributedString *)attributedTitle
-                     backgroundColor:(UIColor *)backgroundColor
-                  dimBackgroundColor:(UIColor *)dimBackgroundColor
+                     attributedTitle:(nullable NSAttributedString *)attributedTitle
+                     backgroundColor:(nullable UIColor *)backgroundColor
+                  dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
                  horizontalAlignment:(BOOL)horizontalAlignment
                        contentInsets:(UIEdgeInsets)contentInsets
                         cornerRadius:(CGFloat)cornerRadius;
@@ -59,7 +61,7 @@
  *  @param attributedText 属性文本，默认白色、16号字体
  *  @return 吐司视图
  */
-- (UIView *)fwShowToastWithAttributedText:(NSAttributedString *)attributedText;
+- (UIView *)fwShowToastWithAttributedText:(nullable NSAttributedString *)attributedText;
 
 /**
  *  显示吐司，不可点击（详细版）
@@ -72,9 +74,9 @@
  *  @param cornerRadius        圆角半径，默认5.0
  *  @return 吐司视图
  */
-- (UIView *)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
-                          backgroundColor:(UIColor *)backgroundColor
-                       dimBackgroundColor:(UIColor *)dimBackgroundColor
+- (UIView *)fwShowToastWithAttributedText:(nullable NSAttributedString *)attributedText
+                          backgroundColor:(nullable UIColor *)backgroundColor
+                       dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
                              paddingWidth:(CGFloat)paddingWidth
                             contentInsets:(UIEdgeInsets)contentInsets
                              cornerRadius:(CGFloat)cornerRadius;
@@ -91,6 +93,8 @@
  *  @param completion 完成回调
  */
 - (void)fwHideToastAfterDelay:(NSTimeInterval)delay
-                   completion:(void (^)(void))completion;
+                   completion:(nullable void (^)(void))completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

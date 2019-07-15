@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - UIGestureRecognizer+FWBlock
 
 @interface UIGestureRecognizer (FWBlock)
 
 // 获取手势直接作用的view，不同于view，此处是view的subview
-@property (nonatomic, weak, readonly) UIView *fwTargetView;
+@property (nullable, nonatomic, weak, readonly) UIView *fwTargetView;
 
 // 从事件句柄初始化
 + (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;
@@ -67,9 +69,11 @@
 @interface UIBarButtonItem (FWBlock)
 
 // 使用指定对象和事件创建Item
-+ (instancetype)fwBarItemWithObject:(id)object target:(id)target action:(SEL)action;
++ (instancetype)fwBarItemWithObject:(nullable id)object target:(id)target action:(SEL)action;
 
 // 使用指定对象和句柄创建Item
-+ (instancetype)fwBarItemWithObject:(id)object block:(void (^)(id sender))block;
++ (instancetype)fwBarItemWithObject:(nullable id)object block:(void (^)(id sender))block;
 
 @end
+
+NS_ASSUME_NONNULL_END
