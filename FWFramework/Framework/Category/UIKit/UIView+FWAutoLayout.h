@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
  @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加
@@ -409,7 +411,7 @@
  @param otherView 目标视图
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView;
+- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
 
 /*!
  @brief 与指定视图属性偏移指定距离
@@ -420,7 +422,7 @@
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset;
 
 /*!
  @brief 与指定视图属性偏移指定距离，指定关系
@@ -432,7 +434,7 @@
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
 
 /*!
  @brief 与指定视图属性指定比例
@@ -443,7 +445,7 @@
  @param multiplier 指定比例
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier;
+- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
 
 /*!
  @brief 与指定视图属性指定比例，指定关系
@@ -455,7 +457,7 @@
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
 #pragma mark - Key
 
@@ -465,7 +467,7 @@
  @param constraint 布局约束
  @param key 保存key
  */
-- (void)fwSetConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key;
+- (void)fwSetConstraint:(nullable NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key;
 
 /*!
  @brief 获取键名对应约束
@@ -473,7 +475,7 @@
  @param key 保存key
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstraintForKey:(id<NSCopying>)key;
+- (nullable NSLayoutConstraint *)fwConstraintForKey:(id<NSCopying>)key;
 
 #pragma mark - All
 
@@ -495,3 +497,5 @@
 - (void)fwRemoveAllConstraints;
 
 @end
+
+NS_ASSUME_NONNULL_END

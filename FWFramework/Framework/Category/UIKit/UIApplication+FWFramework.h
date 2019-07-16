@@ -12,6 +12,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 是否是调试模式
 #ifdef DEBUG
     #define FWIsDebug YES
@@ -28,7 +30,7 @@
 #pragma mark - App
 
 // 读取应用信息字典
-+ (id)fwAppInfo:(NSString *)key;
++ (nullable id)fwAppInfo:(NSString *)key;
 
 // 读取应用名称
 + (NSString *)fwAppName;
@@ -65,7 +67,7 @@
 + (void)fwOpenURL:(NSURL *)url;
 
 // 打开URL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(NSURL *)url completionHandler:(void (^)(BOOL success))completion;
++ (void)fwOpenURL:(NSURL *)url completionHandler:(nullable void (^)(BOOL success))completion;
 
 // 打开浏览器
 + (void)fwOpenSafari:(NSString *)url;
@@ -95,7 +97,7 @@
 + (void)fwMakeCall:(NSString *)phone;
 
 // 播放音频文件
-+ (AVAudioPlayer *)fwPlaySound:(NSString *)file;
++ (nullable AVAudioPlayer *)fwPlaySound:(NSString *)file;
 
 // 播放内置声音文件
 + (SystemSoundID)fwPlayAlert:(NSString *)file;
@@ -107,3 +109,5 @@
 + (void)fwReadText:(NSString *)text;
 
 @end
+
+NS_ASSUME_NONNULL_END

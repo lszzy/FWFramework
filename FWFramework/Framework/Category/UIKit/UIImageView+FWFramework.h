@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "UIImageView+FWNetwork.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  图片视图分类
  */
@@ -44,3 +46,5 @@
 - (void)fwSetImage:(UIImage *)image watermarkString:(NSAttributedString *)watermarkString atPoint:(CGPoint)point;
 
 @end
+
+NS_ASSUME_NONNULL_END

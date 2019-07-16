@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UISearchBar+FWFramework
  */
@@ -18,10 +20,10 @@
 @property (nonatomic, assign) UIEdgeInsets fwContentInset;
 
 // 设置整体背景色
-- (void)fwSetBackgroundColor:(UIColor *)color;
+- (void)fwSetBackgroundColor:(nullable UIColor *)color;
 
 // 设置输入框背景色
-- (void)fwSetTextFieldBackgroundColor:(UIColor *)color;
+- (void)fwSetTextFieldBackgroundColor:(nullable UIColor *)color;
 
 // 设置TextField搜索图标(placeholder)离左侧的位置
 - (void)fwSetSearchIconPosition:(CGFloat)offset;
@@ -33,10 +35,10 @@
 - (void)fwForceCancelButtonEnabled:(BOOL)force;
 
 // 输入框
-- (UITextField *)fwTextField;
+- (nullable UITextField *)fwTextField;
 
 // 取消按钮
-- (UIButton *)fwCancelButton;
+- (nullable UIButton *)fwCancelButton;
 
 #pragma mark - Navigation
 
@@ -44,3 +46,5 @@
 - (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem;
 
 @end
+
+NS_ASSUME_NONNULL_END

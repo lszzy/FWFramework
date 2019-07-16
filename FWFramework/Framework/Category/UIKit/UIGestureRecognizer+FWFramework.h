@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIPanGestureRecognizer+FWFramework
  */
@@ -27,14 +29,16 @@
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
  @param callback 抽屉视图位移回调，参数为相对view父视图的originY位置
  */
-- (void)fwDrawerView:(UIView *)view
+- (void)fwDrawerView:(nullable UIView *)view
            direction:(UISwipeGestureRecognizerDirection)direction
         fromPosition:(CGFloat)fromPosition
           toPosition:(CGFloat)toPosition
       kickbackHeight:(CGFloat)kickbackHeight
-            callback:(void (^)(CGFloat position))callback;
+            callback:(nullable void (^)(CGFloat position))callback;
 
 // 交换抽屉效果视图位置，会触发抽屉callback回调
 - (void)fwDrawerViewTogglePosition;
 
 @end
+
+NS_ASSUME_NONNULL_END

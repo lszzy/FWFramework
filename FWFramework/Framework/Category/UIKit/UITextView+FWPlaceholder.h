@@ -8,15 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UITextView (FWPlaceholder)
 
 // 占位文本
-@property (nonatomic, strong) NSString *fwPlaceholder;
+@property (nullable, nonatomic, strong) NSString *fwPlaceholder;
 
 // 占位颜色
-@property (nonatomic, strong) UIColor *fwPlaceholderColor;
+@property (nullable, nonatomic, strong) UIColor *fwPlaceholderColor;
 
 // 带属性占位文本
-@property (nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
+@property (nullable, nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
 
 @end
+
+NS_ASSUME_NONNULL_END

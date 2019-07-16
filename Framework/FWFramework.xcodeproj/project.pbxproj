@@ -225,6 +225,8 @@
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
+		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */; };
 		2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -533,6 +535,8 @@
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
+		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
+		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
 		2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCalendar+FWFramework.h"; sourceTree = "<group>"; };
 		2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSCalendar+FWFramework.m"; sourceTree = "<group>"; };
 		2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWAppearance.h"; sourceTree = "<group>"; };
@@ -665,6 +669,8 @@
 				2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */,
 				2F03A508216CF4B9001965A1 /* UIBezierPath+FWFramework.h */,
 				2F03A4E5216CF4B9001965A1 /* UIBezierPath+FWFramework.m */,
+				2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */,
+				2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */,
 				2F03A503216CF4B9001965A1 /* UIButton+FWFramework.h */,
 				2F03A4EA216CF4B9001965A1 /* UIButton+FWFramework.m */,
 				2F1E625B22BCB86600A1AB49 /* UIControl+FWFramework.h */,
@@ -1122,6 +1128,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */,
 				2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */,
 				2F1E626822BD4A2B00A1AB49 /* UIView+FWLayoutChain.h in Headers */,
 				2F1E625D22BCB86600A1AB49 /* UIControl+FWFramework.h in Headers */,
@@ -1515,6 +1522,7 @@
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,
 				2F03A5BC216CF4B9001965A1 /* UIView+FWIndicator.m in Sources */,
 				2FBFB70822C5045400E669B6 /* NSBundle+FWFramework.swift in Sources */,
+				2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */,
 				2F03A5ED216CF4B9001965A1 /* FWKeychainManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

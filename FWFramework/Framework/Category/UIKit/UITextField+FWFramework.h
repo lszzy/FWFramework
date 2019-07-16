@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "UITextField+FWKeyboard.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - UITextField+FWFramework
 
 // 文本输入框分类
@@ -28,10 +30,10 @@
 @property (nonatomic, assign) BOOL fwReturnResign;
 
 // 设置点击键盘完成按钮自动切换的下一个输入框，二选一
-@property (nonatomic, weak) UIResponder *fwReturnResponder;
+@property (nullable, nonatomic, weak) UIResponder *fwReturnResponder;
 
 // 设置点击键盘完成按钮的事件句柄
-@property (nonatomic, copy) void (^fwReturnBlock)(UITextField *textField);
+@property (nullable, nonatomic, copy) void (^fwReturnBlock)(UITextField *textField);
 
 #pragma mark - Menu
 
@@ -50,3 +52,5 @@
 - (void)fwSelectAllText;
 
 @end
+
+NS_ASSUME_NONNULL_END

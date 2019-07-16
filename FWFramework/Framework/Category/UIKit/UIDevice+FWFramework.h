@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Macro
 
 // 是否是模拟器
@@ -87,28 +89,30 @@
 #pragma mark - Model
 
 // 设备模型，格式："iPhone6,1"
-+ (NSString *)fwDeviceModel;
++ (nullable NSString *)fwDeviceModel;
 
 // 设备UUID，应用删除后会改变，可通过keychain持久化
-+ (NSString *)fwDeviceUUID;
++ (nullable NSString *)fwDeviceUUID;
 
 #pragma mark - Token
 
 // 设置设备token，格式化并保存
-+ (void)fwSetDeviceToken:(NSData *)tokenData;
++ (void)fwSetDeviceToken:(nullable NSData *)tokenData;
 
 // 获取设备Token格式化后的字符串
-+ (NSString *)fwDeviceToken;
++ (nullable NSString *)fwDeviceToken;
 
 #pragma mark - Network
 
 // 本地IP地址
-+ (NSString *)fwIpAddress;
++ (nullable NSString *)fwIpAddress;
 
 // 本地主机名称
-+ (NSString *)fwHostName;
++ (nullable NSString *)fwHostName;
 
 // 手机运营商名称
-+ (NSString *)fwCarrierName;
++ (nullable NSString *)fwCarrierName;
 
 @end
+
+NS_ASSUME_NONNULL_END

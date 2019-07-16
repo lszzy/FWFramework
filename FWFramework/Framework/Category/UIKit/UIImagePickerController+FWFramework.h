@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIImagePickerController+FWFramework
  */
@@ -21,6 +23,8 @@
  @param completion 完成回调。参数1为回调数据，参数2为是否取消
  @return 照片选择器，不支持的返回nil
  */
-+ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(void(^)(NSDictionary *info, BOOL cancel))completion;
++ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(nullable void (^)(NSDictionary *info, BOOL cancel))completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

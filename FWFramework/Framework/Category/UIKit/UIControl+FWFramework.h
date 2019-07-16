@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIControl+FWFramework
  @discussion 防重复点击可以手工控制enabled或userInteractionEnabled，如request开始时禁用，结束时启用等
@@ -19,3 +21,5 @@
 @property (nonatomic, assign) NSTimeInterval fwTouchEventInterval UI_APPEARANCE_SELECTOR;
 
 @end
+
+NS_ASSUME_NONNULL_END

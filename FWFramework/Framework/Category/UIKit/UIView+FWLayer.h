@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - CAGradientLayer+FWLayer
 
 /*!
@@ -27,7 +29,7 @@
  */
 + (CAGradientLayer *)fwGradientLayer:(CGRect)frame
                               colors:(NSArray *)colors
-                           locations:(NSArray<NSNumber *> *)locations
+                           locations:(nullable NSArray<NSNumber *> *)locations
                           startPoint:(CGPoint)startPoint
                             endPoint:(CGPoint)endPoint;
 
@@ -52,9 +54,24 @@
 #pragma mark - Shadow
 
 // 设置阴影颜色、偏移和半径
-- (void)fwSetShadowColor:(UIColor *)color
+- (void)fwSetShadowColor:(nullable UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius;
+
+#pragma mark - Bezier
+
+/*!
+ @brief 绘制形状路径，需要在drawRect中调用
+ 
+ @param bezierPath 绘制路径
+ @param strokeWidth 绘制宽度
+ @param strokeColor 绘制颜色
+ @param fillColor 填充颜色
+ */
+- (void)fwDrawBezierPath:(UIBezierPath *)bezierPath
+             strokeWidth:(CGFloat)strokeWidth
+             strokeColor:(UIColor *)strokeColor
+               fillColor:(nullable UIColor *)fillColor;
 
 #pragma mark - Gradient
 
@@ -66,10 +83,10 @@
  @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
  @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
  */
-- (void)fwDrawGradient:(CGRect)rect
-                colors:(NSArray *)colors
-             locations:(const CGFloat *)locations
-             direction:(UISwipeGestureRecognizerDirection)direction;
+- (void)fwDrawLinearGradient:(CGRect)rect
+                      colors:(NSArray *)colors
+                   locations:(nullable const CGFloat *)locations
+                   direction:(UISwipeGestureRecognizerDirection)direction;
 
 /*!
  @brief 绘制渐变颜色，需要在drawRect中调用
@@ -80,11 +97,11 @@
  @param startPoint 渐变开始点，需要根据rect计算
  @param endPoint 渐变结束点，需要根据rect计算
  */
-- (void)fwDrawGradient:(CGRect)rect
-                colors:(NSArray *)colors
-             locations:(const CGFloat *)locations
-            startPoint:(CGPoint)startPoint
-              endPoint:(CGPoint)endPoint;
+- (void)fwDrawLinearGradient:(CGRect)rect
+                      colors:(NSArray *)colors
+                   locations:(nullable const CGFloat *)locations
+                  startPoint:(CGPoint)startPoint
+                    endPoint:(CGPoint)endPoint;
 
 /**
  *  添加渐变Layer
@@ -98,7 +115,7 @@
  */
 - (CAGradientLayer *)fwAddGradientLayer:(CGRect)frame
                                  colors:(NSArray *)colors
-                              locations:(NSArray<NSNumber *> *)locations
+                              locations:(nullable NSArray<NSNumber *> *)locations
                              startPoint:(CGPoint)startPoint
                                endPoint:(CGPoint)endPoint;
 
@@ -123,7 +140,7 @@
 - (CALayer *)fwAddCircleLayer:(CGRect)rect
                        degree:(CGFloat)degree
                      progress:(CGFloat)progress
-                gradientBlock:(void (^)(CALayer *layer))gradientBlock
+                gradientBlock:(nullable void (^)(CALayer *layer))gradientBlock
                   strokeColor:(UIColor *)strokeColor
                   strokeWidth:(CGFloat)strokeWidth;
 
@@ -144,3 +161,5 @@
                   lineColor:(UIColor *)lineColor;
 
 @end
+
+NS_ASSUME_NONNULL_END

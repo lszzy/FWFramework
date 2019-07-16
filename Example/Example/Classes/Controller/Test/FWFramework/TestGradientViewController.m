@@ -18,7 +18,7 @@
 {
     NSArray *colors = @[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor greenColor].CGColor, (__bridge id)[UIColor blueColor].CGColor];
     CGFloat locations[] = {0.0, 0.5, 1.0};
-    [self fwDrawGradient:rect colors:colors locations:locations direction:UISwipeGestureRecognizerDirectionRight];
+    [self fwDrawLinearGradient:rect colors:colors locations:locations direction:UISwipeGestureRecognizerDirectionRight];
 }
 
 @end

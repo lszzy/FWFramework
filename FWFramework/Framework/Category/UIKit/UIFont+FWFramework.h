@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 快速创建细字体
  
@@ -109,3 +111,5 @@ typedef NS_ENUM(NSUInteger, FWFontWeight) {
 - (CGFloat)fwSpaceHeight;
 
 @end
+
+NS_ASSUME_NONNULL_END

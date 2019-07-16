@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - UITableView+FWTemplateLayout
 
 // 表格自动计算cell高度分类
@@ -50,3 +52,5 @@
 - (CGFloat)fwTemplateHeightWithWidth:(CGFloat)width;
 
 @end
+
+NS_ASSUME_NONNULL_END

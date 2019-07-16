@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "UITextView+FWPlaceholder.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - UITextView+FWFramework
 
 // 多行输入框分类
@@ -28,13 +30,13 @@
 @property (nonatomic, assign) BOOL fwReturnResign;
 
 // 设置点击键盘完成按钮自动切换的下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-@property (nonatomic, weak) UIResponder *fwReturnResponder;
+@property (nullable, nonatomic, weak) UIResponder *fwReturnResponder;
 
 // 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
-@property (nonatomic, copy) void (^fwReturnBlock)(UITextView *textView);
+@property (nullable, nonatomic, copy) void (^fwReturnBlock)(UITextView *textView);
 
 // 调用上面三个方法后会修改delegate，此方法始终访问外部delegate
-@property (nonatomic, weak) id<UITextViewDelegate> fwDelegate;
+@property (nullable, nonatomic, weak) id<UITextViewDelegate> fwDelegate;
 
 #pragma mark - Menu
 
@@ -55,6 +57,8 @@
 #pragma mark - Toolbar
 
 // 添加完成Toolbar
-- (void)fwAddDoneButton:(UIBarStyle)barStyle title:(NSString *)title;
+- (void)fwAddDoneButton:(UIBarStyle)barStyle title:(nullable NSString *)title;
 
 @end
+
+NS_ASSUME_NONNULL_END
