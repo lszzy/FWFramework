@@ -9,20 +9,22 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*! @brief Resolve代码块，标记完成 */
-typedef void (^FWResolveBlock)(id value);
+typedef void (^FWResolveBlock)(id _Nullable value);
 
 /*! @brief Reject代码块，标记失败 */
-typedef void (^FWRejectBlock)(NSError *error);
+typedef void (^FWRejectBlock)(NSError * _Nullable error);
 
 /*! @brief Then代码块，支持返回value|error|promise */
-typedef id (^FWThenBlock)(id value);
+typedef id _Nullable (^FWThenBlock)(id _Nullable value);
 
 /*! @brief Promise代码块，按条件触发resolve|reject */
 typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
 
 /*! @brief Progress代码块，标记进度 */
-typedef void (^FWProgressBlock)(double ratio, id value);
+typedef void (^FWProgressBlock)(double ratio, id _Nullable value);
 
 /*! @brief ProgressPromise代码块，按条件触发resolve|reject|progress */
 typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress);
@@ -66,7 +68,7 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param value 完成值
  @return 完成约定
  */
-+ (FWPromise *)resolve:(id)value;
++ (FWPromise *)resolve:(nullable id)value;
 
 /*!
  @brief 快速创建标记失败的约定
@@ -74,21 +76,21 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param error 错误信息
  @return 失败约定
  */
-+ (FWPromise *)reject:(NSError *)error;
++ (FWPromise *)reject:(nullable NSError *)error;
 
 /*!
  @brief 标记约定已完成
  
  @param value 完成值
  */
-- (void)resolve:(id)value;
+- (void)resolve:(nullable id)value;
 
 /*!
  @brief 标记约定已失败
  
  @param error 错误信息
  */
-- (void)reject:(NSError *)error;
+- (void)reject:(nullable NSError *)error;
 
 /*!
  @brief 标记约定进行中，仅progress创建的约定生效
@@ -96,7 +98,7 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param ratio 进行比率
  @param value 附加值
  */
-- (void)progress:(double)ratio value:(id)value;
+- (void)progress:(double)ratio value:(nullable id)value;
 
 /*!
  @brief 创建支持进度的约定
@@ -131,3 +133,5 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 + (FWPromise *)race:(NSArray<FWPromise *> *)promises;
 
 @end
+
+NS_ASSUME_NONNULL_END

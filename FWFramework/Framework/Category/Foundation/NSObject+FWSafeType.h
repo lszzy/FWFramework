@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param value 参数
  @return 数字
  */
-FOUNDATION_EXPORT NSNumber * FWSafeNumber(_Nullable id value);
+FOUNDATION_EXPORT NSNumber * FWSafeNumber(id _Nullable value);
 
 /*!
  @brief 安全字符串，不为nil
@@ -25,7 +25,7 @@ FOUNDATION_EXPORT NSNumber * FWSafeNumber(_Nullable id value);
  @param value 参数
  @return 字符串
  */
-FOUNDATION_EXPORT NSString * FWSafeString(_Nullable id value);
+FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
 
 #pragma mark - NSObject+FWSafeType
 

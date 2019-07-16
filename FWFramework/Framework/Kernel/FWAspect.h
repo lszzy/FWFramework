@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief AOP选项，支持多个
  
@@ -82,10 +84,10 @@ typedef NS_OPTIONS(NSUInteger, FWAspectOptions) {
  @param error 注册错误
  @return 可以反注册的AOP信息
  */
-+ (id<FWAspectToken>)fwHookSelector:(SEL)selector
-                          withBlock:(id)block
-                            options:(FWAspectOptions)options
-                              error:(NSError **)error;
++ (nullable id<FWAspectToken>)fwHookSelector:(SEL)selector
+                                   withBlock:(id)block
+                                     options:(FWAspectOptions)options
+                                       error:(NSError * _Nullable __autoreleasing *)error;
 
 /*!
  @brief 添加指定代码到当前对象方法执行之前/替换/之后
@@ -96,9 +98,11 @@ typedef NS_OPTIONS(NSUInteger, FWAspectOptions) {
  @param error 注册错误
  @return 可以反注册的AOP信息
  */
-- (id<FWAspectToken>)fwHookSelector:(SEL)selector
-                          withBlock:(id)block
-                            options:(FWAspectOptions)options
-                              error:(NSError **)error;
+- (nullable id<FWAspectToken>)fwHookSelector:(SEL)selector
+                                   withBlock:(id)block
+                                     options:(FWAspectOptions)options
+                                       error:(NSError * _Nullable __autoreleasing *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

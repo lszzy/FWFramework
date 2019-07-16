@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWWeakProxy
 
 /*!
@@ -17,7 +19,7 @@
 @interface FWWeakProxy : NSProxy
 
 /*! @brief 原target对象 */
-@property (nonatomic, weak, readonly) id target;
+@property (nullable, nonatomic, weak, readonly) id target;
 
 /*!
  @brief 初始化代理对象
@@ -25,7 +27,7 @@
  @param target 原target对象
  @return 代理对象
  */
-- (instancetype)initWithTarget:(id)target;
+- (instancetype)initWithTarget:(nullable id)target;
 
 /*!
  @brief 初始化代理对象
@@ -33,7 +35,7 @@
  @param target 原target对象
  @return 代理对象
  */
-+ (instancetype)proxyWithTarget:(id)target;
++ (instancetype)proxyWithTarget:(nullable id)target;
 
 @end
 
@@ -58,7 +60,7 @@
  @param block block代码
  @return 方法签名
  */
-+ (NSMethodSignature *)methodSignatureForBlock:(id)block;
++ (nullable NSMethodSignature *)methodSignatureForBlock:(id)block;
 
 /*!
  @brief 初始化代理
@@ -83,7 +85,7 @@
  @param returnValue 返回值
  @return 是否调用成功
  */
-- (BOOL)invokeWithInvocation:(NSInvocation *)invocation returnValue:(out NSValue **)returnValue;
+- (BOOL)invokeWithInvocation:(NSInvocation *)invocation returnValue:(out NSValue * __nullable * __nonnull)returnValue;
 
 /*!
  @brief 指定invocation调用block，并设置返回值
@@ -105,7 +107,7 @@
 @property (nonatomic, readonly) Protocol *protocol;
 
 /*! @brief 事件代理对象 */
-@property (nonatomic, weak) id delegate;
+@property (nullable, nonatomic, weak) id delegate;
 
 /*!
  @brief 初始化事件协议代理对象
@@ -129,7 +131,7 @@
  @param selector 目标方法
  @param block 实现的block
  */
-- (void)setSelector:(SEL)selector withBlock:(id)block;
+- (void)setSelector:(SEL)selector withBlock:(nullable id)block;
 
 /*!
  @brief 获取动态实现block
@@ -137,6 +139,8 @@
  @param selector 目标方法
  @return 实现的block
  */
-- (id)blockForSelector:(SEL)selector;
+- (nullable id)blockForSelector:(SEL)selector;
 
 @end
+
+NS_ASSUME_NONNULL_END
