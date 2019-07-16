@@ -8,6 +8,8 @@
 
 #import "FWCacheAbstract.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 内存缓存
 @interface FWCacheMemory : FWCacheAbstract
 
@@ -15,3 +17,5 @@
 + (instancetype)sharedInstance;
 
 @end
+
+NS_ASSUME_NONNULL_END
