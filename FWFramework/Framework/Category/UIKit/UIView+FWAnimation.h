@@ -83,12 +83,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param toValue    结束值
  @param duration   持续时间，0为默认(0.25秒)
  @param completion 完成事件
+ @return CABasicAnimation
  */
-- (void)fwAddAnimationWithKeyPath:(NSString *)keyPath
-                        fromValue:(id)fromValue
-                          toValue:(id)toValue
-                         duration:(CFTimeInterval)duration
-                       completion:(nullable void (^)(BOOL finished))completion;
+- (CABasicAnimation *)fwAddAnimationWithKeyPath:(NSString *)keyPath
+                                      fromValue:(id)fromValue
+                                        toValue:(id)toValue
+                                       duration:(CFTimeInterval)duration
+                                     completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  添加转场动画
@@ -125,12 +126,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param timingFunction 动画速度
  @param duration       持续时间，0为默认(0.25秒)
  @param completion     完成事件
+ @return CATransition
  */
-- (void)fwAddTransitionWithType:(NSString *)type
-                        subtype:(NSString *)subtype
-                 timingFunction:(NSString *)timingFunction
-                       duration:(CFTimeInterval)duration
-                     completion:(nullable void (^)(BOOL finished))completion;
+- (CATransition *)fwAddTransitionWithType:(NSString *)type
+                                  subtype:(NSString *)subtype
+                           timingFunction:(NSString *)timingFunction
+                                 duration:(CFTimeInterval)duration
+                               completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  移除所有视图动画
@@ -145,10 +147,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param layer      CAShapeLayer层
  *  @param duration   持续时间
  *  @param completion 完成回调
+ *  @return CABasicAnimation
  */
-- (void)fwStrokeWithLayer:(CAShapeLayer *)layer
-                 duration:(NSTimeInterval)duration
-               completion:(nullable void (^)(BOOL finished))completion;
+- (CABasicAnimation *)fwStrokeWithLayer:(CAShapeLayer *)layer
+                               duration:(NSTimeInterval)duration
+                             completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  水平摇摆动画

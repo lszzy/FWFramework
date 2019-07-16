@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 坐标转"纬度,经度"字符串
 FOUNDATION_EXPORT NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate);
 
@@ -51,10 +53,10 @@ extern NSString *const FWHeadingUpdatedNotification;
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 
 // 当前位置
-@property (nonatomic, readonly) CLLocation *location;
+@property (nullable, nonatomic, readonly) CLLocation *location;
 
 // 当前方向，headingEnabled启用后生效
-@property (nonatomic, readonly) CLHeading *heading;
+@property (nullable, nonatomic, readonly) CLHeading *heading;
 
 // 单例模式
 + (instancetype)sharedInstance;
@@ -66,3 +68,5 @@ extern NSString *const FWHeadingUpdatedNotification;
 - (void)stopUpdateLocation;
 
 @end
+
+NS_ASSUME_NONNULL_END

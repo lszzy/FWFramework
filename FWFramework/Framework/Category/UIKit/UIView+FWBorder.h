@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIView (FWBorder)
 
 #pragma mark - Default
@@ -18,7 +20,7 @@
  * @param color 边框颜色
  * @param width 边框宽度
  */
-- (void)fwSetBorderColor:(UIColor *)color width:(CGFloat)width;
+- (void)fwSetBorderColor:(nullable UIColor *)color width:(CGFloat)width;
 
 /**
  * 绘制四边边框和四角圆角
@@ -27,7 +29,7 @@
  * @param width  边框宽度
  * @param radius 圆角半径
  */
-- (void)fwSetBorderColor:(UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius;
+- (void)fwSetBorderColor:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius;
 
 /**
  * 绘制四角圆角
@@ -45,7 +47,7 @@
  * @param color  边框颜色
  * @param width  边框宽度
  */
-- (void)fwSetBorderLayer:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width;
+- (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
 
 /**
  * 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
@@ -56,7 +58,7 @@
  * @param leftInset  左内边距
  * @param rightInset 右内边距
  */
-- (void)fwSetBorderLayer:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+- (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
 
 /**
  * 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
@@ -74,7 +76,7 @@
  * @param color  边框宽度
  * @param width  边框颜色
  */
-- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(UIColor *)color width:(CGFloat)width;
+- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(nullable UIColor *)color width:(CGFloat)width;
 
 #pragma mark - View
 
@@ -85,7 +87,7 @@
  * @param color  边框颜色
  * @param width  边框宽度
  */
-- (void)fwSetBorderView:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width;
+- (void)fwSetBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
 
 /**
  * 绘制单边或多边边框。使用AutoLayout
@@ -96,6 +98,8 @@
  * @param leftInset  左内边距
  * @param rightInset 右内边距
  */
-- (void)fwSetBorderView:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+- (void)fwSetBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
 
 @end
+
+NS_ASSUME_NONNULL_END

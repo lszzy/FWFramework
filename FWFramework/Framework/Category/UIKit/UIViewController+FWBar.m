@@ -192,7 +192,7 @@
     // 按钮颜色
     self.tintColor = color;
     // 标题颜色
-    [self setTitleTextAttributes:@{NSForegroundColorAttributeName: color}];
+    self.titleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
 }
 
 - (void)fwSetBackgroundColor:(UIColor *)color

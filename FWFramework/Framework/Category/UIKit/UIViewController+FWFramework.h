@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Child
 
 // 获取当前显示的子控制器，解决不能触发viewWillAppear等的bug
-- (UIViewController *)fwChildViewController;
+- (nullable UIViewController *)fwChildViewController;
 
 // 设置当前显示的子控制器，解决不能触发viewWillAppear等的bug
 - (void)fwSetChildViewController:(UIViewController *)viewController;

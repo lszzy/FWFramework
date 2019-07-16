@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
     FWPullRefreshStateStopped = 0,
     FWPullRefreshStateTriggered,
@@ -18,18 +20,18 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 @interface FWPullRefreshView : UIView
 
-@property (nonatomic, strong) UIColor *arrowColor;
-@property (nonatomic, strong) UIColor *textColor;
+@property (nullable, nonatomic, strong) UIColor *arrowColor;
+@property (nullable, nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
-@property (nonatomic, strong, readwrite) UIColor *activityIndicatorViewColor;
-@property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
+@property (nullable, nonatomic, strong) UIColor *activityIndicatorViewColor;
+@property (nonatomic, assign) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
 
-- (void)setTitle:(NSString *)title forState:(FWPullRefreshState)state;
-- (void)setSubtitle:(NSString *)subtitle forState:(FWPullRefreshState)state;
-- (void)setCustomView:(UIView *)view forState:(FWPullRefreshState)state;
+- (void)setTitle:(nullable NSString *)title forState:(FWPullRefreshState)state;
+- (void)setSubtitle:(nullable NSString *)subtitle forState:(FWPullRefreshState)state;
+- (void)setCustomView:(nullable UIView *)view forState:(FWPullRefreshState)state;
 
 - (void)startAnimating;
 - (void)stopAnimating;
@@ -48,7 +50,9 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 - (void)fwAddPullRefreshWithTarget:(id)target action:(SEL)action;
 - (void)fwTriggerPullRefresh;
 
-@property (nonatomic, strong, readonly) FWPullRefreshView *fwPullRefreshView;
+@property (nullable, nonatomic, strong, readonly) FWPullRefreshView *fwPullRefreshView;
 @property (nonatomic, assign) BOOL fwShowPullRefresh;
 
 @end
+
+NS_ASSUME_NONNULL_END

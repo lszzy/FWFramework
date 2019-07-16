@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief UIPageControl分类
  */
@@ -28,3 +30,5 @@
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize;
 
 @end
+
+NS_ASSUME_NONNULL_END

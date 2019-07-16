@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - Macro
+NS_ASSUME_NONNULL_BEGIN
 
 // 从16进制创建UIColor，格式0xFFFFFF，透明度可选，默认1.0
 #define FWColorHex( hex, ... ) \
@@ -35,16 +35,16 @@
 #pragma mark - String
 
 // 从十六进制字符串初始化，支持RGB、RGBA、RRGGBB、RRGGBBAA，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0
-+ (UIColor *)fwColorWithHexString:(NSString *)hexString;
++ (nullable UIColor *)fwColorWithHexString:(NSString *)hexString;
 
 // 从十六进制字符串初始化，支持RGB、RGBA、RRGGBB、RRGGBBAA，格式：@"20B2AA", @"#FFFFFF"，自定义透明度
-+ (UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
++ (nullable UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
 
 // 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0
-+ (UIColor *)fwColorWithString:(NSString *)string;
++ (nullable UIColor *)fwColorWithString:(NSString *)string;
 
 // 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度
-+ (UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
++ (nullable UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
 
 #pragma mark - Image
 
@@ -52,7 +52,7 @@
 + (UIColor *)fwColorWithImage:(UIImage *)image;
 
 // 从图像的某个点初始化UIColor
-+ (UIColor *)fwColorWithImage:(UIImage *)image point:(CGPoint)point;
++ (nullable UIColor *)fwColorWithImage:(UIImage *)image point:(CGPoint)point;
 
 #pragma mark - Color
 
@@ -95,7 +95,7 @@
  */
 + (UIColor *)fwGradientColorWithSize:(CGSize)size
                               colors:(NSArray *)colors
-                           locations:(const CGFloat *)locations
+                           locations:(nullable const CGFloat *)locations
                            direction:(UISwipeGestureRecognizerDirection)direction;
 
 /*!
@@ -110,7 +110,7 @@
  */
 + (UIColor *)fwGradientColorWithSize:(CGSize)size
                               colors:(NSArray *)colors
-                           locations:(const CGFloat *)locations
+                           locations:(nullable const CGFloat *)locations
                           startPoint:(CGPoint)startPoint
                             endPoint:(CGPoint)endPoint;
 
@@ -120,3 +120,5 @@
 + (UIColor *)fwRandomColor;
 
 @end
+
+NS_ASSUME_NONNULL_END
