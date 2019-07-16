@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Macro
 
 /*!
@@ -75,7 +77,7 @@
  @param object 消息对象，值为nil时表示所有
  @param block  消息句柄
  */
-- (void)fwObserveMessage:(NSString *)name object:(id)object block:(void (^)(NSNotification *notification))block;
+- (void)fwObserveMessage:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /*!
  @brief 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -94,7 +96,7 @@
  @param target 消息目标
  @param action 目标动作，参数为通知对象
  */
-- (void)fwObserveMessage:(NSString *)name object:(id)object target:(id)target action:(SEL)action;
+- (void)fwObserveMessage:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
 
 /*!
  @brief 手工移除某个点对点消息指定监听
@@ -103,7 +105,7 @@
  @param target 消息目标
  @param action 目标动作
  */
-- (void)fwUnobserveMessage:(NSString *)name target:(id)target action:(SEL)action;
+- (void)fwUnobserveMessage:(NSString *)name target:(nullable id)target action:(nullable SEL)action;
 
 /*!
  @brief 手工移除某个指定对象点对点消息指定监听
@@ -113,7 +115,7 @@
  @param target 消息目标
  @param action 目标动作
  */
-- (void)fwUnobserveMessage:(NSString *)name object:(id)object target:(id)target action:(SEL)action;
+- (void)fwUnobserveMessage:(NSString *)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
 
 /*!
  @brief 手工移除某个点对点消息所有监听
@@ -128,7 +130,7 @@
  @param name   消息名称
  @param object 消息对象，值为nil时表示所有
  */
-- (void)fwUnobserveMessage:(NSString *)name object:(id)object;
+- (void)fwUnobserveMessage:(NSString *)name object:(nullable id)object;
 
 /*!
  @brief 手工移除所有点对点消息监听
@@ -152,7 +154,7 @@
  @param object 消息对象
  @param receiver 消息接收者
  */
-+ (void)fwSendMessage:(NSString *)name object:(id)object toReceiver:(id)receiver;
++ (void)fwSendMessage:(NSString *)name object:(nullable id)object toReceiver:(id)receiver;
 
 /*!
  @brief 发送类点对点消息，附带对象和用户信息
@@ -162,7 +164,7 @@
  @param userInfo 用户信息
  @param receiver 消息接收者
  */
-+ (void)fwSendMessage:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver;
++ (void)fwSendMessage:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
 
 /*!
  @brief 发送点对点消息
@@ -179,7 +181,7 @@
  @param object 消息对象
  @param receiver 消息接收者
  */
-- (void)fwSendMessage:(NSString *)name object:(id)object toReceiver:(id)receiver;
+- (void)fwSendMessage:(NSString *)name object:(nullable id)object toReceiver:(id)receiver;
 
 /*!
  @brief 发送点对点消息，附带对象和用户信息
@@ -189,7 +191,7 @@
  @param userInfo 用户信息
  @param receiver 消息接收者
  */
-- (void)fwSendMessage:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver;
+- (void)fwSendMessage:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
 
 @end
 
@@ -217,7 +219,7 @@
  @param object 通知对象，值为nil时表示所有
  @param block  通知句柄
  */
-- (void)fwObserveNotification:(NSString *)name object:(id)object block:(void (^)(NSNotification *notification))block;
+- (void)fwObserveNotification:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /*!
  @brief 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -236,7 +238,7 @@
  @param target 通知目标
  @param action 目标动作，参数为通知对象
  */
-- (void)fwObserveNotification:(NSString *)name object:(id)object target:(id)target action:(SEL)action;
+- (void)fwObserveNotification:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
 
 /*!
  @brief 手工移除某个广播通知指定监听
@@ -245,7 +247,7 @@
  @param target 通知目标
  @param action 目标动作
  */
-- (void)fwUnobserveNotification:(NSString *)name target:(id)target action:(SEL)action;
+- (void)fwUnobserveNotification:(NSString *)name target:(nullable id)target action:(nullable SEL)action;
 
 /*!
  @brief 手工移除某个指定对象广播通知指定监听
@@ -255,7 +257,7 @@
  @param target 通知目标
  @param action 目标动作
  */
-- (void)fwUnobserveNotification:(NSString *)name object:(id)object target:(id)target action:(SEL)action;
+- (void)fwUnobserveNotification:(NSString *)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
 
 /*!
  @brief 手工移除某个广播通知所有监听
@@ -270,7 +272,7 @@
  @param name   通知名称
  @param object 通知对象，值为nil时表示所有
  */
-- (void)fwUnobserveNotification:(NSString *)name object:(id)object;
+- (void)fwUnobserveNotification:(NSString *)name object:(nullable id)object;
 
 /*!
  @brief 手工移除所有广播通知监听
@@ -292,7 +294,7 @@
  @param name   通知名称
  @param object 通知对象
  */
-+ (void)fwPostNotification:(NSString *)name object:(id)object;
++ (void)fwPostNotification:(NSString *)name object:(nullable id)object;
 
 /*!
  @brief 发送广播通知，附带对象和用户信息
@@ -301,7 +303,7 @@
  @param object   通知对象
  @param userInfo 用户信息
  */
-+ (void)fwPostNotification:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo;
++ (void)fwPostNotification:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 /*!
  @brief 发送广播通知
@@ -316,7 +318,7 @@
  @param name   通知名称
  @param object 通知对象
  */
-- (void)fwPostNotification:(NSString *)name object:(id)object;
+- (void)fwPostNotification:(NSString *)name object:(nullable id)object;
 
 /*!
  @brief 发送广播通知，附带对象和用户信息
@@ -325,7 +327,7 @@
  @param object   通知对象
  @param userInfo 用户信息
  */
-- (void)fwPostNotification:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo;
+- (void)fwPostNotification:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -360,7 +362,7 @@
  @param target   目标对象，值为nil时移除所有对象(同UIControl)
  @param action   目标动作，值为nil时移除所有动作(同UIControl)
  */
-- (void)fwUnobserveProperty:(NSString *)property target:(id)target action:(SEL)action;
+- (void)fwUnobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
 
 /*!
  @brief 手工移除某个属性所有监听
@@ -375,3 +377,5 @@
 - (void)fwUnobserveAllProperties;
 
 @end
+
+NS_ASSUME_NONNULL_END
