@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // 指示器控件类型
 typedef NS_ENUM(NSInteger, FWIndicatorControlType) {
     // 自定义指示器控件
@@ -49,22 +51,22 @@ typedef NS_ENUM(NSInteger, FWIndicatorControlType) {
 @property (nonatomic, assign) CGSize indicatorSize;
 
 // 主指示器颜色，根据类型处理，show之前生效
-@property (nonatomic, strong) UIColor *indicatorColor;
+@property (nonatomic, strong, nullable) UIColor *indicatorColor;
 
 // 指示器图片，支持动画图片，自适应大小，仅Image生效，show之前生效
-@property (nonatomic, strong) UIImage *indicatorImage;
+@property (nonatomic, strong, nullable) UIImage *indicatorImage;
 
 // 活动指示器样式，默认WhiteLarge，仅Activity生效，show之前生效
 @property (nonatomic, assign) UIActivityIndicatorViewStyle indicatorStyle;
 
 // 带属性标题文本，非Text类型show之前如果为nil则不显示文本，一直生效
-@property (nonatomic, copy) NSAttributedString *attributedTitle;
+@property (nonatomic, copy, nullable) NSAttributedString *attributedTitle;
 
 // 当前指示器进度值，范围0~1，仅Progress生效，一直生效
 @property (nonatomic, assign) float progress;
 
 // 完成回调句柄
-@property (nonatomic, copy) void (^completionBlock)(void);
+@property (nonatomic, copy, nullable) void (^completionBlock)(void);
 
 // 初始化指定类型指示器
 - (instancetype)initWithType:(FWIndicatorControlType)type;
@@ -88,6 +90,8 @@ typedef NS_ENUM(NSInteger, FWIndicatorControlType) {
 /**
  *  视图指示器控件，不可点击，同一视图最多显示一个指示器
  */
-@property (nonatomic, strong) FWIndicatorControl *fwIndicatorControl;
+@property (nonatomic, strong, nullable) FWIndicatorControl *fwIndicatorControl;
 
 @end
+
+NS_ASSUME_NONNULL_END

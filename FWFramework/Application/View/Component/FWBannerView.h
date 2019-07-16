@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, FWBannerViewPageControlAlignment) {
     FWBannerViewPageControlAlignmentRight,
     FWBannerViewPageControlAlignmentCenter,
@@ -37,10 +39,10 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 - (void)bannerView:(FWBannerView *)bannerView customCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index;
 
 /** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法返回你的自定义UICollectionViewCell的class。 */
-- (Class)customCellClassForBannerView:(FWBannerView *)view;
+- (nullable Class)customCellClassForBannerView:(FWBannerView *)view;
 
 /** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法返回你的自定义UICollectionViewCell的Nib。 */
-- (UINib *)customCellNibForBannerView:(FWBannerView *)view;
+- (nullable UINib *)customCellNibForBannerView:(FWBannerView *)view;
 
 @end
 
@@ -52,24 +54,24 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 @interface FWBannerView : UIView
 
 /** 初始轮播图（推荐使用） */
-+ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(id<FWBannerViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage;
++ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(nullable id<FWBannerViewDelegate>)delegate placeholderImage:(nullable UIImage *)placeholderImage;
 
-+ (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup;
++ (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(nullable NSArray *)imageURLStringsGroup;
 
 /** 本地图片轮播初始化方式 */
-+ (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup;
++ (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(nullable NSArray *)imageNamesGroup;
 
 /** 本地图片轮播初始化方式2,infiniteLoop:是否无限循环 */
-+ (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup;
++ (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(nullable NSArray *)imageNamesGroup;
 
 /** 网络图片 url string 数组 */
-@property (nonatomic, strong) NSArray *imageURLStringsGroup;
+@property (nonatomic, strong, nullable) NSArray *imageURLStringsGroup;
 
 /** 每张图片对应要显示的文字数组 */
-@property (nonatomic, strong) NSArray *titlesGroup;
+@property (nonatomic, strong, nullable) NSArray *titlesGroup;
 
 /** 本地图片数组 */
-@property (nonatomic, strong) NSArray *localizationImageNamesGroup;
+@property (nonatomic, strong, nullable) NSArray *localizationImageNamesGroup;
 
 /** 自动滚动间隔时间,默认2s */
 @property (nonatomic, assign) CGFloat autoScrollTimeInterval;
@@ -96,13 +98,13 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 @property (nonatomic, assign) BOOL itemPagingCenter;
 
 /** 设置事件代理 */
-@property (nonatomic, weak) id<FWBannerViewDelegate> delegate;
+@property (nonatomic, weak, nullable) id<FWBannerViewDelegate> delegate;
 
 /** block方式监听点击 */
-@property (nonatomic, copy) void (^clickItemOperationBlock)(NSInteger currentIndex);
+@property (nonatomic, copy, nullable) void (^clickItemOperationBlock)(NSInteger currentIndex);
 
 /** block方式监听滚动 */
-@property (nonatomic, copy) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);
+@property (nonatomic, copy, nullable) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);
 
 /** 可以调用此方法手动控制滚动到哪一个index */
 - (void)makeScrollViewScrollToIndex:(NSInteger)index;
@@ -114,7 +116,7 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 @property (nonatomic, assign) UIViewContentMode bannerImageViewContentMode;
 
 /** 占位图，用于网络未加载到图片时 */
-@property (nonatomic, strong) UIImage *placeholderImage;
+@property (nonatomic, strong, nullable) UIImage *placeholderImage;
 
 /** 是否显示分页控件 */
 @property (nonatomic, assign) BOOL showPageControl;
@@ -144,28 +146,28 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 @property (nonatomic, assign) CGFloat pageControlDotSpacing;
 
 /** 当前分页控件小圆标颜色 */
-@property (nonatomic, strong) UIColor *currentPageDotColor;
+@property (nonatomic, strong, nullable) UIColor *currentPageDotColor;
 
 /** 其他分页控件小圆标颜色 */
-@property (nonatomic, strong) UIColor *pageDotColor;
+@property (nonatomic, strong, nullable) UIColor *pageDotColor;
 
 /** 当前分页控件小圆标图片 */
-@property (nonatomic, strong) UIImage *currentPageDotImage;
+@property (nonatomic, strong, nullable) UIImage *currentPageDotImage;
 
 /** 其他分页控件小圆标图片 */
-@property (nonatomic, strong) UIImage *pageDotImage;
+@property (nonatomic, strong, nullable) UIImage *pageDotImage;
 
 /** 其他分页控件自定义视图类，默认FWDotView */
-@property (nonatomic) Class pageDotViewClass;
+@property (nonatomic, nullable) Class pageDotViewClass;
 
 /** 轮播文字label字体颜色 */
-@property (nonatomic, strong) UIColor *titleLabelTextColor;
+@property (nonatomic, strong, nullable) UIColor *titleLabelTextColor;
 
 /** 轮播文字label字体大小 */
-@property (nonatomic, strong) UIFont  *titleLabelTextFont;
+@property (nonatomic, strong, nullable) UIFont  *titleLabelTextFont;
 
 /** 轮播文字label背景颜色 */
-@property (nonatomic, strong) UIColor *titleLabelBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *titleLabelBackgroundColor;
 
 /** 轮播文字label高度 */
 @property (nonatomic, assign) CGFloat titleLabelHeight;
@@ -186,12 +188,12 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 
 @interface FWBannerViewCell : UICollectionViewCell
 
-@property (weak, nonatomic) UIImageView *imageView;
-@property (copy, nonatomic) NSString *title;
+@property (nonatomic, weak, nullable) UIImageView *imageView;
+@property (nonatomic, copy, nullable) NSString *title;
 
-@property (nonatomic, strong) UIColor *titleLabelTextColor;
-@property (nonatomic, strong) UIFont *titleLabelTextFont;
-@property (nonatomic, strong) UIColor *titleLabelBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *titleLabelTextColor;
+@property (nonatomic, strong, nullable) UIFont *titleLabelTextFont;
+@property (nonatomic, strong, nullable) UIColor *titleLabelBackgroundColor;
 @property (nonatomic, assign) CGFloat titleLabelHeight;
 @property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;
 @property (nonatomic, assign) UIEdgeInsets contentViewInset;
@@ -203,3 +205,5 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 @property (nonatomic, assign) BOOL onlyDisplayText;
 
 @end
+
+NS_ASSUME_NONNULL_END
