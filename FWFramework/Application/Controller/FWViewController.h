@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 视图控制器挂钩协议
  */
@@ -35,11 +37,11 @@
  */
 @interface FWViewControllerIntercepter : NSObject
 
-@property (nonatomic, assign) SEL initIntercepter;
-@property (nonatomic, assign) SEL loadViewIntercepter;
-@property (nonatomic, assign) SEL viewDidLoadIntercepter;
+@property (nonatomic, assign, nullable) SEL initIntercepter;
+@property (nonatomic, assign, nullable) SEL loadViewIntercepter;
+@property (nonatomic, assign, nullable) SEL viewDidLoadIntercepter;
 
-@property (nonatomic, copy) NSDictionary *forwardSelectors;
+@property (nonatomic, copy, nullable) NSDictionary *forwardSelectors;
 
 @end
 
@@ -55,3 +57,5 @@
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
 
 @end
+
+NS_ASSUME_NONNULL_END

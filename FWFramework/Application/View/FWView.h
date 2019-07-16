@@ -9,17 +9,19 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief FWViewEvent
  */
 @interface FWViewEvent : NSObject
 
 @property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, strong, readonly) id object;
-@property (nonatomic, copy, readonly) NSDictionary *userInfo;
+@property (nonatomic, strong, readonly, nullable) id object;
+@property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;
 
-+ (instancetype)eventWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo;
-- (instancetype)initWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo;
++ (instancetype)eventWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+- (instancetype)initWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -38,15 +40,17 @@
 @interface UIView (FWEvent)
 
 // 通用事件代理
-@property (nonatomic, weak) id<FWViewDelegate> fwViewDelegate;
+@property (nonatomic, weak, nullable) id<FWViewDelegate> fwViewDelegate;
 
 // 调用事件代理
 - (void)fwTouchEvent:(FWViewEvent *)event;
 
 // 通用视图数据
-@property (nonatomic, strong) id fwViewData;
+@property (nonatomic, strong, nullable) id fwViewData;
 
 // 渲染数据，子类重写
 - (void)fwRenderData;
 
 @end
+
+NS_ASSUME_NONNULL_END
