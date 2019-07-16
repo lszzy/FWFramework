@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 线程安全的可变数组，参考自YYKit
  
@@ -17,3 +19,5 @@
 @interface FWMutableArray : NSMutableArray
 
 @end
+
+NS_ASSUME_NONNULL_END

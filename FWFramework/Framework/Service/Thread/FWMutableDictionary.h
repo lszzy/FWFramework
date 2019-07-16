@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 线程安全的可变字典，参考自YYKit
  
@@ -17,3 +19,5 @@
 @interface FWMutableDictionary : NSMutableDictionary
 
 @end
+
+NS_ASSUME_NONNULL_END
