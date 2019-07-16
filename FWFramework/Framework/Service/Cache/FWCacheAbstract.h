@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWCacheProtocol
 
 /**
@@ -18,13 +20,13 @@
 @required
 
 // 读取某个缓存
-- (id)objectForKey:(NSString *)key;
+- (nullable id)objectForKey:(NSString *)key;
 
 // 设置某个缓存
-- (void)setObject:(id)object forKey:(NSString *)key;
+- (void)setObject:(nullable id)object forKey:(NSString *)key;
 
 // 设置某个缓存，支持缓存有效期，小于等于0为永久有效
-- (void)setObject:(id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire;
+- (void)setObject:(nullable id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire;
 
 // 移除某个缓存
 - (void)removeObjectForKey:(NSString *)key;
@@ -44,7 +46,7 @@
 #pragma mark - Protect
 
 // 读取某个缓存，内部方法，子类重写
-- (id)innerObjectForKey:(NSString *)key;
+- (nullable id)innerObjectForKey:(NSString *)key;
 
 // 设置某个缓存，内部方法，子类重写
 - (void)innerSetObject:(id)object forKey:(NSString *)key;
@@ -56,3 +58,5 @@
 - (void)innerRemoveAllObjects;
 
 @end
+
+NS_ASSUME_NONNULL_END

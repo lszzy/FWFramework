@@ -8,6 +8,8 @@
 
 #import "FWCacheAbstract.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Sqlite缓存
 @interface FWCacheSqlite : FWCacheAbstract
 
@@ -15,6 +17,8 @@
 + (instancetype)sharedInstance;
 
 // 指定路径
-- (instancetype)initWithPath:(NSString *)path;
+- (instancetype)initWithPath:(nullable NSString *)path;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWTask
 
 // 任务基类
@@ -16,7 +18,7 @@
 /**
  *  错误信息
  */
-@property (nonatomic, readonly) NSError *error;
+@property (nonatomic, readonly, nullable) NSError *error;
 
 /**
  *  子类重写，任务执行完成，需调用finishWithError:
@@ -28,7 +30,7 @@
  *
  *  @param error 任务错误信息
  */
-- (void)finishWithError:(NSError *)error;
+- (void)finishWithError:(nullable NSError *)error;
 
 /**
  *  是否需要主线程执行，会阻碍UI渲染，默认NO
@@ -74,3 +76,5 @@
 - (void)addTasks:(NSArray<NSOperation *> *)tasks;
 
 @end
+
+NS_ASSUME_NONNULL_END
