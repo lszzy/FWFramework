@@ -243,7 +243,7 @@
         fromPosition:(CGFloat)fromPosition
           toPosition:(CGFloat)toPosition
       kickbackHeight:(CGFloat)kickbackHeight
-            callback:(void (^)(CGFloat))callback
+            callback:(void (^)(CGFloat, BOOL))callback
 {
     // 禁用拖拽回弹效果
     self.bounces = NO;

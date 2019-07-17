@@ -29,7 +29,7 @@
     FWWeakifySelf();
     [self fwSetLeftBarItem:@"Menu" block:^(id sender) {
         FWStrongifySelf();
-        [self.panGesture fwDrawerViewTogglePosition];
+        [self.panGesture fwDrawerViewToggleOpen:![self.panGesture fwDrawerViewIsOpen]];
     }];
 }
 
