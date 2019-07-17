@@ -20,7 +20,7 @@
 @property (nonatomic, assign) CGFloat fromPosition;
 @property (nonatomic, assign) CGFloat toPosition;
 @property (nonatomic, assign) CGFloat kickbackHeight;
-@property (nonatomic, copy) void (^callback)(CGFloat position);
+@property (nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
 
 @end
 
@@ -92,7 +92,7 @@
                                  self.view.frame.size.width,
                                  self.view.frame.size.height);
     if (self.callback) {
-        self.callback(position);
+        self.callback(position, NO);
     }
     
     // 拖动结束时停留指定位置
@@ -116,7 +116,7 @@
     } completion:^(BOOL finished) {
         self.position = position;
         if (self.callback) {
-            self.callback(position);
+            self.callback(position, YES);
         }
     }];
 }
@@ -158,7 +158,7 @@
         fromPosition:(CGFloat)fromPosition
           toPosition:(CGFloat)toPosition
       kickbackHeight:(CGFloat)kickbackHeight
-            callback:(void (^)(CGFloat))callback
+            callback:(void (^)(CGFloat, BOOL))callback
 {
     // 生成内部事件绑定target
     FWInnerDrawerViewTarget *target = [[FWInnerDrawerViewTarget alloc] init];
@@ -180,15 +180,27 @@
     }
 }
 
-- (void)fwDrawerViewTogglePosition
+- (BOOL)fwDrawerViewIsOpen
+{
+    FWInnerDrawerViewTarget *target = objc_getAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:));
+    if (!target) {
+        return NO;
+    }
+    
+    return target.position == target.toPosition;
+}
+
+- (void)fwDrawerViewToggleOpen:(BOOL)open
 {
     FWInnerDrawerViewTarget *target = objc_getAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:));
     if (!target) {
         return;
     }
     
-    CGFloat position = (target.position == target.fromPosition) ? target.toPosition : target.fromPosition;
-    [target togglePosition:position];
+    CGFloat position = open ? target.toPosition : target.fromPosition;
+    if (target.position != position) {
+        [target togglePosition:position];
+    }
 }
 
 @end

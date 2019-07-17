@@ -126,12 +126,12 @@ static NSString *const FWAspectMessagePrefix = @"fwaspect_";
 + (id<FWAspectToken>)fwHookSelector:(SEL)selector
                           withBlock:(id)block
                             options:(FWAspectOptions)options
-                              error:(NSError **)error
+                              error:(NSError * __autoreleasing *)error
 {
     return fw_aspect_add((id)self, selector, options, block, error);
 }
 
-- (id<FWAspectToken>)fwHookSelector:(SEL)selector withBlock:(id)block options:(FWAspectOptions)options error:(NSError **)error
+- (id<FWAspectToken>)fwHookSelector:(SEL)selector withBlock:(id)block options:(FWAspectOptions)options error:(NSError * __autoreleasing *)error
 {
     return fw_aspect_add(self, selector, options, block, error);
 }

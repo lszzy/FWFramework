@@ -13,6 +13,8 @@
 #import "FWCacheFile.h"
 #import "FWCacheSqlite.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, FWCacheType) {
     FWCacheTypeMemory = 1,
     FWCacheTypeUserDefaults,
@@ -27,6 +29,8 @@ typedef NS_ENUM(NSInteger, FWCacheType) {
 @interface FWCacheManager : NSObject
 
 // 获取指定类型的缓存单例对象
-+ (id<FWCacheProtocol>)managerWithType:(FWCacheType)type;
++ (nullable id<FWCacheProtocol>)managerWithType:(FWCacheType)type;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWState
 
 @class FWStateTransition;
@@ -19,16 +21,16 @@
 @property (nonatomic, copy, readonly) NSString *name;
 
 // 即将进入block
-@property (nonatomic, copy) void (^willEnterBlock)(FWStateTransition *transition);
+@property (nonatomic, copy, nullable) void (^willEnterBlock)(FWStateTransition * _Nullable transition);
 
 // 已进入block
-@property (nonatomic, copy) void (^didEnterBlock)(FWStateTransition *transition);
+@property (nonatomic, copy, nullable) void (^didEnterBlock)(FWStateTransition * _Nullable transition);
 
 // 即将退出block
-@property (nonatomic, copy) void (^willExitBlock)(FWStateTransition *transition);
+@property (nonatomic, copy, nullable) void (^willExitBlock)(FWStateTransition *transition);
 
 // 已退出block
-@property (nonatomic, copy) void (^didExitBlock)(FWStateTransition *transition);
+@property (nonatomic, copy, nullable) void (^didExitBlock)(FWStateTransition *transition);
 
 // 从名称初始化
 + (instancetype)stateWithName:(NSString *)name;
@@ -50,16 +52,16 @@
 @property (nonatomic, strong, readonly) FWState *targetState;
 
 // 能否触发block
-@property (nonatomic, copy) BOOL (^shouldFireBlock)(FWStateTransition *transition);
+@property (nonatomic, copy, nullable) BOOL (^shouldFireBlock)(FWStateTransition *transition);
 
 // 即将触发block
-@property (nonatomic, copy) void (^willFireBlock)(FWStateTransition *transition);
+@property (nonatomic, copy, nullable) void (^willFireBlock)(FWStateTransition *transition);
 
 // 正在触发block，必须调用completion标记完成结果。YES事件完成、状态改变，NO事件失败、状态不变。不设置默认完成
-@property (nonatomic, copy) void (^fireBlock)(FWStateTransition *transition, void (^completion)(BOOL finished));
+@property (nonatomic, copy, nullable) void (^fireBlock)(FWStateTransition *transition, void (^completion)(BOOL finished));
 
 // 触发完成block，finished为完成状态
-@property (nonatomic, copy) void (^didFireBlock)(FWStateTransition *transition, BOOL finished);
+@property (nonatomic, copy, nullable) void (^didFireBlock)(FWStateTransition *transition, BOOL finished);
 
 // 初始化事件
 + (instancetype)eventWithName:(NSString *)name fromStates:(NSArray<FWState *> *)sourceStates toState:(FWState *)targetState;
@@ -86,10 +88,10 @@
 @property (nonatomic, strong, readonly) FWState *targetState;
 
 // 附加参数，只读
-@property (nonatomic, strong, readonly) id object;
+@property (nonatomic, strong, readonly, nullable) id object;
 
 // 初始化转换器
-+ (instancetype)transitionInMachine:(FWStateMachine *)machine forEvent:(FWStateEvent *)event fromState:(FWState *)sourceState withObject:(id)object;
++ (instancetype)transitionInMachine:(FWStateMachine *)machine forEvent:(FWStateEvent *)event fromState:(FWState *)sourceState withObject:(nullable id)object;
 
 @end
 
@@ -111,7 +113,7 @@ extern NSString *const FWStateChangedNotification;
 @property (nonatomic, strong, readonly) FWState *state;
 
 // 初始化状态，可写
-@property (nonatomic, strong) FWState *initialState;
+@property (nonatomic, strong, nullable) FWState *initialState;
 
 /**
  *  添加状态
@@ -134,7 +136,7 @@ extern NSString *const FWStateChangedNotification;
  *
  *  @return 状态对象
  */
-- (FWState *)stateNamed:(NSString *)name;
+- (nullable FWState *)stateNamed:(NSString *)name;
 
 /**
  *  当前状态判断
@@ -143,7 +145,7 @@ extern NSString *const FWStateChangedNotification;
  *
  *  @return 判断结果
  */
-- (BOOL)isState:(id)state;
+- (BOOL)isState:(nullable id)state;
 
 /**
  *  添加事件
@@ -166,7 +168,7 @@ extern NSString *const FWStateChangedNotification;
  *
  *  @return 事件对象
  */
-- (FWStateEvent *)eventNamed:(NSString *)name;
+- (nullable FWStateEvent *)eventNamed:(NSString *)name;
 
 /**
  *  激活并锁定状态机
@@ -187,7 +189,7 @@ extern NSString *const FWStateChangedNotification;
  *
  *  @return 是否可触发
  */
-- (BOOL)canFireEvent:(id)event;
+- (BOOL)canFireEvent:(nullable id)event;
 
 /**
  *  触发事件
@@ -196,7 +198,7 @@ extern NSString *const FWStateChangedNotification;
  *
  *  @return 触发状态
  */
-- (BOOL)fireEvent:(id)event;
+- (BOOL)fireEvent:(nullable id)event;
 
 /**
  *  触发事件
@@ -206,6 +208,8 @@ extern NSString *const FWStateChangedNotification;
  *
  *  @return 触发状态
  */
-- (BOOL)fireEvent:(id)event withObject:(id)object;
+- (BOOL)fireEvent:(nullable id)event withObject:(nullable id)object;
 
 @end
+
+NS_ASSUME_NONNULL_END

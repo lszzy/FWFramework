@@ -8,6 +8,8 @@
 
 #import "FWCacheAbstract.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // NSUserDefaults缓存
 @interface FWCacheUserDefaults : FWCacheAbstract
 
@@ -15,6 +17,8 @@
 + (instancetype)sharedInstance;
 
 // 分组对象
-- (instancetype)initWithGroup:(NSString *)group;
+- (instancetype)initWithGroup:(nullable NSString *)group;
 
 @end
+
+NS_ASSUME_NONNULL_END

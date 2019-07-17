@@ -337,7 +337,7 @@
         
         return [formatter stringFromNumber:product.price];
     }
-    return @"";
+    return nil;
 }
 
 @end

@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*! @brief 路由URL */
 extern NSString * const FWRouterURLKey;
 
@@ -22,7 +24,7 @@ extern NSString * const FWRouterUserInfoKey;
 typedef void (^FWRouterHandler)(NSDictionary *parameters);
 
 /*! @brief 路由对象处理句柄 */
-typedef id (^FWRouterObjectHandler)(NSDictionary *parameters);
+typedef id _Nullable (^FWRouterObjectHandler)(NSDictionary *parameters);
 
 /*! @brief 路由过滤器处理句柄 */
 typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
@@ -75,14 +77,14 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
  *                    如果 block 返回YES，则继续解析pattern；如果返回NO，则停止解析
  */
-+ (void)setFilterHandler:(FWRouterFilterHandler)handler;
++ (void)setFilterHandler:(nullable FWRouterFilterHandler)handler;
 
 /**
  *  设置 错误 对应的 Handler，URL 未注册时触发
  *
  *  @param handler    该 block 回传不支持的URL参数
  */
-+ (void)setErrorHandler:(FWRouterHandler)handler;
++ (void)setErrorHandler:(nullable FWRouterHandler)handler;
 
 #pragma mark - Open
 
@@ -109,7 +111,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  @param URL        带 Scheme 的 URL，如 app://beauty/4
  *  @param userInfo   附加参数
  */
-+ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo;
++ (void)openURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo;
 
 /**
  *  打开此 URL，同时当操作完成时，执行额外的代码
@@ -117,7 +119,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  @param URL        带 Scheme 的 URL，如 app://beauty/4
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL completion:(void (^)(id result))completion;
++ (void)openURL:(NSString *)URL completion:(nullable void (^)(id _Nullable result))completion;
 
 /**
  *  打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
@@ -126,7 +128,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  @param userInfo   附加参数
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion;
++ (void)openURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable void (^)(id _Nullable result))completion;
 
 #pragma mark - Object
 
@@ -142,7 +144,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *
  *  @param URL 带 Scheme，如 app://beauty/3
  */
-+ (id)objectForURL:(NSString *)URL;
++ (nullable id)objectForURL:(NSString *)URL;
 
 /**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
@@ -150,7 +152,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  @param URL 带 Scheme，如 app://beauty/3
  *  @param userInfo 附加参数
  */
-+ (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo;
++ (nullable id)objectForURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo;
 
 #pragma mark - Generator
 
@@ -166,7 +168,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *
  *  @return 返回生成的URL String
  */
-+ (NSString *)generateURL:(NSString *)pattern parameters:(id)parameters;
++ (NSString *)generateURL:(NSString *)pattern parameters:(nullable id)parameters;
 
 @end
 
@@ -185,14 +187,14 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  @param url URL to be rewritten
  @return URL after being rewritten
  */
-+ (NSString *)rewriteURL:(NSString *)url;
++ (nullable NSString *)rewriteURL:(NSString *)url;
 
 /**
  Set custom rewrite filter block
  
  @param filter Custom filter block
  */
-+ (void)setRewriteFilter:(NSString * (^)(NSString *url))filter;
++ (void)setRewriteFilter:(nullable NSString * (^)(NSString *url))filter;
 
 /**
  Add a RewriteRule
@@ -234,6 +236,8 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 + (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
 // 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
-+ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion;
++ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 @end
+
+NS_ASSUME_NONNULL_END
