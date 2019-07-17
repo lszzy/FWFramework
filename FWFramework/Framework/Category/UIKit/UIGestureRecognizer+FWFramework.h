@@ -27,17 +27,20 @@ NS_ASSUME_NONNULL_BEGIN
  @param fromPosition 相对于view父视图的起点originY位置
  @param toPosition 相对于view父视图的终点originY位置
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
- @param callback 抽屉视图位移回调，参数为相对view父视图的originY位置
+ @param callback 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
  */
 - (void)fwDrawerView:(nullable UIView *)view
            direction:(UISwipeGestureRecognizerDirection)direction
         fromPosition:(CGFloat)fromPosition
           toPosition:(CGFloat)toPosition
       kickbackHeight:(CGFloat)kickbackHeight
-            callback:(nullable void (^)(CGFloat position))callback;
+            callback:(nullable void (^)(CGFloat position, BOOL finished))callback;
 
-// 交换抽屉效果视图位置，会触发抽屉callback回调
-- (void)fwDrawerViewTogglePosition;
+// 判断抽屉效果视图是否位于打开位置(toPosition)
+- (BOOL)fwDrawerViewIsOpen;
+
+// 设置抽屉效果视图到打开位置(toPosition)或关闭位置(fromPosition)，如果位置发生改变，会触发抽屉callback回调
+- (void)fwDrawerViewToggleOpen:(BOOL)open;
 
 @end
 

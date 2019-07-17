@@ -9,6 +9,8 @@
 
 #import "FWViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 滚动视图控制器协议，可覆写
  */
@@ -33,3 +35,5 @@
 @interface FWViewControllerManager (FWScrollViewController)
 
 @end
+
+NS_ASSUME_NONNULL_END

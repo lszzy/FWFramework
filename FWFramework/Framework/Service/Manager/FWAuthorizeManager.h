@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Enum
 
 /*!
@@ -72,12 +74,12 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
 - (FWAuthorizeStatus)authorizeStatus;
 
 // 执行权限授权，主线程回调，必须实现
-- (void)authorize:(void (^)(FWAuthorizeStatus status))completion;
+- (void)authorize:(nullable void (^)(FWAuthorizeStatus status))completion;
 
 @optional
 
 // 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
-- (void)authorizeStatus:(void (^)(FWAuthorizeStatus status))completion;
+- (void)authorizeStatus:(nullable void (^)(FWAuthorizeStatus status))completion;
 
 @end
 
@@ -90,6 +92,8 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
 @interface FWAuthorizeManager : NSObject <FWAuthorizeProtocol>
 
 // 获取指定类型的权限管理器单例，部分权限未启用时返回nil
-+ (instancetype)managerWithType:(FWAuthorizeType)type;
++ (nullable instancetype)managerWithType:(FWAuthorizeType)type;
 
 @end
+
+NS_ASSUME_NONNULL_END

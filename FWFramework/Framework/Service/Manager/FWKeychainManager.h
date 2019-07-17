@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Keychain管理器
 @interface FWKeychainManager : NSObject
 
@@ -15,27 +17,29 @@
 + (instancetype)sharedInstance;
 
 // 分组对象
-- (instancetype)initWithGroup:(NSString *)group;
+- (instancetype)initWithGroup:(nullable NSString *)group;
 
 // 读取String数据
-- (NSString *)passwordForService:(NSString *)service account:(NSString *)account;
+- (nullable NSString *)passwordForService:(nullable NSString *)service account:(nullable NSString *)account;
 
 // 读取Data数据
-- (NSData *)passwordDataForService:(NSString *)service account:(NSString *)account;
+- (nullable NSData *)passwordDataForService:(nullable NSString *)service account:(nullable NSString *)account;
 
 // 读取Object数据
-- (id)passwordObjectForService:(NSString *)service account:(NSString *)account;
+- (nullable id)passwordObjectForService:(nullable NSString *)service account:(nullable NSString *)account;
 
 // 保存String数据
-- (BOOL)setPassword:(NSString *)password forService:(NSString *)service account:(NSString *)account;
+- (BOOL)setPassword:(NSString *)password forService:(nullable NSString *)service account:(nullable NSString *)account;
 
 // 保存Data数据
-- (BOOL)setPasswordData:(NSData *)passwordData forService:(NSString *)service account:(NSString *)account;
+- (BOOL)setPasswordData:(NSData *)passwordData forService:(nullable NSString *)service account:(nullable NSString *)account;
 
 // 保存Object数据
-- (BOOL)setPasswordObject:(id)passwordObject forService:(NSString *)service account:(NSString *)account;
+- (BOOL)setPasswordObject:(id)passwordObject forService:(nullable NSString *)service account:(nullable NSString *)account;
 
 // 删除数据
-- (BOOL)deletePasswordForService:(NSString *)service account:(NSString *)account;
+- (BOOL)deletePasswordForService:(nullable NSString *)service account:(nullable NSString *)account;
 
 @end
+
+NS_ASSUME_NONNULL_END
