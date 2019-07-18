@@ -98,10 +98,17 @@
     
     // 拖动结束时停留指定位置
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        CGFloat baseline = (self.position == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
-        CGFloat current = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
-        position = current < baseline ? self.fromPosition : self.toPosition;
-        [self togglePosition:position];
+        // 停留位置未发生改变时不执行动画，直接回调
+        if (position == self.position) {
+            if (self.callback) {
+                self.callback(position, YES);
+            }
+        // 停留位置发生改变时执行动画，动画完成后回调
+        } else {
+            CGFloat baseline = (self.position == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
+            position = (position < baseline) ? self.fromPosition : self.toPosition;
+            [self togglePosition:position];
+        }
     }
 }
 
