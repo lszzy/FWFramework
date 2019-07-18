@@ -21,6 +21,7 @@
 @property (nonatomic, assign) CGFloat toPosition;
 @property (nonatomic, assign) CGFloat kickbackHeight;
 @property (nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
+@property (nonatomic, strong) CADisplayLink *displayLink;
 
 @end
 
@@ -106,6 +107,14 @@
 
 - (void)togglePosition:(CGFloat)position
 {
+    // 使用CADisplayLink监听动画过程中的位置
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+    }
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction)];
+    [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
     [UIView animateWithDuration:0.2 animations:^{
         self.view.frame = CGRectMake(
@@ -114,11 +123,26 @@
                                      self.view.frame.size.width,
                                      self.view.frame.size.height);
     } completion:^(BOOL finished) {
+        // 动画完成时需释放displayLink
+        if (self.displayLink) {
+            [self.displayLink invalidate];
+            self.displayLink = nil;
+        }
+        
         self.position = position;
         if (self.callback) {
             self.callback(position, YES);
         }
     }];
+}
+
+- (void)displayLinkAction
+{
+    // 监听动画过程中的位置，访问view.layer.presentationLayer即可
+    CGFloat position = self.isVertical ? self.view.layer.presentationLayer.frame.origin.y : self.view.layer.presentationLayer.frame.origin.x;
+    if (self.callback) {
+        self.callback(position, NO);
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate
