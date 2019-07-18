@@ -77,25 +77,44 @@
 
 - (NSInteger)fwTotalPage
 {
-    return (NSInteger)ceil((self.contentSize.width / self.frame.size.width));
+    if ([self fwCanScrollVertical]) {
+        return (NSInteger)ceil((self.contentSize.height / self.frame.size.height));
+    } else {
+        return (NSInteger)ceil((self.contentSize.width / self.frame.size.width));
+    }
 }
 
 - (NSInteger)fwCurrentPage
 {
-    CGFloat pageWidth = self.frame.size.width;
-    return (NSInteger)floor((self.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    if ([self fwCanScrollVertical]) {
+        CGFloat pageHeight = self.frame.size.height;
+        return (NSInteger)floor((self.contentOffset.y - pageHeight / 2) / pageHeight) + 1;
+    } else {
+        CGFloat pageWidth = self.frame.size.width;
+        return (NSInteger)floor((self.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    }
 }
 
 - (void)fwSetCurrentPage:(NSInteger)page
 {
-    CGFloat offset = (self.frame.size.width * page);
-    self.contentOffset = CGPointMake(offset, 0.f);
+    if ([self fwCanScrollVertical]) {
+        CGFloat offset = (self.frame.size.height * page);
+        self.contentOffset = CGPointMake(0.f, offset);
+    } else {
+        CGFloat offset = (self.frame.size.width * page);
+        self.contentOffset = CGPointMake(offset, 0.f);
+    }
 }
 
 - (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated
 {
-    CGFloat offset = (self.frame.size.width * page);
-    [self setContentOffset:CGPointMake(offset, 0.f) animated:animated];
+    if ([self fwCanScrollVertical]) {
+        CGFloat offset = (self.frame.size.height * page);
+        [self setContentOffset:CGPointMake(0.f, offset) animated:animated];
+    } else {
+        CGFloat offset = (self.frame.size.width * page);
+        [self setContentOffset:CGPointMake(offset, 0.f) animated:animated];
+    }
 }
 
 - (BOOL)fwIsLastPage
@@ -105,15 +124,22 @@
 
 #pragma mark - Scroll
 
-- (BOOL)fwCanScroll
+- (BOOL)fwCanScrollHorizontal
 {
-    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) {
+    if (self.bounds.size.width <= 0) {
         return NO;
     }
     
-    BOOL canVerticalScroll = self.contentSize.height + self.contentInset.top + self.contentInset.bottom > CGRectGetHeight(self.bounds);
-    BOOL canHorizontalScoll = self.contentSize.width + self.contentInset.left + self.contentInset.right > CGRectGetWidth(self.bounds);
-    return canVerticalScroll || canHorizontalScoll;
+    return self.contentSize.width + self.contentInset.left + self.contentInset.right > CGRectGetWidth(self.bounds);
+}
+
+- (BOOL)fwCanScrollVertical
+{
+    if (self.bounds.size.height <= 0) {
+        return NO;
+    }
+    
+    return self.contentSize.height + self.contentInset.top + self.contentInset.bottom > CGRectGetHeight(self.bounds);
 }
 
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge
