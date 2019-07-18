@@ -8,6 +8,40 @@
  */
 
 #import "NSTimer+FWFramework.h"
+#import <objc/runtime.h>
+
+@implementation CADisplayLink (FWFramework)
+
++ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector
+{
+    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:target selector:selector];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    return displayLink;
+}
+
++ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
+{
+    CADisplayLink *displayLink = [self fwDisplayLinkWithBlock:block];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    return displayLink;
+}
+
++ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
+{
+    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(fwInnerDisplayLinkBlock:)];
+    objc_setAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    return displayLink;
+}
+
++ (void)fwInnerDisplayLinkBlock:(CADisplayLink *)displayLink
+{
+    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:));
+    if (block) {
+        block(displayLink);
+    }
+}
+
+@end
 
 @implementation NSTimer (FWFramework)
 

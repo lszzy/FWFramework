@@ -7,9 +7,42 @@
  @updated    2018-09-11
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+/*!
+ @brief CADisplayLink分类
+ */
+@interface CADisplayLink (FWFramework)
+
+/*!
+ @brief 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param target 目标
+ @param selector 方法
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
+
+/*!
+ @brief 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param block 代码块
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+
+/*!
+ @brief 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @discussion 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
+ 
+ @param block 代码块
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+
+@end
 
 /*!
  @brief NSTimer分类

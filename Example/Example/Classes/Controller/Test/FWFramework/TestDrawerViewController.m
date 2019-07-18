@@ -74,8 +74,9 @@
     [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp fromPosition:0 toPosition:ViewHeight / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
-        if (position == 0) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor brownColor]];
+        if (position < FWTopBarHeight) {
+            CGFloat progress = MIN(1 - position / FWTopBarHeight, 1);
+            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor brownColor] colorWithAlphaComponent:progress]];
         } else {
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
