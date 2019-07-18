@@ -38,25 +38,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Page
 
-// 总页数
+// 总页数，自动识别翻页方向
 - (NSInteger)fwTotalPage;
 
-// 当前页数
+// 当前页数，自动识别翻页方向
 - (NSInteger)fwCurrentPage;
 
-// 设置当前页数
+// 设置当前页数，自动识别翻页方向
 - (void)fwSetCurrentPage:(NSInteger)page;
 
-// 设置当前页数，支持动画
+// 设置当前页数，支持动画，自动识别翻页方向
 - (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated;
 
-// 是否是最后一页
+// 是否是最后一页，自动识别翻页方向
 - (BOOL)fwIsLastPage;
 
 #pragma mark - Scroll
 
-// 判断当前的scrollView内容是否足够滚动
-- (BOOL)fwCanScroll;
+// 判断当前的scrollView内容是否足够水平滚动
+- (BOOL)fwCanScrollHorizontal;
+
+// 判断当前的scrollView内容是否足够纵向滚动
+- (BOOL)fwCanScrollVertical;
 
 // 是否已滚动到指定边
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
