@@ -245,9 +245,6 @@
       kickbackHeight:(CGFloat)kickbackHeight
             callback:(void (^)(CGFloat, BOOL))callback
 {
-    // 禁用拖拽回弹效果
-    self.bounces = NO;
-    
     // 添加拖拽手势
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
