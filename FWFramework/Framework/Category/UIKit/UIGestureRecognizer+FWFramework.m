@@ -122,6 +122,28 @@
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction)];
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
+    // 如果是滚动视图，当位置发生改变时还原内容到起始位置
+    if (self.scrollView) {
+        CGPoint contentOffset = self.scrollView.contentOffset;
+        switch (self.direction) {
+            case UISwipeGestureRecognizerDirectionUp:
+                contentOffset.y = 0 - self.scrollView.contentInset.top;
+                break;
+            case UISwipeGestureRecognizerDirectionDown:
+                contentOffset.y = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
+                break;
+            case UISwipeGestureRecognizerDirectionLeft:
+                contentOffset.x = 0 - self.scrollView.contentInset.left;
+                break;
+            case UISwipeGestureRecognizerDirectionRight:
+                contentOffset.x = self.scrollView.contentSize.width - self.scrollView.bounds.size.width + self.scrollView.contentInset.right;
+                break;
+            default:
+                break;
+        }
+        self.scrollView.contentOffset = contentOffset;
+    }
+    
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
     [UIView animateWithDuration:0.2 animations:^{
         self.view.frame = CGRectMake(
