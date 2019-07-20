@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (UISwipeGestureRecognizerDirection)fwSwipeDirection;
 
 /*!
- @brief 设置抽屉拖拽效果。如果view为滚动视图，自动设置delegate处理与滚动视图pan手势冲突的问题
+ @brief 设置抽屉拖拽效果。不支持滚动视图，滚动视图请使用FWDrawerView
  
  @param view 抽屉视图，默认为self.view
  @param direction 拖拽方向，如向上拖动视图时为Up

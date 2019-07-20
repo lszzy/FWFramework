@@ -21,7 +21,6 @@
 @property (nonatomic, assign, readonly) CGFloat kickbackHeight;
 @property (nonatomic, copy, readonly) void (^callback)(CGFloat position, BOOL finished);
 
-@property (nonatomic, weak, readonly) UIScrollView *scrollView;
 @property (nonatomic, assign, readonly) BOOL isVertical;
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat beganPosition;
@@ -49,10 +48,8 @@
         _kickbackHeight = kickbackHeight;
         _callback = callback;
         
-        _scrollView = [view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)view : nil;
         _isVertical = (direction == UISwipeGestureRecognizerDirectionUp || direction == UISwipeGestureRecognizerDirectionDown);
         _position = _isVertical ? view.frame.origin.y : view.frame.origin.x;
-        _beganPosition = _position;
     }
     return self;
 }
@@ -74,87 +71,16 @@
             CGPoint transition = [gestureRecognizer translationInView:self.view.superview];
             [gestureRecognizer setTranslation:CGPointZero inView:self.view.superview];
             
-            // 视图跟随拖动移动指定距离
+            // 视图跟随拖动移动指定距离，且不超过限制范围
             self.position = self.isVertical ? (self.view.frame.origin.y + transition.y) : (self.view.frame.origin.x + transition.x);
-            switch (self.direction) {
-                case UISwipeGestureRecognizerDirectionUp: {
-                    // 如果是滚动视图，还需计算contentOffset和contentInset
-                    if (self.scrollView) {
-                        self.position -= (self.scrollView.contentOffset.y + self.scrollView.contentInset.top);
-                    }
-                    
-                    // 移动时限制不超过范围
-                    if (self.position < self.fromPosition) {
-                        self.position = self.fromPosition;
-                    }
-                    
-                    // 如果是滚动视图且不在fromPosition时，内部视图需还原到起始位置
-                    if (self.scrollView && self.position != self.fromPosition) {
-                        CGPoint offset = self.scrollView.contentOffset;
-                        offset.y = 0 - self.scrollView.contentInset.top;
-                        self.scrollView.contentOffset = offset;
-                    }
-                    break;
+            if (self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft) {
+                if (self.position < self.fromPosition) {
+                    self.position = self.fromPosition;
                 }
-                case UISwipeGestureRecognizerDirectionDown: {
-                    // 如果是滚动视图，还需计算contentOffset和contentInset
-                    if (self.scrollView) {
-                        self.position += (self.scrollView.contentSize.height - self.scrollView.frame.size.height - self.scrollView.contentOffset.y + self.scrollView.contentInset.bottom);
-                    }
-                    
-                    // 移动时限制不超过范围
-                    if (self.position > self.toPosition) {
-                        self.position = self.toPosition;
-                    }
-                    
-                    // 如果是滚动视图且不在fromPosition时，内部视图需还原到起始位置
-                    if (self.scrollView && self.position != self.fromPosition) {
-                        CGPoint offset = self.scrollView.contentOffset;
-                        offset.y = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
-                        self.scrollView.contentOffset = offset;
-                    }
-                    break;
+            } else {
+                if (self.position > self.toPosition) {
+                    self.position = self.toPosition;
                 }
-                case UISwipeGestureRecognizerDirectionLeft: {
-                    // 如果是滚动视图，还需计算contentOffset和contentInset
-                    if (self.scrollView) {
-                        self.position -= (self.scrollView.contentOffset.x + self.scrollView.contentInset.left);
-                    }
-                    
-                    // 移动时限制不超过范围
-                    if (self.position < self.fromPosition) {
-                        self.position = self.fromPosition;
-                    }
-                    
-                    // 如果是滚动视图且不在fromPosition时，内部视图需还原到起始位置
-                    if (self.scrollView && self.position != self.fromPosition) {
-                        CGPoint offset = self.scrollView.contentOffset;
-                        offset.x = 0 - self.scrollView.contentInset.left;
-                        self.scrollView.contentOffset = offset;
-                    }
-                    break;
-                }
-                case UISwipeGestureRecognizerDirectionRight: {
-                    // 如果是滚动视图，还需计算contentOffset和contentInset
-                    if (self.scrollView) {
-                        self.position += (self.scrollView.contentSize.width - self.scrollView.frame.size.width - self.scrollView.contentOffset.x + self.scrollView.contentInset.right);
-                    }
-                    
-                    // 移动时限制不超过范围
-                    if (self.position > self.toPosition) {
-                        self.position = self.toPosition;
-                    }
-                    
-                    // 如果是滚动视图且不在fromPosition时，内部视图需还原到起始位置
-                    if (self.scrollView && self.position != self.fromPosition) {
-                        CGPoint offset = self.scrollView.contentOffset;
-                        offset.x = self.scrollView.contentSize.width - self.scrollView.bounds.size.width + self.scrollView.contentInset.right;
-                        self.scrollView.contentOffset = offset;
-                    }
-                    break;
-                }
-                default:
-                    break;
             }
             
             // 执行位移并回调
@@ -168,6 +94,7 @@
             break;
         }
         // 拖动结束时停留指定位置
+        case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateEnded: {
             // 停留位置未发生改变时不执行动画，直接回调
             if (self.position == self.beganPosition) {
@@ -197,13 +124,6 @@
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction)];
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
-    // 动画开始时禁用回弹
-    BOOL scrollBounces = NO;
-    if (self.scrollView) {
-        scrollBounces = self.scrollView.bounces;
-        self.scrollView.bounces = NO;
-    }
-    
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
     [UIView animateWithDuration:0.2 animations:^{
         self.view.frame = CGRectMake(
@@ -218,13 +138,7 @@
             self.displayLink = nil;
         }
         
-        // 动画结束时还原回弹
-        if (self.scrollView) {
-            self.scrollView.bounces = scrollBounces;
-        }
-        
         self.position = position;
-        self.beganPosition = position;
         if (self.callback) {
             self.callback(self.position, YES);
         }
@@ -238,20 +152,6 @@
     if (self.callback) {
         self.callback(self.position, NO);
     }
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    // 视图在终点时允许同时识别滚动视图pan手势
-    if ([otherGestureRecognizer isEqual:self.scrollView.panGestureRecognizer]) {
-        CGFloat targetPosition = (self.direction == UISwipeGestureRecognizerDirectionLeft || self.direction == UISwipeGestureRecognizerDirectionUp) ? self.fromPosition : self.toPosition;
-        if (self.beganPosition == targetPosition) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 @end
@@ -283,11 +183,6 @@
     FWInnerDrawerViewTarget *target = [[FWInnerDrawerViewTarget alloc] initWithView:(view ?: self.view) direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
     objc_setAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self addTarget:target action:@selector(panAction:)];
-    
-    // view为滚动视图时自动设置手势delegate处理内部滚动
-    if (target.scrollView && !self.delegate) {
-        self.delegate = target;
-    }
 }
 
 - (BOOL)fwDrawerViewIsOpen
@@ -297,7 +192,7 @@
         return NO;
     }
     
-    return target.beganPosition == target.toPosition;
+    return target.position == target.toPosition;
 }
 
 - (void)fwDrawerViewToggleOpen:(BOOL)open
@@ -308,7 +203,7 @@
     }
     
     CGFloat position = open ? target.toPosition : target.fromPosition;
-    if (target.beganPosition != position) {
+    if (target.position != position) {
         [target togglePosition:position];
     }
 }
