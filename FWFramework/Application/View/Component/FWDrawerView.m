@@ -492,21 +492,12 @@
 {
     if (!self.superview) return;
     
-    NSMutableArray<NSNumber *> *positions = [NSMutableArray array];
-    [self.snapPositions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-        CGFloat position = [self snapPositionFor:[obj integerValue] inSuperview:self.superview];
-        [positions addObject:@(position)];
-    }];
-    [positions sortUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
-        return [obj1 compare:obj2];
-    }];
-    
     CGFloat position;
-    CGFloat lowerBound = [positions.firstObject doubleValue];
-    CGFloat upperBound = [positions.lastObject doubleValue];
-    if (positions.firstObject && dragPoint < lowerBound) {
+    CGFloat lowerBound = [self snapPositionFor:[self.snapPositions.lastObject integerValue] inSuperview:self.superview];
+    CGFloat upperBound = [self snapPositionFor:[self.snapPositions.firstObject integerValue] inSuperview:self.superview];
+    if (dragPoint < lowerBound) {
         position = lowerBound - [self damp:lowerBound - dragPoint factor:50];
-    } else if (positions.lastObject && dragPoint > upperBound) {
+    } else if (dragPoint > upperBound) {
         position = upperBound + [self damp:dragPoint - upperBound factor:50];
     } else {
         position = dragPoint;
@@ -571,15 +562,12 @@
 {
     if (!self.superview) return FWDrawerViewPositionCollapsed;
     
-    NSMutableArray<NSArray *> *distances = [NSMutableArray array];
-    [self.snapPositions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-        CGFloat distance = [self snapPositionFor:[obj integerValue] inSuperview:self.superview];
-        [distances addObject:@[obj, @(distance)]];
+    NSArray *positions = [self.snapPositions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
+        CGFloat dis1 = [self snapPositionFor:[obj1 integerValue] inSuperview:self.superview];
+        CGFloat dis2 = [self snapPositionFor:[obj2 integerValue] inSuperview:self.superview];
+        return fabs(dis1 - offset) > fabs(dis2 - offset);
     }];
-    [distances sortUsingComparator:^NSComparisonResult(NSArray *obj1, NSArray *obj2) {
-        return [@(fabs([obj1.lastObject doubleValue] - offset)) compare:@(fabs([obj2.lastObject doubleValue] - offset))];
-    }];
-    return distances.firstObject ? [distances.firstObject.firstObject integerValue] : FWDrawerViewPositionCollapsed;
+    return [positions.firstObject integerValue];
 }
 
 - (CGFloat)convertScrollPositionToOffset:(CGFloat)position
