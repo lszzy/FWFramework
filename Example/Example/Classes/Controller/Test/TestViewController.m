@@ -85,6 +85,7 @@
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"MapView", @"TestMapViewController"],
                                              @[@"DrawerView", @"TestDrawerViewController"],
+                                             @[@"ScrollDrawerView", @"TestDrawerScrollViewController"],
                                              @[@"MenuView", @"TestMenuViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
