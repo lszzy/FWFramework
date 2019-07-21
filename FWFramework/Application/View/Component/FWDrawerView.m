@@ -527,8 +527,8 @@
                 self.scrollView = scrollView;
                 self.scrollWasEnabled = scrollView.scrollEnabled;
             }
+            return YES;
         }
-        return YES;
     }
     return NO;
 }
