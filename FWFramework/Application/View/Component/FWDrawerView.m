@@ -8,6 +8,7 @@
  */
 
 #import "FWDrawerView.h"
+#import "UIView+FWAutoLayout.h"
 
 @interface FWDrawerViewScrollInfo : NSObject
 
@@ -85,19 +86,7 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         [self setup];
-        
-        embedView.frame = self.bounds;
-        // embedView.backgroundColor = [UIColor clearColor];
-        embedView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self addSubview:embedView];
-        if (@available(iOS 9.0, *)) {
-            [embedView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor].active = YES;
-            [embedView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor].active = YES;
-            [embedView.heightAnchor constraintEqualToAnchor:self.heightAnchor].active = YES;
-            [embedView.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
-        } else {
-            
-        }
+        [self setEmbedView:embedView];
     }
     return self;
 }
@@ -124,6 +113,24 @@
 }
 
 #pragma mark - Accessor
+
+- (void)setEmbedView:(UIView *)embedView
+{
+    _embedView = embedView;
+    
+    if (embedView) {
+        embedView.frame = self.bounds;
+        // embedView.backgroundColor = [UIColor clearColor];
+        embedView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:embedView];
+        [embedView fwPinEdgesToSuperview];
+    }
+}
+
+- (void)setContainerView:(UIView *)containerView
+{
+    [self attachTo:containerView];
+}
 
 - (CGFloat)drawerOffset
 {
@@ -208,7 +215,7 @@
 {
     _snapPositions = snapPositions;
     if (![snapPositions containsObject:@(self.position)]) {
-        NSNumber *position = self.snapPositionsSorted.lastObject;
+        NSNumber *position = self.snapPositionsSorted.firstObject;
         self.position = position ? [position integerValue] : FWDrawerViewPositionCollapsed;
     }
 }
@@ -216,11 +223,6 @@
 - (void)setConcealed:(BOOL)concealed
 {
     [self setConcealed:concealed animated:NO];
-}
-
-- (void)setContainerView:(UIView *)containerView
-{
-    [self attachTo:containerView];
 }
 
 #pragma mark - Public
@@ -245,6 +247,7 @@
     }
     
     [self updateVisuals];
+    [self updateSnapPositionAnimated:false];
 }
 
 - (void)setPosition:(FWDrawerViewPosition)position animated:(BOOL)animated
