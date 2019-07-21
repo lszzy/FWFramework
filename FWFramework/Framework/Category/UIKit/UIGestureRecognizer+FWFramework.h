@@ -12,6 +12,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
+ @brief UIGestureRecognizer+FWFramework
+ */
+@interface UIGestureRecognizer (FWFramework)
+
+// 是否正在拖动中：Began || Changed
+- (BOOL)fwIsTracking;
+
+// 是否是激活状态: isEnabled && (Began || Changed)
+- (BOOL)fwIsActive;
+
+@end
+
+/*!
  @brief UIPanGestureRecognizer+FWFramework
  */
 @interface UIPanGestureRecognizer (FWFramework)

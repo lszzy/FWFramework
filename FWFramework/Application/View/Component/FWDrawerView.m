@@ -10,27 +10,7 @@
 #import "FWDrawerView.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIScreen+FWFramework.h"
-
-@interface FWDrawerViewScrollInfo : NSObject
-
-@property (nonatomic, weak) UIScrollView *scrollView;
-@property (nonatomic, assign) BOOL scrollWasEnabled;
-@property (nonatomic, strong) NSMutableArray<UIGestureRecognizer *> *gestureRecognizers;
-
-@end
-
-@implementation FWDrawerViewScrollInfo
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _gestureRecognizers = [NSMutableArray array];
-    }
-    return self;
-}
-
-@end
+#import "UIGestureRecognizer+FWFramework.h"
 
 #pragma mark - FWDrawerView
 
@@ -45,7 +25,8 @@
 
 @property (nonatomic, strong) UIViewPropertyAnimator *previousAnimator NS_AVAILABLE_IOS(10_0);
 
-@property (nonatomic, strong) NSMutableArray<FWDrawerViewScrollInfo *> *childScrollViews;
+@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, assign) BOOL scrollWasEnabled;
 
 @end
 
@@ -98,7 +79,6 @@
     _position = FWDrawerViewPositionCollapsed;
     _snapPositions = @[@(FWDrawerViewPositionCollapsed), @(FWDrawerViewPositionPartiallyOpen), @(FWDrawerViewPositionOpen)];
     _enabled = YES;
-    _childScrollViews = [NSMutableArray array];
     
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     self.panGestureRecognizer.maximumNumberOfTouches = 2;
@@ -122,32 +102,6 @@
 - (void)setContainerView:(UIView *)containerView
 {
     [self attachTo:containerView];
-}
-
-- (CGFloat)drawerOffset
-{
-    if (!self.superview) return 0;
-    
-    if (self.isConcealed) {
-        CGFloat closedSnapPosition = [self snapPositionFor:FWDrawerViewPositionClosed inSuperview:self.superview];
-        return [self convertScrollPositionToOffset:closedSnapPosition];
-    } else {
-        CGFloat currentSnapPosition = self.topConstraint.constant;
-        return [self convertScrollPositionToOffset:currentSnapPosition];
-    }
-}
-
-- (CGFloat)topSpace
-{
-    if (!self.superview) return 0;
-    
-    FWDrawerViewPosition topPosition = [self.snapPositions.lastObject integerValue];
-    return [self snapPositionFor:topPosition inSuperview:self.superview];
-}
-
-- (CGFloat)bottomInset
-{
-    return 0;
 }
 
 - (void)setTopMargin:(CGFloat)topMargin
@@ -188,6 +142,35 @@
 - (void)setConcealed:(BOOL)concealed
 {
     [self setConcealed:concealed animated:NO];
+}
+
+- (CGFloat)openHeight
+{
+    if (!self.superview) return 0;
+    
+    CGFloat snapPosition = [self snapPositionFor:FWDrawerViewPositionOpen inSuperview:self.superview];
+    return [self convertScrollPositionToOffset:snapPosition];
+}
+
+- (CGFloat)drawerOffset
+{
+    if (!self.superview) return 0;
+    
+    if (self.isConcealed) {
+        CGFloat closedSnapPosition = [self snapPositionFor:FWDrawerViewPositionClosed inSuperview:self.superview];
+        return [self convertScrollPositionToOffset:closedSnapPosition];
+    } else {
+        CGFloat currentSnapPosition = self.topConstraint.constant;
+        return [self convertScrollPositionToOffset:currentSnapPosition];
+    }
+}
+
+- (CGFloat)topSpace
+{
+    if (!self.superview) return 0;
+    
+    FWDrawerViewPosition topPosition = [self.snapPositions.lastObject integerValue];
+    return [self snapPositionFor:topPosition inSuperview:self.superview];
 }
 
 #pragma mark - Public
@@ -231,6 +214,11 @@
     }];
 }
 
+- (FWDrawerViewPosition)getPositionWithOffset:(NSInteger)offset
+{
+    return [self advance:self.position offset:offset];
+}
+
 - (void)setConcealed:(BOOL)concealed animated:(BOOL)animated
 {
     _concealed = concealed;
@@ -245,19 +233,6 @@
     [self scrollToPosition:pos animated:animated notifyDelegate:YES completion:^(BOOL finished) {
         [self removeFromSuperview];
     }];
-}
-
-- (FWDrawerViewPosition)getPositionWithStep:(NSInteger)step
-{
-    return [self advance:self.position step:step];
-}
-
-- (CGFloat)drawerOffsetWithPosition:(FWDrawerViewPosition)position
-{
-    if (!self.superview) return 0;
-    
-    CGFloat snapPosition = [self snapPositionFor:position inSuperview:self.superview];
-    return [self convertScrollPositionToOffset:snapPosition];
 }
 
 #pragma mark - Private
@@ -292,37 +267,14 @@
                 break;
             }
             
-            if (self.childScrollViews.count > 0) {
-                NSMutableArray *activeScrollViews = [NSMutableArray array];
-                [self.childScrollViews enumerateObjectsUsingBlock:^(FWDrawerViewScrollInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if (obj.scrollWasEnabled) {
-                        for (UIGestureRecognizer *gesture in obj.gestureRecognizers) {
-                            if ([gesture isKindOfClass:[UIPanGestureRecognizer class]] && [gesture.view isKindOfClass:[UIScrollView class]] ) {
-                                UIPanGestureRecognizer *panGesture = (UIPanGestureRecognizer *)gesture;
-                                if (panGesture.isEnabled && (panGesture.state == UIGestureRecognizerStateBegan || panGesture.state == UIGestureRecognizerStateChanged)) {
-                                    if (![activeScrollViews containsObject:gesture.view]) {
-                                        [activeScrollViews addObject:gesture.view];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }];
+            if (self.scrollView != nil) {
+                UIScrollView *activeScrollView = nil;
+                if (self.scrollWasEnabled && [self.scrollView.panGestureRecognizer fwIsActive]) {
+                    activeScrollView = self.scrollView;
+                }
                 
-                BOOL childReachedTheTop = NO;
-                for (UIScrollView *scrollView in activeScrollViews) {
-                    if (scrollView.contentOffset.y <= 0 - scrollView.contentInset.top) {
-                        childReachedTheTop = YES;
-                        break;
-                    }
-                }
-                BOOL childScrollEnabled = NO;
-                for (UIScrollView *scrollView in activeScrollViews) {
-                    if (scrollView.isScrollEnabled) {
-                        childScrollEnabled = YES;
-                        break;
-                    }
-                }
+                BOOL childReachedTheTop = activeScrollView ? (activeScrollView.contentOffset.y <= 0 - activeScrollView.contentInset.top) : NO;
+                BOOL childScrollEnabled = activeScrollView ? activeScrollView.scrollEnabled : NO;
                 BOOL scrollingToBottom = velocity.y < 0;
                 
                 BOOL shouldScrollChildView = NO;
@@ -343,17 +295,7 @@
                     [sender setTranslation:CGPointZero inView:self];
                     
                     CGRect frame = self.layer.presentationLayer ? self.layer.presentationLayer.frame : self.frame;
-                    NSNumber *minContentOffsetValue = nil;
-                    for (UIScrollView *scrollView in activeScrollViews) {
-                        CGFloat y = scrollView.contentOffset.y + scrollView.contentInset.top;
-                        if (!minContentOffsetValue) {
-                            minContentOffsetValue = @(y);
-                        } else if (y < [minContentOffsetValue doubleValue]) {
-                            minContentOffsetValue = @(y);
-                        }
-                    }
-                    
-                    CGFloat minContentOffset = minContentOffsetValue ? [minContentOffsetValue doubleValue] : 0;
+                    CGFloat minContentOffset = activeScrollView ? (activeScrollView.contentOffset.y + activeScrollView.contentInset.top) : 0;
                     if (minContentOffset < 0) {
                         self.panOrigin = frame.origin.y - minContentOffset;
                     } else {
@@ -363,9 +305,7 @@
                     if (@available(iOS 10.0, *)) {
                         [self.previousAnimator stopAnimation:YES];
                         self.previousAnimator = [UIViewPropertyAnimator runningPropertyAnimatorWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animations:^{
-                            for (UIScrollView *scrollView in activeScrollViews) {
-                                scrollView.scrollEnabled = NO;
-                            }
+                            activeScrollView.scrollEnabled = NO;
                             [self updateScrollPositionWhileDraggingAtPoint:self.panOrigin notifyDelegate:YES];
                         } completion:nil];
                     } else {
@@ -388,26 +328,13 @@
         case UIGestureRecognizerStateEnded: {
             CGPoint velocity = [sender velocityInView:self];
             
-            __block BOOL childScroll = NO;
-            [self.childScrollViews enumerateObjectsUsingBlock:^(FWDrawerViewScrollInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (obj.scrollView.isScrollEnabled) {
-                    BOOL scrollValid = NO;
-                    for (UIGestureRecognizer *gesture in obj.scrollView.gestureRecognizers) {
-                        if (gesture.isEnabled && (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged)) {
-                            scrollValid = YES;
-                            break;
-                        }
-                    }
-                    if (scrollValid) {
-                        if (obj.scrollView.contentOffset.y > 0 - obj.scrollView.contentInset.top) {
-                            childScroll = YES;
-                            *stop = YES;
-                        }
-                    }
-                }
-            }];
+            BOOL shouldScrollChildView = NO;
+            if (self.scrollView.scrollEnabled && [self.scrollView.panGestureRecognizer fwIsActive] &&
+                (self.scrollView.contentOffset.y > 0 - self.scrollView.contentInset.top)) {
+                shouldScrollChildView = YES;
+            }
             
-            if (childScroll) {
+            if (shouldScrollChildView) {
                 // 子视图滚动
             } else if (self.startedDragging) {
                 if (self.delegate && [self.delegate respondsToSelector:@selector(drawerViewWillEndDragging:)]) {
@@ -416,22 +343,20 @@
                 
                 CGFloat targetOffset = self.frame.origin.y + velocity.y / 100;
                 FWDrawerViewPosition targetPosition = [self positionFor:targetOffset];
+                FWDrawerViewPosition advancePosition = [self advance:targetPosition offset:(velocity.y > 0 ? -1 : 1)];
                 
-                NSInteger advancement = velocity.y > 0 ? -1 : 1;
                 FWDrawerViewPosition nextPosition;
-                FWDrawerViewPosition advanced = [self advance:targetPosition step:advancement];
-                if (targetPosition == self.position && fabs(velocity.y) > 0 && advancement != NSNotFound) {
-                    nextPosition = advanced;
+                if (targetPosition == self.position && fabs(velocity.y) > 0 && advancePosition != NSNotFound) {
+                    nextPosition = advancePosition;
                 } else {
                     nextPosition = targetPosition;
                 }
                 [self setPosition:nextPosition animated:YES];
             }
             
-            for (FWDrawerViewScrollInfo *scrollInfo in self.childScrollViews) {
-                scrollInfo.scrollView.scrollEnabled = scrollInfo.scrollWasEnabled;
-            }
-            [self.childScrollViews removeAllObjects];
+            self.scrollView.scrollEnabled = self.scrollWasEnabled;
+            self.scrollView = nil;
+            self.scrollWasEnabled = NO;
             
             self.startedDragging = NO;
             break;
@@ -488,6 +413,20 @@
     }
 }
 
+- (void)setScrollPosition:(CGFloat)scrollPosition notifyDelegate:(BOOL)notifyDelegate
+{
+    self.topConstraint.constant = scrollPosition;
+    
+    if (notifyDelegate) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(drawerView:didMoveTo:)]) {
+            CGFloat drawerOffset = [self convertScrollPositionToOffset:scrollPosition];
+            [self.delegate drawerView:self didMoveTo:drawerOffset];
+        }
+    }
+    
+    [self.superview layoutIfNeeded];
+}
+
 - (void)updateScrollPositionWhileDraggingAtPoint:(CGFloat)dragPoint notifyDelegate:(BOOL)notifyDelegate
 {
     if (!self.superview) return;
@@ -506,34 +445,6 @@
     [self setScrollPosition:position notifyDelegate:notifyDelegate];
 }
 
-- (void)setScrollPosition:(CGFloat)scrollPosition notifyDelegate:(BOOL)notifyDelegate
-{
-    self.topConstraint.constant = scrollPosition;
-    
-    if (notifyDelegate) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(drawerView:didMoveTo:)]) {
-            CGFloat drawerOffset = [self convertScrollPositionToOffset:scrollPosition];
-            [self.delegate drawerView:self didMoveTo:drawerOffset];
-        }
-    }
-    
-    [self.superview layoutIfNeeded];
-}
-
-- (FWDrawerViewPosition)advance:(FWDrawerViewPosition)position step:(NSInteger)step
-{
-    NSInteger index = [self.snapPositions indexOfObject:@(position)];
-    if (index != NSNotFound) {
-        NSInteger nextIndex = index + step;
-        if (nextIndex < 0 || nextIndex >= self.snapPositions.count) {
-            return NSNotFound;
-        }
-        return [[self.snapPositions objectAtIndex:nextIndex] integerValue];
-    } else {
-        return NSNotFound;
-    }
-}
-
 - (void)updateSnapPositionAnimated:(BOOL)animated
 {
     BOOL isTracking = self.panGestureRecognizer.state == UIGestureRecognizerStateBegan || self.panGestureRecognizer.state == UIGestureRecognizerStateChanged;
@@ -548,9 +459,9 @@
         case FWDrawerViewPositionOpen:
             return self.topMargin;
         case FWDrawerViewPositionPartiallyOpen:
-            return self.superview.bounds.size.height - self.bottomInset - self.partiallyOpenHeight;
+            return self.superview.bounds.size.height - self.partiallyOpenHeight;
         case FWDrawerViewPositionCollapsed:
-            return self.superview.bounds.size.height - self.bottomInset - self.collapsedHeight;
+            return self.superview.bounds.size.height - self.collapsedHeight;
         case FWDrawerViewPositionClosed:
             return self.superview.bounds.size.height;
         default:
@@ -582,6 +493,20 @@
     return factor * (log10(value + factor / log(10)) - log10(factor / log(10)));
 }
 
+- (FWDrawerViewPosition)advance:(FWDrawerViewPosition)position offset:(NSInteger)offset
+{
+    NSInteger index = [self.snapPositions indexOfObject:@(position)];
+    if (index != NSNotFound) {
+        NSInteger nextIndex = index + offset;
+        if (nextIndex < 0 || nextIndex >= self.snapPositions.count) {
+            return NSNotFound;
+        }
+        return [[self.snapPositions objectAtIndex:nextIndex] integerValue];
+    } else {
+        return NSNotFound;
+    }
+}
+
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
@@ -595,27 +520,15 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (gestureRecognizer == self.panGestureRecognizer) {
-        UIScrollView *scrollView = [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)otherGestureRecognizer.view : nil;
-        if (scrollView) {
-            __block FWDrawerViewScrollInfo *scrollInfo = nil;
-            [self.childScrollViews enumerateObjectsUsingBlock:^(FWDrawerViewScrollInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (obj.scrollView == scrollView) {
-                    scrollInfo = obj;
-                    *stop = YES;
-                }
-            }];
-            if (scrollInfo != nil) {
-                if (![scrollInfo.gestureRecognizers containsObject:otherGestureRecognizer]) {
-                    [scrollInfo.gestureRecognizers addObject:otherGestureRecognizer];
-                }
-            } else {
-                scrollInfo = [FWDrawerViewScrollInfo new];
-                scrollInfo.scrollView = scrollView;
-                scrollInfo.scrollWasEnabled = scrollView.scrollEnabled;
-                [self.childScrollViews addObject:scrollInfo];
+        if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+            [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (scrollView != self.scrollView) {
+                self.scrollView = scrollView;
+                self.scrollWasEnabled = scrollView.scrollEnabled;
             }
-            return YES;
         }
+        return YES;
     }
     return NO;
 }
@@ -623,7 +536,8 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (gestureRecognizer == self.panGestureRecognizer) {
-        if ([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+            [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
             return NO;
         }
     }

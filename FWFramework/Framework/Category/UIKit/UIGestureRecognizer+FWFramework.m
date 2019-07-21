@@ -10,6 +10,22 @@
 #import "UIGestureRecognizer+FWFramework.h"
 #import <objc/runtime.h>
 
+#pragma mark - UIGestureRecognizer+FWFramework
+
+@implementation UIGestureRecognizer (FWFramework)
+
+- (BOOL)fwIsTracking
+{
+    return self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged;
+}
+
+- (BOOL)fwIsActive
+{
+    return self.isEnabled && (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged);
+}
+
+@end
+
 #pragma mark - FWInnerDrawerViewTarget
 
 @interface FWInnerDrawerViewTarget : NSObject <UIGestureRecognizerDelegate>
@@ -155,6 +171,8 @@
 }
 
 @end
+
+#pragma mark - UIPanGestureRecognizer+FWFramework
 
 @implementation UIPanGestureRecognizer (FWFramework)
 

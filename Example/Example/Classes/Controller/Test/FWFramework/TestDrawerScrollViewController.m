@@ -98,11 +98,9 @@
 {
     FWLogDebug(@"drawerViewDidMoveTo: %@", @(drawerOffset));
     
-    CGFloat openOffset = [drawerView drawerOffsetWithPosition:FWDrawerViewPositionOpen];
-    CGFloat partiallyOpenOffset = [drawerView drawerOffsetWithPosition:FWDrawerViewPositionPartiallyOpen];
-    if (drawerOffset > partiallyOpenOffset) {
-        CGFloat targetDistance = openOffset - partiallyOpenOffset;
-        CGFloat distance = drawerOffset - partiallyOpenOffset;
+    if (drawerOffset > drawerView.partiallyOpenHeight) {
+        CGFloat targetDistance = drawerView.openHeight - drawerView.partiallyOpenHeight;
+        CGFloat distance = drawerOffset - drawerView.partiallyOpenHeight;
         CGFloat progress = MIN(distance / targetDistance, 1);
         [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor brownColor] colorWithAlphaComponent:progress]];
     } else {
