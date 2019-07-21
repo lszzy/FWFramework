@@ -63,7 +63,7 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 // 设置事件代理，支持可视化设置
 @property (nonatomic, weak, nullable) IBOutlet id<FWDrawerViewDelegate> delegate;
 
-// 抽屉完整显示时离顶部的距离，默认0
+// 抽屉完整显示时离顶部的距离，默认68
 @property (nonatomic, assign) CGFloat topMargin;
 
 // 抽屉折叠时的高度，默认68

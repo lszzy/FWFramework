@@ -116,15 +116,12 @@
 
 - (void)setEmbedView:(UIView *)embedView
 {
+    if (!embedView) return;
     _embedView = embedView;
     
-    if (embedView) {
-        embedView.frame = self.bounds;
-        // embedView.backgroundColor = [UIColor clearColor];
-        embedView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self addSubview:embedView];
-        [embedView fwPinEdgesToSuperview];
-    }
+    embedView.frame = self.bounds;
+    [self addSubview:embedView];
+    [embedView fwPinEdgesToSuperview];
 }
 
 - (void)setContainerView:(UIView *)containerView
@@ -229,25 +226,15 @@
 
 - (void)attachTo:(UIView *)containerView
 {
-    if (self.superview != nil) return;
-    
+    if (self.superview != nil || !containerView) return;
     _containerView = containerView;
-    if (!containerView) return;
     
-    self.translatesAutoresizingMaskIntoConstraints = NO;
     [containerView addSubview:self];
-    if (@available(iOS 9.0, *)) {
-        self.topConstraint = [self.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:self.topMargin];
-        self.topConstraint.active = YES;
-        self.heightConstraint = [self.heightAnchor constraintEqualToAnchor:containerView.heightAnchor constant:-self.topSpace];
-        self.heightConstraint = [self.heightAnchor constraintGreaterThanOrEqualToAnchor:containerView.heightAnchor multiplier:1 constant:-self.topSpace];
-        self.heightConstraint.active = YES;
-        [self.bottomAnchor constraintGreaterThanOrEqualToAnchor:containerView.bottomAnchor].active = YES;
-        [self.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor].active = YES;
-        [self.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor].active = YES;
-    } else {
-        
-    }
+    [self fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [self fwPinEdgeToSuperview:NSLayoutAttributeRight];
+    [self fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationLessThanOrEqual];
+    self.topConstraint = [self fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.topMargin];
+    self.heightConstraint = [self fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:containerView withOffset:-self.topSpace relation:NSLayoutRelationGreaterThanOrEqual];
     
     [self updateVisuals];
     [self updateSnapPositionAnimated:false];
