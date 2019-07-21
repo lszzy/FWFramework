@@ -258,6 +258,12 @@
             CGRect frame = self.layer.presentationLayer ? self.layer.presentationLayer.frame : self.frame;
             self.panOrigin = frame.origin.y;
             
+            /*
+            if (!isFullyOpen) {
+                if (self.scrollWasEnabled && [self.scrollView.panGestureRecognizer fwIsActive]) {
+                    self.scrollView.scrollEnabled = NO;
+                }
+            }*/
             [self updateScrollPositionWhileDraggingAtPoint:self.panOrigin notifyDelegate:YES];
             break;
         }
@@ -327,6 +333,10 @@
         }
         case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateEnded: {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(drawerViewWillEndDragging:)]) {
+                [self.delegate drawerViewWillEndDragging:self];
+            }
+            
             CGPoint velocity = [sender velocityInView:self];
             
             BOOL shouldScrollChildView = NO;
@@ -335,13 +345,7 @@
                 shouldScrollChildView = YES;
             }
             
-            if (shouldScrollChildView) {
-                // 子视图滚动
-            } else if (self.startedDragging) {
-                if (self.delegate && [self.delegate respondsToSelector:@selector(drawerViewWillEndDragging:)]) {
-                    [self.delegate drawerViewWillEndDragging:self];
-                }
-                
+            if (!shouldScrollChildView && self.startedDragging) {
                 CGFloat targetOffset = self.frame.origin.y + velocity.y / 100;
                 FWDrawerViewPosition targetPosition = [self positionFor:targetOffset];
                 FWDrawerViewPosition advancePosition = [self advance:targetPosition offset:(velocity.y > 0 ? -1 : 1)];
