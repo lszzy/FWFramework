@@ -229,7 +229,10 @@
 
 - (void)attachTo:(UIView *)containerView
 {
-    if (self.superview != nil || !containerView) return;
+    if (self.superview != nil) return;
+    
+    _containerView = containerView;
+    if (!containerView) return;
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
     [containerView addSubview:self];
