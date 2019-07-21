@@ -17,9 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 抽屉视图位置枚举
  */
 typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
+    // 不显示
     FWDrawerViewPositionClosed = 0,
+    // 折叠，显示很小部分
     FWDrawerViewPositionCollapsed,
+    // 部分打开，显示部分
     FWDrawerViewPositionPartiallyOpen,
+    // 完全打开，显示全部
     FWDrawerViewPositionOpen,
 };
 
@@ -32,20 +36,25 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 
 @optional
 
+// 抽屉将要从一个位置到另一个位置
 - (void)drawerView:(FWDrawerView *)drawerView willTransitionFrom:(FWDrawerViewPosition)startPosition to:(FWDrawerViewPosition)targetPosition;
 
+// 抽屉转换到另一个位置
 - (void)drawerView:(FWDrawerView *)drawerView didTransitionTo:(FWDrawerViewPosition)position;
 
+// 抽屉移动到某个偏移
 - (void)drawerView:(FWDrawerView *)drawerView didMoveTo:(CGFloat)drawerOffset;
 
+// 抽屉将要开始拖动
 - (void)drawerViewWillBeginDragging:(FWDrawerView *)drawerView;
 
+// 抽屉将要结束拖动
 - (void)drawerViewWillEndDragging:(FWDrawerView *)drawerView;
 
 @end
 
 /*!
- @brief FWDrawerView
+ @brief 抽屉视图
  
  @see https://github.com/mkko/DrawerView
  */
