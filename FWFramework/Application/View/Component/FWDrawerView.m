@@ -336,7 +336,7 @@
                 
                 BOOL childReachedTheTop = NO;
                 for (UIScrollView *scrollView in activeScrollViews) {
-                    if (scrollView.contentOffset.y <= 0) {
+                    if (scrollView.contentOffset.y <= 0 - scrollView.contentInset.top) {
                         childReachedTheTop = YES;
                         break;
                     }
@@ -370,7 +370,7 @@
                     CGRect frame = self.layer.presentationLayer ? self.layer.presentationLayer.frame : self.frame;
                     NSNumber *minContentOffsetValue = nil;
                     for (UIScrollView *scrollView in activeScrollViews) {
-                        CGFloat y = scrollView.contentOffset.y;
+                        CGFloat y = scrollView.contentOffset.y + scrollView.contentInset.top;
                         if (!minContentOffsetValue) {
                             minContentOffsetValue = @(y);
                         } else if (y < [minContentOffsetValue doubleValue]) {
@@ -424,7 +424,7 @@
                         }
                     }
                     if (scrollValid) {
-                        if (obj.scrollView.contentOffset.y > 0) {
+                        if (obj.scrollView.contentOffset.y > 0 - obj.scrollView.contentInset.top) {
                             childScroll = YES;
                             *stop = YES;
                         }
