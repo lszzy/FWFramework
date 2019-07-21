@@ -192,7 +192,10 @@
 
 - (void)setPosition:(FWDrawerViewPosition)position animated:(BOOL)animated
 {
-    if (!self.superview) return;
+    if (!self.superview) {
+        _position = position;
+        return;
+    }
     
     FWDrawerViewPosition visiblePosition = self.isConcealed ? FWDrawerViewPositionClosed : position;
     BOOL notifyPosition = !self.isConcealed && self.position != visiblePosition;
