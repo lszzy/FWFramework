@@ -24,6 +24,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.fwForcePopGesture = YES;
     self.navigationItem.hidesBackButton = YES;
     self.fwNavigationBarHidden = YES;
     
@@ -57,8 +58,8 @@
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.backgroundColor = [UIColor whiteColor];
     scrollView.contentSize = CGSizeMake(self.view.fwWidth, 2000);
-    //scrollView.contentInset = UIEdgeInsetsMake(50, 0, 100, 0);
-    //scrollView.contentOffset = CGPointMake(0, -50);
+    scrollView.contentInset = UIEdgeInsetsMake(50, 0, 100, 0);
+    scrollView.contentOffset = CGPointMake(0, -50);
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 2000)];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 50)];
@@ -87,8 +88,6 @@
     _drawerView = drawerView;
     // 无需添加到self.view，调用attachTo即可
     [drawerView attachTo:self.view];
-    drawerView.snapPositions = @[@(FWDrawerViewPositionCollapsed), @(FWDrawerViewPositionPartiallyOpen), @(FWDrawerViewPositionOpen)];
-    drawerView.position = FWDrawerViewPositionCollapsed;
 }
 
 @end

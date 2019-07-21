@@ -72,6 +72,9 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 // 快速设置容器视图，内部会调用attachTo:，支持可视化设置
 @property (nonatomic, weak, nullable) IBOutlet UIView *containerView;
 
+// 快速设置嵌入视图，支持可视化设置
+@property (nonatomic, weak, nullable) IBOutlet UIView *embedView;
+
 // 抽屉效果是否启用，默认YES
 @property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
