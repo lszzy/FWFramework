@@ -21,7 +21,6 @@
 @property (nonatomic, assign) BOOL startedDragging;
 
 @property (nonatomic, strong) NSLayoutConstraint *topConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
 
 @property (nonatomic, strong) UIViewPropertyAnimator *previousAnimator NS_AVAILABLE_IOS(10_0);
 
@@ -183,9 +182,8 @@
     [containerView addSubview:self];
     [self fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self fwPinEdgeToSuperview:NSLayoutAttributeRight];
-    [self fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationLessThanOrEqual];
+    [self fwPinEdgeToSuperview:NSLayoutAttributeBottom];
     self.topConstraint = [self fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.topMargin];
-    self.heightConstraint = [self fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:containerView withOffset:-self.topSpace relation:NSLayoutRelationGreaterThanOrEqual];
     
     [self setPosition:self.position animated:NO];
 }
