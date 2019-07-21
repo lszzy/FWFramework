@@ -258,12 +258,10 @@
             CGRect frame = self.layer.presentationLayer ? self.layer.presentationLayer.frame : self.frame;
             self.panOrigin = frame.origin.y;
             
-            /*
-            if (!isFullyOpen) {
-                if (self.scrollWasEnabled && [self.scrollView.panGestureRecognizer fwIsActive]) {
-                    self.scrollView.scrollEnabled = NO;
-                }
-            }*/
+            if (!isFullyOpen && self.scrollWasEnabled && [self.scrollView.panGestureRecognizer fwIsActive]) {
+                self.scrollView.scrollEnabled = NO;
+            }
+            
             [self updateScrollPositionWhileDraggingAtPoint:self.panOrigin notifyDelegate:YES];
             break;
         }
