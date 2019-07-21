@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 // 抽屉的当前位置，默认Collapsed
 @property (nonatomic, assign) FWDrawerViewPosition position;
 
-// 自定义抽屉的折叠位置列表，默认[Collapsed|PartiallyOpen|Open]
+// 自定义抽屉的折叠位置列表，自动从小到大排序，默认[Collapsed|PartiallyOpen|Open]
 @property (nonatomic, copy) NSArray<NSNumber *> *snapPositions;
 
 // 快速设置容器视图，内部会调用attachTo:，支持可视化设置
