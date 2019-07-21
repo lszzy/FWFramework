@@ -40,17 +40,22 @@
 
 - (void)renderViewUp
 {
-    UIView *drawerView = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
+    CGFloat fromPosition = 0;
+    CGFloat toPosition = ViewHeight / 4 * 3;
+    
+    UIView *drawerView = [[UIView alloc] initWithFrame:CGRectMake(0, toPosition, self.view.fwWidth, ViewHeight)];
     drawerView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:drawerView];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:drawerView direction:UISwipeGestureRecognizerDirectionUp fromPosition:0 toPosition:ViewHeight / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:drawerView direction:UISwipeGestureRecognizerDirectionUp fromPosition:fromPosition toPosition:toPosition kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:drawerView];
-        if (position < FWTopBarHeight) {
-            CGFloat progress = MIN(1 - position / FWTopBarHeight, 1);
+        CGFloat targetDistance = toPosition - fromPosition;
+        CGFloat distance = position - fromPosition;
+        if (distance < targetDistance) {
+            CGFloat progress = MIN(1 - distance / targetDistance, 1);
             [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor brownColor] colorWithAlphaComponent:progress]];
         } else {
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];

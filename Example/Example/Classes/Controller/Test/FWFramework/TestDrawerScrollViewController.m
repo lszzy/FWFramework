@@ -11,7 +11,7 @@
 
 #define ViewHeight (FWScreenHeight - FWStatusBarHeight - FWNavigationBarHeight)
 
-@interface TestDrawerScrollViewController ()
+@interface TestDrawerScrollViewController () <FWDrawerViewDelegate>
 
 @property (nonatomic, weak) MKMapView *mapView;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -77,8 +77,47 @@
     // scrollView无需添加到self.view，DrawerView会自动添加scrollView
     FWDrawerView *drawerView = [[FWDrawerView alloc] initWithEmbedView:self.scrollView];
     _drawerView = drawerView;
+    drawerView.delegate = self;
     // 无需添加到self.view，调用attachTo即可
     [drawerView attachTo:self.view];
+}
+
+#pragma mark - FWDrawerViewDelegate
+
+- (void)drawerView:(FWDrawerView *)drawerView willTransitionFrom:(FWDrawerViewPosition)startPosition to:(FWDrawerViewPosition)targetPosition
+{
+    FWLogDebug(@"drawerViewWillTransitionFrom: %@ to: %@", @(startPosition), @(targetPosition));
+}
+
+- (void)drawerView:(FWDrawerView *)drawerView didTransitionTo:(FWDrawerViewPosition)position
+{
+    FWLogDebug(@"drawerViewDidTransitionTo: %@", @(position));
+}
+
+- (void)drawerView:(FWDrawerView *)drawerView didMoveTo:(CGFloat)drawerOffset
+{
+    FWLogDebug(@"drawerViewDidMoveTo: %@", @(drawerOffset));
+    
+    CGFloat openOffset = [drawerView drawerOffsetWithPosition:FWDrawerViewPositionOpen];
+    CGFloat partiallyOpenOffset = [drawerView drawerOffsetWithPosition:FWDrawerViewPositionPartiallyOpen];
+    if (drawerOffset > partiallyOpenOffset) {
+        CGFloat targetDistance = openOffset - partiallyOpenOffset;
+        CGFloat distance = drawerOffset - partiallyOpenOffset;
+        CGFloat progress = MIN(distance / targetDistance, 1);
+        [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor brownColor] colorWithAlphaComponent:progress]];
+    } else {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
+    }
+}
+
+- (void)drawerViewWillBeginDragging:(FWDrawerView *)drawerView
+{
+    FWLogDebug(@"drawerViewWillBeginDragging");
+}
+
+- (void)drawerViewWillEndDragging:(FWDrawerView *)drawerView
+{
+    FWLogDebug(@"drawerViewWillEndDragging");
 }
 
 @end
