@@ -72,6 +72,12 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 // 抽屉部分打开时的高度，默认屏幕高度的1/3
 @property (nonatomic, assign) CGFloat partiallyOpenHeight;
 
+// 获取抽屉完全打开时的高度，自动根据TopMargin计算，只读
+@property (nonatomic, assign, readonly) CGFloat openHeight;
+
+// 获取抽屉当前偏移offset，从底部向上计算
+@property (nonatomic, assign, readonly) CGFloat drawerOffset;
+
 // 抽屉的当前位置，默认Collapsed
 @property (nonatomic, assign) FWDrawerViewPosition position;
 
@@ -90,9 +96,6 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 // 设置隐蔽状态，默认NO
 @property (nonatomic, assign, getter=isConcealed) BOOL concealed;
 
-// 获取抽屉偏移offset，从底部向上计算
-@property (nonatomic, assign, readonly) CGFloat drawerOffset;
-
 // 初始化，可设置嵌入视图
 - (instancetype)initWithEmbedView:(nullable UIView *)embedView;
 
@@ -102,17 +105,14 @@ typedef NS_ENUM(NSInteger, FWDrawerViewPosition) {
 // 动画方式指定抽屉位置
 - (void)setPosition:(FWDrawerViewPosition)position animated:(BOOL)animated;
 
+// 获取当前位置偏移指定步进后的位置，找不到时返回NSNotFound
+- (FWDrawerViewPosition)getPositionWithOffset:(NSInteger)offset;
+
 // 动画方式设置隐蔽状态
 - (void)setConcealed:(BOOL)concealed animated:(BOOL)animated;
 
 // 动画方式从父视图移除
 - (void)removeFromSuperviewAnimated:(BOOL)animated;
-
-// 获取当前位置步进后的位置，找不到时返回NSNotFound
-- (FWDrawerViewPosition)getPositionWithStep:(NSInteger)step;
-
-// 获取指定位置的偏移offset值
-- (CGFloat)drawerOffsetWithPosition:(FWDrawerViewPosition)position;
 
 @end
 
