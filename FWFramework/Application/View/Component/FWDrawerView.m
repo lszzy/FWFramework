@@ -37,15 +37,13 @@
 @interface FWDrawerView ()
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-
 @property (nonatomic, assign) CGFloat panOrigin;
-
 @property (nonatomic, assign) BOOL startedDragging;
-
-@property (nonatomic, strong) UIViewPropertyAnimator *previousAnimator NS_AVAILABLE_IOS(10_0);
 
 @property (nonatomic, strong) NSLayoutConstraint *topConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
+
+@property (nonatomic, strong) UIViewPropertyAnimator *previousAnimator NS_AVAILABLE_IOS(10_0);
 
 @property (nonatomic, strong) NSMutableArray<FWDrawerViewScrollInfo *> *childScrollViews;
 
@@ -107,10 +105,6 @@
     self.panGestureRecognizer.minimumNumberOfTouches = 1;
     self.panGestureRecognizer.delegate = self;
     [self addGestureRecognizer:self.panGestureRecognizer];
-    
-    self.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [self updateVisuals];
 }
 
 #pragma mark - Accessor
@@ -145,45 +139,15 @@
 
 - (CGFloat)topSpace
 {
-    NSArray<NSNumber *> *openPositions = @[@(FWDrawerViewPositionOpen), @(FWDrawerViewPositionPartiallyOpen)];
-    // 目标从大到小
-    openPositions = [openPositions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
-        if (self.superview) {
-            return [self snapPositionFor:[obj1 integerValue] inSuperview:self.superview] > [self snapPositionFor:[obj2 integerValue] inSuperview:self.superview];
-        } else {
-            return obj1.integerValue > obj2.integerValue;
-        }
-    }];
+    if (!self.superview) return 0;
     
-    __block FWDrawerViewPosition topPosition = FWDrawerViewPositionOpen;
-    [openPositions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-        if ([self.snapPositions containsObject:obj]) {
-            topPosition = [obj integerValue];
-            *stop = YES;
-        }
-    }];
-    
-    if (self.superview != nil) {
-        return [self snapPositionFor:topPosition inSuperview:self.superview];
-    }
-    return 0;
+    FWDrawerViewPosition topPosition = [self.snapPositions.lastObject integerValue];
+    return [self snapPositionFor:topPosition inSuperview:self.superview];
 }
 
 - (CGFloat)bottomInset
 {
     return 0;
-}
-
-- (NSArray<NSNumber *> *)snapPositionsSorted
-{
-    // 目标从小到大
-    return [self.snapPositions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
-        if (self.superview) {
-            return [self snapPositionFor:[obj1 integerValue] inSuperview:self.superview] < [self snapPositionFor:[obj2 integerValue] inSuperview:self.superview];
-        } else {
-            return obj1.integerValue < obj2.integerValue;
-        }
-    }];
 }
 
 - (void)setTopMargin:(CGFloat)topMargin
@@ -211,10 +175,13 @@
 
 - (void)setSnapPositions:(NSArray<NSNumber *> *)snapPositions
 {
-    _snapPositions = snapPositions;
-    if (![snapPositions containsObject:@(self.position)]) {
-        NSNumber *position = self.snapPositionsSorted.firstObject;
-        self.position = position ? [position integerValue] : FWDrawerViewPositionCollapsed;
+    // 自动从小到大排序
+    _snapPositions = [snapPositions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
+        return obj1.integerValue < obj2.integerValue;
+    }];
+    
+    if (![_snapPositions containsObject:@(self.position)]) {
+        self.position = [_snapPositions.firstObject integerValue];
     }
 }
 
@@ -237,7 +204,6 @@
     self.topConstraint = [self fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.topMargin];
     self.heightConstraint = [self fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:containerView withOffset:-self.topSpace relation:NSLayoutRelationGreaterThanOrEqual];
     
-    [self updateVisuals];
     [self setPosition:self.position animated:NO];
 }
 
@@ -298,7 +264,7 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    BOOL isFullyOpen = [self.snapPositionsSorted.lastObject integerValue] == self.position;
+    BOOL isFullyOpen = [self.snapPositions.lastObject integerValue] == self.position;
     switch (sender.state) {
         case UIGestureRecognizerStateBegan: {
             if (self.delegate && [self.delegate respondsToSelector:@selector(drawerViewWillBeginDragging:)]) {
@@ -565,23 +531,16 @@
 
 - (FWDrawerViewPosition)advance:(FWDrawerViewPosition)position step:(NSInteger)step
 {
-    NSArray<NSNumber *> *snapPositionsSorted = self.snapPositionsSorted;
-    NSInteger index = [snapPositionsSorted indexOfObject:@(position)];
+    NSInteger index = [self.snapPositions indexOfObject:@(position)];
     if (index != NSNotFound) {
         NSInteger nextIndex = index + step;
-        if (nextIndex < 0 || nextIndex >= snapPositionsSorted.count) {
+        if (nextIndex < 0 || nextIndex >= self.snapPositions.count) {
             return NSNotFound;
         }
-        return [[snapPositionsSorted objectAtIndex:nextIndex] integerValue];
+        return [[self.snapPositions objectAtIndex:nextIndex] integerValue];
     } else {
         return NSNotFound;
     }
-}
-
-- (void)updateVisuals
-{
-    self.heightConstraint.constant = -self.topSpace;
-    [self setNeedsDisplay];
 }
 
 - (void)updateSnapPositionAnimated:(BOOL)animated
