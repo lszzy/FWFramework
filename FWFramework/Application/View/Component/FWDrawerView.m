@@ -131,7 +131,7 @@
 {
     // 自动从小到大排序
     _snapPositions = [snapPositions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
-        return obj1.integerValue < obj2.integerValue;
+        return obj1.integerValue > obj2.integerValue;
     }];
     
     if (![_snapPositions containsObject:@(self.position)]) {
@@ -447,8 +447,7 @@
 
 - (void)updateSnapPositionAnimated:(BOOL)animated
 {
-    BOOL isTracking = self.panGestureRecognizer.state == UIGestureRecognizerStateBegan || self.panGestureRecognizer.state == UIGestureRecognizerStateChanged;
-    if (!isTracking) {
+    if (!self.panGestureRecognizer.fwIsTracking) {
         [self setPosition:self.position animated:animated];
     }
 }
@@ -471,7 +470,7 @@
 
 - (FWDrawerViewPosition)positionFor:(CGFloat)offset
 {
-    if (!self.superview) return FWDrawerViewPositionCollapsed;
+    if (!self.superview) return self.position;
     
     NSArray *positions = [self.snapPositions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
         CGFloat dis1 = [self snapPositionFor:[obj1 integerValue] inSuperview:self.superview];
