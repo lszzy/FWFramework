@@ -26,6 +26,7 @@
 #import "FWIndicatorControl.h"
 #import "FWProgressView.h"
 #import "FWBannerView.h"
+#import "FWDrawerView.h"
 #import "FWPhotoBrowser.h"
 #import "FWPageControl.h"
 #import "FWSegmentedControl.h"
