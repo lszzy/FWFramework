@@ -13,26 +13,18 @@
 
 @interface TestDrawerScrollViewController ()
 
-@property (nonatomic, strong) MKMapView *mapView;
+@property (nonatomic, weak) MKMapView *mapView;
 @property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) FWDrawerView *drawerView;
+@property (nonatomic, weak) FWDrawerView *drawerView;
 
 @end
 
 @implementation TestDrawerScrollViewController
 
-- (void)viewDidLoad
+- (void)renderView
 {
-    [super viewDidLoad];
-    self.fwForcePopGesture = YES;
-    self.navigationItem.hidesBackButton = YES;
-    self.fwNavigationBarHidden = YES;
-    
-    FWWeakifySelf();
-    [self fwSetLeftBarItem:[UIImage imageNamed:@"public_back"] block:^(id sender) {
-        FWStrongifySelf();
-        [self fwCloseViewControllerAnimated:YES];
-    }];
+    // 因为显示了导航栏，去掉self.view多出来的高度
+    self.view.fwHeight -= FWTopBarHeight;
     
     [self renderMapView];
     [self renderScrollView];
@@ -84,7 +76,6 @@
 {
     // scrollView无需添加到self.view，DrawerView会自动添加scrollView
     FWDrawerView *drawerView = [[FWDrawerView alloc] initWithEmbedView:self.scrollView];
-    drawerView.backgroundColor = [UIColor brownColor];
     _drawerView = drawerView;
     // 无需添加到self.view，调用attachTo即可
     [drawerView attachTo:self.view];
