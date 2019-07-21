@@ -9,6 +9,7 @@
 
 #import "FWDrawerView.h"
 #import "UIView+FWAutoLayout.h"
+#import "UIScreen+FWFramework.h"
 
 @interface FWDrawerViewScrollInfo : NSObject
 
@@ -93,9 +94,9 @@
 
 - (void)setup
 {
-    _topMargin = 68;
-    _collapsedHeight = 68;
-    _partiallyOpenHeight = 264;
+    _topMargin = 0;
+    _collapsedHeight = FWTabBarHeight;
+    _partiallyOpenHeight = FWScreenHeight / 3;
     _position = FWDrawerViewPositionCollapsed;
     _snapPositions = @[@(FWDrawerViewPositionCollapsed), @(FWDrawerViewPositionPartiallyOpen), @(FWDrawerViewPositionOpen)];
     _enabled = YES;
@@ -237,7 +238,7 @@
     self.heightConstraint = [self fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:containerView withOffset:-self.topSpace relation:NSLayoutRelationGreaterThanOrEqual];
     
     [self updateVisuals];
-    [self updateSnapPositionAnimated:false];
+    [self setPosition:self.position animated:NO];
 }
 
 - (void)setPosition:(FWDrawerViewPosition)position animated:(BOOL)animated
@@ -255,18 +256,13 @@
     _position = position;
     
     CGFloat nextSnapPosition = [self snapPositionFor:visiblePosition inSuperview:self.superview];
-    [self scrollToPosition:nextSnapPosition animated:animated notifyDelegate:YES completion:^(BOOL finished) {
+    [self scrollToPosition:nextSnapPosition animated:animated notifyDelegate:notifyPosition completion:^(BOOL finished) {
         if (notifyPosition) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(drawerView:didTransitionTo:)]) {
                 [self.delegate drawerView:self didTransitionTo:visiblePosition];
             }
         }
     }];
-}
-
-- (FWDrawerViewPosition)getPositionWithOffset:(NSInteger)offset
-{
-    return [self advance:self.position offset:offset];
 }
 
 - (void)setConcealed:(BOOL)concealed animated:(BOOL)animated
@@ -283,6 +279,19 @@
     [self scrollToPosition:pos animated:animated notifyDelegate:YES completion:^(BOOL finished) {
         [self removeFromSuperview];
     }];
+}
+
+- (FWDrawerViewPosition)getPositionWithStep:(NSInteger)step
+{
+    return [self advance:self.position step:step];
+}
+
+- (CGFloat)drawerOffsetWithPosition:(FWDrawerViewPosition)position
+{
+    if (!self.superview) return 0;
+    
+    CGFloat snapPosition = [self snapPositionFor:position inSuperview:self.superview];
+    return [self convertScrollPositionToOffset:snapPosition];
 }
 
 #pragma mark - Private
@@ -444,7 +453,7 @@
                 
                 NSInteger advancement = velocity.y > 0 ? -1 : 1;
                 FWDrawerViewPosition nextPosition;
-                FWDrawerViewPosition advanced = [self advance:targetPosition offset:advancement];
+                FWDrawerViewPosition advanced = [self advance:targetPosition step:advancement];
                 if (targetPosition == self.position && fabs(velocity.y) > 0 && advancement != NSNotFound) {
                     nextPosition = advanced;
                 } else {
@@ -490,7 +499,7 @@
                 } else if (pos == UIViewAnimatingPositionCurrent) {
                     if (self.layer.presentationLayer) {
                         CGRect frame = self.layer.presentationLayer.frame;
-                        [self setScrollPosition:CGRectGetMinY(frame) notifyDelegate:NO];
+                        [self setScrollPosition:CGRectGetMinY(frame) notifyDelegate:notifyDelegate];
                     }
                 }
                 
@@ -554,12 +563,12 @@
     [self.superview layoutIfNeeded];
 }
 
-- (FWDrawerViewPosition)advance:(FWDrawerViewPosition)position offset:(NSInteger)offset
+- (FWDrawerViewPosition)advance:(FWDrawerViewPosition)position step:(NSInteger)step
 {
     NSArray<NSNumber *> *snapPositionsSorted = self.snapPositionsSorted;
     NSInteger index = [snapPositionsSorted indexOfObject:@(position)];
     if (index != NSNotFound) {
-        NSInteger nextIndex = index + offset;
+        NSInteger nextIndex = index + step;
         if (nextIndex < 0 || nextIndex >= snapPositionsSorted.count) {
             return NSNotFound;
         }
