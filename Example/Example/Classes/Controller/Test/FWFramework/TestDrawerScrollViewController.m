@@ -100,7 +100,7 @@
     
     CGFloat startOffset = drawerView.partiallyOpenHeight + (drawerView.openHeight - drawerView.partiallyOpenHeight) / 2;
     if (drawerOffset > startOffset) {
-        CGFloat progress = MIN(drawerOffset - startOffset / drawerView.openHeight - startOffset, 1);
+        CGFloat progress = MIN((drawerOffset - startOffset) / (drawerView.openHeight - startOffset), 1);
         [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor brownColor] colorWithAlphaComponent:progress]];
     } else {
         [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
