@@ -40,7 +40,7 @@
 @property (nonatomic, weak, readonly) UIScrollView *scrollView;
 @property (nonatomic, assign, readonly) BOOL isVertical;
 @property (nonatomic, assign) CGFloat position;
-@property (nonatomic, assign) CGFloat beganPosition;
+@property (nonatomic, assign) CGFloat originPosition;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
 @end
@@ -68,7 +68,7 @@
         _scrollView = [view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)view : nil;
         _isVertical = (direction == UISwipeGestureRecognizerDirectionUp || direction == UISwipeGestureRecognizerDirectionDown);
         _position = _isVertical ? view.frame.origin.y : view.frame.origin.x;
-        _beganPosition = _position;
+        _originPosition = _position;
     }
     return self;
 }
@@ -81,7 +81,7 @@
             // 拖动开始时记录起始位置
             case UIGestureRecognizerStateBegan: {
                 self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
-                self.beganPosition = self.position;
+                self.originPosition = self.position;
                 break;
             }
             // 拖动改变时更新视图位置
@@ -186,13 +186,13 @@
             // 拖动结束时停留指定位置
             case UIGestureRecognizerStateEnded: {
                 // 停留位置未发生改变时不执行动画，直接回调
-                if (self.position == self.beganPosition) {
+                if (self.position == self.originPosition) {
                     if (self.callback) {
                         self.callback(self.position, YES);
                     }
                     // 停留位置发生改变时执行动画，动画完成后回调
                 } else {
-                    CGFloat baseline = (self.beganPosition == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
+                    CGFloat baseline = (self.originPosition == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
                     CGFloat position = (self.position < baseline) ? self.fromPosition : self.toPosition;
                     [self togglePosition:position];
                 }
@@ -228,7 +228,7 @@
         }
         
         self.position = position;
-        self.beganPosition = position;
+        self.originPosition = position;
         if (self.callback) {
             self.callback(self.position, YES);
         }
@@ -251,7 +251,7 @@
     // 视图在终点时允许同时识别滚动视图pan手势
     if ([otherGestureRecognizer isEqual:self.scrollView.panGestureRecognizer]) {
         CGFloat targetPosition = (self.direction == UISwipeGestureRecognizerDirectionLeft || self.direction == UISwipeGestureRecognizerDirectionUp) ? self.fromPosition : self.toPosition;
-        if (self.beganPosition == targetPosition) {
+        if (self.originPosition == targetPosition) {
             return YES;
         }
     }
@@ -301,7 +301,7 @@
         return NO;
     }
     
-    return target.beganPosition == target.toPosition;
+    return target.originPosition == target.toPosition;
 }
 
 - (void)fwDrawerViewToggleOpen:(BOOL)open
@@ -312,7 +312,7 @@
     }
     
     CGFloat position = open ? target.toPosition : target.fromPosition;
-    if (target.beganPosition != position) {
+    if (target.originPosition != position) {
         [target togglePosition:position];
     }
 }
