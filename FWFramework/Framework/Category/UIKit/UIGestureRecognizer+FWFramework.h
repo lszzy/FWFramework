@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UIGestureRecognizer+FWFramework
+ @discussion gestureRecognizerShouldBegin：是否继续进行手势识别，默认YES
+    shouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO
+    shouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败
+    shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败
  */
 @interface UIGestureRecognizer (FWFramework)
 
