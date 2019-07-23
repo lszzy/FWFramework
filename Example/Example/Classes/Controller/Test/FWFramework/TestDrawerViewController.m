@@ -68,14 +68,17 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    scrollView.bounces = NO;
+    CGFloat fromPosition = 0;
+    CGFloat toPosition = ViewHeight / 4 * 3;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp fromPosition:0 toPosition:ViewHeight / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp fromPosition:fromPosition toPosition:toPosition kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
-        if (position < FWTopBarHeight) {
-            CGFloat progress = MIN(1 - position / FWTopBarHeight, 1);
+        CGFloat targetDistance = toPosition - fromPosition;
+        CGFloat distance = position - fromPosition;
+        if (distance < targetDistance) {
+            CGFloat progress = MIN(1 - distance / targetDistance, 1);
             [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor brownColor] colorWithAlphaComponent:progress]];
         } else {
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
@@ -114,7 +117,6 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    scrollView.bounces = NO;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
     [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown fromPosition:-ViewHeight / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
@@ -159,7 +161,6 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    scrollView.bounces = NO;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
     [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionLeft fromPosition:0 toPosition:FWScreenWidth / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
@@ -204,7 +205,6 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    scrollView.bounces = NO;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
     [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionRight fromPosition:-FWScreenWidth / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
