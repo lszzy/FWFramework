@@ -73,12 +73,20 @@
 
 - (BOOL)isVertical
 {
+    // 是否纵向拖动，Up|Down时纵向，Right|Left时横向
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown;
+}
+
+- (BOOL)isReverse
+{
+    // 是否反向拖动，Down|Right时正向，Up|Left时反向
+    return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
 }
 
 - (CGFloat)openPosition
 {
-    return (self.direction == UISwipeGestureRecognizerDirectionLeft || self.direction == UISwipeGestureRecognizerDirectionUp) ? self.fromPosition : self.toPosition;
+    // 计算打开位置，正向拖动时toPosition，反向拖动时fromPosition
+    return self.isReverse ? self.fromPosition : self.toPosition;
 }
 
 #pragma mark - Public
@@ -101,26 +109,30 @@
             // 视图跟随拖动移动指定距离
             self.position = self.isVertical ? (self.view.frame.origin.y + transition.y) : (self.view.frame.origin.x + transition.x);
             
-            // 如果是滚动视图，还需计算contentOffset和contentInset
+            // 如果是滚动视图，还需计算contentOffset
             if (self.scrollView) {
-                if (self.isVertical) {
-                    BOOL canScroll = self.scrollView.contentSize.height + self.scrollView.contentInset.top + self.scrollView.contentInset.bottom > self.scrollView.frame.size.height;
-                    if (canScroll) {
-                        if (self.direction == UISwipeGestureRecognizerDirectionUp) {
-                            self.position += -(self.scrollView.contentOffset.y + self.scrollView.contentInset.top);
-                        } else {
-                            self.position += (self.scrollView.contentSize.height - self.scrollView.frame.size.height - self.scrollView.contentOffset.y + self.scrollView.contentInset.bottom);
-                        }
-                    }
-                } else {
-                    BOOL canScroll = self.scrollView.contentSize.width + self.scrollView.contentInset.left + self.scrollView.contentInset.right > self.scrollView.frame.size.width;
-                    if (canScroll) {
-                        if (self.direction == UISwipeGestureRecognizerDirectionLeft) {
-                            self.position += -(self.scrollView.contentOffset.x + self.scrollView.contentInset.left);
-                        } else {
-                            self.position += (self.scrollView.contentSize.width - self.scrollView.frame.size.width - self.scrollView.contentOffset.x + self.scrollView.contentInset.right);
-                        }
-                    }
+                // 计算滚动视图的contentOffset(包含contentInset)
+                CGFloat contentOffset = 0;
+                switch (self.direction) {
+                    case UISwipeGestureRecognizerDirectionUp:
+                        contentOffset = self.scrollView.contentOffset.y + self.scrollView.contentInset.top;
+                        break;
+                    case UISwipeGestureRecognizerDirectionDown:
+                        contentOffset = self.scrollView.contentSize.height - self.scrollView.frame.size.height - self.scrollView.contentOffset.y + self.scrollView.contentInset.bottom;
+                        break;
+                    case UISwipeGestureRecognizerDirectionLeft:
+                        contentOffset = self.scrollView.contentOffset.x + self.scrollView.contentInset.left;
+                        break;
+                    case UISwipeGestureRecognizerDirectionRight:
+                        contentOffset = self.scrollView.contentSize.width - self.scrollView.frame.size.width - self.scrollView.contentOffset.x + self.scrollView.contentInset.right;
+                        break;
+                    default:
+                        break;
+                }
+                
+                // 只处理contentOffset大于0的情况
+                if (contentOffset > 0) {
+                    self.position = self.isReverse ? (self.position - contentOffset) : (self.position + contentOffset);
                 }
             }
                 
@@ -212,10 +224,8 @@
         if (self.position == self.openPosition) {
             self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
             return YES;
-        } else {
-            self.scrollView = nil;
-            return NO;
         }
+        self.scrollView = nil;
     }
     return NO;
 }
@@ -285,7 +295,7 @@
         return;
     }
     
-    CGFloat position = open ? target.openPosition : (target.openPosition == target.fromPosition ? target.toPosition : target.fromPosition);
+    CGFloat position = open ? target.openPosition : (target.isReverse ? target.toPosition : target.fromPosition);
     if (target.position != position) {
         [target togglePosition:position];
     }
