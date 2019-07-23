@@ -37,7 +37,6 @@
 @property (nonatomic, assign, readonly) CGFloat kickbackHeight;
 @property (nonatomic, copy, readonly) void (^callback)(CGFloat position, BOOL finished);
 
-@property (nonatomic, assign, readonly) BOOL isVertical;
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
 @property (nonatomic, strong) CADisplayLink *displayLink;
@@ -65,10 +64,21 @@
         _kickbackHeight = kickbackHeight;
         _callback = callback;
         
-        _isVertical = (direction == UISwipeGestureRecognizerDirectionUp || direction == UISwipeGestureRecognizerDirectionDown);
-        _position = _isVertical ? view.frame.origin.y : view.frame.origin.x;
+        _position = self.isVertical ? view.frame.origin.y : view.frame.origin.x;
     }
     return self;
+}
+
+#pragma mark - Accessor
+
+- (BOOL)isVertical
+{
+    return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown;
+}
+
+- (CGFloat)openPosition
+{
+    return (self.direction == UISwipeGestureRecognizerDirectionLeft || self.direction == UISwipeGestureRecognizerDirectionUp) ? self.fromPosition : self.toPosition;
 }
 
 #pragma mark - Public
@@ -249,7 +259,7 @@
         return NO;
     }
     
-    return target.position == target.toPosition;
+    return target.position == target.openPosition;
 }
 
 - (void)fwDrawerViewToggleOpen:(BOOL)open
@@ -259,7 +269,7 @@
         return;
     }
     
-    CGFloat position = open ? target.toPosition : target.fromPosition;
+    CGFloat position = open ? target.openPosition : (target.openPosition == target.fromPosition ? target.toPosition : target.fromPosition);
     if (target.position != position) {
         [target togglePosition:position];
     }

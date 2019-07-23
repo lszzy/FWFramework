@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 设置抽屉拖拽效果。如果未自定义delegate，会自动设置delegate处理与滚动视图pan手势冲突的问题
  
  @param view 抽屉视图，默认为self.view
- @param direction 拖拽方向，如向上拖动视图时为Up
+ @param direction 拖拽方向，如向上拖动视图时为Up，向下为Down，向右为Right，向左为Left
  @param fromPosition 相对于view父视图的起点originY位置
  @param toPosition 相对于view父视图的终点originY位置
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
@@ -49,10 +49,15 @@ NS_ASSUME_NONNULL_BEGIN
       kickbackHeight:(CGFloat)kickbackHeight
             callback:(nullable void (^)(CGFloat position, BOOL finished))callback;
 
-// 判断抽屉效果视图是否位于打开位置(toPosition)
+/*!
+ @brief 判断抽屉效果视图是否位于打开位置
+ @discussion 打开位置定义：拖拽方向为Up时fromPosition，Down时toPosition，Right时toPosition，Left时fromPosition，关闭位置取反即可
+ 
+ @return 是否位于打开位置
+ */
 - (BOOL)fwDrawerViewIsOpen;
 
-// 设置抽屉效果视图到打开位置(toPosition)或关闭位置(fromPosition)，如果位置发生改变，会触发抽屉callback回调
+// 设置抽屉效果视图到打开位置或关闭位置，如果位置发生改变，会触发抽屉callback回调
 - (void)fwDrawerViewToggleOpen:(BOOL)open;
 
 @end
