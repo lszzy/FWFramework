@@ -37,10 +37,10 @@
 @property (nonatomic, assign, readonly) CGFloat kickbackHeight;
 @property (nonatomic, copy, readonly) void (^callback)(CGFloat position, BOOL finished);
 
+@property (nonatomic, weak, readonly) UIScrollView *scrollView;
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
 @property (nonatomic, strong) CADisplayLink *displayLink;
-@property (nonatomic, weak) UIScrollView *scrollView;
 
 @end
 
@@ -64,6 +64,7 @@
         _kickbackHeight = kickbackHeight;
         _callback = callback;
         
+        _scrollView = [view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)view : nil;
         _position = self.isVertical ? view.frame.origin.y : view.frame.origin.x;
     }
     return self;
@@ -219,13 +220,10 @@
 // 视图在打开位置时允许同时识别滚动视图pan手势
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if ([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]] &&
-        [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    if (otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
         if (self.position == self.openPosition) {
-            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
             return YES;
         }
-        self.scrollView = nil;
     }
     return NO;
 }
@@ -233,8 +231,7 @@
 // 视图不在打开位置时不允许识别滚动视图pan手势
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if ([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]] &&
-        [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    if (otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
         if (self.position != self.openPosition) {
             return YES;
         }
@@ -272,8 +269,8 @@
     objc_setAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self addTarget:target action:@selector(panAction:)];
     
-    // 自动设置delegate处理与滚动视图pan手势冲突的问题
-    if (!self.delegate) {
+    // view为滚动视图时自动设置手势delegate处理内部滚动
+    if (target.scrollView && !self.delegate) {
         self.delegate = target;
     }
 }
