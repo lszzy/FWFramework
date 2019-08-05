@@ -77,6 +77,7 @@
                                              @[@"UITextField(FWKeyboard)", @"TestKeyboardViewController"],
                                              @[@"UIView+FWGradient", @"TestGradientViewController"],
                                              @[@"NSURL(FWVendor)", @"TestUrlViewController"],
+                                             @[@"UILabel(FWFramework)", @"TestLabelViewController"],
                                              @[@"FWAsyncSocket", @"TestSocketViewController"],
                                              ]],
                                        @[@"FWApplication", @[
