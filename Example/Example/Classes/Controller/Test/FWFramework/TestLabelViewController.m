@@ -75,11 +75,17 @@
 - (void)renderData
 {
     self.label.text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本我是很长很长的文本";
+    self.label.text = [self.label.text stringByAppendingString:NSStringFromCGSize([self.label fwTextSize])];
     self.label2.text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本我是很长很长的文本";
+    self.label2.text = [self.label2.text stringByAppendingString:NSStringFromCGSize([self.label2 fwTextSize])];
     self.attrLabel.text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本我是很长很长的文本";
+    self.attrLabel.text = [self.attrLabel.text stringByAppendingString:NSStringFromCGSize([self.attrLabel intrinsicContentSize])];
     self.attrLabel2.text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本我是很长很长的文本";
+    self.attrLabel2.text = [self.attrLabel2.text stringByAppendingString:NSStringFromCGSize([self.attrLabel2 intrinsicContentSize])];
     self.textView.text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本我是很长很长的文本";
+    self.textView.text = [self.textView.text stringByAppendingString:NSStringFromCGSize([self.textView intrinsicContentSize])];
     self.textView2.text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本我是很长很长的文本";
+    self.textView2.text = [self.textView2.text stringByAppendingString:NSStringFromCGSize([self.textView2 intrinsicContentSize])];
 }
 
 @end
