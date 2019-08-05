@@ -689,7 +689,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     {
         CFRelease(framesetter);
     }
-    return CGSizeMake(ceilf(newSize.width) + 1, MIN(ceilf(newSize.height) + 1, size.height));
+    return CGSizeMake(MIN(ceilf(newSize.width), size.width), MIN(ceilf(newSize.height), size.height));
 }
 
 
@@ -698,6 +698,14 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     return [self sizeThatFits:CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX)];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    if (!CGSizeEqualToSize(self.bounds.size, [self intrinsicContentSize])) {
+        [self invalidateIntrinsicContentSize];
+    }
+}
 
 #pragma mark - 绘制方法
 - (void)drawRect:(CGRect)rect
