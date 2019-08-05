@@ -215,6 +215,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 合并图片
 - (nullable UIImage *)fwImageWithMergeImage:(UIImage *)mergeImage;
 
+// 高斯模糊图片，默认模糊半径为10，饱和度为1
+- (nullable UIImage *)fwImageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
+
 #pragma mark - Rotate
 
 // 按角度常数(0~360)转动图片，默认图片尺寸适应内容
