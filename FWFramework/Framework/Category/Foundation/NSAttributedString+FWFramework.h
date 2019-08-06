@@ -20,13 +20,21 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)fwAttributedString:(NSString *)string;
 
 // 快速创建NSAttributedString，自定义字体
-+ (instancetype)fwAttributedString:(NSString *)string
-                          withFont:(nullable UIFont *)font;
++ (instancetype)fwAttributedString:(NSString *)string withFont:(nullable UIFont *)font;
 
 // 快速创建NSAttributedString，自定义字体和颜色
-+ (instancetype)fwAttributedString:(NSString *)string
-                          withFont:(nullable UIFont *)font
-                         textColor:(nullable UIColor *)textColor;
++ (instancetype)fwAttributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+
+// 快速创建NSAttributedString，自定义字体、颜色和段落样式
++ (instancetype)fwAttributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle;
+
+#pragma mark - Size
+
+// 计算所占尺寸
+- (CGSize)fwSize;
+
+// 计算在指定绘制区域内所占尺寸
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize;
 
 @end
 
@@ -36,16 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSMutableParagraphStyle (FWFramework)
 
 // 快速创建一个NSMutableParagraphStyle
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight;
++ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing;
 
 // 快速创建一个NSMutableParagraphStyle
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode;
++ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing textAlignment:(NSTextAlignment)textAlignment;
 
 // 快速创建一个NSMutableParagraphStyle
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
-                                 textAlignment:(NSTextAlignment)textAlignment;
++ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode;
 
 @end
 
