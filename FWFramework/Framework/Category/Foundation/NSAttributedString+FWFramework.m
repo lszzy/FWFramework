@@ -9,9 +9,32 @@
 
 #import "NSAttributedString+FWFramework.h"
 
+#pragma mark - FWAttributedOption
+
+@interface FWAttributedOption ()
+
+@end
+
+@implementation FWAttributedOption
+
+- (NSDictionary<NSAttributedStringKey,id> *)toDictionary
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    return dictionary;
+}
+
+@end
+
+#pragma mark - NSAttributedString+FWFramework
+
 @implementation NSAttributedString (FWFramework)
 
-#pragma mark - Font
+#pragma mark - Convert
+
++ (instancetype)fwAttributedString:(NSString *)string withOption:(FWAttributedOption *)option
+{
+    return [[self alloc] initWithString:string attributes:[option toDictionary]];
+}
 
 + (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font
 {
