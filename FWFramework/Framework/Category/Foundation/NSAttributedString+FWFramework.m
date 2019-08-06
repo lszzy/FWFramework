@@ -23,6 +23,11 @@
 
 + (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor
 {
+    return [self fwAttributedString:string withFont:font textColor:textColor paragraphStyle:nil];
+}
+
++ (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor paragraphStyle:(NSParagraphStyle *)paragraphStyle
+{
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     if (font) {
         attr[NSFontAttributeName] = font;
@@ -30,36 +35,47 @@
     if (textColor) {
         attr[NSForegroundColorAttributeName] = textColor;
     }
+    if (paragraphStyle) {
+        attr[NSParagraphStyleAttributeName] = paragraphStyle;
+    }
     return [[self alloc] initWithString:string attributes:attr];
+}
+
+#pragma mark - Size
+
+- (CGSize)fwSize
+{
+    return [self fwSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end
 
 @implementation NSMutableParagraphStyle (FWFramework)
 
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
++ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing
 {
-    return [self fwParagraphStyleWithLineHeight:lineHeight
-                                  lineBreakMode:NSLineBreakByWordWrapping];
+    return [self fwParagraphStyleWithLineSpacing:lineSpacing textAlignment:NSTextAlignmentLeft];
 }
 
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
++ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing textAlignment:(NSTextAlignment)textAlignment
 {
-    return [self fwParagraphStyleWithLineHeight:lineHeight
-                                  lineBreakMode:lineBreakMode
-                                  textAlignment:NSTextAlignmentLeft];
+    return [self fwParagraphStyleWithLineSpacing:lineSpacing textAlignment:textAlignment lineBreakMode:NSLineBreakByWordWrapping];
 }
 
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
-                                 textAlignment:(NSTextAlignment)textAlignment
++ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode
 {
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.minimumLineHeight = lineHeight;
-    paragraphStyle.maximumLineHeight = lineHeight;
-    paragraphStyle.lineBreakMode = lineBreakMode;
+    paragraphStyle.lineSpacing = lineSpacing;
     paragraphStyle.alignment = textAlignment;
+    paragraphStyle.lineBreakMode = lineBreakMode;
     return paragraphStyle;
 }
 
