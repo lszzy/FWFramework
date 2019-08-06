@@ -110,9 +110,6 @@ typedef NS_ENUM(NSUInteger, FWFontWeight) {
 // 上下单边空白高度，(fwLineHeight-fwPointHeight)/2，用于精确布局
 - (CGFloat)fwSpaceHeight;
 
-// 根据字体计算倍数行间距的行距值，fwPointHeight*(multiplier-1)-(fwLineHeight-fwPointHeight)
-- (CGFloat)fwLineSpacingWithMultiplier:(CGFloat)multiplier;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,10 +11,7 @@
 
 @implementation NSAttributedString (FWFramework)
 
-+ (instancetype)fwAttributedString:(NSString *)string
-{
-    return [[self alloc] initWithString:string];
-}
+#pragma mark - Font
 
 + (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font
 {
@@ -23,20 +20,12 @@
 
 + (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor
 {
-    return [self fwAttributedString:string withFont:font textColor:textColor paragraphStyle:nil];
-}
-
-+ (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor paragraphStyle:(NSParagraphStyle *)paragraphStyle
-{
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     if (font) {
         attr[NSFontAttributeName] = font;
     }
     if (textColor) {
         attr[NSForegroundColorAttributeName] = textColor;
-    }
-    if (paragraphStyle) {
-        attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
     return [[self alloc] initWithString:string attributes:attr];
 }
@@ -54,29 +43,6 @@
                                      options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                      context:nil].size;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
-}
-
-@end
-
-@implementation NSMutableParagraphStyle (FWFramework)
-
-+ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing
-{
-    return [self fwParagraphStyleWithLineSpacing:lineSpacing textAlignment:NSTextAlignmentLeft];
-}
-
-+ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing textAlignment:(NSTextAlignment)textAlignment
-{
-    return [self fwParagraphStyleWithLineSpacing:lineSpacing textAlignment:textAlignment lineBreakMode:NSLineBreakByWordWrapping];
-}
-
-+ (instancetype)fwParagraphStyleWithLineSpacing:(CGFloat)lineSpacing textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode
-{
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = lineSpacing;
-    paragraphStyle.alignment = textAlignment;
-    paragraphStyle.lineBreakMode = lineBreakMode;
-    return paragraphStyle;
 }
 
 @end
