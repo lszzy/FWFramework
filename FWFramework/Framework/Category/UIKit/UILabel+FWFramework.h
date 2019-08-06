@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UILabel+FWFramework
+ @discussion 注意UILabel的lineBreakMode默认值为TruncatingTail，如设置numberOfLines为0时，需显示修改lineBreakMode值；
+    自动布局时，可设置preferredMaxLayoutWidth，从而通过intrinsicContentSize获取多行Label的高度
  */
 @interface UILabel (FWFramework)
 
@@ -30,20 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Size
 
-// 计算当前文本所占尺寸，需frame或者宽度布局完整，默认WordWrapping模式
+// 计算当前文本所占尺寸，需frame或者宽度布局完整
 - (CGSize)fwTextSize;
-
-// 计算指定边界，当前文本所占尺寸，默认WordWrapping模式B
-- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize;
-
-// 计算指定边界，当前文本所占尺寸，指定段落样式(如lineBreakMode等，默认WordWrapping)
-- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle;
 
 // 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
 - (CGSize)fwAttributedTextSize;
-
-// 计算指定边界，当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
-- (CGSize)fwAttributedTextSizeWithDrawSize:(CGSize)drawSize;
 
 @end
 

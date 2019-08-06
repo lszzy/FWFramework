@@ -27,16 +27,16 @@
     UILabel *label = [UILabel new];
     _label = label;
     label.backgroundColor = [UIColor lightGrayColor];
-    label.numberOfLines = 0;
     label.font = [UIFont systemFontOfSize:16];
+    label.numberOfLines = 0;
     [self.view addSubview:label];
     label.fwLayoutChain.leftWithInset(10).rightWithInset(10).topWithInset(10);
     
     UILabel *label2 = [UILabel new];
     _label2 = label2;
     label2.backgroundColor = [UIColor lightGrayColor];
-    label2.numberOfLines = 0;
     label2.font = [UIFont systemFontOfSize:16];
+    label2.numberOfLines = 0;
     [self.view addSubview:label2];
     label2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(label, 10);
     
@@ -52,6 +52,7 @@
     attrLabel2.backgroundColor = [UIColor lightGrayColor];
     attrLabel2.numberOfLines = 0;
     attrLabel2.font = [UIFont systemFontOfSize:16];
+    attrLabel2.lineBreakMode = NSLineBreakByCharWrapping;
     attrLabel2.lineSpacing = 8 - attrLabel.font.fwSpaceHeight * 2;
     [self.view addSubview:attrLabel2];
     attrLabel2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(attrLabel, 10);
@@ -83,8 +84,8 @@
 
 - (void)renderData
 {
-    NSString *text = @"我是很长很长的文本我是很长很长的文本我是很长很长的文本\n我是很长很长的文本我是很长很长的文本";
-    NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSParagraphStyleAttributeName: [NSMutableParagraphStyle fwParagraphStyleWithLineSpacing:8 - self.label.font.fwSpaceHeight * 2]}];
+    NSString *text = @"I am a very long text I am a very long text I veryverylongword bad I am a very long text finish!";
+    NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSParagraphStyleAttributeName: [NSMutableParagraphStyle fwParagraphStyleWithLineSpacing:8 - self.label.font.fwSpaceHeight * 2 textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping]}];
     CGSize size = CGSizeZero;
     NSMutableString *resultText = [NSMutableString new];
     
@@ -105,12 +106,12 @@
     [resultText appendFormat:@"attrLabel2: %@\n", NSStringFromCGSize(size)];
     
     self.textView.text = text;
-    size = [self.textView fwFitSize];
+    size = [self.textView fwTextSize];
     [resultText appendFormat:@"textView: %@\n", NSStringFromCGSize(size)];
     self.textView.fwLayoutChain.height(size.height);
     
     self.textView2.attributedText = attrText;
-    size = [self.textView2 fwFitSize];
+    size = [self.textView2 fwAttributedTextSize];
     [resultText appendFormat:@"textView2: %@", NSStringFromCGSize(size)];
     self.textView2.fwLayoutChain.height(size.height);
     

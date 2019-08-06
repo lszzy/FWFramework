@@ -125,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 计算多行字符串指定字体在指定绘制区域内所占尺寸
 - (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize;
 
-// 计算多行字符串指定字体、指定段落样式(如lineBreakMode等，默认WordWrapping)在指定绘制区域内所占尺寸
+// 计算多行字符串指定字体、指定段落样式(如lineBreakMode等)在指定绘制区域内所占尺寸
 - (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle;
 
 @end
