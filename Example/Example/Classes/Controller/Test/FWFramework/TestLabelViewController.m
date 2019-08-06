@@ -85,7 +85,7 @@
 - (void)renderData
 {
     NSString *text = @"I am a very long text I am a very long text I veryverylongword bad I am a very long text finish!";
-    NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSParagraphStyleAttributeName: [NSMutableParagraphStyle fwParagraphStyleWithLineSpacing:8 - self.label.font.fwSpaceHeight * 2 textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping]}];
+    NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSParagraphStyleAttributeName: [NSMutableParagraphStyle fwParagraphStyleWithLineSpacing:[self.label.font fwLineSpacingWithMultiplier:1.5] textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping]}];
     CGSize size = CGSizeZero;
     NSMutableString *resultText = [NSMutableString new];
     
