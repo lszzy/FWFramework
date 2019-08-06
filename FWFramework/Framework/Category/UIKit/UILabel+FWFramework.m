@@ -113,22 +113,20 @@
         [self layoutIfNeeded];
     }
     
-    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
-    return [self fwTextSizeWithDrawSize:drawSize];
-}
-
-- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize
-{
-    return [self fwTextSizeWithDrawSize:drawSize paragraphStyle:nil];
-}
-
-- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle
-{
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     attr[NSFontAttributeName] = self.font;
-    if (paragraphStyle != nil) {
+    if (self.lineBreakMode != NSLineBreakByWordWrapping) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        // 由于lineBreakMode默认值为TruncatingTail，多行显示时仍然按照WordWrapping计算
+        if (self.numberOfLines != 1 && self.lineBreakMode == NSLineBreakByTruncatingTail) {
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        } else {
+            paragraphStyle.lineBreakMode = self.lineBreakMode;
+        }
         attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
     CGSize size = [self.text boundingRectWithSize:drawSize
                                           options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                        attributes:attr
@@ -144,11 +142,6 @@
     }
     
     CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
-    return [self fwAttributedTextSizeWithDrawSize:drawSize];
-}
-
-- (CGSize)fwAttributedTextSizeWithDrawSize:(CGSize)drawSize
-{
     CGSize size = [self.attributedText boundingRectWithSize:drawSize
                                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                                     context:nil].size;
