@@ -108,40 +108,51 @@
 
 - (CGSize)fwTextSize
 {
-    return [self fwTextSizeWithString:self.text];
-}
-
-- (CGSize)fwTextSizeWithString:(NSString *)string
-{
-    // 兼容自动布局，初始化frame
     if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
         [self setNeedsLayout];
         [self layoutIfNeeded];
     }
     
-    CGSize boundingSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
-    return [self fwTextSizeWithString:string boundingSize:boundingSize];
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    return [self fwTextSizeWithDrawSize:drawSize];
 }
 
-- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize
+- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize
 {
-    return [self fwTextSizeWithString:string boundingSize:boundingSize lineBreak:NSLineBreakByWordWrapping];
+    return [self fwTextSizeWithDrawSize:drawSize paragraphStyle:nil];
 }
 
-- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize lineBreak:(NSLineBreakMode)breakMode
+- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle
 {
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     attr[NSFontAttributeName] = self.font;
-    if (breakMode != NSLineBreakByWordWrapping) {
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        paragraphStyle.lineBreakMode = breakMode;
+    if (paragraphStyle != nil) {
         attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
-    CGSize size = [string boundingRectWithSize:boundingSize
-                                       options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                    attributes:attr
-                                       context:nil].size;
-    return CGSizeMake(MIN(boundingSize.width, ceilf(size.width)), MIN(boundingSize.height, ceilf(size.height)));
+    CGSize size = [self.text boundingRectWithSize:drawSize
+                                          options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attr
+                                          context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+- (CGSize)fwAttributedTextSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    return [self fwAttributedTextSizeWithDrawSize:drawSize];
+}
+
+- (CGSize)fwAttributedTextSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self.attributedText boundingRectWithSize:drawSize
+                                                    options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                    context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end

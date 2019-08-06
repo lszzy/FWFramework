@@ -47,6 +47,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置自定义估算尺寸，CGSizeZero为清空自定义设置
 - (void)fwSetIntrinsicContentSize:(CGSize)size;
 
+// 计算当前视图适合大小，需实现sizeThatFits:方法
+- (CGSize)fwFitSize;
+
+// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
+- (CGSize)fwFitSizeWithDrawSize:(CGSize)drawSize;
+
 #pragma mark - ViewController
 
 // 获取响应的视图控制器

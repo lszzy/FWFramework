@@ -692,7 +692,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     return CGSizeMake(MIN(ceilf(newSize.width), size.width), MIN(ceilf(newSize.height), size.height));
 }
 
-
 - (CGSize)intrinsicContentSize
 {
     return [self sizeThatFits:CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX)];
@@ -702,7 +701,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
 {
     [super layoutSubviews];
     
-    if (!CGSizeEqualToSize(self.bounds.size, [self intrinsicContentSize])) {
+    if (!CGSizeEqualToSize(self.frame.size, [self intrinsicContentSize])) {
         [self invalidateIntrinsicContentSize];
     }
 }

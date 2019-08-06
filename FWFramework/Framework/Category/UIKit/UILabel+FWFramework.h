@@ -33,14 +33,17 @@ NS_ASSUME_NONNULL_BEGIN
 // 计算当前文本所占尺寸，需frame或者宽度布局完整，默认WordWrapping模式
 - (CGSize)fwTextSize;
 
-// 计算指定文本所占尺寸，需frame或者宽度布局完整，默认WordWrapping模式
-- (CGSize)fwTextSizeWithString:(nullable NSString *)string;
+// 计算指定边界，当前文本所占尺寸，默认WordWrapping模式B
+- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize;
 
-// 计算指定边界，指定文本所占尺寸，默认WordWrapping模式
-- (CGSize)fwTextSizeWithString:(nullable NSString *)string boundingSize:(CGSize)boundingSize;
+// 计算指定边界，当前文本所占尺寸，指定段落样式(如lineBreakMode等，默认WordWrapping)
+- (CGSize)fwTextSizeWithDrawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle;
 
-// 计算指定边界，指定文本所占尺寸，指定换行模式
-- (CGSize)fwTextSizeWithString:(nullable NSString *)string boundingSize:(CGSize)boundingSize lineBreak:(NSLineBreakMode)breakMode;
+// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
+- (CGSize)fwAttributedTextSize;
+
+// 计算指定边界，当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
+- (CGSize)fwAttributedTextSizeWithDrawSize:(CGSize)drawSize;
 
 @end
 
