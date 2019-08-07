@@ -182,6 +182,11 @@
 {
     // 默认不被导航栏等遮挡，隐藏TabBar；如果不同，覆盖即可
     viewController.edgesForExtendedLayout = UIRectEdgeNone;
+    // 开启不透明bar(translucent为NO)情况下延伸包括bar，占满全屏
+    viewController.extendedLayoutIncludesOpaqueBars = YES;
+    // 解决iOS7-10时scrollView占不满导航栏问题
+    viewController.automaticallyAdjustsScrollViewInsets = NO;
+    // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
     viewController.hidesBottomBarWhenPushed = YES;
 }
 

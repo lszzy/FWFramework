@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * 备注：需要设置UIViewControllerBasedStatusBarAppearance为YES，视图控制器修改状态栏样式才会生效
  * modalPresentationCapturesStatusBarAppearance：弹出非UIModalPresentationFullScreen控制器时，该控制器是否控制状态栏样式。默认NO，不控制
+ * 如果ScrollView占不满导航栏，iOS7-10需设置viewController.automaticallyAdjustsScrollViewInsets为NO，iOS11则需要设置contentInsetAdjustmentBehavior为UIScrollViewContentInsetAdjustmentNever
  */
 @interface UIViewController (FWBar)
 
