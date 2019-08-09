@@ -376,14 +376,15 @@
     return self;
 }
 
-- (void)interactWithViewController:(UIViewController *)viewController
+- (UIPanGestureRecognizer *)interactWithViewController:(UIViewController *)viewController
 {
     if (!viewController.view) {
-        return;
+        return nil;
     }
     
     UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
     [viewController.view addGestureRecognizer:gestureRecognizer];
+    return gestureRecognizer;
 }
 
 - (void)gestureRecognizeAction:(UIPanGestureRecognizer *)gestureRecognizer
