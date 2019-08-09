@@ -80,8 +80,9 @@
     // 自动设置和绑定out交互转场，在dismiss前设置生效。in交互转场需要在present之前设置才能生效
     if (!self.isSystem && [self.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
         FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.outInteractiveTransition;
+        __weak UIViewController *weakPresented = presented;
         interactiveTransition.interactiveBlock = ^{
-            [presented dismissViewControllerAnimated:YES completion:nil];
+            [weakPresented dismissViewControllerAnimated:YES completion:nil];
         };
         [interactiveTransition interactWithViewController:presented];
     }
