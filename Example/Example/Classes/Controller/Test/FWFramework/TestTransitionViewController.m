@@ -217,7 +217,24 @@
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
-    transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    interactiveTransition.percentBlock = ^CGFloat(UIPanGestureRecognizer *sender) {
+        UISwipeGestureRecognizerDirection direction = [sender fwSwipeDirection];
+        if (direction == UISwipeGestureRecognizerDirectionDown || direction == UISwipeGestureRecognizerDirectionRight) {
+            return [sender fwSwipePercent];
+        }
+        return 0;
+    };
+    interactiveTransition.transitionBlock = ^(FWAnimatedTransition *transition) {
+        FWSwipeAnimatedTransition *swipeTransition = (FWSwipeAnimatedTransition *)transition;
+        FWPercentInteractiveTransition *percentTransition = swipeTransition.outInteractiveTransition;
+        if (percentTransition.isInteractive) {
+            swipeTransition.outDirection = percentTransition.interactiveDirection;
+        } else {
+            swipeTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
+        }
+    };
+    transition.outInteractiveTransition = interactiveTransition;
     vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }
