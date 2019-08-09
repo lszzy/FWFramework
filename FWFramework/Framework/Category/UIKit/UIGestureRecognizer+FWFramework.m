@@ -245,16 +245,31 @@
 
 - (UISwipeGestureRecognizerDirection)fwSwipeDirection
 {
-    if ([self translationInView:self.view.superview].y > 0.0f) {
-        return UISwipeGestureRecognizerDirectionUp;
-    } else if ([self translationInView:self.view.superview].y < 0.0f) {
-        return UISwipeGestureRecognizerDirectionDown;
-    } else if ([self translationInView:self.view].x < 0.0f) {
-        return UISwipeGestureRecognizerDirectionLeft;
-    } else if ([self translationInView:self.view].x > 0.0f) {
-        return UISwipeGestureRecognizerDirectionRight;
+    CGPoint transition = [self translationInView:self.view];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        if (transition.x < 0.0f) {
+            return UISwipeGestureRecognizerDirectionLeft;
+        } else if (transition.x > 0.0f) {
+            return UISwipeGestureRecognizerDirectionRight;
+        }
+    } else {
+        if (transition.y > 0.0f) {
+            return UISwipeGestureRecognizerDirectionDown;
+        } else if (transition.y < 0.0f) {
+            return UISwipeGestureRecognizerDirectionUp;
+        }
     }
     return 0;
+}
+
+- (CGFloat)fwSwipePercent
+{
+    CGPoint transition = [self translationInView:self.view];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        return self.view.bounds.size.width > 0 ? fabs(transition.x) / self.view.bounds.size.width : 0;
+    } else {
+        return self.view.bounds.size.height > 0 ? fabs(transition.y) / self.view.bounds.size.height : 0;
+    }
 }
 
 - (void)fwDrawerView:(UIView *)view
