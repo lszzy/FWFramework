@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/*!
+ @brief UIImage加载gif图片分类
+ 
+ @see 常用动画库：https://github.com/airbnb/lottie-ios
+ */
 @interface UIImage (FWGif)
 
 #pragma mark - Judge
