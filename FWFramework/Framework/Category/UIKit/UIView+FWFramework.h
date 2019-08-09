@@ -17,7 +17,6 @@
 #import "UIView+FWFrame.h"
 #import "UIView+FWIndicator.h"
 #import "UIView+FWLayer.h"
-#import "UIView+FWViewChain.h"
 #import "UIView+FWLayoutChain.h"
 
 NS_ASSUME_NONNULL_BEGIN
