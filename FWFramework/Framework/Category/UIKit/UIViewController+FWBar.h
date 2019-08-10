@@ -147,4 +147,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UITabBarItem+FWBar
+
+/*!
+ @brief UITabBarItem分类
+ */
+@interface UITabBarItem (FWBar)
+
+// 获取一个UITabBarItem内显示图标的UIImageView，如果找不到则返回nil
+- (nullable UIImageView *)fwImageView;
+
+@end
+
 NS_ASSUME_NONNULL_END
