@@ -112,13 +112,10 @@
     
     // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
     self.fwViewLoadedBlock = ^(UIBarButtonItem *item, UIView *view) {
-        UIView *superview = view;
-        if (!superview) return;
-        
         badgeView.badgeLabel.text = badgeValue;
         badgeView.tag = 2041;
-        [superview addSubview:badgeView];
-        [superview bringSubviewToFront:badgeView];
+        [view addSubview:badgeView];
+        [view bringSubviewToFront:badgeView];
         
         // 自定义视图时默认偏移，否则固定偏移
         [badgeView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 0];
@@ -149,23 +146,23 @@
     
     // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
     self.fwViewLoadedBlock = ^(UITabBarItem *item, UIView *view) {
-        UIView *superview = item.fwImageView;
-        if (!superview) return;
+        UIView *imageView = item.fwImageView;
+        if (!imageView) return;
         
         badgeView.badgeLabel.text = badgeValue;
         badgeView.tag = 2041;
-        [superview addSubview:badgeView];
-        [superview bringSubviewToFront:badgeView];
+        [view addSubview:badgeView];
+        [view bringSubviewToFront:badgeView];
         
         // x轴默认偏移，y轴固定偏移，类似系统布局
-        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:superview.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
-        [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:badgeView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
+        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:imageView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
+        [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
     };
 }
 
 - (void)fwHideBadgeView
 {
-    UIView *superview = self.fwImageView;
+    UIView *superview = self.fwView;
     if (superview) {
         UIView *badgeView = [superview viewWithTag:2041];
         if (badgeView) {
