@@ -8,6 +8,8 @@
  */
 
 #import "NSObject+FWRuntime.h"
+#import "NSString+FWFramework.h"
+#import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
 @implementation NSObject (FWRuntime)
@@ -125,6 +127,45 @@
         method_exchangeImplementations(originalMethod, swizzleMethod);
     }
     return YES;
+}
+
+#pragma mark - Value
+
+- (id)fwValueForKey:(NSString *)key
+{
+    if (@available(iOS 13.0, *)) {
+        if ([self isKindOfClass:[UIView class]]) {
+            key = [key hasPrefix:@"_"] ? [key substringFromIndex:1] : key;
+            Ivar ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_%@", key].UTF8String);
+            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_is%@", key.fwUcfirstString].UTF8String);
+            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), key.UTF8String);
+            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"is%@", key.fwUcfirstString].UTF8String);
+            
+            if (ivar) {
+                if (strncmp(@encode(id), ivar_getTypeEncoding(ivar), strlen(@encode(id))) == 0) {
+                    return object_getIvar(self, ivar);
+                }
+                ptrdiff_t ivarOffset = ivar_getOffset(ivar);
+                unsigned char * bytes = (unsigned char *)(__bridge void *)self;
+                NSValue *value = @(*(bytes + ivarOffset));
+                return value;
+            } else {
+                #pragma clang diagnostic push
+                #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", key.fwUcfirstString]);
+                if ([self respondsToSelector:selector]) return [self performSelector:selector];
+                selector = NSSelectorFromString(key);
+                if ([self respondsToSelector:selector]) return [self performSelector:selector];
+                selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", key.fwUcfirstString]);
+                if ([self respondsToSelector:selector]) return [self performSelector:selector];
+                selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", key]);// 这一步是额外加的，系统的 valueForKey: 没有
+                if ([self respondsToSelector:selector]) return [self performSelector:selector];
+                #pragma clang diagnostic pop
+            }
+            return nil;
+        }
+    }
+    return [self valueForKey:key];
 }
 
 @end

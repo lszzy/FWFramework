@@ -477,6 +477,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
 
+#pragma mark - Value
+
+/*!
+ @brief 如果iOS13系统UIView调用部分valueForKey:方法闪退，可尝试调用此方法
+ @discussion 建议优先采用不调用valueForKey:的方案，没有好的解决方法，再调用此方法
+ 
+ @param key 属性名称
+ @return 属性值
+ */
+- (nullable id)fwValueForKey:(NSString *)key;
+
 @end
 
 NS_ASSUME_NONNULL_END
