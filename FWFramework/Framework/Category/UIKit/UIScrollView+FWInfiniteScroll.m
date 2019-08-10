@@ -13,7 +13,7 @@
 
 #pragma mark - FWInfiniteScrollView
 
-static CGFloat const FWInfiniteScrollViewHeight = 44;
+static CGFloat FWInfiniteScrollViewHeight = 44;
 
 @interface FWInfiniteScrollView ()
 
@@ -42,6 +42,8 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
 @synthesize state = _state;
 @synthesize scrollView = _scrollView;
 @synthesize activityIndicatorView = _activityIndicatorView;
+
+#pragma mark - Lifecycle
 
 - (id)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
@@ -76,6 +78,16 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
     self.activityIndicatorView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
 }
 
+#pragma mark - Static
+
++ (CGFloat)height {
+    return FWInfiniteScrollViewHeight;
+}
+
++ (void)setHeight:(CGFloat)height {
+    FWInfiniteScrollViewHeight = height;
+}
+
 #pragma mark - Scroll View
 
 - (void)resetScrollViewContentInset {
@@ -106,6 +118,12 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint newPoint = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (newPoint.y >= 0) {
+            if(self.progressBlock) {
+                CGFloat scrollHeight = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
+                CGFloat progress = (FWInfiniteScrollViewHeight + newPoint.y - scrollHeight) / FWInfiniteScrollViewHeight;
+                self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
+            }
+            
             [self scrollViewDidScroll:newPoint];
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
@@ -250,6 +268,10 @@ static CGFloat const FWInfiniteScrollViewHeight = 44;
             [self.target performSelector:self.action];
 #pragma clang diagnostic pop
         }
+    }
+    
+    if(self.stateBlock) {
+        self.stateBlock(self, newState);
     }
 }
 
