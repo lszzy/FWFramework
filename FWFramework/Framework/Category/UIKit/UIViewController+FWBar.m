@@ -370,3 +370,42 @@
 }
 
 @end
+
+#pragma mark - UITabBarItem+FWBar
+
+@implementation UITabBarItem (FWBar)
+
+- (UIImageView *)fwImageView
+{
+    // 获取内部视图：UITabBarButton
+    UIView *tabBarButton = nil;
+    if ([self respondsToSelector:@selector(view)]) {
+        tabBarButton = [(id)self view];
+    }
+    if (!tabBarButton) return nil;
+    
+    UIView *superview = tabBarButton;
+    if (@available(iOS 13.0, *)) {
+        // iOS 13 下如果 tabBar 是磨砂的，则每个 button 内部都会有一个磨砂，而磨砂再包裹了 imageView、label 等 subview，但某些时机后系统又会把 imageView、label 挪出来放到 button 上，所以这里做个保护
+        if ([tabBarButton.subviews.firstObject isKindOfClass:[UIVisualEffectView class]] && ((UIVisualEffectView *)tabBarButton.subviews.firstObject).contentView.subviews.count) {
+            superview = ((UIVisualEffectView *)tabBarButton.subviews.firstObject).contentView;
+        }
+    }
+    
+    for (UIView *subview in superview.subviews) {
+        if (@available(iOS 10.0, *)) {
+            // iOS10及以后，imageView都是用UITabBarSwappableImageView实现的，所以遇到这个class就直接拿
+            if ([NSStringFromClass([subview class]) isEqualToString:@"UITabBarSwappableImageView"]) {
+                return (UIImageView *)subview;
+            }
+        }
+        
+        // iOS10以前，选中的item的高亮是用UITabBarSelectionIndicatorView实现的，所以要屏蔽掉
+        if ([subview isKindOfClass:[UIImageView class]] && ![NSStringFromClass([subview class]) isEqualToString:@"UITabBarSelectionIndicatorView"]) {
+            return (UIImageView *)subview;
+        }
+    }
+    return nil;
+}
+
+@end
