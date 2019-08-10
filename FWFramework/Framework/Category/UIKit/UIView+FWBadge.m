@@ -9,6 +9,7 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIViewController+FWBar.h"
+#import "FWAspect.h"
 
 #pragma mark - FWBadgeView
 
@@ -157,6 +158,11 @@
         // x轴默认偏移，y轴固定偏移，类似系统布局
         [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:imageView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
         [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
+        
+        // 解决因为层级关系变化导致的badgeView被遮挡问题
+        [view fwHookSelector:@selector(layoutSubviews) withBlock:^(id<FWAspectInfo> aspectInfo){
+            [(UIView *)aspectInfo.instance bringSubviewToFront:badgeView];
+        } options:FWAspectPositionAfter error:nil];
     };
 }
 
