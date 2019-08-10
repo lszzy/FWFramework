@@ -8,9 +8,8 @@
  */
 
 #import "NSObject+FWRuntime.h"
-#import "NSString+FWFramework.h"
-#import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import <UIKit/UIKit.h>
 
 @implementation NSObject (FWRuntime)
 
@@ -136,10 +135,12 @@
     if (@available(iOS 13.0, *)) {
         if ([self isKindOfClass:[UIView class]]) {
             key = [key hasPrefix:@"_"] ? [key substringFromIndex:1] : key;
+            NSString *capKey = key.length ? [NSString stringWithFormat:@"%@%@", [key substringToIndex:1].uppercaseString, [key substringFromIndex:1]] : nil;
+            
             Ivar ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_%@", key].UTF8String);
-            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_is%@", key.fwUcfirstString].UTF8String);
+            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_is%@", capKey].UTF8String);
             if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), key.UTF8String);
-            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"is%@", key.fwUcfirstString].UTF8String);
+            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"is%@", capKey].UTF8String);
             
             if (ivar) {
                 if (strncmp(@encode(id), ivar_getTypeEncoding(ivar), strlen(@encode(id))) == 0) {
@@ -152,13 +153,13 @@
             } else {
                 #pragma clang diagnostic push
                 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", key.fwUcfirstString]);
+                SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", capKey]);
                 if ([self respondsToSelector:selector]) return [self performSelector:selector];
                 selector = NSSelectorFromString(key);
                 if ([self respondsToSelector:selector]) return [self performSelector:selector];
-                selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", key.fwUcfirstString]);
+                selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", capKey]);
                 if ([self respondsToSelector:selector]) return [self performSelector:selector];
-                selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", key]);// 这一步是额外加的，系统的 valueForKey: 没有
+                selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", key]);
                 if ([self respondsToSelector:selector]) return [self performSelector:selector];
                 #pragma clang diagnostic pop
             }

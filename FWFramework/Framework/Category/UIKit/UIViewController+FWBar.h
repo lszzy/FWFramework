@@ -105,10 +105,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwSetIndicatorImage:(nullable UIImage *)image insets:(UIEdgeInsets)insets UI_APPEARANCE_SELECTOR;
 
 // 背景view，可能显示磨砂、背景图，顶部有一部分溢出到UINavigationBar外。在iOS10及以后是私有的_UIBarBackground类，在iOS9及以前是私有的_UINavigationBarBackground类
-- (nullable UIView *)fwBackgroundView;
+@property (nullable, nonatomic, weak, readonly) UIView *fwBackgroundView;
 
 // 用于显示底部分隔线shadowImage，注意这个view是溢出到backgroundView外的。若shadowImage为[UIImage new]，则这个view的高度为0
-- (nullable UIImageView *)fwShadowImageView;
+@property (nullable, nonatomic, weak, readonly) UIImageView *fwShadowImageView;
 
 @end
 
@@ -140,10 +140,25 @@ NS_ASSUME_NONNULL_BEGIN
                   radius:(CGFloat)radius;
 
 // UITabBar 的背景 view，可能显示磨砂、背景图，顶部有一部分溢出到 UITabBar 外。在 iOS 10 及以后是私有的 _UIBarBackground 类，在 iOS 9 及以前是私有的 _UITabBarBackgroundView 类
-- (nullable UIView *)fwBackgroundView;
+@property (nullable, nonatomic, weak, readonly) UIView *fwBackgroundView;
 
 // 用于显示顶部分隔线 shadowImage，注意这个 view 是溢出到 backgroundView 外的。若 shadowImage 为 [UIImage new]，则这个 view 的高度为 0
-- (nullable UIImageView *)fwShadowImageView;
+@property (nullable, nonatomic, weak, readonly) UIImageView *fwShadowImageView;
+
+@end
+
+#pragma mark - UIBarItem+FWBar
+
+/*!
+@brief UIBarItem分类
+*/
+@interface UIBarItem (FWBar)
+
+// 获取UIBarItem(UIBarButtonItem、UITabBarItem)内部的view，通常对于navigationItem和tabBarItem而言，需要在设置为item后并且在bar可见时(例如 viewDidAppear:及之后)获取fwView才有值
+@property (nullable, nonatomic, weak, readonly) UIView *fwView;
+
+// 当item内的view生成后就会调用一次这个block，仅对UIBarButtonItem、UITabBarItem有效
+@property (nullable, nonatomic, copy) void (^fwViewLoadedBlock)(__kindof UIBarItem *item, UIView *view);
 
 @end
 
@@ -155,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UITabBarItem (FWBar)
 
 // 获取一个UITabBarItem内显示图标的UIImageView，如果找不到则返回nil
-- (nullable UIImageView *)fwImageView;
+@property (nullable, nonatomic, weak, readonly) UIImageView *fwImageView;
 
 @end
 

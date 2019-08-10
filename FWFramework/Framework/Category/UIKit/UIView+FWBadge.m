@@ -7,8 +7,8 @@
 //
 
 #import "UIView+FWBadge.h"
-#import "FWMessage.h"
 #import "UIView+FWAutoLayout.h"
+#import "UIViewController+FWBar.h"
 
 #pragma mark - FWBadgeView
 
@@ -110,63 +110,31 @@
 {
     [self fwHideBadgeView];
     
-    // 查找内部视图，存在时调用
-    [self fwInnerBadgeBlock:^(UIView *view) {
+    // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
+    self.fwViewLoadedBlock = ^(UIBarButtonItem *item, UIView *view) {
+        UIView *superview = view;
+        if (!superview) return;
+        
         badgeView.badgeLabel.text = badgeValue;
         badgeView.tag = 2041;
-        [view addSubview:badgeView];
-        [view bringSubviewToFront:badgeView];
+        [superview addSubview:badgeView];
+        [superview bringSubviewToFront:badgeView];
         
         // 自定义视图时默认偏移，否则固定偏移
         [badgeView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 0];
         [badgeView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : 0];
-    }];
+    };
 }
 
 - (void)fwHideBadgeView
 {
-    UIView *superview = self.fwInnerBadgeSuperview;
+    UIView *superview = [self fwView];
     if (superview) {
         UIView *badgeView = [superview viewWithTag:2041];
         if (badgeView) {
             [badgeView removeFromSuperview];
         }
     }
-}
-
-// 查找内部视图，由于view只有显示到页面后才存在，所以使用回调
-- (void)fwInnerBadgeBlock:(void (^)(UIView *view))block
-{
-    UIView *targetView = [self fwInnerBadgeSuperview];
-    // 视图已经显示
-    if (targetView) {
-        block(targetView);
-    // 监听视图改变，存在时回调
-    } else {
-        [self fwObserveProperty:@"view" block:^(UIBarButtonItem *object, NSDictionary *change) {
-            if ([change objectForKey:NSKeyValueChangeNewKey]) {
-                UIView *innerView = [object fwInnerBadgeSuperview];
-                if (innerView) {
-                    block(innerView);
-                }
-            }
-        }];
-    }
-}
-
-- (UIView *)fwInnerBadgeSuperview
-{
-    // 自定义视图存在
-    if (self.customView) {
-        return self.customView;
-    }
-    
-    // 获取内部视图：UINavigationButton
-    UIView *innerView = nil;
-    if ([self respondsToSelector:@selector(view)]) {
-        innerView = [(id)self view];
-    }
-    return innerView;
 }
 
 @end
@@ -179,70 +147,31 @@
 {
     [self fwHideBadgeView];
     
-    // 查找内部视图，存在时调用
-    [self fwInnerBadgeBlock:^(UIView *view) {
+    // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
+    self.fwViewLoadedBlock = ^(UITabBarItem *item, UIView *view) {
+        UIView *superview = item.fwImageView;
+        if (!superview) return;
+        
         badgeView.badgeLabel.text = badgeValue;
         badgeView.tag = 2041;
-        [view addSubview:badgeView];
-        [view bringSubviewToFront:badgeView];
+        [superview addSubview:badgeView];
+        [superview bringSubviewToFront:badgeView];
         
         // x轴默认偏移，y轴固定偏移，类似系统布局
-        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:view.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
+        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:superview.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
         [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:badgeView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
-    }];
+    };
 }
 
 - (void)fwHideBadgeView
 {
-    UIView *superview = self.fwInnerBadgeSuperview;
+    UIView *superview = self.fwImageView;
     if (superview) {
         UIView *badgeView = [superview viewWithTag:2041];
         if (badgeView) {
             [badgeView removeFromSuperview];
         }
     }
-}
-
-// 查找内部视图，由于view只有显示到页面后才存在，所以使用回调
-- (void)fwInnerBadgeBlock:(void (^)(UIView *view))block
-{
-    UIView *targetView = [self fwInnerBadgeSuperview];
-    // 视图已经显示
-    if (targetView) {
-        block(targetView);
-    // 监听视图改变，存在时回调
-    } else {
-        [self fwObserveProperty:@"view" block:^(UITabBarItem *object, NSDictionary *change) {
-            if ([change objectForKey:NSKeyValueChangeNewKey]) {
-                UIView *innerView = [object fwInnerBadgeSuperview];
-                if (innerView) {
-                    block(innerView);
-                }
-            }
-        }];
-    }
-}
-
-- (UIView *)fwInnerBadgeSuperview
-{
-    // 获取内部视图：UITabBarButton
-    UIView *innerView = nil;
-    if ([self respondsToSelector:@selector(view)]) {
-        innerView = [(id)self view];
-    }
-    
-    // 获取目标视图：UITabBarSwappableImageView
-    UIView *targetView = nil;
-    if (innerView) {
-        Class targetClass = NSClassFromString(@"UITabBarSwappableImageView");
-        for (UIView *subview in innerView.subviews) {
-            if ([subview isKindOfClass:targetClass]) {
-                targetView = subview;
-                break;
-            }
-        }
-    }
-    return targetView;
 }
 
 @end
