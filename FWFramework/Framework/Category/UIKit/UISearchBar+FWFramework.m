@@ -113,12 +113,12 @@
 
 - (UITextField *)fwTextField
 {
-    return [self valueForKey:@"searchField"];
+    return [self fwValueForKey:@"searchField"];
 }
 
 - (UIButton *)fwCancelButton
 {
-    return [self valueForKey:@"cancelButton"];
+    return [self fwValueForKey:@"cancelButton"];
 }
 
 #pragma mark - Navigation
