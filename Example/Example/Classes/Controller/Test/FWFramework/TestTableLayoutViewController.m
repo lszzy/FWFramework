@@ -142,6 +142,7 @@
         self.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
     };
     
+    FWInfiniteScrollView.height = 64;
     [self.tableView fwAddInfiniteScrollWithBlock:^{
         FWStrongifySelf();
         
@@ -244,12 +245,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.dataList.count < 5000 ? YES : NO;
+        self.tableView.fwShowPullRefresh = self.dataList.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
@@ -260,12 +261,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.dataList.count < 5000 ? YES : NO;
+        self.tableView.fwShowInfiniteScroll = self.dataList.count < 20 ? YES : NO;
         [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }
