@@ -53,7 +53,7 @@
 #define fequal(a,b) (fabs((a) - (b)) < FLT_EPSILON)
 #define fequalzero(a) (fabs(a) < FLT_EPSILON)
 
-static CGFloat const FWPullRefreshViewHeight = 54;
+static CGFloat FWPullRefreshViewHeight = 54;
 
 @interface FWPullRefreshView ()
 
@@ -95,6 +95,8 @@ static CGFloat const FWPullRefreshViewHeight = 54;
 @synthesize arrow = _arrow;
 @synthesize activityIndicatorView = _activityIndicatorView;
 @synthesize titleLabel = _titleLabel;
+
+#pragma mark - Lifecycle
 
 - (id)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
@@ -235,6 +237,16 @@ static CGFloat const FWPullRefreshViewHeight = 54;
     }
 }
 
+#pragma mark - Static
+
++ (CGFloat)height {
+    return FWPullRefreshViewHeight;
+}
+
++ (void)setHeight:(CGFloat)height {
+    FWPullRefreshViewHeight = height;
+}
+
 #pragma mark - Scroll View
 
 - (void)resetScrollViewContentInset {
@@ -268,6 +280,11 @@ static CGFloat const FWPullRefreshViewHeight = 54;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint newPoint = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if(newPoint.y <= 0) {
+            if(self.progressBlock) {
+                CGFloat progress = 1.f - (FWPullRefreshViewHeight + newPoint.y) / FWPullRefreshViewHeight;
+                self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
+            }
+            
             [self scrollViewDidScroll:newPoint];
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
@@ -487,6 +504,10 @@ static CGFloat const FWPullRefreshViewHeight = 54;
             }
             
             break;
+    }
+    
+    if (self.stateBlock) {
+        self.stateBlock(self, newState);
     }
 }
 

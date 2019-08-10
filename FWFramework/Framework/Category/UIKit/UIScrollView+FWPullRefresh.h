@@ -18,8 +18,12 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
     FWPullRefreshStateAll = 10
 };
 
+/*!
+@brief 下拉刷新视图，默认高度54
+*/
 @interface FWPullRefreshView : UIView
 
+@property (class, nonatomic, assign) CGFloat height;
 @property (nullable, nonatomic, strong) UIColor *arrowColor;
 @property (nullable, nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
@@ -28,6 +32,8 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
+@property (nullable, nonatomic, copy) void (^stateBlock)(FWPullRefreshView *view, FWPullRefreshState state);
+@property (nullable, nonatomic, copy) void (^progressBlock)(FWPullRefreshView *view, CGFloat progress);
 
 - (void)setTitle:(nullable NSString *)title forState:(FWPullRefreshState)state;
 - (void)setSubtitle:(nullable NSString *)subtitle forState:(FWPullRefreshState)state;
