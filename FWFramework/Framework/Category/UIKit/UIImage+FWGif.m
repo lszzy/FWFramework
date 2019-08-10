@@ -77,9 +77,9 @@
         
         NSUInteger loopCount = 0;
         NSDictionary *imageProperties = (__bridge_transfer NSDictionary *)CGImageSourceCopyProperties(source, nil);
-        NSDictionary *gifProperties = [imageProperties valueForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary];
+        NSDictionary *gifProperties = [imageProperties objectForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary];
         if (gifProperties) {
-            NSNumber *gifLoopCount = [gifProperties valueForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFLoopCount];
+            NSNumber *gifLoopCount = [gifProperties objectForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFLoopCount];
             if (gifLoopCount) {
                 loopCount = gifLoopCount.unsignedIntegerValue;
             }
