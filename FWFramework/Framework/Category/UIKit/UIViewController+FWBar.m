@@ -287,12 +287,15 @@
 
 - (UIView *)fwBackgroundView
 {
-    return [self valueForKey:@"_backgroundView"];
+    return [self fwValueForKey:@"_backgroundView"];
 }
 
 - (UIImageView *)fwShadowImageView
 {
-    return [self.fwBackgroundView valueForKey:@"_shadowView"];
+    if (@available(iOS 13, *)) {
+        return [self.fwBackgroundView fwValueForKey:@"_shadowView1"];
+    }
+    return [self.fwBackgroundView fwValueForKey:@"_shadowView"];
 }
 
 @end
@@ -344,21 +347,23 @@
 
 - (UIView *)fwBackgroundView
 {
-    return [self valueForKey:@"_backgroundView"];
+    return [self fwValueForKey:@"_backgroundView"];
 }
 
 - (UIImageView *)fwShadowImageView
 {
-    if (@available(iOS 10, *)) {
+    if (@available(iOS 13, *)) {
+        return [self.fwBackgroundView fwValueForKey:@"_shadowView1"];
+    } else if (@available(iOS 10, *)) {
         // iOS 10 及以后，在 UITabBar 初始化之后就能获取到 backgroundView 和 shadowView 了
-        return [self.fwBackgroundView valueForKey:@"_shadowView"];
+        return [self.fwBackgroundView fwValueForKey:@"_shadowView"];
     } else {
         // iOS 9 及以前，shadowView 要在 UITabBar 第一次 layoutSubviews 之后才会被创建，直至 UITabBarController viewWillAppear: 时仍未能获取到 shadowView，所以为了省去调用时机的考虑，这里获取不到的时候会主动触发一次 tabBar 的布局
-        UIImageView *shadowView = [self valueForKey:@"_shadowView"];
+        UIImageView *shadowView = [self fwValueForKey:@"_shadowView"];
         if (!shadowView) {
             [self setNeedsLayout];
             [self layoutIfNeeded];
-            shadowView = [self valueForKey:@"_shadowView"];
+            shadowView = [self fwValueForKey:@"_shadowView"];
         }
         return shadowView;
     }
