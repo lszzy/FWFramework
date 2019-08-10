@@ -8,6 +8,7 @@
  */
 
 #import "UINavigationController+FWBar.h"
+#import "UIViewController+FWBar.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
@@ -53,7 +54,7 @@
 - (void)fwInnerUINavigationBarLayoutSubviews
 {
     [self fwInnerUINavigationBarLayoutSubviews];
-    UIView *backgroundView = [self fwValueForKey:@"_backgroundView"];
+    UIView *backgroundView = self.fwBackgroundView;
     CGRect frame = backgroundView.frame;
     frame.size.height = self.frame.size.height + fabs(frame.origin.y);
     backgroundView.frame = frame;
@@ -220,7 +221,7 @@
     if (!self.view.window) {
         return;
     }
-    UIView *backgroundView = [self.navigationController.navigationBar fwValueForKey:@"_backgroundView"];
+    UIView *backgroundView = self.navigationController.navigationBar.fwBackgroundView;
     CGRect rect = [backgroundView.superview convertRect:backgroundView.frame toView:self.view];
     self.fwTransitionNavigationBar.frame = rect;
 }
@@ -420,7 +421,7 @@
 - (void)setFwBackgroundViewHidden:(BOOL)hidden
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundViewHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [[self.navigationBar fwValueForKey:@"_backgroundView"] setHidden:hidden];
+    [self.navigationBar.fwBackgroundView setHidden:hidden];
 }
 
 - (UIViewController *)fwTransitionContextToViewController

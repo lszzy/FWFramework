@@ -82,6 +82,16 @@
     }
 }
 
+- (UITextField *)fwTextField
+{
+    return [self fwValueForKey:@"searchField"];
+}
+
+- (UIButton *)fwCancelButton
+{
+    return [self fwValueForKey:@"cancelButton"];
+}
+
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
     self.backgroundImage = [UIImage fwImageWithColor:color];
@@ -109,16 +119,6 @@
     } else {
         [self.fwCancelButton fwUnobserveProperty:@"enabled"];
     }
-}
-
-- (UITextField *)fwTextField
-{
-    return [self fwValueForKey:@"searchField"];
-}
-
-- (UIButton *)fwCancelButton
-{
-    return [self fwValueForKey:@"cancelButton"];
 }
 
 #pragma mark - Navigation

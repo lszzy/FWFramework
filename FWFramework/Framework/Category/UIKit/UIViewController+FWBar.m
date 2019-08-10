@@ -11,6 +11,7 @@
 #import "UIScreen+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import "UIImage+FWFramework.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
@@ -371,17 +372,61 @@
 
 @end
 
+#pragma mark - UIBarItem+FWBar
+
+@implementation UIBarItem (FWBar)
+
+- (UIView *)fwView
+{
+    if ([self isKindOfClass:[UIBarButtonItem class]]) {
+        if (((UIBarButtonItem *)self).customView != nil) {
+            return ((UIBarButtonItem *)self).customView;
+        }
+    }
+    
+    if ([self respondsToSelector:@selector(view)]) {
+        return [self fwValueForKey:@"view"];
+    }
+    return nil;
+}
+
+- (void (^)(__kindof UIBarItem *, UIView *))fwViewLoadedBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwViewLoadedBlock));
+}
+
+- (void)setFwViewLoadedBlock:(void (^)(__kindof UIBarItem *, UIView *))block
+{
+    objc_setAssociatedObject(self, @selector(fwViewLoadedBlock), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
+    UIView *view = [self fwView];
+    if (view) {
+        block(self, view);
+    } else {
+        [self fwObserveProperty:@"view" target:self action:@selector(fwViewLoaded:change:)];
+    }
+}
+
+- (void)fwViewLoaded:(UIBarItem *)object change:(NSDictionary *)change
+{
+    if (![change objectForKey:NSKeyValueChangeNewKey]) return;
+    [object fwUnobserveProperty:@"view" target:self action:@selector(fwViewLoaded:change:)];
+    
+    UIView *view = [object fwView];
+    if (view && self.fwViewLoadedBlock) {
+        self.fwViewLoadedBlock(self, view);
+    }
+}
+
+@end
+
 #pragma mark - UITabBarItem+FWBar
 
 @implementation UITabBarItem (FWBar)
 
 - (UIImageView *)fwImageView
 {
-    // 获取内部视图：UITabBarButton
-    UIView *tabBarButton = nil;
-    if ([self respondsToSelector:@selector(view)]) {
-        tabBarButton = [(id)self view];
-    }
+    UIView *tabBarButton = [self fwView];
     if (!tabBarButton) return nil;
     
     UIView *superview = tabBarButton;
