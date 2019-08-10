@@ -14,12 +14,6 @@
 
 @implementation TestFullScreenViewController
 
-- (void)renderInit
-{
-    // 设置present半透明，init中生效
-    self.modalPresentationStyle = UIModalPresentationCustom;
-}
-
 - (void)renderView
 {
     FWBannerView *cycleView = [FWBannerView new];
