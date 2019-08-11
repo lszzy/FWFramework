@@ -166,15 +166,6 @@
 
 #pragma mark - File
 
-+ (UIImage *)fwGifImageWithFile:(NSString *)path
-{
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    if (data) {
-        return [UIImage fwGifImageWithData:data];
-    }
-    return nil;
-}
-
 + (UIImage *)fwGifImageWithName:(NSString *)name
 {
     UIImage *gifImage = nil;
@@ -202,6 +193,19 @@
     }
     
     return [UIImage imageNamed:name];
+}
+
++ (UIImage *)fwGifImageWithFile:(NSString *)path
+{
+    NSString *file = path;
+    if (![file isAbsolutePath]) {
+        file = [[NSBundle mainBundle] pathForResource:file ofType:([file hasSuffix:@".gif"] ? nil : @"gif")];
+    }
+    NSData *data = [NSData dataWithContentsOfFile:file];
+    if (data) {
+        return [UIImage fwGifImageWithData:data];
+    }
+    return nil;
 }
 
 #pragma mark - Scale

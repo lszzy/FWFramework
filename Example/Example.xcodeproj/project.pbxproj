@@ -75,6 +75,7 @@
 		2FCD376A22533C10001E81DB /* TestStorekitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD376822533C10001E81DB /* TestStorekitViewController.m */; };
 		2FCE517121D3BE02009EA65E /* TestCacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517021D3BE02009EA65E /* TestCacheViewController.m */; };
 		2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */; };
+		2FD375A422FFBE280066F308 /* LoadingPlaceholder.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
 		2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */; };
 		2FF98EF222FEADBD004B6BE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */; };
@@ -244,6 +245,7 @@
 		2FCE517021D3BE02009EA65E /* TestCacheViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCacheViewController.m; sourceTree = "<group>"; };
 		2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestControllerViewController.h; sourceTree = "<group>"; };
 		2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestControllerViewController.m; sourceTree = "<group>"; };
+		2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LoadingPlaceholder.gif; sourceTree = "<group>"; };
 		2FE533E72181645300CA54E6 /* TestTableBackgroundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableBackgroundViewController.h; sourceTree = "<group>"; };
 		2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableBackgroundViewController.m; sourceTree = "<group>"; };
 		2FF3873C22F7C8B000C1375E /* TestLabelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLabelViewController.h; sourceTree = "<group>"; };
@@ -611,6 +613,7 @@
 				2F51D7E71E5C2357009FD40F /* Assets.xcassets */,
 				2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */,
 				2FB90F1C21F5716800084D76 /* QrcodeSound.caf */,
+				2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */,
 				2F30D8972153775B000F0A1D /* InfoPlist.strings */,
 				2F30D89A2153775E000F0A1D /* Localizable.strings */,
 			);
@@ -784,6 +787,7 @@
 				2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */,
 				2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */,
 				2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */,
+				2FD375A422FFBE280066F308 /* LoadingPlaceholder.gif in Resources */,
 				2FF98EF222FEADBD004B6BE1 /* LaunchScreen.storyboard in Resources */,
 				2F30D8982153775E000F0A1D /* Localizable.strings in Resources */,
 			);

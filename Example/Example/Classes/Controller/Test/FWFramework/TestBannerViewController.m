@@ -33,7 +33,7 @@
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.placeholderImage = [UIImage fwGifImageWithName:@"loading"];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -42,7 +42,7 @@
     
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls addObject:@"public_picture"];
+    [imageUrls addObject:@"LoadingPlaceholder.gif"];
     [imageUrls addObject:@"not_found.jpg"];
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
