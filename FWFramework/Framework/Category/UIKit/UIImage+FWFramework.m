@@ -29,25 +29,17 @@
 
 + (UIImage *)fwImageWithFile:(NSString *)path
 {
-    return [UIImage imageWithContentsOfFile:path];
+    return [self fwImageWithFile:path inBundle:nil];
 }
 
-+ (UIImage *)fwImageWithResource:(NSString *)path
++ (UIImage *)fwImageWithFile:(NSString *)path inBundle:(NSBundle *)bundle
 {
-    return [self fwImageWithResource:path ofType:nil];
-}
-
-+ (UIImage *)fwImageWithResource:(NSString *)path ofType:(NSString *)type
-{
-    NSString *resourceFile = [[NSBundle mainBundle] pathForResource:path ofType:type];
-    return [UIImage imageWithContentsOfFile:resourceFile];
-}
-
-+ (UIImage *)fwImageWithResource:(NSString *)path ofType:(NSString *)type inBundle:(NSBundle *)bundle
-{
-    NSBundle *resourceBundle = bundle ? bundle : [NSBundle mainBundle];
-    NSString *resourceFile = [resourceBundle pathForResource:path ofType:type];
-    return [UIImage imageWithContentsOfFile:resourceFile];
+    NSString *file = path;
+    if (![file isAbsolutePath]) {
+        NSBundle *resourceBundle = bundle ? bundle : [NSBundle mainBundle];
+        file = [resourceBundle pathForResource:file ofType:nil];
+    }
+    return [UIImage imageWithContentsOfFile:file];
 }
 
 #pragma mark - View

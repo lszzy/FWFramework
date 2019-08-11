@@ -10,7 +10,8 @@
 #import "FWBannerView.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
-#import "UIImageView+FWNetwork.h"
+#import "UIImage+FWFramework.h"
+#import "UIImageView+FWFramework.h"
 #import "FWPageControl.h"
 
 #pragma mark - FWBannerViewFlowLayout
@@ -559,20 +560,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _imageURLStringsGroup = imageURLStringsGroup;
     
-    NSMutableArray *temp = [NSMutableArray new];
+    NSMutableArray *imagePaths = [NSMutableArray new];
     [_imageURLStringsGroup enumerateObjectsUsingBlock:^(NSString * obj, NSUInteger idx, BOOL * stop) {
-        NSString *urlString;
         if ([obj isKindOfClass:[NSString class]]) {
-            urlString = obj;
+            [imagePaths addObject:obj];
         } else if ([obj isKindOfClass:[NSURL class]]) {
-            NSURL *url = (NSURL *)obj;
-            urlString = [url absoluteString];
-        }
-        if (urlString) {
-            [temp addObject:urlString];
+            NSString *urlString = ((NSURL *)obj).absoluteString;
+            if (urlString) {
+                [imagePaths addObject:urlString];
+            }
+        } else if ([obj isKindOfClass:[UIImage class]]) {
+            [imagePaths addObject:obj];
         }
     }];
-    self.imagePathsGroup = [temp copy];
+    self.imagePathsGroup = [imagePaths copy];
 }
 
 - (void)setLocalizationImageNamesGroup:(NSArray *)localizationImageNamesGroup
@@ -812,14 +813,18 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         if ([imagePath hasPrefix:@"http"]) {
             [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
         } else {
-            UIImage *image = [UIImage imageNamed:imagePath];
-            if (!image) {
-                image = [UIImage imageWithContentsOfFile:imagePath];
+            UIImage *image = nil;
+            if ([imagePath hasSuffix:@".gif"]) {
+                image = [UIImage fwGifImageWithFile:imagePath];
+                if (!image) image = [UIImage fwGifImageWithName:[imagePath substringToIndex:imagePath.length - 4]];
+            } else {
+                image = [UIImage imageNamed:imagePath];
+                if (!image) image = [UIImage fwImageWithFile:imagePath];
             }
-            cell.imageView.image = image ?: self.placeholderImage;
+            cell.imageView.fwImage = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
-        cell.imageView.image = (UIImage *)imagePath;
+        cell.imageView.fwImage = (UIImage *)imagePath;
     }
     
     if (_titlesGroup.count && itemIndex < _titlesGroup.count) {

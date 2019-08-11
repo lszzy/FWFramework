@@ -16,13 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWImageName( name ) \
     [UIImage imageNamed:name]
 
-// 从图片文件加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
-#define FWImageFile( file ) \
-    [UIImage imageWithContentsOfFile:file]
-
-// 从应用资源路径加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
-#define FWImageResource( path, ... ) \
-    FWImageFile( [[NSBundle mainBundle] pathForResource:path ofType:fw_macro_default(nil, ##__VA_ARGS__)] )
+// 从图片文件或应用资源路径加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
+#define FWImageFile( path ) \
+    [UIImage imageWithContentsOfFile:(path.isAbsolutePath ? path : [NSBundle.mainBundle pathForResource:path ofType:nil])]
 
 /*!
  @brief UIImage+FWFramework
@@ -37,17 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 使用文件名方式从bundle加载UIImage。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name inBundle:(nullable NSBundle *)bundle;
 
-// 从图片文件加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
+// 从图片文件加载UIImage，支持绝对路径和bundle路径。不会被系统缓存，适用于不被复用的图片，特别是大图
 + (nullable UIImage *)fwImageWithFile:(NSString *)path;
 
-// 从应用资源路径加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithResource:(NSString *)path;
-
-// 从应用资源路径加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithResource:(NSString *)path ofType:(nullable NSString *)type;
-
-// 从应用资源路径从bundle加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithResource:(NSString *)path ofType:(nullable NSString *)type inBundle:(nullable NSBundle *)bundle;
+// 从图片文件加载UIImage，支持绝对路径和bundle路径。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (nullable UIImage *)fwImageWithFile:(NSString *)path inBundle:(nullable NSBundle *)bundle;
 
 #pragma mark - View
 
