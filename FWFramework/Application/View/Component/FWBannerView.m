@@ -505,9 +505,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _itemSize = itemSize;
     
     _flowLayout.itemSize = itemSize;
-    if (!self.itemPagingEnabled) {
-        self.itemPagingEnabled = YES;
-    }
+    self.itemPagingEnabled = YES;
 }
 
 - (void)setItemSpacing:(CGFloat)itemSpacing
@@ -515,9 +513,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _itemSpacing = itemSpacing;
     
     _flowLayout.minimumLineSpacing = itemSpacing;
-    if (!self.itemPagingEnabled) {
-        self.itemPagingEnabled = YES;
-    }
+    self.itemPagingEnabled = YES;
 }
 
 - (void)setItemPagingCenter:(BOOL)itemPagingCenter
@@ -525,9 +521,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _itemPagingCenter = itemPagingCenter;
     
     _flowLayout.pagingCenter = itemPagingCenter;
-    if (!self.itemPagingEnabled) {
-        self.itemPagingEnabled = YES;
-    }
+    self.itemPagingEnabled = YES;
 }
 
 - (void)setAutoScrollTimeInterval:(CGFloat)autoScrollTimeInterval
