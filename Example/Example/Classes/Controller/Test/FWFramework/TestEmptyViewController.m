@@ -35,7 +35,7 @@
 
 - (UIImage *)fwImageForEmptyView:(UIScrollView *)scrollView
 {
-    return [UIImage imageNamed:@"public_icon"];
+    return [UIImage fwGifImageWithName:@"loading"];
 }
 
 - (CAAnimation *)fwImageAnimationForEmptyView:(UIScrollView *)scrollView

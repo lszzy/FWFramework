@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  If the image is cached locally, the image is set immediately, otherwise the specified placeholder image will be set immediately, and then the remote image will be set once the request is finished.
  
- If a completion block is specified, it is the responsibility of the block to set the image of the image view before returning. If no completion block is specified, the default behavior of setting the image with `self.image = image` is applied.
+ If a completion block is specified, it is the responsibility of the block to set the image of the image view before returning. If no completion block is specified, the default behavior of setting the image with `self.fwImage = image` is applied.
  
  @param url The URL request used for the image request.
  @param placeholderImage The image to be set initially, until the image request finishes completely. If `nil`, the image view will not change its image until the image request finishes.
@@ -100,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  If the image is cached locally, the image is set immediately, otherwise the specified placeholder image will be set immediately, and then the remote image will be set once the request is finished.
 
- If a success block is specified, it is the responsibility of the block to set the image of the image view before returning. If no success block is specified, the default behavior of setting the image with `self.image = image` is applied.
+ If a success block is specified, it is the responsibility of the block to set the image of the image view before returning. If no success block is specified, the default behavior of setting the image with `self.fwImage = image` is applied.
 
  @param urlRequest The URL request used for the image request.
  @param placeholderImage The image to be set initially, until the image request finishes. If `nil`, the image view will not change its image until the image request finishes.
