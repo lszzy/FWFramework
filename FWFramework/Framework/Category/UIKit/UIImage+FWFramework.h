@@ -12,13 +12,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 快速创建UIImage，支持name和file，支持普通图片和gif图片
+FOUNDATION_EXPORT UIImage * _Nullable FWImageMake(NSString *string);
+
 // 使用文件名方式加载UIImage。会被系统缓存，适用于大量复用的小资源图
-#define FWImageName( name ) \
-    [UIImage imageNamed:name]
+FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
 
 // 从图片文件或应用资源路径加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
-#define FWImageFile( path ) \
-    [UIImage imageWithContentsOfFile:(path.isAbsolutePath ? path : [NSBundle.mainBundle pathForResource:path ofType:nil])]
+FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /*!
  @brief UIImage+FWFramework
@@ -26,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIImage (FWFramework)
 
 #pragma mark - Make
+
+// 快速创建UIImage，支持name和file，支持普通图片和gif图片
++ (nullable UIImage *)fwImageMake:(NSString *)string;
 
 // 使用文件名方式加载UIImage。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name;

@@ -13,9 +13,34 @@
 #import <Accelerate/Accelerate.h>
 #import <objc/runtime.h>
 
+UIImage * FWImageMake(NSString *string) {
+    return [UIImage fwImageMake:string];
+}
+
+UIImage * FWImageName(NSString *name) {
+    return [UIImage imageNamed:name];
+}
+
+UIImage * FWImageFile(NSString *path) {
+    return [UIImage imageWithContentsOfFile:(path.isAbsolutePath ? path : [NSBundle.mainBundle pathForResource:path ofType:nil])];
+}
+
 @implementation UIImage (FWFramework)
 
 #pragma mark - Make
+
++ (UIImage *)fwImageMake:(NSString *)string
+{
+    UIImage *image = nil;
+    if ([string hasSuffix:@".gif"]) {
+        image = [UIImage fwGifImageWithFile:string];
+        if (!image) image = [UIImage fwGifImageWithName:[string substringToIndex:string.length - 4]];
+    } else {
+        image = [UIImage imageNamed:string];
+        if (!image) image = [UIImage fwImageWithFile:string];
+    }
+    return image;
+}
 
 + (UIImage *)fwImageWithName:(NSString *)name
 {

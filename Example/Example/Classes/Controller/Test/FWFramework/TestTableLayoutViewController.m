@@ -95,7 +95,7 @@
     if ([object.imageUrl fwIsFormatUrl]) {
         [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
     } else {
-        self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+        self.myImageView.fwImage = [UIImage fwImageMake:object.imageUrl];
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
@@ -216,7 +216,7 @@
         [randomArray addObject:@[
                                  @"",
                                  @"public_icon",
-                                 @"tabbar_home",
+                                 @"loading.gif",
                                  @"public_picture",
                                  @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
                                  @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
@@ -294,7 +294,7 @@
                                      @"public_icon",
                                      @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
                                      @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                                     @"tabbar_home",
+                                     @"loading.gif",
                                      @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
                                      ];
         photoBrowser.longPressBlock = ^(NSInteger index) {

@@ -522,14 +522,7 @@
             self.progressView.progress = downloadProgress.fractionCompleted;
         }];
     } else {
-        UIImage *image = nil;
-        if ([urlString hasSuffix:@".gif"]) {
-            image = [UIImage fwGifImageWithFile:urlString];
-            if (!image) image = [UIImage fwGifImageWithName:[urlString substringToIndex:urlString.length - 4]];
-        } else {
-            image = [UIImage imageNamed:urlString];
-            if (!image) image = [UIImage fwImageWithFile:urlString];
-        }
+        UIImage *image = [UIImage fwImageMake:urlString];
         if (image) {
             self.imageView.fwImage = image;
             // 计算图片的大小

@@ -813,14 +813,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         if ([imagePath hasPrefix:@"http"]) {
             [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
         } else {
-            UIImage *image = nil;
-            if ([imagePath hasSuffix:@".gif"]) {
-                image = [UIImage fwGifImageWithFile:imagePath];
-                if (!image) image = [UIImage fwGifImageWithName:[imagePath substringToIndex:imagePath.length - 4]];
-            } else {
-                image = [UIImage imageNamed:imagePath];
-                if (!image) image = [UIImage fwImageWithFile:imagePath];
-            }
+            UIImage *image = [UIImage fwImageMake:imagePath];
             cell.imageView.fwImage = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
