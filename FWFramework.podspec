@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.3.2'
+  spec.version             = '0.3.3'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -22,7 +22,7 @@ Pod::Spec.new do |spec|
     subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.h'
   end
-  
+
   spec.subspec 'Application' do |subspec|
     subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/**/*.h'
