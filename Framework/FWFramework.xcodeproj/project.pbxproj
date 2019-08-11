@@ -263,7 +263,6 @@
 		2FBFB73722C5D98400E669B6 /* UIColor+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */; };
 		2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */; };
 		2FBFB75E22C616BD00E669B6 /* UIApplication+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */; };
-		2FBFB76122C62AD000E669B6 /* UIImage+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76022C62AD000E669B6 /* UIImage+FWFramework.swift */; };
 		2FBFB76322C62EB300E669B6 /* UIScreen+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76222C62EB300E669B6 /* UIScreen+FWFramework.swift */; };
 		2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76422C6434300E669B6 /* FWLog.swift */; };
 		2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FBFB76622C6766B00E669B6 /* FWTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -574,7 +573,6 @@
 		2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+FWFramework.swift"; sourceTree = "<group>"; };
-		2FBFB76022C62AD000E669B6 /* UIImage+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB76222C62EB300E669B6 /* UIScreen+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB76422C6434300E669B6 /* FWLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWLog.swift; sourceTree = "<group>"; };
 		2FBFB76622C6766B00E669B6 /* FWTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTest.h; sourceTree = "<group>"; };
@@ -689,7 +687,6 @@
 				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
 				2F03A4FC216CF4B9001965A1 /* UIImage+FWFramework.m */,
-				2FBFB76022C62AD000E669B6 /* UIImage+FWFramework.swift */,
 				2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */,
 				2F03A4EF216CF4B9001965A1 /* UIImage+FWGif.m */,
 				2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */,
@@ -1516,7 +1513,6 @@
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
-				2FBFB76122C62AD000E669B6 /* UIImage+FWFramework.swift in Sources */,
 				2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */,
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,
