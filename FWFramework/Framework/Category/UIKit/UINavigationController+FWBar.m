@@ -94,8 +94,8 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [NSObject fwSwizzleMethod:@selector(setHidden:) in:objc_getClass("_UIBarBackground") with:@selector(fwInnerUIBarBackgroundSetHidden:) in:[self class]];
-        [NSObject fwSwizzleMethod:@selector(layoutSubviews) in:objc_getClass("_UIParallaxDimmingView") with:@selector(fwInnerUIParallaxDimmingViewLayoutSubviews) in:[self class]];
+        [NSObject fwSwizzleInstanceMethod:@selector(setHidden:) in:objc_getClass("_UIBarBackground") with:@selector(fwInnerUIBarBackgroundSetHidden:) in:[self class]];
+        [NSObject fwSwizzleInstanceMethod:@selector(layoutSubviews) in:objc_getClass("_UIParallaxDimmingView") with:@selector(fwInnerUIParallaxDimmingViewLayoutSubviews) in:[self class]];
     });
 }
 
