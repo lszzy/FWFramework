@@ -9,7 +9,8 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIViewController+FWBar.h"
-#import "FWAspect.h"
+#import "NSObject+FWRuntime.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWBadgeView
 
@@ -143,6 +144,28 @@
 
 @implementation UITabBarItem (FWBadge)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(layoutSubviews) in:objc_getClass("UITabBarButton") withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^(UIView *tabBarButton) {
+                void (*originalMSG)(id, SEL);
+                originalMSG = (void (*)(id, SEL))originalIMP();
+                originalMSG(tabBarButton, originalCMD);
+                
+                // 解决因为层级关系变化导致的badgeView被遮挡问题
+                for (UIView *subview in tabBarButton.subviews) {
+                    if ([subview isKindOfClass:[FWBadgeView class]]) {
+                        [tabBarButton bringSubviewToFront:subview];
+                        break;
+                    }
+                }
+            };
+        }];
+    });
+}
+
 - (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
     [self fwHideBadgeView];
@@ -160,11 +183,6 @@
         // x轴默认偏移，y轴固定偏移，类似系统布局
         [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:imageView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
         [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
-        
-        // 解决因为层级关系变化导致的badgeView被遮挡问题
-        [view fwHookSelector:@selector(layoutSubviews) withBlock:^(id<FWAspectInfo> aspectInfo){
-            [(UIView *)aspectInfo.instance bringSubviewToFront:badgeView];
-        } options:FWAspectPositionAfter error:nil];
     };
 }
 
