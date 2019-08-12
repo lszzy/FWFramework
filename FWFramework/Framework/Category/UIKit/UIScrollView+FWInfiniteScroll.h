@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 };
 
 /*!
- @brief 上拉追加视图，默认高度44
+ @brief 上拉追加视图，默认高度60
  */
 @interface FWInfiniteScrollView : UIView
 

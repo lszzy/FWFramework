@@ -53,7 +53,7 @@
 #define fequal(a,b) (fabs((a) - (b)) < FLT_EPSILON)
 #define fequalzero(a) (fabs(a) < FLT_EPSILON)
 
-static CGFloat FWPullRefreshViewHeight = 54;
+static CGFloat FWPullRefreshViewHeight = 60;
 
 @interface FWPullRefreshView ()
 

@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 };
 
 /*!
-@brief 下拉刷新视图，默认高度54
+@brief 下拉刷新视图，默认高度60
 */
 @interface FWPullRefreshView : UIView
 
