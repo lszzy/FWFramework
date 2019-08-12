@@ -121,7 +121,7 @@
 
 - (void)renderData
 {
-    [self.tableView fwTriggerPullRefresh];
+    [self.tableView fwTriggerInfiniteScroll];
 }
 
 #pragma mark - TableView
