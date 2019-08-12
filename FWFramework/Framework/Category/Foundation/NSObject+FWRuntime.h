@@ -477,16 +477,33 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
 
-#pragma mark - Value
+#pragma mark - Selector
 
 /*!
- @brief 如果iOS13系统UIView调用部分valueForKey:方法闪退，可尝试调用此方法
- @discussion 建议优先采用不调用valueForKey:的方案，没有好的解决方法，再调用此方法
+ @brief 安全调用方法，如果不能响应，则忽略之
  
- @param key 属性名称
+ @param aSelector 要执行的方法
+ @return id 方法执行后返回的值
+ */
+- (nullable id)fwPerformSelector:(SEL)aSelector;
+
+/*!
+ @brief 安全调用方法，如果不能响应，则忽略之
+ 
+ @param aSelector 要执行的方法
+ @param object 传递的方法参数
+ @return id 方法执行后返回的值
+ */
+- (nullable id)fwPerformSelector:(SEL)aSelector withObject:(nullable id)object;
+
+/*!
+ @brief 安全调用内部属性方法，如果属性不存在，则忽略之
+ @discussion 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
+ 
+ @param name 内部属性名称
  @return 属性值
  */
-- (nullable id)fwValueForKey:(NSString *)key;
+- (nullable id)fwPerformPropertySelector:(NSString *)name;
 
 @end
 

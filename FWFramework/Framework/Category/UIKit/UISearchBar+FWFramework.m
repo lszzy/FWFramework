@@ -84,12 +84,12 @@
 
 - (UITextField *)fwTextField
 {
-    return [self fwValueForKey:@"searchField"];
+    return [self fwPerformPropertySelector:@"searchField"];
 }
 
 - (UIButton *)fwCancelButton
 {
-    return [self fwValueForKey:@"cancelButton"];
+    return [self fwPerformPropertySelector:@"cancelButton"];
 }
 
 - (void)fwSetBackgroundColor:(UIColor *)color

@@ -128,45 +128,47 @@
     return YES;
 }
 
-#pragma mark - Value
+#pragma mark - Selector
 
-- (id)fwValueForKey:(NSString *)key
+- (id)fwPerformSelector:(SEL)aSelector
 {
-    if (@available(iOS 13.0, *)) {
-        if ([self isKindOfClass:[UIView class]]) {
-            key = [key hasPrefix:@"_"] ? [key substringFromIndex:1] : key;
-            NSString *capKey = key.length ? [NSString stringWithFormat:@"%@%@", [key substringToIndex:1].uppercaseString, [key substringFromIndex:1]] : nil;
-            
-            Ivar ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_%@", key].UTF8String);
-            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"_is%@", capKey].UTF8String);
-            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), key.UTF8String);
-            if (!ivar) ivar = class_getInstanceVariable(object_getClass(self), [NSString stringWithFormat:@"is%@", capKey].UTF8String);
-            
-            if (ivar) {
-                if (strncmp(@encode(id), ivar_getTypeEncoding(ivar), strlen(@encode(id))) == 0) {
-                    return object_getIvar(self, ivar);
-                }
-                ptrdiff_t ivarOffset = ivar_getOffset(ivar);
-                unsigned char * bytes = (unsigned char *)(__bridge void *)self;
-                NSValue *value = @(*(bytes + ivarOffset));
-                return value;
-            } else {
-                #pragma clang diagnostic push
-                #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", capKey]);
-                if ([self respondsToSelector:selector]) return [self performSelector:selector];
-                selector = NSSelectorFromString(key);
-                if ([self respondsToSelector:selector]) return [self performSelector:selector];
-                selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", capKey]);
-                if ([self respondsToSelector:selector]) return [self performSelector:selector];
-                selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", key]);
-                if ([self respondsToSelector:selector]) return [self performSelector:selector];
-                #pragma clang diagnostic pop
-            }
-            return nil;
-        }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if ([self respondsToSelector:aSelector]) {
+        return [self performSelector:aSelector];
     }
-    return [self valueForKey:key];
+#pragma clang diagnostic pop
+    return nil;
+}
+
+- (id)fwPerformSelector:(SEL)aSelector withObject:(id)object
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if ([self respondsToSelector:aSelector]) {
+        return [self performSelector:aSelector withObject:object];
+    }
+#pragma clang diagnostic pop
+    return nil;
+}
+
+- (id)fwPerformPropertySelector:(NSString *)name
+{
+    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
+    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
+    
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
+    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    selector = NSSelectorFromString(name);
+    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
+    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
+    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    #pragma clang diagnostic pop
+    return nil;
 }
 
 @end
