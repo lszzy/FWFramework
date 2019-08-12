@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, FWBadgeStyle) {
     FWBadgeStyleBig,
 };
 
-// 提醒灯视图
+// 提醒灯视图，默认禁用userInteractionEnabled
 @interface FWBadgeView : UIView
 
 // 提醒灯样式，默认0自定义

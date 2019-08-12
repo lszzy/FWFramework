@@ -35,6 +35,7 @@
                 CGFloat badgeHeight = 10.f;
                 _badgeOffset = CGPointMake(3.f, 3.f);
                 
+                self.userInteractionEnabled = NO;
                 self.backgroundColor = [UIColor redColor];
                 self.layer.cornerRadius = badgeHeight / 2.0;
                 [self fwSetDimensionsToSize:CGSizeMake(badgeHeight, badgeHeight)];
@@ -58,6 +59,7 @@
 {
     _badgeOffset = badgeOffset;
     
+    self.userInteractionEnabled = NO;
     self.backgroundColor = [UIColor redColor];
     self.layer.cornerRadius = badgeHeight / 2.0;
     [self fwSetDimension:NSLayoutAttributeHeight toSize:badgeHeight];
