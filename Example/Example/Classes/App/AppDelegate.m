@@ -10,7 +10,7 @@
 #import "ObjcController.h"
 #import "TestViewController.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () <UITabBarControllerDelegate>
 
 @end
 
@@ -64,10 +64,20 @@
     testNav.tabBarItem.title = @"测试";
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.delegate = self;
     // present时隐藏tabBar
     tabBarController.definesPresentationContext = YES;
     tabBarController.viewControllers = @[homeNav, testNav];
     return tabBarController;
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    UIImageView *imageView = viewController.tabBarItem.fwImageView;
+    CABasicAnimation *animation = [imageView fwAddAnimationWithKeyPath:@"transform.scale" fromValue:@(0.7) toValue:@(1.3) duration:0.08 completion:nil];
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    animation.repeatCount = 1;
+    animation.autoreverses = YES;
 }
 
 @end
