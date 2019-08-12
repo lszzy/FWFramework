@@ -13,7 +13,7 @@
 
 #pragma mark - FWInfiniteScrollView
 
-static CGFloat FWInfiniteScrollViewHeight = 44;
+static CGFloat FWInfiniteScrollViewHeight = 60;
 
 @interface FWInfiniteScrollView ()
 
