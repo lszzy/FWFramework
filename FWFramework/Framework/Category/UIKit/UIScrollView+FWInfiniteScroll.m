@@ -27,7 +27,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 @property (nonatomic, weak) UIView *currentCustomView;
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, readwrite) CGFloat originalBottomInset;
-@property (nonatomic, assign) BOOL wasTriggeredByUser;
 @property (nonatomic, assign) BOOL isObserving;
 
 - (void)resetScrollViewContentInset;
@@ -135,11 +134,11 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != FWInfiniteScrollStateLoading && self.enabled) {
-        CGFloat scrollViewContentHeight = self.scrollView.contentSize.height;
-        CGFloat scrollOffsetThreshold = scrollViewContentHeight - self.scrollView.bounds.size.height;
-        CGFloat velocityY = [self.scrollView.panGestureRecognizer velocityInView:self.scrollView].y;
+        CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
         
-        if(velocityY < 0 && contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging)
+        if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
+            self.state = FWInfiniteScrollStateLoading;
+        else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging)
             self.state = FWInfiniteScrollStateTriggered;
         else if(contentOffset.y < scrollOffsetThreshold  && self.state != FWInfiniteScrollStateStopped)
             self.state = FWInfiniteScrollStateStopped;
@@ -249,12 +248,10 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         
         switch (newState) {
             case FWInfiniteScrollStateStopped:
-                [self resetScrollViewContentInset];
                 [self.activityIndicatorView stopAnimating];
                 break;
                 
             case FWInfiniteScrollStateTriggered:
-                [self setScrollViewContentInsetForInfiniteScrolling];
                 [self.activityIndicatorView startAnimating];
                 break;
                 
