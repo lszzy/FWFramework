@@ -103,7 +103,7 @@
     return [object_getClass((id)self) fwSwizzleInstanceMethod:originalSelector with:swizzleSelector];
 }
 
-+ (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass
 {
     if (!originalClass || !swizzleClass) {
         return NO;
@@ -126,6 +126,53 @@
         method_exchangeImplementations(originalMethod, swizzleMethod);
     }
     return YES;
+}
+
++ (BOOL)fwSwizzleInstanceMethod:(SEL)targetSelector in:(Class)targetClass withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))implementationBlock
+{
+    Method originalMethod = class_getInstanceMethod(targetClass, targetSelector);
+    IMP imp = method_getImplementation(originalMethod);
+    BOOL isOverride = [self fwIsOverrideSuperclassMethod:targetSelector in:targetClass];
+    
+    IMP (^originalImplementation)(void) = ^IMP(void) {
+        IMP result = NULL;
+        if (!imp) {
+            result = imp_implementationWithBlock(^(id selfObject){});
+        } else {
+            if (isOverride) {
+                result = imp;
+            } else {
+                Class superclass = class_getSuperclass(targetClass);
+                result = class_getMethodImplementation(superclass, targetSelector);
+            }
+        }
+        return result;
+    };
+    
+    if (isOverride) {
+        method_setImplementation(originalMethod, imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalImplementation)));
+    } else {
+        const char *typeEncoding = method_getTypeEncoding(originalMethod);
+        if (!typeEncoding) {
+            NSMethodSignature *methodSignature = [targetClass instanceMethodSignatureForSelector:targetSelector];
+            NSString *typeString = [methodSignature fwPerformSelector:NSSelectorFromString([NSString stringWithFormat:@"_%@String", @"type"])];
+            typeEncoding = typeString.UTF8String;
+        }
+        
+        class_addMethod(targetClass, targetSelector, imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalImplementation)), typeEncoding);
+    }
+    return YES;
+}
+
++ (BOOL)fwIsOverrideSuperclassMethod:(SEL)targetSelector in:(Class)targetClass
+{
+    Method method = class_getInstanceMethod(targetClass, targetSelector);
+    if (!method) return NO;
+    
+    Method methodOfSuperclass = class_getInstanceMethod(class_getSuperclass(targetClass), targetSelector);
+    if (!methodOfSuperclass) return YES;
+    
+    return method != methodOfSuperclass;
 }
 
 #pragma mark - Selector

@@ -467,7 +467,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
 
 /*!
- @brief 使用swizzle替换类方法为另一类方法
+ @brief 使用swizzle替换类实例方法为另一类方法
  
  @param originalSelector 原始方法
  @param originalClass 原始类
@@ -475,7 +475,18 @@ NS_ASSUME_NONNULL_BEGIN
  @param swizzleClass 替换类
  @return 是否成功
  */
-+ (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
+
+/*!
+ @brief 使用swizzle替换类实例方法为block实现
+ @discussion 该block必须返回一个block，返回的block将被当成targetSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果targetClass的targetSelector是继承自父类的，targetClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的targetSelector，所以会产生预期之外的class的影响，例如targetClass传进来UIButton.class，则最终可能会影响到UIView.class）。implementationBlock的参数里第一个为你要修改的class，也即等同于targetClass，第二个参数为你要修改的selector，也即等同于targetSelector，第三个参数是一个block，用于获取targetSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于targetSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
+ 
+ @param targetSelector 目标方法
+ @param targetClass 目标类
+ @param implementationBlock 实现句柄
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleInstanceMethod:(SEL)targetSelector in:(Class)targetClass withBlock:(id (^)(__unsafe_unretained Class originalClass, SEL originalSelector, IMP (^originalImplementation)(void)))implementationBlock;
 
 #pragma mark - Selector
 
