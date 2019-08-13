@@ -103,6 +103,11 @@
     return [self fwIsScreenX] ? 83.0 : 49.0;
 }
 
++ (CGFloat)fwToolBarHeight
+{
+    return [self fwIsScreenX] ? 78.0 : 44.0;
+}
+
 + (CGFloat)fwTopBarHeight
 {
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
