@@ -106,21 +106,22 @@
 
 - (void)renderView
 {
+    FWInfiniteScrollView.height = 64;
     [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
     [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    pullView.image = [UIImage imageNamed:@"public_icon"];
+    pullView.fwImage = [UIImage fwImageMake:@"loading.gif"];
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    infiniteView.image = [UIImage imageNamed:@"public_icon"];
+    infiniteView.fwImage = [UIImage fwImageMake:@"LoadingPlaceholder.gif"];
     [self.tableView.fwInfiniteScrollView setCustomView:infiniteView forState:FWInfiniteScrollStateAll];
 }
 
 - (void)renderData
 {
-    [self.tableView fwTriggerPullRefresh];
+    [self.tableView fwTriggerInfiniteScroll];
 }
 
 #pragma mark - TableView
@@ -189,12 +190,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.dataList.count < 5000 ? YES : NO;
+        self.tableView.fwShowPullRefresh = self.dataList.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
@@ -205,12 +206,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.dataList.count < 5000 ? YES : NO;
+        self.tableView.fwShowInfiniteScroll = self.dataList.count < 20 ? YES : NO;
         [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }

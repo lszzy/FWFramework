@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/*!
+ @brief UIImage加载gif图片分类
+ 
+ @see 常用动画库：https://github.com/airbnb/lottie-ios
+ */
 @interface UIImage (FWGif)
 
 #pragma mark - Judge
@@ -33,11 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - File
 
-// 从文件路径创建Gif图片对象，绝对路径
-+ (nullable UIImage *)fwGifImageWithFile:(NSString *)path;
-
 // 从图片名称创建Gif图片对象，内置图片，不含后缀
 + (nullable UIImage *)fwGifImageWithName:(NSString *)name;
+
+// 从文件路径创建Gif图片对象，支持绝对路径和bundle路径
++ (nullable UIImage *)fwGifImageWithFile:(NSString *)path;
 
 #pragma mark - Scale
 

@@ -19,6 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 自定义内容边距，可调整左右距离和TextField高度。未设置时为系统默认
 @property (nonatomic, assign) UIEdgeInsets fwContentInset;
 
+// 输入框内部视图
+@property (nullable, nonatomic, weak, readonly) UITextField *fwTextField;
+
+// 取消按钮内部视图
+@property (nullable, nonatomic, weak, readonly) UIButton *fwCancelButton;
+
 // 设置整体背景色
 - (void)fwSetBackgroundColor:(nullable UIColor *)color;
 
@@ -33,12 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
 - (void)fwForceCancelButtonEnabled:(BOOL)force;
-
-// 输入框
-- (nullable UITextField *)fwTextField;
-
-// 取消按钮
-- (nullable UIButton *)fwCancelButton;
 
 #pragma mark - Navigation
 

@@ -467,7 +467,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
 
 /*!
- @brief 使用swizzle替换类方法为另一类方法
+ @brief 使用swizzle替换类实例方法为另一类方法
  
  @param originalSelector 原始方法
  @param originalClass 原始类
@@ -475,7 +475,46 @@ NS_ASSUME_NONNULL_BEGIN
  @param swizzleClass 替换类
  @return 是否成功
  */
-+ (BOOL)fwSwizzleMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass with:(SEL)swizzleSelector in:(Class)swizzleClass;
+
+/*!
+ @brief 使用swizzle替换类实例方法为block实现
+ @discussion 该block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
+ 
+ @param originalSelector 原始方法
+ @param originalClass 原始类
+ @param block 实现句柄
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
+#pragma mark - Selector
+
+/*!
+ @brief 安全调用方法，如果不能响应，则忽略之
+ 
+ @param aSelector 要执行的方法
+ @return id 方法执行后返回的值
+ */
+- (nullable id)fwPerformSelector:(SEL)aSelector;
+
+/*!
+ @brief 安全调用方法，如果不能响应，则忽略之
+ 
+ @param aSelector 要执行的方法
+ @param object 传递的方法参数
+ @return id 方法执行后返回的值
+ */
+- (nullable id)fwPerformSelector:(SEL)aSelector withObject:(nullable id)object;
+
+/*!
+ @brief 安全调用内部属性方法，如果属性不存在，则忽略之
+ @discussion 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
+ 
+ @param name 内部属性名称
+ @return 属性值
+ */
+- (nullable id)fwPerformPropertySelector:(NSString *)name;
 
 @end
 

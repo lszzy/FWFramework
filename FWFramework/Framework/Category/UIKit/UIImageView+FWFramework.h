@@ -16,6 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIImageView (FWFramework)
 
+#pragma mark - Image
+
+// 设置图片，如果是gif图片，自动开始播放
+@property (nullable, nonatomic, strong) UIImage *fwImage;
+
 #pragma mark - Mode
 
 // 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置

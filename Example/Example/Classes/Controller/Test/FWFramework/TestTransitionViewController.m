@@ -14,10 +14,25 @@
 
 @implementation TestFullScreenViewController
 
-- (void)renderInit
+- (void)renderView
 {
-    // 设置present半透明，init中生效
-    self.modalPresentationStyle = UIModalPresentationCustom;
+    FWBannerView *cycleView = [FWBannerView new];
+    cycleView.autoScroll = YES;
+    cycleView.autoScrollTimeInterval = 6;
+    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    [self.view addSubview:cycleView];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0];
+    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
+    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
+    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:200];
+    
+    NSMutableArray *imageUrls = [NSMutableArray array];
+    [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls addObject:@"public_picture"];
+    [imageUrls addObject:@"not_found.jpg"];
+    [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    cycleView.imageURLStringsGroup = [imageUrls copy];
+    cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
 }
 
 - (void)viewDidLoad
@@ -217,7 +232,24 @@
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
-    transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    interactiveTransition.percentBlock = ^CGFloat(UIPanGestureRecognizer *sender) {
+        UISwipeGestureRecognizerDirection direction = [sender fwSwipeDirection];
+        if (direction == UISwipeGestureRecognizerDirectionDown || direction == UISwipeGestureRecognizerDirectionRight) {
+            return [sender fwSwipePercent];
+        }
+        return 0;
+    };
+    interactiveTransition.transitionBlock = ^(FWAnimatedTransition *transition) {
+        FWSwipeAnimatedTransition *swipeTransition = (FWSwipeAnimatedTransition *)transition;
+        FWPercentInteractiveTransition *percentTransition = swipeTransition.outInteractiveTransition;
+        if (percentTransition.isInteractive) {
+            swipeTransition.outDirection = percentTransition.interactiveDirection;
+        } else {
+            swipeTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
+        }
+    };
+    transition.outInteractiveTransition = interactiveTransition;
     vc.fwModalTransition = transition;
     [self presentViewController:vc animated:YES completion:nil];
 }

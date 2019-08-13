@@ -182,16 +182,31 @@
 
 - (UISwipeGestureRecognizerDirection)fwScrollDirection
 {
-    if ([self.panGestureRecognizer translationInView:self.superview].y > 0.0f) {
-        return UISwipeGestureRecognizerDirectionUp;
-    } else if ([self.panGestureRecognizer translationInView:self.superview].y < 0.0f) {
-        return UISwipeGestureRecognizerDirectionDown;
-    } else if ([self.panGestureRecognizer translationInView:self].x < 0.0f) {
-        return UISwipeGestureRecognizerDirectionLeft;
-    } else if ([self.panGestureRecognizer translationInView:self].x > 0.0f) {
-        return UISwipeGestureRecognizerDirectionRight;
+    CGPoint transition = [self.panGestureRecognizer translationInView:self];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        if (transition.x < 0.0f) {
+            return UISwipeGestureRecognizerDirectionLeft;
+        } else if (transition.x > 0.0f) {
+            return UISwipeGestureRecognizerDirectionRight;
+        }
+    } else {
+        if (transition.y > 0.0f) {
+            return UISwipeGestureRecognizerDirectionDown;
+        } else if (transition.y < 0.0f) {
+            return UISwipeGestureRecognizerDirectionUp;
+        }
     }
     return 0;
+}
+
+- (CGFloat)fwScrollPercent
+{
+    CGPoint transition = [self.panGestureRecognizer translationInView:self];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        return self.bounds.size.width > 0 ? fabs(transition.x) / self.bounds.size.width : 0;
+    } else {
+        return self.bounds.size.height > 0 ? fabs(transition.y) / self.bounds.size.height : 0;
+    }
 }
 
 #pragma mark - Content

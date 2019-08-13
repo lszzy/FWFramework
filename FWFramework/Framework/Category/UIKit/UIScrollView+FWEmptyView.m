@@ -9,6 +9,7 @@
 
 #import "UIScrollView+FWEmptyView.h"
 #import "UIView+FWAutoLayout.h"
+#import "UIImageView+FWFramework.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyViewWeakTarget
@@ -755,7 +756,7 @@ static NSString * const kEmptyViewImageAnimationKey = @"emptyViewImageAnimation"
             
             // Configure Image
             if (image) {
-                view.imageView.image = [image imageWithRenderingMode:renderingMode];
+                view.imageView.fwImage = [image imageWithRenderingMode:renderingMode];
                 view.imageView.tintColor = imageTintColor;
             }
             

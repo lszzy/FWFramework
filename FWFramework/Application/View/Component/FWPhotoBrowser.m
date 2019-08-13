@@ -8,7 +8,8 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "UIImageView+FWNetwork.h"
+#import "UIImage+FWFramework.h"
+#import "UIImageView+FWFramework.h"
 #import "FWProgressView.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
@@ -493,7 +494,7 @@
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
             __typeof__(self) self = self_weak_;
-            self.imageView.image = image;
+            self.imageView.fwImage = image;
             self.progressView.hidden = true;
             self.userInteractionEnabled = true;
             // 计算图片的大小
@@ -521,16 +522,13 @@
             self.progressView.progress = downloadProgress.fractionCompleted;
         }];
     } else {
-        UIImage *image = [UIImage imageNamed:urlString];
-        if (!image) {
-            image = [UIImage imageWithContentsOfFile:urlString];
-        }
+        UIImage *image = [UIImage fwImageMake:urlString];
         if (image) {
-            self.imageView.image = image;
+            self.imageView.fwImage = image;
             // 计算图片的大小
             [self setPictureSize:image.size];
         } else {
-            self.imageView.image = self.placeholderImage;
+            self.imageView.fwImage = self.placeholderImage;
         }
         self.progressView.hidden = true;
         self.userInteractionEnabled = true;

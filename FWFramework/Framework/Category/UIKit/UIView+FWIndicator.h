@@ -50,21 +50,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  隐藏加载吐司，与show必须成对出现
+ *
+ *  @return 如果加载吐司不存在，返回NO
  */
-- (void)fwHideIndicator;
+- (BOOL)fwHideIndicator;
 
 #pragma mark - Toast
 
 /**
- *  显示吐司，不可点击（简单版）
+ *  显示吐司，默认不可点击（简单版）
  *
  *  @param attributedText 属性文本，默认白色、16号字体
- *  @return 吐司视图
+ *  @return 吐司视图，如需点击其它视图可设置userInteractionEnabled为NO
  */
 - (UIView *)fwShowToastWithAttributedText:(nullable NSAttributedString *)attributedText;
 
 /**
- *  显示吐司，不可点击（详细版）
+ *  显示吐司，默认不可点击（详细版）
  *
  *  @param attributedText      属性文本，默认白色、16号字体
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
@@ -72,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param paddingWidth        吐司左右最小内间距，默认10
  *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
  *  @param cornerRadius        圆角半径，默认5.0
- *  @return 吐司视图
+ *  @return 吐司视图，如需点击其它视图可设置userInteractionEnabled为NO
  */
 - (UIView *)fwShowToastWithAttributedText:(nullable NSAttributedString *)attributedText
                           backgroundColor:(nullable UIColor *)backgroundColor
@@ -83,16 +85,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  手工隐藏吐司
+ *
+ *  @return 如果吐司不存在，返回NO
  */
-- (void)fwHideToast;
+- (BOOL)fwHideToast;
 
 /**
  *  延迟n秒后自动隐藏吐司
  *
  *  @param delay 延迟时间
  *  @param completion 完成回调
+ *  @return 如果吐司不存在，返回NO
  */
-- (void)fwHideToastAfterDelay:(NSTimeInterval)delay
+- (BOOL)fwHideToastAfterDelay:(NSTimeInterval)delay
                    completion:(nullable void (^)(void))completion;
 
 @end

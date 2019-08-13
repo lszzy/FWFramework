@@ -20,6 +20,9 @@
         // 默认关闭视图延伸Bar布局
         [self fwSetBarExtendEdge:UIRectEdgeNone];
         
+        // 解决iOS7-10时scrollView占不满导航栏问题
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        
         // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
         self.hidesBottomBarWhenPushed = YES;
         

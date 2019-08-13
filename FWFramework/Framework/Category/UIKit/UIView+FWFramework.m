@@ -64,6 +64,23 @@
     }
 }
 
+- (CGSize)fwFitSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    return [self fwFitSizeWithDrawSize:drawSize];
+}
+
+- (CGSize)fwFitSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self sizeThatFits:drawSize];
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
 #pragma mark - ViewController
 
 - (UIViewController *)fwViewController

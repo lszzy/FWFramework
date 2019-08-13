@@ -95,7 +95,7 @@
     if ([object.imageUrl fwIsFormatUrl]) {
         [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
     } else {
-        self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+        self.myImageView.fwImage = [UIImage fwImageMake:object.imageUrl];
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
@@ -131,12 +131,33 @@
         
         [self onRefreshing];
     }];
+    self.tableView.fwPullRefreshView.stateBlock = ^(FWPullRefreshView * _Nonnull view, FWPullRefreshState state) {
+        FWStrongifySelf();
+        
+        self.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
+    };
+    self.tableView.fwPullRefreshView.progressBlock = ^(FWPullRefreshView * _Nonnull view, CGFloat progress) {
+        FWStrongifySelf();
+        
+        self.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
+    };
     
+    FWInfiniteScrollView.height = 64;
     [self.tableView fwAddInfiniteScrollWithBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
     }];
+    self.tableView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
+        FWStrongifySelf();
+        
+        self.title = [NSString stringWithFormat:@"load state-%@", @(state)];
+    };
+    self.tableView.fwInfiniteScrollView.progressBlock = ^(FWInfiniteScrollView * _Nonnull view, CGFloat progress) {
+        FWStrongifySelf();
+        
+        self.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
+    };
 }
 
 - (void)renderData
@@ -195,7 +216,7 @@
         [randomArray addObject:@[
                                  @"",
                                  @"public_icon",
-                                 @"tabbar_home",
+                                 @"loading.gif",
                                  @"public_picture",
                                  @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
                                  @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
@@ -224,12 +245,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.dataList.count < 5000 ? YES : NO;
+        self.tableView.fwShowPullRefresh = self.dataList.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
@@ -240,12 +261,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             [self.dataList addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.dataList.count < 5000 ? YES : NO;
+        self.tableView.fwShowInfiniteScroll = self.dataList.count < 20 ? YES : NO;
         [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }
@@ -273,7 +294,7 @@
                                      @"public_icon",
                                      @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
                                      @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                                     @"tabbar_home",
+                                     @"loading.gif",
                                      @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
                                      ];
         photoBrowser.longPressBlock = ^(NSInteger index) {

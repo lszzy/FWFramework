@@ -12,17 +12,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 快速创建UIImage，支持name和file，支持普通图片和gif图片
+FOUNDATION_EXPORT UIImage * _Nullable FWImageMake(NSString *string);
+
 // 使用文件名方式加载UIImage。会被系统缓存，适用于大量复用的小资源图
-#define FWImageName( name ) \
-    [UIImage imageNamed:name]
+FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
 
-// 从图片文件加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
-#define FWImageFile( file ) \
-    [UIImage imageWithContentsOfFile:file]
-
-// 从应用资源路径加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
-#define FWImageResource( path, ... ) \
-    FWImageFile( [[NSBundle mainBundle] pathForResource:path ofType:fw_macro_default(nil, ##__VA_ARGS__)] )
+// 从图片文件或应用资源路径加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
+FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /*!
  @brief UIImage+FWFramework
@@ -31,23 +28,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Make
 
+// 快速创建UIImage，支持name和file，支持普通图片和gif图片
++ (nullable UIImage *)fwImageMake:(NSString *)string;
+
 // 使用文件名方式加载UIImage。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name;
 
 // 使用文件名方式从bundle加载UIImage。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name inBundle:(nullable NSBundle *)bundle;
 
-// 从图片文件加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
+// 从图片文件加载UIImage，支持绝对路径和bundle路径。不会被系统缓存，适用于不被复用的图片，特别是大图
 + (nullable UIImage *)fwImageWithFile:(NSString *)path;
 
-// 从应用资源路径加载UIImage。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithResource:(NSString *)path;
-
-// 从应用资源路径加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithResource:(NSString *)path ofType:(nullable NSString *)type;
-
-// 从应用资源路径从bundle加载UIImage，后缀可选，默认nil。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithResource:(NSString *)path ofType:(nullable NSString *)type inBundle:(nullable NSBundle *)bundle;
+// 从图片文件加载UIImage，支持绝对路径和bundle路径。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (nullable UIImage *)fwImageWithFile:(NSString *)path inBundle:(nullable NSBundle *)bundle;
 
 #pragma mark - View
 
@@ -214,6 +208,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 合并图片
 - (nullable UIImage *)fwImageWithMergeImage:(UIImage *)mergeImage;
+
+// 高斯模糊图片，默认模糊半径为10，饱和度为1
+- (nullable UIImage *)fwImageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
 
 #pragma mark - Rotate
 

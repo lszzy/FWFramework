@@ -8,6 +8,7 @@
 
 #import "FWIndicatorControl.h"
 #import "UIView+FWAutoLayout.h"
+#import "UIImageView+FWFramework.h"
 #import "FWProxy.h"
 
 @interface FWIndicatorProgressView : UIView
@@ -220,7 +221,7 @@
             self.imageView = [UIImageView fwAutoLayoutView];
             self.imageView.userInteractionEnabled = NO;
             self.imageView.backgroundColor = [UIColor clearColor];
-            self.imageView.image = self.indicatorImage;
+            self.imageView.fwImage = self.indicatorImage;
             [centerView addSubview:self.imageView];
             [self.imageView fwSetDimensionsToSize:self.indicatorSize];
             [self.imageView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];

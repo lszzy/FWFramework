@@ -280,4 +280,38 @@
     self.inputAccessoryView = toolbar;
 }
 
+#pragma mark - Size
+
+- (CGSize)fwTextSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    attr[NSFontAttributeName] = self.font;
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    CGSize size = [self.text boundingRectWithSize:drawSize
+                                          options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attr
+                                          context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)) + self.textContainerInset.left + self.textContainerInset.right, MIN(drawSize.height, ceilf(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom);
+}
+
+- (CGSize)fwAttributedTextSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    CGSize size = [self.attributedText boundingRectWithSize:drawSize
+                                                    options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                    context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)) + self.textContainerInset.left + self.textContainerInset.right, MIN(drawSize.height, ceilf(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom);
+}
+
 @end

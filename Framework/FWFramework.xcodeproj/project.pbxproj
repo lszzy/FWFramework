@@ -213,8 +213,6 @@
 		2F1E61F922AE90F400A1AB49 /* FWAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */; };
 		2F1E61FA22AE90F400A1AB49 /* FWAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */; };
 		2F1E61FB22AE90F400A1AB49 /* FWAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F1E623922BA2C3200A1AB49 /* UIView+FWViewChain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E623722BA2C3200A1AB49 /* UIView+FWViewChain.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F1E623A22BA2C3200A1AB49 /* UIView+FWViewChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E623822BA2C3200A1AB49 /* UIView+FWViewChain.m */; };
 		2F1E625D22BCB86600A1AB49 /* UIControl+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E625B22BCB86600A1AB49 /* UIControl+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F1E625E22BCB86600A1AB49 /* UIControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E625C22BCB86600A1AB49 /* UIControl+FWFramework.m */; };
 		2F1E626822BD4A2B00A1AB49 /* UIView+FWLayoutChain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1E626622BD4A2B00A1AB49 /* UIView+FWLayoutChain.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -265,7 +263,6 @@
 		2FBFB73722C5D98400E669B6 /* UIColor+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */; };
 		2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */; };
 		2FBFB75E22C616BD00E669B6 /* UIApplication+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */; };
-		2FBFB76122C62AD000E669B6 /* UIImage+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76022C62AD000E669B6 /* UIImage+FWFramework.swift */; };
 		2FBFB76322C62EB300E669B6 /* UIScreen+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76222C62EB300E669B6 /* UIScreen+FWFramework.swift */; };
 		2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB76422C6434300E669B6 /* FWLog.swift */; };
 		2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FBFB76622C6766B00E669B6 /* FWTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -525,8 +522,6 @@
 		2F1E61F522AE90F300A1AB49 /* FWAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncSocket.m; sourceTree = "<group>"; };
 		2F1E61F622AE90F300A1AB49 /* FWAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncUdpSocket.m; sourceTree = "<group>"; };
 		2F1E61F722AE90F400A1AB49 /* FWAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncSocket.h; sourceTree = "<group>"; };
-		2F1E623722BA2C3200A1AB49 /* UIView+FWViewChain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWViewChain.h"; sourceTree = "<group>"; };
-		2F1E623822BA2C3200A1AB49 /* UIView+FWViewChain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWViewChain.m"; sourceTree = "<group>"; };
 		2F1E625B22BCB86600A1AB49 /* UIControl+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIControl+FWFramework.h"; sourceTree = "<group>"; };
 		2F1E625C22BCB86600A1AB49 /* UIControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F1E626622BD4A2B00A1AB49 /* UIView+FWLayoutChain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWLayoutChain.h"; sourceTree = "<group>"; };
@@ -578,7 +573,6 @@
 		2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+FWFramework.swift"; sourceTree = "<group>"; };
-		2FBFB76022C62AD000E669B6 /* UIImage+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB76222C62EB300E669B6 /* UIScreen+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+FWFramework.swift"; sourceTree = "<group>"; };
 		2FBFB76422C6434300E669B6 /* FWLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWLog.swift; sourceTree = "<group>"; };
 		2FBFB76622C6766B00E669B6 /* FWTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTest.h; sourceTree = "<group>"; };
@@ -666,24 +660,24 @@
 			isa = PBXGroup;
 			children = (
 				2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */,
+				2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */,
+				2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */,
 				2F03A501216CF4B9001965A1 /* UIApplication+FWFramework.h */,
 				2F03A521216CF4B9001965A1 /* UIApplication+FWFramework.m */,
 				2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */,
-				2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */,
-				2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */,
 				2F03A508216CF4B9001965A1 /* UIBezierPath+FWFramework.h */,
 				2F03A4E5216CF4B9001965A1 /* UIBezierPath+FWFramework.m */,
 				2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */,
 				2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */,
 				2F03A503216CF4B9001965A1 /* UIButton+FWFramework.h */,
 				2F03A4EA216CF4B9001965A1 /* UIButton+FWFramework.m */,
-				2F1E625B22BCB86600A1AB49 /* UIControl+FWFramework.h */,
-				2F1E625C22BCB86600A1AB49 /* UIControl+FWFramework.m */,
 				2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */,
 				2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */,
 				2F03A520216CF4B9001965A1 /* UIColor+FWFramework.h */,
 				2F03A4FF216CF4B9001965A1 /* UIColor+FWFramework.m */,
 				2FBFB73622C5D98400E669B6 /* UIColor+FWFramework.swift */,
+				2F1E625B22BCB86600A1AB49 /* UIControl+FWFramework.h */,
+				2F1E625C22BCB86600A1AB49 /* UIControl+FWFramework.m */,
 				2F03A4ED216CF4B9001965A1 /* UIDevice+FWFramework.h */,
 				2F03A513216CF4B9001965A1 /* UIDevice+FWFramework.m */,
 				2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */,
@@ -693,21 +687,20 @@
 				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
 				2F03A4FC216CF4B9001965A1 /* UIImage+FWFramework.m */,
-				2FBFB76022C62AD000E669B6 /* UIImage+FWFramework.swift */,
 				2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */,
 				2F03A4EF216CF4B9001965A1 /* UIImage+FWGif.m */,
+				2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */,
+				2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */,
 				2F03A4E7216CF4B9001965A1 /* UIImageView+FWFramework.h */,
 				2F03A507216CF4B9001965A1 /* UIImageView+FWFramework.m */,
 				2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */,
 				2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */,
-				2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */,
-				2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */,
 				2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */,
 				2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */,
-				2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */,
-				2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */,
 				2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */,
 				2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */,
+				2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */,
+				2F03A4E4216CF4B9001965A1 /* UINavigationController+FWFramework.m */,
 				2F03A506216CF4B9001965A1 /* UINavigationController+FWWorkflow.h */,
 				2F03A4E6216CF4B9001965A1 /* UINavigationController+FWWorkflow.m */,
 				2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */,
@@ -715,10 +708,10 @@
 				2F03A4FB216CF4B9001965A1 /* UIScreen+FWFramework.h */,
 				2F03A526216CF4B9001965A1 /* UIScreen+FWFramework.m */,
 				2FBFB76222C62EB300E669B6 /* UIScreen+FWFramework.swift */,
-				2F03A4F7216CF4B9001965A1 /* UIScrollView+FWFramework.h */,
-				2F03A518216CF4B9001965A1 /* UIScrollView+FWFramework.m */,
 				2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */,
 				2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */,
+				2F03A4F7216CF4B9001965A1 /* UIScrollView+FWFramework.h */,
+				2F03A518216CF4B9001965A1 /* UIScrollView+FWFramework.m */,
 				2F0FFF1C21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h */,
 				2F0FFF1D21D0B76400049383 /* UIScrollView+FWInfiniteScroll.m */,
 				2F0FFF1721D0ACFA00049383 /* UIScrollView+FWPullRefresh.h */,
@@ -759,17 +752,15 @@
 				2F03A525216CF4B9001965A1 /* UIView+FWIndicator.m */,
 				2F03A4FE216CF4B9001965A1 /* UIView+FWLayer.h */,
 				2F03A523216CF4B9001965A1 /* UIView+FWLayer.m */,
-				2F1E623722BA2C3200A1AB49 /* UIView+FWViewChain.h */,
-				2F1E623822BA2C3200A1AB49 /* UIView+FWViewChain.m */,
 				2F1E626622BD4A2B00A1AB49 /* UIView+FWLayoutChain.h */,
 				2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */,
 				2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
 				2F03A4F6216CF4B9001965A1 /* UIViewController+FWAlert.m */,
-				2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */,
-				2F03A4F0216CF4B9001965A1 /* UIViewController+FWBar.m */,
 				2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */,
 				2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */,
+				2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */,
+				2F03A4F0216CF4B9001965A1 /* UIViewController+FWBar.m */,
 				2F03A4F8216CF4B9001965A1 /* UIViewController+FWFramework.h */,
 				2F03A516216CF4B9001965A1 /* UIViewController+FWFramework.m */,
 				2F03A4F3216CF4B9001965A1 /* UIViewController+FWTransition.h */,
@@ -843,13 +834,13 @@
 		2F03A551216CF4B9001965A1 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				2F03A55B216CF4B9001965A1 /* Thread */,
+				2FCE515421D3B90F009EA65E /* Cache */,
+				2FCE512F21D3746B009EA65E /* Database */,
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
 				2F1E61F322AE905400A1AB49 /* Socket */,
-				2FCE512F21D3746B009EA65E /* Database */,
-				2FCE515421D3B90F009EA65E /* Cache */,
+				2F03A55B216CF4B9001965A1 /* Thread */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -861,16 +852,16 @@
 				2F03A554216CF4B9001965A1 /* FWAuthorizeManager.m */,
 				2F03A555216CF4B9001965A1 /* FWKeychainManager.h */,
 				2F03A559216CF4B9001965A1 /* FWKeychainManager.m */,
+				2FCE514C21D3B149009EA65E /* FWLocationManager.h */,
+				2FCE514D21D3B149009EA65E /* FWLocationManager.m */,
+				2FA99E96228E71DA0059DFDB /* FWNotificationManager.h */,
+				2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */,
+				2FCE514E21D3B14A009EA65E /* FWStorekitManager.h */,
+				2FCE514B21D3B149009EA65E /* FWStorekitManager.m */,
 				2F03A553216CF4B9001965A1 /* FWTaskManager.h */,
 				2F03A557216CF4B9001965A1 /* FWTaskManager.m */,
 				2F03A556216CF4B9001965A1 /* FWVersionManager.h */,
 				2F03A558216CF4B9001965A1 /* FWVersionManager.m */,
-				2FCE514C21D3B149009EA65E /* FWLocationManager.h */,
-				2FCE514D21D3B149009EA65E /* FWLocationManager.m */,
-				2FCE514E21D3B14A009EA65E /* FWStorekitManager.h */,
-				2FCE514B21D3B149009EA65E /* FWStorekitManager.m */,
-				2FA99E96228E71DA0059DFDB /* FWNotificationManager.h */,
-				2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -929,10 +920,10 @@
 		2F03A574216CF4B9001965A1 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */,
-				2FD1A51B21D4B5EA00A215C2 /* FWViewController.m */,
 				2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */,
 				2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */,
+				2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */,
+				2FD1A51B21D4B5EA00A215C2 /* FWViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -940,10 +931,10 @@
 		2F03A575216CF4B9001965A1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				2FD1A51521D4B41D00A215C2 /* FWModel.h */,
-				2FD1A51621D4B41D00A215C2 /* FWModel.m */,
 				2F0CCE3D21E496EE0018FA87 /* FWDbModel.h */,
 				2F0CCE3E21E496EE0018FA87 /* FWDbModel.m */,
+				2FD1A51521D4B41D00A215C2 /* FWModel.h */,
+				2FD1A51621D4B41D00A215C2 /* FWModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -987,8 +978,14 @@
 			isa = PBXGroup;
 			children = (
 				2F03A657216D0049001965A1 /* FWNetwork.h */,
+				2F03A626216CF882001965A1 /* FWAutoPurgingImageCache.h */,
+				2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */,
 				2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */,
 				2F03A627216CF882001965A1 /* FWHTTPSessionManager.m */,
+				2F03A625216CF882001965A1 /* FWImageDownloader.h */,
+				2F03A631216CF882001965A1 /* FWImageDownloader.m */,
+				2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */,
+				2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */,
 				2F03A621216CF882001965A1 /* FWNetworkReachabilityManager.h */,
 				2F03A62C216CF882001965A1 /* FWNetworkReachabilityManager.m */,
 				2F03A620216CF882001965A1 /* FWSecurityPolicy.h */,
@@ -999,12 +996,6 @@
 				2F03A624216CF882001965A1 /* FWURLResponseSerialization.m */,
 				2F03A622216CF882001965A1 /* FWURLSessionManager.h */,
 				2F03A629216CF882001965A1 /* FWURLSessionManager.m */,
-				2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */,
-				2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */,
-				2F03A625216CF882001965A1 /* FWImageDownloader.h */,
-				2F03A631216CF882001965A1 /* FWImageDownloader.m */,
-				2F03A626216CF882001965A1 /* FWAutoPurgingImageCache.h */,
-				2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1063,14 +1054,14 @@
 				2FCE513021D3746B009EA65E /* FWDatabase.m */,
 				2FCE514521D3A6A5009EA65E /* FWDatabaseAdditions.h */,
 				2FCE514621D3A6A5009EA65E /* FWDatabaseAdditions.m */,
+				2F0CCE4121E4973C0018FA87 /* FWDatabaseManager.h */,
+				2F0CCE4221E4973C0018FA87 /* FWDatabaseManager.m */,
 				2FCE513921D3A41D009EA65E /* FWDatabasePool.h */,
 				2FCE513A21D3A41D009EA65E /* FWDatabasePool.m */,
 				2FCE513D21D3A43E009EA65E /* FWDatabaseQueue.h */,
 				2FCE513E21D3A43E009EA65E /* FWDatabaseQueue.m */,
 				2FCE514121D3A457009EA65E /* FWResultSet.h */,
 				2FCE514221D3A457009EA65E /* FWResultSet.m */,
-				2F0CCE4121E4973C0018FA87 /* FWDatabaseManager.h */,
-				2F0CCE4221E4973C0018FA87 /* FWDatabaseManager.m */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -1080,18 +1071,18 @@
 			children = (
 				2FCE515C21D3BA31009EA65E /* FWCacheAbstract.h */,
 				2FCE515F21D3BA32009EA65E /* FWCacheAbstract.m */,
-				2FCE515621D3BA31009EA65E /* FWCacheUserDefaults.h */,
-				2FCE515921D3BA31009EA65E /* FWCacheUserDefaults.m */,
 				2FCE515A21D3BA31009EA65E /* FWCacheFile.h */,
 				2FCE515E21D3BA32009EA65E /* FWCacheFile.m */,
 				2FCE515B21D3BA31009EA65E /* FWCacheKeychain.h */,
 				2FCE515721D3BA31009EA65E /* FWCacheKeychain.m */,
+				2FCE516B21D3BD1B009EA65E /* FWCacheManager.h */,
+				2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */,
 				2FCE515D21D3BA32009EA65E /* FWCacheMemory.h */,
 				2FCE515821D3BA31009EA65E /* FWCacheMemory.m */,
 				2FCE517321D3C574009EA65E /* FWCacheSqlite.h */,
 				2FCE517421D3C574009EA65E /* FWCacheSqlite.m */,
-				2FCE516B21D3BD1B009EA65E /* FWCacheManager.h */,
-				2FCE516C21D3BD1B009EA65E /* FWCacheManager.m */,
+				2FCE515621D3BA31009EA65E /* FWCacheUserDefaults.h */,
+				2FCE515921D3BA31009EA65E /* FWCacheUserDefaults.m */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -1101,28 +1092,28 @@
 			children = (
 				2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */,
 				2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */,
-				2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */,
-				2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */,
-				2F1E39382178F0B80051A6BB /* FWProgressView.h */,
-				2F1E39362178F0B80051A6BB /* FWProgressView.m */,
 				2FB7CBC721C23728002E5412 /* FWBannerView.h */,
 				2FB7CBC821C23728002E5412 /* FWBannerView.m */,
-				2F71FD8822E2E64400E905BE /* FWDrawerView.h */,
-				2F71FD8922E2E64400E905BE /* FWDrawerView.m */,
-				2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */,
-				2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */,
-				2F1D984521E6FD2800769651 /* FWPageControl.h */,
-				2F1D984621E6FD2800769651 /* FWPageControl.m */,
-				2FB90F0721F48AAB00084D76 /* FWSegmentedControl.h */,
-				2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */,
-				2FB90F0D21F4A00C00084D76 /* FWMarqueeLabel.h */,
-				2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */,
-				2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */,
-				2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */,
-				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
-				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
 				2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */,
+				2F71FD8822E2E64400E905BE /* FWDrawerView.h */,
+				2F71FD8922E2E64400E905BE /* FWDrawerView.m */,
+				2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */,
+				2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */,
+				2FB90F0D21F4A00C00084D76 /* FWMarqueeLabel.h */,
+				2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */,
+				2F1D984521E6FD2800769651 /* FWPageControl.h */,
+				2F1D984621E6FD2800769651 /* FWPageControl.m */,
+				2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */,
+				2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */,
+				2F1E39382178F0B80051A6BB /* FWProgressView.h */,
+				2F1E39362178F0B80051A6BB /* FWProgressView.m */,
+				2FB90F1821F55B1400084D76 /* FWQrcodeScanView.h */,
+				2FB90F1921F55B1400084D76 /* FWQrcodeScanView.m */,
+				2FB90F0721F48AAB00084D76 /* FWSegmentedControl.h */,
+				2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */,
+				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
+				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1139,7 +1130,6 @@
 				2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */,
 				2F1E626822BD4A2B00A1AB49 /* UIView+FWLayoutChain.h in Headers */,
 				2F1E625D22BCB86600A1AB49 /* UIControl+FWFramework.h in Headers */,
-				2F1E623922BA2C3200A1AB49 /* UIView+FWViewChain.h in Headers */,
 				2F1E61F822AE90F400A1AB49 /* FWAsyncUdpSocket.h in Headers */,
 				2F1E61FB22AE90F400A1AB49 /* FWAsyncSocket.h in Headers */,
 				2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */,
@@ -1503,7 +1493,6 @@
 				2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */,
 				2F03A59E216CF4B9001965A1 /* UIImageView+FWFramework.m in Sources */,
 				2F03A5EC216CF4B9001965A1 /* FWVersionManager.m in Sources */,
-				2F1E623A22BA2C3200A1AB49 /* UIView+FWViewChain.m in Sources */,
 				2F03A5BD216CF4B9001965A1 /* UIScreen+FWFramework.m in Sources */,
 				2F03A5F1216CF4B9001965A1 /* FWMutableDictionary.m in Sources */,
 				2F03A5E2216CF4B9001965A1 /* NSString+FWFramework.m in Sources */,
@@ -1524,7 +1513,6 @@
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
-				2FBFB76122C62AD000E669B6 /* UIImage+FWFramework.swift in Sources */,
 				2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */,
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,

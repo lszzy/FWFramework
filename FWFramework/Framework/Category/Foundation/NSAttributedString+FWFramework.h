@@ -11,41 +11,43 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWAttributedOption
+
+/*!
+ @brief NSAttributedString属性封装器
+ */
+@interface FWAttributedOption : NSObject
+
+// 转换为属性字典
+- (NSDictionary<NSAttributedStringKey, id> *)toDictionary;
+
+@end
+
+#pragma mark - NSAttributedString+FWFramework
+
 /*!
  @brief NSAttributedString+FWFramework
  */
 @interface NSAttributedString (FWFramework)
 
-// 快速创建NSAttributedString
-+ (instancetype)fwAttributedString:(NSString *)string;
+#pragma mark - Convert
+
+// 快速创建NSAttributedString，自定义选项
++ (instancetype)fwAttributedString:(NSString *)string withOption:(nullable FWAttributedOption *)option;
 
 // 快速创建NSAttributedString，自定义字体
-+ (instancetype)fwAttributedString:(NSString *)string
-                          withFont:(nullable UIFont *)font;
++ (instancetype)fwAttributedString:(NSString *)string withFont:(nullable UIFont *)font;
 
 // 快速创建NSAttributedString，自定义字体和颜色
-+ (instancetype)fwAttributedString:(NSString *)string
-                          withFont:(nullable UIFont *)font
-                         textColor:(nullable UIColor *)textColor;
++ (instancetype)fwAttributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
 
-@end
+#pragma mark - Size
 
-/*!
- @brief NSMutableParagraphStyle+FWFramework
- */
-@interface NSMutableParagraphStyle (FWFramework)
+// 计算所占尺寸，需设置Font等
+- (CGSize)fwSize;
 
-// 快速创建一个NSMutableParagraphStyle
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight;
-
-// 快速创建一个NSMutableParagraphStyle
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode;
-
-// 快速创建一个NSMutableParagraphStyle
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
-                                 textAlignment:(NSTextAlignment)textAlignment;
+// 计算在指定绘制区域内所占尺寸，需设置Font等
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize;
 
 @end
 

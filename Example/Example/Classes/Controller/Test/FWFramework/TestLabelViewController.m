@@ -1,0 +1,122 @@
+//
+//  TestLabelViewController.m
+//  Example
+//
+//  Created by wuyong on 2019/8/5.
+//  Copyright © 2019 wuyong.site. All rights reserved.
+//
+
+#import "TestLabelViewController.h"
+
+@interface TestLabelViewController ()
+
+@property (nonatomic, weak) UILabel *label;
+@property (nonatomic, weak) UILabel *label2;
+@property (nonatomic, weak) FWAttributedLabel *attrLabel;
+@property (nonatomic, weak) FWAttributedLabel *attrLabel2;
+@property (nonatomic, weak) UITextView *textView;
+@property (nonatomic, weak) UITextView *textView2;
+@property (nonatomic, weak) UILabel *resultLabel;
+
+@end
+
+@implementation TestLabelViewController
+
+- (void)renderView
+{
+    UILabel *label = [UILabel new];
+    _label = label;
+    label.backgroundColor = [UIColor lightGrayColor];
+    label.font = [UIFont systemFontOfSize:16];
+    label.numberOfLines = 0;
+    [self.view addSubview:label];
+    label.fwLayoutChain.leftWithInset(10).rightWithInset(10).topWithInset(10);
+    
+    UILabel *label2 = [UILabel new];
+    _label2 = label2;
+    label2.backgroundColor = [UIColor lightGrayColor];
+    label2.font = [UIFont systemFontOfSize:16];
+    label2.numberOfLines = 0;
+    [self.view addSubview:label2];
+    label2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(label, 10);
+    
+    FWAttributedLabel *attrLabel = [FWAttributedLabel new];
+    _attrLabel = attrLabel;
+    attrLabel.backgroundColor = [UIColor lightGrayColor];
+    attrLabel.font = [UIFont systemFontOfSize:16];
+    [self.view addSubview:attrLabel];
+    attrLabel.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(label2, 10);
+    
+    FWAttributedLabel *attrLabel2 = [FWAttributedLabel new];
+    _attrLabel2 = attrLabel2;
+    attrLabel2.backgroundColor = [UIColor lightGrayColor];
+    attrLabel2.numberOfLines = 0;
+    attrLabel2.font = [UIFont systemFontOfSize:16];
+    attrLabel2.lineBreakMode = NSLineBreakByCharWrapping;
+    attrLabel2.lineSpacing = 8 - attrLabel.font.fwSpaceHeight * 2;
+    [self.view addSubview:attrLabel2];
+    attrLabel2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(attrLabel, 10);
+    
+    UITextView *textView = [UITextView new];
+    _textView = textView;
+    textView.editable = NO;
+    textView.backgroundColor = [UIColor lightGrayColor];
+    textView.font = [UIFont systemFontOfSize:16];
+    [self.view addSubview:textView];
+    textView.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(attrLabel2, 10).height(120);
+    
+    UITextView *textView2 = [UITextView new];
+    _textView2 = textView2;
+    textView2.editable = NO;
+    textView2.backgroundColor = [UIColor lightGrayColor];
+    textView2.font = [UIFont systemFontOfSize:16];
+    [self.view addSubview:textView2];
+    textView2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(textView, 10).height(120);
+    
+    UILabel *resultLabel = [UILabel new];
+    _resultLabel = resultLabel;
+    resultLabel.backgroundColor = [UIColor lightGrayColor];
+    resultLabel.numberOfLines = 0;
+    resultLabel.font = [UIFont systemFontOfSize:16];
+    [self.view addSubview:resultLabel];
+    resultLabel.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(textView2, 10);
+}
+
+- (void)renderData
+{
+    NSString *text = @"I am a very long text I am a very long text I veryverylongword bad I am a very long text finish!";
+    //NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSParagraphStyleAttributeName: [NSMutableParagraphStyle fwParagraphStyleWithLineSpacing:[self.label.font fwLineSpacingWithMultiplier:1.5] textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping]}];
+    NSAttributedString *attrText = nil;
+    CGSize size = CGSizeZero;
+    NSMutableString *resultText = [NSMutableString new];
+    
+    self.label.text = text;
+    size = [self.label fwTextSize];
+    [resultText appendFormat:@"label: %@\n", NSStringFromCGSize(size)];
+    
+    self.label2.attributedText = attrText;
+    size = [self.label2 fwAttributedTextSize];
+    [resultText appendFormat:@"label2: %@\n", NSStringFromCGSize(size)];
+    
+    self.attrLabel.text = text;
+    size = [self.attrLabel fwFitSize];
+    [resultText appendFormat:@"attrLabel: %@\n", NSStringFromCGSize(size)];
+    
+    self.attrLabel2.text = text;
+    size = [self.attrLabel2 fwFitSize];
+    [resultText appendFormat:@"attrLabel2: %@\n", NSStringFromCGSize(size)];
+    
+    self.textView.text = text;
+    size = [self.textView fwTextSize];
+    [resultText appendFormat:@"textView: %@\n", NSStringFromCGSize(size)];
+    self.textView.fwLayoutChain.height(size.height);
+    
+    self.textView2.attributedText = attrText;
+    size = [self.textView2 fwAttributedTextSize];
+    [resultText appendFormat:@"textView2: %@", NSStringFromCGSize(size)];
+    self.textView2.fwLayoutChain.height(size.height);
+    
+    self.resultLabel.text = resultText;
+}
+
+@end

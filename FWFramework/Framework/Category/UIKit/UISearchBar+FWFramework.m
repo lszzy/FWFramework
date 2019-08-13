@@ -23,6 +23,31 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self fwSwizzleInstanceMethod:@selector(layoutSubviews) with:@selector(fwInnerUISearchBarLayoutSubviews)];
+        
+        // iOS13因为层级关系变化，兼容处理
+        if (@available(iOS 13, *)) {
+            [self fwSwizzleInstanceMethod:@selector(setFrame:) in:objc_getClass("UISearchBarTextField") withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+                return ^(UITextField *textField, CGRect frame) {
+                    UISearchBar *searchBar = nil;
+                    if (@available(iOS 13.0, *)) {
+                        searchBar = (UISearchBar *)textField.superview.superview.superview;
+                    } else {
+                        searchBar = (UISearchBar *)textField.superview.superview;
+                    }
+                    if ([searchBar isKindOfClass:[UISearchBar class]]) {
+                        NSValue *contentInsetValue = objc_getAssociatedObject(searchBar, @selector(fwContentInset));
+                        if (contentInsetValue) {
+                            UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                            frame = CGRectMake(contentInset.left, contentInset.top, searchBar.bounds.size.width - contentInset.left - contentInset.right, searchBar.bounds.size.height - contentInset.top - contentInset.bottom);
+                        }
+                    }
+                    
+                    void (*originalMSG)(id, SEL, CGRect);
+                    originalMSG = (void (*)(id, SEL, CGRect))originalIMP();
+                    originalMSG(textField, originalCMD, frame);
+                };
+            }];
+        }
     });
 }
 
@@ -47,11 +72,14 @@
     [self fwInnerUISearchBarLayoutSubviews];
     
     // 自定义了才处理
-    NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
-    if (contentInsetValue) {
-        UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
-        UITextField *textField = [self fwTextField];
-        textField.frame = CGRectMake(contentInset.left, contentInset.top, self.bounds.size.width - contentInset.left - contentInset.right, self.bounds.size.height - contentInset.top - contentInset.bottom);
+    if (@available(iOS 13, *)) {
+    } else {
+        NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
+        if (contentInsetValue) {
+            UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+            UITextField *textField = [self fwTextField];
+            textField.frame = CGRectMake(contentInset.left, contentInset.top, self.bounds.size.width - contentInset.left - contentInset.right, self.bounds.size.height - contentInset.top - contentInset.bottom);
+        }
     }
     
     // 自定义了才处理
@@ -82,6 +110,16 @@
     }
 }
 
+- (UITextField *)fwTextField
+{
+    return [self fwPerformPropertySelector:@"searchField"];
+}
+
+- (UIButton *)fwCancelButton
+{
+    return [self fwPerformPropertySelector:@"cancelButton"];
+}
+
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
     self.backgroundImage = [UIImage fwImageWithColor:color];
@@ -109,16 +147,6 @@
     } else {
         [self.fwCancelButton fwUnobserveProperty:@"enabled"];
     }
-}
-
-- (UITextField *)fwTextField
-{
-    return [self valueForKey:@"searchField"];
-}
-
-- (UIButton *)fwCancelButton
-{
-    return [self valueForKey:@"cancelButton"];
 }
 
 #pragma mark - Navigation

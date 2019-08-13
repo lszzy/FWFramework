@@ -147,8 +147,11 @@
 + (void)fwSetDeviceToken:(NSData *)tokenData
 {
     if (tokenData) {
-        NSString *deviceToken = [[tokenData description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-        deviceToken = [deviceToken stringByReplacingOccurrencesOfString:@" " withString:@""];
+        const unsigned *tokenBytes = (const unsigned *)[tokenData bytes];
+        NSString *deviceToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+                                 ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                                 ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                                 ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
         [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:@"FWDeviceToken"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {

@@ -9,11 +9,31 @@
 
 #import "NSAttributedString+FWFramework.h"
 
+#pragma mark - FWAttributedOption
+
+@interface FWAttributedOption ()
+
+@end
+
+@implementation FWAttributedOption
+
+- (NSDictionary<NSAttributedStringKey,id> *)toDictionary
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    return dictionary;
+}
+
+@end
+
+#pragma mark - NSAttributedString+FWFramework
+
 @implementation NSAttributedString (FWFramework)
 
-+ (instancetype)fwAttributedString:(NSString *)string
+#pragma mark - Convert
+
++ (instancetype)fwAttributedString:(NSString *)string withOption:(FWAttributedOption *)option
 {
-    return [[self alloc] initWithString:string];
+    return [[self alloc] initWithString:string attributes:[option toDictionary]];
 }
 
 + (instancetype)fwAttributedString:(NSString *)string withFont:(UIFont *)font
@@ -33,34 +53,19 @@
     return [[self alloc] initWithString:string attributes:attr];
 }
 
-@end
+#pragma mark - Size
 
-@implementation NSMutableParagraphStyle (FWFramework)
-
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
+- (CGSize)fwSize
 {
-    return [self fwParagraphStyleWithLineHeight:lineHeight
-                                  lineBreakMode:NSLineBreakByWordWrapping];
+    return [self fwSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
 }
 
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize
 {
-    return [self fwParagraphStyleWithLineHeight:lineHeight
-                                  lineBreakMode:lineBreakMode
-                                  textAlignment:NSTextAlignmentLeft];
-}
-
-+ (instancetype)fwParagraphStyleWithLineHeight:(CGFloat)lineHeight
-                                 lineBreakMode:(NSLineBreakMode)lineBreakMode
-                                 textAlignment:(NSTextAlignment)textAlignment
-{
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.minimumLineHeight = lineHeight;
-    paragraphStyle.maximumLineHeight = lineHeight;
-    paragraphStyle.lineBreakMode = lineBreakMode;
-    paragraphStyle.alignment = textAlignment;
-    return paragraphStyle;
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end

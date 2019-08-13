@@ -59,6 +59,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 添加完成Toolbar
 - (void)fwAddDoneButton:(UIBarStyle)barStyle title:(nullable NSString *)title;
 
+#pragma mark - Size
+
+// 计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整
+- (CGSize)fwTextSize;
+
+// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
+- (CGSize)fwAttributedTextSize;
+
 @end
 
 NS_ASSUME_NONNULL_END

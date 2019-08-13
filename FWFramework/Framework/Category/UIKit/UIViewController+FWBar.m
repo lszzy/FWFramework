@@ -11,6 +11,7 @@
 #import "UIScreen+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import "UIImage+FWFramework.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)
@@ -287,12 +288,15 @@
 
 - (UIView *)fwBackgroundView
 {
-    return [self valueForKey:@"_backgroundView"];
+    return [self fwPerformPropertySelector:@"_backgroundView"];
 }
 
 - (UIImageView *)fwShadowImageView
 {
-    return [self.fwBackgroundView valueForKey:@"_shadowView"];
+    if (@available(iOS 13, *)) {
+        return [self.fwBackgroundView fwPerformPropertySelector:@"_shadowView1"];
+    }
+    return [self.fwBackgroundView fwPerformPropertySelector:@"_shadowView"];
 }
 
 @end
@@ -344,24 +348,109 @@
 
 - (UIView *)fwBackgroundView
 {
-    return [self valueForKey:@"_backgroundView"];
+    return [self fwPerformPropertySelector:@"_backgroundView"];
 }
 
 - (UIImageView *)fwShadowImageView
 {
-    if (@available(iOS 10, *)) {
+    if (@available(iOS 13, *)) {
+        return [self.fwBackgroundView fwPerformPropertySelector:@"_shadowView1"];
+    } else if (@available(iOS 10, *)) {
         // iOS 10 及以后，在 UITabBar 初始化之后就能获取到 backgroundView 和 shadowView 了
-        return [self.fwBackgroundView valueForKey:@"_shadowView"];
+        return [self.fwBackgroundView fwPerformPropertySelector:@"_shadowView"];
     } else {
         // iOS 9 及以前，shadowView 要在 UITabBar 第一次 layoutSubviews 之后才会被创建，直至 UITabBarController viewWillAppear: 时仍未能获取到 shadowView，所以为了省去调用时机的考虑，这里获取不到的时候会主动触发一次 tabBar 的布局
-        UIImageView *shadowView = [self valueForKey:@"_shadowView"];
+        UIImageView *shadowView = [self fwPerformPropertySelector:@"_shadowView"];
         if (!shadowView) {
             [self setNeedsLayout];
             [self layoutIfNeeded];
-            shadowView = [self valueForKey:@"_shadowView"];
+            shadowView = [self fwPerformPropertySelector:@"_shadowView"];
         }
         return shadowView;
     }
+}
+
+@end
+
+#pragma mark - UIBarItem+FWBar
+
+@implementation UIBarItem (FWBar)
+
+- (UIView *)fwView
+{
+    if ([self isKindOfClass:[UIBarButtonItem class]]) {
+        if (((UIBarButtonItem *)self).customView != nil) {
+            return ((UIBarButtonItem *)self).customView;
+        }
+    }
+    
+    if ([self respondsToSelector:@selector(view)]) {
+        return [self fwPerformPropertySelector:@"view"];
+    }
+    return nil;
+}
+
+- (void (^)(__kindof UIBarItem *, UIView *))fwViewLoadedBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwViewLoadedBlock));
+}
+
+- (void)setFwViewLoadedBlock:(void (^)(__kindof UIBarItem *, UIView *))block
+{
+    objc_setAssociatedObject(self, @selector(fwViewLoadedBlock), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
+    UIView *view = [self fwView];
+    if (view) {
+        block(self, view);
+    } else {
+        [self fwObserveProperty:@"view" target:self action:@selector(fwViewLoaded:change:)];
+    }
+}
+
+- (void)fwViewLoaded:(UIBarItem *)object change:(NSDictionary *)change
+{
+    if (![change objectForKey:NSKeyValueChangeNewKey]) return;
+    [object fwUnobserveProperty:@"view" target:self action:@selector(fwViewLoaded:change:)];
+    
+    UIView *view = [object fwView];
+    if (view && self.fwViewLoadedBlock) {
+        self.fwViewLoadedBlock(self, view);
+    }
+}
+
+@end
+
+#pragma mark - UITabBarItem+FWBar
+
+@implementation UITabBarItem (FWBar)
+
+- (UIImageView *)fwImageView
+{
+    UIView *tabBarButton = [self fwView];
+    if (!tabBarButton) return nil;
+    
+    UIView *superview = tabBarButton;
+    if (@available(iOS 13.0, *)) {
+        // iOS 13 下如果 tabBar 是磨砂的，则每个 button 内部都会有一个磨砂，而磨砂再包裹了 imageView、label 等 subview，但某些时机后系统又会把 imageView、label 挪出来放到 button 上，所以这里做个保护
+        if ([tabBarButton.subviews.firstObject isKindOfClass:[UIVisualEffectView class]] && ((UIVisualEffectView *)tabBarButton.subviews.firstObject).contentView.subviews.count) {
+            superview = ((UIVisualEffectView *)tabBarButton.subviews.firstObject).contentView;
+        }
+    }
+    
+    for (UIView *subview in superview.subviews) {
+        if (@available(iOS 10.0, *)) {
+            // iOS10及以后，imageView都是用UITabBarSwappableImageView实现的，所以遇到这个class就直接拿
+            if ([NSStringFromClass([subview class]) isEqualToString:@"UITabBarSwappableImageView"]) {
+                return (UIImageView *)subview;
+            }
+        }
+        
+        // iOS10以前，选中的item的高亮是用UITabBarSelectionIndicatorView实现的，所以要屏蔽掉
+        if ([subview isKindOfClass:[UIImageView class]] && ![NSStringFromClass([subview class]) isEqualToString:@"UITabBarSelectionIndicatorView"]) {
+            return (UIImageView *)subview;
+        }
+    }
+    return nil;
 }
 
 @end

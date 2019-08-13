@@ -77,9 +77,9 @@
         
         NSUInteger loopCount = 0;
         NSDictionary *imageProperties = (__bridge_transfer NSDictionary *)CGImageSourceCopyProperties(source, nil);
-        NSDictionary *gifProperties = [imageProperties valueForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary];
+        NSDictionary *gifProperties = [imageProperties objectForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFDictionary];
         if (gifProperties) {
-            NSNumber *gifLoopCount = [gifProperties valueForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFLoopCount];
+            NSNumber *gifLoopCount = [gifProperties objectForKey:(__bridge_transfer NSString *)kCGImagePropertyGIFLoopCount];
             if (gifLoopCount) {
                 loopCount = gifLoopCount.unsignedIntegerValue;
             }
@@ -166,15 +166,6 @@
 
 #pragma mark - File
 
-+ (UIImage *)fwGifImageWithFile:(NSString *)path
-{
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    if (data) {
-        return [UIImage fwGifImageWithData:data];
-    }
-    return nil;
-}
-
 + (UIImage *)fwGifImageWithName:(NSString *)name
 {
     UIImage *gifImage = nil;
@@ -202,6 +193,19 @@
     }
     
     return [UIImage imageNamed:name];
+}
+
++ (UIImage *)fwGifImageWithFile:(NSString *)path
+{
+    NSString *file = path;
+    if (![file isAbsolutePath]) {
+        file = [[NSBundle mainBundle] pathForResource:file ofType:([file hasSuffix:@".gif"] ? nil : @"gif")];
+    }
+    NSData *data = [NSData dataWithContentsOfFile:file];
+    if (data) {
+        return [UIImage fwGifImageWithData:data];
+    }
+    return nil;
 }
 
 #pragma mark - Scale
