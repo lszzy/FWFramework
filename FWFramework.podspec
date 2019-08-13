@@ -8,6 +8,7 @@ Pod::Spec.new do |spec|
   spec.source              = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => spec.version, :submodules => true }
 
   spec.platform            = :ios, '8.0'
+  spec.swift_version       = '5.0'
   spec.requires_arc        = true
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
