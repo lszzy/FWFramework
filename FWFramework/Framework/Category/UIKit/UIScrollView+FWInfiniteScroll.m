@@ -116,15 +116,9 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if([keyPath isEqualToString:@"contentOffset"]) {
-        CGPoint newPoint = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
-        if (newPoint.y >= 0) {
-            if(self.progressBlock) {
-                CGFloat scrollHeight = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
-                CGFloat progress = (FWInfiniteScrollViewHeight + newPoint.y - scrollHeight) / FWInfiniteScrollViewHeight;
-                self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
-            }
-            
-            [self scrollViewDidScroll:newPoint];
+        CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
+        if (contentOffset.y >= 0) {
+            [self scrollViewDidScroll:contentOffset];
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
@@ -134,8 +128,13 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != FWInfiniteScrollStateLoading && self.enabled) {
-        CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
+        if(self.progressBlock) {
+            CGFloat scrollHeight = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
+            CGFloat progress = (FWInfiniteScrollViewHeight + contentOffset.y - scrollHeight) / FWInfiniteScrollViewHeight;
+            self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
+        }
         
+        CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
         if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
             self.state = FWInfiniteScrollStateLoading;
         else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging)
