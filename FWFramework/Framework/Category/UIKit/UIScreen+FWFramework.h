@@ -81,6 +81,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 标签栏高度
 #define FWTabBarHeight (FWIsScreenX ? 83.0 : 49.0)
 
+// 工具栏高度
+#define FWToolBarHeight (FWIsScreenX ? 78.0 : 44.0)
+
 // 顶部栏高度，包含状态栏、导航栏
 #define FWTopBarHeight (FWStatusBarHeight + FWNavigationBarHeight)
 
@@ -142,6 +145,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 标签栏高度，与是否隐藏无关
 + (CGFloat)fwTabBarHeight;
+
+// 工具栏高度，与是否隐藏无关
++ (CGFloat)fwToolBarHeight;
 
 // 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
 + (CGFloat)fwTopBarHeight;
