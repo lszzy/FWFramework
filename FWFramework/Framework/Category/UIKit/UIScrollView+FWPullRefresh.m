@@ -278,14 +278,9 @@ static CGFloat FWPullRefreshViewHeight = 60;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if([keyPath isEqualToString:@"contentOffset"]) {
-        CGPoint newPoint = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
-        if(newPoint.y <= 0) {
-            if(self.progressBlock) {
-                CGFloat progress = 1.f - (FWPullRefreshViewHeight + newPoint.y) / FWPullRefreshViewHeight;
-                self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
-            }
-            
-            [self scrollViewDidScroll:newPoint];
+        CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
+        if(contentOffset.y <= 0) {
+            [self scrollViewDidScroll:contentOffset];
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
@@ -300,8 +295,12 @@ static CGFloat FWPullRefreshViewHeight = 60;
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != FWPullRefreshStateLoading) {
-        CGFloat scrollOffsetThreshold = self.frame.origin.y - self.originalTopInset;
+        if(self.progressBlock) {
+            CGFloat progress = 1.f - (FWPullRefreshViewHeight + contentOffset.y) / FWPullRefreshViewHeight;
+            self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
+        }
         
+        CGFloat scrollOffsetThreshold = self.frame.origin.y - self.originalTopInset;
         if(!self.scrollView.isDragging && self.state == FWPullRefreshStateTriggered)
             self.state = FWPullRefreshStateLoading;
         else if(contentOffset.y < scrollOffsetThreshold && self.scrollView.isDragging && self.state == FWPullRefreshStateStopped)
