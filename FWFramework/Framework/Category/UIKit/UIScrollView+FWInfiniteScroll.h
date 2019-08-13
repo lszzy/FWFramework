@@ -18,11 +18,18 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
     FWInfiniteScrollStateAll = 10
 };
 
+/*!
+ @brief 上拉追加视图，默认高度60
+ */
 @interface FWInfiniteScrollView : UIView
 
+@property (class, nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
-@property (nonatomic, readonly) FWInfiniteScrollState state;
 @property (nonatomic, readwrite) BOOL enabled;
+
+@property (nonatomic, readonly) FWInfiniteScrollState state;
+@property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
+@property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
 
 - (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
 

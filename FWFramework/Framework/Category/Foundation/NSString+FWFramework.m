@@ -279,16 +279,14 @@
 
 - (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize
 {
-    return [self fwSizeWithFont:font drawSize:drawSize lineBreak:NSLineBreakByWordWrapping];
+    return [self fwSizeWithFont:font drawSize:drawSize paragraphStyle:nil];
 }
 
-- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize lineBreak:(NSLineBreakMode)breakMode
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize paragraphStyle:(NSParagraphStyle *)paragraphStyle
 {
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     attr[NSFontAttributeName] = font;
-    if (breakMode != NSLineBreakByWordWrapping) {
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        paragraphStyle.lineBreakMode = breakMode;
+    if (paragraphStyle != nil) {
         attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
     CGSize size = [self boundingRectWithSize:drawSize

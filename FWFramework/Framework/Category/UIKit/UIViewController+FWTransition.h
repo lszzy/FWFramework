@@ -101,23 +101,29 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 百分比交互转场
 @interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
-// 设置交互方向，默认下滑Down
+// 设置交互方向，默认下滑Down。可通过percentBlock和transitionBlock实现多个方向交互
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
 // 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
 @property (nullable, nonatomic, copy) void(^interactiveBlock)(void);
 
-// 自定义进度计算方法，默认根据translation计算进度
+// 自定义进度计算方法，默认根据direction和translation计算进度
 @property (nullable, nonatomic, copy) CGFloat(^percentBlock)(UIPanGestureRecognizer *sender);
+
+// 自定义转场动画动作句柄，比如指定转场动画方向等。可通过isInteractive区分是否交互转场
+@property (nullable, nonatomic, copy) void(^transitionBlock)(FWAnimatedTransition *transition);
 
 // 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.3
 @property (nonatomic, assign) CGFloat completionPercent;
 
-// 是否正在交互中，手势开始才会标记YES，手势结束标记NO
+// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
 @property (nonatomic, assign, readonly) BOOL isInteractive;
 
+// 正在交互方向，手势开始才会标记为滑动方向，手势结束标记为0
+@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection interactiveDirection;
+
 // 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
-- (void)interactWithViewController:(nullable UIViewController *)viewController;
+- (nullable UIPanGestureRecognizer *)interactWithViewController:(nullable UIViewController *)viewController;
 
 @end
 

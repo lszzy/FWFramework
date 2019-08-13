@@ -33,8 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIPanGestureRecognizer (FWFramework)
 
-// 当前滑动方向，失败返回0
+// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
 - (UISwipeGestureRecognizerDirection)fwSwipeDirection;
+
+// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
+- (CGFloat)fwSwipePercent;
 
 /*!
  @brief 设置抽屉拖拽效果。如果view为滚动视图，自动设置delegate处理与滚动视图pan手势冲突的问题

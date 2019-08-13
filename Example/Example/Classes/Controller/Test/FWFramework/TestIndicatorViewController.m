@@ -37,8 +37,8 @@
                                          @[@"进度动画", @"onProgress"],
                                          @[@"加载动画(window)", @"onLoadingWindow"],
                                          @[@"进度动画(window)", @"onProgressWindow"],
-                                         @[@"单行吐司", @"onToast"],
-                                         @[@"多行吐司", @"onToast2"],
+                                         @[@"单行吐司(可点击)", @"onToast"],
+                                         @[@"多行吐司(默认不可点击)", @"onToast2"],
                                          ]];
 }
 
@@ -163,8 +163,10 @@
 - (void)onToast
 {
     self.view.tag = 100;
-    NSString *text = @"吐司消息";
-    [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:text ? text : @""]];
+    static int count = 0;
+    NSString *text = [NSString stringWithFormat:@"吐司消息%@", @(++count)];
+    UIView *toastView = [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:text ? text : @""]];
+    toastView.userInteractionEnabled = NO;
     [self.view fwHideToastAfterDelay:2.0 completion:nil];
 }
 

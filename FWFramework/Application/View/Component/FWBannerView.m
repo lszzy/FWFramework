@@ -10,7 +10,8 @@
 #import "FWBannerView.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
-#import "UIImageView+FWNetwork.h"
+#import "UIImage+FWFramework.h"
+#import "UIImageView+FWFramework.h"
 #import "FWPageControl.h"
 
 #pragma mark - FWBannerViewFlowLayout
@@ -325,6 +326,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     mainView.pagingEnabled = YES;
     mainView.showsHorizontalScrollIndicator = NO;
     mainView.showsVerticalScrollIndicator = NO;
+    if (@available(iOS 11.0, *)) {
+        mainView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [mainView registerClass:[FWBannerViewCell class] forCellWithReuseIdentifier:FWBannerViewCellID];
     
     mainView.dataSource = self;
@@ -501,9 +505,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _itemSize = itemSize;
     
     _flowLayout.itemSize = itemSize;
-    if (!self.itemPagingEnabled) {
-        self.itemPagingEnabled = YES;
-    }
+    self.itemPagingEnabled = YES;
 }
 
 - (void)setItemSpacing:(CGFloat)itemSpacing
@@ -511,9 +513,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _itemSpacing = itemSpacing;
     
     _flowLayout.minimumLineSpacing = itemSpacing;
-    if (!self.itemPagingEnabled) {
-        self.itemPagingEnabled = YES;
-    }
+    self.itemPagingEnabled = YES;
 }
 
 - (void)setItemPagingCenter:(BOOL)itemPagingCenter
@@ -521,9 +521,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _itemPagingCenter = itemPagingCenter;
     
     _flowLayout.pagingCenter = itemPagingCenter;
-    if (!self.itemPagingEnabled) {
-        self.itemPagingEnabled = YES;
-    }
+    self.itemPagingEnabled = YES;
 }
 
 - (void)setAutoScrollTimeInterval:(CGFloat)autoScrollTimeInterval
@@ -556,20 +554,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _imageURLStringsGroup = imageURLStringsGroup;
     
-    NSMutableArray *temp = [NSMutableArray new];
+    NSMutableArray *imagePaths = [NSMutableArray new];
     [_imageURLStringsGroup enumerateObjectsUsingBlock:^(NSString * obj, NSUInteger idx, BOOL * stop) {
-        NSString *urlString;
         if ([obj isKindOfClass:[NSString class]]) {
-            urlString = obj;
+            [imagePaths addObject:obj];
         } else if ([obj isKindOfClass:[NSURL class]]) {
-            NSURL *url = (NSURL *)obj;
-            urlString = [url absoluteString];
-        }
-        if (urlString) {
-            [temp addObject:urlString];
+            NSString *urlString = ((NSURL *)obj).absoluteString;
+            if (urlString) {
+                [imagePaths addObject:urlString];
+            }
+        } else if ([obj isKindOfClass:[UIImage class]]) {
+            [imagePaths addObject:obj];
         }
     }];
-    self.imagePathsGroup = [temp copy];
+    self.imagePathsGroup = [imagePaths copy];
 }
 
 - (void)setLocalizationImageNamesGroup:(NSArray *)localizationImageNamesGroup
@@ -809,14 +807,11 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         if ([imagePath hasPrefix:@"http"]) {
             [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
         } else {
-            UIImage *image = [UIImage imageNamed:imagePath];
-            if (!image) {
-                image = [UIImage imageWithContentsOfFile:imagePath];
-            }
-            cell.imageView.image = image ?: self.placeholderImage;
+            UIImage *image = [UIImage fwImageMake:imagePath];
+            cell.imageView.fwImage = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
-        cell.imageView.image = (UIImage *)imagePath;
+        cell.imageView.fwImage = (UIImage *)imagePath;
     }
     
     if (_titlesGroup.count && itemIndex < _titlesGroup.count) {

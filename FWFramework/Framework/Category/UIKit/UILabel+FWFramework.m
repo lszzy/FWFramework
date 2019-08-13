@@ -108,40 +108,44 @@
 
 - (CGSize)fwTextSize
 {
-    return [self fwTextSizeWithString:self.text];
-}
-
-- (CGSize)fwTextSizeWithString:(NSString *)string
-{
-    // 兼容自动布局，初始化frame
     if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
         [self setNeedsLayout];
         [self layoutIfNeeded];
     }
     
-    CGSize boundingSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
-    return [self fwTextSizeWithString:string boundingSize:boundingSize];
-}
-
-- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize
-{
-    return [self fwTextSizeWithString:string boundingSize:boundingSize lineBreak:NSLineBreakByWordWrapping];
-}
-
-- (CGSize)fwTextSizeWithString:(NSString *)string boundingSize:(CGSize)boundingSize lineBreak:(NSLineBreakMode)breakMode
-{
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     attr[NSFontAttributeName] = self.font;
-    if (breakMode != NSLineBreakByWordWrapping) {
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        paragraphStyle.lineBreakMode = breakMode;
+    if (self.lineBreakMode != NSLineBreakByWordWrapping) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        // 由于lineBreakMode默认值为TruncatingTail，多行显示时仍然按照WordWrapping计算
+        if (self.numberOfLines != 1 && self.lineBreakMode == NSLineBreakByTruncatingTail) {
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        } else {
+            paragraphStyle.lineBreakMode = self.lineBreakMode;
+        }
         attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
-    CGSize size = [string boundingRectWithSize:boundingSize
-                                       options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                    attributes:attr
-                                       context:nil].size;
-    return CGSizeMake(MIN(boundingSize.width, ceilf(size.width)), MIN(boundingSize.height, ceilf(size.height)));
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    CGSize size = [self.text boundingRectWithSize:drawSize
+                                          options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attr
+                                          context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+- (CGSize)fwAttributedTextSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    CGSize size = [self.attributedText boundingRectWithSize:drawSize
+                                                    options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                    context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end

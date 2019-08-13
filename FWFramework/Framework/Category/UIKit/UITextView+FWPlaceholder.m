@@ -7,6 +7,7 @@
 //
 
 #import "UITextView+FWPlaceholder.h"
+#import "NSObject+FWRuntime.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 
@@ -24,7 +25,8 @@
         dispatch_once(&onceToken, ^{
             UITextField *textField = [[UITextField alloc] init];
             textField.placeholder = @" ";
-            defaultPlaceholderColor = [textField valueForKeyPath:@"_placeholderLabel.textColor"];
+            UILabel *placeholderLabel = [textField fwPerformPropertySelector:@"_placeholderLabel"];
+            defaultPlaceholderColor = placeholderLabel.textColor;
         });
         
         NSAttributedString *originalText = self.attributedText;

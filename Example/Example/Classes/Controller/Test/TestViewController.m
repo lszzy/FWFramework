@@ -75,6 +75,7 @@
                                              @[@"UIViewController(FWTransition)", @"TestTransitionViewController"],
                                              @[@"UIViewController(FWWorkflow)", @"TestWorkflowViewController"],
                                              @[@"UITextField(FWKeyboard)", @"TestKeyboardViewController"],
+                                             @[@"UILabel(FWFramework)", @"TestLabelViewController"],
                                              @[@"UIView+FWGradient", @"TestGradientViewController"],
                                              @[@"NSURL(FWVendor)", @"TestUrlViewController"],
                                              @[@"FWAsyncSocket", @"TestSocketViewController"],

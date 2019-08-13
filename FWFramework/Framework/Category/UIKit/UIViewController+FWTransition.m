@@ -59,7 +59,11 @@
         BOOL transitionIn = (animatedTransition.type == FWAnimatedTransitionTypePresent || animatedTransition.type == FWAnimatedTransitionTypePush);
         id<UIViewControllerInteractiveTransitioning> interactiveTransition = transitionIn ? animatedTransition.inInteractiveTransition : animatedTransition.outInteractiveTransition;
         if ([interactiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-            return ((FWPercentInteractiveTransition *)interactiveTransition).isInteractive ? interactiveTransition : nil;
+            FWPercentInteractiveTransition *percentTransition = (FWPercentInteractiveTransition *)interactiveTransition;
+            if (percentTransition.transitionBlock) {
+                percentTransition.transitionBlock(animatedTransition);
+            }
+            return percentTransition.isInteractive ? percentTransition : nil;
         }
         return interactiveTransition;
     }
@@ -76,8 +80,9 @@
     // 自动设置和绑定out交互转场，在dismiss前设置生效。in交互转场需要在present之前设置才能生效
     if (!self.isSystem && [self.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
         FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.outInteractiveTransition;
+        __weak UIViewController *weakPresented = presented;
         interactiveTransition.interactiveBlock = ^{
-            [presented dismissViewControllerAnimated:YES completion:nil];
+            [weakPresented dismissViewControllerAnimated:YES completion:nil];
         };
         [interactiveTransition interactWithViewController:presented];
     }
@@ -371,14 +376,15 @@
     return self;
 }
 
-- (void)interactWithViewController:(UIViewController *)viewController
+- (UIPanGestureRecognizer *)interactWithViewController:(UIViewController *)viewController
 {
     if (!viewController.view) {
-        return;
+        return nil;
     }
     
     UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
     [viewController.view addGestureRecognizer:gestureRecognizer];
+    return gestureRecognizer;
 }
 
 - (void)gestureRecognizeAction:(UIPanGestureRecognizer *)gestureRecognizer
@@ -386,6 +392,7 @@
     // 自定义percent计算规则
     if (self.percentBlock) {
         _percent = self.percentBlock(gestureRecognizer);
+    // 默认计算当前方向上的进度
     } else {
         CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
         switch (self.direction) {
@@ -408,6 +415,22 @@
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
+            // 计算实际交互方向，如果多个方向交互，取绝对值较大的一方
+            CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
+            if (fabs(transition.x) > fabs(transition.y)) {
+                if (transition.x < 0.0f) {
+                    _interactiveDirection = UISwipeGestureRecognizerDirectionLeft;
+                } else if (transition.x > 0.0f) {
+                    _interactiveDirection = UISwipeGestureRecognizerDirectionRight;
+                }
+            } else {
+                if (transition.y > 0.0f) {
+                    _interactiveDirection = UISwipeGestureRecognizerDirectionDown;
+                } else if (transition.y < 0.0f) {
+                    _interactiveDirection = UISwipeGestureRecognizerDirectionUp;
+                }
+            }
+            
             if (self.interactiveBlock) {
                 self.interactiveBlock();
             }
@@ -419,6 +442,8 @@
         }
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
+            _interactiveDirection = 0;
+
             if (!_displayLink) {
                 // displayLink强引用self，会循环引用，所以action中需要invalidate
                 _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction)];

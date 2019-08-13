@@ -10,6 +10,7 @@
 #import "UIView+FWIndicator.h"
 #import "UIView+FWAutoLayout.h"
 #import "NSTimer+FWFramework.h"
+#import <objc/runtime.h>
 
 @implementation UIView (FWIndicator)
 
@@ -119,12 +120,14 @@
     return indicatorView;
 }
 
-- (void)fwHideIndicator
+- (BOOL)fwHideIndicator
 {
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
         [indicatorView removeFromSuperview];
+        return YES;
     }
+    return NO;
 }
 
 #pragma mark - Toast
@@ -149,7 +152,7 @@
     // 移除之前的视图
     [self fwHideToast];
     
-    // 背景容器，不可点击
+    // 背景容器，默认不可点击
     UIButton *toastView = [UIButton fwAutoLayoutView];
     toastView.userInteractionEnabled = YES;
     toastView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
@@ -182,27 +185,40 @@
     return toastView;
 }
 
-- (void)fwHideToast
+- (BOOL)fwHideToast
 {
     UIButton *toastView = [self viewWithTag:2031];
     if (toastView) {
         [toastView removeFromSuperview];
+        
+        NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideToastAfterDelay:completion:));
+        if (toastTimer) {
+            [toastTimer invalidate];
+            objc_setAssociatedObject(self, @selector(fwHideToastAfterDelay:completion:), nil, OBJC_ASSOCIATION_ASSIGN);
+        }
+        
+        return YES;
     }
+    return NO;
 }
 
-- (void)fwHideToastAfterDelay:(NSTimeInterval)delay
+- (BOOL)fwHideToastAfterDelay:(NSTimeInterval)delay
                    completion:(void (^)(void))completion
 {
-    // 创建Common模式Timer，避免ScrollView滚动时不触发
-    [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
-        UIButton *toastView = [self viewWithTag:2031];
-        if (toastView) {
-            [toastView removeFromSuperview];
-            if (completion) {
+    UIButton *toastView = [self viewWithTag:2031];
+    if (toastView) {
+        // 创建Common模式Timer，避免ScrollView滚动时不触发
+        NSTimer *toastTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
+            BOOL hideToast = [self fwHideToast];
+            if (hideToast && completion) {
                 completion();
             }
-        }
-    } repeats:NO];
+        } repeats:NO];
+        objc_setAssociatedObject(self, @selector(fwHideToastAfterDelay:completion:), toastTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+        return YES;
+    }
+    return NO;
 }
 
 @end
