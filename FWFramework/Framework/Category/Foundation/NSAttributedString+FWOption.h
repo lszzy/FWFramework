@@ -18,10 +18,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWAttributedOption : NSObject
 
+// Appearance单例，统一设置样式
++ (instancetype)appearance;
+
 // 转换为属性字典
 - (NSDictionary<NSAttributedStringKey, id> *)toDictionary;
 
 @end
+
+#pragma mark - NSAttributedString+FWOption
 
 /*!
  @brief NSAttributedString+FWOption
