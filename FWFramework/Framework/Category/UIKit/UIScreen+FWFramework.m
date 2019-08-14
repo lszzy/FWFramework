@@ -182,6 +182,15 @@
     }
 }
 
+- (CGFloat)fwToolBarHeight
+{
+    if (self.navigationController.toolbarHidden) {
+        return 0.0;
+    } else {
+        return self.navigationController.toolbar.frame.size.height;
+    }
+}
+
 - (CGFloat)fwTopBarHeight
 {
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
