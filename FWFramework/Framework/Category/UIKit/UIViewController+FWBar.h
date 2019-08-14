@@ -36,6 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 标签栏是否隐藏，默认为NO。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
 
+// 工具栏是否隐藏，默认为YES。需设置toolbarItems
+@property (nonatomic, assign) BOOL fwToolBarHidden;
+
+// 动态设置工具栏是否隐藏，切换动画不突兀
+- (void)fwSetToolBarHidden:(BOOL)hidden animated:(BOOL)animated;
+
 // 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 - (void)fwSetBarExtendEdge:(UIRectEdge)edge;
 

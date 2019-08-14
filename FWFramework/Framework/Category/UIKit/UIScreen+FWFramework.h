@@ -177,6 +177,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 当前标签栏高度，隐藏为0
 - (CGFloat)fwTabBarHeight;
 
+// 当前工具栏高度，隐藏为0
+- (CGFloat)fwToolBarHeight;
+
 // 顶部栏高度，包含状态栏、导航栏，隐藏为0
 - (CGFloat)fwTopBarHeight;
 

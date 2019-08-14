@@ -106,6 +106,21 @@
     self.tabBarController.tabBar.hidden = fwTabBarHidden;
 }
 
+- (BOOL)fwToolBarHidden
+{
+    return self.navigationController.toolbarHidden;
+}
+
+- (void)setFwToolBarHidden:(BOOL)fwToolBarHidden
+{
+    self.navigationController.toolbarHidden = fwToolBarHidden;
+}
+
+- (void)fwSetToolBarHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    [self.navigationController setToolbarHidden:hidden animated:animated];
+}
+
 - (void)fwSetBarExtendEdge:(UIRectEdge)edge
 {
     self.edgesForExtendedLayout = edge;
