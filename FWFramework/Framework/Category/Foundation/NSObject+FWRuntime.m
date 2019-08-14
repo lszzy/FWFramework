@@ -9,6 +9,7 @@
 
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
+#import <objc/message.h>
 #import <UIKit/UIKit.h>
 
 @implementation NSObject (FWRuntime)
@@ -194,6 +195,26 @@
     }
 #pragma clang diagnostic pop
     return nil;
+}
+
+- (id)fwPerformSuperSelector:(SEL)aSelector
+{
+    struct objc_super mySuper;
+    mySuper.receiver = self;
+    mySuper.super_class = class_getSuperclass(object_getClass(self));
+    
+    id (*objc_superAllocTyped)(struct objc_super *, SEL) = (void *)&objc_msgSendSuper;
+    return (*objc_superAllocTyped)(&mySuper, aSelector);
+}
+
+- (id)fwPerformSuperSelector:(SEL)aSelector withObject:(id)object
+{
+    struct objc_super mySuper;
+    mySuper.receiver = self;
+    mySuper.super_class = class_getSuperclass(object_getClass(self));
+    
+    id (*objc_superAllocTyped)(struct objc_super *, SEL, ...) = (void *)&objc_msgSendSuper;
+    return (*objc_superAllocTyped)(&mySuper, aSelector, object);
 }
 
 - (id)fwPerformPropertySelector:(NSString *)name

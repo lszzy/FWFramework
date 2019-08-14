@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWIsIpad \
     (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
 
-// iOS系统版本
+// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
 #define FWIosVersion \
     [[[UIDevice currentDevice] systemVersion] floatValue]
 
