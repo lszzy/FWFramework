@@ -110,6 +110,16 @@
 #pragma mark - Animation
 
 - (void)fwAddAnimationWithBlock:(void (^)(void))block
+                     completion:(void (^)(BOOL finished))completion
+{
+    [UIView animateWithDuration:0.25
+                          delay:0
+                        options:(7<<16)
+                     animations:block
+                     completion:completion];
+}
+
+- (void)fwAddAnimationWithBlock:(void (^)(void))block
                        duration:(NSTimeInterval)duration
                      completion:(void (^)(BOOL finished))completion
 {
