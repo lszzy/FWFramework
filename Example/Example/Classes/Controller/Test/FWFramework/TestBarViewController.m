@@ -113,6 +113,7 @@ FWPropertyWeak(UILabel *, frameLabel);
     } else {
         [self.dataList addObject:@[@"Dismiss", @"onDismiss"]];
     }
+    [self.dataList addObject:@[@"Orientation", @"onOrientation"]];
 }
 
 #pragma mark - TableView
@@ -201,6 +202,15 @@ FWPropertyWeak(UILabel *, frameLabel);
 - (void)onTransitionBar
 {
     [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
+}
+
+- (void)onOrientation
+{
+    if ([UIDevice fwIsDeviceLandscape]) {
+        [UIDevice fwSetDeviceOrientation:UIDeviceOrientationPortrait];
+    } else {
+        [UIDevice fwSetDeviceOrientation:UIDeviceOrientationLandscapeLeft];
+    }
 }
 
 @end

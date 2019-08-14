@@ -75,6 +75,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 设备是否横屏，无论支不支持横屏
 + (BOOL)fwIsDeviceLandscape;
 
+// 设置界面方向，支持旋转方向时生效
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
+
 #pragma mark - Version
 
 // iOS系统版本
