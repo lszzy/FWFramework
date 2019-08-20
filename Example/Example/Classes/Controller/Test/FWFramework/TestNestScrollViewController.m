@@ -213,21 +213,36 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    /*
-    // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
-    UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
-    if (direction == UISwipeGestureRecognizerDirectionLeft ||
-        direction == UISwipeGestureRecognizerDirectionRight) {
-        return NO;
-    }*/
-    
-    // nestView拖动中不能同时响应手势
-    UIGestureRecognizerState state = self.nestView.panGestureRecognizer.state;
-    if (state != UIGestureRecognizerStatePossible) {
-        return NO;
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        if (self.scrollView.contentOffset.y == HoverMaxY) {
+            return YES;
+        }
     }
-    
-    return YES;
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+        if (scrollView.contentOffset.y > 0) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        if (self.scrollView.contentOffset.y != HoverMaxY) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate
