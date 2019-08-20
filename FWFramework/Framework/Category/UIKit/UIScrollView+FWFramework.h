@@ -85,8 +85,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Gesture
 
+// 设置pan手势识别代理，注意不能设置为scrollView自身
+@property (nullable, nonatomic, weak) id<UIGestureRecognizerDelegate> fwPanGestureRecognizerDelegate;
+
 // 是否允许同时识别多个手势
 @property (nullable, nonatomic, copy) BOOL (^fwShouldRecognizeSimultaneously)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
+
+// 是否另一个手势识别失败后，才能识别pan手势
+@property (nullable, nonatomic, copy) BOOL (^fwShouldRequireFailure)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
+
+// 是否pan手势识别失败后，才能识别另一个手势
+@property (nullable, nonatomic, copy) BOOL (^fwShouldBeRequiredToFail)(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer);
 
 #pragma mark - Hover
 

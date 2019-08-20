@@ -9,8 +9,8 @@
 #import "UIScrollView+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIGestureRecognizer+FWFramework.h"
-#import <objc/runtime.h>
 #import "NSObject+FWRuntime.h"
+#import <objc/runtime.h>
 
 @implementation UIScrollView (FWFramework)
 
@@ -18,7 +18,14 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(gestureRecognizerShouldBegin:) with:@selector(fwInnerGestureRecognizerShouldBegin:)];
         [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
+        [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldRequireFailureOfGestureRecognizer:)];
+        [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)];
+        [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldReceiveTouch:) with:@selector(fwInnerGestureRecognizer:shouldReceiveTouch:)];
+        if (@available(iOS 9.0, *)) {
+            [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldReceivePress:) with:@selector(fwInnerGestureRecognizer:shouldReceivePress:)];
+        }
     });
 }
 
@@ -232,6 +239,16 @@
 
 #pragma mark - Gesture
 
+- (id<UIGestureRecognizerDelegate>)fwPanGestureRecognizerDelegate
+{
+    return objc_getAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate));
+}
+
+- (void)setFwPanGestureRecognizerDelegate:(id<UIGestureRecognizerDelegate>)fwPanGestureRecognizerDelegate
+{
+    objc_setAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate), fwPanGestureRecognizerDelegate, OBJC_ASSOCIATION_ASSIGN);
+}
+
 - (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRecognizeSimultaneously
 {
     return objc_getAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously));
@@ -242,14 +259,93 @@
     objc_setAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously), fwShouldRecognizeSimultaneously, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRequireFailure
+{
+    return objc_getAssociatedObject(self, @selector(fwShouldRequireFailure));
+}
+
+- (void)setFwShouldRequireFailure:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRequireFailure
+{
+    objc_setAssociatedObject(self, @selector(fwShouldRequireFailure), fwShouldRequireFailure, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldBeRequiredToFail
+{
+    return objc_getAssociatedObject(self, @selector(fwShouldBeRequiredToFail));
+}
+
+- (void)setFwShouldBeRequiredToFail:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldBeRequiredToFail
+{
+    objc_setAssociatedObject(self, @selector(fwShouldBeRequiredToFail), fwShouldBeRequiredToFail, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (BOOL)fwInnerGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
+        return [self.fwPanGestureRecognizerDelegate gestureRecognizerShouldBegin:gestureRecognizer];
+    }
+    
+    return [self fwInnerGestureRecognizerShouldBegin:gestureRecognizer];
+}
+
 - (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
+    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
+        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
+    }
+    
     BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously));
     if (shouldBlock) {
         return shouldBlock(gestureRecognizer, otherGestureRecognizer);
     }
     
     return [self fwInnerGestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
+}
+
+- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)]) {
+        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
+    }
+    
+    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldRequireFailure));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
+    }
+    
+    return [self fwInnerGestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
+}
+
+- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)]) {
+        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
+    }
+    
+    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldBeRequiredToFail));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
+    }
+    
+    return [self fwInnerGestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
+}
+
+- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
+    }
+    
+    return [self fwInnerGestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
+}
+
+- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceivePress:(UIPress *)press API_AVAILABLE(ios(9.0))
+{
+    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldReceivePress:)]) {
+        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldReceivePress:press];
+    }
+    
+    return [self fwInnerGestureRecognizer:gestureRecognizer shouldReceivePress:press];
 }
 
 #pragma mark - Hover

@@ -13,7 +13,6 @@
 
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
-@property (nonatomic, copy) void (^scrollViewDidScrollBlock)(UIScrollView *scrollView);
 
 @end
 
@@ -23,13 +22,6 @@
 {
     for (int i = 0; i < self.rows; i++) {
         [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
-    }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (self.scrollViewDidScrollBlock) {
-        self.scrollViewDidScrollBlock(scrollView);
     }
 }
 
@@ -60,14 +52,12 @@
 
 #define HeaderViewHeight 150
 #define SegmentViewHeight 50
-#define NavigationViewHeight (FWStatusBarHeight + FWNavigationBarHeight)
+#define NavigationViewHeight FWTopBarHeight
 #define CartViewHeight FWTabBarHeight
-#define HoverMaxY (self.isTop ? (HeaderViewHeight - NavigationViewHeight) : HeaderViewHeight)
+#define HoverMaxY (HeaderViewHeight - NavigationViewHeight)
 #define ChildViewHeight (FWScreenHeight - NavigationViewHeight - SegmentViewHeight)
 
-@interface TestNestScrollViewController () <UIScrollViewDelegate>
-
-@property (nonatomic, assign) BOOL isTop;
+@interface TestNestScrollViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *segmentView;
 @property (nonatomic, strong) UIView *hoverView;
@@ -83,7 +73,6 @@
 @property (nonatomic, strong) TestNestChildController *shopController;
 
 @property (nonatomic, assign) NSInteger segmentIndex;
-@property (nonatomic, strong) UIScrollView *segmentScrollView;
 
 @end
 
@@ -93,60 +82,23 @@
 {
     self = [super init];
     if (self) {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-        [self fwSetBackBarTitle:@""];
+        [self fwSetBarExtendEdge:UIRectEdgeTop];
     }
     return self;
 }
 
-- (void)setIsTop:(BOOL)isTop
+- (void)viewDidAppear:(BOOL)animated
 {
-    _isTop = isTop;
-    
-    if (isTop) {
-        [self fwSetBarExtendEdge:UIRectEdgeTop];
-    }
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
+    [super viewDidAppear:animated];
     [self.navigationController.navigationBar fwSetBackgroundClear];
-    
-    FWWeakifySelf();
-    [self fwSetRightBarItem:@"切换" block:^(id sender) {
-        FWStrongifySelf();
-        
-        TestNestScrollViewController *viewController = [TestNestScrollViewController new];
-        viewController.isTop = !self.isTop;
-        [self fwOpenViewController:viewController animated:YES];
-    }];
 }
 
 - (void)renderScrollLayout
 {
     [super renderScrollLayout];
-    
+
     self.scrollView.delegate = self;
-    self.scrollView.fwTempObject = @YES;
-    FWWeakifySelf();
-    self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
-        FWStrongifySelf();
-        /*
-        // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
-        UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
-        if (direction == UISwipeGestureRecognizerDirectionLeft ||
-            direction == UISwipeGestureRecognizerDirectionRight) {
-            return NO;
-        }*/
-        // nestView拖动中不能同时响应手势
-        UIGestureRecognizerState state = self.nestView.panGestureRecognizer.state;
-        if (state != UIGestureRecognizerStatePossible) {
-            return NO;
-        }
-        return YES;
-    };
+    self.scrollView.fwPanGestureRecognizerDelegate = self;
     
     UIImageView *imageView = [UIImageView fwAutoLayoutView];
     imageView.image = [UIImage imageNamed:@"public_picture"];
@@ -236,31 +188,18 @@
     self.orderController = [TestNestChildController new];
     self.orderController.rows = 30;
     self.orderController.section = YES;
-    FWWeakifySelf();
-    self.orderController.scrollViewDidScrollBlock = ^(UIScrollView *scrollView) {
-        FWStrongifySelf();
-        [self scrollViewDidScroll:scrollView];
-    };
     [self addChildViewController:self.orderController];
     [self.nestView addSubview:self.orderController.view];
     self.orderController.view.frame = CGRectMake(0, 0, FWScreenWidth, ChildViewHeight - CartViewHeight);
     
     self.reviewController = [TestNestChildController new];
     self.reviewController.rows = 50;
-    self.reviewController.scrollViewDidScrollBlock = ^(UIScrollView *scrollView) {
-        FWStrongifySelf();
-        [self scrollViewDidScroll:scrollView];
-    };
     [self addChildViewController:self.reviewController];
     [self.nestView addSubview:self.reviewController.view];
     self.reviewController.view.frame = CGRectMake(FWScreenWidth, 0, FWScreenWidth, ChildViewHeight);
     
     self.shopController = [TestNestChildController new];
     self.shopController.rows = 5;
-    self.shopController.scrollViewDidScrollBlock = ^(UIScrollView *scrollView) {
-        FWStrongifySelf();
-        [self scrollViewDidScroll:scrollView];
-    };
     [self addChildViewController:self.shopController];
     [self.nestView addSubview:self.shopController.view];
     self.shopController.view.frame = CGRectMake(FWScreenWidth * 2, 0, FWScreenWidth, ChildViewHeight);
@@ -270,6 +209,27 @@
     self.segmentIndex = 0;
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    /*
+    // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
+    UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
+    if (direction == UISwipeGestureRecognizerDirectionLeft ||
+        direction == UISwipeGestureRecognizerDirectionRight) {
+        return NO;
+    }*/
+    
+    // nestView拖动中不能同时响应手势
+    UIGestureRecognizerState state = self.nestView.panGestureRecognizer.state;
+    if (state != UIGestureRecognizerStatePossible) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -277,7 +237,7 @@
     // 主视图
     if (scrollView == self.scrollView) {
         // 导航栏透明度
-        CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - (self.isTop ? NavigationViewHeight : 0));
+        CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
         if (progress >= 1) {
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
         } else if (progress >= 0 && progress < 1) {
@@ -285,26 +245,11 @@
         }
         
         // 不能滚动时固定顶部
-        if (![scrollView.fwTempObject boolValue]) {
-            scrollView.contentOffset = CGPointMake(0, HoverMaxY);
+        if (scrollView.contentOffset.y < 0) {
+            scrollView.contentOffset = CGPointMake(0, 0);
         // 固定在悬停位置
-        } else if (scrollView.contentOffset.y >= HoverMaxY) {
+        } else if (scrollView.contentOffset.y > HoverMaxY) {
             scrollView.contentOffset = CGPointMake(0, HoverMaxY);
-            scrollView.fwTempObject = @NO;
-            self.segmentScrollView.fwTempObject = @YES;
-        }
-    }
-    
-    // 子视图
-    if (scrollView == self.segmentScrollView) {
-        // 子视图不可滚动时，固定在顶部
-        if (![scrollView.fwTempObject boolValue]) {
-            scrollView.contentOffset = CGPointZero;
-        // 子视图滚动到顶部时固定，标记主视图可滚动
-        } else if (scrollView.contentOffset.y <= 0) {
-            scrollView.contentOffset = CGPointZero;
-            self.scrollView.fwTempObject = @YES;
-            scrollView.fwTempObject = @NO;
         }
     }
 }
@@ -333,19 +278,16 @@
         self.reviewButton.selected = NO;
         self.shopButton.selected = NO;
         self.orderButton.selected = YES;
-        self.segmentScrollView = self.orderController.tableView;
     } else if (segmentIndex == 1) {
         self.cartView.hidden = YES;
         self.orderButton.selected = NO;
         self.shopButton.selected = NO;
         self.reviewButton.selected = YES;
-        self.segmentScrollView = self.reviewController.tableView;
     } else {
         self.cartView.hidden = YES;
         self.orderButton.selected = NO;
         self.reviewButton.selected = NO;
         self.shopButton.selected = YES;
-        self.segmentScrollView = self.shopController.tableView;
     }
 }
 

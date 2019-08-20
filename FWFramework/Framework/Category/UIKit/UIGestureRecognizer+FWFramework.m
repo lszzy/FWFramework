@@ -217,7 +217,7 @@
 
 #pragma mark - UIGestureRecognizerDelegate
 
-// 视图在打开位置时允许同时识别滚动视图pan手势
+// 视图在打开位置时允许同时识别子视图pan手势
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
@@ -228,7 +228,7 @@
     return NO;
 }
 
-// 视图不在打开位置时不允许识别滚动视图pan手势
+// 视图不在打开位置时不允许识别子视图pan手势
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
