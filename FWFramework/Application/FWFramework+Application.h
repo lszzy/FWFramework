@@ -29,6 +29,7 @@
 #import "FWDrawerView.h"
 #import "FWPhotoBrowser.h"
 #import "FWPageControl.h"
+#import "FWPagerView.h"
 #import "FWSegmentedControl.h"
 #import "FWMarqueeLabel.h"
 #import "FWQrcodeScanView.h"
