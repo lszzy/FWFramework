@@ -249,6 +249,16 @@
     objc_setAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate), fwPanGestureRecognizerDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
+- (BOOL (^)(UIGestureRecognizer *))fwShouldBegin
+{
+    return objc_getAssociatedObject(self, @selector(fwShouldBegin));
+}
+
+- (void)setFwShouldBegin:(BOOL (^)(UIGestureRecognizer *))fwShouldBegin
+{
+    objc_setAssociatedObject(self, @selector(fwShouldBegin), fwShouldBegin, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRecognizeSimultaneously
 {
     return objc_getAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously));
@@ -283,6 +293,11 @@
 {
     if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
         return [self.fwPanGestureRecognizerDelegate gestureRecognizerShouldBegin:gestureRecognizer];
+    }
+    
+    BOOL (^shouldBlock)(UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldBegin));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer);
     }
     
     return [self fwInnerGestureRecognizerShouldBegin:gestureRecognizer];
