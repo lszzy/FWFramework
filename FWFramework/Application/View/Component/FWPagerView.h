@@ -89,7 +89,7 @@
  
  @return UIView
  */
-- (UIView *)listView;
+- (UIView *)pagerListView;
 
 /**
  返回listView内部持有的UIScrollView或UITableView或UICollectionView
@@ -97,7 +97,7 @@
  
  @return listView内部持有的UIScrollView或UITableView或UICollectionView
  */
-- (UIScrollView *)listScrollView;
+- (UIScrollView *)pagerListScrollView;
 
 
 /**
@@ -105,24 +105,24 @@
  
  @param callback `scrollViewDidScroll`回调时调用的callback
  */
-- (void)listViewDidScrollCallback:(void (^)(UIScrollView *scrollView))callback;
+- (void)pagerListViewDidScrollCallback:(void (^)(UIScrollView *scrollView))callback;
 
 @optional
 
 /**
  将要重置listScrollView的contentOffset
  */
-- (void)listScrollViewWillResetContentOffset;
+- (void)pagerListScrollViewWillResetContentOffset;
 
 /**
  可选实现，列表显示的时候调用
  */
-- (void)listDidAppear;
+- (void)pagerListDidAppear;
 
 /**
  可选实现，列表消失的时候调用
  */
-- (void)listDidDisappear;
+- (void)pagerListDidDisappear;
 
 @end
 
@@ -187,7 +187,15 @@
  
  @param scrollView mainTableView
  */
-- (void)mainTableViewDidScroll:(UIScrollView *)scrollView;
+- (void)pagerView:(FWPagerView *)pagerView mainTableViewDidScroll:(UIScrollView *)scrollView;
+
+/**
+ 滚动到指定index
+ 
+ @param pagerView pagerView description
+ @param index index description
+ */
+- (void)pagerView:(FWPagerView *)pagerView didScrollToIndex:(NSInteger)index;
 
 @end
 
@@ -225,6 +233,8 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (void)reloadData;
 - (void)resizeTableHeaderViewHeightWithAnimatable:(BOOL)animatable duration:(NSTimeInterval)duration curve:(UIViewAnimationCurve)curve;
+// 为了不丧失延迟加载功能，请调用本方法。相邻的两个item切换时有动画，未相邻的两个item直接切换
+- (void)scrollToIndex:(NSInteger)index;
 
 @end
 

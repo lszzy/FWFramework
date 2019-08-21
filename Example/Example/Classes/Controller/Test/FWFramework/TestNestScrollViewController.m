@@ -77,17 +77,17 @@
 
 #pragma mark - FWPagerViewListViewDelegate
 
-- (UIView *)listView
+- (UIView *)pagerListView
 {
     return self.view;
 }
 
-- (UIScrollView *)listScrollView
+- (UIScrollView *)pagerListScrollView
 {
     return self.tableView;
 }
 
-- (void)listViewDidScrollCallback:(void (^)(UIScrollView *))callback
+- (void)pagerListViewDidScrollCallback:(void (^)(UIScrollView *))callback
 {
     self.scrollCallback = callback;
 }
@@ -132,8 +132,7 @@
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
         FWStrongifySelf();
-        
-        [self.pagerView.listContainerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+        [self.pagerView scrollToIndex:index];
     };
     
     self.pagerView = [[FWPagerView alloc] initWithDelegate:self];
@@ -200,7 +199,7 @@
     return listView;
 }
 
-- (void)mainTableViewDidScroll:(UIScrollView *)scrollView
+- (void)pagerView:(FWPagerView *)pagerView mainTableViewDidScroll:(UIScrollView *)scrollView
 {
     // 导航栏透明度
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
@@ -209,6 +208,12 @@
     } else if (progress >= 0 && progress < 1) {
         [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
     }
+}
+
+- (void)pagerView:(FWPagerView *)pagerView didScrollToIndex:(NSInteger)index
+{
+    [self.segmentedControl setSelectedSegmentIndex:index animated:YES];
+    self.cartView.hidden = (index != 0);
 }
 
 @end

@@ -273,7 +273,7 @@
     self.currentScrollingListView = nil;
     
     for (id<FWPagerViewListViewDelegate> list in self.validListDict.allValues) {
-        [list.listView removeFromSuperview];
+        [list.pagerListView removeFromSuperview];
     }
     [_validListDict removeAllObjects];
     
@@ -297,6 +297,16 @@
         frame.size.height = [self.delegate tableHeaderViewHeightInPagerView:self];
         self.tableHeaderContainerView.frame = frame;
         self.mainTableView.tableHeaderView = self.tableHeaderContainerView;
+    }
+}
+
+- (void)scrollToIndex:(NSInteger)index
+{
+    NSInteger diffIndex = labs(self.currentIndex - index);
+    if (diffIndex > 1) {
+        [self.listContainerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    }else {
+        [self.listContainerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     }
 }
 
@@ -347,8 +357,8 @@
 
 - (void)currentListDidDisappear {
     id<FWPagerViewListViewDelegate> list = _validListDict[@(self.currentIndex)];
-    if (list && [list respondsToSelector:@selector(listDidDisappear)]) {
-        [list listDidDisappear];
+    if (list && [list respondsToSelector:@selector(pagerListDidDisappear)]) {
+        [list pagerListDidDisappear];
     }
     self.willRemoveFromWindow = NO;
     self.retainedSelf = nil;
@@ -365,8 +375,12 @@
     self.currentIndex = index;
     
     id<FWPagerViewListViewDelegate> list = _validListDict[@(index)];
-    if (list && [list respondsToSelector:@selector(listDidAppear)]) {
-        [list listDidAppear];
+    if (list && [list respondsToSelector:@selector(pagerListDidAppear)]) {
+        [list pagerListDidAppear];
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(pagerView:didScrollToIndex:)]) {
+        [self.delegate pagerView:self didScrollToIndex:index];
     }
 }
 
@@ -379,8 +393,8 @@
         return;
     }
     id<FWPagerViewListViewDelegate> list = _validListDict[@(index)];
-    if (list && [list respondsToSelector:@selector(listDidDisappear)]) {
-        [list listDidDisappear];
+    if (list && [list respondsToSelector:@selector(pagerListDidDisappear)]) {
+        [list pagerListDidDisappear];
     }
 }
 
@@ -447,8 +461,8 @@
     
     [self preferredProcessMainTableViewDidScroll:scrollView];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(mainTableViewDidScroll:)]) {
-        [self.delegate mainTableViewDidScroll:scrollView];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(pagerView:mainTableViewDidScroll:)]) {
+        [self.delegate pagerView:self mainTableViewDidScroll:scrollView];
     }
 }
 
@@ -495,7 +509,7 @@
         list = [self.delegate pagerView:self initListAtIndex:row];
         __weak typeof(self)weakSelf = self;
         __weak typeof(id<FWPagerViewListViewDelegate>) weakList = list;
-        [list listViewDidScrollCallback:^(UIScrollView *scrollView) {
+        [list pagerListViewDidScrollCallback:^(UIScrollView *scrollView) {
             weakSelf.currentList = weakList;
             [weakSelf listViewDidScroll:scrollView];
         }];
@@ -503,18 +517,18 @@
     }
     for (id<FWPagerViewListViewDelegate> listItem in self.validListDict.allValues) {
         if (listItem == list) {
-            [listItem listScrollView].scrollsToTop = YES;
+            [listItem pagerListScrollView].scrollsToTop = YES;
         }else {
-            [listItem listScrollView].scrollsToTop = NO;
+            [listItem pagerListScrollView].scrollsToTop = NO;
         }
     }
     
-    return [list listView];
+    return [list pagerListView];
 }
 
 - (void)listContainerView:(FWPagerListContainerView *)listContainerView willDisplayCellAtRow:(NSInteger)row {
     [self listDidAppear:row];
-    self.currentScrollingListView = [self.validListDict[@(row)] listScrollView];
+    self.currentScrollingListView = [self.validListDict[@(row)] pagerListScrollView];
 }
 
 - (void)listContainerView:(FWPagerListContainerView *)listContainerView didEndDisplayingCellAtRow:(NSInteger)row {
@@ -563,8 +577,8 @@
 - (void)preferredProcessListViewDidScroll:(UIScrollView *)scrollView {
     if (self.mainTableView.contentOffset.y < self.mainTableViewMaxContentOffsetY) {
         //mainTableView的header还没有消失，让listScrollView一直为0
-        if (self.currentList && [self.currentList respondsToSelector:@selector(listScrollViewWillResetContentOffset)]) {
-            [self.currentList listScrollViewWillResetContentOffset];
+        if (self.currentList && [self.currentList respondsToSelector:@selector(pagerListScrollViewWillResetContentOffset)]) {
+            [self.currentList pagerListScrollViewWillResetContentOffset];
         }
         [self setListScrollViewToMinContentOffsetY:scrollView];
         if (self.automaticallyDisplayListVerticalScrollIndicator) {
@@ -588,10 +602,10 @@
     if (scrollView.contentOffset.y < self.mainTableViewMaxContentOffsetY) {
         //mainTableView已经显示了header，listView的contentOffset需要重置
         for (id<FWPagerViewListViewDelegate> list in self.validListDict.allValues) {
-            if ([list respondsToSelector:@selector(listScrollViewWillResetContentOffset)]) {
-                [list listScrollViewWillResetContentOffset];
+            if ([list respondsToSelector:@selector(pagerListScrollViewWillResetContentOffset)]) {
+                [list pagerListScrollViewWillResetContentOffset];
             }
-            [self setListScrollViewToMinContentOffsetY:[list listScrollView]];
+            [self setListScrollViewToMinContentOffsetY:[list pagerListScrollView]];
         }
     }
     
@@ -645,8 +659,8 @@
         }else {
             if (self.mainTableView.contentOffset.y < self.mainTableViewMaxContentOffsetY) {
                 //mainTableView的header还没有消失，让listScrollView一直为0
-                if (self.currentList && [self.currentList respondsToSelector:@selector(listScrollViewWillResetContentOffset)]) {
-                    [self.currentList listScrollViewWillResetContentOffset];
+                if (self.currentList && [self.currentList respondsToSelector:@selector(pagerListScrollViewWillResetContentOffset)]) {
+                    [self.currentList pagerListScrollViewWillResetContentOffset];
                 }
                 [self setListScrollViewToMinContentOffsetY:self.currentScrollingListView];
                 if (self.automaticallyDisplayListVerticalScrollIndicator) {
@@ -660,8 +674,8 @@
             //处于下拉刷新的状态，scrollView.contentOffset.y为负数，就重置为0
             if (self.currentScrollingListView.contentOffset.y > [self minContentOffsetYInListScrollView:self.currentScrollingListView]) {
                 //mainTableView的header还没有消失，让listScrollView一直为0
-                if (self.currentList && [self.currentList respondsToSelector:@selector(listScrollViewWillResetContentOffset)]) {
-                    [self.currentList listScrollViewWillResetContentOffset];
+                if (self.currentList && [self.currentList respondsToSelector:@selector(pagerListScrollViewWillResetContentOffset)]) {
+                    [self.currentList pagerListScrollViewWillResetContentOffset];
                 }
                 [self setListScrollViewToMinContentOffsetY:self.currentScrollingListView];
                 if (self.automaticallyDisplayListVerticalScrollIndicator) {
@@ -696,10 +710,10 @@
         //mainTableView已经显示了header，listView的contentOffset需要重置
         for (id<FWPagerViewListViewDelegate> list in self.validListDict.allValues) {
             //正在下拉刷新时，不需要重置
-            UIScrollView *listScrollView = [list listScrollView];
+            UIScrollView *listScrollView = [list pagerListScrollView];
             if (listScrollView.contentOffset.y > 0) {
-                if ([list respondsToSelector:@selector(listScrollViewWillResetContentOffset)]) {
-                    [list listScrollViewWillResetContentOffset];
+                if ([list respondsToSelector:@selector(pagerListScrollViewWillResetContentOffset)]) {
+                    [list pagerListScrollViewWillResetContentOffset];
                 }
                 [self setListScrollViewToMinContentOffsetY:listScrollView];
             }
