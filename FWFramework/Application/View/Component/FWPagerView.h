@@ -48,6 +48,8 @@
 
 - (void)listContainerView:(FWPagerListContainerView *)listContainerView didEndDisplayingCellAtRow:(NSInteger)row;
 
+- (void)listContainerView:(FWPagerListContainerView *)listContainerView didScrollToRow:(NSInteger)row;
+
 @end
 
 
@@ -199,6 +201,10 @@
 
 @end
 
+/*!
+ @brief FWPagerView
+ @see https://github.com/pujiaxin33/JXPagingView
+ */
 @interface FWPagerView : UIView
 /**
  需要和self.categoryView.defaultSelectedIndex保持一致
@@ -238,10 +244,6 @@
 
 @end
 
-/*!
- @brief FWPagerView
- @see https://github.com/pujiaxin33/JXPagingView
- */
 @interface FWPagerView (UISubclassingGet)
 /**
  暴露给子类使用，请勿直接使用该属性！
