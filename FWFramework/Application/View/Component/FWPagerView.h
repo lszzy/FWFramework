@@ -166,7 +166,7 @@
  @param pagerView pagerView description
  @return 列表的数量
  */
-- (NSInteger)numberOfListsInPagerView:(FWPagerView *)pagerView;
+- (NSInteger)numberOfListViewsInPagerView:(FWPagerView *)pagerView;
 
 /**
  根据index初始化一个对应列表实例，需要是遵从`FWPagerViewListViewDelegate`协议的对象。
@@ -178,7 +178,7 @@
  @param index index description
  @return 新生成的列表实例
  */
-- (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView initListAtIndex:(NSInteger)index;
+- (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index;
 
 @optional
 

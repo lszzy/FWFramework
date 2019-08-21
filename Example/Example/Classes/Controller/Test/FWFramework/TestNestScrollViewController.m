@@ -179,12 +179,12 @@
     return self.segmentedControl;
 }
 
-- (NSInteger)numberOfListsInPagerView:(FWPagerView *)pagerView
+- (NSInteger)numberOfListViewsInPagerView:(FWPagerView *)pagerView
 {
     return self.segmentedControl.sectionTitles.count;
 }
 
-- (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView initListAtIndex:(NSInteger)index
+- (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
 {
     TestNestChildController *listView = [TestNestChildController new];
     if (index == 0) {
