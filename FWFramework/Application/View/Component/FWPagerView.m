@@ -646,17 +646,15 @@
     return -scrollView.contentInset.top;
 }
 
-
 @end
 
-#pragma mark - FWPagerListRefreshView
+#pragma mark - FWPagerRefreshView
 
-@interface FWPagerListRefreshView()
+@interface FWPagerRefreshView()
 @property (nonatomic, assign) CGFloat lastScrollingListViewContentOffsetY;
 @end
 
-@implementation FWPagerListRefreshView
-
+@implementation FWPagerRefreshView
 
 - (void)initializeViews {
     [super initializeViews];
@@ -741,6 +739,5 @@
         [self setMainTableViewToMaxContentOffsetY];
     }
 }
-
 
 @end

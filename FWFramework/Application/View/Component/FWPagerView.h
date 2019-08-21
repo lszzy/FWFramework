@@ -265,8 +265,8 @@
 - (CGFloat)minContentOffsetYInListScrollView:(UIScrollView *)scrollView;
 @end
 
-#pragma mark - FWPagerListRefreshView
+#pragma mark - FWPagerRefreshView
 
-@interface FWPagerListRefreshView : FWPagerView
+@interface FWPagerRefreshView : FWPagerView
 
 @end
