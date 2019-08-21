@@ -6,11 +6,11 @@
 //  Copyright © 2018 wuyong.site. All rights reserved.
 //
 
-#import "BaseScrollViewController.h"
+#import "BaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestNestScrollViewController : BaseScrollViewController
+@interface TestNestScrollViewController : BaseViewController
 
 @end
 
