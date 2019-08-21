@@ -223,6 +223,8 @@
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
+		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -536,6 +538,8 @@
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
+		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
+		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
 		2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCalendar+FWFramework.h"; sourceTree = "<group>"; };
@@ -1116,6 +1120,8 @@
 				2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */,
 				2F1D984521E6FD2800769651 /* FWPageControl.h */,
 				2F1D984621E6FD2800769651 /* FWPageControl.m */,
+				2F69A64D230D223D0063D95A /* FWPagerView.h */,
+				2F69A64E230D223D0063D95A /* FWPagerView.m */,
 				2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */,
 				2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */,
 				2F1E39382178F0B80051A6BB /* FWProgressView.h */,
@@ -1137,6 +1143,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */,
 				2FACF02E2303A90B007AFC16 /* UIView+FWTheme.h in Headers */,
 				2FDD34EE2303A63900624BBD /* NSAttributedString+FWOption.h in Headers */,
 				2F71FD8A22E2E64400E905BE /* FWDrawerView.h in Headers */,
@@ -1528,6 +1535,7 @@
 				2F0FFF1A21D0ACFA00049383 /* UIScrollView+FWPullRefresh.m in Sources */,
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
+				2F69A650230D223D0063D95A /* FWPagerView.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
 				2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */,
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
