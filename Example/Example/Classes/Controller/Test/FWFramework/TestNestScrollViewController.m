@@ -212,7 +212,7 @@
 
 - (void)pagerView:(FWPagerView *)pagerView didScrollToIndex:(NSInteger)index
 {
-    [self.segmentedControl setSelectedSegmentIndex:index animated:YES];
+    self.segmentedControl.selectedSegmentIndex = index;
     self.cartView.hidden = (index != 0);
 }
 
