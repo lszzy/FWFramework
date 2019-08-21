@@ -368,7 +368,7 @@
     if (self.delegate == nil) {
         return;
     }
-    NSUInteger count = [self.delegate numberOfListsInPagerView:self];
+    NSUInteger count = [self.delegate numberOfListViewsInPagerView:self];
     if (count <= 0 || index >= count) {
         return;
     }
@@ -388,7 +388,7 @@
     if (self.delegate == nil) {
         return;
     }
-    NSUInteger count = [self.delegate numberOfListsInPagerView:self];
+    NSUInteger count = [self.delegate numberOfListViewsInPagerView:self];
     if (count <= 0 || index >= count) {
         return;
     }
@@ -497,7 +497,7 @@
     if (self.delegate == nil) {
         return 0;
     }
-    return [self.delegate numberOfListsInPagerView:self];
+    return [self.delegate numberOfListViewsInPagerView:self];
 }
 
 - (UIView *)listContainerView:(FWPagerListContainerView *)listContainerView listViewInRow:(NSInteger)row {
@@ -506,7 +506,7 @@
     }
     id<FWPagerViewListViewDelegate> list = self.validListDict[@(row)];
     if (list == nil) {
-        list = [self.delegate pagerView:self initListAtIndex:row];
+        list = [self.delegate pagerView:self listViewAtIndex:row];
         __weak typeof(self)weakSelf = self;
         __weak typeof(id<FWPagerViewListViewDelegate>) weakList = list;
         [list pagerListViewDidScrollCallback:^(UIScrollView *scrollView) {
