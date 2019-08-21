@@ -259,26 +259,6 @@
     objc_setAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously), fwShouldRecognizeSimultaneously, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRequireFailure
-{
-    return objc_getAssociatedObject(self, @selector(fwShouldRequireFailure));
-}
-
-- (void)setFwShouldRequireFailure:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldRequireFailure
-{
-    objc_setAssociatedObject(self, @selector(fwShouldRequireFailure), fwShouldRequireFailure, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldBeRequiredToFail
-{
-    return objc_getAssociatedObject(self, @selector(fwShouldBeRequiredToFail));
-}
-
-- (void)setFwShouldBeRequiredToFail:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fwShouldBeRequiredToFail
-{
-    objc_setAssociatedObject(self, @selector(fwShouldBeRequiredToFail), fwShouldBeRequiredToFail, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
 - (BOOL)fwInnerGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
@@ -308,11 +288,6 @@
         return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
     }
     
-    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldRequireFailure));
-    if (shouldBlock) {
-        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
-    }
-    
     return [self fwInnerGestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
 }
 
@@ -320,11 +295,6 @@
 {
     if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)]) {
         return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
-    }
-    
-    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldBeRequiredToFail));
-    if (shouldBlock) {
-        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
     }
     
     return [self fwInnerGestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
