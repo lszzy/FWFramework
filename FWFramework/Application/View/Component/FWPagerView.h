@@ -150,7 +150,7 @@
  @param pagerView pagerView description
  @return 悬浮HeaderView的高度
  */
-- (NSUInteger)heightForPinSectionHeaderInPagerView:(FWPagerView *)pagerView;
+- (NSUInteger)pinSectionHeaderHeightInPagerView:(FWPagerView *)pagerView;
 
 /**
  返回悬浮HeaderView。可以选择其他的三方库或者自己写
@@ -158,7 +158,7 @@
  @param pagerView pagerView description
  @return 悬浮HeaderView
  */
-- (UIView *)viewForPinSectionHeaderInPagerView:(FWPagerView *)pagerView;
+- (UIView *)pinSectionHeaderInPagerView:(FWPagerView *)pagerView;
 
 /**
  返回列表的数量
@@ -221,7 +221,7 @@
 /**
  是否允许列表左右滑动。默认：YES
  */
-@property (nonatomic, assign) BOOL isListHorizontalScrollEnabled;
+@property (nonatomic, assign, getter=isListHorizontalScrollEnabled) BOOL listHorizontalScrollEnabled;
 /**
  是否允许当前列表自动显示或隐藏列表是垂直滚动指示器。YES：悬浮的headerView滚动到顶部开始滚动列表时，就会显示，反之隐藏。NO：内部不会处理列表的垂直滚动指示器。默认为：YES。
  */
