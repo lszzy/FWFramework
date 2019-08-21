@@ -21,6 +21,7 @@
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, assign) BOOL cart;
+@property (nonatomic, assign) BOOL isRefreshed;
 
 @property (nonatomic, copy) void(^scrollCallback)(UIScrollView *scrollView);
 
@@ -36,7 +37,11 @@
 - (void)renderData
 {
     for (int i = 0; i < self.rows; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
+        if (self.isRefreshed) {
+            [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(i)]];
+        } else {
+            [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
+        }
     }
 }
 
@@ -100,6 +105,7 @@
 @property (nonatomic, strong) UIImageView *headerView;
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 @property (nonatomic, strong) UIView *cartView;
+@property (nonatomic, assign) BOOL isRefreshed;
 
 @end
 
@@ -137,7 +143,9 @@
     
     self.pagerView = [[FWPagerView alloc] initWithDelegate:self];
     self.pagerView.pinSectionHeaderVerticalOffset = FWTopBarHeight;
+    [self.pagerView.mainTableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
     [self.view addSubview:self.pagerView];
+    [self.pagerView fwPinEdgesToSuperview];
     
     UIView *cartView = [UIView fwAutoLayoutView];
     _cartView = cartView;
@@ -151,10 +159,13 @@
     [cartView addSubview:cartLabel];
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    
-    self.pagerView.frame = self.view.bounds;
+- (void)onRefreshing
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isRefreshed = !self.isRefreshed;
+        [self.pagerView reloadData];
+        [self.pagerView.mainTableView.fwPullRefreshView stopAnimating];
+    });
 }
 
 #pragma mark - FWPagerViewDelegate
@@ -187,6 +198,7 @@
 - (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
 {
     TestNestChildController *listView = [TestNestChildController new];
+    listView.isRefreshed = self.isRefreshed;
     if (index == 0) {
         listView.rows = 30;
         listView.section = YES;
