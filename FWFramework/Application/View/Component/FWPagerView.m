@@ -262,10 +262,10 @@
     self.listContainerView.defaultSelectedIndex = defaultSelectedIndex;
 }
 
-- (void)setIsListHorizontalScrollEnabled:(BOOL)isListHorizontalScrollEnabled {
-    _isListHorizontalScrollEnabled = isListHorizontalScrollEnabled;
+- (void)setListHorizontalScrollEnabled:(BOOL)listHorizontalScrollEnabled {
+    _listHorizontalScrollEnabled = listHorizontalScrollEnabled;
     
-    self.listContainerView.collectionView.scrollEnabled = isListHorizontalScrollEnabled;
+    self.listContainerView.collectionView.scrollEnabled = listHorizontalScrollEnabled;
 }
 
 - (void)reloadData {
@@ -408,7 +408,7 @@
     if (self.delegate == nil) {
         return 0;
     }
-    return self.bounds.size.height - [self.delegate heightForPinSectionHeaderInPagerView:self] - self.pinSectionHeaderVerticalOffset;
+    return self.bounds.size.height - [self.delegate pinSectionHeaderHeightInPagerView:self] - self.pinSectionHeaderVerticalOffset;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -426,14 +426,14 @@
     if (self.delegate == nil) {
         return 0;
     }
-    return [self.delegate heightForPinSectionHeaderInPagerView:self];
+    return [self.delegate pinSectionHeaderHeightInPagerView:self];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.delegate == nil) {
         return [[UIView alloc] init];
     }
-    return [self.delegate viewForPinSectionHeaderInPagerView:self];
+    return [self.delegate pinSectionHeaderInPagerView:self];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -568,7 +568,7 @@
     _listContainerView = [[FWPagerListContainerView alloc] initWithDelegate:self];
     self.listContainerView.mainTableView = self.mainTableView;
     
-    self.isListHorizontalScrollEnabled = YES;
+    self.listHorizontalScrollEnabled = YES;
     
     self.currentDeviceOrientation = [UIDevice currentDevice].orientation;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChangeNotification:) name:UIDeviceOrientationDidChangeNotification object:nil];

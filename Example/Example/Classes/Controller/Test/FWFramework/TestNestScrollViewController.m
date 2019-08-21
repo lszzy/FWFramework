@@ -169,12 +169,12 @@
     return self.headerView;
 }
 
-- (NSUInteger)heightForPinSectionHeaderInPagerView:(FWPagerView *)pagerView
+- (NSUInteger)pinSectionHeaderHeightInPagerView:(FWPagerView *)pagerView
 {
     return SegmentViewHeight;
 }
 
-- (UIView *)viewForPinSectionHeaderInPagerView:(FWPagerView *)pagerView
+- (UIView *)pinSectionHeaderInPagerView:(FWPagerView *)pagerView
 {
     return self.segmentedControl;
 }
