@@ -28,7 +28,7 @@
 + (void)setDefaultAppearance
 {
     // 设置统一默认样式
-    FWAttributedOption *appearance = [FWAttributedOption appearance];
+    // WAttributedOption *appearance = [FWAttributedOption appearance];
 }
 
 + (instancetype)appearance
