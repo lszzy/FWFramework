@@ -32,6 +32,7 @@
 @interface FWPagerListContainerView() <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, weak) id<FWPagerListContainerViewDelegate> delegate;
 @property (nonatomic, strong) FWPagerListContainerCollectionView *collectionView;
+@property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @property (nonatomic, assign) BOOL isFirstLayoutSubviews;
 @end
@@ -82,6 +83,11 @@
     if (self.isFirstLayoutSubviews) {
         self.isFirstLayoutSubviews = NO;
         [self.collectionView setContentOffset:CGPointMake(self.collectionView.bounds.size.width*self.defaultSelectedIndex, 0) animated:NO];
+        
+        self.selectedIndex = self.defaultSelectedIndex;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(listContainerView:didScrollToRow:)]) {
+            [self.delegate listContainerView:self didScrollToRow:self.selectedIndex];
+        }
     }
 }
 
@@ -118,6 +124,17 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     [self.delegate listContainerView:self didEndDisplayingCellAtRow:indexPath.item];
+    
+    CGFloat pageWidth = self.collectionView.bounds.size.width;
+    if (pageWidth > 0) {
+        NSInteger selectedIndex = (NSInteger)floor((self.collectionView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        if (self.selectedIndex != selectedIndex) {
+            self.selectedIndex = selectedIndex;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(listContainerView:didScrollToRow:)]) {
+                [self.delegate listContainerView:self didScrollToRow:self.selectedIndex];
+            }
+        }
+    }
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -200,7 +217,6 @@
 @property (nonatomic, strong) id<FWPagerViewListViewDelegate> currentList;
 @property (nonatomic, strong) NSMutableDictionary <NSNumber *, id<FWPagerViewListViewDelegate>> *validListDict;
 @property (nonatomic, assign) UIDeviceOrientation currentDeviceOrientation;
-@property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL willRemoveFromWindow;
 @property (nonatomic, assign) BOOL isFirstMoveToWindow;
 @property (nonatomic, strong) FWPagerView *retainedSelf;
@@ -302,7 +318,7 @@
 
 - (void)scrollToIndex:(NSInteger)index
 {
-    NSInteger diffIndex = labs(self.currentIndex - index);
+    NSInteger diffIndex = labs(self.listContainerView.selectedIndex - index);
     if (diffIndex > 1) {
         [self.listContainerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     }else {
@@ -352,11 +368,11 @@
 }
 
 - (void)currentListDidAppear {
-    [self listDidAppear:self.currentIndex];
+    [self listDidAppear:self.listContainerView.selectedIndex];
 }
 
 - (void)currentListDidDisappear {
-    id<FWPagerViewListViewDelegate> list = _validListDict[@(self.currentIndex)];
+    id<FWPagerViewListViewDelegate> list = _validListDict[@(self.listContainerView.selectedIndex)];
     if (list && [list respondsToSelector:@selector(pagerListDidDisappear)]) {
         [list pagerListDidDisappear];
     }
@@ -372,15 +388,9 @@
     if (count <= 0 || index >= count) {
         return;
     }
-    self.currentIndex = index;
-    
     id<FWPagerViewListViewDelegate> list = _validListDict[@(index)];
     if (list && [list respondsToSelector:@selector(pagerListDidAppear)]) {
         [list pagerListDidAppear];
-    }
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(pagerView:didScrollToIndex:)]) {
-        [self.delegate pagerView:self didScrollToIndex:index];
     }
 }
 
@@ -533,6 +543,12 @@
 
 - (void)listContainerView:(FWPagerListContainerView *)listContainerView didEndDisplayingCellAtRow:(NSInteger)row {
     [self listDidDisappear:row];
+}
+
+- (void)listContainerView:(FWPagerListContainerView *)listContainerView didScrollToRow:(NSInteger)row {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(pagerView:didScrollToIndex:)]) {
+        [self.delegate pagerView:self didScrollToIndex:row];
+    }
 }
 
 @end
