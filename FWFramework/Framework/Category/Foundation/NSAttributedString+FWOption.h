@@ -32,26 +32,26 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置字体所在区域背景颜色
 @property (nullable, nonatomic, strong) UIColor *backgroundColor;
 
-// 设置连体属性，0表示没有连体字符，1表示使用默认的连体字符
-@property (nonatomic, assign) NSInteger ligature;
+// 设置连体属性，@0表示没有连体字符，@1表示使用默认的连体字符
+@property (nullable, nonatomic, strong) NSNumber *ligature;
 
 // 设置字符间距，正值间距加宽，负值间距变窄
-@property (nonatomic, assign) NSInteger kern;
+@property (nullable, nonatomic, strong) NSNumber *kern;
 
 // 设置删除线
-@property (nonatomic, assign) NSUnderlineStyle strikethroughStyle;
+@property (nullable, nonatomic, strong) NSNumber *strikethroughStyle;
 
 // 设置删除线颜色
 @property (nullable, nonatomic, strong) UIColor *strikethroughColor;
 
 // 设置下划线
-@property (nonatomic, assign) NSUnderlineStyle underlineStyle;
+@property (nullable, nonatomic, strong) NSNumber *underlineStyle;
 
 // 设置下划线颜色
 @property (nullable, nonatomic, strong) UIColor *underlineColor;
 
 // 设置笔画宽度，负值填充效果，正值中空效果
-@property (nonatomic, assign) NSInteger strokeWidth;
+@property (nullable, nonatomic, strong) NSNumber *strokeWidth;
 
 // 设置填充颜色
 @property (nullable, nonatomic, strong) UIColor *strokeColor;
@@ -63,19 +63,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSTextEffectStyle textEffect;
 
 // 设置基线偏移值，正值上偏，负值下偏
-@property (nonatomic, assign) CGFloat baselineOffset;
+@property (nullable, nonatomic, strong) NSNumber *baselineOffset;
 
 // 设置字形倾斜度，正值右倾，负值左倾
-@property (nonatomic, assign) CGFloat obliqueness;
+@property (nullable, nonatomic, strong) NSNumber *obliqueness;
 
 // 设置文本横向拉伸属性，正值横向拉伸文本，负值横向压缩文本
-@property (nonatomic, assign) CGFloat expansion;
+@property (nullable, nonatomic, strong) NSNumber *expansion;
 
 // 设置文字书写方向，从左向右书写或者从右向左书写
-@property (nonatomic, assign) NSInteger writingDirection;
+@property (nullable, nonatomic, strong) NSNumber *writingDirection;
 
-// 设置文字排版方向，0表示横排文本，1表示竖排文本，iOS只支持0
-@property (nonatomic, assign) NSInteger verticalGlyphForm;
+// 设置文字排版方向，@0表示横排文本，@1表示竖排文本，iOS只支持@0
+@property (nullable, nonatomic, strong) NSNumber *verticalGlyphForm;
 
 // 设置链接属性，点击后调用浏览器打开指定URL地址，NSString或NSURL对象，仅UITextView支持
 @property (nullable, nonatomic, copy) NSURL *link;
@@ -83,18 +83,16 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置文本附件，常用于文字图片混排
 @property (nullable, nonatomic, strong) NSTextAttachment *attachment;
 
-#pragma mark - Appearance
+#pragma mark - Public
 
-// 设置行高倍数，需指定font生效，示例：行高为1.5倍实际高度
+// 设置行高倍数，需指定font生效，优先级低，默认0，示例：行高为1.5倍实际高度
 @property (nonatomic, assign) CGFloat lineHeightMultiplier;
 
-// 设置行间距倍数，需指定font生效，示例：行间距为0.5倍实际高度
+// 设置行间距倍数，需指定font生效，优先级低，默认0，示例：行间距为0.5倍实际高度
 @property (nonatomic, assign) CGFloat lineSpacingMultiplier;
 
 // Appearance单例，统一设置样式
 + (instancetype)appearance;
-
-#pragma mark - Dictionary
 
 // 转换为属性字典
 - (NSDictionary<NSAttributedStringKey, id> *)toDictionary;

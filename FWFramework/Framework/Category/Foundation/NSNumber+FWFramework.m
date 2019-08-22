@@ -11,6 +11,15 @@
 
 @implementation NSNumber (FWFramework)
 
+- (CGFloat)fwCGFloatValue
+{
+#if CGFLOAT_IS_DOUBLE
+    return [self doubleValue];
+#else
+    return [self floatValue];
+#endif
+}
+
 - (NSString *)fwDigitString:(NSInteger)digit
 {
     NSString *result = nil;
