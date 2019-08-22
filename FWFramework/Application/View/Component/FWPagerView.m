@@ -14,7 +14,7 @@
 
 @interface FWPagerListContainerView() <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, weak) id<FWPagerListContainerViewDelegate> delegate;
-@property (nonatomic, strong) FWPagerListContainerCollectionView *collectionView;
+@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @property (nonatomic, assign) BOOL isFirstLayoutSubviews;
@@ -38,7 +38,32 @@
     layout.minimumInteritemSpacing = 0;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
-    _collectionView = [[FWPagerListContainerCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    __weak __typeof__(self) self_weak_ = self;
+    self.collectionView.fwShouldBegin = ^BOOL(UIGestureRecognizer *gestureRecognizer) {
+        __typeof__(self) self = self_weak_;
+        if (self.isNestEnabled) {
+            if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+                [gestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+                CGFloat velocityX = [(UIPanGestureRecognizer *)gestureRecognizer velocityInView:gestureRecognizer.view].x;
+                //x大于0就是往右滑
+                if (velocityX > 0) {
+                    if (self.collectionView.contentOffset.x == 0) {
+                        return NO;
+                    }
+                }else if (velocityX < 0) {
+                    //x小于0就是往左滑
+                    if (self.collectionView.contentOffset.x + self.collectionView.bounds.size.width == self.collectionView.contentSize.width) {
+                        return NO;
+                    }
+                }
+            }
+        }
+        return YES;
+    };
+    self.collectionView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
+        return NO;
+    };
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.pagingEnabled = YES;
@@ -146,46 +171,6 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return self.bounds.size;
-}
-
-@end
-
-
-@interface FWPagerListContainerCollectionView ()
-
-@end
-
-@implementation FWPagerListContainerCollectionView
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    if (self.gestureDelegate && [self.gestureDelegate respondsToSelector:@selector(pagerListContainerCollectionView:gestureRecognizerShouldBegin:)]) {
-        return [self.gestureDelegate pagerListContainerCollectionView:self gestureRecognizerShouldBegin:gestureRecognizer];
-    }else {
-        if (self.isNestEnabled) {
-            if ([gestureRecognizer isMemberOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]) {
-                CGFloat velocityX = [(UIPanGestureRecognizer *)gestureRecognizer velocityInView:gestureRecognizer.view].x;
-                //x大于0就是往右滑
-                if (velocityX > 0) {
-                    if (self.contentOffset.x == 0) {
-                        return NO;
-                    }
-                }else if (velocityX < 0) {
-                    //x小于0就是往左滑
-                    if (self.contentOffset.x + self.bounds.size.width == self.contentSize.width) {
-                        return NO;
-                    }
-                }
-            }
-        }
-    }
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if (self.gestureDelegate && [self.gestureDelegate respondsToSelector:@selector(pagerListContainerCollectionView:gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
-        return [self.gestureDelegate pagerListContainerCollectionView:self gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
-    }
-    return NO;
 }
 
 @end
