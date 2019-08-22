@@ -9,21 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - FWPagerMainTableView
-
-@protocol FWPagerMainTableViewGestureDelegate <NSObject>
-
-- (BOOL)mainTableViewGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
-
-@end
-
-@interface FWPagerMainTableView : UITableView
-@property (nonatomic, weak) id<FWPagerMainTableViewGestureDelegate> gestureDelegate;
-@end
-
 #pragma mark - FWPagerListContainerView
 
-@class FWPagerMainTableView;
 @class FWPagerListContainerView;
 @class FWPagerListContainerCollectionView;
 
@@ -60,8 +47,9 @@
  */
 @property (nonatomic, assign) NSInteger defaultSelectedIndex;
 
+// 可自定义shouldBegin和shouldRecognizeSimultaneously解决手势冲突
 @property (nonatomic, strong, readonly) FWPagerListContainerCollectionView *collectionView;
-@property (nonatomic, weak) FWPagerMainTableView *mainTableView;
+@property (nonatomic, weak) UITableView *mainTableView;
 
 - (instancetype)initWithDelegate:(id<FWPagerListContainerViewDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 
@@ -210,7 +198,8 @@
  需要和self.categoryView.defaultSelectedIndex保持一致
  */
 @property (nonatomic, assign) NSInteger defaultSelectedIndex;
-@property (nonatomic, strong, readonly) FWPagerMainTableView *mainTableView;
+// 可自定义shouldRecognizeSimultaneously解决手势冲突
+@property (nonatomic, strong, readonly) UITableView *mainTableView;
 @property (nonatomic, strong, readonly) FWPagerListContainerView *listContainerView;
 /**
  当前已经加载过可用的列表字典，key就是index值，value是对应的列表。

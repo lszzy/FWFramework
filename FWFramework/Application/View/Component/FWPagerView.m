@@ -8,24 +8,7 @@
  */
 
 #import "FWPagerView.h"
-
-#pragma mark - FWPagerMainTableView
-
-@interface FWPagerMainTableView ()<UIGestureRecognizerDelegate>
-
-@end
-
-@implementation FWPagerMainTableView
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if (self.gestureDelegate && [self.gestureDelegate respondsToSelector:@selector(mainTableViewGestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
-        return [self.gestureDelegate mainTableViewGestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
-    }else {
-        return [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]];
-    }
-}
-
-@end
+#import "UIScrollView+FWFramework.h"
 
 #pragma mark - FWPagerListContainerView
 
@@ -211,7 +194,7 @@
 
 @interface FWPagerView () <UITableViewDataSource, UITableViewDelegate, FWPagerListContainerViewDelegate>
 @property (nonatomic, weak) id<FWPagerViewDelegate> delegate;
-@property (nonatomic, strong) FWPagerMainTableView *mainTableView;
+@property (nonatomic, strong) UITableView *mainTableView;
 @property (nonatomic, strong) FWPagerListContainerView *listContainerView;
 @property (nonatomic, strong) UIScrollView *currentScrollingListView;
 @property (nonatomic, strong) id<FWPagerViewListViewDelegate> currentList;
@@ -570,7 +553,11 @@
 @implementation FWPagerView (UISubclassingHooks)
 
 - (void)initializeViews {
-    _mainTableView = [[FWPagerMainTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    // 默认实现，可自定义
+    self.mainTableView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer * gestureRecognizer, UIGestureRecognizer * otherGestureRecognizer) {
+        return [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]];
+    };
     self.mainTableView.showsVerticalScrollIndicator = NO;
     self.mainTableView.showsHorizontalScrollIndicator = NO;
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
