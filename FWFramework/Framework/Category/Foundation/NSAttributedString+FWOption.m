@@ -44,7 +44,7 @@ static FWAttributedOption *appearance = nil;
     if (self) {
         if (appearance) {
             self.font = appearance.font;
-            self.paragraphStyle = appearance.paragraphStyle;
+            self.paragraphStyle = [appearance.paragraphStyle mutableCopy];
             self.foregroundColor = appearance.foregroundColor;
             self.backgroundColor = appearance.backgroundColor;
             self.ligature = appearance.ligature;
@@ -64,8 +64,8 @@ static FWAttributedOption *appearance = nil;
             self.verticalGlyphForm = appearance.verticalGlyphForm;
             self.link = appearance.link;
             self.attachment = appearance.attachment;
-            self.lineSpacingMultiplier = appearance.lineSpacingMultiplier;
             self.lineHeightMultiplier = appearance.lineHeightMultiplier;
+            self.lineSpacingMultiplier = appearance.lineSpacingMultiplier;
         }
     }
     return self;
@@ -77,7 +77,7 @@ static FWAttributedOption *appearance = nil;
 {
     FWAttributedOption *option = [[[self class] allocWithZone:zone] init];
     option.font = self.font;
-    option.paragraphStyle = self.paragraphStyle;
+    option.paragraphStyle = [self.paragraphStyle mutableCopy];
     option.foregroundColor = self.foregroundColor;
     option.backgroundColor = self.backgroundColor;
     option.ligature = self.ligature;
@@ -97,8 +97,8 @@ static FWAttributedOption *appearance = nil;
     option.verticalGlyphForm = self.verticalGlyphForm;
     option.link = self.link;
     option.attachment = self.attachment;
-    option.lineSpacingMultiplier = self.lineSpacingMultiplier;
     option.lineHeightMultiplier = self.lineHeightMultiplier;
+    option.lineSpacingMultiplier = self.lineSpacingMultiplier;
     return option;
 }
 
@@ -129,31 +129,25 @@ static FWAttributedOption *appearance = nil;
     if (self.link) dictionary[NSLinkAttributeName] = self.link;
     if (self.attachment) dictionary[NSAttachmentAttributeName] = self.attachment;
     
-    if (self.lineSpacingMultiplier && self.font) {
-        CGFloat lineSpacing = self.font.pointSize * self.lineSpacingMultiplier - (self.font.lineHeight - self.font.pointSize);
-        if (self.paragraphStyle) {
-            if (!self.paragraphStyle.lineSpacing) self.paragraphStyle.lineSpacing = lineSpacing;
-        } else {
-            NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-            paragraphStyle.lineSpacing = lineSpacing;
-            dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
-        }
-    }
     if (self.lineHeightMultiplier && self.font) {
         CGFloat lineHeight = self.font.pointSize * self.lineHeightMultiplier;
-        if (self.paragraphStyle) {
-            if (!self.paragraphStyle.maximumLineHeight) self.paragraphStyle.maximumLineHeight = lineHeight;
-            if (!self.paragraphStyle.minimumLineHeight) self.paragraphStyle.minimumLineHeight = lineHeight;
-        } else {
-            NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-            paragraphStyle.maximumLineHeight = lineHeight;
-            paragraphStyle.minimumLineHeight = lineHeight;
-            dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
-        }
+        NSMutableParagraphStyle *paragraphStyle = [self.paragraphStyle mutableCopy];
+        if (!paragraphStyle) paragraphStyle = [NSMutableParagraphStyle new];
+        if (!paragraphStyle.maximumLineHeight) paragraphStyle.maximumLineHeight = lineHeight;
+        if (!paragraphStyle.minimumLineHeight) paragraphStyle.minimumLineHeight = lineHeight;
+        dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
         if (!self.baselineOffset) {
             CGFloat baselineOffset = (lineHeight - self.font.lineHeight) / 4;
             dictionary[NSBaselineOffsetAttributeName] = @(baselineOffset);
         }
+    }
+    
+    if (self.lineSpacingMultiplier && self.font) {
+        CGFloat lineSpacing = self.font.pointSize * self.lineSpacingMultiplier - (self.font.lineHeight - self.font.pointSize);
+        NSMutableParagraphStyle *paragraphStyle = [self.paragraphStyle mutableCopy];
+        if (!paragraphStyle) paragraphStyle = [NSMutableParagraphStyle new];
+        if (!paragraphStyle.lineSpacing) paragraphStyle.lineSpacing = lineSpacing;
+        dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
     }
     return dictionary;
 }

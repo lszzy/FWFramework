@@ -44,6 +44,10 @@
     
     option = [FWAttributedOption new];
     [attrString appendAttributedString:[self renderString:option]];
+    
+    option = [FWAttributedOption new];
+    option.lineHeightMultiplier = 2;
+    [attrString appendAttributedString:[self renderString:option]];
     self.label.attributedText = attrString;
 }
 
