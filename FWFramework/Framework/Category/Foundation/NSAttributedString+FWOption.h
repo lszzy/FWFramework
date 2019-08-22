@@ -85,11 +85,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Appearance
 
-// 设置行间距倍数，需指定font生效，示例：行间距为0.5倍实际高度
-@property (nonatomic, assign) CGFloat lineSpacingMultiplier;
-
 // 设置行高倍数，需指定font生效，示例：行高为1.5倍实际高度
 @property (nonatomic, assign) CGFloat lineHeightMultiplier;
+
+// 设置行间距倍数，需指定font生效，示例：行间距为0.5倍实际高度
+@property (nonatomic, assign) CGFloat lineSpacingMultiplier;
 
 // Appearance单例，统一设置样式
 + (instancetype)appearance;
