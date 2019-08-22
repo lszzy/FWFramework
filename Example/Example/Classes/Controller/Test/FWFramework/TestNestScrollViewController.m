@@ -18,6 +18,7 @@
 
 @interface TestNestChildController : BaseTableViewController <FWPagerViewListViewDelegate>
 
+@property (nonatomic, assign) BOOL refreshList;
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, assign) BOOL cart;
@@ -34,6 +35,14 @@
     [self.tableView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0)];
 }
 
+- (void)renderView
+{
+    if (self.refreshList) {
+        [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    }
+    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+}
+
 - (void)renderData
 {
     for (int i = 0; i < self.rows; i++) {
@@ -43,6 +52,33 @@
             [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
         }
     }
+}
+
+- (void)onRefreshing
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isRefreshed = !self.isRefreshed;
+        [self.dataList removeAllObjects];
+        [self renderData];
+        [self.tableView reloadData];
+        [self.tableView.fwPullRefreshView stopAnimating];
+    });
+}
+
+- (void)onLoading
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSInteger rows = self.dataList.count;
+        for (int i = 0; i < 5; i++) {
+            if (self.isRefreshed) {
+                [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(rows + i)]];
+            } else {
+                [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
+            }
+        }
+        [self.tableView reloadData];
+        [self.tableView.fwInfiniteScrollView stopAnimating];
+    });
 }
 
 #pragma mark - TableView
@@ -101,6 +137,7 @@
 
 @interface TestNestScrollViewController () <FWPagerViewDelegate>
 
+@property (nonatomic, assign) BOOL refreshList;
 @property (nonatomic, strong) FWPagerView *pagerView;
 @property (nonatomic, strong) UIImageView *headerView;
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
@@ -120,10 +157,36 @@
     return self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    if (!self.refreshList) {
+        [self.pagerView.mainTableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+        
+        FWWeakifySelf();
+        [self fwSetRightBarItem:@"测试" block:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            TestNestScrollViewController *viewController = [TestNestScrollViewController new];
+            viewController.refreshList = YES;
+            [self fwOpenViewController:viewController animated:YES];
+        }];
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar fwSetBackgroundClear];
+}
+
+- (void)onRefreshing
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isRefreshed = !self.isRefreshed;
+        [self.pagerView reloadData];
+        [self.pagerView.mainTableView.fwPullRefreshView stopAnimating];
+    });
 }
 
 #pragma mark - Protected
@@ -141,9 +204,12 @@
         [self.pagerView scrollToIndex:index];
     };
     
-    self.pagerView = [[FWPagerView alloc] initWithDelegate:self];
+    if (self.refreshList) {
+        self.pagerView = [[FWPagerRefreshView alloc] initWithDelegate:self];
+    } else {
+        self.pagerView = [[FWPagerView alloc] initWithDelegate:self];
+    }
     self.pagerView.pinSectionHeaderVerticalOffset = FWTopBarHeight;
-    [self.pagerView.mainTableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
     [self.view addSubview:self.pagerView];
     [self.pagerView fwPinEdgesToSuperview];
     
@@ -157,15 +223,6 @@
     cartLabel.textAlignment = NSTextAlignmentCenter;
     cartLabel.frame = CGRectMake(0, 0, FWScreenWidth, CartViewHeight);
     [cartView addSubview:cartLabel];
-}
-
-- (void)onRefreshing
-{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.isRefreshed = !self.isRefreshed;
-        [self.pagerView reloadData];
-        [self.pagerView.mainTableView.fwPullRefreshView stopAnimating];
-    });
 }
 
 #pragma mark - FWPagerViewDelegate
@@ -198,6 +255,7 @@
 - (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
 {
     TestNestChildController *listView = [TestNestChildController new];
+    listView.refreshList = self.refreshList;
     listView.isRefreshed = self.isRefreshed;
     if (index == 0) {
         listView.rows = 30;
@@ -217,8 +275,14 @@
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
     if (progress >= 1) {
         [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
+        [self.navigationController.navigationBar fwSetTextColor:[UIColor appColorHex:0x111111]];
     } else if (progress >= 0 && progress < 1) {
         [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+        if (progress <= 0.5) {
+            [self.navigationController.navigationBar fwSetTextColor:[[UIColor whiteColor] colorWithAlphaComponent:1 - progress]];
+        } else {
+            [self.navigationController.navigationBar fwSetTextColor:[[UIColor appColorHex:0x111111] colorWithAlphaComponent:progress]];
+        }
     }
 }
 
