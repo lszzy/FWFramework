@@ -128,6 +128,33 @@ static FWAttributedOption *appearance = nil;
     if (self.verticalGlyphForm) dictionary[NSVerticalGlyphFormAttributeName] = @(self.verticalGlyphForm);
     if (self.link) dictionary[NSLinkAttributeName] = self.link;
     if (self.attachment) dictionary[NSAttachmentAttributeName] = self.attachment;
+    
+    if (self.lineSpacingMultiplier && self.font) {
+        CGFloat lineSpacing = self.font.pointSize * self.lineSpacingMultiplier - (self.font.lineHeight - self.font.pointSize);
+        if (self.paragraphStyle) {
+            if (!self.paragraphStyle.lineSpacing) self.paragraphStyle.lineSpacing = lineSpacing;
+        } else {
+            NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+            paragraphStyle.lineSpacing = lineSpacing;
+            dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
+        }
+    }
+    if (self.lineHeightMultiplier && self.font) {
+        CGFloat lineHeight = self.font.pointSize * self.lineHeightMultiplier;
+        if (self.paragraphStyle) {
+            if (!self.paragraphStyle.maximumLineHeight) self.paragraphStyle.maximumLineHeight = lineHeight;
+            if (!self.paragraphStyle.minimumLineHeight) self.paragraphStyle.minimumLineHeight = lineHeight;
+        } else {
+            NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+            paragraphStyle.maximumLineHeight = lineHeight;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
+        }
+        if (!self.baselineOffset) {
+            CGFloat baselineOffset = (lineHeight - self.font.lineHeight) / 4;
+            dictionary[NSBaselineOffsetAttributeName] = @(baselineOffset);
+        }
+    }
     return dictionary;
 }
 
