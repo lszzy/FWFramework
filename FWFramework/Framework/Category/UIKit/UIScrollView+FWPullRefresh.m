@@ -283,6 +283,11 @@ static CGFloat FWPullRefreshViewHeight = 60;
         if(contentOffset.y <= 0) {
             if (!self.scrollView.fwInfiniteScrollView || !self.scrollView.fwInfiniteScrollView.isAnimating) {
                 [self scrollViewDidScroll:contentOffset];
+            } else {
+                // 修复滚动视图不够高时，快速下拉上拉再下拉刷新是否不消失的问题
+                if (self.pullingPercent > 0 && self.scrollView.isDragging && self.state == FWPullRefreshStateStopped) {
+                    self.pullingPercent = 0;
+                }
             }
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
