@@ -16,12 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief NSAttributedString属性封装器
  */
-@interface FWAttributedOption : NSObject
+@interface FWAttributedOption : NSObject <NSCopying>
+
+#pragma mark - Attribute
 
 // 设置字体
 @property (nullable, nonatomic, strong) UIFont *font;
 
-// 设置文本段落排版格式，自动延迟加载属性
+// 设置文本段落排版格式
 @property (nullable, nonatomic, strong) NSMutableParagraphStyle *paragraphStyle;
 
 // 设置字体颜色
@@ -81,8 +83,18 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置文本附件，常用于文字图片混排
 @property (nullable, nonatomic, strong) NSTextAttachment *attachment;
 
+#pragma mark - Appearance
+
+// 设置行间距倍数，需指定font生效，示例：行间距为0.5倍实际高度
+@property (nonatomic, assign) CGFloat lineSpacingMultiplier;
+
+// 设置行高倍数，需指定font生效，示例：行高为1.5倍实际高度
+@property (nonatomic, assign) CGFloat lineHeightMultiplier;
+
 // Appearance单例，统一设置样式
 + (instancetype)appearance;
+
+#pragma mark - Dictionary
 
 // 转换为属性字典
 - (NSDictionary<NSAttributedStringKey, id> *)toDictionary;

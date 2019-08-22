@@ -1,0 +1,56 @@
+//
+//  TestAttributedStringViewController.m
+//  Example
+//
+//  Created by wuyong on 2019/8/22.
+//  Copyright © 2019 wuyong.site. All rights reserved.
+//
+
+#import "TestAttributedStringViewController.h"
+
+@interface TestAttributedStringViewController ()
+
+@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, assign) NSInteger count;
+
+@end
+
+@implementation TestAttributedStringViewController
+
+- (void)renderView
+{
+    UILabel *label = [UILabel fwLabelWithFont:[UIFont appFontSize:15] textColor:[UIColor appColorHex:0x111111] text:nil];
+    _label = label;
+    label.backgroundColor = [UIColor grayColor];
+    label.numberOfLines = 0;
+    [self.view addSubview:label];
+    [label fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(15, 15, 15, 15) excludingEdge:NSLayoutAttributeBottom];
+}
+
+- (void)renderData
+{
+    [FWAttributedOption appearance].lineSpacingMultiplier = 1;
+    
+    NSMutableAttributedString *attrString = [NSMutableAttributedString new];
+    FWAttributedOption *option = [FWAttributedOption new];
+    [attrString appendAttributedString:[self renderString:option]];
+    
+    option = [FWAttributedOption new];
+    option.lineSpacingMultiplier = 2;
+    [attrString appendAttributedString:[self renderString:option]];
+    
+    option = [FWAttributedOption new];
+    [attrString appendAttributedString:[self renderString:option]];
+    self.label.attributedText = attrString;
+}
+
+- (NSAttributedString *)renderString:(FWAttributedOption *)option
+{
+    NSString *string = @"我是很长很长很长很长很长很长很长很长的文本，我是很长很长很长很长很长很长很长很长的文本。";
+    if (self.count ++ != 0) {
+        string = [@"\n" stringByAppendingString:string];
+    }
+    return [NSAttributedString fwAttributedString:string withOption:option];
+}
+
+@end
