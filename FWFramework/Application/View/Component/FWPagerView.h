@@ -12,18 +12,6 @@
 #pragma mark - FWPagerListContainerView
 
 @class FWPagerListContainerView;
-@class FWPagerListContainerCollectionView;
-
-@protocol FWPagerListContainerCollectionViewGestureDelegate <NSObject>
-@optional
-- (BOOL)pagerListContainerCollectionView:(FWPagerListContainerCollectionView *)collectionView gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
-- (BOOL)pagerListContainerCollectionView:(FWPagerListContainerCollectionView *)collectionView gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
-@end
-
-@interface FWPagerListContainerCollectionView: UICollectionView<UIGestureRecognizerDelegate>
-@property (nonatomic, assign) BOOL isNestEnabled;
-@property (nonatomic, weak) id<FWPagerListContainerCollectionViewGestureDelegate> gestureDelegate;
-@end
 
 @protocol FWPagerListContainerViewDelegate <NSObject>
 
@@ -39,7 +27,6 @@
 
 @end
 
-
 @interface FWPagerListContainerView : UIView
 
 /**
@@ -47,8 +34,9 @@
  */
 @property (nonatomic, assign) NSInteger defaultSelectedIndex;
 
+@property (nonatomic, assign) BOOL isNestEnabled;
 // 可自定义shouldBegin和shouldRecognizeSimultaneously解决手势冲突
-@property (nonatomic, strong, readonly) FWPagerListContainerCollectionView *collectionView;
+@property (nonatomic, strong, readonly) UICollectionView *collectionView;
 @property (nonatomic, weak) UITableView *mainTableView;
 
 - (instancetype)initWithDelegate:(id<FWPagerListContainerViewDelegate>)delegate NS_DESIGNATED_INITIALIZER;
