@@ -235,7 +235,7 @@
     if (self) {
         _delegate = delegate;
         _validListDict = [NSMutableDictionary dictionary];
-        _automaticallyDisplayListVerticalScrollIndicator = YES;
+        _automaticallyDisplayListVerticalScrollIndicator = NO;
         _deviceOrientationChangeEnabled = NO;
         [self initializeViews];
     }
