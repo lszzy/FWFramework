@@ -29,7 +29,10 @@
 
 - (void)renderData
 {
-    [FWAttributedOption appearance].lineSpacingMultiplier = 1;
+    FWAttributedOption *appearance = [FWAttributedOption appearance];
+    appearance.lineSpacingMultiplier = 1;
+    appearance.font = [UIFont appFontSize:15];
+    appearance.paragraphStyle = [NSMutableParagraphStyle new];
     
     NSMutableAttributedString *attrString = [NSMutableAttributedString new];
     FWAttributedOption *option = [FWAttributedOption new];
