@@ -107,11 +107,16 @@ typedef NS_ENUM(NSUInteger, FWFontWeight) {
 // 字体实际高度(不含空白)
 - (CGFloat)fwPointHeight;
 
-// 上下单边空白高度，(fwLineHeight-fwPointHeight)/2，用于精确布局
+// 字体空白高度(上下之和)
 - (CGFloat)fwSpaceHeight;
 
-// 根据字体计算倍数行间距的行距值，fwPointHeight*(multiplier-1)-(fwLineHeight-fwPointHeight)
+#pragma mark - Line
+
+// 根据字体计算指定倍数行间距的实际行距值(减去空白高度)，示例：行间距为0.5倍实际高度
 - (CGFloat)fwLineSpacingWithMultiplier:(CGFloat)multiplier;
+
+// 根据字体计算指定倍数行高的实际行高值(减去空白高度)，示例：行高为1.5倍实际高度
+- (CGFloat)fwLineHeightWithMultiplier:(CGFloat)multiplier;
 
 @end
 

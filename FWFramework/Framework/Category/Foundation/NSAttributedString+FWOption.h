@@ -7,7 +7,7 @@
  @updated    2019/8/14
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +17,69 @@ NS_ASSUME_NONNULL_BEGIN
  @brief NSAttributedString属性封装器
  */
 @interface FWAttributedOption : NSObject
+
+// 设置字体
+@property (nullable, nonatomic, strong) UIFont *font;
+
+// 设置文本段落排版格式，自动延迟加载属性
+@property (nullable, nonatomic, strong) NSMutableParagraphStyle *paragraphStyle;
+
+// 设置字体颜色
+@property (nullable, nonatomic, strong) UIColor *foregroundColor;
+
+// 设置字体所在区域背景颜色
+@property (nullable, nonatomic, strong) UIColor *backgroundColor;
+
+// 设置连体属性，0表示没有连体字符，1表示使用默认的连体字符
+@property (nonatomic, assign) NSInteger ligature;
+
+// 设置字符间距，正值间距加宽，负值间距变窄
+@property (nonatomic, assign) NSInteger kern;
+
+// 设置删除线
+@property (nonatomic, assign) NSUnderlineStyle strikethroughStyle;
+
+// 设置删除线颜色
+@property (nullable, nonatomic, strong) UIColor *strikethroughColor;
+
+// 设置下划线
+@property (nonatomic, assign) NSUnderlineStyle underlineStyle;
+
+// 设置下划线颜色
+@property (nullable, nonatomic, strong) UIColor *underlineColor;
+
+// 设置笔画宽度，负值填充效果，正值中空效果
+@property (nonatomic, assign) NSInteger strokeWidth;
+
+// 设置填充颜色
+@property (nullable, nonatomic, strong) UIColor *strokeColor;
+
+// 设置阴影属性
+@property (nullable, nonatomic, strong) NSShadow *shadow;
+
+// 设置文本特殊效果，目前只有图版印刷效果可用
+@property (nullable, nonatomic, copy) NSTextEffectStyle textEffect;
+
+// 设置基线偏移值，正值上偏，负值下偏
+@property (nonatomic, assign) CGFloat baselineOffset;
+
+// 设置字形倾斜度，正值右倾，负值左倾
+@property (nonatomic, assign) CGFloat obliqueness;
+
+// 设置文本横向拉伸属性，正值横向拉伸文本，负值横向压缩文本
+@property (nonatomic, assign) CGFloat expansion;
+
+// 设置文字书写方向，从左向右书写或者从右向左书写
+@property (nonatomic, assign) NSInteger writingDirection;
+
+// 设置文字排版方向，0表示横排文本，1表示竖排文本，iOS只支持0
+@property (nonatomic, assign) NSInteger verticalGlyphForm;
+
+// 设置链接属性，点击后调用浏览器打开指定URL地址，NSString或NSURL对象，仅UITextView支持
+@property (nullable, nonatomic, copy) NSURL *link;
+
+// 设置文本附件，常用于文字图片混排
+@property (nullable, nonatomic, strong) NSTextAttachment *attachment;
 
 // Appearance单例，统一设置样式
 + (instancetype)appearance;
