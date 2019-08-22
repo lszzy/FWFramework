@@ -709,7 +709,10 @@
 
 - (void)preferredProcessMainTableViewDidScroll:(UIScrollView *)scrollView {
     if (self.pinSectionHeaderVerticalOffset != 0) {
-        if (scrollView.contentOffset.y == 0) {
+        if (scrollView.contentOffset.y <= 0) {
+            if (scrollView.contentOffset.y < 0) {
+                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0);
+            }
             self.mainTableView.bounces = NO;
         }else {
             self.mainTableView.bounces = YES;
