@@ -237,6 +237,7 @@
         _validListDict = [NSMutableDictionary dictionary];
         _automaticallyDisplayListVerticalScrollIndicator = NO;
         _deviceOrientationChangeEnabled = NO;
+        _adjustMainScrollViewToTargetContentInset = NO;
         [self initializeViews];
     }
     return self;
@@ -346,8 +347,10 @@
 }
 
 - (void)adjustMainScrollViewToTargetContentInsetIfNeeded:(UIEdgeInsets)insets {
-    if (UIEdgeInsetsEqualToEdgeInsets(insets, self.mainTableView.contentInset) == NO) {
-        self.mainTableView.contentInset = insets;
+    if (self.adjustMainScrollViewToTargetContentInset) {
+        if (UIEdgeInsetsEqualToEdgeInsets(insets, self.mainTableView.contentInset) == NO) {
+            self.mainTableView.contentInset = insets;
+        }
     }
 }
 
