@@ -30,8 +30,8 @@
 - (void)renderData
 {
     FWAttributedOption *appearance = [FWAttributedOption appearance];
-    appearance.lineSpacingMultiplier = 1;
-    appearance.font = [UIFont appFontSize:15];
+    appearance.lineHeightMultiplier = 1.5;
+    appearance.font = [UIFont appFontSize:16];
     appearance.paragraphStyle = [NSMutableParagraphStyle new];
     
     NSMutableAttributedString *attrString = [NSMutableAttributedString new];
@@ -39,14 +39,15 @@
     [attrString appendAttributedString:[self renderString:option]];
     
     option = [FWAttributedOption new];
-    option.lineSpacingMultiplier = 2;
-    [attrString appendAttributedString:[self renderString:option]];
-    
-    option = [FWAttributedOption new];
-    [attrString appendAttributedString:[self renderString:option]];
-    
-    option = [FWAttributedOption new];
     option.lineHeightMultiplier = 2;
+    [attrString appendAttributedString:[self renderString:option]];
+    
+    option = [FWAttributedOption new];
+    [attrString appendAttributedString:[self renderString:option]];
+    
+    option = [FWAttributedOption new];
+    option.lineHeightMultiplier = 0;
+    option.lineSpacingMultiplier = 1;
     [attrString appendAttributedString:[self renderString:option]];
     self.label.attributedText = attrString;
 }

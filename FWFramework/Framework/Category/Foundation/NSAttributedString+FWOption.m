@@ -55,7 +55,7 @@ static FWAttributedOption *appearance = nil;
             self.underlineColor = appearance.underlineColor;
             self.strokeWidth = appearance.strokeWidth;
             self.strokeColor = appearance.strokeColor;
-            self.shadow = appearance.shadow;
+            self.shadow = [appearance.shadow copy];
             self.textEffect = appearance.textEffect;
             self.baselineOffset = appearance.baselineOffset;
             self.obliqueness = appearance.obliqueness;
@@ -88,7 +88,7 @@ static FWAttributedOption *appearance = nil;
     option.underlineColor = self.underlineColor;
     option.strokeWidth = self.strokeWidth;
     option.strokeColor = self.strokeColor;
-    option.shadow = self.shadow;
+    option.shadow = [self.shadow copy];
     option.textEffect = self.textEffect;
     option.baselineOffset = self.baselineOffset;
     option.obliqueness = self.obliqueness;
@@ -102,50 +102,49 @@ static FWAttributedOption *appearance = nil;
     return option;
 }
 
-#pragma mark - Dictionary
+#pragma mark - Public
 
 - (NSDictionary<NSAttributedStringKey,id> *)toDictionary
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     if (self.font) dictionary[NSFontAttributeName] = self.font;
-    if (self.paragraphStyle) dictionary[NSParagraphStyleAttributeName] = self.paragraphStyle;
+    if (self.paragraphStyle) dictionary[NSParagraphStyleAttributeName] = [self.paragraphStyle mutableCopy];
     if (self.foregroundColor) dictionary[NSForegroundColorAttributeName] = self.foregroundColor;
     if (self.backgroundColor) dictionary[NSBackgroundColorAttributeName] = self.backgroundColor;
-    if (self.ligature) dictionary[NSLigatureAttributeName] = @(self.ligature);
-    if (self.kern) dictionary[NSKernAttributeName] = @(self.kern);
-    if (self.strikethroughStyle) dictionary[NSStrikethroughStyleAttributeName] = @(self.strikethroughStyle);
+    if (self.ligature) dictionary[NSLigatureAttributeName] = self.ligature;
+    if (self.kern) dictionary[NSKernAttributeName] = self.kern;
+    if (self.strikethroughStyle) dictionary[NSStrikethroughStyleAttributeName] = self.strikethroughStyle;
     if (self.strikethroughColor) dictionary[NSStrikethroughColorAttributeName] = self.strikethroughColor;
-    if (self.underlineStyle) dictionary[NSUnderlineStyleAttributeName] = @(self.underlineStyle);
+    if (self.underlineStyle) dictionary[NSUnderlineStyleAttributeName] = self.underlineStyle;
     if (self.underlineColor) dictionary[NSUnderlineColorAttributeName] = self.underlineColor;
-    if (self.strokeWidth) dictionary[NSStrokeWidthAttributeName] = @(self.strokeWidth);
+    if (self.strokeWidth) dictionary[NSStrokeWidthAttributeName] = self.strokeWidth;
     if (self.strokeColor) dictionary[NSStrokeColorAttributeName] = self.strokeColor;
-    if (self.shadow) dictionary[NSShadowAttributeName] = self.shadow;
+    if (self.shadow) dictionary[NSShadowAttributeName] = [self.shadow copy];
     if (self.textEffect) dictionary[NSTextEffectAttributeName] = self.textEffect;
-    if (self.baselineOffset) dictionary[NSBaselineOffsetAttributeName] = @(self.baselineOffset);
-    if (self.obliqueness) dictionary[NSObliquenessAttributeName] = @(self.obliqueness);
-    if (self.expansion) dictionary[NSExpansionAttributeName] = @(self.expansion);
-    if (self.writingDirection) dictionary[NSWritingDirectionAttributeName] = @(self.writingDirection);
-    if (self.verticalGlyphForm) dictionary[NSVerticalGlyphFormAttributeName] = @(self.verticalGlyphForm);
+    if (self.baselineOffset) dictionary[NSBaselineOffsetAttributeName] = self.baselineOffset;
+    if (self.obliqueness) dictionary[NSObliquenessAttributeName] = self.obliqueness;
+    if (self.expansion) dictionary[NSExpansionAttributeName] = self.expansion;
+    if (self.writingDirection) dictionary[NSWritingDirectionAttributeName] = self.writingDirection;
+    if (self.verticalGlyphForm) dictionary[NSVerticalGlyphFormAttributeName] = self.verticalGlyphForm;
     if (self.link) dictionary[NSLinkAttributeName] = self.link;
     if (self.attachment) dictionary[NSAttachmentAttributeName] = self.attachment;
     
-    if (self.lineHeightMultiplier && self.font) {
+    if (self.lineHeightMultiplier > 0 && self.font) {
         CGFloat lineHeight = self.font.pointSize * self.lineHeightMultiplier;
-        NSMutableParagraphStyle *paragraphStyle = [self.paragraphStyle mutableCopy];
-        if (!paragraphStyle) paragraphStyle = [NSMutableParagraphStyle new];
+        NSMutableParagraphStyle *paragraphStyle = dictionary[NSParagraphStyleAttributeName] ?: [NSMutableParagraphStyle new];
         if (!paragraphStyle.maximumLineHeight) paragraphStyle.maximumLineHeight = lineHeight;
         if (!paragraphStyle.minimumLineHeight) paragraphStyle.minimumLineHeight = lineHeight;
         dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
-        if (!self.baselineOffset) {
+        
+        if (!dictionary[NSBaselineOffsetAttributeName]) {
             CGFloat baselineOffset = (lineHeight - self.font.lineHeight) / 4;
             dictionary[NSBaselineOffsetAttributeName] = @(baselineOffset);
         }
     }
     
-    if (self.lineSpacingMultiplier && self.font) {
+    if (self.lineSpacingMultiplier > 0 && self.font) {
         CGFloat lineSpacing = self.font.pointSize * self.lineSpacingMultiplier - (self.font.lineHeight - self.font.pointSize);
-        NSMutableParagraphStyle *paragraphStyle = [self.paragraphStyle mutableCopy];
-        if (!paragraphStyle) paragraphStyle = [NSMutableParagraphStyle new];
+        NSMutableParagraphStyle *paragraphStyle = dictionary[NSParagraphStyleAttributeName] ?: [NSMutableParagraphStyle new];
         if (!paragraphStyle.lineSpacing) paragraphStyle.lineSpacing = lineSpacing;
         dictionary[NSParagraphStyleAttributeName] = paragraphStyle;
     }
