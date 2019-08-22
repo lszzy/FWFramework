@@ -345,12 +345,6 @@
     self.mainTableView.tableHeaderView = containerView;
 }
 
-- (void)adjustMainScrollViewToTargetContentInsetIfNeeded:(UIEdgeInsets)insets {
-    if (UIEdgeInsetsEqualToEdgeInsets(insets, self.mainTableView.contentInset) == NO) {
-        self.mainTableView.contentInset = insets;
-    }
-}
-
 - (void)listViewDidScroll:(UIScrollView *)scrollView {
     self.currentScrollingListView = scrollView;
     
@@ -457,18 +451,6 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.pinSectionHeaderVerticalOffset != 0) {
-        if (scrollView.contentOffset.y < self.pinSectionHeaderVerticalOffset) {
-            //因为设置了contentInset.top，所以顶部会有对应高度的空白区间，所以需要设置负数抵消掉
-            if (scrollView.contentOffset.y >= 0) {
-                [self adjustMainScrollViewToTargetContentInsetIfNeeded:UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0)];
-            }
-        }else if (scrollView.contentOffset.y > self.pinSectionHeaderVerticalOffset){
-            //固定的位置就是contentInset.top
-            [self adjustMainScrollViewToTargetContentInsetIfNeeded:UIEdgeInsetsMake(self.pinSectionHeaderVerticalOffset, 0, 0, 0)];
-        }
-    }
-    
     [self preferredProcessMainTableViewDidScroll:scrollView];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(pagerView:mainTableViewDidScroll:)]) {
@@ -489,9 +471,6 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (self.isListHorizontalScrollEnabled) {
         self.listContainerView.collectionView.scrollEnabled = YES;
-    }
-    if (self.mainTableView.contentInset.top != 0 && self.pinSectionHeaderVerticalOffset != 0) {
-        [self adjustMainScrollViewToTargetContentInsetIfNeeded:UIEdgeInsetsZero];
     }
 }
 
