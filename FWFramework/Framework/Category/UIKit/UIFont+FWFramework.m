@@ -150,12 +150,19 @@ UIFont * FWFontItalic(CGFloat fontSize) {
 
 - (CGFloat)fwSpaceHeight
 {
-    return (self.lineHeight - self.pointSize) / 2.f;
+    return self.lineHeight - self.pointSize;
 }
+
+#pragma mark - Line
 
 - (CGFloat)fwLineSpacingWithMultiplier:(CGFloat)multiplier
 {
-    return self.pointSize * (multiplier - 1.f) - (self.lineHeight - self.pointSize);
+    return self.pointSize * multiplier - (self.lineHeight - self.pointSize);
+}
+
+- (CGFloat)fwLineHeightWithMultiplier:(CGFloat)multiplier
+{
+    return self.pointSize * multiplier;
 }
 
 @end

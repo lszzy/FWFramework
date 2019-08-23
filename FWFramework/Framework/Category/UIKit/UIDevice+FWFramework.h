@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWIsIpad \
     (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
 
-// iOS系统版本
+// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
 #define FWIosVersion \
     [[[UIDevice currentDevice] systemVersion] floatValue]
 
@@ -74,6 +74,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 设备是否横屏，无论支不支持横屏
 + (BOOL)fwIsDeviceLandscape;
+
+// 设置界面方向，支持旋转方向时生效
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
 
 #pragma mark - Version
 

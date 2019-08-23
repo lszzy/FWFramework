@@ -98,6 +98,17 @@
     return UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]);
 }
 
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation
+{
+    if ([UIDevice currentDevice].orientation == orientation) {
+        [UIViewController attemptRotationToDeviceOrientation];
+        return NO;
+    }
+    
+    [[UIDevice currentDevice] setValue:@(orientation) forKey:@"orientation"];
+    return YES;
+}
+
 #pragma mark - Version
 
 + (float)fwIosVersion
@@ -147,12 +158,13 @@
 + (void)fwSetDeviceToken:(NSData *)tokenData
 {
     if (tokenData) {
-        const unsigned *tokenBytes = (const unsigned *)[tokenData bytes];
-        NSString *deviceToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
-                                 ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-                                 ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-                                 ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-        [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:@"FWDeviceToken"];
+        NSMutableString *deviceToken = [NSMutableString string];
+        const char *bytes = tokenData.bytes;
+        NSInteger count = tokenData.length;
+        for (int i = 0; i < count; i++) {
+            [deviceToken appendFormat:@"%02x", bytes[i] & 0x000000FF];
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:[deviceToken copy] forKey:@"FWDeviceToken"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];

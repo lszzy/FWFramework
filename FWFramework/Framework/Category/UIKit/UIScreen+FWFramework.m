@@ -103,6 +103,11 @@
     return [self fwIsScreenX] ? 83.0 : 49.0;
 }
 
++ (CGFloat)fwToolBarHeight
+{
+    return [self fwIsScreenX] ? 78.0 : 44.0;
+}
+
 + (CGFloat)fwTopBarHeight
 {
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
@@ -174,6 +179,15 @@
         return 0.0;
     } else {
         return self.tabBarController.tabBar.frame.size.height;
+    }
+}
+
+- (CGFloat)fwToolBarHeight
+{
+    if (self.navigationController.toolbarHidden) {
+        return 0.0;
+    } else {
+        return self.navigationController.toolbar.frame.size.height;
     }
 }
 

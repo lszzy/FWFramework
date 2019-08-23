@@ -7,7 +7,7 @@
  @updated    2018/9/18
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
  @brief NSNumber+FWFramework
  */
 @interface NSNumber (FWFramework)
+
+// 转换为CGFloat
+- (CGFloat)fwCGFloatValue;
 
 // 小数展示，去掉末尾0，最多digit位
 - (NSString *)fwDigitString:(NSInteger)digit;

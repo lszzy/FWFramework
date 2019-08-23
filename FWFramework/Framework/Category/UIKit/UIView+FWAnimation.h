@@ -52,8 +52,17 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Animation
 
 /**
+ @brief 添加UIView动画，使用默认动画参数
+ @discussion 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取，下同
+ 
+ @param block      动画代码块
+ @param completion 完成事件
+ */
+- (void)fwAddAnimationWithBlock:(void (^)(void))block
+                     completion:(nullable void (^)(BOOL finished))completion;
+
+/**
  @brief 添加UIView动画
- @discussion 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取
  
  @param block      动画代码块
  @param duration   持续时间
