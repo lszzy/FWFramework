@@ -118,14 +118,15 @@
 - (void)fwInnerUIParallaxDimmingViewLayoutSubviews
 {
     [self fwInnerUIParallaxDimmingViewLayoutSubviews];
-    // 处理导航栏左侧阴影占不满的问题
-    if ([self.subviews.firstObject isKindOfClass:[UIImageView class]]) {
-        UIImageView *imageView = self.subviews.firstObject;
-        if (self.frame.origin.y > 0 && imageView.frame.origin.y == 0) {
-            imageView.frame = CGRectMake(imageView.frame.origin.x,
-                                         imageView.frame.origin.y - self.frame.origin.y,
-                                         imageView.frame.size.width,
-                                         imageView.frame.size.height + self.frame.origin.y);
+    // 处理导航栏左侧阴影占不满的问题。兼容iOS13下如果navigationBar是磨砂的，则每个视图内部都会有一个磨砂，而磨砂再包裹了imageView等subview
+    if ([self.subviews.firstObject isKindOfClass:[UIImageView class]] ||
+        [self.subviews.firstObject isKindOfClass:[UIVisualEffectView class]]) {
+        UIView *shadowView = self.subviews.firstObject;
+        if (self.frame.origin.y > 0 && shadowView.frame.origin.y == 0) {
+            shadowView.frame = CGRectMake(shadowView.frame.origin.x,
+                                          shadowView.frame.origin.y - self.frame.origin.y,
+                                          shadowView.frame.size.width,
+                                          shadowView.frame.size.height + self.frame.origin.y);
         }
     }
 }

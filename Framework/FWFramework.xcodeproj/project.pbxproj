@@ -223,6 +223,8 @@
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
+		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -242,6 +244,8 @@
 		2FA99E99228E71DA0059DFDB /* FWNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */; };
 		2FA99EA7228E80810059DFDB /* UISwitch+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99EA5228E80810059DFDB /* UISwitch+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA99EA8228E80810059DFDB /* UISwitch+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99EA6228E80810059DFDB /* UISwitch+FWFramework.m */; };
+		2FACF02E2303A90B007AFC16 /* UIView+FWTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FACF02F2303A90B007AFC16 /* UIView+FWTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -309,6 +313,8 @@
 		2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */; };
 		2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */; };
+		2FDD34EE2303A63900624BBD /* NSAttributedString+FWOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FDD34EF2303A63900624BBD /* NSAttributedString+FWOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */; };
 		2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -532,6 +538,8 @@
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
+		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
+		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
 		2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCalendar+FWFramework.h"; sourceTree = "<group>"; };
@@ -552,6 +560,8 @@
 		2FA99E97228E71DA0059DFDB /* FWNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWNotificationManager.m; sourceTree = "<group>"; };
 		2FA99EA5228E80810059DFDB /* UISwitch+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISwitch+FWFramework.h"; sourceTree = "<group>"; };
 		2FA99EA6228E80810059DFDB /* UISwitch+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISwitch+FWFramework.m"; sourceTree = "<group>"; };
+		2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWTheme.h"; sourceTree = "<group>"; };
+		2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWTheme.m"; sourceTree = "<group>"; };
 		2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+FWFramework.h"; sourceTree = "<group>"; };
 		2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+FWFramework.m"; sourceTree = "<group>"; };
 		2FB7CBC721C23728002E5412 /* FWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
@@ -619,6 +629,8 @@
 		2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWScrollViewController.m; sourceTree = "<group>"; };
 		2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+FWFramework.h"; sourceTree = "<group>"; };
 		2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+FWFramework.m"; sourceTree = "<group>"; };
+		2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+FWOption.h"; sourceTree = "<group>"; };
+		2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+FWOption.m"; sourceTree = "<group>"; };
 		2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBack.h"; sourceTree = "<group>"; };
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
@@ -755,6 +767,8 @@
 				2F1E626622BD4A2B00A1AB49 /* UIView+FWLayoutChain.h */,
 				2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */,
 				2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */,
+				2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */,
+				2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
 				2F03A4F6216CF4B9001965A1 /* UIViewController+FWAlert.m */,
 				2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */,
@@ -781,6 +795,8 @@
 				2F03A549216CF4B9001965A1 /* NSArray+FWFramework.m */,
 				2F0FFF2E21D20EA800049383 /* NSAttributedString+FWFramework.h */,
 				2F0FFF2F21D20EA800049383 /* NSAttributedString+FWFramework.m */,
+				2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */,
+				2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */,
 				2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */,
 				2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */,
 				2FBFB70722C5045400E669B6 /* NSBundle+FWFramework.swift */,
@@ -1104,6 +1120,8 @@
 				2FB90F0E21F4A00C00084D76 /* FWMarqueeLabel.m */,
 				2F1D984521E6FD2800769651 /* FWPageControl.h */,
 				2F1D984621E6FD2800769651 /* FWPageControl.m */,
+				2F69A64D230D223D0063D95A /* FWPagerView.h */,
+				2F69A64E230D223D0063D95A /* FWPagerView.m */,
 				2FB90F6521F97E6C00084D76 /* FWPhotoBrowser.h */,
 				2FB90F6621F97E6C00084D76 /* FWPhotoBrowser.m */,
 				2F1E39382178F0B80051A6BB /* FWProgressView.h */,
@@ -1125,6 +1143,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */,
+				2FACF02E2303A90B007AFC16 /* UIView+FWTheme.h in Headers */,
+				2FDD34EE2303A63900624BBD /* NSAttributedString+FWOption.h in Headers */,
 				2F71FD8A22E2E64400E905BE /* FWDrawerView.h in Headers */,
 				2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */,
 				2FBFB76822C6766B00E669B6 /* FWTest.h in Headers */,
@@ -1494,6 +1515,7 @@
 				2F03A59E216CF4B9001965A1 /* UIImageView+FWFramework.m in Sources */,
 				2F03A5EC216CF4B9001965A1 /* FWVersionManager.m in Sources */,
 				2F03A5BD216CF4B9001965A1 /* UIScreen+FWFramework.m in Sources */,
+				2FDD34EF2303A63900624BBD /* NSAttributedString+FWOption.m in Sources */,
 				2F03A5F1216CF4B9001965A1 /* FWMutableDictionary.m in Sources */,
 				2F03A5E2216CF4B9001965A1 /* NSString+FWFramework.m in Sources */,
 				2FB7CBCA21C23728002E5412 /* FWBannerView.m in Sources */,
@@ -1508,10 +1530,12 @@
 				2F03A63F216CF882001965A1 /* FWBatchRequest.m in Sources */,
 				2F03A64C216CF882001965A1 /* FWHTTPSessionManager.m in Sources */,
 				2F03A5B2216CF4B9001965A1 /* UIViewController+FWTransition.m in Sources */,
+				2FACF02F2303A90B007AFC16 /* UIView+FWTheme.m in Sources */,
 				2F03A655216CF882001965A1 /* FWAutoPurgingImageCache.m in Sources */,
 				2F0FFF1A21D0ACFA00049383 /* UIScrollView+FWPullRefresh.m in Sources */,
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
+				2F69A650230D223D0063D95A /* FWPagerView.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
 				2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */,
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,

@@ -8,6 +8,7 @@
  */
 
 #import "UIScrollView+FWPullRefresh.h"
+#import "UIScrollView+FWInfiniteScroll.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
@@ -280,7 +281,14 @@ static CGFloat FWPullRefreshViewHeight = 60;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if(contentOffset.y <= 0) {
-            [self scrollViewDidScroll:contentOffset];
+            if (!self.scrollView.fwInfiniteScrollView || !self.scrollView.fwInfiniteScrollView.isAnimating) {
+                [self scrollViewDidScroll:contentOffset];
+            } else {
+                // 修复滚动视图不够高时，快速下拉上拉再下拉刷新是否不消失的问题
+                if (self.pullingPercent > 0 && self.scrollView.isDragging && self.state == FWPullRefreshStateStopped) {
+                    self.pullingPercent = 0;
+                }
+            }
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
@@ -308,7 +316,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
         else if(contentOffset.y >= scrollOffsetThreshold && self.state != FWPullRefreshStateStopped)
             self.state = FWPullRefreshStateStopped;
         else if(contentOffset.y >= scrollOffsetThreshold && self.state == FWPullRefreshStateStopped)
-            self.pullingPercent = MAX(1.f - (contentOffset.y - scrollOffsetThreshold) / FWPullRefreshViewHeight, 0);
+            self.pullingPercent = MAX(MIN(1.f - (FWPullRefreshViewHeight + contentOffset.y) / FWPullRefreshViewHeight, 1.f), 0.f);
     } else {
         CGFloat offset = MAX(self.scrollView.contentOffset.y * -1, 0.0f);
         offset = MIN(offset, self.originalTopInset + self.bounds.size.height);
@@ -440,7 +448,6 @@ static CGFloat FWPullRefreshViewHeight = 60;
 - (void)setPullingPercent:(CGFloat)pullingPercent
 {
     _pullingPercent = pullingPercent;
-    // change alpha with pullingPercent
     self.alpha = pullingPercent;
 }
 

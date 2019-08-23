@@ -9,28 +9,76 @@
 #import "TestNestScrollViewController.h"
 #import "BaseTableViewController.h"
 
-@interface TestNestChildController : BaseTableViewController
+#define HeaderViewHeight 150
+#define SegmentViewHeight 50
+#define NavigationViewHeight FWTopBarHeight
+#define CartViewHeight FWTabBarHeight
+#define HoverMaxY (HeaderViewHeight - NavigationViewHeight)
+#define ChildViewHeight (FWScreenHeight - NavigationViewHeight - SegmentViewHeight)
 
+@interface TestNestChildController : BaseTableViewController <FWPagerViewListViewDelegate>
+
+@property (nonatomic, assign) BOOL refreshList;
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
-@property (nonatomic, copy) void (^scrollViewDidScrollBlock)(UIScrollView *scrollView);
+@property (nonatomic, assign) BOOL cart;
+@property (nonatomic, assign) BOOL isRefreshed;
+
+@property (nonatomic, copy) void(^scrollCallback)(UIScrollView *scrollView);
 
 @end
 
 @implementation TestNestChildController
 
+- (void)renderTableLayout
+{
+    [self.tableView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0)];
+}
+
+- (void)renderView
+{
+    if (self.refreshList) {
+        [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    }
+    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+}
+
 - (void)renderData
 {
     for (int i = 0; i < self.rows; i++) {
-        [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
+        if (self.isRefreshed) {
+            [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(i)]];
+        } else {
+            [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
+        }
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)onRefreshing
 {
-    if (self.scrollViewDidScrollBlock) {
-        self.scrollViewDidScrollBlock(scrollView);
-    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isRefreshed = !self.isRefreshed;
+        [self.dataList removeAllObjects];
+        [self renderData];
+        [self.tableView reloadData];
+        [self.tableView.fwPullRefreshView stopAnimating];
+    });
+}
+
+- (void)onLoading
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSInteger rows = self.dataList.count;
+        for (int i = 0; i < 5; i++) {
+            if (self.isRefreshed) {
+                [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(rows + i)]];
+            } else {
+                [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
+            }
+        }
+        [self.tableView reloadData];
+        [self.tableView.fwInfiniteScrollView stopAnimating];
+    });
 }
 
 #pragma mark - TableView
@@ -56,34 +104,45 @@
     return view;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self fwShowAlertWithTitle:[NSString stringWithFormat:@"点击%@", @(indexPath.row)] message:nil cancel:@"关闭" cancelBlock:nil];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.scrollCallback) {
+        self.scrollCallback(scrollView);
+    }
+}
+
+#pragma mark - FWPagerViewListViewDelegate
+
+- (UIView *)pagerListView
+{
+    return self.view;
+}
+
+- (UIScrollView *)pagerListScrollView
+{
+    return self.tableView;
+}
+
+- (void)pagerListViewDidScrollCallback:(void (^)(UIScrollView *))callback
+{
+    self.scrollCallback = callback;
+}
+
 @end
 
-#define HeaderViewHeight 150
-#define SegmentViewHeight 50
-#define NavigationViewHeight (FWStatusBarHeight + FWNavigationBarHeight)
-#define CartViewHeight FWTabBarHeight
-#define HoverMaxY (self.isTop ? (HeaderViewHeight - NavigationViewHeight) : HeaderViewHeight)
-#define ChildViewHeight (FWScreenHeight - NavigationViewHeight - SegmentViewHeight)
+@interface TestNestScrollViewController () <FWPagerViewDelegate>
 
-@interface TestNestScrollViewController () <UIScrollViewDelegate>
-
-@property (nonatomic, assign) BOOL isTop;
-
-@property (nonatomic, strong) UIView *segmentView;
-@property (nonatomic, strong) UIView *hoverView;
-@property (nonatomic, strong) UIScrollView *nestView;
+@property (nonatomic, assign) BOOL refreshList;
+@property (nonatomic, strong) FWPagerView *pagerView;
+@property (nonatomic, strong) UIImageView *headerView;
+@property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 @property (nonatomic, strong) UIView *cartView;
-
-@property (nonatomic, strong) UIButton *orderButton;
-@property (nonatomic, strong) UIButton *reviewButton;
-@property (nonatomic, strong) UIButton *shopButton;
-
-@property (nonatomic, strong) TestNestChildController *orderController;
-@property (nonatomic, strong) TestNestChildController *reviewController;
-@property (nonatomic, strong) TestNestChildController *shopController;
-
-@property (nonatomic, assign) NSInteger segmentIndex;
-@property (nonatomic, strong) UIScrollView *segmentScrollView;
+@property (nonatomic, assign) BOOL isRefreshed;
 
 @end
 
@@ -93,131 +152,66 @@
 {
     self = [super init];
     if (self) {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-        [self fwSetBackBarTitle:@""];
-    }
-    return self;
-}
-
-- (void)setIsTop:(BOOL)isTop
-{
-    _isTop = isTop;
-    
-    if (isTop) {
         [self fwSetBarExtendEdge:UIRectEdgeTop];
     }
+    return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self.navigationController.navigationBar fwSetBackgroundClear];
-    
-    FWWeakifySelf();
-    [self fwSetRightBarItem:@"切换" block:^(id sender) {
-        FWStrongifySelf();
+    if (!self.refreshList) {
+        [self.pagerView.mainTableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
         
-        TestNestScrollViewController *viewController = [TestNestScrollViewController new];
-        viewController.isTop = !self.isTop;
-        [self fwOpenViewController:viewController animated:YES];
-    }];
+        FWWeakifySelf();
+        [self fwSetRightBarItem:@"测试" block:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            TestNestScrollViewController *viewController = [TestNestScrollViewController new];
+            viewController.refreshList = YES;
+            [self fwOpenViewController:viewController animated:YES];
+        }];
+    }
 }
 
-- (void)renderScrollLayout
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super renderScrollLayout];
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar fwSetBackgroundClear];
+}
+
+- (void)onRefreshing
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isRefreshed = !self.isRefreshed;
+        [self.pagerView reloadData];
+        [self.pagerView.mainTableView.fwPullRefreshView stopAnimating];
+    });
+}
+
+#pragma mark - Protected
+
+- (void)renderView
+{
+    self.headerView = [[UIImageView alloc] init];
+    self.headerView.image = [UIImage imageNamed:@"public_picture"];
     
-    self.scrollView.delegate = self;
-    self.scrollView.fwTempObject = @YES;
+    self.segmentedControl = [FWSegmentedControl new];
+    self.segmentedControl.sectionTitles = @[@"下单", @"评价", @"商家"];
     FWWeakifySelf();
-    self.scrollView.fwShouldRecognizeSimultaneously = ^BOOL(UIGestureRecognizer *gestureRecognizer, UIGestureRecognizer *otherGestureRecognizer) {
+    self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
         FWStrongifySelf();
-        /*
-        // nestView左右滚动时禁止同时响应手势，不能同时上下滚动
-        UISwipeGestureRecognizerDirection direction = self.nestView.fwScrollDirection;
-        if (direction == UISwipeGestureRecognizerDirectionLeft ||
-            direction == UISwipeGestureRecognizerDirectionRight) {
-            return NO;
-        }*/
-        // nestView拖动中不能同时响应手势
-        UIGestureRecognizerState state = self.nestView.panGestureRecognizer.state;
-        if (state != UIGestureRecognizerStatePossible) {
-            return NO;
-        }
-        return YES;
+        [self.pagerView scrollToIndex:index];
     };
     
-    UIImageView *imageView = [UIImageView fwAutoLayoutView];
-    imageView.image = [UIImage imageNamed:@"public_picture"];
-    [self.contentView addSubview:imageView]; {
-        [imageView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-        [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-        [imageView fwSetDimension:NSLayoutAttributeHeight toSize:HeaderViewHeight];
+    if (self.refreshList) {
+        self.pagerView = [[FWPagerRefreshView alloc] initWithDelegate:self];
+    } else {
+        self.pagerView = [[FWPagerView alloc] initWithDelegate:self];
     }
-    
-    UIView *segmentView = [UIView fwAutoLayoutView];
-    _segmentView = segmentView;
-    segmentView.backgroundColor = [UIColor whiteColor];
-    [self.contentView addSubview:segmentView]; {
-        [segmentView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-        [segmentView fwPinEdgeToSuperview:NSLayoutAttributeRight];
-        [segmentView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView];
-        [segmentView fwSetDimension:NSLayoutAttributeHeight toSize:SegmentViewHeight];
-    }
-    
-    UIView *hoverView = [UIView fwAutoLayoutView];
-    _hoverView = hoverView;
-    hoverView.backgroundColor = [UIColor whiteColor];
-    [hoverView fwSetBorderView:UIRectEdgeBottom color:[UIColor appColorHex:0xDDDDDD] width:1];
-    [segmentView addSubview:hoverView]; {
-        [hoverView fwPinEdgesToSuperview];
-    }
-    
-    UIButton *orderButton = [UIButton fwButtonWithFont:[UIFont appFontNormal] titleColor:[UIColor appColorHex:0x111111] title:@"下单"];
-    _orderButton = orderButton;
-    [orderButton setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
-    orderButton.tag = 0;
-    [orderButton fwAddTouchTarget:self action:@selector(onSegmentChanged:)];
-    [hoverView addSubview:orderButton];
-    [orderButton fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeRight];
-    [orderButton fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:hoverView withMultiplier:1 / 3.f];
-    
-    UIButton *reviewButton = [UIButton fwButtonWithFont:[UIFont appFontNormal] titleColor:[UIColor appColorHex:0x111111] title:@"评价"];
-    _reviewButton = reviewButton;
-    [reviewButton setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
-    reviewButton.tag = 1;
-    [reviewButton fwAddTouchTarget:self action:@selector(onSegmentChanged:)];
-    [hoverView addSubview:reviewButton];
-    [reviewButton fwPinEdgeToSuperview:NSLayoutAttributeTop];
-    [reviewButton fwPinEdgeToSuperview:NSLayoutAttributeBottom];
-    [reviewButton fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:orderButton];
-    [reviewButton fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:hoverView withMultiplier:1
-     / 3.f];
-    
-    UIButton *shopButton = [UIButton fwButtonWithFont:[UIFont appFontNormal] titleColor:[UIColor appColorHex:0x111111] title:@"商家"];
-    _shopButton = shopButton;
-    [shopButton setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
-    shopButton.tag = 2;
-    [shopButton fwAddTouchTarget:self action:@selector(onSegmentChanged:)];
-    [hoverView addSubview:shopButton];
-    [shopButton fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeLeft];
-    [shopButton fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:hoverView withMultiplier:1 / 3.f];
-    
-    UIScrollView *nestView = [UIScrollView fwAutoLayoutView];
-    _nestView = nestView;
-    nestView.delegate = self;
-    nestView.backgroundColor = [UIColor appColorBg];
-    nestView.pagingEnabled = YES;
-    nestView.bounces = NO;
-    nestView.showsVerticalScrollIndicator = NO;
-    nestView.showsHorizontalScrollIndicator = NO;
-    nestView.contentSize = CGSizeMake(FWScreenWidth * 3, ChildViewHeight);
-    [self.contentView addSubview:nestView]; {
-        [nestView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-        [nestView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:segmentView];
-        [nestView fwSetDimension:NSLayoutAttributeHeight toSize:ChildViewHeight];
-    }
+    self.pagerView.pinSectionHeaderVerticalOffset = FWTopBarHeight;
+    [self.view addSubview:self.pagerView];
+    [self.pagerView fwPinEdgesToSuperview];
     
     UIView *cartView = [UIView fwAutoLayoutView];
     _cartView = cartView;
@@ -231,132 +225,71 @@
     [cartView addSubview:cartLabel];
 }
 
-- (void)renderView
+#pragma mark - FWPagerViewDelegate
+
+- (NSUInteger)tableHeaderViewHeightInPagerView:(FWPagerView *)pagerView
 {
-    self.orderController = [TestNestChildController new];
-    self.orderController.rows = 30;
-    self.orderController.section = YES;
-    FWWeakifySelf();
-    self.orderController.scrollViewDidScrollBlock = ^(UIScrollView *scrollView) {
-        FWStrongifySelf();
-        [self scrollViewDidScroll:scrollView];
-    };
-    [self addChildViewController:self.orderController];
-    [self.nestView addSubview:self.orderController.view];
-    self.orderController.view.frame = CGRectMake(0, 0, FWScreenWidth, ChildViewHeight - CartViewHeight);
-    
-    self.reviewController = [TestNestChildController new];
-    self.reviewController.rows = 50;
-    self.reviewController.scrollViewDidScrollBlock = ^(UIScrollView *scrollView) {
-        FWStrongifySelf();
-        [self scrollViewDidScroll:scrollView];
-    };
-    [self addChildViewController:self.reviewController];
-    [self.nestView addSubview:self.reviewController.view];
-    self.reviewController.view.frame = CGRectMake(FWScreenWidth, 0, FWScreenWidth, ChildViewHeight);
-    
-    self.shopController = [TestNestChildController new];
-    self.shopController.rows = 5;
-    self.shopController.scrollViewDidScrollBlock = ^(UIScrollView *scrollView) {
-        FWStrongifySelf();
-        [self scrollViewDidScroll:scrollView];
-    };
-    [self addChildViewController:self.shopController];
-    [self.nestView addSubview:self.shopController.view];
-    self.shopController.view.frame = CGRectMake(FWScreenWidth * 2, 0, FWScreenWidth, ChildViewHeight);
-    
-    // 默认选中第一个
-    _segmentIndex = -1;
-    self.segmentIndex = 0;
+    return HeaderViewHeight;
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (UIView *)tableHeaderViewInPagerView:(FWPagerView *)pagerView
 {
-    // 主视图
-    if (scrollView == self.scrollView) {
-        // 导航栏透明度
-        CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - (self.isTop ? NavigationViewHeight : 0));
-        if (progress >= 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
-        } else if (progress >= 0 && progress < 1) {
-            [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
-        }
-        
-        // 不能滚动时固定顶部
-        if (![scrollView.fwTempObject boolValue]) {
-            scrollView.contentOffset = CGPointMake(0, HoverMaxY);
-        // 固定在悬停位置
-        } else if (scrollView.contentOffset.y >= HoverMaxY) {
-            scrollView.contentOffset = CGPointMake(0, HoverMaxY);
-            scrollView.fwTempObject = @NO;
-            self.segmentScrollView.fwTempObject = @YES;
-        }
-    }
-    
-    // 子视图
-    if (scrollView == self.segmentScrollView) {
-        // 子视图不可滚动时，固定在顶部
-        if (![scrollView.fwTempObject boolValue]) {
-            scrollView.contentOffset = CGPointZero;
-        // 子视图滚动到顶部时固定，标记主视图可滚动
-        } else if (scrollView.contentOffset.y <= 0) {
-            scrollView.contentOffset = CGPointZero;
-            self.scrollView.fwTempObject = @YES;
-            scrollView.fwTempObject = @NO;
-        }
-    }
+    return self.headerView;
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+- (NSUInteger)pinSectionHeaderHeightInPagerView:(FWPagerView *)pagerView
 {
-    // 子视图容器
-    if (scrollView == self.nestView) {
-        // 左右滚动切换segmentIndex
-        NSInteger selectedIndex = scrollView.contentOffset.x / FWScreenWidth;
-        self.segmentIndex = selectedIndex;
-    }
+    return SegmentViewHeight;
 }
 
-#pragma mark - Action
-
-- (void)setSegmentIndex:(NSInteger)segmentIndex
+- (UIView *)pinSectionHeaderInPagerView:(FWPagerView *)pagerView
 {
-    if (_segmentIndex == segmentIndex) {
-        return;
-    }
-    
-    _segmentIndex = segmentIndex;
-    if (segmentIndex == 0) {
-        self.cartView.hidden = NO;
-        self.reviewButton.selected = NO;
-        self.shopButton.selected = NO;
-        self.orderButton.selected = YES;
-        self.segmentScrollView = self.orderController.tableView;
-    } else if (segmentIndex == 1) {
-        self.cartView.hidden = YES;
-        self.orderButton.selected = NO;
-        self.shopButton.selected = NO;
-        self.reviewButton.selected = YES;
-        self.segmentScrollView = self.reviewController.tableView;
+    return self.segmentedControl;
+}
+
+- (NSInteger)numberOfListViewsInPagerView:(FWPagerView *)pagerView
+{
+    return self.segmentedControl.sectionTitles.count;
+}
+
+- (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
+{
+    TestNestChildController *listView = [TestNestChildController new];
+    listView.refreshList = self.refreshList;
+    listView.isRefreshed = self.isRefreshed;
+    if (index == 0) {
+        listView.rows = 30;
+        listView.section = YES;
+        listView.cart = YES;
+    } else if (index == 1) {
+        listView.rows = 50;
     } else {
-        self.cartView.hidden = YES;
-        self.orderButton.selected = NO;
-        self.reviewButton.selected = NO;
-        self.shopButton.selected = YES;
-        self.segmentScrollView = self.shopController.tableView;
+        listView.rows = 5;
+    }
+    return listView;
+}
+
+- (void)pagerView:(FWPagerView *)pagerView mainTableViewDidScroll:(UIScrollView *)scrollView
+{
+    // 导航栏透明度
+    CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
+    if (progress >= 1) {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
+        [self.navigationController.navigationBar fwSetTextColor:[UIColor appColorHex:0x111111]];
+    } else if (progress >= 0 && progress < 1) {
+        [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+        if (progress <= 0.5) {
+            [self.navigationController.navigationBar fwSetTextColor:[[UIColor whiteColor] colorWithAlphaComponent:1 - progress]];
+        } else {
+            [self.navigationController.navigationBar fwSetTextColor:[[UIColor appColorHex:0x111111] colorWithAlphaComponent:progress]];
+        }
     }
 }
 
-- (void)onSegmentChanged:(UIButton *)sender
+- (void)pagerView:(FWPagerView *)pagerView didScrollToIndex:(NSInteger)index
 {
-    if (sender.tag == self.segmentIndex) {
-        return;
-    }
-    
-    self.segmentIndex = sender.tag;
-    [self.nestView setContentOffset:CGPointMake(FWScreenWidth * self.segmentIndex, 0) animated:YES];
+    self.segmentedControl.selectedSegmentIndex = index;
+    self.cartView.hidden = (index != 0);
 }
 
 @end

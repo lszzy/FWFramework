@@ -106,6 +106,7 @@ FWPropertyWeak(UILabel *, frameLabel);
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
                                          @[@"标签栏切换", @"onTabBar"],
+                                         @[@"工具栏切换", @"onToolBar"],
                                          @[@"导航栏转场", @"onTransitionBar"],
                                          ]];
     if (self.navigationController) {
@@ -113,6 +114,7 @@ FWPropertyWeak(UILabel *, frameLabel);
     } else {
         [self.dataList addObject:@[@"Dismiss", @"onDismiss"]];
     }
+    [self.dataList addObject:@[@"设备转向", @"onOrientation"]];
 }
 
 #pragma mark - TableView
@@ -150,13 +152,11 @@ FWPropertyWeak(UILabel *, frameLabel);
 
 - (void)refreshBarFrame
 {
-    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@\n全局导航栏：%@\n全局标签栏：%@\n当前状态栏：%@\n当前导航栏：%@\n当前标签栏：%@",
-                            @([UIScreen fwStatusBarHeight]),
-                            @([UIScreen fwNavigationBarHeight]),
-                            @([UIScreen fwTabBarHeight]),
-                            @([self fwStatusBarHeight]),
-                            @([self fwNavigationBarHeight]),
-                            @([self fwTabBarHeight])];
+    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@ 当前状态栏：%@\n全局导航栏：%@ 当前导航栏：%@\n全局标签栏：%@ 当前标签栏：%@\n全局工具栏：%@ 当前工具栏：%@",
+                            @([UIScreen fwStatusBarHeight]), @([self fwStatusBarHeight]),
+                            @([UIScreen fwNavigationBarHeight]), @([self fwNavigationBarHeight]),
+                            @([UIScreen fwTabBarHeight]), @([self fwTabBarHeight]),
+                            @([UIScreen fwToolBarHeight]), @([self fwToolBarHeight])];
 }
 
 - (void)onStatusBar
@@ -187,6 +187,19 @@ FWPropertyWeak(UILabel *, frameLabel);
     [self refreshBarFrame];
 }
 
+- (void)onToolBar
+{
+    if (self.fwToolBarHidden) {
+        UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:@(UIBarButtonSystemItemCancel) target:self action:@selector(onToolBar)];
+        UIBarButtonItem *item2 = [UIBarButtonItem fwBarItemWithObject:@(UIBarButtonSystemItemDone) target:self action:@selector(onPresent)];
+        self.toolbarItems = @[item, item2];
+        self.fwToolBarHidden = NO;
+    } else {
+        self.fwToolBarHidden = YES;
+    }
+    [self refreshBarFrame];
+}
+
 - (void)onPresent
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
@@ -201,6 +214,15 @@ FWPropertyWeak(UILabel *, frameLabel);
 - (void)onTransitionBar
 {
     [self.navigationController pushViewController:[TestBarSubViewController new] animated:YES];
+}
+
+- (void)onOrientation
+{
+    if ([UIDevice fwIsDeviceLandscape]) {
+        [UIDevice fwSetDeviceOrientation:UIDeviceOrientationPortrait];
+    } else {
+        [UIDevice fwSetDeviceOrientation:UIDeviceOrientationLandscapeLeft];
+    }
 }
 
 @end

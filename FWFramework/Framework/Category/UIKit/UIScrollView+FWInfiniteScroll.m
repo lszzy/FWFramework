@@ -8,6 +8,7 @@
  */
 
 #import "UIScrollView+FWInfiniteScroll.h"
+#import "UIScrollView+FWPullRefresh.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
@@ -118,7 +119,9 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (contentOffset.y >= 0) {
-            [self scrollViewDidScroll:contentOffset];
+            if (!self.scrollView.fwPullRefreshView || !self.scrollView.fwPullRefreshView.isAnimating) {
+                [self scrollViewDidScroll:contentOffset];
+            }
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];

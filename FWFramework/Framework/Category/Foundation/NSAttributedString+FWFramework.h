@@ -8,22 +8,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "NSAttributedString+FWOption.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-#pragma mark - FWAttributedOption
-
-/*!
- @brief NSAttributedString属性封装器
- */
-@interface FWAttributedOption : NSObject
-
-// 转换为属性字典
-- (NSDictionary<NSAttributedStringKey, id> *)toDictionary;
-
-@end
-
-#pragma mark - NSAttributedString+FWFramework
 
 /*!
  @brief NSAttributedString+FWFramework
@@ -31,9 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSAttributedString (FWFramework)
 
 #pragma mark - Convert
-
-// 快速创建NSAttributedString，自定义选项
-+ (instancetype)fwAttributedString:(NSString *)string withOption:(nullable FWAttributedOption *)option;
 
 // 快速创建NSAttributedString，自定义字体
 + (instancetype)fwAttributedString:(NSString *)string withFont:(nullable UIFont *)font;
