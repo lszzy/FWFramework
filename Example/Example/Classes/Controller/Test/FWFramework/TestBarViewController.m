@@ -64,6 +64,7 @@
 @interface TestBarViewController ()
 
 FWPropertyWeak(UILabel *, frameLabel);
+FWPropertyAssign(BOOL, hideToast);
 
 @end
 
@@ -79,6 +80,26 @@ FWPropertyWeak(UILabel *, frameLabel);
     [self fwSetRightBarItem:@"启用" block:^(id sender) {
         [UINavigationController fwEnableNavigationBarTransition];
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (!self.hideToast) {
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"viewWillAppear:%@", @(animated)]]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (!self.hideToast) {
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"viewWillDisappear:%@", @(animated)]]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    }
 }
 
 - (void)renderView
@@ -110,7 +131,8 @@ FWPropertyWeak(UILabel *, frameLabel);
                                          @[@"导航栏转场", @"onTransitionBar"],
                                          ]];
     if (self.navigationController) {
-        [self.dataList addObject:@[@"Present", @"onPresent"]];
+        [self.dataList addObject:@[@"Present(默认)", @"onPresent"]];
+        [self.dataList addObject:@[@"Present(全屏)", @"onPresent2"]];
     } else {
         [self.dataList addObject:@[@"Dismiss", @"onDismiss"]];
     }
@@ -203,6 +225,15 @@ FWPropertyWeak(UILabel *, frameLabel);
 - (void)onPresent
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (void)onPresent2
+{
+    TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    viewController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
