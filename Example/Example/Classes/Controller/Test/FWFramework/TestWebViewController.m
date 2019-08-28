@@ -26,8 +26,9 @@
 - (void)renderView
 {
     if (!self.isWKWebView) {
-        self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        self.webView = [[UIWebView alloc] init];
         [self.view addSubview:self.webView];
+        [self.webView fwPinEdgesToSuperview];
         
         self.progressProxy = [[FWWebViewProgress alloc] init];
         self.webView.delegate = self.progressProxy;
@@ -43,6 +44,7 @@
         self.webView2 = [[WKWebView alloc] initWithFrame:self.view.bounds];
         self.webView2.fwNavigationDelegate = self;
         [self.view addSubview:self.webView2];
+        [self.webView2 fwPinEdgesToSuperview];
         
         _progressView2 = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
         _progressView2.trackTintColor = [UIColor clearColor];
