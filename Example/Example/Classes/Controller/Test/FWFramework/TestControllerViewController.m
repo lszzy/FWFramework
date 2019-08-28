@@ -45,19 +45,19 @@
     }];
 }
 
-- (void)fwRenderInit
+- (void)renderInit
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self fwSetBackBarTitle:@""];
 }
 
-- (void)fwRenderView
+- (void)renderView
 {
-    self.fwScrollView.delegate = self;
+    self.scrollView.delegate = self;
     
     UIImageView *imageView = [UIImageView fwAutoLayoutView];
     imageView.image = [UIImage imageNamed:@"public_picture"];
-    [self.fwContentView addSubview:imageView]; {
+    [self.contentView addSubview:imageView]; {
         [imageView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
         [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
         [imageView fwSetDimension:NSLayoutAttributeHeight toSize:150];
@@ -66,7 +66,7 @@
     UIView *redView = [UIView fwAutoLayoutView];
     _redView = redView;
     redView.backgroundColor = [UIColor redColor];
-    [self.fwContentView addSubview:redView]; {
+    [self.contentView addSubview:redView]; {
         [redView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
         [redView fwPinEdgeToSuperview:NSLayoutAttributeRight];
         [redView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView];
@@ -82,7 +82,7 @@
     
     UIView *blueView = [UIView fwAutoLayoutView];
     blueView.backgroundColor = [UIColor blueColor];
-    [self.fwContentView addSubview:blueView]; {
+    [self.contentView addSubview:blueView]; {
         [blueView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
         [blueView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:redView];
         [blueView fwSetDimension:NSLayoutAttributeHeight toSize:FWScreenHeight];
