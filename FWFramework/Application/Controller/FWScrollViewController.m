@@ -21,7 +21,7 @@
 
 - (UIScrollView *)fwInnerScrollView
 {
-    UIScrollView *scrollView = objc_getAssociatedObject(self, @selector(fwScrollView));
+    UIScrollView *scrollView = objc_getAssociatedObject(self, @selector(fwInnerScrollView));
     if (!scrollView) {
         scrollView = [[UIScrollView alloc] init];
         scrollView.showsVerticalScrollIndicator = NO;
@@ -29,17 +29,17 @@
         if (@available(iOS 11.0, *)) {
             scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        objc_setAssociatedObject(self, @selector(fwScrollView), scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(fwInnerScrollView), scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return scrollView;
 }
 
 - (UIView *)fwInnerContentView
 {
-    UIView *contentView = objc_getAssociatedObject(self, @selector(fwContentView));
+    UIView *contentView = objc_getAssociatedObject(self, @selector(fwInnerContentView));
     if (!contentView) {
         contentView = [[UIView alloc] init];
-        objc_setAssociatedObject(self, @selector(fwContentView), contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(fwInnerContentView), contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return contentView;
 }
@@ -54,21 +54,21 @@
 {
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"fwScrollView" : @"fwInnerScrollView", @"fwContentView" : @"fwInnerContentView"};
+    intercepter.forwardSelectors = @{@"scrollView" : @"fwInnerScrollView", @"contentView" : @"fwInnerContentView"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
 }
 
-- (void)scrollViewControllerLoadView:(UIViewController *)viewController
+- (void)scrollViewControllerLoadView:(UIViewController<FWScrollViewController> *)viewController
 {
-    UIScrollView *scrollView = [viewController performSelector:@selector(fwScrollView)];
+    UIScrollView *scrollView = [viewController scrollView];
     [viewController.view addSubview:scrollView];
     
-    UIView *contentView = [viewController performSelector:@selector(fwContentView)];
+    UIView *contentView = [viewController contentView];
     [scrollView addSubview:contentView];
     [contentView fwPinEdgesToSuperview];
     
-    if ([viewController respondsToSelector:@selector(fwRenderScrollView)]) {
-        [viewController performSelector:@selector(fwRenderScrollView)];
+    if ([viewController respondsToSelector:@selector(renderScrollView)]) {
+        [viewController renderScrollView];
     } else {
         [scrollView fwPinEdgesToSuperview];
     }

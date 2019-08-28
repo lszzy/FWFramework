@@ -125,8 +125,8 @@
             }
         }
         
-        if ([viewController respondsToSelector:@selector(fwRenderInit)]) {
-            [viewController performSelector:@selector(fwRenderInit)];
+        if ([viewController respondsToSelector:@selector(renderInit)]) {
+            [viewController performSelector:@selector(renderInit)];
         }
     }
 }
@@ -146,8 +146,8 @@
             }
         }
         
-        if ([viewController respondsToSelector:@selector(fwRenderView)]) {
-            [viewController performSelector:@selector(fwRenderView)];
+        if ([viewController respondsToSelector:@selector(renderView)]) {
+            [viewController performSelector:@selector(renderView)];
         }
     }
 }
@@ -167,11 +167,11 @@
             }
         }
         
-        if ([viewController respondsToSelector:@selector(fwRenderModel)]) {
-            [viewController performSelector:@selector(fwRenderModel)];
+        if ([viewController respondsToSelector:@selector(renderModel)]) {
+            [viewController performSelector:@selector(renderModel)];
         }
-        if ([viewController respondsToSelector:@selector(fwRenderData)]) {
-            [viewController performSelector:@selector(fwRenderData)];
+        if ([viewController respondsToSelector:@selector(renderData)]) {
+            [viewController performSelector:@selector(renderData)];
         }
     }
 }
