@@ -23,7 +23,14 @@
 {
     UITableView *tableView = objc_getAssociatedObject(self, @selector(tableView));
     if (!tableView) {
-        tableView = [(id<FWTableViewController>)self renderTableView];
+        UITableViewStyle tableStyle = [(id<FWTableViewController>)self renderTableStyle];
+        tableView = [[UITableView alloc] initWithFrame:CGRectZero style:tableStyle];
+        tableView.showsVerticalScrollIndicator = NO;
+        tableView.showsHorizontalScrollIndicator = NO;
+        if (@available(iOS 11.0, *)) {
+            tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         objc_setAssociatedObject(self, @selector(tableView), tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return tableView;
@@ -39,19 +46,12 @@
     return tableData;
 }
 
-- (UITableView *)fwInnerRenderTableView
+- (UITableViewStyle)fwInnerRenderTableStyle
 {
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    tableView.showsVerticalScrollIndicator = NO;
-    tableView.showsHorizontalScrollIndicator = NO;
-    if (@available(iOS 11.0, *)) {
-        tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    return tableView;
+    return UITableViewStylePlain;
 }
 
-- (void)fwInnerRenderTableLayout
+- (void)fwInnerRenderTableView
 {
     UITableView *tableView = [(id<FWTableViewController>)self tableView];
     [tableView fwPinEdgesToSuperview];
@@ -69,8 +69,8 @@
     intercepter.loadViewIntercepter = @selector(tableViewControllerLoadView:);
     intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
                                      @"tableData" : @"fwInnerTableData",
-                                     @"renderTableView" : @"fwInnerRenderTableView",
-                                     @"renderTableLayout" : @"fwInnerRenderTableLayout"};
+                                     @"renderTableStyle" : @"fwInnerRenderTableStyle",
+                                     @"renderTableView" : @"fwInnerRenderTableView"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
 }
 
@@ -80,8 +80,8 @@
     tableView.dataSource = viewController;
     tableView.delegate = viewController;
     [viewController.view addSubview:tableView];
-    [viewController renderTableLayout];
     
+    [viewController renderTableView];
     [tableView setNeedsLayout];
     [tableView layoutIfNeeded];
 }

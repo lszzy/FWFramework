@@ -22,4 +22,9 @@
     self.scrollView.backgroundColor = [UIColor appColorBg];
 }
 
+- (void)renderScrollView
+{
+    [self.scrollView fwPinEdgesToSuperview];
+}
+
 @end

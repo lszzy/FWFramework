@@ -18,17 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 表格视图，默认Plain样式，Footer为空视图，不显示滚动条。Plain有悬停，Group无悬停
+// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
 @property (nonatomic, readonly) UITableView *tableView;
 
 // 表格数据，默认空数组，延迟加载
 @property (nonatomic, readonly) NSMutableArray *tableData;
 
-// 渲染表格视图，只调用一次
-- (UITableView *)renderTableView;
+// 渲染表格视图样式，默认Plain
+- (UITableViewStyle)renderTableStyle;
 
-// 渲染表格视图布局，默认铺满
-- (void)renderTableLayout;
+// 渲染表格视图和布局等，默认铺满
+- (void)renderTableView;
 
 @end
 

@@ -115,12 +115,15 @@
 
 #pragma mark - TableView
 
-- (UITableView *)renderTableView
+- (UITableViewStyle)renderTableStyle
 {
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.fwKeyboardDismissOnDrag = YES;
-    return tableView;
+    return UITableViewStyleGrouped;
+}
+
+- (void)renderTableView
+{
+    [super renderTableView];
+    self.tableView.fwKeyboardDismissOnDrag = YES;
 }
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath

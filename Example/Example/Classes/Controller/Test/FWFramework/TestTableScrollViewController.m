@@ -126,10 +126,10 @@
 
 #pragma mark - TableView
 
-- (void)renderTableLayout
+- (void)renderTableView
 {
+    [super renderTableView];
     [self.tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
-    [self.tableView fwPinEdgesToSuperview];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

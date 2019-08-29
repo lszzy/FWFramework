@@ -44,7 +44,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
 
 @implementation TestCollectionViewController
 
-- (UICollectionViewLayout *)renderCollectionViewLayout
+- (UICollectionViewLayout *)renderCollectionLayout
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake((FWScreenWidth - 30) / 2.f, 100);
@@ -57,12 +57,12 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
     return layout;
 }
 
-- (void)renderCollectionLayout
+- (void)renderCollectionView
 {
+    [super renderCollectionView];
     [self.collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
     [self.collectionView registerClass:[TestCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTestCollectionHeaderViewID];
     [self.collectionView registerClass:[TestCollectionFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kTestCollectionFooterViewID];
-    [self.collectionView fwPinEdgesToSuperview];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

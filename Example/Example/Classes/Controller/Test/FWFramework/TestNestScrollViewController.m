@@ -30,7 +30,7 @@
 
 @implementation TestNestChildController
 
-- (void)renderTableLayout
+- (void)renderTableView
 {
     [self.tableView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0)];
 }
