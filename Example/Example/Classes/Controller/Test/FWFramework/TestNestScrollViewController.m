@@ -47,9 +47,9 @@
 {
     for (int i = 0; i < self.rows; i++) {
         if (self.isRefreshed) {
-            [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(i)]];
+            [self.tableData addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(i)]];
         } else {
-            [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
+            [self.tableData addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
         }
     }
 }
@@ -58,7 +58,7 @@
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.isRefreshed = !self.isRefreshed;
-        [self.dataList removeAllObjects];
+        [self.tableData removeAllObjects];
         [self renderData];
         [self.tableView reloadData];
         [self.tableView.fwPullRefreshView stopAnimating];
@@ -68,12 +68,12 @@
 - (void)onLoading
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSInteger rows = self.dataList.count;
+        NSInteger rows = self.tableData.count;
         for (int i = 0; i < 5; i++) {
             if (self.isRefreshed) {
-                [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(rows + i)]];
+                [self.tableData addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(rows + i)]];
             } else {
-                [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
+                [self.tableData addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
             }
         }
         [self.tableView reloadData];
@@ -85,7 +85,7 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [self.dataList objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

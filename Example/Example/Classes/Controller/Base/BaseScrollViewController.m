@@ -14,40 +14,12 @@
 
 @implementation BaseScrollViewController
 
-- (void)setupView
+- (void)loadView
 {
-    // 创建滚动视图
-    _scrollView = [self renderScrollView];
-    [self.view addSubview:_scrollView];
+    [super loadView];
     
-    // 创建容器视图，占满滚动视图
-    _contentView = [UIView fwAutoLayoutView];
-    [_scrollView addSubview:_contentView];
-    [_contentView fwPinEdgesToSuperview];
-    
-    // 渲染滚动视图布局
-    [self renderScrollLayout];
-    
-    // 初始化视图frame
-    [_scrollView setNeedsLayout];
-    [_scrollView layoutIfNeeded];
-}
-
-- (UIScrollView *)renderScrollView
-{
-    UIScrollView *scrollView = [UIScrollView fwAutoLayoutView];
-    scrollView.showsVerticalScrollIndicator = NO;
-    scrollView.showsHorizontalScrollIndicator = NO;
     // 默认背景色
-    scrollView.backgroundColor = [UIColor appColorBg];
-    // 禁用内边距适应
-    [scrollView fwContentInsetAdjustmentNever];
-    return scrollView;
-}
-
-- (void)renderScrollLayout
-{
-    [self.scrollView fwPinEdgesToSuperview];
+    self.scrollView.backgroundColor = [UIColor appColorBg];
 }
 
 @end

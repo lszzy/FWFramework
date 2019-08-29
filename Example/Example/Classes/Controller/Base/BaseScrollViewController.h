@@ -11,18 +11,6 @@
 /*!
  @brief 滚动视图控制器基类
  */
-@interface BaseScrollViewController : BaseViewController
-
-// 滚动视图，默认不显示滚动条
-@property (nonatomic, readonly) UIScrollView *scrollView;
-
-// 内容容器视图，自动撑开，子视图需要添加到此视图上
-@property (nonatomic, readonly) UIView *contentView;
-
-// 渲染滚动视图，loadView自动调用
-- (UIScrollView *)renderScrollView;
-
-// 渲染滚动视图布局，默认铺满，loadView自动调用
-- (void)renderScrollLayout;
+@interface BaseScrollViewController : BaseViewController <FWScrollViewController>
 
 @end
