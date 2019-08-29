@@ -33,7 +33,7 @@
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @[@"定位", @(FWAuthorizeTypeLocationWhenInUse)],
                                          @[@"后台定位", @(FWAuthorizeTypeLocationAlways)],
                                          @[@"麦克风", @(FWAuthorizeTypeMicrophone)],
@@ -51,7 +51,7 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     FWAuthorizeType type = [[rowData objectAtIndex:1] integerValue];
     
     FWAuthorizeManager *manager = [FWAuthorizeManager managerWithType:type];
@@ -74,7 +74,7 @@
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     FWAuthorizeType type = [[rowData objectAtIndex:1] integerValue];
     
     FWAuthorizeManager *manager = [FWAuthorizeManager managerWithType:type];

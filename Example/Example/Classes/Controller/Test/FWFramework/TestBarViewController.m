@@ -122,7 +122,7 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @[@"状态栏切换", @"onStatusBar"],
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
@@ -131,25 +131,25 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"导航栏转场", @"onTransitionBar"],
                                          ]];
     if (self.navigationController) {
-        [self.dataList addObject:@[@"Present(默认)", @"onPresent"]];
-        [self.dataList addObject:@[@"Present(全屏)", @"onPresent2"]];
+        [self.tableData addObject:@[@"Present(默认)", @"onPresent"]];
+        [self.tableData addObject:@[@"Present(全屏)", @"onPresent2"]];
     } else {
-        [self.dataList addObject:@[@"Dismiss", @"onDismiss"]];
+        [self.tableData addObject:@[@"Dismiss", @"onDismiss"]];
     }
-    [self.dataList addObject:@[@"设备转向", @"onOrientation"]];
+    [self.tableData addObject:@[@"设备转向", @"onOrientation"]];
 }
 
 #pragma mark - TableView
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [rowData objectAtIndex:0];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();
