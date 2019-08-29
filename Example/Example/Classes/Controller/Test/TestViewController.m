@@ -115,14 +115,12 @@
 
 #pragma mark - TableView
 
-- (UITableView *)tableView
+- (UITableView *)renderTableView
 {
-    if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-        _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-        _tableView.fwKeyboardDismissOnDrag = YES;
-    }
-    return _tableView;
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    tableView.fwKeyboardDismissOnDrag = YES;
+    return tableView;
 }
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath

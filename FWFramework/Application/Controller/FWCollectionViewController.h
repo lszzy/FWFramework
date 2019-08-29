@@ -24,11 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 集合数据，默认空数组，延迟加载
 @property (nonatomic, readonly) NSMutableArray *collectionData;
 
-// 渲染集合视图布局
-- (UICollectionViewLayout *)renderCollectionLayout;
+// 渲染集合视图内容布局，只调用一次
+- (UICollectionViewLayout *)renderCollectionViewLayout;
 
-// 渲染集合视图和布局等，默认铺满
-- (void)renderCollectionView;
+// 渲染集合视图，只调用一次
+- (UICollectionView *)renderCollectionView;
+
+// 渲染集合视图布局，默认铺满
+- (void)renderCollectionLayout;
 
 @end
 

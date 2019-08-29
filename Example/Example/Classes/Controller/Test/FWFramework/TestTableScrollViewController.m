@@ -126,7 +126,7 @@
 
 #pragma mark - TableView
 
-- (void)renderTableView
+- (void)renderTableLayout
 {
     [self.tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
     [self.tableView fwPinEdgesToSuperview];

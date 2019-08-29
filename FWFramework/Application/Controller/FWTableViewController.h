@@ -24,8 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 表格数据，默认空数组，延迟加载
 @property (nonatomic, readonly) NSMutableArray *tableData;
 
-// 渲染表格视图和布局等，默认铺满
-- (void)renderTableView;
+// 渲染表格视图，只调用一次
+- (UITableView *)renderTableView;
+
+// 渲染表格视图布局，默认铺满
+- (void)renderTableLayout;
 
 @end
 
