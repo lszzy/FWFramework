@@ -14,7 +14,10 @@
 
 // Controller
 #import "FWViewController.h"
+#import "FWCollectionViewController.h"
 #import "FWScrollViewController.h"
+#import "FWTableViewController.h"
+#import "FWWebViewController.h"
 
 // Model
 #import "FWModel.h"

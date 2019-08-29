@@ -223,6 +223,10 @@
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
+		2F6492AC2316880C002E15AC /* FWCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6492AA2316880C002E15AC /* FWCollectionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6492AD2316880C002E15AC /* FWCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AB2316880C002E15AC /* FWCollectionViewController.m */; };
+		2F6492B023168828002E15AC /* FWWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6492AE23168828002E15AC /* FWWebViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6492B123168828002E15AC /* FWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AF23168828002E15AC /* FWWebViewController.m */; };
 		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -317,7 +321,7 @@
 		2FDD34EF2303A63900624BBD /* NSAttributedString+FWOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */; };
 		2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
-		2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE6519423167C280078ECE4 /* FWTableViewController.h */; };
+		2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE6519423167C280078ECE4 /* FWTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE6519523167C280078ECE4 /* FWTableViewController.m */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */; };
@@ -540,6 +544,10 @@
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
+		2F6492AA2316880C002E15AC /* FWCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWCollectionViewController.h; sourceTree = "<group>"; };
+		2F6492AB2316880C002E15AC /* FWCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWCollectionViewController.m; sourceTree = "<group>"; };
+		2F6492AE23168828002E15AC /* FWWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWWebViewController.h; sourceTree = "<group>"; };
+		2F6492AF23168828002E15AC /* FWWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebViewController.m; sourceTree = "<group>"; };
 		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
@@ -940,12 +948,16 @@
 		2F03A574216CF4B9001965A1 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */,
+				2FD1A51B21D4B5EA00A215C2 /* FWViewController.m */,
+				2F6492AA2316880C002E15AC /* FWCollectionViewController.h */,
+				2F6492AB2316880C002E15AC /* FWCollectionViewController.m */,
 				2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */,
 				2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */,
 				2FE6519423167C280078ECE4 /* FWTableViewController.h */,
 				2FE6519523167C280078ECE4 /* FWTableViewController.m */,
-				2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */,
-				2FD1A51B21D4B5EA00A215C2 /* FWViewController.m */,
+				2F6492AE23168828002E15AC /* FWWebViewController.h */,
+				2F6492AF23168828002E15AC /* FWWebViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1149,6 +1161,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */,
+				2F6492B023168828002E15AC /* FWWebViewController.h in Headers */,
+				2F6492AC2316880C002E15AC /* FWCollectionViewController.h in Headers */,
 				2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */,
 				2FACF02E2303A90B007AFC16 /* UIView+FWTheme.h in Headers */,
 				2FDD34EE2303A63900624BBD /* NSAttributedString+FWOption.h in Headers */,
@@ -1227,7 +1242,6 @@
 				2F03A637216CF882001965A1 /* FWNetworkAgent.h in Headers */,
 				2F03A636216CF882001965A1 /* FWBatchRequest.h in Headers */,
 				2F03A63B216CF882001965A1 /* FWChainRequestAgent.h in Headers */,
-				2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */,
 				2F03A633216CF882001965A1 /* FWBaseRequest.h in Headers */,
 				2F03A639216CF882001965A1 /* FWRequest.h in Headers */,
 				2F03A647216CF882001965A1 /* FWURLSessionManager.h in Headers */,
@@ -1456,6 +1470,7 @@
 				2F03A5D4216CF4B9001965A1 /* NSObject+FWFramework.m in Sources */,
 				2F03A5E8216CF4B9001965A1 /* FWAuthorizeManager.m in Sources */,
 				2F03A5D2216CF4B9001965A1 /* NSDate+FWFramework.m in Sources */,
+				2F6492AD2316880C002E15AC /* FWCollectionViewController.m in Sources */,
 				2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */,
 				2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */,
 				2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */,
@@ -1513,6 +1528,7 @@
 				2F03A5F2216CF4B9001965A1 /* FWMutableArray.m in Sources */,
 				2F1E39692178F9E00051A6BB /* FWCollectionViewFlowLayout.m in Sources */,
 				2F03A60A216CF850001965A1 /* UIImageView+FWNetwork.m in Sources */,
+				2F6492B123168828002E15AC /* FWWebViewController.m in Sources */,
 				2F03A5BF216CF4B9001965A1 /* NSObject+FWBlock.m in Sources */,
 				2FBFB76322C62EB300E669B6 /* UIScreen+FWFramework.swift in Sources */,
 				2F03A5D3216CF4B9001965A1 /* NSThread+FWFramework.m in Sources */,

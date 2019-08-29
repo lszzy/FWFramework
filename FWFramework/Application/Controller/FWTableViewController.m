@@ -21,7 +21,7 @@
 
 - (UITableView *)fwInnerTableView
 {
-    UITableView *tableView = objc_getAssociatedObject(self, @selector(fwInnerTableView));
+    UITableView *tableView = objc_getAssociatedObject(self, @selector(tableView));
     if (!tableView) {
         tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         tableView.showsVerticalScrollIndicator = NO;
@@ -30,19 +30,25 @@
             tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-        objc_setAssociatedObject(self, @selector(fwInnerTableView), tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(tableView), tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return tableView;
 }
 
 - (NSMutableArray *)fwInnerTableData
 {
-    NSMutableArray *tableData = objc_getAssociatedObject(self, @selector(fwInnerTableData));
+    NSMutableArray *tableData = objc_getAssociatedObject(self, @selector(tableData));
     if (!tableData) {
         tableData = [[NSMutableArray alloc] init];
-        objc_setAssociatedObject(self, @selector(fwInnerTableData), tableData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(tableData), tableData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return tableData;
+}
+
+- (void)fwInnerRenderTableView
+{
+    UITableView *tableView = [(id<FWTableViewController>)self tableView];
+    [tableView fwPinEdgesToSuperview];
 }
 
 @end
@@ -55,7 +61,9 @@
 {
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(tableViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView", @"tableData" : @"fwInnerTableData"};
+    intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
+                                     @"tableData" : @"fwInnerTableData",
+                                     @"renderTableView" : @"fwInnerRenderTableView"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
 }
 
@@ -66,11 +74,7 @@
     tableView.delegate = viewController;
     [viewController.view addSubview:tableView];
     
-    if ([viewController respondsToSelector:@selector(renderTableView)]) {
-        [viewController renderTableView];
-    } else {
-        [tableView fwPinEdgesToSuperview];
-    }
+    [viewController renderTableView];
     
     [tableView setNeedsLayout];
     [tableView layoutIfNeeded];
