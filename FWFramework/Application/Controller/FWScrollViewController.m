@@ -23,7 +23,12 @@
 {
     UIScrollView *scrollView = objc_getAssociatedObject(self, @selector(scrollView));
     if (!scrollView) {
-        scrollView = [(id<FWScrollViewController>)self renderScrollView];
+        scrollView = [[UIScrollView alloc] init];
+        scrollView.showsVerticalScrollIndicator = NO;
+        scrollView.showsHorizontalScrollIndicator = NO;
+        if (@available(iOS 11.0, *)) {
+            scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         objc_setAssociatedObject(self, @selector(scrollView), scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return scrollView;
@@ -39,18 +44,7 @@
     return contentView;
 }
 
-- (UIScrollView *)fwInnerRenderScrollView
-{
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    scrollView.showsVerticalScrollIndicator = NO;
-    scrollView.showsHorizontalScrollIndicator = NO;
-    if (@available(iOS 11.0, *)) {
-        scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    return scrollView;
-}
-
-- (void)fwInnerRenderScrollLayout
+- (void)fwInnerRenderScrollView
 {
     UIScrollView *scrollView = [(id<FWScrollViewController>)self scrollView];
     [scrollView fwPinEdgesToSuperview];
@@ -68,8 +62,7 @@
     intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
     intercepter.forwardSelectors = @{@"scrollView" : @"fwInnerScrollView",
                                      @"contentView" : @"fwInnerContentView",
-                                     @"renderScrollView" : @"fwInnerRenderScrollView",
-                                     @"renderScrollLayout" : @"fwInnerRenderScrollLayout"};
+                                     @"renderScrollView" : @"fwInnerRenderScrollView"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
 }
 
@@ -81,8 +74,8 @@
     UIView *contentView = [viewController contentView];
     [scrollView addSubview:contentView];
     [contentView fwPinEdgesToSuperview];
-    [viewController renderScrollLayout];
     
+    [viewController renderScrollView];
     [scrollView setNeedsLayout];
     [scrollView layoutIfNeeded];
 }

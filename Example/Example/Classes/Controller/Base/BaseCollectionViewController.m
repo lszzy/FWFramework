@@ -14,6 +14,11 @@
 
 @implementation BaseCollectionViewController
 
+- (void)renderCollectionView
+{
+    [self.collectionView fwPinEdgesToSuperview];
+}
+
 #pragma mark - UICollectionView
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

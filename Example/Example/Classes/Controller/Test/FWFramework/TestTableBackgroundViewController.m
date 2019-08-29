@@ -32,10 +32,10 @@
     [self.navigationController.navigationBar fwSetBackgroundClear];
 }
 
-- (void)renderTableLayout
+- (void)renderTableView
 {
+    [super renderTableView];
     self.tableView.backgroundColor = [UIColor clearColor];
-    [self.tableView fwPinEdgesToSuperview];
 }
 
 - (void)renderView

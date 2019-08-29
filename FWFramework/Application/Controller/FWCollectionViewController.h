@@ -25,13 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSMutableArray *collectionData;
 
 // 渲染集合视图内容布局，只调用一次
-- (UICollectionViewLayout *)renderCollectionViewLayout;
+- (UICollectionViewLayout *)renderCollectionLayout;
 
-// 渲染集合视图，只调用一次
-- (UICollectionView *)renderCollectionView;
-
-// 渲染集合视图布局，默认铺满
-- (void)renderCollectionLayout;
+// 渲染集合视图和布局等，默认铺满
+- (void)renderCollectionView;
 
 @end
 

@@ -25,6 +25,11 @@
     [self.tableView fwSetTemplateLayout:YES];
 }
 
+- (void)renderTableView
+{
+    [self.tableView fwPinEdgesToSuperview];
+}
+
 - (NSDictionary<NSString *, Class> *)renderCellClass
 {
     // 使用自定义cell，class方式，子类重写
