@@ -53,6 +53,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, assign) BOOL cart;
 @property (nonatomic, assign) BOOL isRefreshed;
+@property (nonatomic, weak) FWPagerView *pagerView;
 
 @property (nonatomic, copy) void(^scrollCallback)(UIScrollView *scrollView);
 
@@ -162,6 +163,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.pagerView setMainTableViewToMaxContentOffsetY];
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] animated:YES scrollPosition:UITableViewScrollPositionTop];
 }
 
@@ -375,6 +377,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
 {
     TestNestChildController *listView = [TestNestChildController new];
+    listView.pagerView = pagerView;
     listView.refreshList = self.refreshList;
     listView.isRefreshed = self.isRefreshed;
     if (index == 0) {
