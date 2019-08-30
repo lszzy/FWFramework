@@ -3,8 +3,9 @@ use_frameworks!
 
 abstract_target "ExampleTarget" do
 
-pod 'FWFramework'
+pod 'FWFramework', :path => '../'
+pod 'FWDebug', :configurations => ['Debug']
 
-target "Example"
+target "Example2"
 
 end
