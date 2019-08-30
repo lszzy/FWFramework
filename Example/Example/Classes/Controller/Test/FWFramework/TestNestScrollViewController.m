@@ -14,6 +14,7 @@
 #define NavigationViewHeight FWTopBarHeight
 #define CartViewHeight FWTabBarHeight
 #define CategoryViewWidth 84
+#define ItemViewHeight 40
 
 static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID";
 
@@ -40,7 +41,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
-    self.backgroundColor = selected ? [UIColor whiteColor] : [UIColor appColorFill];
+    self.contentView.backgroundColor = selected ? [UIColor whiteColor] : [UIColor appColorFill];
 }
 
 @end
@@ -67,7 +68,10 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (UICollectionViewLayout *)renderCollectionLayout
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.itemSize = CGSizeMake(50, 50);
+    layout.itemSize = CGSizeMake(CategoryViewWidth, ItemViewHeight);
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    layout.sectionInset = UIEdgeInsetsZero;
     return layout;
 }
 
@@ -95,25 +99,35 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
         } else {
             [self.tableData addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
         }
-        [self.collectionView reloadData];
     }
+    [self.collectionView reloadData];
+    FWWeakifySelf();
+    [self.tableView fwReloadDataWithCompletion:^{
+        FWStrongifySelf();
+        [self selectCollectionViewWithOffset:self.tableView.contentOffset.y];
+    }];
 }
 
 - (void)onRefreshing
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView.fwPullRefreshView stopAnimating];
         self.isRefreshed = !self.isRefreshed;
         [self.tableData removeAllObjects];
         [self renderData];
-        [self.tableView reloadData];
-        [self.tableView.fwPullRefreshView stopAnimating];
         [self.collectionView reloadData];
+        FWWeakifySelf();
+        [self.tableView fwReloadDataWithCompletion:^{
+            FWStrongifySelf();
+            [self selectCollectionViewWithOffset:self.tableView.contentOffset.y];
+        }];
     });
 }
 
 - (void)onLoading
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView.fwInfiniteScrollView stopAnimating];
         NSInteger rows = self.tableData.count;
         for (int i = 0; i < 5; i++) {
             if (self.isRefreshed) {
@@ -122,9 +136,12 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
                 [self.tableData addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
             }
         }
-        [self.tableView reloadData];
-        [self.tableView.fwInfiniteScrollView stopAnimating];
         [self.collectionView reloadData];
+        FWWeakifySelf();
+        [self.tableView fwReloadDataWithCompletion:^{
+            FWStrongifySelf();
+            [self selectCollectionViewWithOffset:self.tableView.contentOffset.y];
+        }];
     });
 }
 
@@ -132,7 +149,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.tableData.count;
+    return ceil(self.tableData.count / 5);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -145,19 +162,30 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] animated:YES scrollPosition:UITableViewScrollPositionTop];
 }
 
 #pragma mark - TableView
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return ceil(self.tableData.count / 5);
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 5;
+}
+
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
+    NSInteger index = indexPath.section * 5 + indexPath.row;
+    cell.textLabel.text = [self.tableData objectAtIndex:index];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return self.section ? 40 : 0;
+    return self.section ? ItemViewHeight : 0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -165,15 +193,15 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     UIView *view = [UIView new];
     view.backgroundColor = [UIColor whiteColor];
     
-    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:@"Header"];
-    headerLabel.frame = CGRectMake(0, 0, FWScreenWidth, 40);
+    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:[NSString stringWithFormat:@"Header%@", @(section)]];
+    headerLabel.frame = CGRectMake(0, 0, FWScreenWidth, ItemViewHeight);
     [view addSubview:headerLabel];
     return view;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 40;
+    return ItemViewHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -181,26 +209,15 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     [self fwShowAlertWithTitle:[NSString stringWithFormat:@"点击%@", @(indexPath.row)] message:nil cancel:@"关闭" cancelBlock:nil];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+- (void)selectCollectionViewWithOffset:(CGFloat)contentOffsetY
 {
-    if (scrollView == self.tableView) {
-        for (int i = 0; i < self.tableData.count; i++) {
-            if (scrollView.contentOffset.y < (40 * i + 40)) {
-                [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UICollectionViewScrollPositionTop];
-                break;
-            }
-        }
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if (scrollView == self.tableView) {
-        for (int i = 0; i < self.tableData.count; i++) {
-            if (scrollView.contentOffset.y < (40 * i + 40)) {
-                [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UICollectionViewScrollPositionTop];
-                break;
-            }
+    if (!self.cart) return;
+    
+    for (int i = 0; i < self.tableData.count; i++) {
+        CGFloat sectionOffsetY = ItemViewHeight * (i + 1) + (i / 5 + 1) * ItemViewHeight;
+        if (contentOffsetY < sectionOffsetY) {
+            [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:(i / 5) inSection:0] animated:YES scrollPosition:UICollectionViewScrollPositionTop];
+            break;
         }
     }
 }
@@ -208,6 +225,11 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView == self.tableView) {
+        // 拖动或减速时选中左侧菜单
+        if (self.tableView.isDragging || self.tableView.isDecelerating) {
+            [self selectCollectionViewWithOffset:scrollView.contentOffset.y];
+        }
+        
         if (self.scrollCallback) {
             self.scrollCallback(scrollView);
         }
