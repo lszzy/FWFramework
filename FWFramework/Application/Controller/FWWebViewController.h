@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 网页视图，默认不显示滚动条，系统配置
+// 网页视图，默认显示滚动条，启用前进后退手势
 @property (nonatomic, readonly) WKWebView *webView;
 
 // 进度视图，默认trackTintColor为clear

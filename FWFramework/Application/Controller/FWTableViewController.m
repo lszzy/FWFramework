@@ -11,6 +11,35 @@
 #import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWViewControllerManager+FWTableViewController
+
+@implementation FWViewControllerManager (FWTableViewController)
+
++ (void)load
+{
+    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    intercepter.loadViewIntercepter = @selector(tableViewControllerLoadView:);
+    intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
+                                     @"tableData" : @"fwInnerTableData",
+                                     @"renderTableStyle" : @"fwInnerRenderTableStyle",
+                                     @"renderTableView" : @"fwInnerRenderTableView"};
+    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
+}
+
+- (void)tableViewControllerLoadView:(UIViewController<FWTableViewController> *)viewController
+{
+    UITableView *tableView = [viewController tableView];
+    tableView.dataSource = viewController;
+    tableView.delegate = viewController;
+    [viewController.view addSubview:tableView];
+    
+    [viewController renderTableView];
+    [tableView setNeedsLayout];
+    [tableView layoutIfNeeded];
+}
+
+@end
+
 #pragma mark - UIViewController+FWTableViewController
 
 @interface UIViewController (FWTableViewController)
@@ -55,35 +84,6 @@
 {
     UITableView *tableView = [(id<FWTableViewController>)self tableView];
     [tableView fwPinEdgesToSuperview];
-}
-
-@end
-
-#pragma mark - FWViewControllerManager+FWTableViewController
-
-@implementation FWViewControllerManager (FWTableViewController)
-
-+ (void)load
-{
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
-    intercepter.loadViewIntercepter = @selector(tableViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
-                                     @"tableData" : @"fwInnerTableData",
-                                     @"renderTableStyle" : @"fwInnerRenderTableStyle",
-                                     @"renderTableView" : @"fwInnerRenderTableView"};
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
-}
-
-- (void)tableViewControllerLoadView:(UIViewController<FWTableViewController> *)viewController
-{
-    UITableView *tableView = [viewController tableView];
-    tableView.dataSource = viewController;
-    tableView.delegate = viewController;
-    [viewController.view addSubview:tableView];
-    
-    [viewController renderTableView];
-    [tableView setNeedsLayout];
-    [tableView layoutIfNeeded];
 }
 
 @end

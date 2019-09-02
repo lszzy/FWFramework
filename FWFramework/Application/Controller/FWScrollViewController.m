@@ -11,6 +11,36 @@
 #import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWViewControllerManager+FWScrollViewController
+
+@implementation FWViewControllerManager (FWScrollViewController)
+
++ (void)load
+{
+    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
+    intercepter.forwardSelectors = @{@"scrollView" : @"fwInnerScrollView",
+                                     @"contentView" : @"fwInnerContentView",
+                                     @"renderScrollView" : @"fwInnerRenderScrollView"};
+    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
+}
+
+- (void)scrollViewControllerLoadView:(UIViewController<FWScrollViewController> *)viewController
+{
+    UIScrollView *scrollView = [viewController scrollView];
+    [viewController.view addSubview:scrollView];
+    
+    UIView *contentView = [viewController contentView];
+    [scrollView addSubview:contentView];
+    [contentView fwPinEdgesToSuperview];
+    
+    [viewController renderScrollView];
+    [scrollView setNeedsLayout];
+    [scrollView layoutIfNeeded];
+}
+
+@end
+
 #pragma mark - UIViewController+FWScrollViewController
 
 @interface UIViewController (FWScrollViewController)
@@ -48,36 +78,6 @@
 {
     UIScrollView *scrollView = [(id<FWScrollViewController>)self scrollView];
     [scrollView fwPinEdgesToSuperview];
-}
-
-@end
-
-#pragma mark - FWViewControllerManager+FWScrollViewController
-
-@implementation FWViewControllerManager (FWScrollViewController)
-
-+ (void)load
-{
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
-    intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"scrollView" : @"fwInnerScrollView",
-                                     @"contentView" : @"fwInnerContentView",
-                                     @"renderScrollView" : @"fwInnerRenderScrollView"};
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
-}
-
-- (void)scrollViewControllerLoadView:(UIViewController<FWScrollViewController> *)viewController
-{
-    UIScrollView *scrollView = [viewController scrollView];
-    [viewController.view addSubview:scrollView];
-    
-    UIView *contentView = [viewController contentView];
-    [scrollView addSubview:contentView];
-    [contentView fwPinEdgesToSuperview];
-    
-    [viewController renderScrollView];
-    [scrollView setNeedsLayout];
-    [scrollView layoutIfNeeded];
 }
 
 @end
