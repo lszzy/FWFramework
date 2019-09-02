@@ -88,7 +88,7 @@
 
 - (void)onShare
 {
-    [self fwShowAlertWithTitle:@"分享功能" message:nil cancel:@"关闭" cancelBlock:nil];
+    [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
 }
 
 #pragma mark - WKNavigationDelegate
