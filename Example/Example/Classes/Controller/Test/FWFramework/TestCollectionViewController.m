@@ -59,7 +59,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
 
 - (void)renderCollectionView
 {
-    [super renderCollectionView];
+    [self.collectionView fwPinEdgesToSuperview];
     [self.collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
     [self.collectionView registerClass:[TestCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTestCollectionHeaderViewID];
     [self.collectionView registerClass:[TestCollectionFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kTestCollectionFooterViewID];

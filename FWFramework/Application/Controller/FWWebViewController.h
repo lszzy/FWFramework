@@ -19,11 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 网页视图，默认不显示滚动条
+// 网页视图，默认不显示滚动条，系统配置
 @property (nonatomic, readonly) WKWebView *webView;
 
-// 渲染网页视图配置，默认系统配置
-- (WKWebViewConfiguration *)renderWebConfiguration;
+// 进度视图，默认trackTintColor为clear
+@property (nonatomic, readonly) UIProgressView *progressView;
+
+// 请求对象，支持NSString|NSURL|NSURLRequest，设置后会自动请求
+@property (nonatomic, strong) id urlRequest;
 
 // 渲染网页视图和布局等，默认铺满
 - (void)renderWebView;

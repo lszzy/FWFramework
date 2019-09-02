@@ -34,7 +34,7 @@
 
 - (void)renderTableView
 {
-    [super renderTableView];
+    [self.tableView fwPinEdgesToSuperview];
     self.tableView.backgroundColor = [UIColor clearColor];
 }
 
