@@ -169,7 +169,7 @@
 
 - (void)renderTableView
 {
-    [super renderTableView];
+    [self.tableView fwPinEdgesToSuperview];
     [self.tableView registerClass:[TestTableLayoutCell class] forCellReuseIdentifier:@"Cell"];
 }
 

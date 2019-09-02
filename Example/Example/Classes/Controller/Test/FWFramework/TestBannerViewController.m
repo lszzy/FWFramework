@@ -7,7 +7,7 @@
 //
 
 #import "TestBannerViewController.h"
-#import "DZNWebViewController.h"
+#import "BaseWebViewController.h"
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
@@ -205,7 +205,8 @@
 {
     FWLogDebug(@"index: %@", @(index));
     
-    DZNWebViewController *viewController = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.baidu.com"]];
+    BaseWebViewController *viewController = [BaseWebViewController new];
+    viewController.urlRequest = @"https://www.baidu.com";
     [self fwOpenViewController:viewController animated:YES];
 }
 

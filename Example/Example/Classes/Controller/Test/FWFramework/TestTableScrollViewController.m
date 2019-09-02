@@ -128,7 +128,7 @@
 
 - (void)renderTableView
 {
-    [super renderTableView];
+    [self.tableView fwPinEdgesToSuperview];
     [self.tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
 }
 
