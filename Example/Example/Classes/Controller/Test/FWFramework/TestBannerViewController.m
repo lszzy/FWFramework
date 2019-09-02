@@ -206,8 +206,13 @@
     FWLogDebug(@"index: %@", @(index));
     
     BaseWebViewController *viewController = [BaseWebViewController new];
-    viewController.urlRequest = @"https://www.baidu.com";
-    [self fwOpenViewController:viewController animated:YES];
+    viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
+    if (index % 2 == 0) {
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [self presentViewController:navigationController animated:YES completion:nil];
+    }
 }
 
 @end

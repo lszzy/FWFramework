@@ -23,8 +23,8 @@
     intercepter.loadViewIntercepter = @selector(webViewControllerLoadView:);
     intercepter.forwardSelectors = @{@"webView" : @"fwInnerWebView",
                                      @"progressView" : @"fwInnerProgressView",
-                                     @"urlRequest" : @"fwInnerUrlRequest",
-                                     @"setUrlRequest:" : @"fwInnerSetUrlRequest:",
+                                     @"webRequest" : @"fwInnerWebRequest",
+                                     @"setWebRequest:" : @"fwInnerSetWebRequest:",
                                      @"renderWebView" : @"fwInnerRenderWebView"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
@@ -56,26 +56,26 @@
 
 - (void)webViewControllerLoadRequest:(UIViewController<FWWebViewController> *)viewController
 {
-    id urlRequest = [viewController urlRequest];
-    if (!urlRequest) return;
+    id webRequest = [viewController webRequest];
+    if (!webRequest) return;
     
     WKWebView *webView = [viewController webView];
-    if ([urlRequest isKindOfClass:[NSURLRequest class]]) {
-        [webView loadRequest:urlRequest];
+    if ([webRequest isKindOfClass:[NSURLRequest class]]) {
+        [webView loadRequest:webRequest];
     } else {
-        NSURL *url = [urlRequest isKindOfClass:[NSURL class]] ? urlRequest : nil;
-        if (!url && [urlRequest isKindOfClass:[NSString class]]) {
-            url = [NSURL URLWithString:urlRequest];
+        NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
+        if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
+            requestUrl = [NSURL URLWithString:webRequest];
         }
-        if (!url) return;
+        if (!requestUrl) return;
         
-        if (url.isFileURL) {
-            NSString *htmlString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+        if (requestUrl.isFileURL) {
+            NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
             if (htmlString) {
                 [webView loadHTMLString:htmlString baseURL:nil];
             }
         } else {
-            [webView loadRequest:[NSURLRequest requestWithURL:url]];
+            [webView loadRequest:[NSURLRequest requestWithURL:requestUrl]];
         }
     }
 }
@@ -116,14 +116,14 @@
     return progressView;
 }
 
-- (id)fwInnerUrlRequest
+- (id)fwInnerWebRequest
 {
-    return objc_getAssociatedObject(self, @selector(urlRequest));
+    return objc_getAssociatedObject(self, @selector(webRequest));
 }
 
-- (void)fwInnerSetUrlRequest:(id)urlRequest
+- (void)fwInnerSetWebRequest:(id)webRequest
 {
-    objc_setAssociatedObject(self, @selector(urlRequest), urlRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(webRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded) {
         [[FWViewControllerManager sharedInstance] webViewControllerLoadRequest:(UIViewController<FWWebViewController> *)self];
