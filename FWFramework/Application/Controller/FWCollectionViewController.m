@@ -11,6 +11,35 @@
 #import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWViewControllerManager+FWCollectionViewController
+
+@implementation FWViewControllerManager (FWCollectionViewController)
+
++ (void)load
+{
+    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    intercepter.loadViewIntercepter = @selector(collectionViewControllerLoadView:);
+    intercepter.forwardSelectors = @{@"collectionView" : @"fwInnerCollectionView",
+                                     @"collectionData" : @"fwInnerCollectionData",
+                                     @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout",
+                                     @"renderCollectionView" : @"fwInnerRenderCollectionView"};
+    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWCollectionViewController) withIntercepter:intercepter];
+}
+
+- (void)collectionViewControllerLoadView:(UIViewController<FWCollectionViewController> *)viewController
+{
+    UICollectionView *collectionView = [viewController collectionView];
+    collectionView.dataSource = viewController;
+    collectionView.delegate = viewController;
+    [viewController.view addSubview:collectionView];
+    
+    [viewController renderCollectionView];
+    [collectionView setNeedsLayout];
+    [collectionView layoutIfNeeded];
+}
+
+@end
+
 #pragma mark - UIViewController+FWCollectionViewController
 
 @interface UIViewController (FWCollectionViewController)
@@ -55,35 +84,6 @@
 {
     UICollectionView *collectionView = [(id<FWCollectionViewController>)self collectionView];
     [collectionView fwPinEdgesToSuperview];
-}
-
-@end
-
-#pragma mark - FWViewControllerManager+FWCollectionViewController
-
-@implementation FWViewControllerManager (FWCollectionViewController)
-
-+ (void)load
-{
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
-    intercepter.loadViewIntercepter = @selector(collectionViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"collectionView" : @"fwInnerCollectionView",
-                                     @"collectionData" : @"fwInnerCollectionData",
-                                     @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout",
-                                     @"renderCollectionView" : @"fwInnerRenderCollectionView"};
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWCollectionViewController) withIntercepter:intercepter];
-}
-
-- (void)collectionViewControllerLoadView:(UIViewController<FWCollectionViewController> *)viewController
-{
-    UICollectionView *collectionView = [viewController collectionView];
-    collectionView.dataSource = viewController;
-    collectionView.delegate = viewController;
-    [viewController.view addSubview:collectionView];
-    
-    [viewController renderCollectionView];
-    [collectionView setNeedsLayout];
-    [collectionView layoutIfNeeded];
 }
 
 @end
