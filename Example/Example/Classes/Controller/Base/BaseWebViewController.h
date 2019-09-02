@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BaseWebViewController : BaseViewController <FWWebViewController>
 
+@property (nonatomic, copy) NSString *requestUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END

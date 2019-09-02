@@ -38,7 +38,7 @@
         _progressView = [[FWWebViewProgressView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 2.f)];
         [self.webView addSubview:_progressView];
         
-        NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.sydsc.com.au/courier/invite/reg"]];
+        NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.wuyong.site"]];
         [_webView loadRequest:req];
     } else {
         self.webView2 = [[WKWebView alloc] initWithFrame:self.view.bounds];
@@ -51,7 +51,7 @@
         [_progressView2 fwSetProgress:0];
         [self.webView2 addSubview:_progressView2];
         
-        NSURLRequest *req2 = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.sydsc.com.au/courier/invite/reg"]];
+        NSURLRequest *req2 = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.wuyong.site"]];
         [_webView2 loadRequest:req2];
     }
 }
