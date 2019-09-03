@@ -43,11 +43,13 @@
     [progressView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [progressView fwSetDimension:NSLayoutAttributeHeight toSize:2.f];
     
+    __weak __typeof(viewController) weakController = viewController;
     [webView fwObserveProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
-        viewController.title = webView.title;
+        weakController.title = webView.title;
     }];
+    __weak __typeof(progressView) weakProgressView = progressView;
     [webView fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {
-        [progressView fwSetProgress:webView.estimatedProgress];
+        [weakProgressView fwSetProgress:webView.estimatedProgress];
     }];
     
     [viewController renderWebView];
@@ -59,6 +61,7 @@
 {
     NSUInteger webItemsCount = viewController.webItems.count;
     if (webItemsCount > 0) {
+        __weak __typeof(viewController) weakController = viewController;
         NSMutableArray<UIBarButtonItem *> *leftItems = [NSMutableArray array];
         for (int i = 0; i < webItemsCount; i++) {
             id webItem = viewController.webItems[i];
@@ -67,16 +70,16 @@
             } else {
                 if (i == 0) {
                     UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
-                        if (viewController.webView.canGoBack) {
-                            [viewController.webView goBack];
+                        if (weakController.webView.canGoBack) {
+                            [weakController.webView goBack];
                         } else {
-                            [viewController fwCloseViewControllerAnimated:YES];
+                            [weakController fwCloseViewControllerAnimated:YES];
                         }
                     }];
                     [leftItems addObject:leftItem];
                 } else {
                     UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
-                        [viewController fwCloseViewControllerAnimated:YES];
+                        [weakController fwCloseViewControllerAnimated:YES];
                     }];
                     [leftItems addObject:leftItem];
                 }
@@ -86,9 +89,9 @@
         viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
         [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
             if (webView.canGoBack) {
-                viewController.navigationItem.leftBarButtonItems = [leftItems copy];
+                weakController.navigationItem.leftBarButtonItems = [leftItems copy];
             } else {
-                viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
+                weakController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
             }
         }];
     }
