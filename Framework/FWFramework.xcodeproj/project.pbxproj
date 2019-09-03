@@ -231,8 +231,6 @@
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
-		2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */; };
 		2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */; };
 		2F71FD8A22E2E64400E905BE /* FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F71FD8822E2E64400E905BE /* FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -552,8 +550,6 @@
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
-		2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCalendar+FWFramework.h"; sourceTree = "<group>"; };
-		2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSCalendar+FWFramework.m"; sourceTree = "<group>"; };
 		2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWAppearance.h"; sourceTree = "<group>"; };
 		2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWAppearance.m"; sourceTree = "<group>"; };
 		2F71FD8822E2E64400E905BE /* FWDrawerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDrawerView.h; sourceTree = "<group>"; };
@@ -812,8 +808,6 @@
 				2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */,
 				2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */,
 				2FBFB70722C5045400E669B6 /* NSBundle+FWFramework.swift */,
-				2F6F789521CA8C5400298C81 /* NSCalendar+FWFramework.h */,
-				2F6F789621CA8C5400298C81 /* NSCalendar+FWFramework.m */,
 				2F03A550216CF4B9001965A1 /* NSData+FWFramework.h */,
 				2F03A53A216CF4B9001965A1 /* NSData+FWFramework.m */,
 				2F03A54E216CF4B9001965A1 /* NSDate+FWFramework.h */,
@@ -1216,7 +1210,6 @@
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
 				2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */,
 				2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */,
-				2F6F789721CA8C5400298C81 /* NSCalendar+FWFramework.h in Headers */,
 				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
 				2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */,
 				2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */,
@@ -1503,7 +1496,6 @@
 				2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
 				2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */,
-				2F6F789821CA8C5400298C81 /* NSCalendar+FWFramework.m in Sources */,
 				2FCE516121D3BA32009EA65E /* FWCacheKeychain.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
 				2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */,

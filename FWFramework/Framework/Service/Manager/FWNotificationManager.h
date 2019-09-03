@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWNotificationManager : NSObject
 
+// 单例模式
++ (instancetype)sharedInstance;
+
 @end
 
 NS_ASSUME_NONNULL_END
