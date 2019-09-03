@@ -16,40 +16,14 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor whiteColor];
-    
-    self.window.rootViewController = [self tabBarController];
-    [self.window makeKeyAndVisible];
-    return YES;
-}
+#pragma mark - Protected
 
-- (void)applicationWillResignActive:(UIApplication *)application {
-    
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    
-}
-
-- (UITabBarController *)tabBarController
+- (void)setupController
 {
     // 统一设置导航栏样式
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
+    // 初始化tabBar控制器
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
@@ -68,8 +42,13 @@
     // present时隐藏tabBar
     tabBarController.definesPresentationContext = YES;
     tabBarController.viewControllers = @[homeNav, testNav];
-    return tabBarController;
+    
+    // 设置主控制器
+    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.rootViewController = tabBarController;
 }
+
+#pragma mark - UITabBarControllerDelegate
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
