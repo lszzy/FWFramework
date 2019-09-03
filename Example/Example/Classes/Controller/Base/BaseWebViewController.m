@@ -10,85 +10,25 @@
 
 @interface BaseWebViewController ()
 
-@property (nonatomic, strong) UIBarButtonItem *backItem;
-@property (nonatomic, strong) UIBarButtonItem *closeItem;
-@property (nonatomic, strong) UIBarButtonItem *shareItem;
-
 @end
 
 @implementation BaseWebViewController
 
-#pragma mark - Accessor
-
-- (UIBarButtonItem *)backItem
-{
-    if (!_backItem) {
-        _backItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"public_back"] style:UIBarButtonItemStylePlain target:self action:@selector(onBack)];
-    }
-    return _backItem;
-}
-
-- (UIBarButtonItem *)closeItem
-{
-    if (!_closeItem) {
-        _closeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"public_close"] style:UIBarButtonItemStylePlain target:self action:@selector(onClose)];
-    }
-    return _closeItem;
-}
-
-- (UIBarButtonItem *)shareItem
-{
-    if (!_shareItem) {
-        _shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(onShare)];
-    }
-    return _shareItem;
-}
-
-#pragma mark - Lifecycle
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.fwForcePopGesture = YES;
     
-    self.navigationItem.leftBarButtonItems = @[self.backItem];
-    self.navigationItem.rightBarButtonItem = self.shareItem;
+    // 分享按钮
     FWWeakifySelf();
-    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) block:^(id sender) {
         FWStrongifySelf();
-        BOOL canGoBack = [change[NSKeyValueChangeNewKey] boolValue];
-        if (canGoBack) {
-            self.navigationItem.leftBarButtonItems = @[self.backItem, self.closeItem];
-        } else {
-            self.navigationItem.leftBarButtonItems = @[self.backItem];
-        }
+        [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
     }];
     
     // 设置统一请求头
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
     [urlRequest setValue:@"test" forHTTPHeaderField:@"Test-Token"];
     self.webRequest = urlRequest;
-}
-
-#pragma mark - Action
-
-- (void)onBack
-{
-    if ([self.webView canGoBack]) {
-        [self.webView goBack];
-    } else {
-        [self onClose];
-    }
-}
-
-- (void)onClose
-{
-    [self fwCloseViewControllerAnimated:YES];
-}
-
-- (void)onShare
-{
-    [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
 }
 
 #pragma mark - WKNavigationDelegate
