@@ -25,8 +25,7 @@
     intercepter.viewDidLoadIntercepter = @selector(webViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{@"webView" : @"fwInnerWebView",
                                      @"progressView" : @"fwInnerProgressView",
-                                     @"webBackItem" : @"fwInnerWebBackItem",
-                                     @"webCloseItem" : @"fwInnerWebCloseItem",
+                                     @"webItems" : @"fwInnerWebItems",
                                      @"webRequest" : @"fwInnerWebRequest",
                                      @"setWebRequest:" : @"fwInnerSetWebRequest:",
                                      @"renderWebView" : @"fwInnerRenderWebView"};
@@ -58,13 +57,38 @@
 
 - (void)webViewControllerViewDidLoad:(UIViewController<FWWebViewController> *)viewController
 {
-    if (viewController.webBackItem) {
-        viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:viewController.webBackItem, nil];
+    NSUInteger webItemsCount = viewController.webItems.count;
+    if (webItemsCount > 0) {
+        NSMutableArray<UIBarButtonItem *> *leftItems = [NSMutableArray array];
+        for (int i = 0; i < webItemsCount; i++) {
+            id webItem = viewController.webItems[i];
+            if ([webItem isKindOfClass:[UIBarButtonItem class]]) {
+                [leftItems addObject:webItem];
+            } else {
+                if (i == 0) {
+                    UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
+                        if (viewController.webView.canGoBack) {
+                            [viewController.webView goBack];
+                        } else {
+                            [viewController fwCloseViewControllerAnimated:YES];
+                        }
+                    }];
+                    [leftItems addObject:leftItem];
+                } else {
+                    UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
+                        [viewController fwCloseViewControllerAnimated:YES];
+                    }];
+                    [leftItems addObject:leftItem];
+                }
+            }
+        }
+        
+        viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
         [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
             if (webView.canGoBack) {
-                viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:viewController.webBackItem, viewController.webCloseItem, nil];
+                viewController.navigationItem.leftBarButtonItems = [leftItems copy];
             } else {
-                viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:viewController.webBackItem, nil];
+                viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
             }
         }];
     }
@@ -134,37 +158,9 @@
     return progressView;
 }
 
-- (UIBarButtonItem *)fwInnerWebBackItem
+- (NSArray *)fwInnerWebItems
 {
-    UIBarButtonItem *backItem = objc_getAssociatedObject(self, @selector(webBackItem));
-    if (!backItem) {
-        __weak __typeof__(self) self_weak_ = self;
-        backItem = [UIBarButtonItem fwBarItemWithObject:@"返回" block:^(id sender) {
-            __typeof__(self) self = self_weak_;
-            WKWebView *webView = [(id<FWWebViewController>)self webView];
-            if ([webView canGoBack]) {
-                [webView goBack];
-            } else {
-                [self fwCloseViewControllerAnimated:YES];
-            }
-        }];
-        objc_setAssociatedObject(self, @selector(webBackItem), backItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return backItem;
-}
-
-- (UIBarButtonItem *)fwInnerWebCloseItem
-{
-    UIBarButtonItem *closeItem = objc_getAssociatedObject(self, @selector(webCloseItem));
-    if (!closeItem) {
-        __weak __typeof__(self) self_weak_ = self;
-        closeItem = [UIBarButtonItem fwBarItemWithObject:@"关闭" block:^(id sender) {
-            __typeof__(self) self = self_weak_;
-            [self fwCloseViewControllerAnimated:YES];
-        }];
-        objc_setAssociatedObject(self, @selector(webCloseItem), closeItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return closeItem;
+    return nil;
 }
 
 - (id)fwInnerWebRequest

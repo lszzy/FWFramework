@@ -14,6 +14,13 @@
 
 @implementation BaseWebViewController
 
+- (NSArray *)webItems
+{
+    return @[[UIImage imageNamed:@"public_back"], [UIImage imageNamed:@"public_close"]];
+}
+
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
