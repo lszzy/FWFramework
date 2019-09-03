@@ -8,7 +8,6 @@
  */
 
 #import "FWNotificationManager.h"
-@import UserNotifications;
 
 @interface FWNotificationManager () <UNUserNotificationCenterDelegate>
 
@@ -38,9 +37,28 @@
     [[FWAuthorizeManager managerWithType:FWAuthorizeTypeNotifications] authorize:completion];
 }
 
+#pragma mark - Badge
+
+- (void)clearBadgeNumber
+{
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
+
+- (void)increaseBadgeNumber
+{
+    [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
+}
+
+- (void)decreaseBadgeNumber
+{
+    if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
+        [UIApplication sharedApplication].applicationIconBadgeNumber -= 1;
+    }
+}
+
 #pragma mark - Handler
 
-- (void)registerHandler
+- (void)registerNotificationHandler
 {
     if (@available(iOS 10.0, *)) {
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;

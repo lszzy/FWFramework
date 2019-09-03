@@ -110,12 +110,12 @@
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
-    // application.applicationIconBadgeNumber = 0;
+    // [[FWNotificationManager sharedInstance] clearBadgeNumber];
 }
 
 - (void)setupService
 {
-    // [[FWNotificationManager sharedInstance] registerHandler];
+    // [[FWNotificationManager sharedInstance] registerNotificationHandler];
     // [[FWNotificationManager sharedInstance] requestAuthorize:nil];
 }
 

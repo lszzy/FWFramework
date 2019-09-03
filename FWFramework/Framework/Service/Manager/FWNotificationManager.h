@@ -7,6 +7,7 @@
  @updated    2019/5/17
  */
 
+@import UserNotifications;
 #import "FWAuthorizeManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,16 +28,29 @@ NS_ASSUME_NONNULL_BEGIN
 // 执行通知权限授权，主线程回调
 - (void)requestAuthorize:(nullable void (^)(FWAuthorizeStatus status))completion;
 
+#pragma mark - Badge
+
+// 清空图标通知计数
+- (void)clearBadgeNumber;
+
+// 通知计数+1
+- (void)increaseBadgeNumber;
+
+// 通知计数-1
+- (void)decreaseBadgeNumber;
+
 #pragma mark - Handler
 
-// 注册通知处理器
-- (void)registerHandler;
+// 注册通知处理器，iOS10+生效，iOS10以下详见UIApplicationDelegate
+- (void)registerNotificationHandler;
 
 // 处理远程推送通知，支持NSDictionary|UNNotification|UNNotificationResponse等
 - (void)handleRemoteNotification:(id)notification;
 
 // 处理本地通知，支持NSDictionary|UILocalNotification|UNNotification|UNNotificationResponse等
 - (void)handleLocalNotification:(id)notification;
+
+#pragma mark - Local
 
 @end
 
