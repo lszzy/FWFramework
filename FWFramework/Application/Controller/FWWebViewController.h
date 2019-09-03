@@ -25,13 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 进度视图，默认trackTintColor为clear
 @property (nonatomic, readonly) UIProgressView *progressView;
 
-// 返回按钮，默认箭头图标，可覆写。如果为nil，不处理
-@property (nullable, nonatomic, readonly) UIBarButtonItem *webBackItem;
+// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
+@property (nullable, nonatomic, readonly) NSArray *webItems;
 
-// 关闭按钮，默认关闭图标，可覆写。如果为nil，不处理
-@property (nullable, nonatomic, readonly) UIBarButtonItem *webCloseItem;
-
-// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest
+// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
 @property (nullable, nonatomic, strong) id webRequest;
 
 // 渲染网页视图和布局等，默认铺满
