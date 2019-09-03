@@ -11,4 +11,14 @@
 
 @implementation FWNotificationManager
 
++ (instancetype)sharedInstance
+{
+    static FWNotificationManager *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWNotificationManager alloc] init];
+    });
+    return instance;
+}
+
 @end
