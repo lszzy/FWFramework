@@ -7,6 +7,7 @@
 //
 
 #import "AppRouter.h"
+#import "BaseWebViewController.h"
 #import "TestRouterViewController.h"
 
 @implementation AppRouter
@@ -38,6 +39,13 @@
 
 + (void)registerRouters
 {
+    [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^(NSDictionary *parameters) {
+        BaseWebViewController *viewController = [BaseWebViewController new];
+        viewController.title = parameters[FWRouterURLKey];
+        viewController.requestUrl = parameters[FWRouterURLKey];
+        [FWRouter pushViewController:viewController animated:YES];
+    }];
+    
     [FWRouter registerURL:@"app://test/:id" withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;

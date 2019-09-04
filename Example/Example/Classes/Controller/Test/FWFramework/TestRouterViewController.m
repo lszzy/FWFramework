@@ -72,6 +72,7 @@
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
+                                         @[@"打开http", @"onOpenHttp"],
                                          ]];
 }
 
@@ -161,6 +162,11 @@
 - (void)onRewriteFilter
 {
     [FWRouter openURL:@"https://www.baidu.com/filter/1"];
+}
+
+- (void)onOpenHttp
+{
+    [FWRouter openURL:@"http://www.wuyong.site"];
 }
 
 @end
