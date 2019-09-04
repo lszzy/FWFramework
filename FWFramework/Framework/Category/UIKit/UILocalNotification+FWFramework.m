@@ -60,21 +60,11 @@
 + (UNMutableNotificationContent *)fwLocalNotificationWithTitle:(NSString *)title subtitle:(NSString *)subtitle body:(NSString *)body userInfo:(NSDictionary *)userInfo category:(NSString *)category badge:(NSNumber *)badge soundName:(NSString *)soundName
 {
     UNMutableNotificationContent *notification = [[UNMutableNotificationContent alloc] init];
-    if (title) {
-        notification.title = title;
-    }
-    if (subtitle) {
-        notification.subtitle = subtitle;
-    }
-    if (body) {
-        notification.body = body;
-    }
-    if (userInfo) {
-        notification.userInfo = userInfo;
-    }
-    if (category) {
-        notification.categoryIdentifier = category;
-    }
+    if (title) notification.title = title;
+    if (subtitle) notification.subtitle = subtitle;
+    if (body) notification.body = body;
+    if (userInfo) notification.userInfo = userInfo;
+    if (category) notification.categoryIdentifier = category;
     notification.badge = badge;
     if (soundName) {
         notification.sound = [@"default" isEqualToString:soundName] ? [UNNotificationSound defaultSound] : [UNNotificationSound soundNamed:soundName];
@@ -88,9 +78,9 @@
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
 }
 
-+ (void)fwRemovePendingNotification:(NSString *)identifier
++ (void)fwRemovePendingNotification:(NSArray<NSString *> *)identifiers
 {
-    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier]];
+    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:identifiers];
 }
 
 + (void)fwRemoveAllPendingNotifications
@@ -98,9 +88,9 @@
     [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
 }
 
-+ (void)fwRemoveDeliveredNotification:(NSString *)identifier
++ (void)fwRemoveDeliveredNotification:(NSArray<NSString *> *)identifiers
 {
-    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier]];
+    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:identifiers];
 }
 
 + (void)fwRemoveAllDeliveredNotifications

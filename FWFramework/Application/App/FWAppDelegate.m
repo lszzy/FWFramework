@@ -8,7 +8,6 @@
  */
 
 #import "FWAppDelegate.h"
-#import "FWNotificationManager.h"
 
 @interface FWAppDelegate ()
 
@@ -67,16 +66,20 @@
     [self setupDeviceToken:nil error:error];
 }
 
+/*
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
 }
+*/
 
+/*
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
 }
+*/
 
 #pragma mark - openURL
 

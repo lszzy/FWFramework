@@ -101,10 +101,22 @@
 
 #pragma mark - Local
 
-- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(nullable NSNumber *)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats
+- (void)registerLocalNotification:(NSString *)identifier title:(NSString *)title subtitle:(NSString *)subtitle body:(NSString *)body userInfo:(NSDictionary *)userInfo badge:(NSInteger)badge soundName:(NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats
 {
     if (@available(iOS 10.0, *)) {
+        UNMutableNotificationContent *notification = [[UNMutableNotificationContent alloc] init];
+        if (title) notification.title = title;
+        if (subtitle) notification.subtitle = subtitle;
+        if (body) notification.body = body;
+        if (userInfo) notification.userInfo = userInfo;
+        notification.badge = badge > 0 ? [NSNumber numberWithInteger:badge] : nil;
+        if (soundName) {
+            notification.sound = [@"default" isEqualToString:soundName] ? [UNNotificationSound defaultSound] : [UNNotificationSound soundNamed:soundName];
+        }
         
+        UNNotificationTrigger *trigger = timeInterval > 0 ? [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:repeats] : nil;
+        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:notification trigger:trigger];
+        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
     } else {
         UILocalNotification *notification = [[UILocalNotification alloc] init];
         notification.category = identifier;
@@ -113,9 +125,7 @@
         }
         notification.alertBody = body;
         notification.userInfo = userInfo;
-        if (badge) {
-            notification.applicationIconBadgeNumber = [badge integerValue];
-        }
+        notification.applicationIconBadgeNumber = badge;
         if (soundName) {
             notification.soundName = [@"default" isEqualToString:soundName] ? UILocalNotificationDefaultSoundName : soundName;
         }
@@ -123,25 +133,34 @@
             notification.timeZone = [NSTimeZone defaultTimeZone];
             notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
             
-            /*
+            // UILocalNotification只支持NSCalendarUnit级别的重复，否则不生效
             if (repeats) {
                 switch (timeInterval) {
-                    case <#constant#>:
-                        <#statements#>
+                    case 60:
+                        notification.repeatInterval = NSCalendarUnitMinute;
                         break;
-                        
+                    case 900:
+                        notification.repeatInterval = NSCalendarUnitQuarter;
+                        break;
+                    case 3600:
+                        notification.repeatInterval = NSCalendarUnitHour;
+                        break;
+                    case 86400:
+                        notification.repeatInterval = NSCalendarUnitDay;
+                        break;
+                    case 86400 * 7:
+                        notification.repeatInterval = NSCalendarUnitWeekday;
+                        break;
+                    case 86400 * 30:
+                        notification.repeatInterval = NSCalendarUnitMonth;
+                        break;
+                    case 86400 * 365:
+                        notification.repeatInterval = NSCalendarUnitYear;
+                        break;
                     default:
                         break;
                 }
-                
-                NSCalendarUnitYear              = 年单位。值很大。（2016）年
-                NSCalendarUnitMonth             = 月单位。范围为1-12
-                NSCalendarUnitDay               = 天单位。范围为1-31
-                NSCalendarUnitHour              = 小时单位。范围为0-24
-                NSCalendarUnitMinute            = 分钟单位。范围为0-60
-                NSCalendarUnitWeekday           = 星期单位。范围为1-7 （一个星期有七天）
-                NSCalendarUnitQuarter           = 刻钟单位。范围为1-4 （1刻钟等于15分钟）
-            }*/
+            }
             
             [[UIApplication sharedApplication] scheduleLocalNotification:notification];
         } else {
@@ -150,16 +169,16 @@
     }
 }
 
-- (void)removeLocalNotification:(NSString *)identifier
+- (void)removeLocalNotification:(NSArray<NSString *> *)identifiers
 {
     if (@available(iOS 10.0, *)) {
-        [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier]];
+        [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:identifiers];
+        [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:identifiers];
     } else {
         NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
         for (UILocalNotification *notification in notifications) {
-            if ([identifier isEqualToString:notification.category]) {
+            if (notification.category && [identifiers containsObject:notification.category]) {
                 [[UIApplication sharedApplication] cancelLocalNotification:notification];
-                break;
             }
         }
     }
@@ -169,6 +188,7 @@
 {
     if (@available(iOS 10.0, *)) {
         [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
+        [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
     } else {
         [[UIApplication sharedApplication] cancelAllLocalNotifications];
     }
