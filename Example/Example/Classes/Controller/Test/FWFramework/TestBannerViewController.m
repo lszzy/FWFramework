@@ -7,7 +7,7 @@
 //
 
 #import "TestBannerViewController.h"
-#import "DZNWebViewController.h"
+#import "BaseWebViewController.h"
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
@@ -205,8 +205,14 @@
 {
     FWLogDebug(@"index: %@", @(index));
     
-    DZNWebViewController *viewController = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.baidu.com"]];
-    [self fwOpenViewController:viewController animated:YES];
+    BaseWebViewController *viewController = [BaseWebViewController new];
+    viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
+    if (index % 2 == 0) {
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [self presentViewController:navigationController animated:YES completion:nil];
+    }
 }
 
 @end

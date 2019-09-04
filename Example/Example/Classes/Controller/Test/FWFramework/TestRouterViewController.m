@@ -59,7 +59,7 @@
     urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@3];
     NSLog(@"url: %@", urlStr);
     
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @[@"打开Url", @"onOpen"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
@@ -72,6 +72,7 @@
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
+                                         @[@"打开http", @"onOpenHttp"],
                                          ]];
 }
 
@@ -79,13 +80,13 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [rowData objectAtIndex:0];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();
@@ -161,6 +162,11 @@
 - (void)onRewriteFilter
 {
     [FWRouter openURL:@"https://www.baidu.com/filter/1"];
+}
+
+- (void)onOpenHttp
+{
+    [FWRouter openURL:@"http://www.wuyong.site"];
 }
 
 @end

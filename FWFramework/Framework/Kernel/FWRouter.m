@@ -71,44 +71,62 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 
 #pragma mark - Register
 
-+ (void)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler
++ (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler
 {
-    NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
-    if (handler && subRoutes) {
-        subRoutes[FWRouterCoreKey] = [handler copy];
-        subRoutes[FWRouterTypeKey] = @(FWRouterTypeDefault);
+    if ([pattern isKindOfClass:[NSArray class]]) {
+        for (id subPattern in pattern) {
+            [self registerURL:subPattern withHandler:handler];
+        }
+    } else {
+        NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
+        if (handler && subRoutes) {
+            subRoutes[FWRouterCoreKey] = [handler copy];
+            subRoutes[FWRouterTypeKey] = @(FWRouterTypeDefault);
+        }
     }
 }
 
-+ (void)registerURL:(NSString *)pattern withObjectHandler:(FWRouterObjectHandler)handler
++ (void)registerURL:(id)pattern withObjectHandler:(FWRouterObjectHandler)handler
 {
-    NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
-    if (handler && subRoutes) {
-        subRoutes[FWRouterCoreKey] = [handler copy];
-        subRoutes[FWRouterTypeKey] = @(FWRouterTypeObject);
+    if ([pattern isKindOfClass:[NSArray class]]) {
+        for (id subPattern in pattern) {
+            [self registerURL:subPattern withObjectHandler:handler];
+        }
+    } else {
+        NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
+        if (handler && subRoutes) {
+            subRoutes[FWRouterCoreKey] = [handler copy];
+            subRoutes[FWRouterTypeKey] = @(FWRouterTypeObject);
+        }
     }
 }
 
-+ (void)unregisterURL:(NSString *)pattern
++ (void)unregisterURL:(id)pattern
 {
-    NSMutableArray *pathComponents = [NSMutableArray arrayWithArray:[[self sharedInstance] pathComponentsFromURL:pattern]];
-    // 只删除该 pattern 的最后一级
-    if (pathComponents.count >= 1) {
-        // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
-        NSString *components = [pathComponents componentsJoinedByString:@"."];
-        NSMutableDictionary *route = [[self sharedInstance].routes valueForKeyPath:components];
-        
-        if (route.count >= 1) {
-            NSString *lastComponent = [pathComponents lastObject];
-            [pathComponents removeLastObject];
+    if ([pattern isKindOfClass:[NSArray class]]) {
+        for (id subPattern in pattern) {
+            [self unregisterURL:subPattern];
+        }
+    } else {
+        NSMutableArray *pathComponents = [NSMutableArray arrayWithArray:[[self sharedInstance] pathComponentsFromURL:pattern]];
+        // 只删除该 pattern 的最后一级
+        if (pathComponents.count >= 1) {
+            // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
+            NSString *components = [pathComponents componentsJoinedByString:@"."];
+            NSMutableDictionary *route = [[self sharedInstance].routes valueForKeyPath:components];
             
-            // 有可能是根 key，这样就是 self.routes 了
-            route = [self sharedInstance].routes;
-            if (pathComponents.count) {
-                NSString *componentsWithoutLast = [pathComponents componentsJoinedByString:@"."];
-                route = [[self sharedInstance].routes valueForKeyPath:componentsWithoutLast];
+            if (route.count >= 1) {
+                NSString *lastComponent = [pathComponents lastObject];
+                [pathComponents removeLastObject];
+                
+                // 有可能是根 key，这样就是 self.routes 了
+                route = [self sharedInstance].routes;
+                if (pathComponents.count) {
+                    NSString *componentsWithoutLast = [pathComponents componentsJoinedByString:@"."];
+                    route = [[self sharedInstance].routes valueForKeyPath:componentsWithoutLast];
+                }
+                [route removeObjectForKey:lastComponent];
             }
-            [route removeObjectForKey:lastComponent];
         }
     }
 }

@@ -126,18 +126,17 @@
 
 #pragma mark - TableView
 
-- (UITableView *)renderTableView
+- (void)renderTableView
 {
-    UITableView *tableView = [super renderTableView];
-    [tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
-    return tableView;
+    [self.tableView fwPinEdgesToSuperview];
+    [self.tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // 渲染可重用Cell
     TestTableScrollCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    TestTableScrollObject *object = [self.dataList objectAtIndex:indexPath.row];
+    TestTableScrollObject *object = [self.tableData objectAtIndex:indexPath.row];
     cell.object = object;
     return cell;
 }
@@ -191,11 +190,11 @@
         NSLog(@"刷新完成");
         
         for (int i = 0; i < 1; i++) {
-            [self.dataList addObject:[self randomObject]];
+            [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.dataList.count < 20 ? YES : NO;
+        self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
     });
 }
@@ -207,11 +206,11 @@
         NSLog(@"加载完成");
         
         for (int i = 0; i < 1; i++) {
-            [self.dataList addObject:[self randomObject]];
+            [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.dataList.count < 20 ? YES : NO;
+        self.tableView.fwShowInfiniteScroll = self.tableData.count < 20 ? YES : NO;
         [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }

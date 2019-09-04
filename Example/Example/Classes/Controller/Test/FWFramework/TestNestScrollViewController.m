@@ -13,16 +13,47 @@
 #define SegmentViewHeight 50
 #define NavigationViewHeight FWTopBarHeight
 #define CartViewHeight FWTabBarHeight
-#define HoverMaxY (HeaderViewHeight - NavigationViewHeight)
-#define ChildViewHeight (FWScreenHeight - NavigationViewHeight - SegmentViewHeight)
+#define CategoryViewWidth 84
+#define ItemViewHeight 40
 
-@interface TestNestChildController : BaseTableViewController <FWPagerViewListViewDelegate>
+static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID";
+
+@interface TestNestCollectionCell : UICollectionViewCell
+
+@property (nonatomic, strong) UILabel *textLabel;
+
+@end
+
+@implementation TestNestCollectionCell
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityNormal] text:nil];
+        _textLabel.textAlignment = NSTextAlignmentCenter;
+        [self.contentView addSubview:_textLabel];
+        [_textLabel fwPinEdgesToSuperview];
+    }
+    return self;
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    [super setSelected:selected];
+    self.contentView.backgroundColor = selected ? [UIColor whiteColor] : [UIColor appColorFill];
+}
+
+@end
+
+@interface TestNestChildController : BaseTableViewController <FWCollectionViewController, FWPagerViewListViewDelegate>
 
 @property (nonatomic, assign) BOOL refreshList;
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, assign) BOOL cart;
 @property (nonatomic, assign) BOOL isRefreshed;
+@property (nonatomic, weak) FWPagerView *pagerView;
 
 @property (nonatomic, copy) void(^scrollCallback)(UIScrollView *scrollView);
 
@@ -30,9 +61,27 @@
 
 @implementation TestNestChildController
 
-- (void)renderTableLayout
+- (void)renderTableView
 {
-    [self.tableView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0)];
+    [self.tableView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, self.cart ? CategoryViewWidth : 0, self.cart ? CartViewHeight : 0, 0)];
+}
+
+- (UICollectionViewLayout *)renderCollectionLayout
+{
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.itemSize = CGSizeMake(CategoryViewWidth, ItemViewHeight);
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    layout.sectionInset = UIEdgeInsetsZero;
+    return layout;
+}
+
+- (void)renderCollectionView
+{
+    self.collectionView.backgroundColor = [UIColor appColorBg];
+    [self.collectionView registerClass:[TestNestCollectionCell class] forCellWithReuseIdentifier:kTestNestCollectionCellID];
+    [self.collectionView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0) excludingEdge:NSLayoutAttributeRight];
+    [self.collectionView fwSetDimension:NSLayoutAttributeWidth toSize:self.cart ? CategoryViewWidth : 0];
 }
 
 - (void)renderView
@@ -47,50 +96,98 @@
 {
     for (int i = 0; i < self.rows; i++) {
         if (self.isRefreshed) {
-            [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(i)]];
+            [self.tableData addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(i)]];
         } else {
-            [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
+            [self.tableData addObject:[NSString stringWithFormat:@"我是测试数据%@", @(i)]];
         }
     }
+    [self.collectionView reloadData];
+    FWWeakifySelf();
+    [self.tableView fwReloadDataWithCompletion:^{
+        FWStrongifySelf();
+        [self selectCollectionViewWithOffset:self.tableView.contentOffset.y];
+    }];
 }
 
 - (void)onRefreshing
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.isRefreshed = !self.isRefreshed;
-        [self.dataList removeAllObjects];
-        [self renderData];
-        [self.tableView reloadData];
         [self.tableView.fwPullRefreshView stopAnimating];
+        self.isRefreshed = !self.isRefreshed;
+        [self.tableData removeAllObjects];
+        [self renderData];
+        [self.collectionView reloadData];
+        FWWeakifySelf();
+        [self.tableView fwReloadDataWithCompletion:^{
+            FWStrongifySelf();
+            [self selectCollectionViewWithOffset:self.tableView.contentOffset.y];
+        }];
     });
 }
 
 - (void)onLoading
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSInteger rows = self.dataList.count;
+        [self.tableView.fwInfiniteScrollView stopAnimating];
+        NSInteger rows = self.tableData.count;
         for (int i = 0; i < 5; i++) {
             if (self.isRefreshed) {
-                [self.dataList addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(rows + i)]];
+                [self.tableData addObject:[NSString stringWithFormat:@"我是刷新的测试数据%@", @(rows + i)]];
             } else {
-                [self.dataList addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
+                [self.tableData addObject:[NSString stringWithFormat:@"我是测试数据%@", @(rows + i)]];
             }
         }
-        [self.tableView reloadData];
-        [self.tableView.fwInfiniteScrollView stopAnimating];
+        [self.collectionView reloadData];
+        FWWeakifySelf();
+        [self.tableView fwReloadDataWithCompletion:^{
+            FWStrongifySelf();
+            [self selectCollectionViewWithOffset:self.tableView.contentOffset.y];
+        }];
     });
+}
+
+#pragma mark - CollectionView
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return ceil(self.tableData.count / 5);
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    TestNestCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kTestNestCollectionCellID forIndexPath:indexPath];
+    cell.textLabel.text = [@(indexPath.row) fwAsNSString];
+    cell.selected = NO;
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.pagerView setMainTableViewToMaxContentOffsetY];
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] animated:YES scrollPosition:UITableViewScrollPositionTop];
 }
 
 #pragma mark - TableView
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return ceil(self.tableData.count / 5);
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 5;
+}
+
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [self.dataList objectAtIndex:indexPath.row];
+    NSInteger index = indexPath.section * 5 + indexPath.row;
+    cell.textLabel.text = [self.tableData objectAtIndex:index];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return self.section ? 40 : 0;
+    return self.section ? ItemViewHeight : 0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -98,10 +195,15 @@
     UIView *view = [UIView new];
     view.backgroundColor = [UIColor whiteColor];
     
-    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:@"Header"];
-    headerLabel.frame = CGRectMake(0, 0, FWScreenWidth, 40);
+    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:[NSString stringWithFormat:@"Header%@", @(section)]];
+    headerLabel.frame = CGRectMake(0, 0, FWScreenWidth, ItemViewHeight);
     [view addSubview:headerLabel];
     return view;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return ItemViewHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -109,10 +211,30 @@
     [self fwShowAlertWithTitle:[NSString stringWithFormat:@"点击%@", @(indexPath.row)] message:nil cancel:@"关闭" cancelBlock:nil];
 }
 
+- (void)selectCollectionViewWithOffset:(CGFloat)contentOffsetY
+{
+    if (!self.cart) return;
+    
+    for (int i = 0; i < self.tableData.count; i++) {
+        CGFloat sectionOffsetY = ItemViewHeight * (i + 1) + (i / 5 + 1) * ItemViewHeight;
+        if (contentOffsetY < sectionOffsetY) {
+            [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:(i / 5) inSection:0] animated:YES scrollPosition:UICollectionViewScrollPositionTop];
+            break;
+        }
+    }
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (self.scrollCallback) {
-        self.scrollCallback(scrollView);
+    if (scrollView == self.tableView) {
+        // 拖动或减速时选中左侧菜单
+        if (self.tableView.isDragging || self.tableView.isDecelerating) {
+            [self selectCollectionViewWithOffset:scrollView.contentOffset.y];
+        }
+        
+        if (self.scrollCallback) {
+            self.scrollCallback(scrollView);
+        }
     }
 }
 
@@ -255,6 +377,7 @@
 - (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
 {
     TestNestChildController *listView = [TestNestChildController new];
+    listView.pagerView = pagerView;
     listView.refreshList = self.refreshList;
     listView.isRefreshed = self.isRefreshed;
     if (index == 0) {

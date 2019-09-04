@@ -68,10 +68,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIBarButtonItem (FWBlock)
 
-// 使用指定对象和事件创建Item
+// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber等
 + (instancetype)fwBarItemWithObject:(nullable id)object target:(id)target action:(SEL)action;
 
-// 使用指定对象和句柄创建Item
+// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber等
 + (instancetype)fwBarItemWithObject:(nullable id)object block:(void (^)(id sender))block;
 
 @end

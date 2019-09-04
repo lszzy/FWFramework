@@ -73,17 +73,23 @@
         return protocolList;
     }
     
-    // 解析协议列表，目前用不到父协议，暂不解析
-    unsigned int count = 0;
-    __unsafe_unretained Protocol **list = class_copyProtocolList(clazz, &count);
+    // 解析FWViewController协议列表，包含父协议
     NSMutableArray *protocolNames = [NSMutableArray array];
-    for (unsigned int i = 0; i < count; i++) {
-        Protocol *protocol = list[i];
-        const char *cName = protocol_getName(protocol);
-        NSString *name = [NSString stringWithUTF8String:cName];
-        [protocolNames addObject:name];
+    while (clazz != NULL) {
+        unsigned int count = 0;
+        __unsafe_unretained Protocol **list = class_copyProtocolList(clazz, &count);
+        for (unsigned int i = 0; i < count; i++) {
+            Protocol *protocol = list[i];
+            if (!protocol_conformsToProtocol(protocol, @protocol(FWViewController))) continue;
+            NSString *name = [NSString stringWithUTF8String:protocol_getName(protocol)];
+            if (!name || [protocolNames containsObject:name]) continue;
+            [protocolNames addObject:name];
+        }
+        free(list);
+        
+        clazz = class_getSuperclass(clazz);
+        if (nil == clazz || clazz == [NSObject class]) break;
     }
-    free(list);
     
     // 写入协议缓存
     [classProtocols setObject:protocolNames forKey:className];
@@ -125,8 +131,8 @@
             }
         }
         
-        if ([viewController respondsToSelector:@selector(fwRenderInit)]) {
-            [viewController performSelector:@selector(fwRenderInit)];
+        if ([viewController respondsToSelector:@selector(renderInit)]) {
+            [viewController performSelector:@selector(renderInit)];
         }
     }
 }
@@ -146,8 +152,8 @@
             }
         }
         
-        if ([viewController respondsToSelector:@selector(fwRenderView)]) {
-            [viewController performSelector:@selector(fwRenderView)];
+        if ([viewController respondsToSelector:@selector(renderView)]) {
+            [viewController performSelector:@selector(renderView)];
         }
     }
 }
@@ -167,11 +173,11 @@
             }
         }
         
-        if ([viewController respondsToSelector:@selector(fwRenderModel)]) {
-            [viewController performSelector:@selector(fwRenderModel)];
+        if ([viewController respondsToSelector:@selector(renderModel)]) {
+            [viewController performSelector:@selector(renderModel)];
         }
-        if ([viewController respondsToSelector:@selector(fwRenderData)]) {
-            [viewController performSelector:@selector(fwRenderData)];
+        if ([viewController respondsToSelector:@selector(renderData)]) {
+            [viewController performSelector:@selector(renderData)];
         }
     }
 }

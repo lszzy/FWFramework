@@ -32,11 +32,10 @@
     [self.navigationController.navigationBar fwSetBackgroundClear];
 }
 
-- (UITableView *)renderTableView
+- (void)renderTableView
 {
-    UITableView *tableView = [super renderTableView];
-    tableView.backgroundColor = [UIColor clearColor];
-    return tableView;
+    [self.tableView fwPinEdgesToSuperview];
+    self.tableView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)renderView
@@ -53,7 +52,7 @@
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @"我是数据",
                                          @"我是数据",
                                          @"我是数据",
@@ -84,7 +83,7 @@
 {
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.textLabel.text = [self.dataList objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
 }
 
 #pragma mark - UITableView
@@ -96,7 +95,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.dataList.count;
+    return self.tableData.count;
 }
 
 @end

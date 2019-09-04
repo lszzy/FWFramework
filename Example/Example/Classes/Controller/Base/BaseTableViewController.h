@@ -12,19 +12,7 @@
 /*!
  @brief BaseTableViewController
  */
-@interface BaseTableViewController : BaseViewController <UITableViewDataSource, UITableViewDelegate>
-
-// 数据源
-@property (nonatomic, readonly) NSMutableArray *dataList;
-
-// 表格视图
-@property (nonatomic, readonly) UITableView *tableView;
-
-// 渲染表格视图，默认Plain样式，Header为nil，Footer为空视图，loadView自动调用。Plain有悬停，Group无悬停
-- (UITableView *)renderTableView;
-
-// 渲染表格布局，默认铺满，loadView自动调用
-- (void)renderTableLayout;
+@interface BaseTableViewController : BaseViewController <FWTableViewController>
 
 // 渲染可重用单元格类，格式identifier=>class，自动调用registerClass:forCellReuseIdentifier:进行注册。和renderCellView二选一
 - (NSDictionary<NSString *, Class> *)renderCellClass;

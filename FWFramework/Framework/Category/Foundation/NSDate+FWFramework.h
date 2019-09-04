@@ -165,8 +165,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSDateComponents (FWFramework)
-
-@end
-
 NS_ASSUME_NONNULL_END
