@@ -18,6 +18,17 @@
 
 #pragma mark - Protected
 
+- (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
+{
+    [[FWNotificationManager sharedInstance] clearNotificationBadges];
+}
+
+- (void)setupService
+{
+    [[FWNotificationManager sharedInstance] registerNotificationHandler];
+    [[FWNotificationManager sharedInstance] requestAuthorize:nil];
+}
+
 - (void)setupController
 {
     // 统一设置导航栏样式
@@ -46,6 +57,17 @@
     // 设置主控制器
     self.window.backgroundColor = [UIColor whiteColor];
     self.window.rootViewController = tabBarController;
+}
+
+- (void)setupDeviceToken:(NSData *)deviceToken error:(NSError *)error
+{
+    [UIDevice fwSetDeviceToken:deviceToken];
+}
+
+- (BOOL)handleOpenURL:(NSURL *)url options:(NSDictionary *)options
+{
+    [FWRouter openURL:url.absoluteString];
+    return YES;
 }
 
 #pragma mark - UITabBarControllerDelegate

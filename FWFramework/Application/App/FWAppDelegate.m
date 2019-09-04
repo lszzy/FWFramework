@@ -110,7 +110,9 @@
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
-    // [[FWNotificationManager sharedInstance] clearBadgeNumber];
+    // [[FWNotificationManager sharedInstance] clearNotificationBadges];
+    // NSDictionary *localNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    // NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 }
 
 - (void)setupService

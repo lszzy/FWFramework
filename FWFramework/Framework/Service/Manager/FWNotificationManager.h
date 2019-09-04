@@ -7,6 +7,7 @@
  @updated    2019/5/17
  */
 
+#import <UIKit/UIKit.h>
 @import UserNotifications;
 #import "FWAuthorizeManager.h"
 
@@ -31,15 +32,15 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Badge
 
 // 清空图标通知计数
-- (void)clearBadgeNumber;
-
-// 通知计数+1
-- (void)increaseBadgeNumber;
-
-// 通知计数-1
-- (void)decreaseBadgeNumber;
+- (void)clearNotificationBadges;
 
 #pragma mark - Handler
+
+// 设置远程推送处理句柄，参数为userInfo和原始通知对象
+@property (nonatomic, copy) void (^remoteNotificationHandler)(NSDictionary *userInfo, id notification);
+
+// 设置本地推送处理句柄，参数为userInfo和原始通知对象
+@property (nonatomic, copy) void (^localNotificationHandler)(NSDictionary *userInfo, id notification);
 
 // 注册通知处理器，iOS10+生效，iOS10以下详见UIApplicationDelegate
 - (void)registerNotificationHandler;
@@ -51,6 +52,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleLocalNotification:(id)notification;
 
 #pragma mark - Local
+
+// 注册本地通知，badge为0时不显示(nil时不修改)，soundName为default时为默认声音，timeInterval为距离当前时间戳(0为立即触发)，repeats为YES时定时重复，最少1分钟(iOS10以下只支持重复NSCalendarUnit标准单位时间，如60|900|3600|86400|86400*7|86400*30|86400*365，否则不生效)
+- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(nullable NSNumber *)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats;
+
+// 删除本地通知
+- (void)removeLocalNotification:(NSString *)identifier;
+
+// 删除所有本地通知
+- (void)removeAllLocalNotifications;
 
 @end
 

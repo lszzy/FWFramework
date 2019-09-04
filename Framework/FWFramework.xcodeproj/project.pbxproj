@@ -181,6 +181,8 @@
 		2F03A658216D0049001965A1 /* FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A657216D0049001965A1 /* FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A666216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */; };
 		2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F03EECE231F65AA009D2A22 /* UILocalNotification+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F03EECF231F65AA009D2A22 /* UILocalNotification+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */; };
 		2F071B6D21DF321500F47DFD /* UIWebView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F071B6E21DF321500F47DFD /* UIWebView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B6C21DF321500F47DFD /* UIWebView+FWFramework.m */; };
 		2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -500,6 +502,8 @@
 		2F03A657216D0049001965A1 /* FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetwork.h; sourceTree = "<group>"; };
 		2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
 		2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILocalNotification+FWFramework.h"; sourceTree = "<group>"; };
+		2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILocalNotification+FWFramework.m"; sourceTree = "<group>"; };
 		2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIWebView+FWFramework.h"; sourceTree = "<group>"; };
 		2F071B6C21DF321500F47DFD /* UIWebView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+FWFramework.m"; sourceTree = "<group>"; };
 		2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
@@ -717,6 +721,8 @@
 				2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */,
 				2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */,
 				2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */,
+				2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */,
+				2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */,
 				2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */,
 				2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */,
 				2F03A509216CF4B9001965A1 /* UINavigationController+FWFramework.h */,
@@ -1155,6 +1161,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F03EECE231F65AA009D2A22 /* UILocalNotification+FWFramework.h in Headers */,
 				2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */,
 				2F6492B023168828002E15AC /* FWWebViewController.h in Headers */,
 				2F6492AC2316880C002E15AC /* FWCollectionViewController.h in Headers */,
@@ -1401,6 +1408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F03A638216CF882001965A1 /* FWNetworkPrivate.m in Sources */,
+				2F03EECF231F65AA009D2A22 /* UILocalNotification+FWFramework.m in Sources */,
 				2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */,
 				2FCE516921D3BA32009EA65E /* FWCacheAbstract.m in Sources */,
 				2FCE516E21D3BD1B009EA65E /* FWCacheManager.m in Sources */,
