@@ -53,13 +53,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Local
 
-// 注册本地通知，badge为0时不显示(nil时不修改)，soundName为default时为默认声音，timeInterval为距离当前时间戳(0为立即触发)，repeats为YES时定时重复，最少1分钟(iOS10以下只支持重复NSCalendarUnit标准单位时间，如60|900|3600|86400|86400*7|86400*30|86400*365，否则不生效)
-- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(nullable NSNumber *)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats;
+// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，重复触发时最少间隔1分钟(60)。(iOS10以下只支持重复NSCalendarUnit标准单位时间，如60|900|3600|86400|86400*7|86400*30|86400*365，否则不生效)
+- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(NSInteger)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats;
 
-// 删除本地通知
-- (void)removeLocalNotification:(NSString *)identifier;
+// 批量删除本地通知(未发出和已发出)
+- (void)removeLocalNotification:(NSArray<NSString *> *)identifiers;
 
-// 删除所有本地通知
+// 删除所有本地通知(未发出和已发出)
 - (void)removeAllLocalNotifications;
 
 @end

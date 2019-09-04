@@ -43,13 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)fwRegisterLocalNotification:(NSString *)identifier content:(UNNotificationContent *)content trigger:(nullable UNNotificationTrigger *)trigger;
 
 // 删除未发出的本地通知，iOS10+
-+ (void)fwRemovePendingNotification:(NSString *)identifier;
++ (void)fwRemovePendingNotification:(NSArray<NSString *> *)identifiers;
 
 // 删除所有未发出的本地通知，iOS10+
 + (void)fwRemoveAllPendingNotifications;
 
 // 删除已发出的本地通知，iOS10+
-+ (void)fwRemoveDeliveredNotification:(NSString *)identifier;
++ (void)fwRemoveDeliveredNotification:(NSArray<NSString *> *)identifiers;
 
 // 删除所有已发出的本地通知，iOS10+
 + (void)fwRemoveAllDeliveredNotifications;

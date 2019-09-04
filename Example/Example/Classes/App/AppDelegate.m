@@ -16,11 +16,31 @@
 
 @implementation AppDelegate
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
+}
+
 #pragma mark - Protected
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
     [[FWNotificationManager sharedInstance] clearNotificationBadges];
+    
+    NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification) {
+        [[FWNotificationManager sharedInstance] handleRemoteNotification:remoteNotification];
+    }
+    NSDictionary *localNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        [[FWNotificationManager sharedInstance] handleLocalNotification:localNotification];
+    }
 }
 
 - (void)setupService
