@@ -103,7 +103,7 @@
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                           @[@"默认Present", @"onPresent"],
                                           @[@"转场present", @"onPresentTransition"],
                                           @[@"自定义present", @"onPresentAnimation"],
@@ -122,13 +122,13 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *cellData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *cellData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [cellData objectAtIndex:0];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *cellData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *cellData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([cellData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();

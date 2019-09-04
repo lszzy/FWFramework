@@ -64,6 +64,7 @@
 @interface TestBarViewController ()
 
 FWPropertyWeak(UILabel *, frameLabel);
+FWPropertyAssign(BOOL, hideToast);
 
 @end
 
@@ -81,6 +82,26 @@ FWPropertyWeak(UILabel *, frameLabel);
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (!self.hideToast) {
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"viewWillAppear:%@", @(animated)]]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (!self.hideToast) {
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"viewWillDisappear:%@", @(animated)]]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    }
+}
+
 - (void)renderView
 {
     UILabel *frameLabel = [UILabel fwAutoLayoutView];
@@ -94,14 +115,14 @@ FWPropertyWeak(UILabel *, frameLabel);
     }
 }
 
-- (void)renderTableLayout
+- (void)renderTableView
 {
     [self.tableView fwPinEdgesToSuperviewSafeArea];
 }
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @[@"状态栏切换", @"onStatusBar"],
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
@@ -110,24 +131,25 @@ FWPropertyWeak(UILabel *, frameLabel);
                                          @[@"导航栏转场", @"onTransitionBar"],
                                          ]];
     if (self.navigationController) {
-        [self.dataList addObject:@[@"Present", @"onPresent"]];
+        [self.tableData addObject:@[@"Present(默认)", @"onPresent"]];
+        [self.tableData addObject:@[@"Present(全屏)", @"onPresent2"]];
     } else {
-        [self.dataList addObject:@[@"Dismiss", @"onDismiss"]];
+        [self.tableData addObject:@[@"Dismiss", @"onDismiss"]];
     }
-    [self.dataList addObject:@[@"设备转向", @"onOrientation"]];
+    [self.tableData addObject:@[@"设备转向", @"onOrientation"]];
 }
 
 #pragma mark - TableView
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [rowData objectAtIndex:0];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();
@@ -203,6 +225,15 @@ FWPropertyWeak(UILabel *, frameLabel);
 - (void)onPresent
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (void)onPresent2
+{
+    TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    viewController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:viewController animated:YES completion:nil];
 }
 

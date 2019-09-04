@@ -16,7 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UIViewController+FWFramework
- @discussion 注意modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置
+ @discussion 注意modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置。
+ iOS13由于modalPresentationStyle默认值为Automatic(PageSheet)，不会触发父控制器的viewWillDisappear|viewWillAppear等生命周期方法
  */
 @interface UIViewController (FWFramework)
 

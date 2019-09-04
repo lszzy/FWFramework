@@ -28,7 +28,7 @@
     self.to = @"29.5302033389,106.4601725638";
     self.target = @"港城凤鸣香山";
     
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @[@"Google Maps(gps)", @"onGoogleMaps1"],
                                          @[@"Google Maps(address)", @"onGoogleMaps2"],
                                          @[@"Google Maps(direction)", @"onGoogleMaps3"],
@@ -48,13 +48,13 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [rowData objectAtIndex:0];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();

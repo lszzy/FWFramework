@@ -19,16 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 // 渲染初始化方法，init自动调用
-- (void)fwRenderInit;
+- (void)renderInit;
 
 // 渲染视图方法，loadView自动调用
-- (void)fwRenderView;
+- (void)renderView;
 
 // 渲染模型方法，viewDidLoad自动调用
-- (void)fwRenderModel;
+- (void)renderModel;
 
 // 渲染数据模型，viewDidLoad自动调用
-- (void)fwRenderData;
+- (void)renderData;
 
 @end
 

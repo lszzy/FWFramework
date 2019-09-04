@@ -24,7 +24,7 @@
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @"默认Header悬停(Plain)",
                                          @"Header不悬停(Plain)",
                                          @"默认Footer悬停(Plain)",
@@ -53,7 +53,7 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [self.dataList objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
@@ -81,22 +81,22 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.dataList.count;
+    return self.tableData.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.dataList.count;
+    return self.tableData.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [self.dataList objectAtIndex:self.index];
+    return [self.tableData objectAtIndex:self.index];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    return [self.dataList objectAtIndex:self.index];
+    return [self.tableData objectAtIndex:self.index];
 }
 
 @end

@@ -15,7 +15,9 @@
 
 @end
 
-@implementation TestViewController
+@implementation TestViewController {
+    UITableView *_tableView;
+}
 
 - (UISearchBar *)searchBar
 {
@@ -51,7 +53,7 @@
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                        @[@"FWFramework", @[
                                              @[@"UIButton(FWFramework)", @"TestButtonViewController"],
                                              @[@"UIView(FWAnimation)", @"TestAnimationViewController"],
@@ -97,6 +99,7 @@
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              @[@"FWStorekitManager", @"TestStorekitViewController"],
+                                             @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              @[@"FWVersionManager", @"TestVersionViewController"],
                                              ]],
@@ -113,17 +116,20 @@
 
 #pragma mark - TableView
 
-- (UITableView *)renderTableView
+- (UITableViewStyle)renderTableStyle
 {
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    tableView.fwKeyboardDismissOnDrag = YES;
-    return tableView;
+    return UITableViewStyleGrouped;
+}
+
+- (void)renderTableView
+{
+    [self.tableView fwPinEdgesToSuperview];
+    self.tableView.fwKeyboardDismissOnDrag = YES;
 }
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *sectionData = [self.dataList objectAtIndex:indexPath.section];
+    NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
     NSArray *sectionList = [sectionData objectAtIndex:1];
     NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
     
@@ -132,7 +138,7 @@
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *sectionData = [self.dataList objectAtIndex:indexPath.section];
+    NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
     NSArray *sectionList = [sectionData objectAtIndex:1];
     NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
     
@@ -147,19 +153,19 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.dataList.count;
+    return self.tableData.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *sectionData = [self.dataList objectAtIndex:section];
+    NSArray *sectionData = [self.tableData objectAtIndex:section];
     NSArray *sectionList = [sectionData objectAtIndex:1];
     return sectionList.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSArray *sectionData = [self.dataList objectAtIndex:section];
+    NSArray *sectionData = [self.tableData objectAtIndex:section];
     NSString *sectionName = [sectionData objectAtIndex:0];
     return sectionName;
 }

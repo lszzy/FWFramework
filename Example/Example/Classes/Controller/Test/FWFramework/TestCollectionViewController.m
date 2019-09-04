@@ -44,16 +44,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
 
 @implementation TestCollectionViewController
 
-- (UICollectionView *)renderCollectionView
-{
-    UICollectionView *collectionView = [super renderCollectionView];
-    [collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
-    [collectionView registerClass:[TestCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTestCollectionHeaderViewID];
-    [collectionView registerClass:[TestCollectionFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kTestCollectionFooterViewID];
-    return collectionView;
-}
-
-- (UICollectionViewLayout *)renderCollectionViewLayout
+- (UICollectionViewLayout *)renderCollectionLayout
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake((FWScreenWidth - 30) / 2.f, 100);
@@ -64,6 +55,14 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
         layout.sectionHeadersPinToVisibleBounds = YES;
     }
     return layout;
+}
+
+- (void)renderCollectionView
+{
+    [self.collectionView fwPinEdgesToSuperview];
+    [self.collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
+    [self.collectionView registerClass:[TestCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTestCollectionHeaderViewID];
+    [self.collectionView registerClass:[TestCollectionFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kTestCollectionFooterViewID];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

@@ -11,57 +11,18 @@
 
 @implementation BaseTableViewController
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (void)loadView
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // 初始化表格数据
-        _dataList = [[NSMutableArray alloc] initWithCapacity:0];
-    }
-    return self;
-}
-
-#pragma mark - Render
-
-- (void)setupView
-{
-    // 创建自动布局表格
-    _tableView = [self renderTableView];
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:_tableView];
+    [super loadView];
     
     // 渲染可重用单元格类
     NSDictionary *cellDict = [self renderCellClass];
     for (NSString *cellIdentifier in cellDict) {
-        [_tableView registerClass:[cellDict objectForKey:cellIdentifier] forCellReuseIdentifier:cellIdentifier];
+        [self.tableView registerClass:[cellDict objectForKey:cellIdentifier] forCellReuseIdentifier:cellIdentifier];
     }
     
-    // 渲染表格布局
-    [self renderTableLayout];
-    
-    // 初始化表格frame
-    [_tableView setNeedsLayout];
-    [_tableView layoutIfNeeded];
-}
-
-- (UITableView *)renderTableView
-{
-    // 默认Plain样式
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    // 默认表格底部为空
-    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    // 兼容TableView
-    [tableView fwContentInsetAdjustmentNever];
     // 默认启用估算高度
-    [tableView fwSetTemplateLayout:YES];
-    return tableView;
-}
-
-- (void)renderTableLayout
-{
-    [self.tableView fwPinEdgesToSuperview];
+    [self.tableView fwSetTemplateLayout:YES];
 }
 
 - (NSDictionary<NSString *, Class> *)renderCellClass
@@ -106,7 +67,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.dataList.count;
+    return self.tableData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

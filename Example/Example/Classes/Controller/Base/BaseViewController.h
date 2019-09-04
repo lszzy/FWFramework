@@ -12,25 +12,6 @@
 /*!
  @brief BaseViewController
  */
-@interface BaseViewController : UIViewController
-
-#pragma mark - Protect
-
-// 初始化内部视图，仅子类重写，外部不可见
-- (void)setupView;
-
-#pragma mark - Render
-
-// 渲染初始化方法，init自动调用
-- (void)renderInit;
-
-// 渲染视图方法，loadView自动调用
-- (void)renderView;
-
-// 渲染模型方法，viewDidLoad自动调用
-- (void)renderModel;
-
-// 渲染数据模型，viewDidLoad自动调用
-- (void)renderData;
+@interface BaseViewController : UIViewController <FWViewController>
 
 @end

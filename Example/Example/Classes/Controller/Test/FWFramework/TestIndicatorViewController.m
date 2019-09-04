@@ -28,7 +28,7 @@
 
 - (void)renderData
 {
-    [self.dataList addObjectsFromArray:@[
+    [self.tableData addObjectsFromArray:@[
                                          @[@"上下无文本", @"onIndicator"],
                                          @[@"上下文本", @"onIndicator2"],
                                          @[@"左右无文本", @"onIndicator3"],
@@ -46,13 +46,13 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [rowData objectAtIndex:0];
 }
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *rowData = [self.dataList objectAtIndex:indexPath.row];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();
