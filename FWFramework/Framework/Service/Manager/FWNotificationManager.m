@@ -55,20 +55,45 @@
 
 - (void)handleRemoteNotification:(id)notification
 {
-    if (@available(iOS 10.0, *)) {
-        
+    if (!self.remoteNotificationHandler) return;
+    
+    NSDictionary *userInfo = nil;
+    if ([notification isKindOfClass:[NSDictionary class]]) {
+        userInfo = notification;
     } else {
-        
+        if (@available(iOS 10.0, *)) {
+            if ([notification isKindOfClass:[UNNotificationResponse class]]) {
+                userInfo = ((UNNotificationResponse *)notification).notification.request.content.userInfo;
+            } else if ([notification isKindOfClass:[UNNotification class]]) {
+                userInfo = ((UNNotification *)notification).request.content.userInfo;
+            }
+        }
     }
+    
+    self.remoteNotificationHandler(userInfo, notification);
 }
 
 - (void)handleLocalNotification:(id)notification
 {
-    if (@available(iOS 10.0, *)) {
-        
+    if (!self.localNotificationHandler) return;
+    
+    NSDictionary *userInfo = nil;
+    if ([notification isKindOfClass:[NSDictionary class]]) {
+        userInfo = notification;
     } else {
-        
+        if (@available(iOS 10.0, *)) {
+            if ([notification isKindOfClass:[UNNotificationResponse class]]) {
+                userInfo = ((UNNotificationResponse *)notification).notification.request.content.userInfo;
+            } else if ([notification isKindOfClass:[UNNotification class]]) {
+                userInfo = ((UNNotification *)notification).request.content.userInfo;
+            }
+        }
+        if ([notification isKindOfClass:[UILocalNotification class]]) {
+            userInfo = ((UILocalNotification *)notification).userInfo;
+        }
     }
+    
+    self.localNotificationHandler(userInfo, notification);
 }
 
 #pragma mark - UNUserNotificationCenterDelegate
