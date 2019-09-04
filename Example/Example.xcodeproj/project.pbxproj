@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F03EEC9231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */; };
+		2F03EECA231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */; };
 		2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE5E2097137C000F8587 /* ObjcController.m */; };
 		2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B7021DF387000F47DFD /* TestWebViewController.m */; };
 		2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3821E496B30018FA87 /* FWDbModel.m */; };
@@ -176,6 +178,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2F03EEC7231EAF3C009D2A22 /* TestNotificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNotificationViewController.h; sourceTree = "<group>"; };
+		2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNotificationViewController.m; sourceTree = "<group>"; };
 		2F06BE5D2097137C000F8587 /* ObjcController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcController.h; sourceTree = "<group>"; };
 		2F06BE5E2097137C000F8587 /* ObjcController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcController.m; sourceTree = "<group>"; };
 		2F06BE6420971483000F8587 /* SwiftController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftController.swift; sourceTree = "<group>"; };
@@ -539,6 +543,8 @@
 				2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */,
 				2F203D43219E76BB00DA83D9 /* TestNestScrollViewController.h */,
 				2F203D44219E76BB00DA83D9 /* TestNestScrollViewController.m */,
+				2F03EEC7231EAF3C009D2A22 /* TestNotificationViewController.h */,
+				2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */,
 				2FB90F1F21F571EA00084D76 /* TestQrcodeViewController.h */,
 				2FB90F2021F571EA00084D76 /* TestQrcodeViewController.m */,
 				2FA32CCA21B0572900C230EA /* TestRouterViewController.h */,
@@ -983,6 +989,7 @@
 			files = (
 				2F4385652318F687003A683C /* AppDelegate.m in Sources */,
 				2F4385662318F687003A683C /* ComplexView.m in Sources */,
+				2F03EECA231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */,
 				2F4385672318F687003A683C /* TestSegmentViewController.m in Sources */,
 				2F4385682318F687003A683C /* TestUrlViewController.m in Sources */,
 				2F4385692318F687003A683C /* TestIndicatorViewController.m in Sources */,
@@ -1053,6 +1060,7 @@
 			files = (
 				2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
+				2F03EEC9231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */,
 				2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */,
 				2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,

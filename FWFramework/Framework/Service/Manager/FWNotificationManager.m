@@ -39,21 +39,9 @@
 
 #pragma mark - Badge
 
-- (void)clearBadgeNumber
+- (void)clearNotificationBadges
 {
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-}
-
-- (void)increaseBadgeNumber
-{
-    [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
-}
-
-- (void)decreaseBadgeNumber
-{
-    if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
-        [UIApplication sharedApplication].applicationIconBadgeNumber -= 1;
-    }
 }
 
 #pragma mark - Handler
@@ -69,12 +57,16 @@
 {
     if (@available(iOS 10.0, *)) {
         
+    } else {
+        
     }
 }
 
 - (void)handleLocalNotification:(id)notification
 {
     if (@available(iOS 10.0, *)) {
+        
+    } else {
         
     }
 }
@@ -104,6 +96,81 @@
     } else {
         [self handleLocalNotification:response];
         completionHandler();
+    }
+}
+
+#pragma mark - Local
+
+- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(nullable NSNumber *)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats
+{
+    if (@available(iOS 10.0, *)) {
+        
+    } else {
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        notification.category = identifier;
+        if (@available(iOS 8.2, *)) {
+            notification.alertTitle = title ?: subtitle;
+        }
+        notification.alertBody = body;
+        notification.userInfo = userInfo;
+        if (badge) {
+            notification.applicationIconBadgeNumber = [badge integerValue];
+        }
+        if (soundName) {
+            notification.soundName = [@"default" isEqualToString:soundName] ? UILocalNotificationDefaultSoundName : soundName;
+        }
+        if (timeInterval > 0) {
+            notification.timeZone = [NSTimeZone defaultTimeZone];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
+            
+            /*
+            if (repeats) {
+                switch (timeInterval) {
+                    case <#constant#>:
+                        <#statements#>
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+                NSCalendarUnitYear              = 年单位。值很大。（2016）年
+                NSCalendarUnitMonth             = 月单位。范围为1-12
+                NSCalendarUnitDay               = 天单位。范围为1-31
+                NSCalendarUnitHour              = 小时单位。范围为0-24
+                NSCalendarUnitMinute            = 分钟单位。范围为0-60
+                NSCalendarUnitWeekday           = 星期单位。范围为1-7 （一个星期有七天）
+                NSCalendarUnitQuarter           = 刻钟单位。范围为1-4 （1刻钟等于15分钟）
+            }*/
+            
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+        } else {
+            [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+        }
+    }
+}
+
+- (void)removeLocalNotification:(NSString *)identifier
+{
+    if (@available(iOS 10.0, *)) {
+        [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier]];
+    } else {
+        NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+        for (UILocalNotification *notification in notifications) {
+            if ([identifier isEqualToString:notification.category]) {
+                [[UIApplication sharedApplication] cancelLocalNotification:notification];
+                break;
+            }
+        }
+    }
+}
+
+- (void)removeAllLocalNotifications
+{
+    if (@available(iOS 10.0, *)) {
+        [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
+    } else {
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
     }
 }
 

@@ -99,6 +99,7 @@
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              @[@"FWStorekitManager", @"TestStorekitViewController"],
+                                             @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              @[@"FWVersionManager", @"TestVersionViewController"],
                                              ]],
