@@ -19,7 +19,7 @@
     [self.tableData addObjectsFromArray:@[
                                           @[@"本地通知(不重复，立即)", @"onNotification1"],
                                           @[@"本地通知(不重复，5秒后)", @"onNotification2"],
-                                          @[@"本地通知(重复1分钟)", @"onNotification3"],
+                                          @[@"本地通知(重复，每1分钟)", @"onNotification3"],
                                           @[@"取消本地通知(批量)", @"onNotification4"],
                                           @[@"取消本地通知(所有)", @"onNotification5"],
                                           ]];
@@ -58,7 +58,7 @@
 
 - (void)onNotification3
 {
-    [[FWNotificationManager sharedInstance] registerLocalNotification:@"test3" title:@"重复1分钟通知" subtitle:@"subtitle" body:@"body" userInfo:@{@"id": @"test3"} badge:0 soundName:nil timeInterval:60 repeats:YES];
+    [[FWNotificationManager sharedInstance] registerLocalNotification:@"test3" title:@"重复1分钟通知" subtitle:@"subtitle" body:@"body" userInfo:@{@"id": @"test3"} badge:1 soundName:@"default" timeInterval:60 repeats:YES];
 }
 
 - (void)onNotification4

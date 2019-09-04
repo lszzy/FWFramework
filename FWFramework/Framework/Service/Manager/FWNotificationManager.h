@@ -37,18 +37,18 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Handler
 
 // 设置远程推送处理句柄，参数为userInfo和原始通知对象
-@property (nonatomic, copy) void (^remoteNotificationHandler)(NSDictionary *userInfo, id notification);
+@property (nonatomic, copy) void (^remoteNotificationHandler)(NSDictionary * _Nullable userInfo, id notification);
 
 // 设置本地推送处理句柄，参数为userInfo和原始通知对象
-@property (nonatomic, copy) void (^localNotificationHandler)(NSDictionary *userInfo, id notification);
+@property (nonatomic, copy) void (^localNotificationHandler)(NSDictionary * _Nullable userInfo, id notification);
 
 // 注册通知处理器，iOS10+生效，iOS10以下详见UIApplicationDelegate
 - (void)registerNotificationHandler;
 
-// 处理远程推送通知，支持NSDictionary|UNNotification|UNNotificationResponse等
+// 处理远程推送通知，支持NSDictionary|UNNotification|UNNotificationResponse
 - (void)handleRemoteNotification:(id)notification;
 
-// 处理本地通知，支持NSDictionary|UILocalNotification|UNNotification|UNNotificationResponse等
+// 处理本地通知，支持NSDictionary|UILocalNotification|UNNotification|UNNotificationResponse
 - (void)handleLocalNotification:(id)notification;
 
 #pragma mark - Local
