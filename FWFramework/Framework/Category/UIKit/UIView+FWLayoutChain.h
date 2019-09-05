@@ -57,38 +57,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottom)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^left)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^right)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leading)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailing)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingToView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToBottomOfView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToTopOfView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToRightOfView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToLeftOfView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingToTrailingOfView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingToLeadingOfView)(id view);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToBottomOfViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToTopOfViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToRightOfViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToLeftOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingToTrailingOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingToLeadingOfViewWithOffset)(id view, CGFloat offset);
 
 #pragma mark - SafeArea
 
@@ -107,14 +95,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingToSafeArea)(void);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToSafeAreaWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToSafeAreaWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToSafeAreaWithInset)(CGFloat inset);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToSafeAreaWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leadingToSafeAreaWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^trailingToSafeAreaWithInset)(CGFloat inset);
 
 #pragma mark - Dimension
 
