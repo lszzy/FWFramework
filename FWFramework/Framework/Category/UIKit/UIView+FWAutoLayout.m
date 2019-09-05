@@ -10,6 +10,8 @@
 #import "UIView+FWAutoLayout.h"
 #import <objc/runtime.h>
 
+static BOOL fwStaticAutoLayoutRTL = NO;
+
 @implementation UIView (FWAutoLayout)
 
 #pragma mark - AutoLayout
@@ -38,6 +40,11 @@
     
     // 还原自动布局设置
     self.translatesAutoresizingMaskIntoConstraints = translateConstraint;
+}
+
++ (void)fwAutoLayoutRTL:(BOOL)enabled
+{
+    fwStaticAutoLayoutRTL = enabled;
 }
 
 #pragma mark - Compression
@@ -360,6 +367,23 @@
 
 - (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation
 {
+    if (fwStaticAutoLayoutRTL) {
+        switch (attribute) {
+            case NSLayoutAttributeLeft: { attribute = NSLayoutAttributeLeading; break; }
+            case NSLayoutAttributeRight: { attribute = NSLayoutAttributeTrailing; break; }
+            case NSLayoutAttributeLeftMargin: { attribute = NSLayoutAttributeLeadingMargin; break; }
+            case NSLayoutAttributeRightMargin: { attribute = NSLayoutAttributeTrailingMargin; break; }
+            default: break;
+        }
+        switch (toAttribute) {
+            case NSLayoutAttributeLeft: { toAttribute = NSLayoutAttributeLeading; break; }
+            case NSLayoutAttributeRight: { toAttribute = NSLayoutAttributeTrailing; break; }
+            case NSLayoutAttributeLeftMargin: { toAttribute = NSLayoutAttributeLeadingMargin; break; }
+            case NSLayoutAttributeRightMargin: { toAttribute = NSLayoutAttributeTrailingMargin; break; }
+            default: break;
+        }
+    }
+    
     self.translatesAutoresizingMaskIntoConstraints = NO;
     // 自动生成唯一约束Key，存在则更新，否则添加
     NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];

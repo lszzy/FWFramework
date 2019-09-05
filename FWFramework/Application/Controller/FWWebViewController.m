@@ -59,12 +59,12 @@
 
 - (void)webViewControllerViewDidLoad:(UIViewController<FWWebViewController> *)viewController
 {
-    NSUInteger webItemsCount = viewController.webItems.count;
-    if (webItemsCount > 0) {
+    NSArray *webItems = viewController.webItems;
+    if (webItems.count > 0) {
         __weak __typeof(viewController) weakController = viewController;
         NSMutableArray<UIBarButtonItem *> *leftItems = [NSMutableArray array];
-        for (int i = 0; i < webItemsCount; i++) {
-            id webItem = viewController.webItems[i];
+        for (int i = 0; i < webItems.count; i++) {
+            id webItem = webItems[i];
             if ([webItem isKindOfClass:[UIBarButtonItem class]]) {
                 [leftItems addObject:webItem];
             } else {
