@@ -38,6 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)fwAutoLayoutSubviews;
 
+/*!
+ @brief 是否启用自动布局RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
+ @discussion 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
+ 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+ 
+ @param enabled 是否启用自动布局RTL
+ */
++ (void)fwAutoLayoutRTL:(BOOL)enabled;
+
 #pragma mark - Compression
 
 /*!
