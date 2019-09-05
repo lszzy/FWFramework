@@ -69,6 +69,8 @@
 
 - (void)setupController
 {
+    // 自动布局适配RTL
+    [UIView fwAutoLayoutRTL:YES];
     // 统一设置导航栏样式
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     

@@ -368,11 +368,19 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation
 {
     if (fwStaticAutoLayoutRTL) {
-        if (attribute == NSLayoutAttributeLeft || attribute == NSLayoutAttributeRight || attribute == NSLayoutAttributeLeftMargin || attribute == NSLayoutAttributeRightMargin) {
-            attribute = attribute + 4;
+        switch (attribute) {
+            case NSLayoutAttributeLeft: { attribute = NSLayoutAttributeLeading; break; }
+            case NSLayoutAttributeRight: { attribute = NSLayoutAttributeTrailing; break; }
+            case NSLayoutAttributeLeftMargin: { attribute = NSLayoutAttributeLeadingMargin; break; }
+            case NSLayoutAttributeRightMargin: { attribute = NSLayoutAttributeTrailingMargin; break; }
+            default: break;
         }
-        if (toAttribute == NSLayoutAttributeLeft || toAttribute == NSLayoutAttributeRight || toAttribute == NSLayoutAttributeLeftMargin || toAttribute == NSLayoutAttributeRightMargin) {
-            toAttribute = toAttribute + 4;
+        switch (toAttribute) {
+            case NSLayoutAttributeLeft: { toAttribute = NSLayoutAttributeLeading; break; }
+            case NSLayoutAttributeRight: { toAttribute = NSLayoutAttributeTrailing; break; }
+            case NSLayoutAttributeLeftMargin: { toAttribute = NSLayoutAttributeLeadingMargin; break; }
+            case NSLayoutAttributeRightMargin: { toAttribute = NSLayoutAttributeTrailingMargin; break; }
+            default: break;
         }
     }
     
