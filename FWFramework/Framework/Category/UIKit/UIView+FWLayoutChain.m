@@ -230,6 +230,22 @@
     };
 }
 
+- (id<FWLayoutChainProtocol> (^)(void))leading
+{
+    return ^id(void) {
+        [self.view fwPinEdgeToSuperview:NSLayoutAttributeLeading];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(void))trailing
+{
+    return ^id(void) {
+        [self.view fwPinEdgeToSuperview:NSLayoutAttributeTrailing];
+        return self;
+    };
+}
+
 - (id<FWLayoutChainProtocol> (^)(CGFloat))topWithInset
 {
     return ^id(CGFloat inset) {
@@ -258,6 +274,22 @@
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:inset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))leadingWithInset
+{
+    return ^id(CGFloat inset) {
+        [self.view fwPinEdgeToSuperview:NSLayoutAttributeLeading withInset:inset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))trailingWithInset
+{
+    return ^id(CGFloat inset) {
+        [self.view fwPinEdgeToSuperview:NSLayoutAttributeTrailing withInset:inset];
         return self;
     };
 }
@@ -294,6 +326,22 @@
     };
 }
 
+- (id<FWLayoutChainProtocol> (^)(id))leadingToView
+{
+    return ^id(id view) {
+        [self.view fwPinEdge:NSLayoutAttributeLeading toEdge:NSLayoutAttributeLeading ofView:view];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(id))trailingToView
+{
+    return ^id(id view) {
+        [self.view fwPinEdge:NSLayoutAttributeTrailing toEdge:NSLayoutAttributeTrailing ofView:view];
+        return self;
+    };
+}
+
 - (id<FWLayoutChainProtocol> (^)(id))topToBottomOfView
 {
     return ^id(id view) {
@@ -322,6 +370,22 @@
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:view];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(id))leadingToTrailingOfView
+{
+    return ^id(id view) {
+        [self.view fwPinEdge:NSLayoutAttributeLeading toEdge:NSLayoutAttributeTrailing ofView:view];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(id))trailingToLeadingOfView
+{
+    return ^id(id view) {
+        [self.view fwPinEdge:NSLayoutAttributeTrailing toEdge:NSLayoutAttributeLeading ofView:view];
         return self;
     };
 }
@@ -358,6 +422,22 @@
     };
 }
 
+- (id<FWLayoutChainProtocol> (^)(id, CGFloat))leadingToViewWithOffset
+{
+    return ^id(id view, CGFloat offset) {
+        [self.view fwPinEdge:NSLayoutAttributeLeading toEdge:NSLayoutAttributeLeading ofView:view withOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(id, CGFloat))trailingToViewWithOffset
+{
+    return ^id(id view, CGFloat offset) {
+        [self.view fwPinEdge:NSLayoutAttributeTrailing toEdge:NSLayoutAttributeTrailing ofView:view withOffset:offset];
+        return self;
+    };
+}
+
 - (id<FWLayoutChainProtocol> (^)(id, CGFloat))topToBottomOfViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
@@ -386,6 +466,22 @@
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:view withOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(id, CGFloat))leadingToTrailingOfViewWithOffset
+{
+    return ^id(id view, CGFloat offset) {
+        [self.view fwPinEdge:NSLayoutAttributeLeading toEdge:NSLayoutAttributeTrailing ofView:view withOffset:offset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(id, CGFloat))trailingToLeadingOfViewWithOffset
+{
+    return ^id(id view, CGFloat offset) {
+        [self.view fwPinEdge:NSLayoutAttributeTrailing toEdge:NSLayoutAttributeLeading ofView:view withOffset:offset];
         return self;
     };
 }
@@ -512,6 +608,22 @@
     };
 }
 
+- (id<FWLayoutChainProtocol> (^)(void))leadingToSafeArea
+{
+    return ^id(void) {
+        [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeading];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(void))trailingToSafeArea
+{
+    return ^id(void) {
+        [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing];
+        return self;
+    };
+}
+
 - (id<FWLayoutChainProtocol> (^)(CGFloat))topToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
@@ -540,6 +652,22 @@
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:inset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))leadingToSafeAreaWithInset
+{
+    return ^id(CGFloat inset) {
+        [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeading withInset:inset];
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(CGFloat))trailingToSafeAreaWithInset
+{
+    return ^id(CGFloat inset) {
+        [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTrailing withInset:inset];
         return self;
     };
 }

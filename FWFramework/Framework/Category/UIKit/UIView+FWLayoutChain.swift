@@ -165,6 +165,30 @@ public class FWLayoutChain {
         view?.fwPinEdge(toSuperview: .right, withInset: inset, relation: relation)
         return self
     }
+    
+    @discardableResult
+    public func leading(_ inset: CGFloat = 0) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperview: .leading, withInset: inset)
+        return self
+    }
+    
+    @discardableResult
+    public func leading(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperview: .leading, withInset: inset, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func trailing(_ inset: CGFloat = 0) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperview: .trailing, withInset: inset)
+        return self
+    }
+    
+    @discardableResult
+    public func trailing(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperview: .trailing, withInset: inset, relation: relation)
+        return self
+    }
 
     @discardableResult
     public func topToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
@@ -213,6 +237,30 @@ public class FWLayoutChain {
         self.view?.fwPinEdge(.right, toEdge: .right, ofView: view, withOffset: offset, relation: relation)
         return self
     }
+    
+    @discardableResult
+    public func leadingToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+        self.view?.fwPinEdge(.leading, toEdge: .leading, ofView: view, withOffset: offset)
+        return self
+    }
+    
+    @discardableResult
+    public func leadingToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        self.view?.fwPinEdge(.leading, toEdge: .leading, ofView: view, withOffset: offset, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func trailingToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+        self.view?.fwPinEdge(.trailing, toEdge: .trailing, ofView: view, withOffset: offset)
+        return self
+    }
+    
+    @discardableResult
+    public func trailingToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        self.view?.fwPinEdge(.trailing, toEdge: .trailing, ofView: view, withOffset: offset, relation: relation)
+        return self
+    }
 
     @discardableResult
     public func topToBottomOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
@@ -259,6 +307,30 @@ public class FWLayoutChain {
     @discardableResult
     public func rightToLeftOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
         self.view?.fwPinEdge(.right, toEdge: .left, ofView: view, withOffset: offset, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func leadingToTrailingOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+        self.view?.fwPinEdge(.leading, toEdge: .trailing, ofView: view, withOffset: offset)
+        return self
+    }
+    
+    @discardableResult
+    public func leadingToTrailingOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        self.view?.fwPinEdge(.leading, toEdge: .trailing, ofView: view, withOffset: offset, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func trailingToLeadingOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+        self.view?.fwPinEdge(.trailing, toEdge: .leading, ofView: view, withOffset: offset)
+        return self
+    }
+    
+    @discardableResult
+    public func trailingToLeadingOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        self.view?.fwPinEdge(.trailing, toEdge: .leading, ofView: view, withOffset: offset, relation: relation)
         return self
     }
 
@@ -351,6 +423,30 @@ public class FWLayoutChain {
     @discardableResult
     public func rightToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
         view?.fwPinEdge(toSuperviewSafeArea: .right, withInset: inset, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func leadingToSafeArea(_ inset: CGFloat = 0) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperviewSafeArea: .leading, withInset: inset)
+        return self
+    }
+    
+    @discardableResult
+    public func leadingToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperviewSafeArea: .leading, withInset: inset, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func trailingToSafeArea(_ inset: CGFloat = 0) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperviewSafeArea: .trailing, withInset: inset)
+        return self
+    }
+    
+    @discardableResult
+    public func trailingToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+        view?.fwPinEdge(toSuperviewSafeArea: .trailing, withInset: inset, relation: relation)
         return self
     }
 
