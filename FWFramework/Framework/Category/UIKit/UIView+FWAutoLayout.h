@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
- @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加
+ @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加。
+ 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
  */
 @interface UIView (FWAutoLayout)
 
@@ -37,6 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
  */
 - (void)fwAutoLayoutSubviews;
+
+/*!
+ @brief 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
+ @discussion 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
+ 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+ 
+ @param enabled 是否启用自动布局适配RTL
+ */
++ (void)fwAutoLayoutRTL:(BOOL)enabled;
 
 #pragma mark - Compression
 
