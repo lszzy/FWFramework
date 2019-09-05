@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 视图链式布局协议
- @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加
+ @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加。
+ 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
  */
 @protocol FWLayoutChainProtocol <NSObject>
 
