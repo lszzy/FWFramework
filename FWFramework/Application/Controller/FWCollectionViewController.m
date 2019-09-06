@@ -21,8 +21,8 @@
     intercepter.loadViewIntercepter = @selector(collectionViewControllerLoadView:);
     intercepter.forwardSelectors = @{@"collectionView" : @"fwInnerCollectionView",
                                      @"collectionData" : @"fwInnerCollectionData",
-                                     @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout",
-                                     @"renderCollectionView" : @"fwInnerRenderCollectionView"};
+                                     @"renderCollectionViewLayout" : @"fwInnerRenderCollectionViewLayout",
+                                     @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWCollectionViewController) withIntercepter:intercepter];
 }
 
@@ -33,7 +33,11 @@
     collectionView.delegate = viewController;
     [viewController.view addSubview:collectionView];
     
-    [viewController renderCollectionView];
+    if ([viewController respondsToSelector:@selector(renderCollectionView)]) {
+        [viewController renderCollectionView];
+    }
+    
+    [viewController renderCollectionLayout];
     [collectionView setNeedsLayout];
     [collectionView layoutIfNeeded];
 }
@@ -50,37 +54,37 @@
 
 - (UICollectionView *)fwInnerCollectionView
 {
-    UICollectionView *collectionView = objc_getAssociatedObject(self, @selector(collectionView));
+    UICollectionView *collectionView = objc_getAssociatedObject(self, _cmd);
     if (!collectionView) {
-        UICollectionViewLayout *collectionLayout = [(id<FWCollectionViewController>)self renderCollectionLayout];
-        collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:collectionLayout];
+        UICollectionViewLayout *viewLayout = [(id<FWCollectionViewController>)self renderCollectionViewLayout];
+        collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:viewLayout];
         collectionView.showsVerticalScrollIndicator = NO;
         collectionView.showsHorizontalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
             collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        objc_setAssociatedObject(self, @selector(collectionView), collectionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, collectionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return collectionView;
 }
 
 - (NSMutableArray *)fwInnerCollectionData
 {
-    NSMutableArray *collectionData = objc_getAssociatedObject(self, @selector(collectionData));
+    NSMutableArray *collectionData = objc_getAssociatedObject(self, _cmd);
     if (!collectionData) {
         collectionData = [[NSMutableArray alloc] init];
-        objc_setAssociatedObject(self, @selector(collectionData), collectionData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, collectionData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return collectionData;
 }
 
-- (UICollectionViewLayout *)fwInnerRenderCollectionLayout
+- (UICollectionViewLayout *)fwInnerRenderCollectionViewLayout
 {
-    UICollectionViewFlowLayout *collectionLayout = [[UICollectionViewFlowLayout alloc] init];
-    return collectionLayout;
+    UICollectionViewFlowLayout *viewLayout = [[UICollectionViewFlowLayout alloc] init];
+    return viewLayout;
 }
 
-- (void)fwInnerRenderCollectionView
+- (void)fwInnerRenderCollectionLayout
 {
     UICollectionView *collectionView = [(id<FWCollectionViewController>)self collectionView];
     [collectionView fwPinEdgesToSuperview];

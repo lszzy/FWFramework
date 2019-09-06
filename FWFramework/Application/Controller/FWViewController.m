@@ -11,14 +11,6 @@
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
-#pragma mark - UIViewController+FWViewController
-
-@interface UIViewController (FWViewController)
-
-- (SEL)fwInnerForwardSelector:(SEL)aSelector;
-
-@end
-
 #pragma mark - FWViewControllerIntercepter
 
 @implementation FWViewControllerIntercepter
@@ -66,18 +58,6 @@
     [self.intercepters setObject:intercepter forKey:NSStringFromProtocol(protocol)];
 }
 
-- (id)performIntercepter:(UIViewController *)viewController withSelector:(SEL)aSelector
-{
-    SEL forwardSelector = [viewController fwInnerForwardSelector:aSelector];
-    if (forwardSelector) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        return [viewController performSelector:forwardSelector];
-#pragma clang diagnostic pop
-    }
-    return nil;
-}
-
 - (NSArray *)protocolsWithClass:(Class)clazz
 {
     static NSMutableDictionary *classProtocols = nil;
@@ -93,8 +73,8 @@
         return protocolList;
     }
     
-    // 解析FWViewController协议列表，包含父协议
-    NSMutableArray *protocolNames = [NSMutableArray array];
+    // 解析协议列表，包含父协议。始终包含FWViewController，且位于第一位
+    NSMutableArray *protocolNames = [NSMutableArray arrayWithObject:@"FWViewController"];
     while (clazz != NULL) {
         unsigned int count = 0;
         __unsafe_unretained Protocol **list = class_copyProtocolList(clazz, &count);
@@ -136,7 +116,7 @@
 - (void)hookInit:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 统一初始化视图控制器
+        // 全局控制器init
         [self viewControllerInit:viewController];
         
         // 调用init拦截器
@@ -234,6 +214,20 @@
         [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
         [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
     });
+}
+
+#pragma mark - Public
+
+- (id)fwPerformIntercepter:(SEL)intercepter
+{
+    SEL forwardSelector = [self fwInnerForwardSelector:intercepter];
+    if (forwardSelector) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        return [self performSelector:forwardSelector];
+#pragma clang diagnostic pop
+    }
+    return nil;
 }
 
 #pragma mark - Hook

@@ -11,10 +11,8 @@
 
 @implementation BaseTableViewController
 
-- (void)loadView
+- (void)renderTableView
 {
-    [super loadView];
-    
     // 渲染可重用单元格类
     NSDictionary *cellDict = [self renderCellClass];
     for (NSString *cellIdentifier in cellDict) {

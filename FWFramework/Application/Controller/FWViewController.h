@@ -12,22 +12,22 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
- @brief 视图控制器挂钩协议
+ @brief 视图控制器挂钩协议，可覆写
  */
 @protocol FWViewController <NSObject>
 
 @optional
 
-// 渲染初始化方法，init自动调用
+// 渲染初始化方法，init自动调用，默认未实现
 - (void)renderInit;
 
-// 渲染视图方法，loadView自动调用
+// 渲染视图方法，loadView自动调用，默认未实现
 - (void)renderView;
 
-// 渲染模型方法，viewDidLoad自动调用
+// 渲染模型方法，viewDidLoad自动调用，默认未实现
 - (void)renderModel;
 
-// 渲染数据模型，viewDidLoad自动调用
+// 渲染数据模型，viewDidLoad自动调用，默认未实现
 - (void)renderData;
 
 @end
@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 视图控制器管理器
+ @discussion 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，注册该拦截器即可
  */
 @interface FWViewControllerManager : NSObject
 
@@ -56,8 +57,15 @@ NS_ASSUME_NONNULL_BEGIN
 // 注册协议拦截器，提供拦截和跳转方法
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
 
-// 调用控制器拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
-- (nullable id)performIntercepter:(UIViewController *)viewController withSelector:(SEL)selector;
+@end
+
+/*!
+ @brief 视图控制器分类
+ */
+@interface UIViewController (FWViewController)
+
+// 调用拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
+- (nullable id)fwPerformIntercepter:(SEL)intercepter;
 
 @end
 

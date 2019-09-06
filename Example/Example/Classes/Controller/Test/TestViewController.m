@@ -15,9 +15,7 @@
 
 @end
 
-@implementation TestViewController {
-    UITableView *_tableView;
-}
+@implementation TestViewController
 
 - (UISearchBar *)searchBar
 {
@@ -121,7 +119,7 @@
     return UITableViewStyleGrouped;
 }
 
-- (void)renderTableView
+- (void)renderTableLayout
 {
     [self.tableView fwPinEdgesToSuperview];
     self.tableView.fwKeyboardDismissOnDrag = YES;

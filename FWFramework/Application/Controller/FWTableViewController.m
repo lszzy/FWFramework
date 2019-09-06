@@ -22,7 +22,7 @@
     intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
                                      @"tableData" : @"fwInnerTableData",
                                      @"renderTableStyle" : @"fwInnerRenderTableStyle",
-                                     @"renderTableView" : @"fwInnerRenderTableView"};
+                                     @"renderTableLayout" : @"fwInnerRenderTableLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
 }
 
@@ -33,7 +33,11 @@
     tableView.delegate = viewController;
     [viewController.view addSubview:tableView];
     
-    [viewController renderTableView];
+    if ([viewController respondsToSelector:@selector(renderTableView)]) {
+        [viewController renderTableView];
+    }
+    
+    [viewController renderTableLayout];
     [tableView setNeedsLayout];
     [tableView layoutIfNeeded];
 }
@@ -50,7 +54,7 @@
 
 - (UITableView *)fwInnerTableView
 {
-    UITableView *tableView = objc_getAssociatedObject(self, @selector(tableView));
+    UITableView *tableView = objc_getAssociatedObject(self, _cmd);
     if (!tableView) {
         UITableViewStyle tableStyle = [(id<FWTableViewController>)self renderTableStyle];
         tableView = [[UITableView alloc] initWithFrame:CGRectZero style:tableStyle];
@@ -60,17 +64,17 @@
             tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-        objc_setAssociatedObject(self, @selector(tableView), tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return tableView;
 }
 
 - (NSMutableArray *)fwInnerTableData
 {
-    NSMutableArray *tableData = objc_getAssociatedObject(self, @selector(tableData));
+    NSMutableArray *tableData = objc_getAssociatedObject(self, _cmd);
     if (!tableData) {
         tableData = [[NSMutableArray alloc] init];
-        objc_setAssociatedObject(self, @selector(tableData), tableData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, tableData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return tableData;
 }
@@ -80,7 +84,7 @@
     return UITableViewStylePlain;
 }
 
-- (void)fwInnerRenderTableView
+- (void)fwInnerRenderTableLayout
 {
     UITableView *tableView = [(id<FWTableViewController>)self tableView];
     [tableView fwPinEdgesToSuperview];
