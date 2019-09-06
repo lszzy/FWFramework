@@ -18,13 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 滚动视图，默认不显示滚动条，默认实现
+// 滚动视图，默认不显示滚动条
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
-// 内容容器视图，自动撑开，子视图需要添加到此视图上，默认实现
+// 内容容器视图，自动撑开，子视图需要添加到此视图上
 @property (nonatomic, readonly) UIView *contentView;
 
-// 渲染滚动视图和布局等，默认铺满，默认实现
+// 渲染滚动视图和布局等，默认铺满
 - (void)renderScrollView;
 
 @end

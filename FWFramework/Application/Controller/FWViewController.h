@@ -18,16 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 渲染初始化方法，init自动调用，无默认实现
+// 渲染初始化方法，init自动调用
 - (void)renderInit;
 
-// 渲染视图方法，loadView自动调用，无默认实现
+// 渲染视图方法，loadView自动调用
 - (void)renderView;
 
-// 渲染模型方法，viewDidLoad自动调用，无默认实现
+// 渲染模型方法，viewDidLoad自动调用
 - (void)renderModel;
 
-// 渲染数据模型，viewDidLoad自动调用，无默认实现
+// 渲染数据模型，viewDidLoad自动调用
 - (void)renderData;
 
 @end

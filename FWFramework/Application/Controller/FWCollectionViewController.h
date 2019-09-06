@@ -18,16 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 集合视图，默认不显示滚动条，默认实现
+// 集合视图，默认不显示滚动条
 @property (nonatomic, readonly) UICollectionView *collectionView;
 
-// 集合数据，默认空数组，延迟加载，默认实现
+// 集合数据，默认空数组，延迟加载
 @property (nonatomic, readonly) NSMutableArray *collectionData;
 
-// 渲染集合视图内容布局，只调用一次，默认实现
+// 渲染集合视图内容布局，只调用一次
 - (UICollectionViewLayout *)renderCollectionLayout;
 
-// 渲染集合视图和布局等，默认铺满，默认实现
+// 渲染集合视图和布局等，默认铺满
 - (void)renderCollectionView;
 
 @end
