@@ -115,7 +115,7 @@ FWPropertyAssign(BOOL, hideToast);
     }
 }
 
-- (void)renderTableView
+- (void)renderTableLayout
 {
     [self.tableView fwPinEdgesToSuperviewSafeArea];
 }

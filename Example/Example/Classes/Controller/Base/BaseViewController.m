@@ -24,6 +24,7 @@
 
 - (void)loadView:(UIViewController *)viewController
 {
+    // 默认背景色
     viewController.view.backgroundColor = [UIColor whiteColor];
 }
 

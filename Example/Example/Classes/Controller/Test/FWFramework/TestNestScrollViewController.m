@@ -61,12 +61,12 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 @implementation TestNestChildController
 
-- (void)renderTableView
+- (void)renderTableLayout
 {
     [self.tableView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, self.cart ? CategoryViewWidth : 0, self.cart ? CartViewHeight : 0, 0)];
 }
 
-- (UICollectionViewLayout *)renderCollectionLayout
+- (UICollectionViewLayout *)renderCollectionViewLayout
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake(CategoryViewWidth, ItemViewHeight);
@@ -76,7 +76,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     return layout;
 }
 
-- (void)renderCollectionView
+- (void)renderCollectionLayout
 {
     self.collectionView.backgroundColor = [UIColor appColorBg];
     [self.collectionView registerClass:[TestNestCollectionCell class] forCellWithReuseIdentifier:kTestNestCollectionCellID];
