@@ -44,7 +44,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
 
 @implementation TestCollectionViewController
 
-- (UICollectionViewLayout *)renderCollectionLayout
+- (UICollectionViewLayout *)renderCollectionViewLayout
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake((FWScreenWidth - 30) / 2.f, 100);
@@ -57,7 +57,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
     return layout;
 }
 
-- (void)renderCollectionView
+- (void)renderCollectionLayout
 {
     [self.collectionView fwPinEdgesToSuperview];
     [self.collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
