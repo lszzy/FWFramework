@@ -14,11 +14,8 @@
 
 @implementation BaseScrollViewController
 
-- (void)loadView
+- (void)renderScrollView
 {
-    [super loadView];
-    
-    // 默认背景色
     self.scrollView.backgroundColor = [UIColor appColorBg];
 }
 
