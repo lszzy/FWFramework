@@ -15,9 +15,7 @@
 
 @end
 
-@implementation TestViewController {
-    UITableView *_tableView;
-}
+@implementation TestViewController
 
 - (UISearchBar *)searchBar
 {
