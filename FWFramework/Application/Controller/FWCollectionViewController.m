@@ -22,7 +22,6 @@
     intercepter.forwardSelectors = @{@"collectionView" : @"fwInnerCollectionView",
                                      @"collectionData" : @"fwInnerCollectionData",
                                      @"renderCollectionViewLayout" : @"fwInnerRenderCollectionViewLayout",
-                                     @"renderCollectionView" : @"fwInnerRenderCollectionView",
                                      @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWCollectionViewController) withIntercepter:intercepter];
 }
@@ -34,7 +33,10 @@
     collectionView.delegate = viewController;
     [viewController.view addSubview:collectionView];
     
-    [viewController renderCollectionView];
+    if ([viewController respondsToSelector:@selector(renderCollectionView)]) {
+        [viewController renderCollectionView];
+    }
+    
     [viewController renderCollectionLayout];
     [collectionView setNeedsLayout];
     [collectionView layoutIfNeeded];
@@ -52,7 +54,7 @@
 
 - (UICollectionView *)fwInnerCollectionView
 {
-    UICollectionView *collectionView = objc_getAssociatedObject(self, @selector(collectionView));
+    UICollectionView *collectionView = objc_getAssociatedObject(self, _cmd);
     if (!collectionView) {
         UICollectionViewLayout *viewLayout = [(id<FWCollectionViewController>)self renderCollectionViewLayout];
         collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:viewLayout];
@@ -61,17 +63,17 @@
         if (@available(iOS 11.0, *)) {
             collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        objc_setAssociatedObject(self, @selector(collectionView), collectionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, collectionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return collectionView;
 }
 
 - (NSMutableArray *)fwInnerCollectionData
 {
-    NSMutableArray *collectionData = objc_getAssociatedObject(self, @selector(collectionData));
+    NSMutableArray *collectionData = objc_getAssociatedObject(self, _cmd);
     if (!collectionData) {
         collectionData = [[NSMutableArray alloc] init];
-        objc_setAssociatedObject(self, @selector(collectionData), collectionData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, collectionData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return collectionData;
 }
@@ -80,11 +82,6 @@
 {
     UICollectionViewFlowLayout *viewLayout = [[UICollectionViewFlowLayout alloc] init];
     return viewLayout;
-}
-
-- (void)fwInnerRenderCollectionView
-{
-    // 默认不处理
 }
 
 - (void)fwInnerRenderCollectionLayout

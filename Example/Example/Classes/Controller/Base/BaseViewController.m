@@ -30,6 +30,8 @@
 
 @end
 
+#pragma mark - BaseViewController
+
 @implementation BaseViewController
 
 - (void)viewDidLoad

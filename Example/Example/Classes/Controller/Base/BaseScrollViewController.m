@@ -16,7 +16,6 @@
 
 - (void)renderScrollView
 {
-    // 默认背景色
     self.scrollView.backgroundColor = [UIColor appColorBg];
 }
 

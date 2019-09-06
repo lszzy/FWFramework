@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 内容容器视图，自动撑开，子视图需要添加到此视图上
 @property (nonatomic, readonly) UIView *contentView;
 
-// 渲染滚动视图，默认不处理
+// 渲染滚动视图，默认未实现
 - (void)renderScrollView;
 
 // 渲染滚动视图布局，默认铺满
