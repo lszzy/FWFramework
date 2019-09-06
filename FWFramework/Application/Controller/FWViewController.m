@@ -320,26 +320,4 @@
     }
 }
 
-#pragma mark - FWViewController
-
-- (void)fwInnerRenderInit
-{
-    // 默认不处理
-}
-
-- (void)fwInnerRenderView
-{
-    // 默认不处理
-}
-
-- (void)fwInnerRenderModel
-{
-    // 默认不处理
-}
-
-- (void)fwInnerRenderData
-{
-    // 默认不处理
-}
-
 @end
