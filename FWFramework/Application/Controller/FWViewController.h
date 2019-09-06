@@ -56,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 注册协议拦截器，提供拦截和跳转方法
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
 
+// 调用控制器拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
+- (nullable id)performIntercepter:(UIViewController *)viewController withSelector:(SEL)selector;
+
 @end
 
 NS_ASSUME_NONNULL_END
