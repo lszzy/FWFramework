@@ -28,7 +28,6 @@
                                      @"webItems" : @"fwInnerWebItems",
                                      @"webRequest" : @"fwInnerWebRequest",
                                      @"setWebRequest:" : @"fwInnerSetWebRequest:",
-                                     @"renderWebView" : @"fwInnerRenderWebView",
                                      @"renderWebLayout" : @"fwInnerRenderWebLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
@@ -53,7 +52,10 @@
         [weakProgressView fwSetProgress:webView.estimatedProgress];
     }];
     
-    [viewController renderWebView];
+    if ([viewController respondsToSelector:@selector(renderWebView)]) {
+        [viewController renderWebView];
+    }
+    
     [viewController renderWebLayout];
     [webView setNeedsLayout];
     [webView layoutIfNeeded];
@@ -139,26 +141,26 @@
 
 - (WKWebView *)fwInnerWebView
 {
-    WKWebView *webView = objc_getAssociatedObject(self, @selector(webView));
+    WKWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
         webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[WKWebViewConfiguration new]];
         webView.allowsBackForwardNavigationGestures = YES;
         if (@available(iOS 11.0, *)) {
             webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        objc_setAssociatedObject(self, @selector(webView), webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return webView;
 }
 
 - (UIProgressView *)fwInnerProgressView
 {
-    UIProgressView *progressView = objc_getAssociatedObject(self, @selector(progressView));
+    UIProgressView *progressView = objc_getAssociatedObject(self, _cmd);
     if (!progressView) {
         progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
         progressView.trackTintColor = [UIColor clearColor];
         [progressView fwSetProgress:0];
-        objc_setAssociatedObject(self, @selector(progressView), progressView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, progressView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return progressView;
 }
@@ -170,21 +172,16 @@
 
 - (id)fwInnerWebRequest
 {
-    return objc_getAssociatedObject(self, @selector(webRequest));
+    return objc_getAssociatedObject(self, @selector(fwInnerWebRequest));
 }
 
 - (void)fwInnerSetWebRequest:(id)webRequest
 {
-    objc_setAssociatedObject(self, @selector(webRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwInnerWebRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded) {
         [[FWViewControllerManager sharedInstance] webViewControllerLoadRequest:(UIViewController<FWWebViewController> *)self];
     }
-}
-
-- (void)fwInnerRenderWebView
-{
-    // 默认不处理
 }
 
 - (void)fwInnerRenderWebLayout
