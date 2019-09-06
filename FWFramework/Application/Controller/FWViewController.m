@@ -73,8 +73,8 @@
         return protocolList;
     }
     
-    // 解析FWViewController协议列表，包含父协议
-    NSMutableArray *protocolNames = [NSMutableArray array];
+    // 解析协议列表，包含父协议。始终包含FWViewController，且位于第一位
+    NSMutableArray *protocolNames = [NSMutableArray arrayWithObject:@"FWViewController"];
     while (clazz != NULL) {
         unsigned int count = 0;
         __unsafe_unretained Protocol **list = class_copyProtocolList(clazz, &count);
@@ -116,7 +116,7 @@
 - (void)hookInit:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 统一控制器init
+        // 全局控制器init
         [self viewControllerInit:viewController];
         
         // 调用init拦截器
@@ -140,9 +140,6 @@
 - (void)hookLoadView:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 统一控制器loadView
-        [self viewControllerLoadView:viewController];
-        
         // 调用loadView拦截器
         NSArray *protocolNames = [self protocolsWithClass:viewController.class];
         for (NSString *protocolName in protocolNames) {
@@ -164,9 +161,6 @@
 - (void)hookViewDidLoad:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 统一控制器viewDidLoad
-        [self viewControllerViewDidLoad:viewController];
-        
         // 调用viewDidLoad拦截器
         NSArray *protocolNames = [self protocolsWithClass:viewController.class];
         for (NSString *protocolName in protocolNames) {
@@ -200,16 +194,6 @@
     viewController.automaticallyAdjustsScrollViewInsets = NO;
     // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
     viewController.hidesBottomBarWhenPushed = YES;
-}
-
-- (void)viewControllerLoadView:(UIViewController *)viewController
-{
-    // 默认不处理
-}
-
-- (void)viewControllerViewDidLoad:(UIViewController *)viewController
-{
-    // 默认不处理
 }
 
 @end

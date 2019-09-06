@@ -22,7 +22,8 @@
     intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
                                      @"tableData" : @"fwInnerTableData",
                                      @"renderTableStyle" : @"fwInnerRenderTableStyle",
-                                     @"renderTableView" : @"fwInnerRenderTableView"};
+                                     @"renderTableView" : @"fwInnerRenderTableView",
+                                     @"renderTableLayout" : @"fwInnerRenderTableLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
 }
 
@@ -34,6 +35,7 @@
     [viewController.view addSubview:tableView];
     
     [viewController renderTableView];
+    [viewController renderTableLayout];
     [tableView setNeedsLayout];
     [tableView layoutIfNeeded];
 }
@@ -81,6 +83,11 @@
 }
 
 - (void)fwInnerRenderTableView
+{
+    // 默认不处理
+}
+
+- (void)fwInnerRenderTableLayout
 {
     UITableView *tableView = [(id<FWTableViewController>)self tableView];
     [tableView fwPinEdgesToSuperview];
