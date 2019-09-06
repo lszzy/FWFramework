@@ -19,19 +19,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 网页视图，默认显示滚动条，启用前进后退手势，默认实现
+// 网页视图，默认显示滚动条，启用前进后退手势
 @property (nonatomic, readonly) WKWebView *webView;
 
-// 进度视图，默认trackTintColor为clear，默认实现
+// 进度视图，默认trackTintColor为clear
 @property (nonatomic, readonly) UIProgressView *progressView;
 
-// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil，默认实现
+// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
 @property (nullable, nonatomic, readonly) NSArray *webItems;
 
-// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil，默认实现
+// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
 @property (nullable, nonatomic, strong) id webRequest;
 
-// 渲染网页视图和布局等，默认铺满，默认实现
+// 渲染网页视图和布局等，默认铺满
 - (void)renderWebView;
 
 @end
