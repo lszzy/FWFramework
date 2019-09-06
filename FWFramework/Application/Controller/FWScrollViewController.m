@@ -21,7 +21,8 @@
     intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
     intercepter.forwardSelectors = @{@"scrollView" : @"fwInnerScrollView",
                                      @"contentView" : @"fwInnerContentView",
-                                     @"renderScrollView" : @"fwInnerRenderScrollView"};
+                                     @"renderScrollView" : @"fwInnerRenderScrollView",
+                                     @"renderScrollLayout" : @"fwInnerRenderScrollLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
 }
 
@@ -35,6 +36,7 @@
     [contentView fwPinEdgesToSuperview];
     
     [viewController renderScrollView];
+    [viewController renderScrollLayout];
     [scrollView setNeedsLayout];
     [scrollView layoutIfNeeded];
 }
@@ -75,6 +77,11 @@
 }
 
 - (void)fwInnerRenderScrollView
+{
+    // 默认不处理
+}
+
+- (void)fwInnerRenderScrollLayout
 {
     UIScrollView *scrollView = [(id<FWScrollViewController>)self scrollView];
     [scrollView fwPinEdgesToSuperview];

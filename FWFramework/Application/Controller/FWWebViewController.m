@@ -28,7 +28,8 @@
                                      @"webItems" : @"fwInnerWebItems",
                                      @"webRequest" : @"fwInnerWebRequest",
                                      @"setWebRequest:" : @"fwInnerSetWebRequest:",
-                                     @"renderWebView" : @"fwInnerRenderWebView"};
+                                     @"renderWebView" : @"fwInnerRenderWebView",
+                                     @"renderWebLayout" : @"fwInnerRenderWebLayout"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
 
@@ -53,6 +54,7 @@
     }];
     
     [viewController renderWebView];
+    [viewController renderWebLayout];
     [webView setNeedsLayout];
     [webView layoutIfNeeded];
 }
@@ -181,6 +183,11 @@
 }
 
 - (void)fwInnerRenderWebView
+{
+    // 默认不处理
+}
+
+- (void)fwInnerRenderWebLayout
 {
     WKWebView *webView = [(id<FWWebViewController>)self webView];
     [webView fwPinEdgesToSuperview];

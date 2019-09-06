@@ -9,15 +9,27 @@
 
 #import "BaseViewController.h"
 
-@implementation BaseViewController
+@interface FWViewControllerManager (FWViewController)
 
-- (void)loadView
+@end
+
+@implementation FWViewControllerManager (FWViewController)
+
++ (void)load
 {
-    [super loadView];
-    
-    // 统一设置背景色
-    self.view.backgroundColor = [UIColor whiteColor];
+    FWViewControllerIntercepter *intercepter = [FWViewControllerIntercepter new];
+    intercepter.loadViewIntercepter = @selector(loadView:);
+    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWViewController) withIntercepter:intercepter];
 }
+
+- (void)loadView:(UIViewController *)viewController
+{
+    viewController.view.backgroundColor = [UIColor whiteColor];
+}
+
+@end
+
+@implementation BaseViewController
 
 - (void)viewDidLoad
 {

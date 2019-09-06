@@ -27,8 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 渲染表格视图样式，默认Plain
 - (UITableViewStyle)renderTableStyle;
 
-// 渲染表格视图和布局等，默认铺满
+// 渲染表格视图，默认不处理
 - (void)renderTableView;
+
+// 渲染表格视图布局，默认铺满
+- (void)renderTableLayout;
 
 @end
 

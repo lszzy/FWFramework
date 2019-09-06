@@ -18,16 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 渲染初始化方法，init自动调用，无默认实现
+// 渲染初始化方法，init自动调用，默认未实现
 - (void)renderInit;
 
-// 渲染视图方法，loadView自动调用，无默认实现
+// 渲染视图方法，loadView自动调用，默认未实现
 - (void)renderView;
 
-// 渲染模型方法，viewDidLoad自动调用，无默认实现
+// 渲染模型方法，viewDidLoad自动调用，默认未实现
 - (void)renderModel;
 
-// 渲染数据模型，viewDidLoad自动调用，无默认实现
+// 渲染数据模型，viewDidLoad自动调用，默认未实现
 - (void)renderData;
 
 @end
@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 视图控制器管理器
+ @discussion 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，注册该拦截器即可
  */
 @interface FWViewControllerManager : NSObject
 
