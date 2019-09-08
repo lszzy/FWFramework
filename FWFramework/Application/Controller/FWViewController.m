@@ -11,6 +11,14 @@
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
+#pragma mark - UIViewController+FWViewController
+
+@interface UIViewController (FWViewController)
+
+- (SEL)fwInnerForwardSelector:(SEL)aSelector;
+
+@end
+
 #pragma mark - FWViewControllerIntercepter
 
 @implementation FWViewControllerIntercepter
@@ -56,6 +64,23 @@
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter
 {
     [self.intercepters setObject:intercepter forKey:NSStringFromProtocol(protocol)];
+}
+
+- (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object
+{
+    SEL forwardSelector = [object fwInnerForwardSelector:intercepter];
+    if (forwardSelector) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        char *type = method_copyReturnType(class_getInstanceMethod([object class], forwardSelector));
+        if (type && *type == 'v') {
+            [object performSelector:forwardSelector];
+        } else {
+            return [object performSelector:forwardSelector];
+        }
+#pragma clang diagnostic pop
+    }
+    return nil;
 }
 
 - (NSArray *)protocolsWithClass:(Class)clazz
@@ -214,25 +239,6 @@
         [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerMethodSignatureForSelector:)];
         [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerForwardInvocation:)];
     });
-}
-
-#pragma mark - Public
-
-- (id)fwPerformIntercepter:(SEL)intercepter
-{
-    SEL forwardSelector = [self fwInnerForwardSelector:intercepter];
-    if (forwardSelector) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        char *type = method_copyReturnType(class_getInstanceMethod([self class], forwardSelector));
-        if (type && *type == 'v') {
-            [self performSelector:forwardSelector];
-        } else {
-            return [self performSelector:forwardSelector];
-        }
-#pragma clang diagnostic pop
-    }
-    return nil;
 }
 
 #pragma mark - Hook
