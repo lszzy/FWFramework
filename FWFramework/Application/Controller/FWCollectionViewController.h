@@ -27,10 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 渲染集合视图内容布局，只调用一次
 - (UICollectionViewLayout *)renderCollectionViewLayout;
 
-// 渲染集合视图，默认未实现
+// 渲染集合视图，renderView之前调用，默认未实现
 - (void)renderCollectionView;
 
-// 渲染集合视图布局，默认铺满
+// 渲染集合视图布局，renderView之前调用，默认铺满
 - (void)renderCollectionLayout;
 
 @end

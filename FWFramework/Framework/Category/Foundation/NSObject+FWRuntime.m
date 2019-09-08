@@ -180,7 +180,12 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if ([self respondsToSelector:aSelector]) {
-        return [self performSelector:aSelector];
+        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
+        if (type && *type == 'v') {
+            [self performSelector:aSelector];
+        } else {
+            return [self performSelector:aSelector];
+        }
     }
 #pragma clang diagnostic pop
     return nil;
@@ -191,7 +196,12 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if ([self respondsToSelector:aSelector]) {
-        return [self performSelector:aSelector withObject:object];
+        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
+        if (type && *type == 'v') {
+            [self performSelector:aSelector withObject:object];
+        } else {
+            return [self performSelector:aSelector withObject:object];
+        }
     }
 #pragma clang diagnostic pop
     return nil;
