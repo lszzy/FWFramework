@@ -494,7 +494,7 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 安全调用方法，如果不能响应，则忽略之
  
  @param aSelector 要执行的方法
- @return id 方法执行后返回的值
+ @return id 方法执行后返回的值。如果无返回值，则为nil
  */
 - (nullable id)fwPerformSelector:(SEL)aSelector;
 
@@ -503,7 +503,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param aSelector 要执行的方法
  @param object 传递的方法参数
- @return id 方法执行后返回的值
+ @return id 方法执行后返回的值。如果无返回值，则为nil
  */
 - (nullable id)fwPerformSelector:(SEL)aSelector withObject:(nullable id)object;
 
