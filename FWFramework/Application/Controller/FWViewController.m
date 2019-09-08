@@ -224,7 +224,12 @@
     if (forwardSelector) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        return [self performSelector:forwardSelector];
+        char *type = method_copyReturnType(class_getInstanceMethod([self class], forwardSelector));
+        if (type && *type == 'v') {
+            [self performSelector:forwardSelector];
+        } else {
+            return [self performSelector:forwardSelector];
+        }
 #pragma clang diagnostic pop
     }
     return nil;
