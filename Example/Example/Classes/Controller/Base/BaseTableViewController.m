@@ -11,16 +11,21 @@
 
 @implementation BaseTableViewController
 
-- (void)renderTableView
+- (UITableView *)tableView
 {
-    // 渲染可重用单元格类
-    NSDictionary *cellDict = [self renderCellClass];
-    for (NSString *cellIdentifier in cellDict) {
-        [self.tableView registerClass:[cellDict objectForKey:cellIdentifier] forCellReuseIdentifier:cellIdentifier];
+    UITableView *tableView = objc_getAssociatedObject(self, _cmd);
+    if (!tableView) {
+        tableView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        // 渲染可重用单元格类
+        NSDictionary *cellDict = [self renderCellClass];
+        for (NSString *cellIdentifier in cellDict) {
+            [tableView registerClass:[cellDict objectForKey:cellIdentifier] forCellReuseIdentifier:cellIdentifier];
+        }
+        // 默认启用估算高度
+        [tableView fwSetTemplateLayout:YES];
+        objc_setAssociatedObject(self, _cmd, tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    
-    // 默认启用估算高度
-    [self.tableView fwSetTemplateLayout:YES];
+    return tableView;
 }
 
 - (NSDictionary<NSString *, Class> *)renderCellClass

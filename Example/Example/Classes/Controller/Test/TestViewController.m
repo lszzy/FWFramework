@@ -119,9 +119,8 @@
     return UITableViewStyleGrouped;
 }
 
-- (void)renderTableLayout
+- (void)renderTableView
 {
-    [self.tableView fwPinEdgesToSuperview];
     self.tableView.fwKeyboardDismissOnDrag = YES;
 }
 
