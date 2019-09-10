@@ -9,6 +9,6 @@
 
 #import "FWAppRefreshPlugin.h"
 
-@implementation FWAppRefreshPlugin
+@implementation UIScrollView (FWAppRefreshPlugin)
 
 @end
