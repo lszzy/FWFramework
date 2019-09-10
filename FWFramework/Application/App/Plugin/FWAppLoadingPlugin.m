@@ -9,6 +9,6 @@
 
 #import "FWAppLoadingPlugin.h"
 
-@implementation FWAppLoadingPlugin
+@implementation UIView (FWAppLoadingPlugin)
 
 @end

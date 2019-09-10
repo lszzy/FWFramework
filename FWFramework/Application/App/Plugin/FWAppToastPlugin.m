@@ -8,7 +8,8 @@
  */
 
 #import "FWAppToastPlugin.h"
+#import <objc/runtime.h>
 
-@implementation FWAppToastPlugin
+@implementation UIView (FWAppToastPlugin)
 
 @end

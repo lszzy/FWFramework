@@ -7,11 +7,16 @@
  @updated    2019/9/10
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-/*!
- @brief FWAppLoadingPlugin
- */
-@interface FWAppLoadingPlugin : NSObject
+@protocol FWAppLoadingPlugin <NSObject>
+
+@required
+
+@end
+
+@interface UIView (FWAppLoadingPlugin)
+
+@property (nonatomic, readonly) id<FWAppLoadingPlugin> fwLoadingPlugin;
 
 @end

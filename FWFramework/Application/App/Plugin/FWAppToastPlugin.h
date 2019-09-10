@@ -7,11 +7,16 @@
  @updated    2019/9/10
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-/*!
- @brief FWAppToastPlugin
- */
-@interface FWAppToastPlugin : NSObject
+@protocol FWAppToastPlugin <NSObject>
+
+@required
+
+@end
+
+@interface UIView (FWAppToastPlugin)
+
+@property (nonatomic, readonly) id<FWAppToastPlugin> fwToastPlugin;
 
 @end
