@@ -23,6 +23,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /*!
  @brief UIImage+FWFramework
+ @discussion 注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退(如高斯模糊效果)，建议先压缩再调用
  */
 @interface UIImage (FWFramework)
 
