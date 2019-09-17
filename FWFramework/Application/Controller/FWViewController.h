@@ -51,8 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWViewControllerManager : NSObject
 
-// 单例对象
-+ (FWViewControllerManager *)sharedInstance;
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance;
 
 // 注册协议拦截器，提供拦截和跳转方法
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;

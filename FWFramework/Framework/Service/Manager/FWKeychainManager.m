@@ -17,7 +17,7 @@
 
 @implementation FWKeychainManager
 
-+ (instancetype)sharedInstance
++ (FWKeychainManager *)sharedInstance
 {
     static FWKeychainManager *instance = nil;
     static dispatch_once_t onceToken;

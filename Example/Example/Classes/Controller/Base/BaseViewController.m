@@ -18,11 +18,21 @@
 + (void)load
 {
     FWViewControllerIntercepter *intercepter = [FWViewControllerIntercepter new];
-    intercepter.loadViewIntercepter = @selector(loadView:);
+    intercepter.initIntercepter = @selector(viewControllerInit:);
+    intercepter.loadViewIntercepter = @selector(viewControllerLoadView:);
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWViewController) withIntercepter:intercepter];
 }
 
-- (void)loadView:(UIViewController *)viewController
+- (void)viewControllerInit:(UIViewController *)viewController
+{
+    // 全局控制器初始化
+    viewController.edgesForExtendedLayout = UIRectEdgeNone;
+    viewController.extendedLayoutIncludesOpaqueBars = YES;
+    viewController.automaticallyAdjustsScrollViewInsets = NO;
+    viewController.hidesBottomBarWhenPushed = YES;
+}
+
+- (void)viewControllerLoadView:(UIViewController *)viewController
 {
     // 默认背景色
     viewController.view.backgroundColor = [UIColor whiteColor];

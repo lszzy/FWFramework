@@ -12,6 +12,10 @@
 
 @implementation AppRouter
 
+FWDefStaticString(ROUTE_TEST, @"app://test/:id");
+FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
+FWDefStaticString(ROUTE_OBJECT, @"object://test2");
+
 + (void)load
 {
     [self registerFilters];
@@ -46,7 +50,7 @@
         [FWRouter pushViewController:viewController animated:YES];
     }];
     
-    [FWRouter registerURL:@"app://test/:id" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:AppRouter.ROUTE_TEST withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
         viewController.title = [NSString stringWithFormat:@"app://test/%@", parameters[@"id"]];
@@ -68,10 +72,10 @@
         [FWRouter pushViewController:viewController animated:YES];
     }];
     
-    [FWRouter registerURL:@"wildcard://test1" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:AppRouter.ROUTE_WILDCARD withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = @"wildcard://test1";
+        viewController.title = AppRouter.ROUTE_WILDCARD;
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;
@@ -79,10 +83,10 @@
         [FWRouter pushViewController:viewController animated:YES];
     }];
     
-    [FWRouter registerURL:@"object://test2" withObjectHandler:^id(NSDictionary *parameters) {
+    [FWRouter registerURL:AppRouter.ROUTE_OBJECT withObjectHandler:^id(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = @"object://test2";
+        viewController.title = AppRouter.ROUTE_OBJECT;
         return viewController;
     }];
 }
