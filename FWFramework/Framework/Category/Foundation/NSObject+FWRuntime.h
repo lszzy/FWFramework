@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param cls 类名
  */
 #define FWSingleton( cls ) \
-    + (cls *)sharedInstance;
+    @property (class, nonatomic, readonly) cls *sharedInstance;
 
 /*!
  @brief 定义单例实现
@@ -259,9 +259,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 属性名称
  */
 #define FWStaticProperty( name ) \
-    @property (nonatomic, readonly) NSString * name; \
-    - (NSString *)name; \
-    + (NSString *)name;
+    @property (class, nonatomic, readonly) NSString * name; \
+    @property (nonatomic, readonly) NSString * name;
 
 /*!
  @brief 定义静态属性实现
@@ -302,9 +301,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 属性名称
  */
 #define FWStaticInteger( name ) \
-    @property (nonatomic, readonly) NSInteger name; \
-    - (NSInteger)name; \
-    + (NSInteger)name;
+    @property (class, nonatomic, readonly) NSInteger name; \
+    @property (nonatomic, readonly) NSInteger name;
 
 /*!
  @brief 定义静态NSInteger属性实现
@@ -323,9 +321,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 属性名称
  */
 #define FWStaticNumber( name ) \
-    @property (nonatomic, readonly) NSNumber * name; \
-    - (NSNumber *)name; \
-    + (NSNumber *)name;
+    @property (class, nonatomic, readonly) NSNumber * name; \
+    @property (nonatomic, readonly) NSNumber * name;
 
 /*!
  @brief 定义静态NSNumber属性实现
@@ -344,9 +341,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 属性名称
  */
 #define FWStaticString( name ) \
-    @property (nonatomic, readonly) NSString * name; \
-    - (NSString *)name; \
-    + (NSString *)name;
+    @property (class, nonatomic, readonly) NSString * name; \
+    @property (nonatomic, readonly) NSString * name;
 
 /*!
  @brief 定义静态字符串属性实现

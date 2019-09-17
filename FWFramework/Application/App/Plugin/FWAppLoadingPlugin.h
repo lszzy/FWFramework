@@ -11,12 +11,8 @@
 
 @protocol FWAppLoadingPlugin <NSObject>
 
-@required
-
 @end
 
 @interface UIView (FWAppLoadingPlugin)
-
-@property (nonatomic, readonly) id<FWAppLoadingPlugin> fwLoadingPlugin;
 
 @end
