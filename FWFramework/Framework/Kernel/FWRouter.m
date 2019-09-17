@@ -49,12 +49,12 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 
 @implementation FWRouter
 
-+ (instancetype)sharedInstance
++ (FWRouter *)sharedInstance
 {
     static FWRouter *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[self alloc] init];
+        instance = [[FWRouter alloc] init];
     });
     return instance;
 }
