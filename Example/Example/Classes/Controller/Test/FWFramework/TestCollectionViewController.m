@@ -57,9 +57,8 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
     return layout;
 }
 
-- (void)renderCollectionLayout
+- (void)renderCollectionView
 {
-    [self.collectionView fwPinEdgesToSuperview];
     [self.collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
     [self.collectionView registerClass:[TestCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTestCollectionHeaderViewID];
     [self.collectionView registerClass:[TestCollectionFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kTestCollectionFooterViewID];

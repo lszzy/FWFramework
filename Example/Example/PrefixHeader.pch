@@ -13,5 +13,6 @@
 #import "SwiftHeader.h"
 #import "AppConfig.h"
 #import "AppStandard.h"
+#import "AppRouter.h"
 
 #endif /* PrefixHeader_pch */

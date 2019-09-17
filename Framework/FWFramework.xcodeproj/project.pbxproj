@@ -235,6 +235,12 @@
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */; };
+		2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDDD2327864700498538 /* FWAppToastPlugin.h */; };
+		2F70EDE02327864700498538 /* FWAppToastPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDDE2327864700498538 /* FWAppToastPlugin.m */; };
+		2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */; };
+		2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE22327867100498538 /* FWAppRefreshPlugin.m */; };
+		2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */; };
+		2F70EDE82327882F00498538 /* FWAppLoadingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */; };
 		2F71FD8A22E2E64400E905BE /* FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F71FD8822E2E64400E905BE /* FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F71FD8B22E2E64400E905BE /* FWDrawerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F71FD8922E2E64400E905BE /* FWDrawerView.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -556,6 +562,12 @@
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
 		2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWAppearance.h"; sourceTree = "<group>"; };
 		2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWAppearance.m"; sourceTree = "<group>"; };
+		2F70EDDD2327864700498538 /* FWAppToastPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppToastPlugin.h; sourceTree = "<group>"; };
+		2F70EDDE2327864700498538 /* FWAppToastPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppToastPlugin.m; sourceTree = "<group>"; };
+		2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppRefreshPlugin.h; sourceTree = "<group>"; };
+		2F70EDE22327867100498538 /* FWAppRefreshPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppRefreshPlugin.m; sourceTree = "<group>"; };
+		2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppLoadingPlugin.h; sourceTree = "<group>"; };
+		2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppLoadingPlugin.m; sourceTree = "<group>"; };
 		2F71FD8822E2E64400E905BE /* FWDrawerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDrawerView.h; sourceTree = "<group>"; };
 		2F71FD8922E2E64400E905BE /* FWDrawerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDrawerView.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1045,6 +1057,19 @@
 			path = Socket;
 			sourceTree = "<group>";
 		};
+		2F70EDDC2327810900498538 /* Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				2F70EDDD2327864700498538 /* FWAppToastPlugin.h */,
+				2F70EDDE2327864700498538 /* FWAppToastPlugin.m */,
+				2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */,
+				2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */,
+				2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */,
+				2F70EDE22327867100498538 /* FWAppRefreshPlugin.m */,
+			);
+			path = Plugin;
+			sourceTree = "<group>";
+		};
 		2F7E41F420FC2DCF00CE3E2F = {
 			isa = PBXGroup;
 			children = (
@@ -1077,6 +1102,7 @@
 			children = (
 				2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */,
 				2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */,
+				2F70EDDC2327810900498538 /* Plugin */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1183,10 +1209,12 @@
 				2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */,
 				2FA99D9D228A753B0059DFDB /* FWAppDelegate.h in Headers */,
 				2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */,
+				2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */,
 				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
 				2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */,
 				2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */,
+				2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */,
 				2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */,
 				2FB90F0F21F4A00C00084D76 /* FWMarqueeLabel.h in Headers */,
 				2FB90F0921F48AAB00084D76 /* FWSegmentedControl.h in Headers */,
@@ -1308,6 +1336,7 @@
 				2F03A591216CF4B9001965A1 /* UIView+FWIndicator.h in Headers */,
 				2F03A5B7216CF4B9001965A1 /* UIColor+FWFramework.h in Headers */,
 				2F03A5BB216CF4B9001965A1 /* UIImage+FWFramework.h in Headers */,
+				2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */,
 				2F03A5C3216CF4B9001965A1 /* NSThread+FWFramework.h in Headers */,
 				2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */,
 				2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */,
@@ -1469,6 +1498,7 @@
 				2FD1A52121D4B71600A215C2 /* FWView.m in Sources */,
 				2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */,
 				2F03A5D4216CF4B9001965A1 /* NSObject+FWFramework.m in Sources */,
+				2F70EDE82327882F00498538 /* FWAppLoadingPlugin.m in Sources */,
 				2F03A5E8216CF4B9001965A1 /* FWAuthorizeManager.m in Sources */,
 				2F03A5D2216CF4B9001965A1 /* NSDate+FWFramework.m in Sources */,
 				2F6492AD2316880C002E15AC /* FWCollectionViewController.m in Sources */,
@@ -1490,6 +1520,7 @@
 				2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */,
 				2F03A656216CF882001965A1 /* FWImageDownloader.m in Sources */,
 				2F03A581216CF4B9001965A1 /* UIButton+FWFramework.m in Sources */,
+				2F70EDE02327864700498538 /* FWAppToastPlugin.m in Sources */,
 				2F03A5B6216CF4B9001965A1 /* UIView+FWBadge.m in Sources */,
 				2F03A5DD216CF4B9001965A1 /* NSFileManager+FWFramework.m in Sources */,
 				2F03A632216CF882001965A1 /* FWNetworkConfig.m in Sources */,
@@ -1551,6 +1582,7 @@
 				2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */,
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
 				2F03A590216CF4B9001965A1 /* UITableView+FWTemplateLayout.m in Sources */,
+				2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */,
 				2F03A63F216CF882001965A1 /* FWBatchRequest.m in Sources */,
 				2F03A64C216CF882001965A1 /* FWHTTPSessionManager.m in Sources */,
 				2F03A5B2216CF4B9001965A1 /* UIViewController+FWTransition.m in Sources */,

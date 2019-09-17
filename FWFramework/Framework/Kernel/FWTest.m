@@ -153,7 +153,7 @@
 
 #pragma mark - Lifecycle
 
-+ (instancetype)sharedInstance
++ (FWUnitTest *)sharedInstance
 {
     static FWUnitTest *instance = nil;
     static dispatch_once_t onceToken;

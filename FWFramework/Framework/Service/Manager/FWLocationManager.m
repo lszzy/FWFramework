@@ -56,7 +56,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 @implementation FWLocationManager
 
-+ (instancetype)sharedInstance
++ (FWLocationManager *)sharedInstance
 {
     static FWLocationManager *instance = nil;
     static dispatch_once_t onceToken;

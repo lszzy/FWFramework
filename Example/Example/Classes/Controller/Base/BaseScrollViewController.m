@@ -14,9 +14,16 @@
 
 @implementation BaseScrollViewController
 
-- (void)renderScrollView
+- (UIScrollView *)scrollView
 {
-    self.scrollView.backgroundColor = [UIColor appColorBg];
+    UIScrollView *scrollView = objc_getAssociatedObject(self, _cmd);
+    if (!scrollView) {
+        scrollView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        // 默认背景色
+        scrollView.backgroundColor = [UIColor appColorBg];
+        objc_setAssociatedObject(self, _cmd, scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return scrollView;
 }
 
 @end

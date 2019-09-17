@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWNotificationManager : NSObject
 
-// 单例模式
-+ (instancetype)sharedInstance;
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWNotificationManager *sharedInstance;
 
 #pragma mark - Authorize
 

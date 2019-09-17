@@ -44,10 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 任务管理器，兼容NSBlockOperation和NSInvocationOperation
 @interface FWTaskManager : NSObject
 
-/**
- *  单例模式
- */
-+ (instancetype)sharedInstance;
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWTaskManager *sharedInstance;
 
 /**
  *  并发操作的最大任务数
