@@ -17,7 +17,7 @@
 
 @implementation FWCacheKeychain
 
-+ (instancetype)sharedInstance
++ (FWCacheKeychain *)sharedInstance
 {
     static FWCacheKeychain *instance = nil;
     static dispatch_once_t onceToken;

@@ -17,7 +17,7 @@
 
 @implementation FWCacheFile
 
-+ (instancetype)sharedInstance
++ (FWCacheFile *)sharedInstance
 {
     static FWCacheFile *instance = nil;
     static dispatch_once_t onceToken;

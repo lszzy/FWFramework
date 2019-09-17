@@ -16,7 +16,7 @@
 
 @implementation FWCacheUserDefaults
 
-+ (instancetype)sharedInstance
++ (FWCacheUserDefaults *)sharedInstance
 {
     static FWCacheUserDefaults *instance = nil;
     static dispatch_once_t onceToken;

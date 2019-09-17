@@ -158,7 +158,7 @@
     static FWUnitTest *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWUnitTest alloc] init];
+        instance = [[self alloc] init];
     });
     return instance;
 }

@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 #pragma mark - Lifecycle
 
-+ (instancetype)sharedInstance
++ (FWPluginManager *)sharedInstance
 {
     static FWPluginManager *instance = nil;
     static dispatch_once_t onceToken;
