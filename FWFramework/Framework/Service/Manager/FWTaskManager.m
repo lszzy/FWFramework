@@ -247,7 +247,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     NSOperationQueue *_taskQueue;
 }
 
-+ (instancetype)sharedInstance
++ (FWTaskManager *)sharedInstance
 {
     static FWTaskManager *instance = nil;
     static dispatch_once_t onceToken;

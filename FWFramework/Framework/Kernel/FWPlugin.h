@@ -16,12 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWPluginManager : NSObject
 
-/*!
- @brief 获取单例模式对象
-
- @return 单例模式对象
- */
-+ (instancetype)sharedInstance;
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWPluginManager *sharedInstance;
 
 /*!
  @brief 注册默认插件，仅当插件未注册时生效

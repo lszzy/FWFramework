@@ -58,8 +58,8 @@ extern NSString *const FWHeadingUpdatedNotification;
 // 当前方向，headingEnabled启用后生效
 @property (nullable, nonatomic, readonly) CLHeading *heading;
 
-// 单例模式
-+ (instancetype)sharedInstance;
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWLocationManager *sharedInstance;
 
 // 开始更新位置
 - (void)startUpdateLocation;

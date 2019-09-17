@@ -17,7 +17,7 @@
 
 @implementation FWCacheSqlite
 
-+ (instancetype)sharedInstance
++ (FWCacheSqlite *)sharedInstance
 {
     static FWCacheSqlite *instance = nil;
     static dispatch_once_t onceToken;

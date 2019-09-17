@@ -21,7 +21,7 @@
 
 @implementation FWVersionManager
 
-+ (instancetype)sharedInstance
++ (FWVersionManager *)sharedInstance
 {
     static FWVersionManager *instance = nil;
     static dispatch_once_t onceToken;

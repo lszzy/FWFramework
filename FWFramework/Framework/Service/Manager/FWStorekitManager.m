@@ -33,7 +33,7 @@
 
 @implementation FWStorekitManager
 
-+ (instancetype)sharedInstance
++ (FWStorekitManager *)sharedInstance
 {
     static FWStorekitManager *instance = nil;
     static dispatch_once_t onceToken;

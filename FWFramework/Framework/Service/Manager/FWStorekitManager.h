@@ -29,8 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否是生产环境，默认NO
 @property (nonatomic, assign) BOOL production;
 
-// 单例模式
-+ (instancetype)sharedInstance;
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWStorekitManager *sharedInstance;
 
 // 初始化产品标识列表，第一步
 - (void)setupProductIdentifiers:(NSSet *)productIdentifiers;
