@@ -11,12 +11,8 @@
 
 @protocol FWAppRefreshPlugin <NSObject>
 
-@required
-
 @end
 
 @interface UIScrollView (FWAppRefreshPlugin)
-
-@property (nonatomic, readonly) id<FWAppRefreshPlugin> fwRefreshPlugin;
 
 @end

@@ -50,13 +50,13 @@
     url = [NSURL fwURLWithString:str];
     NSLog(@"str: %@ =>\nurl: %@", str, url);
     
-    NSString *urlStr = [FWRouter generateURL:@"app://test/:id" parameters:nil];
+    NSString *urlStr = [FWRouter generateURL:AppRouter.ROUTE_TEST parameters:nil];
     NSLog(@"url: %@", urlStr);
-    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@[@1]];
+    urlStr = [FWRouter generateURL:AppRouter.ROUTE_TEST parameters:@[@1]];
     NSLog(@"url: %@", urlStr);
-    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@{@"id": @2}];
+    urlStr = [FWRouter generateURL:AppRouter.ROUTE_TEST parameters:@{@"id": @2}];
     NSLog(@"url: %@", urlStr);
-    urlStr = [FWRouter generateURL:@"app://test/:id" parameters:@3];
+    urlStr = [FWRouter generateURL:AppRouter.ROUTE_TEST parameters:@3];
     NSLog(@"url: %@", urlStr);
     
     [self.tableData addObjectsFromArray:@[
@@ -109,14 +109,14 @@
 
 - (void)onOpenCallback
 {
-    [FWRouter openURL:@"wildcard://test1?id=2" completion:^(id result) {
+    [FWRouter openURL:[NSString stringWithFormat:@"%@?id=2", AppRouter.ROUTE_WILDCARD] completion:^(id result) {
         NSLog(@"result: %@", result);
     }];
 }
 
 - (void)onOpenObject
 {
-    TestRouterResultViewController *viewController = [FWRouter objectForURL:@"object://test2"];
+    TestRouterResultViewController *viewController = [FWRouter objectForURL:AppRouter.ROUTE_OBJECT];
     viewController.completion = ^(id result) {
         NSLog(@"result: %@", result);
     };
@@ -146,7 +146,7 @@
 
 - (void)onOpenUnmatch
 {
-    [FWRouter openURL:@"object://test2"];
+    [FWRouter openURL:AppRouter.ROUTE_OBJECT];
 }
 
 - (void)onOpenUnmatch2

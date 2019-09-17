@@ -11,12 +11,10 @@
 
 @protocol FWAppToastPlugin <NSObject>
 
-@required
-
 @end
 
 @interface UIView (FWAppToastPlugin)
 
-@property (nonatomic, readonly) id<FWAppToastPlugin> fwToastPlugin;
+// @property (nonatomic, readonly) id<FWAppToastPlugin> fwToastPlugin;
 
 @end
