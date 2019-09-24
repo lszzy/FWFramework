@@ -39,6 +39,9 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 /*! @brief 当前约定标记完成时触发的代码块，支持返回value|error|promise */
 @property (nonatomic, readonly) FWPromise *(^then)(FWThenBlock);
 
+/*! @brief 当前约定标记完成时触发的代码块，无返回值 */
+@property (nonatomic, readonly) FWPromise *(^done)(FWResolveBlock);
+
 /*! @brief 当前约定标记失败时触发的代码块，错误处理 */
 @property (nonatomic, readonly) FWPromise *(^catch)(FWRejectBlock);
 
