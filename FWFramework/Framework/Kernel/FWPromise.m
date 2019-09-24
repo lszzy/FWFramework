@@ -198,6 +198,23 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     };
 }
 
+- (FWPromise *(^)(FWResolveBlock))done
+{
+    __weak FWPromise *weakSelf = self;
+    return ^FWPromise *(FWResolveBlock resolveBlock) {
+        __weak FWPromise *newPromise = nil;
+        newPromise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+            __strong FWPromise *strongSelf = weakSelf;
+            resolve(strongSelf);
+        }];
+        newPromise.thenBlock = ^id(id value) {
+            resolveBlock(value);
+            return nil;
+        };
+        return newPromise;
+    };
+}
+
 - (FWPromise *(^)(FWRejectBlock))catch
 {
     __weak FWPromise *weakSelf = self;
@@ -423,3 +440,53 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 }
 
 @end
+
+#ifdef DEBUG
+
+#pragma mark - Test
+
+#import "FWTest.h"
+
+@interface FWTestCase_FWPromise : FWTestCase
+
+@end
+
+@implementation FWTestCase_FWPromise
+
+- (void)testPromise
+{
+    __block NSNumber *result = nil;
+    FWPromise *promise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWPromise", NULL);
+        dispatch_async(queue, ^{
+            sleep(1);
+            resolve(@1);
+        });
+    }];
+    promise.then(^id(NSNumber *value) {
+        return [FWPromise resolve:@(value.integerValue + 1)];
+    }).done(^(id  _Nullable value) {
+        result = value;
+    }).finally(^{
+        FWAssertTrue(result.integerValue == 2);
+    });
+    
+    result = nil;
+    promise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        resolve(@1);
+    }];
+    promise.then(^id(NSNumber *value) {
+        return [FWPromise reject:nil];
+    }).then(^id(id value) {
+        result = value;
+        return nil;
+    }).catch(^(NSError * _Nullable error) {
+        result = nil;
+    }).finally(^{
+        FWAssertTrue(result == nil);
+    });
+}
+
+@end
+
+#endif
