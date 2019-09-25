@@ -468,10 +468,10 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     return promise;
 }
 
-- (FWAsyncClosure)coroutine
+- (FWCoroutineClosure)coroutine
 {
     __weak __typeof__(self) self_weak_ = self;
-    return ^(FWAsyncCallback callback){
+    return ^(FWCoroutineCallback callback){
         __typeof__(self) self = self_weak_;
         [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
             callback(request, nil);
@@ -496,10 +496,10 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     return promise;
 }
 
-- (FWAsyncClosure)coroutine
+- (FWCoroutineClosure)coroutine
 {
     __weak __typeof__(self) self_weak_ = self;
-    return ^(FWAsyncCallback callback){
+    return ^(FWCoroutineCallback callback){
         __typeof__(self) self = self_weak_;
         [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
             callback(batchRequest, nil);
@@ -558,9 +558,9 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     });
 }
 
-- (FWAsyncClosure)login:(NSString *)account pwd:(NSString *)pwd
+- (FWCoroutineClosure)login:(NSString *)account pwd:(NSString *)pwd
 {
-    return ^(FWAsyncCallback callback){
+    return ^(FWCoroutineCallback callback){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if ([account isEqualToString:@"test"] && [pwd isEqualToString:@"123"]) {
                 callback(@{@"uid": @"1", @"token": @"token"}, nil);
@@ -584,7 +584,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     }];
 }
 
-- (void)testIterator
+- (void)testCoroutine
 {
     __block NSInteger value = 0;
     [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {

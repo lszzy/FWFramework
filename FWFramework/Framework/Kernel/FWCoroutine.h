@@ -1,7 +1,7 @@
 /*!
- @header     FWIterator.h
+ @header     FWCoroutine.h
  @indexgroup FWFramework
- @brief      FWIterator
+ @brief      FWCoroutine
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019-09-20
@@ -12,31 +12,31 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWResult;
-@class FWIterator;
-@class FWAsyncEpilog;
+@class FWCoroutine;
+@class FWCoroutineEpilog;
 
 id _Nullable fw_yield(id _Nullable value);
 FWResult * fw_await(id _Nullable value);
-FWAsyncEpilog * fw_async(dispatch_block_t block);
+FWCoroutineEpilog * fw_async(dispatch_block_t block);
 
-typedef id _Nullable (*FWGenetarorFunc)(id _Nullable);
-typedef void (^FWAsyncCallback)(id _Nullable value, id _Nullable error);
-typedef void (^FWAsyncClosure)(FWAsyncCallback callback);
+typedef id _Nullable (*FWGeneratorFunc)(id _Nullable);
+typedef void (^FWCoroutineCallback)(id _Nullable value, id _Nullable error);
+typedef void (^FWCoroutineClosure)(FWCoroutineCallback callback);
 
 /*!
- @brief 生成器和迭代器，兼容FWPromise
+ @brief 协程类，兼容FWPromise
  
  @see https://github.com/renjinkui2719/FWIterator
  */
-@interface FWIterator : NSObject
+@interface FWCoroutine : NSObject
 {
     int *_ev_leave;
     int *_ev_entry;
     BOOL _ev_entry_valid;
     void *_stack;
     int _stack_size;
-    FWIterator * _nest;
-    FWGenetarorFunc _func;
+    FWCoroutine * _nest;
+    FWGeneratorFunc _func;
     id _target;
     SEL _selector;
     id _block;
@@ -47,7 +47,7 @@ typedef void (^FWAsyncClosure)(FWAsyncCallback callback);
     id _error;
 }
 
-- (id)initWithFunc:(FWGenetarorFunc)func arg:(id _Nullable)arg;
+- (id)initWithFunc:(FWGeneratorFunc)func arg:(id _Nullable)arg;
 - (id)initWithTarget:(id)target selector:(SEL)selector, ...;
 - (id)initWithBlock:(id)block, ...;
 
@@ -60,10 +60,10 @@ typedef void (^FWAsyncClosure)(FWAsyncCallback callback);
 
 @end
 
-@protocol FWAsyncClosureCaller <NSObject>
+@protocol FWCoroutineClosureCaller <NSObject>
 
 @optional
-+ (void)callWithClosure:(id)closure completion:(FWAsyncCallback)completion;
++ (void)callWithClosure:(id)closure completion:(FWCoroutineCallback)completion;
 
 @end
 
@@ -81,14 +81,14 @@ typedef void (^FWAsyncClosure)(FWAsyncCallback callback);
 
 @end
 
-typedef void (^FWFinallyConfiger)(dispatch_block_t);
+typedef void (^FWFinallyHandler)(dispatch_block_t);
 
-@interface FWAsyncEpilog: NSObject
+@interface FWCoroutineEpilog: NSObject
 {
     id _finally_handler;
 }
 
-@property (nonatomic, readonly) FWFinallyConfiger finally;
+@property (nonatomic, readonly) FWFinallyHandler finally;
 
 @end
 
