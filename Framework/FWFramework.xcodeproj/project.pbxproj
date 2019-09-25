@@ -235,11 +235,11 @@
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */; };
-		2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDDD2327864700498538 /* FWAppToastPlugin.h */; };
+		2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDDD2327864700498538 /* FWAppToastPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F70EDE02327864700498538 /* FWAppToastPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDDE2327864700498538 /* FWAppToastPlugin.m */; };
-		2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */; };
+		2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE22327867100498538 /* FWAppRefreshPlugin.m */; };
-		2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */; };
+		2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F70EDE82327882F00498538 /* FWAppLoadingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */; };
 		2F71FD8A22E2E64400E905BE /* FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F71FD8822E2E64400E905BE /* FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F71FD8B22E2E64400E905BE /* FWDrawerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F71FD8922E2E64400E905BE /* FWDrawerView.m */; };
@@ -1187,6 +1187,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */,
+				2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */,
+				2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */,
 				2F03EECE231F65AA009D2A22 /* UILocalNotification+FWFramework.h in Headers */,
 				2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */,
 				2F6492B023168828002E15AC /* FWWebViewController.h in Headers */,
@@ -1209,12 +1212,10 @@
 				2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */,
 				2FA99D9D228A753B0059DFDB /* FWAppDelegate.h in Headers */,
 				2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */,
-				2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */,
 				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
 				2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */,
 				2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */,
-				2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */,
 				2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */,
 				2FB90F0F21F4A00C00084D76 /* FWMarqueeLabel.h in Headers */,
 				2FB90F0921F48AAB00084D76 /* FWSegmentedControl.h in Headers */,
@@ -1336,7 +1337,6 @@
 				2F03A591216CF4B9001965A1 /* UIView+FWIndicator.h in Headers */,
 				2F03A5B7216CF4B9001965A1 /* UIColor+FWFramework.h in Headers */,
 				2F03A5BB216CF4B9001965A1 /* UIImage+FWFramework.h in Headers */,
-				2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */,
 				2F03A5C3216CF4B9001965A1 /* NSThread+FWFramework.h in Headers */,
 				2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */,
 				2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */,

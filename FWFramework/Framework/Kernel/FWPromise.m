@@ -10,6 +10,8 @@
 #import "FWPromise.h"
 #import "FWMessage.h"
 
+#pragma mark - FWPromise
+
 typedef NS_ENUM(NSInteger, FWPromiseState) {
     FWPromiseStatePending = 0,
     FWPromiseStateResolved,
@@ -437,6 +439,42 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
         }
     }];
     return promise;
+}
+
+@end
+
+#pragma mark - FWRequest+FWPromise
+
+@implementation FWBaseRequest (FWPromise)
+
+- (FWPromise *)promise
+{
+    __weak __typeof__(self) self_weak_ = self;
+    return [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        __typeof__(self) self = self_weak_;
+        [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
+            resolve(request.responseObject);
+        } failure:^(__kindof FWBaseRequest *request) {
+            reject(request.error);
+        }];
+    }];
+}
+
+@end
+
+@implementation FWBatchRequest (FWPromise)
+
+- (FWPromise *)promise
+{
+    __weak __typeof__(self) self_weak_ = self;
+    return [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        __typeof__(self) self = self_weak_;
+        [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
+            resolve(batchRequest);
+        } failure:^(FWBatchRequest *batchRequest) {
+            resolve(batchRequest.failedRequest.error);
+        }];
+    }];
 }
 
 @end

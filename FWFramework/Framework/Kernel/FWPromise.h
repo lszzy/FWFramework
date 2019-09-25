@@ -7,7 +7,9 @@
  @updated    2018-07-18
  */
 
-#import <Foundation/Foundation.h>
+#import "FWRequest.h"
+
+#pragma mark - FWPromise
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -134,6 +136,25 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @return 竞速约定
  */
 + (FWPromise *)race:(NSArray<FWPromise *> *)promises;
+
+@end
+
+#pragma mark - FWRequest+FWPromise
+
+/*!
+ @brief FWRequest约定分类
+ */
+@interface FWBaseRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为request.responseObject|request.error
+- (FWPromise *)promise;
+
+@end
+
+@interface FWBatchRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为batchRequest|batchRequest.failedRequest.error
+- (FWPromise *)promise;
 
 @end
 
