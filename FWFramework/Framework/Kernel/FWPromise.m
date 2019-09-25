@@ -10,6 +10,8 @@
 #import "FWPromise.h"
 #import "FWMessage.h"
 
+#pragma mark - FWPromise
+
 typedef NS_ENUM(NSInteger, FWPromiseState) {
     FWPromiseStatePending = 0,
     FWPromiseStateResolved,
@@ -18,27 +20,27 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @interface FWPromise ()
 
-@property (nonatomic) id value;
+@property (nonatomic, strong) id value;
 
-@property (nonatomic) NSError *error;
+@property (nonatomic, strong) id error;
 
 @property (atomic, assign) FWPromiseState state;
 
 @property (nonatomic, copy) void (^stateBlock)(FWPromise *object, FWPromiseState state);
 
-@property (nonatomic, copy) FWPromiseBlock promiseBlock;
+@property (nonatomic, copy) FWPromiseConstructor promiseBlock;
 
-@property (nonatomic, copy) FWResolveBlock resolveBlock;
+@property (nonatomic, copy) FWPromiseBlock resolveBlock;
 
-@property (nonatomic, copy) FWRejectBlock rejectBlock;
+@property (nonatomic, copy) FWPromiseBlock rejectBlock;
 
-@property (nonatomic, copy) FWProgressBlock progressBlock;
+@property (nonatomic, copy) FWPromiseBlock progressBlock;
 
-@property (nonatomic, copy) FWRejectBlock catchBlock;
+@property (nonatomic, copy) FWPromiseBlock catchBlock;
 
 @property (nonatomic, copy) FWThenBlock thenBlock;
 
-@property (nonatomic, copy) FWProgressBlock ratioBlock;
+@property (nonatomic, copy) FWPromiseBlock percentBlock;
 
 @property (nonatomic, strong) FWPromise *dependPromise;
 
@@ -56,26 +58,36 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @implementation FWPromise
 
-+ (FWPromise *)promise:(FWPromiseBlock)block
++ (FWPromise *)promise
+{
+    return [[FWPromise alloc] init];
+}
+
++ (FWPromise *)promise:(FWPromiseConstructor)block
 {
     return [[FWPromise alloc] initWithBlock:block];
 }
 
 + (FWPromise *)resolve:(id)value
 {
-    return [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
         resolve(value);
     }];
 }
 
-+ (FWPromise *)reject:(NSError *)error
++ (FWPromise *)reject:(id)error
 {
-    return [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
         reject(error);
     }];
 }
 
-- (instancetype)initWithBlock:(FWPromiseBlock)block
+- (instancetype)init
+{
+    return [self initWithBlock:nil];
+}
+
+- (instancetype)initWithBlock:(FWPromiseConstructor)block
 {
     self = [super init];
     if (self) {
@@ -133,7 +145,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             }
         };
         
-        self.rejectBlock = ^(NSError *error) {
+        self.rejectBlock = ^(id error) {
             __strong FWPromise *strongSelf = weakSelf;
             if (strongSelf.state != FWPromiseStatePending) {
                 return;
@@ -172,15 +184,15 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     self.resolveBlock(value);
 }
 
-- (void)reject:(NSError *)error
+- (void)reject:(id)error
 {
     self.rejectBlock(error);
 }
 
-- (void)progress:(double)ratio value:(id)value
+- (void)progress:(id)percent
 {
-    if (self.ratioBlock) {
-        self.ratioBlock(ratio, value);
+    if (self.percentBlock) {
+        self.percentBlock(percent);
     }
 }
 
@@ -189,7 +201,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     __weak FWPromise *weakSelf = self;
     return ^FWPromise *(FWThenBlock thenBlock) {
         __weak FWPromise *newPromise = nil;
-        newPromise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        newPromise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
             __strong FWPromise *strongSelf = weakSelf;
             resolve(strongSelf);
         }];
@@ -198,12 +210,29 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     };
 }
 
-- (FWPromise *(^)(FWRejectBlock))catch
+- (FWPromise *(^)(FWPromiseBlock))done
 {
     __weak FWPromise *weakSelf = self;
-    return ^FWPromise *(FWRejectBlock catchBlock) {
+    return ^FWPromise *(FWPromiseBlock resolveBlock) {
         __weak FWPromise *newPromise = nil;
-        newPromise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        newPromise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
+            __strong FWPromise *strongSelf = weakSelf;
+            resolve(strongSelf);
+        }];
+        newPromise.thenBlock = ^id(id value) {
+            resolveBlock(value);
+            return nil;
+        };
+        return newPromise;
+    };
+}
+
+- (FWPromise *(^)(FWPromiseBlock))catch
+{
+    __weak FWPromise *weakSelf = self;
+    return ^FWPromise *(FWPromiseBlock catchBlock) {
+        __weak FWPromise *newPromise = nil;
+        newPromise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
             __strong FWPromise *strongSelf = weakSelf;
             resolve(strongSelf);
         }];
@@ -217,44 +246,44 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     __weak FWPromise *weakSelf = self;
     return ^(dispatch_block_t runBlock) {
         __weak FWPromise *newPromise = nil;
-        newPromise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        newPromise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
             resolve(weakSelf);
         }];
         newPromise.thenBlock = ^id(id value) {
             runBlock();
             return nil;
         };
-        newPromise.catchBlock = ^(NSError *error) {
+        newPromise.catchBlock = ^(id error) {
             runBlock();
         };
     };
 }
 
-- (FWPromise *(^)(FWProgressBlock))progress
+- (FWPromise *(^)(FWPromiseBlock))progress
 {
     __weak FWPromise *weakSelf = self;
-    return ^FWPromise *(FWProgressBlock ratioBlock){
-        weakSelf.ratioBlock = ratioBlock;
+    return ^FWPromise *(FWPromiseBlock percentBlock){
+        weakSelf.percentBlock = percentBlock;
         return weakSelf;
     };
 }
 
-+ (FWPromise *)progress:(FWProgressPromiseBlock)block
++ (FWPromise *)progress:(FWProgressPromiseConstructor)block
 {
     FWPromise *promise = [[FWPromise alloc] initWithBlock:nil];
     __weak FWPromise *weakPromise = promise;
-    promise.progressBlock = ^(double ratio, id value) {
+    promise.progressBlock = ^(id percent) {
         __strong FWPromise *strongPromise = weakPromise;
         if (strongPromise.state != FWPromiseStatePending) {
             return;
         }
         
-        if (strongPromise.ratioBlock) {
-            strongPromise.ratioBlock(ratio, value);
+        if (strongPromise.percentBlock) {
+            strongPromise.percentBlock(percent);
         }
     };
     
-    promise.promiseBlock = ^(FWResolveBlock resolve, FWRejectBlock reject) {
+    promise.promiseBlock = ^(FWPromiseBlock resolve, FWPromiseBlock reject) {
         block(resolve, reject, weakPromise.progressBlock);
     };
     
@@ -266,7 +295,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 + (FWPromise *)timer:(NSTimeInterval)interval
 {
-    return [self promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+    return [self promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(interval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             resolve(@(interval));
         });
@@ -287,7 +316,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     __weak FWPromise *weakSelf = self;
     return ^FWPromise *(NSUInteger retryCount) {
         FWPromise *newPromise = nil;
-        newPromise = [[FWPromise alloc] initWithBlock:^(FWResolveBlock resolve, FWRejectBlock reject) {
+        newPromise = [[FWPromise alloc] initWithBlock:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
             __strong FWPromise *strongSelf = weakSelf;
             resolve(strongSelf);
         }];
@@ -331,12 +360,12 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
             thenBlock = YES;
         }
         
-        newPromise.catchBlock = ^(NSError *error){
+        newPromise.catchBlock = ^(id error){
             if (weakPromise.retryCount++ < retryCount){
                 if (thenBlock) {
                     @autoreleasepool {
                         __weak FWPromise *retryPromise = nil;
-                        retryPromise = [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
+                        retryPromise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
                             id value = ((FWThenBlock)block)(weakSelf.retryValue);
                             if (value && [value isKindOfClass:[NSError class]]) {
                                 reject(value);
@@ -423,3 +452,85 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 }
 
 @end
+
+#pragma mark - FWRequest+FWPromise
+
+@implementation FWBaseRequest (FWPromise)
+
+- (FWPromise *)promise
+{
+    FWPromise *promise = [FWPromise promise];
+    [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
+        [promise resolve:request];
+    } failure:^(__kindof FWBaseRequest *request) {
+        [promise reject:request];
+    }];
+    return promise;
+}
+
+@end
+
+@implementation FWBatchRequest (FWPromise)
+
+- (FWPromise *)promise
+{
+    FWPromise *promise = [FWPromise promise];
+    [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
+        [promise resolve:batchRequest];
+    } failure:^(FWBatchRequest *batchRequest) {
+        [promise reject:batchRequest];
+    }];
+    return promise;
+}
+
+@end
+
+#ifdef DEBUG
+
+#pragma mark - Test
+
+#import "FWTest.h"
+
+@interface FWTestCase_FWPromise : FWTestCase
+
+@end
+
+@implementation FWTestCase_FWPromise
+
+- (void)testPromise
+{
+    __block NSNumber *result = nil;
+    FWPromise *promise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
+        dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWPromise", NULL);
+        dispatch_async(queue, ^{
+            [NSThread sleepForTimeInterval:0.1];
+            resolve(@1);
+        });
+    }];
+    promise.then(^id(NSNumber *value) {
+        return [FWPromise resolve:@(value.integerValue + 1)];
+    }).done(^(id  _Nullable value) {
+        result = value;
+    }).finally(^{
+        FWAssertTrue(result.integerValue == 2);
+    });
+    
+    result = nil;
+    promise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
+        resolve(@1);
+    }];
+    promise.then(^id(NSNumber *value) {
+        return [FWPromise reject:nil];
+    }).then(^id(id value) {
+        result = value;
+        return nil;
+    }).catch(^(id error) {
+        result = nil;
+    }).finally(^{
+        FWAssertTrue(result == nil);
+    });
+}
+
+@end
+
+#endif
