@@ -60,6 +60,13 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 @property (nonatomic, readonly) FWPromise *(^retry)(NSUInteger);
 
 /*!
+ @brief 创建约定
+ 
+ @return 约定
+ */
++ (FWPromise *)promise;
+
+/*!
  @brief 创建标准约定
  
  @param block 约定代码块

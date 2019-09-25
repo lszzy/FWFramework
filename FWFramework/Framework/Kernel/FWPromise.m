@@ -58,6 +58,11 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @implementation FWPromise
 
++ (FWPromise *)promise
+{
+    return [[FWPromise alloc] init];
+}
+
 + (FWPromise *)promise:(FWPromiseBlock)block
 {
     return [[FWPromise alloc] initWithBlock:block];
@@ -75,6 +80,11 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     return [FWPromise promise:^(FWResolveBlock resolve, FWRejectBlock reject) {
         reject(error);
     }];
+}
+
+- (instancetype)init
+{
+    return [self initWithBlock:nil];
 }
 
 - (instancetype)initWithBlock:(FWPromiseBlock)block
