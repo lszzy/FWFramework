@@ -9,6 +9,20 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+// 快速创建元组
+#define FWTuple(...) \
+    [[FWTuple alloc] initWithObjects:__VA_ARGS__, FWTupleSentinel()]
+
+// 快速元组解包
+#define FWUnpack(...) \
+    [[FWTupleUnpack alloc] initWithPointers:0, __VA_ARGS__, FWUnpackSentinel()].tuple
+
+id FWTupleSentinel(void);
+
+void* _Nonnull * _Nonnull FWUnpackSentinel(void);
+
 /*!
  @brief 元组，参考自coobjc
  
@@ -16,15 +30,15 @@
  */
 @interface FWTuple : NSObject <NSFastEnumeration>
 
-- (id)init;
-- (id)initWithArray:(NSArray *)array;
-- (id)initWithObjects:(id)objects, ...;
+- (instancetype)init;
+- (instancetype)initWithArray:(NSArray *)array;
+- (instancetype)initWithObjects:(id)objects, ...;
 
-- (id)objectAtIndexedSubscript:(NSUInteger)index;
-- (id)objectAtIndex:(NSInteger)index;
+- (nullable id)objectAtIndexedSubscript:(NSUInteger)index;
+- (nullable id)objectAtIndex:(NSInteger)index;
 
-- (id)firstObject;
-- (id)lastObject;
+- (nullable id)firstObject;
+- (nullable id)lastObject;
 
 @end
 
@@ -68,14 +82,4 @@
 
 @end
 
-id FWTupleSentinel(void);
-
-void** FWUnpackSentinel(void);
-
-// 快速创建元组
-#define FWTuple(...) \
-    [[FWTuple alloc] initWithObjects:__VA_ARGS__, FWTupleSentinel()]
-
-// 快速元组解包
-#define FWUnpack(...) \
-    [[FWTupleUnpack alloc] initWithPointers:0, __VA_ARGS__, FWUnpackSentinel()].tuple
+NS_ASSUME_NONNULL_END

@@ -38,7 +38,7 @@ void** FWUnpackSentinel() {
     NSPointerArray *storage;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -47,7 +47,7 @@ void** FWUnpackSentinel() {
     return self;
 }
 
-- (id)initWithArray:(NSArray *)array
+- (instancetype)initWithArray:(NSArray *)array
 {
     self = [self init];
     if (self) {
@@ -58,7 +58,7 @@ void** FWUnpackSentinel() {
     return self;
 }
 
-- (id)initWithObjects:(id)objects, ...
+- (instancetype)initWithObjects:(id)objects, ...
 {
     self = [self init];
     if (self) {
