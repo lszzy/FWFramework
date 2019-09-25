@@ -503,7 +503,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     FWPromise *promise = [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
         dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWPromise", NULL);
         dispatch_async(queue, ^{
-            sleep(1);
+            [NSThread sleepForTimeInterval:0.1];
             resolve(@1);
         });
     }];

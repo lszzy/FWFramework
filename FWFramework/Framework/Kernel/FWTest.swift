@@ -51,7 +51,7 @@ class FWTestCase_FWTest_Swift: FWTestCase {
         var result = 0
         fwSyncPerformAsyncBlock { completionHanlder in
             DispatchQueue(label: "FWTestCase_FWTest_Swift").async {
-                sleep(1)
+                Thread.sleep(forTimeInterval: 0.1)
                 result = 1
                 completionHanlder()
             }

@@ -15,7 +15,6 @@
 #import <setjmp.h>
 #import <pthread.h>
 
-// ARC下存在跳转导致的编译器生成的释放函数执行不到的问题，MRC就可以回避编译器的这种"干扰"
 #if __has_feature(objc_arc)
 #error FWIterator Must be compiled with MRC
 #endif
@@ -561,7 +560,7 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
 - (FWAsyncClosure)login:(NSString *)account pwd:(NSString *)pwd
 {
     return Block_copy(^(FWAsyncCallback callback){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if ([account isEqualToString:@"test"] && [pwd isEqualToString:@"123"]) {
                 callback(@{@"uid": @"1", @"token": @"token"}, nil);
             } else {
@@ -574,7 +573,7 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
 - (FWPromise *)query:(NSString *)uid token:(NSString *)token
 {
     return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if ([uid isEqualToString:@"1"] && [token isEqualToString:@"token"]) {
                 resolve(@{@"name": @"test"});
             } else {
