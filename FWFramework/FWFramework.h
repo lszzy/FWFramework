@@ -14,11 +14,6 @@
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-// Swift
-#if __has_include(<FWFramework/FWFramework-Swift.h>)
-#import <FWFramework/FWFramework-Swift.h>
-#endif
-
 // FWFramework
 #import <FWFramework/FWFramework+Framework.h>
 
