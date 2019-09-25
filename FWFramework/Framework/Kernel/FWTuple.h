@@ -9,20 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-// 快速创建元组
-#define FWTuple(...) \
-    [[FWTuple alloc] initWithObjects:__VA_ARGS__, FWTupleSentinel()]
-
-// 快速元组解包
-#define FWUnpack(...) \
-    [[FWTupleUnpack alloc] initWithPointers:0, __VA_ARGS__, FWUnpackSentinel()].tuple
-
-id FWTupleSentinel(void);
-
-void** FWUnpackSentinel(void);
-
-#pragma mark - FWTuple
-
 /*!
  @brief 元组，参考自coobjc
  
@@ -81,3 +67,15 @@ void** FWUnpackSentinel(void);
 - (instancetype)initWithPointers:(int)startIndex, ...;
 
 @end
+
+id FWTupleSentinel(void);
+
+void** FWUnpackSentinel(void);
+
+// 快速创建元组
+#define FWTuple(...) \
+    [[FWTuple alloc] initWithObjects:__VA_ARGS__, FWTupleSentinel()]
+
+// 快速元组解包
+#define FWUnpack(...) \
+    [[FWTupleUnpack alloc] initWithPointers:0, __VA_ARGS__, FWUnpackSentinel()].tuple
