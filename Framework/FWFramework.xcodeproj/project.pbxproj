@@ -256,9 +256,9 @@
 		2FA99EA8228E80810059DFDB /* UISwitch+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA99EA6228E80810059DFDB /* UISwitch+FWFramework.m */; };
 		2FACF02E2303A90B007AFC16 /* UIView+FWTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FACF02F2303A90B007AFC16 /* UIView+FWTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */; };
-		2FAD221F233B12E400140359 /* FWIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD221C233B12E300140359 /* FWIterator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2FAD2220233B12E400140359 /* FWIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD221D233B12E300140359 /* FWIterator.swift */; };
-		2FAD2221233B12E400140359 /* FWIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD221E233B12E300140359 /* FWIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FAD221F233B12E400140359 /* FWCoroutine.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD221C233B12E300140359 /* FWCoroutine.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2FAD2220233B12E400140359 /* FWCoroutine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD221D233B12E300140359 /* FWCoroutine.swift */; };
+		2FAD2221233B12E400140359 /* FWCoroutine.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD221E233B12E300140359 /* FWCoroutine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FAD2227233B5FF500140359 /* FWTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD2225233B5FF500140359 /* FWTuple.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FAD2228233B5FF500140359 /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD2226233B5FF500140359 /* FWTuple.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -589,9 +589,9 @@
 		2FA99EA6228E80810059DFDB /* UISwitch+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISwitch+FWFramework.m"; sourceTree = "<group>"; };
 		2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWTheme.h"; sourceTree = "<group>"; };
 		2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWTheme.m"; sourceTree = "<group>"; };
-		2FAD221C233B12E300140359 /* FWIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWIterator.m; sourceTree = "<group>"; };
-		2FAD221D233B12E300140359 /* FWIterator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWIterator.swift; sourceTree = "<group>"; };
-		2FAD221E233B12E300140359 /* FWIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWIterator.h; sourceTree = "<group>"; };
+		2FAD221C233B12E300140359 /* FWCoroutine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCoroutine.m; sourceTree = "<group>"; };
+		2FAD221D233B12E300140359 /* FWCoroutine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWCoroutine.swift; sourceTree = "<group>"; };
+		2FAD221E233B12E300140359 /* FWCoroutine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCoroutine.h; sourceTree = "<group>"; };
 		2FAD2225233B5FF500140359 /* FWTuple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTuple.h; sourceTree = "<group>"; };
 		2FAD2226233B5FF500140359 /* FWTuple.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTuple.m; sourceTree = "<group>"; };
 		2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+FWFramework.h"; sourceTree = "<group>"; };
@@ -932,9 +932,9 @@
 			children = (
 				2F03A56F216CF4B9001965A1 /* FWAspect.h */,
 				2F03A567216CF4B9001965A1 /* FWAspect.m */,
-				2FAD221E233B12E300140359 /* FWIterator.h */,
-				2FAD221C233B12E300140359 /* FWIterator.m */,
-				2FAD221D233B12E300140359 /* FWIterator.swift */,
+				2FAD221E233B12E300140359 /* FWCoroutine.h */,
+				2FAD221C233B12E300140359 /* FWCoroutine.m */,
+				2FAD221D233B12E300140359 /* FWCoroutine.swift */,
 				2F03A564216CF4B9001965A1 /* FWLog.h */,
 				2F03A56C216CF4B9001965A1 /* FWLog.m */,
 				2FBFB76422C6434300E669B6 /* FWLog.swift */,
@@ -1203,7 +1203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FAD2227233B5FF500140359 /* FWTuple.h in Headers */,
-				2FAD2221233B12E400140359 /* FWIterator.h in Headers */,
+				2FAD2221233B12E400140359 /* FWCoroutine.h in Headers */,
 				2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */,
 				2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */,
 				2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */,
@@ -1561,7 +1561,7 @@
 				2F03A5FB216CF4B9001965A1 /* FWProxy.m in Sources */,
 				2F03A5BA216CF4B9001965A1 /* UIView+FWLayer.m in Sources */,
 				2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */,
-				2FAD2220233B12E400140359 /* FWIterator.swift in Sources */,
+				2FAD2220233B12E400140359 /* FWCoroutine.swift in Sources */,
 				2F03A5FE216CF4B9001965A1 /* FWLog.m in Sources */,
 				2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */,
 				2F03A587216CF4B9001965A1 /* UIViewController+FWBar.m in Sources */,
@@ -1615,7 +1615,7 @@
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,
 				2F03A5BC216CF4B9001965A1 /* UIView+FWIndicator.m in Sources */,
-				2FAD221F233B12E400140359 /* FWIterator.m in Sources */,
+				2FAD221F233B12E400140359 /* FWCoroutine.m in Sources */,
 				2FBFB70822C5045400E669B6 /* NSBundle+FWFramework.swift in Sources */,
 				2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */,
 				2FAD2228233B5FF500140359 /* FWTuple.m in Sources */,

@@ -8,7 +8,7 @@
  */
 
 #import "FWRequest.h"
-#import "FWIterator.h"
+#import "FWCoroutine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -151,7 +151,7 @@ typedef void (^FWProgressPromiseConstructor)(FWPromiseBlock resolve, FWPromiseBl
 - (FWPromise *)promise;
 
 // 创建coroutine对象并开始请求，参数为request|error
-- (FWAsyncClosure)coroutine;
+- (FWCoroutineClosure)coroutine;
 
 @end
 
@@ -161,7 +161,7 @@ typedef void (^FWProgressPromiseConstructor)(FWPromiseBlock resolve, FWPromiseBl
 - (FWPromise *)promise;
 
 // 创建coroutine对象并开始请求，参数为request|error
-- (FWAsyncClosure)coroutine;
+- (FWCoroutineClosure)coroutine;
 
 @end
 
