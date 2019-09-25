@@ -23,13 +23,13 @@ typedef void (^FWRejectBlock)(NSError * _Nullable error);
 typedef id _Nullable (^FWThenBlock)(id _Nullable value);
 
 /*! @brief Promise代码块，按条件触发resolve|reject */
-typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
+typedef void (^FWPromiseConstructor)(FWResolveBlock resolve, FWRejectBlock reject);
 
 /*! @brief Progress代码块，标记进度 */
 typedef void (^FWProgressBlock)(double ratio, id _Nullable value);
 
 /*! @brief ProgressPromise代码块，按条件触发resolve|reject|progress */
-typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress);
+typedef void (^FWProgressPromiseConstructor)(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress);
 
 /*!
  @brief FWPromise约定类，参考自RWPromiseKit
@@ -72,7 +72,7 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param block 约定代码块
  @return 标准约定
  */
-+ (FWPromise *)promise:(FWPromiseBlock)block;
++ (FWPromise *)promise:(FWPromiseConstructor)block;
 
 /*!
  @brief 快速创建标记完成的约定
@@ -118,7 +118,7 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param block 约定block
  @return 进度约定
  */
-+ (FWPromise *)progress:(FWProgressPromiseBlock)block;
++ (FWPromise *)progress:(FWProgressPromiseConstructor)block;
 
 /*!
  @brief 创建定时约定，当定时触发时标记完成

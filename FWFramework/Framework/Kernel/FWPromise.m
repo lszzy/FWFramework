@@ -20,15 +20,15 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @interface FWPromise ()
 
-@property (nonatomic) id value;
+@property (nonatomic, strong) id value;
 
-@property (nonatomic) NSError *error;
+@property (nonatomic, strong) NSError *error;
 
 @property (atomic, assign) FWPromiseState state;
 
 @property (nonatomic, copy) void (^stateBlock)(FWPromise *object, FWPromiseState state);
 
-@property (nonatomic, copy) FWPromiseBlock promiseBlock;
+@property (nonatomic, copy) FWPromiseConstructor promiseBlock;
 
 @property (nonatomic, copy) FWResolveBlock resolveBlock;
 
@@ -63,7 +63,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     return [[FWPromise alloc] init];
 }
 
-+ (FWPromise *)promise:(FWPromiseBlock)block
++ (FWPromise *)promise:(FWPromiseConstructor)block
 {
     return [[FWPromise alloc] initWithBlock:block];
 }
@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     return [self initWithBlock:nil];
 }
 
-- (instancetype)initWithBlock:(FWPromiseBlock)block
+- (instancetype)initWithBlock:(FWPromiseConstructor)block
 {
     self = [super init];
     if (self) {
@@ -268,7 +268,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     };
 }
 
-+ (FWPromise *)progress:(FWProgressPromiseBlock)block
++ (FWPromise *)progress:(FWProgressPromiseConstructor)block
 {
     FWPromise *promise = [[FWPromise alloc] initWithBlock:nil];
     __weak FWPromise *weakPromise = promise;
