@@ -463,9 +463,22 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
         [promise resolve:request];
     } failure:^(__kindof FWBaseRequest *request) {
-        [promise reject:request];
+        [promise reject:request.error];
     }];
     return promise;
+}
+
+- (FWCoroutineClosure)coroutine
+{
+    __weak __typeof__(self) self_weak_ = self;
+    return ^(FWCoroutineCallback callback){
+        __typeof__(self) self = self_weak_;
+        [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
+            callback(request, nil);
+        } failure:^(__kindof FWBaseRequest *request) {
+            callback(nil, request.error);
+        }];
+    };
 }
 
 @end
@@ -478,9 +491,22 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
         [promise resolve:batchRequest];
     } failure:^(FWBatchRequest *batchRequest) {
-        [promise reject:batchRequest];
+        [promise reject:batchRequest.failedRequest.error];
     }];
     return promise;
+}
+
+- (FWCoroutineClosure)coroutine
+{
+    __weak __typeof__(self) self_weak_ = self;
+    return ^(FWCoroutineCallback callback){
+        __typeof__(self) self = self_weak_;
+        [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
+            callback(batchRequest, nil);
+        } failure:^(FWBatchRequest *batchRequest) {
+            callback(nil, batchRequest.failedRequest.error);
+        }];
+    };
 }
 
 @end
@@ -490,6 +516,7 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 #pragma mark - Test
 
 #import "FWTest.h"
+#import "NSObject+FWBlock.h"
 
 @interface FWTestCase_FWPromise : FWTestCase
 
@@ -529,6 +556,62 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
     }).finally(^{
         FWAssertTrue(result == nil);
     });
+}
+
+- (FWCoroutineClosure)login:(NSString *)account pwd:(NSString *)pwd
+{
+    return ^(FWCoroutineCallback callback){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if ([account isEqualToString:@"test"] && [pwd isEqualToString:@"123"]) {
+                callback(@{@"uid": @"1", @"token": @"token"}, nil);
+            } else {
+                callback(nil, [NSError errorWithDomain:@"FWTest" code:1 userInfo:nil]);
+            }
+        });
+    };
+}
+
+- (FWPromise *)query:(NSString *)uid token:(NSString *)token
+{
+    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if ([uid isEqualToString:@"1"] && [token isEqualToString:@"token"]) {
+                resolve(@{@"name": @"test"});
+            } else {
+                reject([NSError errorWithDomain:@"FWTest" code:2 userInfo:nil]);
+            }
+        });
+    }];
+}
+
+- (void)testCoroutine
+{
+    __block NSInteger value = 0;
+    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
+        fw_async(^{
+            FWResult *result = nil;
+            
+            result = fw_await([self login:@"test" pwd:@"123"]);
+            FWAssertTrue(!result.error);
+            
+            NSDictionary *user = result.value;
+            value = [user[@"uid"] integerValue];
+            FWAssertTrue([user[@"uid"] isEqualToString:@"1"]);
+            
+            result = fw_await([self query:user[@"uid"] token:user[@"token"]]);
+            FWAssertTrue(!result.error);
+            
+            NSDictionary *info = result.value;
+            FWAssertTrue([info[@"name"] isEqualToString:@"test"]);
+            
+            result = fw_await([self login:@"test" pwd:@""]);
+            FWAssertTrue(result.error);
+        }).finally(^{
+            value++;
+            completionHandler();
+        });
+    }];
+    FWAssertTrue(value == 2);
 }
 
 @end

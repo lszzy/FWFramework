@@ -1,13 +1,13 @@
 /*!
- @header     FWIterator.m
+ @header     FWCoroutine.m
  @indexgroup FWFramework
- @brief      FWIterator
+ @brief      FWCoroutine
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019-09-20
  */
 
-#import "FWIterator.h"
+#import "FWCoroutine.h"
 #import "FWPromise.h"
 #import "FWProxy.h"
 #import <objc/message.h>
@@ -16,7 +16,7 @@
 #import <pthread.h>
 
 #if __has_feature(objc_arc)
-#error FWIterator Must be compiled with MRC
+#error FWCoroutine Must be compiled with MRC
 #endif
 
 #define DEFAULT_STACK_SIZE (256 * 1024)
@@ -26,18 +26,18 @@
 #define is_null(arg) (!(arg) || [(arg) isKindOfClass:NSNull.self])
 #define arg_or_nil(arg) (is_null(arg) ? nil : arg)
 
-#pragma mark - FWAsyncEpilog
+#pragma mark - FWCoroutineEpilog
 
-@interface FWAsyncEpilog()
+@interface FWCoroutineEpilog()
 @property (nonatomic, copy) dispatch_block_t finally_hanler;
 - (void)do_finally;
 @end
 
-@implementation FWAsyncEpilog
+@implementation FWCoroutineEpilog
 @synthesize finally_hanler = _finally_handler;
 
-- (FWFinallyConfiger)finally {
-    FWFinallyConfiger configer = ^(dispatch_block_t handler){
+- (FWFinallyHandler)finally {
+    FWFinallyHandler configer = ^(dispatch_block_t handler){
         self.finally_hanler = handler;
     };
     return [[(id)configer copy] autorelease];
@@ -84,25 +84,25 @@
 }
 @end
 
-#pragma mark - FWIteratorStack
+#pragma mark - FWCoroutineStack
 
 static pthread_key_t iterator_stack_key;
 static void destroy_iterator_stack(void * stack) {
     CFRelease((CFArrayRef)stack);
 }
 
-@interface FWIteratorStack: NSObject
-+ (void)push:(FWIterator *)iterator;
-+ (FWIterator *)pop;
-+ (FWIterator *)top;
+@interface FWCoroutineStack: NSObject
++ (void)push:(FWCoroutine *)iterator;
++ (FWCoroutine *)pop;
++ (FWCoroutine *)top;
 @end
 
-@implementation FWIteratorStack
+@implementation FWCoroutineStack
 + (void)load {
     pthread_key_create(&iterator_stack_key, destroy_iterator_stack);
 }
 
-+ (void)push:(FWIterator *)iterator {
++ (void)push:(FWCoroutine *)iterator {
     CFMutableArrayRef stack = pthread_getspecific(iterator_stack_key);
     if (!stack) {
         stack = CFArrayCreateMutable(kCFAllocatorSystemDefault, 16, &kCFTypeArrayCallBacks);
@@ -111,11 +111,11 @@ static void destroy_iterator_stack(void * stack) {
     CFArrayAppendValue(stack, (void *)iterator);
 }
 
-+ (FWIterator *)pop {
++ (FWCoroutine *)pop {
     CFMutableArrayRef stack = pthread_getspecific(iterator_stack_key);
     CFIndex count = stack ? CFArrayGetCount(stack) : 0;
     if (count > 0) {
-        FWIterator *iterator = (FWIterator *)CFArrayGetValueAtIndex(stack, count - 1);
+        FWCoroutine *iterator = (FWCoroutine *)CFArrayGetValueAtIndex(stack, count - 1);
         [iterator retain];
         CFArrayRemoveValueAtIndex(stack, count - 1);
         return iterator.autorelease;
@@ -123,27 +123,27 @@ static void destroy_iterator_stack(void * stack) {
     return nil;
 }
 
-+ (FWIterator *)top {
++ (FWCoroutine *)top {
     CFMutableArrayRef stack = pthread_getspecific(iterator_stack_key);
     CFIndex count = stack ? CFArrayGetCount(stack) : 0;
     if (count > 0) {
-        FWIterator *iterator = (FWIterator *)CFArrayGetValueAtIndex(stack, count - 1);
+        FWCoroutine *iterator = (FWCoroutine *)CFArrayGetValueAtIndex(stack, count - 1);
         return iterator;
     }
     return nil;
 }
 @end
 
-#pragma mark - FWIterator
+#pragma mark - FWCoroutine
 
-@interface FWIterator() <FWAsyncClosureCaller>
-@property (nonatomic, strong) FWIterator * nest;
+@interface FWCoroutine() <FWCoroutineClosureCaller>
+@property (nonatomic, strong) FWCoroutine * nest;
 @property (nonatomic, strong) id value;
 @property (nonatomic, strong) id error;
 @property (nonatomic, assign) BOOL done;
 @end
 
-@implementation FWIterator
+@implementation FWCoroutine
 @synthesize nest = _nest;
 @synthesize value = _value;
 @synthesize error = _error;
@@ -189,7 +189,7 @@ static void destroy_iterator_stack(void * stack) {
     [super dealloc];
 }
 
-- (id)initWithFunc:(FWGenetarorFunc)func arg:(id)arg {
+- (id)initWithFunc:(FWGeneratorFunc)func arg:(id)arg {
     if (self = [self init]) {
         _func = func;
         [_args addObject:arg ?: NSNull.null];
@@ -323,7 +323,7 @@ static void destroy_iterator_stack(void * stack) {
         return [FWResult resultWithValue:_value error:_error done:_done];
     }
     
-    [FWIteratorStack push:self];
+    [FWCoroutineStack push:self];
     
     // 设置跳转返回点
     int leave_value = setjmp(_ev_leave);
@@ -365,7 +365,7 @@ static void destroy_iterator_stack(void * stack) {
         _done = YES;
     }
     
-    [FWIteratorStack pop];
+    [FWCoroutineStack pop];
 
     return [FWResult resultWithValue:_value error:_error done:_done];
 }
@@ -421,7 +421,7 @@ static void destroy_iterator_stack(void * stack) {
     id yield_value = value;
     if ([value isKindOfClass:self.class]) {
         // 嵌套的迭代器
-        self.nest = (FWIterator *)value;
+        self.nest = (FWCoroutine *)value;
     }
     
 next: {
@@ -450,17 +450,17 @@ next: {
 @end
 
 id fw_yield(id value) {
-    FWIterator *iterator = [FWIteratorStack top];
+    FWCoroutine *iterator = [FWCoroutineStack top];
     return [iterator yield:value];
 }
 
 FWResult * fw_await(id _Nullable value) {
-    return (FWResult *) fw_yield(value);
+    return (FWResult *)fw_yield(value);
 }
 
-FWAsyncEpilog * fw_async(dispatch_block_t block) {
-    FWIterator *iterator = [[FWIterator alloc] initWithStandardBlock:block];
-    FWAsyncEpilog *epilog = [[FWAsyncEpilog alloc] init];
+FWCoroutineEpilog * fw_async(dispatch_block_t block) {
+    FWCoroutine *iterator = [[FWCoroutine alloc] initWithStandardBlock:block];
+    FWCoroutineEpilog *epilog = [[FWCoroutineEpilog alloc] init];
     FWResult * __block result = nil;
     
     dispatch_block_t __block step;
@@ -472,7 +472,7 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
                 [value isKindOfClass:NSClassFromString(@"__NSStackBlock__")] ||
                 [value isKindOfClass:NSClassFromString(@"__NSMallocBlock__")]
                 ) {
-                ((FWAsyncClosure)value)(^(id value, id error) {
+                ((FWCoroutineClosure)value)(^(id value, id error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [result release];
                         result = [iterator next:[FWResult resultWithValue:value error:error done:NO]].retain;
@@ -484,7 +484,7 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
                      [value isKindOfClass:NSClassFromString(@"__SwiftValue")] &&
                      [[value description] containsString:@"(Function)"]
                      ) {
-                [FWIterator callWithClosure:value completion:^(id  _Nullable value, id  _Nullable error) {
+                [FWCoroutine callWithClosure:value completion:^(id  _Nullable value, id  _Nullable error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [result release];
                         result = [iterator next: [FWResult resultWithValue:value error:error done:NO]].retain;
@@ -543,76 +543,3 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
     
     return epilog.retain.autorelease;
 }
-
-#ifdef DEBUG
-
-#pragma mark - Test
-
-#import "FWTest.h"
-#import "NSObject+FWBlock.h"
-
-@interface FWTestCase_FWIterator : FWTestCase
-
-@end
-
-@implementation FWTestCase_FWIterator
-
-- (FWAsyncClosure)login:(NSString *)account pwd:(NSString *)pwd
-{
-    return Block_copy(^(FWAsyncCallback callback){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if ([account isEqualToString:@"test"] && [pwd isEqualToString:@"123"]) {
-                callback(@{@"uid": @"1", @"token": @"token"}, nil);
-            } else {
-                callback(nil, [NSError errorWithDomain:@"FWTest" code:1 userInfo:nil]);
-            }
-        });
-    });
-}
-
-- (FWPromise *)query:(NSString *)uid token:(NSString *)token
-{
-    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if ([uid isEqualToString:@"1"] && [token isEqualToString:@"token"]) {
-                resolve(@{@"name": @"test"});
-            } else {
-                reject([NSError errorWithDomain:@"FWTest" code:2 userInfo:nil]);
-            }
-        });
-    }];
-}
-
-- (void)testIterator
-{
-    __block NSInteger value = 0;
-    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
-        fw_async(^{
-            FWResult *result = nil;
-            
-            result = fw_await([self login:@"test" pwd:@"123"]);
-            FWAssertTrue(!result.error);
-            
-            NSDictionary *user = result.value;
-            value = [user[@"uid"] integerValue];
-            FWAssertTrue([user[@"uid"] isEqualToString:@"1"]);
-            
-            result = fw_await([self query:user[@"uid"] token:user[@"token"]]);
-            FWAssertTrue(!result.error);
-            
-            NSDictionary *info = result.value;
-            FWAssertTrue([info[@"name"] isEqualToString:@"test"]);
-            
-            result = fw_await([self login:@"test" pwd:@""]);
-            FWAssertTrue(result.error);
-        }).finally(^{
-            value++;
-            completionHandler();
-        });
-    }];
-    FWAssertTrue(value == 2);
-}
-
-@end
-
-#endif
