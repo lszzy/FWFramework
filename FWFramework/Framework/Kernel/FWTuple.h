@@ -9,8 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 // 快速创建元组
 #define FWTuple(...) \
     [[FWTuple alloc] initWithObjects:__VA_ARGS__, FWTupleSentinel()]
@@ -36,11 +34,11 @@ void** FWUnpackSentinel(void);
 - (id)initWithArray:(NSArray *)array;
 - (id)initWithObjects:(id)objects, ...;
 
-- (nullable id)objectAtIndexedSubscript:(NSUInteger)index;
-- (nullable id)objectAtIndex:(NSInteger)index;
+- (id)objectAtIndexedSubscript:(NSUInteger)index;
+- (id)objectAtIndex:(NSInteger)index;
 
-- (nullable id)firstObject;
-- (nullable id)lastObject;
+- (id)firstObject;
+- (id)lastObject;
 
 @end
 
@@ -83,5 +81,3 @@ void** FWUnpackSentinel(void);
 - (instancetype)initWithPointers:(int)startIndex, ...;
 
 @end
-
-NS_ASSUME_NONNULL_END
