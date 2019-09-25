@@ -9,6 +9,7 @@
 
 #import "FWIterator.h"
 #import "FWPromise.h"
+#import "FWProxy.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import <setjmp.h>
@@ -25,8 +26,6 @@
 
 #define is_null(arg) (!(arg) || [(arg) isKindOfClass:NSNull.self])
 #define arg_or_nil(arg) (is_null(arg) ? nil : arg)
-
-static NSMethodSignature *NSMethodSignatureForBlock(id block);
 
 #pragma mark - FWAsyncEpilog
 
@@ -203,7 +202,7 @@ static void destroy_iterator_stack(void * stack) {
     NSAssert(target && selector, @"target and selector must not be nil");
     
     NSMethodSignature *signature = [self.class signatureForTarget:target selector:selector];
-    [self.class checkGeneratorSignature:signature is_block:NO];
+    [self.class checkGeneratorSignature:signature];
     
     NSMutableArray *args = [NSMutableArray array];
     va_list ap;
@@ -221,7 +220,7 @@ static void destroy_iterator_stack(void * stack) {
     NSAssert(target && selector, @"target and selector must not be nil");
     
     NSMethodSignature *signature = [self.class signatureForTarget:target selector:selector];
-    [self.class checkGeneratorSignature:signature is_block:NO];
+    [self.class checkGeneratorSignature:signature];
     
     return [self initWithTarget:target selector:selector args:args signature:signature];
 }
@@ -239,13 +238,13 @@ static void destroy_iterator_stack(void * stack) {
 - (id)initWithBlock:(id)block, ... {
     NSAssert(block, @"block must not be nil");
     
-    NSMethodSignature *signature = NSMethodSignatureForBlock(block);
-    [self.class checkGeneratorSignature:signature is_block:YES];
+    NSMethodSignature *signature = [FWBlockProxy methodSignatureForBlock:block];
+    [self.class checkGeneratorSignature:signature];
     
     NSMutableArray *args = [NSMutableArray array];
     va_list ap;
     va_start(ap, block);
-    for (int i=0; i < (int)signature.numberOfArguments - 1; ++i) {
+    for (int i=0; i < (int)signature.numberOfArguments - 2; ++i) {
         id arg = va_arg(ap, id);
         [args addObject:arg ?: NSNull.null];
     }
@@ -257,8 +256,8 @@ static void destroy_iterator_stack(void * stack) {
 - (id)initWithBlock:(id  _Nullable (^)(id _Nullable))block arg:(id)arg {
     NSAssert(block, @"block must not be nil");
     
-    NSMethodSignature *signature = NSMethodSignatureForBlock(block);
-    [self.class checkGeneratorSignature:signature is_block:YES];
+    NSMethodSignature *signature = [FWBlockProxy methodSignatureForBlock:block];
+    [self.class checkGeneratorSignature:signature];
     
     return [self initWithBlock:block args:arg ? @[arg] : @[] signature:signature];
 }
@@ -292,33 +291,19 @@ static void destroy_iterator_stack(void * stack) {
     return signature;
 }
 
-+ (void)checkGeneratorSignature:(NSMethodSignature *)signature is_block:(BOOL)is_block{
++ (void)checkGeneratorSignature:(NSMethodSignature *)signature{
     // 返回值必须是id或者void
     __unused BOOL ret_valid = signature.methodReturnType[0] == 'v' || signature.methodReturnType[0] == '@';
     NSAssert(ret_valid, @"return type of generator must be id or void");
     BOOL args_valid = YES;
-    if (is_block) {
-        // block最多支持8个参数，block调用默认有第一个参数:block自身
-        NSAssert(signature.numberOfArguments <= 9, @"arguments count of block must <= 8");
-        // 所有参数必须为对象类型
-        if (signature.numberOfArguments > 1) {
-            for (int i=1; i < signature.numberOfArguments; ++i) {
-                if ([signature getArgumentTypeAtIndex:i][0] != '@') {
-                    args_valid = NO;
-                    break;
-                }
-            }
-        }
-    } else {
-        // 方法调用最多支持8个参数,方法调用默认有第一个参数self(target)，第二个参数_cmd(selector)
-        NSAssert(signature.numberOfArguments <= 10, @"arguments count of method must <= 8");
-        // 所有参数必须为对象类型
-        if (signature.numberOfArguments > 2) {
-            for (int i=2; i < signature.numberOfArguments; ++i) {
-                if ([signature getArgumentTypeAtIndex:i][0] != '@') {
-                    args_valid = NO;
-                    break;
-                }
+    // 方法调用最多支持8个参数,方法调用默认有第一个参数self(target)，第二个参数_cmd(selector)
+    NSAssert(signature.numberOfArguments <= 10, @"arguments count of method must <= 8");
+    // 所有参数必须为对象类型
+    if (signature.numberOfArguments > 2) {
+        for (int i=2; i < signature.numberOfArguments; ++i) {
+            if ([signature getArgumentTypeAtIndex:i][0] != '@') {
+                args_valid = NO;
+                break;
             }
         }
     }
@@ -410,14 +395,14 @@ static void destroy_iterator_stack(void * stack) {
                                                                                     );
         }
     } else if (_block) {
-        id arg0 = _signature.numberOfArguments > 1 ? arg_or_nil(_args[0]) : nil;
-        id arg1 = _signature.numberOfArguments > 2 ? arg_or_nil(_args[1]) : nil;
-        id arg2 = _signature.numberOfArguments > 3 ? arg_or_nil(_args[2]) : nil;
-        id arg3 = _signature.numberOfArguments > 4 ? arg_or_nil(_args[3]) : nil;
-        id arg4 = _signature.numberOfArguments > 5 ? arg_or_nil(_args[4]) : nil;
-        id arg5 = _signature.numberOfArguments > 6 ? arg_or_nil(_args[5]) : nil;
-        id arg6 = _signature.numberOfArguments > 7 ? arg_or_nil(_args[6]) : nil;
-        id arg7 = _signature.numberOfArguments > 8 ? arg_or_nil(_args[7]) : nil;
+        id arg0 = _signature.numberOfArguments > 2 ? arg_or_nil(_args[0]) : nil;
+        id arg1 = _signature.numberOfArguments > 3 ? arg_or_nil(_args[1]) : nil;
+        id arg2 = _signature.numberOfArguments > 4 ? arg_or_nil(_args[2]) : nil;
+        id arg3 = _signature.numberOfArguments > 5 ? arg_or_nil(_args[3]) : nil;
+        id arg4 = _signature.numberOfArguments > 6 ? arg_or_nil(_args[4]) : nil;
+        id arg5 = _signature.numberOfArguments > 7 ? arg_or_nil(_args[5]) : nil;
+        id arg6 = _signature.numberOfArguments > 8 ? arg_or_nil(_args[6]) : nil;
+        id arg7 = _signature.numberOfArguments > 9 ? arg_or_nil(_args[7]) : nil;
         
         if (_signature.methodReturnType[0] == 'v') {
             ((void (^)(id, id, id, id, id, id, id, id))_block)(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7);
@@ -560,82 +545,6 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
     return epilog.retain.autorelease;
 }
 
-struct PMKBlockLiteral {
-    void *isa; // initialized to &_NSConcreteStackBlock or &_NSConcreteGlobalBlock
-    int flags;
-    int reserved;
-    void (*invoke)(void *, ...);
-    struct block_descriptor {
-        unsigned long int reserved;    // NULL
-        unsigned long int size;         // sizeof(struct Block_literal_1)
-        // optional helper functions
-        void (*copy_helper)(void *dst, void *src);     // IFF (1<<25)
-        void (*dispose_helper)(void *src);             // IFF (1<<25)
-        // required ABI.2010.3.16
-        const char *signature;                         // IFF (1<<30)
-    } *descriptor;
-    // imported variables
-};
-
-typedef NS_OPTIONS(NSUInteger, PMKBlockDescriptionFlags) {
-    PMKBlockDescriptionFlagsHasCopyDispose = (1 << 25),
-    PMKBlockDescriptionFlagsHasCtor = (1 << 26), // helpers have C++ code
-    PMKBlockDescriptionFlagsIsGlobal = (1 << 28),
-    PMKBlockDescriptionFlagsHasStret = (1 << 29), // IFF BLOCK_HAS_SIGNATURE
-    PMKBlockDescriptionFlagsHasSignature = (1 << 30)
-};
-
-// It appears 10.7 doesn't support quotes in method signatures. Remove them
-// via @rabovik's method. See https://github.com/OliverLetterer/SLObjectiveCRuntimeAdditions/pull/2
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8
-NS_INLINE static const char * pmk_removeQuotesFromMethodSignature(const char *str){
-    char *result = malloc(strlen(str) + 1);
-    BOOL skip = NO;
-    char *to = result;
-    char c;
-    while ((c = *str++)) {
-        if ('"' == c) {
-            skip = !skip;
-            continue;
-        }
-        if (skip) continue;
-        *to++ = c;
-    }
-    *to = '\0';
-    return result;
-}
-#endif
-
-static NSMethodSignature *NSMethodSignatureForBlock(id block) {
-    if (!block)
-        return nil;
-    
-    struct PMKBlockLiteral *blockRef = (__bridge struct PMKBlockLiteral *)block;
-    PMKBlockDescriptionFlags flags = (PMKBlockDescriptionFlags)blockRef->flags;
-    
-    if (flags & PMKBlockDescriptionFlagsHasSignature) {
-        void *signatureLocation = blockRef->descriptor;
-        signatureLocation += sizeof(unsigned long int);
-        signatureLocation += sizeof(unsigned long int);
-        
-        if (flags & PMKBlockDescriptionFlagsHasCopyDispose) {
-            signatureLocation += sizeof(void(*)(void *dst, void *src));
-            signatureLocation += sizeof(void (*)(void *src));
-        }
-        
-        const char *signature = (*(const char **)signatureLocation);
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8
-        signature = pmk_removeQuotesFromMethodSignature(signature);
-        NSMethodSignature *nsSignature = [NSMethodSignature signatureWithObjCTypes:signature];
-        free((void *)signature);
-        
-        return nsSignature;
-#endif
-        return [NSMethodSignature signatureWithObjCTypes:signature];
-    }
-    return 0;
-}
-
 #ifdef DEBUG
 
 #pragma mark - Test
@@ -651,7 +560,7 @@ static NSMethodSignature *NSMethodSignatureForBlock(id block) {
 
 - (FWAsyncClosure)login:(NSString *)account pwd:(NSString *)pwd
 {
-    return [^(FWAsyncCallback callback){
+    return Block_copy(^(FWAsyncCallback callback){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if ([account isEqualToString:@"test"] && [pwd isEqualToString:@"123"]) {
                 callback(@{@"uid": @"1", @"token": @"token"}, nil);
@@ -659,7 +568,7 @@ static NSMethodSignature *NSMethodSignatureForBlock(id block) {
                 callback(nil, [NSError errorWithDomain:@"FWTest" code:1 userInfo:nil]);
             }
         });
-    } copy];
+    });
 }
 
 - (FWPromise *)query:(NSString *)uid token:(NSString *)token
