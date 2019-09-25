@@ -8,10 +8,11 @@
  */
 
 #import "FWRequest.h"
-
-#pragma mark - FWPromise
+#import "FWIterator.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+#pragma mark - FWPromise
 
 /*! @brief Resolve代码块，标记完成value|失败error|进度progress */
 typedef void (^FWPromiseBlock)(id _Nullable);
@@ -146,15 +147,21 @@ typedef void (^FWProgressPromiseConstructor)(FWPromiseBlock resolve, FWPromiseBl
  */
 @interface FWBaseRequest (FWPromise)
 
-// 创建promise对象并开始请求，参数为request
+// 创建promise对象并开始请求，参数为request|error
 - (FWPromise *)promise;
+
+// 创建coroutine对象并开始请求，参数为request|error
+- (FWAsyncClosure)coroutine;
 
 @end
 
 @interface FWBatchRequest (FWPromise)
 
-// 创建promise对象并开始请求，参数为batchRequest
+// 创建promise对象并开始请求，参数为request|error
 - (FWPromise *)promise;
+
+// 创建coroutine对象并开始请求，参数为request|error
+- (FWAsyncClosure)coroutine;
 
 @end
 
