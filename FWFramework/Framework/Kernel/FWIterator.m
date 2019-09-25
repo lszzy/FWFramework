@@ -8,6 +8,7 @@
  */
 
 #import "FWIterator.h"
+#import "FWPromise.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import <setjmp.h>
@@ -473,11 +474,6 @@ FWResult * fw_await(id _Nullable value) {
     return (FWResult *) fw_yield(value);
 }
 
-@protocol FWLikePromise <NSObject>
-- (id<FWLikePromise> (^)(id))then;
-- (id<FWLikePromise> (^)(id))catch;
-@end
-
 FWAsyncEpilog * fw_async(dispatch_block_t block) {
     FWIterator *iterator = [[FWIterator alloc] initWithStandardBlock:block];
     FWAsyncEpilog *epilog = [[FWAsyncEpilog alloc] init];
@@ -511,13 +507,9 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
                         step();
                     });
                 }];
-            // AnyPromise
-            } else if (NSClassFromString(@"AnyPromise") &&
-                     [value isKindOfClass:NSClassFromString(@"AnyPromise")] &&
-                     [value respondsToSelector:@selector(then)] &&
-                     [value respondsToSelector:@selector(catch)]
-                     ) {
-                id <FWLikePromise> promise = (id <FWLikePromise>)value;
+            // FWPromise
+            } else if ([value isKindOfClass:[FWPromise class]]) {
+                FWPromise *promise = (FWPromise *)value;
                 void (^__block then_block)(id) = NULL;
                 void (^__block catch_block)(id) = NULL;
                 
@@ -539,7 +531,7 @@ FWAsyncEpilog * fw_async(dispatch_block_t block) {
                     step();
                 });
                 
-                promise.then(then_block).catch(catch_block);
+                promise.done(then_block).catch(catch_block);
             // 普通对象
             } else {
                 FWResult *old_result = result;
@@ -670,17 +662,17 @@ static NSMethodSignature *NSMethodSignatureForBlock(id block) {
     } copy];
 }
 
-- (FWAsyncClosure)query:(NSString *)uid token:(NSString *)token
+- (FWPromise *)query:(NSString *)uid token:(NSString *)token
 {
-    return [^(FWAsyncCallback callback){
+    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if ([uid isEqualToString:@"1"] && [token isEqualToString:@"token"]) {
-                callback(@{@"name": @"test"}, nil);
+                resolve(@{@"name": @"test"});
             } else {
-                callback(nil, [NSError errorWithDomain:@"FWTest" code:2 userInfo:nil]);
+                reject([NSError errorWithDomain:@"FWTest" code:2 userInfo:nil]);
             }
         });
-    } copy];
+    }];
 }
 
 - (void)testIterator

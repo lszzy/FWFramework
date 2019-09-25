@@ -459,15 +459,13 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 - (FWPromise *)promise
 {
-    __weak __typeof__(self) self_weak_ = self;
-    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
-        __typeof__(self) self = self_weak_;
-        [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
-            resolve(request.responseObject);
-        } failure:^(__kindof FWBaseRequest *request) {
-            reject(request.error);
-        }];
+    FWPromise *promise = [FWPromise promise];
+    [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
+        [promise resolve:request];
+    } failure:^(__kindof FWBaseRequest *request) {
+        [promise reject:request];
     }];
+    return promise;
 }
 
 @end
@@ -476,15 +474,13 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 - (FWPromise *)promise
 {
-    __weak __typeof__(self) self_weak_ = self;
-    return [FWPromise promise:^(FWPromiseBlock resolve, FWPromiseBlock reject) {
-        __typeof__(self) self = self_weak_;
-        [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
-            resolve(batchRequest);
-        } failure:^(FWBatchRequest *batchRequest) {
-            resolve(batchRequest.failedRequest.error);
-        }];
+    FWPromise *promise = [FWPromise promise];
+    [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
+        [promise resolve:batchRequest];
+    } failure:^(FWBatchRequest *batchRequest) {
+        [promise reject:batchRequest];
     }];
+    return promise;
 }
 
 @end
