@@ -8,8 +8,45 @@
 
 #import "UIViewController+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
+#import "NSObject+FWRuntime.h"
+#import <objc/runtime.h>
+
+static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresentationFullScreen;
 
 @implementation UIViewController (FWFramework)
+
++ (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (@available(iOS 13.0, *)) {
+            [self fwSwizzleInstanceMethod:@selector(setModalPresentationStyle:) with:@selector(fwInnerSetModalPresentationStyle:)];
+            [self fwSwizzleInstanceMethod:@selector(presentViewController:animated:completion:) with:@selector(fwInnerPresentViewController:animated:completion:)];
+        }
+    });
+    fwStaticModalPresentationStyle = style;
+}
+
+- (void)fwInnerSetModalPresentationStyle:(UIModalPresentationStyle)style
+{
+    if (@available(iOS 13.0, *)) {
+        objc_setAssociatedObject(self, @selector(fwInnerSetModalPresentationStyle:), @(style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    [self fwInnerSetModalPresentationStyle:style];
+}
+
+- (void)fwInnerPresentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    if (@available(iOS 13.0, *)) {
+        if (!objc_getAssociatedObject(viewController, @selector(fwInnerSetModalPresentationStyle:))) {
+            if (viewController.modalPresentationStyle == UIModalPresentationAutomatic ||
+                viewController.modalPresentationStyle == UIModalPresentationPageSheet) {
+                [viewController fwInnerSetModalPresentationStyle:fwStaticModalPresentationStyle];
+            }
+        }
+    }
+    [self fwInnerPresentViewController:viewController animated:animated completion:completion];
+}
 
 - (BOOL)fwIsPresented
 {

@@ -303,7 +303,7 @@
     [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
         dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
         dispatch_async(queue, ^{
-            sleep(1);
+            [NSThread sleepForTimeInterval:0.1];
             result = 1;
             completionHandler();
         });

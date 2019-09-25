@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIViewController (FWFramework)
 
 /*!
+ @brief 全局适配iOS13默认present样式(系统Automatic)，仅当未自定义modalPresentationStyle时生效
+ */
++ (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style;
+
+/*!
  @brief 当前viewController是否是被以present的方式显示的，是则返回YES，否则返回NO
  @discussion 如果self是self.navigationController的第一个viewController，则如果self.navigationController是被present起来的，那么self.fwIsPresented为YES，可以方便地给navigationController的第一个界面的左上角添加关闭按钮
  */

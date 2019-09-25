@@ -36,28 +36,53 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     fwStaticLogLevel = level;
 }
 
-+ (void)verbose:(NSString *)message
++ (void)verbose:(NSString *)format, ...
 {
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
     [self log:FWLogTypeVerbose withMessage:message];
 }
 
-+ (void)debug:(NSString *)message
++ (void)debug:(NSString *)format, ...
 {
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
     [self log:FWLogTypeDebug withMessage:message];
 }
 
-+ (void)info:(NSString *)message
++ (void)info:(NSString *)format, ...
 {
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
     [self log:FWLogTypeInfo withMessage:message];
 }
 
-+ (void)warn:(NSString *)message
++ (void)warn:(NSString *)format, ...
 {
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
     [self log:FWLogTypeWarn withMessage:message];
 }
 
-+ (void)error:(NSString *)message
++ (void)error:(NSString *)format, ...
 {
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
     [self log:FWLogTypeError withMessage:message];
 }
 

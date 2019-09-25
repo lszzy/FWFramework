@@ -11,6 +11,9 @@
 
 // App
 #import "FWAppDelegate.h"
+#import "FWAppToastPlugin.h"
+#import "FWAppLoadingPlugin.h"
+#import "FWAppRefreshPlugin.h"
 
 // Controller
 #import "FWViewController.h"

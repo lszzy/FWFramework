@@ -7,27 +7,23 @@
  @updated    2018-07-18
  */
 
-#import <Foundation/Foundation.h>
+#import "FWRequest.h"
+
+#pragma mark - FWPromise
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*! @brief Resolve代码块，标记完成 */
-typedef void (^FWResolveBlock)(id _Nullable value);
-
-/*! @brief Reject代码块，标记失败 */
-typedef void (^FWRejectBlock)(NSError * _Nullable error);
+/*! @brief Resolve代码块，标记完成value|失败error|进度progress */
+typedef void (^FWPromiseBlock)(id _Nullable);
 
 /*! @brief Then代码块，支持返回value|error|promise */
-typedef id _Nullable (^FWThenBlock)(id _Nullable value);
+typedef id _Nullable (^FWThenBlock)(id _Nullable);
 
 /*! @brief Promise代码块，按条件触发resolve|reject */
-typedef void (^FWPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject);
-
-/*! @brief Progress代码块，标记进度 */
-typedef void (^FWProgressBlock)(double ratio, id _Nullable value);
+typedef void (^FWPromiseConstructor)(FWPromiseBlock resolve, FWPromiseBlock reject);
 
 /*! @brief ProgressPromise代码块，按条件触发resolve|reject|progress */
-typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock reject, FWProgressBlock progress);
+typedef void (^FWProgressPromiseConstructor)(FWPromiseBlock resolve, FWPromiseBlock reject, FWPromiseBlock progress);
 
 /*!
  @brief FWPromise约定类，参考自RWPromiseKit
@@ -39,14 +35,17 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 /*! @brief 当前约定标记完成时触发的代码块，支持返回value|error|promise */
 @property (nonatomic, readonly) FWPromise *(^then)(FWThenBlock);
 
+/*! @brief 当前约定标记完成时触发的代码块，无返回值 */
+@property (nonatomic, readonly) FWPromise *(^done)(FWPromiseBlock);
+
 /*! @brief 当前约定标记失败时触发的代码块，错误处理 */
-@property (nonatomic, readonly) FWPromise *(^catch)(FWRejectBlock);
+@property (nonatomic, readonly) FWPromise *(^catch)(FWPromiseBlock);
 
 /*! @brief 当前约定完成或失败时都会触发的代码块，回收处理 */
 @property (nonatomic, readonly) void (^finally)(dispatch_block_t);
 
 /*! @brief 当前约定进行时触发的代码块，仅progress创建的约定生效 */
-@property (nonatomic, readonly) FWPromise *(^progress)(FWProgressBlock);
+@property (nonatomic, readonly) FWPromise *(^progress)(FWPromiseBlock);
 
 /*! @brief 超时约定，当前约定超时触发时仍未完成则标记失败 */
 @property (nonatomic, readonly) FWPromise *(^timeout)(NSTimeInterval);
@@ -55,12 +54,19 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
 @property (nonatomic, readonly) FWPromise *(^retry)(NSUInteger);
 
 /*!
+ @brief 创建约定
+ 
+ @return 约定
+ */
++ (FWPromise *)promise;
+
+/*!
  @brief 创建标准约定
  
  @param block 约定代码块
  @return 标准约定
  */
-+ (FWPromise *)promise:(FWPromiseBlock)block;
++ (FWPromise *)promise:(FWPromiseConstructor)block;
 
 /*!
  @brief 快速创建标记完成的约定
@@ -76,7 +82,7 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param error 错误信息
  @return 失败约定
  */
-+ (FWPromise *)reject:(nullable NSError *)error;
++ (FWPromise *)reject:(nullable id)error;
 
 /*!
  @brief 标记约定已完成
@@ -90,15 +96,14 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  
  @param error 错误信息
  */
-- (void)reject:(nullable NSError *)error;
+- (void)reject:(nullable id)error;
 
 /*!
  @brief 标记约定进行中，仅progress创建的约定生效
  
- @param ratio 进行比率
- @param value 附加值
+ @param percent 进行比率
  */
-- (void)progress:(double)ratio value:(nullable id)value;
+- (void)progress:(nullable id)percent;
 
 /*!
  @brief 创建支持进度的约定
@@ -106,7 +111,7 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @param block 约定block
  @return 进度约定
  */
-+ (FWPromise *)progress:(FWProgressPromiseBlock)block;
++ (FWPromise *)progress:(FWProgressPromiseConstructor)block;
 
 /*!
  @brief 创建定时约定，当定时触发时标记完成
@@ -131,6 +136,25 @@ typedef void (^FWProgressPromiseBlock)(FWResolveBlock resolve, FWRejectBlock rej
  @return 竞速约定
  */
 + (FWPromise *)race:(NSArray<FWPromise *> *)promises;
+
+@end
+
+#pragma mark - FWRequest+FWPromise
+
+/*!
+ @brief FWRequest约定分类
+ */
+@interface FWBaseRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为request
+- (FWPromise *)promise;
+
+@end
+
+@interface FWBatchRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为batchRequest
+- (FWPromise *)promise;
 
 @end
 
