@@ -24,7 +24,7 @@ typedef void (^FWAsyncCallback)(id _Nullable value, id _Nullable error);
 typedef void (^FWAsyncClosure)(FWAsyncCallback callback);
 
 /*!
- @brief 生成器和迭代器
+ @brief 生成器和迭代器，兼容FWPromise
  
  @see https://github.com/renjinkui2719/FWIterator
  */
