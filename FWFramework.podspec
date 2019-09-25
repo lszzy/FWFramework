@@ -10,8 +10,8 @@ Pod::Spec.new do |spec|
   spec.platform            = :ios, '8.0'
   spec.swift_version       = '5.0'
   spec_mrr_files           = [
-    'FWFramework/FWFramework/Kernel/FWIterator.m',
-    'FWFramework/FWFramework/Kernel/FWTuple.m',
+    'FWFramework/Framework/Kernel/FWIterator.m',
+    'FWFramework/Framework/Kernel/FWTuple.m',
   ]
   spec_arc_files           = Pathname.glob("FWFramework/**/*.{h,m,swift}")
   spec_arc_files           = spec_arc_files.map {|file| file.to_path}
