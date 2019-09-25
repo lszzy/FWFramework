@@ -259,6 +259,8 @@
 		2FAD221F233B12E400140359 /* FWIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD221C233B12E300140359 /* FWIterator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FAD2220233B12E400140359 /* FWIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD221D233B12E300140359 /* FWIterator.swift */; };
 		2FAD2221233B12E400140359 /* FWIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD221E233B12E300140359 /* FWIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FAD2227233B5FF500140359 /* FWTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD2225233B5FF500140359 /* FWTuple.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FAD2228233B5FF500140359 /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD2226233B5FF500140359 /* FWTuple.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -590,6 +592,8 @@
 		2FAD221C233B12E300140359 /* FWIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWIterator.m; sourceTree = "<group>"; };
 		2FAD221D233B12E300140359 /* FWIterator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWIterator.swift; sourceTree = "<group>"; };
 		2FAD221E233B12E300140359 /* FWIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWIterator.h; sourceTree = "<group>"; };
+		2FAD2225233B5FF500140359 /* FWTuple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTuple.h; sourceTree = "<group>"; };
+		2FAD2226233B5FF500140359 /* FWTuple.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTuple.m; sourceTree = "<group>"; };
 		2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+FWFramework.h"; sourceTree = "<group>"; };
 		2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+FWFramework.m"; sourceTree = "<group>"; };
 		2FB7CBC721C23728002E5412 /* FWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
@@ -950,6 +954,8 @@
 				2FBFB76622C6766B00E669B6 /* FWTest.h */,
 				2FBFB76722C6766B00E669B6 /* FWTest.m */,
 				2FBFB76B22C680A800E669B6 /* FWTest.swift */,
+				2FAD2225233B5FF500140359 /* FWTuple.h */,
+				2FAD2226233B5FF500140359 /* FWTuple.m */,
 			);
 			path = Kernel;
 			sourceTree = "<group>";
@@ -1196,6 +1202,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FAD2227233B5FF500140359 /* FWTuple.h in Headers */,
 				2FAD2221233B12E400140359 /* FWIterator.h in Headers */,
 				2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */,
 				2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */,
@@ -1611,6 +1618,7 @@
 				2FAD221F233B12E400140359 /* FWIterator.m in Sources */,
 				2FBFB70822C5045400E669B6 /* NSBundle+FWFramework.swift in Sources */,
 				2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */,
+				2FAD2228233B5FF500140359 /* FWTuple.m in Sources */,
 				2F03A5ED216CF4B9001965A1 /* FWKeychainManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

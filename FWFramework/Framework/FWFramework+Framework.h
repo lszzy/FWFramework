@@ -25,6 +25,7 @@
 #import "FWRouter.h"
 #import "FWState.h"
 #import "FWTest.h"
+#import "FWTuple.h"
 
 // Service
 #import "FWMutableArray.h"
