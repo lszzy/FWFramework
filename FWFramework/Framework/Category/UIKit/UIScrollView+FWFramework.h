@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Content
 
-// 单独禁用内边距适应，同上。如果iOS7-10的ScrollView占不满导航栏，需设置viewController.automaticallyAdjustsScrollViewInsets为NO即可
+// 单独禁用内边距适应，同上。如果iOS7-10的ScrollView占不满导航栏，需设置viewController.automaticallyAdjustsScrollViewInsets为NO即可。另外appearance设置时会影响到系统控制器如UIImagePickerController等
 - (void)fwContentInsetAdjustmentNever UI_APPEARANCE_SELECTOR;
 
 #pragma mark - Keyboard
