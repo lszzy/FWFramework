@@ -8,7 +8,33 @@
 
 #import "TestRouterViewController.h"
 
+@interface TestRouterResultViewController () <FWRouterProtocol>
+
+@end
+
 @implementation TestRouterResultViewController
+
++ (void)load
+{
+    [FWRouter registerClass:[self class]];
+}
+
+#pragma mark - Router
+
++ (id)fwRouterURL
+{
+    return AppRouter.ROUTE_CONTROLLER;
+}
+
++ (void)fwRouterHandler:(NSDictionary *)parameters
+{
+    TestRouterResultViewController *viewController = [TestRouterResultViewController new];
+    viewController.parameters = parameters;
+    viewController.title = [NSString stringWithFormat:@"app://controller/%@", parameters[@"id"]];
+    [FWRouter pushViewController:viewController animated:YES];
+}
+
+#pragma mark - Lifecycle
 
 - (void)viewDidLoad
 {
@@ -62,6 +88,7 @@
     [self.tableData addObjectsFromArray:@[
                                          @[@"打开Url", @"onOpen"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
+                                         @[@"打开Url，协议", @"onOpenController"],
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
                                          @[@"解析Url，获取Object", @"onOpenObject"],
                                          @[@"过滤Url", @"onOpenFilter"],
@@ -105,6 +132,11 @@
 - (void)onOpenWild
 {
     [FWRouter openURL:@"wildcard://not_found?id=1"];
+}
+
+- (void)onOpenController
+{
+    [FWRouter openURL:[FWRouter generateURL:AppRouter.ROUTE_CONTROLLER parameters:@1]];
 }
 
 - (void)onOpenCallback
