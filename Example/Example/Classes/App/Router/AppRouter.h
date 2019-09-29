@@ -16,5 +16,6 @@
 FWStaticString(ROUTE_TEST);
 FWStaticString(ROUTE_WILDCARD);
 FWStaticString(ROUTE_OBJECT);
+FWStaticString(ROUTE_CONTROLLER);
 
 @end

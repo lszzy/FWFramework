@@ -32,13 +32,50 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 #pragma mark - FWRouter
 
 /*!
- @brief URL路由
+ @brief URL路由协议
+ */
+@protocol FWRouterProtocol <NSObject>
+
+@optional
+
+// 支持的路由URL
++ (id)fwRouterURL;
+
+// 支持的Object路由URL
++ (id)fwRouterObjectURL;
+
+// 路由方法
++ (void)fwRouterHandler:(NSDictionary *)parameters;
+
+// 对象路由方法
++ (id)fwRouterObjectHandler:(NSDictionary *)parameters;
+
+@end
+
+/*!
+ @brief URL路由器
  
  @see https://github.com/meili/MGJRouter
  */
 @interface FWRouter : NSObject
 
-#pragma mark - Register
+#pragma mark - Class
+
+/**
+*  注册路由类，需要实现FWRouterProtocol协议
+*
+*  @param cls         路由类，需实现FWRouterProtocol协议
+*/
++ (void)registerClass:(Class)cls;
+
+/**
+ *  取消注册某个路由类
+ *
+ *  @param cls         路由类，需实现FWRouterProtocol协议
+ */
++ (void)unregisterClass:(Class)cls;
+
+#pragma mark - URL
 
 /**
  *  注册 pattern 对应的 Handler，在 handler 中可以初始化 VC，然后对 VC 做各种操作
@@ -61,7 +98,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 /**
  *  取消注册某个 pattern
  *
- *  @param pattern 字符串或字符串数组(批量)
+ *  @param pattern    字符串或字符串数组(批量)
  */
 + (void)unregisterURL:(id)pattern;
 
@@ -69,6 +106,8 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  取消注册所有 pattern
  */
 + (void)unregisterAllURLs;
+
+#pragma mark - Filter
 
 /**
  *  设置 过滤器 对应的 Handler，URL 调用时触发
