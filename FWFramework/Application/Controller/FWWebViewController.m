@@ -28,7 +28,10 @@
                                      @"webItems" : @"fwInnerWebItems",
                                      @"webRequest" : @"fwInnerWebRequest",
                                      @"setWebRequest:" : @"fwInnerSetWebRequest:",
-                                     @"renderWebLayout" : @"fwInnerRenderWebLayout"};
+                                     @"renderWebLayout" : @"fwInnerRenderWebLayout",
+                                     @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
+                                     @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
+                                     @"webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:"};
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
 
@@ -36,6 +39,7 @@
 {
     WKWebView *webView = [viewController webView];
     webView.navigationDelegate = viewController;
+    webView.UIDelegate = viewController;
     [viewController.view addSubview:webView];
     
     UIProgressView *progressView = [viewController progressView];
@@ -188,6 +192,35 @@
 {
     WKWebView *webView = [(id<FWWebViewController>)self webView];
     [webView fwPinEdgesToSuperview];
+}
+
+#pragma mark - WKUIDelegate
+
+- (void)fwInnerWebView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
+{
+    [self fwShowAlertWithTitle:nil message:message cancel:NSLocalizedString(@"关闭", nil) cancelBlock:^{
+        completionHandler();
+    }];
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
+{
+    [self fwShowConfirmWithTitle:nil message:message cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) confirmBlock:^{
+        completionHandler(YES);
+    } cancelBlock:^{
+        completionHandler(NO);
+    } priority:FWAlertPriorityNormal];
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *))completionHandler
+{
+    [self fwShowPromptWithTitle:nil message:prompt cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) promptBlock:^(UITextField *textField) {
+        textField.text = defaultText;
+    } confirmBlock:^(NSString *text) {
+        completionHandler(text);
+    } cancelBlock:^{
+        completionHandler(nil);
+    } priority:FWAlertPriorityNormal];
 }
 
 @end
