@@ -233,8 +233,6 @@
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
-		2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */; };
 		2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDDD2327864700498538 /* FWAppToastPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F70EDE02327864700498538 /* FWAppToastPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDDE2327864700498538 /* FWAppToastPlugin.m */; };
 		2F70EDE32327867100498538 /* FWAppRefreshPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -565,8 +563,6 @@
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
-		2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWAppearance.h"; sourceTree = "<group>"; };
-		2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWAppearance.m"; sourceTree = "<group>"; };
 		2F70EDDD2327864700498538 /* FWAppToastPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppToastPlugin.h; sourceTree = "<group>"; };
 		2F70EDDE2327864700498538 /* FWAppToastPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppToastPlugin.m; sourceTree = "<group>"; };
 		2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppRefreshPlugin.h; sourceTree = "<group>"; };
@@ -706,8 +702,6 @@
 			isa = PBXGroup;
 			children = (
 				2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */,
-				2F6F789F21CCA5B700298C81 /* UIApplication+FWAppearance.h */,
-				2F6F78A021CCA5B700298C81 /* UIApplication+FWAppearance.m */,
 				2F03A501216CF4B9001965A1 /* UIApplication+FWFramework.h */,
 				2F03A521216CF4B9001965A1 /* UIApplication+FWFramework.m */,
 				2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */,
@@ -1262,7 +1256,6 @@
 				2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */,
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
 				2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */,
-				2F6F78A121CCA5B700298C81 /* UIApplication+FWAppearance.h in Headers */,
 				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
 				2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */,
 				2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */,
@@ -1483,7 +1476,6 @@
 				2FBFB70D22C5141700E669B6 /* NSDate+FWFramework.swift in Sources */,
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
-				2F6F78A221CCA5B700298C81 /* UIApplication+FWAppearance.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
 				2F03A586216CF4B9001965A1 /* UIImage+FWGif.m in Sources */,
 				2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */,

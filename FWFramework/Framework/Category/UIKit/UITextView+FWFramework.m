@@ -273,7 +273,7 @@
     UIToolbar *toolbar = [UIToolbar new];
     toolbar.items = @[
                       [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-                      [[UIBarButtonItem alloc] initWithTitle:(title.length > 0 ? title : @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)],
+                      [[UIBarButtonItem alloc] initWithTitle:(title.length > 0 ? title : NSLocalizedString(@"完成", nil)) style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)],
                       ];
     toolbar.barStyle = barStyle;
     [toolbar sizeToFit];

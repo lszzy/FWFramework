@@ -14,8 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 网页视图控制器协议，可覆写
+ @discussion 默认实现并允许JS调用alert|confirm|prompt方法，如不需要可覆盖之
  */
-@protocol FWWebViewController <FWViewController, WKNavigationDelegate>
+@protocol FWWebViewController <FWViewController, WKNavigationDelegate, WKUIDelegate>
 
 @optional
 

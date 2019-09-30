@@ -15,6 +15,7 @@
 FWDefStaticString(ROUTE_TEST, @"app://test/:id");
 FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
 FWDefStaticString(ROUTE_OBJECT, @"object://test2");
+FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 
 + (void)load
 {
