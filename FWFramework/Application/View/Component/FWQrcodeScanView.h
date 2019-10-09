@@ -110,13 +110,13 @@
 
 @end
 
-typedef NS_ENUM(NSUInteger, FWQrcodeCornerLoaction) {
+typedef NS_ENUM(NSUInteger, FWQrcodeCornerLocation) {
     /// 默认与边框线同中心点
-    FWQrcodeCornerLoactionDefault,
+    FWQrcodeCornerLocationDefault,
     /// 在边框线内部
-    FWQrcodeCornerLoactionInside,
+    FWQrcodeCornerLocationInside,
     /// 在边框线外部
-    FWQrcodeCornerLoactionOutside
+    FWQrcodeCornerLocationOutside
 };
 
 typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
@@ -137,8 +137,8 @@ typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
 @property (nonatomic, copy) NSString *scanImageName;
 /** 边框颜色，默认白色 */
 @property (nonatomic, strong) UIColor *borderColor;
-/** 边角位置，默认 CornerLoactionDefault */
-@property (nonatomic, assign) FWQrcodeCornerLoaction cornerLocation;
+/** 边角位置，默认 CornerLocationDefault */
+@property (nonatomic, assign) FWQrcodeCornerLocation cornerLocation;
 /** 边角颜色，默认微信颜色 */
 @property (nonatomic, strong) UIColor *cornerColor;
 /** 边角宽度，默认 2.f */
