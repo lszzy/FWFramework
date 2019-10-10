@@ -51,7 +51,7 @@ extern NSString *const FWLocalizedLanguageChangedNotification;
 + (void)fwSetBundleFilter:(BOOL (^)(NSBundle *bundle))filter;
 
 // 设置全局bundle查找器，返回当前bundle实际使用语言，language为nil表示默认语言。需设置全局过滤器后才会生效
-+ (void)fwSetBundleFinder:(nullable NSString * (^)(NSBundle *bundle, NSString * _Nullable language))finder;
++ (void)fwSetBundleFinder:(nullable NSString * _Nullable (^)(NSBundle *bundle, NSString * _Nullable language))finder;
 
 // 根据语言加载当前bundle指定语言文件的bundle，加载失败返回nil
 - (nullable NSBundle *)fwLocalizedBundle:(nullable NSString *)language;
