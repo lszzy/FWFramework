@@ -26,6 +26,9 @@
 #import "FWModel.h"
 #import "FWDbModel.h"
 
+// ViewModel
+#import "FWViewModel.h"
+
 // View
 #import "FWView.h"
 #import "FWAttributedLabel.h"
