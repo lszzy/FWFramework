@@ -97,11 +97,11 @@ typedef void (^FWBlockParam)(id param);
 typedef void (^FWBlockBool)(BOOL isTrue);
 
 /*!
- @brief 通用int参数block
+ @brief 通用NSInteger参数block
  
- @param index int参数
+ @param index NSInteger参数
  */
-typedef void (^FWBlockInt)(int index);
+typedef void (^FWBlockInt)(NSInteger index);
 
 /*!
  @brief NSObject+FWBlock
