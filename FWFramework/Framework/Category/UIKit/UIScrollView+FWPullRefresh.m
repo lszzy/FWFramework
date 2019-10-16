@@ -454,14 +454,14 @@ static CGFloat FWPullRefreshViewHeight = 60;
 #pragma mark -
 
 - (void)startAnimating{
-    self.state = FWPullRefreshStateLoading;
-    
     if(fequalzero(self.scrollView.contentOffset.y + self.originalTopInset)) {
         [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -(self.frame.size.height + self.originalTopInset)) animated:YES];
         self.wasTriggeredByUser = NO;
     }
     else
         self.wasTriggeredByUser = YES;
+    
+    self.state = FWPullRefreshStateLoading;
 }
 
 - (void)stopAnimating {

@@ -160,6 +160,11 @@
     };
 }
 
+- (void)renderModel
+{
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(renderData)];
+}
+
 - (void)renderData
 {
     [self.tableView fwTriggerPullRefresh];
