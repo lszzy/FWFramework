@@ -16,57 +16,6 @@
 
 @implementation AppDelegate
 
-#pragma mark - UIApplicationDelegate
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
-    [self setupApplication:application options:launchOptions];
-    [self setupService];
-    [self setupController];
-    
-    [self.window makeKeyAndVisible];
-    return YES;
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    
-}
-
-#pragma mark - Notification
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-    [self setupDeviceToken:deviceToken error:nil];
-}
-
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-    [self setupDeviceToken:nil error:error];
-}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
@@ -76,23 +25,6 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
-}
-
-#pragma mark - openURL
-
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-    return [self handleOpenURL:url options:options];
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    return [self handleOpenURL:url options:nil];
-}
-
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    return [self handleOpenURL:url options:nil];
 }
 
 #pragma mark - Protected
