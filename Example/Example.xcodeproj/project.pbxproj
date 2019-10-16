@@ -31,7 +31,6 @@
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
 		2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */; };
-		2F4385652318F687003A683C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51D78B1E5C2357009FD40F /* AppDelegate.m */; };
 		2F4385662318F687003A683C /* ComplexView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C8217AC41D00BAEB59 /* ComplexView.m */; };
 		2F4385672318F687003A683C /* TestSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */; };
 		2F4385682318F687003A683C /* TestUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */; };
@@ -126,6 +125,8 @@
 		2F955BEE230E98F90019535A /* TestAttributedStringViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F955BED230E98F90019535A /* TestAttributedStringViewController.m */; };
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
+		2FA9A162235778B20089021F /* FlutterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA9A161235778B20089021F /* FlutterViewController.m */; };
+		2FA9A16523577A2C0089021F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA9A16423577A2C0089021F /* AppDelegate.m */; };
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
 		2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */; };
 		2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */; };
@@ -284,6 +285,9 @@
 		2FA32CC821B03B5B00C230EA /* AppRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppRouter.m; sourceTree = "<group>"; };
 		2FA32CCA21B0572900C230EA /* TestRouterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRouterViewController.h; sourceTree = "<group>"; };
 		2FA32CCB21B0572900C230EA /* TestRouterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterViewController.m; sourceTree = "<group>"; };
+		2FA9A160235778B20089021F /* FlutterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlutterViewController.h; sourceTree = "<group>"; };
+		2FA9A161235778B20089021F /* FlutterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlutterViewController.m; sourceTree = "<group>"; };
+		2FA9A16423577A2C0089021F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2FB38DBF215B7058009F0450 /* TestModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestModelViewController.h; sourceTree = "<group>"; };
 		2FB38DC0215B7058009F0450 /* TestModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestModelViewController.m; sourceTree = "<group>"; };
 		2FB7CBC321C21F44002E5412 /* TestBannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBannerViewController.h; sourceTree = "<group>"; };
@@ -671,6 +675,7 @@
 			children = (
 				2F51D78A1E5C2357009FD40F /* AppDelegate.h */,
 				2F51D78B1E5C2357009FD40F /* AppDelegate.m */,
+				2FA9A15E2357786B0089021F /* Flutter */,
 				2F4CFA60215531A100203A37 /* Config */,
 				2FA32CC621B03B4B00C230EA /* Router */,
 				2F4CFA5D215531A100203A37 /* Standard */,
@@ -739,6 +744,16 @@
 				2FA32CC821B03B5B00C230EA /* AppRouter.m */,
 			);
 			path = Router;
+			sourceTree = "<group>";
+		};
+		2FA9A15E2357786B0089021F /* Flutter */ = {
+			isa = PBXGroup;
+			children = (
+				2FA9A16423577A2C0089021F /* AppDelegate.m */,
+				2FA9A160235778B20089021F /* FlutterViewController.h */,
+				2FA9A161235778B20089021F /* FlutterViewController.m */,
+			);
+			path = Flutter;
 			sourceTree = "<group>";
 		};
 		2FC81A74235031D000BE660C /* ViewModel */ = {
@@ -1034,7 +1049,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F4385652318F687003A683C /* AppDelegate.m in Sources */,
+				2FA9A162235778B20089021F /* FlutterViewController.m in Sources */,
 				2F4385662318F687003A683C /* ComplexView.m in Sources */,
 				2F03EECA231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */,
 				2F4385672318F687003A683C /* TestSegmentViewController.m in Sources */,
@@ -1078,6 +1093,7 @@
 				2F43858D2318F687003A683C /* TestWebViewController.m in Sources */,
 				2F43858E2318F687003A683C /* TestLayerViewController.m in Sources */,
 				2F43858F2318F687003A683C /* TestBorderViewController.m in Sources */,
+				2FA9A16523577A2C0089021F /* AppDelegate.m in Sources */,
 				2F4385902318F687003A683C /* FWDatabaseManager.m in Sources */,
 				2F4385912318F687003A683C /* BaseScrollViewController.m in Sources */,
 				2F4385922318F687003A683C /* TestMapViewController.m in Sources */,

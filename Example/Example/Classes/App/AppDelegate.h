@@ -8,26 +8,17 @@
 
 #if APP_TARGET == 2
 
-#pragma mark - Flutter
-
-@import UIKit;
-@import Flutter;
+#import <Flutter/Flutter.h>
 
 @interface AppDelegate : FlutterAppDelegate
-
-@property (nonatomic, strong) FlutterEngine *flutterEngine;
 
 @end
 
 #else
 
-#pragma mark - Native
-
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (nonatomic, strong) UIWindow *window;
+@interface AppDelegate : FWAppDelegate
 
 @end
 
