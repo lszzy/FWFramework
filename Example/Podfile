@@ -1,11 +1,19 @@
 platform :ios, '8.0'
 use_frameworks!
 
-abstract_target "ExampleTarget" do
+# abstract_target "ExampleTarget" do
+    # pod 'FWFramework', :path => '../'
+    # pod 'FWDebug', :configurations => ['Debug']
+    # target "Example2"
+# end
 
-pod 'FWFramework', :path => '../'
-pod 'FWDebug', :configurations => ['Debug']
+# https://github.com/flutter/flutter/wiki/Add-Flutter-to-existing-apps
+flutter_application_path = '../example_flutter/'
+load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
 
-target "Example2"
+target "Example2" do
+    install_all_flutter_pods(flutter_application_path)
 
+    pod 'FWFramework', :path => '../'
+    pod 'FWDebug', :configurations => ['Debug']
 end

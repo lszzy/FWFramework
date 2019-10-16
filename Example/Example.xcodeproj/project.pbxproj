@@ -152,7 +152,7 @@
 		2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */; };
 		2FF98EF222FEADBD004B6BE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */; };
 		2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */; };
-		F6C8A85633FE10B7A5F226B0 /* Pods_ExampleTarget_Example2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5E47572232247E44BA209E0 /* Pods_ExampleTarget_Example2.framework */; };
+		F64EB154830FF9B2B4AF812F /* Pods_Example2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5835959153D77E6B5128A778 /* Pods_Example2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -329,8 +329,10 @@
 		2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestUrlViewController.h; sourceTree = "<group>"; };
 		2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestUrlViewController.m; sourceTree = "<group>"; };
+		5835959153D77E6B5128A778 /* Pods_Example2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CA343D5FA3CEDA31B56059E /* Pods-ExampleTarget-Example2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTarget-Example2.release.xcconfig"; path = "Target Support Files/Pods-ExampleTarget-Example2/Pods-ExampleTarget-Example2.release.xcconfig"; sourceTree = "<group>"; };
-		A5E47572232247E44BA209E0 /* Pods_ExampleTarget_Example2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTarget_Example2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		76F867C4E9631BF3E2CEC645 /* Pods-Example2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example2.debug.xcconfig"; path = "Target Support Files/Pods-Example2/Pods-Example2.debug.xcconfig"; sourceTree = "<group>"; };
+		A32C521AE70342DBCB189685 /* Pods-Example2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example2.release.xcconfig"; path = "Target Support Files/Pods-Example2/Pods-Example2.release.xcconfig"; sourceTree = "<group>"; };
 		C7467CF69594A156CF245F3C /* Pods-ExampleTarget-Example2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTarget-Example2.debug.xcconfig"; path = "Target Support Files/Pods-ExampleTarget-Example2/Pods-ExampleTarget-Example2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -339,7 +341,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6C8A85633FE10B7A5F226B0 /* Pods_ExampleTarget_Example2.framework in Frameworks */,
+				F64EB154830FF9B2B4AF812F /* Pods_Example2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,6 +762,8 @@
 			children = (
 				C7467CF69594A156CF245F3C /* Pods-ExampleTarget-Example2.debug.xcconfig */,
 				6CA343D5FA3CEDA31B56059E /* Pods-ExampleTarget-Example2.release.xcconfig */,
+				76F867C4E9631BF3E2CEC645 /* Pods-Example2.debug.xcconfig */,
+				A32C521AE70342DBCB189685 /* Pods-Example2.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -767,7 +771,7 @@
 		DB4A4532327B451409276D64 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A5E47572232247E44BA209E0 /* Pods_ExampleTarget_Example2.framework */,
+				5835959153D77E6B5128A778 /* Pods_Example2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -780,6 +784,7 @@
 			buildConfigurationList = 2F4385AF2318F687003A683C /* Build configuration list for PBXNativeTarget "Example2" */;
 			buildPhases = (
 				B831888E2BF0166FF6CED862 /* [CP] Check Pods Manifest.lock */,
+				02FD377B560A70BC7B707108 /* [CP-User] Run Flutter Build Script */,
 				2F4385642318F687003A683C /* Sources */,
 				2F4385A62318F687003A683C /* Frameworks */,
 				2F4385A82318F687003A683C /* Resources */,
@@ -960,24 +965,44 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		02FD377B560A70BC7B707108 /* [CP-User] Run Flutter Build Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/../example_flutter/.metadata",
+				"${SRCROOT}/../example_flutter/.ios/Flutter/App.framework/App",
+				"${SRCROOT}/../example_flutter/.ios/Flutter/engine/Flutter.framework/Flutter",
+				"${SRCROOT}/../example_flutter/.ios/Flutter/flutter_export_environment.sh",
+			);
+			name = "[CP-User] Run Flutter Build Script";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/../example_flutter/.ios/Flutter/flutter_export_environment.sh\"\n\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
+		};
 		63594EB9F1A8B5FB270B6F2D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ExampleTarget-Example2/Pods-ExampleTarget-Example2-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Example2/Pods-Example2-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FWDebug/FWDebug.framework",
 				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
+				"${PODS_ROOT}/../../example_flutter/.ios/Flutter/engine/Flutter.framework",
+				"${PODS_ROOT}/../../example_flutter/.ios/Flutter/App.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWDebug.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flutter.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/App.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExampleTarget-Example2/Pods-ExampleTarget-Example2-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Example2/Pods-Example2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B831888E2BF0166FF6CED862 /* [CP] Check Pods Manifest.lock */ = {
@@ -995,7 +1020,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ExampleTarget-Example2-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Example2-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1204,7 +1229,7 @@
 /* Begin XCBuildConfiguration section */
 		2F4385B02318F687003A683C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C7467CF69594A156CF245F3C /* Pods-ExampleTarget-Example2.debug.xcconfig */;
+			baseConfigurationReference = 76F867C4E9631BF3E2CEC645 /* Pods-Example2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1233,7 +1258,7 @@
 		};
 		2F4385B12318F687003A683C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CA343D5FA3CEDA31B56059E /* Pods-ExampleTarget-Example2.release.xcconfig */;
+			baseConfigurationReference = A32C521AE70342DBCB189685 /* Pods-Example2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
