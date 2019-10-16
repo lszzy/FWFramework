@@ -6,8 +6,27 @@
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
+#if APP_TARGET == 2
+
+#pragma mark - Flutter
+
+@import UIKit;
+@import Flutter;
+
+@interface AppDelegate : FWAppDelegate
+
+@property (nonatomic, strong) FlutterEngine *flutterEngine;
+
+@end
+
+#else
+
+#pragma mark - Native
+
 #import <UIKit/UIKit.h>
 
 @interface AppDelegate : FWAppDelegate
 
 @end
+
+#endif

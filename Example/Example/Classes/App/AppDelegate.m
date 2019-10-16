@@ -7,10 +7,24 @@
 //
 
 #import "AppDelegate.h"
-#import "ObjcController.h"
-#import "TestViewController.h"
 
-@interface AppDelegate () <UITabBarControllerDelegate>
+#if APP_TARGET == 2
+
+#pragma mark - AppDelegate+Flutter
+
+@interface AppDelegate ()
+
+@end
+
+@implementation AppDelegate
+
+@end
+
+#else
+
+#pragma mark - AppDelegate+Native
+
+@interface AppDelegate ()
 
 @end
 
@@ -27,7 +41,20 @@
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
 }
 
-#pragma mark - Protected
+@end
+
+#endif
+
+#pragma mark - AppDelegate+FWAppDelegate
+
+#import "ObjcController.h"
+#import "TestViewController.h"
+
+@interface AppDelegate (FWAppDelegate) <UITabBarControllerDelegate>
+
+@end
+
+@implementation AppDelegate (FWAppDelegate)
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
