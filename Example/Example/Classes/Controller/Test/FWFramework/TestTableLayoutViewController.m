@@ -255,6 +255,9 @@
         
         self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
+        if (!self.tableView.fwShowPullRefresh) {
+            self.navigationItem.rightBarButtonItem = nil;
+        }
     });
 }
 
