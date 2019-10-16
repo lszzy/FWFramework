@@ -50,10 +50,6 @@
 
 #pragma mark - FWPullRefreshView
 
-// fequal() and fequalzro() from http://stackoverflow.com/a/1614761/184130
-#define fequal(a,b) (fabs((a) - (b)) < FLT_EPSILON)
-#define fequalzero(a) (fabs(a) < FLT_EPSILON)
-
 static CGFloat FWPullRefreshViewHeight = 60;
 
 @interface FWPullRefreshView ()
@@ -77,7 +73,6 @@ static CGFloat FWPullRefreshViewHeight = 60;
 @property (nonatomic, readwrite) CGFloat originalTopInset;
 @property (nonatomic, readwrite) CGFloat pullingPercent;
 
-@property (nonatomic, assign) BOOL wasTriggeredByUser;
 @property (nonatomic, assign) BOOL showsPullToRefresh;
 @property(nonatomic, assign) BOOL isObserving;
 
@@ -116,7 +111,6 @@ static CGFloat FWPullRefreshViewHeight = 60;
         
         self.subtitles = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
         self.viewForState = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
-        self.wasTriggeredByUser = YES;
     }
     
     return self;
@@ -253,18 +247,17 @@ static CGFloat FWPullRefreshViewHeight = 60;
 - (void)resetScrollViewContentInset {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = self.originalTopInset;
-    [self setScrollViewContentInset:currentInsets pullingPercent:0 animated:YES];
+    [self setScrollViewContentInset:currentInsets pullingPercent:0];
 }
 
 - (void)setScrollViewContentInsetForLoading {
-    CGFloat offset = MAX(self.scrollView.contentOffset.y * -1, 0);
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
-    currentInsets.top = MIN(offset, self.originalTopInset + self.bounds.size.height);
-    [self setScrollViewContentInset:currentInsets pullingPercent:1 animated:YES];
+    currentInsets.top = self.originalTopInset + self.bounds.size.height;
+    [self setScrollViewContentInset:currentInsets pullingPercent:1];
 }
 
-- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent animated:(BOOL)animated {
-    [UIView animateWithDuration:animated ? 0.3 : 0.0
+- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent {
+    [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
@@ -318,10 +311,9 @@ static CGFloat FWPullRefreshViewHeight = 60;
         else if(contentOffset.y >= scrollOffsetThreshold && self.state == FWPullRefreshStateStopped)
             self.pullingPercent = MAX(MIN(1.f - (FWPullRefreshViewHeight + contentOffset.y) / FWPullRefreshViewHeight, 1.f), 0.f);
     } else {
-        CGFloat offset = MAX(self.scrollView.contentOffset.y * -1, 0.0f);
-        offset = MIN(offset, self.originalTopInset + self.bounds.size.height);
-        UIEdgeInsets contentInset = self.scrollView.contentInset;
-        self.scrollView.contentInset = UIEdgeInsetsMake(offset, contentInset.left, contentInset.bottom, contentInset.right);
+        UIEdgeInsets currentInset = self.scrollView.contentInset;
+        currentInset.top = self.originalTopInset + self.bounds.size.height;
+        self.scrollView.contentInset = currentInset;
     }
 }
 
@@ -454,12 +446,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 #pragma mark -
 
 - (void)startAnimating{
-    if(fequalzero(self.scrollView.contentOffset.y + self.originalTopInset)) {
-        [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -(self.frame.size.height + self.originalTopInset)) animated:YES];
-        self.wasTriggeredByUser = NO;
-    }
-    else
-        self.wasTriggeredByUser = YES;
+    [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -(self.frame.size.height + self.originalTopInset)) animated:YES];
     
     self.state = FWPullRefreshStateLoading;
 }
@@ -467,8 +454,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 - (void)stopAnimating {
     self.state = FWPullRefreshStateStopped;
     
-    if(!self.wasTriggeredByUser)
-        [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -self.originalTopInset) animated:YES];
+    [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -self.originalTopInset) animated:YES];
 }
 
 - (BOOL)isAnimating {
