@@ -22,9 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIViewController (FWFramework)
 
 /*!
- @brief 全局适配iOS13默认present样式(系统Automatic)，仅当未自定义modalPresentationStyle时生效
+ @brief 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
  */
-+ (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style;
+- (BOOL)fwIsViewVisible;
 
 /*!
  @brief 当前viewController是否是被以present的方式显示的，是则返回YES，否则返回NO
@@ -32,10 +32,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)fwIsPresented;
 
-/**
- *  视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
+#pragma mark - Present
+
+/*!
+ @brief 全局适配iOS13默认present样式(系统Automatic)，仅当未自定义modalPresentationStyle时生效
  */
-- (BOOL)fwIsViewVisible;
++ (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style;
+
+/*!
+ @brief 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效
+ @discussion 手工dismiss不会触发，iOS12及以下也不会触发(会触发生命周期方法)。会自动设置presentationController.delegate
+ */
+@property (nullable, nonatomic, copy) void (^fwPresentationDidDismiss)(void);
+
+#pragma mark - Popup
 
 /*!
  @brief 显示弹出视图到控制器，占满父视图。可使用self.view.window添加到窗口
