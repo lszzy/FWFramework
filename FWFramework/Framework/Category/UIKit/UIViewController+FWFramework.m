@@ -11,9 +11,50 @@
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWInnerPresentationTarget
+
+@interface FWInnerPresentationTarget : NSObject <UIAdaptivePresentationControllerDelegate>
+
+@end
+
+@implementation FWInnerPresentationTarget
+
+#pragma mark - UIAdaptivePresentationControllerDelegate
+
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
+{
+    if (presentationController.presentedViewController.fwPresentationDidDismiss) {
+        presentationController.presentedViewController.fwPresentationDidDismiss();
+    }
+}
+
+@end
+
+#pragma mark - UIViewController+FWFramework
+
 static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresentationFullScreen;
 
 @implementation UIViewController (FWFramework)
+
+- (BOOL)fwIsViewVisible
+{
+    return self.isViewLoaded && self.view.window;
+}
+
+- (BOOL)fwIsPresented
+{
+    UIViewController *viewController = self;
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.firstObject != self) {
+            return NO;
+        }
+        viewController = self.navigationController;
+    }
+    BOOL result = viewController.presentingViewController.presentedViewController == viewController;
+    return result;
+}
+
+#pragma mark - Present
 
 + (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style
 {
@@ -48,23 +89,30 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     [self fwInnerPresentViewController:viewController animated:animated completion:completion];
 }
 
-- (BOOL)fwIsPresented
+- (void (^)(void))fwPresentationDidDismiss
 {
-    UIViewController *viewController = self;
-    if (self.navigationController) {
-        if (self.navigationController.viewControllers.firstObject != self) {
-            return NO;
-        }
-        viewController = self.navigationController;
-    }
-    BOOL result = viewController.presentingViewController.presentedViewController == viewController;
-    return result;
+    return objc_getAssociatedObject(self, @selector(fwPresentationDidDismiss));
 }
 
-- (BOOL)fwIsViewVisible
+- (void)setFwPresentationDidDismiss:(void (^)(void))fwPresentationDidDismiss
 {
-    return self.isViewLoaded && self.view.window;
+    objc_setAssociatedObject(self, @selector(fwPresentationDidDismiss), fwPresentationDidDismiss, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (@available(iOS 13.0, *)) {
+        self.presentationController.delegate = self.fwInnerPresentationTarget;
+    }
 }
+
+- (FWInnerPresentationTarget *)fwInnerPresentationTarget
+{
+    FWInnerPresentationTarget *target = objc_getAssociatedObject(self, _cmd);
+    if (!target) {
+        target = [[FWInnerPresentationTarget alloc] init];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return target;
+}
+
+#pragma mark - Popup
 
 - (void)fwShowPopupView:(UIView *)popupView
 {
