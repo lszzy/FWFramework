@@ -32,7 +32,7 @@
     
     // 相机授权
     [[FWAuthorizeManager managerWithType:FWAuthorizeTypeCamera] authorize:^(FWAuthorizeStatus status) {
-        if (status != FWAuthorizeStatusAuthorized) {
+        if (status != FWAuthorizeStatusAuthorized && !FWIsSimulator) {
             [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:@"确定" cancelBlock:NULL];
         } else {
             [self setupScanManager];
@@ -195,6 +195,10 @@
             [self onScanResult:result];
         }
     }];
+    pickerController.fwPresentationDidDismiss = ^{
+        FWStrongifySelf();
+        [self startScanManager];
+    };
     [self presentViewController:pickerController animated:YES completion:nil];
 }
 
