@@ -32,7 +32,7 @@
     
     // 相机授权
     [[FWAuthorizeManager managerWithType:FWAuthorizeTypeCamera] authorize:^(FWAuthorizeStatus status) {
-        if (status != FWAuthorizeStatusAuthorized && !FWIsSimulator) {
+        if (status != FWAuthorizeStatusAuthorized) {
             [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:@"确定" cancelBlock:NULL];
         } else {
             [self setupScanManager];
