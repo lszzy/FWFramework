@@ -288,6 +288,8 @@
 		2FBFB77922C71A3500E669B6 /* UIView+FWLayoutChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */; };
 		2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */; };
+		2FC81A7D235032EF00BE660C /* FWViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC81A7B235032EF00BE660C /* FWViewModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FC81A7E235032EF00BE660C /* FWViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC81A7C235032EF00BE660C /* FWViewModel.m */; };
 		2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE513021D3746B009EA65E /* FWDatabase.m */; };
 		2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513221D3746B009EA65E /* FWDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FCE513921D3A41D009EA65E /* FWDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -619,6 +621,8 @@
 		2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+FWLayoutChain.swift"; sourceTree = "<group>"; };
 		2FC5E005221551D9008A56A7 /* UINavigationController+FWBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWBar.h"; sourceTree = "<group>"; };
 		2FC5E006221551D9008A56A7 /* UINavigationController+FWBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWBar.m"; sourceTree = "<group>"; };
+		2FC81A7B235032EF00BE660C /* FWViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWViewModel.h; sourceTree = "<group>"; };
+		2FC81A7C235032EF00BE660C /* FWViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWViewModel.m; sourceTree = "<group>"; };
 		2FCE513021D3746B009EA65E /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FCE513221D3746B009EA65E /* FWDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabase.h; sourceTree = "<group>"; };
 		2FCE513921D3A41D009EA65E /* FWDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabasePool.h; sourceTree = "<group>"; };
@@ -962,6 +966,7 @@
 				2F03A574216CF4B9001965A1 /* Controller */,
 				2F03A575216CF4B9001965A1 /* Model */,
 				2F03A576216CF4B9001965A1 /* View */,
+				2FC81A732350314500BE660C /* ViewModel */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -1116,6 +1121,15 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		2FC81A732350314500BE660C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2FC81A7B235032EF00BE660C /* FWViewModel.h */,
+				2FC81A7C235032EF00BE660C /* FWViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		2FCE512F21D3746B009EA65E /* Database */ = {
 			isa = PBXGroup;
 			children = (
@@ -1196,6 +1210,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FC81A7D235032EF00BE660C /* FWViewModel.h in Headers */,
 				2FAD2227233B5FF500140359 /* FWTuple.h in Headers */,
 				2FAD2221233B12E400140359 /* FWCoroutine.h in Headers */,
 				2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */,
@@ -1513,6 +1528,7 @@
 				2F6492AD2316880C002E15AC /* FWCollectionViewController.m in Sources */,
 				2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */,
 				2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */,
+				2FC81A7E235032EF00BE660C /* FWViewModel.m in Sources */,
 				2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */,
 				2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */,
 				2F03A5FD216CF4B9001965A1 /* FWState.m in Sources */,
