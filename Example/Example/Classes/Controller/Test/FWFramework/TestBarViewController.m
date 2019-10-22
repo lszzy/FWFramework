@@ -77,9 +77,11 @@ FWPropertyAssign(BOOL, hideToast);
     self.fwTabBarHidden = YES;
     [self refreshBarFrame];
     
-    [self fwSetRightBarItem:@"启用" block:^(id sender) {
-        [UINavigationController fwEnableNavigationBarTransition];
-    }];
+    if (!self.hideToast) {
+        [self fwSetRightBarItem:@"启用" block:^(id sender) {
+            [UINavigationController fwEnableNavigationBarTransition];
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -130,9 +132,10 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"工具栏切换", @"onToolBar"],
                                          @[@"导航栏转场", @"onTransitionBar"],
                                          ]];
-    if (self.navigationController) {
+    if (!self.hideToast) {
         [self.tableData addObject:@[@"Present(默认)", @"onPresent"]];
         [self.tableData addObject:@[@"Present(全屏)", @"onPresent2"]];
+        [self.tableData addObject:@[@"Present(导航栏)", @"onPresent3"]];
     } else {
         [self.tableData addObject:@[@"Dismiss", @"onDismiss"]];
     }
@@ -225,6 +228,14 @@ FWPropertyAssign(BOOL, hideToast);
 - (void)onPresent
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.fwPresentationDidDismiss = ^{
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwPresentationDidDismiss"]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    };
+    viewController.fwDismissBlock = ^{
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwDismissBlock"]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    };
     viewController.hideToast = YES;
     [self presentViewController:viewController animated:YES completion:nil];
 }
@@ -235,6 +246,22 @@ FWPropertyAssign(BOOL, hideToast);
     viewController.hideToast = YES;
     viewController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (void)onPresent3
+{
+    TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    navController.fwPresentationDidDismiss = ^{
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwPresentationDidDismiss"]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    };
+    navController.fwDismissBlock = ^{
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwDismissBlock"]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    };
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (void)onDismiss

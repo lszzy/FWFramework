@@ -195,6 +195,10 @@
             [self onScanResult:result];
         }
     }];
+    pickerController.fwPresentationDidDismiss = ^{
+        FWStrongifySelf();
+        [self startScanManager];
+    };
     [self presentViewController:pickerController animated:YES completion:nil];
 }
 

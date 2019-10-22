@@ -69,12 +69,9 @@
 
 - (void)setupController
 {
-    // 自动布局适配RTL
     [UIView fwAutoLayoutRTL:YES];
-    // 统一设置导航栏样式
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
-    // 初始化tabBar控制器
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
@@ -90,11 +87,8 @@
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
     tabBarController.delegate = self;
-    // present时隐藏tabBar
     tabBarController.definesPresentationContext = YES;
     tabBarController.viewControllers = @[homeNav, testNav];
-    
-    // 设置主控制器
     self.window.backgroundColor = [UIColor whiteColor];
     self.window.rootViewController = tabBarController;
 }

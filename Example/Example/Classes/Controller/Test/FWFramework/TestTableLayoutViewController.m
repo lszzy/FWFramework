@@ -160,6 +160,11 @@
     };
 }
 
+- (void)renderModel
+{
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(renderData)];
+}
+
 - (void)renderData
 {
     [self.tableView fwTriggerPullRefresh];
@@ -250,6 +255,9 @@
         
         self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];
+        if (!self.tableView.fwShowPullRefresh) {
+            self.navigationItem.rightBarButtonItem = nil;
+        }
     });
 }
 

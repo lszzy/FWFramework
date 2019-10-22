@@ -306,7 +306,7 @@
 {
     _scanAnimationStyle = FWQrcodeScanAnimationStyleDefault;
     _borderColor = [UIColor whiteColor];
-    _cornerLocation = FWQrcodeCornerLoactionDefault;
+    _cornerLocation = FWQrcodeCornerLocationDefault;
     _cornerColor = [UIColor colorWithRed:85/255.0f green:183/255.0 blue:55/255.0 alpha:1.0];
     _cornerWidth = 2.0;
     _backgroundAlpha = 0.5;
@@ -364,11 +364,11 @@
     
     CGFloat insideExcess = fabs(0.5 * (self.cornerWidth - borderLineW));
     CGFloat outsideExcess = 0.5 * (borderLineW + self.cornerWidth);
-    if (self.cornerLocation == FWQrcodeCornerLoactionInside) {
+    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
         [leftTopPath moveToPoint:CGPointMake(borderX + insideExcess, borderY + cornerLenght + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLenght + insideExcess, borderY + insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLoactionOutside) {
+    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
         [leftTopPath moveToPoint:CGPointMake(borderX - outsideExcess, borderY + cornerLenght - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLenght - outsideExcess, borderY - outsideExcess)];
@@ -385,11 +385,11 @@
     leftBottomPath.lineWidth = self.cornerWidth;
     [self.cornerColor set];
     
-    if (self.cornerLocation == FWQrcodeCornerLoactionInside) {
+    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
         [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLenght + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - cornerLenght - insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLoactionOutside) {
+    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
         [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLenght - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH - cornerLenght + outsideExcess)];
@@ -406,11 +406,11 @@
     rightTopPath.lineWidth = self.cornerWidth;
     [self.cornerColor set];
     
-    if (self.cornerLocation == FWQrcodeCornerLoactionInside) {
+    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
         [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLenght - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + cornerLenght + insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLoactionOutside) {
+    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
         [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLenght + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + cornerLenght - outsideExcess)];
@@ -427,11 +427,11 @@
     rightBottomPath.lineWidth = self.cornerWidth;
     [self.cornerColor set];
     
-    if (self.cornerLocation == FWQrcodeCornerLoactionInside) {
+    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
         [rightBottomPath moveToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - cornerLenght - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLenght - insideExcess, borderY + borderH - insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLoactionOutside) {
+    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
         [rightBottomPath moveToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH - cornerLenght + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLenght + outsideExcess, borderY + borderH + outsideExcess)];
