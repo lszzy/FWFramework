@@ -46,8 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) void (^fwPresentationDidDismiss)(void);
 
 /*!
- @brief 设置手工dismiss完成回调block，优先级viewController大于navigationController
- @discussion iOS13默认present手势下拉dismiss时不会触发，仅手工dismiss触发
+ @brief 设置手工dismiss完成回调block，优先级presented大于self，viewController大于navigationController
+ @discussion 仅当控制器自身被dismiss时才会触发，如果有presented控制器，会触发presented控制器的对应block。iOS13默认present手势下拉dismiss时不会触发
  */
 @property (nullable, nonatomic, copy) void (^fwDismissBlock)(void);
 
