@@ -131,7 +131,8 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 
 - (void)fwInnerDismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion
 {
-    void (^dismissBlock)(void) = self.fwDismissBlock ?: self.navigationController.fwDismissBlock;
+    UIViewController *viewController = self.presentedViewController ?: self;
+    void (^dismissBlock)(void) = viewController.fwDismissBlock ?: viewController.navigationController.fwDismissBlock;
     if (dismissBlock) {
         [self fwInnerDismissViewControllerAnimated:flag completion:^{
             if (completion) completion();
