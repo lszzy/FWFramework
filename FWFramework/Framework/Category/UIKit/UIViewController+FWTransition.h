@@ -122,8 +122,11 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 正在交互方向，手势开始才会标记为滑动方向，手势结束标记为0
 @property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection interactiveDirection;
 
+// 交互pan手势，调用interactWithViewController之后才存在
+@property (nullable, nonatomic, weak, readonly) UIPanGestureRecognizer *interactiveGestureRecognizer;
+
 // 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
-- (nullable UIPanGestureRecognizer *)interactWithViewController:(nullable UIViewController *)viewController;
+- (void)interactWithViewController:(UIViewController *)viewController;
 
 @end
 
