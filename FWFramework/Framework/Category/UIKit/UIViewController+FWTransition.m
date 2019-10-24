@@ -376,15 +376,16 @@
     return self;
 }
 
-- (UIPanGestureRecognizer *)interactWithViewController:(UIViewController *)viewController
+- (void)interactWithViewController:(UIViewController *)viewController
 {
-    if (!viewController.view) {
-        return nil;
+    if (!viewController.view) return;
+    for (UIGestureRecognizer *gestureRecognizer in viewController.view.gestureRecognizers) {
+        if (gestureRecognizer == self.interactiveGestureRecognizer) return;
     }
     
     UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
+    _interactiveGestureRecognizer = gestureRecognizer;
     [viewController.view addGestureRecognizer:gestureRecognizer];
-    return gestureRecognizer;
 }
 
 - (void)gestureRecognizeAction:(UIPanGestureRecognizer *)gestureRecognizer
