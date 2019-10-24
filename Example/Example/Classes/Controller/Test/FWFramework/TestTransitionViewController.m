@@ -7,8 +7,11 @@
 //
 
 #import "TestTransitionViewController.h"
+#import "BaseScrollViewController.h"
 
-@interface TestFullScreenViewController : BaseViewController
+@interface TestFullScreenViewController : BaseScrollViewController
+
+@property (nonatomic, assign) BOOL canScroll;
 
 @end
 
@@ -16,15 +19,14 @@
 
 - (void)renderView
 {
+    self.scrollView.scrollEnabled = self.canScroll;
+    
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 6;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
-    [self.view addSubview:cycleView];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0];
-    [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
-    [cycleView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
-    [cycleView fwSetDimension:NSLayoutAttributeHeight toSize:200];
+    [self.contentView addSubview:cycleView];
+    cycleView.fwLayoutChain.left().top().width(FWScreenWidth).height(200);
     
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
@@ -33,6 +35,21 @@
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
     cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
+    
+    UIView *footerView = [UIView fwAutoLayoutView];
+    footerView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:footerView];
+    footerView.fwLayoutChain.left().bottom().topToBottomOfView(cycleView).width(FWScreenWidth).height(1000);
+    
+    // 添加视图
+    UIButton *button = [UIButton fwAutoLayoutView];
+    button.backgroundColor = [UIColor appColorWhite];
+    button.titleLabel.font = [UIFont appFontNormal];
+    [button setTitleColor:[UIColor appColorBlackOpacityLarge] forState:UIControlStateNormal];
+    [button setTitle:@"点击背景关闭" forState:UIControlStateNormal];
+    [footerView addSubview:button];
+    [button fwSetDimensionsToSize:CGSizeMake(200, 100)];
+    [button fwAlignCenterToSuperview];
 }
 
 - (void)viewDidLoad
@@ -60,16 +77,6 @@
         FWStrongifySelf();
         [self fwCloseViewControllerAnimated:YES];
     }];
-    
-    // 添加视图
-    UIButton *button = [UIButton fwAutoLayoutView];
-    button.backgroundColor = [UIColor appColorWhite];
-    button.titleLabel.font = [UIFont appFontNormal];
-    [button setTitleColor:[UIColor appColorBlackOpacityLarge] forState:UIControlStateNormal];
-    [button setTitle:@"点击背景关闭" forState:UIControlStateNormal];
-    [self.view addSubview:button];
-    [button fwSetDimensionsToSize:CGSizeMake(200, 100)];
-    [button fwAlignCenterToSuperview];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -251,6 +258,8 @@
     };
     transition.outInteractiveTransition = interactiveTransition;
     vc.fwModalTransition = transition;
+    vc.canScroll = YES;
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
