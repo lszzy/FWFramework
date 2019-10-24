@@ -379,6 +379,7 @@
 - (void)interactWithViewController:(UIViewController *)viewController
 {
     if (!viewController.view) return;
+    
     for (UIGestureRecognizer *gestureRecognizer in viewController.view.gestureRecognizers) {
         if (gestureRecognizer == self.interactiveGestureRecognizer) return;
     }
