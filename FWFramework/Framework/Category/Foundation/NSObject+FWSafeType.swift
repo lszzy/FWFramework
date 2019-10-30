@@ -16,7 +16,7 @@ public protocol FWSafelyUnwrappable: Equatable {
 
 /// 可选值安全解包扩展
 extension Optional where Wrapped: FWSafelyUnwrappable {
-    /// 当值为nil时，会返回默认值。注意可选链调用时可能不会触发，推荐使用FWSafeValue
+    /// 获取安全值。当值为nil时，会返回默认值。注意可选链调用时可能不会触发
     public func fwSafeValue() -> Wrapped {
         if let value = self {
             return value
@@ -25,7 +25,7 @@ extension Optional where Wrapped: FWSafelyUnwrappable {
         }
     }
     
-    /// 判断对象是否非空。当值为nil时，会返回false。注意可选链调用时可能不会触发，推荐使用FWIsNotEmpty
+    /// 判断对象是否非空。当值为nil时，会返回false。注意可选链调用时可能不会触发
     public func fwIsNotEmpty() -> Bool {
         if let value = self {
             return value != Wrapped.fwUnwrappedValue;
