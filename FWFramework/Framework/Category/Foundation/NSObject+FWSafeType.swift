@@ -8,29 +8,21 @@
 
 import Foundation
 
+// MARK: - FWSafelyUnwrappable
+
 /// 安全解包协议
-public protocol FWSafelyUnwrappable: Equatable {
-    // 提供安全解包默认值
-    static var fwUnwrappedValue: Self { get }
+public protocol FWSafelyUnwrappable {
+    // 提供安全默认值
+    static var fwSafeValue: Self { get }
 }
 
-/// 可选值安全解包扩展
 extension Optional where Wrapped: FWSafelyUnwrappable {
-    /// 获取安全值。当值为nil时，会返回默认值。注意可选链调用时可能不会触发
+    /// 获取安全值。当值为nil时，会返回默认值。注意可选链调用时可能不会触发，推荐使用FWSafeValue
     public func fwSafeValue() -> Wrapped {
         if let value = self {
             return value
         } else {
-            return Wrapped.fwUnwrappedValue
-        }
-    }
-    
-    /// 判断对象是否非空。当值为nil时，会返回false。注意可选链调用时可能不会触发
-    public func fwIsNotEmpty() -> Bool {
-        if let value = self {
-            return value != Wrapped.fwUnwrappedValue;
-        } else {
-            return false
+            return Wrapped.fwSafeValue
         }
     }
 }
@@ -41,52 +33,96 @@ public func FWSafeValue<T: FWSafelyUnwrappable>(_ value: T?) -> T {
     return value.fwSafeValue()
 }
 
+// MARK: - FWSafelyEquatable
+
+/// 安全判断协议
+public protocol FWSafelyEquatable {
+    // 判断对象是否非空
+    func fwIsNotEmpty() -> Bool
+}
+
+extension Optional where Wrapped: FWSafelyEquatable {
+    /// 判断对象是否非空。当值为nil时，会返回false。注意可选链调用时可能不会触发，推荐使用FWIsNotEmpty
+    public func fwIsNotEmpty() -> Bool {
+        if let value = self {
+            return value.fwIsNotEmpty()
+        } else {
+            return false
+        }
+    }
+}
+
 /// 当值为nil时，会返回false
 /// - Parameter value: 实现了安全判断协议的可选对象
-public func FWIsNotEmpty<T: FWSafelyUnwrappable>(_ value: T?) -> Bool {
+public func FWIsNotEmpty<T: FWSafelyEquatable>(_ value: T?) -> Bool {
     return value.fwIsNotEmpty()
 }
 
-/// 常用类实现安全解包协议
-extension Int: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Int = .zero
+// MARK: - NSObject+FWSafeType
+
+/// 常用类实现安全解包和安全判断协议
+extension Int: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Int = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Int8: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Int8 = .zero
+extension Int8: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Int8 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Int16: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Int16 = .zero
+extension Int16: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Int16 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Int32: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Int32 = .zero
+extension Int32: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Int32 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Int64: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Int64 = .zero
+extension Int64: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Int64 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension UInt: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: UInt = .zero
+extension UInt: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: UInt = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension UInt8: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: UInt8 = .zero
+extension UInt8: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: UInt8 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension UInt16: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: UInt16 = .zero
+extension UInt16: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: UInt16 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension UInt32: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: UInt32 = .zero
+extension UInt32: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: UInt32 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension UInt64: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: UInt64 = .zero
+extension UInt64: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: UInt64 = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Float: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Float = .zero
+extension Float: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Float = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Double: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Double = .zero
+extension Double: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Double = .zero
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension Bool: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: Bool = false
+extension Bool: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: Bool = false
+    public func fwIsNotEmpty() -> Bool { return self != Self.fwSafeValue }
 }
-extension String: FWSafelyUnwrappable {
-    public static var fwUnwrappedValue: String = ""
+extension String: FWSafelyUnwrappable, FWSafelyEquatable {
+    public static var fwSafeValue: String = ""
+    public func fwIsNotEmpty() -> Bool { return !self.isEmpty }
+}
+extension Array: FWSafelyEquatable {
+    public func fwIsNotEmpty() -> Bool { return !self.isEmpty }
+}
+extension Set: FWSafelyEquatable {
+    public func fwIsNotEmpty() -> Bool { return !self.isEmpty }
+}
+extension Dictionary: FWSafelyEquatable {
+    public func fwIsNotEmpty() -> Bool { return !self.isEmpty }
 }
