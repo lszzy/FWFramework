@@ -241,6 +241,7 @@
 		2F70EDE82327882F00498538 /* FWAppLoadingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */; };
 		2F71FD8A22E2E64400E905BE /* FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F71FD8822E2E64400E905BE /* FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F71FD8B22E2E64400E905BE /* FWDrawerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F71FD8922E2E64400E905BE /* FWDrawerView.m */; };
+		2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
 		2FA99D9D228A753B0059DFDB /* FWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -573,6 +574,7 @@
 		2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppLoadingPlugin.m; sourceTree = "<group>"; };
 		2F71FD8822E2E64400E905BE /* FWDrawerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDrawerView.h; sourceTree = "<group>"; };
 		2F71FD8922E2E64400E905BE /* FWDrawerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDrawerView.m; sourceTree = "<group>"; };
+		2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+FWSafeType.swift"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
 		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
@@ -857,6 +859,7 @@
 				2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */,
 				2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */,
 				2F03A54D216CF4B9001965A1 /* NSObject+FWSafeType.m */,
+				2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */,
 				2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */,
 				2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */,
 				2F03A54B216CF4B9001965A1 /* NSString+FWEncrypt.h */,
@@ -1578,6 +1581,7 @@
 				2F0FFF3121D20EA800049383 /* NSAttributedString+FWFramework.m in Sources */,
 				2F03A5B8216CF4B9001965A1 /* UIApplication+FWFramework.m in Sources */,
 				2F1E61FA22AE90F400A1AB49 /* FWAsyncUdpSocket.m in Sources */,
+				2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */,
 				2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */,
