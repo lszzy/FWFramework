@@ -12,7 +12,7 @@ import Foundation
 public protocol FWSafelyUnwrappable {
     // 提供安全默认值
     static var fwSafeValue: Self { get }
-    // 判断对象是否为空
+    // 判断对象是否为空(nil或默认值)
     func fwIsEmpty() -> Bool
 }
 
@@ -26,7 +26,7 @@ extension Optional where Wrapped: FWSafelyUnwrappable {
         }
     }
     
-    /// 判断对象是否为空。当值为nil时，会返回true。注意可选链调用时可能不会触发，推荐使用FWIsEmpty
+    /// 判断对象是否为空(nil或默认值)。注意可选链调用时可能不会触发，推荐使用FWIsEmpty
     public func fwIsEmpty() -> Bool {
         if let value = self {
             return value.fwIsEmpty()
@@ -36,16 +36,29 @@ extension Optional where Wrapped: FWSafelyUnwrappable {
     }
 }
 
-/// 当值为nil时，会返回默认值
+extension Optional {
+    /// 判断对象是否为nil。注意可选链调用时可能不会触发，推荐使用FWIsNil
+    public func fwIsNil() -> Bool {
+        return self == nil
+    }
+}
+
+/// 获取安全值。当值为nil时，会返回默认值
 /// - Parameter value: 实现了安全解包协议的可选对象
 public func FWSafeValue<T: FWSafelyUnwrappable>(_ value: T?) -> T {
     return value.fwSafeValue()
 }
 
-/// 当值为nil时，会返回true
+/// 判断对象是否为空(nil或默认值)
 /// - Parameter value: 实现了安全解包协议的可选对象
 public func FWIsEmpty<T: FWSafelyUnwrappable>(_ value: T?) -> Bool {
     return value.fwIsEmpty()
+}
+
+/// 判断对象是否为nil
+/// - Parameter value: 可选对象
+public func FWIsNil(_ value: Any?) -> Bool {
+    return value.fwIsNil()
 }
 
 /// 常用类实现安全解包协议
