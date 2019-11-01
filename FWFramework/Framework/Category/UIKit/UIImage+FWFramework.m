@@ -73,11 +73,14 @@ UIImage * FWImageFile(NSString *path) {
 {
     if (!view) return nil;
     
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0);
-    // iOS7+：是否更新屏幕后再截图，效率高
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-    // iOS6+：截取当前状态，效率低
-    // [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
+    if (view.window) {
+        // iOS7+：更新屏幕后再截图，防止刚添加还未显示时截图失败，效率高
+        [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    } else {
+        // iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
+        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    }
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
@@ -112,10 +115,13 @@ UIImage * FWImageFile(NSString *path) {
     CGContextConcatCTM(context, view.transform);
     CGPoint anchorPoint = view.layer.anchorPoint;
     CGContextTranslateCTM(context, -actureBounds.size.width * anchorPoint.x, -actureBounds.size.height * anchorPoint.y);
-    // iOS7+：是否更新屏幕后再截图，效率高
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-    // iOS6+：截取当前状态，效率低
-    // [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    if (view.window) {
+        // iOS7+：更新屏幕后再截图，防止刚添加还未显示时截图失败，效率高
+        [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    } else {
+        // iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
+        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    }
     UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     // 截图完成
