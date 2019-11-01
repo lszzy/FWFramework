@@ -117,19 +117,20 @@ NS_ASSUME_NONNULL_BEGIN
             toPosition:(CGFloat)toPosition;
 
 /*!
- @brief 设置抽屉拖拽效果，起点时只移动位置，终点时可拖拽内容
+ @brief 设置二级抽屉拖拽效果，起点时只移动位置，终点时可拖拽内容
  
  @param direction 拖拽方向，如向上拖动视图时为Up
  @param fromPosition 相对于父视图的起点originY位置
  @param toPosition 相对于父视图的终点originY位置
  @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
  @param callback 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
+ @return 自动添加的pan手势对象
  */
-- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
-        fromPosition:(CGFloat)fromPosition
-          toPosition:(CGFloat)toPosition
-      kickbackHeight:(CGFloat)kickbackHeight
-            callback:(nullable void (^)(CGFloat position, BOOL finished))callback;
+- (UIPanGestureRecognizer *)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
+                            fromPosition:(CGFloat)fromPosition
+                              toPosition:(CGFloat)toPosition
+                          kickbackHeight:(CGFloat)kickbackHeight
+                                callback:(nullable void (^)(CGFloat position, BOOL finished))callback;
 
 @end
 

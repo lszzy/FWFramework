@@ -391,15 +391,16 @@
     return distance;
 }
 
-- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
-        fromPosition:(CGFloat)fromPosition
-          toPosition:(CGFloat)toPosition
-      kickbackHeight:(CGFloat)kickbackHeight
-            callback:(void (^)(CGFloat, BOOL))callback
+- (UIPanGestureRecognizer *)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
+                            fromPosition:(CGFloat)fromPosition
+                              toPosition:(CGFloat)toPosition
+                          kickbackHeight:(CGFloat)kickbackHeight
+                                callback:(void (^)(CGFloat, BOOL))callback
 {
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
     [self addGestureRecognizer:panGesture];
+    return panGesture;
 }
 
 @end
