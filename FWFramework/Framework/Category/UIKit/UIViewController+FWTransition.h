@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection interactiveDirection;
 
 // 交互pan手势，调用interactWithViewController之后才存在
-@property (nullable, nonatomic, weak, readonly) UIPanGestureRecognizer *interactiveGestureRecognizer;
+@property (nullable, nonatomic, weak, readonly) UIPanGestureRecognizer *gestureRecognizer;
 
 // 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
 - (void)interactWithViewController:(UIViewController *)viewController;

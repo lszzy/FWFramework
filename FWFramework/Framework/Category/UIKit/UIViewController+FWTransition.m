@@ -381,11 +381,11 @@
     if (!viewController.view) return;
     
     for (UIGestureRecognizer *gestureRecognizer in viewController.view.gestureRecognizers) {
-        if (gestureRecognizer == self.interactiveGestureRecognizer) return;
+        if (gestureRecognizer == self.gestureRecognizer) return;
     }
     
     UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
-    _interactiveGestureRecognizer = gestureRecognizer;
+    _gestureRecognizer = gestureRecognizer;
     [viewController.view addGestureRecognizer:gestureRecognizer];
 }
 
