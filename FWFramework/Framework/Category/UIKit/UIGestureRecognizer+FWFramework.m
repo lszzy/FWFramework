@@ -83,20 +83,47 @@
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
 }
 
-- (CGFloat)fromPosition
-{
-    return [self.positions.firstObject doubleValue];
-}
-
-- (CGFloat)toPosition
-{
-    return [self.positions.lastObject doubleValue];
-}
-
 - (CGFloat)openPosition
 {
-    // 计算打开位置，正向拖动时toPosition，反向拖动时fromPosition
-    return self.isReverse ? self.fromPosition : self.toPosition;
+    // 计算打开位置，正向拖动时终点位置，反向拖动时起始位置
+    return self.isReverse ? self.positions.firstObject.doubleValue : self.positions.lastObject.doubleValue;
+}
+
+- (CGFloat)closePosition
+{
+    // 计算关闭位置，正向拖动时起始位置，反向拖动时终点位置
+    return self.isReverse ? self.positions.lastObject.doubleValue : self.positions.firstObject.doubleValue;
+}
+
+- (CGFloat)nextPosition
+{
+    // 计算回弹范围，超出此范围才改变停留位置
+    CGFloat minKickback = (self.originPosition == self.positions.firstObject.doubleValue) ? self.originPosition : self.originPosition - self.kickbackHeight;
+    CGFloat maxKickback = (self.originPosition == self.positions.lastObject.doubleValue) ? self.originPosition : self.originPosition + self.kickbackHeight;
+    
+    __block CGFloat position;
+    if (self.position >= minKickback && self.position <= maxKickback) {
+        position = self.originPosition;
+    } else {
+        if (self.position > self.originPosition) {
+            position = self.positions.lastObject.doubleValue;
+            [self.positions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+                if (obj.doubleValue > self.position) {
+                    position = obj.doubleValue;
+                    *stop = YES;
+                }
+            }];
+        } else {
+            position = self.positions.firstObject.doubleValue;
+            [self.positions enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+                if (obj.doubleValue < self.position) {
+                    position = obj.doubleValue;
+                    *stop = YES;
+                }
+            }];
+        }
+    }
+    return position;
 }
 
 #pragma mark - Public
@@ -147,10 +174,10 @@
             }
                 
             // 移动时限制不超过范围
-            if (self.position < self.fromPosition) {
-                self.position = self.fromPosition;
-            } else if (self.position > self.toPosition) {
-                self.position = self.toPosition;
+            if (self.position < self.positions.firstObject.doubleValue) {
+                self.position = self.positions.firstObject.doubleValue;
+            } else if (self.position > self.positions.lastObject.doubleValue) {
+                self.position = self.positions.lastObject.doubleValue;
             }
                 
             // 执行位移并回调
@@ -173,8 +200,7 @@
                 }
             // 停留位置发生改变时执行动画，动画完成后回调
             } else {
-                CGFloat baseline = (self.originPosition == self.fromPosition) ? (self.fromPosition + self.kickbackHeight) : (self.toPosition - self.kickbackHeight);
-                CGFloat position = (self.position < baseline) ? self.fromPosition : self.toPosition;
+                CGFloat position = [self nextPosition];
                 [self togglePosition:position];
             }
             break;
@@ -330,7 +356,7 @@
     FWInnerDrawerViewTarget *target = [self fwInnerDrawerViewTarget];
     if (!target) return;
     
-    CGFloat position = open ? target.openPosition : (target.isReverse ? target.toPosition : target.fromPosition);
+    CGFloat position = open ? target.openPosition : target.closePosition;
     [self fwDrawerViewTogglePosition:position];
 }
 
