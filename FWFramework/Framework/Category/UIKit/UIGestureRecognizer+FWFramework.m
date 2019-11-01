@@ -32,8 +32,7 @@
 
 @property (nonatomic, weak, readonly) UIView *view;
 @property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection direction;
-@property (nonatomic, assign, readonly) CGFloat fromPosition;
-@property (nonatomic, assign, readonly) CGFloat toPosition;
+@property (nonatomic, strong, readonly) NSArray<NSNumber *> *positions;
 @property (nonatomic, assign, readonly) CGFloat kickbackHeight;
 @property (nonatomic, copy, readonly) void (^callback)(CGFloat position, BOOL finished);
 
@@ -50,8 +49,7 @@
 
 - (instancetype)initWithView:(UIView *)view
                    direction:(UISwipeGestureRecognizerDirection)direction
-                fromPosition:(CGFloat)fromPosition
-                  toPosition:(CGFloat)toPosition
+                   positions:(NSArray<NSNumber *> *)positions
               kickbackHeight:(CGFloat)kickbackHeight
                     callback:(void (^)(CGFloat, BOOL))callback
 {
@@ -59,8 +57,9 @@
     if (self) {
         _view = view;
         _direction = direction;
-        _fromPosition = fromPosition;
-        _toPosition = toPosition;
+        _positions = [positions sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
+            return [obj1 compare:obj2];
+        }];
         _kickbackHeight = kickbackHeight;
         _callback = callback;
         
@@ -82,6 +81,16 @@
 {
     // 是否反向拖动，Down|Right时正向，Up|Left时反向
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
+}
+
+- (CGFloat)fromPosition
+{
+    return [self.positions.firstObject doubleValue];
+}
+
+- (CGFloat)toPosition
+{
+    return [self.positions.lastObject doubleValue];
 }
 
 - (CGFloat)openPosition
@@ -272,6 +281,8 @@
     }
 }
 
+#pragma mark - DrawerView
+
 - (void)fwDrawerView:(UIView *)view
            direction:(UISwipeGestureRecognizerDirection)direction
         fromPosition:(CGFloat)fromPosition
@@ -279,9 +290,25 @@
       kickbackHeight:(CGFloat)kickbackHeight
             callback:(void (^)(CGFloat, BOOL))callback
 {
+    [self fwDrawerView:view
+             direction:direction
+             positions:@[@(fromPosition), @(toPosition)]
+        kickbackHeight:kickbackHeight
+              callback:callback];
+}
+
+- (void)fwDrawerView:(UIView *)view
+           direction:(UISwipeGestureRecognizerDirection)direction
+           positions:(nonnull NSArray<NSNumber *> *)positions
+      kickbackHeight:(CGFloat)kickbackHeight
+            callback:(void (^)(CGFloat, BOOL))callback
+{
+    // 至少两个位置
+    if (positions.count < 2) return;
+    
     // 生成内部强引用target，并添加事件绑定
-    FWInnerDrawerViewTarget *target = [[FWInnerDrawerViewTarget alloc] initWithView:(view ?: self.view) direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
-    objc_setAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    FWInnerDrawerViewTarget *target = [[FWInnerDrawerViewTarget alloc] initWithView:(view ?: self.view) direction:direction positions:positions kickbackHeight:kickbackHeight callback:callback];
+    objc_setAssociatedObject(self, @selector(fwInnerDrawerViewTarget), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self addTarget:target action:@selector(panAction:)];
     
     // view为滚动视图时自动设置手势delegate处理内部滚动
@@ -292,25 +319,34 @@
 
 - (BOOL)fwDrawerViewIsOpen
 {
-    FWInnerDrawerViewTarget *target = objc_getAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:));
-    if (!target) {
-        return NO;
-    }
+    FWInnerDrawerViewTarget *target = [self fwInnerDrawerViewTarget];
+    if (!target) return NO;
     
     return target.position == target.openPosition;
 }
 
 - (void)fwDrawerViewToggleOpen:(BOOL)open
 {
-    FWInnerDrawerViewTarget *target = objc_getAssociatedObject(self, @selector(fwDrawerView:direction:fromPosition:toPosition:kickbackHeight:callback:));
-    if (!target) {
-        return;
-    }
+    FWInnerDrawerViewTarget *target = [self fwInnerDrawerViewTarget];
+    if (!target) return;
     
     CGFloat position = open ? target.openPosition : (target.isReverse ? target.toPosition : target.fromPosition);
+    [self fwDrawerViewTogglePosition:position];
+}
+
+- (void)fwDrawerViewTogglePosition:(CGFloat)position
+{
+    FWInnerDrawerViewTarget *target = [self fwInnerDrawerViewTarget];
+    if (!target) return;
+    
     if (target.position != position) {
         [target togglePosition:position];
     }
+}
+
+- (FWInnerDrawerViewTarget *)fwInnerDrawerViewTarget
+{
+    return objc_getAssociatedObject(self, @selector(fwInnerDrawerViewTarget));
 }
 
 @end
