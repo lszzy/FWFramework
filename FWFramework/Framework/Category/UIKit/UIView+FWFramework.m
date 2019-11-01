@@ -8,6 +8,7 @@
  */
 
 #import "UIView+FWFramework.h"
+#import "UIImage+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
@@ -145,14 +146,7 @@
 
 - (UIImage *)fwSnapshotImage
 {
-    UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0);
-    // iOS7+：是否更新屏幕后再截图，效率高
-    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:NO];
-    // iOS6+：截取当前状态，效率低
-    // [self.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return snapshot;
+    return [UIImage fwImageWithView:self];
 }
 
 - (NSData *)fwSnapshotPdf
