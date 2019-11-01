@@ -106,19 +106,29 @@
         position = self.originPosition;
     } else {
         if (self.position > self.originPosition) {
-            position = self.positions.lastObject.doubleValue;
+            //position = self.positions.lastObject.doubleValue;
             [self.positions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                if (obj.doubleValue > self.position) {
-                    position = obj.doubleValue;
-                    *stop = YES;
+                if (obj.doubleValue > self.originPosition) {
+                    CGFloat minKickback = (obj.doubleValue == self.positions.firstObject.doubleValue) ? obj.doubleValue : obj.doubleValue - self.kickbackHeight;
+                    CGFloat maxKickback = (obj.doubleValue == self.positions.lastObject.doubleValue) ? obj.doubleValue : obj.doubleValue + self.kickbackHeight;
+                    
+                    if (self.position <= maxKickback) {
+                        position = obj.doubleValue;
+                        *stop = YES;
+                    }
                 }
             }];
         } else {
-            position = self.positions.firstObject.doubleValue;
+            //position = self.positions.firstObject.doubleValue;
             [self.positions enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                if (obj.doubleValue < self.position) {
-                    position = obj.doubleValue;
-                    *stop = YES;
+                if (obj.doubleValue < self.originPosition) {
+                    CGFloat minKickback = (obj.doubleValue == self.positions.firstObject.doubleValue) ? obj.doubleValue : obj.doubleValue - self.kickbackHeight;
+                    CGFloat maxKickback = (obj.doubleValue == self.positions.lastObject.doubleValue) ? obj.doubleValue : obj.doubleValue + self.kickbackHeight;
+                    
+                    if (self.position >= minKickback) {
+                        position = obj.doubleValue;
+                        *stop = YES;
+                    }
                 }
             }];
         }
