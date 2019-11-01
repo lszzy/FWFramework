@@ -68,11 +68,19 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
+    UIView *redLine = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4, self.view.fwWidth, 1)];
+    redLine.backgroundColor = [UIColor redColor];
+    [self.view addSubview:redLine];
+    
+    redLine = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 2, self.view.fwWidth, 1)];
+    redLine.backgroundColor = [UIColor redColor];
+    [self.view addSubview:redLine];
+    
     CGFloat fromPosition = 0;
     CGFloat toPosition = ViewHeight / 4 * 3;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp positions:@[@(toPosition), @(ViewHeight / 8 * 3), @(fromPosition)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp positions:@[@(toPosition), @(ViewHeight / 4), @(ViewHeight / 2), @(fromPosition)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         CGFloat targetDistance = toPosition - fromPosition;
@@ -119,7 +127,7 @@
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown fromPosition:0 toPosition:-ViewHeight / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown positions:@[@(0), @(-ViewHeight / 4), @(-ViewHeight / 2), @(-ViewHeight / 4 * 3)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
