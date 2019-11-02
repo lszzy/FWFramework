@@ -149,6 +149,8 @@
 		2FD375A422FFBE280066F308 /* LoadingPlaceholder.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
 		2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */; };
+		2FF39112236D4B740056DEEA /* TestTableReloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */; };
+		2FF39113236D4B740056DEEA /* TestTableReloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */; };
 		2FF98EF222FEADBD004B6BE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */; };
 		2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */; };
 		F64EB154830FF9B2B4AF812F /* Pods_Example2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5835959153D77E6B5128A778 /* Pods_Example2.framework */; };
@@ -326,6 +328,8 @@
 		2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableBackgroundViewController.m; sourceTree = "<group>"; };
 		2FF3873C22F7C8B000C1375E /* TestLabelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLabelViewController.h; sourceTree = "<group>"; };
 		2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLabelViewController.m; sourceTree = "<group>"; };
+		2FF39110236D4B740056DEEA /* TestTableReloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableReloadViewController.h; sourceTree = "<group>"; };
+		2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableReloadViewController.m; sourceTree = "<group>"; };
 		2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestUrlViewController.h; sourceTree = "<group>"; };
 		2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestUrlViewController.m; sourceTree = "<group>"; };
@@ -568,6 +572,8 @@
 				2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */,
 				2F4CFA582155302E00203A37 /* TestTableLayoutViewController.h */,
 				2F4CFA592155302E00203A37 /* TestTableLayoutViewController.m */,
+				2FF39110236D4B740056DEEA /* TestTableReloadViewController.h */,
+				2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */,
 				2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */,
 				2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */,
 				2F54B9BC223208AD008411EF /* TestTransitionViewController.h */,
@@ -1063,6 +1069,7 @@
 				2F4385752318F687003A683C /* TestScrollViewController.m in Sources */,
 				2F4385762318F687003A683C /* ComplexViewController.m in Sources */,
 				2F4385772318F687003A683C /* TestTransitionViewController.m in Sources */,
+				2FF39113236D4B740056DEEA /* TestTableReloadViewController.m in Sources */,
 				2F4385782318F687003A683C /* TestCacheViewController.m in Sources */,
 				2F4385792318F687003A683C /* TestStorekitViewController.m in Sources */,
 				2F43857B2318F687003A683C /* TestTableBackgroundViewController.m in Sources */,
@@ -1165,6 +1172,7 @@
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
 				2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */,
+				2FF39112236D4B740056DEEA /* TestTableReloadViewController.m in Sources */,
 				2FCD375822533B3C001E81DB /* TestAnimationViewController.m in Sources */,
 				2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */,
 				2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */,

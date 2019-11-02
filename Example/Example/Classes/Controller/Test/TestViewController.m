@@ -99,6 +99,7 @@
                                              @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              @[@"FWVersionManager", @"TestVersionViewController"],
+                                             @[@"TableReloadData", @"TestTableReloadViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];
