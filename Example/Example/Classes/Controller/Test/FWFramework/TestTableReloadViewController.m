@@ -11,6 +11,7 @@
 @interface TestTableReloadViewController ()
 
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) NSInteger count;
 
 @end
 
@@ -20,6 +21,34 @@
 {
     [super viewWillAppear:animated];
     
+    [self startTimer];
+    [self setupItem];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self stopTimer];
+}
+
+- (void)setupItem
+{
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(self.timer ? UIBarButtonSystemItemStop : UIBarButtonSystemItemPlay) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        
+        if (self.timer) {
+            [self stopTimer];
+        } else {
+            [self startTimer];
+        }
+        [self setupItem];
+    }];
+}
+
+- (void)startTimer
+{
     FWWeakifySelf();
     self.timer = [NSTimer fwCommonTimerWithTimeInterval:10 block:^(NSTimer * _Nonnull timer) {
         FWStrongifySelf();
@@ -27,10 +56,8 @@
     } repeats:YES];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)stopTimer
 {
-    [super viewWillDisappear:animated];
-    
     [self.timer invalidate];
     self.timer = nil;
 }
@@ -63,12 +90,6 @@
     return cell;
 }
 
-- (NSString *)newObject
-{
-    NSString *object = [NSString stringWithFormat:@"我是数据 %@", @(self.tableData.count + 1)];
-    return object;
-}
-
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
@@ -77,10 +98,11 @@
         
         [self.tableData removeAllObjects];
         for (int i = 0; i < 10; i++) {
-            [self.tableData addObject:[self newObject]];
+            [self.tableData addObject:[NSString stringWithFormat:@"我是数据 %@", @(self.tableData.count + self.count + 1)]];
         }
         [self.tableView.fwPullRefreshView stopAnimating];
         [self.tableView reloadData];
+        self.count++;
     });
 }
 
@@ -91,7 +113,7 @@
         NSLog(@"加载完成");
         
         for (int i = 0; i < 10; i++) {
-            [self.tableData addObject:[self newObject]];
+            [self.tableData addObject:[NSString stringWithFormat:@"我是数据 %@", @(self.tableData.count + 1)]];
         }
         [self.tableView.fwInfiniteScrollView stopAnimating];
         [self.tableView reloadData];
