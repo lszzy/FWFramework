@@ -8,7 +8,6 @@
 
 #import "UIScrollView+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
-#import "UIGestureRecognizer+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
@@ -389,18 +388,6 @@
         }
     }
     return distance;
-}
-
-- (UIPanGestureRecognizer *)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
-                            fromPosition:(CGFloat)fromPosition
-                              toPosition:(CGFloat)toPosition
-                          kickbackHeight:(CGFloat)kickbackHeight
-                                callback:(void (^)(CGFloat, BOOL))callback
-{
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
-    [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
-    [self addGestureRecognizer:panGesture];
-    return panGesture;
 }
 
 @end
