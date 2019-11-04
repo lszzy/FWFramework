@@ -7,6 +7,7 @@
 //
 
 #import "UIViewController+FWTransition.h"
+#import "UIGestureRecognizer+FWFramework.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWAnimatedTransition
@@ -404,42 +405,14 @@
         _percent = self.percentBlock(gestureRecognizer);
     // 默认计算当前方向上的进度
     } else {
-        CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
-        switch (self.direction) {
-            case UISwipeGestureRecognizerDirectionLeft:
-                _percent = -transition.x / gestureRecognizer.view.bounds.size.width;
-                break;
-            case UISwipeGestureRecognizerDirectionRight:
-                _percent = transition.x / gestureRecognizer.view.bounds.size.width;
-                break;
-            case UISwipeGestureRecognizerDirectionUp:
-                _percent = -transition.y / gestureRecognizer.view.bounds.size.height;
-                break;
-            case UISwipeGestureRecognizerDirectionDown:
-            default:
-                _percent = transition.y / gestureRecognizer.view.bounds.size.height;
-                break;
-        }
+        _percent = [gestureRecognizer fwSwipePercent:self.direction];
     }
     
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
             // 计算实际交互方向，如果多个方向交互，取绝对值较大的一方
-            CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
-            if (fabs(transition.x) > fabs(transition.y)) {
-                if (transition.x < 0.0f) {
-                    _interactiveDirection = UISwipeGestureRecognizerDirectionLeft;
-                } else if (transition.x > 0.0f) {
-                    _interactiveDirection = UISwipeGestureRecognizerDirectionRight;
-                }
-            } else {
-                if (transition.y > 0.0f) {
-                    _interactiveDirection = UISwipeGestureRecognizerDirectionDown;
-                } else if (transition.y < 0.0f) {
-                    _interactiveDirection = UISwipeGestureRecognizerDirectionUp;
-                }
-            }
+            _interactiveDirection = [gestureRecognizer fwSwipeDirection];
             
             if (self.interactiveBlock) {
                 self.interactiveBlock();

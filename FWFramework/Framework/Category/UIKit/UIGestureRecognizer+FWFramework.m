@@ -46,12 +46,36 @@
 
 - (CGFloat)fwSwipePercent
 {
+    CGFloat percent = 0;
     CGPoint transition = [self translationInView:self.view];
     if (fabs(transition.x) > fabs(transition.y)) {
-        return self.view.bounds.size.width > 0 ? fabs(transition.x) / self.view.bounds.size.width : 0;
+        percent = fabs(transition.x) / self.view.bounds.size.width;
     } else {
-        return self.view.bounds.size.height > 0 ? fabs(transition.y) / self.view.bounds.size.height : 0;
+        percent = fabs(transition.y) / self.view.bounds.size.height;
     }
+    return percent;
+}
+
+- (CGFloat)fwSwipePercent:(UISwipeGestureRecognizerDirection)direction
+{
+    CGFloat percent = 0;
+    CGPoint transition = [self translationInView:self.view];
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionLeft:
+            percent = -transition.x / self.view.bounds.size.width;
+            break;
+        case UISwipeGestureRecognizerDirectionRight:
+            percent = transition.x / self.view.bounds.size.width;
+            break;
+        case UISwipeGestureRecognizerDirectionUp:
+            percent = -transition.y / self.view.bounds.size.height;
+            break;
+        case UISwipeGestureRecognizerDirectionDown:
+        default:
+            percent = transition.y / self.view.bounds.size.height;
+            break;
+    }
+    return percent;
 }
 
 @end
