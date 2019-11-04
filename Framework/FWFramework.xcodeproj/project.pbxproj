@@ -333,6 +333,8 @@
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE6519423167C280078ECE4 /* FWTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE6519523167C280078ECE4 /* FWTableViewController.m */; };
+		2FF3911E236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF3911C236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF3911F236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF3911D236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.m */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */; };
 /* End PBXBuildFile section */
@@ -665,6 +667,8 @@
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FE6519423167C280078ECE4 /* FWTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTableViewController.h; sourceTree = "<group>"; };
 		2FE6519523167C280078ECE4 /* FWTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTableViewController.m; sourceTree = "<group>"; };
+		2FF3911C236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+FWDrawerView.h"; sourceTree = "<group>"; };
+		2FF3911D236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+FWDrawerView.m"; sourceTree = "<group>"; };
 		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
 		2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWVendor.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -727,6 +731,8 @@
 				2F03A505216CF4B9001965A1 /* UIFont+FWFramework.m */,
 				2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */,
 				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
+				2FF3911C236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.h */,
+				2FF3911D236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
 				2F03A4FC216CF4B9001965A1 /* UIImage+FWFramework.m */,
 				2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */,
@@ -1207,6 +1213,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FF3911E236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.h in Headers */,
 				2FC81A7D235032EF00BE660C /* FWViewModel.h in Headers */,
 				2FAD2227233B5FF500140359 /* FWTuple.h in Headers */,
 				2FAD2221233B12E400140359 /* FWCoroutine.h in Headers */,
@@ -1555,6 +1562,7 @@
 				2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
 				2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */,
+				2FF3911F236FE6230056DEEA /* UIGestureRecognizer+FWDrawerView.m in Sources */,
 				2FCE516121D3BA32009EA65E /* FWCacheKeychain.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
 				2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */,
