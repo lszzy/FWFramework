@@ -250,6 +250,8 @@
 - (void)onPresentController
 {
     FWAnimatedTransition *transition = [FWAnimatedTransition systemTransition];
+    // 不会生效，因为未设置动画转场
+    transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
     transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
         FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
         presentation.presentedFrame = CGRectMake(0, 200, FWScreenWidth, FWScreenHeight - 200);
