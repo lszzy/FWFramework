@@ -12,6 +12,7 @@
 @interface TestFullScreenViewController : BaseScrollViewController
 
 @property (nonatomic, assign) BOOL canScroll;
+@property (nonatomic, weak) UILabel *frameLabel;
 
 @end
 
@@ -41,6 +42,13 @@
     [self.contentView addSubview:footerView];
     footerView.fwLayoutChain.left().bottom().topToBottomOfView(cycleView).width(FWScreenWidth).height(1000);
     
+    UILabel *frameLabel = [[UILabel alloc] init];
+    _frameLabel = frameLabel;
+    frameLabel.textColor = [UIColor blackColor];
+    frameLabel.text = NSStringFromCGRect(self.view.frame);
+    [footerView addSubview:frameLabel];
+    frameLabel.fwLayoutChain.centerX().topWithInset(50);
+    
     // 添加视图
     UIButton *button = [UIButton fwAutoLayoutView];
     button.backgroundColor = [UIColor appColorWhite];
@@ -60,7 +68,7 @@
     
     // 视图延伸到导航栏
     self.fwForcePopGesture = YES;
-    [self fwSetBarExtendEdge:UIRectEdgeAll];
+    [self fwSetBarExtendEdge:UIRectEdgeNone];
     
     // 自定义关闭按钮
     FWWeakifySelf();
@@ -82,7 +90,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self fwSetNavigationBarHidden:YES animated:animated];
+    
+    self.frameLabel.text = NSStringFromCGRect(self.view.frame);
+    if (!self.fwIsPresented) {
+        [self fwSetNavigationBarHidden:YES animated:animated];
+    }
 }
 
 @end
@@ -115,6 +127,7 @@
                                           @[@"转场present", @"onPresentTransition"],
                                           @[@"自定义present", @"onPresentAnimation"],
                                           @[@"swipe present", @"onPresentSwipe"],
+                                          @[@"自定义controller", @"onPresentController"],
                                           @[@"interactive present", @"onPresentInteractive"],
                                           @[@"System Push", @"onPush"],
                                           @[@"Block Push", @"onPushBlock"],
@@ -234,6 +247,21 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
+- (void)onPresentController
+{
+    FWAnimatedTransition *transition = [FWAnimatedTransition systemTransition];
+    transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
+        FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        presentation.presentedFrame = CGRectMake(0, 200, FWScreenWidth, FWScreenHeight - 200);
+        return presentation;
+    };
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[[TestFullScreenViewController alloc] init]];
+    nav.modalPresentationStyle = UIModalPresentationCustom;
+    nav.fwModalTransition = transition;
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
 - (void)onPresentInteractive
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
@@ -257,10 +285,12 @@
         }
     };
     transition.outInteractiveTransition = interactiveTransition;
-    vc.fwModalTransition = transition;
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     vc.canScroll = YES;
-    vc.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:vc animated:YES completion:nil];
+    nav.fwModalTransition = transition;
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)onPush

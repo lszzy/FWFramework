@@ -105,6 +105,14 @@
     return [self interactiveTransitionForTransition:animator];
 }
 
+- (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting sourceViewController:(UIViewController *)source
+{
+    if (self.presentationBlock) {
+        self.presentationController = self.presentationBlock(presented, presenting);
+    }
+    return self.presentationController;
+}
+
 #pragma mark - UINavigationControllerDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
@@ -475,6 +483,98 @@
         _displayLink = nil;
         [self cancelInteractiveTransition];
     }
+}
+
+@end
+
+#pragma mark - FWPresentationController
+
+@interface FWPresentationController ()
+
+@property (nonatomic, strong) UIView *dimmingView;
+
+@end
+
+@implementation FWPresentationController
+
+#pragma mark - Lifecycle
+
+- (instancetype)initWithPresentedViewController:(UIViewController *)presentedViewController presentingViewController:(UIViewController *)presentingViewController
+{
+    self = [super initWithPresentedViewController:presentedViewController presentingViewController:presentingViewController];
+    if (self) {
+        _showDimming = YES;
+        _dimmingClick = YES;
+        _presentedFrame = CGRectZero;
+    }
+    return self;
+}
+
+#pragma mark - Accessor
+
+- (UIView *)dimmingView
+{
+    if (!_dimmingView) {
+        _dimmingView = [[UIView alloc] initWithFrame:self.containerView.bounds];
+        _dimmingView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAction:)];
+        [_dimmingView addGestureRecognizer:tapGesture];
+    }
+    return _dimmingView;
+}
+
+- (void)setShowDimming:(BOOL)showDimming
+{
+    _showDimming = showDimming;
+    self.dimmingView.hidden = !showDimming;
+}
+
+- (void)setDimmingClick:(BOOL)dimmingClick
+{
+    _dimmingClick = dimmingClick;
+    self.dimmingView.userInteractionEnabled = dimmingClick;
+}
+
+- (void)onTapAction:(id)sender
+{
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Protected
+
+- (void)presentationTransitionWillBegin
+{
+    [super presentationTransitionWillBegin];
+    
+    self.presentedView.frame = [self frameOfPresentedViewInContainerView];
+    self.dimmingView.frame = self.containerView.bounds;
+    [self.containerView insertSubview:self.dimmingView atIndex:0];
+    
+    self.dimmingView.alpha = 0;
+    [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [UIView animateWithDuration:[context transitionDuration] animations:^{
+            self.dimmingView.alpha = 1.0;
+        }];
+    } completion:nil];
+}
+
+- (void)dismissalTransitionWillBegin
+{
+    [super dismissalTransitionWillBegin];
+    
+    [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [UIView animateWithDuration:[context transitionDuration] animations:^{
+            self.dimmingView.alpha = 0;
+        }];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self.dimmingView removeFromSuperview];
+    }];
+}
+
+- (CGRect)frameOfPresentedViewInContainerView
+{
+    return CGRectEqualToRect(self.presentedFrame, CGRectZero) ? self.containerView.bounds : self.presentedFrame;
 }
 
 @end

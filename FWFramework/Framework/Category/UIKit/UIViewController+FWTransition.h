@@ -58,6 +58,14 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 设置消失交互转场，可选，需要在调用pop|dismiss之前设置并绑定控制器。当设置为FWPercentInteractiveTransition时，会自动绑定
 @property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
 
+#pragma mark - Presentation
+
+// 设置展示控制器创建句柄，自定义弹出效果。present时建议设置modalPresentationStyle为UIModalPresentationCustom
+@property (nullable, nonatomic, copy) UIPresentationController *(^presentationBlock)(UIViewController *presented, UIViewController *presenting);
+
+// 设置展示控制器，自定义弹出效果。present时建议设置modalPresentationStyle为UIModalPresentationCustom
+@property (nullable, nonatomic, strong) UIPresentationController *presentationController;
+
 #pragma mark - Animate
 
 // 转场上下文，只读
@@ -127,6 +135,22 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
 - (void)interactWithViewController:(UIViewController *)viewController;
+
+@end
+
+#pragma mark - FWPresentationController
+
+// 自定义展示控制器。present时建议设置modalPresentationStyle为UIModalPresentationCustom
+@interface FWPresentationController : UIPresentationController
+
+// 是否显示暗色背景，默认YES
+@property (nonatomic, assign) BOOL showDimming;
+
+// 是否可以点击暗色背景关闭，默认YES
+@property (nonatomic, assign) BOOL dimmingClick;
+
+// 设置弹出视图的frame，默认CGRectZero占满
+@property (nonatomic, assign) CGRect presentedFrame;
 
 @end
 
