@@ -40,6 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 当前滑动进度，滑动绝对值相对于手势视图的宽或高
 - (CGFloat)fwSwipePercent;
 
+// 计算指定方向的滑动进度
+- (CGFloat)fwSwipePercent:(UISwipeGestureRecognizerDirection)direction;
+
 @end
 
 NS_ASSUME_NONNULL_END
