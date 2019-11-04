@@ -84,6 +84,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置二级抽屉效果视图到打开位置或关闭位置，如果位置发生改变，会触发抽屉callback回调
 - (void)fwDrawerViewToggleOpen:(BOOL)open;
 
+// 判断多级抽屉效果视图是否位于指定位置
+- (BOOL)fwDrawerViewIsPosition:(CGFloat)position;
+
 // 设置多级抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
 - (void)fwDrawerViewTogglePosition:(CGFloat)position;
 
