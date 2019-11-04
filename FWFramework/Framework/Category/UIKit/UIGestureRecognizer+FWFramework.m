@@ -97,41 +97,24 @@
 
 - (CGFloat)nextPosition
 {
-    // 计算回弹范围，超出此范围才改变停留位置
-    CGFloat minKickback = (self.originPosition == self.positions.firstObject.doubleValue) ? self.originPosition : self.originPosition - self.kickbackHeight;
-    CGFloat maxKickback = (self.originPosition == self.positions.lastObject.doubleValue) ? self.originPosition : self.originPosition + self.kickbackHeight;
-    
     __block CGFloat position;
-    if (self.position >= minKickback && self.position <= maxKickback) {
-        position = self.originPosition;
+    // 根绝拖动方向和回弹高度计算停留位置
+    if (self.position > self.originPosition) {
+        [self.positions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+            CGFloat maxKickback = (obj.doubleValue == self.positions.lastObject.doubleValue) ? obj.doubleValue : obj.doubleValue + self.kickbackHeight;
+            if (self.position <= maxKickback) {
+                position = obj.doubleValue;
+                *stop = YES;
+            }
+        }];
     } else {
-        if (self.position > self.originPosition) {
-            //position = self.positions.lastObject.doubleValue;
-            [self.positions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                if (obj.doubleValue > self.originPosition) {
-                    CGFloat minKickback = (obj.doubleValue == self.positions.firstObject.doubleValue) ? obj.doubleValue : obj.doubleValue - self.kickbackHeight;
-                    CGFloat maxKickback = (obj.doubleValue == self.positions.lastObject.doubleValue) ? obj.doubleValue : obj.doubleValue + self.kickbackHeight;
-                    
-                    if (self.position <= maxKickback) {
-                        position = obj.doubleValue;
-                        *stop = YES;
-                    }
-                }
-            }];
-        } else {
-            //position = self.positions.firstObject.doubleValue;
-            [self.positions enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                if (obj.doubleValue < self.originPosition) {
-                    CGFloat minKickback = (obj.doubleValue == self.positions.firstObject.doubleValue) ? obj.doubleValue : obj.doubleValue - self.kickbackHeight;
-                    CGFloat maxKickback = (obj.doubleValue == self.positions.lastObject.doubleValue) ? obj.doubleValue : obj.doubleValue + self.kickbackHeight;
-                    
-                    if (self.position >= minKickback) {
-                        position = obj.doubleValue;
-                        *stop = YES;
-                    }
-                }
-            }];
-        }
+        [self.positions enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+            CGFloat minKickback = (obj.doubleValue == self.positions.firstObject.doubleValue) ? obj.doubleValue : obj.doubleValue - self.kickbackHeight;
+            if (self.position >= minKickback) {
+                position = obj.doubleValue;
+                *stop = YES;
+            }
+        }];
     }
     return position;
 }
@@ -368,6 +351,14 @@
     
     CGFloat position = open ? target.openPosition : target.closePosition;
     [self fwDrawerViewTogglePosition:position];
+}
+
+- (BOOL)fwDrawerViewIsPosition:(CGFloat)position
+{
+    FWInnerDrawerViewTarget *target = [self fwInnerDrawerViewTarget];
+    if (!target) return NO;
+    
+    return target.position == position;
 }
 
 - (void)fwDrawerViewTogglePosition:(CGFloat)position
