@@ -127,9 +127,6 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
 @property (nonatomic, assign, readonly) BOOL isInteractive;
 
-// 正在交互方向，手势开始才会标记为滑动方向，手势结束标记为0
-@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection interactiveDirection;
-
 // 交互pan手势，调用interactWithViewController之后才存在
 @property (nullable, nonatomic, weak, readonly) UIPanGestureRecognizer *gestureRecognizer;
 

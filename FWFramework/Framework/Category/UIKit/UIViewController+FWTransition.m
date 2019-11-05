@@ -411,8 +411,6 @@
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
-            // 计算实际交互方向，如果多个方向交互，取绝对值较大的一方
-            _interactiveDirection = [gestureRecognizer fwSwipeDirection];
             
             if (self.interactiveBlock) {
                 self.interactiveBlock();
@@ -425,7 +423,6 @@
         }
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
-            _interactiveDirection = 0;
 
             if (!_displayLink) {
                 // displayLink强引用self，会循环引用，所以action中需要invalidate
