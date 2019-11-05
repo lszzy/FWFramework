@@ -162,6 +162,7 @@
 - (void)onPresent
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.canScroll = YES;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
