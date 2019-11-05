@@ -282,7 +282,7 @@
         FWSwipeAnimatedTransition *swipeTransition = (FWSwipeAnimatedTransition *)transition;
         FWPercentInteractiveTransition *percentTransition = swipeTransition.outInteractiveTransition;
         if (percentTransition.isInteractive) {
-            swipeTransition.outDirection = percentTransition.interactiveDirection;
+            swipeTransition.outDirection = percentTransition.gestureRecognizer.fwSwipeDirection;
         } else {
             swipeTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
         }
