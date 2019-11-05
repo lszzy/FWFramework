@@ -452,6 +452,8 @@ static CGFloat FWPullRefreshViewHeight = 60;
 }
 
 - (void)stopAnimating {
+    if (!self.isAnimating) return;
+    
     self.state = FWPullRefreshStateStopped;
     
     [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, -self.originalTopInset) animated:YES];
