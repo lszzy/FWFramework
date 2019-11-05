@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSInteger count;
+@property (nonatomic, assign) BOOL isTimer;
 
 @end
 
@@ -52,7 +53,9 @@
     FWWeakifySelf();
     self.timer = [NSTimer fwCommonTimerWithTimeInterval:10 block:^(NSTimer * _Nonnull timer) {
         FWStrongifySelf();
+        self.isTimer = YES;
         [self onRefreshing];
+        self.isTimer = NO;
     } repeats:YES];
 }
 
@@ -92,9 +95,23 @@
 
 - (void)onRefreshing
 {
-    NSLog(@"开始刷新");
+    BOOL isTimer = self.isTimer;
+    if (isTimer && (self.tableView.isDragging || self.tableView.isDecelerating)) {
+        NSLog(@"拖动中，暂停自动刷新");
+        return;
+    }
+    
+    if (isTimer) {
+        NSLog(@"开始自动刷新");
+    } else {
+        NSLog(@"开始刷新");
+    }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSLog(@"刷新完成");
+        if (isTimer) {
+            NSLog(@"自动刷新完成");
+        } else {
+            NSLog(@"刷新完成");
+        }
         
         [self.tableData removeAllObjects];
         for (int i = 0; i < 10; i++) {
