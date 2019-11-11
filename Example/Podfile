@@ -7,4 +7,3 @@ abstract_target "ExampleTarget" do
 
     target "Example2"
 end
-
