@@ -40,11 +40,24 @@
 
 - (void)renderViewUp
 {
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
-    containerView.backgroundColor = [UIColor grayColor];
-    [self.view addSubview:containerView];
+    BOOL hasHeader = NO;
+    UIView *containerView, *drawerView;
+    if (hasHeader) {
+        containerView = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
+        containerView.backgroundColor = [UIColor grayColor];
+        [self.view addSubview:containerView];
+    } else {
+        containerView = self.view;
+    }
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, self.view.fwWidth, ViewHeight - 30)];
+    UIScrollView *scrollView;
+    if (hasHeader) {
+        scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, self.view.fwWidth, ViewHeight - 30)];
+        drawerView = containerView;
+    } else {
+        scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
+        drawerView = scrollView;
+    }
     [scrollView fwContentInsetAdjustmentNever];
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
@@ -84,9 +97,9 @@
     CGFloat toPosition = ViewHeight / 4 * 3;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:containerView direction:UISwipeGestureRecognizerDirectionUp positions:@[@(toPosition), @(ViewHeight / 4), @(ViewHeight / 2), @(fromPosition)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:drawerView direction:UISwipeGestureRecognizerDirectionUp positions:@[@(toPosition), @(ViewHeight / 4), @(ViewHeight / 2), @(fromPosition)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
-        [self.view bringSubviewToFront:containerView];
+        [self.view bringSubviewToFront:drawerView];
         CGFloat targetDistance = toPosition - fromPosition;
         CGFloat distance = position - fromPosition;
         if (distance < targetDistance) {
@@ -96,7 +109,7 @@
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
     }];
-    [containerView addGestureRecognizer:panGesture];
+    [drawerView addGestureRecognizer:panGesture];
 }
 
 - (void)renderViewDown
