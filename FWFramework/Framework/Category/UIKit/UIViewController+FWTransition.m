@@ -9,6 +9,7 @@
 #import "UIViewController+FWTransition.h"
 #import "UIGestureRecognizer+FWFramework.h"
 #import "UIScrollView+FWFramework.h"
+#import "UIView+FWBorder.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWAnimatedTransition
@@ -370,10 +371,11 @@
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 
+@property (nonatomic, assign) BOOL shouldBegin;
+
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
 @property (nonatomic, assign) CGFloat percent;
-@property (nonatomic, assign) BOOL canPercent;
 
 @end
 
@@ -387,6 +389,22 @@
         _completionPercent = 0.3;
     }
     return self;
+}
+
+- (UIRectEdge)edge
+{
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionDown:
+            return UIRectEdgeTop;
+        case UISwipeGestureRecognizerDirectionUp:
+            return UIRectEdgeBottom;
+        case UISwipeGestureRecognizerDirectionLeft:
+            return UIRectEdgeRight;
+        case UISwipeGestureRecognizerDirectionRight:
+            return UIRectEdgeLeft;
+        default:
+            return UIRectEdgeNone;
+    }
 }
 
 - (void)interactWithViewController:(UIViewController *)viewController
@@ -411,13 +429,7 @@
     // 默认计算当前方向上的进度
     } else {
         _percent = [gestureRecognizer fwSwipePercentOfDirection:self.direction];
-        //if (_percent < 0) {
-            //_percent = 0;
-        //} else if (_percent > 1) {
-           // _percent = 1;
-        //}
-        
-        if (!self.canPercent) {
+        if (!self.shouldBegin) {
             _percent = 0;
         }
     }
@@ -425,16 +437,11 @@
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
-            _canPercent = [self.scrollView fwIsScrollToEdge:UIRectEdgeTop] && gestureRecognizer.fwSwipeDirection == UISwipeGestureRecognizerDirectionDown;
             
-            if (_canPercent) {
-                if (gestureRecognizer.fwSwipeDirection == UISwipeGestureRecognizerDirectionDown) {
-                    self.scrollView.scrollEnabled = NO;
-                } else {
-                    self.scrollView.scrollEnabled = YES;
-                }
-            } else {
-                self.scrollView.scrollEnabled = YES;
+            _shouldBegin = YES;
+            if (self.scrollView) {
+                _shouldBegin = [self.scrollView fwIsScrollToEdge:[self edge]] && gestureRecognizer.fwSwipeDirection == self.direction;
+                self.scrollView.scrollEnabled = !self.shouldBegin;
             }
             
             if (self.interactiveBlock) {
@@ -449,7 +456,10 @@
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
             
-            self.scrollView.scrollEnabled = YES;
+            _shouldBegin = NO;
+            if (self.scrollView) {
+                self.scrollView.scrollEnabled = YES;
+            }
 
             if (!_displayLink) {
                 // displayLink强引用self，会循环引用，所以action中需要invalidate
@@ -467,11 +477,6 @@
 {
     CGFloat timePercent = 2.0 / 60;
     _percent = (_percent > _completionPercent) ? (_percent + timePercent) : (_percent - timePercent);
-    //if (_percent < 0) {
-      //  _percent = 0;
-    //} else if (_percent > 1) {
-    //    _percent = 1;
-    //}
     [self updateInteractiveTransition:_percent];
     
     if (_percent >= 1.0) {
@@ -494,27 +499,12 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
-        if ([self.scrollView fwIsScrollToEdge:UIRectEdgeTop]) {
+        if ([self.scrollView fwIsScrollToEdge:[self edge]]) {
             return YES;
         }
     }
     return NO;
 }
-
-/*
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
-        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
-        self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
-        if ([self.scrollView fwIsScrollToEdge:UIRectEdgeTop]) {
-            UISwipeGestureRecognizerDirection direction = [self.scrollView.panGestureRecognizer fwSwipeDirection];
-            
-            return YES;
-        }
-    }
-    return NO;
-}*/
 
 @end
 
@@ -536,7 +526,9 @@
     if (self) {
         _showDimming = YES;
         _dimmingClick = YES;
+        _cornerRadius = 0;
         _presentedFrame = CGRectZero;
+        _verticalInset = 0;
     }
     return self;
 }
@@ -578,6 +570,10 @@
 {
     [super presentationTransitionWillBegin];
     
+    if (self.cornerRadius > 0) {
+        self.presentedView.layer.masksToBounds = YES;
+        [self.presentedView fwSetCornerLayer:(UIRectCornerTopLeft | UIRectCornerTopRight) radius:self.cornerRadius];
+    }
     self.presentedView.frame = [self frameOfPresentedViewInContainerView];
     self.dimmingView.frame = self.containerView.bounds;
     [self.containerView insertSubview:self.dimmingView atIndex:0];
@@ -605,7 +601,16 @@
 
 - (CGRect)frameOfPresentedViewInContainerView
 {
-    return CGRectEqualToRect(self.presentedFrame, CGRectZero) ? self.containerView.bounds : self.presentedFrame;
+    if (!CGRectEqualToRect(self.presentedFrame, CGRectZero)) {
+        return self.presentedFrame;
+    } else if (self.verticalInset != 0) {
+        CGRect presentedFrame = self.containerView.bounds;
+        presentedFrame.origin.y = self.verticalInset;
+        presentedFrame.size.height -= self.verticalInset;
+        return presentedFrame;
+    } else {
+        return self.containerView.bounds;
+    }
 }
 
 @end

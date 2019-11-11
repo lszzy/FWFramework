@@ -146,8 +146,14 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 是否可以点击暗色背景关闭，默认YES
 @property (nonatomic, assign) BOOL dimmingClick;
 
-// 设置弹出视图的frame，默认CGRectZero占满
+// 设置弹出视图的左上和右上圆角，默认0
+@property (nonatomic, assign) CGFloat cornerRadius;
+
+// 设置弹出视图的frame，默认CGRectZero占满，优先级高
 @property (nonatomic, assign) CGRect presentedFrame;
+
+// 设置弹出视图的顶部距离，默认0占满，优先级低
+@property (nonatomic, assign) CGFloat verticalInset;
 
 @end
 
