@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGFloat)fwSwipePercent;
 
 // 计算指定方向的滑动进度
-- (CGFloat)fwSwipePercent:(UISwipeGestureRecognizerDirection)direction;
+- (CGFloat)fwSwipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction;
 
 @end
 

@@ -271,6 +271,7 @@
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.duration = TestTransitinDuration;
     FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    /*
     interactiveTransition.percentBlock = ^CGFloat(UIPanGestureRecognizer *sender) {
         UISwipeGestureRecognizerDirection direction = [sender fwSwipeDirection];
         if (direction == UISwipeGestureRecognizerDirectionDown || direction == UISwipeGestureRecognizerDirectionRight) {
@@ -287,6 +288,7 @@
             swipeTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
         }
     };
+    */
     transition.outInteractiveTransition = interactiveTransition;
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];

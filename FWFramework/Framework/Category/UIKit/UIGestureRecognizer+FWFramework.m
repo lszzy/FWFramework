@@ -56,7 +56,7 @@
     return percent;
 }
 
-- (CGFloat)fwSwipePercent:(UISwipeGestureRecognizerDirection)direction
+- (CGFloat)fwSwipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction
 {
     CGFloat percent = 0;
     CGPoint transition = [self translationInView:self.view];
