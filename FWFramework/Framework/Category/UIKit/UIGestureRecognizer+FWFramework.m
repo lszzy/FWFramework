@@ -53,7 +53,7 @@
     } else {
         percent = fabs(transition.y) / self.view.bounds.size.height;
     }
-    return percent;
+    return MAX(0, MIN(1, percent));
 }
 
 - (CGFloat)fwSwipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction
@@ -75,7 +75,7 @@
             percent = transition.y / self.view.bounds.size.height;
             break;
     }
-    return percent;
+    return MAX(0, MIN(1, percent));
 }
 
 @end

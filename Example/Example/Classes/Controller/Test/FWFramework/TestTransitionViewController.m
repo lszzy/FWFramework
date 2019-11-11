@@ -255,7 +255,8 @@
     transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
     transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
         FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
-        presentation.presentedFrame = CGRectMake(0, 200, FWScreenWidth, FWScreenHeight - 200);
+        presentation.verticalInset = 200;
+        presentation.cornerRadius = 10;
         return presentation;
     };
     
