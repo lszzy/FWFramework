@@ -8,6 +8,7 @@
 
 #import "UIViewController+FWTransition.h"
 #import "UIGestureRecognizer+FWFramework.h"
+#import "UIScrollView+FWFramework.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWAnimatedTransition
@@ -365,11 +366,14 @@
 
 #pragma mark - FWPercentInteractiveTransition
 
-@interface FWPercentInteractiveTransition ()
+@interface FWPercentInteractiveTransition () <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UIScrollView *scrollView;
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
 @property (nonatomic, assign) CGFloat percent;
+@property (nonatomic, assign) BOOL canPercent;
 
 @end
 
@@ -395,6 +399,7 @@
     
     UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
     _gestureRecognizer = gestureRecognizer;
+    gestureRecognizer.delegate = self;
     [viewController.view addGestureRecognizer:gestureRecognizer];
 }
 
@@ -405,12 +410,32 @@
         _percent = self.percentBlock(gestureRecognizer);
     // 默认计算当前方向上的进度
     } else {
-        _percent = [gestureRecognizer fwSwipePercent:self.direction];
+        _percent = [gestureRecognizer fwSwipePercentOfDirection:self.direction];
+        //if (_percent < 0) {
+            //_percent = 0;
+        //} else if (_percent > 1) {
+           // _percent = 1;
+        //}
+        
+        if (!self.canPercent) {
+            _percent = 0;
+        }
     }
     
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
+            _canPercent = [self.scrollView fwIsScrollToEdge:UIRectEdgeTop] && gestureRecognizer.fwSwipeDirection == UISwipeGestureRecognizerDirectionDown;
+            
+            if (_canPercent) {
+                if (gestureRecognizer.fwSwipeDirection == UISwipeGestureRecognizerDirectionDown) {
+                    self.scrollView.scrollEnabled = NO;
+                } else {
+                    self.scrollView.scrollEnabled = YES;
+                }
+            } else {
+                self.scrollView.scrollEnabled = YES;
+            }
             
             if (self.interactiveBlock) {
                 self.interactiveBlock();
@@ -423,6 +448,8 @@
         }
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
+            
+            self.scrollView.scrollEnabled = YES;
 
             if (!_displayLink) {
                 // displayLink强引用self，会循环引用，所以action中需要invalidate
@@ -440,6 +467,11 @@
 {
     CGFloat timePercent = 2.0 / 60;
     _percent = (_percent > _completionPercent) ? (_percent + timePercent) : (_percent - timePercent);
+    //if (_percent < 0) {
+      //  _percent = 0;
+    //} else if (_percent > 1) {
+    //    _percent = 1;
+    //}
     [self updateInteractiveTransition:_percent];
     
     if (_percent >= 1.0) {
@@ -454,6 +486,35 @@
         [self cancelInteractiveTransition];
     }
 }
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+        if ([self.scrollView fwIsScrollToEdge:UIRectEdgeTop]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+/*
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+        if ([self.scrollView fwIsScrollToEdge:UIRectEdgeTop]) {
+            UISwipeGestureRecognizerDirection direction = [self.scrollView.panGestureRecognizer fwSwipeDirection];
+            
+            return YES;
+        }
+    }
+    return NO;
+}*/
 
 @end
 
