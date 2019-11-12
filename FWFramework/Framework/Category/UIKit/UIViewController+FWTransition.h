@@ -43,13 +43,13 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 + (instancetype)transitionWithBlock:(nullable void (^)(FWAnimatedTransition *transition))block;
 
 // 设置动画句柄
-@property (nullable, nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
+@property (nullable, nonatomic, copy) void (^transitionBlock)(FWAnimatedTransition *transition);
 
 // 动画持续时间，必须大于0，默认0.35秒
-@property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) NSTimeInterval transitionDuration;
 
 // 获取动画类型，默认根据上下文判断
-@property (nonatomic, assign) FWAnimatedTransitionType type;
+@property (nonatomic, assign) FWAnimatedTransitionType transitionType;
 
 #pragma mark - Interactive
 
@@ -70,14 +70,6 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 转场上下文，只读
 @property (nullable, nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
-// 转场来源视图控制器，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController *fromViewController;
-// 转场目标视图控制器，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController *toViewController;
-// 转场来源视图，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIView *fromView;
-// 转场目标视图，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIView *toView;
 
 // 标记动画开始(自动添加视图到容器)
 - (void)start;

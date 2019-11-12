@@ -174,28 +174,28 @@
 - (void)onPresentTransition
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePresent) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePresent) {
             [transition start];
-            transition.toView.transform = CGAffineTransformMakeScale(0.0, 0.0);
-            transition.toView.alpha = 0.0;
+            [transition.transitionContext viewForKey:UITransitionContextToViewKey].transform = CGAffineTransformMakeScale(0.0, 0.0);
+            [transition.transitionContext viewForKey:UITransitionContextToViewKey].alpha = 0.0;
             [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
-                                 transition.toView.transform = CGAffineTransformMakeScale(1.0, 1.0);
-                                 transition.toView.alpha = 1.0;
+                                 [transition.transitionContext viewForKey:UITransitionContextToViewKey].transform = CGAffineTransformMakeScale(1.0, 1.0);
+                                 [transition.transitionContext viewForKey:UITransitionContextToViewKey].alpha = 1.0;
                              }
                              completion:^(BOOL finished) {
                                  [transition complete];
                              }];
-        } else if (transition.type == FWAnimatedTransitionTypeDismiss) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypeDismiss) {
             [transition start];
-            transition.fromView.transform = CGAffineTransformMakeScale(1.0, 1.0);
-            transition.fromView.alpha = 1.0;
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].transform = CGAffineTransformMakeScale(1.0, 1.0);
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].alpha = 1.0;
             [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
-                                 transition.fromView.transform = CGAffineTransformMakeScale(0.01, 0.01);
-                                 transition.fromView.alpha = 0.0;
+                                 [transition.transitionContext viewForKey:UITransitionContextFromViewKey].transform = CGAffineTransformMakeScale(0.01, 0.01);
+                                 [transition.transitionContext viewForKey:UITransitionContextFromViewKey].alpha = 0.0;
                              }
                              completion:^(BOOL finished) {
                                  [transition complete];
@@ -211,22 +211,22 @@
 - (void)onPresentAnimation
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePresent) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePresent) {
             [transition start];
-            [transition.toView fwAddTransitionWithType:kCATransitionMoveIn
+            [[transition.transitionContext viewForKey:UITransitionContextToViewKey] fwAddTransitionWithType:kCATransitionMoveIn
                                                subtype:kCATransitionFromTop
                                         timingFunction:kCAMediaTimingFunctionEaseInEaseOut
                                               duration:[transition transitionDuration:transition.transitionContext]
                                             completion:^(BOOL finished) {
                                                 [transition complete];
                                             }];
-        } else if (transition.type == FWAnimatedTransitionTypeDismiss) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypeDismiss) {
             [transition start];
             // 这种转场动画需要先隐藏目标视图
-            transition.fromView.hidden = YES;
-            [transition.fromView fwAddTransitionWithType:kCATransitionReveal
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].hidden = YES;
+            [[transition.transitionContext viewForKey:UITransitionContextFromViewKey] fwAddTransitionWithType:kCATransitionReveal
                                                  subtype:kCATransitionFromBottom
                                           timingFunction:kCAMediaTimingFunctionEaseInEaseOut
                                                 duration:[transition transitionDuration:transition.transitionContext]
@@ -244,7 +244,7 @@
 - (void)onPresentSwipe
 {
     FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
+    transition.transitionDuration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionLeft;
     transition.outDirection = UISwipeGestureRecognizerDirectionRight;
     
@@ -275,7 +275,7 @@
 {
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
-    transition.duration = TestTransitinDuration;
+    transition.transitionDuration = TestTransitinDuration;
     FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] init];
     /*
     interactiveTransition.percentBlock = ^CGFloat(UIPanGestureRecognizer *sender) {
@@ -313,21 +313,21 @@
 - (void)onPushOption
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePush) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePush) {
             [transition start];
-            [UIView transitionFromView:transition.fromView
-                                toView:transition.toView
+            [UIView transitionFromView:[transition.transitionContext viewForKey:UITransitionContextFromViewKey]
+                                toView:[transition.transitionContext viewForKey:UITransitionContextToViewKey]
                               duration:[transition transitionDuration:transition.transitionContext]
                                options:UIViewAnimationOptionTransitionCurlUp
                             completion:^(BOOL finished) {
                                 [transition complete];
                             }];
-        } else if (transition.type == FWAnimatedTransitionTypePop) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypePop) {
             [transition start];
-            [UIView transitionFromView:transition.fromView
-                                toView:transition.toView
+            [UIView transitionFromView:[transition.transitionContext viewForKey:UITransitionContextFromViewKey]
+                                toView:[transition.transitionContext viewForKey:UITransitionContextToViewKey]
                               duration:[transition transitionDuration:transition.transitionContext]
                                options:UIViewAnimationOptionTransitionCurlDown
                             completion:^(BOOL finished) {
@@ -344,24 +344,24 @@
 - (void)onPushBlock
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePush) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePush) {
             [transition start];
-            transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+            [transition.transitionContext viewForKey:UITransitionContextToViewKey].frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
             [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
-                                 transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+                                 [transition.transitionContext viewForKey:UITransitionContextToViewKey].frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
                                  [transition complete];
                              }];
-        } else if (transition.type == FWAnimatedTransitionTypePop) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypePop) {
             [transition start];
-            transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
             [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
-                                 transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+                                 [transition.transitionContext viewForKey:UITransitionContextFromViewKey].frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
                                  [transition complete];
@@ -377,9 +377,9 @@
 - (void)onPushAnimation
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePush) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePush) {
             [transition start];
             // 使用navigationController.view做动画，而非containerView做动画，下同
             [self.navigationController.view fwAddTransitionWithType:kCATransitionMoveIn
@@ -389,10 +389,10 @@
                                                          completion:^(BOOL finished) {
                                                              [transition complete];
                                                          }];
-        } else if (transition.type == FWAnimatedTransitionTypePop) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypePop) {
             [transition start];
             // 这种转场动画需要先隐藏目标视图
-            transition.fromView.hidden = YES;
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].hidden = YES;
             [self.navigationController.view fwAddTransitionWithType:kCATransitionReveal
                                                             subtype:kCATransitionFromBottom
                                                      timingFunction:kCAMediaTimingFunctionEaseInEaseOut
@@ -411,9 +411,9 @@
 - (void)onPushCustom
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePush) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePush) {
             [transition start];
             [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
                                                          transition:UIViewAnimationTransitionCurlUp
@@ -421,10 +421,10 @@
                                                          completion:^(BOOL finished){
                                                              [transition complete];
                                                          }];
-        } else if (transition.type == FWAnimatedTransitionTypePop) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypePop) {
             [transition start];
             // 这种转场动画需要先隐藏目标视图
-            transition.fromView.hidden = YES;
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].hidden = YES;
             [self.navigationController.view fwAddAnimationWithCurve:UIViewAnimationCurveEaseInOut
                                                          transition:UIViewAnimationTransitionCurlDown
                                                            duration:[transition transitionDuration:transition.transitionContext]
@@ -442,7 +442,7 @@
 - (void)onPushSwipe
 {
     FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
+    transition.transitionDuration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     
@@ -454,24 +454,24 @@
 - (void)onPushProxy
 {
     FWAnimatedTransition *transition = [[FWAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
-    transition.block = ^(FWAnimatedTransition *transition){
-        if (transition.type == FWAnimatedTransitionTypePush) {
+    transition.transitionDuration = TestTransitinDuration;
+    transition.transitionBlock = ^(FWAnimatedTransition *transition){
+        if (transition.transitionType == FWAnimatedTransitionTypePush) {
             [transition start];
-            transition.toView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+            [transition.transitionContext viewForKey:UITransitionContextToViewKey].frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
             [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
-                                 transition.toView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+                                 [transition.transitionContext viewForKey:UITransitionContextToViewKey].frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
                                  [transition complete];
                              }];
-        } else if (transition.type == FWAnimatedTransitionTypePop) {
+        } else if (transition.transitionType == FWAnimatedTransitionTypePop) {
             [transition start];
-            transition.fromView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+            [transition.transitionContext viewForKey:UITransitionContextFromViewKey].frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
             [UIView animateWithDuration:[transition transitionDuration:transition.transitionContext]
                              animations:^{
-                                 transition.fromView.frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
+                                 [transition.transitionContext viewForKey:UITransitionContextFromViewKey].frame = CGRectMake(0, FWScreenHeight, FWScreenWidth, FWScreenHeight);
                              }
                              completion:^(BOOL finished) {
                                  [transition complete];
@@ -488,7 +488,7 @@
 - (void)onPushInteractive
 {
     FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
-    transition.duration = TestTransitinDuration;
+    transition.transitionDuration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
     transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
