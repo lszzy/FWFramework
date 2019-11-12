@@ -13,6 +13,7 @@
 
 @property (nonatomic, assign) BOOL canScroll;
 @property (nonatomic, weak) UILabel *frameLabel;
+@property (nonatomic, assign) BOOL noAnimate;
 
 @end
 
@@ -79,7 +80,7 @@
     FWWeakifySelf();
     [self fwSetLeftBarItem:[UIImage imageNamed:@"public_close"] block:^(id sender) {
         FWStrongifySelf();
-        [self fwCloseViewControllerAnimated:YES];
+        [self fwCloseViewControllerAnimated:!self.noAnimate];
     }];
     
     // 设置背景(present时透明，push时不透明)
@@ -88,7 +89,7 @@
     // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
     [self.view fwAddTapGestureWithBlock:^(id sender) {
         FWStrongifySelf();
-        [self fwCloseViewControllerAnimated:YES];
+        [self fwCloseViewControllerAnimated:!self.noAnimate];
     }];
 }
 
@@ -134,6 +135,7 @@
                                           @[@"swipe present", @"onPresentSwipe"],
                                           @[@"自定义controller", @"onPresentController"],
                                           @[@"interactive present", @"onPresentInteractive"],
+                                          @[@"present without animation", @"onPresentNoAnimate"],
                                           @[@"System Push", @"onPush"],
                                           @[@"Block Push", @"onPushBlock"],
                                           @[@"Option Push", @"onPushOption"],
@@ -142,6 +144,7 @@
                                           @[@"Swipe Push", @"onPushSwipe"],
                                           @[@"Proxy Push", @"onPushProxy"],
                                           @[@"interactive Push", @"onPushInteractive"],
+                                          @[@"push without animation", @"onPushNoAnimate"],
                                           ]];
 }
 
@@ -282,6 +285,26 @@
     nav.fwModalTransition = transition;
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onPresentNoAnimate
+{
+    FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
+    transition.interactiveEnabled = YES;
+    transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
+        FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        presentation.verticalInset = 200;
+        presentation.cornerRadius = 10;
+        return presentation;
+    };
+    
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.canScroll = YES;
+    vc.noAnimate = YES;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    nav.modalPresentationStyle = UIModalPresentationCustom;
+    nav.fwModalTransition = transition;
+    [self presentViewController:nav animated:NO completion:nil];
 }
 
 - (void)onPush
@@ -477,6 +500,21 @@
     vc.canScroll = YES;
     self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onPushNoAnimate
+{
+    FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
+    transition.transitionDuration = TestTransitinDuration;
+    transition.inDirection = UISwipeGestureRecognizerDirectionUp;
+    transition.outDirection = UISwipeGestureRecognizerDirectionDown;
+    transition.interactiveEnabled = YES;
+    
+    TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.canScroll = YES;
+    vc.noAnimate = YES;
+    self.navigationController.fwNavigationTransition = transition;
+    [self.navigationController pushViewController:vc animated:NO];
 }
 
 @end
