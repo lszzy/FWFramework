@@ -19,7 +19,7 @@
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
-@property (nonatomic, strong) FWPanGestureRecognizer *interactiveGesture;
+@property (nonatomic, strong) FWPanGestureRecognizer *gestureRecognizer;
 
 @property (nonatomic, assign) CGFloat interactivePercent;
 
@@ -63,15 +63,15 @@
 - (void)setInteractiveEnabled:(BOOL)interactiveEnabled
 {
     _interactiveEnabled = interactiveEnabled;
-    self.interactiveGesture.enabled = interactiveEnabled;
+    self.gestureRecognizer.enabled = interactiveEnabled;
 }
 
-- (FWPanGestureRecognizer *)interactiveGesture
+- (FWPanGestureRecognizer *)gestureRecognizer
 {
-    if (!_interactiveGesture) {
-        _interactiveGesture = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(interactAction:)];
+    if (!_gestureRecognizer) {
+        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerAction:)];
     }
-    return _interactiveGesture;
+    return _gestureRecognizer;
 }
 
 - (void)interactWithViewController:(UIViewController *)viewController
@@ -79,20 +79,20 @@
     if (!viewController.view) return;
 
     for (UIGestureRecognizer *gestureRecognizer in viewController.view.gestureRecognizers) {
-        if (gestureRecognizer == self.interactiveGesture) return;
+        if (gestureRecognizer == self.gestureRecognizer) return;
     }
-    [viewController.view addGestureRecognizer:self.interactiveGesture];
+    [viewController.view addGestureRecognizer:self.gestureRecognizer];
 }
 
-- (void)interactAction:(FWPanGestureRecognizer *)gesture
+- (void)gestureRecognizerAction:(FWPanGestureRecognizer *)gestureRecognizer
 {
     if (self.percentBlock) {
-        _interactivePercent = self.percentBlock(gesture);
+        _interactivePercent = self.percentBlock(gestureRecognizer);
     } else {
-        _interactivePercent = [gesture fwSwipePercentOfDirection:gesture.direction];
+        _interactivePercent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
     }
     
-    switch (gesture.state) {
+    switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
             
@@ -111,9 +111,9 @@
             if (_interactivePercent >= 0.5) {
                 [self finishInteractiveTransition];
             } else {
-                BOOL isVertical = gesture.direction == UISwipeGestureRecognizerDirectionUp || gesture.direction == UISwipeGestureRecognizerDirectionDown;
-                BOOL isReverse = gesture.direction == UISwipeGestureRecognizerDirectionUp || gesture.direction == UISwipeGestureRecognizerDirectionLeft;
-                CGPoint velocityPoint = [gesture velocityInView:gesture.view];
+                BOOL isVertical = gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown;
+                BOOL isReverse = gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft;
+                CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
                 CGFloat velocity = isVertical ? velocityPoint.y : velocityPoint.x;
                 
                 if (velocity > 100 && !isReverse) {
@@ -342,7 +342,7 @@
 - (void)setOutDirection:(UISwipeGestureRecognizerDirection)outDirection
 {
     _outDirection = outDirection;
-    self.interactiveGesture.direction = outDirection;
+    self.gestureRecognizer.direction = outDirection;
 }
 
 - (void)animate
