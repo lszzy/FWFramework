@@ -40,7 +40,7 @@
 + (instancetype)transitionWithBlock:(void (^)(FWAnimatedTransition *))block
 {
     FWAnimatedTransition *transition = [[self alloc] init];
-    transition.block = block;
+    transition.transitionBlock = block;
     return transition;
 }
 
@@ -48,7 +48,7 @@
 {
     self = [super init];
     if (self) {
-        _duration = 0.35;
+        _transitionDuration = 0.35;
     }
     return self;
 }
@@ -79,7 +79,7 @@
                                                                   presentingController:(UIViewController *)presenting
                                                                       sourceController:(UIViewController *)source
 {
-    self.type = FWAnimatedTransitionTypePresent;
+    self.transitionType = FWAnimatedTransitionTypePresent;
     // 自动设置和绑定out交互转场，在dismiss前设置生效。in交互转场需要在present之前设置才能生效
     if (!self.isSystem && [self.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
         FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.outInteractiveTransition;
@@ -94,7 +94,7 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    self.type = FWAnimatedTransitionTypeDismiss;
+    self.transitionType = FWAnimatedTransitionTypeDismiss;
     return !self.isSystem ? self : nil;
 }
 
@@ -126,7 +126,7 @@
     if (operation == UINavigationControllerOperationPush) {
         // push时检查toVC的转场代理
         FWAnimatedTransition *transition = toVC.fwViewTransition ?: self;
-        transition.type = FWAnimatedTransitionTypePush;
+        transition.transitionType = FWAnimatedTransitionTypePush;
         // 自动设置和绑定in交互转场，在pop前设置生效。out交互转场需要在push之前设置才能生效
         if (!transition.isSystem && [transition.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
             FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)transition.outInteractiveTransition;
@@ -139,7 +139,7 @@
     } else if (operation == UINavigationControllerOperationPop) {
         // pop时检查fromVC的转场代理
         FWAnimatedTransition *transition = fromVC.fwViewTransition ?: self;
-        transition.type = FWAnimatedTransitionTypePop;
+        transition.transitionType = FWAnimatedTransitionTypePop;
         return !transition.isSystem ? transition : nil;
     }
     return nil;
@@ -155,15 +155,15 @@
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-    return transitionContext.isAnimated ? self.duration : 0.f;
+    return transitionContext.isAnimated ? self.transitionDuration : 0.f;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
     self.transitionContext = transitionContext;
     
-    if (self.block) {
-        self.block(self);
+    if (self.transitionBlock) {
+        self.transitionBlock(self);
     } else {
         [self animate];
     }
@@ -174,8 +174,8 @@
 - (FWAnimatedTransitionType)type
 {
     // 如果自定义type，优先使用之
-    if (_type != FWAnimatedTransitionTypeNone) {
-        return _type;
+    if (_transitionType != FWAnimatedTransitionTypeNone) {
+        return _transitionType;
     }
     
     // 自动根据上下文获取type
@@ -183,8 +183,8 @@
         return FWAnimatedTransitionTypeNone;
     }
     
-    UIViewController *fromViewController = self.fromViewController;
-    UIViewController *toViewController = self.toViewController;
+    UIViewController *fromViewController = [self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    UIViewController *toViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     // 导航栏为同一个时为push|pop
     if (fromViewController.navigationController && toViewController.navigationController &&
         fromViewController.navigationController == toViewController.navigationController) {
@@ -204,50 +204,32 @@
     }
 }
 
-- (UIViewController *)fromViewController
-{
-    return [self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-}
-
-- (UIViewController *)toViewController
-{
-    return [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-}
-
-- (UIView *)fromView
-{
-    return [self.transitionContext viewForKey:UITransitionContextFromViewKey];
-}
-
-- (UIView *)toView
-{
-    return [self.transitionContext viewForKey:UITransitionContextToViewKey];
-}
-
 - (void)start
 {
+    UIView *fromView = [self.transitionContext viewForKey:UITransitionContextFromViewKey];
+    UIView *toView = [self.transitionContext viewForKey:UITransitionContextToViewKey];
     switch (self.type) {
         // push时fromView在下，toView在上
         case FWAnimatedTransitionTypePush: {
-            [self.transitionContext.containerView addSubview:self.fromView];
-            [self.transitionContext.containerView addSubview:self.toView];
+            [self.transitionContext.containerView addSubview:fromView];
+            [self.transitionContext.containerView addSubview:toView];
             break;
         }
         // pop时fromView在上，toView在下
         case FWAnimatedTransitionTypePop: {
             // 此处后添加fromView，方便做pop动画，可自行移动toView到上面
-            [self.transitionContext.containerView addSubview:self.toView];
-            [self.transitionContext.containerView addSubview:self.fromView];
+            [self.transitionContext.containerView addSubview:toView];
+            [self.transitionContext.containerView addSubview:fromView];
             break;
         }
         // present时使用toView做动画
         case FWAnimatedTransitionTypePresent: {
-            [self.transitionContext.containerView addSubview:self.toView];
+            [self.transitionContext.containerView addSubview:toView];
             break;
         }
         // dismiss时使用fromView做动画
         case FWAnimatedTransitionTypeDismiss: {
-            [self.transitionContext.containerView addSubview:self.fromView];
+            [self.transitionContext.containerView addSubview:fromView];
             break;
         }
         default: {
@@ -317,10 +299,10 @@
         }
     }
     
-    CGRect fromFrame = [self.transitionContext initialFrameForViewController:self.fromViewController];
-    CGRect toFrame = [self.transitionContext finalFrameForViewController:self.toViewController];
-    UIView *fromView = self.fromView;
-    UIView *toView = self.toView;
+    CGRect fromFrame = [self.transitionContext initialFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey]];
+    CGRect toFrame = [self.transitionContext finalFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
+    UIView *fromView = [self.transitionContext viewForKey:UITransitionContextFromViewKey];
+    UIView *toView = [self.transitionContext viewForKey:UITransitionContextToViewKey];
     if (swipeIn) {
         [self.transitionContext.containerView addSubview:toView];
         toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:YES show:swipeIn];
