@@ -45,4 +45,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/*!
+ @brief FWPanGestureRecognizer
+ @discussion 如果指定了滚动视图，自动处理纵向pan手势冲突；如果未指定滚动视图，则同UIPanGestureRecognizer
+ */
+@interface FWPanGestureRecognizer : UIPanGestureRecognizer
+
+// 指定滚动视图，自动处理纵向pan手势冲突。自动设置默认delegate为自身
+@property (nullable, nonatomic, weak) UIScrollView *scrollView;
+
+// 指定当前pan手势必定判定失败的另一个手势
+@property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailureGestureRecognizer;
+
+@end
+
 NS_ASSUME_NONNULL_END
