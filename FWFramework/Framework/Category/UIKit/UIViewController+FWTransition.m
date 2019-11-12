@@ -367,11 +367,7 @@
 
 #pragma mark - FWPercentInteractiveTransition
 
-@interface FWPercentInteractiveTransition () <UIGestureRecognizerDelegate>
-
-@property (nonatomic, weak) UIScrollView *scrollView;
-
-@property (nonatomic, assign) BOOL shouldBegin;
+@interface FWPercentInteractiveTransition ()
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
@@ -391,22 +387,6 @@
     return self;
 }
 
-- (UIRectEdge)edge
-{
-    switch (self.direction) {
-        case UISwipeGestureRecognizerDirectionDown:
-            return UIRectEdgeTop;
-        case UISwipeGestureRecognizerDirectionUp:
-            return UIRectEdgeBottom;
-        case UISwipeGestureRecognizerDirectionLeft:
-            return UIRectEdgeRight;
-        case UISwipeGestureRecognizerDirectionRight:
-            return UIRectEdgeLeft;
-        default:
-            return UIRectEdgeNone;
-    }
-}
-
 - (void)interactWithViewController:(UIViewController *)viewController
 {
     if (!viewController.view) return;
@@ -415,9 +395,8 @@
         if (gestureRecognizer == self.gestureRecognizer) return;
     }
     
-    UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
+    FWPanGestureRecognizer *gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
     _gestureRecognizer = gestureRecognizer;
-    gestureRecognizer.delegate = self;
     [viewController.view addGestureRecognizer:gestureRecognizer];
 }
 
@@ -429,20 +408,11 @@
     // 默认计算当前方向上的进度
     } else {
         _percent = [gestureRecognizer fwSwipePercentOfDirection:self.direction];
-        if (!self.shouldBegin) {
-            _percent = 0;
-        }
     }
     
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
-            
-            _shouldBegin = YES;
-            if (self.scrollView) {
-                _shouldBegin = [self.scrollView fwIsScrollToEdge:[self edge]] && gestureRecognizer.fwSwipeDirection == self.direction;
-                self.scrollView.scrollEnabled = !self.shouldBegin;
-            }
             
             if (self.interactiveBlock) {
                 self.interactiveBlock();
@@ -455,11 +425,6 @@
         }
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
-            
-            _shouldBegin = NO;
-            if (self.scrollView) {
-                self.scrollView.scrollEnabled = YES;
-            }
 
             if (!_displayLink) {
                 // displayLink强引用self，会循环引用，所以action中需要invalidate
@@ -490,20 +455,6 @@
         _displayLink = nil;
         [self cancelInteractiveTransition];
     }
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
-        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
-        self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
-        if ([self.scrollView fwIsScrollToEdge:[self edge]]) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 @end
