@@ -237,7 +237,7 @@
 
 #pragma mark - Animate
 
-- (FWAnimatedTransitionType)type
+- (FWAnimatedTransitionType)transitionType
 {
     // 如果自定义type，优先使用之
     if (_transitionType != FWAnimatedTransitionTypeNone) {
@@ -274,7 +274,7 @@
 {
     UIView *fromView = [self.transitionContext viewForKey:UITransitionContextFromViewKey];
     UIView *toView = [self.transitionContext viewForKey:UITransitionContextToViewKey];
-    switch (self.type) {
+    switch (self.transitionType) {
         // push时fromView在下，toView在上
         case FWAnimatedTransitionTypePush: {
             [self.transitionContext.containerView addSubview:fromView];
@@ -347,8 +347,8 @@
 
 - (void)animate
 {
-    FWAnimatedTransitionType type = [self type];
-    BOOL swipeIn = (type == FWAnimatedTransitionTypePush || type == FWAnimatedTransitionTypePresent);
+    FWAnimatedTransitionType transitionType = [self transitionType];
+    BOOL swipeIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
     UISwipeGestureRecognizerDirection direction = swipeIn ? self.inDirection : self.outDirection;
     CGVector offset;
     switch (direction) {
@@ -502,9 +502,11 @@
     [super dismissalTransitionWillBegin];
     
     [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        [UIView animateWithDuration:[context transitionDuration] animations:^{
-            self.dimmingView.alpha = 0;
-        }];
+        if (!context.isInteractive) {
+            [UIView animateWithDuration:[context transitionDuration] animations:^{
+                self.dimmingView.alpha = 0;
+            }];
+        }
     } completion:nil];
 }
 
