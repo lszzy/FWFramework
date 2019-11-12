@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 自定义转场动画动作句柄，比如指定转场动画方向等。可通过isInteractive区分是否交互转场
 @property (nullable, nonatomic, copy) void(^transitionBlock)(FWAnimatedTransition *transition);
 
-// 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.3
+// 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.5
 @property (nonatomic, assign) CGFloat completionPercent;
 
 // 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
