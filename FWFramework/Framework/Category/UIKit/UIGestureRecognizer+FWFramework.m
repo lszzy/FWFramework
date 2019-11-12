@@ -79,3 +79,86 @@
 }
 
 @end
+
+@interface FWPanGestureRecognizer () <UIGestureRecognizerDelegate>
+
+@property (nonatomic, strong) NSNumber *isFailed;
+
+@end
+
+@implementation FWPanGestureRecognizer
+
+- (void)setScrollView:(UIScrollView *)scrollView
+{
+    _scrollView = scrollView;
+    
+    if (scrollView) {
+        if (!self.delegate) self.delegate = self;
+    } else {
+        if (self.delegate == self) self.delegate = nil;
+    }
+}
+
+- (void)reset
+{
+    [super reset];
+    self.isFailed = nil;
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesMoved:touches withEvent:event];
+    if (!self.scrollView) return;
+
+    if (self.state == UIGestureRecognizerStateFailed) return;
+    CGPoint velocity = [self velocityInView:self.view];
+    CGPoint nowPoint = [touches.anyObject locationInView:self.view];
+    CGPoint prevPoint = [touches.anyObject previousLocationInView:self.view];
+
+    if (self.isFailed) {
+        if (self.isFailed.boolValue) {
+            self.state = UIGestureRecognizerStateFailed;
+        }
+        return;
+    }
+
+    CGFloat topOffset = -self.scrollView.contentInset.top;
+    if ((fabs(velocity.x) < fabs(velocity.y)) &&
+        (nowPoint.y > prevPoint.y) &&
+        (self.scrollView.contentOffset.y <= topOffset)) {
+        self.isFailed = @NO;
+    } else if (self.scrollView.contentOffset.y >= topOffset) {
+        self.state = UIGestureRecognizerStateFailed;
+        self.isFailed = @YES;
+    } else {
+        self.isFailed = @NO;
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (self.scrollView) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (self.scrollView) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (self.scrollView && self.requireFailureGestureRecognizer && self.requireFailureGestureRecognizer == otherGestureRecognizer) {
+        return YES;
+    }
+    return NO;
+}
+
+@end
