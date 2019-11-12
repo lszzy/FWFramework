@@ -20,6 +20,11 @@
 
 - (void)renderView
 {
+    FWPercentInteractiveTransition *it = self.navigationController.fwModalTransition.outInteractiveTransition;
+    if (it) {
+        ((FWPercentInteractiveTransition *)it).gestureRecognizer.scrollView = self.scrollView;
+    }
+    
     self.scrollView.scrollEnabled = self.canScroll;
     
     FWBannerView *cycleView = [FWBannerView new];

@@ -8,6 +8,9 @@
  */
 
 #import "UIGestureRecognizer+FWFramework.h"
+#import "UIScrollView+FWFramework.h"
+
+#pragma mark - UIGestureRecognizer+FWFramework
 
 @implementation UIGestureRecognizer (FWFramework)
 
@@ -80,6 +83,8 @@
 
 @end
 
+#pragma mark - FWPanGestureRecognizer
+
 @interface FWPanGestureRecognizer () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSNumber *isFailed;
@@ -87,6 +92,24 @@
 @end
 
 @implementation FWPanGestureRecognizer
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _scrollDirection = UISwipeGestureRecognizerDirectionDown;
+    }
+    return self;
+}
+
+- (instancetype)initWithTarget:(id)target action:(SEL)action
+{
+    self = [super initWithTarget:target action:action];
+    if (self) {
+        _scrollDirection = UISwipeGestureRecognizerDirectionDown;
+    }
+    return self;
+}
 
 - (void)setScrollView:(UIScrollView *)scrollView
 {
@@ -111,10 +134,6 @@
     if (!self.scrollView) return;
 
     if (self.state == UIGestureRecognizerStateFailed) return;
-    CGPoint velocity = [self velocityInView:self.view];
-    CGPoint nowPoint = [touches.anyObject locationInView:self.view];
-    CGPoint prevPoint = [touches.anyObject previousLocationInView:self.view];
-
     if (self.isFailed) {
         if (self.isFailed.boolValue) {
             self.state = UIGestureRecognizerStateFailed;
@@ -122,12 +141,53 @@
         return;
     }
 
-    CGFloat topOffset = -self.scrollView.contentInset.top;
-    if ((fabs(velocity.x) < fabs(velocity.y)) &&
-        (nowPoint.y > prevPoint.y) &&
-        (self.scrollView.contentOffset.y <= topOffset)) {
-        self.isFailed = @NO;
-    } else if (self.scrollView.contentOffset.y >= topOffset) {
+    CGPoint velocity = [self velocityInView:self.view];
+    CGPoint location = [touches.anyObject locationInView:self.view];
+    CGPoint prevLocation = [touches.anyObject previousLocationInView:self.view];
+    
+    BOOL isFailed = NO;
+    switch (self.scrollDirection) {
+        case UISwipeGestureRecognizerDirectionDown: {
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeTop].y;
+            if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y > prevLocation.y) && (self.scrollView.contentOffset.y <= edgeOffset)) {
+                isFailed = NO;
+            } else if (self.scrollView.contentOffset.y >= edgeOffset) {
+                isFailed = YES;
+            }
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionUp: {
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeBottom].y;
+            if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y < prevLocation.y) && (self.scrollView.contentOffset.y >= edgeOffset)) {
+                isFailed = NO;
+            } else if (self.scrollView.contentOffset.y <= edgeOffset) {
+                isFailed = YES;
+            }
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionRight: {
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeLeft].x;
+            if ((fabs(velocity.y) < fabs(velocity.x)) && (location.x > prevLocation.x) && (self.scrollView.contentOffset.x <= edgeOffset)) {
+                isFailed = NO;
+            } else if (self.scrollView.contentOffset.x >= edgeOffset) {
+                isFailed = YES;
+            }
+            break;
+        }
+        case UISwipeGestureRecognizerDirectionLeft: {
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeRight].x;
+            if ((fabs(velocity.y) < fabs(velocity.x)) && (location.x < prevLocation.x) && (self.scrollView.contentOffset.x >= edgeOffset)) {
+                isFailed = NO;
+            } else if (self.scrollView.contentOffset.x <= edgeOffset) {
+                isFailed = YES;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+    
+    if (isFailed) {
         self.state = UIGestureRecognizerStateFailed;
         self.isFailed = @YES;
     } else {
