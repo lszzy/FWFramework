@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 指定当前pan手势必定判定失败的另一个手势
 @property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailureGestureRecognizer;
 
+// 自定义Failed判断句柄。默认判定失败时直接修改状态为Failed，可设置此block修改判定条件
+@property (nullable, nonatomic, copy) BOOL (^shouldFailed)(FWPanGestureRecognizer *gestureRecognizer);
+
 @end
 
 NS_ASSUME_NONNULL_END

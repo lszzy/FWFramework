@@ -187,6 +187,10 @@
             break;
     }
     
+    if (isFailed && self.shouldFailed) {
+        isFailed = self.shouldFailed(self);
+    }
+    
     if (isFailed) {
         self.state = UIGestureRecognizerStateFailed;
         self.isFailed = @YES;
