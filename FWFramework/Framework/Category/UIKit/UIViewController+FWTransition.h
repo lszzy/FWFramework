@@ -31,12 +31,14 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - FWAnimatedTransition
 
+@class FWPanGestureRecognizer;
+
 // 转场动画类
-@interface FWAnimatedTransition : NSObject <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
+@interface FWAnimatedTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
 #pragma mark - Public
 
-// 创建系统转场单例，不支持交互转场
+// 创建系统转场单例，不支持交互手势转场
 + (instancetype)systemTransition;
 
 // 创建动画句柄转场
@@ -53,10 +55,17 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - Interactive
 
-// 设置进入交互转场，可选，需要在调用push|present之前设置并绑定控制器
-@property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
-// 设置消失交互转场，可选，需要在调用pop|dismiss之前设置并绑定控制器。当设置为FWPercentInteractiveTransition时，会自动绑定
-@property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
+// 是否启用交互pan手势进行pop|dismiss，默认NO
+@property (nonatomic, assign) BOOL interactiveEnabled;
+
+// 交互pan手势对象，延迟加载，可设置交互方向，滚动视图等
+@property (nonatomic, strong, readonly) FWPanGestureRecognizer *interactiveGesture;
+
+// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
+@property (nonatomic, assign, readonly) BOOL isInteractive;
+
+// 自定义交互进度计算方法，默认计算指定方向上的拖动进度
+@property (nullable, nonatomic, copy) CGFloat(^percentBlock)(FWPanGestureRecognizer *sender);
 
 #pragma mark - Presentation
 
@@ -93,39 +102,6 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection inDirection;
 // 指定消失(pop|dismiss)方向，默认下滑Down
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection outDirection;
-
-@end
-
-#pragma mark - FWPercentInteractiveTransition
-
-@class FWPanGestureRecognizer;
-
-// 百分比交互转场
-@interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
-
-// 设置交互方向，默认下滑Down。可通过percentBlock和transitionBlock实现多个方向交互
-@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
-
-// 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
-@property (nullable, nonatomic, copy) void(^interactiveBlock)(void);
-
-// 自定义进度计算方法，默认根据direction和translation计算进度
-@property (nullable, nonatomic, copy) CGFloat(^percentBlock)(UIPanGestureRecognizer *sender);
-
-// 自定义转场动画动作句柄，比如指定转场动画方向等。可通过isInteractive区分是否交互转场
-@property (nullable, nonatomic, copy) void(^transitionBlock)(FWAnimatedTransition *transition);
-
-// 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.5
-@property (nonatomic, assign) CGFloat completionPercent;
-
-// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
-@property (nonatomic, assign, readonly) BOOL isInteractive;
-
-// 交互pan手势，调用interactWithViewController之后才存在
-@property (nullable, nonatomic, weak, readonly) FWPanGestureRecognizer *gestureRecognizer;
-
-// 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
-- (void)interactWithViewController:(UIViewController *)viewController;
 
 @end
 

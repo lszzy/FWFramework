@@ -8,7 +8,6 @@
 
 #import "UIViewController+FWTransition.h"
 #import "UIGestureRecognizer+FWFramework.h"
-#import "UIScrollView+FWFramework.h"
 #import "UIView+FWBorder.h"
 #import <objc/runtime.h>
 
@@ -19,6 +18,12 @@
 @property (nonatomic, assign) BOOL isSystem;
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
+
+@property (nonatomic, strong) FWPanGestureRecognizer *interactiveGesture;
+
+@property (nonatomic, assign) CGFloat interactivePercent;
+
+@property (nonatomic, copy) void(^interactiveBlock)(void);
 
 @end
 
@@ -55,20 +60,83 @@
 
 #pragma mark - Private
 
+- (void)setInteractiveEnabled:(BOOL)interactiveEnabled
+{
+    _interactiveEnabled = interactiveEnabled;
+    self.interactiveGesture.enabled = interactiveEnabled;
+}
+
+- (FWPanGestureRecognizer *)interactiveGesture
+{
+    if (!_interactiveGesture) {
+        _interactiveGesture = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(interactAction:)];
+    }
+    return _interactiveGesture;
+}
+
+- (void)interactWithViewController:(UIViewController *)viewController
+{
+    if (!viewController.view) return;
+
+    for (UIGestureRecognizer *gestureRecognizer in viewController.view.gestureRecognizers) {
+        if (gestureRecognizer == self.interactiveGesture) return;
+    }
+    [viewController.view addGestureRecognizer:self.interactiveGesture];
+}
+
+- (void)interactAction:(FWPanGestureRecognizer *)gesture
+{
+    if (self.percentBlock) {
+        _interactivePercent = self.percentBlock(gesture);
+    } else {
+        _interactivePercent = [gesture fwSwipePercentOfDirection:gesture.direction];
+    }
+    
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan: {
+            _isInteractive = YES;
+            
+            if (self.interactiveBlock) {
+                self.interactiveBlock();
+            }
+            break;
+        }
+        case UIGestureRecognizerStateChanged: {
+            [self updateInteractiveTransition:_interactivePercent];
+            break;
+        }
+        case UIGestureRecognizerStateEnded: {
+            _isInteractive = NO;
+            
+            if (_interactivePercent >= 0.5) {
+                [self finishInteractiveTransition];
+            } else {
+                BOOL isVertical = gesture.direction == UISwipeGestureRecognizerDirectionUp || gesture.direction == UISwipeGestureRecognizerDirectionDown;
+                BOOL isReverse = gesture.direction == UISwipeGestureRecognizerDirectionUp || gesture.direction == UISwipeGestureRecognizerDirectionLeft;
+                CGPoint velocityPoint = [gesture velocityInView:gesture.view];
+                CGFloat velocity = isVertical ? velocityPoint.y : velocityPoint.x;
+                
+                if (velocity > 100 && !isReverse) {
+                    [self finishInteractiveTransition];
+                } else if (velocity < -100 && isReverse) {
+                    [self finishInteractiveTransition];
+                } else {
+                    [self cancelInteractiveTransition];
+                }
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 - (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
-    if ([transition isKindOfClass:[FWAnimatedTransition class]]) {
-        FWAnimatedTransition *animatedTransition = (FWAnimatedTransition *)transition;
-        BOOL transitionIn = (animatedTransition.type == FWAnimatedTransitionTypePresent || animatedTransition.type == FWAnimatedTransitionTypePush);
-        id<UIViewControllerInteractiveTransitioning> interactiveTransition = transitionIn ? animatedTransition.inInteractiveTransition : animatedTransition.outInteractiveTransition;
-        if ([interactiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-            FWPercentInteractiveTransition *percentTransition = (FWPercentInteractiveTransition *)interactiveTransition;
-            if (percentTransition.transitionBlock) {
-                percentTransition.transitionBlock(animatedTransition);
-            }
-            return percentTransition.isInteractive ? percentTransition : nil;
+    if (self.transitionType == FWAnimatedTransitionTypeDismiss || self.transitionType == FWAnimatedTransitionTypePop) {
+        if (self.interactiveEnabled && self.isInteractive) {
+            return self;
         }
-        return interactiveTransition;
     }
     return nil;
 }
@@ -80,14 +148,13 @@
                                                                       sourceController:(UIViewController *)source
 {
     self.transitionType = FWAnimatedTransitionTypePresent;
-    // 自动设置和绑定out交互转场，在dismiss前设置生效。in交互转场需要在present之前设置才能生效
-    if (!self.isSystem && [self.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-        FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)self.outInteractiveTransition;
+    // 自动设置和绑定dismiss交互转场，在dismiss前设置生效
+    if (!self.isSystem && self.interactiveEnabled) {
         __weak UIViewController *weakPresented = presented;
-        interactiveTransition.interactiveBlock = ^{
+        self.interactiveBlock = ^{
             [weakPresented dismissViewControllerAnimated:YES completion:nil];
         };
-        [interactiveTransition interactWithViewController:presented];
+        [self interactWithViewController:presented];
     }
     return !self.isSystem ? self : nil;
 }
@@ -127,13 +194,12 @@
         // push时检查toVC的转场代理
         FWAnimatedTransition *transition = toVC.fwViewTransition ?: self;
         transition.transitionType = FWAnimatedTransitionTypePush;
-        // 自动设置和绑定in交互转场，在pop前设置生效。out交互转场需要在push之前设置才能生效
-        if (!transition.isSystem && [transition.outInteractiveTransition isKindOfClass:[FWPercentInteractiveTransition class]]) {
-            FWPercentInteractiveTransition *interactiveTransition = (FWPercentInteractiveTransition *)transition.outInteractiveTransition;
-            interactiveTransition.interactiveBlock = ^{
+        // 自动设置和绑定pop交互转场，在pop前设置生效
+        if (!transition.isSystem && transition.interactiveEnabled) {
+            transition.interactiveBlock = ^{
                 [navigationController popViewControllerAnimated:YES];
             };
-            [interactiveTransition interactWithViewController:toVC];
+            [transition interactWithViewController:toVC];
         }
         return !transition.isSystem ? transition : nil;
     } else if (operation == UINavigationControllerOperationPop) {
@@ -273,6 +339,12 @@
     return self;
 }
 
+- (void)setOutDirection:(UISwipeGestureRecognizerDirection)outDirection
+{
+    _outDirection = outDirection;
+    self.interactiveGesture.direction = outDirection;
+}
+
 - (void)animate
 {
     FWAnimatedTransitionType type = [self type];
@@ -343,93 +415,6 @@
     CGFloat offsetX = frame.size.width * offset.dx * flag;
     CGFloat offsetY = frame.size.height * offset.dy * flag;
     return CGRectOffset(frame, offsetX, offsetY);
-}
-
-@end
-
-#pragma mark - FWPercentInteractiveTransition
-
-@interface FWPercentInteractiveTransition ()
-
-@property (nonatomic, strong) CADisplayLink *displayLink;
-
-@property (nonatomic, assign) CGFloat percent;
-
-@end
-
-@implementation FWPercentInteractiveTransition
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _direction = UISwipeGestureRecognizerDirectionDown;
-        _completionPercent = 0.5;
-    }
-    return self;
-}
-
-- (void)interactWithViewController:(UIViewController *)viewController
-{
-    if (!viewController.view) return;
-    
-    for (UIGestureRecognizer *gestureRecognizer in viewController.view.gestureRecognizers) {
-        if (gestureRecognizer == self.gestureRecognizer) return;
-    }
-    
-    FWPanGestureRecognizer *gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
-    _gestureRecognizer = gestureRecognizer;
-    gestureRecognizer.direction = self.direction;
-    [viewController.view addGestureRecognizer:gestureRecognizer];
-}
-
-- (void)gestureRecognizeAction:(UIPanGestureRecognizer *)gestureRecognizer
-{
-    // 自定义percent计算规则
-    if (self.percentBlock) {
-        _percent = self.percentBlock(gestureRecognizer);
-    // 默认计算当前方向上的进度
-    } else {
-        _percent = [gestureRecognizer fwSwipePercentOfDirection:self.direction];
-    }
-    
-    switch (gestureRecognizer.state) {
-        case UIGestureRecognizerStateBegan: {
-            _isInteractive = YES;
-            
-            if (self.interactiveBlock) {
-                self.interactiveBlock();
-            }
-            break;
-        }
-        case UIGestureRecognizerStateChanged: {
-            [self updateInteractiveTransition:_percent];
-            break;
-        }
-        case UIGestureRecognizerStateEnded: {
-            _isInteractive = NO;
-            
-            if (_percent > _completionPercent) {
-                [self finishInteractiveTransition];
-            } else {
-                BOOL isVertical = self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown;
-                BOOL isReverse = self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
-                CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
-                CGFloat velocity = isVertical ? velocityPoint.y : velocityPoint.x;
-                
-                if (velocity > 100 && !isReverse) {
-                    [self finishInteractiveTransition];
-                } else if (velocity < -100 && isReverse) {
-                    [self finishInteractiveTransition];
-                } else {
-                    [self cancelInteractiveTransition];
-                }
-            }
-            break;
-        }
-        default:
-            break;
-    }
 }
 
 @end
@@ -520,9 +505,16 @@
         [UIView animateWithDuration:[context transitionDuration] animations:^{
             self.dimmingView.alpha = 0;
         }];
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+    } completion:nil];
+}
+
+- (void)dismissalTransitionDidEnd:(BOOL)completed
+{
+    [super dismissalTransitionDidEnd:completed];
+    
+    if (completed) {
         [self.dimmingView removeFromSuperview];
-    }];
+    }
 }
 
 - (CGRect)frameOfPresentedViewInContainerView
