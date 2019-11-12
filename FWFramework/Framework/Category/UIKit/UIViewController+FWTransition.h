@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nonatomic, assign) BOOL interactiveEnabled;
 
 // 交互pan手势对象，延迟加载，可设置交互方向，滚动视图等
-@property (nonatomic, strong, readonly) FWPanGestureRecognizer *interactiveGesture;
+@property (nonatomic, strong, readonly) FWPanGestureRecognizer *gestureRecognizer;
 
 // 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
 @property (nonatomic, assign, readonly) BOOL isInteractive;

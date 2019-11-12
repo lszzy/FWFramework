@@ -22,8 +22,8 @@
 - (void)renderView
 {
     if (self.canScroll) {
-        self.navigationController.fwModalTransition.interactiveGesture.scrollView = self.scrollView;
-        self.navigationController.fwNavigationTransition.interactiveGesture.scrollView = self.scrollView;
+        self.navigationController.fwModalTransition.gestureRecognizer.scrollView = self.scrollView;
+        self.navigationController.fwNavigationTransition.gestureRecognizer.scrollView = self.scrollView;
     }
     
     self.scrollView.scrollEnabled = self.canScroll;
