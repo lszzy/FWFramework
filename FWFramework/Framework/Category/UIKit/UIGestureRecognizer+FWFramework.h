@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - UIGestureRecognizer+FWFramework
+
 /*!
  @brief UIGestureRecognizer+FWFramework
  @discussion gestureRecognizerShouldBegin：是否继续进行手势识别，默认YES
@@ -45,14 +47,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWPanGestureRecognizer
+
 /*!
  @brief FWPanGestureRecognizer
- @discussion 如果指定了滚动视图，自动处理纵向pan手势冲突；如果未指定滚动视图，则同UIPanGestureRecognizer
+ @discussion 如果指定了滚动视图，自动处理与滚动视图pan手势在指定方向的冲突；如果未指定滚动视图，什么也不做，同父类
  */
 @interface FWPanGestureRecognizer : UIPanGestureRecognizer
 
-// 指定滚动视图，自动处理纵向pan手势冲突。自动设置默认delegate为自身
+// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身
 @property (nullable, nonatomic, weak) UIScrollView *scrollView;
+
+// 指定与滚动视图pan手势的冲突滚动方向，默认向下
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection scrollDirection;
 
 // 指定当前pan手势必定判定失败的另一个手势
 @property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailureGestureRecognizer;
