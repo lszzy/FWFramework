@@ -382,7 +382,7 @@
     self = [super init];
     if (self) {
         _direction = UISwipeGestureRecognizerDirectionDown;
-        _completionPercent = 0.3;
+        _completionPercent = 0.5;
     }
     return self;
 }
@@ -425,35 +425,27 @@
         }
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
-
-            if (!_displayLink) {
-                // displayLink强引用self，会循环引用，所以action中需要invalidate
-                _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction)];
-                [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+            
+            if (_percent > _completionPercent) {
+                [self finishInteractiveTransition];
+            } else {
+                BOOL isVertical = self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown;
+                BOOL isReverse = self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
+                CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
+                CGFloat velocity = isVertical ? velocityPoint.y : velocityPoint.x;
+                
+                if (velocity > 100 && !isReverse) {
+                    [self finishInteractiveTransition];
+                } else if (velocity < -100 && isReverse) {
+                    [self finishInteractiveTransition];
+                } else {
+                    [self cancelInteractiveTransition];
+                }
             }
             break;
         }
         default:
             break;
-    }
-}
-
-- (void)displayLinkAction
-{
-    CGFloat timePercent = 2.0 / 60;
-    _percent = (_percent > _completionPercent) ? (_percent + timePercent) : (_percent - timePercent);
-    [self updateInteractiveTransition:_percent];
-    
-    if (_percent >= 1.0) {
-        [_displayLink invalidate];
-        _displayLink = nil;
-        [self finishInteractiveTransition];
-    }
-    
-    if (_percent <= 0.0) {
-        [_displayLink invalidate];
-        _displayLink = nil;
-        [self cancelInteractiveTransition];
     }
 }
 
