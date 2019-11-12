@@ -20,9 +20,9 @@
 
 - (void)renderView
 {
-    FWPercentInteractiveTransition *it = self.navigationController.fwModalTransition.outInteractiveTransition;
-    if (it) {
-        ((FWPercentInteractiveTransition *)it).gestureRecognizer.scrollView = self.scrollView;
+    if (self.canScroll) {
+        self.navigationController.fwModalTransition.interactiveGesture.scrollView = self.scrollView;
+        self.navigationController.fwNavigationTransition.interactiveGesture.scrollView = self.scrollView;
     }
     
     self.scrollView.scrollEnabled = self.canScroll;
@@ -255,9 +255,8 @@
 
 - (void)onPresentController
 {
-    FWAnimatedTransition *transition = [FWAnimatedTransition systemTransition];
-    // 不会生效，因为未设置动画转场
-    transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
+    transition.interactiveEnabled = YES;
     transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
         FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
         presentation.verticalInset = 200;
@@ -276,26 +275,7 @@
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.transitionDuration = TestTransitinDuration;
-    FWPercentInteractiveTransition *interactiveTransition = [[FWPercentInteractiveTransition alloc] init];
-    /*
-    interactiveTransition.percentBlock = ^CGFloat(UIPanGestureRecognizer *sender) {
-        UISwipeGestureRecognizerDirection direction = [sender fwSwipeDirection];
-        if (direction == UISwipeGestureRecognizerDirectionDown || direction == UISwipeGestureRecognizerDirectionRight) {
-            return [sender fwSwipePercent];
-        }
-        return 0;
-    };
-    interactiveTransition.transitionBlock = ^(FWAnimatedTransition *transition) {
-        FWSwipeAnimatedTransition *swipeTransition = (FWSwipeAnimatedTransition *)transition;
-        FWPercentInteractiveTransition *percentTransition = swipeTransition.outInteractiveTransition;
-        if (percentTransition.isInteractive) {
-            swipeTransition.outDirection = percentTransition.gestureRecognizer.fwSwipeDirection;
-        } else {
-            swipeTransition.outDirection = UISwipeGestureRecognizerDirectionDown;
-        }
-    };
-    */
-    transition.outInteractiveTransition = interactiveTransition;
+    transition.interactiveEnabled = YES;
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     vc.canScroll = YES;
@@ -491,9 +471,10 @@
     transition.transitionDuration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
-    transition.outInteractiveTransition = [[FWPercentInteractiveTransition alloc] init];
+    transition.interactiveEnabled = YES;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
+    vc.canScroll = YES;
     self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:YES];
 }
