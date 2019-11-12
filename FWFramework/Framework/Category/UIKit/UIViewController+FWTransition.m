@@ -491,9 +491,7 @@
     
     self.dimmingView.alpha = 0;
     [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        [UIView animateWithDuration:(context.animated ? 0.1 : 0) animations:^{
-            self.dimmingView.alpha = 1.0;
-        }];
+        self.dimmingView.alpha = 1.0;
     } completion:nil];
 }
 
@@ -503,9 +501,7 @@
     
     [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         if (!context.isInteractive) {
-            [UIView animateWithDuration:(context.animated ? 0.1 : 0) delay:(context.animated ? MAX(0, context.transitionDuration - 0.1) : 0) options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone) animations:^{
-                self.dimmingView.alpha = 0;
-            } completion:nil];
+            self.dimmingView.alpha = 0;
         }
     } completion:nil];
 }
