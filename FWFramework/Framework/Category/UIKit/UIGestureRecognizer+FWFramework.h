@@ -58,8 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身
 @property (nullable, nonatomic, weak) UIScrollView *scrollView;
 
-// 指定与滚动视图pan手势的冲突滚动方向，默认向下
-@property (nonatomic, assign) UISwipeGestureRecognizerDirection scrollDirection;
+// 指定与滚动视图pan手势的冲突交互方向，默认向下
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
 // 指定当前pan手势必定判定失败的另一个手势
 @property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailureGestureRecognizer;

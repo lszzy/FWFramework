@@ -97,7 +97,7 @@
 {
     self = [super init];
     if (self) {
-        _scrollDirection = UISwipeGestureRecognizerDirectionDown;
+        _direction = UISwipeGestureRecognizerDirectionDown;
     }
     return self;
 }
@@ -106,7 +106,7 @@
 {
     self = [super initWithTarget:target action:action];
     if (self) {
-        _scrollDirection = UISwipeGestureRecognizerDirectionDown;
+        _direction = UISwipeGestureRecognizerDirectionDown;
     }
     return self;
 }
@@ -146,7 +146,7 @@
     CGPoint prevLocation = [touches.anyObject previousLocationInView:self.view];
     
     BOOL isFailed = NO;
-    switch (self.scrollDirection) {
+    switch (self.direction) {
         case UISwipeGestureRecognizerDirectionDown: {
             CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeTop].y;
             if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y > prevLocation.y) && (self.scrollView.contentOffset.y <= edgeOffset)) {

@@ -397,7 +397,7 @@
     
     FWPanGestureRecognizer *gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeAction:)];
     _gestureRecognizer = gestureRecognizer;
-    gestureRecognizer.scrollDirection = self.direction;
+    gestureRecognizer.direction = self.direction;
     [viewController.view addGestureRecognizer:gestureRecognizer];
 }
 
