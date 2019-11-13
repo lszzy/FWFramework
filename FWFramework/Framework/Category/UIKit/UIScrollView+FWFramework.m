@@ -177,10 +177,10 @@
     CGPoint contentOffset = self.contentOffset;
     switch (edge) {
         case UIRectEdgeTop:
-            contentOffset.y = 0 - self.contentInset.top;
+            contentOffset.y = -self.contentInset.top;
             break;
         case UIRectEdgeLeft:
-            contentOffset.x = 0 - self.contentInset.left;
+            contentOffset.x = -self.contentInset.left;
             break;
         case UIRectEdgeBottom:
             contentOffset.y = self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
