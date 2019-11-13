@@ -134,8 +134,9 @@ FWPropertyAssign(BOOL, hideToast);
                                          ]];
     if (!self.hideToast) {
         [self.tableData addObject:@[@"Present(默认)", @"onPresent"]];
-        [self.tableData addObject:@[@"Present(全屏)", @"onPresent2"]];
-        [self.tableData addObject:@[@"Present(导航栏)", @"onPresent3"]];
+        [self.tableData addObject:@[@"Present(FullScreen)", @"onPresent2"]];
+        [self.tableData addObject:@[@"Present(PageSheet)", @"onPresent3"]];
+        [self.tableData addObject:@[@"Present(默认带导航栏)", @"onPresent4"]];
     } else {
         [self.tableData addObject:@[@"Dismiss", @"onDismiss"]];
     }
@@ -249,6 +250,22 @@ FWPropertyAssign(BOOL, hideToast);
 }
 
 - (void)onPresent3
+{
+    TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.fwPresentationDidDismiss = ^{
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwPresentationDidDismiss"]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    };
+    viewController.fwDismissBlock = ^{
+        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwDismissBlock"]];
+        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+    };
+    viewController.hideToast = YES;
+    viewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (void)onPresent4
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
     viewController.hideToast = YES;

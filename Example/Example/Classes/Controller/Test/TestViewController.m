@@ -87,7 +87,6 @@
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"MapView", @"TestMapViewController"],
                                              @[@"DrawerView", @"TestDrawerViewController"],
-                                             @[@"ScrollDrawerView", @"TestDrawerScrollViewController"],
                                              @[@"MenuView", @"TestMenuViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
@@ -100,6 +99,7 @@
                                              @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              @[@"FWVersionManager", @"TestVersionViewController"],
+                                             @[@"TableReloadData", @"TestTableReloadViewController"],
                                              ]],
                                        ]];
     [self.tableView reloadData];

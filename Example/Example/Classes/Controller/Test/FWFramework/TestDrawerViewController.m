@@ -40,7 +40,24 @@
 
 - (void)renderViewUp
 {
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
+    BOOL hasHeader = NO;
+    UIView *containerView, *drawerView;
+    if (hasHeader) {
+        containerView = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
+        containerView.backgroundColor = [UIColor grayColor];
+        [self.view addSubview:containerView];
+    } else {
+        containerView = self.view;
+    }
+    
+    UIScrollView *scrollView;
+    if (hasHeader) {
+        scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, self.view.fwWidth, ViewHeight - 30)];
+        drawerView = containerView;
+    } else {
+        scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
+        drawerView = scrollView;
+    }
     [scrollView fwContentInsetAdjustmentNever];
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
@@ -48,7 +65,7 @@
     scrollView.contentSize = CGSizeMake(self.view.fwWidth, 2000);
     scrollView.contentInset = UIEdgeInsetsMake(50, 0, 100, 0);
     scrollView.contentOffset = CGPointMake(0, -50);
-    [self.view addSubview:scrollView];
+    [containerView addSubview:scrollView];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 2000)];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 50)];
@@ -68,13 +85,21 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
+    UIView *redLine = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4, self.view.fwWidth, 1)];
+    redLine.backgroundColor = [UIColor redColor];
+    [self.view addSubview:redLine];
+    
+    redLine = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 2, self.view.fwWidth, 1)];
+    redLine.backgroundColor = [UIColor redColor];
+    [self.view addSubview:redLine];
+    
     CGFloat fromPosition = 0;
     CGFloat toPosition = ViewHeight / 4 * 3;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionUp fromPosition:fromPosition toPosition:toPosition kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:drawerView direction:UISwipeGestureRecognizerDirectionUp positions:@[@(toPosition), @(ViewHeight / 4), @(ViewHeight / 2), @(fromPosition)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
-        [self.view bringSubviewToFront:scrollView];
+        [self.view bringSubviewToFront:drawerView];
         CGFloat targetDistance = toPosition - fromPosition;
         CGFloat distance = position - fromPosition;
         if (distance < targetDistance) {
@@ -84,7 +109,7 @@
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
     }];
-    [scrollView addGestureRecognizer:panGesture];
+    [drawerView addGestureRecognizer:panGesture];
 }
 
 - (void)renderViewDown
@@ -119,7 +144,7 @@
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown fromPosition:-ViewHeight / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown positions:@[@(0), @(-ViewHeight / 4), @(-ViewHeight / 2), @(-ViewHeight / 4 * 3)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
@@ -163,7 +188,7 @@
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionLeft fromPosition:0 toPosition:FWScreenWidth / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionLeft fromPosition:FWScreenWidth / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
@@ -207,7 +232,7 @@
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionRight fromPosition:-FWScreenWidth / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionRight fromPosition:0 toPosition:-FWScreenWidth / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
