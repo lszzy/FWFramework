@@ -107,20 +107,34 @@
             
             BOOL interactEnded = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
             if (interactEnded) {
+                BOOL finished = NO;
                 CGFloat percent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
                 if (percent >= 0.5) {
+                    finished = YES;
+                } else {
+                    CGPoint velocity = [gestureRecognizer velocityInView:gestureRecognizer.view];
+                    switch (gestureRecognizer.direction) {
+                        case UISwipeGestureRecognizerDirectionUp:
+                            if (velocity.y <= -100) finished = YES;
+                            break;
+                        case UISwipeGestureRecognizerDirectionLeft:
+                            if (velocity.x <= -100) finished = YES;
+                            break;
+                        case UISwipeGestureRecognizerDirectionDown:
+                            if (velocity.y >= 100) finished = YES;
+                            break;
+                        case UISwipeGestureRecognizerDirectionRight:
+                            if (velocity.x >= 100) finished = YES;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+                if (finished) {
                     [self finishInteractiveTransition];
                 } else {
-                    BOOL isReverse = (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft);
-                    CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
-                    CGFloat velocity = (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown) ? velocityPoint.y : velocityPoint.x;
-                    if (velocity > 100 && !isReverse) {
-                        [self finishInteractiveTransition];
-                    } else if (velocity < -100 && isReverse) {
-                        [self finishInteractiveTransition];
-                    } else {
-                        [self cancelInteractiveTransition];
-                    }
+                    [self cancelInteractiveTransition];
                 }
             }
             break;

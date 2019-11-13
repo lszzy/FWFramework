@@ -228,8 +228,8 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.requireFailure && self.requireFailure == otherGestureRecognizer) {
-        return YES;
+    if (self.shouldRequireFailure) {
+        return self.shouldRequireFailure(otherGestureRecognizer);
     }
     return NO;
 }
