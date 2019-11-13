@@ -115,6 +115,13 @@
     return self;
 }
 
+- (void)setScrollView:(UIScrollView *)scrollView
+{
+    if (scrollView != _scrollView) {
+        _scrollView = scrollView;
+    }
+}
+
 - (void)reset
 {
     [super reset];
