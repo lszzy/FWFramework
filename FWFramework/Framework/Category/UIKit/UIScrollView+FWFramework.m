@@ -7,8 +7,8 @@
 //
 
 #import "UIScrollView+FWFramework.h"
-#import "UIView+FWAutoLayout.h"
 #import "UIGestureRecognizer+FWFramework.h"
+#import "UIView+FWAutoLayout.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
@@ -151,15 +151,16 @@
 
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge
 {
+    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
     switch (edge) {
         case UIRectEdgeTop:
-            return self.contentOffset.y <= 0 - self.contentInset.top;
+            return self.contentOffset.y <= contentOffset.y;
         case UIRectEdgeLeft:
-            return self.contentOffset.x <= 0 - self.contentInset.left;
+            return self.contentOffset.x <= contentOffset.x;
         case UIRectEdgeBottom:
-            return self.contentOffset.y >= self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
+            return self.contentOffset.y >= contentOffset.y;
         case UIRectEdgeRight:
-            return self.contentOffset.x >= self.contentSize.width - self.bounds.size.width + self.contentInset.right;
+            return self.contentOffset.x >= contentOffset.x;
         default:
             return NO;
     }
@@ -167,53 +168,45 @@
 
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
 {
-    CGPoint offset = self.contentOffset;
+    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
+    [self setContentOffset:contentOffset animated:animated];
+}
+
+- (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge
+{
+    CGPoint contentOffset = self.contentOffset;
     switch (edge) {
         case UIRectEdgeTop:
-            offset.y = 0 - self.contentInset.top;
+            contentOffset.y = 0 - self.contentInset.top;
             break;
         case UIRectEdgeLeft:
-            offset.x = 0 - self.contentInset.left;
+            contentOffset.x = 0 - self.contentInset.left;
             break;
         case UIRectEdgeBottom:
-            offset.y = self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
+            contentOffset.y = self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
             break;
         case UIRectEdgeRight:
-            offset.x = self.contentSize.width - self.bounds.size.width + self.contentInset.right;
+            contentOffset.x = self.contentSize.width - self.bounds.size.width + self.contentInset.right;
             break;
         default:
             break;
     }
-    [self setContentOffset:offset animated:animated];
+    return contentOffset;
 }
 
 - (UISwipeGestureRecognizerDirection)fwScrollDirection
 {
-    CGPoint transition = [self.panGestureRecognizer translationInView:self];
-    if (fabs(transition.x) > fabs(transition.y)) {
-        if (transition.x < 0.0f) {
-            return UISwipeGestureRecognizerDirectionLeft;
-        } else if (transition.x > 0.0f) {
-            return UISwipeGestureRecognizerDirectionRight;
-        }
-    } else {
-        if (transition.y > 0.0f) {
-            return UISwipeGestureRecognizerDirectionDown;
-        } else if (transition.y < 0.0f) {
-            return UISwipeGestureRecognizerDirectionUp;
-        }
-    }
-    return 0;
+    return [self.panGestureRecognizer fwSwipeDirection];
 }
 
 - (CGFloat)fwScrollPercent
 {
-    CGPoint transition = [self.panGestureRecognizer translationInView:self];
-    if (fabs(transition.x) > fabs(transition.y)) {
-        return self.bounds.size.width > 0 ? fabs(transition.x) / self.bounds.size.width : 0;
-    } else {
-        return self.bounds.size.height > 0 ? fabs(transition.y) / self.bounds.size.height : 0;
-    }
+    return [self.panGestureRecognizer fwSwipePercent];
+}
+
+- (CGFloat)fwScrollPercentOfDirection:(UISwipeGestureRecognizerDirection)direction
+{
+    return [self.panGestureRecognizer fwSwipePercentOfDirection:direction];
 }
 
 #pragma mark - Content
@@ -389,17 +382,6 @@
         }
     }
     return distance;
-}
-
-- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
-        fromPosition:(CGFloat)fromPosition
-          toPosition:(CGFloat)toPosition
-      kickbackHeight:(CGFloat)kickbackHeight
-            callback:(void (^)(CGFloat, BOOL))callback
-{
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
-    [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
-    [self addGestureRecognizer:panGesture];
 }
 
 @end

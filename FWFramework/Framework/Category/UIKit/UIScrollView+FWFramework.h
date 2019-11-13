@@ -67,11 +67,17 @@ NS_ASSUME_NONNULL_BEGIN
 // 滚动到指定边
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
 
+// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
+- (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge;
+
 // 当前滚动方向，如果多个方向滚动，取绝对值较大的一方，失败返回0
 - (UISwipeGestureRecognizerDirection)fwScrollDirection;
 
 // 当前滚动进度，滚动绝对值相对于当前视图的宽或高
 - (CGFloat)fwScrollPercent;
+
+// 计算指定方向的滚动进度
+- (CGFloat)fwScrollPercentOfDirection:(UISwipeGestureRecognizerDirection)direction;
 
 #pragma mark - Content
 
@@ -115,21 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
          fromSuperview:(UIView *)fromSuperview
            toSuperview:(UIView *)toSuperview
             toPosition:(CGFloat)toPosition;
-
-/*!
- @brief 设置抽屉拖拽效果，起点时只移动位置，终点时可拖拽内容
- 
- @param direction 拖拽方向，如向上拖动视图时为Up
- @param fromPosition 相对于父视图的起点originY位置
- @param toPosition 相对于父视图的终点originY位置
- @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
- @param callback 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
- */
-- (void)fwDrawerView:(UISwipeGestureRecognizerDirection)direction
-        fromPosition:(CGFloat)fromPosition
-          toPosition:(CGFloat)toPosition
-      kickbackHeight:(CGFloat)kickbackHeight
-            callback:(nullable void (^)(CGFloat position, BOOL finished))callback;
 
 @end
 

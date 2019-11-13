@@ -8,6 +8,7 @@
  */
 
 #import "FWSegmentedControl.h"
+#import "NSObject+FWSafeType.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 
@@ -318,7 +319,7 @@
                     i++;
                 }
                 
-                CGFloat widthForIndex = [[self.segmentWidthsArray objectAtIndex:idx] floatValue];
+                CGFloat widthForIndex = [[self.segmentWidthsArray fwObjectAtIndex:idx] floatValue];
                 if ([self.titleAlignmentMode isEqualToString:kCAAlignmentLeft]) {
                     rect = CGRectMake(xOffset + self.segmentEdgeInset.left, y, widthForIndex - self.segmentEdgeInset.left, stringHeight);
                 } else if ([self.titleAlignmentMode isEqualToString:kCAAlignmentRight]) {
@@ -369,7 +370,7 @@
             
             if (self.selectedSegmentIndex == idx) {
                 if (self.sectionSelectedImages) {
-                    UIImage *highlightIcon = [self.sectionSelectedImages objectAtIndex:idx];
+                    UIImage *highlightIcon = [self.sectionSelectedImages fwObjectAtIndex:idx];
                     imageLayer.contents = (id)highlightIcon.CGImage;
                 } else {
                     imageLayer.contents = (id)icon.CGImage;
@@ -483,7 +484,7 @@
             
             if (self.selectedSegmentIndex == idx) {
                 if (self.sectionSelectedImages) {
-                    UIImage *highlightIcon = [self.sectionSelectedImages objectAtIndex:idx];
+                    UIImage *highlightIcon = [self.sectionSelectedImages fwObjectAtIndex:idx];
                     imageLayer.contents = (id)highlightIcon.CGImage;
                 } else {
                     imageLayer.contents = (id)icon.CGImage;
@@ -605,12 +606,12 @@
         CGFloat stringWidth = [self measureTitleAtIndex:self.selectedSegmentIndex].width;
         sectionWidth = stringWidth;
     } else if (self.type == FWSegmentedControlTypeImages) {
-        UIImage *sectionImage = [self.sectionImages objectAtIndex:self.selectedSegmentIndex];
+        UIImage *sectionImage = [self.sectionImages fwObjectAtIndex:self.selectedSegmentIndex];
         CGFloat imageWidth = sectionImage.size.width;
         sectionWidth = imageWidth;
     } else if (self.type == FWSegmentedControlTypeTextImages) {
         CGFloat stringWidth = [self measureTitleAtIndex:self.selectedSegmentIndex].width;
-        UIImage *sectionImage = [self.sectionImages objectAtIndex:self.selectedSegmentIndex];
+        UIImage *sectionImage = [self.sectionImages fwObjectAtIndex:self.selectedSegmentIndex];
         CGFloat imageWidth = sectionImage.size.width;
         sectionWidth = MAX(stringWidth, imageWidth);
     }
@@ -641,7 +642,7 @@
                     selectedSegmentOffset = selectedSegmentOffset + [width floatValue];
                     i++;
                 }
-                return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray fwObjectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
             }
             
             return CGRectMake((self.segmentWidth + self.selectionIndicatorEdgeInsets.left) * self.selectedSegmentIndex, indicatorYOffset, self.segmentWidth - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight);
@@ -663,7 +664,7 @@
             i++;
         }
         
-        return CGRectMake(selectedSegmentOffset, 0, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue], CGRectGetHeight(self.frame));
+        return CGRectMake(selectedSegmentOffset, 0, [[self.segmentWidthsArray fwObjectAtIndex:self.selectedSegmentIndex] floatValue], CGRectGetHeight(self.frame));
     }
     return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, 0, self.segmentWidth, CGRectGetHeight(self.frame));
 }
@@ -719,7 +720,7 @@
         int i = 0;
         [self.sectionTitles enumerateObjectsUsingBlock:^(id titleString, NSUInteger idx, BOOL *stop) {
             CGFloat stringWidth = [self measureTitleAtIndex:idx].width + self.segmentEdgeInset.right;
-            UIImage *sectionImage = [self.sectionImages objectAtIndex:i];
+            UIImage *sectionImage = [self.sectionImages fwObjectAtIndex:i];
             CGFloat imageWidth = sectionImage.size.width + self.segmentEdgeInset.left;
             
             CGFloat combinedWidth = 0.0;
@@ -850,10 +851,10 @@
         
         rectForSelectedIndex = CGRectMake(offsetter,
                                           0,
-                                          [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue],
+                                          [[self.segmentWidthsArray fwObjectAtIndex:self.selectedSegmentIndex] floatValue],
                                           self.frame.size.height);
         
-        selectedSegmentOffset = (CGRectGetWidth(self.frame) / 2) - ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] / 2);
+        selectedSegmentOffset = (CGRectGetWidth(self.frame) / 2) - ([[self.segmentWidthsArray fwObjectAtIndex:self.selectedSegmentIndex] floatValue] / 2);
     }
     
     

@@ -31,45 +31,57 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - FWAnimatedTransition
 
+@class FWPanGestureRecognizer;
+
 // 转场动画类
-@interface FWAnimatedTransition : NSObject <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
+@interface FWAnimatedTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
 #pragma mark - Public
 
-// 创建系统转场单例，不支持交互转场
+// 创建系统转场单例，不支持交互手势转场
 + (instancetype)systemTransition;
 
 // 创建动画句柄转场
 + (instancetype)transitionWithBlock:(nullable void (^)(FWAnimatedTransition *transition))block;
 
 // 设置动画句柄
-@property (nullable, nonatomic, copy) void (^block)(FWAnimatedTransition *transition);
+@property (nullable, nonatomic, copy) void (^transitionBlock)(FWAnimatedTransition *transition);
 
 // 动画持续时间，必须大于0，默认0.35秒
-@property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) NSTimeInterval transitionDuration;
 
 // 获取动画类型，默认根据上下文判断
-@property (nonatomic, assign) FWAnimatedTransitionType type;
+@property (nonatomic, assign) FWAnimatedTransitionType transitionType;
 
 #pragma mark - Interactive
 
-// 设置进入交互转场，可选，需要在调用push|present之前设置并绑定控制器
-@property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> inInteractiveTransition;
-// 设置消失交互转场，可选，需要在调用pop|dismiss之前设置并绑定控制器。当设置为FWPercentInteractiveTransition时，会自动绑定
-@property (nullable, nonatomic, strong) id<UIViewControllerInteractiveTransitioning> outInteractiveTransition;
+// 是否启用交互pan手势进行pop|dismiss，默认NO
+@property (nonatomic, assign) BOOL interactEnabled;
+
+// 交互pan手势对象，延迟加载，可设置交互方向，滚动视图等
+@property (nonatomic, strong, readonly) FWPanGestureRecognizer *gestureRecognizer;
+
+// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
+@property (nonatomic, assign, readonly) BOOL isInteractive;
+
+// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
+@property (nullable, nonatomic, copy) BOOL(^interactBlock)(FWPanGestureRecognizer *gestureRecognizer);
+
+// 手工绑定交互控制器，添加pan手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
+- (void)interactWith:(UIViewController *)viewController;
+
+#pragma mark - Presentation
+
+// 设置展示控制器创建句柄，自定义弹出效果。present时建议设置modalPresentationStyle为UIModalPresentationCustom
+@property (nullable, nonatomic, copy) UIPresentationController *(^presentationBlock)(UIViewController *presented, UIViewController *presenting);
+
+// 设置展示控制器，自定义弹出效果。present时建议设置modalPresentationStyle为UIModalPresentationCustom
+@property (nullable, nonatomic, strong) UIPresentationController *presentationController;
 
 #pragma mark - Animate
 
 // 转场上下文，只读
 @property (nullable, nonatomic, weak, readonly) id<UIViewControllerContextTransitioning> transitionContext;
-// 转场来源视图控制器，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController *fromViewController;
-// 转场目标视图控制器，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController *toViewController;
-// 转场来源视图，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIView *fromView;
-// 转场目标视图，只读
-@property (nullable, nonatomic, weak, readonly) __kindof UIView *toView;
 
 // 标记动画开始(自动添加视图到容器)
 - (void)start;
@@ -96,34 +108,25 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @end
 
-#pragma mark - FWPercentInteractiveTransition
+#pragma mark - FWPresentationController
 
-// 百分比交互转场
-@interface FWPercentInteractiveTransition : UIPercentDrivenInteractiveTransition
+// 自定义展示控制器。present时建议设置modalPresentationStyle为UIModalPresentationCustom
+@interface FWPresentationController : UIPresentationController
 
-// 设置交互方向，默认下滑Down。可通过percentBlock和transitionBlock实现多个方向交互
-@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
+// 是否显示暗色背景，默认YES
+@property (nonatomic, assign) BOOL showDimming;
 
-// 设置手势开始时动作句柄，比如调用push|pop|present|dismiss方法
-@property (nullable, nonatomic, copy) void(^interactiveBlock)(void);
+// 是否可以点击暗色背景关闭，默认YES
+@property (nonatomic, assign) BOOL dimmingClick;
 
-// 自定义进度计算方法，默认根据direction和translation计算进度
-@property (nullable, nonatomic, copy) CGFloat(^percentBlock)(UIPanGestureRecognizer *sender);
+// 设置弹出视图的左上和右上圆角，默认0
+@property (nonatomic, assign) CGFloat cornerRadius;
 
-// 自定义转场动画动作句柄，比如指定转场动画方向等。可通过isInteractive区分是否交互转场
-@property (nullable, nonatomic, copy) void(^transitionBlock)(FWAnimatedTransition *transition);
+// 设置弹出视图的frame，默认CGRectZero占满，优先级高
+@property (nonatomic, assign) CGRect presentedFrame;
 
-// 配置完成判定百分比，当交互大于该值时判定为交互完成，默认0.3
-@property (nonatomic, assign) CGFloat completionPercent;
-
-// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
-@property (nonatomic, assign, readonly) BOOL isInteractive;
-
-// 正在交互方向，手势开始才会标记为滑动方向，手势结束标记为0
-@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection interactiveDirection;
-
-// 绑定交互控制器，自动添加pan手势。需要vc.view存在时调用才生效
-- (nullable UIPanGestureRecognizer *)interactWithViewController:(nullable UIViewController *)viewController;
+// 设置弹出视图的顶部距离，默认0占满，优先级低
+@property (nonatomic, assign) CGFloat verticalInset;
 
 @end
 

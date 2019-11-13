@@ -8,8 +8,11 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "UIGestureRecognizer+FWDrawerView.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+#pragma mark - UIGestureRecognizer+FWFramework
 
 /*!
  @brief UIGestureRecognizer+FWFramework
@@ -39,33 +42,33 @@ NS_ASSUME_NONNULL_BEGIN
 // 当前滑动进度，滑动绝对值相对于手势视图的宽或高
 - (CGFloat)fwSwipePercent;
 
-/*!
- @brief 设置抽屉拖拽效果。如果view为滚动视图，自动设置delegate处理与滚动视图pan手势冲突的问题
- 
- @param view 抽屉视图，默认为self.view
- @param direction 拖拽方向，如向上拖动视图时为Up，向下为Down，向右为Right，向左为Left
- @param fromPosition 相对于view父视图的起点originY位置
- @param toPosition 相对于view父视图的终点originY位置
- @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
- @param callback 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
- */
-- (void)fwDrawerView:(nullable UIView *)view
-           direction:(UISwipeGestureRecognizerDirection)direction
-        fromPosition:(CGFloat)fromPosition
-          toPosition:(CGFloat)toPosition
-      kickbackHeight:(CGFloat)kickbackHeight
-            callback:(nullable void (^)(CGFloat position, BOOL finished))callback;
+// 计算指定方向的滑动进度
+- (CGFloat)fwSwipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction;
+
+@end
+
+#pragma mark - FWPanGestureRecognizer
 
 /*!
- @brief 判断抽屉效果视图是否位于打开位置
- @discussion 打开位置定义：拖拽方向为Up时fromPosition，Down时toPosition，Right时toPosition，Left时fromPosition，关闭位置取反即可
- 
- @return 是否位于打开位置
+ @brief FWPanGestureRecognizer
+ @discussion 自动处理与滚动视图pan手势在指定方向的冲突，默认设置delegate为自身。如果找到滚动视图则处理之，否则同父类
  */
-- (BOOL)fwDrawerViewIsOpen;
+@interface FWPanGestureRecognizer : UIPanGestureRecognizer
 
-// 设置抽屉效果视图到打开位置或关闭位置，如果位置发生改变，会触发抽屉callback回调
-- (void)fwDrawerViewToggleOpen:(BOOL)open;
+// 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
+@property (nonatomic, assign) BOOL autoDetected;
+
+// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身
+@property (nullable, nonatomic, weak) UIScrollView *scrollView;
+
+// 指定与滚动视图pan手势的冲突交互方向，默认向下
+@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
+
+// 指定当前pan手势必定判定失败的另一个手势
+@property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailure;
+
+// 自定义Failed判断句柄。默认判定失败时直接修改状态为Failed，可设置此block修改判定条件
+@property (nullable, nonatomic, copy) BOOL (^shouldFailed)(FWPanGestureRecognizer *gestureRecognizer);
 
 @end
 
