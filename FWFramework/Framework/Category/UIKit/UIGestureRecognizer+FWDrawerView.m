@@ -8,6 +8,7 @@
  */
 
 #import "UIGestureRecognizer+FWDrawerView.h"
+#import "UIScrollView+FWFramework.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerDrawerViewTarget
@@ -347,6 +348,42 @@
     [panGesture fwDrawerView:self direction:direction fromPosition:fromPosition toPosition:toPosition kickbackHeight:kickbackHeight callback:callback];
     [self addGestureRecognizer:panGesture];
     return panGesture;
+}
+
+@end
+
+#pragma mark - UIScrollView+FWDrawerView
+
+@implementation UIScrollView (FWDrawerView)
+
+- (BOOL)fwDrawerSuperviewFixed
+{
+    return [objc_getAssociatedObject(self, @selector(fwDrawerSuperviewFixed)) boolValue];
+}
+
+- (void)setFwDrawerSuperviewFixed:(BOOL)fixed
+{
+    objc_setAssociatedObject(self, @selector(fwDrawerSuperviewFixed), @(fixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fwDrawerSuperviewDidScroll:(CGFloat)position
+{
+    if (self.contentOffset.y >= position) {
+        self.fwDrawerSuperviewFixed = YES;
+    }
+    if (self.fwDrawerSuperviewFixed) {
+        self.contentOffset = CGPointMake(self.contentOffset.x, position);
+    }
+}
+
+- (void)fwDrawerSubviewDidScroll:(UIScrollView *)superview
+{
+    if (self.contentOffset.y <= 0) {
+        superview.fwDrawerSuperviewFixed = NO;
+    }
+    if (!superview.fwDrawerSuperviewFixed) {
+        self.contentOffset = CGPointMake(self.contentOffset.x, 0);
+    }
 }
 
 @end

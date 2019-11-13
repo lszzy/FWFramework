@@ -85,4 +85,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/*!
+@brief 滚动视图纵向手势冲突无缝滑动分类，需允许同时识别多个手势
+*/
+@interface UIScrollView (FWDrawerView)
+
+// 外部滚动视图是否位于顶部固定位置，在顶部时不能滚动
+@property (nonatomic, assign) BOOL fwDrawerSuperviewFixed;
+
+// 外部滚动视图scrollViewDidScroll调用，参数为固定的位置
+- (void)fwDrawerSuperviewDidScroll:(CGFloat)position;
+
+// 内嵌滚动视图scrollViewDidScroll调用，参数为外部滚动视图
+- (void)fwDrawerSubviewDidScroll:(UIScrollView *)superview;
+
+@end
+
 NS_ASSUME_NONNULL_END
