@@ -21,9 +21,7 @@
 
 @property (nonatomic, strong) FWPanGestureRecognizer *gestureRecognizer;
 
-@property (nonatomic, assign) CGFloat interactivePercent;
-
-@property (nonatomic, copy) void(^interactiveBlock)(void);
+@property (nonatomic, copy) void(^interactBegan)(void);
 
 @end
 
@@ -60,21 +58,21 @@
 
 #pragma mark - Private
 
-- (void)setInteractiveEnabled:(BOOL)interactiveEnabled
+- (void)setInteractEnabled:(BOOL)interactEnabled
 {
-    _interactiveEnabled = interactiveEnabled;
-    self.gestureRecognizer.enabled = interactiveEnabled;
+    _interactEnabled = interactEnabled;
+    self.gestureRecognizer.enabled = interactEnabled;
 }
 
 - (FWPanGestureRecognizer *)gestureRecognizer
 {
     if (!_gestureRecognizer) {
-        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerAction:)];
+        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(interactAction:)];
     }
     return _gestureRecognizer;
 }
 
-- (void)interactWithViewController:(UIViewController *)viewController
+- (void)interactWith:(UIViewController *)viewController
 {
     if (!viewController.view) return;
 
@@ -84,44 +82,45 @@
     [viewController.view addGestureRecognizer:self.gestureRecognizer];
 }
 
-- (void)gestureRecognizerAction:(FWPanGestureRecognizer *)gestureRecognizer
+- (void)interactAction:(FWPanGestureRecognizer *)gestureRecognizer
 {
-    if (self.percentBlock) {
-        _interactivePercent = self.percentBlock(gestureRecognizer);
-    } else {
-        _interactivePercent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
-    }
-    
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             _isInteractive = YES;
             
-            if (self.interactiveBlock) {
-                self.interactiveBlock();
+            BOOL interactBegan = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
+            if (interactBegan && self.interactBegan) {
+                self.interactBegan();
             }
             break;
         }
         case UIGestureRecognizerStateChanged: {
-            [self updateInteractiveTransition:_interactivePercent];
+            BOOL interactChanged = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
+            if (interactChanged) {
+                CGFloat percent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
+                [self updateInteractiveTransition:percent];
+            }
             break;
         }
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
             
-            if (_interactivePercent >= 0.5) {
-                [self finishInteractiveTransition];
-            } else {
-                BOOL isVertical = gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown;
-                BOOL isReverse = gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft;
-                CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
-                CGFloat velocity = isVertical ? velocityPoint.y : velocityPoint.x;
-                
-                if (velocity > 100 && !isReverse) {
-                    [self finishInteractiveTransition];
-                } else if (velocity < -100 && isReverse) {
+            BOOL interactEnded = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
+            if (interactEnded) {
+                CGFloat percent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
+                if (percent >= 0.5) {
                     [self finishInteractiveTransition];
                 } else {
-                    [self cancelInteractiveTransition];
+                    BOOL isReverse = (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft);
+                    CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
+                    CGFloat velocity = (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown) ? velocityPoint.y : velocityPoint.x;
+                    if (velocity > 100 && !isReverse) {
+                        [self finishInteractiveTransition];
+                    } else if (velocity < -100 && isReverse) {
+                        [self finishInteractiveTransition];
+                    } else {
+                        [self cancelInteractiveTransition];
+                    }
                 }
             }
             break;
@@ -134,7 +133,7 @@
 - (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
     if (self.transitionType == FWAnimatedTransitionTypeDismiss || self.transitionType == FWAnimatedTransitionTypePop) {
-        if (self.interactiveEnabled && self.isInteractive) {
+        if (!self.isSystem && self.interactEnabled && self.isInteractive) {
             return self;
         }
     }
@@ -149,12 +148,12 @@
 {
     self.transitionType = FWAnimatedTransitionTypePresent;
     // 自动设置和绑定dismiss交互转场，在dismiss前设置生效
-    if (!self.isSystem && self.interactiveEnabled) {
+    if (!self.isSystem && self.interactEnabled && !self.interactBlock) {
         __weak UIViewController *weakPresented = presented;
-        self.interactiveBlock = ^{
+        self.interactBegan = ^{
             [weakPresented dismissViewControllerAnimated:YES completion:nil];
         };
-        [self interactWithViewController:presented];
+        [self interactWith:presented];
     }
     return !self.isSystem ? self : nil;
 }
@@ -195,11 +194,11 @@
         FWAnimatedTransition *transition = toVC.fwViewTransition ?: self;
         transition.transitionType = FWAnimatedTransitionTypePush;
         // 自动设置和绑定pop交互转场，在pop前设置生效
-        if (!transition.isSystem && transition.interactiveEnabled) {
-            transition.interactiveBlock = ^{
+        if (!transition.isSystem && transition.interactEnabled && !transition.interactBlock) {
+            transition.interactBegan = ^{
                 [navigationController popViewControllerAnimated:YES];
             };
-            [transition interactWithViewController:toVC];
+            [transition interactWith:toVC];
         }
         return !transition.isSystem ? transition : nil;
     } else if (operation == UINavigationControllerOperationPop) {
