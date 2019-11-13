@@ -98,6 +98,8 @@
     self = [super init];
     if (self) {
         _direction = UISwipeGestureRecognizerDirectionDown;
+        _autoDetected = YES;
+        self.delegate = self;
     }
     return self;
 }
@@ -107,19 +109,10 @@
     self = [super initWithTarget:target action:action];
     if (self) {
         _direction = UISwipeGestureRecognizerDirectionDown;
+        _autoDetected = YES;
+        self.delegate = self;
     }
     return self;
-}
-
-- (void)setScrollView:(UIScrollView *)scrollView
-{
-    _scrollView = scrollView;
-    
-    if (scrollView) {
-        if (!self.delegate) self.delegate = self;
-    } else {
-        if (self.delegate == self) self.delegate = nil;
-    }
 }
 
 - (void)reset
@@ -203,23 +196,39 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.scrollView) {
-        return YES;
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        if (self.autoDetected) {
+            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            return YES;
+        } else {
+            if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
+                return YES;
+            }
+        }
     }
     return NO;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.scrollView) {
-        return YES;
+    if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+        [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
+        if (self.autoDetected) {
+            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            return YES;
+        } else {
+            if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
+                return YES;
+            }
+        }
     }
     return NO;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.scrollView && self.requireFailureGestureRecognizer && self.requireFailureGestureRecognizer == otherGestureRecognizer) {
+    if (self.requireFailure && self.requireFailure == otherGestureRecognizer) {
         return YES;
     }
     return NO;
