@@ -51,9 +51,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief FWPanGestureRecognizer
- @discussion 如果指定了滚动视图，自动处理与滚动视图pan手势在指定方向的冲突；如果未指定滚动视图，什么也不做，同父类
+ @discussion 自动处理与滚动视图pan手势在指定方向的冲突，默认设置delegate为自身。如果找到滚动视图则处理之，否则同父类
  */
 @interface FWPanGestureRecognizer : UIPanGestureRecognizer
+
+// 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
+@property (nonatomic, assign) BOOL autoDetected;
 
 // 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身
 @property (nullable, nonatomic, weak) UIScrollView *scrollView;
@@ -62,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
 // 指定当前pan手势必定判定失败的另一个手势
-@property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailureGestureRecognizer;
+@property (nullable, nonatomic, weak) UIGestureRecognizer *requireFailure;
 
 // 自定义Failed判断句柄。默认判定失败时直接修改状态为Failed，可设置此block修改判定条件
 @property (nullable, nonatomic, copy) BOOL (^shouldFailed)(FWPanGestureRecognizer *gestureRecognizer);
