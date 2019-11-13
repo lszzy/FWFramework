@@ -303,6 +303,15 @@
     vc.noAnimate = YES;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.modalPresentationStyle = UIModalPresentationCustom;
+    
+    transition.interactBlock = ^BOOL(FWPanGestureRecognizer * _Nonnull gestureRecognizer) {
+        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+            [vc dismissViewControllerAnimated:YES completion:nil];
+            return NO;
+        }
+        return YES;
+    };
+    [transition interactWith:nav];
     nav.fwModalTransition = transition;
     [self presentViewController:nav animated:NO completion:nil];
 }
@@ -513,6 +522,17 @@
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     vc.canScroll = YES;
     vc.noAnimate = YES;
+    
+    FWWeakifySelf();
+    transition.interactBlock = ^BOOL(FWPanGestureRecognizer * _Nonnull gestureRecognizer) {
+        FWStrongifySelf();
+        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+            [self.navigationController popViewControllerAnimated:YES];
+            return NO;
+        }
+        return YES;
+    };
+    [transition interactWith:vc];
     self.navigationController.fwNavigationTransition = transition;
     [self.navigationController pushViewController:vc animated:NO];
 }
