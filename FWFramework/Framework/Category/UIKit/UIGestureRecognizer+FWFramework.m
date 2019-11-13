@@ -8,6 +8,7 @@
  */
 
 #import "UIGestureRecognizer+FWFramework.h"
+#import "UIScrollView+FWFramework.h"
 
 #pragma mark - UIGestureRecognizer+FWFramework
 
@@ -147,7 +148,7 @@
     BOOL isFailed = NO;
     switch (self.direction) {
         case UISwipeGestureRecognizerDirectionDown: {
-            CGFloat edgeOffset = -self.scrollView.contentInset.top;
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeTop].y;
             if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y > prevLocation.y) && (self.scrollView.contentOffset.y <= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.y >= edgeOffset) {
@@ -156,7 +157,7 @@
             break;
         }
         case UISwipeGestureRecognizerDirectionUp: {
-            CGFloat edgeOffset = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeBottom].y;
             if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y < prevLocation.y) && (self.scrollView.contentOffset.y >= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.y <= edgeOffset) {
@@ -165,7 +166,7 @@
             break;
         }
         case UISwipeGestureRecognizerDirectionRight: {
-            CGFloat edgeOffset = -self.scrollView.contentInset.left;
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeLeft].x;
             if ((fabs(velocity.y) < fabs(velocity.x)) && (location.x > prevLocation.x) && (self.scrollView.contentOffset.x <= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.x >= edgeOffset) {
@@ -174,7 +175,7 @@
             break;
         }
         case UISwipeGestureRecognizerDirectionLeft: {
-            CGFloat edgeOffset = self.scrollView.contentSize.width - self.scrollView.bounds.size.width + self.scrollView.contentInset.right;
+            CGFloat edgeOffset = [self.scrollView fwContentOffsetOfEdge:UIRectEdgeRight].x;
             if ((fabs(velocity.y) < fabs(velocity.x)) && (location.x < prevLocation.x) && (self.scrollView.contentOffset.x >= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.x <= edgeOffset) {
