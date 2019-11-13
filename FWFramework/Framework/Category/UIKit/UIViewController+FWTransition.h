@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 #pragma mark - Interactive
 
 // 是否启用交互pan手势进行pop|dismiss，默认NO
-@property (nonatomic, assign) BOOL interactiveEnabled;
+@property (nonatomic, assign) BOOL interactEnabled;
 
 // 交互pan手势对象，延迟加载，可设置交互方向，滚动视图等
 @property (nonatomic, strong, readonly) FWPanGestureRecognizer *gestureRecognizer;
@@ -64,8 +64,11 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
 @property (nonatomic, assign, readonly) BOOL isInteractive;
 
-// 自定义交互进度计算方法，默认计算指定方向上的拖动进度
-@property (nullable, nonatomic, copy) CGFloat(^percentBlock)(FWPanGestureRecognizer *sender);
+// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
+@property (nullable, nonatomic, copy) BOOL(^interactBlock)(FWPanGestureRecognizer *gestureRecognizer);
+
+// 手工绑定交互控制器，添加pan手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
+- (void)interactWith:(UIViewController *)viewController;
 
 #pragma mark - Presentation
 

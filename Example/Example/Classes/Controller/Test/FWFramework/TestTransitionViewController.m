@@ -259,7 +259,7 @@
 - (void)onPresentController
 {
     FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
-    transition.interactiveEnabled = YES;
+    transition.interactEnabled = YES;
     transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
         FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
         presentation.verticalInset = 200;
@@ -278,7 +278,7 @@
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     FWSwipeAnimatedTransition *transition = [FWSwipeAnimatedTransition transitionWithInDirection:UISwipeGestureRecognizerDirectionUp outDirection:UISwipeGestureRecognizerDirectionDown];
     transition.transitionDuration = TestTransitinDuration;
-    transition.interactiveEnabled = YES;
+    transition.interactEnabled = YES;
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     vc.canScroll = YES;
@@ -290,7 +290,7 @@
 - (void)onPresentNoAnimate
 {
     FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
-    transition.interactiveEnabled = YES;
+    transition.interactEnabled = YES;
     transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
         FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
         presentation.verticalInset = 200;
@@ -494,7 +494,7 @@
     transition.transitionDuration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
-    transition.interactiveEnabled = YES;
+    transition.interactEnabled = YES;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     vc.canScroll = YES;
@@ -508,7 +508,7 @@
     transition.transitionDuration = TestTransitinDuration;
     transition.inDirection = UISwipeGestureRecognizerDirectionUp;
     transition.outDirection = UISwipeGestureRecognizerDirectionDown;
-    transition.interactiveEnabled = YES;
+    transition.interactEnabled = YES;
     
     TestFullScreenViewController *vc = [[TestFullScreenViewController alloc] init];
     vc.canScroll = YES;
