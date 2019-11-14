@@ -30,10 +30,10 @@
     if (self) {
         _view = view;
         _direction = UISwipeGestureRecognizerDirectionUp;
-        _kickbackHeight = 0;
-        _autoDetected = YES;
         _position = self.isVertical ? view.frame.origin.y : view.frame.origin.x;
         _scrollView = [view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)view : nil;
+        _kickbackHeight = 0;
+        _autoDetected = YES;
         
         UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerAction:)];
         _gestureRecognizer = gestureRecognizer;
@@ -45,6 +45,12 @@
 }
 
 #pragma mark - Accessor
+
+- (void)setDirection:(UISwipeGestureRecognizerDirection)direction
+{
+    _direction = direction;
+    _position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
+}
 
 - (void)setPositions:(NSArray<NSNumber *> *)positions
 {
