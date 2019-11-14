@@ -64,14 +64,6 @@
     self.gestureRecognizer.enabled = interactEnabled;
 }
 
-- (FWPanGestureRecognizer *)gestureRecognizer
-{
-    if (!_gestureRecognizer) {
-        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(interactAction:)];
-    }
-    return _gestureRecognizer;
-}
-
 - (void)interactWith:(UIViewController *)viewController
 {
     if (!viewController.view) return;
@@ -82,7 +74,15 @@
     [viewController.view addGestureRecognizer:self.gestureRecognizer];
 }
 
-- (void)interactAction:(FWPanGestureRecognizer *)gestureRecognizer
+- (FWPanGestureRecognizer *)gestureRecognizer
+{
+    if (!_gestureRecognizer) {
+        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerAction:)];
+    }
+    return _gestureRecognizer;
+}
+
+- (void)gestureRecognizerAction:(FWPanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
