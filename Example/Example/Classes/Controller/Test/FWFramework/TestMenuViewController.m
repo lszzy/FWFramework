@@ -11,7 +11,6 @@
 @interface TestMenuViewController ()
 
 @property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 @end
 
@@ -29,7 +28,9 @@
     FWWeakifySelf();
     [self fwSetLeftBarItem:@"Menu" block:^(id sender) {
         FWStrongifySelf();
-        [self.panGesture fwDrawerViewToggleOpen:![self.panGesture fwDrawerViewIsOpen]];
+        FWDrawerView *drawerView = self.contentView.fwDrawerView;
+        CGFloat position = (drawerView.position == drawerView.openPosition) ? drawerView.closePosition : drawerView.openPosition;
+        [drawerView setPosition:position animated:YES];
     }];
 }
 
@@ -66,9 +67,10 @@
     [contentView addSubview:closeLabel];
     [self.view addSubview:contentView];
     
-    self.panGesture = [[UIPanGestureRecognizer alloc] init];
-    [self.panGesture fwDrawerView:contentView direction:UISwipeGestureRecognizerDirectionRight fromPosition:-FWScreenWidth / 2.0 toPosition:0 kickbackHeight:25 callback:nil];
-    [contentView addGestureRecognizer:self.panGesture];
+    [contentView fwDrawerView:UISwipeGestureRecognizerDirectionRight
+                    positions:@[@(-FWScreenWidth / 2.0), @(0)]
+               kickbackHeight:25
+                     callback:nil];
 }
 
 @end

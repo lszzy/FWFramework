@@ -8,7 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "UIGestureRecognizer+FWDrawerView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
