@@ -116,18 +116,19 @@
                     finished = YES;
                 } else {
                     CGPoint velocity = [gestureRecognizer velocityInView:gestureRecognizer.view];
+                    CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
                     switch (gestureRecognizer.direction) {
                         case UISwipeGestureRecognizerDirectionUp:
-                            if (velocity.y <= -100) finished = YES;
+                            if (velocity.y <= -100 && fabs(transition.x) < fabs(transition.y)) finished = YES;
                             break;
                         case UISwipeGestureRecognizerDirectionLeft:
-                            if (velocity.x <= -100) finished = YES;
+                            if (velocity.x <= -100 && fabs(transition.x) > fabs(transition.y)) finished = YES;
                             break;
                         case UISwipeGestureRecognizerDirectionDown:
-                            if (velocity.y >= 100) finished = YES;
+                            if (velocity.y >= 100 && fabs(transition.x) < fabs(transition.y)) finished = YES;
                             break;
                         case UISwipeGestureRecognizerDirectionRight:
-                            if (velocity.x >= 100) finished = YES;
+                            if (velocity.x >= 100 && fabs(transition.x) > fabs(transition.y)) finished = YES;
                             break;
                         default:
                             break;
