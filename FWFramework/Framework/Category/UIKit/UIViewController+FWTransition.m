@@ -513,9 +513,7 @@
     [super dismissalTransitionWillBegin];
     
     [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (!context.isInteractive) {
-            self.dimmingView.alpha = 0;
-        }
+        self.dimmingView.alpha = 0;
     } completion:nil];
 }
 
