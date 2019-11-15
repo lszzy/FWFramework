@@ -8,6 +8,8 @@
  */
 
 #import "UIView+FWDrawerView.h"
+#import "UIScrollView+FWFramework.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWDrawerView
@@ -17,6 +19,7 @@
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
 @property (nonatomic, strong) CADisplayLink *displayLink;
+@property (nonatomic, assign) BOOL panDisabled;
 
 @end
 
@@ -29,11 +32,13 @@
     self = [super init];
     if (self) {
         _view = view;
+        _autoDetected = YES;
+        _kickbackHeight = 0;
         _direction = UISwipeGestureRecognizerDirectionUp;
         _position = self.isVertical ? view.frame.origin.y : view.frame.origin.x;
-        _scrollView = [view isKindOfClass:[UIScrollView class]] ? (UIScrollView *)view : nil;
-        _kickbackHeight = 0;
-        _autoDetected = YES;
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            self.scrollView = (UIScrollView *)view;
+        }
         
         UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerAction:)];
         _gestureRecognizer = gestureRecognizer;
@@ -64,38 +69,39 @@
 - (void)setScrollView:(UIScrollView *)scrollView
 {
     if (scrollView != _scrollView) {
+        if (_scrollView) {
+            [_scrollView fwUnobserveProperty:@"contentOffset" target:self action:@selector(scrollViewDidScroll:)];
+        }
         _scrollView = scrollView;
+        if (scrollView) {
+            [scrollView fwObserveProperty:@"contentOffset" target:self action:@selector(scrollViewDidScroll:)];
+        }
     }
 }
 
 - (CGFloat)openPosition
 {
-    // 计算打开位置，正向拖动时终点位置，反向拖动时起始位置
     return self.isReverse ? self.positions.firstObject.doubleValue : self.positions.lastObject.doubleValue;
 }
 
 - (CGFloat)closePosition
 {
-    // 计算关闭位置，正向拖动时起始位置，反向拖动时终点位置
     return self.isReverse ? self.positions.lastObject.doubleValue : self.positions.firstObject.doubleValue;
 }
 
 - (BOOL)isVertical
 {
-    // 是否纵向拖动，Up|Down时纵向，Right|Left时横向
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown;
 }
 
 - (BOOL)isReverse
 {
-    // 是否反向拖动，Down|Right时正向，Up|Left时反向
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
 }
 
 - (CGFloat)nextPosition
 {
     __block CGFloat position;
-    // 根绝拖动方向和回弹高度计算停留位置
     if (self.position > self.originPosition) {
         [self.positions enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
             CGFloat maxKickback = (obj.doubleValue == self.positions.lastObject.doubleValue) ? obj.doubleValue : obj.doubleValue + self.kickbackHeight;
@@ -191,34 +197,6 @@
                 
             // 视图跟随拖动移动指定距离
             self.position = self.isVertical ? (self.view.frame.origin.y + transition.y) : (self.view.frame.origin.x + transition.x);
-            
-            /*
-            // 如果是滚动视图，还需计算contentOffset
-            if (self.scrollView) {
-                // 计算滚动视图的contentOffset(包含contentInset)
-                CGFloat contentOffset = 0;
-                switch (self.direction) {
-                    case UISwipeGestureRecognizerDirectionUp:
-                        contentOffset = self.scrollView.contentOffset.y + self.scrollView.contentInset.top;
-                        break;
-                    case UISwipeGestureRecognizerDirectionDown:
-                        contentOffset = self.scrollView.contentSize.height - self.scrollView.frame.size.height - self.scrollView.contentOffset.y + self.scrollView.contentInset.bottom;
-                        break;
-                    case UISwipeGestureRecognizerDirectionLeft:
-                        contentOffset = self.scrollView.contentOffset.x + self.scrollView.contentInset.left;
-                        break;
-                    case UISwipeGestureRecognizerDirectionRight:
-                        contentOffset = self.scrollView.contentSize.width - self.scrollView.frame.size.width - self.scrollView.contentOffset.x + self.scrollView.contentInset.right;
-                        break;
-                    default:
-                        break;
-                }
-                
-                // 只处理contentOffset大于0的情况
-                if (contentOffset > 0) {
-                    self.position = self.isReverse ? (self.position - contentOffset) : (self.position + contentOffset);
-                }
-            }*/
                 
             // 移动时限制不超过范围
             if (self.position < self.positions.firstObject.doubleValue) {
@@ -226,6 +204,9 @@
             } else if (self.position > self.positions.lastObject.doubleValue) {
                 self.position = self.positions.lastObject.doubleValue;
             }
+            
+            // 处理滚动视图手势冲突
+            [self gestureRecognizerDidScroll];
                 
             // 执行位移并回调
             self.view.frame = CGRectMake(self.isVertical ? self.view.frame.origin.x : self.position,
@@ -254,6 +235,48 @@
         }
         default:
             break;
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView != self.scrollView) return;
+    
+    UIRectEdge scrollEdge = UIRectEdgeNone;
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionUp:
+            scrollEdge = UIRectEdgeTop;
+            break;
+        case UISwipeGestureRecognizerDirectionDown:
+            scrollEdge = UIRectEdgeBottom;
+            break;
+        case UISwipeGestureRecognizerDirectionLeft:
+            scrollEdge = UIRectEdgeLeft;
+            break;
+        case UISwipeGestureRecognizerDirectionRight:
+            scrollEdge = UIRectEdgeRight;
+            break;
+        default:
+            break;
+    }
+    
+    if ([self.scrollView fwIsScrollToEdge:scrollEdge]) {
+        self.panDisabled = NO;
+    }
+    if (!self.panDisabled) {
+        [self.scrollView fwScrollToEdge:scrollEdge animated:NO];
+    }
+}
+
+- (void)gestureRecognizerDidScroll
+{
+    if (!self.scrollView) return;
+    
+    if (self.position == self.openPosition) {
+        self.panDisabled = YES;
+    }
+    if (self.panDisabled) {
+        [self setPosition:self.openPosition animated:NO];
     }
 }
 
