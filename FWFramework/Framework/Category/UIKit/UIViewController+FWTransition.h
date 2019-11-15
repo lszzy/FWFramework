@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 设置动画句柄
 @property (nullable, nonatomic, copy) void (^transitionBlock)(FWAnimatedTransition *transition);
 
-// 动画持续时间，必须大于0，默认0.35秒
+// 动画持续时间，必须大于0，默认0.35秒(默认设置completionSpeed为0.35)
 @property (nonatomic, assign) NSTimeInterval transitionDuration;
 
 // 获取动画类型，默认根据上下文判断
