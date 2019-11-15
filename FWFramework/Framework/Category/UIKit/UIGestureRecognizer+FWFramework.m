@@ -143,6 +143,7 @@
     CGPoint velocity = [self velocityInView:self.view];
     CGPoint location = [touches.anyObject locationInView:self.view];
     CGPoint prevLocation = [touches.anyObject previousLocationInView:self.view];
+    if (CGPointEqualToPoint(velocity, CGPointZero) && CGPointEqualToPoint(location, prevLocation)) return;
     
     BOOL isFailed = NO;
     switch (self.direction) {
