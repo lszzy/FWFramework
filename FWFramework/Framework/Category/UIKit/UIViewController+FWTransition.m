@@ -103,13 +103,16 @@
             }
             break;
         }
+        case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
             
             BOOL interactEnded = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
             if (interactEnded) {
                 BOOL finished = NO;
-                if (self.percentComplete >= 0.5) {
+                if (gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+                    finished = NO;
+                } else if (self.percentComplete >= 0.5) {
                     finished = YES;
                 } else {
                     CGPoint velocity = [gestureRecognizer velocityInView:gestureRecognizer.view];
