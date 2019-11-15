@@ -115,10 +115,12 @@
     return self;
 }
 
-- (void)setScrollView:(UIScrollView *)scrollView
+- (BOOL)canScroll:(UIScrollView *)scrollView
 {
-    if (scrollView != _scrollView) {
-        _scrollView = scrollView;
+    if (self.direction == UISwipeGestureRecognizerDirectionUp | self.direction == UISwipeGestureRecognizerDirectionDown) {
+        return scrollView.scrollEnabled && [scrollView fwCanScrollVertical];
+    } else {
+        return scrollView.scrollEnabled && [scrollView fwCanScrollHorizontal];
     }
 }
 
@@ -132,6 +134,7 @@
 {
     [super touchesMoved:touches withEvent:event];
     if (!self.scrollView) return;
+    if (![self canScroll:self.scrollView]) return;
 
     if (self.state == UIGestureRecognizerStateFailed) return;
     if (self.isFailed) {
@@ -206,10 +209,13 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            return YES;
+            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (scrollView != self.scrollView && [self canScroll:scrollView]) {
+                self.scrollView = scrollView;
+                return YES;
+            }
         } else {
-            if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
+            if (self.scrollView && self.scrollView == otherGestureRecognizer.view && [self canScroll:self.scrollView]) {
                 return YES;
             }
         }
@@ -222,10 +228,13 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            return YES;
+            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (scrollView != self.scrollView && [self canScroll:scrollView]) {
+                self.scrollView = scrollView;
+                return YES;
+            }
         } else {
-            if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
+            if (self.scrollView && self.scrollView == otherGestureRecognizer.view && [self canScroll:self.scrollView]) {
                 return YES;
             }
         }
