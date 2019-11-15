@@ -52,6 +52,7 @@
     self = [super init];
     if (self) {
         _transitionDuration = 0.35;
+        self.completionSpeed = 0.35;
     }
     return self;
 }
