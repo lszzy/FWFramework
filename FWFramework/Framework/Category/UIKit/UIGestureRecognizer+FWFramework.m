@@ -207,10 +207,8 @@
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            if (scrollView != self.scrollView) {
-                self.scrollView = scrollView;
-                return YES;
-            }
+            if (scrollView != self.scrollView) self.scrollView = scrollView;
+            return YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
                 return YES;
@@ -226,10 +224,8 @@
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            if (scrollView != self.scrollView) {
-                self.scrollView = scrollView;
-                return YES;
-            }
+            if (scrollView != self.scrollView) self.scrollView = scrollView;
+            return YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
                 return YES;
