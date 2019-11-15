@@ -124,7 +124,13 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [super touchesMoved:touches withEvent:event];
-    if (!self.scrollView) return;
+    if (!self.scrollView || !self.scrollView.scrollEnabled) return;
+    
+    if (self.direction == UISwipeGestureRecognizerDirectionUp | self.direction == UISwipeGestureRecognizerDirectionDown) {
+        if (![self.scrollView fwCanScrollVertical]) return;
+    } else {
+        if (![self.scrollView fwCanScrollHorizontal]) return;
+    }
 
     if (self.state == UIGestureRecognizerStateFailed) return;
     if (self.isFailed) {
@@ -137,6 +143,7 @@
     CGPoint velocity = [self velocityInView:self.view];
     CGPoint location = [touches.anyObject locationInView:self.view];
     CGPoint prevLocation = [touches.anyObject previousLocationInView:self.view];
+    if (CGPointEqualToPoint(velocity, CGPointZero) && CGPointEqualToPoint(location, prevLocation)) return;
     
     BOOL isFailed = NO;
     switch (self.direction) {
@@ -199,7 +206,8 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (scrollView != self.scrollView) self.scrollView = scrollView;
             return YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
@@ -215,7 +223,8 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (scrollView != self.scrollView) self.scrollView = scrollView;
             return YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
@@ -228,8 +237,8 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.requireFailure && self.requireFailure == otherGestureRecognizer) {
-        return YES;
+    if (self.shouldRequireFailure) {
+        return self.shouldRequireFailure(otherGestureRecognizer);
     }
     return NO;
 }

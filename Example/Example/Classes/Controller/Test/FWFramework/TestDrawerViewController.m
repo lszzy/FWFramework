@@ -40,7 +40,7 @@
 
 - (void)renderViewUp
 {
-    BOOL hasHeader = NO;
+    BOOL hasHeader = YES;
     UIView *containerView, *drawerView;
     if (hasHeader) {
         containerView = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
@@ -95,9 +95,11 @@
     
     CGFloat fromPosition = 0;
     CGFloat toPosition = ViewHeight / 4 * 3;
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:drawerView direction:UISwipeGestureRecognizerDirectionUp positions:@[@(toPosition), @(ViewHeight / 4), @(ViewHeight / 2), @(fromPosition)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [drawerView fwDrawerView:0
+                   positions:@[@(toPosition), @(ViewHeight / 4), @(ViewHeight / 2), @(fromPosition)]
+              kickbackHeight:25
+                    callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:drawerView];
         CGFloat targetDistance = toPosition - fromPosition;
@@ -109,7 +111,6 @@
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
     }];
-    [drawerView addGestureRecognizer:panGesture];
 }
 
 - (void)renderViewDown
@@ -142,9 +143,11 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionDown positions:@[@(0), @(-ViewHeight / 4), @(-ViewHeight / 2), @(-ViewHeight / 4 * 3)] kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [scrollView fwDrawerView:UISwipeGestureRecognizerDirectionDown
+                   positions:@[@(0), @(-ViewHeight / 4), @(-ViewHeight / 2), @(-ViewHeight / 4 * 3)]
+              kickbackHeight:25
+                    callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
@@ -153,7 +156,6 @@
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
     }];
-    [scrollView addGestureRecognizer:panGesture];
 }
 
 - (void)renderViewLeft
@@ -186,9 +188,11 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionLeft fromPosition:FWScreenWidth / 4 * 3 toPosition:0 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [scrollView fwDrawerView:UISwipeGestureRecognizerDirectionLeft
+                   positions:@[@(FWScreenWidth / 4 * 3), @(0)]
+              kickbackHeight:25
+                    callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
@@ -197,7 +201,6 @@
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
     }];
-    [scrollView addGestureRecognizer:panGesture];
 }
 
 - (void)renderViewRight
@@ -230,9 +233,11 @@
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     FWWeakifySelf();
-    [panGesture fwDrawerView:scrollView direction:UISwipeGestureRecognizerDirectionRight fromPosition:0 toPosition:-FWScreenWidth / 4 * 3 kickbackHeight:25 callback:^(CGFloat position, BOOL finished) {
+    [scrollView fwDrawerView:UISwipeGestureRecognizerDirectionRight
+                   positions:@[@(0), @(-FWScreenWidth / 4 * 3)]
+              kickbackHeight:25
+                    callback:^(CGFloat position, BOOL finished) {
         FWStrongifySelf();
         [self.view bringSubviewToFront:scrollView];
         if (position == 0) {
@@ -241,7 +246,6 @@
             [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
         }
     }];
-    [scrollView addGestureRecognizer:panGesture];
 }
 
 @end
