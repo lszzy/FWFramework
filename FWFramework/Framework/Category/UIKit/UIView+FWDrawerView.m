@@ -9,12 +9,11 @@
 
 #import "UIView+FWDrawerView.h"
 #import "UIScrollView+FWFramework.h"
-#import "FWMessage.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWDrawerView
 
-@interface FWDrawerView () <UIGestureRecognizerDelegate>
+@interface FWDrawerView () <UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
@@ -69,12 +68,12 @@
 - (void)setScrollView:(UIScrollView *)scrollView
 {
     if (scrollView != _scrollView) {
-        if (_scrollView) {
-            [_scrollView fwUnobserveProperty:@"contentOffset" target:self action:@selector(scrollViewDidScroll:)];
+        if (_scrollView && _scrollView.delegate == self) {
+            _scrollView.delegate = nil;
         }
         _scrollView = scrollView;
-        if (scrollView) {
-            [scrollView fwObserveProperty:@"contentOffset" target:self action:@selector(scrollViewDidScroll:)];
+        if (scrollView && !scrollView.delegate) {
+            scrollView.delegate = self;
         }
     }
 }
@@ -237,6 +236,8 @@
             break;
     }
 }
+
+#pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {

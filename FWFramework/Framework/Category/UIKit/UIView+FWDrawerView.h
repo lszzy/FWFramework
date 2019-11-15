@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @interface FWDrawerView : NSObject
 
-// 创建抽屉拖拽视图，view会强引用之。如果view为scrollView，自动处理手势冲突
+// 创建抽屉拖拽视图，view会强引用之。view为滚动视图时，详见scrollView属性
 - (instancetype)initWithView:(UIView *)view;
 
 // 请使用initWithView
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
 @property (nonatomic, assign) BOOL autoDetected;
 
-// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身
+// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。先尝试设置delegate为自身，尝试失败请手工调用scrollViewDidScroll
 @property (nullable, nonatomic, weak) UIScrollView *scrollView;
 
 // 抽屉视图，自动添加pan手势
@@ -57,6 +57,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 设置抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated;
+
+// 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 @end
 
