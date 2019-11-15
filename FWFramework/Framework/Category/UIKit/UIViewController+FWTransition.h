@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - Interactive
 
-// 是否启用交互pan手势进行pop|dismiss，默认NO
+// 是否启用交互pan手势进行pop|dismiss，默认NO。可使用父类属性设置交互动画
 @property (nonatomic, assign) BOOL interactEnabled;
 
 // 交互pan手势对象，延迟加载，可设置交互方向，滚动视图等

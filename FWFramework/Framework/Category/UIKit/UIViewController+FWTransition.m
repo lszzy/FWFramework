@@ -108,8 +108,7 @@
             BOOL interactEnded = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
             if (interactEnded) {
                 BOOL finished = NO;
-                CGFloat percent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
-                if (percent >= 0.5) {
+                if (self.percentComplete >= 0.5) {
                     finished = YES;
                 } else {
                     CGPoint velocity = [gestureRecognizer velocityInView:gestureRecognizer.view];
