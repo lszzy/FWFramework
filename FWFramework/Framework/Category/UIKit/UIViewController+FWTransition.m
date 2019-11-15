@@ -52,6 +52,7 @@
     self = [super init];
     if (self) {
         _transitionDuration = 0.35;
+        self.completionSpeed = 0.35;
     }
     return self;
 }
@@ -64,14 +65,6 @@
     self.gestureRecognizer.enabled = interactEnabled;
 }
 
-- (FWPanGestureRecognizer *)gestureRecognizer
-{
-    if (!_gestureRecognizer) {
-        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(interactAction:)];
-    }
-    return _gestureRecognizer;
-}
-
 - (void)interactWith:(UIViewController *)viewController
 {
     if (!viewController.view) return;
@@ -82,7 +75,15 @@
     [viewController.view addGestureRecognizer:self.gestureRecognizer];
 }
 
-- (void)interactAction:(FWPanGestureRecognizer *)gestureRecognizer
+- (FWPanGestureRecognizer *)gestureRecognizer
+{
+    if (!_gestureRecognizer) {
+        _gestureRecognizer = [[FWPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerAction:)];
+    }
+    return _gestureRecognizer;
+}
+
+- (void)gestureRecognizerAction:(FWPanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
@@ -102,25 +103,42 @@
             }
             break;
         }
+        case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
             
             BOOL interactEnded = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
             if (interactEnded) {
-                CGFloat percent = [gestureRecognizer fwSwipePercentOfDirection:gestureRecognizer.direction];
-                if (percent >= 0.5) {
+                BOOL finished = NO;
+                if (gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+                    finished = NO;
+                } else if (self.percentComplete >= 0.5) {
+                    finished = YES;
+                } else {
+                    CGPoint velocity = [gestureRecognizer velocityInView:gestureRecognizer.view];
+                    CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
+                    switch (gestureRecognizer.direction) {
+                        case UISwipeGestureRecognizerDirectionUp:
+                            if (velocity.y <= -100 && fabs(transition.x) < fabs(transition.y)) finished = YES;
+                            break;
+                        case UISwipeGestureRecognizerDirectionLeft:
+                            if (velocity.x <= -100 && fabs(transition.x) > fabs(transition.y)) finished = YES;
+                            break;
+                        case UISwipeGestureRecognizerDirectionDown:
+                            if (velocity.y >= 100 && fabs(transition.x) < fabs(transition.y)) finished = YES;
+                            break;
+                        case UISwipeGestureRecognizerDirectionRight:
+                            if (velocity.x >= 100 && fabs(transition.x) > fabs(transition.y)) finished = YES;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+                if (finished) {
                     [self finishInteractiveTransition];
                 } else {
-                    BOOL isReverse = (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft);
-                    CGPoint velocityPoint = [gestureRecognizer velocityInView:gestureRecognizer.view];
-                    CGFloat velocity = (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp || gestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown) ? velocityPoint.y : velocityPoint.x;
-                    if (velocity > 100 && !isReverse) {
-                        [self finishInteractiveTransition];
-                    } else if (velocity < -100 && isReverse) {
-                        [self finishInteractiveTransition];
-                    } else {
-                        [self cancelInteractiveTransition];
-                    }
+                    [self cancelInteractiveTransition];
                 }
             }
             break;
@@ -499,9 +517,7 @@
     [super dismissalTransitionWillBegin];
     
     [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (!context.isInteractive) {
-            self.dimmingView.alpha = 0;
-        }
+        self.dimmingView.alpha = 0;
     } completion:nil];
 }
 

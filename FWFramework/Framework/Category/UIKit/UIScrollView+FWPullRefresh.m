@@ -291,7 +291,6 @@ static CGFloat FWPullRefreshViewHeight = 60;
     }
     else if([keyPath isEqualToString:@"frame"])
         [self layoutSubviews];
-    
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
