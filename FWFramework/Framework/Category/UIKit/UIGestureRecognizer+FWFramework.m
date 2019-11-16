@@ -220,18 +220,15 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.shouldBeRequiredToFail) {
-        return self.shouldBeRequiredToFail(otherGestureRecognizer);
-    }
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
             if (scrollView != self.scrollView) self.scrollView = scrollView;
-            return YES;
+            return self.shouldBeRequiredToFail ? self.shouldBeRequiredToFail(otherGestureRecognizer) : YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
-                return YES;
+                return self.shouldBeRequiredToFail ? self.shouldBeRequiredToFail(otherGestureRecognizer) : YES;
             }
         }
     }
