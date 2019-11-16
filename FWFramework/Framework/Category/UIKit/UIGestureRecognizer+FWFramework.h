@@ -66,6 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 自定义Failed判断句柄。默认判定失败时直接修改状态为Failed，可设置此block修改判定条件
 @property (nullable, nonatomic, copy) BOOL (^shouldFailed)(FWPanGestureRecognizer *gestureRecognizer);
 
+// 自定义shouldBeRequiredToFail判断句柄
+@property (nullable, nonatomic, copy) BOOL (^shouldBeRequiredToFail)(UIGestureRecognizer *otherGestureRecognizer);
+
 // 自定义shouldRequireFailure判断句柄
 @property (nullable, nonatomic, copy) BOOL (^shouldRequireFailure)(UIGestureRecognizer *otherGestureRecognizer);
 
