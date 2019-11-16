@@ -115,6 +115,17 @@
     return self;
 }
 
+- (void)setScrollView:(UIScrollView *)scrollView
+{
+    if (scrollView != _scrollView) {
+        UIScrollView *oldValue = _scrollView;
+        _scrollView = scrollView;
+        if (self.scrollViewChanged) {
+            self.scrollViewChanged(oldValue, scrollView);
+        }
+    }
+}
+
 - (void)reset
 {
     [super reset];
@@ -206,8 +217,7 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            if (scrollView != self.scrollView) self.scrollView = scrollView;
+            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
             return YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
@@ -220,28 +230,16 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.shouldBeRequiredToFail) {
-        return self.shouldBeRequiredToFail(otherGestureRecognizer);
-    }
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            if (scrollView != self.scrollView) self.scrollView = scrollView;
-            return YES;
+            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            return self.shouldBeRequiredToFail ? self.shouldBeRequiredToFail(otherGestureRecognizer) : YES;
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
-                return YES;
+                return self.shouldBeRequiredToFail ? self.shouldBeRequiredToFail(otherGestureRecognizer) : YES;
             }
         }
-    }
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    if (self.shouldRequireFailure) {
-        return self.shouldRequireFailure(otherGestureRecognizer);
     }
     return NO;
 }
