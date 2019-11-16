@@ -69,8 +69,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 自定义shouldBeRequiredToFail判断句柄
 @property (nullable, nonatomic, copy) BOOL (^shouldBeRequiredToFail)(UIGestureRecognizer *otherGestureRecognizer);
 
-// 自定义scrollView发生变化时的回调，可自定义scrollView
-@property (nullable, nonatomic, copy) void (^scrollViewChanged)(UIScrollView * _Nullable oldValue, UIScrollView * _Nullable newValue);
+// 自定义shouldRequireFailure判断句柄
+@property (nullable, nonatomic, copy) BOOL (^shouldRequireFailure)(UIGestureRecognizer *otherGestureRecognizer);
 
 @end
 
