@@ -78,6 +78,16 @@
     }
 }
 
+- (BOOL)enabled
+{
+    return self.gestureRecognizer.enabled;
+}
+
+- (void)setEnabled:(BOOL)enabled
+{
+    self.gestureRecognizer.enabled = enabled;
+}
+
 - (CGFloat)openPosition
 {
     return self.isReverse ? self.positions.firstObject.doubleValue : self.positions.lastObject.doubleValue;
@@ -242,6 +252,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.scrollView) return;
+    if (!self.gestureRecognizer.enabled) return;
     
     UIRectEdge scrollEdge = UIRectEdgeNone;
     switch (self.direction) {
