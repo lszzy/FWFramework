@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 /// 安全解包协议
 public protocol FWSafelyUnwrappable {
@@ -108,6 +109,10 @@ extension Float: FWSafelyUnwrappable {
 }
 extension Double: FWSafelyUnwrappable {
     public static var fwSafeValue: Double = .zero
+    public func fwIsEmpty() -> Bool { return self == Self.fwSafeValue }
+}
+extension CGFloat: FWSafelyUnwrappable {
+    public static var fwSafeValue: CGFloat = .zero
     public func fwIsEmpty() -> Bool { return self == Self.fwSafeValue }
 }
 extension Bool: FWSafelyUnwrappable {
