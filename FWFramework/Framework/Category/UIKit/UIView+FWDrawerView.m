@@ -98,6 +98,8 @@
     return self.isReverse ? self.positions.lastObject.doubleValue : self.positions.firstObject.doubleValue;
 }
 
+#pragma mark - Private
+
 - (BOOL)isVertical
 {
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown;
@@ -106,6 +108,22 @@
 - (BOOL)isReverse
 {
     return self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionLeft;
+}
+
+- (UIRectEdge)scrollEdge
+{
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionUp:
+            return UIRectEdgeTop;
+        case UISwipeGestureRecognizerDirectionDown:
+            return UIRectEdgeBottom;
+        case UISwipeGestureRecognizerDirectionLeft:
+            return UIRectEdgeLeft;
+        case UISwipeGestureRecognizerDirectionRight:
+            return UIRectEdgeRight;
+        default:
+            return UIRectEdgeNone;
+    }
 }
 
 - (CGFloat)nextPosition
@@ -131,6 +149,26 @@
     return position;
 }
 
+- (void)togglePosition:(CGFloat)position
+{
+    self.view.frame = CGRectMake(
+                                 self.isVertical ? self.view.frame.origin.x : position,
+                                 self.isVertical ? position : self.view.frame.origin.y,
+                                 self.view.frame.size.width,
+                                 self.view.frame.size.height);
+}
+
+- (void)notifyPosition:(BOOL)finished
+{
+    if (finished) {
+        [self gestureRecognizerDidScroll];
+    }
+    
+    if (self.callback) {
+        self.callback(self.position, finished);
+    }
+}
+
 #pragma mark - Public
 
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated
@@ -139,15 +177,9 @@
     
     // 不执行动画
     if (!animated) {
-        self.view.frame = CGRectMake(
-                                     self.isVertical ? self.view.frame.origin.x : position,
-                                     self.isVertical ? position : self.view.frame.origin.y,
-                                     self.view.frame.size.width,
-                                     self.view.frame.size.height);
+        [self togglePosition:position];
         self.position = position;
-        if (self.callback) {
-            self.callback(self.position, YES);
-        }
+        [self notifyPosition:YES];
         return;
     }
     
@@ -161,11 +193,7 @@
     
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
     [UIView animateWithDuration:0.2 animations:^{
-        self.view.frame = CGRectMake(
-                                     self.isVertical ? self.view.frame.origin.x : position,
-                                     self.isVertical ? position : self.view.frame.origin.y,
-                                     self.view.frame.size.width,
-                                     self.view.frame.size.height);
+        [self togglePosition:position];
     } completion:^(BOOL finished) {
         // 动画完成时需释放displayLink
         if (self.displayLink) {
@@ -174,9 +202,7 @@
         }
         
         self.position = position;
-        if (self.callback) {
-            self.callback(self.position, YES);
-        }
+        [self notifyPosition:YES];
     }];
 }
 
@@ -184,9 +210,7 @@
 {
     // 监听动画过程中的位置，访问view.layer.presentationLayer即可
     self.position = self.isVertical ? self.view.layer.presentationLayer.frame.origin.y : self.view.layer.presentationLayer.frame.origin.x;
-    if (self.callback) {
-        self.callback(self.position, NO);
-    }
+    [self notifyPosition:NO];
 }
 
 - (void)gestureRecognizerAction:(UIPanGestureRecognizer *)gestureRecognizer
@@ -204,27 +228,18 @@
             CGPoint transition = [gestureRecognizer translationInView:self.view.superview];
             [gestureRecognizer setTranslation:CGPointZero inView:self.view.superview];
                 
-            // 视图跟随拖动移动指定距离
-            self.position = self.isVertical ? (self.view.frame.origin.y + transition.y) : (self.view.frame.origin.x + transition.x);
-                
-            // 移动时限制不超过范围
-            if (self.position < self.positions.firstObject.doubleValue) {
-                self.position = self.positions.firstObject.doubleValue;
-            } else if (self.position > self.positions.lastObject.doubleValue) {
-                self.position = self.positions.lastObject.doubleValue;
+            // 视图跟随拖动移动指定距离，且移动时限制不超过范围
+            CGFloat position = self.isVertical ? (self.view.frame.origin.y + transition.y) : (self.view.frame.origin.x + transition.x);
+            if (position < self.positions.firstObject.doubleValue) {
+                position = self.positions.firstObject.doubleValue;
+            } else if (position > self.positions.lastObject.doubleValue) {
+                position = self.positions.lastObject.doubleValue;
             }
-            
-            // 处理滚动视图手势冲突
-            [self gestureRecognizerDidScroll];
                 
             // 执行位移并回调
-            self.view.frame = CGRectMake(self.isVertical ? self.view.frame.origin.x : self.position,
-                                         self.isVertical ? self.position : self.view.frame.origin.y,
-                                         self.view.frame.size.width,
-                                         self.view.frame.size.height);
-            if (self.callback) {
-                self.callback(self.position, NO);
-            }
+            [self togglePosition:position];
+            self.position = position;
+            [self notifyPosition:NO];
             break;
         }
         // 拖动结束时停留指定位置
@@ -232,13 +247,10 @@
         case UIGestureRecognizerStateEnded: {
             // 停留位置未发生改变时不执行动画，直接回调
             if (self.position == self.originPosition) {
-                if (self.callback) {
-                    self.callback(self.position, YES);
-                }
+                [self notifyPosition:YES];
             // 停留位置发生改变时执行动画，动画完成后回调
             } else {
-                CGFloat position = [self nextPosition];
-                [self setPosition:position animated:YES];
+                [self setPosition:self.nextPosition animated:YES];
             }
             break;
         }
@@ -251,38 +263,19 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView != self.scrollView) return;
-    if (!self.gestureRecognizer.enabled) return;
+    if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     
-    UIRectEdge scrollEdge = UIRectEdgeNone;
-    switch (self.direction) {
-        case UISwipeGestureRecognizerDirectionUp:
-            scrollEdge = UIRectEdgeTop;
-            break;
-        case UISwipeGestureRecognizerDirectionDown:
-            scrollEdge = UIRectEdgeBottom;
-            break;
-        case UISwipeGestureRecognizerDirectionLeft:
-            scrollEdge = UIRectEdgeLeft;
-            break;
-        case UISwipeGestureRecognizerDirectionRight:
-            scrollEdge = UIRectEdgeRight;
-            break;
-        default:
-            break;
-    }
-    
-    if ([self.scrollView fwIsScrollToEdge:scrollEdge]) {
+    if ([self.scrollView fwIsScrollToEdge:self.scrollEdge]) {
         self.panDisabled = NO;
     }
     if (!self.panDisabled) {
-        [self.scrollView fwScrollToEdge:scrollEdge animated:NO];
+        [self.scrollView fwScrollToEdge:self.scrollEdge animated:NO];
     }
 }
 
 - (void)gestureRecognizerDidScroll
 {
-    if (!self.scrollView) return;
+    if (!self.scrollView || !self.gestureRecognizer.enabled) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
