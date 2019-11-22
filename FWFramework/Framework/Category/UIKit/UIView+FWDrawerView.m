@@ -149,6 +149,17 @@
     return position;
 }
 
+- (BOOL)canScroll:(UIScrollView *)scrollView
+{
+    if (!scrollView.scrollEnabled) return NO;
+    if (self.isVertical) {
+        if (![scrollView fwCanScrollVertical]) return NO;
+    } else {
+        if (![scrollView fwCanScrollHorizontal]) return NO;
+    }
+    return YES;
+}
+
 - (void)togglePosition:(CGFloat)position
 {
     self.view.frame = CGRectMake(
@@ -239,6 +250,7 @@
             // 执行位移并回调
             [self togglePosition:position];
             self.position = position;
+            [self gestureRecognizerDidScroll];
             [self notifyPosition:NO];
             break;
         }
@@ -264,6 +276,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
+    if (![self canScroll:self.scrollView]) return;
     
     if ([self.scrollView fwIsScrollToEdge:self.scrollEdge]) {
         self.panDisabled = NO;
@@ -276,6 +289,7 @@
 - (void)gestureRecognizerDidScroll
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
+    if (![self canScroll:self.scrollView]) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
@@ -292,8 +306,11 @@
     if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
-            self.scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            return YES;
+            UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if ([self canScroll:scrollView]) {
+                self.scrollView = scrollView;
+                return YES;
+            }
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
                 return YES;
