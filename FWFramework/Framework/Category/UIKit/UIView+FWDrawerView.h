@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
 @property (nullable, nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
 
+// 是否启用拖拽，默认YES。其实就是设置手势的enabled
+@property (nonatomic, assign) BOOL enabled;
+
 // 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
 @property (nonatomic, assign) BOOL autoDetected;
 
