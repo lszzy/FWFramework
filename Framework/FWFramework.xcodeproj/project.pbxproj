@@ -242,6 +242,8 @@
 		2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F70EDE82327882F00498538 /* FWAppLoadingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */; };
 		2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */; };
+		2FA0C56E238BACAC008E6CB8 /* UITableView+FWBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA0C56C238BACAC008E6CB8 /* UITableView+FWBackgroundView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FA0C56F238BACAC008E6CB8 /* UITableView+FWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA0C56D238BACAC008E6CB8 /* UITableView+FWBackgroundView.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */; };
 		2FA99D9D228A753B0059DFDB /* FWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -576,6 +578,8 @@
 		2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppLoadingPlugin.m; sourceTree = "<group>"; };
 		2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+FWSafeType.swift"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FA0C56C238BACAC008E6CB8 /* UITableView+FWBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWBackgroundView.h"; sourceTree = "<group>"; };
+		2FA0C56D238BACAC008E6CB8 /* UITableView+FWBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWBackgroundView.m"; sourceTree = "<group>"; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
 		2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FWFramework.m"; sourceTree = "<group>"; };
 		2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppDelegate.h; sourceTree = "<group>"; };
@@ -770,6 +774,8 @@
 				2FA99EA6228E80810059DFDB /* UISwitch+FWFramework.m */,
 				2F03A519216CF4B9001965A1 /* UITableView+FWFramework.h */,
 				2F03A4F5216CF4B9001965A1 /* UITableView+FWFramework.m */,
+				2FA0C56C238BACAC008E6CB8 /* UITableView+FWBackgroundView.h */,
+				2FA0C56D238BACAC008E6CB8 /* UITableView+FWBackgroundView.m */,
 				2F03A515216CF4B9001965A1 /* UITableView+FWTemplateLayout.h */,
 				2F03A4F9216CF4B9001965A1 /* UITableView+FWTemplateLayout.m */,
 				2F03A4EC216CF4B9001965A1 /* UITextField+FWFramework.h */,
@@ -1213,6 +1219,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FA0C56E238BACAC008E6CB8 /* UITableView+FWBackgroundView.h in Headers */,
 				2F17B6BA237D14E2007E1DCC /* UIView+FWDrawerView.h in Headers */,
 				2FC81A7D235032EF00BE660C /* FWViewModel.h in Headers */,
 				2FAD2227233B5FF500140359 /* FWTuple.h in Headers */,
@@ -1631,6 +1638,7 @@
 				2FBFB70822C5045400E669B6 /* NSBundle+FWFramework.swift in Sources */,
 				2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */,
 				2FAD2228233B5FF500140359 /* FWTuple.m in Sources */,
+				2FA0C56F238BACAC008E6CB8 /* UITableView+FWBackgroundView.m in Sources */,
 				2F03A5ED216CF4B9001965A1 /* FWKeychainManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
