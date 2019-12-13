@@ -8,6 +8,28 @@
 
 #import "TestTableReloadViewController.h"
 
+@interface TestTableReloadCell : UITableViewCell
+
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@end
+
+@implementation TestTableReloadCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:nil];
+        _titleLabel = titleLabel;
+        [self.contentView addSubview:titleLabel];
+        titleLabel.fwLayoutChain.centerY().leftWithInset(15).rightWithInset(15);
+    }
+    return self;
+}
+
+@end
+
 @interface TestTableReloadViewController ()
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -69,6 +91,11 @@
 {
     [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
     [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    
+    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableReloadCell class] cellHeight:100];
+    self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
+        manager.animation(0).width(100);
+    };
 }
 
 - (void)renderData
@@ -85,11 +112,11 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    TestTableReloadCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell = [[TestTableReloadCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-    cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
+    cell.titleLabel.text = [self.tableData objectAtIndex:indexPath.row];
     return cell;
 }
 
@@ -106,7 +133,9 @@
     } else {
         NSLog(@"开始刷新");
     }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [self.tableView fwTabStartAnimation];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView fwTabEndAnimation];
         if (isTimer) {
             NSLog(@"自动刷新完成");
         } else {

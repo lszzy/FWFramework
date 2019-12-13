@@ -158,6 +158,13 @@
         
         self.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
     };
+    
+    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:100];
+    self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
+        manager.animation(0).line(1).width(100);
+        manager.animation(1).line(1);
+        manager.animation(2).width(30).height(30).placeholder(@"AppIcon");
+    };
 }
 
 - (void)renderModel
@@ -245,7 +252,9 @@
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [self.tableView fwTabStartAnimation];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView fwTabEndAnimation];
         NSLog(@"刷新完成");
         
         for (int i = 0; i < 2; i++) {
