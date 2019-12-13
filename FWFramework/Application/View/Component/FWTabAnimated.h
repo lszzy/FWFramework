@@ -183,10 +183,10 @@ extern NSString * const FWTabCacheManagerFolderName;
 @interface UIView (FWTabAnimated)
 
 // 控制视图持有
-@property (nonatomic, strong) FWTabViewAnimated * _Nullable tabAnimated;
+@property (nonatomic, strong) FWTabViewAnimated * _Nullable fwTabAnimated;
 
 // 骨架屏管理单元持有
-@property (nonatomic, strong) FWTabComponentManager * _Nullable tabComponentManager;
+@property (nonatomic, strong) FWTabComponentManager * _Nullable fwTabComponentManager;
 
 @end
 
@@ -195,7 +195,7 @@ extern NSString * const FWTabCacheManagerFolderName;
 @interface UITableView (FWTabAnimated)
 
 // 控制视图持有的配置管理对象
-@property (nonatomic, strong) FWTabTableAnimated * _Nullable tabAnimated;
+@property (nonatomic, strong) FWTabTableAnimated * _Nullable fwTabAnimated;
 
 @end
 
@@ -204,7 +204,7 @@ extern NSString * const FWTabCacheManagerFolderName;
 @interface UICollectionView (FWTabAnimated)
 
 // 控制视图持有的配置管理对象
-@property (nonatomic, strong) FWTabCollectionAnimated * _Nullable tabAnimated;
+@property (nonatomic, strong) FWTabCollectionAnimated * _Nullable fwTabAnimated;
 
 @end
 
@@ -215,21 +215,21 @@ extern NSString * const FWTabCacheManagerFolderName;
 /**
  * 开启动画, 建议使用下面的方法
  *
- * `[self tab_startAnimation]`即使多次调用，也只会生效一次。
+ * `[self fwTabStartAnimation]`即使多次调用，也只会生效一次。
  * 如有其他需要，请自行修改`FWTabViewAnimated`中的`canLoadAgain`属性，解除限制。
  */
-- (void)tab_startAnimation;
+- (void)fwTabStartAnimation;
 
 /**
- * 使用原有的启动动画方法`tab_startAnimation`时发现了一个问题:
+ * 使用原有的启动动画方法`fwTabStartAnimation`时发现了一个问题:
  * 在网络非常好的情况下，动画基本没机会展示出来，甚至会有一闪而过的视觉差，所以体验会不好。
- * 起初用`tab_startAnimation`方法配合MJRefresh，则会减缓这样的问题，原因是MJRefresh本身有一个延迟效果（为了说明，这么称呼的），大概是0.4秒。
+ * 起初用`fwTabStartAnimation`方法配合MJRefresh，则会减缓这样的问题，原因是MJRefresh本身有一个延迟效果（为了说明，这么称呼的），大概是0.4秒。
  * 所以，增加了一个带有延迟时间的启动方法，默认为0.4s
  * 这样的话，在网络卡的情况下，0.4秒并不会造成太大的影响，在网络不卡的情况下，可以有一个短暂的视觉停留效果。
  *
  * @param completion 在回调中加载数据
  */
-- (void)tab_startAnimationWithCompletion:(void (^)(void))completion;
+- (void)fwTabStartAnimationWithCompletion:(void (^)(void))completion;
 
 /**
  * 与上述方法功能相同，可以自定义延迟时间。
@@ -237,18 +237,18 @@ extern NSString * const FWTabCacheManagerFolderName;
  * @param delayTime 自定义延迟时间
  * @param completion 在回调中加载数据
  */
-- (void)tab_startAnimationWithDelayTime:(CGFloat)delayTime
+- (void)fwTabStartAnimationWithDelayTime:(CGFloat)delayTime
                              completion:(void (^)(void))completion;
 
 /**
  * 结束动画, 默认不加入任何动画效果
  */
-- (void)tab_endAnimation;
+- (void)fwTabEndAnimation;
 
 /**
  * 结束动画, 加入淡入淡出效果
  */
-- (void)tab_endAnimationEaseOut;
+- (void)fwTabEndAnimationEaseOut;
 
 #pragma mark - Section Mode
 
@@ -257,7 +257,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  *
  * @param section UITableView或者UICollectionView的section
  */
-- (void)tab_startAnimationWithSection:(NSInteger)section;
+- (void)fwTabStartAnimationWithSection:(NSInteger)section;
 
 /**
  * 启动动画并指定section，默认延迟时间0.4s
@@ -265,7 +265,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  * @param section UITableView或者UICollectionView的section
  * @param completion 延迟回调
  */
-- (void)tab_startAnimationWithSection:(NSInteger)section
+- (void)fwTabStartAnimationWithSection:(NSInteger)section
                            completion:(void (^)(void))completion;
 
 /**
@@ -275,7 +275,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  * @param delayTime 自定义的延迟时间
  * @param completion 完成回调
  */
-- (void)tab_startAnimationWithSection:(NSInteger)section
+- (void)fwTabStartAnimationWithSection:(NSInteger)section
                             delayTime:(CGFloat)delayTime
                            completion:(void (^)(void))completion;
 
@@ -284,7 +284,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  *
  * @param section 被指定的section的值
  */
-- (void)tab_endAnimationWithSection:(NSInteger)section;
+- (void)fwTabEndAnimationWithSection:(NSInteger)section;
 
 #pragma mark - Row Mode
 
@@ -293,7 +293,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  *
  * @param row 被指定的row的值
  */
-- (void)tab_startAnimationWithRow:(NSInteger)row;
+- (void)fwTabStartAnimationWithRow:(NSInteger)row;
 
 /**
  * 启动动画并指定row，默认延迟时间0.4s
@@ -301,7 +301,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  * @param row UITableView或者UICollectionView的row
  * @param completion 延迟回调
 */
-- (void)tab_startAnimationWithRow:(NSInteger)row
+- (void)fwTabStartAnimationWithRow:(NSInteger)row
                        completion:(void (^)(void))completion;
 
 /**
@@ -311,7 +311,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  * @param delayTime 自定义的延迟时间
  * @param completion 完成回调
  */
-- (void)tab_startAnimationWithRow:(NSInteger)row
+- (void)fwTabStartAnimationWithRow:(NSInteger)row
                         delayTime:(CGFloat)delayTime
                        completion:(void (^)(void))completion;
 /**
@@ -319,7 +319,7 @@ extern NSString * const FWTabCacheManagerFolderName;
  *
  * @param row 被指定的row的值
  */
-- (void)tab_endAnimationWithRow:(NSInteger)row;
+- (void)fwTabEndAnimationWithRow:(NSInteger)row;
 
 @end
 
@@ -1915,6 +1915,8 @@ typedef NS_ENUM(NSInteger, FWTabAnimationType) {
  * 同时还有辅助开发、调试的参数设置。
  *
  * init类型的方法，必须要在`didFinishLaunchingWithOptions`首先使用
+ *
+ * @see https://github.com/tigerAndBull/TABAnimated
  */
 @interface FWTabAnimated : NSObject
 

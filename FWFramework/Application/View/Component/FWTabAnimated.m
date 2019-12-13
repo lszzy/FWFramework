@@ -607,41 +607,41 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 #pragma mark - Getter/Setter
 
-- (FWTabViewAnimated *)tabAnimated {
-    return objc_getAssociatedObject(self, @selector(tabAnimated));
+- (FWTabViewAnimated *)fwTabAnimated {
+    return objc_getAssociatedObject(self, @selector(fwTabAnimated));
 }
 
-- (void)setTabAnimated:(FWTabViewAnimated *)tabAnimated {
-    objc_setAssociatedObject(self, @selector(tabAnimated),tabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFwTabAnimated:(FWTabViewAnimated *)fwTabAnimated {
+    objc_setAssociatedObject(self, @selector(fwTabAnimated),fwTabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (FWTabComponentManager *)tabComponentManager {
-    return objc_getAssociatedObject(self, @selector(tabComponentManager));
+- (FWTabComponentManager *)fwTabComponentManager {
+    return objc_getAssociatedObject(self, @selector(fwTabComponentManager));
 }
 
-- (void)setTabComponentManager:(FWTabComponentManager *)tabComponentManager {
-    objc_setAssociatedObject(self, @selector(tabComponentManager),tabComponentManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFwTabComponentManager:(FWTabComponentManager *)fwTabComponentManager {
+    objc_setAssociatedObject(self, @selector(fwTabComponentManager),fwTabComponentManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
 
 @implementation UITableView (FWTabAnimated)
 
-- (FWTabTableAnimated *)tabAnimated {
-    return objc_getAssociatedObject(self, @selector(tabAnimated));
+- (FWTabTableAnimated *)fwTabAnimated {
+    return objc_getAssociatedObject(self, @selector(fwTabAnimated));
 }
 
-- (void)setTabAnimated:(FWTabTableAnimated *)tabAnimated {
-    objc_setAssociatedObject(self, @selector(tabAnimated),tabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFwTabAnimated:(FWTabTableAnimated *)fwTabAnimated {
+    objc_setAssociatedObject(self, @selector(fwTabAnimated),fwTabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (self.tableHeaderView != nil && self.tableHeaderView.tabAnimated == nil) {
-        self.tableHeaderView.tabAnimated = FWTabViewAnimated.new;
-        self.tabAnimated.tabHeadViewAnimated = self.tableHeaderView.tabAnimated;
+    if (self.tableHeaderView != nil && self.tableHeaderView.fwTabAnimated == nil) {
+        self.tableHeaderView.fwTabAnimated = FWTabViewAnimated.new;
+        self.fwTabAnimated.tabHeadViewAnimated = self.tableHeaderView.fwTabAnimated;
     }
     
-    if (self.tableFooterView != nil && self.tableFooterView.tabAnimated == nil) {
-        self.tableFooterView.tabAnimated = FWTabViewAnimated.new;
-        self.tabAnimated.tabFooterViewAnimated = self.tableFooterView.tabAnimated;
+    if (self.tableFooterView != nil && self.tableFooterView.fwTabAnimated == nil) {
+        self.tableFooterView.fwTabAnimated = FWTabViewAnimated.new;
+        self.fwTabAnimated.tabFooterViewAnimated = self.tableFooterView.fwTabAnimated;
     }
 }
 
@@ -649,12 +649,12 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 @implementation UICollectionView (FWTabAnimated)
 
-- (FWTabCollectionAnimated *)tabAnimated {
-    return objc_getAssociatedObject(self, @selector(tabAnimated));
+- (FWTabCollectionAnimated *)fwTabAnimated {
+    return objc_getAssociatedObject(self, @selector(fwTabAnimated));
 }
 
-- (void)setTabAnimated:(FWTabCollectionAnimated *)tabAnimated {
-    objc_setAssociatedObject(self, @selector(tabAnimated),tabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFwTabAnimated:(FWTabCollectionAnimated *)fwTabAnimated {
+    objc_setAssociatedObject(self, @selector(fwTabAnimated),fwTabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
@@ -665,37 +665,37 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - 启动动画
 
-- (void)tab_startAnimation {
+- (void)fwTabStartAnimation {
     
-    if (self.tabAnimated.state == FWTabViewAnimationEnd && !self.tabAnimated.canLoadAgain) {
+    if (self.fwTabAnimated.state == FWTabViewAnimationEnd && !self.fwTabAnimated.canLoadAgain) {
         return;
     }
     
-    self.tabAnimated.isAnimating = YES;
-    self.tabAnimated.state = FWTabViewAnimationStart;
+    self.fwTabAnimated.isAnimating = YES;
+    self.fwTabAnimated.state = FWTabViewAnimationStart;
     
     [self startAnimationIsAll:YES index:0];
 }
 
-- (void)tab_startAnimationWithCompletion:(void (^)(void))completion {
-    [self tab_startAnimationWithDelayTime:kDelayReloadDataTime
+- (void)fwTabStartAnimationWithCompletion:(void (^)(void))completion {
+    [self fwTabStartAnimationWithDelayTime:kDelayReloadDataTime
                                completion:completion];
 }
 
-- (void)tab_startAnimationWithDelayTime:(CGFloat)delayTime
+- (void)fwTabStartAnimationWithDelayTime:(CGFloat)delayTime
                              completion:(void (^)(void))completion {
     
-    if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (!self.fwTabAnimated.canLoadAgain &&
+        self.fwTabAnimated.state == FWTabViewAnimationEnd) {
         if (completion) {
             completion();
         }
         return;
     }
     
-    self.tabAnimated.state = FWTabViewAnimationStart;
+    self.fwTabAnimated.state = FWTabViewAnimationStart;
     
-    if (!self.tabAnimated.isAnimating) {
+    if (!self.fwTabAnimated.isAnimating) {
         [self startAnimationIsAll:YES index:0];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*delayTime), dispatch_get_main_queue(), ^{
@@ -705,43 +705,43 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         });
     }
     
-    self.tabAnimated.isAnimating = YES;
+    self.fwTabAnimated.isAnimating = YES;
 }
 
-- (void)tab_startAnimationWithSection:(NSInteger)section {
+- (void)fwTabStartAnimationWithSection:(NSInteger)section {
     
-    if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (!self.fwTabAnimated.canLoadAgain &&
+        self.fwTabAnimated.state == FWTabViewAnimationEnd) {
         return;
     }
     
-    self.tabAnimated.isAnimating = YES;
-    self.tabAnimated.state = FWTabViewAnimationStart;
+    self.fwTabAnimated.isAnimating = YES;
+    self.fwTabAnimated.state = FWTabViewAnimationStart;
     
     [self startAnimationIsAll:NO index:section];
 }
 
-- (void)tab_startAnimationWithSection:(NSInteger)section
+- (void)fwTabStartAnimationWithSection:(NSInteger)section
                            completion:(void (^)(void))completion {
-    [self tab_startAnimationWithSection:section
+    [self fwTabStartAnimationWithSection:section
                               delayTime:kDelayReloadDataTime
                              completion:completion];
 }
 
-- (void)tab_startAnimationWithSection:(NSInteger)section
+- (void)fwTabStartAnimationWithSection:(NSInteger)section
                             delayTime:(CGFloat)delayTime
                            completion:(void (^)(void))completion {
-    if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (!self.fwTabAnimated.canLoadAgain &&
+        self.fwTabAnimated.state == FWTabViewAnimationEnd) {
         if (completion) {
             completion();
         }
         return;
     }
     
-    self.tabAnimated.state = FWTabViewAnimationStart;
+    self.fwTabAnimated.state = FWTabViewAnimationStart;
     
-    if (!self.tabAnimated.isAnimating) {
+    if (!self.fwTabAnimated.isAnimating) {
         [self startAnimationIsAll:NO index:section];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*delayTime), dispatch_get_main_queue(), ^{
@@ -751,45 +751,45 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         });
     }
     
-    self.tabAnimated.isAnimating = YES;
+    self.fwTabAnimated.isAnimating = YES;
 }
 
 #pragma mark -
 
-- (void)tab_startAnimationWithRow:(NSInteger)row {
+- (void)fwTabStartAnimationWithRow:(NSInteger)row {
     
-    if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (!self.fwTabAnimated.canLoadAgain &&
+        self.fwTabAnimated.state == FWTabViewAnimationEnd) {
         return;
     }
     
-    self.tabAnimated.isAnimating = YES;
-    self.tabAnimated.state = FWTabViewAnimationStart;
+    self.fwTabAnimated.isAnimating = YES;
+    self.fwTabAnimated.state = FWTabViewAnimationStart;
     
     [self startAnimationIsAll:NO index:row];
 }
 
-- (void)tab_startAnimationWithRow:(NSInteger)row
+- (void)fwTabStartAnimationWithRow:(NSInteger)row
                        completion:(void (^)(void))completion {
-    [self tab_startAnimationWithRow:row
+    [self fwTabStartAnimationWithRow:row
                           delayTime:kDelayReloadDataTime
                          completion:completion];
 }
 
-- (void)tab_startAnimationWithRow:(NSInteger)row
+- (void)fwTabStartAnimationWithRow:(NSInteger)row
                         delayTime:(CGFloat)delayTime
                        completion:(void (^)(void))completion {
-    if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (!self.fwTabAnimated.canLoadAgain &&
+        self.fwTabAnimated.state == FWTabViewAnimationEnd) {
         if (completion) {
             completion();
         }
         return;
     }
     
-    self.tabAnimated.state = FWTabViewAnimationStart;
+    self.fwTabAnimated.state = FWTabViewAnimationStart;
     
-    if (!self.tabAnimated.isAnimating) {
+    if (!self.fwTabAnimated.isAnimating) {
         [self startAnimationIsAll:NO index:row];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*delayTime), dispatch_get_main_queue(), ^{
@@ -799,7 +799,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         });
     }
     
-    self.tabAnimated.isAnimating = YES;
+    self.fwTabAnimated.isAnimating = YES;
 }
 
 #pragma mark -
@@ -807,11 +807,11 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 - (void)startAnimationIsAll:(BOOL)isAll
                       index:(NSInteger)index {
     
-    if (self.tabAnimated.targetControllerClassName == nil ||
-        self.tabAnimated.targetControllerClassName.length == 0) {
+    if (self.fwTabAnimated.targetControllerClassName == nil ||
+        self.fwTabAnimated.targetControllerClassName.length == 0) {
         UIViewController *controller = [self tab_viewController];
         if (controller) {
-            self.tabAnimated.targetControllerClassName = NSStringFromClass(controller.class);
+            self.fwTabAnimated.targetControllerClassName = NSStringFromClass(controller.class);
         }
     }
     
@@ -819,7 +819,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         UICollectionView *collectionView = (UICollectionView *)self;
         
-        for (Class class in self.tabAnimated.cellClassArray) {
+        for (Class class in self.fwTabAnimated.cellClassArray) {
             
             NSString *classString = NSStringFromClass(class);
             if ([classString containsString:@"."]) {
@@ -837,7 +837,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }
         }
         
-        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)(collectionView.tabAnimated);
+        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)(collectionView.fwTabAnimated);
         [tabAnimated exchangeCollectionViewDelegate:collectionView];
         [tabAnimated exchangeCollectionViewDataSource:collectionView];
         
@@ -885,17 +885,17 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         // 更新loadCount
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithCollectionAnimated:collectionView.tabAnimated];
+            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithCollectionAnimated:collectionView.fwTabAnimated];
         });
         
     }else if ([self isKindOfClass:[UITableView class]]) {
         
         UITableView *tableView = (UITableView *)self;
-        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)(tableView.tabAnimated);
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)(tableView.fwTabAnimated);
         [tabAnimated exchangeTableViewDelegate:tableView];
         [tabAnimated exchangeTableViewDataSource:tableView];
         
-        for (Class class in self.tabAnimated.cellClassArray) {
+        for (Class class in self.fwTabAnimated.cellClassArray) {
             
             NSString *classString = NSStringFromClass(class);
             if ([classString containsString:@"."]) {
@@ -922,14 +922,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }
         }
         
-        if (tabAnimated.showTableHeaderView && tableView.tableHeaderView.tabAnimated) {
-            tableView.tableHeaderView.tabAnimated.superAnimationType = tableView.tabAnimated.superAnimationType;
-            [tableView.tableHeaderView tab_startAnimation];
+        if (tabAnimated.showTableHeaderView && tableView.tableHeaderView.fwTabAnimated) {
+            tableView.tableHeaderView.fwTabAnimated.superAnimationType = tableView.fwTabAnimated.superAnimationType;
+            [tableView.tableHeaderView fwTabStartAnimation];
         }
         
-        if (tabAnimated.showTableFooterView && tableView.tableFooterView.tabAnimated) {
-            tableView.tableFooterView.tabAnimated.superAnimationType = tableView.tabAnimated.superAnimationType;
-            [tableView.tableFooterView tab_startAnimation];
+        if (tabAnimated.showTableFooterView && tableView.tableFooterView.fwTabAnimated) {
+            tableView.tableFooterView.fwTabAnimated.superAnimationType = tableView.fwTabAnimated.superAnimationType;
+            [tableView.tableFooterView fwTabStartAnimation];
         }
         
         [tabAnimated.runAnimationIndexArray removeAllObjects];
@@ -981,62 +981,62 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         // 更新loadCount
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithTableAnimated:tableView.tabAnimated];
+            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithTableAnimated:tableView.fwTabAnimated];
         });
         
     }else {
-        if (nil == self.tabComponentManager) {
+        if (nil == self.fwTabComponentManager) {
             
             UIView *targetView;
-            if (self.superview && self.superview.tabAnimated) {
+            if (self.superview && self.superview.fwTabAnimated) {
                 targetView = self.superview;
             }else {
                 targetView = self;
             }
             
-//            self.tabAnimated.oldEnable = self.userInteractionEnabled;
+//            self.fwTabAnimated.oldEnable = self.userInteractionEnabled;
 //            self.userInteractionEnabled = NO;
             
             [FWTabManagerMethod fullData:self];
             [self setNeedsLayout];
-            self.tabComponentManager = [FWTabComponentManager initWithView:self
+            self.fwTabComponentManager = [FWTabComponentManager initWithView:self
                                                                superView:targetView
-                                                             tabAnimated:self.tabAnimated];
+                                                             tabAnimated:self.fwTabAnimated];
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (nil != self.tabAnimated) {
+                if (nil != self.fwTabAnimated) {
                     [FWTabManagerMethod runAnimationWithSuperView:self
                                                      targetView:self
                                                          isCell:NO
-                                                        manager:self.tabComponentManager];
+                                                        manager:self.fwTabComponentManager];
                 }
             });
         }else {
-            if (self.tabComponentManager.tabLayer.hidden)
-                self.tabComponentManager.tabLayer.hidden = NO;
+            if (self.fwTabComponentManager.tabLayer.hidden)
+                self.fwTabComponentManager.tabLayer.hidden = NO;
         }
     }
 }
 
 #pragma mark - 结束动画
 
-- (void)tab_endAnimationIsEaseOut:(BOOL)isEaseOut {
+- (void)fwTabEndAnimationIsEaseOut:(BOOL)isEaseOut {
     
-    if (!self.tabAnimated) {
+    if (!self.fwTabAnimated) {
         tabAnimatedLog(@"FWTabAnimated提醒 - 动画对象已被提前释放");
         return;
     }
     
-    if (self.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (self.fwTabAnimated.state == FWTabViewAnimationEnd) {
         return;
     }
     
-    self.tabAnimated.state = FWTabViewAnimationEnd;
-    self.tabAnimated.isAnimating = NO;
+    self.fwTabAnimated.state = FWTabViewAnimationEnd;
+    self.fwTabAnimated.isAnimating = NO;
     
     if ([self isKindOfClass:[UITableView class]]) {
         
         UITableView *tableView = (UITableView *)self;
-        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)(tableView.tabAnimated);
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)(tableView.fwTabAnimated);
         
         if (tabAnimated.oldEstimatedRowHeight > 0) {
             tableView.estimatedRowHeight = tabAnimated.oldEstimatedRowHeight;
@@ -1044,16 +1044,16 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         }
         [tabAnimated.runAnimationIndexArray removeAllObjects];
         
-        self.tabAnimated = tabAnimated;
+        self.fwTabAnimated = tabAnimated;
         
         if (tableView.tableHeaderView != nil &&
-            tableView.tableHeaderView.tabAnimated != nil) {
-            [tableView.tableHeaderView tab_endAnimation];
+            tableView.tableHeaderView.fwTabAnimated != nil) {
+            [tableView.tableHeaderView fwTabEndAnimation];
         }
         
         if (tableView.tableFooterView != nil &&
-            tableView.tableFooterView.tabAnimated != nil) {
-            [tableView.tableFooterView tab_endAnimation];
+            tableView.tableFooterView.fwTabAnimated != nil) {
+            [tableView.tableFooterView fwTabEndAnimation];
         }
         
         [tableView reloadData];
@@ -1061,15 +1061,15 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     }else {
         if ([self isKindOfClass:[UICollectionView class]]) {
             
-            FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)((UICollectionView *)self.tabAnimated);
+            FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)((UICollectionView *)self.fwTabAnimated);
             [tabAnimated.runAnimationIndexArray removeAllObjects];
-            self.tabAnimated = tabAnimated;
+            self.fwTabAnimated = tabAnimated;
             
             [(UICollectionView *)self reloadData];
             
         }else {
             
-//            self.userInteractionEnabled = self.tabAnimated.oldEnable;
+//            self.userInteractionEnabled = self.fwTabAnimated.oldEnable;
             
             [FWTabManagerMethod resetData:self];
             [FWTabManagerMethod removeMask:self];
@@ -1082,19 +1082,19 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     }
 }
 
-- (void)tab_endAnimation {
-    [self tab_endAnimationIsEaseOut:NO];
+- (void)fwTabEndAnimation {
+    [self fwTabEndAnimationIsEaseOut:NO];
 }
 
-- (void)tab_endAnimationEaseOut {
-    [self tab_endAnimationIsEaseOut:YES];
+- (void)fwTabEndAnimationEaseOut {
+    [self fwTabEndAnimationIsEaseOut:YES];
 }
 
-- (void)tab_endAnimationWithRow:(NSInteger)row {
-    [self tab_endAnimationWithSection:row];
+- (void)fwTabEndAnimationWithRow:(NSInteger)row {
+    [self fwTabEndAnimationWithSection:row];
 }
     
-- (void)tab_endAnimationWithSection:(NSInteger)section {
+- (void)fwTabEndAnimationWithSection:(NSInteger)section {
     
     if (![self isKindOfClass:[UITableView class]] &&
         ![self isKindOfClass:[UICollectionView class]]) {
@@ -1104,14 +1104,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     
     NSInteger maxIndex = 0;
     if ([self isKindOfClass:[UITableView class]]) {
-        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)self.tabAnimated;
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)self.fwTabAnimated;
         if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             maxIndex = [(UITableView *)self numberOfSections] - 1;
         }else {
             maxIndex = [(UITableView *)self numberOfRowsInSection:0] - 1;
         }
     }else {
-        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)self.tabAnimated;
+        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)self.fwTabAnimated;
         if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             maxIndex = [(UICollectionView *)self numberOfSections] - 1;
         }else {
@@ -1126,7 +1126,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     
     if ([self isKindOfClass:[UICollectionView class]]) {
         
-        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)((UICollectionView *)self.tabAnimated);
+        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)((UICollectionView *)self.fwTabAnimated);
         
         for (NSInteger i = 0; i < tabAnimated.runAnimationIndexArray.count; i++) {
             if (section == [tabAnimated.runAnimationIndexArray[i] integerValue]) {
@@ -1136,7 +1136,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }
         }
         
-        self.tabAnimated = tabAnimated;
+        self.fwTabAnimated = tabAnimated;
         
         if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             [(UICollectionView *)self reloadSections:[NSIndexSet indexSetWithIndex:section]];
@@ -1146,7 +1146,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
     }else if ([self isKindOfClass:[UITableView class]]) {
         
-        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)((UITableView *)self.tabAnimated);
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)((UITableView *)self.fwTabAnimated);
         
         for (NSInteger i = 0; i < tabAnimated.runAnimationIndexArray.count; i++) {
             if (section == [tabAnimated.runAnimationIndexArray[i] integerValue]) {
@@ -1156,7 +1156,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }
         }
         
-        self.tabAnimated = tabAnimated;
+        self.fwTabAnimated = tabAnimated;
         
         if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             [(UITableView *)self reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
@@ -1182,8 +1182,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
                       withArray:(NSMutableArray *)array {
     [array removeObjectAtIndex:index];
     if (array.count == 0) {
-        self.tabAnimated.state = FWTabViewAnimationEnd;
-        self.tabAnimated.isAnimating = NO;
+        self.fwTabAnimated.state = FWTabViewAnimationEnd;
+        self.fwTabAnimated.isAnimating = NO;
     }
 }
 
@@ -2120,7 +2120,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     [self setRadiusAndColorWithView:view
                           superView:superView
-                        tabAnimated:superView.tabAnimated];
+                        tabAnimated:superView.fwTabAnimated];
     [self updateComponentLayersWithArray:self.resultLayerArray];
 }
 
@@ -2379,18 +2379,18 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         self.animatedBackgroundColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
             __strong typeof(weakSuperView) strongSuperView = weakSuperView;
             if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-                return strongSuperView.tabAnimated.darkAnimatedBackgroundColor;
+                return strongSuperView.fwTabAnimated.darkAnimatedBackgroundColor;
             }else {
-                return strongSuperView.tabAnimated.animatedBackgroundColor;
+                return strongSuperView.fwTabAnimated.animatedBackgroundColor;
             }
         }];
 
         self.animatedColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
             __strong typeof(weakSuperView) strongSuperView = weakSuperView;
             if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-                return strongSuperView.tabAnimated.darkAnimatedColor;
+                return strongSuperView.fwTabAnimated.darkAnimatedColor;
             }else {
-                return strongSuperView.tabAnimated.animatedColor;
+                return strongSuperView.fwTabAnimated.animatedColor;
             }
         }];
         
@@ -2433,21 +2433,21 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             UIColor *deepColor;
             if (@available(iOS 13.0, *)) {
                 if (superView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-                    if (superView.tabAnimated.dropAnimationDeepColorInDarkMode) {
-                        deepColor = superView.tabAnimated.dropAnimationDeepColorInDarkMode;
+                    if (superView.fwTabAnimated.dropAnimationDeepColorInDarkMode) {
+                        deepColor = superView.fwTabAnimated.dropAnimationDeepColorInDarkMode;
                     }else {
                         deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColorInDarkMode;
                     }
                 }else {
-                    if (superView.tabAnimated.dropAnimationDeepColor) {
-                        deepColor = superView.tabAnimated.dropAnimationDeepColor;
+                    if (superView.fwTabAnimated.dropAnimationDeepColor) {
+                        deepColor = superView.fwTabAnimated.dropAnimationDeepColor;
                     }else {
                         deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                     }
                 }
             } else {
-                if (superView.tabAnimated.dropAnimationDeepColor) {
-                    deepColor = superView.tabAnimated.dropAnimationDeepColor;
+                if (superView.fwTabAnimated.dropAnimationDeepColor) {
+                    deepColor = superView.fwTabAnimated.dropAnimationDeepColor;
                 }else {
                     deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                 }
@@ -2788,15 +2788,15 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 @implementation TableDeDaSelfModel
 
 - (NSInteger)tab_deda_numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView.tabAnimated.state == FWTabViewAnimationStart) {
+    if (tableView.fwTabAnimated.state == FWTabViewAnimationStart) {
         
-        if (tableView.tabAnimated.animatedSectionCount != 0) {
-            return tableView.tabAnimated.animatedSectionCount;
+        if (tableView.fwTabAnimated.animatedSectionCount != 0) {
+            return tableView.fwTabAnimated.animatedSectionCount;
         }
 
         NSInteger count = [self tab_deda_numberOfSectionsInTableView:tableView];
         if (count == 0) {
-            count = tableView.tabAnimated.cellClassArray.count;
+            count = tableView.fwTabAnimated.cellClassArray.count;
         }
 
         if (count == 0) return 1;
@@ -2809,50 +2809,50 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (NSInteger)tab_deda_tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    if (tableView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
+    if (tableView.fwTabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_deda_tableView:tableView numberOfRowsInSection:section];
         if (count == 0) {
-            return tableView.tabAnimated.cellClassArray.count;
+            return tableView.fwTabAnimated.cellClassArray.count;
         }
         return count;
     }
     
     // If the animation running, return animatedCount.
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
         
         // 开发者指定section/row
-        if (tableView.tabAnimated.animatedIndexArray.count > 0) {
+        if (tableView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 没有获取到动画时row数量
-            if (tableView.tabAnimated.animatedCountArray.count == 0) {
+            if (tableView.fwTabAnimated.animatedCountArray.count == 0) {
                 return 0;
             }
             
             // 匹配当前section
-            for (NSNumber *num in tableView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in tableView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == section) {
-                    NSInteger index = [tableView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (index > tableView.tabAnimated.animatedCountArray.count - 1) {
-                        return [[tableView.tabAnimated.animatedCountArray lastObject] integerValue];
+                    NSInteger index = [tableView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (index > tableView.fwTabAnimated.animatedCountArray.count - 1) {
+                        return [[tableView.fwTabAnimated.animatedCountArray lastObject] integerValue];
                     }else {
-                        return [tableView.tabAnimated.animatedCountArray[index] integerValue];
+                        return [tableView.fwTabAnimated.animatedCountArray[index] integerValue];
                     }
                 }
                 
                 // 没有匹配到指定的数量
-                if ([num isEqual:[tableView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[tableView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return 0;
                 }
             }
         }
         
-        if (tableView.tabAnimated.animatedCountArray.count > 0) {
-            if (section > tableView.tabAnimated.animatedCountArray.count - 1) {
-                return tableView.tabAnimated.animatedCount;
+        if (tableView.fwTabAnimated.animatedCountArray.count > 0) {
+            if (section > tableView.fwTabAnimated.animatedCountArray.count - 1) {
+                return tableView.fwTabAnimated.animatedCount;
             }
-            return [tableView.tabAnimated.animatedCountArray[section] integerValue];
+            return [tableView.fwTabAnimated.animatedCountArray[section] integerValue];
         }
-        return tableView.tabAnimated.animatedCount;
+        return tableView.fwTabAnimated.animatedCount;
     }
     return [self tab_deda_tableView:tableView numberOfRowsInSection:section];
 }
@@ -2860,7 +2860,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (CGFloat)tab_deda_tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -2871,17 +2871,17 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定section
-        if (tableView.tabAnimated.animatedIndexArray.count > 0) {
+        if (tableView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in tableView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in tableView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [tableView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > tableView.tabAnimated.cellHeightArray.count - 1) {
-                        index = [tableView.tabAnimated.cellHeightArray count] - 1;
+                    NSInteger currentIndex = [tableView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > tableView.fwTabAnimated.cellHeightArray.count - 1) {
+                        index = [tableView.fwTabAnimated.cellHeightArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
@@ -2889,18 +2889,18 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 }
                 
                 // 没有匹配到注册的cell
-                if ([num isEqual:[tableView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[tableView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return 1.;
                 }
             }
         }else {
-            if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
-                index = tableView.tabAnimated.cellClassArray.count - 1;
+            if (index > (tableView.fwTabAnimated.cellClassArray.count - 1)) {
+                index = tableView.fwTabAnimated.cellClassArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated提醒 - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
-        return [tableView.tabAnimated.cellHeightArray[index] floatValue];
+        return [tableView.fwTabAnimated.cellHeightArray[index] floatValue];
     }
     return [self tab_deda_tableView:tableView heightForRowAtIndexPath:indexPath];
 }
@@ -2908,7 +2908,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (UITableViewCell *)tab_deda_tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -2919,39 +2919,39 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定index
-        if (tableView.tabAnimated.animatedIndexArray.count > 0) {
+        if (tableView.fwTabAnimated.animatedIndexArray.count > 0) {
             
-            if (tableView.tabAnimated.cellClassArray.count == 0) {
+            if (tableView.fwTabAnimated.cellClassArray.count == 0) {
                 return UITableViewCell.new;
             }
             
             // 匹配当前section
-            for (NSNumber *num in tableView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in tableView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [tableView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > tableView.tabAnimated.cellClassArray.count - 1) {
-                        index = [tableView.tabAnimated.cellClassArray count] - 1;
+                    NSInteger currentIndex = [tableView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > tableView.fwTabAnimated.cellClassArray.count - 1) {
+                        index = [tableView.fwTabAnimated.cellClassArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
                     break;
                 }
                 
-                if ([num isEqual:[tableView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[tableView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return UITableViewCell.new;
                 }
             }
         }else {
-            if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
-                index = tableView.tabAnimated.cellClassArray.count - 1;
+            if (index > (tableView.fwTabAnimated.cellClassArray.count - 1)) {
+                index = tableView.fwTabAnimated.cellClassArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
-        Class currentClass = tableView.tabAnimated.cellClassArray[index];
+        Class currentClass = tableView.fwTabAnimated.cellClassArray[index];
         NSString *className = NSStringFromClass(currentClass);
         if ([className containsString:@"."]) {
             NSRange range = [className rangeOfString:@"."];
@@ -2961,9 +2961,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
+        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
         
-        if (nil == cell.tabComponentManager) {
+        if (nil == cell.fwTabComponentManager) {
             
             FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
@@ -2974,7 +2974,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 manager.isLoad = YES;
                 manager.tabTargetClass = currentClass;
                 manager.currentSection = indexPath.section;
-                cell.tabComponentManager = manager;
+                cell.fwTabComponentManager = manager;
                 
                 [manager reAddToView:cell
                            superView:tableView];
@@ -2983,42 +2983,42 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                                                   rootView:cell];
                 [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                       targetView:cell
-                                                         manager:cell.tabComponentManager];
+                                                         manager:cell.fwTabComponentManager];
             }else {
                 
                 [FWTabManagerMethod fullData:cell];
-                cell.tabComponentManager = [FWTabComponentManager initWithView:cell
-                                                                   superView:tableView tabAnimated:tableView.tabAnimated];
-                cell.tabComponentManager.currentSection = indexPath.section;
-                cell.tabComponentManager.fileName = fileName;
-                cell.tabComponentManager.tabTargetClass = currentClass;
+                cell.fwTabComponentManager = [FWTabComponentManager initWithView:cell
+                                                                   superView:tableView tabAnimated:tableView.fwTabAnimated];
+                cell.fwTabComponentManager.currentSection = indexPath.section;
+                cell.fwTabComponentManager.fileName = fileName;
+                cell.fwTabComponentManager.tabTargetClass = currentClass;
             
                 __weak typeof(cell) weakCell = cell;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.tabAnimated;
+                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.fwTabAnimated;
                     
-                    if (weakCell && tabAnimated && weakCell.tabComponentManager) {
+                    if (weakCell && tabAnimated && weakCell.fwTabComponentManager) {
                         [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                          targetView:weakCell
                                                              isCell:YES
-                                                            manager:weakCell.tabComponentManager];
+                                                            manager:weakCell.fwTabComponentManager];
                     }
                 });
             }
         
         }else {
-            if (cell.tabComponentManager.tabLayer.hidden) {
-                cell.tabComponentManager.tabLayer.hidden = NO;
+            if (cell.fwTabComponentManager.tabLayer.hidden) {
+                cell.fwTabComponentManager.tabLayer.hidden = NO;
             }
         }
-        cell.tabComponentManager.currentRow = indexPath.row;
+        cell.fwTabComponentManager.currentRow = indexPath.row;
         
-        if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
+        if (tableView.fwTabAnimated.oldEstimatedRowHeight > 0) {
             [FWTabManagerMethod fullData:cell];
             __weak typeof(cell) weakCell = cell;
             dispatch_async(dispatch_get_main_queue(), ^{
-                weakCell.tabComponentManager.tabLayer.frame = weakCell.bounds;
+                weakCell.fwTabComponentManager.tabLayer.frame = weakCell.bounds;
                 [FWTabManagerMethod resetData:weakCell];
             });
         }
@@ -3031,7 +3031,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)tab_deda_tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -3042,7 +3042,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         return;
     }
     [self tab_deda_tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
@@ -3051,7 +3051,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)tab_deda_tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -3062,7 +3062,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         return;
     }
     [self tab_deda_tableView:tableView didSelectRowAtIndexPath:indexPath];
@@ -3071,14 +3071,14 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 #pragma mark - About HeaderFooterView
 
 - (CGFloat)tab_deda_tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated headerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
-            if (index > tableView.tabAnimated.headerHeightArray.count - 1) {
-                value = tableView.tabAnimated.headerHeightArray.lastObject;
+            if (index > tableView.fwTabAnimated.headerHeightArray.count - 1) {
+                value = tableView.fwTabAnimated.headerHeightArray.lastObject;
             }else {
-                value = tableView.tabAnimated.headerHeightArray[index];
+                value = tableView.fwTabAnimated.headerHeightArray[index];
             }
             return [value floatValue];
         }
@@ -3088,14 +3088,14 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 }
 
 - (CGFloat)tab_deda_tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated footerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
-            if (index > tableView.tabAnimated.footerHeightArray.count - 1) {
-                value = tableView.tabAnimated.footerHeightArray.lastObject;
+            if (index > tableView.fwTabAnimated.footerHeightArray.count - 1) {
+                value = tableView.fwTabAnimated.footerHeightArray.lastObject;
             }else {
-                value = tableView.tabAnimated.footerHeightArray[index];
+                value = tableView.fwTabAnimated.footerHeightArray[index];
             }
             return [value floatValue];
         }
@@ -3105,24 +3105,24 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 }
 
 - (nullable UIView *)tab_deda_tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated headerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
-            if (index > tableView.tabAnimated.headerClassArray.count - 1) {
-                class = tableView.tabAnimated.headerClassArray.lastObject;
+            if (index > tableView.fwTabAnimated.headerClassArray.count - 1) {
+                class = tableView.fwTabAnimated.headerClassArray.lastObject;
             }else {
-                class = tableView.tabAnimated.headerClassArray[index];
+                class = tableView.fwTabAnimated.headerClassArray[index];
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = FWTabViewAnimated.new;
-            [headerFooterView tab_startAnimation];
+            headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
+            [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
+            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
             
-            if (nil == headerFooterView.tabComponentManager) {
+            if (nil == headerFooterView.fwTabComponentManager) {
                 
                 FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
@@ -3133,21 +3133,21 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                     manager.currentSection = section;
                     [manager reAddToView:headerFooterView
                                superView:tableView];
-                    headerFooterView.tabComponentManager = manager;
+                    headerFooterView.fwTabComponentManager = manager;
                     [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
                     [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
-                                                             manager:headerFooterView.tabComponentManager];
+                                                             manager:headerFooterView.fwTabComponentManager];
                 }else {
                     [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
-                    headerFooterView.tabComponentManager.currentSection = section;
-                    headerFooterView.tabComponentManager.fileName = fileName;
+                    headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
+                    headerFooterView.fwTabComponentManager.currentSection = section;
+                    headerFooterView.fwTabComponentManager.fileName = fileName;
                     
                     __weak typeof(headerFooterView) weakView = headerFooterView;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.tabComponentManager) {
+                        if (weakView && weakView.fwTabComponentManager) {
                             
                             BOOL isCell = NO;
                             if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
@@ -3157,21 +3157,21 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                             [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
-                                                                manager:weakView.tabComponentManager];
+                                                                manager:weakView.fwTabComponentManager];
                         }
                     });
                 }
             }else {
-                if (headerFooterView.tabComponentManager.tabLayer.hidden) {
-                    headerFooterView.tabComponentManager.tabLayer.hidden = NO;
+                if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
+                    headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
                 }
             }
-            headerFooterView.tabComponentManager.tabTargetClass = class;
-            if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
+            headerFooterView.fwTabComponentManager.tabTargetClass = class;
+            if (tableView.fwTabAnimated.oldEstimatedRowHeight > 0) {
                 [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
+                    weakView.fwTabComponentManager.tabLayer.frame = weakView.bounds;
                     [FWTabManagerMethod resetData:weakView];
                 });
             }
@@ -3184,24 +3184,24 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 }
 
 - (nullable UIView *)tab_deda_tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated footerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
-            if (index > tableView.tabAnimated.footerClassArray.count - 1) {
-                class = tableView.tabAnimated.footerClassArray.lastObject;
+            if (index > tableView.fwTabAnimated.footerClassArray.count - 1) {
+                class = tableView.fwTabAnimated.footerClassArray.lastObject;
             }else {
-                class = tableView.tabAnimated.footerClassArray[index];
+                class = tableView.fwTabAnimated.footerClassArray[index];
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = FWTabViewAnimated.new;
-            [headerFooterView tab_startAnimation];
+            headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
+            [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
+            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
             
-            if (nil == headerFooterView.tabComponentManager) {
+            if (nil == headerFooterView.fwTabComponentManager) {
                 
                 FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
@@ -3212,23 +3212,23 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                     manager.currentSection = section;
                     [manager reAddToView:headerFooterView
                                superView:tableView];
-                    headerFooterView.tabComponentManager = manager;
+                    headerFooterView.fwTabComponentManager = manager;
                     
                     [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
                     [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
-                                                             manager:headerFooterView.tabComponentManager];
+                                                             manager:headerFooterView.fwTabComponentManager];
                     
                 }else {
                     [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
-                    headerFooterView.tabComponentManager.currentSection = section;
-                    headerFooterView.tabComponentManager.fileName = fileName;
+                    headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
+                    headerFooterView.fwTabComponentManager.currentSection = section;
+                    headerFooterView.fwTabComponentManager.fileName = fileName;
                     
                     __weak typeof(headerFooterView) weakView = headerFooterView;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.tabComponentManager) {
+                        if (weakView && weakView.fwTabComponentManager) {
                             
                             BOOL isCell = NO;
                             if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
@@ -3238,23 +3238,23 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                             [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
-                                                                manager:weakView.tabComponentManager];
+                                                                manager:weakView.fwTabComponentManager];
                         }
                     });
                 }
             }else {
-                if (headerFooterView.tabComponentManager.tabLayer.hidden) {
-                    headerFooterView.tabComponentManager.tabLayer.hidden = NO;
+                if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
+                    headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
                 }
             }
             
-            headerFooterView.tabComponentManager.tabTargetClass = class;
+            headerFooterView.fwTabComponentManager.tabTargetClass = class;
             
-            if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
+            if (tableView.fwTabAnimated.oldEstimatedRowHeight > 0) {
                 [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
+                    weakView.fwTabComponentManager.tabLayer.frame = weakView.bounds;
                     [FWTabManagerMethod resetData:weakView];
                 });
             }
@@ -3273,15 +3273,15 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (NSInteger)tab_deda_numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     
-    if (collectionView.tabAnimated.state == FWTabViewAnimationStart) {
+    if (collectionView.fwTabAnimated.state == FWTabViewAnimationStart) {
         
-        if (collectionView.tabAnimated.animatedSectionCount != 0) {
-            return collectionView.tabAnimated.animatedSectionCount;
+        if (collectionView.fwTabAnimated.animatedSectionCount != 0) {
+            return collectionView.fwTabAnimated.animatedSectionCount;
         }
 
         NSInteger count = [self tab_deda_numberOfSectionsInCollectionView:collectionView];
         if (count == 0) {
-            count = collectionView.tabAnimated.cellClassArray.count;
+            count = collectionView.fwTabAnimated.cellClassArray.count;
         }
 
         if (count == 0) return 1;
@@ -3294,43 +3294,43 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (NSInteger)tab_deda_collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    if (collectionView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
+    if (collectionView.fwTabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_deda_collectionView:collectionView numberOfItemsInSection:section];
         if (count == 0) {
-            return collectionView.tabAnimated.cellClassArray.count;
+            return collectionView.fwTabAnimated.cellClassArray.count;
         }
         return count;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
         
         // 开发者指定section
-        if (collectionView.tabAnimated.animatedIndexArray.count > 0) {
+        if (collectionView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in collectionView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in collectionView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == section) {
-                    NSInteger index = [collectionView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (index > collectionView.tabAnimated.animatedCountArray.count - 1) {
-                        return [[collectionView.tabAnimated.animatedCountArray lastObject] integerValue];
+                    NSInteger index = [collectionView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (index > collectionView.fwTabAnimated.animatedCountArray.count - 1) {
+                        return [[collectionView.fwTabAnimated.animatedCountArray lastObject] integerValue];
                     }else {
-                        return [collectionView.tabAnimated.animatedCountArray[index] integerValue];
+                        return [collectionView.fwTabAnimated.animatedCountArray[index] integerValue];
                     }
                 }
                 
-                if ([num isEqual:[collectionView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[collectionView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return [self tab_deda_collectionView:collectionView numberOfItemsInSection:section];
                 }
             }
         }
         
-        if (collectionView.tabAnimated.animatedCountArray.count > 0) {
-            if (section > collectionView.tabAnimated.animatedCountArray.count - 1) {
-                return collectionView.tabAnimated.animatedCount;
+        if (collectionView.fwTabAnimated.animatedCountArray.count > 0) {
+            if (section > collectionView.fwTabAnimated.animatedCountArray.count - 1) {
+                return collectionView.fwTabAnimated.animatedCount;
             }
-            return [collectionView.tabAnimated.animatedCountArray[section] integerValue];
+            return [collectionView.fwTabAnimated.animatedCountArray[section] integerValue];
         }
-        return collectionView.tabAnimated.animatedCount;
+        return collectionView.fwTabAnimated.animatedCount;
     }
     return [self tab_deda_collectionView:collectionView numberOfItemsInSection:section];
 }
@@ -3338,7 +3338,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (CGSize)tab_deda_collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -3349,35 +3349,35 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定section
-        if (collectionView.tabAnimated.animatedIndexArray.count > 0) {
+        if (collectionView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in collectionView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in collectionView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [collectionView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > collectionView.tabAnimated.cellSizeArray.count - 1) {
-                        index = [collectionView.tabAnimated.cellSizeArray count] - 1;
+                    NSInteger currentIndex = [collectionView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > collectionView.fwTabAnimated.cellSizeArray.count - 1) {
+                        index = [collectionView.fwTabAnimated.cellSizeArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
                     break;
                 }
                 
-                if ([num isEqual:[collectionView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[collectionView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return [self tab_deda_collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
                 }
             }
         }else {
-            if (index > (collectionView.tabAnimated.cellSizeArray.count - 1)) {
-                index = collectionView.tabAnimated.cellSizeArray.count - 1;
+            if (index > (collectionView.fwTabAnimated.cellSizeArray.count - 1)) {
+                index = collectionView.fwTabAnimated.cellSizeArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
-        CGSize size = [collectionView.tabAnimated.cellSizeArray[index] CGSizeValue];
+        CGSize size = [collectionView.fwTabAnimated.cellSizeArray[index] CGSizeValue];
         return size;
     }
     return [self tab_deda_collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
@@ -3386,7 +3386,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (UICollectionViewCell *)tab_deda_collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -3397,35 +3397,35 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定section
-        if (collectionView.tabAnimated.animatedIndexArray.count > 0) {
+        if (collectionView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in collectionView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in collectionView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [collectionView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > collectionView.tabAnimated.cellClassArray.count - 1) {
-                        index = [collectionView.tabAnimated.cellClassArray count] - 1;
+                    NSInteger currentIndex = [collectionView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > collectionView.fwTabAnimated.cellClassArray.count - 1) {
+                        index = [collectionView.fwTabAnimated.cellClassArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
                     break;
                 }
                 
-                if ([num isEqual:[collectionView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[collectionView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return [self tab_deda_collectionView:collectionView cellForItemAtIndexPath:indexPath];
                 }
             }
         }else {
-            if (index > (collectionView.tabAnimated.cellClassArray.count - 1)) {
-                index = collectionView.tabAnimated.cellClassArray.count - 1;
+            if (index > (collectionView.fwTabAnimated.cellClassArray.count - 1)) {
+                index = collectionView.fwTabAnimated.cellClassArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
-        Class currentClass = collectionView.tabAnimated.cellClassArray[index];
+        Class currentClass = collectionView.fwTabAnimated.cellClassArray[index];
         NSString *className = NSStringFromClass(currentClass);
         if ([className containsString:@"."]) {
             NSRange range = [className rangeOfString:@"."];
@@ -3434,9 +3434,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.tabAnimated.targetControllerClassName]];
+        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
         
-        if (nil == cell.tabComponentManager) {
+        if (nil == cell.fwTabComponentManager) {
             
             FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
@@ -3446,42 +3446,42 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 manager.isLoad = YES;
                 manager.tabTargetClass = currentClass;
                 manager.currentSection = indexPath.section;
-                cell.tabComponentManager = manager;
+                cell.fwTabComponentManager = manager;
                 [manager reAddToView:cell
                            superView:collectionView];
                 [FWTabManagerMethod startAnimationToSubViews:cell
                                                   rootView:cell];
                 [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:cell
-                                                         manager:cell.tabComponentManager];
+                                                         manager:cell.fwTabComponentManager];
 
             }else {
                 [FWTabManagerMethod fullData:cell];
-                cell.tabComponentManager =
+                cell.fwTabComponentManager =
                 [FWTabComponentManager initWithView:cell
-                                        superView:collectionView  tabAnimated:collectionView.tabAnimated];
-                cell.tabComponentManager.currentSection = indexPath.section;
-                cell.tabComponentManager.fileName = fileName;
+                                        superView:collectionView  tabAnimated:collectionView.fwTabAnimated];
+                cell.fwTabComponentManager.currentSection = indexPath.section;
+                cell.fwTabComponentManager.fileName = fileName;
                 
                 __weak typeof(cell) weakCell = cell;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakCell && weakCell.tabComponentManager) {
-                        weakCell.tabComponentManager.tabTargetClass = weakCell.class;
+                    if (weakCell && weakCell.fwTabComponentManager) {
+                        weakCell.fwTabComponentManager.tabTargetClass = weakCell.class;
                         // 加载动画
                         [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakCell
                                                              isCell:YES
-                                                            manager:weakCell.tabComponentManager];
+                                                            manager:weakCell.fwTabComponentManager];
                     }
                 });
             }
         
         }else {
-            if (cell.tabComponentManager.tabLayer.hidden) {
-                cell.tabComponentManager.tabLayer.hidden = NO;
+            if (cell.fwTabComponentManager.tabLayer.hidden) {
+                cell.fwTabComponentManager.tabLayer.hidden = NO;
             }
         }
-        cell.tabComponentManager.currentRow = indexPath.row;
+        cell.fwTabComponentManager.currentRow = indexPath.row;
         
         return cell;
     }
@@ -3491,7 +3491,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)tab_deda_collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -3502,7 +3502,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         return;
     }
     [self tab_deda_collectionView:collectionView willDisplayCell:cell forItemAtIndexPath:indexPath];
@@ -3511,7 +3511,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)tab_deda_collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -3522,8 +3522,8 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index] ||
-        collectionView.tabAnimated.state == FWTabViewAnimationRunning) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index] ||
+        collectionView.fwTabAnimated.state == FWTabViewAnimationRunning) {
         return;
     }
     [self tab_deda_collectionView:collectionView didSelectItemAtIndexPath:indexPath];
@@ -3535,15 +3535,15 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                       layout:(UICollectionViewLayout*)collectionViewLayout
 referenceSizeForHeaderInSection:(NSInteger)section {
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [collectionView.fwTabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionHeader];
         if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
-            if (index > collectionView.tabAnimated.headerSizeArray.count - 1) {
-                value = collectionView.tabAnimated.headerSizeArray.lastObject;
+            if (index > collectionView.fwTabAnimated.headerSizeArray.count - 1) {
+                value = collectionView.fwTabAnimated.headerSizeArray.lastObject;
             }else {
-                value = collectionView.tabAnimated.headerSizeArray[index];
+                value = collectionView.fwTabAnimated.headerSizeArray[index];
             }
             return [value CGSizeValue];
         }
@@ -3561,15 +3561,15 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                       layout:(UICollectionViewLayout*)collectionViewLayout
 referenceSizeForFooterInSection:(NSInteger)section {
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [collectionView.fwTabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionFooter];
         if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
-            if (index > collectionView.tabAnimated.footerSizeArray.count - 1) {
-                value = collectionView.tabAnimated.footerSizeArray.lastObject;
+            if (index > collectionView.fwTabAnimated.footerSizeArray.count - 1) {
+                value = collectionView.fwTabAnimated.footerSizeArray.lastObject;
             }else {
-                value = collectionView.tabAnimated.footerSizeArray[index];
+                value = collectionView.fwTabAnimated.footerSizeArray[index];
             }
             return [value CGSizeValue];
         }
@@ -3586,9 +3586,9 @@ referenceSizeForFooterInSection:(NSInteger)section {
 - (UICollectionReusableView *)tab_deda_collectionView:(UICollectionView *)collectionView
                viewForSupplementaryElementOfKind:(NSString *)kind
                                      atIndexPath:(NSIndexPath *)indexPath {
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:indexPath.section]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:indexPath.section]) {
         
-        NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:indexPath.section
+        NSInteger index = [collectionView.fwTabAnimated headerFooterNeedAnimationOnSection:indexPath.section
                                                                                     kind:kind];
         
         if (index == FWTabViewAnimatedErrorCode) {
@@ -3602,18 +3602,18 @@ referenceSizeForFooterInSection:(NSInteger)section {
         NSString *defaultPredix = nil;
         
         if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-            if (index > collectionView.tabAnimated.headerClassArray.count - 1) {
-                resuableClass = collectionView.tabAnimated.headerClassArray.lastObject;
+            if (index > collectionView.fwTabAnimated.headerClassArray.count - 1) {
+                resuableClass = collectionView.fwTabAnimated.headerClassArray.lastObject;
             }else {
-                resuableClass = collectionView.tabAnimated.headerClassArray[index];
+                resuableClass = collectionView.fwTabAnimated.headerClassArray[index];
             }
             defaultPredix = FWTabViewAnimatedHeaderPrefixString;
             identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedHeaderPrefixString,NSStringFromClass(resuableClass)];
         }else {
-            if (index > collectionView.tabAnimated.footerClassArray.count - 1) {
-                resuableClass = collectionView.tabAnimated.footerClassArray.lastObject;
+            if (index > collectionView.fwTabAnimated.footerClassArray.count - 1) {
+                resuableClass = collectionView.fwTabAnimated.footerClassArray.lastObject;
             }else {
-                resuableClass = collectionView.tabAnimated.footerClassArray[index];
+                resuableClass = collectionView.fwTabAnimated.footerClassArray[index];
             }
             defaultPredix = FWTabViewAnimatedFooterPrefixString;
             identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedFooterPrefixString,NSStringFromClass(resuableClass)];
@@ -3643,9 +3643,9 @@ referenceSizeForFooterInSection:(NSInteger)section {
                                                                      forIndexPath:indexPath];
         }
         
-        NSString *fileName = [NSStringFromClass(resuableClass) stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.tabAnimated.targetControllerClassName]];
+        NSString *fileName = [NSStringFromClass(resuableClass) stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
         
-        if (nil == reusableView.tabComponentManager) {
+        if (nil == reusableView.fwTabComponentManager) {
             
             FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
             
@@ -3657,25 +3657,25 @@ referenceSizeForFooterInSection:(NSInteger)section {
                 manager.currentSection = indexPath.section;
                 [manager reAddToView:reusableView
                            superView:collectionView];
-                reusableView.tabComponentManager = manager;
+                reusableView.fwTabComponentManager = manager;
                 [FWTabManagerMethod startAnimationToSubViews:reusableView
                                                   rootView:reusableView];
                 [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:reusableView
-                                                         manager:reusableView.tabComponentManager];
+                                                         manager:reusableView.fwTabComponentManager];
             }else {
                 [FWTabManagerMethod fullData:reusableView];
-                reusableView.tabComponentManager =
+                reusableView.fwTabComponentManager =
                 [FWTabComponentManager initWithView:reusableView
                                         superView:collectionView
-                                      tabAnimated:collectionView.tabAnimated];
-                reusableView.tabComponentManager.currentSection = indexPath.section;
-                reusableView.tabComponentManager.tabTargetClass = resuableClass;
-                reusableView.tabComponentManager.fileName = fileName;
+                                      tabAnimated:collectionView.fwTabAnimated];
+                reusableView.fwTabComponentManager.currentSection = indexPath.section;
+                reusableView.fwTabComponentManager.tabTargetClass = resuableClass;
+                reusableView.fwTabComponentManager.fileName = fileName;
                 
                 __weak typeof(reusableView) weakView = reusableView;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakView && weakView.tabComponentManager) {
+                    if (weakView && weakView.fwTabComponentManager) {
                         
                         BOOL isCell = NO;
                         if ([weakView isKindOfClass:[UICollectionReusableView class]]) {
@@ -3685,16 +3685,16 @@ referenceSizeForFooterInSection:(NSInteger)section {
                         [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakView
                                                              isCell:isCell
-                                                            manager:weakView.tabComponentManager];
+                                                            manager:weakView.fwTabComponentManager];
                     }
                 });
             }
         }else {
-            if (reusableView.tabComponentManager.tabLayer.hidden) {
-                reusableView.tabComponentManager.tabLayer.hidden = NO;
+            if (reusableView.fwTabComponentManager.tabLayer.hidden) {
+                reusableView.fwTabComponentManager.tabLayer.hidden = NO;
             }
         }
-        reusableView.tabComponentManager.currentRow = indexPath.row;
+        reusableView.fwTabComponentManager.currentRow = indexPath.row;
         
         return reusableView;
         
@@ -3816,8 +3816,8 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         return;
     }
     
-    if (view.tabComponentManager == nil
-        && rootSuperView.tabComponentManager &&
+    if (view.fwTabComponentManager == nil
+        && rootSuperView.fwTabComponentManager &&
         ![view isKindOfClass:[UIButton class]]
         && ![view isKindOfClass:[UITableViewCell class]]
         && ![view isKindOfClass:[UICollectionViewCell class]]) {
@@ -3833,21 +3833,21 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         layer.shadowRadius = view.layer.shadowRadius;
         layer.shadowOpacity = view.layer.shadowOpacity;
         layer.cornerRadius = view.layer.cornerRadius;
-        [rootSuperView.tabComponentManager.tabLayer addSublayer:layer];
+        [rootSuperView.fwTabComponentManager.tabLayer addSublayer:layer];
     }
     
     for (int i = 0; i < subViews.count;i++) {
         
         UIView *subV = subViews[i];
         
-        if (subV.tabAnimated.isNest &&
+        if (subV.fwTabAnimated.isNest &&
             ![subV isEqual:rootSuperView]) {
             
-            if (rootSuperView.tabAnimated.targetControllerClassName) {
-                subV.tabAnimated.targetControllerClassName = rootSuperView.tabAnimated.targetControllerClassName;
+            if (rootSuperView.fwTabAnimated.targetControllerClassName) {
+                subV.fwTabAnimated.targetControllerClassName = rootSuperView.fwTabAnimated.targetControllerClassName;
             }
             
-            rootView.tabComponentManager.nestView = subV;
+            rootView.fwTabComponentManager.nestView = subV;
             
             CGRect cutRect = [rootView convertRect:subV.frame
                                           fromView:subV.superview];
@@ -3856,7 +3856,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
                                                          cornerRadius:0.]bezierPathByReversingPath]];
             CAShapeLayer *shapeLayer = [CAShapeLayer layer];
             shapeLayer.path = path.CGPath;
-            [rootView.tabComponentManager.tabLayer setMask:shapeLayer];
+            [rootView.fwTabComponentManager.tabLayer setMask:shapeLayer];
             
             isInNestView = YES;
         }
@@ -3879,14 +3879,14 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         }
         
         // 通过过滤条件标记移除移除
-        if (rootSuperView.tabAnimated.filterSubViewSize.width > 0) {
-            if (subV.frame.size.width <= rootSuperView.tabAnimated.filterSubViewSize.width) {
+        if (rootSuperView.fwTabAnimated.filterSubViewSize.width > 0) {
+            if (subV.frame.size.width <= rootSuperView.fwTabAnimated.filterSubViewSize.width) {
                 needRemove = YES;
             }
         }
         
-        if (rootSuperView.tabAnimated.filterSubViewSize.height > 0) {
-            if (subV.frame.size.height <= rootSuperView.tabAnimated.filterSubViewSize.height) {
+        if (rootSuperView.fwTabAnimated.filterSubViewSize.height > 0) {
+            if (subV.frame.size.height <= rootSuperView.fwTabAnimated.filterSubViewSize.height) {
                 needRemove = YES;
             }
         }
@@ -3966,8 +3966,8 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         UIView *subV = subViews[i];
         [self endAnimationToSubViews:subV];
         
-        if (subV.tabAnimated) {
-            [subV tab_endAnimation];
+        if (subV.fwTabAnimated) {
+            [subV fwTabEndAnimation];
         }
     }
 }
@@ -3986,9 +3986,9 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         [self startAnimationToSubViews:subV
                               rootView:rootView];
         
-        if (subV.tabAnimated) {
+        if (subV.fwTabAnimated) {
             
-            subV.tabAnimated.targetControllerClassName = rootView.tabAnimated.targetControllerClassName;
+            subV.fwTabAnimated.targetControllerClassName = rootView.fwTabAnimated.targetControllerClassName;
             
             dispatch_after(DISPATCH_TIME_NOW, dispatch_get_main_queue(), ^{
                 CGRect cutRect = [rootView convertRect:subV.frame
@@ -3998,10 +3998,10 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
                                                              cornerRadius:0.] bezierPathByReversingPath]];
                 CAShapeLayer *shapeLayer = [CAShapeLayer layer];
                 shapeLayer.path = path.CGPath;
-                [rootView.tabComponentManager.tabLayer setMask:shapeLayer];
+                [rootView.fwTabComponentManager.tabLayer setMask:shapeLayer];
             });
         
-            [subV tab_startAnimation];
+            [subV fwTabStartAnimation];
         }
     }
 }
@@ -4011,7 +4011,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
     if ([view isKindOfClass:[UICollectionView class]] ||
         [view isKindOfClass:[UITableView class]]) {
         // 判断view为tableview/collectionview时，若有设置骨架动画，则返回NO；否则返回YES，允许设置绘制骨架图
-        if (view.tabAnimated) {
+        if (view.fwTabAnimated) {
             return NO;
         }else {
             return YES;
@@ -4054,8 +4054,8 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
                            isCell:(BOOL)isCell
                           manager:(FWTabComponentManager *)manager {
     
-    if (superView.tabAnimated.state == FWTabViewAnimationStart &&
-        !targetView.tabComponentManager.isLoad) {
+    if (superView.fwTabAnimated.state == FWTabViewAnimationStart &&
+        !targetView.fwTabComponentManager.isLoad) {
         
         NSMutableArray <FWTabComponentLayer *> *array = @[].mutableCopy;
         // start animations
@@ -4066,42 +4066,42 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
                                       isInNestView:NO
                                              array:array];
         
-        [targetView.tabComponentManager installBaseComponentArray:array.copy];
+        [targetView.fwTabComponentManager installBaseComponentArray:array.copy];
         
-        if (targetView.tabComponentManager.baseComponentArray.count != 0) {
+        if (targetView.fwTabComponentManager.baseComponentArray.count != 0) {
             __weak typeof(targetView) weakSelf = targetView;
             
-            if (superView.tabAnimated.adjustBlock) {
-                superView.tabAnimated.adjustBlock(weakSelf.tabComponentManager);
+            if (superView.fwTabAnimated.adjustBlock) {
+                superView.fwTabAnimated.adjustBlock(weakSelf.fwTabComponentManager);
             }
             
-            if (superView.tabAnimated.adjustWithClassBlock) {
-                superView.tabAnimated.adjustWithClassBlock(weakSelf.tabComponentManager, weakSelf.tabComponentManager.tabTargetClass);
+            if (superView.fwTabAnimated.adjustWithClassBlock) {
+                superView.fwTabAnimated.adjustWithClassBlock(weakSelf.fwTabComponentManager, weakSelf.fwTabComponentManager.tabTargetClass);
             }
         }
         
-        [targetView.tabComponentManager updateComponentLayers];
+        [targetView.fwTabComponentManager updateComponentLayers];
         
         [FWTabManagerMethod addExtraAnimationWithSuperView:superView
                                               targetView:targetView
-                                                 manager:targetView.tabComponentManager];
+                                                 manager:targetView.fwTabComponentManager];
         
-        if (isCell && !targetView.tabComponentManager.nestView) {
+        if (isCell && !targetView.fwTabComponentManager.nestView) {
             [FWTabManagerMethod hiddenAllView:targetView];
         }else {
             [FWTabManagerMethod resetData:targetView];
         }
-        targetView.tabComponentManager.isLoad = YES;
+        targetView.fwTabComponentManager.isLoad = YES;
         
-        if (targetView.tabComponentManager.nestView) {
-            [targetView.tabComponentManager.nestView tab_startAnimation];
+        if (targetView.fwTabComponentManager.nestView) {
+            [targetView.fwTabComponentManager.nestView fwTabStartAnimation];
         }
         
-        [[FWTabAnimated sharedAnimated].cacheManager cacheComponentManager:targetView.tabComponentManager];
+        [[FWTabAnimated sharedAnimated].cacheManager cacheComponentManager:targetView.fwTabComponentManager];
     }
 
     // 结束动画
-    if (superView.tabAnimated.state == FWTabViewAnimationEnd) {
+    if (superView.fwTabAnimated.state == FWTabViewAnimationEnd) {
         [FWTabManagerMethod endAnimationToSubViews:targetView];
         [FWTabManagerMethod removeMask:targetView];
     }
@@ -4150,7 +4150,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         }
     }
     
-    if (!superView.tabAnimated.isNest) {
+    if (!superView.fwTabAnimated.isNest) {
         
         // add bin animation
         if ([FWTabManagerMethod canAddBinAnimation:superView]) {
@@ -4167,21 +4167,21 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
             if (@available(iOS 13.0, *)) {
                 if (superView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
                     
-                    if (superView.tabAnimated.dropAnimationDeepColorInDarkMode) {
-                        deepColor = superView.tabAnimated.dropAnimationDeepColorInDarkMode;
+                    if (superView.fwTabAnimated.dropAnimationDeepColorInDarkMode) {
+                        deepColor = superView.fwTabAnimated.dropAnimationDeepColorInDarkMode;
                     }else {
                         deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColorInDarkMode;
                     }
                 }else {
-                    if (superView.tabAnimated.dropAnimationDeepColor) {
-                        deepColor = superView.tabAnimated.dropAnimationDeepColor;
+                    if (superView.fwTabAnimated.dropAnimationDeepColor) {
+                        deepColor = superView.fwTabAnimated.dropAnimationDeepColor;
                     }else {
                         deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                     }
                 }
             } else {
-                if (superView.tabAnimated.dropAnimationDeepColor) {
-                    deepColor = superView.tabAnimated.dropAnimationDeepColor;
+                if (superView.fwTabAnimated.dropAnimationDeepColor) {
+                    deepColor = superView.fwTabAnimated.dropAnimationDeepColor;
                 }else {
                     deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                 }
@@ -4194,8 +4194,8 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
             CGFloat duration = 0;
             CGFloat cutTime = 0.02;
             CGFloat allCutTime = cutTime*(manager.resultLayerArray.count-1)*(manager.resultLayerArray.count)/2.0;
-            if (superView.tabAnimated.dropAnimationDuration != 0.) {
-                duration = superView.tabAnimated.dropAnimationDuration;
+            if (superView.fwTabAnimated.dropAnimationDuration != 0.) {
+                duration = superView.fwTabAnimated.dropAnimationDuration;
             }else {
                 duration = [FWTabAnimated sharedAnimated].dropAnimationDuration;
             }
@@ -4221,12 +4221,12 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 + (BOOL)canAddShimmer:(UIView *)view {
     
-    if (view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeShimmer) {
+    if (view.fwTabAnimated.superAnimationType == FWTabViewSuperAnimationTypeShimmer) {
         return YES;
     }
     
     if ([FWTabAnimated sharedAnimated].animationType == FWTabAnimationTypeShimmer &&
-        view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
+        view.fwTabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
         return YES;
     }
     
@@ -4235,12 +4235,12 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 + (BOOL)canAddBinAnimation:(UIView *)view {
     
-    if (view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeBinAnimation) {
+    if (view.fwTabAnimated.superAnimationType == FWTabViewSuperAnimationTypeBinAnimation) {
         return YES;
     }
     
     if ([FWTabAnimated sharedAnimated].animationType == FWTabAnimationTypeBinAnimation &&
-        view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
+        view.fwTabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
         return YES;
     }
     
@@ -4249,12 +4249,12 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 + (BOOL)canAddDropAnimation:(UIView *)view {
     
-    if (view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDrop) {
+    if (view.fwTabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDrop) {
         return YES;
     }
     
     if ([FWTabAnimated sharedAnimated].animationType == FWTabAnimationTypeDrop &&
-        view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
+        view.fwTabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
         return YES;
     }
     
@@ -4283,8 +4283,8 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 }
 
 + (void)removeMask:(UIView *)view {
-    if (view.tabComponentManager.tabLayer) {
-        view.tabComponentManager.tabLayer.hidden = YES;
+    if (view.fwTabComponentManager.tabLayer) {
+        view.fwTabComponentManager.tabLayer.hidden = YES;
     }
 }
 
@@ -4885,15 +4885,15 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (NSInteger)tab_numberOfSectionsInTableView:(UITableView *)tableView {
     
-    if (tableView.tabAnimated.state == FWTabViewAnimationStart) {
+    if (tableView.fwTabAnimated.state == FWTabViewAnimationStart) {
         
-        if (tableView.tabAnimated.animatedSectionCount != 0) {
-            return tableView.tabAnimated.animatedSectionCount;
+        if (tableView.fwTabAnimated.animatedSectionCount != 0) {
+            return tableView.fwTabAnimated.animatedSectionCount;
         }
 
         NSInteger count = [self tab_numberOfSectionsInTableView:tableView];
         if (count == 0) {
-            count = tableView.tabAnimated.cellClassArray.count;
+            count = tableView.fwTabAnimated.cellClassArray.count;
         }
 
         if (count == 0) return 1;
@@ -4906,50 +4906,50 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (NSInteger)tab_tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    if (tableView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
+    if (tableView.fwTabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_tableView:tableView numberOfRowsInSection:section];
         if (count == 0) {
-            return tableView.tabAnimated.cellClassArray.count;
+            return tableView.fwTabAnimated.cellClassArray.count;
         }
         return count;
     }
     
     // If the animation running, return animatedCount.
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
         
         // 开发者指定section/row
-        if (tableView.tabAnimated.animatedIndexArray.count > 0) {
+        if (tableView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 没有获取到动画时row数量
-            if (tableView.tabAnimated.animatedCountArray.count == 0) {
+            if (tableView.fwTabAnimated.animatedCountArray.count == 0) {
                 return 0;
             }
             
             // 匹配当前section
-            for (NSNumber *num in tableView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in tableView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == section) {
-                    NSInteger index = [tableView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (index > tableView.tabAnimated.animatedCountArray.count - 1) {
-                        return [[tableView.tabAnimated.animatedCountArray lastObject] integerValue];
+                    NSInteger index = [tableView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (index > tableView.fwTabAnimated.animatedCountArray.count - 1) {
+                        return [[tableView.fwTabAnimated.animatedCountArray lastObject] integerValue];
                     }else {
-                        return [tableView.tabAnimated.animatedCountArray[index] integerValue];
+                        return [tableView.fwTabAnimated.animatedCountArray[index] integerValue];
                     }
                 }
                 
                 // 没有匹配到指定的数量
-                if ([num isEqual:[tableView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[tableView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return 0;
                 }
             }
         }
         
-        if (tableView.tabAnimated.animatedCountArray.count > 0) {
-            if (section > tableView.tabAnimated.animatedCountArray.count - 1) {
-                return tableView.tabAnimated.animatedCount;
+        if (tableView.fwTabAnimated.animatedCountArray.count > 0) {
+            if (section > tableView.fwTabAnimated.animatedCountArray.count - 1) {
+                return tableView.fwTabAnimated.animatedCount;
             }
-            return [tableView.tabAnimated.animatedCountArray[section] integerValue];
+            return [tableView.fwTabAnimated.animatedCountArray[section] integerValue];
         }
-        return tableView.tabAnimated.animatedCount;
+        return tableView.fwTabAnimated.animatedCount;
     }
     return [self tab_tableView:tableView numberOfRowsInSection:section];
 }
@@ -4957,7 +4957,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (CGFloat)tab_tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -4968,17 +4968,17 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定section
-        if (tableView.tabAnimated.animatedIndexArray.count > 0) {
+        if (tableView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in tableView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in tableView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [tableView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > tableView.tabAnimated.cellHeightArray.count - 1) {
-                        index = [tableView.tabAnimated.cellHeightArray count] - 1;
+                    NSInteger currentIndex = [tableView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > tableView.fwTabAnimated.cellHeightArray.count - 1) {
+                        index = [tableView.fwTabAnimated.cellHeightArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
@@ -4986,18 +4986,18 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                 }
                 
                 // 没有匹配到注册的cell
-                if ([num isEqual:[tableView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[tableView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return 1.;
                 }
             }
         }else {
-            if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
-                index = tableView.tabAnimated.cellClassArray.count - 1;
+            if (index > (tableView.fwTabAnimated.cellClassArray.count - 1)) {
+                index = tableView.fwTabAnimated.cellClassArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated提醒 - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
-        return [tableView.tabAnimated.cellHeightArray[index] floatValue];
+        return [tableView.fwTabAnimated.cellHeightArray[index] floatValue];
     }
     return [self tab_tableView:tableView heightForRowAtIndexPath:indexPath];
 }
@@ -5005,7 +5005,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (UITableViewCell *)tab_tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -5016,39 +5016,39 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定index
-        if (tableView.tabAnimated.animatedIndexArray.count > 0) {
+        if (tableView.fwTabAnimated.animatedIndexArray.count > 0) {
             
-            if (tableView.tabAnimated.cellClassArray.count == 0) {
+            if (tableView.fwTabAnimated.cellClassArray.count == 0) {
                 return UITableViewCell.new;
             }
             
             // 匹配当前section
-            for (NSNumber *num in tableView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in tableView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [tableView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > tableView.tabAnimated.cellClassArray.count - 1) {
-                        index = [tableView.tabAnimated.cellClassArray count] - 1;
+                    NSInteger currentIndex = [tableView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > tableView.fwTabAnimated.cellClassArray.count - 1) {
+                        index = [tableView.fwTabAnimated.cellClassArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
                     break;
                 }
                 
-                if ([num isEqual:[tableView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[tableView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return UITableViewCell.new;
                 }
             }
         }else {
-            if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
-                index = tableView.tabAnimated.cellClassArray.count - 1;
+            if (index > (tableView.fwTabAnimated.cellClassArray.count - 1)) {
+                index = tableView.fwTabAnimated.cellClassArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
-        Class currentClass = tableView.tabAnimated.cellClassArray[index];
+        Class currentClass = tableView.fwTabAnimated.cellClassArray[index];
         NSString *className = NSStringFromClass(currentClass);
         if ([className containsString:@"."]) {
             NSRange range = [className rangeOfString:@"."];
@@ -5058,9 +5058,9 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
+        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
         
-        if (nil == cell.tabComponentManager) {
+        if (nil == cell.fwTabComponentManager) {
             
             FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
@@ -5070,7 +5070,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                 manager.isLoad = YES;
                 manager.tabTargetClass = currentClass;
                 manager.currentSection = indexPath.section;
-                cell.tabComponentManager = manager;
+                cell.fwTabComponentManager = manager;
                 
                 [manager reAddToView:cell
                            superView:tableView];
@@ -5080,41 +5080,41 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                                                   rootView:cell];
                 [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                       targetView:cell
-                                                         manager:cell.tabComponentManager];
+                                                         manager:cell.fwTabComponentManager];
             }else {
                 
                 [FWTabManagerMethod fullData:cell];
                 
-                cell.tabComponentManager = [FWTabComponentManager initWithView:cell
-                                                                   superView:tableView tabAnimated:tableView.tabAnimated];
-                cell.tabComponentManager.currentSection = indexPath.section;
-                cell.tabComponentManager.fileName = fileName;
-                cell.tabComponentManager.tabTargetClass = currentClass;
+                cell.fwTabComponentManager = [FWTabComponentManager initWithView:cell
+                                                                   superView:tableView tabAnimated:tableView.fwTabAnimated];
+                cell.fwTabComponentManager.currentSection = indexPath.section;
+                cell.fwTabComponentManager.fileName = fileName;
+                cell.fwTabComponentManager.tabTargetClass = currentClass;
             
                 __weak typeof(cell) weakCell = cell;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.tabAnimated;
-                    if (weakCell && tabAnimated && weakCell.tabComponentManager) {
+                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.fwTabAnimated;
+                    if (weakCell && tabAnimated && weakCell.fwTabComponentManager) {
                         [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                          targetView:weakCell
                                                              isCell:YES
-                                                            manager:weakCell.tabComponentManager];
+                                                            manager:weakCell.fwTabComponentManager];
                     }
                 });
             }
         
         }else {
-            if (cell.tabComponentManager.tabLayer.hidden) {
-                cell.tabComponentManager.tabLayer.hidden = NO;
+            if (cell.fwTabComponentManager.tabLayer.hidden) {
+                cell.fwTabComponentManager.tabLayer.hidden = NO;
             }
         }
-        cell.tabComponentManager.currentRow = indexPath.row;
+        cell.fwTabComponentManager.currentRow = indexPath.row;
         
-        if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
+        if (tableView.fwTabAnimated.oldEstimatedRowHeight > 0) {
             [FWTabManagerMethod fullData:cell];
             __weak typeof(cell) weakCell = cell;
             dispatch_async(dispatch_get_main_queue(), ^{
-                weakCell.tabComponentManager.tabLayer.frame = weakCell.bounds;
+                weakCell.fwTabComponentManager.tabLayer.frame = weakCell.bounds;
                 [FWTabManagerMethod resetData:weakCell];
             });
         }
@@ -5127,7 +5127,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (void)tab_tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -5138,7 +5138,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         return;
     }
     [self tab_tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
@@ -5147,7 +5147,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (void)tab_tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (tableView.tabAnimated.runMode) {
+    switch (tableView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -5158,7 +5158,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         return;
     }
     [self tab_tableView:tableView didSelectRowAtIndexPath:indexPath];
@@ -5167,14 +5167,14 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 #pragma mark - About HeaderFooterView
 
 - (CGFloat)tab_tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated headerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
-            if (index > tableView.tabAnimated.headerHeightArray.count - 1) {
-                value = tableView.tabAnimated.headerHeightArray.lastObject;
+            if (index > tableView.fwTabAnimated.headerHeightArray.count - 1) {
+                value = tableView.fwTabAnimated.headerHeightArray.lastObject;
             }else {
-                value = tableView.tabAnimated.headerHeightArray[index];
+                value = tableView.fwTabAnimated.headerHeightArray[index];
             }
             return [value floatValue];
         }
@@ -5184,14 +5184,14 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 }
 
 - (CGFloat)tab_tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated footerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
-            if (index > tableView.tabAnimated.footerHeightArray.count - 1) {
-                value = tableView.tabAnimated.footerHeightArray.lastObject;
+            if (index > tableView.fwTabAnimated.footerHeightArray.count - 1) {
+                value = tableView.fwTabAnimated.footerHeightArray.lastObject;
             }else {
-                value = tableView.tabAnimated.footerHeightArray[index];
+                value = tableView.fwTabAnimated.footerHeightArray[index];
             }
             return [value floatValue];
         }
@@ -5201,24 +5201,24 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 }
 
 - (nullable UIView *)tab_tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated headerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
-            if (index > tableView.tabAnimated.headerClassArray.count - 1) {
-                class = tableView.tabAnimated.headerClassArray.lastObject;
+            if (index > tableView.fwTabAnimated.headerClassArray.count - 1) {
+                class = tableView.fwTabAnimated.headerClassArray.lastObject;
             }else {
-                class = tableView.tabAnimated.headerClassArray[index];
+                class = tableView.fwTabAnimated.headerClassArray[index];
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = FWTabViewAnimated.new;
-            [headerFooterView tab_startAnimation];
+            headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
+            [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
+            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
             
-            if (nil == headerFooterView.tabComponentManager) {
+            if (nil == headerFooterView.fwTabComponentManager) {
                 
                 FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
@@ -5229,25 +5229,25 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                     manager.currentSection = section;
                     [manager reAddToView:headerFooterView
                                superView:tableView];
-                    headerFooterView.tabComponentManager = manager;
+                    headerFooterView.fwTabComponentManager = manager;
                     [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
                     [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
-                                                             manager:headerFooterView.tabComponentManager];
+                                                             manager:headerFooterView.fwTabComponentManager];
                 }else {
                     [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager =
+                    headerFooterView.fwTabComponentManager =
                     [FWTabComponentManager initWithView:headerFooterView
                                             superView:tableView
-                                          tabAnimated:tableView.tabAnimated];
-                    headerFooterView.tabComponentManager.currentSection = section;
-                    headerFooterView.tabComponentManager.fileName = fileName;
-                    headerFooterView.tabComponentManager.tabTargetClass = class;
+                                          tabAnimated:tableView.fwTabAnimated];
+                    headerFooterView.fwTabComponentManager.currentSection = section;
+                    headerFooterView.fwTabComponentManager.fileName = fileName;
+                    headerFooterView.fwTabComponentManager.tabTargetClass = class;
                     
                     __weak typeof(headerFooterView) weakView = headerFooterView;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.tabComponentManager) {
+                        if (weakView && weakView.fwTabComponentManager) {
                             
                             BOOL isCell = NO;
                             if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
@@ -5257,21 +5257,21 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                             [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
-                                                                manager:weakView.tabComponentManager];
+                                                                manager:weakView.fwTabComponentManager];
                         }
                     });
                 }
             }else {
-                if (headerFooterView.tabComponentManager.tabLayer.hidden) {
-                    headerFooterView.tabComponentManager.tabLayer.hidden = NO;
+                if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
+                    headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
                 }
             }
             
-            if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
+            if (tableView.fwTabAnimated.oldEstimatedRowHeight > 0) {
                 [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
+                    weakView.fwTabComponentManager.tabLayer.frame = weakView.bounds;
                     [FWTabManagerMethod resetData:weakView];
                 });
             }
@@ -5284,24 +5284,24 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 }
 
 - (nullable UIView *)tab_tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
+    if ([tableView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [tableView.fwTabAnimated footerNeedAnimationOnSection:section];
         if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
-            if (index > tableView.tabAnimated.footerClassArray.count - 1) {
-                class = tableView.tabAnimated.footerClassArray.lastObject;
+            if (index > tableView.fwTabAnimated.footerClassArray.count - 1) {
+                class = tableView.fwTabAnimated.footerClassArray.lastObject;
             }else {
-                class = tableView.tabAnimated.footerClassArray[index];
+                class = tableView.fwTabAnimated.footerClassArray[index];
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = FWTabViewAnimated.new;
-            [headerFooterView tab_startAnimation];
+            headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
+            [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
+            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
             
-            if (nil == headerFooterView.tabComponentManager) {
+            if (nil == headerFooterView.fwTabComponentManager) {
                 
                 FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
@@ -5312,23 +5312,23 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                     manager.currentSection = section;
                     [manager reAddToView:headerFooterView
                                superView:tableView];
-                    headerFooterView.tabComponentManager = manager;
+                    headerFooterView.fwTabComponentManager = manager;
                     
                     [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
                     [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
-                                                             manager:headerFooterView.tabComponentManager];
+                                                             manager:headerFooterView.fwTabComponentManager];
                     
                 }else {
                     [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
-                    headerFooterView.tabComponentManager.currentSection = section;
-                    headerFooterView.tabComponentManager.fileName = fileName;
+                    headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
+                    headerFooterView.fwTabComponentManager.currentSection = section;
+                    headerFooterView.fwTabComponentManager.fileName = fileName;
                     
                     __weak typeof(headerFooterView) weakView = headerFooterView;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.tabComponentManager) {
+                        if (weakView && weakView.fwTabComponentManager) {
                             
                             BOOL isCell = NO;
                             if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
@@ -5338,23 +5338,23 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                             [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
-                                                                manager:weakView.tabComponentManager];
+                                                                manager:weakView.fwTabComponentManager];
                         }
                     });
                 }
             }else {
-                if (headerFooterView.tabComponentManager.tabLayer.hidden) {
-                    headerFooterView.tabComponentManager.tabLayer.hidden = NO;
+                if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
+                    headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
                 }
             }
             
-            headerFooterView.tabComponentManager.tabTargetClass = class;
+            headerFooterView.fwTabComponentManager.tabTargetClass = class;
             
-            if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
+            if (tableView.fwTabAnimated.oldEstimatedRowHeight > 0) {
                 [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
+                    weakView.fwTabComponentManager.tabLayer.frame = weakView.bounds;
                     [FWTabManagerMethod resetData:weakView];
                 });
             }
@@ -5826,15 +5826,15 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 #pragma mark - FWTabCollectionViewDelegate
 
 - (NSInteger)tab_numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    if (collectionView.tabAnimated.state == FWTabViewAnimationStart) {
+    if (collectionView.fwTabAnimated.state == FWTabViewAnimationStart) {
         
-        if (collectionView.tabAnimated.animatedSectionCount != 0) {
-            return collectionView.tabAnimated.animatedSectionCount;
+        if (collectionView.fwTabAnimated.animatedSectionCount != 0) {
+            return collectionView.fwTabAnimated.animatedSectionCount;
         }
 
         NSInteger count = [self tab_numberOfSectionsInCollectionView:collectionView];
         if (count == 0) {
-            count = collectionView.tabAnimated.cellClassArray.count;
+            count = collectionView.fwTabAnimated.cellClassArray.count;
         }
 
         if (count == 0) return 1;
@@ -5847,43 +5847,43 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (NSInteger)tab_collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    if (collectionView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
+    if (collectionView.fwTabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_collectionView:collectionView numberOfItemsInSection:section];
         if (count == 0) {
-            return collectionView.tabAnimated.cellClassArray.count;
+            return collectionView.fwTabAnimated.cellClassArray.count;
         }
         return count;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
         
         // 开发者指定section
-        if (collectionView.tabAnimated.animatedIndexArray.count > 0) {
+        if (collectionView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in collectionView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in collectionView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == section) {
-                    NSInteger index = [collectionView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (index > collectionView.tabAnimated.animatedCountArray.count - 1) {
-                        return [[collectionView.tabAnimated.animatedCountArray lastObject] integerValue];
+                    NSInteger index = [collectionView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (index > collectionView.fwTabAnimated.animatedCountArray.count - 1) {
+                        return [[collectionView.fwTabAnimated.animatedCountArray lastObject] integerValue];
                     }else {
-                        return [collectionView.tabAnimated.animatedCountArray[index] integerValue];
+                        return [collectionView.fwTabAnimated.animatedCountArray[index] integerValue];
                     }
                 }
                 
-                if ([num isEqual:[collectionView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[collectionView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return [self tab_collectionView:collectionView numberOfItemsInSection:section];
                 }
             }
         }
         
-        if (collectionView.tabAnimated.animatedCountArray.count > 0) {
-            if (section > collectionView.tabAnimated.animatedCountArray.count - 1) {
-                return collectionView.tabAnimated.animatedCount;
+        if (collectionView.fwTabAnimated.animatedCountArray.count > 0) {
+            if (section > collectionView.fwTabAnimated.animatedCountArray.count - 1) {
+                return collectionView.fwTabAnimated.animatedCount;
             }
-            return [collectionView.tabAnimated.animatedCountArray[section] integerValue];
+            return [collectionView.fwTabAnimated.animatedCountArray[section] integerValue];
         }
-        return collectionView.tabAnimated.animatedCount;
+        return collectionView.fwTabAnimated.animatedCount;
     }
     return [self tab_collectionView:collectionView numberOfItemsInSection:section];
 }
@@ -5891,7 +5891,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (CGSize)tab_collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -5902,35 +5902,35 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定section
-        if (collectionView.tabAnimated.animatedIndexArray.count > 0) {
+        if (collectionView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in collectionView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in collectionView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [collectionView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > collectionView.tabAnimated.cellSizeArray.count - 1) {
-                        index = [collectionView.tabAnimated.cellSizeArray count] - 1;
+                    NSInteger currentIndex = [collectionView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > collectionView.fwTabAnimated.cellSizeArray.count - 1) {
+                        index = [collectionView.fwTabAnimated.cellSizeArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
                     break;
                 }
                 
-                if ([num isEqual:[collectionView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[collectionView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return [self tab_collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
                 }
             }
         }else {
-            if (index > (collectionView.tabAnimated.cellSizeArray.count - 1)) {
-                index = collectionView.tabAnimated.cellSizeArray.count - 1;
+            if (index > (collectionView.fwTabAnimated.cellSizeArray.count - 1)) {
+                index = collectionView.fwTabAnimated.cellSizeArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
-        CGSize size = [collectionView.tabAnimated.cellSizeArray[index] CGSizeValue];
+        CGSize size = [collectionView.fwTabAnimated.cellSizeArray[index] CGSizeValue];
         return size;
     }
     return [self tab_collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
@@ -5939,7 +5939,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (UICollectionViewCell *)tab_collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -5950,35 +5950,35 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         
         // 开发者指定section
-        if (collectionView.tabAnimated.animatedIndexArray.count > 0) {
+        if (collectionView.fwTabAnimated.animatedIndexArray.count > 0) {
             
             // 匹配当前section
-            for (NSNumber *num in collectionView.tabAnimated.animatedIndexArray) {
+            for (NSNumber *num in collectionView.fwTabAnimated.animatedIndexArray) {
                 if ([num integerValue] == index) {
-                    NSInteger currentIndex = [collectionView.tabAnimated.animatedIndexArray indexOfObject:num];
-                    if (currentIndex > collectionView.tabAnimated.cellClassArray.count - 1) {
-                        index = [collectionView.tabAnimated.cellClassArray count] - 1;
+                    NSInteger currentIndex = [collectionView.fwTabAnimated.animatedIndexArray indexOfObject:num];
+                    if (currentIndex > collectionView.fwTabAnimated.cellClassArray.count - 1) {
+                        index = [collectionView.fwTabAnimated.cellClassArray count] - 1;
                     }else {
                         index = currentIndex;
                     }
                     break;
                 }
                 
-                if ([num isEqual:[collectionView.tabAnimated.animatedIndexArray lastObject]]) {
+                if ([num isEqual:[collectionView.fwTabAnimated.animatedIndexArray lastObject]]) {
                     return [self tab_collectionView:collectionView cellForItemAtIndexPath:indexPath];
                 }
             }
         }else {
-            if (index > (collectionView.tabAnimated.cellClassArray.count - 1)) {
-                index = collectionView.tabAnimated.cellClassArray.count - 1;
+            if (index > (collectionView.fwTabAnimated.cellClassArray.count - 1)) {
+                index = collectionView.fwTabAnimated.cellClassArray.count - 1;
                 tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
-        Class currentClass = collectionView.tabAnimated.cellClassArray[index];
+        Class currentClass = collectionView.fwTabAnimated.cellClassArray[index];
         NSString *className = NSStringFromClass(currentClass);
         if ([className containsString:@"."]) {
             NSRange range = [className rangeOfString:@"."];
@@ -5987,9 +5987,9 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.tabAnimated.targetControllerClassName]];
+        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
         
-        if (nil == cell.tabComponentManager) {
+        if (nil == cell.fwTabComponentManager) {
             
             FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
@@ -5999,43 +5999,43 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                 manager.isLoad = YES;
                 manager.tabTargetClass = currentClass;
                 manager.currentSection = indexPath.section;
-                cell.tabComponentManager = manager;
+                cell.fwTabComponentManager = manager;
                 [manager reAddToView:cell
                            superView:collectionView];
                 [FWTabManagerMethod startAnimationToSubViews:cell
                                                   rootView:cell];
                 [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:cell
-                                                         manager:cell.tabComponentManager];
+                                                         manager:cell.fwTabComponentManager];
 
             }else {
                 [FWTabManagerMethod fullData:cell];
-                cell.tabComponentManager =
+                cell.fwTabComponentManager =
                 [FWTabComponentManager initWithView:cell
                                         superView:collectionView
-                                      tabAnimated:collectionView.tabAnimated];
-                cell.tabComponentManager.currentSection = indexPath.section;
-                cell.tabComponentManager.fileName = fileName;
+                                      tabAnimated:collectionView.fwTabAnimated];
+                cell.fwTabComponentManager.currentSection = indexPath.section;
+                cell.fwTabComponentManager.fileName = fileName;
                 
                 __weak typeof(cell) weakCell = cell;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakCell && weakCell.tabComponentManager) {
-                        weakCell.tabComponentManager.tabTargetClass = weakCell.class;
+                    if (weakCell && weakCell.fwTabComponentManager) {
+                        weakCell.fwTabComponentManager.tabTargetClass = weakCell.class;
                         // 加载动画
                         [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakCell
                                                              isCell:YES
-                                                            manager:weakCell.tabComponentManager];
+                                                            manager:weakCell.fwTabComponentManager];
                     }
                 });
             }
         
         }else {
-            if (cell.tabComponentManager.tabLayer.hidden) {
-                cell.tabComponentManager.tabLayer.hidden = NO;
+            if (cell.fwTabComponentManager.tabLayer.hidden) {
+                cell.fwTabComponentManager.tabLayer.hidden = NO;
             }
         }
-        cell.tabComponentManager.currentRow = indexPath.row;
+        cell.fwTabComponentManager.currentRow = indexPath.row;
         
         return cell;
     }
@@ -6045,7 +6045,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (void)tab_collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -6056,7 +6056,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index]) {
         return;
     }
     [self tab_collectionView:collectionView willDisplayCell:cell forItemAtIndexPath:indexPath];
@@ -6065,7 +6065,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 - (void)tab_collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSInteger index;
-    switch (collectionView.tabAnimated.runMode) {
+    switch (collectionView.fwTabAnimated.runMode) {
         case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
@@ -6076,8 +6076,8 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             break;
     }
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index] ||
-        collectionView.tabAnimated.state == FWTabViewAnimationRunning) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:index] ||
+        collectionView.fwTabAnimated.state == FWTabViewAnimationRunning) {
         return;
     }
     [self tab_collectionView:collectionView didSelectItemAtIndexPath:indexPath];
@@ -6089,15 +6089,15 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                       layout:(UICollectionViewLayout*)collectionViewLayout
 referenceSizeForHeaderInSection:(NSInteger)section {
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [collectionView.fwTabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionHeader];
         if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
-            if (index > collectionView.tabAnimated.headerSizeArray.count - 1) {
-                value = collectionView.tabAnimated.headerSizeArray.lastObject;
+            if (index > collectionView.fwTabAnimated.headerSizeArray.count - 1) {
+                value = collectionView.fwTabAnimated.headerSizeArray.lastObject;
             }else {
-                value = collectionView.tabAnimated.headerSizeArray[index];
+                value = collectionView.fwTabAnimated.headerSizeArray[index];
             }
             return [value CGSizeValue];
         }
@@ -6115,15 +6115,15 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                       layout:(UICollectionViewLayout*)collectionViewLayout
 referenceSizeForFooterInSection:(NSInteger)section {
     
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
-        NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:section]) {
+        NSInteger index = [collectionView.fwTabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionFooter];
         if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
-            if (index > collectionView.tabAnimated.footerSizeArray.count - 1) {
-                value = collectionView.tabAnimated.footerSizeArray.lastObject;
+            if (index > collectionView.fwTabAnimated.footerSizeArray.count - 1) {
+                value = collectionView.fwTabAnimated.footerSizeArray.lastObject;
             }else {
-                value = collectionView.tabAnimated.footerSizeArray[index];
+                value = collectionView.fwTabAnimated.footerSizeArray[index];
             }
             return [value CGSizeValue];
         }
@@ -6140,9 +6140,9 @@ referenceSizeForFooterInSection:(NSInteger)section {
 - (UICollectionReusableView *)tab_collectionView:(UICollectionView *)collectionView
                viewForSupplementaryElementOfKind:(NSString *)kind
                                      atIndexPath:(NSIndexPath *)indexPath {
-    if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:indexPath.section]) {
+    if ([collectionView.fwTabAnimated currentIndexIsAnimatingWithIndex:indexPath.section]) {
         
-        NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:indexPath.section
+        NSInteger index = [collectionView.fwTabAnimated headerFooterNeedAnimationOnSection:indexPath.section
                                                                                     kind:kind];
         
         if (index == FWTabViewAnimatedErrorCode) {
@@ -6156,18 +6156,18 @@ referenceSizeForFooterInSection:(NSInteger)section {
         NSString *defaultPredix = nil;
         
         if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-            if (index > collectionView.tabAnimated.headerClassArray.count - 1) {
-                resuableClass = collectionView.tabAnimated.headerClassArray.lastObject;
+            if (index > collectionView.fwTabAnimated.headerClassArray.count - 1) {
+                resuableClass = collectionView.fwTabAnimated.headerClassArray.lastObject;
             }else {
-                resuableClass = collectionView.tabAnimated.headerClassArray[index];
+                resuableClass = collectionView.fwTabAnimated.headerClassArray[index];
             }
             defaultPredix = FWTabViewAnimatedHeaderPrefixString;
             identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedHeaderPrefixString,NSStringFromClass(resuableClass)];
         }else {
-            if (index > collectionView.tabAnimated.footerClassArray.count - 1) {
-                resuableClass = collectionView.tabAnimated.footerClassArray.lastObject;
+            if (index > collectionView.fwTabAnimated.footerClassArray.count - 1) {
+                resuableClass = collectionView.fwTabAnimated.footerClassArray.lastObject;
             }else {
-                resuableClass = collectionView.tabAnimated.footerClassArray[index];
+                resuableClass = collectionView.fwTabAnimated.footerClassArray[index];
             }
             defaultPredix = FWTabViewAnimatedFooterPrefixString;
             identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedFooterPrefixString,NSStringFromClass(resuableClass)];
@@ -6197,9 +6197,9 @@ referenceSizeForFooterInSection:(NSInteger)section {
                                                                      forIndexPath:indexPath];
         }
         
-        NSString *fileName = [NSStringFromClass(resuableClass) stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.tabAnimated.targetControllerClassName]];
+        NSString *fileName = [NSStringFromClass(resuableClass) stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
         
-        if (nil == reusableView.tabComponentManager) {
+        if (nil == reusableView.fwTabComponentManager) {
             
             FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
             
@@ -6211,25 +6211,25 @@ referenceSizeForFooterInSection:(NSInteger)section {
                 manager.currentSection = indexPath.section;
                 [manager reAddToView:reusableView
                            superView:collectionView];
-                reusableView.tabComponentManager = manager;
+                reusableView.fwTabComponentManager = manager;
                 [FWTabManagerMethod startAnimationToSubViews:reusableView
                                                   rootView:reusableView];
                 [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:reusableView
-                                                         manager:reusableView.tabComponentManager];
+                                                         manager:reusableView.fwTabComponentManager];
             }else {
                 [FWTabManagerMethod fullData:reusableView];
-                reusableView.tabComponentManager =
+                reusableView.fwTabComponentManager =
                 [FWTabComponentManager initWithView:reusableView
                                         superView:collectionView
-                                      tabAnimated:collectionView.tabAnimated];
-                reusableView.tabComponentManager.currentSection = indexPath.section;
-                reusableView.tabComponentManager.tabTargetClass = resuableClass;
-                reusableView.tabComponentManager.fileName = fileName;
+                                      tabAnimated:collectionView.fwTabAnimated];
+                reusableView.fwTabComponentManager.currentSection = indexPath.section;
+                reusableView.fwTabComponentManager.tabTargetClass = resuableClass;
+                reusableView.fwTabComponentManager.fileName = fileName;
                 
                 __weak typeof(reusableView) weakView = reusableView;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakView && weakView.tabComponentManager) {
+                    if (weakView && weakView.fwTabComponentManager) {
                         
                         BOOL isCell = NO;
                         if ([weakView isKindOfClass:[UICollectionReusableView class]]) {
@@ -6239,16 +6239,16 @@ referenceSizeForFooterInSection:(NSInteger)section {
                         [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakView
                                                              isCell:isCell
-                                                            manager:weakView.tabComponentManager];
+                                                            manager:weakView.fwTabComponentManager];
                     }
                 });
             }
         }else {
-            if (reusableView.tabComponentManager.tabLayer.hidden) {
-                reusableView.tabComponentManager.tabLayer.hidden = NO;
+            if (reusableView.fwTabComponentManager.tabLayer.hidden) {
+                reusableView.fwTabComponentManager.tabLayer.hidden = NO;
             }
         }
-        reusableView.tabComponentManager.currentRow = indexPath.row;
+        reusableView.fwTabComponentManager.currentRow = indexPath.row;
         
         return reusableView;
         
