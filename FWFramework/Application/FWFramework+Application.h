@@ -32,16 +32,17 @@
 // View
 #import "FWView.h"
 #import "FWAttributedLabel.h"
-#import "FWIndicatorControl.h"
-#import "FWProgressView.h"
 #import "FWBannerView.h"
-#import "FWPhotoBrowser.h"
+#import "FWCollectionViewFlowLayout.h"
+#import "FWIndicatorControl.h"
+#import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
 #import "FWPagerView.h"
-#import "FWSegmentedControl.h"
-#import "FWMarqueeLabel.h"
+#import "FWPhotoBrowser.h"
+#import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
+#import "FWSegmentedControl.h"
+#import "FWTabAnimated.h"
 #import "FWTagCollectionView.h"
-#import "FWCollectionViewFlowLayout.h"
 
 #endif /* FWFramework_Application_h */

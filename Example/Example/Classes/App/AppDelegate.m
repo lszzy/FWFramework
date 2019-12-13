@@ -65,6 +65,10 @@
         [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"收到本地通知：%@\n%@", FWSafeString(title), userInfo]]];
         [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
     };
+    
+    [[FWTabAnimated sharedAnimated] initWithOnlySkeleton];
+    [FWTabAnimated sharedAnimated].openLog = YES;
+    [FWTabAnimated sharedAnimated].openAnimationTag = YES;
 }
 
 - (void)setupController

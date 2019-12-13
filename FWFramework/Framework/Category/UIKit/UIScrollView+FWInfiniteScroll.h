@@ -28,6 +28,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 @property (nonatomic, readwrite) BOOL enabled;
 
 @property (nonatomic, readonly) FWInfiniteScrollState state;
+@property (nonatomic, assign, readonly) BOOL userTriggered;
 @property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
 @property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
 

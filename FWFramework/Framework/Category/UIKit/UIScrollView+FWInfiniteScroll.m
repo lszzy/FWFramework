@@ -24,6 +24,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, readwrite) FWInfiniteScrollState state;
+@property (nonatomic, assign) BOOL userTriggered;
 @property (nonatomic, strong) NSMutableArray *viewForState;
 @property (nonatomic, weak) UIView *currentCustomView;
 @property (nonatomic, weak) UIScrollView *scrollView;
@@ -140,9 +141,10 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
         if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
             self.state = FWInfiniteScrollStateLoading;
-        else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging)
+        else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging) {
             self.state = FWInfiniteScrollStateTriggered;
-        else if(contentOffset.y < scrollOffsetThreshold  && self.state != FWInfiniteScrollStateStopped)
+            self.userTriggered = YES;
+        } else if(contentOffset.y < scrollOffsetThreshold  && self.state != FWInfiniteScrollStateStopped)
             self.state = FWInfiniteScrollStateStopped;
     }
 }
@@ -320,6 +322,7 @@ static char UIScrollViewFWInfiniteScrollView;
     if ([self.fwInfiniteScrollView isAnimating]) return;
     
     self.fwInfiniteScrollView.state = FWInfiniteScrollStateTriggered;
+    self.fwInfiniteScrollView.userTriggered = NO;
     [self.fwInfiniteScrollView startAnimating];
 }
 

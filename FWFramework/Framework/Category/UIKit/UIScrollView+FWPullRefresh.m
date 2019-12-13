@@ -63,6 +63,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 @property (nonatomic, strong, readwrite) UILabel *titleLabel;
 @property (nonatomic, strong, readwrite) UILabel *subtitleLabel;
 @property (nonatomic, readwrite) FWPullRefreshState state;
+@property (nonatomic, assign) BOOL userTriggered;
 
 @property (nonatomic, strong) NSMutableArray *titles;
 @property (nonatomic, strong) NSMutableArray *subtitles;
@@ -303,9 +304,10 @@ static CGFloat FWPullRefreshViewHeight = 60;
         CGFloat scrollOffsetThreshold = self.frame.origin.y - self.originalTopInset;
         if(!self.scrollView.isDragging && self.state == FWPullRefreshStateTriggered)
             self.state = FWPullRefreshStateLoading;
-        else if(contentOffset.y < scrollOffsetThreshold && self.scrollView.isDragging && self.state == FWPullRefreshStateStopped)
+        else if(contentOffset.y < scrollOffsetThreshold && self.scrollView.isDragging && self.state == FWPullRefreshStateStopped) {
             self.state = FWPullRefreshStateTriggered;
-        else if(contentOffset.y >= scrollOffsetThreshold && self.state != FWPullRefreshStateStopped)
+            self.userTriggered = YES;
+        } else if(contentOffset.y >= scrollOffsetThreshold && self.state != FWPullRefreshStateStopped)
             self.state = FWPullRefreshStateStopped;
         else if(contentOffset.y >= scrollOffsetThreshold && self.state == FWPullRefreshStateStopped)
             self.pullingPercent = MAX(MIN(1.f - (FWPullRefreshViewHeight + contentOffset.y) / FWPullRefreshViewHeight, 1.f), 0.f);
@@ -549,6 +551,7 @@ static char UIScrollViewFWPullRefreshView;
     if ([self.fwPullRefreshView isAnimating]) return;
     
     self.fwPullRefreshView.state = FWPullRefreshStateTriggered;
+    self.fwPullRefreshView.userTriggered = NO;
     [self.fwPullRefreshView startAnimating];
 }
 
