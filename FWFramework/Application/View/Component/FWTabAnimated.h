@@ -957,7 +957,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
 
 @end
 
-@interface TableDeDaSelfModel : NSObject
+@interface FWTabTableDeDaSelfModel : NSObject
 
 @property (nonatomic, copy) NSString *targetClassName;
 @property (nonatomic, assign) BOOL isExhangeDelegate;
@@ -965,7 +965,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
 
 @end
 
-@interface CollectionDeDaSelfModel : NSObject
+@interface FWTabCollectionDeDaSelfModel : NSObject
 
 @property (nonatomic, copy) NSString *targetClassName;
 @property (nonatomic, assign) BOOL isExhangeDelegate;
@@ -1595,7 +1595,7 @@ typedef void(^FWTabAdjustWithClassBlock)(FWTabComponentManager *manager, Class t
 
 #pragma mark -
 
-@interface EstimatedTableViewDelegate : NSObject
+@interface FWTabEstimatedTableViewDelegate : NSObject
 
 @end
 
@@ -1858,16 +1858,12 @@ typedef void(^FWTabAdjustWithClassBlock)(FWTabComponentManager *manager, Class t
 
 @end
 
-#define tabAnimatedLog(x) {if([FWTabAnimated sharedAnimated].openLog) NSLog(x);}
-#define tab_kColor(s) [UIColor colorWithRed:(((s&0xFF0000)>>16))/255.0 green:(((s&0xFF00)>>8))/255.0 blue:((s&0xFF))/255.0 alpha:1.]
-#define tab_RGB(R,G,B) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1.]
-
 extern NSString * const FWTabAnimatedAlphaAnimation;  /// the key of bin animation
 extern NSString * const FWTabAnimatedLocationAnimation;  /// the key of flex animation
 extern NSString * const FWTabAnimatedShimmerAnimation;  ///the key of shimmer animation
 extern NSString * const FWTabAnimatedDropAnimation;   /// the key of drop animation
 
-@class TableDeDaSelfModel, CollectionDeDaSelfModel, FWTabAnimatedCacheManager;
+@class FWTabTableDeDaSelfModel, FWTabCollectionDeDaSelfModel, FWTabAnimatedCacheManager;
 
 /**
  * Gobal animation type,
@@ -2162,11 +2158,11 @@ typedef NS_ENUM(NSInteger, FWTabAnimationType) {
 
 #pragma mark - `self.delegate = self`
 
-@property (nonatomic, strong, readonly) NSMutableArray <TableDeDaSelfModel *> *tableDeDaSelfModelArray;
-@property (nonatomic, strong, readonly) NSMutableArray <CollectionDeDaSelfModel *> *collectionDeDaSelfModelArray;
+@property (nonatomic, strong, readonly) NSMutableArray <FWTabTableDeDaSelfModel *> *tableDeDaSelfModelArray;
+@property (nonatomic, strong, readonly) NSMutableArray <FWTabCollectionDeDaSelfModel *> *collectionDeDaSelfModelArray;
 
-- (TableDeDaSelfModel *)getTableDeDaModelAboutDeDaSelfWithClassName:(NSString *)className;
-- (CollectionDeDaSelfModel *)getCollectionDeDaModelAboutDeDaSelfWithClassName:(NSString *)className;
+- (FWTabTableDeDaSelfModel *)getTableDeDaModelAboutDeDaSelfWithClassName:(NSString *)className;
+- (FWTabCollectionDeDaSelfModel *)getCollectionDeDaModelAboutDeDaSelfWithClassName:(NSString *)className;
 
 #pragma mark - Init Method
 
