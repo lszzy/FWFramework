@@ -1245,7 +1245,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 @implementation NSArray (FWTabAnimated)
 
-- (FWTabAnimatedArrayFloatBlock)fwTabUp {
+- (FWTabAnimatedArrayFloatBlock)up {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.up(offset);
@@ -1254,7 +1254,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabDown {
+- (FWTabAnimatedArrayFloatBlock)down {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.down(offset);
@@ -1263,7 +1263,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabLeft {
+- (FWTabAnimatedArrayFloatBlock)left {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.left(offset);
@@ -1272,7 +1272,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabRight {
+- (FWTabAnimatedArrayFloatBlock)right {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.right(offset);
@@ -1281,7 +1281,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabWidth {
+- (FWTabAnimatedArrayFloatBlock)width {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.width(offset);
@@ -1290,7 +1290,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabHeight {
+- (FWTabAnimatedArrayFloatBlock)height {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.height(offset);
@@ -1299,7 +1299,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabReducedWidth {
+- (FWTabAnimatedArrayFloatBlock)reducedWidth {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.reducedWidth(offset);
@@ -1308,7 +1308,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabReducedHeight {
+- (FWTabAnimatedArrayFloatBlock)reducedHeight {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.reducedHeight(offset);
@@ -1317,7 +1317,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabReducedRadius {
+- (FWTabAnimatedArrayFloatBlock)reducedRadius {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.reducedRadius(offset);
@@ -1326,7 +1326,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabRadius {
+- (FWTabAnimatedArrayFloatBlock)radius {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.radius(offset);
@@ -1335,7 +1335,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayIntBlock)fwTabLine {
+- (FWTabAnimatedArrayIntBlock)line {
     return ^NSArray <FWTabBaseComponent *> *(NSInteger value) {
         for (FWTabBaseComponent *component in self) {
             component.line(value);
@@ -1344,7 +1344,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabSpace {
+- (FWTabAnimatedArrayFloatBlock)space {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.space(offset);
@@ -1353,7 +1353,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayBlock)fwTabRemove {
+- (FWTabAnimatedArrayBlock)remove {
     return ^NSArray <FWTabBaseComponent *> *(void) {
         for (FWTabBaseComponent *component in self) {
             component.remove();
@@ -1362,7 +1362,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayStringBlock)fwTabPlaceholder {
+- (FWTabAnimatedArrayStringBlock)placeholder {
     return ^NSArray <FWTabBaseComponent *> *(NSString *string) {
         for (FWTabBaseComponent *component in self) {
             component.placeholder(string);
@@ -1371,7 +1371,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabX {
+- (FWTabAnimatedArrayFloatBlock)x {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.x(offset);
@@ -1380,7 +1380,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabY {
+- (FWTabAnimatedArrayFloatBlock)y {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.y(offset);
@@ -1389,7 +1389,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayColorBlock)fwTabColor {
+- (FWTabAnimatedArrayColorBlock)color {
     return ^NSArray <FWTabBaseComponent *> *(UIColor *color) {
         for (FWTabBaseComponent *component in self) {
             component.color(color);
@@ -1400,7 +1400,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - Drop Animation
 
-- (FWTabAnimatedArrayIntBlock)fwTabDropIndex {
+- (FWTabAnimatedArrayIntBlock)dropIndex {
     return ^NSArray <FWTabBaseComponent *> *(NSInteger value) {
         for (FWTabBaseComponent *component in self) {
             component.dropIndex(value);
@@ -1409,7 +1409,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayIntBlock)fwTabDropFromIndex {
+- (FWTabAnimatedArrayIntBlock)dropFromIndex {
     return ^NSArray <FWTabBaseComponent *> *(NSInteger value) {
         for (FWTabBaseComponent *component in self) {
             component.dropFromIndex(value);
@@ -1418,7 +1418,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayBlock)fwTabRemoveOnDrop {
+- (FWTabAnimatedArrayBlock)removeOnDrop {
     return ^NSArray <FWTabBaseComponent *> *(void) {
         for (FWTabBaseComponent *component in self) {
             component.removeOnDrop();
@@ -1427,7 +1427,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
-- (FWTabAnimatedArrayFloatBlock)fwTabDropStayTime {
+- (FWTabAnimatedArrayFloatBlock)dropStayTime {
     return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
         for (FWTabBaseComponent *component in self) {
             component.dropStayTime(offset);

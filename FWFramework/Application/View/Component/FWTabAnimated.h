@@ -341,119 +341,119 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabLeft;
+- (FWTabAnimatedArrayFloatBlock)left;
 
 /**
  所有元素向右平移
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabRight;
+- (FWTabAnimatedArrayFloatBlock)right;
 
 /**
  所有元素向上平移
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabUp;
+- (FWTabAnimatedArrayFloatBlock)up;
 
 /**
  所有元素向下平移
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabDown;
+- (FWTabAnimatedArrayFloatBlock)down;
 
 /**
  设置所有元素的宽度
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabWidth;
+- (FWTabAnimatedArrayFloatBlock)width;
 
 /**
  设置所有元素的高度
 
  * @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabHeight;
+- (FWTabAnimatedArrayFloatBlock)height;
 
 /**
  设置所有元素的圆角
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabRadius;
+- (FWTabAnimatedArrayFloatBlock)radius;
 
 /**
  减少的宽度：与当前宽度相比，所减少的宽度，负数则增加。
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabReducedWidth;
+- (FWTabAnimatedArrayFloatBlock)reducedWidth;
 
 /**
  减少的高度：与当前高度相比，所减少的高度，负数则增加。
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabReducedHeight;
+- (FWTabAnimatedArrayFloatBlock)reducedHeight;
 
 /**
  减少的圆角：与当前圆角相比，所减少的圆角，负数则增加。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabReducedRadius;
+- (FWTabAnimatedArrayFloatBlock)reducedRadius;
 
 /**
  设置行数
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)fwTabLine;
+- (FWTabAnimatedArrayIntBlock)line;
 
 /**
  间距，行数超过1时生效，默认为8.0。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabSpace;
+- (FWTabAnimatedArrayFloatBlock)space;
 
 /**
  移除该动画组件数组中的所有组件
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayBlock)fwTabRemove;
+- (FWTabAnimatedArrayBlock)remove;
 
 /**
  添加占位图，不支持圆角，建议切图使用圆角
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayStringBlock)fwTabPlaceholder;
+- (FWTabAnimatedArrayStringBlock)placeholder;
 
 /**
  设置横坐标
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabX;
+- (FWTabAnimatedArrayFloatBlock)x;
 
 /**
  设置纵坐标
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabY;
+- (FWTabAnimatedArrayFloatBlock)y;
 
 /**
  设置动画数组颜色
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayColorBlock)fwTabColor;
+- (FWTabAnimatedArrayColorBlock)color;
 
 #pragma mark - Drop Animation 以下属性均针对豆瓣动画
 
@@ -462,7 +462,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)fwTabDropIndex;
+- (FWTabAnimatedArrayIntBlock)dropIndex;
 
 /**
  适用于多行的动画元素,
@@ -470,21 +470,21 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)fwTabDropFromIndex;
+- (FWTabAnimatedArrayIntBlock)dropFromIndex;
 
 /**
  将动画层移出豆瓣动画队列，不参与变色。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayBlock)fwTabRemoveOnDrop;
+- (FWTabAnimatedArrayBlock)removeOnDrop;
 
 /**
  豆瓣动画变色停留时间比，默认是0.2。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)fwTabDropStayTime;
+- (FWTabAnimatedArrayFloatBlock)dropStayTime;
 
 @end
 

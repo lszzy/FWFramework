@@ -161,8 +161,10 @@
     
     self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:100];
     self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
-        manager.animation(0).line(1).width(100);
-        manager.animation(1).line(1);
+        manager.animationsWithIndexs(0,1).line(1);
+        manager.animations(0,1).line(1);
+        manager.animation(0).width(100).toLongAnimation();
+        manager.animation(1).up(5);
         manager.animation(2).width(30).height(30).placeholder(@"AppIcon");
     };
 }
