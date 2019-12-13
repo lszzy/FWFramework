@@ -17,21 +17,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 typedef enum : NSUInteger {
-    TABShimmerDirectionToRight = 0,    // 从左往右
-    TABShimmerDirectionToLeft,         // 从右往左
-} TABShimmerDirection;                 // 闪光灯方向
+    FWTabShimmerDirectionToRight = 0,    // 从左往右
+    FWTabShimmerDirectionToLeft,         // 从右往左
+} FWTabShimmerDirection;                 // 闪光灯方向
 
 typedef enum : NSUInteger {
-    TABShimmerPropertyStartPoint = 0,
-    TABShimmerPropertyEndPoint,
-} TABShimmerProperty;
+    FWTabShimmerPropertyStartPoint = 0,
+    FWTabShimmerPropertyEndPoint,
+} FWTabShimmerProperty;
 
 typedef struct {
     CGPoint startValue;
     CGPoint endValue;
-} TABShimmerTransition;
+} FWTabShimmerTransition;
 
-@interface TABAnimationMethod : NSObject
+@interface FWTabAnimationMethod : NSObject
 
 /**
  伸缩动画
@@ -54,7 +54,7 @@ typedef struct {
 + (void)addShimmerAnimationToLayer:(CALayer *)layer
                           duration:(CGFloat)duration
                                key:(NSString *)key
-                         direction:(TABShimmerDirection)direction;
+                         direction:(FWTabShimmerDirection)direction;
 
 /**
  UIView加入呼吸灯动画
@@ -96,11 +96,11 @@ typedef struct {
 
 @end
 
-@class TABComponentManager, TABTableAnimated, TABCollectionAnimated;
+@class FWTabComponentManager, FWTabTableAnimated, FWTabCollectionAnimated;
 
-extern NSString * const TABCacheManagerFolderName;
+extern NSString * const FWTabCacheManagerFolderName;
 
-@interface TABAnimatedCacheManager : NSObject
+@interface FWTabAnimatedCacheManager : NSObject
 
 // 当前App版本
 @property (nonatomic, copy, readonly) NSString *currentSystemVersion;
@@ -119,36 +119,36 @@ extern NSString * const TABCacheManagerFolderName;
  * 存储骨架屏管理单元到指定沙盒目录
  * @param manager 骨架屏管理单元
  */
-- (void)cacheComponentManager:(TABComponentManager *)manager;
+- (void)cacheComponentManager:(FWTabComponentManager *)manager;
 
 /**
  * 获取指定骨架屏管理单元
  * @param fileName 文件名
  */
-- (nullable TABComponentManager *)getComponentManagerWithFileName:(NSString *)fileName;
+- (nullable FWTabComponentManager *)getComponentManagerWithFileName:(NSString *)fileName;
 
 /**
  * 更新该viewAnimated下所有骨架屏管理单元的loadCount
  * @param viewAnimated 骨架屏配置对象
  */
-- (void)updateCacheModelLoadCountWithTableAnimated:(TABTableAnimated *)viewAnimated;
+- (void)updateCacheModelLoadCountWithTableAnimated:(FWTabTableAnimated *)viewAnimated;
 
 /**
  * 更新该viewAnimated下所有骨架屏管理单元的loadCount
  * @param viewAnimated 骨架屏配置对象
  */
-- (void)updateCacheModelLoadCountWithCollectionAnimated:(TABCollectionAnimated *)viewAnimated;
+- (void)updateCacheModelLoadCountWithCollectionAnimated:(FWTabCollectionAnimated *)viewAnimated;
 
 @end
 
-@interface TABAnimatedCacheModel : NSObject<NSSecureCoding>
+@interface FWTabAnimatedCacheModel : NSObject<NSSecureCoding>
 
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, assign) NSInteger loadCount;
 
 @end
 
-@interface TABAnimatedDocumentMethod : NSObject
+@interface FWTabAnimatedDocumentMethod : NSObject
 
 + (void)writeToFileWithData:(id)data
                    filePath:(NSString *)filePath;
@@ -165,8 +165,8 @@ extern NSString * const TABCacheManagerFolderName;
 // 获取Documents目录下对应的文件名，不创建
 + (NSString *)getPathByCreateDocumentName:(NSString *)documentName;
 
-// 获取TABCache下对应filePacketName目录
-+ (NSString *)getTABPathByFilePacketName:(NSString *)filePacketName;
+// 获取FWTabCache下对应filePacketName目录
++ (NSString *)getFWTabPathByFilePacketName:(NSString *)filePacketName;
 
 // 创建文件/文件夹
 + (BOOL)createFile:(NSString *)file
@@ -178,43 +178,37 @@ extern NSString * const TABCacheManagerFolderName;
 
 @end
 
-@class TABViewAnimated, TABBaseComponent, TABComponentManager;
+@class FWTabViewAnimated, FWTabBaseComponent, FWTabComponentManager;
 
-typedef TABBaseComponent * _Nullable (^TABSearchLayerBlock)(NSInteger);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABSearchLayerArrayBlock)(NSInteger location, NSInteger length);
-
-@interface UIView (TABAnimated)
+@interface UIView (FWTabAnimated)
 
 // 控制视图持有
-@property (nonatomic, strong) TABViewAnimated * _Nullable tabAnimated;
+@property (nonatomic, strong) FWTabViewAnimated * _Nullable tabAnimated;
 
 // 骨架屏管理单元持有
-@property (nonatomic, strong) TABComponentManager * _Nullable tabComponentManager;
-
-- (TABSearchLayerBlock _Nullable)animation DEPRECATED_MSG_ATTRIBUTE("已废弃的使用逻辑，请使用TABComponentManager中的`animation:`");
-- (TABSearchLayerArrayBlock _Nullable)animations DEPRECATED_MSG_ATTRIBUTE("已废弃的使用逻辑，请使用TABComponentManager中的`animations:`");
+@property (nonatomic, strong) FWTabComponentManager * _Nullable tabComponentManager;
 
 @end
 
-@class TABTableAnimated;
+@class FWTabTableAnimated;
 
-@interface UITableView (TABAnimated)
+@interface UITableView (FWTabAnimated)
 
 // 控制视图持有的配置管理对象
-@property (nonatomic, strong) TABTableAnimated * _Nullable tabAnimated;
+@property (nonatomic, strong) FWTabTableAnimated * _Nullable tabAnimated;
 
 @end
 
-@class TABCollectionAnimated;
+@class FWTabCollectionAnimated;
 
-@interface UICollectionView (TABAnimated)
+@interface UICollectionView (FWTabAnimated)
 
 // 控制视图持有的配置管理对象
-@property (nonatomic, strong) TABCollectionAnimated * _Nullable tabAnimated;
+@property (nonatomic, strong) FWTabCollectionAnimated * _Nullable tabAnimated;
 
 @end
 
-@interface UIView (TABControlAnimation)
+@interface UIView (FWTabControlAnimation)
 
 #pragma mark - General
 
@@ -222,7 +216,7 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABSearchLayerArrayBlock)(NSI
  * 开启动画, 建议使用下面的方法
  *
  * `[self tab_startAnimation]`即使多次调用，也只会生效一次。
- * 如有其他需要，请自行修改`TABViewAnimated`中的`canLoadAgain`属性，解除限制。
+ * 如有其他需要，请自行修改`FWTabViewAnimated`中的`canLoadAgain`属性，解除限制。
  */
 - (void)tab_startAnimation;
 
@@ -332,134 +326,134 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABSearchLayerArrayBlock)(NSI
 /**
  链式语法相关的文件
  */
-@class TABBaseComponent;
+@class FWTabBaseComponent;
 
-@interface NSArray (TABAnimated)
+@interface NSArray (FWTabAnimated)
 
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayFloatBlock)(CGFloat);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayIntBlock)(NSInteger);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayBlock)(void);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayStringBlock)(NSString *);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayColorBlock)(UIColor *);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayFloatBlock)(CGFloat);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayIntBlock)(NSInteger);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayBlock)(void);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayStringBlock)(NSString *);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBlock)(UIColor *);
 
 /**
  所有元素向左平移
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)left;
+- (FWTabAnimatedArrayFloatBlock)left;
 
 /**
  所有元素向右平移
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)right;
+- (FWTabAnimatedArrayFloatBlock)right;
 
 /**
  所有元素向上平移
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)up;
+- (FWTabAnimatedArrayFloatBlock)up;
 
 /**
  所有元素向下平移
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)down;
+- (FWTabAnimatedArrayFloatBlock)down;
 
 /**
  设置所有元素的宽度
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)width;
+- (FWTabAnimatedArrayFloatBlock)width;
 
 /**
  设置所有元素的高度
 
  * @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)height;
+- (FWTabAnimatedArrayFloatBlock)height;
 
 /**
  设置所有元素的圆角
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)radius;
+- (FWTabAnimatedArrayFloatBlock)radius;
 
 /**
  减少的宽度：与当前宽度相比，所减少的宽度，负数则增加。
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)reducedWidth;
+- (FWTabAnimatedArrayFloatBlock)reducedWidth;
 
 /**
  减少的高度：与当前高度相比，所减少的高度，负数则增加。
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)reducedHeight;
+- (FWTabAnimatedArrayFloatBlock)reducedHeight;
 
 /**
  减少的圆角：与当前圆角相比，所减少的圆角，负数则增加。
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)reducedRadius;
+- (FWTabAnimatedArrayFloatBlock)reducedRadius;
 
 /**
  设置行数
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayIntBlock)line;
+- (FWTabAnimatedArrayIntBlock)line;
 
 /**
  间距，行数超过1时生效，默认为8.0。
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)space;
+- (FWTabAnimatedArrayFloatBlock)space;
 
 /**
  移除该动画组件数组中的所有组件
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayBlock)remove;
+- (FWTabAnimatedArrayBlock)remove;
 
 /**
  添加占位图，不支持圆角，建议切图使用圆角
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayStringBlock)placeholder;
+- (FWTabAnimatedArrayStringBlock)placeholder;
 
 /**
  设置横坐标
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)x;
+- (FWTabAnimatedArrayFloatBlock)x;
 
 /**
  设置纵坐标
 
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)y;
+- (FWTabAnimatedArrayFloatBlock)y;
 
 /**
  设置动画数组颜色
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayColorBlock)color;
+- (FWTabAnimatedArrayColorBlock)color;
 
 #pragma mark - Drop Animation 以下属性均针对豆瓣动画
 
@@ -468,7 +462,7 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayColorBlock)(U
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayIntBlock)dropIndex;
+- (FWTabAnimatedArrayIntBlock)dropIndex;
 
 /**
  适用于多行的动画元素,
@@ -476,33 +470,33 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABAnimatedArrayColorBlock)(U
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayIntBlock)dropFromIndex;
+- (FWTabAnimatedArrayIntBlock)dropFromIndex;
 
 /**
  将动画层移出豆瓣动画队列，不参与变色。
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayBlock)removeOnDrop;
+- (FWTabAnimatedArrayBlock)removeOnDrop;
 
 /**
  豆瓣动画变色停留时间比，默认是0.2。
  
  @return 目标动画元素数组
  */
-- (TABAnimatedArrayFloatBlock)dropStayTime;
+- (FWTabAnimatedArrayFloatBlock)dropStayTime;
 
 @end
 
-@class TABComponentLayer;
+@class FWTabComponentLayer;
 
-@interface TABBaseComponent : NSObject
+@interface FWTabBaseComponent : NSObject
 
-typedef TABBaseComponent * _Nullable (^TABBaseComponentVoidBlock)(void);
-typedef TABBaseComponent * _Nullable (^TABBaseComponentIntegerBlock)(NSInteger);
-typedef TABBaseComponent * _Nullable (^TABBaseComponentFloatBlock)(CGFloat);
-typedef TABBaseComponent * _Nullable (^TABBaseComponentStringBlock)(NSString *);
-typedef TABBaseComponent * _Nullable (^TABBaseComponentColorBlock)(UIColor *);
+typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentVoidBlock)(void);
+typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentIntegerBlock)(NSInteger);
+typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentFloatBlock)(CGFloat);
+typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentStringBlock)(NSString *);
+typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *);
 
 #pragma mark - 基础属性
 
@@ -511,49 +505,49 @@ typedef TABBaseComponent * _Nullable (^TABBaseComponentColorBlock)(UIColor *);
 
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)left;
+- (FWTabBaseComponentFloatBlock)left;
 
 /**
  向右平移
 
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)right;
+- (FWTabBaseComponentFloatBlock)right;
 
 /**
  向上平移
 
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)up;
+- (FWTabBaseComponentFloatBlock)up;
 
 /**
  向下平移
 
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)down;
+- (FWTabBaseComponentFloatBlock)down;
 
 /**
  设置动画元素的宽度
 
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)width;
+- (FWTabBaseComponentFloatBlock)width;
 
 /**
  设置动画元素的高度
 
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)height;
+- (FWTabBaseComponentFloatBlock)height;
 
 /**
  设置动画元素的圆角
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)radius;
+- (FWTabBaseComponentFloatBlock)radius;
 
 /**
  需要减少的宽度：与当前宽度相比，所减少的宽度
@@ -561,7 +555,7 @@ typedef TABBaseComponent * _Nullable (^TABBaseComponentColorBlock)(UIColor *);
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)reducedWidth;
+- (FWTabBaseComponentFloatBlock)reducedWidth;
 
 /**
  减少的高度：与当前高度相比，所减少的高度
@@ -569,91 +563,91 @@ typedef TABBaseComponent * _Nullable (^TABBaseComponentColorBlock)(UIColor *);
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)reducedHeight;
+- (FWTabBaseComponentFloatBlock)reducedHeight;
 
 /**
  减少的圆角
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)reducedRadius;
+- (FWTabBaseComponentFloatBlock)reducedRadius;
 
 /**
  设置横坐标
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)x;
+- (FWTabBaseComponentFloatBlock)x;
 
 /**
  设置纵坐标
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)y;
+- (FWTabBaseComponentFloatBlock)y;
 
 /**
  设置动画元素的行数
 
  @return 目标动画元素
  */
-- (TABBaseComponentIntegerBlock)line;
+- (FWTabBaseComponentIntegerBlock)line;
 
 /**
  设置多行动画元素的间距，即行数超过1时生效，默认为8.0。
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)space;
+- (FWTabBaseComponentFloatBlock)space;
 
 /**
  对于`行数` > 1的动画元素，设置最后一行的宽度比例，默认是0.5，即原宽度的一半。
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)lastLineScale;
+- (FWTabBaseComponentFloatBlock)lastLineScale;
 
 /**
  从动画组中移除
  
  @return 目标动画元素
  */
-- (TABBaseComponentVoidBlock)remove;
+- (FWTabBaseComponentVoidBlock)remove;
 
 /**
  添加占位图，不支持圆角，建议切图使用圆角
  
  @return 目标动画元素
  */
-- (TABBaseComponentStringBlock)placeholder;
+- (FWTabBaseComponentStringBlock)placeholder;
 
 /**
  赋予动画元素画由长到短的动画
  
  @return 目标动画元素
  */
-- (TABBaseComponentVoidBlock)toLongAnimation;
+- (FWTabBaseComponentVoidBlock)toLongAnimation;
 
 /**
  赋予动画元素画由短到长的动画
  
  @return 目标动画元素
  */
-- (TABBaseComponentVoidBlock)toShortAnimation;
+- (FWTabBaseComponentVoidBlock)toShortAnimation;
 
 /**
  如果动画元素来自居中文本，设置后取消居中显示，
  
  @return 目标动画元素
  */
-- (TABBaseComponentVoidBlock)cancelAlignCenter;
+- (FWTabBaseComponentVoidBlock)cancelAlignCenter;
 
 /**
  设置动画元素颜色
 
  @return 目标动画元素
  */
-- (TABBaseComponentColorBlock)color;
+- (FWTabBaseComponentColorBlock)color;
 
 #pragma mark - 豆瓣动画需要用到的属性
 
@@ -662,7 +656,7 @@ typedef TABBaseComponent * _Nullable (^TABBaseComponentColorBlock)(UIColor *);
  
  @return 目标动画元素
  */
-- (TABBaseComponentIntegerBlock)dropIndex;
+- (FWTabBaseComponentIntegerBlock)dropIndex;
 
 /**
  豆瓣动画 - 用于多行的动画元素,
@@ -670,51 +664,51 @@ typedef TABBaseComponent * _Nullable (^TABBaseComponentColorBlock)(UIColor *);
  
  @return 目标动画元素
  */
-- (TABBaseComponentIntegerBlock)dropFromIndex;
+- (FWTabBaseComponentIntegerBlock)dropFromIndex;
 
 /**
  豆瓣动画 - 将动画层移出豆瓣动画队列，不参与变色。
  
  @return 目标动画元素
  */
-- (TABBaseComponentVoidBlock)removeOnDrop;
+- (FWTabBaseComponentVoidBlock)removeOnDrop;
 
 /**
  豆瓣动画 - 豆瓣动画变色停留时间比，默认是0.2。
  
  @return 目标动画元素
  */
-- (TABBaseComponentFloatBlock)dropStayTime;
+- (FWTabBaseComponentFloatBlock)dropStayTime;
 
-+ (instancetype)initWithComponentLayer:(TABComponentLayer *)layer;
++ (instancetype)initWithComponentLayer:(FWTabComponentLayer *)layer;
 
-@property (nonatomic, strong, readonly) TABComponentLayer *layer;
+@property (nonatomic, strong, readonly) FWTabComponentLayer *layer;
 
 @end
 
-@interface TABComponentLayer : CAGradientLayer <NSCopying, NSSecureCoding>
+@interface FWTabComponentLayer : CAGradientLayer <NSCopying, NSSecureCoding>
 
 /**
- 如果控制视图开启的动画，那么该控制视图下的所有subViews将被设置为`TABViewLoadAnimationWithOnlySkeleton`
+ 如果控制视图开启的动画，那么该控制视图下的所有subViews将被设置为`FWTabViewLoadAnimationWithOnlySkeleton`
 
- - TABViewLoadAnimationWithOnlySkeleton: 基础骨架
- - TABViewLoadAnimationToLong: 伸缩先变长
- - TABViewLoadAnimationToShort: 伸缩先变短
- - TABViewLoadAnimationRemove: 从动画队列移除
+ - FWTabViewLoadAnimationWithOnlySkeleton: 基础骨架
+ - FWTabViewLoadAnimationToLong: 伸缩先变长
+ - FWTabViewLoadAnimationToShort: 伸缩先变短
+ - FWTabViewLoadAnimationRemove: 从动画队列移除
  */
-typedef NS_ENUM(NSInteger,TABViewLoadAnimationStyle) {
-    TABViewLoadAnimationWithOnlySkeleton,
-    TABViewLoadAnimationToLong,
-    TABViewLoadAnimationToShort,
-    TABViewLoadAnimationRemove,
+typedef NS_ENUM(NSInteger,FWTabViewLoadAnimationStyle) {
+    FWTabViewLoadAnimationWithOnlySkeleton,
+    FWTabViewLoadAnimationToLong,
+    FWTabViewLoadAnimationToShort,
+    FWTabViewLoadAnimationRemove,
 };
 
 #pragma mark - 属性
 
 /**
- * 如果控制视图开启的动画，那么该控制视图下的所有subViews将被设置为`TABViewLoadAnimationWithOnlySkeleton`
+ * 如果控制视图开启的动画，那么该控制视图下的所有subViews将被设置为`FWTabViewLoadAnimationWithOnlySkeleton`
  */
-@property (nonatomic, assign) TABViewLoadAnimationStyle loadStyle;
+@property (nonatomic, assign) FWTabViewLoadAnimationStyle loadStyle;
 
 /**
  * 动画元素来自居中文本
@@ -799,21 +793,21 @@ typedef NS_ENUM(NSInteger,TABViewLoadAnimationStyle) {
 
 @end
 
-@class TABViewAnimated, TABBaseComponent, TABSentryView;
+@class FWTabViewAnimated, FWTabBaseComponent, FWTabSentryView;
 
-typedef TABBaseComponent * _Nullable (^TABBaseComponentBlock)(NSInteger);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayBlock)(NSInteger location, NSInteger length);
-typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithIndexsBlock)(NSInteger index,...);
+typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentBlock)(NSInteger);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayBlock)(NSInteger location, NSInteger length);
+typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWithIndexsBlock)(NSInteger index,...);
 
-@interface TABComponentManager : NSObject <NSCopying, NSSecureCoding>
+@interface FWTabComponentManager : NSObject <NSCopying, NSSecureCoding>
 
 /**
  获取单个动画元素
  使用方式：.animation(x)
  
- @return TABBaseComponent对象
+ @return FWTabBaseComponent对象
  */
-- (TABBaseComponentBlock _Nullable)animation;
+- (FWTabBaseComponentBlock _Nullable)animation;
 
 /**
  获取多个动画元素，需要传递2个参数
@@ -821,17 +815,17 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
  第二个参数长度
  使用方式：.animations(x,x)
  
- @return 装有`TABBaseComponent`类型的数组
+ @return 装有`FWTabBaseComponent`类型的数组
  */
-- (TABBaseComponentArrayBlock _Nullable)animations;
+- (FWTabBaseComponentArrayBlock _Nullable)animations;
 
 /**
  获取不定量动画元素，参数 >= 1
  例如: animationsWithIndexs(1,5,7)，意为获取下标为1，5，7的动画元素
  
- @return 装有`TABBaseComponent`类型的数组
+ @return 装有`FWTabBaseComponent`类型的数组
  */
-- (TABBaseComponentArrayWithIndexsBlock)animationsWithIndexs;
+- (FWTabBaseComponentArrayWithIndexsBlock)animationsWithIndexs;
 
 #pragma mark - 相关属性
 
@@ -843,7 +837,7 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
 /**
  * cell中覆盖在最底层的layer
  */
-@property (nonatomic, strong) TABComponentLayer *tabLayer;
+@property (nonatomic, strong) FWTabComponentLayer *tabLayer;
 
 /**
  * 设置该属性后，统一设置该cell内所有动画元素的内容颜色
@@ -877,22 +871,22 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
 /**
  * 哨兵视图，用于监听暗黑模式
  */
-@property (nonatomic, weak, readonly, nullable) TABSentryView *sentryView;
+@property (nonatomic, weak, readonly, nullable) FWTabSentryView *sentryView;
 
 /**
  * 最初始动画组
  */
-@property (nonatomic, strong, readonly) NSMutableArray <TABComponentLayer *> *componentLayerArray;
+@property (nonatomic, strong, readonly) NSMutableArray <FWTabComponentLayer *> *componentLayerArray;
 
 /**
  * 最初的动画组包装类
  */
-@property (nonatomic, strong, readonly) NSMutableArray <TABBaseComponent *> *baseComponentArray;
+@property (nonatomic, strong, readonly) NSMutableArray <FWTabBaseComponent *> *baseComponentArray;
 
 /**
  * 最终显示在屏幕上的动画组
  */
-@property (nonatomic, strong, readonly) NSMutableArray <TABComponentLayer *> *resultLayerArray;
+@property (nonatomic, strong, readonly) NSMutableArray <FWTabComponentLayer *> *resultLayerArray;
 
 /**
  * 暂存被嵌套的表格视图
@@ -949,9 +943,9 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
 
 + (instancetype)initWithView:(UIView *)view
                    superView:(UIView *)superView
-                 tabAnimated:(TABViewAnimated *)tabAnimated;
+                 tabAnimated:(FWTabViewAnimated *)tabAnimated;
 
-- (void)installBaseComponentArray:(NSArray <TABComponentLayer *> *)array;
+- (void)installBaseComponentArray:(NSArray <FWTabComponentLayer *> *)array;
 
 - (void)updateComponentLayers;
 
@@ -984,9 +978,9 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
  该文件用于管理动画上层依赖的view。
  */
 
-@class TABComponentManager, TABComponentLayer;
+@class FWTabComponentManager, FWTabComponentLayer;
 
-@interface TABManagerMethod : NSObject
+@interface FWTabManagerMethod : NSObject
 
 /**
  填充数据
@@ -1003,20 +997,20 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
 + (void)resetData:(UIView *)view;
 
 /**
- 映射出所view中的TABComponentLayer，组装起来，并加入约定好的动画
+ 映射出所view中的FWTabComponentLayer，组装起来，并加入约定好的动画
 
  @param view 需要映射的view
  @param superView view的父视图
  @param rootView 根view
  @param rootSuperView 根view的父视图
- @param array 得到的TABComponentLayer集合
+ @param array 得到的FWTabComponentLayer集合
  */
 + (void)getNeedAnimationSubViews:(UIView *)view
                    withSuperView:(UIView *)superView
                     withRootView:(UIView *)rootView
                withRootSuperView:(UIView *)rootSuperView
                     isInNestView:(BOOL)isInNestView
-                           array:(NSMutableArray <TABComponentLayer *> *)array;
+                           array:(NSMutableArray <FWTabComponentLayer *> *)array;
 
 /**
  排除部分不符合条件的view
@@ -1062,7 +1056,7 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
 
 + (void)hiddenAllView:(UIView *)view;
 
-+ (void)removeAllTABLayersFromView:(UIView *)view;
++ (void)removeAllFWTabLayersFromView:(UIView *)view;
 
 + (void)removeMask:(UIView *)view;
 
@@ -1070,62 +1064,62 @@ typedef NSArray <TABBaseComponent *> * _Nullable (^TABBaseComponentArrayWithInde
 
 + (void)addExtraAnimationWithSuperView:(UIView *)superView
                             targetView:(UIView *)targetView
-                               manager:(TABComponentManager *)manager;
+                               manager:(FWTabComponentManager *)manager;
 
 + (void)runAnimationWithSuperView:(UIView *)superView
                        targetView:(UIView *)targetView
                            isCell:(BOOL)isCell
-                          manager:(TABComponentManager *)manager;
+                          manager:(FWTabComponentManager *)manager;
 
 + (UIColor *)brightenedColor:(UIColor *)color
                   brightness:(CGFloat)brightness;
 
 @end
 
-typedef void(^TABSentryViewCallBack)(void);
+typedef void(^FWTabSentryViewCallBack)(void);
 
-@interface TABSentryView : UIView
+@interface FWTabSentryView : UIView
 
-@property (nonatomic, copy) TABSentryViewCallBack traitCollectionDidChangeBack;
+@property (nonatomic, copy) FWTabSentryViewCallBack traitCollectionDidChangeBack;
 
 @end
 
-extern const NSInteger TABViewAnimatedErrorCode;
+extern const NSInteger FWTabViewAnimatedErrorCode;
 
-extern NSString * const TABViewAnimatedHeaderPrefixString;
-extern NSString * const TABViewAnimatedFooterPrefixString;
-extern NSString * const TABViewAnimatedDefaultSuffixString;
+extern NSString * const FWTabViewAnimatedHeaderPrefixString;
+extern NSString * const FWTabViewAnimatedFooterPrefixString;
+extern NSString * const FWTabViewAnimatedDefaultSuffixString;
 
-@class TABComponentManager;
+@class FWTabComponentManager;
 
 /**
  * the state of animation
  * 动画状态枚举
  */
-typedef NS_ENUM(NSInteger,TABViewAnimationStyle) {
+typedef NS_ENUM(NSInteger,FWTabViewAnimationStyle) {
     /// default, nothing happen
     /// 默认，无事发生
-    TABViewAnimationDefault = 0,
+    FWTabViewAnimationDefault = 0,
     /// start to load animation
     /// 可以开启动画
-    TABViewAnimationStart,
+    FWTabViewAnimationStart,
     /// animation runing
     /// 动画加载完毕
-    TABViewAnimationRunning,
+    FWTabViewAnimationRunning,
     /// animation close
     /// 动画已关闭
-    TABViewAnimationEnd,
+    FWTabViewAnimationEnd,
 };
 
 /**
  控制视图设置此属性后，动画类型覆盖全局动画类型，加载该属性指定的动画
  */
-typedef NS_ENUM(NSInteger,TABViewSuperAnimationType) {
-    TABViewSuperAnimationTypeDefault = 0,                    // 默认, 不覆盖全局属性处理，使用全局属性
-    TABViewSuperAnimationTypeOnlySkeleton,                   // 骨架层
-    TABViewSuperAnimationTypeBinAnimation,                   // 呼吸灯
-    TABViewSuperAnimationTypeShimmer,                        // 闪光灯
-    TABViewSuperAnimationTypeDrop,                           // 豆瓣下坠动画
+typedef NS_ENUM(NSInteger,FWTabViewSuperAnimationType) {
+    FWTabViewSuperAnimationTypeDefault = 0,                    // 默认, 不覆盖全局属性处理，使用全局属性
+    FWTabViewSuperAnimationTypeOnlySkeleton,                   // 骨架层
+    FWTabViewSuperAnimationTypeBinAnimation,                   // 呼吸灯
+    FWTabViewSuperAnimationTypeShimmer,                        // 闪光灯
+    FWTabViewSuperAnimationTypeDrop,                           // 豆瓣下坠动画
 };
 
 /**
@@ -1139,7 +1133,7 @@ typedef enum : NSUInteger {
      视图结构必须满足以下情况:
      section和cell样式一一对应
      */
-    TABAnimatedRunBySection = 0,
+    FWTabAnimatedRunBySection = 0,
     
     /**
     以row为单位配置动画 - Row Mode
@@ -1149,27 +1143,16 @@ typedef enum : NSUInteger {
     2. 1个section对应多个cell
     3. row的数量必须要是定值
      */
-    TABAnimatedRunByRow,
+    FWTabAnimatedRunByRow,
     
-} TABAnimatedRunMode;
-
-/**
- * 预处理动画组回调，
- * 一个动画组为一次回调，
- * UIView作为控制视图，那么UIView的动画元素会作为一个组
- * UITableView作为控制视图，那么UITableViewCell的动画元素会作为一个组
- * 当UIView作为控制视图，且嵌套着UITableView，那么UIView为主控制视图，UITableView为次控制视图。
- *
- * @param view 动画组持有者
- */
-typedef void(^TABAnimatedCategoryBlock)(UIView *view);
+} FWTabAnimatedRunMode;
 
 /**
  * 新预处理回调
  *
  * @param manager 管理动画组对象
  */
-typedef void(^TABAdjustBlock)(TABComponentManager *manager);
+typedef void(^FWTabAdjustBlock)(FWTabComponentManager *manager);
 
 /**
  * 适用于多cell, 建议使用该回调
@@ -1179,37 +1162,32 @@ typedef void(^TABAdjustBlock)(TABComponentManager *manager);
  * @param manager 管理动画组对象
  * @param targetClass 多cell情况，对应的数组下标
  */
-typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targetClass);
+typedef void(^FWTabAdjustWithClassBlock)(FWTabComponentManager *manager, Class targetClass);
 
-@interface TABViewAnimated : NSObject
+@interface FWTabViewAnimated : NSObject
 
 /**
  * v2.2.0新预处理回调, 职责更明确
  * 可以在其中使用链式语法便捷调整每一个动画元素
  */
-@property (nonatomic, copy) TABAdjustBlock adjustBlock;
+@property (nonatomic, copy) FWTabAdjustBlock adjustBlock;
 
 /**
  * v2.2.0新预处理回调, 职责更明确
  * 可以在其中使用链式语法便捷调整每一个动画元素,
  * section是指数组中不同cell的下标
  */
-@property (nonatomic, copy) TABAdjustWithClassBlock adjustWithClassBlock;
-
-/**
- * 预处理回调，可以在其中使用链式语法便捷调整每一个动画元素
- */
-@property (nonatomic, copy) TABAnimatedCategoryBlock categoryBlock  DEPRECATED_MSG_ATTRIBUTE("该回调在v2.1.4被弃用，请使用新的回调`adjustBlock`或者`adjustWithClassBlock`取代");
+@property (nonatomic, copy) FWTabAdjustWithClassBlock adjustWithClassBlock;
 
 /**
  * 动画状态，可重置
  */
-@property (nonatomic, assign) TABViewAnimationStyle state;
+@property (nonatomic, assign) FWTabViewAnimationStyle state;
 
 /**
  * 使用该属性时，全局动画类型失效，目标视图将更改为当前属性指定的动画类型。
  */
-@property (nonatomic, assign) TABViewSuperAnimationType superAnimationType;
+@property (nonatomic, assign) FWTabViewSuperAnimationType superAnimationType;
 
 /**
  * 一个section对应一种cell
@@ -1323,9 +1301,9 @@ typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targe
 
 @end
 
-@class TABComponentManager;
+@class FWTabComponentManager;
 
-@interface TABTableAnimated : TABViewAnimated
+@interface FWTabTableAnimated : FWTabViewAnimated
 
 #pragma mark - readwrite
 
@@ -1362,12 +1340,12 @@ typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targe
 /**
  头视图动画对象
  */
-@property (nonatomic, weak) TABViewAnimated *tabHeadViewAnimated;
+@property (nonatomic, weak) FWTabViewAnimated *tabHeadViewAnimated;
 
 /**
  尾视图动画对象
  */
-@property (nonatomic, weak) TABViewAnimated *tabFooterViewAnimated;
+@property (nonatomic, weak) FWTabViewAnimated *tabFooterViewAnimated;
 
 #pragma mark - readonly, 不建议重写的属性
 
@@ -1375,7 +1353,7 @@ typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targe
  你不需要手动赋值，但是你需要知道当前视图的结构，
  从而选择初始化方法和启动方法。
  */
-@property (nonatomic, assign, readonly) TABAnimatedRunMode runMode;
+@property (nonatomic, assign, readonly) FWTabAnimatedRunMode runMode;
 
 /**
  指定cell样式加载动画的集合
@@ -1621,7 +1599,7 @@ typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targe
 
 @end
 
-@interface TABCollectionAnimated : TABViewAnimated
+@interface FWTabCollectionAnimated : FWTabViewAnimated
 
 #pragma mark - readwrite
 
@@ -1652,7 +1630,7 @@ typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targe
  你不需要手动赋值，但是你需要知道当前视图的结构，
  从而选择初始化方法和启动方法。
  */
-@property (nonatomic, assign, readonly) TABAnimatedRunMode runMode;
+@property (nonatomic, assign, readonly) FWTabAnimatedRunMode runMode;
 
 /**
  指定某些section / row加载动画集合
@@ -1880,50 +1858,50 @@ typedef void(^TABAdjustWithClassBlock)(TABComponentManager *manager, Class targe
 
 @end
 
-#define tabAnimatedLog(x) {if([TABAnimated sharedAnimated].openLog) NSLog(x);}
+#define tabAnimatedLog(x) {if([FWTabAnimated sharedAnimated].openLog) NSLog(x);}
 #define tab_kColor(s) [UIColor colorWithRed:(((s&0xFF0000)>>16))/255.0 green:(((s&0xFF00)>>8))/255.0 blue:((s&0xFF))/255.0 alpha:1.]
 #define tab_RGB(R,G,B) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1.]
 
-extern NSString * const TABAnimatedAlphaAnimation;  /// the key of bin animation
-extern NSString * const TABAnimatedLocationAnimation;  /// the key of flex animation
-extern NSString * const TABAnimatedShimmerAnimation;  ///the key of shimmer animation
-extern NSString * const TABAnimatedDropAnimation;   /// the key of drop animation
+extern NSString * const FWTabAnimatedAlphaAnimation;  /// the key of bin animation
+extern NSString * const FWTabAnimatedLocationAnimation;  /// the key of flex animation
+extern NSString * const FWTabAnimatedShimmerAnimation;  ///the key of shimmer animation
+extern NSString * const FWTabAnimatedDropAnimation;   /// the key of drop animation
 
-@class TableDeDaSelfModel, CollectionDeDaSelfModel, TABAnimatedCacheManager;
+@class TableDeDaSelfModel, CollectionDeDaSelfModel, FWTabAnimatedCacheManager;
 
 /**
  * Gobal animation type,
  * which determines whether you need to add additional animations on top of the skeleton layer.
  *
- * Besides `TABAnimationTypeOnlySkeleton` outside value, can add additional an animation.
+ * Besides `FWTabAnimationTypeOnlySkeleton` outside value, can add additional an animation.
  *
  * When you have a specified view that doesn't need a global animation type that's already set,
- * You can use a `TABViewSuperAnimationType` covering the local properties `TABAnimationType` values.
+ * You can use a `FWTabViewSuperAnimationType` covering the local properties `FWTabAnimationType` values.
  *
  * 全局动画类型，它决定了你是否需要在骨架层的基础之上，增加额外的动画。
  *
- * 除了`TABAnimationTypeOnlySkeleton`以外的值，都会添加额外的一种动画。
+ * 除了`FWTabAnimationTypeOnlySkeleton`以外的值，都会添加额外的一种动画。
  *
  * 当你有一个指定的view不需要已经设置好的全局的动画类型时，
- * 你可以使用`TABViewSuperAnimationType`这个局部属性覆盖`TABAnimationType`的值。
+ * 你可以使用`FWTabViewSuperAnimationType`这个局部属性覆盖`FWTabAnimationType`的值。
  */
-typedef NS_ENUM(NSInteger, TABAnimationType) {
+typedef NS_ENUM(NSInteger, FWTabAnimationType) {
     
     /// only contain the skeleton of your view created by CALayer
     /// 骨架层
-    TABAnimationTypeOnlySkeleton = 0,
+    FWTabAnimationTypeOnlySkeleton = 0,
     
     /// the skeleton of your view with bin animation
     /// 骨架层 + 呼吸灯动画
-    TABAnimationTypeBinAnimation,
+    FWTabAnimationTypeBinAnimation,
     
     /// the skeleton of your view with shimmer animation
     /// 骨架层 + 闪光灯
-    TABAnimationTypeShimmer,
+    FWTabAnimationTypeShimmer,
     
     /// the skeleton of your view with drop animation
     /// 骨架层 + 豆瓣下坠动画
-    TABAnimationTypeDrop
+    FWTabAnimationTypeDrop
 };
 
 /**
@@ -1938,7 +1916,7 @@ typedef NS_ENUM(NSInteger, TABAnimationType) {
  *
  * init类型的方法，必须要在`didFinishLaunchingWithOptions`首先使用
  */
-@interface TABAnimated : NSObject
+@interface FWTabAnimated : NSObject
 
 /**
  * Global animation type
@@ -1951,7 +1929,7 @@ typedef NS_ENUM(NSInteger, TABAnimationType) {
  * 默认是只有骨架层，后三者是在骨架层的基础之上，还会默认加上额外的动画。
  * 优先级：全局动画类型 < 控制视图声明的动画类型
  */
-@property (nonatomic, assign) TABAnimationType animationType;
+@property (nonatomic, assign) FWTabAnimationType animationType;
 
 /**
  * The ratio of the height of the animation to the original height of the view,
@@ -2013,18 +1991,18 @@ typedef NS_ENUM(NSInteger, TABAnimationType) {
  * It determines whether setting the global animation height
  * After use it, all animation elements except those based on the 'UIImageView' type mapping are set to the value of 'animatedHeight'.
  *
- * When the developer sets 'animatedHeight' in 'TABViewAnimated', the change will be overwritten,
+ * When the developer sets 'animatedHeight' in 'FWTabViewAnimated', the change will be overwritten,
  * When developers use the chain function '.height(x)' to set the height, it has the highest priority.
  *
- * Priority: global height animatedHeight < TABViewAnimated animatedHeight < the height of a single animation element
+ * Priority: global height animatedHeight < FWTabViewAnimated animatedHeight < the height of a single animation element
  *
  * 是否需要全局动画高度，
  * 使用后，所有除了基于`UIImageView`类型映射的动画元素，高度都会设置为`animatedHeight`的高度。
  *
- * 当开发者设置了`TABViewAnimated`中的`animatedHeight`时，将会覆盖改值，
+ * 当开发者设置了`FWTabViewAnimated`中的`animatedHeight`时，将会覆盖改值，
  * 当开发者使用链式语法`.height(x)`设置高度时，则具有最高优先级
  *
- * 优先级：全局高度animatedHeight < TABViewAnimated中animatedHeight < 单个设置动画元素的高度
+ * 优先级：全局高度animatedHeight < FWTabViewAnimated中animatedHeight < 单个设置动画元素的高度
  */
 @property (nonatomic, assign) BOOL useGlobalAnimatedHeight;
 
@@ -2041,7 +2019,7 @@ typedef NS_ENUM(NSInteger, TABAnimationType) {
  * An object that manages  skeleton screen cache.
  * 管理骨架屏缓存的全局对象
  */
-@property (nonatomic, strong, readonly) TABAnimatedCacheManager *cacheManager;
+@property (nonatomic, strong, readonly) FWTabAnimatedCacheManager *cacheManager;
 
 #pragma mark - Other
 
@@ -2127,12 +2105,12 @@ typedef NS_ENUM(NSInteger, TABAnimationType) {
 
 /**
  * Shimmer animation direction,
- * The default is `TABShimmerDirectionToRight`, means from left to right.
+ * The default is `FWTabShimmerDirectionToRight`, means from left to right.
  *
  * 闪光灯动画的方向，
- * 默认是`TABShimmerDirectionToRight`,意思为从左往右。
+ * 默认是`FWTabShimmerDirectionToRight`,意思为从左往右。
  */
-@property (nonatomic, assign) TABShimmerDirection shimmerDirection;
+@property (nonatomic, assign) FWTabShimmerDirection shimmerDirection;
 
 /**
  * Shimmer animation color change value, default 0xDFDFDF.
@@ -2196,7 +2174,7 @@ typedef NS_ENUM(NSInteger, TABAnimationType) {
  *
  * @return return object
  */
-+ (TABAnimated *)sharedAnimated;
++ (FWTabAnimated *)sharedAnimated;
 
 /**
  * Only contain the skeleton of your view created by CALayer.
