@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
+@property (nonatomic, assign, readonly) BOOL userTriggered;
 @property (nullable, nonatomic, copy) void (^stateBlock)(FWPullRefreshView *view, FWPullRefreshState state);
 @property (nullable, nonatomic, copy) void (^progressBlock)(FWPullRefreshView *view, CGFloat progress);
 
