@@ -10,7 +10,7 @@
 #import "FWTabAnimated.h"
 #import <objc/runtime.h>
 
-@implementation TABAnimationMethod
+@implementation FWTabAnimationMethod
 
 + (CABasicAnimation *)scaleXAnimationDuration:(CGFloat)duration
                                       toValue:(CGFloat)toValue {
@@ -42,10 +42,10 @@
 + (void)addShimmerAnimationToLayer:(CALayer *)layer
                           duration:(CGFloat)duration
                                key:(NSString *)key
-                         direction:(TABShimmerDirection)direction {
+                         direction:(FWTabShimmerDirection)direction {
     
-    TABShimmerTransition startPointTransition = transitionMaker(direction, TABShimmerPropertyStartPoint);
-    TABShimmerTransition endPointTransition = transitionMaker(direction, TABShimmerPropertyEndPoint);
+    FWTabShimmerTransition startPointTransition = transitionMaker(direction, FWTabShimmerPropertyStartPoint);
+    FWTabShimmerTransition endPointTransition = transitionMaker(direction, FWTabShimmerPropertyEndPoint);
     
     CABasicAnimation *startPointAnim = [CABasicAnimation animationWithKeyPath:@"startPoint"];
     startPointAnim.fromValue = [NSValue valueWithCGPoint:startPointTransition.startValue];
@@ -100,11 +100,11 @@
     [view.layer addAnimation:animation forKey:@"animation"];
 }
 
-static TABShimmerTransition transitionMaker(TABShimmerDirection dir, TABShimmerProperty position) {
+static FWTabShimmerTransition transitionMaker(FWTabShimmerDirection dir, FWTabShimmerProperty position) {
     
-    if (dir == TABShimmerDirectionToLeft) {
-        TABShimmerTransition transition;
-        if (position == TABShimmerPropertyStartPoint) {
+    if (dir == FWTabShimmerDirectionToLeft) {
+        FWTabShimmerTransition transition;
+        if (position == FWTabShimmerPropertyStartPoint) {
             transition.startValue = CGPointMake(1, 0.5);
             transition.endValue = CGPointMake(-1, 0.5);
         }else {
@@ -115,8 +115,8 @@ static TABShimmerTransition transitionMaker(TABShimmerDirection dir, TABShimmerP
         return transition;
     }
     
-    TABShimmerTransition transition;
-    if (position == TABShimmerPropertyStartPoint) {
+    FWTabShimmerTransition transition;
+    if (position == FWTabShimmerPropertyStartPoint) {
         transition.startValue = CGPointMake(-1, 0.5);
         transition.endValue = CGPointMake(1, 0.5);
     }else {
@@ -129,13 +129,13 @@ static TABShimmerTransition transitionMaker(TABShimmerDirection dir, TABShimmerP
 
 @end
 
-NSString * const TABCacheManagerFolderName = @"TABAnimated";
-NSString * const TABCacheManagerCacheModelFolderName = @"CacheModel";
-NSString * const TABCacheManagerCacheManagerFolderName = @"CacheManager";
+NSString * const FWTabCacheManagerFolderName = @"FWTabAnimated";
+NSString * const FWTabCacheManagerCacheModelFolderName = @"CacheModel";
+NSString * const FWTabCacheManagerCacheManagerFolderName = @"CacheManager";
 
 static const NSInteger kMemeoryModelMaxCount = 20;
 
-@interface TABAnimatedCacheManager()
+@interface FWTabAnimatedCacheManager()
 
 @property (nonatomic, strong) NSRecursiveLock *lock;
 
@@ -148,13 +148,13 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 @end
 
-@implementation TABAnimatedCacheManager
+@implementation FWTabAnimatedCacheManager
 
 + (dispatch_queue_t)updateQueue {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        queue = dispatch_queue_create("com.tigerAndBull.TABAnimated.updateQueue", DISPATCH_QUEUE_SERIAL);
+        queue = dispatch_queue_create("com.tigerAndBull.FWTabAnimated.updateQueue", DISPATCH_QUEUE_SERIAL);
         dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
     });
     return queue;
@@ -162,7 +162,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 + (void)updateThreadMain:(id)object {
     @autoreleasepool {
-        [[NSThread currentThread] setName:@"com.tigerAndBull.TABAnimated.updateThread"];
+        [[NSThread currentThread] setName:@"com.tigerAndBull.FWTabAnimated.updateThread"];
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
         [runLoop run];
@@ -203,23 +203,23 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     _currentSystemVersion = currentVersion;
     
 
-    NSString *documentDir = [TABAnimatedDocumentMethod getTABPathByFilePacketName:TABCacheManagerFolderName];
-    if (![TABAnimatedDocumentMethod isExistFile:documentDir
+    NSString *documentDir = [FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:FWTabCacheManagerFolderName];
+    if (![FWTabAnimatedDocumentMethod isExistFile:documentDir
                                           isDir:YES]) {
-        [TABAnimatedDocumentMethod createFile:documentDir
+        [FWTabAnimatedDocumentMethod createFile:documentDir
                                         isDir:YES];
     }
 
-    NSString *modelDirPath = [documentDir stringByAppendingPathComponent:TABCacheManagerCacheModelFolderName];
-    NSString *managerDirPath = [documentDir stringByAppendingPathComponent:TABCacheManagerCacheManagerFolderName];
+    NSString *modelDirPath = [documentDir stringByAppendingPathComponent:FWTabCacheManagerCacheModelFolderName];
+    NSString *managerDirPath = [documentDir stringByAppendingPathComponent:FWTabCacheManagerCacheManagerFolderName];
     
-    if (![TABAnimatedDocumentMethod isExistFile:modelDirPath
+    if (![FWTabAnimatedDocumentMethod isExistFile:modelDirPath
                                           isDir:YES] ||
-        ![TABAnimatedDocumentMethod isExistFile:managerDirPath
+        ![FWTabAnimatedDocumentMethod isExistFile:managerDirPath
                                           isDir:YES]) {
-        [TABAnimatedDocumentMethod createFile:modelDirPath
+        [FWTabAnimatedDocumentMethod createFile:modelDirPath
                                         isDir:YES];
-        [TABAnimatedDocumentMethod createFile:managerDirPath
+        [FWTabAnimatedDocumentMethod createFile:managerDirPath
                                         isDir:YES];
     }else {
         dispatch_async([self.class updateQueue], ^{
@@ -231,7 +231,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     }
 }
 
-- (void)cacheComponentManager:(TABComponentManager *)manager {
+- (void)cacheComponentManager:(FWTabComponentManager *)manager {
     
     if ((manager == nil) ||
         (manager.fileName == nil) ||
@@ -247,7 +247,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
         manager.version = self.currentSystemVersion.copy;
         [self.cacheManagerDict setObject:manager.copy forKey:manager.fileName];
         
-        TABAnimatedCacheModel *cacheModel = TABAnimatedCacheModel.new;
+        FWTabAnimatedCacheModel *cacheModel = FWTabAnimatedCacheModel.new;
         cacheModel.fileName = manager.fileName;
         [self.cacheModelArray addObject:cacheModel];
         [self.lock unlock];
@@ -262,12 +262,12 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     });
 }
 
-- (nullable TABComponentManager *)getComponentManagerWithFileName:(NSString *)fileName {
+- (nullable FWTabComponentManager *)getComponentManagerWithFileName:(NSString *)fileName {
     
-    if ([TABAnimated sharedAnimated].closeCache) return nil;
+    if ([FWTabAnimated sharedAnimated].closeCache) return nil;
     
     // 从内存中查找
-    TABComponentManager *manager;
+    FWTabComponentManager *manager;
     manager = [self.cacheManagerDict objectForKey:fileName];
     if (manager) {
         if (!manager.needUpdate) {
@@ -279,7 +279,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     // 从沙盒中读取，并存储到内存中
     NSString *filePath = [self _getCacheManagerFilePathWithFileName:fileName];
     if (filePath != nil && filePath.length > 0) {
-        TABComponentManager *manager = (TABComponentManager *)[TABAnimatedDocumentMethod getCacheData:filePath targetClass:[TABComponentManager class]];
+        FWTabComponentManager *manager = (FWTabComponentManager *)[FWTabAnimatedDocumentMethod getCacheData:filePath targetClass:[FWTabComponentManager class]];
         if (manager) {
             if (!manager.needUpdate) {
                 [self.cacheManagerDict setObject:manager.copy forKey:manager.fileName];
@@ -295,7 +295,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     return nil;
 }
 
-- (void)updateCacheModelLoadCountWithTableAnimated:(TABTableAnimated *)viewAnimated {
+- (void)updateCacheModelLoadCountWithTableAnimated:(FWTabTableAnimated *)viewAnimated {
 
     if (viewAnimated == nil) return;
     
@@ -319,7 +319,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     });
 }
 
-- (void)updateCacheModelLoadCountWithCollectionAnimated:(TABCollectionAnimated *)viewAnimated {
+- (void)updateCacheModelLoadCountWithCollectionAnimated:(FWTabCollectionAnimated *)viewAnimated {
     
     if (viewAnimated == nil) return;
     
@@ -363,19 +363,19 @@ static const NSInteger kMemeoryModelMaxCount = 20;
         
         NSMutableArray *cacheModelArray = @[].mutableCopy;
         for (NSString *filePath in fileArray) {
-            NSString *resultFilePath = [[TABAnimatedDocumentMethod getTABPathByFilePacketName:TABCacheManagerFolderName] stringByAppendingString:[NSString stringWithFormat:@"/%@/%@",TABCacheManagerCacheModelFolderName,filePath]];
-            TABAnimatedCacheModel *model =
-            (TABAnimatedCacheModel *)[TABAnimatedDocumentMethod
+            NSString *resultFilePath = [[FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:FWTabCacheManagerFolderName] stringByAppendingString:[NSString stringWithFormat:@"/%@/%@",FWTabCacheManagerCacheModelFolderName,filePath]];
+            FWTabAnimatedCacheModel *model =
+            (FWTabAnimatedCacheModel *)[FWTabAnimatedDocumentMethod
                                            getCacheData:resultFilePath
-                                            targetClass:[TABAnimatedCacheModel class]];
+                                            targetClass:[FWTabAnimatedCacheModel class]];
             if (model) {
                 [cacheModelArray addObject:model];
             }
         }
         
         _cacheModelArray = [NSMutableArray arrayWithArray:[cacheModelArray sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-            TABAnimatedCacheModel *model1 = obj1;
-            TABAnimatedCacheModel *model2 = obj2;
+            FWTabAnimatedCacheModel *model1 = obj1;
+            FWTabAnimatedCacheModel *model2 = obj2;
             if (model1.loadCount > model2.loadCount) {
                 return NSOrderedAscending;
             }else{
@@ -391,13 +391,13 @@ static const NSInteger kMemeoryModelMaxCount = 20;
         
         for (NSInteger i = 0; i < maxCount; i++) {
             
-            TABAnimatedCacheModel *model = _cacheModelArray[i];
+            FWTabAnimatedCacheModel *model = _cacheModelArray[i];
             NSString *filePath = [self _getCacheManagerFilePathWithFileName:model.fileName];
             
             [_lock lock];
-            TABComponentManager *manager =
-            (TABComponentManager *)[TABAnimatedDocumentMethod getCacheData:filePath
-                                                               targetClass:[TABComponentManager class]];
+            FWTabComponentManager *manager =
+            (FWTabComponentManager *)[FWTabAnimatedDocumentMethod getCacheData:filePath
+                                                               targetClass:[FWTabComponentManager class]];
             if (manager &&
                 manager.fileName &&
                 manager.fileName.length > 0) {
@@ -429,8 +429,8 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     
     [_lock lock];
     
-    TABAnimatedCacheModel *targetCacheModel;
-    for (TABAnimatedCacheModel *model in self.cacheModelArray) {
+    FWTabAnimatedCacheModel *targetCacheModel;
+    for (FWTabAnimatedCacheModel *model in self.cacheModelArray) {
         if ([model.fileName isEqualToString:targetFileName]) {
             targetCacheModel = model;
             break;
@@ -443,9 +443,9 @@ static const NSInteger kMemeoryModelMaxCount = 20;
         
         NSString *filePath = [self _getCacheModelFilePathWithFileName:targetCacheModel.fileName];
         if (filePath && filePath.length > 0) {
-            if ([TABAnimatedDocumentMethod isExistFile:filePath
+            if ([FWTabAnimatedDocumentMethod isExistFile:filePath
                                                   isDir:NO]) {
-                [TABAnimatedDocumentMethod writeToFileWithData:targetCacheModel
+                [FWTabAnimatedDocumentMethod writeToFileWithData:targetCacheModel
                                                       filePath:filePath];
             }
         }
@@ -459,36 +459,36 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     if (array == nil || array.count != 2) return;
     
     [_lock lock];
-    TABAnimatedCacheModel *cacheModel = array[0];
-    TABComponentManager *manager = array[1];
+    FWTabAnimatedCacheModel *cacheModel = array[0];
+    FWTabComponentManager *manager = array[1];
     if (manager && cacheModel) {
         NSString *managerFilePath = [self _getCacheManagerFilePathWithFileName:manager.fileName];
-        [TABAnimatedDocumentMethod writeToFileWithData:manager
+        [FWTabAnimatedDocumentMethod writeToFileWithData:manager
                                               filePath:managerFilePath];
         NSString *modelFilePath = [self _getCacheModelFilePathWithFileName:manager.fileName];
-        [TABAnimatedDocumentMethod writeToFileWithData:cacheModel
+        [FWTabAnimatedDocumentMethod writeToFileWithData:cacheModel
                                               filePath:modelFilePath];
     }
     [_lock unlock];
 }
 
 - (NSString *)_getCacheManagerFilePathWithFileName:(NSString *)fileName {
-    return [TABAnimatedDocumentMethod getTABPathByFilePacketName:[NSString stringWithFormat:@"/%@/%@/%@.plist",TABCacheManagerFolderName,TABCacheManagerCacheManagerFolderName,fileName]];
+    return [FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:[NSString stringWithFormat:@"/%@/%@/%@.plist",FWTabCacheManagerFolderName,FWTabCacheManagerCacheManagerFolderName,fileName]];
 }
 
 - (NSString *)_getCacheModelFilePathWithFileName:(NSString *)fileName {
-    return [TABAnimatedDocumentMethod getTABPathByFilePacketName:[NSString stringWithFormat:@"/%@/%@/%@.plist",TABCacheManagerFolderName,TABCacheManagerCacheModelFolderName,fileName]];
+    return [FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:[NSString stringWithFormat:@"/%@/%@/%@.plist",FWTabCacheManagerFolderName,FWTabCacheManagerCacheModelFolderName,fileName]];
 }
 
 @end
 
-@interface TABAnimatedCacheModel()
+@interface FWTabAnimatedCacheModel()
 
 @property (nonatomic, assign, readwrite) BOOL needUpdate;
 
 @end
 
-@implementation TABAnimatedCacheModel
+@implementation FWTabAnimatedCacheModel
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -518,13 +518,13 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 #define kAnimatedFileManager [NSFileManager defaultManager]
 
-@implementation TABAnimatedDocumentMethod
+@implementation FWTabAnimatedDocumentMethod
 
 + (NSString *)documentPath {
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }
 
-+ (NSString *)getTABPathByFilePacketName:(NSString *)filePacketName {
++ (NSString *)getFWTabPathByFilePacketName:(NSString *)filePacketName {
     return [[self documentPath] stringByAppendingPathComponent:filePacketName];
 }
 
@@ -577,7 +577,7 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 + (BOOL)createFile:(NSString *)file
              isDir:(BOOL)isDir {
     
-    if (![TABAnimatedDocumentMethod isExistFile:file
+    if (![FWTabAnimatedDocumentMethod isExistFile:file
                                           isDir:isDir]) {
         if (isDir) {
             return [kAnimatedFileManager createDirectoryAtPath:file
@@ -603,90 +603,57 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 @end
 
-@implementation UIView (TABAnimated)
+@implementation UIView (FWTabAnimated)
 
 #pragma mark - Getter/Setter
 
-- (TABViewAnimated *)tabAnimated {
+- (FWTabViewAnimated *)tabAnimated {
     return objc_getAssociatedObject(self, @selector(tabAnimated));
 }
 
-- (void)setTabAnimated:(TABViewAnimated *)tabAnimated {
+- (void)setTabAnimated:(FWTabViewAnimated *)tabAnimated {
     objc_setAssociatedObject(self, @selector(tabAnimated),tabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (TABComponentManager *)tabComponentManager {
+- (FWTabComponentManager *)tabComponentManager {
     return objc_getAssociatedObject(self, @selector(tabComponentManager));
 }
 
-- (void)setTabComponentManager:(TABComponentManager *)tabComponentManager {
+- (void)setTabComponentManager:(FWTabComponentManager *)tabComponentManager {
     objc_setAssociatedObject(self, @selector(tabComponentManager),tabComponentManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (TABSearchLayerBlock)animation {
-    return ^TABBaseComponent *(NSInteger index) {
-        if (index >= self.tabComponentManager.baseComponentArray.count) {
-            NSAssert(NO, @"Array bound, please check it carefully.");
-            return [TABBaseComponent initWithComponentLayer:TABComponentLayer.new];
-        }
-        return self.tabComponentManager.baseComponentArray[index];
-    };
-}
-
-- (TABSearchLayerArrayBlock)animations {
-    return ^NSArray <TABBaseComponent *> *(NSInteger location, NSInteger length) {
-        
-        if (location + length > self.tabComponentManager.baseComponentArray.count) {
-            NSAssert(NO, @"Array bound, please check it carefully.");
-            return NSArray.new;
-        }
-        
-        NSMutableArray <TABBaseComponent *> *tempArray = @[].mutableCopy;
-        for (NSInteger i = location; i < location+length; i++) {
-            TABBaseComponent *layer = self.tabComponentManager.baseComponentArray[i];
-            [tempArray addObject:layer];
-        }
-        
-        // 修改添加  需要查看数组内容   length == 0 && location == 0 是返回整个数组   xiaoxin
-        if (length == 0 && location == 0) {
-            tempArray = self.tabComponentManager.baseComponentArray.mutableCopy;
-        }
-        
-        return tempArray.mutableCopy;
-    };
 }
 
 @end
 
-@implementation UITableView (TABAnimated)
+@implementation UITableView (FWTabAnimated)
 
-- (TABTableAnimated *)tabAnimated {
+- (FWTabTableAnimated *)tabAnimated {
     return objc_getAssociatedObject(self, @selector(tabAnimated));
 }
 
-- (void)setTabAnimated:(TABTableAnimated *)tabAnimated {
+- (void)setTabAnimated:(FWTabTableAnimated *)tabAnimated {
     objc_setAssociatedObject(self, @selector(tabAnimated),tabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.tableHeaderView != nil && self.tableHeaderView.tabAnimated == nil) {
-        self.tableHeaderView.tabAnimated = TABViewAnimated.new;
+        self.tableHeaderView.tabAnimated = FWTabViewAnimated.new;
         self.tabAnimated.tabHeadViewAnimated = self.tableHeaderView.tabAnimated;
     }
     
     if (self.tableFooterView != nil && self.tableFooterView.tabAnimated == nil) {
-        self.tableFooterView.tabAnimated = TABViewAnimated.new;
+        self.tableFooterView.tabAnimated = FWTabViewAnimated.new;
         self.tabAnimated.tabFooterViewAnimated = self.tableFooterView.tabAnimated;
     }
 }
 
 @end
 
-@implementation UICollectionView (TABAnimated)
+@implementation UICollectionView (FWTabAnimated)
 
-- (TABCollectionAnimated *)tabAnimated {
+- (FWTabCollectionAnimated *)tabAnimated {
     return objc_getAssociatedObject(self, @selector(tabAnimated));
 }
 
-- (void)setTabAnimated:(TABCollectionAnimated *)tabAnimated {
+- (void)setTabAnimated:(FWTabCollectionAnimated *)tabAnimated {
     objc_setAssociatedObject(self, @selector(tabAnimated),tabAnimated, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
@@ -694,18 +661,18 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 static const NSTimeInterval kDelayReloadDataTime = .4;
 
-@implementation UIView (TABControlAnimation)
+@implementation UIView (FWTabControlAnimation)
 
 #pragma mark - 启动动画
 
 - (void)tab_startAnimation {
     
-    if (self.tabAnimated.state == TABViewAnimationEnd && !self.tabAnimated.canLoadAgain) {
+    if (self.tabAnimated.state == FWTabViewAnimationEnd && !self.tabAnimated.canLoadAgain) {
         return;
     }
     
     self.tabAnimated.isAnimating = YES;
-    self.tabAnimated.state = TABViewAnimationStart;
+    self.tabAnimated.state = FWTabViewAnimationStart;
     
     [self startAnimationIsAll:YES index:0];
 }
@@ -719,14 +686,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
                              completion:(void (^)(void))completion {
     
     if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == TABViewAnimationEnd) {
+        self.tabAnimated.state == FWTabViewAnimationEnd) {
         if (completion) {
             completion();
         }
         return;
     }
     
-    self.tabAnimated.state = TABViewAnimationStart;
+    self.tabAnimated.state = FWTabViewAnimationStart;
     
     if (!self.tabAnimated.isAnimating) {
         [self startAnimationIsAll:YES index:0];
@@ -744,12 +711,12 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 - (void)tab_startAnimationWithSection:(NSInteger)section {
     
     if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == TABViewAnimationEnd) {
+        self.tabAnimated.state == FWTabViewAnimationEnd) {
         return;
     }
     
     self.tabAnimated.isAnimating = YES;
-    self.tabAnimated.state = TABViewAnimationStart;
+    self.tabAnimated.state = FWTabViewAnimationStart;
     
     [self startAnimationIsAll:NO index:section];
 }
@@ -765,14 +732,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
                             delayTime:(CGFloat)delayTime
                            completion:(void (^)(void))completion {
     if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == TABViewAnimationEnd) {
+        self.tabAnimated.state == FWTabViewAnimationEnd) {
         if (completion) {
             completion();
         }
         return;
     }
     
-    self.tabAnimated.state = TABViewAnimationStart;
+    self.tabAnimated.state = FWTabViewAnimationStart;
     
     if (!self.tabAnimated.isAnimating) {
         [self startAnimationIsAll:NO index:section];
@@ -792,12 +759,12 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 - (void)tab_startAnimationWithRow:(NSInteger)row {
     
     if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == TABViewAnimationEnd) {
+        self.tabAnimated.state == FWTabViewAnimationEnd) {
         return;
     }
     
     self.tabAnimated.isAnimating = YES;
-    self.tabAnimated.state = TABViewAnimationStart;
+    self.tabAnimated.state = FWTabViewAnimationStart;
     
     [self startAnimationIsAll:NO index:row];
 }
@@ -813,14 +780,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
                         delayTime:(CGFloat)delayTime
                        completion:(void (^)(void))completion {
     if (!self.tabAnimated.canLoadAgain &&
-        self.tabAnimated.state == TABViewAnimationEnd) {
+        self.tabAnimated.state == FWTabViewAnimationEnd) {
         if (completion) {
             completion();
         }
         return;
     }
     
-    self.tabAnimated.state = TABViewAnimationStart;
+    self.tabAnimated.state = FWTabViewAnimationStart;
     
     if (!self.tabAnimated.isAnimating) {
         [self startAnimationIsAll:NO index:row];
@@ -870,7 +837,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }
         }
         
-        TABCollectionAnimated *tabAnimated = (TABCollectionAnimated *)(collectionView.tabAnimated);
+        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)(collectionView.tabAnimated);
         [tabAnimated exchangeCollectionViewDelegate:collectionView];
         [tabAnimated exchangeCollectionViewDataSource:collectionView];
         
@@ -918,13 +885,13 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         // 更新loadCount
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[TABAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithCollectionAnimated:collectionView.tabAnimated];
+            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithCollectionAnimated:collectionView.tabAnimated];
         });
         
     }else if ([self isKindOfClass:[UITableView class]]) {
         
         UITableView *tableView = (UITableView *)self;
-        TABTableAnimated *tabAnimated = (TABTableAnimated *)(tableView.tabAnimated);
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)(tableView.tabAnimated);
         [tabAnimated exchangeTableViewDelegate:tableView];
         [tabAnimated exchangeTableViewDataSource:tableView];
         
@@ -972,12 +939,12 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
                     [tabAnimated.runAnimationIndexArray addObject:num];
                 }
             }else {
-                if (tabAnimated.runMode == TABAnimatedRunBySection) {
+                if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
                     for (NSInteger i = 0; i < [tableView numberOfSections]; i++) {
                         [tabAnimated.runAnimationIndexArray addObject:[NSNumber numberWithInteger:i]];
                     }
                 }else {
-                    if (tabAnimated.runMode == TABAnimatedRunByRow) {
+                    if (tabAnimated.runMode == FWTabAnimatedRunByRow) {
                         for (NSInteger i = 0; i < [tableView numberOfRowsInSection:0]; i++) {
                             [tabAnimated.runAnimationIndexArray addObject:[NSNumber numberWithInteger:i]];
                         }
@@ -1003,10 +970,10 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             
             [tabAnimated.runAnimationIndexArray addObject:@(index)];
             
-            if (tabAnimated.runMode == TABAnimatedRunBySection) {
+            if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
                 [tableView reloadSections:[NSIndexSet indexSetWithIndex:index] withRowAnimation:UITableViewRowAnimationNone];
             }else {
-                if (tabAnimated.runMode == TABAnimatedRunByRow) {
+                if (tabAnimated.runMode == FWTabAnimatedRunByRow) {
                     [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
                 }
             }
@@ -1014,7 +981,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         // 更新loadCount
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[TABAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithTableAnimated:tableView.tabAnimated];
+            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithTableAnimated:tableView.tabAnimated];
         });
         
     }else {
@@ -1030,14 +997,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 //            self.tabAnimated.oldEnable = self.userInteractionEnabled;
 //            self.userInteractionEnabled = NO;
             
-            [TABManagerMethod fullData:self];
+            [FWTabManagerMethod fullData:self];
             [self setNeedsLayout];
-            self.tabComponentManager = [TABComponentManager initWithView:self
+            self.tabComponentManager = [FWTabComponentManager initWithView:self
                                                                superView:targetView
                                                              tabAnimated:self.tabAnimated];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (nil != self.tabAnimated) {
-                    [TABManagerMethod runAnimationWithSuperView:self
+                    [FWTabManagerMethod runAnimationWithSuperView:self
                                                      targetView:self
                                                          isCell:NO
                                                         manager:self.tabComponentManager];
@@ -1055,21 +1022,21 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 - (void)tab_endAnimationIsEaseOut:(BOOL)isEaseOut {
     
     if (!self.tabAnimated) {
-        tabAnimatedLog(@"TABAnimated提醒 - 动画对象已被提前释放");
+        tabAnimatedLog(@"FWTabAnimated提醒 - 动画对象已被提前释放");
         return;
     }
     
-    if (self.tabAnimated.state == TABViewAnimationEnd) {
+    if (self.tabAnimated.state == FWTabViewAnimationEnd) {
         return;
     }
     
-    self.tabAnimated.state = TABViewAnimationEnd;
+    self.tabAnimated.state = FWTabViewAnimationEnd;
     self.tabAnimated.isAnimating = NO;
     
     if ([self isKindOfClass:[UITableView class]]) {
         
         UITableView *tableView = (UITableView *)self;
-        TABTableAnimated *tabAnimated = (TABTableAnimated *)(tableView.tabAnimated);
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)(tableView.tabAnimated);
         
         if (tabAnimated.oldEstimatedRowHeight > 0) {
             tableView.estimatedRowHeight = tabAnimated.oldEstimatedRowHeight;
@@ -1094,7 +1061,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     }else {
         if ([self isKindOfClass:[UICollectionView class]]) {
             
-            TABCollectionAnimated *tabAnimated = (TABCollectionAnimated *)((UICollectionView *)self.tabAnimated);
+            FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)((UICollectionView *)self.tabAnimated);
             [tabAnimated.runAnimationIndexArray removeAllObjects];
             self.tabAnimated = tabAnimated;
             
@@ -1104,14 +1071,14 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             
 //            self.userInteractionEnabled = self.tabAnimated.oldEnable;
             
-            [TABManagerMethod resetData:self];
-            [TABManagerMethod removeMask:self];
-            [TABManagerMethod endAnimationToSubViews:self];
+            [FWTabManagerMethod resetData:self];
+            [FWTabManagerMethod removeMask:self];
+            [FWTabManagerMethod endAnimationToSubViews:self];
         }
     }
     
     if (isEaseOut) {
-        [TABAnimationMethod addEaseOutAnimation:self];
+        [FWTabAnimationMethod addEaseOutAnimation:self];
     }
 }
 
@@ -1131,21 +1098,21 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     
     if (![self isKindOfClass:[UITableView class]] &&
         ![self isKindOfClass:[UICollectionView class]]) {
-        tabAnimatedLog(@"TABAnimated提醒 - 该类型view不支持局部结束动画");
+        tabAnimatedLog(@"FWTabAnimated提醒 - 该类型view不支持局部结束动画");
         return;
     }
     
     NSInteger maxIndex = 0;
     if ([self isKindOfClass:[UITableView class]]) {
-        TABTableAnimated *tabAnimated = (TABTableAnimated *)self.tabAnimated;
-        if (tabAnimated.runMode == TABAnimatedRunBySection) {
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)self.tabAnimated;
+        if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             maxIndex = [(UITableView *)self numberOfSections] - 1;
         }else {
             maxIndex = [(UITableView *)self numberOfRowsInSection:0] - 1;
         }
     }else {
-        TABCollectionAnimated *tabAnimated = (TABCollectionAnimated *)self.tabAnimated;
-        if (tabAnimated.runMode == TABAnimatedRunBySection) {
+        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)self.tabAnimated;
+        if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             maxIndex = [(UICollectionView *)self numberOfSections] - 1;
         }else {
             maxIndex = [(UICollectionView *)self numberOfItemsInSection:0] - 1;
@@ -1153,13 +1120,13 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     }
     
     if (section > maxIndex) {
-        tabAnimatedLog(@"TABAnimated提醒 - 超过当前最大分区数");
+        tabAnimatedLog(@"FWTabAnimated提醒 - 超过当前最大分区数");
         return;
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
         
-        TABCollectionAnimated *tabAnimated = (TABCollectionAnimated *)((UICollectionView *)self.tabAnimated);
+        FWTabCollectionAnimated *tabAnimated = (FWTabCollectionAnimated *)((UICollectionView *)self.tabAnimated);
         
         for (NSInteger i = 0; i < tabAnimated.runAnimationIndexArray.count; i++) {
             if (section == [tabAnimated.runAnimationIndexArray[i] integerValue]) {
@@ -1171,7 +1138,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         self.tabAnimated = tabAnimated;
         
-        if (tabAnimated.runMode == TABAnimatedRunBySection) {
+        if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             [(UICollectionView *)self reloadSections:[NSIndexSet indexSetWithIndex:section]];
         }else {
             [(UICollectionView *)self reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:section inSection:0]]];
@@ -1179,7 +1146,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
     }else if ([self isKindOfClass:[UITableView class]]) {
         
-        TABTableAnimated *tabAnimated = (TABTableAnimated *)((UITableView *)self.tabAnimated);
+        FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)((UITableView *)self.tabAnimated);
         
         for (NSInteger i = 0; i < tabAnimated.runAnimationIndexArray.count; i++) {
             if (section == [tabAnimated.runAnimationIndexArray[i] integerValue]) {
@@ -1191,7 +1158,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
         
         self.tabAnimated = tabAnimated;
         
-        if (tabAnimated.runMode == TABAnimatedRunBySection) {
+        if (tabAnimated.runMode == FWTabAnimatedRunBySection) {
             [(UITableView *)self reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
         }else {
             [(UITableView *)self reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:section inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
@@ -1215,13 +1182,13 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
                       withArray:(NSMutableArray *)array {
     [array removeObjectAtIndex:index];
     if (array.count == 0) {
-        self.tabAnimated.state = TABViewAnimationEnd;
+        self.tabAnimated.state = FWTabViewAnimationEnd;
         self.tabAnimated.isAnimating = NO;
     }
 }
 
 - (void)registerHeaderOrFooter:(BOOL)isHeader
-                   tabAnimated:(TABCollectionAnimated *)tabAnimated {
+                   tabAnimated:(FWTabCollectionAnimated *)tabAnimated {
     
     UICollectionView *collectionView = (UICollectionView *)self;
     NSString *defaultPrefix = nil;
@@ -1229,16 +1196,16 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     NSString *kind = nil;
     
     if (isHeader) {
-        defaultPrefix = TABViewAnimatedHeaderPrefixString;
+        defaultPrefix = FWTabViewAnimatedHeaderPrefixString;
         classArray = tabAnimated.headerClassArray;
         kind = UICollectionElementKindSectionHeader;
     }else {
-        defaultPrefix = TABViewAnimatedFooterPrefixString;
+        defaultPrefix = FWTabViewAnimatedFooterPrefixString;
         classArray = tabAnimated.footerClassArray;
         kind = UICollectionElementKindSectionFooter;
     }
     
-    [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:kind withReuseIdentifier:[NSString stringWithFormat:@"%@%@",defaultPrefix,TABViewAnimatedDefaultSuffixString]];
+    [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:kind withReuseIdentifier:[NSString stringWithFormat:@"%@%@",defaultPrefix,FWTabViewAnimatedDefaultSuffixString]];
     
     for (Class class in classArray) {
         
@@ -1272,155 +1239,155 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 @end
 
-@implementation NSArray (TABAnimated)
+@implementation NSArray (FWTabAnimated)
 
-- (TABAnimatedArrayFloatBlock)up {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)up {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.up(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)down {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)down {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.down(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)left {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)left {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.left(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)right {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)right {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.right(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)width {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)width {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.width(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)height {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)height {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.height(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)reducedWidth {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)reducedWidth {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.reducedWidth(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)reducedHeight {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)reducedHeight {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.reducedHeight(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)reducedRadius {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)reducedRadius {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.reducedRadius(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)radius {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)radius {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.radius(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayIntBlock)line {
-    return ^NSArray <TABBaseComponent *> *(NSInteger value) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayIntBlock)line {
+    return ^NSArray <FWTabBaseComponent *> *(NSInteger value) {
+        for (FWTabBaseComponent *component in self) {
             component.line(value);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)space {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)space {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.space(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayBlock)remove {
-    return ^NSArray <TABBaseComponent *> *(void) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayBlock)remove {
+    return ^NSArray <FWTabBaseComponent *> *(void) {
+        for (FWTabBaseComponent *component in self) {
             component.remove();
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayStringBlock)placeholder {
-    return ^NSArray <TABBaseComponent *> *(NSString *string) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayStringBlock)placeholder {
+    return ^NSArray <FWTabBaseComponent *> *(NSString *string) {
+        for (FWTabBaseComponent *component in self) {
             component.placeholder(string);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)x {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)x {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.x(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)y {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)y {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.y(offset);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayColorBlock)color {
-    return ^NSArray <TABBaseComponent *> *(UIColor *color) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayColorBlock)color {
+    return ^NSArray <FWTabBaseComponent *> *(UIColor *color) {
+        for (FWTabBaseComponent *component in self) {
             component.color(color);
         }
         return self;
@@ -1429,36 +1396,36 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - Drop Animation
 
-- (TABAnimatedArrayIntBlock)dropIndex {
-    return ^NSArray <TABBaseComponent *> *(NSInteger value) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayIntBlock)dropIndex {
+    return ^NSArray <FWTabBaseComponent *> *(NSInteger value) {
+        for (FWTabBaseComponent *component in self) {
             component.dropIndex(value);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayIntBlock)dropFromIndex {
-    return ^NSArray <TABBaseComponent *> *(NSInteger value) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayIntBlock)dropFromIndex {
+    return ^NSArray <FWTabBaseComponent *> *(NSInteger value) {
+        for (FWTabBaseComponent *component in self) {
             component.dropFromIndex(value);
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayBlock)removeOnDrop {
-    return ^NSArray <TABBaseComponent *> *(void) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayBlock)removeOnDrop {
+    return ^NSArray <FWTabBaseComponent *> *(void) {
+        for (FWTabBaseComponent *component in self) {
             component.removeOnDrop();
         }
         return self;
     };
 }
 
-- (TABAnimatedArrayFloatBlock)dropStayTime {
-    return ^NSArray <TABBaseComponent *> *(CGFloat offset) {
-        for (TABBaseComponent *component in self) {
+- (FWTabAnimatedArrayFloatBlock)dropStayTime {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
             component.dropStayTime(offset);
         }
         return self;
@@ -1467,24 +1434,24 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 @end
 
-@interface TABBaseComponent()
+@interface FWTabBaseComponent()
 
-@property (nonatomic, strong, readwrite) TABComponentLayer *layer;
+@property (nonatomic, strong, readwrite) FWTabComponentLayer *layer;
 
 @end
 
-@implementation TABBaseComponent
+@implementation FWTabBaseComponent
 
-+ (instancetype)initWithComponentLayer:(TABComponentLayer *)layer {
-    TABBaseComponent *component = TABBaseComponent.new;
++ (instancetype)initWithComponentLayer:(FWTabComponentLayer *)layer {
+    FWTabBaseComponent *component = FWTabBaseComponent.new;
     component.layer = layer;
     return component;
 }
 
 #pragma mark - left
 
-- (TABBaseComponentFloatBlock)left {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)left {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_left:offset];
         return self;
     };
@@ -1500,8 +1467,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - right
 
-- (TABBaseComponentFloatBlock)right {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)right {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_right:offset];
         return self;
     };
@@ -1517,8 +1484,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - up
 
-- (TABBaseComponentFloatBlock)up {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)up {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_up:offset];
         return self;
     };
@@ -1534,8 +1501,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - down
 
-- (TABBaseComponentFloatBlock)down {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)down {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_down:offset];
         return self;
     };
@@ -1551,8 +1518,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - width
 
-- (TABBaseComponentFloatBlock)width {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)width {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         
         if (offset <= 0) {
             return self;
@@ -1574,8 +1541,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - height
 
-- (TABBaseComponentFloatBlock)height {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)height {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         
         if (offset <= 0) {
             return self;
@@ -1597,8 +1564,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - radius
 
-- (TABBaseComponentFloatBlock)radius {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)radius {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_radius:offset];
         return self;
     };
@@ -1614,8 +1581,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - reducedWidth
 
-- (TABBaseComponentFloatBlock)reducedWidth {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)reducedWidth {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_reducedWidth:offset];
         return self;
     };
@@ -1631,8 +1598,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - reducedHeight
 
-- (TABBaseComponentFloatBlock)reducedHeight {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)reducedHeight {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_reducedHeight:offset];
         return self;
     };
@@ -1648,8 +1615,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - reducedRadius
 
-- (TABBaseComponentFloatBlock)reducedRadius {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)reducedRadius {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_reducedRadius:offset];
         return self;
     };
@@ -1665,8 +1632,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - x
 
-- (TABBaseComponentFloatBlock)x {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)x {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_x:offset];
         return self;
     };
@@ -1682,8 +1649,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - y
 
-- (TABBaseComponentFloatBlock)y {
-    return ^TABBaseComponent *(CGFloat offset) {
+- (FWTabBaseComponentFloatBlock)y {
+    return ^FWTabBaseComponent *(CGFloat offset) {
         [self result_y:offset];
         return self;
     };
@@ -1699,8 +1666,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - line
 
-- (TABBaseComponentIntegerBlock)line {
-    return ^TABBaseComponent *(NSInteger value) {
+- (FWTabBaseComponentIntegerBlock)line {
+    return ^FWTabBaseComponent *(NSInteger value) {
         [self result_line:value];
         return self;
     };
@@ -1716,8 +1683,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - space
 
-- (TABBaseComponentFloatBlock)space {
-    return ^TABBaseComponent *(CGFloat value) {
+- (FWTabBaseComponentFloatBlock)space {
+    return ^FWTabBaseComponent *(CGFloat value) {
         [self result_space:value];
         return self;
     };
@@ -1733,8 +1700,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - lastLineScale
 
-- (TABBaseComponentFloatBlock)lastLineScale {
-    return ^TABBaseComponent *(CGFloat value) {
+- (FWTabBaseComponentFloatBlock)lastLineScale {
+    return ^FWTabBaseComponent *(CGFloat value) {
         [self result_lastLineScale:value];
         return self;
     };
@@ -1750,8 +1717,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - remove
 
-- (TABBaseComponentVoidBlock)remove {
-    return ^TABBaseComponent *(void) {
+- (FWTabBaseComponentVoidBlock)remove {
+    return ^FWTabBaseComponent *(void) {
         [self result_remove];
         return self;
     };
@@ -1762,13 +1729,13 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 }
 
 - (void)result_remove {
-    self.layer.loadStyle = TABViewLoadAnimationRemove;
+    self.layer.loadStyle = FWTabViewLoadAnimationRemove;
 }
 
 #pragma mark - placeholder
 
-- (TABBaseComponentStringBlock)placeholder {
-    return ^TABBaseComponent *(NSString *string) {
+- (FWTabBaseComponentStringBlock)placeholder {
+    return ^FWTabBaseComponent *(NSString *string) {
         [self result_placeholder:string];
         return self;
     };
@@ -1785,8 +1752,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - toLongAnimation
 
-- (TABBaseComponentVoidBlock)toLongAnimation {
-    return ^TABBaseComponent *(void) {
+- (FWTabBaseComponentVoidBlock)toLongAnimation {
+    return ^FWTabBaseComponent *(void) {
         [self result_toLongAnimation];
         return self;
     };
@@ -1797,13 +1764,13 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 }
 
 - (void)result_toLongAnimation {
-    self.layer.loadStyle = TABViewLoadAnimationToLong;
+    self.layer.loadStyle = FWTabViewLoadAnimationToLong;
 }
 
 #pragma mark - toShortAnimation
 
-- (TABBaseComponentVoidBlock)toShortAnimation {
-    return ^TABBaseComponent *(void) {
+- (FWTabBaseComponentVoidBlock)toShortAnimation {
+    return ^FWTabBaseComponent *(void) {
         [self result_toShortAnimation];
         return self;
     };
@@ -1814,13 +1781,13 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 }
 
 - (void)result_toShortAnimation {
-    self.layer.loadStyle = TABViewLoadAnimationToShort;
+    self.layer.loadStyle = FWTabViewLoadAnimationToShort;
 }
 
 #pragma mark - cancelAlignCenter
 
-- (TABBaseComponentVoidBlock)cancelAlignCenter {
-    return ^TABBaseComponent *(void) {
+- (FWTabBaseComponentVoidBlock)cancelAlignCenter {
+    return ^FWTabBaseComponent *(void) {
         [self result_cancelAlignCenter];
         return self;
     };
@@ -1836,8 +1803,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - color
 
-- (TABBaseComponentColorBlock)color {
-    return ^TABBaseComponent *(UIColor *color) {
+- (FWTabBaseComponentColorBlock)color {
+    return ^FWTabBaseComponent *(UIColor *color) {
         [self result_color:color];
         return self;
     };
@@ -1854,8 +1821,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 #pragma mark - 豆瓣动画
 #pragma mark - dropIndex
 
-- (TABBaseComponentIntegerBlock)dropIndex {
-    return ^TABBaseComponent *(NSInteger value) {
+- (FWTabBaseComponentIntegerBlock)dropIndex {
+    return ^FWTabBaseComponent *(NSInteger value) {
         [self result_dropIndex:value];
         return self;
     };
@@ -1871,8 +1838,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - dropFromIndex
 
-- (TABBaseComponentIntegerBlock)dropFromIndex {
-    return ^TABBaseComponent *(NSInteger value) {
+- (FWTabBaseComponentIntegerBlock)dropFromIndex {
+    return ^FWTabBaseComponent *(NSInteger value) {
         [self result_dropFromIndex:value];
         return self;
     };
@@ -1888,8 +1855,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - removeOnDrop
 
-- (TABBaseComponentVoidBlock)removeOnDrop {
-    return ^TABBaseComponent *(void) {
+- (FWTabBaseComponentVoidBlock)removeOnDrop {
+    return ^FWTabBaseComponent *(void) {
         [self result_removeOnDrop];
         return self;
     };
@@ -1905,8 +1872,8 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 #pragma mark - dropStayTime
 
-- (TABBaseComponentFloatBlock)dropStayTime {
-    return ^TABBaseComponent *(CGFloat value) {
+- (FWTabBaseComponentFloatBlock)dropStayTime {
+    return ^FWTabBaseComponent *(CGFloat value) {
         [self result_dropStayTime:value];
         return self;
     };
@@ -1922,19 +1889,19 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 @end
 
-extern const NSInteger TABViewAnimatedErrorCode;
+extern const NSInteger FWTabViewAnimatedErrorCode;
 
-@implementation TABComponentLayer
+@implementation FWTabComponentLayer
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.name = @"TABLayer";
+        self.name = @"FWTabLayer";
         self.anchorPoint = CGPointMake(0, 0);
         self.position = CGPointMake(0, 0);
         self.opaque = YES;
         self.contentsGravity = kCAGravityResizeAspect;
         
-        self.tagIndex = TABViewAnimatedErrorCode;
+        self.tagIndex = FWTabViewAnimatedErrorCode;
         self.dropAnimationStayTime = 0.2;
         self.lastScale = 0.5;
         self.dropAnimationFromIndex = -1;
@@ -1958,7 +1925,7 @@ extern const NSInteger TABViewAnimatedErrorCode;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    TABComponentLayer *layer = [[[self class] allocWithZone:zone] init];
+    FWTabComponentLayer *layer = [[[self class] allocWithZone:zone] init];
     
     layer.loadStyle = self.loadStyle;
     layer.fromImageView = self.fromImageView;
@@ -2022,7 +1989,7 @@ extern const NSInteger TABViewAnimatedErrorCode;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        self.name = @"TABLayer";
+        self.name = @"FWTabLayer";
         self.anchorPoint = CGPointMake(0, 0);
         self.position = CGPointMake(0, 0);
         self.opaque = YES;
@@ -2060,28 +2027,28 @@ static const CGFloat kTagDefaultFontSize = 12.f;
 
 static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
-@interface TABComponentManager()
+@interface FWTabComponentManager()
 
-@property (nonatomic, strong) NSMutableArray <TABBaseComponent *> *baseComponentArray;
-@property (nonatomic, strong, readwrite) NSMutableArray <TABComponentLayer *> *componentLayerArray;
-@property (nonatomic, strong, readwrite) NSMutableArray <TABComponentLayer *> *resultLayerArray;
+@property (nonatomic, strong) NSMutableArray <FWTabBaseComponent *> *baseComponentArray;
+@property (nonatomic, strong, readwrite) NSMutableArray <FWTabComponentLayer *> *componentLayerArray;
+@property (nonatomic, strong, readwrite) NSMutableArray <FWTabComponentLayer *> *resultLayerArray;
 
 @property (nonatomic, assign, readwrite) NSInteger dropAnimationCount;
 @property (nonatomic, assign, readwrite) BOOL haveCachedWithDisk;
 
 @property (nonatomic, weak) UIView *superView;
-@property (nonatomic, weak, readwrite, nullable) TABSentryView *sentryView;
+@property (nonatomic, weak, readwrite, nullable) FWTabSentryView *sentryView;
 
 @end
 
-@implementation TABComponentManager
+@implementation FWTabComponentManager
 
 #pragma mark - Init Method
 
 + (instancetype)initWithView:(UIView *)view
                    superView:(UIView *)superView
-                 tabAnimated:(TABViewAnimated *)tabAnimated {
-    TABComponentManager *manager = [self initWithView:view
+                 tabAnimated:(FWTabViewAnimated *)tabAnimated {
+    FWTabComponentManager *manager = [self initWithView:view
                                             superView:superView];
     manager.animatedHeight = tabAnimated.animatedHeight;
     manager.animatedCornerRadius = tabAnimated.animatedCornerRadius;
@@ -2094,7 +2061,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 + (instancetype)initWithView:(UIView *)view
                    superView:(UIView *)superView {
-    TABComponentManager *manager = [[TABComponentManager alloc] init];
+    FWTabComponentManager *manager = [[FWTabComponentManager alloc] init];
     manager.superView = superView;
     if (view.frame.size.width > 0.) {
         if (superView && [superView isKindOfClass:[UITableView class]]) {
@@ -2126,9 +2093,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         _baseComponentArray = @[].mutableCopy;
         _componentLayerArray = @[].mutableCopy;
         
-        _tabLayer = TABComponentLayer.new;
+        _tabLayer = FWTabComponentLayer.new;
         _tabLayer.opaque = YES;
-        _tabLayer.name = @"TABLayer";
+        _tabLayer.name = @"FWTabLayer";
         _tabLayer.position = CGPointMake(0, 0);
         _tabLayer.anchorPoint = CGPointMake(0, 0);
         _tabLayer.contentsScale = ([[UIScreen mainScreen] scale] > 3.0) ? [[UIScreen mainScreen] scale]:3.0;
@@ -2159,27 +2126,27 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 #pragma mark - Public Method
 
-- (TABBaseComponentBlock _Nullable)animation {
-    return ^TABBaseComponent *(NSInteger index) {
+- (FWTabBaseComponentBlock _Nullable)animation {
+    return ^FWTabBaseComponent *(NSInteger index) {
         if (index >= self.baseComponentArray.count) {
             NSAssert(NO, @"Array bound, please check it carefully.");
-            return [TABBaseComponent initWithComponentLayer:TABComponentLayer.new];
+            return [FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new];
         }
         return self.baseComponentArray[index];
     };
 }
 
-- (TABBaseComponentArrayBlock _Nullable)animations {
-    return ^NSArray <TABBaseComponent *> *(NSInteger location, NSInteger length) {
+- (FWTabBaseComponentArrayBlock _Nullable)animations {
+    return ^NSArray <FWTabBaseComponent *> *(NSInteger location, NSInteger length) {
         
         if (location + length > self.baseComponentArray.count) {
             NSAssert(NO, @"Array bound, please check it carefully.");
             return NSArray.new;
         }
         
-        NSMutableArray <TABBaseComponent *> *tempArray = @[].mutableCopy;
+        NSMutableArray <FWTabBaseComponent *> *tempArray = @[].mutableCopy;
         for (NSInteger i = location; i < location+length; i++) {
-            TABBaseComponent *layer = self.baseComponentArray[i];
+            FWTabBaseComponent *layer = self.baseComponentArray[i];
             [tempArray addObject:layer];
         }
         
@@ -2192,18 +2159,18 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     };
 }
 
-- (TABBaseComponentArrayWithIndexsBlock)animationsWithIndexs {
-    return ^NSArray <TABBaseComponent *> *(NSInteger index,...) {
+- (FWTabBaseComponentArrayWithIndexsBlock)animationsWithIndexs {
+    return ^NSArray <FWTabBaseComponent *> *(NSInteger index,...) {
         
-        NSMutableArray <TABBaseComponent *> *resultArray = @[].mutableCopy;
+        NSMutableArray <FWTabBaseComponent *> *resultArray = @[].mutableCopy;
         
         if (index >= self.baseComponentArray.count) {
             NSAssert(NO, @"Array bound, please check it carefully.");
-            [resultArray addObject:[TABBaseComponent initWithComponentLayer:TABComponentLayer.new]];
+            [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
         }else {
             if(index < 0) {
                 NSAssert(NO, @"Input data contains a number < 0, please check it carefully.");
-                [resultArray addObject:[TABBaseComponent initWithComponentLayer:TABComponentLayer.new]];
+                [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
             }else {
                 [resultArray addObject:self.baseComponentArray[index]];
             }
@@ -2226,11 +2193,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 
                 if (arg >= self.baseComponentArray.count) {
                     NSAssert(NO, @"Array bound, please check it carefully.");
-                    [resultArray addObject:[TABBaseComponent initWithComponentLayer:TABComponentLayer.new]];
+                    [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
                 }else {
                     if(arg < 0) {
                         NSAssert(NO, @"Input data contains a number < 0, please check it carefully.");
-                        [resultArray addObject:[TABBaseComponent initWithComponentLayer:TABComponentLayer.new]];
+                        [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
                     }else {
                         [resultArray addObject:self.baseComponentArray[arg]];
                     }
@@ -2248,7 +2215,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)addSentryView:(UIView *)view
             superView:(UIView *)superView {
     if (@available(iOS 13.0, *)) {
-        TABSentryView *sentryView = TABSentryView.new;
+        FWTabSentryView *sentryView = FWTabSentryView.new;
         _sentryView = sentryView;
         // avoid retain cycle
         __weak typeof(self) weakSelf = self;
@@ -2262,18 +2229,18 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     }
 }
 
-- (void)installBaseComponentArray:(NSArray <TABComponentLayer *> *)array {
+- (void)installBaseComponentArray:(NSArray <FWTabComponentLayer *> *)array {
     self.componentLayerArray = array.mutableCopy;
     [self.baseComponentArray removeAllObjects];
     for (NSInteger i = 0; i < array.count; i++) {
-        TABBaseComponent *component = [TABBaseComponent initWithComponentLayer:array[i]];
+        FWTabBaseComponent *component = [FWTabBaseComponent initWithComponentLayer:array[i]];
         [self.baseComponentArray addObject:component];
     }
 }
 
-- (void)updateComponentLayersWithArray:(NSMutableArray <TABComponentLayer *> *)componentLayerArray {
+- (void)updateComponentLayersWithArray:(NSMutableArray <FWTabComponentLayer *> *)componentLayerArray {
     for (int i = 0; i < componentLayerArray.count; i++) {
-        TABComponentLayer *layer = componentLayerArray[i];
+        FWTabComponentLayer *layer = componentLayerArray[i];
         layer.backgroundColor = self.animatedColor.CGColor;
         
         if (layer.placeholderName && layer.placeholderName.length > 0) {
@@ -2281,8 +2248,8 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }
         
         // 设置伸缩动画
-        if (layer.loadStyle != TABViewLoadAnimationWithOnlySkeleton) {
-            [layer addAnimation:[self getAnimationWithLoadStyle:layer.loadStyle] forKey:TABAnimatedLocationAnimation];
+        if (layer.loadStyle != FWTabViewLoadAnimationWithOnlySkeleton) {
+            [layer addAnimation:[self getAnimationWithLoadStyle:layer.loadStyle] forKey:FWTabAnimatedLocationAnimation];
         }
         
         if (self.dropAnimationCount < layer.dropAnimationIndex) {
@@ -2293,9 +2260,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         
         // 添加红色标记
 #ifdef DEBUG
-        if ([TABAnimated sharedAnimated].openAnimationTag) {
+        if ([FWTabAnimated sharedAnimated].openAnimationTag) {
             BOOL isFromLines = (layer.numberOflines != 1) ? YES : NO;
-            if (layer.tagIndex != TABViewAnimatedErrorCode) {
+            if (layer.tagIndex != FWTabViewAnimatedErrorCode) {
                 [self addAnimatedTagWithComponentLayer:layer
                                                  index:layer.tagIndex
                                           isFromeLines:isFromLines];
@@ -2311,10 +2278,10 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     for (NSInteger i = 0; i < self.baseComponentArray.count; i++) {
         
-        TABBaseComponent *component = self.baseComponentArray[i];
-        TABComponentLayer *layer = component.layer;
+        FWTabBaseComponent *component = self.baseComponentArray[i];
+        FWTabComponentLayer *layer = component.layer;
         
-        if (layer.loadStyle == TABViewLoadAnimationRemove) {
+        if (layer.loadStyle == FWTabViewLoadAnimationRemove) {
             continue;
         }
         
@@ -2348,8 +2315,8 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             }
             
             // 设置动画
-            if (layer.loadStyle != TABAnimationTypeOnlySkeleton) {
-                [layer addAnimation:[self getAnimationWithLoadStyle:layer.loadStyle] forKey:TABAnimatedLocationAnimation];
+            if (layer.loadStyle != FWTabAnimationTypeOnlySkeleton) {
+                [layer addAnimation:[self getAnimationWithLoadStyle:layer.loadStyle] forKey:FWTabAnimatedLocationAnimation];
             }
             
             BOOL isImageView = layer.fromImageView;
@@ -2359,9 +2326,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                     if (self.cancelGlobalCornerRadius) {
                         layer.cornerRadius = self.animatedCornerRadius;
                     }else {
-                        if ([TABAnimated sharedAnimated].useGlobalCornerRadius) {
-                            if ([TABAnimated sharedAnimated].animatedCornerRadius != 0.) {
-                                layer.cornerRadius = [TABAnimated sharedAnimated].animatedCornerRadius;
+                        if ([FWTabAnimated sharedAnimated].useGlobalCornerRadius) {
+                            if ([FWTabAnimated sharedAnimated].animatedCornerRadius != 0.) {
+                                layer.cornerRadius = [FWTabAnimated sharedAnimated].animatedCornerRadius;
                             }else {
                                 layer.cornerRadius = layer.frame.size.height/2.0;
                             }
@@ -2388,7 +2355,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         
         // 添加红色标记
 #ifdef DEBUG
-        if ([TABAnimated sharedAnimated].openAnimationTag) {
+        if ([FWTabAnimated sharedAnimated].openAnimationTag) {
             [self addAnimatedTagWithComponentLayer:layer
                                              index:i
                                       isFromeLines:NO];
@@ -2427,32 +2394,32 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             }
         }];
         
-        for (TABComponentLayer *layer in self.resultLayerArray) {
+        for (FWTabComponentLayer *layer in self.resultLayerArray) {
             layer.backgroundColor = self.animatedColor.CGColor;
             if (layer.contents && layer.placeholderName && layer.placeholderName.length > 0) {
                 layer.contents = (id)[UIImage imageNamed:layer.placeholderName].CGImage;
             }
         }
         
-        if ([TABManagerMethod canAddShimmer:superView]) {
+        if ([FWTabManagerMethod canAddShimmer:superView]) {
             
             __block CGFloat brigtness = 0.;
             UIColor *baseColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
                 if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-                    brigtness = [TABAnimated sharedAnimated].shimmerBrightnessInDarkMode;
-                    return [TABAnimated sharedAnimated].shimmerBackColorInDarkMode;
+                    brigtness = [FWTabAnimated sharedAnimated].shimmerBrightnessInDarkMode;
+                    return [FWTabAnimated sharedAnimated].shimmerBackColorInDarkMode;
                 }else {
-                    brigtness = [TABAnimated sharedAnimated].shimmerBrightness;
-                    return [TABAnimated sharedAnimated].shimmerBackColor;
+                    brigtness = [FWTabAnimated sharedAnimated].shimmerBrightness;
+                    return [FWTabAnimated sharedAnimated].shimmerBackColor;
                 }
             }];
             
-            for (TABComponentLayer *layer in self.resultLayerArray) {
-                if (layer.colors && [layer animationForKey:TABAnimatedShimmerAnimation]) {
+            for (FWTabComponentLayer *layer in self.resultLayerArray) {
+                if (layer.colors && [layer animationForKey:FWTabAnimatedShimmerAnimation]) {
                     if (baseColor) {
                         layer.colors = @[
                         (id)baseColor.CGColor,
-                        (id)[TABManagerMethod brightenedColor:baseColor
+                        (id)[FWTabManagerMethod brightenedColor:baseColor
                                                    brightness:brigtness].CGColor,
                         (id)baseColor.CGColor
                         ];
@@ -2461,7 +2428,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             }
         }
         
-        if ([TABManagerMethod canAddDropAnimation:superView]) {
+        if ([FWTabManagerMethod canAddDropAnimation:superView]) {
             
             UIColor *deepColor;
             if (@available(iOS 13.0, *)) {
@@ -2469,34 +2436,34 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                     if (superView.tabAnimated.dropAnimationDeepColorInDarkMode) {
                         deepColor = superView.tabAnimated.dropAnimationDeepColorInDarkMode;
                     }else {
-                        deepColor = [TABAnimated sharedAnimated].dropAnimationDeepColorInDarkMode;
+                        deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColorInDarkMode;
                     }
                 }else {
                     if (superView.tabAnimated.dropAnimationDeepColor) {
                         deepColor = superView.tabAnimated.dropAnimationDeepColor;
                     }else {
-                        deepColor = [TABAnimated sharedAnimated].dropAnimationDeepColor;
+                        deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                     }
                 }
             } else {
                 if (superView.tabAnimated.dropAnimationDeepColor) {
                     deepColor = superView.tabAnimated.dropAnimationDeepColor;
                 }else {
-                    deepColor = [TABAnimated sharedAnimated].dropAnimationDeepColor;
+                    deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                 }
             }
             
-            for (TABComponentLayer *layer in self.resultLayerArray) {
-                if ([layer animationForKey:TABAnimatedDropAnimation]) {
-                    CAKeyframeAnimation *animation = [layer animationForKey:TABAnimatedDropAnimation].copy;
+            for (FWTabComponentLayer *layer in self.resultLayerArray) {
+                if ([layer animationForKey:FWTabAnimatedDropAnimation]) {
+                    CAKeyframeAnimation *animation = [layer animationForKey:FWTabAnimatedDropAnimation].copy;
                     animation.values = @[
                                          (id)deepColor.CGColor,
                                          (id)layer.backgroundColor,
                                          (id)layer.backgroundColor,
                                          (id)deepColor.CGColor
                                          ];
-                    [layer removeAnimationForKey:TABAnimatedDropAnimation];
-                    [layer addAnimation:animation forKey:TABAnimatedDropAnimation];
+                    [layer removeAnimationForKey:FWTabAnimatedDropAnimation];
+                    [layer addAnimation:animation forKey:FWTabAnimatedDropAnimation];
                 }
             }
         }
@@ -2505,7 +2472,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (void)setRadiusAndColorWithView:(UIView *)view
                         superView:(UIView *)superView
-                      tabAnimated:(__kindof TABViewAnimated *)tabAnimated {
+                      tabAnimated:(__kindof FWTabViewAnimated *)tabAnimated {
     
     if (@available(iOS 13.0, *)) {
         if (superView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
@@ -2543,7 +2510,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     }
 }
 
-- (void)addAnimatedTagWithComponentLayer:(TABComponentLayer *)layer
+- (void)addAnimatedTagWithComponentLayer:(FWTabComponentLayer *)layer
                                    index:(NSInteger)index
                             isFromeLines:(BOOL)isFromeLines {
     CATextLayer *textLayer = [CATextLayer layer];
@@ -2575,10 +2542,10 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         fromIndex:(NSInteger)fromIndex
      removeOnDrop:(BOOL)removeOnDrop
         tabHeight:(CGFloat)tabHeight
-        loadStyle:(TABViewLoadAnimationStyle)loadStyle
+        loadStyle:(FWTabViewLoadAnimationStyle)loadStyle
             index:(NSInteger)index {
     
-    CGFloat textHeight = kDefaultHeight*[TABAnimated sharedAnimated].animatedHeightCoefficient;
+    CGFloat textHeight = kDefaultHeight*[FWTabAnimated sharedAnimated].animatedHeightCoefficient;
     
     if (self.animatedHeight > 0.) {
         textHeight = self.animatedHeight;
@@ -2591,7 +2558,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     if (lines == 0) {
         lines = (frame.size.height*1.0)/(textHeight+space);
         if (lines >= 0 && lines <= 1) {
-            tabAnimatedLog(@"TABAnimated提醒 - 监测到多行文本高度为0，动画时将使用默认行数3");
+            tabAnimatedLog(@"FWTabAnimated提醒 - 监测到多行文本高度为0，动画时将使用默认行数3");
             lines = 3;
         }
     }
@@ -2605,7 +2572,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             rect = CGRectMake(frame.origin.x, frame.origin.y+i*(textHeight+space), frame.size.width*lastScale, textHeight);
         }
         
-        TABComponentLayer *layer = [[TABComponentLayer alloc]init];
+        FWTabComponentLayer *layer = [[FWTabComponentLayer alloc]init];
         layer.anchorPoint = CGPointMake(0, 0);
         layer.position = CGPointMake(0, 0);
         layer.frame = rect;
@@ -2622,9 +2589,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             if (self.cancelGlobalCornerRadius) {
                 layer.cornerRadius = self.animatedCornerRadius;
             }else {
-                if ([TABAnimated sharedAnimated].useGlobalCornerRadius) {
-                    if ([TABAnimated sharedAnimated].animatedCornerRadius != 0.) {
-                        layer.cornerRadius = [TABAnimated sharedAnimated].animatedCornerRadius;
+                if ([FWTabAnimated sharedAnimated].useGlobalCornerRadius) {
+                    if ([FWTabAnimated sharedAnimated].animatedCornerRadius != 0.) {
+                        layer.cornerRadius = [FWTabAnimated sharedAnimated].animatedCornerRadius;
                     }else {
                         layer.cornerRadius = layer.frame.size.height/2.0;
                     }
@@ -2638,20 +2605,20 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             
             layer.tagIndex = index;
             
-            if (loadStyle != TABViewLoadAnimationWithOnlySkeleton) {
-                [layer addAnimation:[self getAnimationWithLoadStyle:loadStyle] forKey:TABAnimatedLocationAnimation];
+            if (loadStyle != FWTabViewLoadAnimationWithOnlySkeleton) {
+                [layer addAnimation:[self getAnimationWithLoadStyle:loadStyle] forKey:FWTabAnimatedLocationAnimation];
             }
             
 #ifdef DEBUG
             // 添加红色标记
-            if ([TABAnimated sharedAnimated].openAnimationTag) {
+            if ([FWTabAnimated sharedAnimated].openAnimationTag) {
                 [self addAnimatedTagWithComponentLayer:layer
                                                  index:index
                                           isFromeLines:YES];
             }
 #endif
         }else {
-            layer.tagIndex = TABViewAnimatedErrorCode;
+            layer.tagIndex = FWTabViewAnimatedErrorCode;
         }
         
         if (!removeOnDrop) {
@@ -2671,20 +2638,20 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     }
 }
 
-- (CABasicAnimation *)getAnimationWithLoadStyle:(TABViewLoadAnimationStyle)loadStyle {
-    CGFloat duration = [TABAnimated sharedAnimated].animatedDuration;
+- (CABasicAnimation *)getAnimationWithLoadStyle:(FWTabViewLoadAnimationStyle)loadStyle {
+    CGFloat duration = [FWTabAnimated sharedAnimated].animatedDuration;
     CGFloat value = 0.;
     
-    if (loadStyle == TABViewLoadAnimationToLong) {
-        value = [TABAnimated sharedAnimated].longToValue;
+    if (loadStyle == FWTabViewLoadAnimationToLong) {
+        value = [FWTabAnimated sharedAnimated].longToValue;
     }else {
-        value = [TABAnimated sharedAnimated].shortToValue;
+        value = [FWTabAnimated sharedAnimated].shortToValue;
     }
     
-    return [TABAnimationMethod scaleXAnimationDuration:duration toValue:value];
+    return [FWTabAnimationMethod scaleXAnimationDuration:duration toValue:value];
 }
 
-- (CGRect)resetFrame:(TABComponentLayer *)layer
+- (CGRect)resetFrame:(FWTabComponentLayer *)layer
                 rect:(CGRect)rect {
     
     BOOL isImageView = layer.fromImageView;
@@ -2698,11 +2665,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         if (self.animatedHeight > 0.) {
             height = self.animatedHeight;
         }else {
-            if ([TABAnimated sharedAnimated].useGlobalAnimatedHeight) {
-                height = [TABAnimated sharedAnimated].animatedHeight;
+            if ([FWTabAnimated sharedAnimated].useGlobalAnimatedHeight) {
+                height = [FWTabAnimated sharedAnimated].animatedHeight;
             }else {
                 if (!isImageView) {
-                    height = rect.size.height*[TABAnimated sharedAnimated].animatedHeightCoefficient;
+                    height = rect.size.height*[FWTabAnimated sharedAnimated].animatedHeightCoefficient;
                     if (layer.cornerRadius > 0) {
                         CGFloat originScale = layer.cornerRadius/rect.size.height;
                         if (originScale == .5 && rect.size.width == rect.size.height) {
@@ -2732,11 +2699,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (id)copyWithZone:(NSZone *)zone {
     
-    TABComponentManager *manager = [[[self class] allocWithZone:zone] init];
+    FWTabComponentManager *manager = [[[self class] allocWithZone:zone] init];
     manager.fileName = self.fileName;
     
     manager.resultLayerArray = @[].mutableCopy;
-    for (TABComponentLayer *layer in self.resultLayerArray) {
+    for (FWTabComponentLayer *layer in self.resultLayerArray) {
         [manager.resultLayerArray addObject:layer.copy];
     }
     
@@ -2794,9 +2761,9 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (BOOL)needUpdate {
     if (self.version && self.version.length > 0 &&
-        [TABAnimated sharedAnimated].cacheManager.currentSystemVersion &&
-        [TABAnimated sharedAnimated].cacheManager.currentSystemVersion.length > 0) {
-        if ([self.version isEqualToString:[TABAnimated sharedAnimated].cacheManager.currentSystemVersion]) {
+        [FWTabAnimated sharedAnimated].cacheManager.currentSystemVersion &&
+        [FWTabAnimated sharedAnimated].cacheManager.currentSystemVersion.length > 0) {
+        if ([self.version isEqualToString:[FWTabAnimated sharedAnimated].cacheManager.currentSystemVersion]) {
             return NO;
         }
         return YES;
@@ -2821,7 +2788,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 @implementation TableDeDaSelfModel
 
 - (NSInteger)tab_deda_numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView.tabAnimated.state == TABViewAnimationStart) {
+    if (tableView.tabAnimated.state == FWTabViewAnimationStart) {
         
         if (tableView.tabAnimated.animatedSectionCount != 0) {
             return tableView.tabAnimated.animatedSectionCount;
@@ -2842,7 +2809,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (NSInteger)tab_deda_tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    if (tableView.tabAnimated.runMode == TABAnimatedRunByRow) {
+    if (tableView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_deda_tableView:tableView numberOfRowsInSection:section];
         if (count == 0) {
             return tableView.tabAnimated.cellClassArray.count;
@@ -2894,11 +2861,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -2929,7 +2896,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }else {
             if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
                 index = tableView.tabAnimated.cellClassArray.count - 1;
-                tabAnimatedLog(@"TABAnimated提醒 - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated提醒 - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
@@ -2942,11 +2909,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -2980,7 +2947,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }else {
             if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
                 index = tableView.tabAnimated.cellClassArray.count - 1;
-                tabAnimatedLog(@"TABAnimated - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
@@ -2998,7 +2965,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         
         if (nil == cell.tabComponentManager) {
             
-            TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
             if (manager &&
                 !manager.needChangeRowStatus) {
@@ -3012,15 +2979,15 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 [manager reAddToView:cell
                            superView:tableView];
                 
-                [TABManagerMethod startAnimationToSubViews:cell
+                [FWTabManagerMethod startAnimationToSubViews:cell
                                                   rootView:cell];
-                [TABManagerMethod addExtraAnimationWithSuperView:tableView
+                [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                       targetView:cell
                                                          manager:cell.tabComponentManager];
             }else {
                 
-                [TABManagerMethod fullData:cell];
-                cell.tabComponentManager = [TABComponentManager initWithView:cell
+                [FWTabManagerMethod fullData:cell];
+                cell.tabComponentManager = [FWTabComponentManager initWithView:cell
                                                                    superView:tableView tabAnimated:tableView.tabAnimated];
                 cell.tabComponentManager.currentSection = indexPath.section;
                 cell.tabComponentManager.fileName = fileName;
@@ -3029,10 +2996,10 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 __weak typeof(cell) weakCell = cell;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    TABTableAnimated *tabAnimated = (TABTableAnimated *)tableView.tabAnimated;
+                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.tabAnimated;
                     
                     if (weakCell && tabAnimated && weakCell.tabComponentManager) {
-                        [TABManagerMethod runAnimationWithSuperView:tableView
+                        [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                          targetView:weakCell
                                                              isCell:YES
                                                             manager:weakCell.tabComponentManager];
@@ -3048,11 +3015,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         cell.tabComponentManager.currentRow = indexPath.row;
         
         if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
-            [TABManagerMethod fullData:cell];
+            [FWTabManagerMethod fullData:cell];
             __weak typeof(cell) weakCell = cell;
             dispatch_async(dispatch_get_main_queue(), ^{
                 weakCell.tabComponentManager.tabLayer.frame = weakCell.bounds;
-                [TABManagerMethod resetData:weakCell];
+                [FWTabManagerMethod resetData:weakCell];
             });
         }
         
@@ -3065,11 +3032,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -3085,11 +3052,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -3106,7 +3073,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (CGFloat)tab_deda_tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
             if (index > tableView.tabAnimated.headerHeightArray.count - 1) {
                 value = tableView.tabAnimated.headerHeightArray.lastObject;
@@ -3123,7 +3090,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (CGFloat)tab_deda_tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
             if (index > tableView.tabAnimated.footerHeightArray.count - 1) {
                 value = tableView.tabAnimated.footerHeightArray.lastObject;
@@ -3140,7 +3107,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (nullable UIView *)tab_deda_tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
             if (index > tableView.tabAnimated.headerClassArray.count - 1) {
@@ -3150,14 +3117,14 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = TABViewAnimated.new;
+            headerFooterView.tabAnimated = FWTabViewAnimated.new;
             [headerFooterView tab_startAnimation];
             
             NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
             
             if (nil == headerFooterView.tabComponentManager) {
                 
-                TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
                 if (manager) {
                     manager.fileName = fileName;
@@ -3167,14 +3134,14 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                     [manager reAddToView:headerFooterView
                                superView:tableView];
                     headerFooterView.tabComponentManager = manager;
-                    [TABManagerMethod startAnimationToSubViews:headerFooterView
+                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
-                    [TABManagerMethod addExtraAnimationWithSuperView:tableView
+                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
                                                              manager:headerFooterView.tabComponentManager];
                 }else {
-                    [TABManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager = [TABComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
+                    [FWTabManagerMethod fullData:headerFooterView];
+                    headerFooterView.tabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
                     headerFooterView.tabComponentManager.currentSection = section;
                     headerFooterView.tabComponentManager.fileName = fileName;
                     
@@ -3187,7 +3154,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                                 isCell = YES;
                             }
                             
-                            [TABManagerMethod runAnimationWithSuperView:tableView
+                            [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
                                                                 manager:weakView.tabComponentManager];
@@ -3201,11 +3168,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             }
             headerFooterView.tabComponentManager.tabTargetClass = class;
             if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
-                [TABManagerMethod fullData:headerFooterView];
+                [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
-                    [TABManagerMethod resetData:weakView];
+                    [FWTabManagerMethod resetData:weakView];
                 });
             }
 
@@ -3219,7 +3186,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (nullable UIView *)tab_deda_tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
             if (index > tableView.tabAnimated.footerClassArray.count - 1) {
@@ -3229,14 +3196,14 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = TABViewAnimated.new;
+            headerFooterView.tabAnimated = FWTabViewAnimated.new;
             [headerFooterView tab_startAnimation];
             
             NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
             
             if (nil == headerFooterView.tabComponentManager) {
                 
-                TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
                 if (manager) {
                     manager.fileName = fileName;
@@ -3247,15 +3214,15 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                                superView:tableView];
                     headerFooterView.tabComponentManager = manager;
                     
-                    [TABManagerMethod startAnimationToSubViews:headerFooterView
+                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
-                    [TABManagerMethod addExtraAnimationWithSuperView:tableView
+                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
                                                              manager:headerFooterView.tabComponentManager];
                     
                 }else {
-                    [TABManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager = [TABComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
+                    [FWTabManagerMethod fullData:headerFooterView];
+                    headerFooterView.tabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
                     headerFooterView.tabComponentManager.currentSection = section;
                     headerFooterView.tabComponentManager.fileName = fileName;
                     
@@ -3268,7 +3235,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                                 isCell = YES;
                             }
                             
-                            [TABManagerMethod runAnimationWithSuperView:tableView
+                            [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
                                                                 manager:weakView.tabComponentManager];
@@ -3284,11 +3251,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             headerFooterView.tabComponentManager.tabTargetClass = class;
             
             if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
-                [TABManagerMethod fullData:headerFooterView];
+                [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
-                    [TABManagerMethod resetData:weakView];
+                    [FWTabManagerMethod resetData:weakView];
                 });
             }
             
@@ -3306,7 +3273,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (NSInteger)tab_deda_numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     
-    if (collectionView.tabAnimated.state == TABViewAnimationStart) {
+    if (collectionView.tabAnimated.state == FWTabViewAnimationStart) {
         
         if (collectionView.tabAnimated.animatedSectionCount != 0) {
             return collectionView.tabAnimated.animatedSectionCount;
@@ -3327,7 +3294,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 - (NSInteger)tab_deda_collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    if (collectionView.tabAnimated.runMode == TABAnimatedRunByRow) {
+    if (collectionView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_deda_collectionView:collectionView numberOfItemsInSection:section];
         if (count == 0) {
             return collectionView.tabAnimated.cellClassArray.count;
@@ -3372,11 +3339,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -3406,7 +3373,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }else {
             if (index > (collectionView.tabAnimated.cellSizeArray.count - 1)) {
                 index = collectionView.tabAnimated.cellSizeArray.count - 1;
-                tabAnimatedLog(@"TABAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
@@ -3420,11 +3387,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -3454,7 +3421,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }else {
             if (index > (collectionView.tabAnimated.cellClassArray.count - 1)) {
                 index = collectionView.tabAnimated.cellClassArray.count - 1;
-                tabAnimatedLog(@"TABAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
@@ -3471,7 +3438,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         
         if (nil == cell.tabComponentManager) {
             
-            TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
             if (manager &&
                 !manager.needChangeRowStatus) {
@@ -3482,16 +3449,16 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                 cell.tabComponentManager = manager;
                 [manager reAddToView:cell
                            superView:collectionView];
-                [TABManagerMethod startAnimationToSubViews:cell
+                [FWTabManagerMethod startAnimationToSubViews:cell
                                                   rootView:cell];
-                [TABManagerMethod addExtraAnimationWithSuperView:collectionView
+                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:cell
                                                          manager:cell.tabComponentManager];
 
             }else {
-                [TABManagerMethod fullData:cell];
+                [FWTabManagerMethod fullData:cell];
                 cell.tabComponentManager =
-                [TABComponentManager initWithView:cell
+                [FWTabComponentManager initWithView:cell
                                         superView:collectionView  tabAnimated:collectionView.tabAnimated];
                 cell.tabComponentManager.currentSection = indexPath.section;
                 cell.tabComponentManager.fileName = fileName;
@@ -3501,7 +3468,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
                     if (weakCell && weakCell.tabComponentManager) {
                         weakCell.tabComponentManager.tabTargetClass = weakCell.class;
                         // 加载动画
-                        [TABManagerMethod runAnimationWithSuperView:collectionView
+                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakCell
                                                              isCell:YES
                                                             manager:weakCell.tabComponentManager];
@@ -3525,11 +3492,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -3545,18 +3512,18 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
     }
     
     if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index] ||
-        collectionView.tabAnimated.state == TABViewAnimationRunning) {
+        collectionView.tabAnimated.state == FWTabViewAnimationRunning) {
         return;
     }
     [self tab_deda_collectionView:collectionView didSelectItemAtIndexPath:indexPath];
@@ -3571,7 +3538,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionHeader];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
             if (index > collectionView.tabAnimated.headerSizeArray.count - 1) {
                 value = collectionView.tabAnimated.headerSizeArray.lastObject;
@@ -3597,7 +3564,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
     if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionFooter];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
             if (index > collectionView.tabAnimated.footerSizeArray.count - 1) {
                 value = collectionView.tabAnimated.footerSizeArray.lastObject;
@@ -3624,7 +3591,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
         NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:indexPath.section
                                                                                     kind:kind];
         
-        if (index == TABViewAnimatedErrorCode) {
+        if (index == FWTabViewAnimatedErrorCode) {
             return [self tab_deda_collectionView:collectionView
           viewForSupplementaryElementOfKind:kind
                                 atIndexPath:indexPath];
@@ -3640,16 +3607,16 @@ referenceSizeForFooterInSection:(NSInteger)section {
             }else {
                 resuableClass = collectionView.tabAnimated.headerClassArray[index];
             }
-            defaultPredix = TABViewAnimatedHeaderPrefixString;
-            identifier = [NSString stringWithFormat:@"%@%@",TABViewAnimatedHeaderPrefixString,NSStringFromClass(resuableClass)];
+            defaultPredix = FWTabViewAnimatedHeaderPrefixString;
+            identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedHeaderPrefixString,NSStringFromClass(resuableClass)];
         }else {
             if (index > collectionView.tabAnimated.footerClassArray.count - 1) {
                 resuableClass = collectionView.tabAnimated.footerClassArray.lastObject;
             }else {
                 resuableClass = collectionView.tabAnimated.footerClassArray[index];
             }
-            defaultPredix = TABViewAnimatedFooterPrefixString;
-            identifier = [NSString stringWithFormat:@"%@%@",TABViewAnimatedFooterPrefixString,NSStringFromClass(resuableClass)];
+            defaultPredix = FWTabViewAnimatedFooterPrefixString;
+            identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedFooterPrefixString,NSStringFromClass(resuableClass)];
         }
         
         if (resuableClass == nil) {
@@ -3663,7 +3630,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
         
         if (![view isKindOfClass:[UICollectionReusableView class]]) {
             reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind
-                                                              withReuseIdentifier:[NSString stringWithFormat:@"%@%@",defaultPredix,TABViewAnimatedDefaultSuffixString]
+                                                              withReuseIdentifier:[NSString stringWithFormat:@"%@%@",defaultPredix,FWTabViewAnimatedDefaultSuffixString]
                                                                      forIndexPath:indexPath];
             for (UIView *view in reusableView.subviews) {
                 [view removeFromSuperview];
@@ -3680,7 +3647,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
         
         if (nil == reusableView.tabComponentManager) {
             
-            TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
             
             if (manager &&
                 !manager.needChangeRowStatus) {
@@ -3691,15 +3658,15 @@ referenceSizeForFooterInSection:(NSInteger)section {
                 [manager reAddToView:reusableView
                            superView:collectionView];
                 reusableView.tabComponentManager = manager;
-                [TABManagerMethod startAnimationToSubViews:reusableView
+                [FWTabManagerMethod startAnimationToSubViews:reusableView
                                                   rootView:reusableView];
-                [TABManagerMethod addExtraAnimationWithSuperView:collectionView
+                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:reusableView
                                                          manager:reusableView.tabComponentManager];
             }else {
-                [TABManagerMethod fullData:reusableView];
+                [FWTabManagerMethod fullData:reusableView];
                 reusableView.tabComponentManager =
-                [TABComponentManager initWithView:reusableView
+                [FWTabComponentManager initWithView:reusableView
                                         superView:collectionView
                                       tabAnimated:collectionView.tabAnimated];
                 reusableView.tabComponentManager.currentSection = indexPath.section;
@@ -3715,7 +3682,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
                             isCell = YES;
                         }
                         
-                        [TABManagerMethod runAnimationWithSuperView:collectionView
+                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakView
                                                              isCell:isCell
                                                             manager:weakView.tabComponentManager];
@@ -3740,7 +3707,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
 static NSString * const kShortDataString = @"tab_testtesttest";
 static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttesttesttesttest";
 
-@implementation TABManagerMethod
+@implementation FWTabManagerMethod
 
 + (void)fullData:(UIView *)view {
     
@@ -3842,7 +3809,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
                     withRootView:(UIView *)rootView
                withRootSuperView:(UIView *)rootSuperView
                     isInNestView:(BOOL)isInNestView
-                           array:(NSMutableArray <TABComponentLayer *> *)array {
+                           array:(NSMutableArray <FWTabComponentLayer *> *)array {
     
     NSArray *subViews = [view subviews];
     if ([subViews count] == 0) {
@@ -3856,7 +3823,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         && ![view isKindOfClass:[UICollectionViewCell class]]) {
 
         CALayer *layer = CALayer.new;
-        layer.name = @"TABLayer";
+        layer.name = @"FWTabLayer";
         CGRect rect = [rootView convertRect:view.frame
                                    fromView:view.superview];
         layer.frame = rect;
@@ -3945,12 +3912,12 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
             break;
         }
         
-        if ([TABManagerMethod judgeViewIsNeedAddAnimation:subV]) {
+        if ([FWTabManagerMethod judgeViewIsNeedAddAnimation:subV]) {
             
-            TABComponentLayer *layer = TABComponentLayer.new;
+            FWTabComponentLayer *layer = FWTabComponentLayer.new;
             
             if (needRemove) {
-                layer.loadStyle = TABViewLoadAnimationRemove;
+                layer.loadStyle = FWTabViewLoadAnimationRemove;
             }
             
             CGRect rect = [rootView convertRect:subV.frame fromView:subV.superview];
@@ -4085,14 +4052,14 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 + (void)runAnimationWithSuperView:(UIView *)superView
                        targetView:(UIView *)targetView
                            isCell:(BOOL)isCell
-                          manager:(TABComponentManager *)manager {
+                          manager:(FWTabComponentManager *)manager {
     
-    if (superView.tabAnimated.state == TABViewAnimationStart &&
+    if (superView.tabAnimated.state == FWTabViewAnimationStart &&
         !targetView.tabComponentManager.isLoad) {
         
-        NSMutableArray <TABComponentLayer *> *array = @[].mutableCopy;
+        NSMutableArray <FWTabComponentLayer *> *array = @[].mutableCopy;
         // start animations
-        [TABManagerMethod getNeedAnimationSubViews:targetView
+        [FWTabManagerMethod getNeedAnimationSubViews:targetView
                                      withSuperView:superView
                                       withRootView:targetView
                                  withRootSuperView:superView
@@ -4103,12 +4070,6 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         
         if (targetView.tabComponentManager.baseComponentArray.count != 0) {
             __weak typeof(targetView) weakSelf = targetView;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            if (superView.tabAnimated.categoryBlock) {
-                superView.tabAnimated.categoryBlock(weakSelf);
-            }
-#pragma clang diagnostic pop
             
             if (superView.tabAnimated.adjustBlock) {
                 superView.tabAnimated.adjustBlock(weakSelf.tabComponentManager);
@@ -4121,14 +4082,14 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         
         [targetView.tabComponentManager updateComponentLayers];
         
-        [TABManagerMethod addExtraAnimationWithSuperView:superView
+        [FWTabManagerMethod addExtraAnimationWithSuperView:superView
                                               targetView:targetView
                                                  manager:targetView.tabComponentManager];
         
         if (isCell && !targetView.tabComponentManager.nestView) {
-            [TABManagerMethod hiddenAllView:targetView];
+            [FWTabManagerMethod hiddenAllView:targetView];
         }else {
-            [TABManagerMethod resetData:targetView];
+            [FWTabManagerMethod resetData:targetView];
         }
         targetView.tabComponentManager.isLoad = YES;
         
@@ -4136,39 +4097,39 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
             [targetView.tabComponentManager.nestView tab_startAnimation];
         }
         
-        [[TABAnimated sharedAnimated].cacheManager cacheComponentManager:targetView.tabComponentManager];
+        [[FWTabAnimated sharedAnimated].cacheManager cacheComponentManager:targetView.tabComponentManager];
     }
 
     // 结束动画
-    if (superView.tabAnimated.state == TABViewAnimationEnd) {
-        [TABManagerMethod endAnimationToSubViews:targetView];
-        [TABManagerMethod removeMask:targetView];
+    if (superView.tabAnimated.state == FWTabViewAnimationEnd) {
+        [FWTabManagerMethod endAnimationToSubViews:targetView];
+        [FWTabManagerMethod removeMask:targetView];
     }
 }
 
 + (void)addExtraAnimationWithSuperView:(UIView *)superView
                             targetView:(UIView *)targetView
-                               manager:(TABComponentManager *)manager {
+                               manager:(FWTabComponentManager *)manager {
     // add shimmer animation
-    if ([TABManagerMethod canAddShimmer:superView]) {
+    if ([FWTabManagerMethod canAddShimmer:superView]) {
         
         for (NSInteger i = 0; i < manager.resultLayerArray.count; i++) {
-            TABComponentLayer *layer = manager.resultLayerArray[i];
+            FWTabComponentLayer *layer = manager.resultLayerArray[i];
             
             UIColor *baseColor;
             CGFloat brigtness;
             
             if (@available(iOS 13.0, *)) {
                 if (superView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-                    baseColor = [TABAnimated sharedAnimated].shimmerBackColorInDarkMode;
-                    brigtness = [TABAnimated sharedAnimated].shimmerBrightnessInDarkMode;
+                    baseColor = [FWTabAnimated sharedAnimated].shimmerBackColorInDarkMode;
+                    brigtness = [FWTabAnimated sharedAnimated].shimmerBrightnessInDarkMode;
                 }else {
-                    baseColor = [TABAnimated sharedAnimated].shimmerBackColor;
-                    brigtness = [TABAnimated sharedAnimated].shimmerBrightness;
+                    baseColor = [FWTabAnimated sharedAnimated].shimmerBackColor;
+                    brigtness = [FWTabAnimated sharedAnimated].shimmerBrightness;
                 }
             } else {
-                baseColor = [TABAnimated sharedAnimated].shimmerBackColor;
-                brigtness = [TABAnimated sharedAnimated].shimmerBrightness;
+                baseColor = [FWTabAnimated sharedAnimated].shimmerBackColor;
+                brigtness = [FWTabAnimated sharedAnimated].shimmerBrightness;
             }
             
             if (baseColor == nil) {
@@ -4177,14 +4138,14 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
             
             layer.colors = @[
                              (id)baseColor.CGColor,
-                             (id)[TABManagerMethod brightenedColor:baseColor brightness:brigtness].CGColor,
+                             (id)[FWTabManagerMethod brightenedColor:baseColor brightness:brigtness].CGColor,
                              (id)baseColor.CGColor
                              ];
             
-            [TABAnimationMethod addShimmerAnimationToLayer:layer
-                                                  duration:[TABAnimated sharedAnimated].animatedDurationShimmer
-                                                       key:TABAnimatedShimmerAnimation
-                                                 direction:[TABAnimated sharedAnimated].shimmerDirection];
+            [FWTabAnimationMethod addShimmerAnimationToLayer:layer
+                                                  duration:[FWTabAnimated sharedAnimated].animatedDurationShimmer
+                                                       key:FWTabAnimatedShimmerAnimation
+                                                 direction:[FWTabAnimated sharedAnimated].shimmerDirection];
             
         }
     }
@@ -4192,14 +4153,14 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
     if (!superView.tabAnimated.isNest) {
         
         // add bin animation
-        if ([TABManagerMethod canAddBinAnimation:superView]) {
-            [TABAnimationMethod addAlphaAnimation:targetView
-                                         duration:[TABAnimated sharedAnimated].animatedDurationBin
-                                              key:TABAnimatedAlphaAnimation];
+        if ([FWTabManagerMethod canAddBinAnimation:superView]) {
+            [FWTabAnimationMethod addAlphaAnimation:targetView
+                                         duration:[FWTabAnimated sharedAnimated].animatedDurationBin
+                                              key:FWTabAnimatedAlphaAnimation];
         }
         
         // add drop animation
-        if ([TABManagerMethod canAddDropAnimation:superView]) {
+        if ([FWTabManagerMethod canAddDropAnimation:superView]) {
             
             UIColor *deepColor;
             
@@ -4209,20 +4170,20 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
                     if (superView.tabAnimated.dropAnimationDeepColorInDarkMode) {
                         deepColor = superView.tabAnimated.dropAnimationDeepColorInDarkMode;
                     }else {
-                        deepColor = [TABAnimated sharedAnimated].dropAnimationDeepColorInDarkMode;
+                        deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColorInDarkMode;
                     }
                 }else {
                     if (superView.tabAnimated.dropAnimationDeepColor) {
                         deepColor = superView.tabAnimated.dropAnimationDeepColor;
                     }else {
-                        deepColor = [TABAnimated sharedAnimated].dropAnimationDeepColor;
+                        deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                     }
                 }
             } else {
                 if (superView.tabAnimated.dropAnimationDeepColor) {
                     deepColor = superView.tabAnimated.dropAnimationDeepColor;
                 }else {
-                    deepColor = [TABAnimated sharedAnimated].dropAnimationDeepColor;
+                    deepColor = [FWTabAnimated sharedAnimated].dropAnimationDeepColor;
                 }
             }
             
@@ -4236,22 +4197,22 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
             if (superView.tabAnimated.dropAnimationDuration != 0.) {
                 duration = superView.tabAnimated.dropAnimationDuration;
             }else {
-                duration = [TABAnimated sharedAnimated].dropAnimationDuration;
+                duration = [FWTabAnimated sharedAnimated].dropAnimationDuration;
             }
             
             for (NSInteger i = 0; i < manager.resultLayerArray.count; i++) {
-                TABComponentLayer *layer = manager.resultLayerArray[i];
+                FWTabComponentLayer *layer = manager.resultLayerArray[i];
                 if (layer.removeOnDropAnimation) {
                     continue;
                 }
-                [TABAnimationMethod addDropAnimation:layer
+                [FWTabAnimationMethod addDropAnimation:layer
                                                index:layer.dropAnimationIndex
                                             duration:duration*(manager.dropAnimationCount+1)-allCutTime
                  
                                                count:manager.dropAnimationCount+1
                                             stayTime:layer.dropAnimationStayTime-i*cutTime
                                            deepColor:deepColor
-                                                 key:TABAnimatedDropAnimation];
+                                                 key:FWTabAnimatedDropAnimation];
             }
         }
         
@@ -4260,12 +4221,12 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 + (BOOL)canAddShimmer:(UIView *)view {
     
-    if (view.tabAnimated.superAnimationType == TABViewSuperAnimationTypeShimmer) {
+    if (view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeShimmer) {
         return YES;
     }
     
-    if ([TABAnimated sharedAnimated].animationType == TABAnimationTypeShimmer &&
-        view.tabAnimated.superAnimationType == TABViewSuperAnimationTypeDefault) {
+    if ([FWTabAnimated sharedAnimated].animationType == FWTabAnimationTypeShimmer &&
+        view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
         return YES;
     }
     
@@ -4274,12 +4235,12 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 + (BOOL)canAddBinAnimation:(UIView *)view {
     
-    if (view.tabAnimated.superAnimationType == TABViewSuperAnimationTypeBinAnimation) {
+    if (view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeBinAnimation) {
         return YES;
     }
     
-    if ([TABAnimated sharedAnimated].animationType == TABAnimationTypeBinAnimation &&
-        view.tabAnimated.superAnimationType == TABViewSuperAnimationTypeDefault) {
+    if ([FWTabAnimated sharedAnimated].animationType == FWTabAnimationTypeBinAnimation &&
+        view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
         return YES;
     }
     
@@ -4288,19 +4249,19 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 + (BOOL)canAddDropAnimation:(UIView *)view {
     
-    if (view.tabAnimated.superAnimationType == TABViewSuperAnimationTypeDrop) {
+    if (view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDrop) {
         return YES;
     }
     
-    if ([TABAnimated sharedAnimated].animationType == TABAnimationTypeDrop &&
-        view.tabAnimated.superAnimationType == TABViewSuperAnimationTypeDefault) {
+    if ([FWTabAnimated sharedAnimated].animationType == FWTabAnimationTypeDrop &&
+        view.tabAnimated.superAnimationType == FWTabViewSuperAnimationTypeDefault) {
         return YES;
     }
     
     return NO;
 }
 
-+ (void)removeAllTABLayersFromView:(UIView *)view {
++ (void)removeAllFWTabLayersFromView:(UIView *)view {
     
     NSArray *subViews = [view subviews];
     if ([subViews count] == 0) {
@@ -4310,7 +4271,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
     for (int i = 0; i < subViews.count; i++) {
         
         UIView *v = subViews[i];
-        [self removeAllTABLayersFromView:v];
+        [self removeAllFWTabLayersFromView:v];
         
         if (v.layer.sublayers.count > 0) {
             NSArray<CALayer *> *subLayers = v.layer.sublayers;
@@ -4356,7 +4317,7 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 @end
 
-@implementation TABSentryView
+@implementation FWTabSentryView
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -4376,19 +4337,19 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 
 @end
 
-const NSInteger TABViewAnimatedErrorCode = -1000;
+const NSInteger FWTabViewAnimatedErrorCode = -1000;
 
-NSString * const TABViewAnimatedHeaderPrefixString = @"tab_header_";
-NSString * const TABViewAnimatedFooterPrefixString = @"tab_footer_";
-NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
+NSString * const FWTabViewAnimatedHeaderPrefixString = @"tab_header_";
+NSString * const FWTabViewAnimatedFooterPrefixString = @"tab_footer_";
+NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view";
 
-@implementation TABViewAnimated
+@implementation FWTabViewAnimated
 
 - (instancetype)init {
     if (self = [super init]) {
         _animatedCountArray = @[].mutableCopy;
         _cellClassArray = @[].mutableCopy;
-        _superAnimationType = TABViewSuperAnimationTypeDefault;
+        _superAnimationType = FWTabViewSuperAnimationTypeDefault;
         _dropAnimationDuration = 0;
         _filterSubViewSize = CGSizeZero;
     }
@@ -4403,33 +4364,33 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     if (_animatedColor) {
         return _animatedColor;
     }
-    return [TABAnimated sharedAnimated].animatedColor;
+    return [FWTabAnimated sharedAnimated].animatedColor;
 }
 
 - (UIColor *)animatedBackgroundColor {
     if (_animatedBackgroundColor) {
         return _animatedBackgroundColor;
     }
-    return [TABAnimated sharedAnimated].animatedBackgroundColor;
+    return [FWTabAnimated sharedAnimated].animatedBackgroundColor;
 }
 
 - (UIColor *)darkAnimatedColor {
     if (_darkAnimatedColor) {
         return _darkAnimatedColor;
     }
-    return [TABAnimated sharedAnimated].darkAnimatedColor;
+    return [FWTabAnimated sharedAnimated].darkAnimatedColor;
 }
 
 - (UIColor *)darkAnimatedBackgroundColor {
     if (_darkAnimatedBackgroundColor) {
         return _darkAnimatedBackgroundColor;
     }
-    return [TABAnimated sharedAnimated].darkAnimatedBackgroundColor;
+    return [FWTabAnimated sharedAnimated].darkAnimatedBackgroundColor;
 }
 
 @end
 
-@interface TABTableAnimated()
+@interface FWTabTableAnimated()
 
 @property (nonatomic, strong, readwrite) NSMutableArray <Class> *headerClassArray;
 @property (nonatomic, strong, readwrite) NSMutableArray <NSNumber *> *headerHeightArray;
@@ -4442,15 +4403,15 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 @property (nonatomic, assign, readwrite) BOOL isExhangeDelegateIMP;
 @property (nonatomic, assign, readwrite) BOOL isExhangeDataSourceIMP;
 
-@property (nonatomic, assign, readwrite) TABAnimatedRunMode runMode;
+@property (nonatomic, assign, readwrite) FWTabAnimatedRunMode runMode;
 
 @end
 
-@implementation TABTableAnimated
+@implementation FWTabTableAnimated
 
 + (instancetype)animatedWithCellClass:(Class)cellClass
                            cellHeight:(CGFloat)cellHeight {
-    TABTableAnimated *obj = [[TABTableAnimated alloc] init];
+    FWTabTableAnimated *obj = [[FWTabTableAnimated alloc] init];
     obj.cellClassArray = @[cellClass];
     obj.cellHeight = cellHeight;
     obj.animatedCount = ceilf([UIScreen mainScreen].bounds.size.height/cellHeight*1.0);
@@ -4460,7 +4421,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedWithCellClass:(Class)cellClass
                            cellHeight:(CGFloat)cellHeight
                         animatedCount:(NSInteger)animatedCount {
-    TABTableAnimated *obj = [self animatedWithCellClass:cellClass cellHeight:cellHeight];
+    FWTabTableAnimated *obj = [self animatedWithCellClass:cellClass cellHeight:cellHeight];
     obj.animatedCount = animatedCount;
     return obj;
 }
@@ -4468,7 +4429,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedWithCellClass:(Class)cellClass
                            cellHeight:(CGFloat)cellHeight
                             toSection:(NSInteger)section {
-    TABTableAnimated *obj = [self animatedWithCellClass:cellClass cellHeight:cellHeight];
+    FWTabTableAnimated *obj = [self animatedWithCellClass:cellClass cellHeight:cellHeight];
     obj.animatedCountArray = @[@(ceilf([UIScreen mainScreen].bounds.size.height/cellHeight*1.0))];
     obj.animatedIndexArray = @[@(section)];
     return obj;
@@ -4478,7 +4439,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                            cellHeight:(CGFloat)cellHeight
                         animatedCount:(NSInteger)animatedCount
                             toSection:(NSInteger)section {
-    TABTableAnimated *obj = [self animatedWithCellClass:cellClass cellHeight:cellHeight];
+    FWTabTableAnimated *obj = [self animatedWithCellClass:cellClass cellHeight:cellHeight];
     obj.animatedCountArray = @[@(animatedCount)];
     obj.animatedIndexArray = @[@(section)];
     return obj;
@@ -4487,7 +4448,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedWithCellClassArray:(NSArray<Class> *)cellClassArray
                            cellHeightArray:(NSArray<NSNumber *> *)cellHeightArray
                         animatedCountArray:(NSArray<NSNumber *> *)animatedCountArray {
-    TABTableAnimated *obj = [[TABTableAnimated alloc] init];
+    FWTabTableAnimated *obj = [[FWTabTableAnimated alloc] init];
     obj.animatedCountArray = animatedCountArray;
     obj.cellHeightArray = cellHeightArray;
     obj.cellClassArray = cellClassArray;
@@ -4498,7 +4459,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                            cellHeightArray:(NSArray <NSNumber *> *)cellHeightArray
                         animatedCountArray:(NSArray <NSNumber *> *)animatedCountArray
                       animatedSectionArray:(NSArray <NSNumber *> *)animatedSectionArray {
-    TABTableAnimated *obj = [self animatedWithCellClassArray:cellClassArray
+    FWTabTableAnimated *obj = [self animatedWithCellClassArray:cellClassArray
                                              cellHeightArray:cellHeightArray
                                           animatedCountArray:animatedCountArray];
     obj.animatedIndexArray = animatedSectionArray;
@@ -4509,17 +4470,17 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 
 + (instancetype)animatedInRowModeWithCellClassArray:(NSArray <Class> *)cellClassArray
                                     cellHeightArray:(NSArray <NSNumber *> *)cellHeightArray {
-    TABTableAnimated *obj = [[TABTableAnimated alloc] init];
+    FWTabTableAnimated *obj = [[FWTabTableAnimated alloc] init];
     obj.cellHeightArray = cellHeightArray;
     obj.cellClassArray = cellClassArray;
-    obj.runMode = TABAnimatedRunByRow;
+    obj.runMode = FWTabAnimatedRunByRow;
     return obj;
 }
 
 + (instancetype)animatedInRowModeWithCellClassArray:(NSArray <Class> *)cellClassArray
                                     cellHeightArray:(NSArray <NSNumber *> *)cellHeightArray
                                            rowArray:(NSArray <NSNumber *> *)rowArray {
-    TABTableAnimated *obj = [TABTableAnimated animatedInRowModeWithCellClassArray:cellClassArray
+    FWTabTableAnimated *obj = [FWTabTableAnimated animatedInRowModeWithCellClassArray:cellClassArray
                                                                   cellHeightArray:cellHeightArray];
     obj.animatedIndexArray = rowArray;
     return obj;
@@ -4528,9 +4489,9 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedInRowModeWithCellClass:(Class)cellClass
                                     cellHeight:(CGFloat)cellHeight
                                          toRow:(NSInteger)row {
-    TABTableAnimated *obj = [self animatedWithCellClass:cellClass
+    FWTabTableAnimated *obj = [self animatedWithCellClass:cellClass
                                              cellHeight:cellHeight];
-    obj.runMode = TABAnimatedRunByRow;
+    obj.runMode = FWTabAnimatedRunByRow;
     obj.animatedCountArray = @[@(1)];
     obj.animatedIndexArray = @[@(row)];
     return obj;
@@ -4539,7 +4500,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 #pragma mark - 自适应高度
 
 + (instancetype)animatedWithCellClass:(Class)cellClass {
-    TABTableAnimated *obj = [[TABTableAnimated alloc] init];
+    FWTabTableAnimated *obj = [[FWTabTableAnimated alloc] init];
     obj.cellClassArray = @[cellClass];
     return obj;
 }
@@ -4636,7 +4597,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 - (NSInteger)headerNeedAnimationOnSection:(NSInteger)section {
     
     if (self.headerSectionArray.count == 0) {
-        return TABViewAnimatedErrorCode;
+        return FWTabViewAnimatedErrorCode;
     }
     
     for (NSInteger i = 0; i < self.headerSectionArray.count; i++) {
@@ -4646,13 +4607,13 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }
     }
     
-    return TABViewAnimatedErrorCode;
+    return FWTabViewAnimatedErrorCode;
 }
 
 - (NSInteger)footerNeedAnimationOnSection:(NSInteger)section {
     
     if (self.footerSectionArray.count == 0) {
-        return TABViewAnimatedErrorCode;
+        return FWTabViewAnimatedErrorCode;
     }
     
     for (NSInteger i = 0; i < self.footerSectionArray.count; i++) {
@@ -4662,7 +4623,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }
     }
     
-    return TABViewAnimatedErrorCode;
+    return FWTabViewAnimatedErrorCode;
 }
 
 - (void)exchangeTableViewDelegate:(UITableView *)target {
@@ -4672,7 +4633,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         
         if ([target isEqual:delegate]) {
             
-            TableDeDaSelfModel *model = [[TABAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
+            TableDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
             if (!model.isExhangeDelegate) {
                 [self exchangeDelegateMethods:delegate
                                        target:target
@@ -4696,7 +4657,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         id <UITableViewDataSource> dataSource = target.dataSource;
         
         if ([target isEqual:dataSource]) {
-            TableDeDaSelfModel *model = [[TABAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
+            TableDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
             if (!model.isExhangeDataSource) {
                 [self exchangeDataSourceMethods:dataSource
                                          target:target
@@ -4920,11 +4881,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     }
 }
 
-#pragma mark - TABTableViewDataSource / Delegate
+#pragma mark - FWTabTableViewDataSource / Delegate
 
 - (NSInteger)tab_numberOfSectionsInTableView:(UITableView *)tableView {
     
-    if (tableView.tabAnimated.state == TABViewAnimationStart) {
+    if (tableView.tabAnimated.state == FWTabViewAnimationStart) {
         
         if (tableView.tabAnimated.animatedSectionCount != 0) {
             return tableView.tabAnimated.animatedSectionCount;
@@ -4945,7 +4906,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 
 - (NSInteger)tab_tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    if (tableView.tabAnimated.runMode == TABAnimatedRunByRow) {
+    if (tableView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_tableView:tableView numberOfRowsInSection:section];
         if (count == 0) {
             return tableView.tabAnimated.cellClassArray.count;
@@ -4997,11 +4958,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -5032,7 +4993,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }else {
             if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
                 index = tableView.tabAnimated.cellClassArray.count - 1;
-                tabAnimatedLog(@"TABAnimated提醒 - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated提醒 - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
@@ -5045,11 +5006,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -5083,7 +5044,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }else {
             if (index > (tableView.tabAnimated.cellClassArray.count - 1)) {
                 index = tableView.tabAnimated.cellClassArray.count - 1;
-                tabAnimatedLog(@"TABAnimated - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated - section的数量和指定分区的数量不一致，超出的section，将使用最后一个分区cell加载");
             }
         }
         
@@ -5101,7 +5062,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         
         if (nil == cell.tabComponentManager) {
             
-            TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
             if (manager && !manager.needChangeRowStatus) {
                 
@@ -5114,17 +5075,17 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                 [manager reAddToView:cell
                            superView:tableView];
                 
-                [TABManagerMethod hiddenAllView:cell];
-                [TABManagerMethod startAnimationToSubViews:cell
+                [FWTabManagerMethod hiddenAllView:cell];
+                [FWTabManagerMethod startAnimationToSubViews:cell
                                                   rootView:cell];
-                [TABManagerMethod addExtraAnimationWithSuperView:tableView
+                [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                       targetView:cell
                                                          manager:cell.tabComponentManager];
             }else {
                 
-                [TABManagerMethod fullData:cell];
+                [FWTabManagerMethod fullData:cell];
                 
-                cell.tabComponentManager = [TABComponentManager initWithView:cell
+                cell.tabComponentManager = [FWTabComponentManager initWithView:cell
                                                                    superView:tableView tabAnimated:tableView.tabAnimated];
                 cell.tabComponentManager.currentSection = indexPath.section;
                 cell.tabComponentManager.fileName = fileName;
@@ -5132,9 +5093,9 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
             
                 __weak typeof(cell) weakCell = cell;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    TABTableAnimated *tabAnimated = (TABTableAnimated *)tableView.tabAnimated;
+                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.tabAnimated;
                     if (weakCell && tabAnimated && weakCell.tabComponentManager) {
-                        [TABManagerMethod runAnimationWithSuperView:tableView
+                        [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                          targetView:weakCell
                                                              isCell:YES
                                                             manager:weakCell.tabComponentManager];
@@ -5150,11 +5111,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         cell.tabComponentManager.currentRow = indexPath.row;
         
         if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
-            [TABManagerMethod fullData:cell];
+            [FWTabManagerMethod fullData:cell];
             __weak typeof(cell) weakCell = cell;
             dispatch_async(dispatch_get_main_queue(), ^{
                 weakCell.tabComponentManager.tabLayer.frame = weakCell.bounds;
-                [TABManagerMethod resetData:weakCell];
+                [FWTabManagerMethod resetData:weakCell];
             });
         }
         
@@ -5167,11 +5128,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -5187,11 +5148,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (tableView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -5208,7 +5169,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 - (CGFloat)tab_tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
             if (index > tableView.tabAnimated.headerHeightArray.count - 1) {
                 value = tableView.tabAnimated.headerHeightArray.lastObject;
@@ -5225,7 +5186,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 - (CGFloat)tab_tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSNumber *value = nil;
             if (index > tableView.tabAnimated.footerHeightArray.count - 1) {
                 value = tableView.tabAnimated.footerHeightArray.lastObject;
@@ -5242,7 +5203,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 - (nullable UIView *)tab_tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated headerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
             if (index > tableView.tabAnimated.headerClassArray.count - 1) {
@@ -5252,14 +5213,14 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = TABViewAnimated.new;
+            headerFooterView.tabAnimated = FWTabViewAnimated.new;
             [headerFooterView tab_startAnimation];
             
             NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
             
             if (nil == headerFooterView.tabComponentManager) {
                 
-                TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
                 if (manager) {
                     manager.fileName = fileName;
@@ -5269,15 +5230,15 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                     [manager reAddToView:headerFooterView
                                superView:tableView];
                     headerFooterView.tabComponentManager = manager;
-                    [TABManagerMethod startAnimationToSubViews:headerFooterView
+                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
-                    [TABManagerMethod addExtraAnimationWithSuperView:tableView
+                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
                                                              manager:headerFooterView.tabComponentManager];
                 }else {
-                    [TABManagerMethod fullData:headerFooterView];
+                    [FWTabManagerMethod fullData:headerFooterView];
                     headerFooterView.tabComponentManager =
-                    [TABComponentManager initWithView:headerFooterView
+                    [FWTabComponentManager initWithView:headerFooterView
                                             superView:tableView
                                           tabAnimated:tableView.tabAnimated];
                     headerFooterView.tabComponentManager.currentSection = section;
@@ -5293,7 +5254,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                                 isCell = YES;
                             }
                             
-                            [TABManagerMethod runAnimationWithSuperView:tableView
+                            [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
                                                                 manager:weakView.tabComponentManager];
@@ -5307,11 +5268,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
             }
             
             if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
-                [TABManagerMethod fullData:headerFooterView];
+                [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
-                    [TABManagerMethod resetData:weakView];
+                    [FWTabManagerMethod resetData:weakView];
                 });
             }
 
@@ -5325,7 +5286,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 - (nullable UIView *)tab_tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if ([tableView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [tableView.tabAnimated footerNeedAnimationOnSection:section];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             
             Class class;
             if (index > tableView.tabAnimated.footerClassArray.count - 1) {
@@ -5335,14 +5296,14 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
             }
             
             UIView *headerFooterView = class.new;
-            headerFooterView.tabAnimated = TABViewAnimated.new;
+            headerFooterView.tabAnimated = FWTabViewAnimated.new;
             [headerFooterView tab_startAnimation];
             
             NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.tabAnimated.targetControllerClassName]];
             
             if (nil == headerFooterView.tabComponentManager) {
                 
-                TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
                 
                 if (manager) {
                     manager.fileName = fileName;
@@ -5353,15 +5314,15 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                                superView:tableView];
                     headerFooterView.tabComponentManager = manager;
                     
-                    [TABManagerMethod startAnimationToSubViews:headerFooterView
+                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
                                                       rootView:headerFooterView];
-                    [TABManagerMethod addExtraAnimationWithSuperView:tableView
+                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
                                                           targetView:headerFooterView
                                                              manager:headerFooterView.tabComponentManager];
                     
                 }else {
-                    [TABManagerMethod fullData:headerFooterView];
-                    headerFooterView.tabComponentManager = [TABComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
+                    [FWTabManagerMethod fullData:headerFooterView];
+                    headerFooterView.tabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.tabAnimated];
                     headerFooterView.tabComponentManager.currentSection = section;
                     headerFooterView.tabComponentManager.fileName = fileName;
                     
@@ -5374,7 +5335,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                                 isCell = YES;
                             }
                             
-                            [TABManagerMethod runAnimationWithSuperView:tableView
+                            [FWTabManagerMethod runAnimationWithSuperView:tableView
                                                              targetView:weakView
                                                                  isCell:isCell
                                                                 manager:weakView.tabComponentManager];
@@ -5390,11 +5351,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
             headerFooterView.tabComponentManager.tabTargetClass = class;
             
             if (tableView.tabAnimated.oldEstimatedRowHeight > 0) {
-                [TABManagerMethod fullData:headerFooterView];
+                [FWTabManagerMethod fullData:headerFooterView];
                 __weak typeof(headerFooterView) weakView = headerFooterView;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     weakView.tabComponentManager.tabLayer.frame = weakView.bounds;
-                    [TABManagerMethod resetData:weakView];
+                    [FWTabManagerMethod resetData:weakView];
                 });
             }
             
@@ -5419,7 +5380,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 
 @end
 
-@interface TABCollectionAnimated()
+@interface FWTabCollectionAnimated()
 
 @property (nonatomic, strong, readwrite) NSMutableArray <Class> *headerClassArray;
 @property (nonatomic, strong, readwrite) NSMutableArray <NSValue *> *headerSizeArray;
@@ -5429,15 +5390,15 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 @property (nonatomic, strong, readwrite) NSMutableArray <NSValue *> *footerSizeArray;
 @property (nonatomic, strong, readwrite) NSMutableArray <NSNumber *> *footerSectionArray;
 
-@property (nonatomic, assign, readwrite) TABAnimatedRunMode runMode;
+@property (nonatomic, assign, readwrite) FWTabAnimatedRunMode runMode;
 
 @end
 
-@implementation TABCollectionAnimated
+@implementation FWTabCollectionAnimated
 
 + (instancetype)animatedWithCellClass:(Class)cellClass
                              cellSize:(CGSize)cellSize {
-    TABCollectionAnimated *obj = [[TABCollectionAnimated alloc] init];
+    FWTabCollectionAnimated *obj = [[FWTabCollectionAnimated alloc] init];
     obj.cellClassArray = @[cellClass];
     obj.cellSize = cellSize;
     obj.animatedCount = ceilf([UIScreen mainScreen].bounds.size.height/cellSize.height*1.0);
@@ -5447,7 +5408,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedWithCellClass:(Class)cellClass
                              cellSize:(CGSize)cellSize
                         animatedCount:(NSInteger)animatedCount {
-    TABCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
+    FWTabCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
     obj.animatedCount = animatedCount;
     return obj;
 }
@@ -5455,7 +5416,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedWithCellClass:(Class)cellClass
                              cellSize:(CGSize)cellSize
                             toSection:(NSInteger)section {
-    TABCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
+    FWTabCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
     obj.animatedCountArray = @[@(ceilf([UIScreen mainScreen].bounds.size.height/cellSize.height*1.0))];
     obj.animatedIndexArray = @[@(section)];
     return obj;
@@ -5465,7 +5426,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                              cellSize:(CGSize)cellSize
                         animatedCount:(NSInteger)animatedCount
                             toSection:(NSInteger)section {
-    TABCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
+    FWTabCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
     obj.animatedCountArray = @[@(animatedCount)];
     obj.animatedIndexArray = @[@(section)];
     return obj;
@@ -5474,7 +5435,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedWithCellClassArray:(NSArray <Class> *)cellClassArray
                              cellSizeArray:(NSArray <NSValue *> *)cellSizeArray
                         animatedCountArray:(NSArray <NSNumber *> *)animatedCountArray {
-    TABCollectionAnimated *obj = [[TABCollectionAnimated alloc] init];
+    FWTabCollectionAnimated *obj = [[FWTabCollectionAnimated alloc] init];
     obj.animatedCountArray = animatedCountArray;
     obj.cellSizeArray = cellSizeArray;
     obj.cellClassArray = cellClassArray;
@@ -5485,7 +5446,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                              cellSizeArray:(NSArray <NSValue *> *)cellSizeArray
                         animatedCountArray:(NSArray <NSNumber *> *)animatedCountArray
                       animatedSectionArray:(NSArray <NSNumber *> *)animatedSectionArray {
-    TABCollectionAnimated *obj = [self animatedWithCellClassArray:cellClassArray
+    FWTabCollectionAnimated *obj = [self animatedWithCellClassArray:cellClassArray
                                                     cellSizeArray:cellSizeArray
                                                animatedCountArray:animatedCountArray];
     obj.animatedIndexArray = animatedSectionArray;
@@ -5496,17 +5457,17 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 
 + (instancetype)animatedInRowModeWithCellClassArray:(NSArray <Class> *)cellClassArray
                                       cellSizeArray:(NSArray <NSValue *> *)cellSizeArray {
-    TABCollectionAnimated *obj = [[TABCollectionAnimated alloc] init];
+    FWTabCollectionAnimated *obj = [[FWTabCollectionAnimated alloc] init];
     obj.cellSizeArray = cellSizeArray;
     obj.cellClassArray = cellClassArray;
-    obj.runMode = TABAnimatedRunByRow;
+    obj.runMode = FWTabAnimatedRunByRow;
     return obj;
 }
 
 + (instancetype)animatedInRowModeWithCellClassArray:(NSArray <Class> *)cellClassArray
                                       cellSizeArray:(NSArray <NSValue *> *)cellSizeArray
                                            rowArray:(NSArray <NSNumber *> *)rowArray {
-    TABCollectionAnimated *obj = [TABCollectionAnimated animatedInRowModeWithCellClassArray:cellSizeArray cellSizeArray:cellSizeArray];
+    FWTabCollectionAnimated *obj = [FWTabCollectionAnimated animatedInRowModeWithCellClassArray:cellSizeArray cellSizeArray:cellSizeArray];
     obj.animatedIndexArray = rowArray;
     return obj;
 }
@@ -5514,8 +5475,8 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 + (instancetype)animatedInRowModeWithCellClass:(Class)cellClass
                                       cellSize:(CGSize)cellSize
                                          toRow:(NSInteger)row {
-    TABCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
-    obj.runMode = TABAnimatedRunByRow;
+    FWTabCollectionAnimated *obj = [self animatedWithCellClass:cellClass cellSize:cellSize];
+    obj.runMode = FWTabAnimatedRunByRow;
     obj.animatedCountArray = @[@(1)];
     obj.animatedIndexArray = @[@(row)];
     return obj;
@@ -5558,7 +5519,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         
         if (self.headerSectionArray.count == 0) {
-            return TABViewAnimatedErrorCode;
+            return FWTabViewAnimatedErrorCode;
         }
         
         for (NSInteger i = 0; i < self.headerSectionArray.count; i++) {
@@ -5568,11 +5529,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
             }
         }
         
-        return TABViewAnimatedErrorCode;
+        return FWTabViewAnimatedErrorCode;
     }
     
     if (self.footerSectionArray.count == 0) {
-        return TABViewAnimatedErrorCode;
+        return FWTabViewAnimatedErrorCode;
     }
     
     for (NSInteger i = 0; i < self.footerSectionArray.count; i++) {
@@ -5582,7 +5543,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }
     }
     
-    return TABViewAnimatedErrorCode;
+    return FWTabViewAnimatedErrorCode;
 }
 
 - (void)addHeaderViewClass:(_Nonnull Class)headerViewClass
@@ -5647,7 +5608,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         _isExhangeDelegateIMP = YES;
         
         if ([target isEqual:delegate]) {
-            CollectionDeDaSelfModel *model = [[TABAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
+            CollectionDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
             if (!model.isExhangeDelegate) {
                 [self exchangeDelegateMethods:delegate
                                        target:target
@@ -5669,7 +5630,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     if (!_isExhangeDataSourceIMP) {
         _isExhangeDataSourceIMP = YES;
         if ([target isEqual:dataSource]) {
-            CollectionDeDaSelfModel *model = [[TABAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
+            CollectionDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
             if (!model.isExhangeDataSource) {
                 [self exchangeDataSourceMethods:dataSource
                                          target:target
@@ -5862,10 +5823,10 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     }
 }
 
-#pragma mark - TABCollectionViewDelegate
+#pragma mark - FWTabCollectionViewDelegate
 
 - (NSInteger)tab_numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    if (collectionView.tabAnimated.state == TABViewAnimationStart) {
+    if (collectionView.tabAnimated.state == FWTabViewAnimationStart) {
         
         if (collectionView.tabAnimated.animatedSectionCount != 0) {
             return collectionView.tabAnimated.animatedSectionCount;
@@ -5886,7 +5847,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
 
 - (NSInteger)tab_collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    if (collectionView.tabAnimated.runMode == TABAnimatedRunByRow) {
+    if (collectionView.tabAnimated.runMode == FWTabAnimatedRunByRow) {
         NSInteger count = [self tab_collectionView:collectionView numberOfItemsInSection:section];
         if (count == 0) {
             return collectionView.tabAnimated.cellClassArray.count;
@@ -5931,11 +5892,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -5965,7 +5926,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }else {
             if (index > (collectionView.tabAnimated.cellSizeArray.count - 1)) {
                 index = collectionView.tabAnimated.cellSizeArray.count - 1;
-                tabAnimatedLog(@"TABAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
@@ -5979,11 +5940,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -6013,7 +5974,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         }else {
             if (index > (collectionView.tabAnimated.cellClassArray.count - 1)) {
                 index = collectionView.tabAnimated.cellClassArray.count - 1;
-                tabAnimatedLog(@"TABAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
+                tabAnimatedLog(@"FWTabAnimated提醒 - 获取到的分区的数量和设置的分区数量不一致，超出的分区值部分，将使用最后一个分区cell加载");
             }
         }
         
@@ -6030,7 +5991,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
         
         if (nil == cell.tabComponentManager) {
             
-            TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
 
             if (manager &&
                 !manager.needChangeRowStatus) {
@@ -6041,16 +6002,16 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                 cell.tabComponentManager = manager;
                 [manager reAddToView:cell
                            superView:collectionView];
-                [TABManagerMethod startAnimationToSubViews:cell
+                [FWTabManagerMethod startAnimationToSubViews:cell
                                                   rootView:cell];
-                [TABManagerMethod addExtraAnimationWithSuperView:collectionView
+                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:cell
                                                          manager:cell.tabComponentManager];
 
             }else {
-                [TABManagerMethod fullData:cell];
+                [FWTabManagerMethod fullData:cell];
                 cell.tabComponentManager =
-                [TABComponentManager initWithView:cell
+                [FWTabComponentManager initWithView:cell
                                         superView:collectionView
                                       tabAnimated:collectionView.tabAnimated];
                 cell.tabComponentManager.currentSection = indexPath.section;
@@ -6061,7 +6022,7 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
                     if (weakCell && weakCell.tabComponentManager) {
                         weakCell.tabComponentManager.tabTargetClass = weakCell.class;
                         // 加载动画
-                        [TABManagerMethod runAnimationWithSuperView:collectionView
+                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakCell
                                                              isCell:YES
                                                             manager:weakCell.tabComponentManager];
@@ -6085,11 +6046,11 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
@@ -6105,18 +6066,18 @@ NSString * const TABViewAnimatedDefaultSuffixString = @"default_resuable_view";
     
     NSInteger index;
     switch (collectionView.tabAnimated.runMode) {
-        case TABAnimatedRunBySection: {
+        case FWTabAnimatedRunBySection: {
             index = indexPath.section;
         }
             break;
-        case TABAnimatedRunByRow: {
+        case FWTabAnimatedRunByRow: {
             index = indexPath.row;
         }
             break;
     }
     
     if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:index] ||
-        collectionView.tabAnimated.state == TABViewAnimationRunning) {
+        collectionView.tabAnimated.state == FWTabViewAnimationRunning) {
         return;
     }
     [self tab_collectionView:collectionView didSelectItemAtIndexPath:indexPath];
@@ -6131,7 +6092,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionHeader];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
             if (index > collectionView.tabAnimated.headerSizeArray.count - 1) {
                 value = collectionView.tabAnimated.headerSizeArray.lastObject;
@@ -6157,7 +6118,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
     if ([collectionView.tabAnimated currentIndexIsAnimatingWithIndex:section]) {
         NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:section
                                                                                     kind:UICollectionElementKindSectionFooter];
-        if (index != TABViewAnimatedErrorCode) {
+        if (index != FWTabViewAnimatedErrorCode) {
             NSValue *value = nil;
             if (index > collectionView.tabAnimated.footerSizeArray.count - 1) {
                 value = collectionView.tabAnimated.footerSizeArray.lastObject;
@@ -6184,7 +6145,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
         NSInteger index = [collectionView.tabAnimated headerFooterNeedAnimationOnSection:indexPath.section
                                                                                     kind:kind];
         
-        if (index == TABViewAnimatedErrorCode) {
+        if (index == FWTabViewAnimatedErrorCode) {
             return [self tab_collectionView:collectionView
           viewForSupplementaryElementOfKind:kind
                                 atIndexPath:indexPath];
@@ -6200,16 +6161,16 @@ referenceSizeForFooterInSection:(NSInteger)section {
             }else {
                 resuableClass = collectionView.tabAnimated.headerClassArray[index];
             }
-            defaultPredix = TABViewAnimatedHeaderPrefixString;
-            identifier = [NSString stringWithFormat:@"%@%@",TABViewAnimatedHeaderPrefixString,NSStringFromClass(resuableClass)];
+            defaultPredix = FWTabViewAnimatedHeaderPrefixString;
+            identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedHeaderPrefixString,NSStringFromClass(resuableClass)];
         }else {
             if (index > collectionView.tabAnimated.footerClassArray.count - 1) {
                 resuableClass = collectionView.tabAnimated.footerClassArray.lastObject;
             }else {
                 resuableClass = collectionView.tabAnimated.footerClassArray[index];
             }
-            defaultPredix = TABViewAnimatedFooterPrefixString;
-            identifier = [NSString stringWithFormat:@"%@%@",TABViewAnimatedFooterPrefixString,NSStringFromClass(resuableClass)];
+            defaultPredix = FWTabViewAnimatedFooterPrefixString;
+            identifier = [NSString stringWithFormat:@"%@%@",FWTabViewAnimatedFooterPrefixString,NSStringFromClass(resuableClass)];
         }
         
         if (resuableClass == nil) {
@@ -6223,7 +6184,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
         
         if (![view isKindOfClass:[UICollectionReusableView class]]) {
             reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind
-                                                              withReuseIdentifier:[NSString stringWithFormat:@"%@%@",defaultPredix,TABViewAnimatedDefaultSuffixString]
+                                                              withReuseIdentifier:[NSString stringWithFormat:@"%@%@",defaultPredix,FWTabViewAnimatedDefaultSuffixString]
                                                                      forIndexPath:indexPath];
             for (UIView *view in reusableView.subviews) {
                 [view removeFromSuperview];
@@ -6240,7 +6201,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
         
         if (nil == reusableView.tabComponentManager) {
             
-            TABComponentManager *manager = [[TABAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
             
             if (manager &&
                 !manager.needChangeRowStatus) {
@@ -6251,15 +6212,15 @@ referenceSizeForFooterInSection:(NSInteger)section {
                 [manager reAddToView:reusableView
                            superView:collectionView];
                 reusableView.tabComponentManager = manager;
-                [TABManagerMethod startAnimationToSubViews:reusableView
+                [FWTabManagerMethod startAnimationToSubViews:reusableView
                                                   rootView:reusableView];
-                [TABManagerMethod addExtraAnimationWithSuperView:collectionView
+                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
                                                       targetView:reusableView
                                                          manager:reusableView.tabComponentManager];
             }else {
-                [TABManagerMethod fullData:reusableView];
+                [FWTabManagerMethod fullData:reusableView];
                 reusableView.tabComponentManager =
-                [TABComponentManager initWithView:reusableView
+                [FWTabComponentManager initWithView:reusableView
                                         superView:collectionView
                                       tabAnimated:collectionView.tabAnimated];
                 reusableView.tabComponentManager.currentSection = indexPath.section;
@@ -6275,7 +6236,7 @@ referenceSizeForFooterInSection:(NSInteger)section {
                             isCell = YES;
                         }
                         
-                        [TABManagerMethod runAnimationWithSuperView:collectionView
+                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
                                                          targetView:weakView
                                                              isCell:isCell
                                                             manager:weakView.tabComponentManager];
@@ -6301,29 +6262,29 @@ referenceSizeForFooterInSection:(NSInteger)section {
 #define tab_kDarkBackColor tab_kColor(0x282828)
 #define tab_kShimmerBackColor tab_kColor(0xDFDFDF)
 
-NSString * const TABAnimatedAlphaAnimation = @"TABAlphaAnimation";
-NSString * const TABAnimatedLocationAnimation = @"TABLocationAnimation";
-NSString * const TABAnimatedShimmerAnimation = @"TABShimmerAnimation";
-NSString * const TABAnimatedDropAnimation = @"TABDropAnimation";
+NSString * const FWTabAnimatedAlphaAnimation = @"FWTabAlphaAnimation";
+NSString * const FWTabAnimatedLocationAnimation = @"FWTabLocationAnimation";
+NSString * const FWTabAnimatedShimmerAnimation = @"FWTabShimmerAnimation";
+NSString * const FWTabAnimatedDropAnimation = @"FWTabDropAnimation";
 
-@interface TABAnimated()
+@interface FWTabAnimated()
 
 @property (nonatomic, strong, readwrite) NSMutableArray <TableDeDaSelfModel *> *tableDeDaSelfModelArray;
 @property (nonatomic, strong, readwrite) NSMutableArray <CollectionDeDaSelfModel *> *collectionDeDaSelfModelArray;
 
-@property (nonatomic, strong, readwrite) TABAnimatedCacheManager *cacheManager;
+@property (nonatomic, strong, readwrite) FWTabAnimatedCacheManager *cacheManager;
 
 @end
 
-@implementation TABAnimated
+@implementation FWTabAnimated
 
 #pragma mark - Initize Method
 
-+ (TABAnimated *)sharedAnimated {
++ (FWTabAnimated *)sharedAnimated {
     static dispatch_once_t token;
-    static TABAnimated *tabAnimated;
+    static FWTabAnimated *tabAnimated;
     dispatch_once(&token, ^{
-        tabAnimated = [[TABAnimated alloc] init];
+        tabAnimated = [[FWTabAnimated alloc] init];
     });
     return tabAnimated;
 }
@@ -6334,14 +6295,14 @@ NSString * const TABAnimatedDropAnimation = @"TABDropAnimation";
         _tableDeDaSelfModelArray = @[].mutableCopy;
         _collectionDeDaSelfModelArray = @[].mutableCopy;
         
-        _animationType = TABAnimationTypeOnlySkeleton;
-        [TABAnimatedDocumentMethod createFile:TABCacheManagerFolderName
+        _animationType = FWTabAnimationTypeOnlySkeleton;
+        [FWTabAnimatedDocumentMethod createFile:FWTabCacheManagerFolderName
                                         isDir:YES];
 #ifdef DEBUG
         _closeCache = YES;
 #endif
         
-        _cacheManager = TABAnimatedCacheManager.new;
+        _cacheManager = FWTabAnimatedCacheManager.new;
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.cacheManager install];
@@ -6352,21 +6313,21 @@ NSString * const TABAnimatedDropAnimation = @"TABDropAnimation";
 
 - (void)initWithOnlySkeleton {
     if (self) {
-        _animationType = TABAnimationTypeOnlySkeleton;
+        _animationType = FWTabAnimationTypeOnlySkeleton;
     }
 }
 
 - (void)initWithBinAnimation {
     if (self) {
-        _animationType = TABAnimationTypeBinAnimation;
+        _animationType = FWTabAnimationTypeBinAnimation;
     }
 }
 
 - (void)initWithShimmerAnimated {
     if (self) {
-        _animationType = TABAnimationTypeShimmer;
+        _animationType = FWTabAnimationTypeShimmer;
         _animatedDurationShimmer = 1.;
-        _shimmerDirection = TABShimmerDirectionToRight;
+        _shimmerDirection = FWTabShimmerDirectionToRight;
         _shimmerBackColor = tab_kShimmerBackColor;
         _shimmerBrightness = 0.92;
     }
@@ -6377,8 +6338,8 @@ NSString * const TABAnimatedDropAnimation = @"TABDropAnimation";
     if (self) {
         _animatedDurationShimmer = duration;
         _animatedColor = color;
-        _animationType = TABAnimationTypeShimmer;
-        _shimmerDirection = TABShimmerDirectionToRight;
+        _animationType = FWTabAnimationTypeShimmer;
+        _shimmerDirection = FWTabShimmerDirectionToRight;
         _shimmerBackColor = tab_kShimmerBackColor;
         _shimmerBrightness = 0.92;
     }
@@ -6386,7 +6347,7 @@ NSString * const TABAnimatedDropAnimation = @"TABDropAnimation";
 
 - (void)initWithDropAnimated {
     if (self) {
-        _animationType = TABAnimationTypeDrop;
+        _animationType = FWTabAnimationTypeDrop;
     }
 }
 
