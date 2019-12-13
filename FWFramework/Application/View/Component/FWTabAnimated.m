@@ -603,6 +603,10 @@ static const NSInteger kMemeoryModelMaxCount = 20;
 
 @end
 
+#define tabAnimatedLog(x) {if([FWTabAnimated sharedAnimated].openLog) NSLog(x);}
+#define tab_kColor(s) [UIColor colorWithRed:(((s&0xFF0000)>>16))/255.0 green:(((s&0xFF00)>>8))/255.0 blue:((s&0xFF))/255.0 alpha:1.]
+#define tab_RGB(R,G,B) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1.]
+
 @implementation UIView (FWTabAnimated)
 
 #pragma mark - Getter/Setter
@@ -2785,7 +2789,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 @end
 
-@implementation TableDeDaSelfModel
+@implementation FWTabTableDeDaSelfModel
 
 - (NSInteger)tab_deda_numberOfSectionsInTableView:(UITableView *)tableView {
     if (tableView.fwTabAnimated.state == FWTabViewAnimationStart) {
@@ -3269,7 +3273,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 
 @end
 
-@implementation CollectionDeDaSelfModel
+@implementation FWTabCollectionDeDaSelfModel
 
 - (NSInteger)tab_deda_numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     
@@ -4633,7 +4637,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         
         if ([target isEqual:delegate]) {
             
-            TableDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
+            FWTabTableDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
             if (!model.isExhangeDelegate) {
                 [self exchangeDelegateMethods:delegate
                                        target:target
@@ -4657,7 +4661,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         id <UITableViewDataSource> dataSource = target.dataSource;
         
         if ([target isEqual:dataSource]) {
-            TableDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
+            FWTabTableDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getTableDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
             if (!model.isExhangeDataSource) {
                 [self exchangeDataSourceMethods:dataSource
                                          target:target
@@ -4676,7 +4680,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (void)exchangeDelegateMethods:(id<UITableViewDelegate>)delegate
                          target:(id)target
-                          model:(TableDeDaSelfModel *)model {
+                          model:(FWTabTableDeDaSelfModel *)model {
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -4705,7 +4709,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
     
     if ([delegate respondsToSelector:estimatedHeightDelegateSel] &&
         ![delegate respondsToSelector:oldHeightDelegate]) {
-        EstimatedTableViewDelegate *edelegate = EstimatedTableViewDelegate.new;
+        FWTabEstimatedTableViewDelegate *edelegate = FWTabEstimatedTableViewDelegate.new;
         Method method = class_getInstanceMethod([edelegate class], oldHeightDelegate);
         BOOL isVictory = class_addMethod([delegate class], oldHeightDelegate, class_getMethodImplementation([edelegate class], oldHeightDelegate), method_getTypeEncoding(method));
         if (isVictory) {
@@ -4780,7 +4784,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (void)exchangeDataSourceMethods:(id<UITableViewDataSource>)dataSource
                            target:(id)target
-                            model:(TableDeDaSelfModel *)model {
+                            model:(FWTabTableDeDaSelfModel *)model {
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -4854,7 +4858,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                     withNewSel:(SEL)newSelector
                     withTarget:(id)target
                   withDelegate:(id)delegate
-                         model:(TableDeDaSelfModel *)model {
+                         model:(FWTabTableDeDaSelfModel *)model {
     
     if (![delegate respondsToSelector:oldSelector]) {
         return;
@@ -5368,7 +5372,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 @end
 
-@implementation EstimatedTableViewDelegate
+@implementation FWTabEstimatedTableViewDelegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -5608,7 +5612,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         _isExhangeDelegateIMP = YES;
         
         if ([target isEqual:delegate]) {
-            CollectionDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
+            FWTabCollectionDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(delegate.class)];
             if (!model.isExhangeDelegate) {
                 [self exchangeDelegateMethods:delegate
                                        target:target
@@ -5630,7 +5634,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
     if (!_isExhangeDataSourceIMP) {
         _isExhangeDataSourceIMP = YES;
         if ([target isEqual:dataSource]) {
-            CollectionDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
+            FWTabCollectionDeDaSelfModel *model = [[FWTabAnimated sharedAnimated] getCollectionDeDaModelAboutDeDaSelfWithClassName:NSStringFromClass(dataSource.class)];
             if (!model.isExhangeDataSource) {
                 [self exchangeDataSourceMethods:dataSource
                                          target:target
@@ -5649,7 +5653,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (void)exchangeDelegateMethods:(id<UICollectionViewDelegate>)delegate
                          target:(id)target
-                          model:(CollectionDeDaSelfModel *)model {
+                          model:(FWTabCollectionDeDaSelfModel *)model {
         
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -5699,7 +5703,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
 
 - (void)exchangeDataSourceMethods:(id<UICollectionViewDataSource>)dataSource
                            target:(id)target
-                            model:(CollectionDeDaSelfModel *)model {
+                            model:(FWTabCollectionDeDaSelfModel *)model {
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -5797,7 +5801,7 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
                     withNewSel:(SEL)newSelector
                     withTarget:(id)target
                   withDelegate:(id)delegate
-                         model:(CollectionDeDaSelfModel *)model {
+                         model:(FWTabCollectionDeDaSelfModel *)model {
     
     if (![delegate respondsToSelector:oldSelector]) {
         return;
@@ -6269,8 +6273,8 @@ NSString * const FWTabAnimatedDropAnimation = @"FWTabDropAnimation";
 
 @interface FWTabAnimated()
 
-@property (nonatomic, strong, readwrite) NSMutableArray <TableDeDaSelfModel *> *tableDeDaSelfModelArray;
-@property (nonatomic, strong, readwrite) NSMutableArray <CollectionDeDaSelfModel *> *collectionDeDaSelfModelArray;
+@property (nonatomic, strong, readwrite) NSMutableArray <FWTabTableDeDaSelfModel *> *tableDeDaSelfModelArray;
+@property (nonatomic, strong, readwrite) NSMutableArray <FWTabCollectionDeDaSelfModel *> *collectionDeDaSelfModelArray;
 
 @property (nonatomic, strong, readwrite) FWTabAnimatedCacheManager *cacheManager;
 
@@ -6353,27 +6357,27 @@ NSString * const FWTabAnimatedDropAnimation = @"FWTabDropAnimation";
 
 #pragma mark - Other Method
 
-- (TableDeDaSelfModel *)getTableDeDaModelAboutDeDaSelfWithClassName:(NSString *)className {
-    for (TableDeDaSelfModel *model in self.tableDeDaSelfModelArray) {
+- (FWTabTableDeDaSelfModel *)getTableDeDaModelAboutDeDaSelfWithClassName:(NSString *)className {
+    for (FWTabTableDeDaSelfModel *model in self.tableDeDaSelfModelArray) {
         if ([model.targetClassName isEqualToString:className]) {
             return model;
         }
     }
     
-    TableDeDaSelfModel *newModel = TableDeDaSelfModel.new;
+    FWTabTableDeDaSelfModel *newModel = FWTabTableDeDaSelfModel.new;
     newModel.targetClassName = className;
     [self.tableDeDaSelfModelArray addObject:newModel];
     return newModel;
 }
 
-- (CollectionDeDaSelfModel *)getCollectionDeDaModelAboutDeDaSelfWithClassName:(NSString *)className {
-    for (CollectionDeDaSelfModel *model in self.collectionDeDaSelfModelArray) {
+- (FWTabCollectionDeDaSelfModel *)getCollectionDeDaModelAboutDeDaSelfWithClassName:(NSString *)className {
+    for (FWTabCollectionDeDaSelfModel *model in self.collectionDeDaSelfModelArray) {
         if ([model.targetClassName isEqualToString:className]) {
             return model;
         }
     }
     
-    CollectionDeDaSelfModel *newModel = CollectionDeDaSelfModel.new;
+    FWTabCollectionDeDaSelfModel *newModel = FWTabCollectionDeDaSelfModel.new;
     newModel.targetClassName = className;
     [self.collectionDeDaSelfModelArray addObject:newModel];
     return newModel;
