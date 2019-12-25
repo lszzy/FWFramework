@@ -45,13 +45,22 @@
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.backgroundColor = [UIColor appColorBg];
+        
+        UIView *bgView = [UIView fwAutoLayoutView];
+        bgView.backgroundColor = [UIColor appColorWhite];
+        bgView.layer.masksToBounds = NO;
+        bgView.layer.cornerRadius = 10;
+        [bgView fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:5];
+        [self.contentView addSubview:bgView];
+        bgView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont appFontNormal];
         titleLabel.textColor = [UIColor appColorBlackOpacityHuge];
         self.myTitleLabel = titleLabel;
-        [self.contentView addSubview:titleLabel]; {
+        [bgView addSubview:titleLabel]; {
             [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
             [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
             NSLayoutConstraint *constraint = [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:kAppPaddingLarge];
@@ -64,7 +73,7 @@
         textLabel.font = [UIFont appFontSmall];
         textLabel.textColor = [UIColor appColorBlackOpacityLarge];
         self.myTextLabel = textLabel;
-        [self.contentView addSubview:textLabel]; {
+        [bgView addSubview:textLabel]; {
             [textLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
             [textLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
             NSLayoutConstraint *constraint = [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:titleLabel withOffset:kAppPaddingNormal];
@@ -75,7 +84,7 @@
         self.myImageView = imageView;
         imageView.userInteractionEnabled = YES;
         [imageView fwAddTapGestureWithTarget:self action:@selector(onImageClick:)];
-        [self.contentView addSubview:imageView]; {
+        [bgView addSubview:imageView]; {
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge relation:NSLayoutRelationGreaterThanOrEqual];
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
@@ -126,6 +135,7 @@
 - (void)renderView
 {
     FWWeakifySelf();
+    self.tableView.backgroundColor = [UIColor appColorBg];
     [self.tableView fwAddPullRefreshWithBlock:^{
         FWStrongifySelf();
         
@@ -159,8 +169,10 @@
         self.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
     };
     
-    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:100];
+    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:120];
+    // self.tableView.fwTabAnimated.animatedBackgroundColor = [UIColor appColorBg];
     self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
+        manager.animation(3).remove();
         manager.animationsWithIndexs(0,1).line(1);
         manager.animations(0,1).line(1);
         manager.animation(0).width(100).toLongAnimation();
