@@ -111,6 +111,11 @@ extension Array where Element: FWTabBaseComponent {
     }
     
     @discardableResult
+    public func z(_ value: CGFloat) -> [FWTabBaseComponent] {
+        return (self as NSArray)._oc_z()(value)!
+    }
+    
+    @discardableResult
     public func color(_ value: UIColor) -> [FWTabBaseComponent] {
         return (self as NSArray)._oc_color()(value)!
     }
@@ -197,6 +202,11 @@ extension FWTabBaseComponent {
     @discardableResult
     public func y(_ value: CGFloat) -> FWTabBaseComponent {
         return self._oc_y()(value)!
+    }
+    
+    @discardableResult
+    public func z(_ value: CGFloat) -> FWTabBaseComponent {
+        return self._oc_z()(value)!
     }
     
     @discardableResult
