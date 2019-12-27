@@ -15,3 +15,7 @@
 @interface TestTableLayoutViewController : BaseTableViewController
 
 @end
+
+@interface TestTableLayoutCell : UITableViewCell
+
+@end
