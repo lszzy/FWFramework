@@ -30,7 +30,7 @@
     
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     [self.contentView addSubview:cycleView];
     cycleView.fwLayoutChain.left().top().width(FWScreenWidth).height(200);
