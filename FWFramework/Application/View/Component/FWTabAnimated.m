@@ -2214,6 +2214,38 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     };
 }
 
+- (NSArray<FWTabBaseComponent *> * _Nullable (^)(NSArray * _Nonnull))_oc_animationsWithIndexs {
+    return ^NSArray <FWTabBaseComponent *> *(NSArray *indexs) {
+        
+        NSMutableArray <FWTabBaseComponent *> *resultArray = @[].mutableCopy;
+        
+        NSInteger arg;
+        for (id index in indexs) {
+            arg = [index integerValue];
+            if(arg >= 0) {
+                
+                if (arg > 1000) {
+                    break;
+                }
+                
+                if (arg >= self.baseComponentArray.count) {
+                    NSAssert(NO, @"Array bound, please check it carefully.");
+                    [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
+                }else {
+                    if(arg < 0) {
+                        NSAssert(NO, @"Input data contains a number < 0, please check it carefully.");
+                        [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
+                    }else {
+                        [resultArray addObject:self.baseComponentArray[arg]];
+                    }
+                }
+            }
+        }
+        
+        return resultArray.copy;
+    };
+}
+
 #pragma mark -
 
 - (void)addSentryView:(UIView *)view

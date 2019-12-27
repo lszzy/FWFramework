@@ -411,7 +411,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)line;
+- (FWTabAnimatedArrayIntBlock)line NS_SWIFT_NAME(_oc_line());
 
 /**
  间距，行数超过1时生效，默认为8.0。
@@ -612,7 +612,7 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentVoidBlock)remove;
+- (FWTabBaseComponentVoidBlock)remove NS_SWIFT_NAME(_oc_remove());
 
 /**
  添加占位图，不支持圆角，建议切图使用圆角
@@ -807,7 +807,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  
  @return FWTabBaseComponent对象
  */
-- (FWTabBaseComponentBlock _Nullable)animation;
+- (FWTabBaseComponentBlock _Nullable)animation NS_SWIFT_NAME(_oc_animation());
 
 /**
  获取多个动画元素，需要传递2个参数
@@ -817,7 +817,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  
  @return 装有`FWTabBaseComponent`类型的数组
  */
-- (FWTabBaseComponentArrayBlock _Nullable)animations;
+- (FWTabBaseComponentArrayBlock _Nullable)animations NS_SWIFT_NAME(_oc_animations());
 
 /**
  获取不定量动画元素，参数 >= 1
@@ -826,6 +826,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  @return 装有`FWTabBaseComponent`类型的数组
  */
 - (FWTabBaseComponentArrayWithIndexsBlock)animationsWithIndexs;
+- (NSArray<FWTabBaseComponent *> * _Nullable (^)(NSArray *indexs))_oc_animationsWithIndexs;
 
 #pragma mark - 相关属性
 
