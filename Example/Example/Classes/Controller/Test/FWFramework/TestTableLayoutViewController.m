@@ -134,15 +134,14 @@
 
 - (void)setupAnimatedOC
 {
-    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:120];
+    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:140];
     self.tableView.fwTabAnimated.animatedBackgroundColor = [UIColor appColorBg];
     self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
-        manager.animation(3).x(10).y(10).width(FWScreenWidth - 20).height(100).color(UIColor.appColorWhite);
+        manager.animation(3).z(-1).height(120).color(UIColor.appColorWhite);
         [manager.animation(3).layer fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:5];
         manager.animationsWithIndexs(0,1).line(1);
-        manager.animations(0,1).line(1);
+        manager.animations(1,1).up(5);
         manager.animation(0).width(100).toLongAnimation();
-        manager.animation(1).up(5);
         manager.animation(2).width(30).height(30).placeholder(@"AppIcon");
     };
 }

@@ -67,8 +67,8 @@
     };
     
     [[FWTabAnimated sharedAnimated] initWithOnlySkeleton];
-    [FWTabAnimated sharedAnimated].openLog = YES;
-    [FWTabAnimated sharedAnimated].openAnimationTag = YES;
+    [FWTabAnimated sharedAnimated].openLog = FWIsSimulator;
+    [FWTabAnimated sharedAnimated].openAnimationTag = FWIsSimulator;
 }
 
 - (void)setupController

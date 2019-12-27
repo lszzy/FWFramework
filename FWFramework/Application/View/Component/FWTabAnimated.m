@@ -1389,6 +1389,15 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
+- (FWTabAnimatedArrayFloatBlock)z {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
+            component.z(offset);
+        }
+        return self;
+    };
+}
+
 - (FWTabAnimatedArrayColorBlock)color {
     return ^NSArray <FWTabBaseComponent *> *(UIColor *color) {
         for (FWTabBaseComponent *component in self) {
@@ -1666,6 +1675,23 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 - (void)result_y:(CGFloat)offset {
     self.layer.frame = CGRectMake(self.layer.frame.origin.x, offset, self.layer.frame.size.width, self.layer.frame.size.height);
+}
+
+#pragma mark - z
+
+- (FWTabBaseComponentFloatBlock)z {
+    return ^FWTabBaseComponent *(CGFloat offset) {
+        [self result_z:offset];
+        return self;
+    };
+}
+
+- (void)preview_z:(NSNumber *)number {
+    [self result_z:[number floatValue]];
+}
+
+- (void)result_z:(CGFloat)offset {
+    self.layer.zPosition = offset;
 }
 
 #pragma mark - line

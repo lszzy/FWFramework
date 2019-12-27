@@ -449,6 +449,13 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
 - (FWTabAnimatedArrayFloatBlock)y NS_SWIFT_NAME(_oc_y());
 
 /**
+ 设置层级，默认0，值越小层级越低
+ 
+ @return 目标动画元素数组
+ */
+- (FWTabAnimatedArrayFloatBlock)z NS_SWIFT_NAME(_oc_z());
+
+/**
  设置动画数组颜色
  
  @return 目标动画元素数组
@@ -585,6 +592,13 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
  @return 目标动画元素
  */
 - (FWTabBaseComponentFloatBlock)y NS_SWIFT_NAME(_oc_y());
+
+/**
+ 设置层级，默认0，值越小层级越低
+ 
+ @return 目标动画元素
+ */
+- (FWTabBaseComponentFloatBlock)z NS_SWIFT_NAME(_oc_z());
 
 /**
  设置动画元素的行数
