@@ -146,6 +146,8 @@
 		2FCD376A22533C10001E81DB /* TestStorekitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD376822533C10001E81DB /* TestStorekitViewController.m */; };
 		2FCE517121D3BE02009EA65E /* TestCacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCE517021D3BE02009EA65E /* TestCacheViewController.m */; };
 		2FD1A52A21D4BF4800A215C2 /* TestControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */; };
+		2FD369FC23B5CF7200741EAC /* TestTableLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD369FB23B5CF7200741EAC /* TestTableLayoutViewController.swift */; };
+		2FD369FD23B5CF7200741EAC /* TestTableLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD369FB23B5CF7200741EAC /* TestTableLayoutViewController.swift */; };
 		2FD375A422FFBE280066F308 /* LoadingPlaceholder.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */; };
 		2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
 		2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */; };
@@ -319,6 +321,7 @@
 		2FCE517021D3BE02009EA65E /* TestCacheViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCacheViewController.m; sourceTree = "<group>"; };
 		2FD1A52821D4BF4800A215C2 /* TestControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestControllerViewController.h; sourceTree = "<group>"; };
 		2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestControllerViewController.m; sourceTree = "<group>"; };
+		2FD369FB23B5CF7200741EAC /* TestTableLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTableLayoutViewController.swift; sourceTree = "<group>"; };
 		2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LoadingPlaceholder.gif; sourceTree = "<group>"; };
 		2FE533E72181645300CA54E6 /* TestTableBackgroundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableBackgroundViewController.h; sourceTree = "<group>"; };
 		2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableBackgroundViewController.m; sourceTree = "<group>"; };
@@ -568,6 +571,7 @@
 				2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */,
 				2F4CFA582155302E00203A37 /* TestTableLayoutViewController.h */,
 				2F4CFA592155302E00203A37 /* TestTableLayoutViewController.m */,
+				2FD369FB23B5CF7200741EAC /* TestTableLayoutViewController.swift */,
 				2FF39110236D4B740056DEEA /* TestTableReloadViewController.h */,
 				2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */,
 				2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */,
@@ -1066,6 +1070,7 @@
 				2F4385972318F687003A683C /* TestAnimationViewController.m in Sources */,
 				2F4385982318F687003A683C /* SimpleViewController.m in Sources */,
 				2F4385992318F687003A683C /* TestLabelViewController.m in Sources */,
+				2FD369FD23B5CF7200741EAC /* TestTableLayoutViewController.swift in Sources */,
 				2F43859A2318F687003A683C /* TestModelViewController.m in Sources */,
 				2F43859C2318F687003A683C /* TestEmptyViewController.m in Sources */,
 				2F43859D2318F687003A683C /* BaseViewController.m in Sources */,
@@ -1138,6 +1143,7 @@
 				2FF39112236D4B740056DEEA /* TestTableReloadViewController.m in Sources */,
 				2FCD375822533B3C001E81DB /* TestAnimationViewController.m in Sources */,
 				2F43E5BF217AC3CE00BAEB59 /* SimpleViewController.m in Sources */,
+				2FD369FC23B5CF7200741EAC /* TestTableLayoutViewController.swift in Sources */,
 				2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */,
 				2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */,
 				2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */,
