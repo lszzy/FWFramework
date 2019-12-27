@@ -11,6 +11,24 @@
 #import "UIView+FWAnimation.h"
 #import "UIBezierPath+FWFramework.h"
 
+#pragma mark - CALayer+FWLayer
+
+@implementation CALayer (FWLayer)
+
+- (void)fwSetShadowColor:(UIColor *)color
+                  offset:(CGSize)offset
+                  radius:(CGFloat)radius
+{
+    self.shadowColor = color.CGColor;
+    self.shadowOffset = offset;
+    self.shadowRadius = radius;
+    self.shadowOpacity = 1.0;
+    self.shouldRasterize = YES;
+    self.rasterizationScale = [UIScreen mainScreen].scale;
+}
+
+@end
+
 #pragma mark - CAGradientLayer+FWLayer
 
 @implementation CAGradientLayer (FWLayer)
@@ -67,12 +85,7 @@
                   offset:(CGSize)offset
                   radius:(CGFloat)radius
 {
-    self.layer.shadowColor = color.CGColor;
-    self.layer.shadowOffset = offset;
-    self.layer.shadowRadius = radius;
-    self.layer.shadowOpacity = 1.0;
-    self.layer.shouldRasterize = YES;
-    self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    [self.layer fwSetShadowColor:color offset:offset radius:radius];
 }
 
 #pragma mark - Bezier
