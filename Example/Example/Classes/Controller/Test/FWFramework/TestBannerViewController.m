@@ -32,7 +32,7 @@
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     cycleView.placeholderImage = [UIImage fwGifImageWithName:@"loading"];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
@@ -56,7 +56,7 @@
     FWBannerView *cycleView = [FWBannerView new];
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleCustom;
     cycleView.pageDotViewClass = [FWDotView class];
@@ -88,7 +88,7 @@
     cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
@@ -120,7 +120,7 @@
     cycleView.itemPagingEnabled = YES;
     cycleView.itemSpacing = 10;
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -150,7 +150,7 @@
     cycleView.itemPagingEnabled = YES;
     cycleView.itemSize = CGSizeMake(FWScreenWidth - 30, 100);
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -181,7 +181,7 @@
     cycleView.itemPagingCenter = YES;
     cycleView.itemSize = CGSizeMake(FWScreenWidth - 40, 100);
     cycleView.autoScroll = YES;
-    cycleView.autoScrollTimeInterval = 6;
+    cycleView.autoScrollTimeInterval = 4;
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
