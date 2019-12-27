@@ -135,9 +135,10 @@
 - (void)setupAnimatedOC
 {
     self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:120];
-    // self.tableView.fwTabAnimated.animatedBackgroundColor = [UIColor appColorBg];
+    self.tableView.fwTabAnimated.animatedBackgroundColor = [UIColor appColorBg];
     self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
-        manager.animation(3).remove();
+        manager.animation(3).x(10).y(10).width(FWScreenWidth - 20).height(100).color(UIColor.appColorWhite);
+        [manager.animation(3).layer fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:5];
         manager.animationsWithIndexs(0,1).line(1);
         manager.animations(0,1).line(1);
         manager.animation(0).width(100).toLongAnimation();
@@ -277,7 +278,7 @@
 {
     NSLog(@"开始刷新");
     [self.tableView fwTabStartAnimation];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.tableView fwTabEndAnimation];
         NSLog(@"刷新完成");
         
