@@ -10,6 +10,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - CALayer+FWLayer
+
+/*!
+@brief CALayer+FWLayer
+*/
+@interface CALayer (FWLayer)
+
+// 设置阴影颜色、偏移和半径
+- (void)fwSetShadowColor:(nullable UIColor *)color
+                  offset:(CGSize)offset
+                  radius:(CGFloat)radius;
+
+@end
+
 #pragma mark - CAGradientLayer+FWLayer
 
 /*!
