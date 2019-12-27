@@ -11,9 +11,10 @@ import Foundation
 extension TestTableLayoutViewController {
     @objc func setupAnimatedSwift() {
         self.tableView.fwTabAnimated = FWTabTableAnimated(cellClass: TestTableLayoutCell.self, cellHeight: 120)
-        // self.tableView.fwTabAnimated?.animatedBackgroundColor = UIColor.appColorBg()
+        self.tableView.fwTabAnimated?.animatedBackgroundColor = UIColor.appColorBg()
         self.tableView.fwTabAnimated?.adjustBlock = { (manager) in
-            manager.animation(3)?.remove()
+            manager.animation(3)?.x(10).y(10).width(FWScreenWidth - 20).height(100).color(UIColor.appColorWhite())
+            manager.animation(3)?.layer.fwSetShadowColor(UIColor.gray, offset: CGSize(width: 0, height: 0), radius: 5)
             manager.animations(indexs: 0,1)?.line(1)
             manager.animations(0, 1)?.line(1)
             manager.animation(0)?.width(100).toLongAnimation()
