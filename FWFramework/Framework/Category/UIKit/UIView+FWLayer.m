@@ -23,8 +23,8 @@
     self.shadowOffset = offset;
     self.shadowRadius = radius;
     self.shadowOpacity = 1.0;
-    self.shouldRasterize = YES;
-    self.rasterizationScale = [UIScreen mainScreen].scale;
+    // self.shouldRasterize = YES;
+    // self.rasterizationScale = [UIScreen mainScreen].scale;
 }
 
 @end
