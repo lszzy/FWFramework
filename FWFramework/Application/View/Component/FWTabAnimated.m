@@ -627,6 +627,14 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     objc_setAssociatedObject(self, @selector(fwTabComponentManager),fwTabComponentManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)fwTabDisabled {
+    return [objc_getAssociatedObject(self, @selector(fwTabDisabled)) boolValue];
+}
+
+- (void)setFwTabDisabled:(BOOL)fwTabDisabled {
+    objc_setAssociatedObject(self, @selector(fwTabDisabled), @(fwTabDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 @implementation UITableView (FWTabAnimated)
@@ -4076,6 +4084,10 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 }
 
 + (BOOL)judgeViewIsNeedAddAnimation:(UIView *)view {
+    // 如果禁用骨架屏，移除动画队列
+    if (view.fwTabDisabled) {
+        return NO;
+    }
     
     if ([view isKindOfClass:[UICollectionView class]] ||
         [view isKindOfClass:[UITableView class]]) {
