@@ -188,6 +188,9 @@ extern NSString * const FWTabCacheManagerFolderName;
 // 骨架屏管理单元持有
 @property (nonatomic, strong) FWTabComponentManager * _Nullable fwTabComponentManager;
 
+// 是否禁用骨架屏
+@property (nonatomic, assign) BOOL fwTabDisabled;
+
 @end
 
 @class FWTabTableAnimated;
@@ -341,119 +344,126 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)left;
+- (FWTabAnimatedArrayFloatBlock)left NS_SWIFT_NAME(_oc_left());
 
 /**
  所有元素向右平移
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)right;
+- (FWTabAnimatedArrayFloatBlock)right NS_SWIFT_NAME(_oc_right());
 
 /**
  所有元素向上平移
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)up;
+- (FWTabAnimatedArrayFloatBlock)up NS_SWIFT_NAME(_oc_up());
 
 /**
  所有元素向下平移
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)down;
+- (FWTabAnimatedArrayFloatBlock)down NS_SWIFT_NAME(_oc_down());
 
 /**
  设置所有元素的宽度
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)width;
+- (FWTabAnimatedArrayFloatBlock)width NS_SWIFT_NAME(_oc_width());
 
 /**
  设置所有元素的高度
 
  * @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)height;
+- (FWTabAnimatedArrayFloatBlock)height NS_SWIFT_NAME(_oc_height());
 
 /**
  设置所有元素的圆角
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)radius;
+- (FWTabAnimatedArrayFloatBlock)radius NS_SWIFT_NAME(_oc_radius());
 
 /**
  减少的宽度：与当前宽度相比，所减少的宽度，负数则增加。
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)reducedWidth;
+- (FWTabAnimatedArrayFloatBlock)reducedWidth NS_SWIFT_NAME(_oc_reducedWidth());
 
 /**
  减少的高度：与当前高度相比，所减少的高度，负数则增加。
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)reducedHeight;
+- (FWTabAnimatedArrayFloatBlock)reducedHeight NS_SWIFT_NAME(_oc_reducedHeight());
 
 /**
  减少的圆角：与当前圆角相比，所减少的圆角，负数则增加。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)reducedRadius;
+- (FWTabAnimatedArrayFloatBlock)reducedRadius NS_SWIFT_NAME(_oc_reducedRadius());
 
 /**
  设置行数
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)line;
+- (FWTabAnimatedArrayIntBlock)line NS_SWIFT_NAME(_oc_line());
 
 /**
  间距，行数超过1时生效，默认为8.0。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)space;
+- (FWTabAnimatedArrayFloatBlock)space NS_SWIFT_NAME(_oc_space());
 
 /**
  移除该动画组件数组中的所有组件
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayBlock)remove;
+- (FWTabAnimatedArrayBlock)remove NS_SWIFT_NAME(_oc_remove());
 
 /**
  添加占位图，不支持圆角，建议切图使用圆角
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayStringBlock)placeholder;
+- (FWTabAnimatedArrayStringBlock)placeholder NS_SWIFT_NAME(_oc_placeholder());
 
 /**
  设置横坐标
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)x;
+- (FWTabAnimatedArrayFloatBlock)x NS_SWIFT_NAME(_oc_x());
 
 /**
  设置纵坐标
 
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)y;
+- (FWTabAnimatedArrayFloatBlock)y NS_SWIFT_NAME(_oc_y());
+
+/**
+ 设置层级，默认0，值越小层级越低
+ 
+ @return 目标动画元素数组
+ */
+- (FWTabAnimatedArrayFloatBlock)z NS_SWIFT_NAME(_oc_z());
 
 /**
  设置动画数组颜色
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayColorBlock)color;
+- (FWTabAnimatedArrayColorBlock)color NS_SWIFT_NAME(_oc_color());
 
 #pragma mark - Drop Animation 以下属性均针对豆瓣动画
 
@@ -462,7 +472,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)dropIndex;
+- (FWTabAnimatedArrayIntBlock)dropIndex NS_SWIFT_NAME(_oc_dropIndex());
 
 /**
  适用于多行的动画元素,
@@ -470,21 +480,21 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabAnimatedArrayColorBloc
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayIntBlock)dropFromIndex;
+- (FWTabAnimatedArrayIntBlock)dropFromIndex NS_SWIFT_NAME(_oc_dropFromIndex());
 
 /**
  将动画层移出豆瓣动画队列，不参与变色。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayBlock)removeOnDrop;
+- (FWTabAnimatedArrayBlock)removeOnDrop NS_SWIFT_NAME(_oc_removeOnDrop());
 
 /**
  豆瓣动画变色停留时间比，默认是0.2。
  
  @return 目标动画元素数组
  */
-- (FWTabAnimatedArrayFloatBlock)dropStayTime;
+- (FWTabAnimatedArrayFloatBlock)dropStayTime NS_SWIFT_NAME(_oc_dropStayTime());
 
 @end
 
@@ -505,49 +515,49 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)left;
+- (FWTabBaseComponentFloatBlock)left NS_SWIFT_NAME(_oc_left());
 
 /**
  向右平移
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)right;
+- (FWTabBaseComponentFloatBlock)right NS_SWIFT_NAME(_oc_right());
 
 /**
  向上平移
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)up;
+- (FWTabBaseComponentFloatBlock)up NS_SWIFT_NAME(_oc_up());
 
 /**
  向下平移
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)down;
+- (FWTabBaseComponentFloatBlock)down NS_SWIFT_NAME(_oc_down());
 
 /**
  设置动画元素的宽度
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)width;
+- (FWTabBaseComponentFloatBlock)width NS_SWIFT_NAME(_oc_width());
 
 /**
  设置动画元素的高度
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)height;
+- (FWTabBaseComponentFloatBlock)height NS_SWIFT_NAME(_oc_height());
 
 /**
  设置动画元素的圆角
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)radius;
+- (FWTabBaseComponentFloatBlock)radius NS_SWIFT_NAME(_oc_radius());
 
 /**
  需要减少的宽度：与当前宽度相比，所减少的宽度
@@ -555,7 +565,7 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)reducedWidth;
+- (FWTabBaseComponentFloatBlock)reducedWidth NS_SWIFT_NAME(_oc_reducedWidth());
 
 /**
  减少的高度：与当前高度相比，所减少的高度
@@ -563,91 +573,98 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)reducedHeight;
+- (FWTabBaseComponentFloatBlock)reducedHeight NS_SWIFT_NAME(_oc_reducedHeight());
 
 /**
  减少的圆角
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)reducedRadius;
+- (FWTabBaseComponentFloatBlock)reducedRadius NS_SWIFT_NAME(_oc_reducedRadius());
 
 /**
  设置横坐标
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)x;
+- (FWTabBaseComponentFloatBlock)x NS_SWIFT_NAME(_oc_x());
 
 /**
  设置纵坐标
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)y;
+- (FWTabBaseComponentFloatBlock)y NS_SWIFT_NAME(_oc_y());
+
+/**
+ 设置层级，默认0，值越小层级越低
+ 
+ @return 目标动画元素
+ */
+- (FWTabBaseComponentFloatBlock)z NS_SWIFT_NAME(_oc_z());
 
 /**
  设置动画元素的行数
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentIntegerBlock)line;
+- (FWTabBaseComponentIntegerBlock)line NS_SWIFT_NAME(_oc_line());
 
 /**
  设置多行动画元素的间距，即行数超过1时生效，默认为8.0。
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)space;
+- (FWTabBaseComponentFloatBlock)space NS_SWIFT_NAME(_oc_space());
 
 /**
  对于`行数` > 1的动画元素，设置最后一行的宽度比例，默认是0.5，即原宽度的一半。
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)lastLineScale;
+- (FWTabBaseComponentFloatBlock)lastLineScale NS_SWIFT_NAME(_oc_lastLineScale());
 
 /**
  从动画组中移除
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentVoidBlock)remove;
+- (FWTabBaseComponentVoidBlock)remove NS_SWIFT_NAME(_oc_remove());
 
 /**
  添加占位图，不支持圆角，建议切图使用圆角
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentStringBlock)placeholder;
+- (FWTabBaseComponentStringBlock)placeholder NS_SWIFT_NAME(_oc_placeholder());
 
 /**
  赋予动画元素画由长到短的动画
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentVoidBlock)toLongAnimation;
+- (FWTabBaseComponentVoidBlock)toLongAnimation NS_SWIFT_NAME(_oc_toLongAnimation());
 
 /**
  赋予动画元素画由短到长的动画
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentVoidBlock)toShortAnimation;
+- (FWTabBaseComponentVoidBlock)toShortAnimation NS_SWIFT_NAME(_oc_toShortAnimation());
 
 /**
  如果动画元素来自居中文本，设置后取消居中显示，
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentVoidBlock)cancelAlignCenter;
+- (FWTabBaseComponentVoidBlock)cancelAlignCenter NS_SWIFT_NAME(_oc_cancelAlignCenter());
 
 /**
  设置动画元素颜色
 
  @return 目标动画元素
  */
-- (FWTabBaseComponentColorBlock)color;
+- (FWTabBaseComponentColorBlock)color NS_SWIFT_NAME(_oc_color());
 
 #pragma mark - 豆瓣动画需要用到的属性
 
@@ -656,7 +673,7 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentIntegerBlock)dropIndex;
+- (FWTabBaseComponentIntegerBlock)dropIndex NS_SWIFT_NAME(_oc_dropIndex());
 
 /**
  豆瓣动画 - 用于多行的动画元素,
@@ -664,21 +681,21 @@ typedef FWTabBaseComponent * _Nullable (^FWTabBaseComponentColorBlock)(UIColor *
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentIntegerBlock)dropFromIndex;
+- (FWTabBaseComponentIntegerBlock)dropFromIndex NS_SWIFT_NAME(_oc_dropFromIndex());
 
 /**
  豆瓣动画 - 将动画层移出豆瓣动画队列，不参与变色。
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentVoidBlock)removeOnDrop;
+- (FWTabBaseComponentVoidBlock)removeOnDrop NS_SWIFT_NAME(_oc_removeOnDrop());
 
 /**
  豆瓣动画 - 豆瓣动画变色停留时间比，默认是0.2。
  
  @return 目标动画元素
  */
-- (FWTabBaseComponentFloatBlock)dropStayTime;
+- (FWTabBaseComponentFloatBlock)dropStayTime NS_SWIFT_NAME(_oc_dropStayTime());
 
 + (instancetype)initWithComponentLayer:(FWTabComponentLayer *)layer;
 
@@ -807,7 +824,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  
  @return FWTabBaseComponent对象
  */
-- (FWTabBaseComponentBlock _Nullable)animation;
+- (FWTabBaseComponentBlock _Nullable)animation NS_SWIFT_NAME(_oc_animation());
 
 /**
  获取多个动画元素，需要传递2个参数
@@ -817,7 +834,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  
  @return 装有`FWTabBaseComponent`类型的数组
  */
-- (FWTabBaseComponentArrayBlock _Nullable)animations;
+- (FWTabBaseComponentArrayBlock _Nullable)animations NS_SWIFT_NAME(_oc_animations());
 
 /**
  获取不定量动画元素，参数 >= 1
@@ -826,6 +843,7 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  @return 装有`FWTabBaseComponent`类型的数组
  */
 - (FWTabBaseComponentArrayWithIndexsBlock)animationsWithIndexs;
+- (NSArray<FWTabBaseComponent *> * _Nullable (^)(NSArray *indexs))_oc_animationsWithIndexs;
 
 #pragma mark - 相关属性
 

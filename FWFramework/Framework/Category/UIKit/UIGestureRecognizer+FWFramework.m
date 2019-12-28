@@ -126,7 +126,7 @@
     [super touchesMoved:touches withEvent:event];
     if (!self.scrollView || !self.scrollView.scrollEnabled) return;
     
-    if (self.direction == UISwipeGestureRecognizerDirectionUp | self.direction == UISwipeGestureRecognizerDirectionDown) {
+    if (self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown) {
         if (![self.scrollView fwCanScrollVertical]) return;
     } else {
         if (![self.scrollView fwCanScrollHorizontal]) return;
@@ -207,6 +207,12 @@
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown) {
+                if ([scrollView fwCanScrollHorizontal]) return NO;
+            } else {
+                if ([scrollView fwCanScrollVertical]) return NO;
+            }
+            
             if (scrollView != self.scrollView) self.scrollView = scrollView;
             return YES;
         } else {
@@ -224,6 +230,12 @@
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
+            if (self.direction == UISwipeGestureRecognizerDirectionUp || self.direction == UISwipeGestureRecognizerDirectionDown) {
+                if ([scrollView fwCanScrollHorizontal]) return NO;
+            } else {
+                if ([scrollView fwCanScrollVertical]) return NO;
+            }
+            
             if (scrollView != self.scrollView) self.scrollView = scrollView;
             return self.shouldBeRequiredToFail ? self.shouldBeRequiredToFail(otherGestureRecognizer) : YES;
         } else {
