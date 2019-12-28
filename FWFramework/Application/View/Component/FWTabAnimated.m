@@ -627,6 +627,14 @@ static const NSInteger kMemeoryModelMaxCount = 20;
     objc_setAssociatedObject(self, @selector(fwTabComponentManager),fwTabComponentManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)fwTabDisabled {
+    return [objc_getAssociatedObject(self, @selector(fwTabDisabled)) boolValue];
+}
+
+- (void)setFwTabDisabled:(BOOL)fwTabDisabled {
+    objc_setAssociatedObject(self, @selector(fwTabDisabled), @(fwTabDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 @implementation UITableView (FWTabAnimated)
@@ -1389,6 +1397,15 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     };
 }
 
+- (FWTabAnimatedArrayFloatBlock)z {
+    return ^NSArray <FWTabBaseComponent *> *(CGFloat offset) {
+        for (FWTabBaseComponent *component in self) {
+            component.z(offset);
+        }
+        return self;
+    };
+}
+
 - (FWTabAnimatedArrayColorBlock)color {
     return ^NSArray <FWTabBaseComponent *> *(UIColor *color) {
         for (FWTabBaseComponent *component in self) {
@@ -1668,6 +1685,23 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
     self.layer.frame = CGRectMake(self.layer.frame.origin.x, offset, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
+#pragma mark - z
+
+- (FWTabBaseComponentFloatBlock)z {
+    return ^FWTabBaseComponent *(CGFloat offset) {
+        [self result_z:offset];
+        return self;
+    };
+}
+
+- (void)preview_z:(NSNumber *)number {
+    [self result_z:[number floatValue]];
+}
+
+- (void)result_z:(CGFloat)offset {
+    self.layer.zPosition = offset;
+}
+
 #pragma mark - line
 
 - (FWTabBaseComponentIntegerBlock)line {
@@ -1819,6 +1853,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 }
 
 - (void)result_color:(UIColor *)color {
+    self.layer.currentColor = color;
     self.layer.backgroundColor = color.CGColor;
 }
 
@@ -1955,11 +1990,13 @@ extern const NSInteger FWTabViewAnimatedErrorCode;
     layer.frame = self.frame;
     layer.resultFrameValue = [NSValue valueWithCGRect:self.frame];
     layer.backgroundColor = self.backgroundColor;
+    layer.currentColor = self.currentColor;
     layer.shadowOffset = self.shadowOffset;
     layer.shadowColor = self.shadowColor;
     layer.shadowRadius = self.shadowRadius;
     layer.shadowOpacity = self.shadowOpacity;
     layer.cornerRadius = self.cornerRadius;
+    layer.zPosition = self.zPosition;
     layer.anchorPoint = self.anchorPoint;
     layer.position = self.position;
     layer.opaque = self.opaque;
@@ -1971,7 +2008,9 @@ extern const NSInteger FWTabViewAnimatedErrorCode;
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[NSValue valueWithCGRect:self.frame] forKey:@"resultFrameValue"];
     [aCoder encodeObject:[UIColor colorWithCGColor:self.backgroundColor] forKey:@"backgroundColor"];
+    [aCoder encodeObject:self.currentColor forKey:@"currentColor"];
     [aCoder encodeFloat:self.cornerRadius forKey:@"cornerRadius"];
+    [aCoder encodeFloat:self.zPosition forKey:@"zPosition"];
     
     [aCoder encodeInteger:_tagIndex forKey:@"tagIndex"];
     [aCoder encodeInteger:_loadStyle forKey:@"loadStyle"];
@@ -2002,7 +2041,9 @@ extern const NSInteger FWTabViewAnimatedErrorCode;
         self.resultFrameValue = [aDecoder decodeObjectForKey:@"resultFrameValue"];
         self.frame = [self.resultFrameValue CGRectValue];
         self.backgroundColor = [(UIColor *)[aDecoder decodeObjectForKey:@"backgroundColor"] CGColor];
+        self.currentColor = [aDecoder decodeObjectForKey:@"currentColor"];
         self.cornerRadius = [aDecoder decodeFloatForKey:@"cornerRadius"];
+        self.zPosition = [aDecoder decodeFloatForKey:@"zPosition"];
         
         self.tagIndex = [aDecoder decodeIntegerForKey:@"tagIndex"];
         self.loadStyle = [aDecoder decodeIntegerForKey:@"loadStyle"];
@@ -2214,6 +2255,38 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     };
 }
 
+- (NSArray<FWTabBaseComponent *> * _Nullable (^)(NSArray * _Nonnull))_oc_animationsWithIndexs {
+    return ^NSArray <FWTabBaseComponent *> *(NSArray *indexs) {
+        
+        NSMutableArray <FWTabBaseComponent *> *resultArray = @[].mutableCopy;
+        
+        NSInteger arg;
+        for (id index in indexs) {
+            arg = [index integerValue];
+            if(arg >= 0) {
+                
+                if (arg > 1000) {
+                    break;
+                }
+                
+                if (arg >= self.baseComponentArray.count) {
+                    NSAssert(NO, @"Array bound, please check it carefully.");
+                    [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
+                }else {
+                    if(arg < 0) {
+                        NSAssert(NO, @"Input data contains a number < 0, please check it carefully.");
+                        [resultArray addObject:[FWTabBaseComponent initWithComponentLayer:FWTabComponentLayer.new]];
+                    }else {
+                        [resultArray addObject:self.baseComponentArray[arg]];
+                    }
+                }
+            }
+        }
+        
+        return resultArray.copy;
+    };
+}
+
 #pragma mark -
 
 - (void)addSentryView:(UIView *)view
@@ -2245,7 +2318,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)updateComponentLayersWithArray:(NSMutableArray <FWTabComponentLayer *> *)componentLayerArray {
     for (int i = 0; i < componentLayerArray.count; i++) {
         FWTabComponentLayer *layer = componentLayerArray[i];
-        layer.backgroundColor = self.animatedColor.CGColor;
+        layer.backgroundColor = layer.currentColor.CGColor ?: self.animatedColor.CGColor;
         
         if (layer.placeholderName && layer.placeholderName.length > 0) {
             layer.contents = (id)[UIImage imageNamed:layer.placeholderName].CGImage;
@@ -2399,7 +2472,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }];
         
         for (FWTabComponentLayer *layer in self.resultLayerArray) {
-            layer.backgroundColor = self.animatedColor.CGColor;
+            layer.backgroundColor = layer.currentColor.CGColor ?: self.animatedColor.CGColor;
             if (layer.contents && layer.placeholderName && layer.placeholderName.length > 0) {
                 layer.contents = (id)[UIImage imageNamed:layer.placeholderName].CGImage;
             }
@@ -4011,6 +4084,10 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
 }
 
 + (BOOL)judgeViewIsNeedAddAnimation:(UIView *)view {
+    // 如果禁用骨架屏，移除动画队列
+    if (view.fwTabDisabled) {
+        return NO;
+    }
     
     if ([view isKindOfClass:[UICollectionView class]] ||
         [view isKindOfClass:[UITableView class]]) {
