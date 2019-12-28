@@ -137,7 +137,18 @@
     self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableLayoutCell class] cellHeight:140];
     self.tableView.fwTabAnimated.animatedBackgroundColor = [UIColor appColorBg];
     self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
-        manager.animation(3).z(-1).height(120).color(UIColor.appColorWhite);
+        UIColor *color = UIColor.appColorWhite;
+        if (@available(iOS 13.0, *)) {
+            color = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+                if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+                    return UIColor.appColorMain;
+                } else {
+                    return UIColor.appColorWhite;
+                }
+            }];
+        }
+        
+        manager.animation(3).z(-1).height(120).color(color);
         [manager.animation(3).layer fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:5];
         manager.animationsWithIndexs(0,1).line(1);
         manager.animations(1,1).up(5);
