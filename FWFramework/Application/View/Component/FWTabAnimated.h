@@ -188,6 +188,9 @@ extern NSString * const FWTabCacheManagerFolderName;
 // 骨架屏管理单元持有
 @property (nonatomic, strong) FWTabComponentManager * _Nullable fwTabComponentManager;
 
+// 是否禁用骨架屏
+@property (nonatomic, assign) BOOL fwTabDisabled;
+
 @end
 
 @class FWTabTableAnimated;

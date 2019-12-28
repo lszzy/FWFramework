@@ -55,6 +55,13 @@
         [self.contentView addSubview:bgView];
         bgView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
         
+        UIView *expectView = [UIView fwAutoLayoutView];
+        expectView.fwTabDisabled = YES;
+        expectView.backgroundColor = [UIColor redColor];
+        expectView.hidden = YES;
+        [bgView addSubview:expectView];
+        expectView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
+        
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont appFontNormal];
