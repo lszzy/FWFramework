@@ -1845,6 +1845,7 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 }
 
 - (void)result_color:(UIColor *)color {
+    self.layer.currentColor = color;
     self.layer.backgroundColor = color.CGColor;
 }
 
@@ -1981,11 +1982,13 @@ extern const NSInteger FWTabViewAnimatedErrorCode;
     layer.frame = self.frame;
     layer.resultFrameValue = [NSValue valueWithCGRect:self.frame];
     layer.backgroundColor = self.backgroundColor;
+    layer.currentColor = self.currentColor;
     layer.shadowOffset = self.shadowOffset;
     layer.shadowColor = self.shadowColor;
     layer.shadowRadius = self.shadowRadius;
     layer.shadowOpacity = self.shadowOpacity;
     layer.cornerRadius = self.cornerRadius;
+    layer.zPosition = self.zPosition;
     layer.anchorPoint = self.anchorPoint;
     layer.position = self.position;
     layer.opaque = self.opaque;
@@ -1997,7 +2000,9 @@ extern const NSInteger FWTabViewAnimatedErrorCode;
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[NSValue valueWithCGRect:self.frame] forKey:@"resultFrameValue"];
     [aCoder encodeObject:[UIColor colorWithCGColor:self.backgroundColor] forKey:@"backgroundColor"];
+    [aCoder encodeObject:self.currentColor forKey:@"currentColor"];
     [aCoder encodeFloat:self.cornerRadius forKey:@"cornerRadius"];
+    [aCoder encodeFloat:self.zPosition forKey:@"zPosition"];
     
     [aCoder encodeInteger:_tagIndex forKey:@"tagIndex"];
     [aCoder encodeInteger:_loadStyle forKey:@"loadStyle"];
@@ -2028,7 +2033,9 @@ extern const NSInteger FWTabViewAnimatedErrorCode;
         self.resultFrameValue = [aDecoder decodeObjectForKey:@"resultFrameValue"];
         self.frame = [self.resultFrameValue CGRectValue];
         self.backgroundColor = [(UIColor *)[aDecoder decodeObjectForKey:@"backgroundColor"] CGColor];
+        self.currentColor = [aDecoder decodeObjectForKey:@"currentColor"];
         self.cornerRadius = [aDecoder decodeFloatForKey:@"cornerRadius"];
+        self.zPosition = [aDecoder decodeFloatForKey:@"zPosition"];
         
         self.tagIndex = [aDecoder decodeIntegerForKey:@"tagIndex"];
         self.loadStyle = [aDecoder decodeIntegerForKey:@"loadStyle"];
@@ -2303,7 +2310,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (void)updateComponentLayersWithArray:(NSMutableArray <FWTabComponentLayer *> *)componentLayerArray {
     for (int i = 0; i < componentLayerArray.count; i++) {
         FWTabComponentLayer *layer = componentLayerArray[i];
-        layer.backgroundColor = self.animatedColor.CGColor;
+        layer.backgroundColor = layer.currentColor.CGColor ?: self.animatedColor.CGColor;
         
         if (layer.placeholderName && layer.placeholderName.length > 0) {
             layer.contents = (id)[UIImage imageNamed:layer.placeholderName].CGImage;
@@ -2457,7 +2464,7 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         }];
         
         for (FWTabComponentLayer *layer in self.resultLayerArray) {
-            layer.backgroundColor = self.animatedColor.CGColor;
+            layer.backgroundColor = layer.currentColor.CGColor ?: self.animatedColor.CGColor;
             if (layer.contents && layer.placeholderName && layer.placeholderName.length > 0) {
                 layer.contents = (id)[UIImage imageNamed:layer.placeholderName].CGImage;
             }
