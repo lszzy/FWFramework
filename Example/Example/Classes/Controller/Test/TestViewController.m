@@ -60,6 +60,7 @@
                                              @[@"UIView(FWBorder)", @"TestBorderViewController"],
                                              @[@"UIView(FWChain)", @"TestChainViewController"],
                                              @[@"UIView(FWLayer)", @"TestLayerViewController"],
+                                             @[@"UIView(FWStatistical)", @"TestStatisticalViewController"],
                                              @[@"UIImageView(FWFace)", @"TestFaceViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
                                              @[@"FWScroll", @"TestTableScrollViewController"],

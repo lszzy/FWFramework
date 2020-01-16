@@ -264,6 +264,8 @@
 		2FAD2221233B12E400140359 /* FWCoroutine.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD221E233B12E300140359 /* FWCoroutine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FAD2227233B5FF500140359 /* FWTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAD2225233B5FF500140359 /* FWTuple.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FAD2228233B5FF500140359 /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD2226233B5FF500140359 /* FWTuple.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2FB4B9B223D06B1C00C0A351 /* UIView+FWStatistical.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB4B9B023D06B1C00C0A351 /* UIView+FWStatistical.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FB4B9B323D06B1C00C0A351 /* UIView+FWStatistical.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4B9B123D06B1C00C0A351 /* UIView+FWStatistical.m */; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -603,6 +605,8 @@
 		2FAD221E233B12E300140359 /* FWCoroutine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCoroutine.h; sourceTree = "<group>"; };
 		2FAD2225233B5FF500140359 /* FWTuple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTuple.h; sourceTree = "<group>"; };
 		2FAD2226233B5FF500140359 /* FWTuple.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTuple.m; sourceTree = "<group>"; };
+		2FB4B9B023D06B1C00C0A351 /* UIView+FWStatistical.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWStatistical.h"; sourceTree = "<group>"; };
+		2FB4B9B123D06B1C00C0A351 /* UIView+FWStatistical.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWStatistical.m"; sourceTree = "<group>"; };
 		2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+FWFramework.h"; sourceTree = "<group>"; };
 		2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+FWFramework.m"; sourceTree = "<group>"; };
 		2FB7CBC721C23728002E5412 /* FWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
@@ -817,6 +821,8 @@
 				2F1E626622BD4A2B00A1AB49 /* UIView+FWLayoutChain.h */,
 				2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */,
 				2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */,
+				2FB4B9B023D06B1C00C0A351 /* UIView+FWStatistical.h */,
+				2FB4B9B123D06B1C00C0A351 /* UIView+FWStatistical.m */,
 				2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */,
 				2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
@@ -1228,6 +1234,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB4B9B223D06B1C00C0A351 /* UIView+FWStatistical.h in Headers */,
 				2F8480CF23A3BC3100FAAAC0 /* FWTabAnimated.h in Headers */,
 				2FA0C56E238BACAC008E6CB8 /* UITableView+FWBackgroundView.h in Headers */,
 				2F17B6BA237D14E2007E1DCC /* UIView+FWDrawerView.h in Headers */,
@@ -1536,6 +1543,7 @@
 				2FD1A51821D4B41D00A215C2 /* FWModel.m in Sources */,
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
 				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
+				2FB4B9B323D06B1C00C0A351 /* UIView+FWStatistical.m in Sources */,
 				2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */,
 				2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */,
 				2FBFB73722C5D98400E669B6 /* UIColor+FWFramework.swift in Sources */,
