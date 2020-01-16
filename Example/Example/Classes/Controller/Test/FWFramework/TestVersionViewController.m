@@ -14,6 +14,15 @@
 
 @implementation TestVersionViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:[UIDevice fwDeviceUUID]];
+    [self.view addSubview:textLabel];
+    [textLabel fwAlignCenterToSuperview];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
