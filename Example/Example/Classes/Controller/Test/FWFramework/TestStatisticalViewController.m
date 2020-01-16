@@ -145,6 +145,16 @@ FWPropertyWeak(UISwitch *, testSwitch);
         FWStrongifySelf();
         [self showToast:[NSString stringWithFormat:@"改变事件: %@", sender]];
     }];
+    
+    [self.tableView fwTrackSelectWithBlock:^(UITableView *tableView, NSIndexPath *indexPath) {
+        FWStrongifySelf();
+        [self showToast:[NSString stringWithFormat:@"tableView点击事件: %@", @(indexPath.row)]];
+    }];
+    
+    [self.collectionView fwTrackSelectWithBlock:^(UICollectionView *collectionView, NSIndexPath *indexPath) {
+        FWStrongifySelf();
+        [self showToast:[NSString stringWithFormat:@"collectionView点击事件: %@", @(indexPath.row)]];
+    }];
 }
 
 - (void)showToast:(NSString *)toast
