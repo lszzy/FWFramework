@@ -9,6 +9,8 @@
 
 #import "UIView+FWStatistical.h"
 #import "UIView+FWBlock.h"
+#import "FWAspect.h"
+#import <objc/runtime.h>
 
 @implementation UIView (FWStatistical)
 
@@ -57,7 +59,30 @@
 
 - (void)fwTrackSelectWithBlock:(void (^)(UITableView *, NSIndexPath *))block
 {
-    
+    objc_setAssociatedObject(self, @selector(fwTrackSelectWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [(NSObject *)self.delegate fwHookSelector:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UITableView *tableView, NSIndexPath *indexPath){
+        void (^trackBlock)(UITableView *, NSIndexPath *) = objc_getAssociatedObject(tableView, @selector(fwTrackSelectWithBlock:));
+        if (trackBlock) {
+            trackBlock(tableView, indexPath);
+        }
+    } options:FWAspectPositionAfter error:NULL];
+}
+
+@end
+
+@implementation UICollectionView (FWStatistical)
+
+#pragma mark - Click
+
+- (void)fwTrackSelectWithBlock:(void (^)(UICollectionView *, NSIndexPath *))block
+{
+    objc_setAssociatedObject(self, @selector(fwTrackSelectWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [(NSObject *)self.delegate fwHookSelector:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UICollectionView *collectionView, NSIndexPath *indexPath){
+        void (^trackBlock)(UICollectionView *, NSIndexPath *) = objc_getAssociatedObject(collectionView, @selector(fwTrackSelectWithBlock:));
+        if (trackBlock) {
+            trackBlock(collectionView, indexPath);
+        }
+    } options:FWAspectPositionAfter error:NULL];
 }
 
 @end

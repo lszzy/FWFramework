@@ -43,7 +43,16 @@
 
 #pragma mark - Click
 
-// 统计Select点击事件，需先设置delegate
+// 统计Select点击事件，需先设置delegate，通过FWAspect实现
 - (void)fwTrackSelectWithBlock:(void (^)(UITableView *tableView, NSIndexPath *indexPath))block;
+
+@end
+
+@interface UICollectionView (FWStatistical)
+
+#pragma mark - Click
+
+// 统计Select点击事件，需先设置delegate，通过FWAspect实现
+- (void)fwTrackSelectWithBlock:(void (^)(UICollectionView *collectionView, NSIndexPath *indexPath))block;
 
 @end
