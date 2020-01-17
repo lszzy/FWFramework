@@ -14,6 +14,16 @@
 
 @implementation BaseWebViewController
 
+- (WKWebView *)webView
+{
+    WKWebView *webView = objc_getAssociatedObject(self, _cmd);
+    if (!webView) {
+        webView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return webView;
+}
+
 - (NSArray *)webItems
 {
     return @[[UIImage imageNamed:@"public_back"], [UIImage imageNamed:@"public_close"]];

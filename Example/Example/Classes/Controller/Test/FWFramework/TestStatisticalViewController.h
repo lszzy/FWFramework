@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestStatisticalViewController : BaseViewController
+@interface TestStatisticalViewController : BaseTableViewController
 
 @end
 
