@@ -94,4 +94,27 @@
     [NSObject fwSyncPerformAsyncBlock:asyncBlock];
 }
 
++ (void)fwPerformOnce:(NSString *)identifier withBlock:(void (^)(void))block
+{
+    static NSMutableSet *identifiers;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        identifiers = [NSMutableSet new];
+    });
+    
+    @synchronized (identifiers) {
+        if (![identifiers containsObject:identifier]) {
+            if (block) {
+                block();
+            }
+            [identifiers addObject:identifier];
+        }
+    }
+}
+
+- (void)fwPerformOnce:(NSString *)identifier withBlock:(void (^)(void))block
+{
+    [NSObject fwPerformOnce:identifier withBlock:block];
+}
+
 @end
