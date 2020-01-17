@@ -137,6 +137,12 @@ typedef void (^FWBlockInt)(NSInteger index);
 // 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler
 - (void)fwSyncPerformAsyncBlock:(void (^)(void (^completionHandler)(void)))asyncBlock;
 
+// 同一个identifier仅执行一次block
++ (void)fwPerformOnce:(NSString *)identifier withBlock:(void (^)(void))block;
+
+// 同一个identifier仅执行一次block
+- (void)fwPerformOnce:(NSString *)identifier withBlock:(void (^)(void))block;
+
 @end
 
 NS_ASSUME_NONNULL_END
