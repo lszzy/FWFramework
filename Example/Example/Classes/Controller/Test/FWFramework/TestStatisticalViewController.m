@@ -30,7 +30,7 @@
 
 @end
 
-@interface TestStatisticalViewController () <FWTableViewController, FWCollectionViewController>
+@interface TestStatisticalViewController () <FWCollectionViewController>
 
 FWPropertyWeak(UIView *, testView);
 FWPropertyWeak(UIButton *, testButton);
@@ -71,6 +71,16 @@ FWPropertyWeak(UISwitch *, testSwitch);
 - (void)renderTableLayout
 {
     self.tableView.fwLayoutChain.edges();
+}
+
+- (UICollectionView *)collectionView
+{
+    UICollectionView *collectionView = objc_getAssociatedObject(self, _cmd);
+    if (!collectionView) {
+        collectionView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        objc_setAssociatedObject(self, _cmd, collectionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return collectionView;
 }
 
 - (UICollectionViewLayout *)renderCollectionViewLayout
