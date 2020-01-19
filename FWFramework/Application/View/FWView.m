@@ -10,26 +10,6 @@
 #import "FWView.h"
 #import <objc/runtime.h>
 
-@implementation FWViewEvent
-
-- (instancetype)initWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
-{
-    self = [super init];
-    if (self) {
-        _name = [name copy];
-        _object = object;
-        _userInfo = [userInfo copy];
-    }
-    return self;
-}
-
-+ (instancetype)eventWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
-{
-    return [[self alloc] initWithName:name object:object userInfo:userInfo];
-}
-
-@end
-
 @implementation UIView (FWEvent)
 
 - (id<FWViewDelegate>)fwViewDelegate
@@ -47,7 +27,7 @@
     }
 }
 
-- (void)fwTouchEvent:(FWViewEvent *)event
+- (void)fwTouchEvent:(NSNotification *)event
 {
     if (self.fwViewDelegate && [self.fwViewDelegate respondsToSelector:@selector(onTouchView:withEvent:)]) {
         [self.fwViewDelegate onTouchView:self withEvent:event];

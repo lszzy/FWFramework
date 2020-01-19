@@ -46,12 +46,14 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UIView *testView = [UIView fwAutoLayoutView];
     _testView = testView;
+    testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_view"];
     testView.backgroundColor = [UIColor fwRandomColor];
     [headerView addSubview:testView];
     testView.fwLayoutChain.width(100).height(30).centerX().topWithInset(10);
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
+    testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_button"];
     [testButton setTitle:@"Button" forState:UIControlStateNormal];
     [testButton fwSetBackgroundColor:[UIColor fwRandomColor] forState:UIControlStateNormal];
     [headerView addSubview:testButton];
@@ -59,12 +61,14 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UISwitch *testSwitch = [UISwitch new];
     _testSwitch = testSwitch;
+    testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"test_switch"];
     testSwitch.thumbTintColor = [UIColor fwRandomColor];
     testSwitch.onTintColor = testSwitch.thumbTintColor;
     [headerView addSubview:testSwitch];
     testSwitch.fwLayoutChain.centerX().topToBottomOfViewWithOffset(testButton, 10).bottomWithInset(10);
     
     self.tableView.tableHeaderView = headerView;
+    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_tableView"];
     [headerView fwAutoLayoutSubviews];
 }
 
@@ -95,6 +99,7 @@ FWPropertyWeak(UISwitch *, testSwitch);
 - (void)renderCollectionView
 {
     [self.collectionView registerClass:[TestStatisticalCell class] forCellWithReuseIdentifier:@"cell"];
+    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_collectionView"];
 }
 
 - (void)renderCollectionLayout
@@ -140,31 +145,24 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)renderData
 {
+    // Notification
+    [self fwObserveNotification:FWStatisticalEventTriggeredNotification block:^(NSNotification *notification) {
+        FWStatisticalObject *object = notification.object;
+        FWLogDebug(@"%@点击通知: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.userInfo);
+    }];
+    
+    // Click
     FWWeakifySelf();
-    [self.testView fwTrackTappedWithBlock:^(__kindof UIView *sender) {
+    FWStatisticalBlock block = ^(FWStatisticalObject *object){
         FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"点击事件: %@", sender]];
-    }];
-    
-    [self.testButton fwTrackTouchedWithBlock:^(__kindof UIControl *sender) {
-        FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"点击事件: %@", sender]];
-    }];
-    
-    [self.testSwitch fwTrackChangedWithBlock:^(__kindof UIControl *sender) {
-        FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"改变事件: %@", sender]];
-    }];
-    
-    [self.tableView fwTrackSelectWithBlock:^(UITableView *tableView, NSIndexPath *indexPath) {
-        FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"tableView点击事件: %@", @(indexPath.row)]];
-    }];
-    
-    [self.collectionView fwTrackSelectWithBlock:^(UICollectionView *collectionView, NSIndexPath *indexPath) {
-        FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"collectionView点击事件: %@", @(indexPath.row)]];
-    }];
+        FWStatisticalObject *event = [object.view isKindOfClass:[UISwitch class]] ? ((UISwitch *)object.view).fwStatisticalChanged : object.view.fwStatisticalClick;
+        [self showToast:[NSString stringWithFormat:@"%@点击事件: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], event.name, event.userInfo]];
+    };
+    [self.testView fwStatisticalClickWithBlock:block];
+    [self.testButton fwStatisticalClickWithBlock:block];
+    [self.testSwitch fwStatisticalChangedWithBlock:block];
+    [self.tableView fwStatisticalClickWithBlock:block];
+    [self.collectionView fwStatisticalClickWithBlock:block];
 }
 
 - (void)showToast:(NSString *)toast
