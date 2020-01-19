@@ -12,20 +12,68 @@
 #import "FWAspect.h"
 #import <objc/runtime.h>
 
-@implementation UIView (FWStatistical)
+#pragma mark - FWStatistical
 
-#pragma mark - Click
+NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTriggeredNotification";
 
-- (void)fwTrackTappedWithBlock:(void (^)(id))block
+@interface FWStatisticalObject ()
+
+@property (nonatomic, copy, nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSDictionary *userInfo;
+
+@property (nonatomic, weak, nullable) __kindof UIView *view;
+@property (nonatomic, strong, nullable) NSIndexPath *indexPath;
+
+@end
+
+@implementation FWStatisticalObject
+
+- (instancetype)initWithName:(NSString *)name
 {
-    [self fwTrackGesture:[UITapGestureRecognizer class] withBlock:block];
+    return [self initWithName:name userInfo:nil];
 }
 
-- (void)fwTrackGesture:(Class)clazz withBlock:(void (^)(id))block
+- (instancetype)initWithName:(NSString *)name userInfo:(NSDictionary *)userInfo
+{
+    self = [super init];
+    if (self) {
+        _name = [name copy];
+        _userInfo = [userInfo copy];
+    }
+    return self;
+}
+
+@end
+
+#pragma mark - UIView+FWStatistical
+
+@implementation UIView (FWStatistical)
+
+- (FWStatisticalObject *)fwStatisticalClick
+{
+    return objc_getAssociatedObject(self, @selector(fwStatisticalClick));
+}
+
+- (void)setFwStatisticalClick:(FWStatisticalObject *)fwStatisticalClick
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalClick), fwStatisticalClick, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self fwStatisticalClickWithBlock:^(FWStatisticalObject *object) {
+        object.name = fwStatisticalClick.name;
+        object.userInfo = fwStatisticalClick.userInfo;
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+    }];
+}
+
+- (void)fwStatisticalClickWithBlock:(FWStatisticalBlock)block
 {
     for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
-        if ([gesture isKindOfClass:clazz]) {
-            [gesture fwAddBlock:block];
+        if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
+            [gesture fwAddBlock:^(UIGestureRecognizer *sender) {
+                FWStatisticalObject *object = [FWStatisticalObject new];
+                object.view = sender.view;
+                block(object);
+            }];
         }
     }
 }
@@ -34,37 +82,51 @@
 
 @implementation UIControl (FWStatistical)
 
-#pragma mark - Click
-
-- (void)fwTrackTouchedWithBlock:(void (^)(id))block
+- (void)fwStatisticalClickWithBlock:(FWStatisticalBlock)block
 {
-    [self fwTrackEvent:UIControlEventTouchUpInside withBlock:block];
+    [self fwAddBlock:^(UIButton *sender) {
+        FWStatisticalObject *object = [FWStatisticalObject new];
+        object.view = sender;
+        block(object);
+    } forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)fwTrackChangedWithBlock:(void (^)(id))block
+- (FWStatisticalObject *)fwStatisticalChanged
 {
-    [self fwTrackEvent:UIControlEventValueChanged withBlock:block];
+    return objc_getAssociatedObject(self, @selector(fwStatisticalChanged));
 }
 
-- (void)fwTrackEvent:(UIControlEvents)event withBlock:(void (^)(id))block
+- (void)setFwStatisticalChanged:(FWStatisticalObject *)fwStatisticalChanged
 {
-    [self fwAddBlock:block forControlEvents:event];
+    objc_setAssociatedObject(self, @selector(fwStatisticalChanged), fwStatisticalChanged, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self fwStatisticalChangedWithBlock:^(FWStatisticalObject *object) {
+        object.name = fwStatisticalChanged.name;
+        object.userInfo = fwStatisticalChanged.userInfo;
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+    }];
+}
+
+- (void)fwStatisticalChangedWithBlock:(FWStatisticalBlock)block
+{
+    [self fwAddBlock:^(UIButton *sender) {
+        FWStatisticalObject *object = [FWStatisticalObject new];
+        object.view = sender;
+        block(object);
+    } forControlEvents:UIControlEventValueChanged];
 }
 
 @end
 
 @implementation UITableView (FWStatistical)
 
-#pragma mark - Click
-
-- (void)fwTrackSelectWithBlock:(void (^)(UITableView *, NSIndexPath *))block
+- (void)fwStatisticalClickWithBlock:(FWStatisticalBlock)block
 {
-    objc_setAssociatedObject(self, @selector(fwTrackSelectWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     [(NSObject *)self.delegate fwHookSelector:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UITableView *tableView, NSIndexPath *indexPath){
-        void (^trackBlock)(UITableView *, NSIndexPath *) = objc_getAssociatedObject(tableView, @selector(fwTrackSelectWithBlock:));
-        if (trackBlock) {
-            trackBlock(tableView, indexPath);
-        }
+        FWStatisticalObject *object = [FWStatisticalObject new];
+        object.view = tableView;
+        object.indexPath = indexPath;
+        block(object);
     } options:FWAspectPositionAfter error:NULL];
 }
 
@@ -72,16 +134,13 @@
 
 @implementation UICollectionView (FWStatistical)
 
-#pragma mark - Click
-
-- (void)fwTrackSelectWithBlock:(void (^)(UICollectionView *, NSIndexPath *))block
+- (void)fwStatisticalClickWithBlock:(FWStatisticalBlock)block
 {
-    objc_setAssociatedObject(self, @selector(fwTrackSelectWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     [(NSObject *)self.delegate fwHookSelector:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UICollectionView *collectionView, NSIndexPath *indexPath){
-        void (^trackBlock)(UICollectionView *, NSIndexPath *) = objc_getAssociatedObject(collectionView, @selector(fwTrackSelectWithBlock:));
-        if (trackBlock) {
-            trackBlock(collectionView, indexPath);
-        }
+        FWStatisticalObject *object = [FWStatisticalObject new];
+        object.view = collectionView;
+        object.indexPath = indexPath;
+        block(object);
     } options:FWAspectPositionAfter error:NULL];
 }
 

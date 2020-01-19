@@ -9,50 +9,60 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+#pragma mark - FWStatistical
+
+// 统计事件触发通知，可统一处理。通知object为FWStatisticalObject统计对象，userInfo为附加信息
+extern NSString *const FWStatisticalEventTriggeredNotification;
+
 /*!
- @brief Click点击统计和Exposure曝光统计
+ @brief 事件统计对象
+ */
+@interface FWStatisticalObject : NSObject
+
+// 事件绑定信息，未绑定时为空
+@property (nonatomic, copy, readonly, nullable) NSString *name;
+@property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;
+
+// 事件来源信息，触发时自动赋值
+@property (nonatomic, weak, readonly, nullable) __kindof UIView *view;
+@property (nonatomic, strong, readonly, nullable) NSIndexPath *indexPath;
+
+// 创建事件绑定信息
+- (instancetype)initWithName:(nullable NSString *)name;
+- (instancetype)initWithName:(nullable NSString *)name userInfo:(nullable NSDictionary *)userInfo;
+
+@end
+
+/*!
+@brief 统计通用block
+*/
+typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
+
+#pragma mark - UIView+FWStatistical
+
+/*!
+ @brief Click点击统计
  */
 @interface UIView (FWStatistical)
 
-#pragma mark - Click
+// 绑定统计点击事件。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
+@property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalClick;
 
-// 统计Tap手势点击事件，需先添加Tap手势
-- (void)fwTrackTappedWithBlock:(void (^)(id sender))block;
-
-// 统计指定类手势事件，需先添加指定类手势
-- (void)fwTrackGesture:(Class)clazz withBlock:(void (^)(id sender))block;
+// 手工统计点击事件。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
+- (void)fwStatisticalClickWithBlock:(FWStatisticalBlock)block;
 
 @end
 
 @interface UIControl (FWStatistical)
 
-#pragma mark - Click
+// 绑定统计值Changed事件
+@property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalChanged;
 
-// 统计Touch点击事件
-- (void)fwTrackTouchedWithBlock:(void (^)(id sender))block;
-
-// 统计值Changed事件
-- (void)fwTrackChangedWithBlock:(void (^)(id sender))block;
-
-// 统计指定Event事件
-- (void)fwTrackEvent:(UIControlEvents)event withBlock:(void (^)(id sender))block;
+// 手工统计值Changed事件
+- (void)fwStatisticalChangedWithBlock:(FWStatisticalBlock)block;
 
 @end
 
-@interface UITableView (FWStatistical)
-
-#pragma mark - Click
-
-// 统计Select点击事件，需先设置delegate，通过FWAspect实现
-- (void)fwTrackSelectWithBlock:(void (^)(UITableView *tableView, NSIndexPath *indexPath))block;
-
-@end
-
-@interface UICollectionView (FWStatistical)
-
-#pragma mark - Click
-
-// 统计Select点击事件，需先设置delegate，通过FWAspect实现
-- (void)fwTrackSelectWithBlock:(void (^)(UICollectionView *collectionView, NSIndexPath *indexPath))block;
-
-@end
+NS_ASSUME_NONNULL_END
