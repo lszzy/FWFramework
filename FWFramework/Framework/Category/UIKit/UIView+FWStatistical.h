@@ -47,21 +47,21 @@ typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
  */
 @interface UIView (FWStatistical)
 
-// 绑定统计点击事件。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
+// 绑定统计点击事件，发送通知。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalClick;
 
-// 手工统计点击事件。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
-- (void)fwStatisticalClickWithBlock:(FWStatisticalBlock)block;
+// 绑定统计点击事件，触发回调。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
+@property (nullable, nonatomic, copy) FWStatisticalBlock fwStatisticalClickBlock;
 
 @end
 
 @interface UIControl (FWStatistical)
 
-// 绑定统计值Changed事件
+// 绑定统计值Changed事件，发送通知
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalChanged;
 
-// 手工统计值Changed事件
-- (void)fwStatisticalChangedWithBlock:(FWStatisticalBlock)block;
+// 绑定统计值Changed事件，触发回调
+@property (nullable, nonatomic, copy) FWStatisticalBlock fwStatisticalChangedBlock;
 
 @end
 

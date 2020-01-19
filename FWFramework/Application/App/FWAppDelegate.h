@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIWindow *window;
 
-#pragma mark - Protected
+#pragma mark - Protect
 
 // 初始化应用，子类重写
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options;

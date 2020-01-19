@@ -109,7 +109,7 @@
 }
 */
 
-#pragma mark - Protected
+#pragma mark - Protect
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {

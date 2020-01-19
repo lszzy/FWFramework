@@ -8,6 +8,7 @@
  */
 
 #import "NSObject+FWBlock.h"
+#import <objc/runtime.h>
 
 @implementation NSObject (FWBlock)
 
@@ -114,7 +115,20 @@
 
 - (void)fwPerformOnce:(NSString *)identifier withBlock:(void (^)(void))block
 {
-    [NSObject fwPerformOnce:identifier withBlock:block];
+    @synchronized (self) {
+        NSMutableSet *identifiers = objc_getAssociatedObject(self, @selector(fwPerformOnce:withBlock:));
+        if (!identifiers) {
+            identifiers = [NSMutableSet new];
+            objc_setAssociatedObject(self, @selector(fwPerformOnce:withBlock:), identifiers, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        
+        if (![identifiers containsObject:identifier]) {
+            if (block) {
+                block();
+            }
+            [identifiers addObject:identifier];
+        }
+    }
 }
 
 @end
