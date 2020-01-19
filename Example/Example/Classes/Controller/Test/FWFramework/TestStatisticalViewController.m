@@ -46,7 +46,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UIView *testView = [UIView fwAutoLayoutView];
     _testView = testView;
-    testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_view"];
     testView.backgroundColor = [UIColor fwRandomColor];
     [headerView addSubview:testView];
     testView.fwLayoutChain.width(100).height(30).centerX().topWithInset(10);
@@ -114,6 +113,7 @@ FWPropertyWeak(UISwitch *, testSwitch);
         FWStrongifySelf();
         self.testView.backgroundColor = [UIColor fwRandomColor];
     }];
+    self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_view"];
     
     [self.testButton fwAddTouchBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
@@ -148,21 +148,20 @@ FWPropertyWeak(UISwitch *, testSwitch);
     // Notification
     [self fwObserveNotification:FWStatisticalEventTriggeredNotification block:^(NSNotification *notification) {
         FWStatisticalObject *object = notification.object;
-        FWLogDebug(@"%@点击通知: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.userInfo);
+        FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.userInfo);
     }];
     
     // Click
     FWWeakifySelf();
-    FWStatisticalBlock block = ^(FWStatisticalObject *object){
+    FWStatisticalBlock clickBlock = ^(FWStatisticalObject *object){
         FWStrongifySelf();
-        FWStatisticalObject *event = [object.view isKindOfClass:[UISwitch class]] ? ((UISwitch *)object.view).fwStatisticalChanged : object.view.fwStatisticalClick;
-        [self showToast:[NSString stringWithFormat:@"%@点击事件: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], event.name, event.userInfo]];
+        [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.userInfo]];
     };
-    [self.testView fwStatisticalClickWithBlock:block];
-    [self.testButton fwStatisticalClickWithBlock:block];
-    [self.testSwitch fwStatisticalChangedWithBlock:block];
-    [self.tableView fwStatisticalClickWithBlock:block];
-    [self.collectionView fwStatisticalClickWithBlock:block];
+    self.testView.fwStatisticalClickBlock = clickBlock;
+    self.testButton.fwStatisticalClickBlock = clickBlock;
+    self.testSwitch.fwStatisticalChangedBlock = clickBlock;
+    self.tableView.fwStatisticalClickBlock = clickBlock;
+    self.collectionView.fwStatisticalClickBlock = clickBlock;
 }
 
 - (void)showToast:(NSString *)toast
