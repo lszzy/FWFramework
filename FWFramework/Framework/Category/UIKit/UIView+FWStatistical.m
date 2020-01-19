@@ -30,14 +30,20 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (instancetype)initWithName:(NSString *)name
 {
-    return [self initWithName:name userInfo:nil];
+    return [self initWithName:name object:nil];
 }
 
-- (instancetype)initWithName:(NSString *)name userInfo:(NSDictionary *)userInfo
+- (instancetype)initWithName:(NSString *)name object:(id)object
+{
+    return [self initWithName:name object:object userInfo:nil];
+}
+
+- (instancetype)initWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
 {
     self = [super init];
     if (self) {
         _name = [name copy];
+        _object = object;
         _userInfo = [userInfo copy];
     }
     return self;
@@ -168,6 +174,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @implementation UITableView (FWStatistical)
 
+#pragma mark - Protect
+
 - (void)fwStatisticalClickRegister
 {
     [(NSObject *)self.delegate fwHookSelector:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UITableView *tableView, NSIndexPath *indexPath){
@@ -178,6 +186,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 @end
 
 @implementation UICollectionView (FWStatistical)
+
+#pragma mark - Protect
 
 - (void)fwStatisticalClickRegister
 {

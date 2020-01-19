@@ -23,6 +23,7 @@ extern NSString *const FWStatisticalEventTriggeredNotification;
 
 // 事件绑定信息，未绑定时为空
 @property (nonatomic, copy, readonly, nullable) NSString *name;
+@property (nonatomic, strong, readonly, nullable) id object;
 @property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;
 
 // 事件来源信息，触发时自动赋值
@@ -31,7 +32,8 @@ extern NSString *const FWStatisticalEventTriggeredNotification;
 
 // 创建事件绑定信息
 - (instancetype)initWithName:(nullable NSString *)name;
-- (instancetype)initWithName:(nullable NSString *)name userInfo:(nullable NSDictionary *)userInfo;
+- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object;
+- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
