@@ -52,7 +52,7 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
-    testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_button"];
+    testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_button" object:@(1)];
     [testButton setTitle:@"Button" forState:UIControlStateNormal];
     [testButton fwSetBackgroundColor:[UIColor fwRandomColor] forState:UIControlStateNormal];
     [headerView addSubview:testButton];
@@ -60,14 +60,13 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UISwitch *testSwitch = [UISwitch new];
     _testSwitch = testSwitch;
-    testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"test_switch"];
+    testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"test_switch" object:@(2) userInfo:@{@"type": @(3)}];
     testSwitch.thumbTintColor = [UIColor fwRandomColor];
     testSwitch.onTintColor = testSwitch.thumbTintColor;
     [headerView addSubview:testSwitch];
     testSwitch.fwLayoutChain.centerX().topToBottomOfViewWithOffset(testButton, 10).bottomWithInset(10);
     
     self.tableView.tableHeaderView = headerView;
-    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_tableView"];
     [headerView fwAutoLayoutSubviews];
 }
 
@@ -98,7 +97,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
 - (void)renderCollectionView
 {
     [self.collectionView registerClass:[TestStatisticalCell class] forCellWithReuseIdentifier:@"cell"];
-    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_collectionView"];
 }
 
 - (void)renderCollectionLayout
@@ -108,6 +106,9 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)renderView
 {
+    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_tableView" object:@(4)];
+    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_collectionView" object:@5 userInfo:@{@"type": @6}];
+    
     FWWeakifySelf();
     [self.testView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
@@ -148,14 +149,14 @@ FWPropertyWeak(UISwitch *, testSwitch);
     // Notification
     [self fwObserveNotification:FWStatisticalEventTriggeredNotification block:^(NSNotification *notification) {
         FWStatisticalObject *object = notification.object;
-        FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.userInfo);
+        FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
     }];
     
     // Click
     FWWeakifySelf();
     FWStatisticalBlock clickBlock = ^(FWStatisticalObject *object){
         FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.userInfo]];
+        [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo]];
     };
     self.testView.fwStatisticalClickBlock = clickBlock;
     self.testButton.fwStatisticalClickBlock = clickBlock;
