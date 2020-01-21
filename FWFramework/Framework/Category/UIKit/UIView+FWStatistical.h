@@ -31,9 +31,9 @@ extern NSString *const FWStatisticalEventTriggeredNotification;
 @property (nonatomic, strong, readonly, nullable) NSIndexPath *indexPath;
 
 // 创建事件绑定信息
-- (instancetype)initWithName:(NSString *)name;
-- (instancetype)initWithName:(NSString *)name object:(nullable id)object;
-- (instancetype)initWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+- (instancetype)initWithName:(nullable NSString *)name;
+- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object;
+- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -45,7 +45,8 @@ typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
 #pragma mark - UIView+FWStatistical
 
 /*!
- @brief Click点击统计
+ @brief Click点击统计和Exposure曝光统计
+ @discussion 表格视图只需设置主视图即可；不支持单独设置Cell，但Cell可设置事件属性覆盖表格视图
  */
 @interface UIView (FWStatistical)
 
