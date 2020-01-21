@@ -52,7 +52,8 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
-    testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_button" object:@(1)];
+    testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_button" object:@(1)];
+    testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@(1)];
     [testButton setTitle:@"Button" forState:UIControlStateNormal];
     [testButton fwSetBackgroundColor:[UIColor fwRandomColor] forState:UIControlStateNormal];
     [headerView addSubview:testButton];
@@ -60,7 +61,8 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UISwitch *testSwitch = [UISwitch new];
     _testSwitch = testSwitch;
-    testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"test_switch" object:@(2) userInfo:@{@"type": @(3)}];
+    testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"click_switch" object:@(2) userInfo:@{@"type": @(3)}];
+    testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@(2) userInfo:@{@"type": @(3)}];
     testSwitch.thumbTintColor = [UIColor fwRandomColor];
     testSwitch.onTintColor = testSwitch.thumbTintColor;
     [headerView addSubview:testSwitch];
@@ -106,15 +108,18 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)renderView
 {
-    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_tableView" object:@(4)];
-    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_collectionView" object:@5 userInfo:@{@"type": @6}];
+    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@(4)];
+    self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@(4)];
+    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@5 userInfo:@{@"type": @6}];
+    self.collectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@5 userInfo:@{@"type": @6}];
     
     FWWeakifySelf();
     [self.testView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
         self.testView.backgroundColor = [UIColor fwRandomColor];
     }];
-    self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"test_view"];
+    self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_view"];
+    self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view"];
     
     [self.testButton fwAddTouchBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
@@ -149,7 +154,8 @@ FWPropertyWeak(UISwitch *, testSwitch);
     // Notification
     [self fwObserveNotification:FWStatisticalEventTriggeredNotification block:^(NSNotification *notification) {
         FWStatisticalObject *object = notification.object;
-        FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
+        NSString *type = [object.name containsString:@"exposure"] ? @"曝光" : ([object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击");
+        FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), type, [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
     }];
     
     // Click
@@ -163,6 +169,16 @@ FWPropertyWeak(UISwitch *, testSwitch);
     self.testSwitch.fwStatisticalChangedBlock = clickBlock;
     self.tableView.fwStatisticalClickBlock = clickBlock;
     self.collectionView.fwStatisticalClickBlock = clickBlock;
+    
+    // Exposure
+    FWStatisticalBlock exposureBlock = ^(FWStatisticalObject *object){
+        FWLogDebug(@"%@曝光事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
+    };
+    self.testView.fwStatisticalExposureBlock = exposureBlock;
+    self.testButton.fwStatisticalExposureBlock = exposureBlock;
+    self.testSwitch.fwStatisticalExposureBlock = exposureBlock;
+    self.tableView.fwStatisticalExposureBlock = exposureBlock;
+    self.collectionView.fwStatisticalExposureBlock = exposureBlock;
 }
 
 - (void)showToast:(NSString *)toast

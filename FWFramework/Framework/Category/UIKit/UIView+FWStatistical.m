@@ -9,6 +9,7 @@
 
 #import "UIView+FWStatistical.h"
 #import "UIView+FWBlock.h"
+#import "UIWindow+FWFramework.h"
 #import "FWAspect.h"
 #import <objc/runtime.h>
 
@@ -55,6 +56,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @implementation UIView (FWStatistical)
 
+#pragma mark - Click
+
 - (FWStatisticalObject *)fwStatisticalClick
 {
     return objc_getAssociatedObject(self, @selector(fwStatisticalClick));
@@ -83,8 +86,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     objc_setAssociatedObject(self, @selector(fwStatisticalClickBlock), fwStatisticalClickBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-#pragma mark - Protect
-
 - (void)fwStatisticalClickRegister
 {
     for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
@@ -109,9 +110,83 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
 }
 
+#pragma mark - Exposure
+
+- (BOOL)fwIsExposed
+{
+    if (self == nil || self.hidden || self.alpha <= 0.1 || !self.window ||
+        self.bounds.size.width == 0 || self.bounds.size.height == 0) {
+        return NO;
+    }
+    
+    CGRect rect = [self convertRect:self.bounds toView:UIWindow.fwMainWindow];
+    CGRect screenRect = [UIScreen mainScreen].bounds;
+    if (CGRectContainsRect(screenRect, rect) && !CGRectIsEmpty(rect) && !CGRectIsNull(rect)) {
+        return YES;
+    }
+    return NO;
+}
+
+- (FWStatisticalObject *)fwStatisticalExposure
+{
+    return objc_getAssociatedObject(self, @selector(fwStatisticalExposure));
+}
+
+- (void)setFwStatisticalExposure:(FWStatisticalObject *)fwStatisticalExposure
+{
+    if (!self.fwStatisticalExposure && !self.fwStatisticalExposureBlock) {
+        [self fwStatisticalExposureRegister];
+    }
+    
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposure), fwStatisticalExposure, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (FWStatisticalBlock)fwStatisticalExposureBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwStatisticalExposureBlock));
+}
+
+- (void)setFwStatisticalExposureBlock:(FWStatisticalBlock)fwStatisticalExposureBlock
+{
+    if (!self.fwStatisticalExposure && !self.fwStatisticalExposureBlock) {
+        [self fwStatisticalExposureRegister];
+    }
+    
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureBlock), fwStatisticalExposureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (void)fwStatisticalExposureRegister
+{
+    
+}
+
+- (void)fwStatisticalExposureHandler:(NSIndexPath *)indexPath
+{
+    FWStatisticalObject *object = self.fwStatisticalExposure ?: [FWStatisticalObject new];
+    object.view = self;
+    object.indexPath = indexPath;
+    if (self.fwStatisticalExposureBlock) {
+        self.fwStatisticalExposureBlock(object);
+    }
+    if (self.fwStatisticalExposure) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+    }
+}
+
 @end
 
 @implementation UIControl (FWStatistical)
+
+#pragma mark - Click
+
+- (void)fwStatisticalClickRegister
+{
+    [self fwAddBlock:^(UIButton *sender) {
+        [sender fwStatisticalClickHandler:nil];
+    } forControlEvents:UIControlEventTouchUpInside];
+}
+
+#pragma mark - Changed
 
 - (FWStatisticalObject *)fwStatisticalChanged
 {
@@ -141,15 +216,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     objc_setAssociatedObject(self, @selector(fwStatisticalChangedBlock), fwStatisticalChangedBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-#pragma mark - Protect
-
-- (void)fwStatisticalClickRegister
-{
-    [self fwAddBlock:^(UIButton *sender) {
-        [sender fwStatisticalClickHandler:nil];
-    } forControlEvents:UIControlEventTouchUpInside];
-}
-
 - (void)fwStatisticalChangedRegister
 {
     [self fwAddBlock:^(UIButton *sender) {
@@ -174,7 +240,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @implementation UITableView (FWStatistical)
 
-#pragma mark - Protect
+#pragma mark - Click
 
 - (void)fwStatisticalClickRegister
 {
@@ -187,7 +253,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @implementation UICollectionView (FWStatistical)
 
-#pragma mark - Protect
+#pragma mark - Click
 
 - (void)fwStatisticalClickRegister
 {

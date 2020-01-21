@@ -31,9 +31,9 @@ extern NSString *const FWStatisticalEventTriggeredNotification;
 @property (nonatomic, strong, readonly, nullable) NSIndexPath *indexPath;
 
 // 创建事件绑定信息
-- (instancetype)initWithName:(nullable NSString *)name;
-- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object;
-- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+- (instancetype)initWithName:(NSString *)name;
+- (instancetype)initWithName:(NSString *)name object:(nullable id)object;
+- (instancetype)initWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -49,15 +49,30 @@ typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
  */
 @interface UIView (FWStatistical)
 
+#pragma mark - Click
+
 // 绑定统计点击事件，发送通知。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalClick;
 
 // 绑定统计点击事件，触发回调。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
 @property (nullable, nonatomic, copy) FWStatisticalBlock fwStatisticalClickBlock;
 
+#pragma mark - Exposure
+
+// 是否是曝光状态(全部显示在window区域内)
+@property (nonatomic, assign, readonly) BOOL fwIsExposed;
+
+// 绑定统计曝光事件，发送通知
+@property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalExposure;
+
+// 绑定统计曝光事件，触发回调
+@property (nullable, nonatomic, copy) FWStatisticalBlock fwStatisticalExposureBlock;
+
 @end
 
 @interface UIControl (FWStatistical)
+
+#pragma mark - Changed
 
 // 绑定统计值Changed事件，发送通知
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalChanged;
