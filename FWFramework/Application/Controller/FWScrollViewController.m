@@ -19,9 +19,11 @@
 {
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(scrollViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"scrollView" : @"fwInnerScrollView",
-                                     @"contentView" : @"fwInnerContentView",
-                                     @"renderScrollLayout" : @"fwInnerRenderScrollLayout"};
+    intercepter.forwardSelectors = @{
+        @"scrollView" : @"fwInnerScrollView",
+        @"contentView" : @"fwInnerContentView",
+        @"renderScrollLayout" : @"fwInnerRenderScrollLayout",
+    };
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
 }
 
