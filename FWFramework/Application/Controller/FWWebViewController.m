@@ -23,15 +23,18 @@
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(webViewControllerLoadView:);
     intercepter.viewDidLoadIntercepter = @selector(webViewControllerViewDidLoad:);
-    intercepter.forwardSelectors = @{@"webView" : @"fwInnerWebView",
-                                     @"progressView" : @"fwInnerProgressView",
-                                     @"webItems" : @"fwInnerWebItems",
-                                     @"webRequest" : @"fwInnerWebRequest",
-                                     @"setWebRequest:" : @"fwInnerSetWebRequest:",
-                                     @"renderWebLayout" : @"fwInnerRenderWebLayout",
-                                     @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
-                                     @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
-                                     @"webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:"};
+    intercepter.forwardSelectors = @{
+        @"webView" : @"fwInnerWebView",
+        @"progressView" : @"fwInnerProgressView",
+        @"webItems" : @"fwInnerWebItems",
+        @"webRequest" : @"fwInnerWebRequest",
+        @"setWebRequest:" : @"fwInnerSetWebRequest:",
+        @"renderWebLayout" : @"fwInnerRenderWebLayout",
+        @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
+        @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
+        @"webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:",
+        @"webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:" : @"fwInnerWebView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:",
+    };
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
 
@@ -221,6 +224,14 @@
     } cancelBlock:^{
         completionHandler(nil);
     } priority:FWAlertPriorityNormal];
+}
+
+- (WKWebView *)fwInnerWebView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    return nil;
 }
 
 @end

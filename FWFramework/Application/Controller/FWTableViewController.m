@@ -19,10 +19,12 @@
 {
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(tableViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"tableView" : @"fwInnerTableView",
-                                     @"tableData" : @"fwInnerTableData",
-                                     @"renderTableStyle" : @"fwInnerRenderTableStyle",
-                                     @"renderTableLayout" : @"fwInnerRenderTableLayout"};
+    intercepter.forwardSelectors = @{
+        @"tableView" : @"fwInnerTableView",
+        @"tableData" : @"fwInnerTableData",
+        @"renderTableStyle" : @"fwInnerRenderTableStyle",
+        @"renderTableLayout" : @"fwInnerRenderTableLayout",
+    };
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
 }
 
