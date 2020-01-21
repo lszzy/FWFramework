@@ -214,6 +214,11 @@ FWPropertyWeak(UISwitch *, testSwitch);
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
+    
+    if (indexPath.row % 2 == 0) {
+        cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableViewCell" object:@(4)];
+        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableViewCell" object:@(4)];
+    }
 }
 
 #pragma mark - UICollectionView
@@ -235,6 +240,11 @@ FWPropertyWeak(UISwitch *, testSwitch);
 {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
+    
+    if (indexPath.row % 2 == 0) {
+        cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionViewCell" object:@5 userInfo:@{@"type": @6}];
+        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionViewCell" object:@5 userInfo:@{@"type": @6}];
+    }
 }
 
 @end
