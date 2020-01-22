@@ -235,7 +235,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 - (void)fwInnerUIViewDidMoveToWindow
 {
     [self fwInnerUIViewDidMoveToWindow];
-    [self fwStatisticalExposureUpdate];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
+    [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
 }
 
 #pragma mark - Exposure
@@ -350,6 +351,20 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (void)fwStatisticalExposureUpdate
 {
+    if (![self fwStatisticalExposureRegistered] && ![self fwStatisticalExposureEnabled]) return;
+
+    if ([self fwStatisticalExposureRegistered]) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
+        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+    }
+    
+    [self.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
+        [obj fwStatisticalExposureUpdate];
+    }];
+}
+
+- (void)fwStatisticalExposureCalculate
+{
     static NSMutableDictionary *counts = nil;
     static NSInteger index = 0;
     static dispatch_once_t onceToken;
@@ -363,21 +378,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
         
         [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
-        
-        [self.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
-            [obj fwStatisticalExposureUpdate];
-        }];
         return;
-    }
-    
-    if ([self fwStatisticalExposureEnabled]) {
-        NSInteger count = [[counts objectForKey:@(self.hash)] integerValue];
-        [counts setObject:@(++count) forKey:@(self.hash)];
-        NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
-        
-        [self.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
-            [obj fwStatisticalExposureUpdate];
-        }];
     }
 }
 
