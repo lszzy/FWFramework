@@ -9,7 +9,7 @@
 
 #import "UIView+FWStatistical.h"
 #import "UIView+FWBlock.h"
-#import "UIWindow+FWFramework.h"
+#import "UIView+FWFramework.h"
 #import "FWAspect.h"
 #import <objc/runtime.h>
 
@@ -135,70 +135,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
 }
 
-#pragma mark - Exposure
-
-- (BOOL)fwIsExposed
-{
-    if (self == nil || self.hidden || self.alpha <= 0.1 || !self.window ||
-        self.bounds.size.width == 0 || self.bounds.size.height == 0) {
-        return NO;
-    }
-    
-    CGRect rect = [self convertRect:self.bounds toView:UIWindow.fwMainWindow];
-    CGRect screenRect = [UIScreen mainScreen].bounds;
-    if (CGRectContainsRect(screenRect, rect) && !CGRectIsEmpty(rect) && !CGRectIsNull(rect)) {
-        return YES;
-    }
-    return NO;
-}
-
-- (FWStatisticalObject *)fwStatisticalExposure
-{
-    return objc_getAssociatedObject(self, @selector(fwStatisticalExposure));
-}
-
-- (void)setFwStatisticalExposure:(FWStatisticalObject *)fwStatisticalExposure
-{
-    objc_setAssociatedObject(self, @selector(fwStatisticalExposure), fwStatisticalExposure, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self fwStatisticalExposureRegister];
-}
-
-- (FWStatisticalBlock)fwStatisticalExposureBlock
-{
-    return objc_getAssociatedObject(self, @selector(fwStatisticalExposureBlock));
-}
-
-- (void)setFwStatisticalExposureBlock:(FWStatisticalBlock)fwStatisticalExposureBlock
-{
-    objc_setAssociatedObject(self, @selector(fwStatisticalExposureBlock), fwStatisticalExposureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    
-    [self fwStatisticalExposureRegister];
-}
-
-- (void)fwStatisticalExposureRegister
-{
-    if (objc_getAssociatedObject(self, _cmd) != nil) return;
-    objc_setAssociatedObject(self, _cmd, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-}
-
-- (void)fwStatisticalExposureHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
-{
-    FWStatisticalObject *object = cell.fwStatisticalExposure ?: self.fwStatisticalExposure;
-    if (!object) {
-        object = [FWStatisticalObject new];
-    }
-    object.view = self;
-    object.indexPath = indexPath;
-    if (self.fwStatisticalExposureBlock) {
-        self.fwStatisticalExposureBlock(object);
-    }
-    if (self.fwStatisticalExposure) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
-    }
-}
-
 @end
 
 @implementation UIControl (FWStatistical)
@@ -247,6 +183,119 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         self.fwStatisticalChangedBlock(object);
     }
     if (self.fwStatisticalChanged) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+    }
+}
+
+@end
+
+#pragma mark - UIView+FWExposure
+
+@implementation UIView (FWExposure)
+
+#pragma mark - Exposure
+
+- (FWStatisticalExposureState)fwExposureStateInSuperview:(UIView *)superview
+{
+    if (superview == nil || self == nil || self.hidden || self.alpha <= 0.01 || !self.window ||
+        self.bounds.size.width == 0 || self.bounds.size.height == 0) {
+        return FWStatisticalExposureStateNone;
+    }
+    
+    CGRect viewRect = [self convertRect:self.bounds toView:superview];
+    CGRect superviewRect = superview.bounds;
+    if (!CGRectIsEmpty(viewRect) && !CGRectIsNull(viewRect)) {
+        if (CGRectContainsRect(superviewRect, viewRect)) {
+            return FWStatisticalExposureStateFully;
+        } else if (CGRectIntersectsRect(superviewRect, viewRect)) {
+            return FWStatisticalExposureStatePartly;
+        }
+    }
+    return FWStatisticalExposureStateNone;
+}
+
+- (FWStatisticalExposureState)fwExposureStateInViewController
+{
+    return [self fwExposureStateInSuperview:self.fwViewController.view];
+}
+
+- (FWStatisticalObject *)fwStatisticalExposure
+{
+    return objc_getAssociatedObject(self, @selector(fwStatisticalExposure));
+}
+
+- (void)setFwStatisticalExposure:(FWStatisticalObject *)fwStatisticalExposure
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposure), fwStatisticalExposure, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self fwStatisticalExposureRegister];
+}
+
+- (FWStatisticalBlock)fwStatisticalExposureBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwStatisticalExposureBlock));
+}
+
+- (void)setFwStatisticalExposureBlock:(FWStatisticalBlock)fwStatisticalExposureBlock
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureBlock), fwStatisticalExposureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    
+    [self fwStatisticalExposureRegister];
+}
+
+- (BOOL)fwStatisticalExposureEnabled
+{
+    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureEnabled)) boolValue];
+}
+
+- (void)setFwStatisticalExposureEnabled:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)fwStatisticalExposureRegistered
+{
+    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureRegistered)) boolValue];
+}
+
+- (void)setFwStatisticalExposureRegistered:(BOOL)registered
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureRegistered), @(registered), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fwStatisticalExposureRegister
+{
+    if ([self fwStatisticalExposureRegistered]) return;
+    [self setFwStatisticalExposureRegistered:YES];
+    
+    if ([self isKindOfClass:[UITableView class]]) {
+        
+        return;
+    }
+    
+    if ([self isKindOfClass:[UICollectionView class]]) {
+        
+        return;
+    }
+    
+    if (![self isKindOfClass:[UITableViewCell class]] &&
+        ![self isKindOfClass:[UICollectionViewCell class]]) {
+        
+    }
+}
+
+- (void)fwStatisticalExposureHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
+{
+    FWStatisticalObject *object = cell.fwStatisticalExposure ?: self.fwStatisticalExposure;
+    if (!object) {
+        object = [FWStatisticalObject new];
+    }
+    object.view = self;
+    object.indexPath = indexPath;
+    if (self.fwStatisticalExposureBlock) {
+        self.fwStatisticalExposureBlock(object);
+    }
+    if (self.fwStatisticalExposure) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
     }
 }
