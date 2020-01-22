@@ -46,6 +46,23 @@
     return CGSizeZero;
 }
 
+- (UICollectionView *)fwCollectionView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[UICollectionView class]]) {
+            return (UICollectionView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)fwIndexPath
+{
+    return [[self fwCollectionView] indexPathForCell:self];
+}
+
 @end
 
 @implementation UICollectionViewFlowLayout (FWFramework)

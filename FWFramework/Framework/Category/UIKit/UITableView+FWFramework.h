@@ -40,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 根据数据模型计算cell高度，子类重写
 + (CGFloat)fwHeightWithModel:(nullable id)model;
 
+// 获取当前所属tableView
+- (nullable UITableView *)fwTableView;
+
+// 获取当前显示indexPath
+- (nullable NSIndexPath *)fwIndexPath;
+
 @end
 
 NS_ASSUME_NONNULL_END
