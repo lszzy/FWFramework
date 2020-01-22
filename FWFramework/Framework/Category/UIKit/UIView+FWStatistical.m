@@ -337,14 +337,30 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureState)) integerValue];
 }
 
+- (BOOL)fwStatisticalExposureFully
+{
+    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureFully)) boolValue];
+}
+
+- (void)setFwStatisticalExposureFully:(BOOL)fully
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureFully), @(fully), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (void)setFwStatisticalExposureState:(FWStatisticalExposureState)state
 {
     FWStatisticalExposureState oldState = [self fwStatisticalExposureState];
     if (state != oldState) {
         objc_setAssociatedObject(self, @selector(fwStatisticalExposureState), @(state), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
-        if (state == FWStatisticalExposureStateFully) {
+        if (state == FWStatisticalExposureStateFully && ![self fwStatisticalExposureFully]) {
             [self fwStatisticalExposureHandler:nil indexPath:nil];
+        }
+        
+        if (state == FWStatisticalExposureStateFully) {
+            [self setFwStatisticalExposureFully:YES];
+        } else if (state == FWStatisticalExposureStateNone) {
+            [self setFwStatisticalExposureFully:NO];
         }
     }
 }
