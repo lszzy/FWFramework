@@ -350,10 +350,17 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (void)fwStatisticalExposureUpdate
 {
-    static NSInteger i = 0;
-    
+    static NSMutableDictionary *counts = nil;
+    static NSInteger index = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        counts = [NSMutableDictionary new];
+    });
+
     if ([self fwStatisticalExposureRegistered]) {
-        NSLog(@"i: %@ %@", @(++i), @(self.hash));
+        NSInteger count = [[counts objectForKey:@(self.hash)] integerValue];
+        [counts setObject:@(++count) forKey:@(self.hash)];
+        NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
         
         [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
         
@@ -364,7 +371,9 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self fwStatisticalExposureEnabled]) {
-        NSLog(@"i: %@ %@", @(++i), @(self.hash));
+        NSInteger count = [[counts objectForKey:@(self.hash)] integerValue];
+        [counts setObject:@(++count) forKey:@(self.hash)];
+        NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
         
         [self.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
             [obj fwStatisticalExposureUpdate];
