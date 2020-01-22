@@ -27,6 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 根据数据模型计算cell尺寸，子类重写
 + (CGSize)fwSizeWithModel:(nullable id)model;
 
+// 获取当前所属collectionView
+- (nullable UICollectionView *)fwCollectionView;
+
+// 获取当前显示indexPath
+- (nullable NSIndexPath *)fwIndexPath;
+
 @end
 
 // iOS9+可通过UICollectionViewFlowLayout调用sectionHeadersPinToVisibleBounds实现Header悬停效果
