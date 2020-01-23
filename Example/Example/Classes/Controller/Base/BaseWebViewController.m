@@ -52,9 +52,11 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    if ([navigationAction.request.URL.scheme isEqualToString:@"app"] ||
-        [UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
+    if ([navigationAction.request.URL.scheme isEqualToString:@"app"]) {
         [FWRouter openURL:navigationAction.request.URL.absoluteString];
+        decisionHandler(WKNavigationActionPolicyCancel);
+    } else if ([UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
+        [UIApplication fwOpenURL:navigationAction.request.URL];
         decisionHandler(WKNavigationActionPolicyCancel);
     } else {
         decisionHandler(WKNavigationActionPolicyAllow);

@@ -27,11 +27,15 @@ FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 + (void)registerFilters
 {
     [FWRouter setFilterHandler:^BOOL(NSDictionary *parameters) {
-        NSString *url = parameters[FWRouterURLKey];
-        if ([url hasPrefix:@"app://filter/"]) {
+        NSURL *url = [NSURL fwURLWithString:parameters[FWRouterURLKey]];
+        if ([UIApplication fwIsAppStoreURL:url]) {
+            [UIApplication fwOpenURL:url];
+            return NO;
+        }
+        if ([url.absoluteString hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
             viewController.parameters = parameters;
-            viewController.title = url;
+            viewController.title = url.absoluteString;
             [FWRouter pushViewController:viewController animated:YES];
             return NO;
         }
@@ -45,12 +49,6 @@ FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 + (void)registerRouters
 {
     [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^(NSDictionary *parameters) {
-        NSURL *url = [NSURL fwURLWithString:parameters[FWRouterURLKey]];
-        if ([UIApplication fwIsAppStoreURL:url]) {
-            [UIApplication fwOpenURL:url];
-            return;
-        }
-        
         BaseWebViewController *viewController = [BaseWebViewController new];
         viewController.title = parameters[FWRouterURLKey];
         viewController.requestUrl = parameters[FWRouterURLKey];
