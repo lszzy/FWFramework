@@ -45,6 +45,12 @@ FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 + (void)registerRouters
 {
     [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^(NSDictionary *parameters) {
+        NSURL *url = [NSURL fwURLWithString:parameters[FWRouterURLKey]];
+        if ([UIApplication fwIsAppStoreURL:url]) {
+            [UIApplication fwOpenURL:url];
+            return;
+        }
+        
         BaseWebViewController *viewController = [BaseWebViewController new];
         viewController.title = parameters[FWRouterURLKey];
         viewController.requestUrl = parameters[FWRouterURLKey];
