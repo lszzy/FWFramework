@@ -310,6 +310,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     [self fwInnerUIViewDidMoveToWindow];
     
     if (![self fwStatisticalExposureRegistered]) return;
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) return;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
     [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
 }
@@ -374,6 +375,11 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureFully), @(fully), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSIndexPath *)fwStatisticalExposureIndexPath
+{
+    return objc_getAssociatedObject(self, @selector(fwStatisticalExposureIndexPath));
+}
+
 - (FWStatisticalExposureState)fwStatisticalExposureState
 {
     return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureState)) integerValue];
@@ -381,8 +387,24 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (void)setFwStatisticalExposureState:(FWStatisticalExposureState)state
 {
+    BOOL stateChanged = NO;
+    NSIndexPath *oldIndexPath, *indexPath;
+    if ([self isKindOfClass:[UITableViewCell class]] ||
+        [self isKindOfClass:[UICollectionViewCell class]]) {
+        oldIndexPath = [self fwStatisticalExposureIndexPath];
+        indexPath = [(UITableViewCell *)self fwIndexPath];
+        objc_setAssociatedObject(self, @selector(fwStatisticalExposureIndexPath), indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if (indexPath) {
+            if (!oldIndexPath || [indexPath compare:oldIndexPath] != NSOrderedSame) {
+                stateChanged = YES;
+                [self setFwStatisticalExposureFully:NO];
+            }
+        }
+        //NSLog(@"stateChanged: %@ index: %@ => %@ state: %@ => %@", @(stateChanged), oldIndexPath, indexPath, @([self fwStatisticalExposureState]), @(state));
+    }
+    
     FWStatisticalExposureState oldState = [self fwStatisticalExposureState];
-    if (state != oldState) {
+    if (state != oldState || stateChanged) {
         objc_setAssociatedObject(self, @selector(fwStatisticalExposureState), @(state), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         if (state == FWStatisticalExposureStateFully && ![self fwStatisticalExposureFully]) {
@@ -424,6 +446,13 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 - (void)fwStatisticalExposureUpdate
 {
     if (![self fwStatisticalExposureRegistered]) return;
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) return;
+    
+    if ([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
+        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        return;
+    }
 
     if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
@@ -444,10 +473,20 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         logs = [NSMutableDictionary new];
     });
 
-    NSInteger count = [[logs objectForKey:@(self.hash)] integerValue];
-    [logs setObject:@(++count) forKey:@(self.hash)];
-    NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
-    [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
+    if ([self isKindOfClass:[UITableView class]]) {
+        [((UITableView *)self).visibleCells enumerateObjectsUsingBlock:^(__kindof UITableViewCell *obj, NSUInteger idx, BOOL *stop) {
+            [obj fwStatisticalExposureCalculate];
+        }];
+    } else if ([self isKindOfClass:[UICollectionView class]]) {
+        [((UICollectionView *)self).visibleCells enumerateObjectsUsingBlock:^(__kindof UICollectionViewCell *obj, NSUInteger idx, BOOL *stop) {
+            [obj fwStatisticalExposureCalculate];
+        }];
+    } else {
+        NSInteger count = [[logs objectForKey:@(self.hash)] integerValue];
+        [logs setObject:@(++count) forKey:@(self.hash)];
+        //NSLog(@"%@: %@ => %@", @(++index), [self.class description], @(count));
+        [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
+    }
 }
 
 - (void)fwStatisticalExposureHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
