@@ -271,8 +271,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
             UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
             [targetView fwStatisticalClickRegister];
         } else if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
-            //UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
-            //[targetView fwStatisticalExposureRegister];
+            UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
+            [targetView fwStatisticalExposureRegister];
         }
     }
 }
@@ -387,7 +387,9 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         
         if (state == FWStatisticalExposureStateFully && ![self fwStatisticalExposureFully]) {
             if ([self isKindOfClass:[UITableViewCell class]]) {
-                [self fwStatisticalExposureHandler:nil indexPath:((UITableViewCell *)self).fwIndexPath];
+                [((UITableViewCell *)self).fwTableView fwStatisticalExposureHandler:self indexPath:((UITableViewCell *)self).fwIndexPath];
+            } else if ([self isKindOfClass:[UICollectionViewCell class]]) {
+                [((UICollectionViewCell *)self).fwCollectionView fwStatisticalExposureHandler:self indexPath:((UICollectionViewCell *)self).fwIndexPath];
             } else {
                 [self fwStatisticalExposureHandler:nil indexPath:nil];
             }
@@ -411,12 +413,12 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     if ([self fwStatisticalExposureRegistered]) return;
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    //if (![self isKindOfClass:[UITableViewCell class]] &&
-        //![self isKindOfClass:[UICollectionViewCell class]]) {
+    if (![self isKindOfClass:[UITableViewCell class]] &&
+        ![self isKindOfClass:[UICollectionViewCell class]]) {
         if (self.superview) {
             [self.superview fwStatisticalExposureRegister];
         }
-    //}
+    }
 }
 
 - (void)fwStatisticalExposureUpdate
