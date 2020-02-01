@@ -58,6 +58,27 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 #pragma mark - Click
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerWillMoveToWindow:)];
+    });
+}
+
+- (void)fwInnerWillMoveToWindow:(UIWindow *)newWindow
+{
+    [self fwInnerWillMoveToWindow:newWindow];
+    
+    if ([self isKindOfClass:[UITableViewCell class]] ||
+        [self isKindOfClass:[UICollectionViewCell class]]) {
+        if (newWindow && (self.fwStatisticalClick || self.fwStatisticalClickBlock)) {
+            UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
+            [targetView fwStatisticalClickRegister];
+        }
+    }
+}
+
 - (FWStatisticalObject *)fwStatisticalClick
 {
     return objc_getAssociatedObject(self, @selector(fwStatisticalClick));
@@ -138,52 +159,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     if (cell.fwStatisticalClick || self.fwStatisticalClick) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
-    }
-}
-
-@end
-
-@implementation UITableViewCell (FWStatistical)
-
-#pragma mark - Click
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerWillMoveToWindow:)];
-    });
-}
-
-- (void)fwInnerWillMoveToWindow:(UIWindow *)newWindow
-{
-    [self fwInnerWillMoveToWindow:newWindow];
-    
-    if (newWindow && (self.fwStatisticalClick || self.fwStatisticalClickBlock)) {
-        [[self fwTableView] fwStatisticalClickRegister];
-    }
-}
-
-@end
-
-@implementation UICollectionViewCell (FWStatistical)
-
-#pragma mark - Click
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerWillMoveToWindow:)];
-    });
-}
-
-- (void)fwInnerWillMoveToWindow:(UIWindow *)newWindow
-{
-    [self fwInnerWillMoveToWindow:newWindow];
-    
-    if (newWindow && (self.fwStatisticalClick || self.fwStatisticalClickBlock)) {
-        [[self fwCollectionView] fwStatisticalClickRegister];
     }
 }
 
