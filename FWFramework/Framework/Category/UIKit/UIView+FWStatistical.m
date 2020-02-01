@@ -104,7 +104,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @implementation UIView (FWStatistical)
 
-#pragma mark - Click
+#pragma mark - Hook
 
 + (void)load
 {
@@ -126,6 +126,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         }
     }
 }
+
+#pragma mark - Click
 
 - (FWStatisticalObject *)fwStatisticalClick
 {
