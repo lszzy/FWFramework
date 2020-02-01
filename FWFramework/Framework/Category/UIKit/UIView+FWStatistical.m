@@ -287,30 +287,36 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 - (void)fwInnerUIViewSetFrame:(CGRect)frame
 {
     [self fwInnerUIViewSetFrame:frame];
+    
     [self fwStatisticalExposureUpdate];
 }
 
 - (void)fwInnerUIViewSetBounds:(CGRect)bounds
 {
     [self fwInnerUIViewSetBounds:bounds];
+    
     [self fwStatisticalExposureUpdate];
 }
 
 - (void)fwInnerUIViewSetHidden:(BOOL)hidden
 {
     [self fwInnerUIViewSetHidden:hidden];
+    
     [self fwStatisticalExposureUpdate];
 }
 
 - (void)fwInnerUIViewSetAlpha:(CGFloat)alpha
 {
     [self fwInnerUIViewSetAlpha:alpha];
+    
     [self fwStatisticalExposureUpdate];
 }
 
 - (void)fwInnerUIViewDidMoveToWindow
 {
     [self fwInnerUIViewDidMoveToWindow];
+    
+    if (![self fwStatisticalExposureRegistered]) return;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
     [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
 }
@@ -365,21 +371,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     [self fwStatisticalExposureRegister];
 }
 
-- (BOOL)fwStatisticalExposureEnabled
-{
-    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureEnabled)) boolValue];
-}
-
-- (void)fwStatisticalExposureEnable
-{
-    if ([self fwStatisticalExposureEnabled]) return;
-    objc_setAssociatedObject(self, @selector(fwStatisticalExposureEnabled), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (self.superview) {
-        [self.superview fwStatisticalExposureEnable];
-    }
-}
-
 - (BOOL)fwStatisticalExposureRegistered
 {
     return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureRegistered)) boolValue];
@@ -390,27 +381,9 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     if ([self fwStatisticalExposureRegistered]) return;
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if ([self isKindOfClass:[UITableView class]]) {
-        
-        return;
+    if (self.superview) {
+        [self.superview fwStatisticalExposureRegister];
     }
-    
-    if ([self isKindOfClass:[UICollectionView class]]) {
-        
-        return;
-    }
-    
-    //if (![self isKindOfClass:[UITableViewCell class]] &&
-        //![self isKindOfClass:[UICollectionViewCell class]]) {
-        if (self.superview) {
-            [self.superview fwStatisticalExposureEnable];
-        }
-    //}
-}
-
-- (FWStatisticalExposureState)fwStatisticalExposureState
-{
-    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureState)) integerValue];
 }
 
 - (BOOL)fwStatisticalExposureFully
@@ -421,6 +394,11 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 - (void)setFwStatisticalExposureFully:(BOOL)fully
 {
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureFully), @(fully), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (FWStatisticalExposureState)fwStatisticalExposureState
+{
+    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureState)) integerValue];
 }
 
 - (void)setFwStatisticalExposureState:(FWStatisticalExposureState)state
@@ -447,9 +425,9 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (void)fwStatisticalExposureUpdate
 {
-    if (![self fwStatisticalExposureRegistered] && ![self fwStatisticalExposureEnabled]) return;
+    if (![self fwStatisticalExposureRegistered]) return;
 
-    if ([self fwStatisticalExposureRegistered]) {
+    if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
         [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
     }
@@ -461,21 +439,17 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (void)fwStatisticalExposureCalculate
 {
-    static NSMutableDictionary *counts = nil;
+    static NSMutableDictionary *logs = nil;
     static NSInteger index = 0;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        counts = [NSMutableDictionary new];
+        logs = [NSMutableDictionary new];
     });
 
-    if ([self fwStatisticalExposureRegistered]) {
-        NSInteger count = [[counts objectForKey:@(self.hash)] integerValue];
-        [counts setObject:@(++count) forKey:@(self.hash)];
-        //NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
-        
-        [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
-        return;
-    }
+    NSInteger count = [[logs objectForKey:@(self.hash)] integerValue];
+    [logs setObject:@(++count) forKey:@(self.hash)];
+    NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
+    [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
 }
 
 - (void)fwStatisticalExposureHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
@@ -486,10 +460,13 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     object.view = self;
     object.indexPath = indexPath;
-    if (self.fwStatisticalExposureBlock) {
+    
+    if (cell.fwStatisticalExposureBlock) {
+        cell.fwStatisticalExposureBlock(object);
+    } else if (self.fwStatisticalExposureBlock) {
         self.fwStatisticalExposureBlock(object);
     }
-    if (self.fwStatisticalExposure) {
+    if (cell.fwStatisticalExposure || self.fwStatisticalExposure) {
         [[FWStatisticalManager sharedInstance] handleEvent:object];
     }
 }
