@@ -20,6 +20,54 @@
 
 NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTriggeredNotification";
 
+@interface FWStatisticalManager ()
+
+@property (nonatomic, strong) NSMutableDictionary *eventHandlers;
+
+@end
+
+@implementation FWStatisticalManager
+
++ (instancetype)sharedInstance
+{
+    static FWStatisticalManager *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWStatisticalManager alloc] init];
+    });
+    return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _eventHandlers = [[NSMutableDictionary alloc] init];
+    }
+    return self;
+}
+
+- (void)registerEvent:(NSString *)name withHandler:(FWStatisticalBlock)handler
+{
+    [self.eventHandlers setObject:handler forKey:name];
+}
+
+- (void)handleEvent:(FWStatisticalObject *)object
+{
+    FWStatisticalBlock eventHandler = [self.eventHandlers objectForKey:object.name];
+    if (eventHandler) {
+        eventHandler(object);
+    }
+    if (self.globalHandler) {
+        self.globalHandler(object);
+    }
+    if (self.notificationEnabled) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+    }
+}
+
+@end
+
 @interface FWStatisticalObject ()
 
 @property (nonatomic, weak, nullable) __kindof UIView *view;
@@ -158,7 +206,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         self.fwStatisticalClickBlock(object);
     }
     if (cell.fwStatisticalClick || self.fwStatisticalClick) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+        [[FWStatisticalManager sharedInstance] handleEvent:object];
     }
 }
 
@@ -210,7 +258,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         self.fwStatisticalChangedBlock(object);
     }
     if (self.fwStatisticalChanged) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+        [[FWStatisticalManager sharedInstance] handleEvent:object];
     }
 }
 
@@ -440,7 +488,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         self.fwStatisticalExposureBlock(object);
     }
     if (self.fwStatisticalExposure) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+        [[FWStatisticalManager sharedInstance] handleEvent:object];
     }
 }
 
