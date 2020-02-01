@@ -45,8 +45,7 @@ typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
 #pragma mark - UIView+FWStatistical
 
 /*!
- @brief Click点击统计和Exposure曝光统计
- @discussion 表格视图只需设置主视图即可；不支持单独设置Cell，但Cell可设置事件属性覆盖表格视图
+ @brief Click点击统计
  */
 @interface UIView (FWStatistical)
 
@@ -81,6 +80,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     FWStatisticalExposureStateFully,
 };
 
+/*!
+ @brief Exposure曝光统计
+ */
 @interface UIView (FWExposure)
 
 #pragma mark - Exposure
