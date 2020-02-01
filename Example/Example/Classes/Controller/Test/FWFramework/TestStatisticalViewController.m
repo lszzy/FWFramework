@@ -147,11 +147,10 @@ FWPropertyWeak(UISwitch *, testSwitch);
     self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@"table"];
     self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@"collection"];
     
-    [self fwObserveNotification:FWStatisticalEventTriggeredNotification block:^(NSNotification *notification) {
-        FWStatisticalObject *object = notification.object;
+    [FWStatisticalManager sharedInstance].globalHandler = ^(FWStatisticalObject *object) {
         NSString *type = [object.name containsString:@"exposure"] ? @"曝光" : ([object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击");
         FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), type, [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
-    }];
+    };
     
     FWWeakifySelf();
     FWStatisticalBlock clickBlock = ^(FWStatisticalObject *object){
