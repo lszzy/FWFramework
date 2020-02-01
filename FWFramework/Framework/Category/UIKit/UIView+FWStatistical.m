@@ -11,6 +11,8 @@
 #import "UIView+FWBlock.h"
 #import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
+#import "UITableView+FWFramework.h"
+#import "UICollectionView+FWFramework.h"
 #import "FWAspect.h"
 #import <objc/runtime.h>
 
@@ -128,11 +130,60 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     object.view = self;
     object.indexPath = indexPath;
-    if (self.fwStatisticalClickBlock) {
+    
+    if (cell.fwStatisticalClickBlock) {
+        cell.fwStatisticalClickBlock(object);
+    } else if (self.fwStatisticalClickBlock) {
         self.fwStatisticalClickBlock(object);
     }
-    if (self.fwStatisticalClick) {
+    if (cell.fwStatisticalClick || self.fwStatisticalClick) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+    }
+}
+
+@end
+
+@implementation UITableViewCell (FWStatistical)
+
+#pragma mark - Click
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerWillMoveToWindow:)];
+    });
+}
+
+- (void)fwInnerWillMoveToWindow:(UIWindow *)newWindow
+{
+    [self fwInnerWillMoveToWindow:newWindow];
+    
+    if (newWindow && (self.fwStatisticalClick || self.fwStatisticalClickBlock)) {
+        [[self fwTableView] fwStatisticalClickRegister];
+    }
+}
+
+@end
+
+@implementation UICollectionViewCell (FWStatistical)
+
+#pragma mark - Click
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerWillMoveToWindow:)];
+    });
+}
+
+- (void)fwInnerWillMoveToWindow:(UIWindow *)newWindow
+{
+    [self fwInnerWillMoveToWindow:newWindow];
+    
+    if (newWindow && (self.fwStatisticalClick || self.fwStatisticalClickBlock)) {
+        [[self fwCollectionView] fwStatisticalClickRegister];
     }
 }
 
@@ -324,12 +375,12 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         return;
     }
     
-    if (![self isKindOfClass:[UITableViewCell class]] &&
-        ![self isKindOfClass:[UICollectionViewCell class]]) {
+    //if (![self isKindOfClass:[UITableViewCell class]] &&
+        //![self isKindOfClass:[UICollectionViewCell class]]) {
         if (self.superview) {
             [self.superview fwStatisticalExposureEnable];
         }
-    }
+    //}
 }
 
 - (FWStatisticalExposureState)fwStatisticalExposureState
@@ -354,7 +405,11 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
         objc_setAssociatedObject(self, @selector(fwStatisticalExposureState), @(state), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         if (state == FWStatisticalExposureStateFully && ![self fwStatisticalExposureFully]) {
-            [self fwStatisticalExposureHandler:nil indexPath:nil];
+            if ([self isKindOfClass:[UITableViewCell class]]) {
+                [self fwStatisticalExposureHandler:nil indexPath:((UITableViewCell *)self).fwIndexPath];
+            } else {
+                [self fwStatisticalExposureHandler:nil indexPath:nil];
+            }
         }
         
         if (state == FWStatisticalExposureStateFully) {
@@ -391,7 +446,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     if ([self fwStatisticalExposureRegistered]) {
         NSInteger count = [[counts objectForKey:@(self.hash)] integerValue];
         [counts setObject:@(++count) forKey:@(self.hash)];
-        NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
+        //NSLog(@"%@: %@ => %@", @(++index), @(self.hash), @(count));
         
         [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
         return;
