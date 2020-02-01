@@ -104,29 +104,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @implementation UIView (FWStatistical)
 
-#pragma mark - Hook
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerUIViewWillMoveToWindow:)];
-    });
-}
-
-- (void)fwInnerUIViewWillMoveToWindow:(UIWindow *)newWindow
-{
-    [self fwInnerUIViewWillMoveToWindow:newWindow];
-    
-    if ([self isKindOfClass:[UITableViewCell class]] ||
-        [self isKindOfClass:[UICollectionViewCell class]]) {
-        if (newWindow && (self.fwStatisticalClick || self.fwStatisticalClickBlock)) {
-            UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
-            [targetView fwStatisticalClickRegister];
-        }
-    }
-}
-
 #pragma mark - Click
 
 - (FWStatisticalObject *)fwStatisticalClick
@@ -276,12 +253,28 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerUIViewWillMoveToWindow:)];
         [self fwSwizzleInstanceMethod:@selector(setFrame:) with:@selector(fwInnerUIViewSetFrame:)];
         [self fwSwizzleInstanceMethod:@selector(setHidden:) with:@selector(fwInnerUIViewSetHidden:)];
         [self fwSwizzleInstanceMethod:@selector(setAlpha:) with:@selector(fwInnerUIViewSetAlpha:)];
         [self fwSwizzleInstanceMethod:@selector(setBounds:) with:@selector(fwInnerUIViewSetBounds:)];
         [self fwSwizzleInstanceMethod:@selector(didMoveToWindow) with:@selector(fwInnerUIViewDidMoveToWindow)];
     });
+}
+
+- (void)fwInnerUIViewWillMoveToWindow:(UIWindow *)newWindow
+{
+    [self fwInnerUIViewWillMoveToWindow:newWindow];
+    
+    if (newWindow && ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]])) {
+        if (self.fwStatisticalClick || self.fwStatisticalClickBlock) {
+            UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
+            [targetView fwStatisticalClickRegister];
+        } else if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
+            //UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
+            //[targetView fwStatisticalExposureRegister];
+        }
+    }
 }
 
 - (void)fwInnerUIViewSetFrame:(CGRect)frame
@@ -371,21 +364,6 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     [self fwStatisticalExposureRegister];
 }
 
-- (BOOL)fwStatisticalExposureRegistered
-{
-    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureRegistered)) boolValue];
-}
-
-- (void)fwStatisticalExposureRegister
-{
-    if ([self fwStatisticalExposureRegistered]) return;
-    objc_setAssociatedObject(self, @selector(fwStatisticalExposureRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (self.superview) {
-        [self.superview fwStatisticalExposureRegister];
-    }
-}
-
 - (BOOL)fwStatisticalExposureFully
 {
     return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureFully)) boolValue];
@@ -421,6 +399,24 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
             [self setFwStatisticalExposureFully:NO];
         }
     }
+}
+
+- (BOOL)fwStatisticalExposureRegistered
+{
+    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureRegistered)) boolValue];
+}
+
+- (void)fwStatisticalExposureRegister
+{
+    if ([self fwStatisticalExposureRegistered]) return;
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    //if (![self isKindOfClass:[UITableViewCell class]] &&
+        //![self isKindOfClass:[UICollectionViewCell class]]) {
+        if (self.superview) {
+            [self.superview fwStatisticalExposureRegister];
+        }
+    //}
 }
 
 - (void)fwStatisticalExposureUpdate
