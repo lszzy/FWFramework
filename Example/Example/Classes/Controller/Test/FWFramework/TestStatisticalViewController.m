@@ -52,8 +52,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
-    testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_button" object:@(1)];
-    testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@(1)];
     [testButton setTitle:@"Button" forState:UIControlStateNormal];
     [testButton fwSetBackgroundColor:[UIColor fwRandomColor] forState:UIControlStateNormal];
     [headerView addSubview:testButton];
@@ -61,8 +59,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     UISwitch *testSwitch = [UISwitch new];
     _testSwitch = testSwitch;
-    testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"click_switch" object:@(2) userInfo:@{@"type": @(3)}];
-    testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@(2) userInfo:@{@"type": @(3)}];
     testSwitch.thumbTintColor = [UIColor fwRandomColor];
     testSwitch.onTintColor = testSwitch.thumbTintColor;
     [headerView addSubview:testSwitch];
@@ -108,18 +104,11 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)renderView
 {
-    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@(4)];
-    self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@(4)];
-    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@5 userInfo:@{@"type": @6}];
-    self.collectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@5 userInfo:@{@"type": @6}];
-    
     FWWeakifySelf();
     [self.testView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
         self.testView.backgroundColor = [UIColor fwRandomColor];
     }];
-    self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_view"];
-    self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view"];
     
     [self.testButton fwAddTouchBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
@@ -151,6 +140,18 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)renderData
 {
+    // Statistical
+    self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_view"];
+    self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view"];
+    self.testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_button" object:@(1)];
+    self.testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@(1)];
+    self.testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"click_switch" object:@(2) userInfo:@{@"type": @(3)}];
+    self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@(2) userInfo:@{@"type": @(3)}];
+    self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@(4)];
+    self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@(4)];
+    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@5 userInfo:@{@"type": @6}];
+    self.collectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@5 userInfo:@{@"type": @6}];
+    
     // Notification
     [self fwObserveNotification:FWStatisticalEventTriggeredNotification block:^(NSNotification *notification) {
         FWStatisticalObject *object = notification.object;

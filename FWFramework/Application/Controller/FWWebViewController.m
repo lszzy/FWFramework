@@ -208,7 +208,7 @@
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
-    decisionHandler(WKNavigationResponsePolicyAllow);
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 #pragma mark - WKUIDelegate
