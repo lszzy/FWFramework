@@ -110,13 +110,13 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerWillMoveToWindow:)];
+        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerUIViewWillMoveToWindow:)];
     });
 }
 
-- (void)fwInnerWillMoveToWindow:(UIWindow *)newWindow
+- (void)fwInnerUIViewWillMoveToWindow:(UIWindow *)newWindow
 {
-    [self fwInnerWillMoveToWindow:newWindow];
+    [self fwInnerUIViewWillMoveToWindow:newWindow];
     
     if ([self isKindOfClass:[UITableViewCell class]] ||
         [self isKindOfClass:[UICollectionViewCell class]]) {

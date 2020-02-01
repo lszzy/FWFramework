@@ -55,9 +55,9 @@ typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
 @property (nonatomic, strong, readonly, nullable) NSIndexPath *indexPath;
 
 /// 创建事件绑定信息
-- (instancetype)initWithName:(nullable NSString *)name;
-- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object;
-- (instancetype)initWithName:(nullable NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+- (instancetype)initWithName:(NSString *)name;
+- (instancetype)initWithName:(NSString *)name object:(nullable id)object;
+- (instancetype)initWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
