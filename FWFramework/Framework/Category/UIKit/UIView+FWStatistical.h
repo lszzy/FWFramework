@@ -21,6 +21,9 @@ extern NSString *const FWStatisticalEventTriggeredNotification;
 /// 统计通用block，参数object为FWStatisticalObject统计对象
 typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
 
+/// 统计回调block，参数cell为表格子cell，indexPath为表格子cell所在位置
+typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath);
+
 /*!
  @brief 事件统计管理器
  */
@@ -58,6 +61,21 @@ typedef void (^FWStatisticalBlock)(FWStatisticalObject *object);
 - (instancetype)initWithName:(NSString *)name;
 - (instancetype)initWithName:(NSString *)name object:(nullable id)object;
 - (instancetype)initWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+
+@end
+
+/*!
+ @brief 自定义统计实现代理
+ */
+@protocol FWStatisticalDelegate <NSObject>
+
+@optional
+
+/// 自定义点击事件统计方式，触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
+- (void)statisticalClickWithCallback:(FWStatisticalCallback)callback;
+
+/// 自定义曝光事件统计方式，触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
+- (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback;
 
 @end
 

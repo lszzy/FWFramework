@@ -135,6 +135,16 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     if (objc_getAssociatedObject(self, _cmd) != nil) return;
     objc_setAssociatedObject(self, _cmd, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+        [self respondsToSelector:@selector(statisticalClickWithCallback:)]) {
+        __weak __typeof__(self) self_weak_ = self;
+        [(id<FWStatisticalDelegate>)self statisticalClickWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
+            __typeof__(self) self = self_weak_;
+            [self fwStatisticalClickHandler:cell indexPath:indexPath];
+        }];
+        return;
+    }
+    
     if ([self isKindOfClass:[UITableView class]]) {
         [(NSObject *)((UITableView *)self).delegate fwHookSelector:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UITableView *tableView, NSIndexPath *indexPath){
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -311,6 +321,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     
     if (![self fwStatisticalExposureRegistered]) return;
     if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) return;
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] && [self respondsToSelector:@selector(statisticalExposureWithCallback:)]) return;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
     [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
 }
@@ -325,6 +336,29 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     UIView *targetView = superview ?: self.window;
+    UIView *view = self.superview;
+    BOOL viewHidden = NO;
+    while (view && view != targetView) {
+        if (view.hidden || view.alpha <= 0.01 ||
+            view.bounds.size.width == 0 || view.bounds.size.height == 0) {
+            viewHidden = YES;
+            break;
+        }
+        view = view.superview;
+    }
+    if (viewHidden) {
+        return FWStatisticalExposureStateNone;
+    }
+    
+    /*
+    if (self.superview && self.superview != targetView) {
+        // TODO: 优化为只判断hidden alpha width height，其它不需要
+        FWStatisticalExposureState *superState = [self.superview fwExposureStateInSuperview:superview];
+        if (superState == FWStatisticalExposureStateNone) {
+            return FWStatisticalExposureStateNone;
+        }
+    }*/
+    
     CGRect viewRect = [self convertRect:self.bounds toView:targetView];
     CGRect targetRect = targetView.bounds;
     if (!CGRectIsEmpty(viewRect) && !CGRectIsNull(viewRect)) {
@@ -436,6 +470,16 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     if ([self fwStatisticalExposureRegistered]) return;
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+        [self respondsToSelector:@selector(statisticalExposureWithCallback:)]) {
+        __weak __typeof__(self) self_weak_ = self;
+        [(id<FWStatisticalDelegate>)self statisticalExposureWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
+            __typeof__(self) self = self_weak_;
+            [self fwStatisticalExposureHandler:cell indexPath:indexPath];
+        }];
+        return;
+    }
+    
     if (![self isKindOfClass:[UITableViewCell class]] &&
         ![self isKindOfClass:[UICollectionViewCell class]]) {
         if (self.superview) {
@@ -448,6 +492,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 {
     if (![self fwStatisticalExposureRegistered]) return;
     if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) return;
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] && [self respondsToSelector:@selector(statisticalExposureWithCallback:)]) return;
     
     if ([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
@@ -485,7 +530,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     } else {
         NSInteger count = [[logs objectForKey:@(self.hash)] integerValue];
         [logs setObject:@(++count) forKey:@(self.hash)];
-        //NSLog(@"%@: %@ => %@", @(++index), [self.class description], @(count));
+        NSLog(@"%@: %@ => %@", @(++index), [self.class description], @(count));
         [self setFwStatisticalExposureState:[self fwExposureStateInViewController]];
     }
 }
