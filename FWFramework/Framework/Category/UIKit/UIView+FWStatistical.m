@@ -438,8 +438,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     }
     
     CGRect viewRect = [self convertRect:self.bounds toView:targetView];
+    viewRect = CGRectMake(floor(viewRect.origin.x), floor(viewRect.origin.y), floor(viewRect.size.width), floor(viewRect.size.height));
     CGRect targetRect = targetView.bounds;
-    if (!CGRectIsEmpty(viewRect) && !CGRectIsNull(viewRect)) {
+    if (!CGRectIsEmpty(viewRect)) {
         if (CGRectContainsRect(targetRect, viewRect)) {
             return FWStatisticalExposureStateFully;
         } else if (CGRectIntersectsRect(targetRect, viewRect)) {
