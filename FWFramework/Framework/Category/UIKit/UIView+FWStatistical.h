@@ -106,10 +106,10 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 
 #pragma mark - Exposure
 
-/// 当前视图在指定父视图的曝光状态
+/// 当前视图在指定父视图的曝光状态，superview为nil时则为window
 - (FWStatisticalExposureState)fwExposureStateInSuperview:(UIView *)superview;
 
-/// 当前视图在父控制器的曝光状态
+/// 当前视图在父控制器的曝光状态，父控制器不存在时则为window
 - (FWStatisticalExposureState)fwExposureStateInViewController;
 
 /// 绑定统计曝光事件，触发管理器
