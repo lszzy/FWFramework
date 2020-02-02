@@ -71,10 +71,10 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 
 @optional
 
-/// 自定义点击事件统计方式，触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
+/// 自定义点击事件统计方式(单次)，仅注册时调用一次，点击触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
 - (void)statisticalClickWithCallback:(FWStatisticalCallback)callback;
 
-/// 自定义曝光事件统计方式，触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
+/// 自定义曝光事件统计方式(多次)，当视图切换为完全曝光时会调用，曝光触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
 - (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback;
 
 @end
