@@ -308,7 +308,8 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         if (self.fwStatisticalClick || self.fwStatisticalClickBlock) {
             UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
             [targetView fwStatisticalClickRegister];
-        } else if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
+        }
+        if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
             UIView *targetView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
             [targetView fwStatisticalExposureRegister];
         }
