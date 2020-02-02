@@ -933,6 +933,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback
 {
     self.exposureCallback = callback;
+    
+    NSInteger itemIndex = [_flowLayout currentPage];
+    UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
+    self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0]);
 }
 
 @end
