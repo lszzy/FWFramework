@@ -86,8 +86,6 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
  */
 @interface UIView (FWStatistical)
 
-#pragma mark - Click
-
 /// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside，tableView|collectionView为Select(需先设置delegate)
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalClick;
 
@@ -97,8 +95,6 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 @end
 
 @interface UIControl (FWStatistical)
-
-#pragma mark - Changed
 
 /// 绑定统计值Changed事件，触发管理器
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalChanged;
@@ -110,25 +106,10 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 
 #pragma mark - UIView+FWExposure
 
-/// 曝光状态，未曝光、部分曝光、全曝光
-typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
-    FWStatisticalExposureStateNone,
-    FWStatisticalExposureStatePartly,
-    FWStatisticalExposureStateFully,
-};
-
 /*!
  @brief Exposure曝光统计
  */
 @interface UIView (FWExposure)
-
-#pragma mark - Exposure
-
-/// 当前视图在指定父视图的曝光状态，superview为nil时则为window
-- (FWStatisticalExposureState)fwExposureStateInSuperview:(UIView *)superview;
-
-/// 当前视图在父控制器的曝光状态，父控制器不存在时则为window
-- (FWStatisticalExposureState)fwExposureStateInViewController;
 
 /// 绑定统计曝光事件，触发管理器
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalExposure;
