@@ -319,17 +319,18 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (FWStatisticalExposureState)fwExposureStateInSuperview:(UIView *)superview
 {
-    if (superview == nil || self == nil || self.hidden || self.alpha <= 0.01 || !self.window ||
+    if (self == nil || self.hidden || self.alpha <= 0.01 || !self.window ||
         self.bounds.size.width == 0 || self.bounds.size.height == 0) {
         return FWStatisticalExposureStateNone;
     }
     
-    CGRect viewRect = [self convertRect:self.bounds toView:superview];
-    CGRect superviewRect = superview.bounds;
+    UIView *targetView = superview ?: self.window;
+    CGRect viewRect = [self convertRect:self.bounds toView:targetView];
+    CGRect targetRect = targetView.bounds;
     if (!CGRectIsEmpty(viewRect) && !CGRectIsNull(viewRect)) {
-        if (CGRectContainsRect(superviewRect, viewRect)) {
+        if (CGRectContainsRect(targetRect, viewRect)) {
             return FWStatisticalExposureStateFully;
-        } else if (CGRectIntersectsRect(superviewRect, viewRect)) {
+        } else if (CGRectIntersectsRect(targetRect, viewRect)) {
             return FWStatisticalExposureStatePartly;
         }
     }
