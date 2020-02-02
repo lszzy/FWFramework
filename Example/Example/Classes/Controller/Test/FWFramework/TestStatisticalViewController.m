@@ -32,6 +32,7 @@
 
 @interface TestStatisticalViewController () <FWCollectionViewController>
 
+FWPropertyWeak(FWBannerView *, bannerView);
 FWPropertyWeak(UIView *, testView);
 FWPropertyWeak(UIButton *, testButton);
 FWPropertyWeak(UISwitch *, testSwitch);
@@ -44,11 +45,27 @@ FWPropertyWeak(UISwitch *, testSwitch);
 {
     UIView *headerView = [UIView new];
     
+    FWBannerView *bannerView = [FWBannerView new];
+    _bannerView = bannerView;
+    bannerView.autoScroll = YES;
+    bannerView.autoScrollTimeInterval = 4;
+    bannerView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    [headerView addSubview:bannerView];
+    bannerView.fwLayoutChain.leftWithInset(10).topWithInset(10).rightWithInset(10).height(100);
+    
+    NSMutableArray *imageUrls = [NSMutableArray array];
+    [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
+    [imageUrls addObject:@"public_picture"];
+    [imageUrls addObject:@"not_found.jpg"];
+    [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    bannerView.imageURLStringsGroup = [imageUrls copy];
+    bannerView.titlesGroup = @[@"1", @"2", @"3", @"4"];
+    
     UIView *testView = [UIView fwAutoLayoutView];
     _testView = testView;
     testView.backgroundColor = [UIColor fwRandomColor];
     [headerView addSubview:testView];
-    testView.fwLayoutChain.width(100).height(30).centerX().topWithInset(10);
+    testView.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(bannerView, 10);
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
@@ -140,44 +157,31 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)renderData
 {
+    FWWeakifySelf();
+    [FWStatisticalManager sharedInstance].globalHandler = ^(FWStatisticalObject *object) {
+        BOOL isExposure = [object.name containsString:@"exposure"] ? YES : NO;
+        NSString *type = isExposure ? @"曝光" : ([object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击");
+        if (isExposure) {
+            FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), type, [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
+        } else {
+            FWStrongifySelf();
+            [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo]];
+        }
+    };
+    
     // Click
     self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_view" object:@"view"];
     self.testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_button" object:@"button"];
     self.testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"click_switch" object:@"switch"];
+    self.bannerView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_banner" object:@"banner"];
     self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@"table"];
-    self.collectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@"collection"];
-    
-    [FWStatisticalManager sharedInstance].globalHandler = ^(FWStatisticalObject *object) {
-        NSString *type = [object.name containsString:@"exposure"] ? @"曝光" : ([object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击");
-        FWLogDebug(@"%@%@通知: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), type, [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
-    };
-    
-    FWWeakifySelf();
-    FWStatisticalBlock clickBlock = ^(FWStatisticalObject *object){
-        FWStrongifySelf();
-        [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo]];
-    };
-    self.testView.fwStatisticalClickBlock = clickBlock;
-    self.testButton.fwStatisticalClickBlock = clickBlock;
-    self.testSwitch.fwStatisticalChangedBlock = clickBlock;
-    self.tableView.fwStatisticalClickBlock = clickBlock;
-    self.collectionView.fwStatisticalClickBlock = clickBlock;
     
     // Exposure
     self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view" object:@"view"];
     self.testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@"button"];
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
+    self.bannerView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"banner"];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
-    self.collectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@"collection"];
-    
-    FWStatisticalBlock exposureBlock = ^(FWStatisticalObject *object){
-        FWLogDebug(@"%@曝光事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
-    };
-    self.testView.fwStatisticalExposureBlock = exposureBlock;
-    self.testButton.fwStatisticalExposureBlock = exposureBlock;
-    self.testSwitch.fwStatisticalExposureBlock = exposureBlock;
-    self.tableView.fwStatisticalExposureBlock = exposureBlock;
-    self.collectionView.fwStatisticalExposureBlock = exposureBlock;
 }
 
 - (void)showToast:(NSString *)toast
@@ -206,30 +210,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
     }
     cell.textLabel.text = [NSString stringWithFormat:@"%@", @(indexPath.row)];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
-    if (indexPath.row % 3 == 1) {
-        cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableViewCell" object:@"cell"];
-        cell.fwStatisticalClickBlock = nil;
-        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableViewCell" object:@"cell"];
-        cell.fwStatisticalExposureBlock = nil;
-    } else if (indexPath.row % 3 == 2) {
-        FWWeakifySelf();
-        FWStatisticalBlock clickBlock = ^(FWStatisticalObject *object){
-            FWStrongifySelf();
-            [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo]];
-        };
-        cell.fwStatisticalClick = nil;
-        cell.fwStatisticalClickBlock = clickBlock;
-        cell.fwStatisticalExposure = nil;
-        FWStatisticalBlock exposureBlock = ^(FWStatisticalObject *object){
-            FWLogDebug(@"%@曝光事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
-        };
-        cell.fwStatisticalExposureBlock = exposureBlock;
-    } else {
-        cell.fwStatisticalClick = nil;
-        cell.fwStatisticalClickBlock = nil;
-        cell.fwStatisticalExposure = nil;
-        cell.fwStatisticalExposureBlock = nil;
-    }
     return cell;
 }
 
@@ -251,30 +231,8 @@ FWPropertyWeak(UISwitch *, testSwitch);
     TestStatisticalCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", @(indexPath.row)];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
-    if (indexPath.row % 3 == 1) {
-        cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionViewCell" object:@"cell"];
-        cell.fwStatisticalClickBlock = nil;
-        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionViewCell" object:@"cell"];
-        cell.fwStatisticalExposureBlock = nil;
-    } else if (indexPath.row % 3 == 2) {
-        FWWeakifySelf();
-        FWStatisticalBlock clickBlock = ^(FWStatisticalObject *object){
-            FWStrongifySelf();
-            [self showToast:[NSString stringWithFormat:@"%@%@事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [object.view isKindOfClass:[UISwitch class]] ? @"改变" : @"点击", [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo]];
-        };
-        cell.fwStatisticalClick = nil;
-        cell.fwStatisticalClickBlock = clickBlock;
-        cell.fwStatisticalExposure = nil;
-        FWStatisticalBlock exposureBlock = ^(FWStatisticalObject *object){
-            FWLogDebug(@"%@曝光事件: \nindexPath: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view.class), [NSString stringWithFormat:@"%@.%@", @(object.indexPath.section), @(object.indexPath.row)], object.name, object.object, object.userInfo);
-        };
-        cell.fwStatisticalExposureBlock = exposureBlock;
-    } else {
-        cell.fwStatisticalClick = nil;
-        cell.fwStatisticalClickBlock = nil;
-        cell.fwStatisticalExposure = nil;
-        cell.fwStatisticalExposureBlock = nil;
-    }
+    cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@"cell"];
+    cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@"cell"];
     return cell;
 }
 
