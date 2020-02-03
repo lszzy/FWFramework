@@ -7,6 +7,7 @@
 //
 
 #import "TestStatisticalViewController.h"
+#import "BaseWebViewController.h"
 
 @interface TestStatisticalCell : UICollectionViewCell
 
@@ -30,7 +31,7 @@
 
 @end
 
-@interface TestStatisticalViewController () <FWCollectionViewController>
+@interface TestStatisticalViewController () <FWCollectionViewController, FWBannerViewDelegate>
 
 FWPropertyWeak(FWBannerView *, bannerView);
 FWPropertyWeak(UIView *, testView);
@@ -47,8 +48,9 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     FWBannerView *bannerView = [FWBannerView new];
     _bannerView = bannerView;
+    bannerView.delegate = self;
     bannerView.autoScroll = YES;
-    bannerView.autoScrollTimeInterval = 4;
+    bannerView.autoScrollTimeInterval = 6;
     bannerView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     [headerView addSubview:bannerView];
     bannerView.fwLayoutChain.leftWithInset(10).topWithInset(10).rightWithInset(10).height(100);
@@ -180,7 +182,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
     self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view" object:@"view"];
     self.testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@"button"];
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
-    self.bannerView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"banner"];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
 }
 
@@ -240,6 +241,27 @@ FWPropertyWeak(UISwitch *, testSwitch);
 {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
+}
+
+#pragma mark - FWBannerViewDelegate
+
+- (void)bannerView:(FWBannerView *)bannerView customCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index
+{
+    cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"cell"];
+}
+
+- (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        BaseWebViewController *viewController = [BaseWebViewController new];
+        viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
+        if (index % 2 == 0) {
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+        }
+    });
 }
 
 @end
