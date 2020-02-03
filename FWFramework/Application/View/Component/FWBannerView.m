@@ -945,6 +945,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 #pragma mark - FWBannerViewCell
 
+@interface FWBannerViewCell () <FWStatisticalDelegate>
+
+@end
+
 @implementation FWBannerViewCell
 {
     __weak UIView *_insetView;
@@ -1037,6 +1041,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         _imageView.frame = _insetView.bounds;
         _titleLabel.frame = CGRectMake(0, _insetView.frame.size.height - _titleLabelHeight, _insetView.frame.size.width, _titleLabelHeight);
     }
+}
+
+#pragma mark - FWStatisticalDelegate
+
+- (UIView *)statisticalCellProxyView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[FWBannerView class]]) {
+            return (FWBannerView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
 }
 
 @end
