@@ -72,6 +72,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 @property (nonatomic, weak, nullable) __kindof UIView *view;
 @property (nonatomic, strong, nullable) NSIndexPath *indexPath;
+@property (nonatomic, assign) NSInteger triggerCount;
 
 @end
 
@@ -233,10 +234,21 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     } forControlEvents:UIControlEventValueChanged];
 }
 
+- (NSInteger)fwStatisticalChangedCount
+{
+    NSInteger count = [objc_getAssociatedObject(self, _cmd) integerValue] + 1;
+    objc_setAssociatedObject(self, _cmd, @(count), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return count;
+}
+
 - (void)fwStatisticalChangedHandler
 {
     FWStatisticalObject *object = self.fwStatisticalChanged ?: [FWStatisticalObject new];
     object.view = self;
+    NSInteger count = [self fwStatisticalChangedCount];
+    if (count > 1 && object.triggerOnce) return;
+    object.triggerCount = count;
+    
     if (self.fwStatisticalChangedBlock) {
         self.fwStatisticalChangedBlock(object);
     }
