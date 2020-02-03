@@ -77,6 +77,9 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 /// 自定义曝光事件统计方式(多次)，当视图切换为完全曝光时会调用，曝光触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置
 - (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback;
 
+/// 自定义cell事件代理视图，仅cell生效。默认为所在tableView|collectionView，如果不同，实现此方法即可
+- (nullable UIView *)statisticalCellProxyView;
+
 @end
 
 #pragma mark - UIView+FWStatistical
