@@ -422,7 +422,12 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         return FWStatisticalExposureStateNone;
     }
     
-    UIView *targetView = self.fwViewController.view ?: self.window;
+    UIViewController *viewController = self.fwViewController;
+    if (viewController && viewController.presentedViewController) {
+        return FWStatisticalExposureStateNone;
+    }
+    
+    UIView *targetView = viewController.view ?: self.window;
     UIView *superview = self.superview;
     BOOL superviewHidden = NO;
     while (superview && superview != targetView) {
