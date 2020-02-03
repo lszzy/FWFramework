@@ -181,6 +181,7 @@ FWPropertyWeak(UISwitch *, testSwitch);
     // Exposure
     self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view" object:@"view"];
     self.testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@"button"];
+    self.testButton.fwStatisticalExposure.triggerOnce = YES;
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
 }
@@ -234,6 +235,7 @@ FWPropertyWeak(UISwitch *, testSwitch);
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
     cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@"cell"];
     cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@"cell"];
+    cell.fwStatisticalExposure.triggerOnce = YES;
     return cell;
 }
 
