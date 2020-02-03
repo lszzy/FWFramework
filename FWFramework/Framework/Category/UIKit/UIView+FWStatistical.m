@@ -177,6 +177,19 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
 }
 
+- (NSInteger)fwStatisticalClickCount:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *triggerDict = objc_getAssociatedObject(self, _cmd);
+    if (!triggerDict) {
+        triggerDict = [[NSMutableDictionary alloc] init];
+        objc_setAssociatedObject(self, _cmd, triggerDict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    NSString *triggerKey = [NSString stringWithFormat:@"%@.%@", @(indexPath.section), @(indexPath.row)];
+    NSInteger triggerCount = [[triggerDict objectForKey:triggerKey] integerValue] + 1;
+    [triggerDict setObject:@(triggerCount) forKey:triggerKey];
+    return triggerCount;
+}
+
 - (void)fwStatisticalClickHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
 {
     FWStatisticalObject *object = cell.fwStatisticalClick ?: self.fwStatisticalClick;
@@ -185,6 +198,9 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     object.view = self;
     object.indexPath = indexPath;
+    NSInteger triggerCount = [self fwStatisticalClickCount:indexPath];
+    if (triggerCount > 1 && object.triggerOnce) return;
+    object.triggerCount = triggerCount;
     
     if (cell.fwStatisticalClickBlock) {
         cell.fwStatisticalClickBlock(object);
@@ -236,18 +252,18 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 
 - (NSInteger)fwStatisticalChangedCount
 {
-    NSInteger count = [objc_getAssociatedObject(self, _cmd) integerValue] + 1;
-    objc_setAssociatedObject(self, _cmd, @(count), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    return count;
+    NSInteger triggerCount = [objc_getAssociatedObject(self, _cmd) integerValue] + 1;
+    objc_setAssociatedObject(self, _cmd, @(triggerCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return triggerCount;
 }
 
 - (void)fwStatisticalChangedHandler
 {
     FWStatisticalObject *object = self.fwStatisticalChanged ?: [FWStatisticalObject new];
     object.view = self;
-    NSInteger count = [self fwStatisticalChangedCount];
-    if (count > 1 && object.triggerOnce) return;
-    object.triggerCount = count;
+    NSInteger triggerCount = [self fwStatisticalChangedCount];
+    if (triggerCount > 1 && object.triggerOnce) return;
+    object.triggerCount = triggerCount;
     
     if (self.fwStatisticalChangedBlock) {
         self.fwStatisticalChangedBlock(object);
@@ -531,6 +547,19 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     }
 }
 
+- (NSInteger)fwStatisticalExposureCount:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *triggerDict = objc_getAssociatedObject(self, _cmd);
+    if (!triggerDict) {
+        triggerDict = [[NSMutableDictionary alloc] init];
+        objc_setAssociatedObject(self, _cmd, triggerDict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    NSString *triggerKey = [NSString stringWithFormat:@"%@.%@", @(indexPath.section), @(indexPath.row)];
+    NSInteger triggerCount = [[triggerDict objectForKey:triggerKey] integerValue] + 1;
+    [triggerDict setObject:@(triggerCount) forKey:triggerKey];
+    return triggerCount;
+}
+
 - (void)fwStatisticalExposureHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
 {
     FWStatisticalObject *object = cell.fwStatisticalExposure ?: self.fwStatisticalExposure;
@@ -539,6 +568,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     }
     object.view = self;
     object.indexPath = indexPath;
+    NSInteger triggerCount = [self fwStatisticalExposureCount:indexPath];
+    if (triggerCount > 1 && object.triggerOnce) return;
+    object.triggerCount = triggerCount;
     
     if (cell.fwStatisticalExposureBlock) {
         cell.fwStatisticalExposureBlock(object);
