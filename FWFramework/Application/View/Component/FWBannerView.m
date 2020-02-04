@@ -13,6 +13,7 @@
 #import "UIImage+FWFramework.h"
 #import "UIImageView+FWFramework.h"
 #import "FWPageControl.h"
+#import "FWStatisticalManager.h"
 
 #pragma mark - FWBannerViewFlowLayout
 
@@ -104,7 +105,7 @@
     [self.collectionView setContentOffset:proposedContentOffset animated:shouldAnimate];
 }
 
-#pragma mark - Protected
+#pragma mark - Protect
 
 - (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context
 {
@@ -227,7 +228,7 @@
 
 NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
-@interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, FWStatisticalDelegate>
 
 @property (nonatomic, weak) UICollectionView *mainView;
 @property (nonatomic, weak) FWBannerViewFlowLayout *flowLayout;
@@ -235,6 +236,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
+@property (nonatomic, copy) FWStatisticalCallback clickCallback;
+@property (nonatomic, copy) FWStatisticalCallback exposureCallback;
 
 @end
 
@@ -846,6 +849,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (self.clickItemOperationBlock) {
         self.clickItemOperationBlock([self pageControlIndexWithCurrentCellIndex:indexPath.item]);
     }
+    if (self.clickCallback) {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        self.clickCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:indexPath.item] inSection:0]);
+    }
 }
 
 
@@ -893,8 +900,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
         [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
-    } else if (self.itemDidScrollOperationBlock) {
+    }
+    if (self.itemDidScrollOperationBlock) {
         self.itemDidScrollOperationBlock(indexOnPageControl);
+    }
+    if (self.exposureCallback) {
+        UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
+        self.exposureCallback(cell, [NSIndexPath indexPathForRow:indexOnPageControl inSection:0]);
     }
 }
 
@@ -911,9 +923,31 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
+#pragma mark - FWStatisticalDelegate
+
+- (void)statisticalClickWithCallback:(FWStatisticalCallback)callback
+{
+    self.clickCallback = callback;
+}
+
+- (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback
+{
+    self.exposureCallback = callback;
+    
+    if (self.exposureCallback) {
+        NSInteger itemIndex = [_flowLayout currentPage];
+        UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
+        self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0]);
+    }
+}
+
 @end
 
 #pragma mark - FWBannerViewCell
+
+@interface FWBannerViewCell () <FWStatisticalDelegate>
+
+@end
 
 @implementation FWBannerViewCell
 {
@@ -1007,6 +1041,20 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         _imageView.frame = _insetView.bounds;
         _titleLabel.frame = CGRectMake(0, _insetView.frame.size.height - _titleLabelHeight, _insetView.frame.size.width, _titleLabelHeight);
     }
+}
+
+#pragma mark - FWStatisticalDelegate
+
+- (UIView *)statisticalCellProxyView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[FWBannerView class]]) {
+            return (FWBannerView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
 }
 
 @end

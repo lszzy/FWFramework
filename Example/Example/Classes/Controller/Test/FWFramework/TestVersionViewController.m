@@ -14,6 +14,19 @@
 
 @implementation TestVersionViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    NSString *deviceText = [NSString stringWithFormat:@"Device UUID: \n%@", [UIDevice fwDeviceUUID]];
+    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:deviceText];
+    textLabel.textAlignment = NSTextAlignmentCenter;
+    textLabel.numberOfLines = 0;
+    [self.view addSubview:textLabel];
+    [textLabel fwAlignCenterToSuperview];
+    [textLabel fwPinEdgesToSuperviewHorizontal];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

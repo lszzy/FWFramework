@@ -28,13 +28,12 @@
 #import "FWTuple.h"
 
 // Service
-#import "FWMutableArray.h"
-#import "FWMutableDictionary.h"
 #import "FWAuthorizeManager.h"
 #import "FWKeychainManager.h"
 #import "FWTaskManager.h"
 #import "FWVersionManager.h"
 #import "FWLocationManager.h"
+#import "FWStatisticalManager.h"
 #import "FWStorekitManager.h"
 #import "FWNotificationManager.h"
 #import "FWNetwork.h"

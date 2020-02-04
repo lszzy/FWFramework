@@ -94,8 +94,20 @@ NS_ASSUME_NONNULL_BEGIN
 // 设备模型，格式："iPhone6,1"
 + (nullable NSString *)fwDeviceModel;
 
-// 设备UUID，应用删除后会改变，可通过keychain持久化
-+ (nullable NSString *)fwDeviceUUID;
+#pragma mark - UUID
+
+/*!
+ @brief 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
+ @discussion 如需获取设备IDFA(外部使用)，重置广告或系统后会改变，需导入AdSupport，算法：
+    1. 先调用[[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled]判断是否启用广告追踪
+    2. 执行[[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString]获取IDFA
+ */
++ (nullable NSString *)fwDeviceIDFV;
+
+/*!
+@brief 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+*/
+@property (class, nonatomic, copy) NSString *fwDeviceUUID;
 
 #pragma mark - Token
 

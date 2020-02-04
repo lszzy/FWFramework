@@ -70,6 +70,10 @@ typedef NS_OPTIONS(NSUInteger, FWAspectOptions) {
 
 /*!
  @brief AOP管理器，修改自Aspects
+ @discussion 示例代码如下：
+    [UIViewController fwHookSelector:@selector(viewWillAppear:) withBlock:^(id<FWAspectInfo> aspectInfo, BOOL animated){
+        NSLog(@"viewController:%@ animated:%@", aspectInfo.instance, @(animated));
+    } options:FWAspectPositionAfter error:NULL];
  
  @see https://github.com/steipete/Aspects
  */

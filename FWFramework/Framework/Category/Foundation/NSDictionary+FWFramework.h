@@ -8,6 +8,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSDictionary+FWThread.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

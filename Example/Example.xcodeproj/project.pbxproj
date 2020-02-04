@@ -126,6 +126,8 @@
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
+		2FB4B9B623D0913800C0A351 /* TestStatisticalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */; };
+		2FB4B9B723D0913800C0A351 /* TestStatisticalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */; };
 		2FB7CBC521C21F44002E5412 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */; };
 		2FB7CBDA21C25B25002E5412 /* TestTableScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */; };
 		2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2FB90F1C21F5716800084D76 /* QrcodeSound.caf */; };
@@ -286,6 +288,8 @@
 		2FA32CCB21B0572900C230EA /* TestRouterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterViewController.m; sourceTree = "<group>"; };
 		2FB38DBF215B7058009F0450 /* TestModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestModelViewController.h; sourceTree = "<group>"; };
 		2FB38DC0215B7058009F0450 /* TestModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestModelViewController.m; sourceTree = "<group>"; };
+		2FB4B9B423D0913800C0A351 /* TestStatisticalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestStatisticalViewController.h; sourceTree = "<group>"; };
+		2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestStatisticalViewController.m; sourceTree = "<group>"; };
 		2FB7CBC321C21F44002E5412 /* TestBannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBannerViewController.h; sourceTree = "<group>"; };
 		2FB7CBC421C21F44002E5412 /* TestBannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBannerViewController.m; sourceTree = "<group>"; };
 		2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableScrollViewController.h; sourceTree = "<group>"; };
@@ -561,6 +565,8 @@
 				2F1E3927217896A90051A6BB /* TestScrollViewController.m */,
 				2F41A733229F9F3B0008E4E2 /* TestSegmentViewController.h */,
 				2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */,
+				2FB4B9B423D0913800C0A351 /* TestStatisticalViewController.h */,
+				2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */,
 				2F1E620A22AEAC2000A1AB49 /* TestSocketViewController.h */,
 				2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */,
 				2FCD376522533C0F001E81DB /* TestStateViewController.h */,
@@ -1057,6 +1063,7 @@
 				2F43858B2318F687003A683C /* ObjcController.m in Sources */,
 				2F43858C2318F687003A683C /* SwiftController.swift in Sources */,
 				2F5B1EE6231CADBF007884EC /* BaseWebViewController.m in Sources */,
+				2FB4B9B723D0913800C0A351 /* TestStatisticalViewController.m in Sources */,
 				2F43858D2318F687003A683C /* TestWebViewController.m in Sources */,
 				2F43858E2318F687003A683C /* TestLayerViewController.m in Sources */,
 				2F43858F2318F687003A683C /* TestBorderViewController.m in Sources */,
@@ -1130,6 +1137,7 @@
 				2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */,
 				2FBFB70922C5047700E669B6 /* SwiftController.swift in Sources */,
 				2F5B1EE5231CADBF007884EC /* BaseWebViewController.m in Sources */,
+				2FB4B9B623D0913800C0A351 /* TestStatisticalViewController.m in Sources */,
 				2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */,
 				2FCD376122533BA1001E81DB /* TestLayerViewController.m in Sources */,
 				2FCD375D22533B5A001E81DB /* TestBorderViewController.m in Sources */,
