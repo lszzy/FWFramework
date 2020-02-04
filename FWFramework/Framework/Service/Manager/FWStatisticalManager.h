@@ -1,10 +1,10 @@
 /*!
- @header     UIView+FWStatistical.h
+ @header     FWStatisticalManager.h
  @indexgroup FWFramework
- @brief      UIView+FWStatistical
+ @brief      FWStatisticalManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/1/16
+ @updated    2020/2/4
  */
 
 #import <UIKit/UIKit.h>

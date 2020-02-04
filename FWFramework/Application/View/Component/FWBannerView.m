@@ -9,11 +9,11 @@
 
 #import "FWBannerView.h"
 #import "UIView+FWAutoLayout.h"
-#import "UIView+FWStatistical.h"
 #import "UIPageControl+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "UIImageView+FWFramework.h"
 #import "FWPageControl.h"
+#import "FWStatisticalManager.h"
 
 #pragma mark - FWBannerViewFlowLayout
 
