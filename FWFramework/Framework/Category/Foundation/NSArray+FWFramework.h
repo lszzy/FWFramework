@@ -8,6 +8,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSArray+FWThread.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

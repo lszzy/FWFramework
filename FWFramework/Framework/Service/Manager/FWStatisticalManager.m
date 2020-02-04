@@ -1,13 +1,13 @@
 /*!
- @header     UIView+FWStatistical.m
+ @header     FWStatisticalManager.m
  @indexgroup FWFramework
- @brief      UIView+FWStatistical
+ @brief      FWStatisticalManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/1/16
+ @updated    2020/2/4
  */
 
-#import "UIView+FWStatistical.h"
+#import "FWStatisticalManager.h"
 #import "UIView+FWBlock.h"
 #import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
