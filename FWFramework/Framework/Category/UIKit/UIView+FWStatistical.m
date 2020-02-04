@@ -352,6 +352,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
             } else {
                 proxyView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
             }
+            [proxyView setFwStatisticalExposureIsProxy:YES];
             [proxyView fwStatisticalExposureRegister];
         }
     }
@@ -390,6 +391,16 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureBlock), fwStatisticalExposureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
     
     [self fwStatisticalExposureRegister];
+}
+
+- (BOOL)fwStatisticalExposureIsProxy
+{
+    return [objc_getAssociatedObject(self, @selector(fwStatisticalExposureIsProxy)) boolValue];
+}
+
+- (void)setFwStatisticalExposureIsProxy:(BOOL)isProxy
+{
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureIsProxy), @(isProxy), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)fwStatisticalExposureIsFully
@@ -519,10 +530,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 {
     if (![self fwStatisticalExposureIsRegistered]) return;
 
-    if ([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]] ||
-        self.fwStatisticalExposure || self.fwStatisticalExposureBlock ||
-        ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-         [self respondsToSelector:@selector(statisticalExposureWithCallback:)])) {
+    if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock || [self fwStatisticalExposureIsProxy]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
         [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
     }
