@@ -19,10 +19,12 @@
 {
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(collectionViewControllerLoadView:);
-    intercepter.forwardSelectors = @{@"collectionView" : @"fwInnerCollectionView",
-                                     @"collectionData" : @"fwInnerCollectionData",
-                                     @"renderCollectionViewLayout" : @"fwInnerRenderCollectionViewLayout",
-                                     @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout"};
+    intercepter.forwardSelectors = @{
+        @"collectionView" : @"fwInnerCollectionView",
+        @"collectionData" : @"fwInnerCollectionData",
+        @"renderCollectionViewLayout" : @"fwInnerRenderCollectionViewLayout",
+        @"renderCollectionLayout" : @"fwInnerRenderCollectionLayout",
+    };
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWCollectionViewController) withIntercepter:intercepter];
 }
 

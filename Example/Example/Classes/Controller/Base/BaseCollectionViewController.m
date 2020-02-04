@@ -14,6 +14,16 @@
 
 @implementation BaseCollectionViewController
 
+- (UICollectionView *)collectionView
+{
+    UICollectionView *collectionView = objc_getAssociatedObject(self, _cmd);
+    if (!collectionView) {
+        collectionView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        objc_setAssociatedObject(self, _cmd, collectionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return collectionView;
+}
+
 #pragma mark - UICollectionView
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

@@ -1,13 +1,13 @@
 /*!
- @header     FWMutableArray.m
+ @header     NSArray+FWThread.m
  @indexgroup FWFramework
  @brief      线程安全的可变数组
  @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018-09-11
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/2/4
  */
 
-#import "FWMutableArray.h"
+#import "NSArray+FWThread.h"
 
 #define INIT(...) \
     self = super.init; \

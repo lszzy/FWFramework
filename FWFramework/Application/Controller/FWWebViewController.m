@@ -11,6 +11,7 @@
 #import "UIView+FWFramework.h"
 #import "UIViewController+FWFramework.h"
 #import "UIWebView+FWFramework.h"
+#import "UIApplication+FWFramework.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 
@@ -23,15 +24,19 @@
     FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
     intercepter.loadViewIntercepter = @selector(webViewControllerLoadView:);
     intercepter.viewDidLoadIntercepter = @selector(webViewControllerViewDidLoad:);
-    intercepter.forwardSelectors = @{@"webView" : @"fwInnerWebView",
-                                     @"progressView" : @"fwInnerProgressView",
-                                     @"webItems" : @"fwInnerWebItems",
-                                     @"webRequest" : @"fwInnerWebRequest",
-                                     @"setWebRequest:" : @"fwInnerSetWebRequest:",
-                                     @"renderWebLayout" : @"fwInnerRenderWebLayout",
-                                     @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
-                                     @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
-                                     @"webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:"};
+    intercepter.forwardSelectors = @{
+        @"webView" : @"fwInnerWebView",
+        @"progressView" : @"fwInnerProgressView",
+        @"webItems" : @"fwInnerWebItems",
+        @"webRequest" : @"fwInnerWebRequest",
+        @"setWebRequest:" : @"fwInnerSetWebRequest:",
+        @"renderWebLayout" : @"fwInnerRenderWebLayout",
+        @"webView:decidePolicyForNavigationAction:decisionHandler:" : @"fwInnerWebView:decidePolicyForNavigationAction:decisionHandler:",
+        @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
+        @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
+        @"webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:",
+        @"webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:" : @"fwInnerWebView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:",
+    };
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
 
@@ -194,6 +199,18 @@
     [webView fwPinEdgesToSuperview];
 }
 
+#pragma mark - WKNavigationDelegate
+
+- (void)fwInnerWebView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+    if ([UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
+        [UIApplication fwOpenURL:navigationAction.request.URL];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    decisionHandler(WKNavigationActionPolicyAllow);
+}
+
 #pragma mark - WKUIDelegate
 
 - (void)fwInnerWebView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
@@ -221,6 +238,14 @@
     } cancelBlock:^{
         completionHandler(nil);
     } priority:FWAlertPriorityNormal];
+}
+
+- (WKWebView *)fwInnerWebView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    return nil;
 }
 
 @end

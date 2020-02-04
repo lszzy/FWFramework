@@ -70,6 +70,32 @@ FWPropertyStrong(UITextView *, textView);
     [self.view addSubview:self.textView];
 }
 
+- (void)testHook
+{
+    NSLog(@"testHook");
+}
+
+- (void)renderModel
+{
+    [TestModelViewController fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+        NSLog(@"testHook class after1");
+    } options:FWAspectPositionAfter error:NULL];
+    
+    [TestModelViewController fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+        NSLog(@"testHook class after2");
+    } options:FWAspectPositionAfter error:NULL];
+    
+    [self fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+        NSLog(@"testHook object after1");
+    } options:FWAspectPositionAfter error:NULL];
+    
+    [self fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+        NSLog(@"testHook object after2");
+    } options:FWAspectPositionAfter error:NULL];
+    
+    [self testHook];
+}
+
 - (void)renderData
 {
     NSDictionary *jsonDict = @{

@@ -90,4 +90,21 @@
     return 44.f;
 }
 
+- (UITableView *)fwTableView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[UITableView class]]) {
+            return (UITableView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)fwIndexPath
+{
+    return [[self fwTableView] indexPathForCell:self];
+}
+
 @end

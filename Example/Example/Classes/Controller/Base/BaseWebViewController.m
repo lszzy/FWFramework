@@ -14,6 +14,16 @@
 
 @implementation BaseWebViewController
 
+- (WKWebView *)webView
+{
+    WKWebView *webView = objc_getAssociatedObject(self, _cmd);
+    if (!webView) {
+        webView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return webView;
+}
+
 - (NSArray *)webItems
 {
     return @[[UIImage imageNamed:@"public_back"], [UIImage imageNamed:@"public_close"]];
@@ -43,8 +53,11 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     if ([navigationAction.request.URL.scheme isEqualToString:@"app"]) {
-        decisionHandler(WKNavigationActionPolicyCancel);
         [FWRouter openURL:navigationAction.request.URL.absoluteString];
+        decisionHandler(WKNavigationActionPolicyCancel);
+    } else if ([UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
+        [UIApplication fwOpenURL:navigationAction.request.URL];
+        decisionHandler(WKNavigationActionPolicyCancel);
     } else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }

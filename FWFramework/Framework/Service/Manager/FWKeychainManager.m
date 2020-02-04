@@ -108,7 +108,7 @@
         query = [[NSMutableDictionary alloc] init];
         [query setObject:passwordData forKey:(__bridge id)kSecValueData];
         status = SecItemUpdate((__bridge CFDictionaryRef)searchQuery, (__bridge CFDictionaryRef)query);
-        // 添加数据
+    // 添加数据
     } else if (status == errSecItemNotFound) {
         query = [self queryForService:service account:account];
         [query setObject:passwordData forKey:(__bridge id)kSecValueData];
