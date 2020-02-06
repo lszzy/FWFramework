@@ -404,12 +404,18 @@ static Class fw_aspect_hookClass(NSObject *self, NSError **error) {
 }
 
 static NSString *const FWAspectForwardInvocationSelectorName = @"fwaspect_inner_forwardInvocation:";
+static NSString *const FWAspectForwardInvocationOriginSelectorName = @"fwaspect_inner_originForwardInvocation:";
 static void fw_aspect_swizzleForwardInvocation(Class klass) {
     NSCParameterAssert(klass);
     // 如果方法不存在，使用class_addMethod
-    IMP originalImplementation = class_replaceMethod(klass, @selector(forwardInvocation:), (IMP)fw_aspect_inner_forward_invocation, "v@:@");
+    Method forwardMethod = class_getInstanceMethod(klass, @selector(forwardInvocation:));
+    IMP originalImplementation = method_getImplementation(forwardMethod);
     if (originalImplementation) {
-        class_addMethod(klass, NSSelectorFromString(FWAspectForwardInvocationSelectorName), originalImplementation, "v@:@");
+        class_addMethod(klass, NSSelectorFromString(FWAspectForwardInvocationOriginSelectorName), originalImplementation, "v@:@");
+    }
+    IMP replaceImplementation = class_replaceMethod(klass, @selector(forwardInvocation:), (IMP)fw_aspect_inner_forward_invocation, "v@:@");
+    if (replaceImplementation) {
+        class_addMethod(klass, NSSelectorFromString(FWAspectForwardInvocationSelectorName), replaceImplementation, "v@:@");
     }
     FWAspectLog(@"FWAspect: %@ is now aspect aware.", NSStringFromClass(klass));
 }
@@ -514,7 +520,6 @@ static void fw_aspect_inner_forward_invocation(__unsafe_unretained NSObject *sel
     fw_aspect_invoke(classContainer.afterAspects, info);
     fw_aspect_invoke(objectContainer.afterAspects, info);
     
-    // If no hooks are installed, call original implementation (usually to throw an exception)
     // 如果未安装hooks，调用原始实现(一般抛出异常)
     if (!respondsToAlias) {
         invocation.selector = originalSelector;
@@ -522,7 +527,15 @@ static void fw_aspect_inner_forward_invocation(__unsafe_unretained NSObject *sel
         if ([self respondsToSelector:originalForwardInvocationSEL]) {
             ((void( *)(id, SEL, NSInvocation *))objc_msgSend)(self, originalForwardInvocationSEL, invocation);
         }else {
-            [self doesNotRecognizeSelector:invocation.selector];
+            SEL originalForwardInvocationSEL = NSSelectorFromString(FWAspectForwardInvocationOriginSelectorName);
+            Class klass = object_getClass(invocation.target);
+            Method originalForwardMethod = class_getInstanceMethod(klass, originalForwardInvocationSEL);
+            IMP originalImplementation = method_getImplementation(originalForwardMethod);
+            if (originalImplementation) {
+                ((void( *)(id, SEL, NSInvocation *))originalImplementation)(self, selector, invocation);
+            } else {
+                [self doesNotRecognizeSelector:invocation.selector];
+            }
         }
     }
     
