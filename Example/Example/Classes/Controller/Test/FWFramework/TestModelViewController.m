@@ -133,6 +133,7 @@ FWPropertyStrong(UITextView *, textView);
                                };
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
     self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
+    FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
 }
 
 @end
