@@ -103,19 +103,19 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     // 插件不存在，系统日志
     switch (type) {
         case FWLogTypeError:
-            NSLog(@"❌ ERROR: %@", message);
+            NSLog(@"%@ ERROR: %@", @"❌", message);
             break;
         case FWLogTypeWarn:
-            NSLog(@"⚠️ WARN: %@", message);
+            NSLog(@"%@ WARN: %@", @"⚠️", message);
             break;
         case FWLogTypeInfo:
-            NSLog(@"ℹ️ INFO: %@", message);
+            NSLog(@"%@ INFO: %@", @"ℹ️", message);
             break;
         case FWLogTypeDebug:
-            NSLog(@"📝 DEBUG: %@", message);
+            NSLog(@"%@ DEBUG: %@", @"📝", message);
             break;
         default:
-            NSLog(@"♈ VERBOSE: %@", message);
+            NSLog(@"%@ VERBOSE: %@", @"♈", message);
             break;
     }
 }
