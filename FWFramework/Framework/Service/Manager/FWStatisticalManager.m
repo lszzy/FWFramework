@@ -336,7 +336,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
                       [self isKindOfClass:[UICollectionViewCell class]])) {
         if (self.fwStatisticalClick || self.fwStatisticalClickBlock) {
             UIView *proxyView = nil;
-            if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+            if (self.fwStatisticalClick.proxyView) {
+                proxyView = self.fwStatisticalClick.proxyView;
+            } else if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
                 [self respondsToSelector:@selector(statisticalCellProxyView)]) {
                 proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
             } else {
@@ -346,7 +348,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         }
         if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
             UIView *proxyView = nil;
-            if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+            if (self.fwStatisticalExposure.proxyView) {
+                proxyView = self.fwStatisticalExposure.proxyView;
+            } else if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
                 [self respondsToSelector:@selector(statisticalCellProxyView)]) {
                 proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
             } else {
