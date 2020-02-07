@@ -177,6 +177,23 @@
     return YES;
 }
 
+- (BOOL)fwSwizzleMethod:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+{
+    @synchronized (self) {
+        static NSInteger swizzleCount = 0;
+        Class originalClass = self.class;
+        NSString *className = NSStringFromClass(originalClass);
+        const char *newClassName = [NSString stringWithFormat:@"%@%@%@", className, ([className containsString:@"FWRuntime_"] ? @"" : @"FWRuntime_"), @(++swizzleCount)].UTF8String;
+        
+        Class newClass = objc_allocateClassPair(originalClass, newClassName, 0);
+        if (newClass == nil) return NO;
+        objc_registerClassPair(newClass);
+        [NSObject fwSwizzleInstanceMethod:originalSelector in:newClass withBlock:block];
+        object_setClass(self, newClass);
+        return YES;
+    }
+}
+
 #pragma mark - Selector
 
 - (id)fwPerformSelector:(SEL)aSelector
