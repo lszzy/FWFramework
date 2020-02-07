@@ -131,6 +131,10 @@
 
 + (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
+    if (!originalClass) {
+        return NO;
+    }
+    
     Method originalMethod = class_getInstanceMethod(originalClass, originalSelector);
     IMP imp = method_getImplementation(originalMethod);
     BOOL isOverride = NO;
