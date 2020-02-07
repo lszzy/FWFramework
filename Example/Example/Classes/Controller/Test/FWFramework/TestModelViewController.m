@@ -70,6 +70,11 @@ FWPropertyStrong(UITextView *, textView);
     [self.view addSubview:self.textView];
 }
 
++ (void)testHook
+{
+    NSLog(@"testHook");
+}
+
 - (void)testHook
 {
     NSLog(@"testHook");
@@ -77,13 +82,19 @@ FWPropertyStrong(UITextView *, textView);
 
 - (void)renderModel
 {
-    [TestModelViewController fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
-        NSLog(@"testHook class after1");
-    } options:FWAspectPositionAfter error:NULL];
-    
-    [TestModelViewController fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
-        NSLog(@"testHook class after2");
-    } options:FWAspectPositionAfter error:NULL];
+    [NSObject fwPerformOnce:NSStringFromClass(self.class) withBlock:^{
+        [object_getClass((id)self.class) fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+            NSLog(@"testHook meta after");
+        } options:FWAspectPositionAfter error:NULL];
+        
+        [TestModelViewController fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+            NSLog(@"testHook class after1");
+        } options:FWAspectPositionAfter error:NULL];
+        
+        [TestModelViewController fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
+            NSLog(@"testHook class after2");
+        } options:FWAspectPositionAfter error:NULL];
+    }];
     
     [self fwHookSelector:@selector(testHook) withBlock:^(id<FWAspectInfo> info){
         NSLog(@"testHook object after1");
@@ -93,6 +104,7 @@ FWPropertyStrong(UITextView *, textView);
         NSLog(@"testHook object after2");
     } options:FWAspectPositionAfter error:NULL];
     
+    [self.class testHook];
     [self testHook];
 }
 
@@ -133,7 +145,7 @@ FWPropertyStrong(UITextView *, textView);
                                };
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
     self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
-    FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
+    // FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
 }
 
 @end
