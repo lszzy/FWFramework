@@ -533,7 +533,7 @@ static void fw_aspect_inner_forward_invocation(__unsafe_unretained NSObject *sel
             IMP originalImplementation = method_getImplementation(originalForwardMethod);
             if (originalImplementation) {
                 ((void( *)(id, SEL, NSInvocation *))originalImplementation)(self, selector, invocation);
-            } else {
+            }else {
                 [self doesNotRecognizeSelector:invocation.selector];
             }
         }
