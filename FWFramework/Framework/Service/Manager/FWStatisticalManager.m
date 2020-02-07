@@ -295,7 +295,6 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         [self fwSwizzleInstanceMethod:@selector(setHidden:) with:@selector(fwInnerUIViewSetHidden:)];
         [self fwSwizzleInstanceMethod:@selector(setAlpha:) with:@selector(fwInnerUIViewSetAlpha:)];
         [self fwSwizzleInstanceMethod:@selector(setBounds:) with:@selector(fwInnerUIViewSetBounds:)];
-        [self fwSwizzleInstanceMethod:@selector(willMoveToWindow:) with:@selector(fwInnerUIViewWillMoveToWindow:)];
         [self fwSwizzleInstanceMethod:@selector(didMoveToWindow) with:@selector(fwInnerUIViewDidMoveToWindow)];
     });
 }
@@ -326,40 +325,6 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     [self fwInnerUIViewSetAlpha:alpha];
     
     [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewWillMoveToWindow:(UIWindow *)newWindow
-{
-    [self fwInnerUIViewWillMoveToWindow:newWindow];
-    
-    if (newWindow && ([self isKindOfClass:[UITableViewCell class]] ||
-                      [self isKindOfClass:[UICollectionViewCell class]])) {
-        if (self.fwStatisticalClick || self.fwStatisticalClickBlock) {
-            UIView *proxyView = nil;
-            if (self.fwStatisticalClick.proxyView) {
-                proxyView = self.fwStatisticalClick.proxyView;
-            } else if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-                [self respondsToSelector:@selector(statisticalCellProxyView)]) {
-                proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
-            } else {
-                proxyView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
-            }
-            [proxyView fwStatisticalClickRegister];
-        }
-        if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
-            UIView *proxyView = nil;
-            if (self.fwStatisticalExposure.proxyView) {
-                proxyView = self.fwStatisticalExposure.proxyView;
-            } else if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-                [self respondsToSelector:@selector(statisticalCellProxyView)]) {
-                proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
-            } else {
-                proxyView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
-            }
-            [proxyView setFwStatisticalExposureIsProxy:YES];
-            [proxyView fwStatisticalExposureRegister];
-        }
-    }
 }
 
 - (void)fwInnerUIViewDidMoveToWindow
@@ -528,6 +493,11 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     if (self.superview) {
         [self.superview fwStatisticalExposureRegister];
     }
+    
+    if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock || [self fwStatisticalExposureIsProxy]) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
+        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+    }
 }
 
 - (void)fwStatisticalExposureUpdate
@@ -594,6 +564,128 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     }
     if (cell.fwStatisticalExposure || self.fwStatisticalExposure) {
         [[FWStatisticalManager sharedInstance] handleEvent:object];
+    }
+}
+
+@end
+
+#pragma mark - UITableView+FWExposure
+
+@implementation UITableView (FWExposure)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(reloadData) with:@selector(fwInnerUITableViewReloadData)];
+    });
+}
+
+- (void)fwInnerUITableViewReloadData
+{
+    [self fwInnerUITableViewReloadData];
+    
+    [self fwStatisticalExposureUpdate];
+}
+
+@end
+
+@implementation UITableViewCell (FWExposure)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(didMoveToSuperview) with:@selector(fwInnerUITableViewCellDidMoveToSuperview)];
+    });
+}
+
+- (void)fwInnerUITableViewCellDidMoveToSuperview
+{
+    [self fwInnerUITableViewCellDidMoveToSuperview];
+    
+    if (!self.superview) return;
+    if (self.fwStatisticalClick || self.fwStatisticalClickBlock) {
+        UIView *proxyView = nil;
+        if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+            [self respondsToSelector:@selector(statisticalCellProxyView)]) {
+            proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+        } else {
+            proxyView = [self fwTableView];
+        }
+        [proxyView fwStatisticalClickRegister];
+    }
+    if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
+        UIView *proxyView = nil;
+        if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+            [self respondsToSelector:@selector(statisticalCellProxyView)]) {
+            proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+        } else {
+            proxyView = [self fwTableView];
+        }
+        [proxyView setFwStatisticalExposureIsProxy:YES];
+        [proxyView fwStatisticalExposureRegister];
+    }
+}
+
+@end
+
+#pragma mark - UICollectionView+FWExposure
+
+@implementation UICollectionView (FWExposure)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(reloadData) with:@selector(fwInnerUICollectionViewReloadData)];
+    });
+}
+
+- (void)fwInnerUICollectionViewReloadData
+{
+    [self fwInnerUICollectionViewReloadData];
+    
+    [self fwStatisticalExposureUpdate];
+}
+
+@end
+
+@implementation UICollectionViewCell (FWExposure)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(didMoveToSuperview) with:@selector(fwInnerUICollectionViewCellDidMoveToSuperview)];
+    });
+}
+
+- (void)fwInnerUICollectionViewCellDidMoveToSuperview
+{
+    [self fwInnerUICollectionViewCellDidMoveToSuperview];
+    
+    if (!self.superview) return;
+    if (self.fwStatisticalClick || self.fwStatisticalClickBlock) {
+        UIView *proxyView = nil;
+        if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+            [self respondsToSelector:@selector(statisticalCellProxyView)]) {
+            proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+        } else {
+            proxyView = [self fwCollectionView];
+        }
+        [proxyView fwStatisticalClickRegister];
+    }
+    if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock) {
+        UIView *proxyView = nil;
+        if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+            [self respondsToSelector:@selector(statisticalCellProxyView)]) {
+            proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+        } else {
+            proxyView = [self fwCollectionView];
+        }
+        [proxyView setFwStatisticalExposureIsProxy:YES];
+        [proxyView fwStatisticalExposureRegister];
     }
 }
 
