@@ -532,13 +532,13 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     FWStatisticalExposureState state = [self fwStatisticalExposureState];
     NSString *identifier = [self fwStatisticalExposureIdentifier];
     
+    objc_setAssociatedObject(self, @selector(fwStatisticalExposureIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     BOOL stateChanged = ![identifier isEqualToString:oldIdentifier];
     if (stateChanged) {
         [self setFwStatisticalExposureIsFully:NO];
     }
     if (state == oldState && !stateChanged) return;
     
-    objc_setAssociatedObject(self, @selector(fwStatisticalExposureIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureState), @(state), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (state == FWStatisticalExposureStateNone) {
         [self setFwStatisticalExposureIsFully:NO];
