@@ -118,7 +118,7 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
  */
 @interface UIView (FWExposure)
 
-/// 绑定统计曝光事件，触发管理器
+/// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalExposure;
 
 /// 绑定统计曝光事件，仅触发回调
