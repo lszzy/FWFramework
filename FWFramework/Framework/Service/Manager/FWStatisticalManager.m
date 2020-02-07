@@ -480,7 +480,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     }
     
     UIViewController *viewController = self.fwViewController;
-    if (viewController && viewController.presentedViewController) {
+    if (viewController && (!viewController.view.window || viewController.presentedViewController)) {
         return FWStatisticalExposureStateNone;
     }
     
@@ -533,6 +533,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 - (void)fwStatisticalExposureUpdate
 {
     if (![self fwStatisticalExposureIsRegistered]) return;
+    
+    UIViewController *viewController = self.fwViewController;
+    if (viewController && (!viewController.view.window || viewController.presentedViewController)) return;
 
     if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock || [self fwStatisticalExposureIsProxy]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
