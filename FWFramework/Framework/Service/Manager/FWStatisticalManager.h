@@ -57,9 +57,6 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 @property (nonatomic, weak, readonly, nullable) __kindof UIView *view;
 @property (nonatomic, strong, readonly, nullable) NSIndexPath *indexPath;
 
-/// 事件代理视图，仅cell生效，默认为所在tableView|collectionView
-@property (nonatomic, weak, nullable) UIView *proxyView;
-
 /// 事件触发设置，触发时统计次数
 @property (nonatomic, assign) BOOL triggerOnce;
 @property (nonatomic, assign, readonly) NSInteger triggerCount;
@@ -121,7 +118,7 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
  */
 @interface UIView (FWExposure)
 
-/// 绑定统计曝光事件，触发管理器
+/// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
 @property (nullable, nonatomic, strong) FWStatisticalObject *fwStatisticalExposure;
 
 /// 绑定统计曝光事件，仅触发回调
