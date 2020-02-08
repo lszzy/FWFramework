@@ -177,6 +177,28 @@
     return YES;
 }
 
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+{
+    if (!originalClass) {
+        return NO;
+    }
+    
+    static NSMutableSet *swizzleIdentifiers;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        swizzleIdentifiers = [NSMutableSet new];
+    });
+    
+    @synchronized (swizzleIdentifiers) {
+        NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@-%@-%@", NSStringFromClass(originalClass), NSStringFromSelector(originalSelector), identifier];
+        if (![swizzleIdentifiers containsObject:swizzleIdentifier]) {
+            [swizzleIdentifiers addObject:swizzleIdentifier];
+            return [self fwSwizzleInstanceMethod:originalSelector in:originalClass withBlock:block];
+        }
+        return NO;
+    }
+}
+
 - (BOOL)fwSwizzleMethod:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     @synchronized ([self class]) {
