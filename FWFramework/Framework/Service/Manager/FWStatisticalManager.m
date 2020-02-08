@@ -12,7 +12,6 @@
 #import "UIView+FWFramework.h"
 #import "UITableView+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
-#import "FWAspect.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWStatistical
@@ -147,18 +146,30 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        [(NSObject *)((UITableView *)self).delegate fwHookSelector:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UITableView *tableView, NSIndexPath *indexPath){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            [tableView fwStatisticalClickHandler:cell indexPath:indexPath];
-        } options:FWAspectPositionAfter error:NULL];
+        [(NSObject *)((UITableView *)self).delegate fwSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^(id<UITableViewDelegate> delegate, UITableView *tableView, NSIndexPath *indexPath) {
+                void (*originalMSG)(id, SEL, UITableView *, NSIndexPath *);
+                originalMSG = (void (*)(id, SEL, UITableView *, NSIndexPath *))originalIMP();
+                originalMSG(delegate, originalCMD, tableView, indexPath);
+                
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                [tableView fwStatisticalClickHandler:cell indexPath:indexPath];
+            };
+        }];
         return;
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        [(NSObject *)((UICollectionView *)self).delegate fwHookSelector:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^(id<FWAspectInfo> aspectInfo, UICollectionView *collectionView, NSIndexPath *indexPath){
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-            [collectionView fwStatisticalClickHandler:cell indexPath:indexPath];
-        } options:FWAspectPositionAfter error:NULL];
+        [(NSObject *)((UICollectionView *)self).delegate fwSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^(id<UICollectionViewDelegate> delegate, UICollectionView *collectionView, NSIndexPath *indexPath) {
+                void (*originalMSG)(id, SEL, UICollectionView *, NSIndexPath *);
+                originalMSG = (void (*)(id, SEL, UICollectionView *, NSIndexPath *))originalIMP();
+                originalMSG(delegate, originalCMD, collectionView, indexPath);
+                
+                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+                [collectionView fwStatisticalClickHandler:cell indexPath:indexPath];
+            };
+        }];
         return;
     }
     
