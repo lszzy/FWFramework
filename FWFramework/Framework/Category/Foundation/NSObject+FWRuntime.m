@@ -131,6 +131,10 @@
 
 + (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
+    if (!originalClass) {
+        return NO;
+    }
+    
     Method originalMethod = class_getInstanceMethod(originalClass, originalSelector);
     IMP imp = method_getImplementation(originalMethod);
     BOOL isOverride = NO;
@@ -171,6 +175,54 @@
         class_addMethod(originalClass, originalSelector, imp_implementationWithBlock(block(originalClass, originalSelector, originalIMP)), typeEncoding);
     }
     return YES;
+}
+
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector in:(Class)originalClass identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+{
+    if (!originalClass) {
+        return NO;
+    }
+    
+    static NSMutableSet *swizzleIdentifiers;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        swizzleIdentifiers = [NSMutableSet new];
+    });
+    
+    @synchronized (swizzleIdentifiers) {
+        NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@-%@-%@", NSStringFromClass(originalClass), NSStringFromSelector(originalSelector), identifier];
+        if (![swizzleIdentifiers containsObject:swizzleIdentifier]) {
+            [swizzleIdentifiers addObject:swizzleIdentifier];
+            return [self fwSwizzleInstanceMethod:originalSelector in:originalClass withBlock:block];
+        }
+        return NO;
+    }
+}
+
+- (BOOL)fwSwizzleMethod:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+{
+    @synchronized ([self class]) {
+        static NSInteger swizzleCount = 0;
+        Class statedClass = self.class;
+        Class baseClass = object_getClass(self);
+        
+        const char *newClassName = [NSStringFromClass(statedClass) stringByAppendingFormat:@"FWRuntime_%@", @(++swizzleCount)].UTF8String;
+        Class newClass = objc_allocateClassPair(baseClass, newClassName, 0);
+        Class newBaseClass = object_getClass(newClass);
+        if (newClass == nil) return NO;
+        
+        class_replaceMethod(newClass, @selector(class), imp_implementationWithBlock(^(id self){
+            return statedClass;
+        }), method_getTypeEncoding(class_getInstanceMethod(newClass, @selector(class))));
+        class_replaceMethod(newBaseClass, @selector(class), imp_implementationWithBlock(^(id self){
+            return statedClass;
+        }), method_getTypeEncoding(class_getInstanceMethod(newBaseClass, @selector(class))));
+        objc_registerClassPair(newClass);
+        [NSObject fwSwizzleInstanceMethod:originalSelector in:newClass withBlock:block];
+        
+        object_setClass(self, newClass);
+        return YES;
+    }
 }
 
 #pragma mark - Selector

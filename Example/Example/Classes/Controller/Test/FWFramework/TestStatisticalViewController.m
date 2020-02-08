@@ -192,6 +192,20 @@ FWPropertyWeak(UISwitch *, testSwitch);
     [self.view fwHideToastAfterDelay:2.0 completion:nil];
 }
 
+- (void)clickHandler:(NSInteger)index
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        BaseWebViewController *viewController = [BaseWebViewController new];
+        viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
+        if (index % 2 == 0) {
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+        }
+    });
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -219,6 +233,8 @@ FWPropertyWeak(UISwitch *, testSwitch);
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
+    
+    [self clickHandler:indexPath.row];
 }
 
 #pragma mark - UICollectionView
@@ -243,6 +259,8 @@ FWPropertyWeak(UISwitch *, testSwitch);
 {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
+    
+    [self clickHandler:indexPath.row];
 }
 
 #pragma mark - FWBannerViewDelegate
@@ -254,16 +272,7 @@ FWPropertyWeak(UISwitch *, testSwitch);
 
 - (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index
 {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        BaseWebViewController *viewController = [BaseWebViewController new];
-        viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
-        if (index % 2 == 0) {
-            [self.navigationController pushViewController:viewController animated:YES];
-        } else {
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-            [self.navigationController presentViewController:navigationController animated:YES completion:nil];
-        }
-    });
+    [self clickHandler:index];
 }
 
 @end
