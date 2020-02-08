@@ -179,16 +179,25 @@
 
 - (BOOL)fwSwizzleMethod:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
-    @synchronized (self) {
+    @synchronized ([self class]) {
         static NSInteger swizzleCount = 0;
-        Class originalClass = self.class;
-        NSString *className = NSStringFromClass(originalClass);
-        const char *newClassName = [NSString stringWithFormat:@"%@%@%@", className, ([className containsString:@"FWRuntime_"] ? @"" : @"FWRuntime_"), @(++swizzleCount)].UTF8String;
+        Class statedClass = self.class;
+        Class baseClass = object_getClass(self);
         
-        Class newClass = objc_allocateClassPair(originalClass, newClassName, 0);
+        const char *newClassName = [NSStringFromClass(statedClass) stringByAppendingFormat:@"FWRuntime_%@", @(++swizzleCount)].UTF8String;
+        Class newClass = objc_allocateClassPair(baseClass, newClassName, 0);
+        Class newBaseClass = object_getClass(newClass);
         if (newClass == nil) return NO;
+        
+        class_replaceMethod(newClass, @selector(class), imp_implementationWithBlock(^(id self){
+            return statedClass;
+        }), method_getTypeEncoding(class_getInstanceMethod(newClass, @selector(class))));
+        class_replaceMethod(newBaseClass, @selector(class), imp_implementationWithBlock(^(id self){
+            return statedClass;
+        }), method_getTypeEncoding(class_getInstanceMethod(newBaseClass, @selector(class))));
         objc_registerClassPair(newClass);
         [NSObject fwSwizzleInstanceMethod:originalSelector in:newClass withBlock:block];
+        
         object_setClass(self, newClass);
         return YES;
     }
