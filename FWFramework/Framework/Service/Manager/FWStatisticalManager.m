@@ -526,14 +526,32 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     CGRect viewRect = [self convertRect:self.bounds toView:targetView];
     viewRect = CGRectMake(floor(viewRect.origin.x), floor(viewRect.origin.y), floor(viewRect.size.width), floor(viewRect.size.height));
     CGRect targetRect = targetView.bounds;
+    FWStatisticalExposureState state = FWStatisticalExposureStateNone;
     if (!CGRectIsEmpty(viewRect)) {
         if (CGRectContainsRect(targetRect, viewRect)) {
-            return FWStatisticalExposureStateFully;
+            state = FWStatisticalExposureStateFully;
         } else if (CGRectIntersectsRect(targetRect, viewRect)) {
+            state = FWStatisticalExposureStatePartly;
+        }
+    }
+    if (state == FWStatisticalExposureStateNone) {
+        return state;
+    }
+    
+    UIView *shieldView = self.fwStatisticalExposure.shieldView;
+    if (!shieldView || shieldView.hidden || shieldView.alpha <= 0.01 ||
+        shieldView.bounds.size.width == 0 || shieldView.bounds.size.height == 0) {
+        return state;
+    }
+    CGRect shieldRect = [shieldView convertRect:shieldView.bounds toView:targetView];
+    if (!CGRectIsEmpty(shieldRect)) {
+        if (CGRectContainsRect(shieldRect, viewRect)) {
+            return FWStatisticalExposureStateNone;
+        } else if (CGRectIntersectsRect(shieldRect, viewRect)) {
             return FWStatisticalExposureStatePartly;
         }
     }
-    return FWStatisticalExposureStateNone;
+    return state;
 }
 
 - (void)setFwStatisticalExposureState
