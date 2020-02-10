@@ -212,9 +212,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 - (void)fwStatisticalClickHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
 {
     FWStatisticalObject *object = cell.fwStatisticalClick ?: self.fwStatisticalClick;
-    if (!object) {
-        object = [FWStatisticalObject new];
-    }
+    if (!object) object = [FWStatisticalObject new];
     object.view = self;
     object.indexPath = indexPath;
     NSInteger triggerCount = [self fwStatisticalClickCount:indexPath];
@@ -496,6 +494,22 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     return identifier;
 }
 
+- (BOOL)fwStatisticalExposureCustom
+{
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+        [self respondsToSelector:@selector(statisticalExposureWithCallback:)]) {
+        __weak __typeof__(self) self_weak_ = self;
+        [(id<FWStatisticalDelegate>)self statisticalExposureWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
+            __typeof__(self) self = self_weak_;
+            if ([self fwStatisticalExposureState] == FWStatisticalExposureStateFully) {
+                [self fwStatisticalExposureHandler:cell indexPath:indexPath];
+            }
+        }];
+        return YES;
+    }
+    return NO;
+}
+
 - (FWStatisticalExposureState)fwStatisticalExposureState
 {
     if (self == nil || self.hidden || self.alpha <= 0.01 || !self.window ||
@@ -563,34 +577,24 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     BOOL stateChanged = ![identifier isEqualToString:oldIdentifier];
-    if (stateChanged) {
+    if (stateChanged || state == FWStatisticalExposureStateNone) {
         [self setFwStatisticalExposureIsFully:NO];
     }
     if (state == oldState && !stateChanged) return;
     
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureState), @(state), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (state == FWStatisticalExposureStateNone) {
-        [self setFwStatisticalExposureIsFully:NO];
-        return;
-    }
-    if (state != FWStatisticalExposureStateFully || [self fwStatisticalExposureIsFully]) return;
-    
-    [self setFwStatisticalExposureIsFully:YES];
-    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-        [self respondsToSelector:@selector(statisticalExposureWithCallback:)]) {
-        __weak __typeof__(self) self_weak_ = self;
-        [(id<FWStatisticalDelegate>)self statisticalExposureWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
-            __typeof__(self) self = self_weak_;
-            if ([self fwStatisticalExposureState] == FWStatisticalExposureStateFully) {
-                [self fwStatisticalExposureHandler:cell indexPath:indexPath];
-            }
-        }];
-    } else if ([self isKindOfClass:[UITableViewCell class]]) {
-        [((UITableViewCell *)self).fwTableView fwStatisticalExposureHandler:self indexPath:((UITableViewCell *)self).fwIndexPath];
-    } else if ([self isKindOfClass:[UICollectionViewCell class]]) {
-        [((UICollectionViewCell *)self).fwCollectionView fwStatisticalExposureHandler:self indexPath:((UICollectionViewCell *)self).fwIndexPath];
-    } else {
-        [self fwStatisticalExposureHandler:nil indexPath:nil];
+    if (state == FWStatisticalExposureStateFully && ![self fwStatisticalExposureIsFully]) {
+        [self setFwStatisticalExposureIsFully:YES];
+        if ([self fwStatisticalExposureCustom]) {
+        } else if ([self isKindOfClass:[UITableViewCell class]]) {
+            [((UITableViewCell *)self).fwTableView fwStatisticalExposureHandler:self indexPath:((UITableViewCell *)self).fwIndexPath];
+        } else if ([self isKindOfClass:[UICollectionViewCell class]]) {
+            [((UICollectionViewCell *)self).fwCollectionView fwStatisticalExposureHandler:self indexPath:((UICollectionViewCell *)self).fwIndexPath];
+        } else {
+            [self fwStatisticalExposureHandler:nil indexPath:nil];
+        }
+    } else if (oldIdentifier.length < 1) {
+        [self fwStatisticalExposureCustom];
     }
 }
 
@@ -667,9 +671,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 - (void)fwStatisticalExposureHandler:(UIView *)cell indexPath:(NSIndexPath *)indexPath
 {
     FWStatisticalObject *object = cell.fwStatisticalExposure ?: self.fwStatisticalExposure;
-    if (!object) {
-        object = [FWStatisticalObject new];
-    }
+    if (!object) object = [FWStatisticalObject new];
     object.view = self;
     object.indexPath = indexPath;
     NSInteger triggerCount = [self fwStatisticalExposureCount:indexPath];
