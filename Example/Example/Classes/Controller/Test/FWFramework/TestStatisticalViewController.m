@@ -38,6 +38,11 @@ FWPropertyWeak(UIView *, testView);
 FWPropertyWeak(UIButton *, testButton);
 FWPropertyWeak(UISwitch *, testSwitch);
 FWPropertyWeak(FWSegmentedControl *, segmentedControl);
+FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
+
+FWPropertyCopy(NSArray *, imageUrls);
+FWPropertyCopy(NSArray *, sectionTitles);
+FWPropertyCopy(NSArray *, textTags);
 
 @end
 
@@ -77,7 +82,6 @@ FWPropertyWeak(FWSegmentedControl *, segmentedControl);
     
     FWSegmentedControl *segmentedControl = [FWSegmentedControl new];
     self.segmentedControl = segmentedControl;
-    self.segmentedControl.sectionTitles = @[@"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8", @"Section9"];
     self.segmentedControl.selectedSegmentIndex = 1;
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
@@ -87,7 +91,14 @@ FWPropertyWeak(FWSegmentedControl *, segmentedControl);
     self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
     self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
     [headerView addSubview:self.segmentedControl];
-    segmentedControl.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(testSwitch, 50).height(50).bottomWithInset(50);
+    segmentedControl.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(testSwitch, 50).height(50);
+    
+    FWTextTagCollectionView *tagCollectionView = [FWTextTagCollectionView new];
+    _tagCollectionView = tagCollectionView;
+    tagCollectionView.verticalSpacing = 10;
+    tagCollectionView.horizontalSpacing = 10;
+    [headerView addSubview:tagCollectionView];
+    tagCollectionView.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(segmentedControl, 50).height(100).bottomWithInset(50);
     
     self.tableView.tableHeaderView = headerView;
     [headerView fwAutoLayoutSubviews];
@@ -155,18 +166,6 @@ FWPropertyWeak(FWSegmentedControl *, segmentedControl);
         FWStrongifySelf();
         self.segmentedControl.selectionIndicatorBoxColor = [UIColor fwRandomColor];
     };
-    
-    NSMutableArray *imageUrls = [NSMutableArray array];
-    [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls addObject:@"public_picture"];
-    [imageUrls addObject:@"not_found.jpg"];
-    [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
-    // block需要提前设置，否则第一个不会触发，delegate不需要
-    self.bannerView.customItemOperationBlock = ^(UICollectionViewCell * _Nonnull cell, NSInteger index) {
-        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"cell"];
-    };
-    self.bannerView.imageURLStringsGroup = [imageUrls copy];
-    self.bannerView.titlesGroup = @[@"1", @"2", @"3", @"4"];
 }
 
 - (void)renderModel
@@ -183,6 +182,10 @@ FWPropertyWeak(FWSegmentedControl *, segmentedControl);
             self.tableView.hidden = NO;
         }
     }];
+    
+    self.imageUrls = @[@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg", @"public_picture", @"not_found.jpg", @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    self.sectionTitles = @[@"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8", @"Section9"];
+    self.textTags = @[@"80减12", @"首单减15", @"在线支付", @"支持自提", @"26减3", @"80减12", @"首单减15", @"在线支付"];
 }
 
 - (void)renderData
@@ -203,8 +206,10 @@ FWPropertyWeak(FWSegmentedControl *, segmentedControl);
     self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_view" object:@"view"];
     self.testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_button" object:@"button"];
     self.testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"click_switch" object:@"switch"];
-    self.bannerView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_banner" object:@"banner"];
     self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@"table"];
+    self.bannerView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_banner" object:@"banner"];
+    self.segmentedControl.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_segment" object:@"segment"];
+    self.tagCollectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tag" object:@"tag"];
     
     // Exposure
     self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view" object:@"view"];
@@ -212,6 +217,13 @@ FWPropertyWeak(FWSegmentedControl *, segmentedControl);
     self.testButton.fwStatisticalExposure.triggerOnce = YES;
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
+    // block需要提前设置，否则第一个不会触发，delegate不需要
+    self.bannerView.customItemOperationBlock = ^(UICollectionViewCell * _Nonnull cell, NSInteger index) {
+        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"cell"];
+    };
+    self.bannerView.imageURLStringsGroup = self.imageUrls;
+    self.segmentedControl.sectionTitles = self.sectionTitles;
+    [self.tagCollectionView addTags:self.textTags];
 }
 
 - (void)showToast:(NSString *)toast
