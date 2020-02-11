@@ -8,6 +8,7 @@
  */
 
 #import "FWWebViewController.h"
+#import "NSURL+FWFramework.h"
 #import "UIView+FWFramework.h"
 #import "UIViewController+FWFramework.h"
 #import "UIWebView+FWFramework.h"
@@ -123,7 +124,7 @@
     } else {
         NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
         if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
-            requestUrl = [NSURL URLWithString:webRequest];
+            requestUrl = [NSURL fwURLWithString:webRequest];
         }
         if (!requestUrl) return;
         
