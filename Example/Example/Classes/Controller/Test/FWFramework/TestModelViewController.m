@@ -14,6 +14,7 @@
 @property (nonatomic, assign) NSInteger userId;
 @property (nonatomic, strong) NSNumber *userAge;
 @property (nonatomic, strong) NSString *userName;
+@property (nonatomic, strong) NSURL *userLink;
 
 @end
 
@@ -25,6 +26,7 @@
              @"userId": @[@"userId", @"user_id"],
              @"userAge": @[@"userAge", @"user_age"],
              @"userName": @[@"userName", @"user_name"],
+             @"userLink": @[@"userLink", @"user_link"],
              };
 }
 
@@ -117,17 +119,20 @@ FWPropertyStrong(UITextView *, textView);
                                        @"userId": @1,
                                        @"userAge": @20,
                                        @"userName": @"userName",
+                                       @"userLink": @"http://www.baidu.com/中文?id=中文",
                                        },
                                @"users": @[
                                        @{
                                            @"userId": @2,
                                            @"userAge": @20,
                                            @"userName": @"userName",
+                                           @"userLink": @"http://www.baidu.com/中文?id=中文",
                                            },
                                        @{
                                            @"user_id": @3,
                                            @"user_age": @20,
                                            @"user_name": @"userName",
+                                           @"user_link": @"http://www.baidu.com/中文?id=中文",
                                            },
                                        ],
                                @"users2": @[
@@ -135,11 +140,13 @@ FWPropertyStrong(UITextView *, textView);
                                            @"userId": @4,
                                            @"userAge": @20,
                                            @"userName": @"userName",
+                                           @"userLink": @"http://www.baidu.com/中文?id=中文",
                                            },
                                        @{
                                            @"user_id": @5,
                                            @"user_age": @20,
                                            @"user_name": @"userName",
+                                           @"user_link": @"http://www.baidu.com/中文?id=中文",
                                            },
                                        ],
                                };

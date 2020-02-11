@@ -446,10 +446,16 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     }
     
     // Extract Params From Query.
-    NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:[[NSURL alloc] initWithString:url] resolvingAgainstBaseURL:false].queryItems;
-    
-    for (NSURLQueryItem *item in queryItems) {
-        parameters[item.name] = item.value;
+    NSURL *queryUrl = [NSURL URLWithString:url];
+    if (!queryUrl && url.length > 0) {
+        queryUrl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    if (queryUrl) {
+        NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:queryUrl resolvingAgainstBaseURL:false].queryItems;
+        
+        for (NSURLQueryItem *item in queryItems) {
+            parameters[item.name] = item.value;
+        }
     }
     
     if (subRoutes[FWRouterCoreKey]) {
