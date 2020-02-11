@@ -883,7 +883,11 @@ static void FWModelSetValueForProperty(__unsafe_unretained id model,
                         if (str.length == 0) {
                             ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, nil);
                         } else {
-                            ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, [[NSURL alloc] initWithString:str]);
+                            NSURL *url = [NSURL URLWithString:str];
+                            if (!url && str.length > 0) {
+                                url = [NSURL URLWithString:[str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+                            }
+                            ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, url);
                         }
                     }
                 } break;
