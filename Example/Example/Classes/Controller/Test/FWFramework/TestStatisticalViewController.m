@@ -183,8 +183,10 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     self.bannerView.imageURLStringsGroup = imageUrls;
     NSArray *sectionTitles = @[@"Section0", @"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8"];
     self.segmentedControl.sectionTitles = sectionTitles;
-    NSArray *textTags = @[@"80减12", @"首单减15", @"在线支付", @"支持自提", @"26减3", @"80减12", @"首单减15", @"在线支付"];
-    [self.tagCollectionView addTags:textTags];
+    [self.tagCollectionView addTags:@[@"标签0", @"标签1", @"标签2", @"标签3", @"标签4", @"标签5"]];
+    [self.tagCollectionView removeTag:@"标签4"];
+    [self.tagCollectionView removeTag:@"标签5"];
+    [self.tagCollectionView addTags:@[@"标签4", @"标签5", @"标签6", @"标签7"]];
 }
 
 - (void)renderData

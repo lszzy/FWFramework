@@ -17,6 +17,7 @@
 @property (nonatomic, assign) NSUInteger actualNumberOfLines;
 @property (nonatomic, copy) FWStatisticalCallback clickCallback;
 @property (nonatomic, copy) FWStatisticalCallback exposureCallback;
+@property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 @end
 
 @implementation FWTagCollectionView
@@ -85,6 +86,8 @@
     // Update tag view frame
     [self setNeedsLayoutTagViews];
     [self layoutTagViews];
+    
+    [self statisticalExposureDidChange];
 }
 
 - (NSInteger)indexOfTagAt:(CGPoint)point {
@@ -513,7 +516,16 @@
 - (void)statisticalExposureDidChange {
     if (!self.exposureCallback) return;
     
-    
+    // Calculate current exposure indexes
+    NSMutableArray *exposureIndexes = [NSMutableArray new];
+    NSArray *previousIndexes = self.exposureIndexes;
+    [_containerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView *obj, NSUInteger idx, BOOL *stop) {
+        [exposureIndexes addObject:@(obj.hash)];
+        if (![previousIndexes containsObject:@(obj.hash)]) {
+            self.exposureCallback(nil, [NSIndexPath indexPathForRow:idx inSection:0]);
+        }
+    }];
+    self.exposureIndexes = [exposureIndexes copy];
 }
 
 @end
