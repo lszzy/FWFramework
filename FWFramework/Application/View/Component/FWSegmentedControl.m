@@ -868,7 +868,7 @@
     rectToScrollTo.size.width += selectedSegmentOffset * 2;
     [self.scrollView scrollRectToVisible:rectToScrollTo animated:animated];
     
-    if (!animated && self.exposureCallback) {
+    if (!animated) {
         [self statisticalExposureDidChange];
     }
 }
@@ -994,23 +994,19 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (!decelerate && self.exposureCallback) {
+    if (!decelerate) {
         [self statisticalExposureDidChange];
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-    if (self.exposureCallback) {
-        [self statisticalExposureDidChange];
-    }
+    [self statisticalExposureDidChange];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    if (self.exposureCallback) {
-        [self statisticalExposureDidChange];
-    }
+    [self statisticalExposureDidChange];
 }
 
 #pragma mark - FWStatisticalDelegate
@@ -1024,13 +1020,13 @@
 {
     self.exposureCallback = callback;
     
-    if (self.exposureCallback) {
-        [self statisticalExposureDidChange];
-    }
+    [self statisticalExposureDidChange];
 }
 
 - (void)statisticalExposureDidChange
 {
+    if (!self.exposureCallback) return;
+    
     CGFloat visibleMin = self.scrollView.contentOffset.x;
     CGFloat visibleMax = visibleMin + self.scrollView.frame.size.width;
     NSInteger sectionCount = 0;
