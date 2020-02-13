@@ -40,10 +40,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
 FWPropertyWeak(FWSegmentedControl *, segmentedControl);
 FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
-FWPropertyCopy(NSArray *, imageUrls);
-FWPropertyCopy(NSArray *, sectionTitles);
-FWPropertyCopy(NSArray *, textTags);
-
 @end
 
 @implementation TestStatisticalViewController
@@ -183,9 +179,12 @@ FWPropertyCopy(NSArray *, textTags);
         }
     }];
     
-    self.imageUrls = @[@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg", @"public_picture", @"not_found.jpg", @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
-    self.sectionTitles = @[@"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8", @"Section9"];
-    self.textTags = @[@"80减12", @"首单减15", @"在线支付", @"支持自提", @"26减3", @"80减12", @"首单减15", @"在线支付"];
+    NSArray *imageUrls = @[@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg", @"public_picture", @"not_found.jpg", @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    self.bannerView.imageURLStringsGroup = imageUrls;
+    NSArray *sectionTitles = @[@"Section0", @"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8"];
+    self.segmentedControl.sectionTitles = sectionTitles;
+    NSArray *textTags = @[@"80减12", @"首单减15", @"在线支付", @"支持自提", @"26减3", @"80减12", @"首单减15", @"在线支付"];
+    [self.tagCollectionView addTags:textTags];
 }
 
 - (void)renderData
@@ -217,13 +216,9 @@ FWPropertyCopy(NSArray *, textTags);
     self.testButton.fwStatisticalExposure.triggerOnce = YES;
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
-    // block需要提前设置，否则第一个不会触发，delegate不需要
-    self.bannerView.customItemOperationBlock = ^(UICollectionViewCell * _Nonnull cell, NSInteger index) {
-        cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"cell"];
-    };
-    self.bannerView.imageURLStringsGroup = self.imageUrls;
-    self.segmentedControl.sectionTitles = self.sectionTitles;
-    [self.tagCollectionView addTags:self.textTags];
+    self.bannerView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"banner"];
+    self.segmentedControl.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_segment" object:@"segment"];
+    self.tagCollectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tag" object:@"tag"];
 }
 
 - (void)showToast:(NSString *)toast
