@@ -106,9 +106,6 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 /** block方式监听滚动 */
 @property (nonatomic, copy, nullable) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);
 
-/** block方式设置样式 */
-@property (nonatomic, copy, nullable) void (^customItemOperationBlock)(UICollectionViewCell *cell, NSInteger index);
-
 /** 可以调用此方法手动控制滚动到哪一个index */
 - (void)makeScrollViewScrollToIndex:(NSInteger)index;
 
