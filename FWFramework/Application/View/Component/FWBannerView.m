@@ -906,10 +906,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (self.itemDidScrollOperationBlock) {
         self.itemDidScrollOperationBlock(indexOnPageControl);
     }
-    if (self.exposureCallback) {
-        UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-        self.exposureCallback(cell, [NSIndexPath indexPathForRow:indexOnPageControl inSection:0]);
-    }
+    [self statisticalExposureDidChange];
 }
 
 - (void)makeScrollViewScrollToIndex:(NSInteger)index{
@@ -936,11 +933,16 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     self.exposureCallback = callback;
     
-    if (self.exposureCallback) {
-        NSInteger itemIndex = [_flowLayout currentPage];
-        UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-        self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0]);
-    }
+    [self statisticalExposureDidChange];
+}
+
+- (void)statisticalExposureDidChange
+{
+    if (!self.exposureCallback) return;
+    
+    NSInteger itemIndex = [_flowLayout currentPage];
+    UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
+    self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0]);
 }
 
 @end
