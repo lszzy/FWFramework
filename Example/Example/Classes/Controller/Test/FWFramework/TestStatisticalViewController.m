@@ -81,6 +81,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     self.segmentedControl.selectedSegmentIndex = 1;
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
+    self.segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
     self.segmentedControl.titleAlignmentMode = kCAAlignmentRight;

@@ -507,7 +507,7 @@
     }
     
     // Add the selection indicators
-    if (self.selectedSegmentIndex != FWSegmentedControlNoSegment) {
+    if (self.selectedSegmentIndex != FWSegmentedControlNoSegment && [self sectionCount] > 0) {
         if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
             if (!self.selectionIndicatorArrowLayer.superlayer) {
                 [self setArrowFrame];
@@ -887,7 +887,7 @@
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
     
-    if (index == FWSegmentedControlNoSegment) {
+    if (index == FWSegmentedControlNoSegment || [self sectionCount] < 1) {
         [self.selectionIndicatorArrowLayer removeFromSuperlayer];
         [self.selectionIndicatorStripLayer removeFromSuperlayer];
         [self.selectionIndicatorBoxLayer removeFromSuperlayer];
@@ -1029,25 +1029,15 @@
     
     CGFloat visibleMin = self.scrollView.contentOffset.x;
     CGFloat visibleMax = visibleMin + self.scrollView.frame.size.width;
-    NSInteger sectionCount = 0;
-    BOOL widthFixed = NO;
-    if (self.type == FWSegmentedControlTypeText && self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
-        sectionCount = self.sectionTitles.count;
-        widthFixed = YES;
-    } else if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
-        sectionCount = self.segmentWidthsArray.count;
-        widthFixed = NO;
-    } else {
-        sectionCount = self.sectionImages.count;
-        widthFixed = YES;
-    }
+    NSInteger sectionCount = [self sectionCount];
+    BOOL dynamicWidth = (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic);
     
     // Calculate current exposure indexes, including segmentEdgeInset
     NSMutableArray *exposureIndexes = [NSMutableArray new];
     NSArray *previousIndexes = self.exposureIndexes;
     CGFloat currentMin = 0;
     for (NSInteger i = 0; i < sectionCount; i++) {
-        CGFloat currentMax = currentMin + (widthFixed ? self.segmentWidth : self.segmentWidthsArray[i].floatValue);
+        CGFloat currentMax = currentMin + (dynamicWidth ? self.segmentWidthsArray[i].floatValue : self.segmentWidth);
         if (currentMin > visibleMax) break;
         if (currentMin >= visibleMin && currentMax <= visibleMax) {
             [exposureIndexes addObject:@(i)];
