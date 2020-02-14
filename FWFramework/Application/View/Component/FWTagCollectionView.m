@@ -8,12 +8,16 @@
  */
 
 #import "FWTagCollectionView.h"
+#import "FWStatisticalManager.h"
 
-@interface FWTagCollectionView ()
+@interface FWTagCollectionView () <FWStatisticalDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, assign) BOOL needsLayoutTagViews;
 @property (nonatomic, assign) NSUInteger actualNumberOfLines;
+@property (nonatomic, copy) FWStatisticalCallback clickCallback;
+@property (nonatomic, copy) FWStatisticalCallback exposureCallback;
+@property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 @end
 
 @implementation FWTagCollectionView
@@ -82,6 +86,8 @@
     // Update tag view frame
     [self setNeedsLayoutTagViews];
     [self layoutTagViews];
+    
+    [self statisticalExposureDidChange];
 }
 
 - (NSInteger)indexOfTagAt:(CGPoint)point {
@@ -124,9 +130,15 @@
             if ([self.delegate respondsToSelector:@selector(tagCollectionView:shouldSelectTag:atIndex:)]) {
                 if ([self.delegate tagCollectionView:self shouldSelectTag:tagView atIndex:i]) {
                     [self.delegate tagCollectionView:self didSelectTag:tagView atIndex:i];
+                    if (self.clickCallback) {
+                        self.clickCallback(nil, [NSIndexPath indexPathForRow:i inSection:0]);
+                    }
                 }
             } else {
                 [self.delegate tagCollectionView:self didSelectTag:tagView atIndex:i];
+                if (self.clickCallback) {
+                    self.clickCallback(nil, [NSIndexPath indexPathForRow:i inSection:0]);
+                }
             }
         }
     }
@@ -489,6 +501,33 @@
     return _scrollView.showsVerticalScrollIndicator;
 }
 
+#pragma mark - FWStatisticalDelegate
+
+- (void)statisticalClickWithCallback:(FWStatisticalCallback)callback {
+    self.clickCallback = callback;
+}
+
+- (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback {
+    self.exposureCallback = callback;
+    
+    [self statisticalExposureDidChange];
+}
+
+- (void)statisticalExposureDidChange {
+    if (!self.exposureCallback) return;
+    
+    // Calculate current exposure indexes
+    NSMutableArray *exposureIndexes = [NSMutableArray new];
+    NSArray *previousIndexes = self.exposureIndexes;
+    [_containerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView *obj, NSUInteger idx, BOOL *stop) {
+        [exposureIndexes addObject:@(obj.hash)];
+        if (![previousIndexes containsObject:@(obj.hash)]) {
+            self.exposureCallback(nil, [NSIndexPath indexPathForRow:idx inSection:0]);
+        }
+    }];
+    self.exposureIndexes = [exposureIndexes copy];
+}
+
 @end
 
 #pragma mark - FWTextTagConfig
@@ -794,7 +833,7 @@
 
 #pragma mark - FWTextTagCollectionView
 
-@interface FWTextTagCollectionView () <FWTagCollectionViewDataSource, FWTagCollectionViewDelegate>
+@interface FWTextTagCollectionView () <FWTagCollectionViewDataSource, FWTagCollectionViewDelegate, FWStatisticalDelegate>
 @property (strong, nonatomic) NSMutableArray <FWTextTagLabel *> *tagLabels;
 @property (strong, nonatomic) FWTagCollectionView *tagCollectionView;
 @end
@@ -1260,6 +1299,16 @@
     label.label.text = tagText;
     label.config = config;
     return label;
+}
+
+#pragma mark - FWStatisticalDelegate
+
+- (void)statisticalClickWithCallback:(FWStatisticalCallback)callback {
+    [self.tagCollectionView statisticalClickWithCallback:callback];
+}
+
+- (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback {
+    [self.tagCollectionView statisticalExposureWithCallback:callback];
 }
 
 @end

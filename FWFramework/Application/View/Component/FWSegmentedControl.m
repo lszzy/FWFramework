@@ -9,13 +9,14 @@
 
 #import "FWSegmentedControl.h"
 #import "NSObject+FWSafeType.h"
+#import "FWStatisticalManager.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 
 @interface FWSegmentedScrollView : UIScrollView
 @end
 
-@interface FWSegmentedControl ()
+@interface FWSegmentedControl () <UIScrollViewDelegate, FWStatisticalDelegate>
 
 @property (nonatomic, strong) CALayer *selectionIndicatorStripLayer;
 @property (nonatomic, strong) CALayer *selectionIndicatorBoxLayer;
@@ -23,6 +24,9 @@
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray<NSNumber *> *segmentWidthsArray;
 @property (nonatomic, strong) FWSegmentedScrollView *scrollView;
+@property (nonatomic, copy) FWStatisticalCallback clickCallback;
+@property (nonatomic, copy) FWStatisticalCallback exposureCallback;
+@property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 
 @end
 
@@ -126,6 +130,7 @@
 
 - (void)commonInit {
     self.scrollView = [[FWSegmentedScrollView alloc] init];
+    self.scrollView.delegate = self;
     self.scrollView.scrollsToTop = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
@@ -862,6 +867,10 @@
     rectToScrollTo.origin.x -= selectedSegmentOffset;
     rectToScrollTo.size.width += selectedSegmentOffset * 2;
     [self.scrollView scrollRectToVisible:rectToScrollTo animated:animated];
+    
+    if (!animated) {
+        [self statisticalExposureDidChange];
+    }
 }
 
 #pragma mark - Index Change
@@ -949,6 +958,9 @@
     
     if (self.indexChangeBlock)
         self.indexChangeBlock(index);
+    
+    if (self.clickCallback)
+        self.clickCallback(nil, [NSIndexPath indexPathForRow:index inSection:0]);
 }
 
 #pragma mark - Styling Support
@@ -976,6 +988,76 @@
     }
     
     return [resultingAttrs copy];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate) {
+        [self statisticalExposureDidChange];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    [self statisticalExposureDidChange];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self statisticalExposureDidChange];
+}
+
+#pragma mark - FWStatisticalDelegate
+
+- (void)statisticalClickWithCallback:(FWStatisticalCallback)callback
+{
+    self.clickCallback = callback;
+}
+
+- (void)statisticalExposureWithCallback:(FWStatisticalCallback)callback
+{
+    self.exposureCallback = callback;
+    
+    [self statisticalExposureDidChange];
+}
+
+- (void)statisticalExposureDidChange
+{
+    if (!self.exposureCallback) return;
+    
+    CGFloat visibleMin = self.scrollView.contentOffset.x;
+    CGFloat visibleMax = visibleMin + self.scrollView.frame.size.width;
+    NSInteger sectionCount = 0;
+    BOOL widthFixed = NO;
+    if (self.type == FWSegmentedControlTypeText && self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
+        sectionCount = self.sectionTitles.count;
+        widthFixed = YES;
+    } else if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
+        sectionCount = self.segmentWidthsArray.count;
+        widthFixed = NO;
+    } else {
+        sectionCount = self.sectionImages.count;
+        widthFixed = YES;
+    }
+    
+    // Calculate current exposure indexes, including segmentEdgeInset
+    NSMutableArray *exposureIndexes = [NSMutableArray new];
+    NSArray *previousIndexes = self.exposureIndexes;
+    CGFloat currentMin = 0;
+    for (NSInteger i = 0; i < sectionCount; i++) {
+        CGFloat currentMax = currentMin + (widthFixed ? self.segmentWidth : self.segmentWidthsArray[i].floatValue);
+        if (currentMin > visibleMax) break;
+        if (currentMin >= visibleMin && currentMax <= visibleMax) {
+            [exposureIndexes addObject:@(i)];
+            if (![previousIndexes containsObject:@(i)]) {
+                self.exposureCallback(nil, [NSIndexPath indexPathForRow:i inSection:0]);
+            }
+        }
+        currentMin = currentMax;
+    }
+    self.exposureIndexes = [exposureIndexes copy];
 }
 
 @end

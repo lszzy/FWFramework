@@ -8,6 +8,7 @@
  */
 
 #import "FWRouter.h"
+#import "NSURL+FWFramework.h"
 #import "UIWindow+FWFramework.h"
 
 #pragma mark - FWRouter
@@ -386,7 +387,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         }
     }
     
-    for (NSString *pathComponent in [[NSURL URLWithString:URL] pathComponents]) {
+    for (NSString *pathComponent in [[NSURL fwURLWithString:URL] pathComponents]) {
         if ([pathComponent isEqualToString:@"/"]) continue;
         if ([[pathComponent substringToIndex:1] isEqualToString:@"?"]) break;
         [pathComponents addObject:pathComponent];
@@ -446,10 +447,13 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     }
     
     // Extract Params From Query.
-    NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:[[NSURL alloc] initWithString:url] resolvingAgainstBaseURL:false].queryItems;
-    
-    for (NSURLQueryItem *item in queryItems) {
-        parameters[item.name] = item.value;
+    NSURL *nsurl = [NSURL fwURLWithString:url];
+    if (nsurl) {
+        NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
+        
+        for (NSURLQueryItem *item in queryItems) {
+            parameters[item.name] = item.value;
+        }
     }
     
     if (subRoutes[FWRouterCoreKey]) {

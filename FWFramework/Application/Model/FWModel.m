@@ -8,6 +8,7 @@
  */
 
 #import "FWModel.h"
+#import "NSURL+FWFramework.h"
 #import <objc/message.h>
 
 #define force_inline __inline__ __attribute__((always_inline))
@@ -883,7 +884,7 @@ static void FWModelSetValueForProperty(__unsafe_unretained id model,
                         if (str.length == 0) {
                             ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, nil);
                         } else {
-                            ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, [[NSURL alloc] initWithString:str]);
+                            ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, [NSURL fwURLWithString:str]);
                         }
                     }
                 } break;

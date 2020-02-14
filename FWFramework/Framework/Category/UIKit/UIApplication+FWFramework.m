@@ -8,6 +8,7 @@
  */
 
 #import "UIApplication+FWFramework.h"
+#import "NSURL+FWFramework.h"
 #import <StoreKit/StoreKit.h>
 
 @implementation UIApplication (FWFramework)
@@ -96,36 +97,38 @@
 
 #pragma mark - URL
 
-+ (BOOL)fwCanOpenURL:(NSURL *)url
++ (BOOL)fwCanOpenURL:(id)url
 {
-    return [[UIApplication sharedApplication] canOpenURL:url];
+    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    return [[UIApplication sharedApplication] canOpenURL:nsurl];
 }
 
-+ (void)fwOpenURL:(NSURL *)url
++ (void)fwOpenURL:(id)url
 {
     [self fwOpenURL:url completionHandler:nil];
 }
 
-+ (void)fwOpenURL:(NSURL *)url completionHandler:(void (^)(BOOL success))completion
++ (void)fwOpenURL:(id)url completionHandler:(void (^)(BOOL success))completion
 {
+    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
     if (@available(iOS 10.0, *)) {
-        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:completion];
+        [[UIApplication sharedApplication] openURL:nsurl options:@{} completionHandler:completion];
     } else {
-        BOOL success = [[UIApplication sharedApplication] openURL:url];
+        BOOL success = [[UIApplication sharedApplication] openURL:nsurl];
         if (completion) {
             completion(success);
         }
     }
 }
 
-+ (void)fwOpenSafari:(NSString *)url
++ (void)fwOpenSafari:(id)url
 {
-    [self fwOpenURL:[NSURL URLWithString:url]];
+    [self fwOpenURL:url];
 }
 
 + (void)fwOpenAppSettings
 {
-    [self fwOpenURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    [self fwOpenURL:UIApplicationOpenSettingsURLString];
 }
 
 + (void)fwRequestAppReview
@@ -140,25 +143,26 @@
 + (void)fwOpenAppStore:(NSString *)appId
 {
     // SKStoreProductViewController可以内部打开，但需要加载
-    [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", appId]]];
+    [self fwOpenURL:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", appId]];
 }
 
 + (void)fwOpenAppReview:(NSString *)appId
 {
     if (@available(iOS 11.0, *)) {
-        [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@?action=write-review", appId]]];
+        [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@?action=write-review", appId]];
     } else {
-        [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]]];
+        [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]];
     }
 }
 
-+ (BOOL)fwIsAppStoreURL:(NSURL *)url
++ (BOOL)fwIsAppStoreURL:(id)url
 {
     // itms-apps等
-    if ([url.scheme hasPrefix:@"itms"]) {
+    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    if ([nsurl.scheme hasPrefix:@"itms"]) {
         return YES;
     // https://itunes.apple.com/等
-    } else if ([url.host isEqualToString:@"itunes.apple.com"]) {
+    } else if ([nsurl.host isEqualToString:@"itunes.apple.com"]) {
         return YES;
     }
     return NO;
@@ -166,18 +170,18 @@
 
 + (void)fwSendEmail:(NSString *)email
 {
-    [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto://%@", email]]];
+    [self fwOpenURL:[NSString stringWithFormat:@"mailto://%@", email]];
 }
 
 + (void)fwSendSms:(NSString *)phone
 {
-    [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"sms://%@", phone]]];
+    [self fwOpenURL:[NSString stringWithFormat:@"sms://%@", phone]];
 }
 
 + (void)fwMakeCall:(NSString *)phone
 {
     // tel:为直接拨打电话
-    [self fwOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"telprompt://%@", phone]]];
+    [self fwOpenURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
 }
 
 + (AVAudioPlayer *)fwPlaySound:(NSString *)file
