@@ -794,13 +794,15 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     long itemIndex = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     
-    if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)] &&
-        [self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
-        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+    if ([self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
+        if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
+            [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+        }
         return cell;
-    }else if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)] &&
-              [self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
-        [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+    }else if ([self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
+        if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
+            [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+        }
         return cell;
     }
     
@@ -904,10 +906,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (self.itemDidScrollOperationBlock) {
         self.itemDidScrollOperationBlock(indexOnPageControl);
     }
-    if (self.exposureCallback) {
-        UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-        self.exposureCallback(cell, [NSIndexPath indexPathForRow:indexOnPageControl inSection:0]);
-    }
+    [self statisticalExposureDidChange];
 }
 
 - (void)makeScrollViewScrollToIndex:(NSInteger)index{
@@ -934,11 +933,16 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     self.exposureCallback = callback;
     
-    if (self.exposureCallback) {
-        NSInteger itemIndex = [_flowLayout currentPage];
-        UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-        self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0]);
-    }
+    [self statisticalExposureDidChange];
+}
+
+- (void)statisticalExposureDidChange
+{
+    if (!self.exposureCallback) return;
+    
+    NSInteger itemIndex = [_flowLayout currentPage];
+    UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
+    self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0]);
 }
 
 @end

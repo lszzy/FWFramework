@@ -31,12 +31,14 @@
 
 @end
 
-@interface TestStatisticalViewController () <FWCollectionViewController, FWBannerViewDelegate>
+@interface TestStatisticalViewController () <FWCollectionViewController>
 
 FWPropertyWeak(FWBannerView *, bannerView);
 FWPropertyWeak(UIView *, testView);
 FWPropertyWeak(UIButton *, testButton);
 FWPropertyWeak(UISwitch *, testSwitch);
+FWPropertyWeak(FWSegmentedControl *, segmentedControl);
+FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
 @end
 
@@ -48,40 +50,51 @@ FWPropertyWeak(UISwitch *, testSwitch);
     
     FWBannerView *bannerView = [FWBannerView new];
     _bannerView = bannerView;
-    bannerView.delegate = self;
     bannerView.autoScroll = YES;
     bannerView.autoScrollTimeInterval = 6;
     bannerView.placeholderImage = [UIImage imageNamed:@"public_icon"];
     [headerView addSubview:bannerView];
-    bannerView.fwLayoutChain.leftWithInset(10).topWithInset(10).rightWithInset(10).height(100);
-    
-    NSMutableArray *imageUrls = [NSMutableArray array];
-    [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls addObject:@"public_picture"];
-    [imageUrls addObject:@"not_found.jpg"];
-    [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
-    bannerView.imageURLStringsGroup = [imageUrls copy];
-    bannerView.titlesGroup = @[@"1", @"2", @"3", @"4"];
+    bannerView.fwLayoutChain.leftWithInset(10).topWithInset(50).rightWithInset(10).height(100);
     
     UIView *testView = [UIView fwAutoLayoutView];
     _testView = testView;
     testView.backgroundColor = [UIColor fwRandomColor];
     [headerView addSubview:testView];
-    testView.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(bannerView, 10);
+    testView.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(bannerView, 50);
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
     [testButton setTitle:@"Button" forState:UIControlStateNormal];
     [testButton fwSetBackgroundColor:[UIColor fwRandomColor] forState:UIControlStateNormal];
     [headerView addSubview:testButton];
-    testButton.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(testView, 10);
+    testButton.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(testView, 50);
     
     UISwitch *testSwitch = [UISwitch new];
     _testSwitch = testSwitch;
     testSwitch.thumbTintColor = [UIColor fwRandomColor];
     testSwitch.onTintColor = testSwitch.thumbTintColor;
     [headerView addSubview:testSwitch];
-    testSwitch.fwLayoutChain.centerX().topToBottomOfViewWithOffset(testButton, 10).bottomWithInset(10);
+    testSwitch.fwLayoutChain.centerX().topToBottomOfViewWithOffset(testButton, 50);
+    
+    FWSegmentedControl *segmentedControl = [FWSegmentedControl new];
+    self.segmentedControl = segmentedControl;
+    self.segmentedControl.selectedSegmentIndex = 1;
+    self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
+    self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
+    self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
+    self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
+    self.segmentedControl.titleAlignmentMode = kCAAlignmentRight;
+    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
+    [headerView addSubview:self.segmentedControl];
+    segmentedControl.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(testSwitch, 50).height(50);
+    
+    FWTextTagCollectionView *tagCollectionView = [FWTextTagCollectionView new];
+    _tagCollectionView = tagCollectionView;
+    tagCollectionView.verticalSpacing = 10;
+    tagCollectionView.horizontalSpacing = 10;
+    [headerView addSubview:tagCollectionView];
+    tagCollectionView.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(segmentedControl, 50).height(100).bottomWithInset(50);
     
     self.tableView.tableHeaderView = headerView;
     [headerView fwAutoLayoutSubviews];
@@ -139,6 +152,16 @@ FWPropertyWeak(UISwitch *, testSwitch);
         self.testSwitch.thumbTintColor = [UIColor fwRandomColor];
         self.testSwitch.onTintColor = self.testSwitch.thumbTintColor;
     } forControlEvents:UIControlEventValueChanged];
+    
+    self.bannerView.clickItemOperationBlock = ^(NSInteger currentIndex) {
+        FWStrongifySelf();
+        [self clickHandler:currentIndex];
+    };
+    
+    self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
+        FWStrongifySelf();
+        self.segmentedControl.selectionIndicatorBoxColor = [UIColor fwRandomColor];
+    };
 }
 
 - (void)renderModel
@@ -155,6 +178,15 @@ FWPropertyWeak(UISwitch *, testSwitch);
             self.tableView.hidden = NO;
         }
     }];
+    
+    NSArray *imageUrls = @[@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg", @"public_picture", @"not_found.jpg", @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    self.bannerView.imageURLStringsGroup = imageUrls;
+    NSArray *sectionTitles = @[@"Section0", @"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8"];
+    self.segmentedControl.sectionTitles = sectionTitles;
+    [self.tagCollectionView addTags:@[@"标签0", @"标签1", @"标签2", @"标签3", @"标签4", @"标签5"]];
+    [self.tagCollectionView removeTag:@"标签4"];
+    [self.tagCollectionView removeTag:@"标签5"];
+    [self.tagCollectionView addTags:@[@"标签4", @"标签5", @"标签6", @"标签7"]];
 }
 
 - (void)renderData
@@ -175,8 +207,10 @@ FWPropertyWeak(UISwitch *, testSwitch);
     self.testView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_view" object:@"view"];
     self.testButton.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_button" object:@"button"];
     self.testSwitch.fwStatisticalChanged = [[FWStatisticalObject alloc] initWithName:@"click_switch" object:@"switch"];
-    self.bannerView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_banner" object:@"banner"];
     self.tableView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tableView" object:@"table"];
+    self.bannerView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_banner" object:@"banner"];
+    self.segmentedControl.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_segment" object:@"segment"];
+    self.tagCollectionView.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_tag" object:@"tag"];
     
     // Exposure
     self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view" object:@"view"];
@@ -184,6 +218,9 @@ FWPropertyWeak(UISwitch *, testSwitch);
     self.testButton.fwStatisticalExposure.triggerOnce = YES;
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
+    self.bannerView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"banner"];
+    self.segmentedControl.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_segment" object:@"segment"];
+    self.tagCollectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tag" object:@"tag"];
 }
 
 - (void)showToast:(NSString *)toast
@@ -261,18 +298,6 @@ FWPropertyWeak(UISwitch *, testSwitch);
     cell.contentView.backgroundColor = [UIColor fwRandomColor];
     
     [self clickHandler:indexPath.row];
-}
-
-#pragma mark - FWBannerViewDelegate
-
-- (void)bannerView:(FWBannerView *)bannerView customCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index
-{
-    cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"cell"];
-}
-
-- (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index
-{
-    [self clickHandler:index];
 }
 
 @end

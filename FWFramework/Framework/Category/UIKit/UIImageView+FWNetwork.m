@@ -21,6 +21,7 @@
 
 #import "UIImageView+FWNetwork.h"
 #import "UIImageView+FWFramework.h"
+#import "NSURL+FWFramework.h"
 
 #import <objc/runtime.h>
 
@@ -75,7 +76,7 @@
 - (void)fwSetImageWithURL:(NSURL *)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
 {
     if ([url isKindOfClass:[NSString class]]) {
-        url = [NSURL URLWithString:(NSString *)url];
+        url = [NSURL fwURLWithString:(NSString *)url];
     }
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

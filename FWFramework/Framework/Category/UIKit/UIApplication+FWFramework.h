@@ -59,17 +59,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - URL
 
-// 能否打开URL，需配置对应URL SCHEME到Info.plist才能返回YES
-+ (BOOL)fwCanOpenURL:(NSURL *)url;
+// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
++ (BOOL)fwCanOpenURL:(id)url;
 
-// 打开URL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(NSURL *)url;
+// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
++ (void)fwOpenURL:(id)url;
 
-// 打开URL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(NSURL *)url completionHandler:(nullable void (^)(BOOL success))completion;
+// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
++ (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
-// 打开浏览器
-+ (void)fwOpenSafari:(NSString *)url;
+// 打开浏览器，支持NSString|NSURL
++ (void)fwOpenSafari:(id)url;
 
 // 打开应用设置
 + (void)fwOpenAppSettings;
@@ -83,8 +83,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 打开AppStore评论页
 + (void)fwOpenAppReview:(NSString *)appId;
 
-// 判断URL是否是App Store链接
-+ (BOOL)fwIsAppStoreURL:(NSURL *)url;
+// 判断URL是否是App Store链接，支持NSString|NSURL
++ (BOOL)fwIsAppStoreURL:(id)url;
 
 // 发送邮件
 + (void)fwSendEmail:(NSString *)email;

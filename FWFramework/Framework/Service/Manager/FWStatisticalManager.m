@@ -138,7 +138,10 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 {
     if ([self fwStatisticalClickIsRegistered]) return;
     objc_setAssociatedObject(self, @selector(fwStatisticalClickIsRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) return;
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
+        [self fwStatisticalClickCellRegister];
+        return;
+    }
     
     if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
         [self respondsToSelector:@selector(statisticalClickWithCallback:)]) {
@@ -194,6 +197,22 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
             }];
         }
     }
+}
+
+- (void)fwStatisticalClickCellRegister
+{
+    if (!self.superview) return;
+    if ([objc_getAssociatedObject(self, _cmd) boolValue]) return;
+    objc_setAssociatedObject(self, _cmd, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    UIView *proxyView = nil;
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+        [self respondsToSelector:@selector(statisticalCellProxyView)]) {
+        proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+    } else {
+        proxyView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
+    }
+    [proxyView fwStatisticalClickRegister];
 }
 
 - (NSInteger)fwStatisticalClickCount:(NSIndexPath *)indexPath
@@ -341,27 +360,11 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
                 originalMSG = (void (*)(id, SEL))originalIMP();
                 originalMSG(cell, originalCMD);
                 
-                if (!cell.superview) return;
                 if (cell.fwStatisticalClick || cell.fwStatisticalClickBlock) {
-                    UIView *proxyView = nil;
-                    if ([cell conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-                        [cell respondsToSelector:@selector(statisticalCellProxyView)]) {
-                        proxyView = [(id<FWStatisticalDelegate>)cell statisticalCellProxyView];
-                    } else {
-                        proxyView = [cell fwTableView];
-                    }
-                    [proxyView fwStatisticalClickRegister];
+                    [cell fwStatisticalClickCellRegister];
                 }
                 if (cell.fwStatisticalExposure || cell.fwStatisticalExposureBlock) {
-                    UIView *proxyView = nil;
-                    if ([cell conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-                        [cell respondsToSelector:@selector(statisticalCellProxyView)]) {
-                        proxyView = [(id<FWStatisticalDelegate>)cell statisticalCellProxyView];
-                    } else {
-                        proxyView = [cell fwTableView];
-                    }
-                    [proxyView setFwStatisticalExposureIsProxy:YES];
-                    [proxyView fwStatisticalExposureRegister];
+                    [cell fwStatisticalExposureCellRegister];
                 }
             };
         }];
@@ -371,27 +374,11 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
                 originalMSG = (void (*)(id, SEL))originalIMP();
                 originalMSG(cell, originalCMD);
                 
-                if (!cell.superview) return;
                 if (cell.fwStatisticalClick || cell.fwStatisticalClickBlock) {
-                    UIView *proxyView = nil;
-                    if ([cell conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-                        [cell respondsToSelector:@selector(statisticalCellProxyView)]) {
-                        proxyView = [(id<FWStatisticalDelegate>)cell statisticalCellProxyView];
-                    } else {
-                        proxyView = [cell fwCollectionView];
-                    }
-                    [proxyView fwStatisticalClickRegister];
+                    [cell fwStatisticalClickCellRegister];
                 }
                 if (cell.fwStatisticalExposure || cell.fwStatisticalExposureBlock) {
-                    UIView *proxyView = nil;
-                    if ([cell conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
-                        [cell respondsToSelector:@selector(statisticalCellProxyView)]) {
-                        proxyView = [(id<FWStatisticalDelegate>)cell statisticalCellProxyView];
-                    } else {
-                        proxyView = [cell fwCollectionView];
-                    }
-                    [proxyView setFwStatisticalExposureIsProxy:YES];
-                    [proxyView fwStatisticalExposureRegister];
+                    [cell fwStatisticalExposureCellRegister];
                 }
             };
         }];
@@ -611,7 +598,10 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 {
     if ([objc_getAssociatedObject(self, @selector(fwStatisticalExposureIsRegistered)) boolValue]) return;
     objc_setAssociatedObject(self, @selector(fwStatisticalExposureIsRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) return;
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
+        [self fwStatisticalExposureCellRegister];
+        return;
+    }
     
     if (self.superview) {
         [self.superview fwStatisticalExposureRegister];
@@ -621,6 +611,23 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
         [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
     }
+}
+
+- (void)fwStatisticalExposureCellRegister
+{
+    if (!self.superview) return;
+    if ([objc_getAssociatedObject(self, _cmd) boolValue]) return;
+    objc_setAssociatedObject(self, _cmd, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    UIView *proxyView = nil;
+    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+        [self respondsToSelector:@selector(statisticalCellProxyView)]) {
+        proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+    } else {
+        proxyView = [self isKindOfClass:[UITableViewCell class]] ? [(UITableViewCell *)self fwTableView] : [(UICollectionViewCell *)self fwCollectionView];
+    }
+    [proxyView setFwStatisticalExposureIsProxy:YES];
+    [proxyView fwStatisticalExposureRegister];
 }
 
 - (void)fwStatisticalExposureUpdate
