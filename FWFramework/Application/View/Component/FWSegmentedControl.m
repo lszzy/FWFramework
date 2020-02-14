@@ -1029,8 +1029,16 @@
     
     CGFloat visibleMin = self.scrollView.contentOffset.x;
     CGFloat visibleMax = visibleMin + self.scrollView.frame.size.width;
-    NSInteger sectionCount = [self sectionCount];
-    BOOL dynamicWidth = (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic);
+    NSInteger sectionCount = 0;
+    BOOL dynamicWidth = NO;
+    if (self.type == FWSegmentedControlTypeText && self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
+        sectionCount = self.sectionTitles.count;
+    } else if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
+        sectionCount = self.segmentWidthsArray.count;
+        dynamicWidth = YES;
+    } else {
+        sectionCount = self.sectionImages.count;
+    }
     
     // Calculate current exposure indexes, including segmentEdgeInset
     NSMutableArray *exposureIndexes = [NSMutableArray new];
