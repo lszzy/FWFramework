@@ -87,7 +87,7 @@ typedef void (^FWBlockVoid)(void);
  
  @param param id参数
  */
-typedef void (^FWBlockParam)(id param);
+typedef void (^FWBlockParam)(id _Nullable param);
 
 /*!
  @brief 通用bool参数block
