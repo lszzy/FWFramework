@@ -43,6 +43,8 @@
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     [imageUrls addObject:@"LoadingPlaceholder.gif"];
+    [imageUrls addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
+    [imageUrls addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls addObject:@"not_found.jpg"];
     [imageUrls addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls copy];
@@ -101,6 +103,8 @@
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
+    [imageUrls2 addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
@@ -130,6 +134,8 @@
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
+    [imageUrls2 addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];
@@ -160,6 +166,8 @@
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
     [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
+    [imageUrls2 addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls2 addObject:@"not_found.jpg"];
     [imageUrls2 addObject:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     cycleView.imageURLStringsGroup = [imageUrls2 copy];

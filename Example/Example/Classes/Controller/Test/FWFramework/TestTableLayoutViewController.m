@@ -268,6 +268,8 @@
         [randomArray addObject:@[
                                  @"",
                                  @"public_icon",
+                                 @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
+                                 @"http://littlesvr.ca/apng/images/SteamEngine.webp",
                                  @"loading.gif",
                                  @"public_picture",
                                  @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
@@ -346,6 +348,8 @@
                                      @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
                                      @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
                                      @"public_picture",
+                                     @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
+                                     @"http://littlesvr.ca/apng/images/SteamEngine.webp",
                                      @"https://pic3.zhimg.com/b471eb23a_im.jpg",
                                      @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
                                      @"public_icon",
