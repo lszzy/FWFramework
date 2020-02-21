@@ -1,10 +1,10 @@
 /*!
- @header     NSThread+FWFramework.h
+ @header     NSObject+FWThread.h
  @indexgroup FWFramework
- @brief      NSThread+FWFramework
+ @brief      NSObject+FWThread
  @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018/9/19
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/2/21
  */
 
 #import <Foundation/Foundation.h>
@@ -81,10 +81,34 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - Lock
+
+// 定义GCD信号量锁，声明属性，类声明中调用
+#define FWLockSemaphore( ) \
+    @property (nonatomic, strong) dispatch_semaphore_t lockSemaphore;
+
+// 创建CGD信号量，初始值1，初始化中调用
+#define FWLockCreate( ) \
+    _lockSemaphore = dispatch_semaphore_create(1);
+
+// 等待GCD信号量，如果>0则值-1继续否则等待，操作前调用
+#define FWLock( ) \
+    dispatch_semaphore_wait(self.lockSemaphore, DISPATCH_TIME_FOREVER);
+
+// 发送GCD信号量，值+1，操作后调用
+#define FWUnlock( ) \
+    dispatch_semaphore_signal(self.lockSemaphore);
+
 /*!
- @brief NSThread+FWFramework
+ @brief 给任意对象附加CGD信号量锁的功能
  */
-@interface NSThread (FWFramework)
+@interface NSObject (FWThread)
+
+// 执行加锁，等待信号量
+- (void)fwLock;
+
+// 执行解锁，发送信号量
+- (void)fwUnlock;
 
 @end
 
