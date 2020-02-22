@@ -38,12 +38,13 @@
 
 - (id)fwRandomObject:(NSArray *)weights
 {
-    if (self.count < 1) return nil;
+    NSInteger count = self.count;
+    if (count < 1) return nil;
     
     __block NSInteger sum = 0;
     [weights enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSInteger val = [obj fwAsInteger];
-        if (val > 0) {
+        if (val > 0 && idx < count) {
             sum += val;
         }
     }];
@@ -54,7 +55,7 @@
     NSInteger random = arc4random_uniform((u_int32_t)sum);
     [weights enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSInteger val = [obj fwAsInteger];
-        if (val > 0) {
+        if (val > 0 && idx < count) {
             weight += val;
             if (weight > random) {
                 index = idx;
@@ -62,7 +63,7 @@
             }
         }
     }];
-    return index >= 0 ? [self fwObjectAtIndex:index] : nil;
+    return index >= 0 ? [self fwObjectAtIndex:index] : self.fwRandomObject;
 }
 
 - (NSArray *)fwReverseArray
