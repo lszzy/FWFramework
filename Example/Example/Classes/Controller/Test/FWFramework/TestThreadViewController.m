@@ -26,6 +26,8 @@
                                          @[@"FWMutableDictionary", @"onDictionary2"],
                                          @[@"NSMutableDictionary加锁", @"onDictionary3"],
                                          @[@"字典随机", @"onRandom1"],
+                                         @[@"FWCacheMemory", @"onCache1"],
+                                         @[@"FWCacheMemory加锁", @"onCache2"],
                                          ]];
 }
 
@@ -299,6 +301,52 @@
         // 结果
         NSLog(@"1 => %@, 2 => %@, 3 => %@, 4 => %@", @(count1), @(count2), @(count3), @(count4));
         NSInteger value = count1 + count2 + count3;
+        [self onResult:value];
+    }];
+}
+
+- (void)onCache1
+{
+    // 清空
+    [[FWCacheMemory sharedInstance] setObject:@(0) forKey:@"cache"];
+    
+    FWWeakifySelf();
+    [self onQueue:^{
+
+        // 操作
+        NSInteger value = [[[FWCacheMemory sharedInstance] objectForKey:@"cache"] integerValue];
+        value++;
+        [[FWCacheMemory sharedInstance] setObject:@(value) forKey:@"cache"];
+        
+    } completion:^{
+        FWStrongifySelf();
+        
+        // 结果
+        NSInteger value = [[[FWCacheMemory sharedInstance] objectForKey:@"cache"] integerValue];
+        [self onResult:value];
+    }];
+}
+
+- (void)onCache2
+{
+    // 清空
+    [[FWCacheMemory sharedInstance] setObject:@(0) forKey:@"cache"];
+    
+    FWWeakifySelf();
+    [self onQueue:^{
+
+        // 操作
+        [self fwLock];
+        NSInteger value = [[[FWCacheMemory sharedInstance] objectForKey:@"cache"] integerValue];
+        value++;
+        [[FWCacheMemory sharedInstance] setObject:@(value) forKey:@"cache"];
+        [self fwUnlock];
+        
+    } completion:^{
+        FWStrongifySelf();
+        
+        // 结果
+        NSInteger value = [[[FWCacheMemory sharedInstance] objectForKey:@"cache"] integerValue];
         [self onResult:value];
     }];
 }
