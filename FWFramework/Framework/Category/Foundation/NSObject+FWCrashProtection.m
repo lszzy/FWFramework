@@ -121,7 +121,7 @@ static BOOL fwStaticNullEnabled = NO;
 
 + (void)fwEnableCrashProtection
 {
-#ifndef DEBUG
+#ifdef DEBUG
     // 调试模式不生效
 #else
     // 正式模式生效
