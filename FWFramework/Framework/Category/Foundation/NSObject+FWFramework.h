@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NSObject+FWBlock.h"
+#import "NSObject+FWCrashProtection.h"
 #import "NSObject+FWRuntime.h"
 #import "NSObject+FWSafeType.h"
 #import "NSObject+FWThread.h"

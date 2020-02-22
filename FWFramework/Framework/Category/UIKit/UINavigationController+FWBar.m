@@ -289,22 +289,22 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(pushViewController:animated:) with:@selector(fwInnerPushViewController:animated:)];
-        [self fwSwizzleInstanceMethod:@selector(popViewControllerAnimated:) with:@selector(fwInnerPopViewControllerAnimated:)];
-        [self fwSwizzleInstanceMethod:@selector(popToViewController:animated:) with:@selector(fwInnerPopToViewController:animated:)];
-        [self fwSwizzleInstanceMethod:@selector(popToRootViewControllerAnimated:) with:@selector(fwInnerPopToRootViewControllerAnimated:)];
-        [self fwSwizzleInstanceMethod:@selector(setViewControllers:animated:) with:@selector(fwInnerSetViewControllers:animated:)];
+        [self fwSwizzleInstanceMethod:@selector(pushViewController:animated:) with:@selector(fwInnerTransitionPushViewController:animated:)];
+        [self fwSwizzleInstanceMethod:@selector(popViewControllerAnimated:) with:@selector(fwInnerTransitionPopViewControllerAnimated:)];
+        [self fwSwizzleInstanceMethod:@selector(popToViewController:animated:) with:@selector(fwInnerTransitionPopToViewController:animated:)];
+        [self fwSwizzleInstanceMethod:@selector(popToRootViewControllerAnimated:) with:@selector(fwInnerTransitionPopToRootViewControllerAnimated:)];
+        [self fwSwizzleInstanceMethod:@selector(setViewControllers:animated:) with:@selector(fwInnerTransitionSetViewControllers:animated:)];
     });
 }
 
-- (void)fwInnerPushViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (void)fwInnerTransitionPushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     if (!disappearingViewController) {
-        return [self fwInnerPushViewController:viewController animated:animated];
+        return [self fwInnerTransitionPushViewController:viewController animated:animated];
     }
     if (![self fwShouldCustomTransitionFrom:disappearingViewController to:viewController]) {
-        return [self fwInnerPushViewController:viewController animated:animated];
+        return [self fwInnerTransitionPushViewController:viewController animated:animated];
     }
     
     if (!self.fwTransitionContextToViewController || !disappearingViewController.fwTransitionNavigationBar) {
@@ -316,18 +316,18 @@
             disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
         }
     }
-    return [self fwInnerPushViewController:viewController animated:animated];
+    return [self fwInnerTransitionPushViewController:viewController animated:animated];
 }
 
-- (UIViewController *)fwInnerPopViewControllerAnimated:(BOOL)animated
+- (UIViewController *)fwInnerTransitionPopViewControllerAnimated:(BOOL)animated
 {
     if (self.viewControllers.count < 2) {
-        return [self fwInnerPopViewControllerAnimated:animated];
+        return [self fwInnerTransitionPopViewControllerAnimated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     UIViewController *appearingViewController = self.viewControllers[self.viewControllers.count - 2];
     if (![self fwShouldCustomTransitionFrom:disappearingViewController to:appearingViewController]) {
-        return [self fwInnerPopViewControllerAnimated:animated];
+        return [self fwInnerTransitionPopViewControllerAnimated:animated];
     }
     
     [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
@@ -338,17 +338,17 @@
     if (animated) {
         disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
     }
-    return [self fwInnerPopViewControllerAnimated:animated];
+    return [self fwInnerTransitionPopViewControllerAnimated:animated];
 }
 
-- (NSArray<UIViewController *> *)fwInnerPopToViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (NSArray<UIViewController *> *)fwInnerTransitionPopToViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if (![self.viewControllers containsObject:viewController] || self.viewControllers.count < 2) {
-        return [self fwInnerPopToViewController:viewController animated:animated];
+        return [self fwInnerTransitionPopToViewController:viewController animated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     if (![self fwShouldCustomTransitionFrom:disappearingViewController to:viewController]) {
-        return [self fwInnerPopToViewController:viewController animated:animated];
+        return [self fwInnerTransitionPopToViewController:viewController animated:animated];
     }
     
     [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
@@ -359,18 +359,18 @@
     if (animated) {
         disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
     }
-    return [self fwInnerPopToViewController:viewController animated:animated];
+    return [self fwInnerTransitionPopToViewController:viewController animated:animated];
 }
 
-- (NSArray<UIViewController *> *)fwInnerPopToRootViewControllerAnimated:(BOOL)animated
+- (NSArray<UIViewController *> *)fwInnerTransitionPopToRootViewControllerAnimated:(BOOL)animated
 {
     if (self.viewControllers.count < 2) {
-        return [self fwInnerPopToRootViewControllerAnimated:animated];
+        return [self fwInnerTransitionPopToRootViewControllerAnimated:animated];
     }
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     UIViewController *rootViewController = self.viewControllers.firstObject;
     if (![self fwShouldCustomTransitionFrom:disappearingViewController to:rootViewController]) {
-        return [self fwInnerPopToRootViewControllerAnimated:animated];
+        return [self fwInnerTransitionPopToRootViewControllerAnimated:animated];
     }
     
     [disappearingViewController fwAddTransitionNavigationBarIfNeeded];
@@ -381,15 +381,15 @@
     if (animated) {
         disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
     }
-    return [self fwInnerPopToRootViewControllerAnimated:animated];
+    return [self fwInnerTransitionPopToRootViewControllerAnimated:animated];
 }
 
-- (void)fwInnerSetViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
+- (void)fwInnerTransitionSetViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
 {
     UIViewController *disappearingViewController = self.viewControllers.lastObject;
     UIViewController *appearingViewController = viewControllers.count > 0 ? viewControllers.lastObject : nil;
     if (![self fwShouldCustomTransitionFrom:disappearingViewController to:appearingViewController]) {
-        return [self fwInnerSetViewControllers:viewControllers animated:animated];
+        return [self fwInnerTransitionSetViewControllers:viewControllers animated:animated];
     }
     
     if (animated && disappearingViewController && ![disappearingViewController isEqual:viewControllers.lastObject]) {
@@ -398,7 +398,7 @@
             disappearingViewController.navigationController.fwBackgroundViewHidden = YES;
         }
     }
-    return [self fwInnerSetViewControllers:viewControllers animated:animated];
+    return [self fwInnerTransitionSetViewControllers:viewControllers animated:animated];
 }
 
 #pragma mark - Accessor

@@ -86,7 +86,6 @@
 		2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */; };
 		2F03A5C8216CF4B9001965A1 /* NSNumber+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */; };
-		2F03A5CA216CF4B9001965A1 /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A534216CF4B9001965A1 /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */; };
 		2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -99,7 +98,6 @@
 		2F03A5D5216CF4B9001965A1 /* NSString+FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */; };
 		2F03A5D6216CF4B9001965A1 /* NSDictionary+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A540216CF4B9001965A1 /* NSDictionary+FWFramework.m */; };
 		2F03A5D7216CF4B9001965A1 /* NSObject+FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A543216CF4B9001965A1 /* NSNull+FWFramework.m */; };
 		2F03A5DA216CF4B9001965A1 /* NSObject+FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */; };
 		2F03A5DC216CF4B9001965A1 /* NSBundle+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -240,8 +238,8 @@
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
 		2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F370224002D79003472B5 /* NSObject+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F370324002D79003472B5 /* NSObject+FWThread.m */; };
-		2F8F371624016FE2003472B5 /* FWExceptionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F371424016FE2003472B5 /* FWExceptionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F8F371724016FE2003472B5 /* FWExceptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F371524016FE2003472B5 /* FWExceptionManager.m */; };
+		2F8F371F24017CDC003472B5 /* NSObject+FWCrashProtection.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F371D24017CDC003472B5 /* NSObject+FWCrashProtection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F8F372024017CDC003472B5 /* NSObject+FWCrashProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F371E24017CDC003472B5 /* NSObject+FWCrashProtection.m */; };
 		2F92113F23E912F800183311 /* FWStatisticalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92113D23E912F800183311 /* FWStatisticalManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F92114023E912F800183311 /* FWStatisticalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F92113E23E912F800183311 /* FWStatisticalManager.m */; };
 		2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92114123E914ED00183311 /* NSArray+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -428,7 +426,6 @@
 		2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWRuntime.m"; sourceTree = "<group>"; };
-		2F03A534216CF4B9001965A1 /* NSNull+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWSafeType.h"; sourceTree = "<group>"; };
 		2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncrypt.m"; sourceTree = "<group>"; };
 		2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFramework.h"; sourceTree = "<group>"; };
@@ -441,7 +438,6 @@
 		2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncode.m"; sourceTree = "<group>"; };
 		2F03A540216CF4B9001965A1 /* NSDictionary+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWBlock.h"; sourceTree = "<group>"; };
-		2F03A543216CF4B9001965A1 /* NSNull+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWRuntime.h"; sourceTree = "<group>"; };
 		2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+FWFramework.h"; sourceTree = "<group>"; };
@@ -583,8 +579,8 @@
 		2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTabAnimated.m; sourceTree = "<group>"; };
 		2F8F370224002D79003472B5 /* NSObject+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWThread.h"; sourceTree = "<group>"; };
 		2F8F370324002D79003472B5 /* NSObject+FWThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWThread.m"; sourceTree = "<group>"; };
-		2F8F371424016FE2003472B5 /* FWExceptionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWExceptionManager.h; sourceTree = "<group>"; };
-		2F8F371524016FE2003472B5 /* FWExceptionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWExceptionManager.m; sourceTree = "<group>"; };
+		2F8F371D24017CDC003472B5 /* NSObject+FWCrashProtection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWCrashProtection.h"; sourceTree = "<group>"; };
+		2F8F371E24017CDC003472B5 /* NSObject+FWCrashProtection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWCrashProtection.m"; sourceTree = "<group>"; };
 		2F92113D23E912F800183311 /* FWStatisticalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWStatisticalManager.h; sourceTree = "<group>"; };
 		2F92113E23E912F800183311 /* FWStatisticalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWStatisticalManager.m; sourceTree = "<group>"; };
 		2F92114123E914ED00183311 /* NSArray+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWThread.h"; sourceTree = "<group>"; };
@@ -872,13 +868,13 @@
 				2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */,
 				2F03A547216CF4B9001965A1 /* NSFileManager+FWFramework.m */,
 				2FBFB70F22C59E6600E669B6 /* NSFileManager+FWFramework.swift */,
-				2F03A534216CF4B9001965A1 /* NSNull+FWFramework.h */,
-				2F03A543216CF4B9001965A1 /* NSNull+FWFramework.m */,
 				2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */,
 				2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */,
 				2FBFB73022C5B1F600E669B6 /* NSNumber+FWFramework.swift */,
 				2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */,
 				2F03A529216CF4B9001965A1 /* NSObject+FWBlock.m */,
+				2F8F371D24017CDC003472B5 /* NSObject+FWCrashProtection.h */,
+				2F8F371E24017CDC003472B5 /* NSObject+FWCrashProtection.m */,
 				2F03A52C216CF4B9001965A1 /* NSObject+FWFramework.h */,
 				2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */,
 				2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */,
@@ -927,8 +923,6 @@
 			children = (
 				2F03A55A216CF4B9001965A1 /* FWAuthorizeManager.h */,
 				2F03A554216CF4B9001965A1 /* FWAuthorizeManager.m */,
-				2F8F371424016FE2003472B5 /* FWExceptionManager.h */,
-				2F8F371524016FE2003472B5 /* FWExceptionManager.m */,
 				2F03A555216CF4B9001965A1 /* FWKeychainManager.h */,
 				2F03A559216CF4B9001965A1 /* FWKeychainManager.m */,
 				2FCE514C21D3B149009EA65E /* FWLocationManager.h */,
@@ -1240,7 +1234,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F8F371624016FE2003472B5 /* FWExceptionManager.h in Headers */,
+				2F8F371F24017CDC003472B5 /* NSObject+FWCrashProtection.h in Headers */,
 				2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */,
 				2F92114723E9158100183311 /* NSDictionary+FWThread.h in Headers */,
 				2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */,
@@ -1362,7 +1356,6 @@
 				2F03A5AC216CF4B9001965A1 /* UITableView+FWTemplateLayout.h in Headers */,
 				2F03A5C8216CF4B9001965A1 /* NSNumber+FWFramework.h in Headers */,
 				2F03A5C6216CF4B9001965A1 /* NSString+FWFormat.h in Headers */,
-				2F03A5CA216CF4B9001965A1 /* NSNull+FWFramework.h in Headers */,
 				2F03A57F216CF4B9001965A1 /* UIFont+FWFramework.h in Headers */,
 				2F03A5E5216CF4B9001965A1 /* NSTimer+FWFramework.h in Headers */,
 				2F03A5CE216CF4B9001965A1 /* NSUserDefaults+FWFramework.h in Headers */,
@@ -1605,6 +1598,7 @@
 				2F03A5FB216CF4B9001965A1 /* FWProxy.m in Sources */,
 				2F03A5BA216CF4B9001965A1 /* UIView+FWLayer.m in Sources */,
 				2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */,
+				2F8F372024017CDC003472B5 /* NSObject+FWCrashProtection.m in Sources */,
 				2FAD2220233B12E400140359 /* FWCoroutine.swift in Sources */,
 				2F03A5FE216CF4B9001965A1 /* FWLog.m in Sources */,
 				2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */,
@@ -1617,7 +1611,6 @@
 				2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */,
-				2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */,
 				2F03A57B216CF4B9001965A1 /* UINavigationController+FWFramework.m in Sources */,
 				2F92114423E914ED00183311 /* NSArray+FWThread.m in Sources */,
 				2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */,
@@ -1645,7 +1638,6 @@
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
 				2F03A590216CF4B9001965A1 /* UITableView+FWTemplateLayout.m in Sources */,
 				2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */,
-				2F8F371724016FE2003472B5 /* FWExceptionManager.m in Sources */,
 				2F17B6BB237D14E2007E1DCC /* UIView+FWDrawerView.m in Sources */,
 				2F03A63F216CF882001965A1 /* FWBatchRequest.m in Sources */,
 				2F03A64C216CF882001965A1 /* FWHTTPSessionManager.m in Sources */,
