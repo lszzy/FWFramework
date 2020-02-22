@@ -29,6 +29,7 @@
 
 // Service
 #import "FWAuthorizeManager.h"
+#import "FWExceptionManager.h"
 #import "FWKeychainManager.h"
 #import "FWTaskManager.h"
 #import "FWVersionManager.h"

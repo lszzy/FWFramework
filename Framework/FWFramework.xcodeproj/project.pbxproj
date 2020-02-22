@@ -240,6 +240,8 @@
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
 		2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F370224002D79003472B5 /* NSObject+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F370324002D79003472B5 /* NSObject+FWThread.m */; };
+		2F8F371624016FE2003472B5 /* FWExceptionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F371424016FE2003472B5 /* FWExceptionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F8F371724016FE2003472B5 /* FWExceptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F371524016FE2003472B5 /* FWExceptionManager.m */; };
 		2F92113F23E912F800183311 /* FWStatisticalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92113D23E912F800183311 /* FWStatisticalManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F92114023E912F800183311 /* FWStatisticalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F92113E23E912F800183311 /* FWStatisticalManager.m */; };
 		2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92114123E914ED00183311 /* NSArray+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -581,6 +583,8 @@
 		2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTabAnimated.m; sourceTree = "<group>"; };
 		2F8F370224002D79003472B5 /* NSObject+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWThread.h"; sourceTree = "<group>"; };
 		2F8F370324002D79003472B5 /* NSObject+FWThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWThread.m"; sourceTree = "<group>"; };
+		2F8F371424016FE2003472B5 /* FWExceptionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWExceptionManager.h; sourceTree = "<group>"; };
+		2F8F371524016FE2003472B5 /* FWExceptionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWExceptionManager.m; sourceTree = "<group>"; };
 		2F92113D23E912F800183311 /* FWStatisticalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWStatisticalManager.h; sourceTree = "<group>"; };
 		2F92113E23E912F800183311 /* FWStatisticalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWStatisticalManager.m; sourceTree = "<group>"; };
 		2F92114123E914ED00183311 /* NSArray+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWThread.h"; sourceTree = "<group>"; };
@@ -909,6 +913,7 @@
 			children = (
 				2FCE515421D3B90F009EA65E /* Cache */,
 				2FCE512F21D3746B009EA65E /* Database */,
+				2F8F371324016F83003472B5 /* Image */,
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
@@ -922,6 +927,8 @@
 			children = (
 				2F03A55A216CF4B9001965A1 /* FWAuthorizeManager.h */,
 				2F03A554216CF4B9001965A1 /* FWAuthorizeManager.m */,
+				2F8F371424016FE2003472B5 /* FWExceptionManager.h */,
+				2F8F371524016FE2003472B5 /* FWExceptionManager.m */,
 				2F03A555216CF4B9001965A1 /* FWKeychainManager.h */,
 				2F03A559216CF4B9001965A1 /* FWKeychainManager.m */,
 				2FCE514C21D3B149009EA65E /* FWLocationManager.h */,
@@ -1053,12 +1060,8 @@
 			isa = PBXGroup;
 			children = (
 				2F03A657216D0049001965A1 /* FWNetwork.h */,
-				2F03A626216CF882001965A1 /* FWAutoPurgingImageCache.h */,
-				2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */,
 				2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */,
 				2F03A627216CF882001965A1 /* FWHTTPSessionManager.m */,
-				2F03A625216CF882001965A1 /* FWImageDownloader.h */,
-				2F03A631216CF882001965A1 /* FWImageDownloader.m */,
 				2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */,
 				2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */,
 				2F03A621216CF882001965A1 /* FWNetworkReachabilityManager.h */,
@@ -1124,6 +1127,17 @@
 			);
 			name = FWFramework;
 			path = ../FWFramework;
+			sourceTree = "<group>";
+		};
+		2F8F371324016F83003472B5 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				2F03A626216CF882001965A1 /* FWAutoPurgingImageCache.h */,
+				2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */,
+				2F03A625216CF882001965A1 /* FWImageDownloader.h */,
+				2F03A631216CF882001965A1 /* FWImageDownloader.m */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 		2FA99D9A228A74DF0059DFDB /* App */ = {
@@ -1226,6 +1240,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F8F371624016FE2003472B5 /* FWExceptionManager.h in Headers */,
 				2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */,
 				2F92114723E9158100183311 /* NSDictionary+FWThread.h in Headers */,
 				2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */,
@@ -1630,6 +1645,7 @@
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
 				2F03A590216CF4B9001965A1 /* UITableView+FWTemplateLayout.m in Sources */,
 				2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */,
+				2F8F371724016FE2003472B5 /* FWExceptionManager.m in Sources */,
 				2F17B6BB237D14E2007E1DCC /* UIView+FWDrawerView.m in Sources */,
 				2F03A63F216CF882001965A1 /* FWBatchRequest.m in Sources */,
 				2F03A64C216CF882001965A1 /* FWHTTPSessionManager.m in Sources */,
@@ -1791,10 +1807,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=1",
-					"FWAuthorizeMicrophoneEnabled=1",
-					"FWAuthorizeContactsEnabled=1",
-					"FWAuthorizeCalendarEnabled=1",
-					"FWAuthorizeAppleMusicEnabled=1",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1824,13 +1836,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"FWAuthorizeMicrophoneEnabled=1",
-					"FWAuthorizeContactsEnabled=1",
-					"FWAuthorizeCalendarEnabled=1",
-					"FWAuthorizeAppleMusicEnabled=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

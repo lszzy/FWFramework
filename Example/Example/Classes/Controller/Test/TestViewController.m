@@ -96,6 +96,7 @@
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
+                                             @[@"FWExceptionManager", @"TestCrashViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              @[@"FWStorekitManager", @"TestStorekitViewController"],
                                              @[@"FWNotificationManager", @"TestNotificationViewController"],
