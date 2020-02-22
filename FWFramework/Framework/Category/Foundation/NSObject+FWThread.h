@@ -84,20 +84,20 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Lock
 
 // 定义GCD信号量锁，声明属性，类声明中调用
-#define FWLockSemaphore( ) \
-    @property (nonatomic, strong) dispatch_semaphore_t lockSemaphore;
+#define FWLockSemaphore( lock ) \
+    @property (nonatomic, strong) dispatch_semaphore_t lock;
 
 // 创建CGD信号量，初始值1，初始化中调用
-#define FWLockCreate( ) \
-    _lockSemaphore = dispatch_semaphore_create(1);
+#define FWLockCreate( lock ) \
+    lock = dispatch_semaphore_create(1);
 
 // 等待GCD信号量，如果>0则值-1继续否则等待，操作前调用
-#define FWLock( ) \
-    dispatch_semaphore_wait(self.lockSemaphore, DISPATCH_TIME_FOREVER);
+#define FWLock( lock ) \
+    dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
 
 // 发送GCD信号量，值+1，操作后调用
-#define FWUnlock( ) \
-    dispatch_semaphore_signal(self.lockSemaphore);
+#define FWUnlock( lock ) \
+    dispatch_semaphore_signal(lock);
 
 /*!
  @brief 给任意对象附加CGD信号量锁的功能
