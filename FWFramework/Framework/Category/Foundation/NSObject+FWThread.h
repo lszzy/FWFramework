@@ -104,10 +104,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSObject (FWThread)
 
-// 执行加锁，等待信号量
+// 创建信号量，初始值1，可选调用
+- (void)fwLockCreate;
+
+// 执行加锁，等待信号量，自动创建信号量
 - (void)fwLock;
 
-// 执行解锁，发送信号量
+// 执行解锁，发送信号量，自动创建信号量
 - (void)fwUnlock;
 
 @end
