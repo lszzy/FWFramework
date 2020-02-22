@@ -27,11 +27,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)fwFilterWithBlock:(BOOL (^)(ObjectType obj))block;
 
 /*!
- @brief 从数组中随机取出对象
+ @brief 从数组中随机取出对象，如@[@"a", @"b", @"c"]随机取出@"b"
  
  @return 随机对象
  */
 - (nullable ObjectType)fwRandomObject;
+
+/*!
+ @brief 从数组中按照权重随机取出对象，如@[@"a", @"b", @"c"]按照@[@0, @8, @02]大概率取出@"b"，不会取出@"a"
+ 
+ @param weights 权重数组，按整数计算
+ @return 随机对象
+ */
+- (nullable ObjectType)fwRandomObject:(NSArray *)weights;
 
 /*!
  @brief 获取翻转后的新数组
