@@ -1,30 +1,45 @@
 /*!
- @header     NSNull+FWFramework.m
+ @header     NSObject+FWCrashProtection.m
  @indexgroup FWFramework
- @brief      NSNull分类
+ @brief      NSObject+FWCrashProtection
  @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018-05-15
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/2/22
  */
 
-#import "NSNull+FWFramework.h"
+#import "NSObject+FWCrashProtection.h"
+#import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
-// 是否处理NSNull崩溃
-#ifdef DEBUG
-    #define FWNullEnabled 0
-#else
-    #define FWNullEnabled 1
-#endif
+#pragma mark - NSNull+FWCrashProtection
 
-#pragma GCC diagnostic ignored "-Wgnu-conditional-omitted-operand"
+/*!
+@brief NSNull分类，解决值为NSNull时调用不存在方法崩溃问题(如JSON中包含null)
+@discussion 默认调试环境不处理崩溃，正式环境才处理崩溃，尽量开发阶段避免此问题
 
-@implementation NSNull (FWFramework)
+@see https://github.com/nicklockwood/NullSafe
+*/
+@interface NSNull (FWCrashProtection)
 
-#if FWNullEnabled
++ (void)fwCrashProtection;
+
+@end
+
+static BOOL fwStaticNullEnabled = NO;
+
+@implementation NSNull (FWCrashProtection)
+
++ (void)fwCrashProtection
+{
+    fwStaticNullEnabled = YES;
+}
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
+    if (!fwStaticNullEnabled) {
+        return [super methodSignatureForSelector:selector];
+    }
+    
     @synchronized([self class]) {
         // 查找方法签名
         NSMethodSignature *signature = [super methodSignatureForSelector:selector];
@@ -90,10 +105,31 @@
 
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
+    if (!fwStaticNullEnabled) {
+        return [super forwardInvocation:invocation];
+    }
+    
     invocation.target = nil;
     [invocation invoke];
 }
 
+@end
+
+#pragma mark - NSObject+FWCrashProtection
+
+@implementation NSObject (FWCrashProtection)
+
++ (void)fwEnableCrashProtection
+{
+#ifndef DEBUG
+    // 调试模式不生效
+#else
+    // 正式模式生效
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [NSNull fwCrashProtection];
+    });
 #endif
+}
 
 @end
