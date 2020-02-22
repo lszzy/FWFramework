@@ -17,14 +17,15 @@
 - (void)renderData
 {
     [self.tableData addObjectsFromArray:@[
-                                         @[@"不加锁", @"onLock1"],
-                                         @[@"加锁", @"onLock2"],
+                                         @[@"Associated不加锁", @"onLock1"],
+                                         @[@"Associated加锁", @"onLock2"],
                                          @[@"NSMutableArray", @"onArray1"],
                                          @[@"FWMutableArray", @"onArray2"],
                                          @[@"NSMutableArray加锁", @"onArray3"],
                                          @[@"NSMutableDictionary", @"onDictionary1"],
                                          @[@"FWMutableDictionary", @"onDictionary2"],
                                          @[@"NSMutableDictionary加锁", @"onDictionary3"],
+                                         @[@"字典随机", @"onRandom1"],
                                          ]];
 }
 
@@ -259,6 +260,45 @@
         
         // 结果
         NSInteger value = [[dict[@"object"] fwTempObject] integerValue];
+        [self onResult:value];
+    }];
+}
+
+- (void)onRandom1
+{
+    // 清空
+    NSDictionary *dict = @{
+        @1: @1,
+        @2: @2,
+        @3: @"7",
+        @4: [NSObject new],
+    };
+    __block NSInteger count1 = 0, count2 = 0, count3 = 0, count4 = 0;
+    
+    FWWeakifySelf();
+    [self onQueue:^{
+        FWStrongifySelf();
+        
+        // 操作
+        [self fwLock];
+        NSInteger value = [[dict fwRandomWeightKey] integerValue];
+        if (value == 1) {
+            count1 += 1;
+        } else if (value == 2) {
+            count2 += 1;
+        } else if (value == 3) {
+            count3 += 1;
+        } else {
+            count4 += 1;
+        }
+        [self fwUnlock];
+        
+    } completion:^{
+        FWStrongifySelf();
+        
+        // 结果
+        NSLog(@"1 => %@, 2 => %@, 3 => %@, 4 => %@", @(count1), @(count2), @(count3), @(count4));
+        NSInteger value = count1 + count2 + count3;
         [self onResult:value];
     }];
 }
