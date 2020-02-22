@@ -51,12 +51,12 @@
     
     __block NSInteger index = -1;
     __block NSInteger weight = 0;
-    NSInteger random = arc4random_uniform((u_int32_t)sum) + 1;
+    NSInteger random = arc4random_uniform((u_int32_t)sum);
     [weights enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSInteger val = [obj fwAsInteger];
         if (val > 0) {
             weight += val;
-            if (weight >= random) {
+            if (weight > random) {
                 index = idx;
                 *stop = YES;
             }
