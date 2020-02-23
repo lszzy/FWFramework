@@ -17,8 +17,11 @@
 - (void)renderData
 {
     [self.tableData addObjectsFromArray:@[
-                                         @[@"NSNull", @"onNull"],
+                                         @[[@"NSNull" stringByAppendingString:FWIsDebug ? @"(Debug)" : @"(Release)"], @"onNull"],
                                          @[@"NSNumber", @"onNumber"],
+                                         @[@"NSString", @"onString"],
+                                         @[@"NSArray", @"onArray"],
+                                         @[@"NSDictionary", @"onDictionary"],
                                          ]];
 }
 
@@ -52,8 +55,38 @@
 - (void)onNumber
 {
     id value = nil;
-    [@(1) isEqualToNumber:value];
-    [@(1) compare:value];
+    [@(1) fwIsEqualToNumber:value];
+    [@(1) fwCompare:value];
+}
+
+- (void)onString
+{
+    NSString *str = @"test";
+    [str fwSubstringFromIndex:10];
+    [str fwSubstringToIndex:10];
+    [str fwSubstringWithRange:NSMakeRange(2, 10)];
+}
+
+- (void)onArray
+{
+    NSArray *arr = @[@1, @2, @3];
+    [arr fwObjectAtIndex:10];
+    [arr fwSubarrayWithRange:NSMakeRange(2, 10)];
+    
+    NSMutableArray *arrm = arr.mutableCopy;
+    [arrm fwAddObject:nil];
+    [arrm fwRemoveObjectAtIndex:10];
+    [arrm fwReplaceObjectAtIndex:10 withObject:@3];
+}
+
+- (void)onDictionary
+{
+    NSDictionary *dict = @{@"a": @1};
+    [dict fwObjectForKey:nil];
+    
+    NSMutableDictionary *dictm = dict.mutableCopy;
+    [dictm fwRemoveObjectForKey:nil];
+    [dictm fwSetObject:nil forKey:nil];
 }
 
 @end
