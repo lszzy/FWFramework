@@ -16,11 +16,6 @@
 
 - (void)renderData
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [NSObject fwEnableCrashProtection];
-    });
-    
     [self.tableData addObjectsFromArray:@[
                                          @[@"NSNull", @"onNull"],
                                          @[@"NSNumber", @"onNumber"],

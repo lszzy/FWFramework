@@ -1,33 +1,26 @@
 /*!
- @header     NSObject+FWCrashProtection.m
+ @header     NSNull+FWFramework.m
  @indexgroup FWFramework
- @brief      NSObject+FWCrashProtection
+ @brief      NSNull+FWFramework
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/2/22
+ @updated    2020/2/23
  */
 
-#import "NSObject+FWCrashProtection.h"
+#import "NSNull+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 
-#pragma mark - NSNull+FWCrashProtection
+@implementation NSNull (FWFramework)
 
-// NSNull分类，解决值为NSNull时调用不存在方法崩溃问题，如JSON中包含null。参考：https://github.com/nicklockwood/NullSafe
-@interface NSNull (FWCrashProtection)
-
-+ (void)fwCrashProtection;
-
-@end
-
-@implementation NSNull (FWCrashProtection)
-
-+ (void)fwCrashProtection
++ (void)load
 {
+#ifndef DEBUG
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerNullMethodSignatureForSelector:)];
         [self fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerNullForwardInvocation:)];
     });
+#endif
 }
 
 - (NSMethodSignature *)fwInnerNullMethodSignatureForSelector:(SEL)selector
@@ -43,23 +36,6 @@
 {
     invocation.target = nil;
     [invocation invoke];
-}
-
-@end
-
-#pragma mark - NSObject+FWCrashProtection
-
-// 调试模式不生效，仅正式模式生效
-@implementation NSObject (FWCrashProtection)
-
-+ (void)fwEnableCrashProtection
-{
-#ifndef DEBUG
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [NSNull fwCrashProtection];
-    });
-#endif
 }
 
 @end

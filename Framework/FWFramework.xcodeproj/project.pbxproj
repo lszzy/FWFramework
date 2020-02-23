@@ -238,8 +238,8 @@
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
 		2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F370224002D79003472B5 /* NSObject+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F370324002D79003472B5 /* NSObject+FWThread.m */; };
-		2F8F371F24017CDC003472B5 /* NSObject+FWCrashProtection.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F371D24017CDC003472B5 /* NSObject+FWCrashProtection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F8F372024017CDC003472B5 /* NSObject+FWCrashProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F371E24017CDC003472B5 /* NSObject+FWCrashProtection.m */; };
+		2F8F3726240289CB003472B5 /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F8F3727240289CB003472B5 /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F3725240289CB003472B5 /* NSNull+FWFramework.m */; };
 		2F92113F23E912F800183311 /* FWStatisticalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92113D23E912F800183311 /* FWStatisticalManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F92114023E912F800183311 /* FWStatisticalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F92113E23E912F800183311 /* FWStatisticalManager.m */; };
 		2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92114123E914ED00183311 /* NSArray+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -579,8 +579,8 @@
 		2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTabAnimated.m; sourceTree = "<group>"; };
 		2F8F370224002D79003472B5 /* NSObject+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWThread.h"; sourceTree = "<group>"; };
 		2F8F370324002D79003472B5 /* NSObject+FWThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWThread.m"; sourceTree = "<group>"; };
-		2F8F371D24017CDC003472B5 /* NSObject+FWCrashProtection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWCrashProtection.h"; sourceTree = "<group>"; };
-		2F8F371E24017CDC003472B5 /* NSObject+FWCrashProtection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWCrashProtection.m"; sourceTree = "<group>"; };
+		2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
+		2F8F3725240289CB003472B5 /* NSNull+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
 		2F92113D23E912F800183311 /* FWStatisticalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWStatisticalManager.h; sourceTree = "<group>"; };
 		2F92113E23E912F800183311 /* FWStatisticalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWStatisticalManager.m; sourceTree = "<group>"; };
 		2F92114123E914ED00183311 /* NSArray+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWThread.h"; sourceTree = "<group>"; };
@@ -868,13 +868,13 @@
 				2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */,
 				2F03A547216CF4B9001965A1 /* NSFileManager+FWFramework.m */,
 				2FBFB70F22C59E6600E669B6 /* NSFileManager+FWFramework.swift */,
+				2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */,
+				2F8F3725240289CB003472B5 /* NSNull+FWFramework.m */,
 				2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */,
 				2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */,
 				2FBFB73022C5B1F600E669B6 /* NSNumber+FWFramework.swift */,
 				2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */,
 				2F03A529216CF4B9001965A1 /* NSObject+FWBlock.m */,
-				2F8F371D24017CDC003472B5 /* NSObject+FWCrashProtection.h */,
-				2F8F371E24017CDC003472B5 /* NSObject+FWCrashProtection.m */,
 				2F03A52C216CF4B9001965A1 /* NSObject+FWFramework.h */,
 				2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */,
 				2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */,
@@ -1234,7 +1234,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F8F371F24017CDC003472B5 /* NSObject+FWCrashProtection.h in Headers */,
+				2F8F3726240289CB003472B5 /* NSNull+FWFramework.h in Headers */,
 				2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */,
 				2F92114723E9158100183311 /* NSDictionary+FWThread.h in Headers */,
 				2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */,
@@ -1558,6 +1558,7 @@
 				2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */,
 				2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */,
 				2FC81A7E235032EF00BE660C /* FWViewModel.m in Sources */,
+				2F8F3727240289CB003472B5 /* NSNull+FWFramework.m in Sources */,
 				2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */,
 				2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */,
 				2F03A5FD216CF4B9001965A1 /* FWState.m in Sources */,
@@ -1598,7 +1599,6 @@
 				2F03A5FB216CF4B9001965A1 /* FWProxy.m in Sources */,
 				2F03A5BA216CF4B9001965A1 /* UIView+FWLayer.m in Sources */,
 				2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */,
-				2F8F372024017CDC003472B5 /* NSObject+FWCrashProtection.m in Sources */,
 				2FAD2220233B12E400140359 /* FWCoroutine.swift in Sources */,
 				2F03A5FE216CF4B9001965A1 /* FWLog.m in Sources */,
 				2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */,

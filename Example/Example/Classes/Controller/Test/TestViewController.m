@@ -66,7 +66,7 @@
                                              @[@"FWScroll", @"TestTableScrollViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"NSObject(FWThread)", @"TestThreadViewController"],
-                                             @[@"NSObject+FWCrashProtection", @"TestCrashViewController"],
+                                             @[@"NSNull+FWFramework", @"TestCrashViewController"],
                                              @[@"NSAttributedString(FWOption)", @"TestAttributedStringViewController"],
                                              @[@"UIWindow(FWFramework)", @"TestWindowViewController"],
                                              @[@"UIScrollView(FWFramework)", @"TestScrollViewController"],
