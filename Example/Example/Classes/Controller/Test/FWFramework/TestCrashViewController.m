@@ -23,6 +23,7 @@
     
     [self.tableData addObjectsFromArray:@[
                                          @[@"NSNull", @"onNull"],
+                                         @[@"NSNumber", @"onNumber"],
                                          ]];
 }
 
@@ -51,6 +52,13 @@
 {
     id object = [NSNull null];
     [object onNull];
+}
+
+- (void)onNumber
+{
+    id value = nil;
+    [@(1) isEqualToNumber:value];
+    [@(1) compare:value];
 }
 
 @end
