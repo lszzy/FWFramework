@@ -167,6 +167,26 @@ NSNumber * FWSafeNumber(id value) {
 
 @end
 
+#pragma mark - NSNumber+FWSafeType
+
+@implementation NSNumber (FWSafeType)
+
+- (BOOL)fwIsEqualToNumber:(NSNumber *)number
+{
+    if (!number) return NO;
+    
+    return [self isEqualToNumber:number];
+}
+
+- (NSComparisonResult)fwCompare:(NSNumber *)number
+{
+    if (!number) return NSOrderedDescending;
+    
+    return [self compare:number];
+}
+
+@end
+
 #pragma mark - NSString+FWSafeType
 
 @implementation NSString (FWSafeType)

@@ -141,6 +141,31 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
 
 @end
 
+#pragma mark - NSNumber+FWSafeType
+
+/*!
+ @brief NSNumber类型安全分类
+ */
+@interface NSNumber (FWSafeType)
+
+/*!
+ @brief 比较NSNumber是否相等，如果参数为nil，判定为不相等
+ 
+ @param number 比较的number
+ @return 是否相等
+ */
+- (BOOL)fwIsEqualToNumber:(nullable NSNumber *)number;
+
+/*!
+@brief 比较NSNumber大小，如果参数为nil，判定为NSOrderedDescending
+
+@param number 比较的number
+@return 比较结果
+*/
+- (NSComparisonResult)fwCompare:(nullable NSNumber *)number;
+
+@end
+
 #pragma mark - NSString+FWSafeType
 
 /*!
