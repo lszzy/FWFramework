@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 最大缓存大小，默认0动态计算
 @property (nonatomic) NSUInteger maxBufferSize;
 
+// 循环执行完成回调
+@property (nonatomic, copy) void(^loopCompletionBlock)(NSUInteger loopCountRemaining);
+
 @end
 
 /*!

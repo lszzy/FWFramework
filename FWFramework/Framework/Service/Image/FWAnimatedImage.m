@@ -90,6 +90,10 @@ static CGFloat _NSStringPathScale(NSString *string) {
 }
 
 + (FWImage *)imageNamed:(NSString *)name {
+    return [self imageNamed:name inBundle:nil];
+}
+
++ (FWImage *)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle {
     if (name.length == 0) return nil;
     if ([name hasSuffix:@"/"]) return nil;
     
@@ -105,7 +109,7 @@ static CGFloat _NSStringPathScale(NSString *string) {
         scale = ((NSNumber *)scales[s]).floatValue;
         NSString *scaledName = _NSStringByAppendingNameScale(res, scale);
         for (NSString *e in exts) {
-            path = [[NSBundle mainBundle] pathForResource:scaledName ofType:e];
+            path = [(bundle ? bundle : [NSBundle mainBundle]) pathForResource:scaledName ofType:e];
             if (path) break;
         }
         if (path) break;
@@ -279,7 +283,7 @@ static CGFloat _NSStringPathScale(NSString *string) {
     NSData *firstData = [NSData dataWithContentsOfFile:firstPath];
     CGFloat scale = _NSStringPathScale(firstPath);
     UIImage *firstCG = [[[UIImage alloc] initWithData:firstData] fwImageByDecoded];
-    self = [self initWithCGImage:firstCG.CGImage scale:scale orientation:UIImageOrientationUp];
+    self = [self initWithCGImage:firstCG.CGImage scale:scale orientation:firstCG.imageOrientation];
     if (!self) return nil;
     long frameByte = CGImageGetBytesPerRow(firstCG.CGImage) * CGImageGetHeight(firstCG.CGImage);
     _oneFrameBytes = (NSUInteger)frameByte;
@@ -305,7 +309,7 @@ static CGFloat _NSStringPathScale(NSString *string) {
     NSData *firstData = dataArray[0];
     CGFloat scale = [UIScreen mainScreen].scale;
     UIImage *firstCG = [[[UIImage alloc] initWithData:firstData] fwImageByDecoded];
-    self = [self initWithCGImage:firstCG.CGImage scale:scale orientation:UIImageOrientationUp];
+    self = [self initWithCGImage:firstCG.CGImage scale:scale orientation:firstCG.imageOrientation];
     if (!self) return nil;
     long frameByte = CGImageGetBytesPerRow(firstCG.CGImage) * CGImageGetHeight(firstCG.CGImage);
     _oneFrameBytes = (NSUInteger)frameByte;
