@@ -225,6 +225,12 @@
 		2F6492B123168828002E15AC /* FWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AF23168828002E15AC /* FWWebViewController.m */; };
 		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
+		2F6EFC5F2403C00400C4AC7E /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6EFC5D2403C00400C4AC7E /* FWAnimatedImageView.h */; };
+		2F6EFC602403C00400C4AC7E /* FWAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6EFC5E2403C00400C4AC7E /* FWAnimatedImageView.m */; };
+		2F6EFC632403C8F600C4AC7E /* FWImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6EFC612403C8F600C4AC7E /* FWImageCoder.h */; };
+		2F6EFC642403C8F600C4AC7E /* FWImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6EFC622403C8F600C4AC7E /* FWImageCoder.m */; };
+		2F6EFC672403CBFB00C4AC7E /* FWAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6EFC652403CBFB00C4AC7E /* FWAnimatedImage.h */; };
+		2F6EFC682403CBFB00C4AC7E /* FWAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6EFC662403CBFB00C4AC7E /* FWAnimatedImage.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDDD2327864700498538 /* FWAppToastPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -565,6 +571,12 @@
 		2F6492AF23168828002E15AC /* FWWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebViewController.m; sourceTree = "<group>"; };
 		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
+		2F6EFC5D2403C00400C4AC7E /* FWAnimatedImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImageView.h; sourceTree = "<group>"; };
+		2F6EFC5E2403C00400C4AC7E /* FWAnimatedImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImageView.m; sourceTree = "<group>"; };
+		2F6EFC612403C8F600C4AC7E /* FWImageCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWImageCoder.h; sourceTree = "<group>"; };
+		2F6EFC622403C8F600C4AC7E /* FWImageCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWImageCoder.m; sourceTree = "<group>"; };
+		2F6EFC652403CBFB00C4AC7E /* FWAnimatedImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
+		2F6EFC662403CBFB00C4AC7E /* FWAnimatedImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
 		2F70EDDD2327864700498538 /* FWAppToastPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppToastPlugin.h; sourceTree = "<group>"; };
@@ -1130,6 +1142,12 @@
 				2F41D1FD240388850010A588 /* UIImage+FWGif.m */,
 				2F41D1FC240388850010A588 /* UIImageView+FWNetwork.h */,
 				2F41D1FE240388850010A588 /* UIImageView+FWNetwork.m */,
+				2F6EFC5D2403C00400C4AC7E /* FWAnimatedImageView.h */,
+				2F6EFC5E2403C00400C4AC7E /* FWAnimatedImageView.m */,
+				2F6EFC612403C8F600C4AC7E /* FWImageCoder.h */,
+				2F6EFC622403C8F600C4AC7E /* FWImageCoder.m */,
+				2F6EFC652403CBFB00C4AC7E /* FWAnimatedImage.h */,
+				2F6EFC662403CBFB00C4AC7E /* FWAnimatedImage.m */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -1297,8 +1315,10 @@
 				2FCE515021D3B14A009EA65E /* FWLocationManager.h in Headers */,
 				2FCE515221D3B14A009EA65E /* FWStorekitManager.h in Headers */,
 				2FCE513F21D3A43E009EA65E /* FWDatabaseQueue.h in Headers */,
+				2F6EFC632403C8F600C4AC7E /* FWImageCoder.h in Headers */,
 				2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */,
 				2FCE514721D3A6A5009EA65E /* FWDatabaseAdditions.h in Headers */,
+				2F6EFC5F2403C00400C4AC7E /* FWAnimatedImageView.h in Headers */,
 				2FCE514321D3A457009EA65E /* FWResultSet.h in Headers */,
 				2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */,
 				2F0FFF3021D20EA800049383 /* NSAttributedString+FWFramework.h in Headers */,
@@ -1306,6 +1326,7 @@
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
 				2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */,
 				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
+				2F6EFC672403CBFB00C4AC7E /* FWAnimatedImage.h in Headers */,
 				2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */,
 				2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */,
 				2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */,
@@ -1568,6 +1589,7 @@
 				2F1E626922BD4A2B00A1AB49 /* UIView+FWLayoutChain.m in Sources */,
 				2F03A5D0216CF4B9001965A1 /* NSData+FWFramework.m in Sources */,
 				2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */,
+				2F6EFC602403C00400C4AC7E /* FWAnimatedImageView.m in Sources */,
 				2F41D201240388850010A588 /* UIImage+FWGif.m in Sources */,
 				2F0CCE4421E4973C0018FA87 /* FWDatabaseManager.m in Sources */,
 				2FA99E99228E71DA0059DFDB /* FWNotificationManager.m in Sources */,
@@ -1586,6 +1608,7 @@
 				2F0CCE4021E496EE0018FA87 /* FWDbModel.m in Sources */,
 				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
 				2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */,
+				2F6EFC682403CBFB00C4AC7E /* FWAnimatedImage.m in Sources */,
 				2FB90F1021F4A00C00084D76 /* FWMarqueeLabel.m in Sources */,
 				2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
@@ -1635,6 +1658,7 @@
 				2FBFB75E22C616BD00E669B6 /* UIApplication+FWFramework.swift in Sources */,
 				2F03A589216CF4B9001965A1 /* UIView+FWAnimation.m in Sources */,
 				2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */,
+				2F6EFC642403C8F600C4AC7E /* FWImageCoder.m in Sources */,
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
 				2F03A590216CF4B9001965A1 /* UITableView+FWTemplateLayout.m in Sources */,
 				2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */,
