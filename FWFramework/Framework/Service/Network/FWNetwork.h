@@ -38,6 +38,4 @@
     #import "FWURLSessionManager.h"
     #import "FWHTTPSessionManager.h"
 
-    #import "FWNetworkActivityIndicatorManager.h"
-
 #endif /* _FWNETWORKING_ */
