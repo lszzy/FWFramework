@@ -157,6 +157,8 @@
 		2FC81A782350321800BE660C /* ComplexViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC81A772350321800BE660C /* ComplexViewModel.m */; };
 		2FC81A792350321800BE660C /* ComplexViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC81A772350321800BE660C /* ComplexViewModel.m */; };
 		2FCA005E228020BE00611399 /* TestDrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA005D228020BE00611399 /* TestDrawerViewController.m */; };
+		2FCBAEB424041FCA00507F59 /* TestImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCBAEB324041FCA00507F59 /* TestImageViewController.m */; };
+		2FCBAEB524041FCA00507F59 /* TestImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCBAEB324041FCA00507F59 /* TestImageViewController.m */; };
 		2FCD374D22533825001E81DB /* TestAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD374C22533825001E81DB /* TestAlertViewController.m */; };
 		2FCD375222533AB6001E81DB /* TestVersionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375122533AB6001E81DB /* TestVersionViewController.m */; };
 		2FCD375522533B1F001E81DB /* TestWorkflowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375322533B1F001E81DB /* TestWorkflowViewController.m */; };
@@ -335,6 +337,8 @@
 		2FC81A772350321800BE660C /* ComplexViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComplexViewModel.m; sourceTree = "<group>"; };
 		2FCA005C228020BE00611399 /* TestDrawerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestDrawerViewController.h; sourceTree = "<group>"; };
 		2FCA005D228020BE00611399 /* TestDrawerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestDrawerViewController.m; sourceTree = "<group>"; };
+		2FCBAEB224041FCA00507F59 /* TestImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestImageViewController.h; sourceTree = "<group>"; };
+		2FCBAEB324041FCA00507F59 /* TestImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestImageViewController.m; sourceTree = "<group>"; };
 		2FCD374B22533825001E81DB /* TestAlertViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertViewController.h; sourceTree = "<group>"; };
 		2FCD374C22533825001E81DB /* TestAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertViewController.m; sourceTree = "<group>"; };
 		2FCD375022533AB6001E81DB /* TestVersionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVersionViewController.h; sourceTree = "<group>"; };
@@ -569,6 +573,8 @@
 				2FCD375B22533B5A001E81DB /* TestFaceViewController.m */,
 				2F2FBDD422432BF90037830E /* TestGradientViewController.h */,
 				2F2FBDD522432BF90037830E /* TestGradientViewController.m */,
+				2FCBAEB224041FCA00507F59 /* TestImageViewController.h */,
+				2FCBAEB324041FCA00507F59 /* TestImageViewController.m */,
 				2F1E393F2178F3710051A6BB /* TestIndicatorControlViewController.h */,
 				2F1E39402178F3710051A6BB /* TestIndicatorControlViewController.m */,
 				2F593FDB21560B000022137F /* TestIndicatorViewController.h */,
@@ -599,12 +605,12 @@
 				2F1E3927217896A90051A6BB /* TestScrollViewController.m */,
 				2F41A733229F9F3B0008E4E2 /* TestSegmentViewController.h */,
 				2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */,
-				2FB4B9B423D0913800C0A351 /* TestStatisticalViewController.h */,
-				2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */,
 				2F1E620A22AEAC2000A1AB49 /* TestSocketViewController.h */,
 				2F1E620B22AEAC2000A1AB49 /* TestSocketViewController.m */,
 				2FCD376522533C0F001E81DB /* TestStateViewController.h */,
 				2FCD376722533C10001E81DB /* TestStateViewController.m */,
+				2FB4B9B423D0913800C0A351 /* TestStatisticalViewController.h */,
+				2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */,
 				2FCD376622533C10001E81DB /* TestStorekitViewController.h */,
 				2FCD376822533C10001E81DB /* TestStorekitViewController.m */,
 				2FE533E72181645300CA54E6 /* TestTableBackgroundViewController.h */,
@@ -616,10 +622,10 @@
 				2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */,
 				2FB7CBD821C25B25002E5412 /* TestTableScrollViewController.h */,
 				2FB7CBD921C25B25002E5412 /* TestTableScrollViewController.m */,
-				2F54B9BC223208AD008411EF /* TestTransitionViewController.h */,
-				2F54B9BE223208AD008411EF /* TestTransitionViewController.m */,
 				2F8F3706240037D5003472B5 /* TestThreadViewController.h */,
 				2F8F3707240037D5003472B5 /* TestThreadViewController.m */,
+				2F54B9BC223208AD008411EF /* TestTransitionViewController.h */,
+				2F54B9BE223208AD008411EF /* TestTransitionViewController.m */,
 				2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */,
 				2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */,
 				2FCD375022533AB6001E81DB /* TestVersionViewController.h */,
@@ -1109,6 +1115,7 @@
 				2F4385732318F687003A683C /* TestCollectionViewController.m in Sources */,
 				2F4385742318F687003A683C /* TestAuthorizeViewController.m in Sources */,
 				2F4385752318F687003A683C /* TestScrollViewController.m in Sources */,
+				2FCBAEB524041FCA00507F59 /* TestImageViewController.m in Sources */,
 				2F4385762318F687003A683C /* ComplexViewController.m in Sources */,
 				2F4385772318F687003A683C /* TestTransitionViewController.m in Sources */,
 				2FF39113236D4B740056DEEA /* TestTableReloadViewController.m in Sources */,
@@ -1185,6 +1192,7 @@
 				2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */,
 				2F1E39322178E02C0051A6BB /* TestCollectionViewController.m in Sources */,
 				2F2FBDC222410BB30037830E /* TestAuthorizeViewController.m in Sources */,
+				2FCBAEB424041FCA00507F59 /* TestImageViewController.m in Sources */,
 				2F1E3928217896A90051A6BB /* TestScrollViewController.m in Sources */,
 				2F43E5C3217AC3E700BAEB59 /* ComplexViewController.m in Sources */,
 				2F54B9BF223208AD008411EF /* TestTransitionViewController.m in Sources */,
