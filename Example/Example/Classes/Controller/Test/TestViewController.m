@@ -91,6 +91,7 @@
                                              @[@"MapView", @"TestMapViewController"],
                                              @[@"DrawerView", @"TestDrawerViewController"],
                                              @[@"MenuView", @"TestMenuViewController"],
+                                             @[@"FWImage", @"TestImageViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
                                              @[@"FWSegmentedControl", @"TestSegmentViewController"],
