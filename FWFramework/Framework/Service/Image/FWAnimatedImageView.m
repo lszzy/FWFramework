@@ -8,6 +8,7 @@
  */
 
 #import "FWAnimatedImageView.h"
+#import "FWAnimatedImage.h"
 #import "FWImageCoder.h"
 #import "FWProxy.h"
 #import <pthread.h>

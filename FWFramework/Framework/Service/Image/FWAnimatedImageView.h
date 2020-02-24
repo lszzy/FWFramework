@@ -38,33 +38,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/*!
- @brief 动画image协议
- */
-@protocol FWAnimatedImage <NSObject>
-
-@required
-
-// 动画image总frame数
-- (NSUInteger)animatedImageFrameCount;
-
-// 动画image循环次数，0为无限循环
-- (NSUInteger)animatedImageLoopCount;
-
-// 每帧的Bytes数
-- (NSUInteger)animatedImageBytesPerFrame;
-
-// 指定index的帧image，后台线程调用
-- (nullable UIImage *)animatedImageFrameAtIndex:(NSUInteger)index;
-
-// 指定index的帧时长
-- (NSTimeInterval)animatedImageDurationAtIndex:(NSUInteger)index;
-
-@optional
-
-// 指定index的动画图片区域，用于精灵动画
-- (CGRect)animatedImageContentsRectAtIndex:(NSUInteger)index;
-
-@end
-
 NS_ASSUME_NONNULL_END
