@@ -12,7 +12,6 @@
 #import "UIImageView+FWNetwork.h"
 #import "FWImageDownloader.h"
 #import "FWAutoPurgingImageCache.h"
-#import "FWNetworkActivityIndicatorManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
