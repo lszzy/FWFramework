@@ -111,7 +111,7 @@
     if ([object.imageUrl fwIsFormatUrl]) {
         [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
     } else {
-        self.myImageView.fwImage = [UIImage fwImageMake:object.imageUrl];
+        self.myImageView.fwAnimationImage = [UIImage fwImageMake:object.imageUrl];
     }
     // 手工收缩
     self.myTextLabel.text = object.text;

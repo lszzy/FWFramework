@@ -10,8 +10,8 @@
 #import "FWBannerView.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
-#import "UIImage+FWFramework.h"
-#import "UIImageView+FWFramework.h"
+#import "UIImageView+FWNetwork.h"
+#import "FWImage.h"
 #import "FWPageControl.h"
 #import "FWStatisticalManager.h"
 
@@ -813,10 +813,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
         } else {
             UIImage *image = [UIImage fwImageMake:imagePath];
-            cell.imageView.fwImage = image ?: self.placeholderImage;
+            cell.imageView.image = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
-        cell.imageView.fwImage = (UIImage *)imagePath;
+        cell.imageView.image = (UIImage *)imagePath;
     }
     
     if (_titlesGroup.count && itemIndex < _titlesGroup.count) {
