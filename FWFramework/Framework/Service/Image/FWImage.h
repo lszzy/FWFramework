@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "UIImage+FWGif.h"
 #import "UIImageView+FWNetwork.h"
+#import "FWAnimatedImage.h"
 #import "FWImageDownloader.h"
 #import "FWAutoPurgingImageCache.h"
 
