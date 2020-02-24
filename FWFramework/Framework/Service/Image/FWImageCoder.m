@@ -2815,8 +2815,8 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 /// @param forSystem YES: used for system album (PNG/JPEG/GIF), NO: used for FWImage (PNG/JPEG/GIF/WebP)
 - (NSData *)fw_dataRepresentationForSystem:(BOOL)forSystem {
     NSData *data = nil;
-    if ([self isKindOfClass:[FWImage class]]) {
-        FWImage *image = (id)self;
+    if ([self isKindOfClass:[FWAnimatedImage class]]) {
+        FWAnimatedImage *image = (id)self;
         if (image.animatedImageData) {
             if (forSystem) { // system only support GIF and PNG
                 if (image.animatedImageType == FWImageTypeGIF ||
