@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWImage : UIImage <FWAnimatedImage>
 
 + (nullable FWImage *)imageNamed:(NSString *)name; // no cache!
++ (nullable FWImage *)imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle; // no cache!
 + (nullable FWImage *)imageWithContentsOfFile:(NSString *)path;
 + (nullable FWImage *)imageWithData:(NSData *)data;
 + (nullable FWImage *)imageWithData:(NSData *)data scale:(CGFloat)scale;
