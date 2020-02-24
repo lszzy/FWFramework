@@ -14,19 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Image file type.
  */
-typedef NS_ENUM(NSUInteger, FWImageType) {
-    FWImageTypeUnknown = 0, ///< unknown
-    FWImageTypeJPEG,        ///< jpeg, jpg
-    FWImageTypeJPEG2000,    ///< jp2
-    FWImageTypeTIFF,        ///< tiff, tif
-    FWImageTypeBMP,         ///< bmp
-    FWImageTypeICO,         ///< ico
-    FWImageTypeICNS,        ///< icns
-    FWImageTypeGIF,         ///< gif
-    FWImageTypePNG,         ///< png
-    FWImageTypeWebP,        ///< webp
-    FWImageTypeOther,       ///< other image format
-};
+typedef NSUInteger FWImageType NS_TYPED_EXTENSIBLE_ENUM;
+static const FWImageType FWImageTypeUnknown  = 0; ///< unknown
+static const FWImageType FWImageTypeJPEG     = 1; ///< jpeg, jpg
+static const FWImageType FWImageTypeJPEG2000 = 2; ///< jp2
+static const FWImageType FWImageTypeTIFF     = 3; ///< tiff, tif
+static const FWImageType FWImageTypeBMP      = 4; ///< bmp
+static const FWImageType FWImageTypeICO      = 5; ///< ico
+static const FWImageType FWImageTypeICNS     = 6; ///< icns
+static const FWImageType FWImageTypeGIF      = 7; ///< gif
+static const FWImageType FWImageTypePNG      = 8; ///< png
+static const FWImageType FWImageTypeWebP     = 9; ///< webp
 
 
 /**

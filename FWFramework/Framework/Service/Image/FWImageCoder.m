@@ -2320,7 +2320,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (instancetype)initWithType:(FWImageType)type {
-    if (type == FWImageTypeUnknown || type >= FWImageTypeOther) {
+    if (type == FWImageTypeUnknown) {
         NSLog(@"[%s: %d] Unsupported image type:%d",__FUNCTION__, __LINE__, (int)type);
         return nil;
     }
