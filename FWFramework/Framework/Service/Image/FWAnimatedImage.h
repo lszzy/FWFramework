@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- A FWImage object is a high-level way to display animated image data.
+ A FWAnimatedImage object is a high-level way to display animated image data.
  
  @discussion It is a fully compatible `UIImage` subclass. It extends the UIImage
  to support animated WebP, APNG and GIF format image data decoding. It also
@@ -55,18 +55,18 @@ NS_ASSUME_NONNULL_BEGIN
  Sample Code:
  
      // animation@3x.webp
-     FWImage *image = [FWImage imageNamed:@"animation.webp"];
+     FWAnimatedImage *image = [FWAnimatedImage imageNamed:@"animation.webp"];
      FWAnimatedImageView *imageView = [FWAnimatedImageView alloc] initWithImage:image];
      [view addSubView:imageView];
     
  */
-@interface FWImage : UIImage <FWAnimatedImage>
+@interface FWAnimatedImage : UIImage <FWAnimatedImage>
 
-+ (nullable FWImage *)imageNamed:(NSString *)name; // no cache!
-+ (nullable FWImage *)imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle; // no cache!
-+ (nullable FWImage *)imageWithContentsOfFile:(NSString *)path;
-+ (nullable FWImage *)imageWithData:(NSData *)data;
-+ (nullable FWImage *)imageWithData:(NSData *)data scale:(CGFloat)scale;
++ (nullable instancetype)imageNamed:(NSString *)name; // no cache!
++ (nullable instancetype)imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle; // no cache!
++ (nullable instancetype)imageWithContentsOfFile:(NSString *)path;
++ (nullable instancetype)imageWithData:(NSData *)data;
++ (nullable instancetype)imageWithData:(NSData *)data scale:(CGFloat)scale;
 
 /**
  If the image is created from data or file, then the value indicates the data type.

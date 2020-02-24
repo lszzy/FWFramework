@@ -82,18 +82,18 @@ static CGFloat _NSStringPathScale(NSString *string) {
 }
 
 
-@implementation FWImage {
+@implementation FWAnimatedImage {
     FWImageDecoder *_decoder;
     NSArray *_preloadedFrames;
     dispatch_semaphore_t _preloadedLock;
     NSUInteger _bytesPerFrame;
 }
 
-+ (FWImage *)imageNamed:(NSString *)name {
++ (instancetype)imageNamed:(NSString *)name {
     return [self imageNamed:name inBundle:nil];
 }
 
-+ (FWImage *)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle {
++ (instancetype)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle {
     if (name.length == 0) return nil;
     if ([name hasSuffix:@"/"]) return nil;
     
@@ -122,15 +122,15 @@ static CGFloat _NSStringPathScale(NSString *string) {
     return [[self alloc] initWithData:data scale:scale];
 }
 
-+ (FWImage *)imageWithContentsOfFile:(NSString *)path {
++ (instancetype)imageWithContentsOfFile:(NSString *)path {
     return [[self alloc] initWithContentsOfFile:path];
 }
 
-+ (FWImage *)imageWithData:(NSData *)data {
++ (instancetype)imageWithData:(NSData *)data {
     return [[self alloc] initWithData:data];
 }
 
-+ (FWImage *)imageWithData:(NSData *)data scale:(CGFloat)scale {
++ (instancetype)imageWithData:(NSData *)data scale:(CGFloat)scale {
     return [[self alloc] initWithData:data scale:scale];
 }
 

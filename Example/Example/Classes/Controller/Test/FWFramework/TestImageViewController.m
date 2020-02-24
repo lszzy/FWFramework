@@ -58,7 +58,7 @@
 
 - (void)addImageWithName:(NSString *)name
 {
-    UIImage *image = [FWImage imageNamed:name];
+    UIImage *image = [FWAnimatedImage imageNamed:name];
     [self.tableData fwAddObject:image];
 }
 
