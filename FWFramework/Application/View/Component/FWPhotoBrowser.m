@@ -494,6 +494,7 @@
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
             __typeof__(self) self = self_weak_;
+            // FWImage
             self.imageView.image = image;
             self.progressView.hidden = true;
             self.userInteractionEnabled = true;
@@ -522,12 +523,15 @@
             self.progressView.progress = downloadProgress.fractionCompleted;
         }];
     } else {
+        // FWImage
         UIImage *image = [UIImage fwImageMake:urlString];
         if (image) {
+            // FWImage
             self.imageView.image = image;
             // 计算图片的大小
             [self setPictureSize:image.size];
         } else {
+            // FWImage
             self.imageView.image = self.placeholderImage;
         }
         self.progressView.hidden = true;
