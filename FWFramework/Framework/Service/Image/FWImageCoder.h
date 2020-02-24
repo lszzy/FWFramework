@@ -366,10 +366,10 @@ CG_EXTERN NSString *_Nullable FWImageTypeGetExtension(FWImageType type);
 
 
 /// Returns the shared DeviceRGB color space.
-CG_EXTERN CGColorSpaceRef FWCGColorSpaceGetDeviceRGB();
+CG_EXTERN CGColorSpaceRef FWCGColorSpaceGetDeviceRGB(void);
 
 /// Returns the shared DeviceGray color space.
-CG_EXTERN CGColorSpaceRef FWCGColorSpaceGetDeviceGray();
+CG_EXTERN CGColorSpaceRef FWCGColorSpaceGetDeviceGray(void);
 
 /// Returns whether a color space is DeviceRGB.
 CG_EXTERN BOOL FWCGColorSpaceIsDeviceRGB(CGColorSpaceRef space);
@@ -444,7 +444,7 @@ CG_EXTERN CFDataRef _Nullable FWCGImageCreateEncodedData(CGImageRef imageRef, FW
 /**
  Whether WebP is available in FWImage.
  */
-CG_EXTERN BOOL FWImageWebPAvailable();
+CG_EXTERN BOOL FWImageWebPAvailable(void);
 
 /**
  Get a webp image frame count;
