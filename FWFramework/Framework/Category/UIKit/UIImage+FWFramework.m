@@ -13,59 +13,7 @@
 #import <Accelerate/Accelerate.h>
 #import <objc/runtime.h>
 
-UIImage * FWImageMake(NSString *string) {
-    return [UIImage fwImageMake:string];
-}
-
-UIImage * FWImageName(NSString *name) {
-    return [UIImage imageNamed:name];
-}
-
-UIImage * FWImageFile(NSString *path) {
-    return [UIImage imageWithContentsOfFile:(path.isAbsolutePath ? path : [NSBundle.mainBundle pathForResource:path ofType:nil])];
-}
-
 @implementation UIImage (FWFramework)
-
-#pragma mark - Make
-
-+ (UIImage *)fwImageMake:(NSString *)string
-{
-    UIImage *image = nil;
-    if ([string hasSuffix:@".gif"]) {
-        image = [UIImage fwGifImageWithFile:string];
-        if (!image) image = [UIImage fwGifImageWithName:[string substringToIndex:string.length - 4]];
-    } else {
-        image = [UIImage imageNamed:string];
-        if (!image) image = [UIImage fwImageWithFile:string];
-    }
-    return image;
-}
-
-+ (UIImage *)fwImageWithName:(NSString *)name
-{
-    return [self fwImageWithName:name inBundle:nil];
-}
-
-+ (UIImage *)fwImageWithName:(NSString *)name inBundle:(NSBundle *)bundle
-{
-    return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
-}
-
-+ (UIImage *)fwImageWithFile:(NSString *)path
-{
-    return [self fwImageWithFile:path inBundle:nil];
-}
-
-+ (UIImage *)fwImageWithFile:(NSString *)path inBundle:(NSBundle *)bundle
-{
-    NSString *file = path;
-    if (![file isAbsolutePath]) {
-        NSBundle *resourceBundle = bundle ? bundle : [NSBundle mainBundle];
-        file = [resourceBundle pathForResource:file ofType:nil];
-    }
-    return [UIImage imageWithContentsOfFile:file];
-}
 
 #pragma mark - View
 

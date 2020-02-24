@@ -39,7 +39,5 @@
     #import "FWHTTPSessionManager.h"
 
     #import "FWNetworkActivityIndicatorManager.h"
-    #import "FWImageDownloader.h"
-    #import "FWAutoPurgingImageCache.h"
 
 #endif /* _FWNETWORKING_ */

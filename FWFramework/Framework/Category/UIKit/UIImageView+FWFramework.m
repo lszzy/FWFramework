@@ -7,36 +7,10 @@
 //
 
 #import "UIImageView+FWFramework.h"
-#import "UIImage+FWGif.h"
 #import <CoreImage/CoreImage.h>
 #import <QuartzCore/QuartzCore.h>
 
 @implementation UIImageView (FWFramework)
-
-#pragma mark - Image
-
-- (UIImage *)fwImage
-{
-    if (!self.image && self.animationImages != nil) {
-        // 兼容直接设置animationImages而未设置image的情况
-        UIImage *image = [UIImage animatedImageWithImages:self.animationImages duration:self.animationDuration];
-        image.fwImageLoopCount = self.animationRepeatCount;
-        return image;
-    }
-    return self.image;
-}
-
-- (void)setFwImage:(UIImage *)image
-{
-    // 同时设置image属性，防止通过image属性读取不到图片
-    self.image = image;
-    if (image && image.images != nil) {
-        self.animationImages = image.images;
-        self.animationDuration = image.duration;
-        self.animationRepeatCount = image.fwImageLoopCount;
-        [self startAnimating];
-    }
-}
 
 #pragma mark - Mode
 
