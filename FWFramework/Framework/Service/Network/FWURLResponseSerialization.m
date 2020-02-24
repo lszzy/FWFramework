@@ -541,6 +541,7 @@ static NSLock* imageLock = nil;
     });
     
     [imageLock lock];
+    // FWImage
     image = [UIImage imageWithData:data];
     [imageLock unlock];
     return image;

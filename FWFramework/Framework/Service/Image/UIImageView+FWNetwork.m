@@ -99,6 +99,7 @@
                         progress:(void (^)(NSProgress *downloadProgress))progress
 {
     if ([urlRequest URL] == nil) {
+        // FWImage
         self.image = placeholderImage;
         if (failure) {
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
@@ -122,11 +123,13 @@
         if (success) {
             success(urlRequest, nil, cachedImage);
         } else {
+            // FWImage
             self.image = cachedImage;
         }
         [self clearActiveDownloadInformation];
     } else {
         if (placeholderImage) {
+            // FWImage
             self.image = placeholderImage;
         }
 
@@ -142,6 +145,7 @@
                            if (success) {
                                success(request, response, responseObject);
                            } else if(responseObject) {
+                               // FWImage
                                strongSelf.image = responseObject;
                            }
                            [strongSelf clearActiveDownloadInformation];
