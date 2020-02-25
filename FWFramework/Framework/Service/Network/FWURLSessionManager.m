@@ -517,20 +517,17 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     self.lock = [[NSLock alloc] init];
     self.lock.name = FWURLSessionManagerLockName;
 
-    __weak typeof(self) weakSelf = self;
     [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        
-        __strong typeof(weakSelf) strongSelf = weakSelf;
         for (NSURLSessionDataTask *task in dataTasks) {
-            [strongSelf addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
+            [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
         }
 
         for (NSURLSessionUploadTask *uploadTask in uploadTasks) {
-            [strongSelf addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
+            [self addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
         }
 
         for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
-            [strongSelf addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
+            [self addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
         }
     }];
 
@@ -1068,9 +1065,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
 
     int64_t totalUnitCount = totalBytesExpectedToSend;
-    if(totalUnitCount == NSURLSessionTransferSizeUnknown) {
+    if (totalUnitCount == NSURLSessionTransferSizeUnknown) {
         NSString *contentLength = [task.originalRequest valueForHTTPHeaderField:@"Content-Length"];
-        if(contentLength) {
+        if (contentLength) {
             totalUnitCount = (int64_t) [contentLength longLongValue];
         }
     }
