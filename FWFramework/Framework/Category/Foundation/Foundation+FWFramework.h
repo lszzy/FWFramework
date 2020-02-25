@@ -21,7 +21,6 @@
 #import "NSNumber+FWFramework.h"
 #import "NSObject+FWFramework.h"
 #import "NSString+FWFramework.h"
-#import "NSThread+FWFramework.h"
 #import "NSTimer+FWFramework.h"
 #import "NSURL+FWFramework.h"
 #import "NSUserDefaults+FWFramework.h"

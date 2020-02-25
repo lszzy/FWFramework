@@ -9,6 +9,7 @@
 
 #import "NSArray+FWFramework.h"
 #import "NSDictionary+FWFramework.h"
+#import "NSObject+FWSafeType.h"
 
 @implementation NSArray (FWFramework)
 
@@ -30,10 +31,39 @@
 
 - (id)fwRandomObject
 {
-    if (self.count > 0) {
-        return self[arc4random_uniform((u_int32_t)self.count)];
-    }
-    return nil;
+    if (self.count < 1) return nil;
+    
+    return self[arc4random_uniform((u_int32_t)self.count)];
+}
+
+- (id)fwRandomObject:(NSArray *)weights
+{
+    NSInteger count = self.count;
+    if (count < 1) return nil;
+    
+    __block NSInteger sum = 0;
+    [weights enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSInteger val = [obj fwAsInteger];
+        if (val > 0 && idx < count) {
+            sum += val;
+        }
+    }];
+    if (sum < 1) return self.fwRandomObject;
+    
+    __block NSInteger index = -1;
+    __block NSInteger weight = 0;
+    NSInteger random = arc4random_uniform((u_int32_t)sum);
+    [weights enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSInteger val = [obj fwAsInteger];
+        if (val > 0 && idx < count) {
+            weight += val;
+            if (weight > random) {
+                index = idx;
+                *stop = YES;
+            }
+        }
+    }];
+    return index >= 0 ? [self fwObjectAtIndex:index] : self.fwRandomObject;
 }
 
 - (NSArray *)fwReverseArray

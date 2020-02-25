@@ -12,6 +12,27 @@
 
 @implementation NSDictionary (FWFramework)
 
+- (id)fwRandomKey
+{
+    if (self.count < 1) return nil;
+    
+    return self.allKeys.fwRandomObject;
+}
+
+- (id)fwRandomObject
+{
+    if (self.count < 1) return nil;
+        
+    return self.allValues.fwRandomObject;
+}
+
+- (id)fwRandomWeightKey
+{
+    if (self.count < 1) return nil;
+    
+    return [self.allKeys fwRandomObject:self.allValues];
+}
+
 - (BOOL)fwIncludeNull
 {
     __block BOOL includeNull = NO;

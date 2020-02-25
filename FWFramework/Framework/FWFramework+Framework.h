@@ -36,6 +36,7 @@
 #import "FWStatisticalManager.h"
 #import "FWStorekitManager.h"
 #import "FWNotificationManager.h"
+#import "FWImage.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
 #import "FWNetworkPrivate.h"
