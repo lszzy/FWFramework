@@ -10,6 +10,7 @@
 #import "FWPhotoBrowser.h"
 #import "UIImageView+FWNetwork.h"
 #import "FWImage.h"
+#import "FWPlugin.h"
 #import "FWProgressView.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
@@ -398,7 +399,13 @@
     self.maximumZoomScale = 2;
     
     // 添加 imageView
-    UIImageView *imageView = [[UIImageView alloc] init];
+    Class imageClass = [UIImageView class];
+    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
+        imageClass = [imagePlugin fwImageViewAnimatedClass];
+    }
+    
+    UIImageView *imageView = [[imageClass alloc] init];
     imageView.clipsToBounds = true;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.frame = self.bounds;
@@ -489,39 +496,54 @@
         }
         // 取消上一次的下载
         self.userInteractionEnabled = false;
-        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-        [urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
-        [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+        void (^completionBlock)(UIImage *image, NSError *error) = ^(UIImage *image, NSError *error){
             __typeof__(self) self = self_weak_;
-            // FWImage
-            self.imageView.image = image;
-            self.progressView.hidden = true;
-            self.userInteractionEnabled = true;
-            // 计算图片的大小
-            [self setPictureSize:image.size];
-            // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-            // 解决在执行动画完毕之后根据值去判断是否要隐藏
-            // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-            self.progressView.progress = 1;
-            self.imageLoaded = YES;
-            
-            [self.pictureDelegate photoViewLoaded:self];
-        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+            if (image) {
+                // FWImage
+                self.imageView.image = image;
+                self.progressView.hidden = true;
+                self.userInteractionEnabled = true;
+                // 计算图片的大小
+                [self setPictureSize:image.size];
+                // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
+                // 解决在执行动画完毕之后根据值去判断是否要隐藏
+                // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
+                self.progressView.progress = 1;
+                self.imageLoaded = YES;
+                
+                [self.pictureDelegate photoViewLoaded:self];
+            } else {
+                self.progressView.hidden = true;
+                self.userInteractionEnabled = true;
+                // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
+                // 解决在执行动画完毕之后根据值去判断是否要隐藏
+                // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
+                self.progressView.progress = 1;
+                self.imageLoaded = NO;
+                
+                [self.pictureDelegate photoViewLoaded:self];
+            }
+        };
+        void (^progressBlock)(float progress) = ^(float progress){
             __typeof__(self) self = self_weak_;
-            self.progressView.hidden = true;
-            self.userInteractionEnabled = true;
-            // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-            // 解决在执行动画完毕之后根据值去判断是否要隐藏
-            // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-            self.progressView.progress = 1;
-            self.imageLoaded = NO;
-            
-            [self.pictureDelegate photoViewLoaded:self];
-        } progress:^(NSProgress * _Nonnull downloadProgress) {
-            __typeof__(self) self = self_weak_;
-            self.progressView.progress = downloadProgress.fractionCompleted;
-        }];
+            self.progressView.progress = progress;
+        };
+        id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+        if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageUrl:placeholder:completion:progress:)]) {
+            [imagePlugin fwImageView:self.imageView setImageUrl:urlString placeholder:self.placeholderImage completion:completionBlock progress:progressBlock];
+        } else {
+            NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+            [urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+            [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+                completionBlock(image, nil);
+            } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+                completionBlock(nil, error);
+            } progress:^(NSProgress * _Nonnull downloadProgress) {
+                progressBlock(downloadProgress.fractionCompleted);
+            }];
+        }
     } else {
         // FWImage
         UIImage *image = [UIImage fwImageMake:urlString];
