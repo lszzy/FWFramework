@@ -18,7 +18,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(drawTextInRect:) with:@selector(fwInnerDrawTextInRect:)];
+        [self fwSwizzleInstanceMethod:@selector(drawTextInRect:) with:@selector(fwInnerUILabelDrawTextInRect:)];
         [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUILabelIntrinsicContentSize)];
     });
 }
@@ -47,7 +47,7 @@
     [self setNeedsDisplay];
 }
 
-- (void)fwInnerDrawTextInRect:(CGRect)rect
+- (void)fwInnerUILabelDrawTextInRect:(CGRect)rect
 {
     NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
     if (contentInsetValue) {
@@ -63,7 +63,7 @@
         rect = CGRectMake(rect.origin.x, rect.origin.y + (rect.size.height - fitsSize.height), rect.size.width, fitsSize.height);
     }
     
-    [self fwInnerDrawTextInRect:rect];
+    [self fwInnerUILabelDrawTextInRect:rect];
 }
 
 - (CGSize)fwInnerUILabelIntrinsicContentSize

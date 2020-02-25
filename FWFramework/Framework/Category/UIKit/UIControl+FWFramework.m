@@ -17,11 +17,11 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(sendAction:to:forEvent:) with:@selector(fwInnerSendAction:to:forEvent:)];
+        [self fwSwizzleInstanceMethod:@selector(sendAction:to:forEvent:) with:@selector(fwInnerUIControlSendAction:to:forEvent:)];
     });
 }
 
-- (void)fwInnerSendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
+- (void)fwInnerUIControlSendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
 {
     // 仅拦截Touch事件，且配置了间隔时间的Event
     if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && self.fwTouchEventInterval > 0) {
@@ -31,7 +31,7 @@
         self.fwTouchEventTimestamp = event.timestamp;
     }
     
-    [self fwInnerSendAction:action to:target forEvent:event];
+    [self fwInnerUIControlSendAction:action to:target forEvent:event];
 }
 
 - (NSTimeInterval)fwTouchEventInterval

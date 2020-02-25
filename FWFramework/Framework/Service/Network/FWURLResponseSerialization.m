@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 #import "FWURLResponseSerialization.h"
-#import "UIImage+FWGif.h"
 
 #import <TargetConditionals.h>
 
@@ -542,11 +541,8 @@ static NSLock* imageLock = nil;
     });
     
     [imageLock lock];
-    if ([UIImage fwIsGifData:data]) {
-        image = [UIImage fwGifImageWithData:data];
-    } else {
-        image = [UIImage imageWithData:data];
-    }
+    // FWImage
+    image = [UIImage imageWithData:data];
     [imageLock unlock];
     return image;
 }

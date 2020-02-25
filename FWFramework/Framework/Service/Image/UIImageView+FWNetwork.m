@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 #import "UIImageView+FWNetwork.h"
-#import "UIImageView+FWFramework.h"
 #import "NSURL+FWFramework.h"
 
 #import <objc/runtime.h>
@@ -100,7 +99,8 @@
                         progress:(void (^)(NSProgress *downloadProgress))progress
 {
     if ([urlRequest URL] == nil) {
-        self.fwImage = placeholderImage;
+        // FWImage
+        self.image = placeholderImage;
         if (failure) {
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
             failure(urlRequest, nil, error);
@@ -123,12 +123,14 @@
         if (success) {
             success(urlRequest, nil, cachedImage);
         } else {
-            self.fwImage = cachedImage;
+            // FWImage
+            self.image = cachedImage;
         }
         [self clearActiveDownloadInformation];
     } else {
         if (placeholderImage) {
-            self.fwImage = placeholderImage;
+            // FWImage
+            self.image = placeholderImage;
         }
 
         __weak __typeof(self)weakSelf = self;
@@ -143,7 +145,8 @@
                            if (success) {
                                success(request, response, responseObject);
                            } else if(responseObject) {
-                               strongSelf.fwImage = responseObject;
+                               // FWImage
+                               strongSelf.image = responseObject;
                            }
                            [strongSelf clearActiveDownloadInformation];
                        }

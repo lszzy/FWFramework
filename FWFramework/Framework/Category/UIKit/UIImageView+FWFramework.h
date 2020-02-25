@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIImageView+FWNetwork.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,11 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  图片视图分类
  */
 @interface UIImageView (FWFramework)
-
-#pragma mark - Image
-
-// 设置图片，如果是gif图片，自动开始播放
-@property (nullable, nonatomic, strong) UIImage *fwImage;
 
 #pragma mark - Mode
 

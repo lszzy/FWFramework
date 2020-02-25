@@ -111,11 +111,13 @@
     [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    pullView.fwImage = [UIImage fwImageMake:@"loading.gif"];
+    // FWImage
+    pullView.fwAnimationImage = [UIImage fwImageMake:@"loading.gif"];
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    infiniteView.fwImage = [UIImage fwImageMake:@"LoadingPlaceholder.gif"];
+    // FWImage
+    infiniteView.fwAnimationImage = [UIImage fwImageMake:@"LoadingPlaceholder.gif"];
     [self.tableView.fwInfiniteScrollView setCustomView:infiniteView forState:FWInfiniteScrollStateAll];
 }
 

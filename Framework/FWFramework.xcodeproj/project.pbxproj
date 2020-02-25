@@ -21,7 +21,6 @@
 		2F03A583216CF4B9001965A1 /* UITextField+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4EC216CF4B9001965A1 /* UITextField+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A584216CF4B9001965A1 /* UIDevice+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4ED216CF4B9001965A1 /* UIDevice+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A585216CF4B9001965A1 /* UIWindow+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4EE216CF4B9001965A1 /* UIWindow+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A586216CF4B9001965A1 /* UIImage+FWGif.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4EF216CF4B9001965A1 /* UIImage+FWGif.m */; };
 		2F03A587216CF4B9001965A1 /* UIViewController+FWBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4F0216CF4B9001965A1 /* UIViewController+FWBar.m */; };
 		2F03A588216CF4B9001965A1 /* UITextView+FWPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4F1216CF4B9001965A1 /* UITextView+FWPlaceholder.m */; };
 		2F03A589216CF4B9001965A1 /* UIView+FWAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4F2216CF4B9001965A1 /* UIView+FWAnimation.m */; };
@@ -53,7 +52,6 @@
 		2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A50D216CF4B9001965A1 /* UIView+FWFramework.m */; };
 		2F03A5A5216CF4B9001965A1 /* UIViewController+FWBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5A6216CF4B9001965A1 /* UIKit+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5A7216CF4B9001965A1 /* UIImage+FWGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5A8216CF4B9001965A1 /* UIWindow+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A511216CF4B9001965A1 /* UIWindow+FWFramework.m */; };
 		2F03A5A9216CF4B9001965A1 /* UITextField+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A512216CF4B9001965A1 /* UITextField+FWFramework.m */; };
 		2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A513216CF4B9001965A1 /* UIDevice+FWFramework.m */; };
@@ -80,14 +78,12 @@
 		2F03A5C0216CF4B9001965A1 /* NSDictionary+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52A216CF4B9001965A1 /* NSDictionary+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C1216CF4B9001965A1 /* NSString+FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C2216CF4B9001965A1 /* NSObject+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52C216CF4B9001965A1 /* NSObject+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5C3216CF4B9001965A1 /* NSThread+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52D216CF4B9001965A1 /* NSThread+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C4216CF4B9001965A1 /* NSFileManager+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C5216CF4B9001965A1 /* Foundation+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52F216CF4B9001965A1 /* Foundation+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C6216CF4B9001965A1 /* NSString+FWFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A530216CF4B9001965A1 /* NSString+FWFormat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */; };
 		2F03A5C8216CF4B9001965A1 /* NSNumber+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */; };
-		2F03A5CA216CF4B9001965A1 /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A534216CF4B9001965A1 /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */; };
 		2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -96,12 +92,10 @@
 		2F03A5D0216CF4B9001965A1 /* NSData+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53A216CF4B9001965A1 /* NSData+FWFramework.m */; };
 		2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */; };
 		2F03A5D2216CF4B9001965A1 /* NSDate+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53C216CF4B9001965A1 /* NSDate+FWFramework.m */; };
-		2F03A5D3216CF4B9001965A1 /* NSThread+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53D216CF4B9001965A1 /* NSThread+FWFramework.m */; };
 		2F03A5D4216CF4B9001965A1 /* NSObject+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */; };
 		2F03A5D5216CF4B9001965A1 /* NSString+FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */; };
 		2F03A5D6216CF4B9001965A1 /* NSDictionary+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A540216CF4B9001965A1 /* NSDictionary+FWFramework.m */; };
 		2F03A5D7216CF4B9001965A1 /* NSObject+FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A543216CF4B9001965A1 /* NSNull+FWFramework.m */; };
 		2F03A5DA216CF4B9001965A1 /* NSObject+FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */; };
 		2F03A5DC216CF4B9001965A1 /* NSBundle+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -138,8 +132,6 @@
 		2F03A601216CF4B9001965A1 /* FWAspect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A56F216CF4B9001965A1 /* FWAspect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A570216CF4B9001965A1 /* FWPlugin.m */; };
 		2F03A603216CF4B9001965A1 /* FWMacro.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A571216CF4B9001965A1 /* FWMacro.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A609216CF850001965A1 /* UIImageView+FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A60A216CF850001965A1 /* UIImageView+FWNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */; };
 		2F03A632216CF882001965A1 /* FWNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A60C216CF882001965A1 /* FWNetworkConfig.m */; };
 		2F03A633216CF882001965A1 /* FWBaseRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A60D216CF882001965A1 /* FWBaseRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A634216CF882001965A1 /* FWChainRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A60E216CF882001965A1 /* FWChainRequest.m */; };
@@ -175,8 +167,6 @@
 		2F03A655216CF882001965A1 /* FWAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */; };
 		2F03A656216CF882001965A1 /* FWImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A631216CF882001965A1 /* FWImageDownloader.m */; };
 		2F03A658216D0049001965A1 /* FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A657216D0049001965A1 /* FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A666216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */; };
-		2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03EECE231F65AA009D2A22 /* UILocalNotification+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03EECF231F65AA009D2A22 /* UILocalNotification+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */; };
 		2F071B6D21DF321500F47DFD /* UIWebView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -221,6 +211,12 @@
 		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
 		2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
+		2F41D1FF240388850010A588 /* UIImage+FWGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41D1FB240388850010A588 /* UIImage+FWGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F41D200240388850010A588 /* UIImageView+FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41D1FC240388850010A588 /* UIImageView+FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F41D201240388850010A588 /* UIImage+FWGif.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41D1FD240388850010A588 /* UIImage+FWGif.m */; };
+		2F41D202240388850010A588 /* UIImageView+FWNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41D1FE240388850010A588 /* UIImageView+FWNetwork.m */; };
+		2F41D205240389010010A588 /* FWImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41D203240389010010A588 /* FWImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F41D206240389010010A588 /* FWImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41D204240389010010A588 /* FWImage.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
 		2F6492AC2316880C002E15AC /* FWCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6492AA2316880C002E15AC /* FWCollectionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -229,6 +225,12 @@
 		2F6492B123168828002E15AC /* FWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AF23168828002E15AC /* FWWebViewController.m */; };
 		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
+		2F6EFC5F2403C00400C4AC7E /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6EFC5D2403C00400C4AC7E /* FWAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6EFC602403C00400C4AC7E /* FWAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6EFC5E2403C00400C4AC7E /* FWAnimatedImageView.m */; };
+		2F6EFC632403C8F600C4AC7E /* FWImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6EFC612403C8F600C4AC7E /* FWImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6EFC642403C8F600C4AC7E /* FWImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6EFC622403C8F600C4AC7E /* FWImageCoder.m */; };
+		2F6EFC672403CBFB00C4AC7E /* FWAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6EFC652403CBFB00C4AC7E /* FWAnimatedImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F6EFC682403CBFB00C4AC7E /* FWAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6EFC662403CBFB00C4AC7E /* FWAnimatedImage.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */; };
 		2F70EDDF2327864700498538 /* FWAppToastPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDDD2327864700498538 /* FWAppToastPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -240,6 +242,10 @@
 		2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */; };
 		2F8480CF23A3BC3100FAAAC0 /* FWTabAnimated.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
+		2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F370224002D79003472B5 /* NSObject+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F370324002D79003472B5 /* NSObject+FWThread.m */; };
+		2F8F3726240289CB003472B5 /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F8F3727240289CB003472B5 /* NSNull+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F3725240289CB003472B5 /* NSNull+FWFramework.m */; };
 		2F92113F23E912F800183311 /* FWStatisticalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92113D23E912F800183311 /* FWStatisticalManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F92114023E912F800183311 /* FWStatisticalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F92113E23E912F800183311 /* FWStatisticalManager.m */; };
 		2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F92114123E914ED00183311 /* NSArray+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -361,7 +367,6 @@
 		2F03A4EC216CF4B9001965A1 /* UITextField+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A4ED216CF4B9001965A1 /* UIDevice+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A4EE216CF4B9001965A1 /* UIWindow+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+FWFramework.h"; sourceTree = "<group>"; };
-		2F03A4EF216CF4B9001965A1 /* UIImage+FWGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FWGif.m"; sourceTree = "<group>"; };
 		2F03A4F0216CF4B9001965A1 /* UIViewController+FWBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBar.m"; sourceTree = "<group>"; };
 		2F03A4F1216CF4B9001965A1 /* UITextView+FWPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+FWPlaceholder.m"; sourceTree = "<group>"; };
 		2F03A4F2216CF4B9001965A1 /* UIView+FWAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWAnimation.m"; sourceTree = "<group>"; };
@@ -393,7 +398,6 @@
 		2F03A50D216CF4B9001965A1 /* UIView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBar.h"; sourceTree = "<group>"; };
 		2F03A50F216CF4B9001965A1 /* UIKit+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+FWFramework.h"; sourceTree = "<group>"; };
-		2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWGif.h"; sourceTree = "<group>"; };
 		2F03A511216CF4B9001965A1 /* UIWindow+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A512216CF4B9001965A1 /* UITextField+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A513216CF4B9001965A1 /* UIDevice+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+FWFramework.m"; sourceTree = "<group>"; };
@@ -420,14 +424,12 @@
 		2F03A52A216CF4B9001965A1 /* NSDictionary+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWEncode.h"; sourceTree = "<group>"; };
 		2F03A52C216CF4B9001965A1 /* NSObject+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWFramework.h"; sourceTree = "<group>"; };
-		2F03A52D216CF4B9001965A1 /* NSThread+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A52F216CF4B9001965A1 /* Foundation+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A530216CF4B9001965A1 /* NSString+FWFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFormat.h"; sourceTree = "<group>"; };
 		2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWRuntime.m"; sourceTree = "<group>"; };
-		2F03A534216CF4B9001965A1 /* NSNull+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWSafeType.h"; sourceTree = "<group>"; };
 		2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncrypt.m"; sourceTree = "<group>"; };
 		2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFramework.h"; sourceTree = "<group>"; };
@@ -436,12 +438,10 @@
 		2F03A53A216CF4B9001965A1 /* NSData+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A53C216CF4B9001965A1 /* NSDate+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+FWFramework.m"; sourceTree = "<group>"; };
-		2F03A53D216CF4B9001965A1 /* NSThread+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncode.m"; sourceTree = "<group>"; };
 		2F03A540216CF4B9001965A1 /* NSDictionary+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWBlock.h"; sourceTree = "<group>"; };
-		2F03A543216CF4B9001965A1 /* NSNull+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWRuntime.h"; sourceTree = "<group>"; };
 		2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+FWFramework.h"; sourceTree = "<group>"; };
@@ -478,8 +478,6 @@
 		2F03A56F216CF4B9001965A1 /* FWAspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAspect.h; sourceTree = "<group>"; };
 		2F03A570216CF4B9001965A1 /* FWPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWPlugin.m; sourceTree = "<group>"; };
 		2F03A571216CF4B9001965A1 /* FWMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMacro.h; sourceTree = "<group>"; };
-		2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FWNetwork.h"; sourceTree = "<group>"; };
-		2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FWNetwork.m"; sourceTree = "<group>"; };
 		2F03A60C216CF882001965A1 /* FWNetworkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNetworkConfig.m; sourceTree = "<group>"; };
 		2F03A60D216CF882001965A1 /* FWBaseRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWBaseRequest.h; sourceTree = "<group>"; };
 		2F03A60E216CF882001965A1 /* FWChainRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWChainRequest.m; sourceTree = "<group>"; };
@@ -515,8 +513,6 @@
 		2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAutoPurgingImageCache.m; sourceTree = "<group>"; };
 		2F03A631216CF882001965A1 /* FWImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImageDownloader.m; sourceTree = "<group>"; };
 		2F03A657216D0049001965A1 /* FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetwork.h; sourceTree = "<group>"; };
-		2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
-		2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
 		2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILocalNotification+FWFramework.h"; sourceTree = "<group>"; };
 		2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILocalNotification+FWFramework.m"; sourceTree = "<group>"; };
 		2F071B6B21DF321500F47DFD /* UIWebView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIWebView+FWFramework.h"; sourceTree = "<group>"; };
@@ -561,6 +557,12 @@
 		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+FWFramework.h"; sourceTree = "<group>"; };
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
+		2F41D1FB240388850010A588 /* UIImage+FWGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWGif.h"; sourceTree = "<group>"; };
+		2F41D1FC240388850010A588 /* UIImageView+FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FWNetwork.h"; sourceTree = "<group>"; };
+		2F41D1FD240388850010A588 /* UIImage+FWGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FWGif.m"; sourceTree = "<group>"; };
+		2F41D1FE240388850010A588 /* UIImageView+FWNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FWNetwork.m"; sourceTree = "<group>"; };
+		2F41D203240389010010A588 /* FWImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWImage.h; sourceTree = "<group>"; };
+		2F41D204240389010010A588 /* FWImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWImage.m; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
 		2F6492AA2316880C002E15AC /* FWCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWCollectionViewController.h; sourceTree = "<group>"; };
@@ -569,6 +571,12 @@
 		2F6492AF23168828002E15AC /* FWWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebViewController.m; sourceTree = "<group>"; };
 		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
+		2F6EFC5D2403C00400C4AC7E /* FWAnimatedImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImageView.h; sourceTree = "<group>"; };
+		2F6EFC5E2403C00400C4AC7E /* FWAnimatedImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImageView.m; sourceTree = "<group>"; };
+		2F6EFC612403C8F600C4AC7E /* FWImageCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWImageCoder.h; sourceTree = "<group>"; };
+		2F6EFC622403C8F600C4AC7E /* FWImageCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWImageCoder.m; sourceTree = "<group>"; };
+		2F6EFC652403CBFB00C4AC7E /* FWAnimatedImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
+		2F6EFC662403CBFB00C4AC7E /* FWAnimatedImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
 		2F6F275122D4D6C40078D648 /* UIBezierPath+FWShape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+FWShape.m"; sourceTree = "<group>"; };
 		2F70EDDD2327864700498538 /* FWAppToastPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppToastPlugin.h; sourceTree = "<group>"; };
@@ -581,6 +589,10 @@
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTabAnimated.h; sourceTree = "<group>"; };
 		2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTabAnimated.m; sourceTree = "<group>"; };
+		2F8F370224002D79003472B5 /* NSObject+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWThread.h"; sourceTree = "<group>"; };
+		2F8F370324002D79003472B5 /* NSObject+FWThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWThread.m"; sourceTree = "<group>"; };
+		2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
+		2F8F3725240289CB003472B5 /* NSNull+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNull+FWFramework.m"; sourceTree = "<group>"; };
 		2F92113D23E912F800183311 /* FWStatisticalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWStatisticalManager.h; sourceTree = "<group>"; };
 		2F92113E23E912F800183311 /* FWStatisticalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWStatisticalManager.m; sourceTree = "<group>"; };
 		2F92114123E914ED00183311 /* NSArray+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWThread.h"; sourceTree = "<group>"; };
@@ -747,14 +759,10 @@
 				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
 				2F03A4FC216CF4B9001965A1 /* UIImage+FWFramework.m */,
-				2F03A510216CF4B9001965A1 /* UIImage+FWGif.h */,
-				2F03A4EF216CF4B9001965A1 /* UIImage+FWGif.m */,
 				2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */,
 				2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */,
 				2F03A4E7216CF4B9001965A1 /* UIImageView+FWFramework.h */,
 				2F03A507216CF4B9001965A1 /* UIImageView+FWFramework.m */,
-				2F03A607216CF850001965A1 /* UIImageView+FWNetwork.h */,
-				2F03A608216CF850001965A1 /* UIImageView+FWNetwork.m */,
 				2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */,
 				2FA89DD5217DE020000F92BF /* UILabel+FWFramework.m */,
 				2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */,
@@ -868,8 +876,8 @@
 				2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */,
 				2F03A547216CF4B9001965A1 /* NSFileManager+FWFramework.m */,
 				2FBFB70F22C59E6600E669B6 /* NSFileManager+FWFramework.swift */,
-				2F03A534216CF4B9001965A1 /* NSNull+FWFramework.h */,
-				2F03A543216CF4B9001965A1 /* NSNull+FWFramework.m */,
+				2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */,
+				2F8F3725240289CB003472B5 /* NSNull+FWFramework.m */,
 				2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */,
 				2F03A545216CF4B9001965A1 /* NSNumber+FWFramework.m */,
 				2FBFB73022C5B1F600E669B6 /* NSNumber+FWFramework.swift */,
@@ -882,6 +890,8 @@
 				2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */,
 				2F03A54D216CF4B9001965A1 /* NSObject+FWSafeType.m */,
 				2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */,
+				2F8F370224002D79003472B5 /* NSObject+FWThread.h */,
+				2F8F370324002D79003472B5 /* NSObject+FWThread.m */,
 				2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */,
 				2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */,
 				2F03A54B216CF4B9001965A1 /* NSString+FWEncrypt.h */,
@@ -890,8 +900,6 @@
 				2F03A548216CF4B9001965A1 /* NSString+FWFormat.m */,
 				2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */,
 				2F03A54C216CF4B9001965A1 /* NSString+FWFramework.m */,
-				2F03A52D216CF4B9001965A1 /* NSThread+FWFramework.h */,
-				2F03A53D216CF4B9001965A1 /* NSThread+FWFramework.m */,
 				2F03A54F216CF4B9001965A1 /* NSTimer+FWFramework.h */,
 				2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */,
 				2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */,
@@ -909,6 +917,7 @@
 			children = (
 				2FCE515421D3B90F009EA65E /* Cache */,
 				2FCE512F21D3746B009EA65E /* Database */,
+				2F8F371324016F83003472B5 /* Image */,
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
@@ -1053,14 +1062,8 @@
 			isa = PBXGroup;
 			children = (
 				2F03A657216D0049001965A1 /* FWNetwork.h */,
-				2F03A626216CF882001965A1 /* FWAutoPurgingImageCache.h */,
-				2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */,
 				2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */,
 				2F03A627216CF882001965A1 /* FWHTTPSessionManager.m */,
-				2F03A625216CF882001965A1 /* FWImageDownloader.h */,
-				2F03A631216CF882001965A1 /* FWImageDownloader.m */,
-				2F03A665216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h */,
-				2F03A664216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m */,
 				2F03A621216CF882001965A1 /* FWNetworkReachabilityManager.h */,
 				2F03A62C216CF882001965A1 /* FWNetworkReachabilityManager.m */,
 				2F03A620216CF882001965A1 /* FWSecurityPolicy.h */,
@@ -1124,6 +1127,29 @@
 			);
 			name = FWFramework;
 			path = ../FWFramework;
+			sourceTree = "<group>";
+		};
+		2F8F371324016F83003472B5 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				2F03A626216CF882001965A1 /* FWAutoPurgingImageCache.h */,
+				2F03A630216CF882001965A1 /* FWAutoPurgingImageCache.m */,
+				2F41D203240389010010A588 /* FWImage.h */,
+				2F41D204240389010010A588 /* FWImage.m */,
+				2F03A625216CF882001965A1 /* FWImageDownloader.h */,
+				2F03A631216CF882001965A1 /* FWImageDownloader.m */,
+				2F41D1FB240388850010A588 /* UIImage+FWGif.h */,
+				2F41D1FD240388850010A588 /* UIImage+FWGif.m */,
+				2F41D1FC240388850010A588 /* UIImageView+FWNetwork.h */,
+				2F41D1FE240388850010A588 /* UIImageView+FWNetwork.m */,
+				2F6EFC5D2403C00400C4AC7E /* FWAnimatedImageView.h */,
+				2F6EFC5E2403C00400C4AC7E /* FWAnimatedImageView.m */,
+				2F6EFC612403C8F600C4AC7E /* FWImageCoder.h */,
+				2F6EFC622403C8F600C4AC7E /* FWImageCoder.m */,
+				2F6EFC652403CBFB00C4AC7E /* FWAnimatedImage.h */,
+				2F6EFC662403CBFB00C4AC7E /* FWAnimatedImage.m */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 		2FA99D9A228A74DF0059DFDB /* App */ = {
@@ -1226,6 +1252,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6EFC632403C8F600C4AC7E /* FWImageCoder.h in Headers */,
+				2F6EFC5F2403C00400C4AC7E /* FWAnimatedImageView.h in Headers */,
+				2F6EFC672403CBFB00C4AC7E /* FWAnimatedImage.h in Headers */,
+				2F41D200240388850010A588 /* UIImageView+FWNetwork.h in Headers */,
+				2F41D205240389010010A588 /* FWImage.h in Headers */,
+				2F41D1FF240388850010A588 /* UIImage+FWGif.h in Headers */,
+				2F8F3726240289CB003472B5 /* NSNull+FWFramework.h in Headers */,
+				2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */,
 				2F92114723E9158100183311 /* NSDictionary+FWThread.h in Headers */,
 				2F92114323E914ED00183311 /* NSArray+FWThread.h in Headers */,
 				2F92113F23E912F800183311 /* FWStatisticalManager.h in Headers */,
@@ -1305,7 +1339,6 @@
 				2F1E393C2178F0B90051A6BB /* FWProgressView.h in Headers */,
 				2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */,
 				2F03A643216CF882001965A1 /* FWNetworkPrivate.h in Headers */,
-				2F03A667216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.h in Headers */,
 				2F03A658216D0049001965A1 /* FWNetwork.h in Headers */,
 				2F03A64B216CF882001965A1 /* FWAutoPurgingImageCache.h in Headers */,
 				2F03A645216CF882001965A1 /* FWSecurityPolicy.h in Headers */,
@@ -1322,7 +1355,6 @@
 				2F03A647216CF882001965A1 /* FWURLSessionManager.h in Headers */,
 				2F03A648216CF882001965A1 /* FWURLRequestSerialization.h in Headers */,
 				2F03A646216CF882001965A1 /* FWNetworkReachabilityManager.h in Headers */,
-				2F03A609216CF850001965A1 /* UIImageView+FWNetwork.h in Headers */,
 				2F03A654216CF882001965A1 /* FWHTTPSessionManager.h in Headers */,
 				2F03A594216CF4B9001965A1 /* UIView+FWFrame.h in Headers */,
 				2F03A5B4216CF4B9001965A1 /* UITextView+FWPlaceholder.h in Headers */,
@@ -1346,7 +1378,6 @@
 				2F03A5AC216CF4B9001965A1 /* UITableView+FWTemplateLayout.h in Headers */,
 				2F03A5C8216CF4B9001965A1 /* NSNumber+FWFramework.h in Headers */,
 				2F03A5C6216CF4B9001965A1 /* NSString+FWFormat.h in Headers */,
-				2F03A5CA216CF4B9001965A1 /* NSNull+FWFramework.h in Headers */,
 				2F03A57F216CF4B9001965A1 /* UIFont+FWFramework.h in Headers */,
 				2F03A5E5216CF4B9001965A1 /* NSTimer+FWFramework.h in Headers */,
 				2F03A5CE216CF4B9001965A1 /* NSUserDefaults+FWFramework.h in Headers */,
@@ -1361,7 +1392,6 @@
 				2F03A592216CF4B9001965A1 /* UIScreen+FWFramework.h in Headers */,
 				2F03A5C2216CF4B9001965A1 /* NSObject+FWFramework.h in Headers */,
 				2F03A5C4216CF4B9001965A1 /* NSFileManager+FWFramework.h in Headers */,
-				2F03A5A7216CF4B9001965A1 /* UIImage+FWGif.h in Headers */,
 				2F03A599216CF4B9001965A1 /* UITextView+FWFramework.h in Headers */,
 				2F03A5AE216CF4B9001965A1 /* UIViewController+FWAlert.h in Headers */,
 				2F03A584216CF4B9001965A1 /* UIDevice+FWFramework.h in Headers */,
@@ -1381,7 +1411,6 @@
 				2F03A591216CF4B9001965A1 /* UIView+FWIndicator.h in Headers */,
 				2F03A5B7216CF4B9001965A1 /* UIColor+FWFramework.h in Headers */,
 				2F03A5BB216CF4B9001965A1 /* UIImage+FWFramework.h in Headers */,
-				2F03A5C3216CF4B9001965A1 /* NSThread+FWFramework.h in Headers */,
 				2F03A5CB216CF4B9001965A1 /* NSObject+FWSafeType.h in Headers */,
 				2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */,
 				2F03A5E7216CF4B9001965A1 /* FWTaskManager.h in Headers */,
@@ -1480,6 +1509,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F41D202240388850010A588 /* UIImageView+FWNetwork.m in Sources */,
 				2F03A638216CF882001965A1 /* FWNetworkPrivate.m in Sources */,
 				2F03EECF231F65AA009D2A22 /* UILocalNotification+FWFramework.m in Sources */,
 				2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */,
@@ -1489,7 +1519,6 @@
 				2F03A5A9216CF4B9001965A1 /* UITextField+FWFramework.m in Sources */,
 				2F03A58C216CF4B9001965A1 /* UITableView+FWFramework.m in Sources */,
 				2F03A5DF216CF4B9001965A1 /* NSArray+FWFramework.m in Sources */,
-				2F03A666216D1DA4001965A1 /* FWNetworkActivityIndicatorManager.m in Sources */,
 				2FCE514F21D3B14A009EA65E /* FWStorekitManager.m in Sources */,
 				2F03A641216CF882001965A1 /* FWChainRequestAgent.m in Sources */,
 				2F03A5AD216CF4B9001965A1 /* UIViewController+FWFramework.m in Sources */,
@@ -1512,7 +1541,6 @@
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
-				2F03A586216CF4B9001965A1 /* UIImage+FWGif.m in Sources */,
 				2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,
@@ -1550,6 +1578,7 @@
 				2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */,
 				2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */,
 				2FC81A7E235032EF00BE660C /* FWViewModel.m in Sources */,
+				2F8F3727240289CB003472B5 /* NSNull+FWFramework.m in Sources */,
 				2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */,
 				2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */,
 				2F03A5FD216CF4B9001965A1 /* FWState.m in Sources */,
@@ -1560,6 +1589,8 @@
 				2F1E626922BD4A2B00A1AB49 /* UIView+FWLayoutChain.m in Sources */,
 				2F03A5D0216CF4B9001965A1 /* NSData+FWFramework.m in Sources */,
 				2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */,
+				2F6EFC602403C00400C4AC7E /* FWAnimatedImageView.m in Sources */,
+				2F41D201240388850010A588 /* UIImage+FWGif.m in Sources */,
 				2F0CCE4421E4973C0018FA87 /* FWDatabaseManager.m in Sources */,
 				2FA99E99228E71DA0059DFDB /* FWNotificationManager.m in Sources */,
 				2FCE514821D3A6A5009EA65E /* FWDatabaseAdditions.m in Sources */,
@@ -1577,6 +1608,7 @@
 				2F0CCE4021E496EE0018FA87 /* FWDbModel.m in Sources */,
 				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
 				2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */,
+				2F6EFC682403CBFB00C4AC7E /* FWAnimatedImage.m in Sources */,
 				2FB90F1021F4A00C00084D76 /* FWMarqueeLabel.m in Sources */,
 				2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
@@ -1590,6 +1622,7 @@
 				2F03A5FB216CF4B9001965A1 /* FWProxy.m in Sources */,
 				2F03A5BA216CF4B9001965A1 /* UIView+FWLayer.m in Sources */,
 				2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */,
+				2F41D206240389010010A588 /* FWImage.m in Sources */,
 				2FAD2220233B12E400140359 /* FWCoroutine.swift in Sources */,
 				2F03A5FE216CF4B9001965A1 /* FWLog.m in Sources */,
 				2F03A5C7216CF4B9001965A1 /* NSBundle+FWFramework.m in Sources */,
@@ -1602,16 +1635,13 @@
 				2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */,
 				2F03A596216CF4B9001965A1 /* UIColor+FWFramework.m in Sources */,
 				2F1D8B8421B02ED400E0F820 /* FWRouter.m in Sources */,
-				2F03A5D9216CF4B9001965A1 /* NSNull+FWFramework.m in Sources */,
 				2F03A57B216CF4B9001965A1 /* UINavigationController+FWFramework.m in Sources */,
 				2F92114423E914ED00183311 /* NSArray+FWThread.m in Sources */,
 				2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */,
 				2F1E39692178F9E00051A6BB /* FWCollectionViewFlowLayout.m in Sources */,
-				2F03A60A216CF850001965A1 /* UIImageView+FWNetwork.m in Sources */,
 				2F6492B123168828002E15AC /* FWWebViewController.m in Sources */,
 				2F03A5BF216CF4B9001965A1 /* NSObject+FWBlock.m in Sources */,
 				2FBFB76322C62EB300E669B6 /* UIScreen+FWFramework.swift in Sources */,
-				2F03A5D3216CF4B9001965A1 /* NSThread+FWFramework.m in Sources */,
 				2F03A5EB216CF4B9001965A1 /* FWTaskManager.m in Sources */,
 				2F1D984821E6FD2800769651 /* FWPageControl.m in Sources */,
 				2F03A5B9216CF4B9001965A1 /* UIView+FWFrame.m in Sources */,
@@ -1628,6 +1658,7 @@
 				2FBFB75E22C616BD00E669B6 /* UIApplication+FWFramework.swift in Sources */,
 				2F03A589216CF4B9001965A1 /* UIView+FWAnimation.m in Sources */,
 				2F03A5AA216CF4B9001965A1 /* UIDevice+FWFramework.m in Sources */,
+				2F6EFC642403C8F600C4AC7E /* FWImageCoder.m in Sources */,
 				2FCE517621D3C574009EA65E /* FWCacheSqlite.m in Sources */,
 				2F03A590216CF4B9001965A1 /* UITableView+FWTemplateLayout.m in Sources */,
 				2F70EDE42327867100498538 /* FWAppRefreshPlugin.m in Sources */,
@@ -1637,6 +1668,7 @@
 				2F03A5B2216CF4B9001965A1 /* UIViewController+FWTransition.m in Sources */,
 				2FACF02F2303A90B007AFC16 /* UIView+FWTheme.m in Sources */,
 				2F03A655216CF882001965A1 /* FWAutoPurgingImageCache.m in Sources */,
+				2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */,
 				2F0FFF1A21D0ACFA00049383 /* UIScrollView+FWPullRefresh.m in Sources */,
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
@@ -1791,10 +1823,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=1",
-					"FWAuthorizeMicrophoneEnabled=1",
-					"FWAuthorizeContactsEnabled=1",
-					"FWAuthorizeCalendarEnabled=1",
-					"FWAuthorizeAppleMusicEnabled=1",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1824,13 +1852,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"FWAuthorizeMicrophoneEnabled=1",
-					"FWAuthorizeContactsEnabled=1",
-					"FWAuthorizeCalendarEnabled=1",
-					"FWAuthorizeAppleMusicEnabled=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
