@@ -158,17 +158,6 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     return [NSSet setWithSet:certificates];
 }
 
-+ (NSSet *)defaultPinnedCertificates {
-    static NSSet *_defaultPinnedCertificates = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-        _defaultPinnedCertificates = [self certificatesInBundle:bundle];
-    });
-
-    return _defaultPinnedCertificates;
-}
-
 + (instancetype)defaultPolicy {
     FWSecurityPolicy *securityPolicy = [[self alloc] init];
     securityPolicy.SSLPinningMode = FWSSLPinningModeNone;
@@ -177,7 +166,8 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 }
 
 + (instancetype)policyWithPinningMode:(FWSSLPinningMode)pinningMode {
-    return [self policyWithPinningMode:pinningMode withPinnedCertificates:[self defaultPinnedCertificates]];
+    NSSet <NSData *> *defaultPinnedCertificates = [self certificatesInBundle:[NSBundle mainBundle]];
+    return [self policyWithPinningMode:pinningMode withPinnedCertificates:defaultPinnedCertificates];
 }
 
 + (instancetype)policyWithPinningMode:(FWSSLPinningMode)pinningMode withPinnedCertificates:(NSSet *)pinnedCertificates {
@@ -252,9 +242,6 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     }
 
     switch (self.SSLPinningMode) {
-        case FWSSLPinningModeNone:
-        default:
-            return NO;
         case FWSSLPinningModeCertificate: {
             NSMutableArray *pinnedCertificates = [NSMutableArray array];
             for (NSData *certificateData in self.pinnedCertificates) {
@@ -290,6 +277,8 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
             }
             return trustedPublicKeyCount > 0;
         }
+        default:
+            return NO;
     }
     
     return NO;
@@ -317,7 +306,7 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     self.SSLPinningMode = [[decoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(SSLPinningMode))] unsignedIntegerValue];
     self.allowInvalidCertificates = [decoder decodeBoolForKey:NSStringFromSelector(@selector(allowInvalidCertificates))];
     self.validatesDomainName = [decoder decodeBoolForKey:NSStringFromSelector(@selector(validatesDomainName))];
-    self.pinnedCertificates = [decoder decodeObjectOfClass:[NSArray class] forKey:NSStringFromSelector(@selector(pinnedCertificates))];
+    self.pinnedCertificates = [decoder decodeObjectOfClass:[NSSet class] forKey:NSStringFromSelector(@selector(pinnedCertificates))];
 
     return self;
 }

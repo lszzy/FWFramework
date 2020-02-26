@@ -52,11 +52,11 @@
 
 + (FWImageDownloader *)fwSharedImageDownloader
 {
-    return objc_getAssociatedObject(self, @selector(fwSharedImageDownloader)) ?: [FWImageDownloader defaultInstance];
+    return objc_getAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader)) ?: [FWImageDownloader defaultInstance];
 }
 
 + (void)fwSetSharedImageDownloader:(FWImageDownloader *)imageDownloader {
-    objc_setAssociatedObject(self, @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark -
@@ -108,7 +108,7 @@
         return;
     }
     
-    if ([self isActiveTaskURLEqualToURLRequest:urlRequest]){
+    if ([self isActiveTaskURLEqualToURLRequest:urlRequest]) {
         return;
     }
     
@@ -144,7 +144,7 @@
                        if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
                            if (success) {
                                success(request, response, responseObject);
-                           } else if(responseObject) {
+                           } else if (responseObject) {
                                // FWImage
                                strongSelf.image = responseObject;
                            }
