@@ -33,6 +33,7 @@
 
 @interface TestStatisticalViewController () <FWCollectionViewController>
 
+FWPropertyWeak(UIView *, shieldView);
 FWPropertyWeak(FWBannerView *, bannerView);
 FWPropertyWeak(UIView *, testView);
 FWPropertyWeak(UIButton *, testButton);
@@ -61,6 +62,12 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     testView.backgroundColor = [UIColor fwRandomColor];
     [headerView addSubview:testView];
     testView.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(bannerView, 50);
+    
+    UILabel *testLabel = [UILabel fwAutoLayoutView];
+    testLabel.text = @"Banner";
+    testLabel.textAlignment = NSTextAlignmentCenter;
+    [testView addSubview:testLabel];
+    testLabel.fwLayoutChain.edges();
     
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
@@ -137,10 +144,31 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
 - (void)renderView
 {
+    // 设置遮挡视图
+    UIView *shieldView = [UIView new];
+    self.shieldView = shieldView;
+    shieldView.backgroundColor = [UIColor whiteColor];
     FWWeakifySelf();
+    [shieldView fwAddTapGestureWithBlock:^(UITapGestureRecognizer *sender) {
+        FWStrongifySelf();
+        [self.shieldView removeFromSuperview];
+        self.shieldView = nil;
+        // 手工触发曝光计算
+        self.view.hidden = self.view.hidden;
+    }];
+    [[UIWindow fwMainWindow] addSubview:shieldView];
+    [shieldView fwPinEdgesToSuperview];
+    
+    UILabel *shieldLabel = [UILabel fwAutoLayoutView];
+    shieldLabel.text = @"点击关闭";
+    shieldLabel.textAlignment = NSTextAlignmentCenter;
+    [shieldView addSubview:shieldLabel];
+    shieldLabel.fwLayoutChain.edges();
+    
     [self.testView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
         self.testView.backgroundColor = [UIColor fwRandomColor];
+        [self.bannerView makeScrollViewScrollToIndex:0];
     }];
     
     [self.testButton fwAddTouchBlock:^(id  _Nonnull sender) {
@@ -215,13 +243,32 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     
     // Exposure
     self.testView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_view" object:@"view"];
+    [self configShieldView:self.testView.fwStatisticalExposure];
     self.testButton.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_button" object:@"button"];
     self.testButton.fwStatisticalExposure.triggerOnce = YES;
+    [self configShieldView:self.testButton.fwStatisticalExposure];
     self.testSwitch.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_switch" object:@"switch"];
+    [self configShieldView:self.testSwitch.fwStatisticalExposure];
     self.tableView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tableView" object:@"table"];
+    [self configShieldView:self.tableView.fwStatisticalExposure];
     self.bannerView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_banner" object:@"banner"];
+    [self configShieldView:self.bannerView.fwStatisticalExposure];
     self.segmentedControl.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_segment" object:@"segment"];
+    [self configShieldView:self.segmentedControl.fwStatisticalExposure];
     self.tagCollectionView.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_tag" object:@"tag"];
+    [self configShieldView:self.tagCollectionView.fwStatisticalExposure];
+}
+
+- (void)configShieldView:(FWStatisticalObject *)object
+{
+    FWWeakifySelf();
+    // 动态设置，调用时判断
+    object.shieldViewBlock = ^UIView * _Nullable{
+        FWStrongifySelf();
+        return self.shieldView;
+    };
+    // weak引用，固定设置
+    // object.shieldView = self.shieldView;
 }
 
 - (void)showToast:(NSString *)toast
@@ -290,6 +337,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     cell.fwStatisticalClick = [[FWStatisticalObject alloc] initWithName:@"click_collectionView" object:@"cell"];
     cell.fwStatisticalExposure = [[FWStatisticalObject alloc] initWithName:@"exposure_collectionView" object:@"cell"];
     cell.fwStatisticalExposure.triggerOnce = YES;
+    [self configShieldView:cell.fwStatisticalExposure];
     return cell;
 }
 

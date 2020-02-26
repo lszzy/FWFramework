@@ -119,8 +119,9 @@ void FWRequestLog(NSString *format, ...) {
 + (NSStringEncoding)stringEncodingWithRequest:(FWBaseRequest *)request {
     // From AFNetworking 2.6.3
     NSStringEncoding stringEncoding = NSUTF8StringEncoding;
-    if (request.response.textEncodingName) {
-        CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)request.response.textEncodingName);
+    NSString *encodingName = [request.response.textEncodingName copy];
+    if (encodingName) {
+        CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName);
         if (encoding != kCFStringEncodingInvalidId) {
             stringEncoding = CFStringConvertEncodingToNSStringEncoding(encoding);
         }

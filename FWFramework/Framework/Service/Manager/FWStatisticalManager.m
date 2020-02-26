@@ -539,7 +539,12 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         return state;
     }
     
-    UIView *shieldView = self.fwStatisticalExposure.shieldView;
+    UIView *shieldView = nil;
+    if (self.fwStatisticalExposure.shieldView) {
+        shieldView = self.fwStatisticalExposure.shieldView;
+    } else if (self.fwStatisticalExposure.shieldViewBlock) {
+        shieldView = self.fwStatisticalExposure.shieldViewBlock();
+    }
     if (!shieldView || shieldView.hidden || shieldView.alpha <= 0.01 ||
         shieldView.bounds.size.width == 0 || shieldView.bounds.size.height == 0) {
         return state;
