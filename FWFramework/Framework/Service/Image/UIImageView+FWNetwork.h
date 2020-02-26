@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param url The URL used for the image request.
  */
-- (void)fwSetImageWithURL:(NSURL *)url;
+- (void)fwSetImageWithURL:(id)url;
 
 /**
  Asynchronously downloads an image from the specified URL, and sets it once the request is finished. Any previous image request for the receiver will be cancelled.
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param url The URL used for the image request.
  @param placeholderImage The image to be set initially, until the image request finishes. If `nil`, the image view will not change its image until the image request finishes.
  */
-- (void)fwSetImageWithURL:(NSURL *)url
+- (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage;
 
 /**
@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param placeholderImage The image to be set initially, until the image request finishes completely. If `nil`, the image view will not change its image until the image request finishes.
  @param completion A block to be executed when the image data task finishes. This block has no return value and takes two arguments: the image created from the response data of request, and the error object describing the network or parsing error that occurred. If the image was returned from cache, the error parameter will be `nil`.
  */
-- (void)fwSetImageWithURL:(NSURL *)url
+- (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 

@@ -29,7 +29,9 @@
 #import "FWImageDownloader.h"
 
 @interface UIImageView (FWInnerNetwork)
+
 @property (readwrite, nonatomic, strong, setter = af_setActiveImageDownloadReceipt:) FWImageDownloadReceipt *af_activeImageDownloadReceipt;
+
 @end
 
 @implementation UIImageView (FWInnerNetwork)
@@ -61,18 +63,18 @@
 
 #pragma mark -
 
-- (void)fwSetImageWithURL:(NSURL *)url
+- (void)fwSetImageWithURL:(id)url
 {
     [self fwSetImageWithURL:url placeholderImage:nil];
 }
 
-- (void)fwSetImageWithURL:(NSURL *)url
+- (void)fwSetImageWithURL:(id)url
          placeholderImage:(UIImage *)placeholderImage
 {
     [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:nil];
 }
 
-- (void)fwSetImageWithURL:(NSURL *)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+- (void)fwSetImageWithURL:(id)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
 {
     if ([url isKindOfClass:[NSString class]]) {
         url = [NSURL fwURLWithString:(NSString *)url];
