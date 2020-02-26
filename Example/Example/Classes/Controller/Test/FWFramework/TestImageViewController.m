@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong, readonly) UIImageView *systemView;
 
-@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
+//@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
 
 @end
 
@@ -26,9 +26,9 @@
         [self.contentView addSubview:_systemView];
         _systemView.fwLayoutChain.leftWithInset(10).topWithInset(10).bottomWithInset(10).width(100);
         
-        _animatedView = [FWAnimatedImageView new];
-        [self.contentView addSubview:_animatedView];
-        _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topWithInset(10).bottomWithInset(10).width(100);
+        //_animatedView = [FWAnimatedImageView new];
+        //[self.contentView addSubview:_animatedView];
+        //_animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topWithInset(10).bottomWithInset(10).width(100);
     }
     return self;
 }
@@ -58,8 +58,8 @@
 
 - (void)addImageWithName:(NSString *)name
 {
-    UIImage *image = [FWAnimatedImage imageNamed:name];
-    [self.tableData fwAddObject:image];
+    //UIImage *image = [FWAnimatedImage imageNamed:name];
+    //[self.tableData fwAddObject:image];
 }
 
 - (void)addFrameImage
@@ -69,8 +69,8 @@
     [paths addObject:[basePath stringByAppendingPathComponent:@"frame1.png"]];
     [paths addObject:[basePath stringByAppendingPathComponent:@"frame2.png"]];
     [paths addObject:[basePath stringByAppendingPathComponent:@"frame3.png"]];
-    UIImage *image = [[FWFrameImage alloc] initWithImagePaths:paths oneFrameDuration:0.1 loopCount:0];
-    [self.tableData fwAddObject:image];
+    //UIImage *image = [[FWFrameImage alloc] initWithImagePaths:paths oneFrameDuration:0.1 loopCount:0];
+    //[self.tableData fwAddObject:image];
 }
 
 - (void)addSpriteSheetImage
@@ -90,11 +90,11 @@
             [durations addObject:@(1 / 60.0)];
         }
     }
-    FWSpriteSheetImage *image = [[FWSpriteSheetImage alloc] initWithSpriteSheetImage:sheet
-                                                     contentRects:contentRects
-                                                   frameDurations:durations
-                                                        loopCount:0];
-    [self.tableData fwAddObject:image];
+    //FWSpriteSheetImage *image = [[FWSpriteSheetImage alloc] initWithSpriteSheetImage:sheet
+     //                                                contentRects:contentRects
+      //                                             frameDurations:durations
+        //                                                loopCount:0];
+    //[self.tableData fwAddObject:image];
 }
 
 #pragma mark - TableView
@@ -108,7 +108,7 @@
 {
     UIImage *image = [self.tableData objectAtIndex:indexPath.row];
     cell.systemView.image = image;
-    cell.animatedView.image = image;
+    //cell.animatedView.image = image;
 }
 
 @end
