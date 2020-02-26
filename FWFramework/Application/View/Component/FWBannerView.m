@@ -677,10 +677,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     if (0 == _totalItemsCount) return;
     NSInteger targetIndex = [_flowLayout currentPage] + 1;;
-    [self scrollToIndex:targetIndex];
+    [self scrollToIndex:targetIndex animated:YES];
 }
 
-- (void)scrollToIndex:(NSInteger)targetIndex
+- (void)scrollToIndex:(NSInteger)targetIndex animated:(BOOL)animated
 {
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
@@ -689,7 +689,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }
         return;
     }
-    [_flowLayout scrollToPage:targetIndex animated:YES];
+    [_flowLayout scrollToPage:targetIndex animated:animated];
 }
 
 - (NSInteger)pageControlIndexWithCurrentCellIndex:(NSInteger)index
@@ -918,13 +918,19 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     [self statisticalExposureDidChange];
 }
 
-- (void)makeScrollViewScrollToIndex:(NSInteger)index{
+- (void)makeScrollViewScrollToIndex:(NSInteger)index
+{
+    [self makeScrollViewScrollToIndex:index animated:NO];
+}
+
+- (void)makeScrollViewScrollToIndex:(NSInteger)index animated:(BOOL)animated
+{
     if (self.autoScroll) {
         [self invalidateTimer];
     }
     if (0 == _totalItemsCount) return;
     
-    [self scrollToIndex:(NSInteger)(_totalItemsCount * 0.5 + index)];
+    [self scrollToIndex:(NSInteger)(_totalItemsCount * 0.5 + index) animated:animated];
     
     if (self.autoScroll) {
         [self setupTimer];
