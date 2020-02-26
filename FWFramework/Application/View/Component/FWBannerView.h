@@ -106,8 +106,11 @@ typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
 /** block方式监听滚动 */
 @property (nonatomic, copy, nullable) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);
 
-/** 可以调用此方法手动控制滚动到哪一个index */
+/** 手工滚动到指定index，不使用动画 */
 - (void)makeScrollViewScrollToIndex:(NSInteger)index;
+
+/** 手工滚动到指定index，可指定动画 */
+- (void)makeScrollViewScrollToIndex:(NSInteger)index animated:(BOOL)animated;
 
 /** 解决viewWillAppear时出现时轮播图卡在一半的问题，在控制器viewWillAppear时调用此方法 */
 - (void)adjustWhenControllerViewWillAppear;
