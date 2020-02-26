@@ -62,6 +62,12 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     [headerView addSubview:testView];
     testView.fwLayoutChain.width(100).height(30).centerX().topToBottomOfViewWithOffset(bannerView, 50);
     
+    UILabel *testLabel = [UILabel fwAutoLayoutView];
+    testLabel.text = @"Banner";
+    testLabel.textAlignment = NSTextAlignmentCenter;
+    [testView addSubview:testLabel];
+    testLabel.fwLayoutChain.edges();
+    
     UIButton *testButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _testButton = testButton;
     [testButton setTitle:@"Button" forState:UIControlStateNormal];
@@ -141,6 +147,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     [self.testView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
         self.testView.backgroundColor = [UIColor fwRandomColor];
+        [self.bannerView makeScrollViewScrollToIndex:0];
     }];
     
     [self.testButton fwAddTouchBlock:^(id  _Nonnull sender) {

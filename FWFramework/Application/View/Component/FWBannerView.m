@@ -932,6 +932,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     [self scrollToIndex:(NSInteger)(_totalItemsCount * 0.5 + index) animated:animated];
     
+    if (!animated) {
+        [self statisticalExposureDidChange];
+    }
+    
     if (self.autoScroll) {
         [self setupTimer];
     }
