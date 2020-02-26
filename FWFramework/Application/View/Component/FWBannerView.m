@@ -608,6 +608,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)setupTimer
 {
     [self invalidateTimer];
+    if (self.imagePathsGroup.count < 2) return;
     
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:self.autoScrollTimeInterval target:self selector:@selector(automaticScroll) userInfo:nil repeats:YES];
     _timer = timer;
@@ -930,9 +931,11 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
     if (0 == _totalItemsCount) return;
     
-    [self scrollToIndex:(NSInteger)(_totalItemsCount * 0.5 + index) animated:animated];
+    NSInteger previousIndex = [_flowLayout currentPage];
+    NSInteger currentIndex = (NSInteger)(_totalItemsCount * 0.5 + index);
+    [self scrollToIndex:currentIndex animated:animated];
     
-    if (!animated) {
+    if (!animated && currentIndex != previousIndex) {
         [self statisticalExposureDidChange];
     }
     
