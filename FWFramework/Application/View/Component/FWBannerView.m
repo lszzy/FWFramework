@@ -917,6 +917,16 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         self.itemDidScrollOperationBlock(indexOnPageControl);
     }
     [self statisticalExposureDidChange];
+    
+    if (self.infiniteLoop) {
+        if (itemIndex == _totalItemsCount - 1) {
+            NSInteger targetIndex = _totalItemsCount * 0.5 - 1;
+            [_flowLayout scrollToPage:targetIndex animated:NO];
+        } else if (itemIndex == 0) {
+            NSInteger targetIndex = _totalItemsCount * 0.5;
+            [_flowLayout scrollToPage:targetIndex animated:NO];
+        }
+    }
 }
 
 - (void)makeScrollViewScrollToIndex:(NSInteger)index
