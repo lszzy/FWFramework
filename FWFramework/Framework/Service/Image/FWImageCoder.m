@@ -49,7 +49,7 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 - (instancetype)init {
     if (self = [super init]) {
         // initialize with default coders
-        //_imageCoders = [NSMutableArray arrayWithArray:@[[SDImageIOCoder sharedCoder], [SDImageGIFCoder sharedCoder], [SDImageAPNGCoder sharedCoder]]];
+        _imageCoders = [NSMutableArray arrayWithArray:@[[SDImageIOCoder sharedCoder], [SDImageGIFCoder sharedCoder], [SDImageAPNGCoder sharedCoder]]];
         _codersLock = dispatch_semaphore_create(1);
     }
     return self;
