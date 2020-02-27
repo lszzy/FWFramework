@@ -432,7 +432,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDMemoryCacheCostForImage(UIImage *image) {
     return memoryCost;
 }
 
-- (void)setSd_memoryCost:(NSUInteger)fw_memoryCost {
+- (void)setFw_memoryCost:(NSUInteger)fw_memoryCost {
     objc_setAssociatedObject(self, @selector(fw_memoryCost), @(fw_memoryCost), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 

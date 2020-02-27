@@ -1717,7 +1717,7 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
     return imageLoopCount;
 }
 
-- (void)setSd_imageLoopCount:(NSUInteger)fw_imageLoopCount {
+- (void)setFw_imageLoopCount:(NSUInteger)fw_imageLoopCount {
     NSNumber *value = @(fw_imageLoopCount);
     objc_setAssociatedObject(self, @selector(fw_imageLoopCount), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -1741,11 +1741,11 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
     return imageFormat;
 }
 
-- (void)setSd_imageFormat:(FWImageFormat)fw_imageFormat {
+- (void)setFw_imageFormat:(FWImageFormat)fw_imageFormat {
     objc_setAssociatedObject(self, @selector(fw_imageFormat), @(fw_imageFormat), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setSd_isIncremental:(BOOL)fw_isIncremental {
+- (void)setFw_isIncremental:(BOOL)fw_isIncremental {
     objc_setAssociatedObject(self, @selector(fw_isIncremental), @(fw_isIncremental), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
@@ -1759,7 +1759,7 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
     return value.boolValue;
 }
 
-- (void)setSd_isDecoded:(BOOL)fw_isDecoded {
+- (void)setFw_isDecoded:(BOOL)fw_isDecoded {
     objc_setAssociatedObject(self, @selector(fw_isDecoded), @(fw_isDecoded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 

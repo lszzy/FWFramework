@@ -119,6 +119,12 @@
 		2F5A5BE61FB1B18B00EA39D0 /* FWFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5A5BE51FB1B18600EA39D0 /* FWFramework.framework */; };
 		2F5B1EE5231CADBF007884EC /* BaseWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5B1EE4231CADBF007884EC /* BaseWebViewController.m */; };
 		2F5B1EE6231CADBF007884EC /* BaseWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5B1EE4231CADBF007884EC /* BaseWebViewController.m */; };
+		2F62DAAE2407DB22001B8F9F /* test.heic in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAA2407DB22001B8F9F /* test.heic */; };
+		2F62DAAF2407DB22001B8F9F /* test.heic in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAA2407DB22001B8F9F /* test.heic */; };
+		2F62DAB02407DB22001B8F9F /* animation.heic in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAC2407DB22001B8F9F /* animation.heic */; };
+		2F62DAB12407DB22001B8F9F /* animation.heic in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAC2407DB22001B8F9F /* animation.heic */; };
+		2F62DAB22407DB22001B8F9F /* test.heif in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAD2407DB22001B8F9F /* test.heif */; };
+		2F62DAB32407DB22001B8F9F /* test.heif in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAD2407DB22001B8F9F /* test.heif */; };
 		2F6EFC482403B38200C4AC7E /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2F6EFC402403B38100C4AC7E /* test.gif */; };
 		2F6EFC492403B38200C4AC7E /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2F6EFC402403B38100C4AC7E /* test.gif */; };
 		2F6EFC4A2403B38200C4AC7E /* frame2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F6EFC412403B38100C4AC7E /* frame2.png */; };
@@ -295,6 +301,9 @@
 		2F5A5BE01FB1B18500EA39D0 /* FWFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FWFramework.xcodeproj; path = ../Framework/FWFramework.xcodeproj; sourceTree = "<group>"; };
 		2F5B1EE3231CADBF007884EC /* BaseWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseWebViewController.h; sourceTree = "<group>"; };
 		2F5B1EE4231CADBF007884EC /* BaseWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseWebViewController.m; sourceTree = "<group>"; };
+		2F62DAAA2407DB22001B8F9F /* test.heic */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.heic; sourceTree = "<group>"; };
+		2F62DAAC2407DB22001B8F9F /* animation.heic */ = {isa = PBXFileReference; lastKnownFileType = file; path = animation.heic; sourceTree = "<group>"; };
+		2F62DAAD2407DB22001B8F9F /* test.heif */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.heif; sourceTree = "<group>"; };
 		2F6EFC402403B38100C4AC7E /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		2F6EFC412403B38100C4AC7E /* frame2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = frame2.png; sourceTree = "<group>"; };
 		2F6EFC422403B38200C4AC7E /* frame1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = frame1.png; sourceTree = "<group>"; };
@@ -788,6 +797,7 @@
 		2F6EFC3E2403B33200C4AC7E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				2F62DAAC2407DB22001B8F9F /* animation.heic */,
 				2F6EFC452403B38200C4AC7E /* animation.png */,
 				2F6EFC422403B38200C4AC7E /* frame1.png */,
 				2F6EFC412403B38100C4AC7E /* frame2.png */,
@@ -795,6 +805,8 @@
 				2F6EFC472403B38200C4AC7E /* progressive.jpg */,
 				2F6EFC432403B38200C4AC7E /* sheet.png */,
 				2F6EFC402403B38100C4AC7E /* test.gif */,
+				2F62DAAA2407DB22001B8F9F /* test.heic */,
+				2F62DAAD2407DB22001B8F9F /* test.heif */,
 				2F6EFC442403B38200C4AC7E /* test.webp */,
 			);
 			path = Images;
@@ -993,10 +1005,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F62DAB32407DB22001B8F9F /* test.heif in Resources */,
 				2F6EFC4D2403B38200C4AC7E /* frame1.png in Resources */,
 				2F6EFC492403B38200C4AC7E /* test.gif in Resources */,
+				2F62DAAF2407DB22001B8F9F /* test.heic in Resources */,
 				2F4385A92318F687003A683C /* Assets.xcassets in Resources */,
 				2F6EFC4B2403B38200C4AC7E /* frame2.png in Resources */,
+				2F62DAB12407DB22001B8F9F /* animation.heic in Resources */,
 				2F6EFC532403B38200C4AC7E /* animation.png in Resources */,
 				2F4385AA2318F687003A683C /* QrcodeSound.caf in Resources */,
 				2F4385AB2318F687003A683C /* InfoPlist.strings in Resources */,
@@ -1014,10 +1029,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F62DAB22407DB22001B8F9F /* test.heif in Resources */,
 				2F6EFC4C2403B38200C4AC7E /* frame1.png in Resources */,
 				2F6EFC482403B38200C4AC7E /* test.gif in Resources */,
+				2F62DAAE2407DB22001B8F9F /* test.heic in Resources */,
 				2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */,
 				2F6EFC4A2403B38200C4AC7E /* frame2.png in Resources */,
+				2F62DAB02407DB22001B8F9F /* animation.heic in Resources */,
 				2F6EFC522403B38200C4AC7E /* animation.png in Resources */,
 				2FB90F1E21F5716800084D76 /* QrcodeSound.caf in Resources */,
 				2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */,

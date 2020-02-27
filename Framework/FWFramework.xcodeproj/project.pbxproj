@@ -219,7 +219,7 @@
 		2F41D206240389010010A588 /* FWImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41D204240389010010A588 /* FWImage.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
-		2F62DA972406D154001B8F9F /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F62DA952406D154001B8F9F /* FWAnimatedImageView.h */; };
+		2F62DA972406D154001B8F9F /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F62DA952406D154001B8F9F /* FWAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F62DA982406D155001B8F9F /* FWAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F62DA962406D154001B8F9F /* FWAnimatedImageView.m */; };
 		2F6492AC2316880C002E15AC /* FWCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6492AA2316880C002E15AC /* FWCollectionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6492AD2316880C002E15AC /* FWCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AB2316880C002E15AC /* FWCollectionViewController.m */; };
@@ -1252,8 +1252,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FBA8337240692B300457CF7 /* FWImageCoder.h in Headers */,
 				2F62DA972406D154001B8F9F /* FWAnimatedImageView.h in Headers */,
+				2FBA8337240692B300457CF7 /* FWImageCoder.h in Headers */,
 				2FBA833B24069A2700457CF7 /* FWAnimatedImage.h in Headers */,
 				2F41D200240388850010A588 /* UIImageView+FWNetwork.h in Headers */,
 				2F41D205240389010010A588 /* FWImage.h in Headers */,

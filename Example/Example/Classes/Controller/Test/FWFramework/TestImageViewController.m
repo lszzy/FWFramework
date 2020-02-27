@@ -10,9 +10,11 @@
 
 @interface TestImageCell : UITableViewCell
 
+@property (nonatomic, strong, readonly) UILabel *nameLabel;
+
 @property (nonatomic, strong, readonly) UIImageView *systemView;
 
-//@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
+@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
 
 @end
 
@@ -22,13 +24,17 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        _nameLabel = [UILabel new];
+        [self.contentView addSubview:_nameLabel];
+        _nameLabel.fwLayoutChain.leftWithInset(10).topWithInset(10).height(20);
+        
         _systemView = [UIImageView new];
         [self.contentView addSubview:_systemView];
-        _systemView.fwLayoutChain.leftWithInset(10).topWithInset(10).bottomWithInset(10).width(100);
+        _systemView.fwLayoutChain.leftWithInset(10).topToBottomOfViewWithOffset(_nameLabel, 10).bottomWithInset(10).width(100);
         
-        //_animatedView = [FWAnimatedImageView new];
-        //[self.contentView addSubview:_animatedView];
-        //_animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topWithInset(10).bottomWithInset(10).width(100);
+        _animatedView = [FWAnimatedImageView new];
+        [self.contentView addSubview:_animatedView];
+        _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
     }
     return self;
 }
@@ -36,6 +42,8 @@
 @end
 
 @interface TestImageViewController ()
+
+@property (nonatomic, assign) BOOL isWebImage;
 
 @end
 
@@ -46,21 +54,36 @@
     return @{ @"cell" : [TestImageCell class] };
 }
 
-- (void)renderData
+- (void)renderModel
 {
-    [self addImageWithName:@"progressive.jpg"];
-    [self addImageWithName:@"animation.png"];
-    [self addFrameImage];
-    [self addImageWithName:@"test.gif"];
-    [self addImageWithName:@"test.webp"];
-    [self addSpriteSheetImage];
-    [self addProgressiveImage];
+    [[FWImageCodersManager sharedManager] addCoder:[FWImageHEICCoder sharedCoder]];
+    
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"Toggle" block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        self.isWebImage = !self.isWebImage;
+        [self.tableView reloadData];
+    }];
 }
 
-- (void)addImageWithName:(NSString *)name
+- (void)renderData
 {
-    //UIImage *image = [FWAnimatedImage imageNamed:name];
-    //[self.tableData fwAddObject:image];
+    [self.tableData addObjectsFromArray:@[
+        @"progressive.jpg",
+        @"animation.png",
+        @"test.gif",
+        @"test.webp",
+        @"test.heic",
+        @"test.heif",
+        @"animation.heic",
+    ]];
+    [self.tableView reloadData];
+    
+    /*
+    [self addFrameImage];
+    [self addSpriteSheetImage];
+    [self addProgressiveImage];
+    */
 }
 
 - (void)addFrameImage
@@ -117,14 +140,24 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 120;
+    return 150;
 }
 
 - (void)renderCellData:(TestImageCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    UIImage *image = [self.tableData objectAtIndex:indexPath.row];
-    cell.systemView.image = image;
-    //cell.animatedView.image = image;
+    NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
+    cell.nameLabel.text = fileName;
+    if (self.isWebImage) {
+        NSString *url = [NSString stringWithFormat:@"http://kvm.wuyong.site/images/%@", fileName];
+        cell.systemView.image = nil;
+        cell.animatedView.image = nil;
+        [cell.systemView fwSetImageWithURL:url];
+        [cell.animatedView fwSetImageWithURL:url];
+    } else {
+        UIImage *image = [FWAnimatedImage imageNamed:fileName];
+        cell.systemView.image = image;
+        cell.animatedView.image = image;
+    }
 }
 
 @end
