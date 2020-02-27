@@ -508,9 +508,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 
     self.securityPolicy = [FWSecurityPolicy defaultPolicy];
 
-#if !TARGET_OS_WATCH
     self.reachabilityManager = [FWNetworkReachabilityManager sharedManager];
-#endif
 
     self.mutableTaskDelegatesKeyedByTaskIdentifier = [[NSMutableDictionary alloc] init];
 
@@ -863,11 +861,9 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     self.sessionDidReceiveAuthenticationChallenge = block;
 }
 
-#if !TARGET_OS_OSX
 - (void)setDidFinishEventsForBackgroundURLSessionBlock:(void (^)(NSURLSession *session))block {
     self.didFinishEventsForBackgroundURLSession = block;
 }
-#endif
 
 #pragma mark -
 
@@ -940,12 +936,9 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
         return self.dataTaskDidReceiveResponse != nil;
     } else if (selector == @selector(URLSession:dataTask:willCacheResponse:completionHandler:)) {
         return self.dataTaskWillCacheResponse != nil;
-    }
-#if !TARGET_OS_OSX
-    else if (selector == @selector(URLSessionDidFinishEventsForBackgroundURLSession:)) {
+    } else if (selector == @selector(URLSessionDidFinishEventsForBackgroundURLSession:)) {
         return self.didFinishEventsForBackgroundURLSession != nil;
     }
-#endif
 
     return [[self class] instancesRespondToSelector:selector];
 }
@@ -1178,7 +1171,6 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask
     }
 }
 
-#if !TARGET_OS_OSX
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
     if (self.didFinishEventsForBackgroundURLSession) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1186,7 +1178,6 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask
         });
     }
 }
-#endif
 
 #pragma mark - NSURLSessionDownloadDelegate
 

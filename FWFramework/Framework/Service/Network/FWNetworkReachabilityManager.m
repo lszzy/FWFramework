@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 #import "FWNetworkReachabilityManager.h"
-#if !TARGET_OS_WATCH
 
 #import <netinet/in.h>
 #import <netinet6/in6.h>
@@ -266,4 +265,3 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
 }
 
 @end
-#endif
