@@ -54,6 +54,7 @@
     [self addImageWithName:@"test.gif"];
     [self addImageWithName:@"test.webp"];
     [self addSpriteSheetImage];
+    [self addProgressiveImage];
 }
 
 - (void)addImageWithName:(NSString *)name
@@ -95,6 +96,21 @@
       //                                             frameDurations:durations
         //                                                loopCount:0];
     //[self.tableData fwAddObject:image];
+}
+
+- (void)addProgressiveImage
+{
+    NSString *name = @"progressive.jpg";
+    
+    NSData *data = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
+    float progress = 0.5;
+    if (progress > 1) progress = 1;
+    NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
+    /*
+    YYImageDecoder *decoder = [[YYImageDecoder alloc] initWithScale:[UIScreen mainScreen].scale];
+    [decoder updateData:subData final:NO];
+    YYImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
+    [self.tableData fwAddObject:image];*/
 }
 
 #pragma mark - TableView
