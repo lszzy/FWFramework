@@ -9,13 +9,13 @@
 
 #import "FWImageCoder.h"
 
-@protocol SDAnimatedImage <SDAnimatedImageProvider>
+@protocol FWAnimatedImage <FWAnimatedImageProvider>
 
 @required
 
-- (nullable instancetype)initWithData:(nonnull NSData *)data scale:(CGFloat)scale options:(nullable SDImageCoderOptions *)options;
+- (nullable instancetype)initWithData:(nonnull NSData *)data scale:(CGFloat)scale options:(nullable FWImageCoderOptions *)options;
 
-- (nullable instancetype)initWithAnimatedCoder:(nonnull id<SDAnimatedImageCoder>)animatedCoder scale:(CGFloat)scale;
+- (nullable instancetype)initWithAnimatedCoder:(nonnull id<FWAnimatedImageCoder>)animatedCoder scale:(CGFloat)scale;
 
 @optional
 
@@ -25,15 +25,15 @@
 
 @property (nonatomic, assign, readonly, getter=isAllFramesLoaded) BOOL allFramesLoaded;
 
-@property (nonatomic, strong, readonly, nullable) id<SDAnimatedImageCoder> animatedCoder;
+@property (nonatomic, strong, readonly, nullable) id<FWAnimatedImageCoder> animatedCoder;
 
 @end
 
-@interface SDAnimatedImage : UIImage <SDAnimatedImage>
+@interface FWAnimatedImage : UIImage <FWAnimatedImage>
 
 // This class override these methods from UIImage(NSImage), and it supports NSSecureCoding.
 // You should use these methods to create a new animated image. Use other methods just call super instead.
-// Pay attention, when the animated image frame count <= 1, all the `SDAnimatedImageProvider` protocol methods will return nil or 0 value, you'd better check the frame count before usage and keep fallback.
+// Pay attention, when the animated image frame count <= 1, all the `FWAnimatedImageProvider` protocol methods will return nil or 0 value, you'd better check the frame count before usage and keep fallback.
 + (nullable instancetype)imageNamed:(nonnull NSString *)name; // Cache in memory, no Asset Catalog support
 + (nullable instancetype)imageNamed:(nonnull NSString *)name inBundle:(nullable NSBundle *)bundle; // Cache in memory, no Asset
 + (nullable instancetype)imageWithContentsOfFile:(nonnull NSString *)path;
@@ -46,7 +46,7 @@
 /**
  Current animated image format.
  */
-@property (nonatomic, assign, readonly) SDImageFormat animatedImageFormat;
+@property (nonatomic, assign, readonly) FWImageFormat animatedImageFormat;
 
 /**
  Current animated image data, you can use this to grab the compressed format data and create another animated image instance.
@@ -62,7 +62,7 @@
  */
 @property (nonatomic, readonly) CGFloat scale;
 
-// By default, animated image frames are returned by decoding just in time without keeping into memory. But you can choose to preload them into memory as well, See the decsription in `SDAnimatedImage` protocol.
+// By default, animated image frames are returned by decoding just in time without keeping into memory. But you can choose to preload them into memory as well, See the decsription in `FWAnimatedImage` protocol.
 // After preloaded, there is no huge difference on performance between this and UIImage's `animatedImageWithImages:duration:`. But UIImage's animation have some issues such like blanking and pausing during segue when using in `UIImageView`. It's recommend to use only if need.
 - (void)preloadAllFrames;
 - (void)unloadAllFrames;
@@ -82,8 +82,8 @@
  For `UIImage`, this method return the single frame bytes size when `image.images` is nil for static image. Retuen full frame bytes size when `image.images` is not nil for animated image.
  For `NSImage`, this method return the single frame bytes size because `NSImage` does not store all frames in memory.
  @note Note that because of the limitations of category this property can get out of sync if you create another instance with CGImage or other methods.
- @note For custom animated class conforms to `SDAnimatedImage`, you can override this getter method in your subclass to return a more proper value instead, which representing the current frame's total bytes.
+ @note For custom animated class conforms to `FWAnimatedImage`, you can override this getter method in your subclass to return a more proper value instead, which representing the current frame's total bytes.
  */
-@property (assign, nonatomic) NSUInteger sd_memoryCost;
+@property (assign, nonatomic) NSUInteger fw_memoryCost;
 
 @end

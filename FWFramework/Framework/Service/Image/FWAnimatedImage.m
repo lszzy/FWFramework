@@ -177,16 +177,16 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
     return scale;
 }
 
-@interface SDAnimatedImage ()
+@interface FWAnimatedImage ()
 
-@property (nonatomic, strong) id<SDAnimatedImageCoder> animatedCoder;
-@property (nonatomic, assign, readwrite) SDImageFormat animatedImageFormat;
-@property (atomic, copy) NSArray<SDImageFrame *> *loadedAnimatedImageFrames; // Mark as atomic to keep thread-safe
+@property (nonatomic, strong) id<FWAnimatedImageCoder> animatedCoder;
+@property (nonatomic, assign, readwrite) FWImageFormat animatedImageFormat;
+@property (atomic, copy) NSArray<FWImageFrame *> *loadedAnimatedImageFrames; // Mark as atomic to keep thread-safe
 @property (nonatomic, assign, getter=isAllFramesLoaded) BOOL allFramesLoaded;
 
 @end
 
-@implementation SDAnimatedImage
+@implementation FWAnimatedImage
 @dynamic scale; // call super
 
 + (instancetype)imageNamed:(NSString *)name {
@@ -206,8 +206,8 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
         bundle = [NSBundle mainBundle];
     }
     SDImageAssetManager *assetManager = [SDImageAssetManager sharedAssetManager];
-    SDAnimatedImage *image = (SDAnimatedImage *)[assetManager imageForName:name];
-    if ([image isKindOfClass:[SDAnimatedImage class]]) {
+    FWAnimatedImage *image = (FWAnimatedImage *)[assetManager imageForName:name];
+    if ([image isKindOfClass:[FWAnimatedImage class]]) {
         return image;
     }
     NSString *path = [assetManager getPathForName:name bundle:bundle preferredScale:&scale];
@@ -251,17 +251,17 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
     return [self initWithData:data scale:scale options:nil];
 }
 
-- (instancetype)initWithData:(NSData *)data scale:(CGFloat)scale options:(SDImageCoderOptions *)options {
+- (instancetype)initWithData:(NSData *)data scale:(CGFloat)scale options:(FWImageCoderOptions *)options {
     if (!data || data.length == 0) {
         return nil;
     }
     data = [data copy]; // avoid mutable data
-    id<SDAnimatedImageCoder> animatedCoder = nil;
-    for (id<SDImageCoder>coder in [SDImageCodersManager sharedManager].coders) {
-        if ([coder conformsToProtocol:@protocol(SDAnimatedImageCoder)]) {
+    id<FWAnimatedImageCoder> animatedCoder = nil;
+    for (id<FWImageCoder>coder in [FWImageCodersManager sharedManager].coders) {
+        if ([coder conformsToProtocol:@protocol(FWAnimatedImageCoder)]) {
             if ([coder canDecodeFromData:data]) {
                 if (!options) {
-                    options = @{SDImageCoderDecodeScaleFactor : @(scale)};
+                    options = @{FWImageCoderDecodeScaleFactor : @(scale)};
                 }
                 animatedCoder = [[[coder class] alloc] initWithAnimatedImageData:data options:options];
                 break;
@@ -274,7 +274,7 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
     return [self initWithAnimatedCoder:animatedCoder scale:scale];
 }
 
-- (instancetype)initWithAnimatedCoder:(id<SDAnimatedImageCoder>)animatedCoder scale:(CGFloat)scale {
+- (instancetype)initWithAnimatedCoder:(id<FWAnimatedImageCoder>)animatedCoder scale:(CGFloat)scale {
     if (!animatedCoder) {
         return nil;
     }
@@ -293,7 +293,7 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
             _animatedCoder = animatedCoder;
         }
         NSData *data = [animatedCoder animatedImageData];
-        SDImageFormat format = [NSData sd_imageFormatForImageData:data];
+        FWImageFormat format = [NSData fw_imageFormatForImageData:data];
         _animatedImageFormat = format;
     }
     return self;
@@ -305,11 +305,11 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
         return;
     }
     if (!self.isAllFramesLoaded) {
-        NSMutableArray<SDImageFrame *> *frames = [NSMutableArray arrayWithCapacity:self.animatedImageFrameCount];
+        NSMutableArray<FWImageFrame *> *frames = [NSMutableArray arrayWithCapacity:self.animatedImageFrameCount];
         for (size_t i = 0; i < self.animatedImageFrameCount; i++) {
             UIImage *image = [self animatedImageFrameAtIndex:i];
             NSTimeInterval duration = [self animatedImageDurationAtIndex:i];
-            SDImageFrame *frame = [SDImageFrame frameWithImage:image duration:duration]; // through the image should be nonnull, used as nullable for `animatedImageFrameAtIndex:`
+            FWImageFrame *frame = [FWImageFrame frameWithImage:image duration:duration]; // through the image should be nonnull, used as nullable for `animatedImageFrameAtIndex:`
             [frames addObject:frame];
         }
         self.loadedAnimatedImageFrames = frames;
@@ -337,11 +337,11 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
             return self;
         }
         CGFloat scale = self.scale;
-        id<SDAnimatedImageCoder> animatedCoder = nil;
-        for (id<SDImageCoder>coder in [SDImageCodersManager sharedManager].coders) {
-            if ([coder conformsToProtocol:@protocol(SDAnimatedImageCoder)]) {
+        id<FWAnimatedImageCoder> animatedCoder = nil;
+        for (id<FWImageCoder>coder in [FWImageCodersManager sharedManager].coders) {
+            if ([coder conformsToProtocol:@protocol(FWAnimatedImageCoder)]) {
                 if ([coder canDecodeFromData:animatedImageData]) {
-                    animatedCoder = [[[coder class] alloc] initWithAnimatedImageData:animatedImageData options:@{SDImageCoderDecodeScaleFactor : @(scale)}];
+                    animatedCoder = [[[coder class] alloc] initWithAnimatedImageData:animatedImageData options:@{FWImageCoderDecodeScaleFactor : @(scale)}];
                     break;
                 }
             }
@@ -369,7 +369,7 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
     return YES;
 }
 
-#pragma mark - SDAnimatedImageProvider
+#pragma mark - FWAnimatedImageProvider
 
 - (NSData *)animatedImageData {
     return [self.animatedCoder animatedImageData];
@@ -388,7 +388,7 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
         return nil;
     }
     if (self.isAllFramesLoaded) {
-        SDImageFrame *frame = [self.loadedAnimatedImageFrames objectAtIndex:index];
+        FWImageFrame *frame = [self.loadedAnimatedImageFrames objectAtIndex:index];
         return frame.image;
     }
     return [self.animatedCoder animatedImageFrameAtIndex:index];
@@ -399,7 +399,7 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
         return 0;
     }
     if (self.isAllFramesLoaded) {
-        SDImageFrame *frame = [self.loadedAnimatedImageFrames objectAtIndex:index];
+        FWImageFrame *frame = [self.loadedAnimatedImageFrames objectAtIndex:index];
         return frame.duration;
     }
     return [self.animatedCoder animatedImageDurationAtIndex:index];
@@ -421,8 +421,8 @@ FOUNDATION_STATIC_INLINE NSUInteger SDMemoryCacheCostForImage(UIImage *image) {
 
 @implementation UIImage (MemoryCacheCost)
 
-- (NSUInteger)sd_memoryCost {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_memoryCost));
+- (NSUInteger)fw_memoryCost {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_memoryCost));
     NSUInteger memoryCost;
     if (value != nil) {
         memoryCost = [value unsignedIntegerValue];
@@ -432,16 +432,16 @@ FOUNDATION_STATIC_INLINE NSUInteger SDMemoryCacheCostForImage(UIImage *image) {
     return memoryCost;
 }
 
-- (void)setSd_memoryCost:(NSUInteger)sd_memoryCost {
-    objc_setAssociatedObject(self, @selector(sd_memoryCost), @(sd_memoryCost), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setSd_memoryCost:(NSUInteger)fw_memoryCost {
+    objc_setAssociatedObject(self, @selector(fw_memoryCost), @(fw_memoryCost), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
 
-@implementation SDAnimatedImage (MemoryCacheCost)
+@implementation FWAnimatedImage (MemoryCacheCost)
 
-- (NSUInteger)sd_memoryCost {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_memoryCost));
+- (NSUInteger)fw_memoryCost {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_memoryCost));
     if (value != nil) {
         return value.unsignedIntegerValue;
     }

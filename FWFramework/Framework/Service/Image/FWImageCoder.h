@@ -12,38 +12,38 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // 图片类型枚举，可动态扩展
-typedef NSInteger SDImageFormat NS_TYPED_EXTENSIBLE_ENUM;
-static const SDImageFormat SDImageFormatUndefined = -1;
-static const SDImageFormat SDImageFormatJPEG      = 0;
-static const SDImageFormat SDImageFormatPNG       = 1;
-static const SDImageFormat SDImageFormatGIF       = 2;
-static const SDImageFormat SDImageFormatTIFF      = 3;
-static const SDImageFormat SDImageFormatWebP      = 4;
-static const SDImageFormat SDImageFormatHEIC      = 5;
-static const SDImageFormat SDImageFormatHEIF      = 6;
+typedef NSInteger FWImageFormat NS_TYPED_EXTENSIBLE_ENUM;
+static const FWImageFormat FWImageFormatUndefined = -1;
+static const FWImageFormat FWImageFormatJPEG      = 0;
+static const FWImageFormat FWImageFormatPNG       = 1;
+static const FWImageFormat FWImageFormatGIF       = 2;
+static const FWImageFormat FWImageFormatTIFF      = 3;
+static const FWImageFormat FWImageFormatWebP      = 4;
+static const FWImageFormat FWImageFormatHEIC      = 5;
+static const FWImageFormat FWImageFormatHEIF      = 6;
 
 // 图片解码器选项，可动态扩展
-typedef NSString * SDImageCoderOption NS_STRING_ENUM;
-typedef NSDictionary<SDImageCoderOption, id> SDImageCoderOptions;
-FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderDecodeFirstFrameOnly;
-FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderDecodeScaleFactor;
-FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeFirstFrameOnly;
-FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressionQuality;
+typedef NSString * FWImageCoderOption NS_STRING_ENUM;
+typedef NSDictionary<FWImageCoderOption, id> FWImageCoderOptions;
+FOUNDATION_EXPORT FWImageCoderOption _Nonnull const FWImageCoderDecodeFirstFrameOnly;
+FOUNDATION_EXPORT FWImageCoderOption _Nonnull const FWImageCoderDecodeScaleFactor;
+FOUNDATION_EXPORT FWImageCoderOption _Nonnull const FWImageCoderEncodeFirstFrameOnly;
+FOUNDATION_EXPORT FWImageCoderOption _Nonnull const FWImageCoderEncodeCompressionQuality;
 
 // 图片编码器协议
-@protocol SDImageCoder <NSObject>
+@protocol FWImageCoder <NSObject>
 
 @required
 
 - (BOOL)canDecodeFromData:(nullable NSData *)data;
-- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data options:(nullable SDImageCoderOptions *)options;
+- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data options:(nullable FWImageCoderOptions *)options;
 
-- (BOOL)canEncodeToFormat:(SDImageFormat)format;
-- (nullable NSData *)encodedDataWithImage:(nullable UIImage *)image format:(SDImageFormat)format options:(nullable SDImageCoderOptions *)options;
+- (BOOL)canEncodeToFormat:(FWImageFormat)format;
+- (nullable NSData *)encodedDataWithImage:(nullable UIImage *)image format:(FWImageFormat)format options:(nullable FWImageCoderOptions *)options;
 
 @end
 
-@protocol SDAnimatedImageProvider <NSObject>
+@protocol FWAnimatedImageProvider <NSObject>
 
 @required
 
@@ -59,59 +59,59 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
 
 @end
 
-@protocol SDAnimatedImageCoder <SDImageCoder, SDAnimatedImageProvider>
+@protocol FWAnimatedImageCoder <FWImageCoder, FWAnimatedImageProvider>
 
 @required
 
-- (nullable instancetype)initWithAnimatedImageData:(nullable NSData *)data options:(nullable SDImageCoderOptions *)options;
+- (nullable instancetype)initWithAnimatedImageData:(nullable NSData *)data options:(nullable FWImageCoderOptions *)options;
 
 @end
 
-@protocol SDProgressiveImageCoder <SDImageCoder>
+@protocol FWProgressiveImageCoder <FWImageCoder>
 
 @required
 
 - (BOOL)canIncrementalDecodeFromData:(nullable NSData *)data;
 
-- (nonnull instancetype)initIncrementalWithOptions:(nullable SDImageCoderOptions *)options;
+- (nonnull instancetype)initIncrementalWithOptions:(nullable FWImageCoderOptions *)options;
 
 - (void)updateIncrementalData:(nullable NSData *)data finished:(BOOL)finished;
 
-- (nullable UIImage *)incrementalDecodedImageWithOptions:(nullable SDImageCoderOptions *)options;
+- (nullable UIImage *)incrementalDecodedImageWithOptions:(nullable FWImageCoderOptions *)options;
 
 @end
 
-@interface SDImageCodersManager : NSObject <SDImageCoder>
+@interface FWImageCodersManager : NSObject <FWImageCoder>
 
-@property (nonatomic, class, readonly, nonnull) SDImageCodersManager *sharedManager;
+@property (nonatomic, class, readonly, nonnull) FWImageCodersManager *sharedManager;
 
-@property (nonatomic, copy, nullable) NSArray<id<SDImageCoder>> *coders;
+@property (nonatomic, copy, nullable) NSArray<id<FWImageCoder>> *coders;
 
-- (void)addCoder:(nonnull id<SDImageCoder>)coder;
+- (void)addCoder:(nonnull id<FWImageCoder>)coder;
 
-- (void)removeCoder:(nonnull id<SDImageCoder>)coder;
+- (void)removeCoder:(nonnull id<FWImageCoder>)coder;
 
 @end
 
 #pragma mark - Coder
 
-@interface SDImageIOCoder : NSObject <SDProgressiveImageCoder>
+@interface FWImageIOCoder : NSObject <FWProgressiveImageCoder>
 
-@property (nonatomic, class, readonly, nonnull) SDImageIOCoder *sharedCoder;
+@property (nonatomic, class, readonly, nonnull) FWImageIOCoder *sharedCoder;
 
 @end
 
-@interface SDImageIOAnimatedCoder : NSObject <SDProgressiveImageCoder, SDAnimatedImageCoder>
+@interface FWImageIOAnimatedCoder : NSObject <FWProgressiveImageCoder, FWAnimatedImageCoder>
 
 #pragma mark - Subclass Override
 /**
- The supported animated image format. Such as `SDImageFormatGIF`.
+ The supported animated image format. Such as `FWImageFormatGIF`.
  @note Subclass override.
  */
-@property (class, readonly) SDImageFormat imageFormat;
+@property (class, readonly) FWImageFormat imageFormat;
 /**
  The supported image format UTI Type. Such as `kUTTypeGIF`.
- This can be used for cases when we can not detect `SDImageFormat. Such as progressive decoding's hint format `kCGImageSourceTypeIdentifierHint`.
+ This can be used for cases when we can not detect `FWImageFormat. Such as progressive decoding's hint format `kCGImageSourceTypeIdentifierHint`.
  @note Subclass override.
  */
 @property (class, readonly, nonnull) NSString *imageUTType;
@@ -144,27 +144,27 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
 
 @end
 
-@interface SDImageGIFCoder : SDImageIOAnimatedCoder <SDProgressiveImageCoder, SDAnimatedImageCoder>
+@interface FWImageGIFCoder : FWImageIOAnimatedCoder <FWProgressiveImageCoder, FWAnimatedImageCoder>
 
-@property (nonatomic, class, readonly, nonnull) SDImageGIFCoder *sharedCoder;
-
-@end
-
-@interface SDImageAPNGCoder : SDImageIOAnimatedCoder <SDProgressiveImageCoder, SDAnimatedImageCoder>
-
-@property (nonatomic, class, readonly, nonnull) SDImageAPNGCoder *sharedCoder;
+@property (nonatomic, class, readonly, nonnull) FWImageGIFCoder *sharedCoder;
 
 @end
 
-@interface SDImageHEICCoder : SDImageIOAnimatedCoder <SDProgressiveImageCoder, SDAnimatedImageCoder>
+@interface FWImageAPNGCoder : FWImageIOAnimatedCoder <FWProgressiveImageCoder, FWAnimatedImageCoder>
 
-@property (nonatomic, class, readonly, nonnull) SDImageHEICCoder *sharedCoder;
+@property (nonatomic, class, readonly, nonnull) FWImageAPNGCoder *sharedCoder;
 
 @end
 
-#pragma mark - SDImageFrame
+@interface FWImageHEICCoder : FWImageIOAnimatedCoder <FWProgressiveImageCoder, FWAnimatedImageCoder>
 
-@interface SDImageFrame : NSObject
+@property (nonatomic, class, readonly, nonnull) FWImageHEICCoder *sharedCoder;
+
+@end
+
+#pragma mark - FWImageFrame
+
+@interface FWImageFrame : NSObject
 
 @property (nonatomic, strong, readonly, nonnull) UIImage *image;
 
@@ -174,7 +174,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
 
 @end
 
-@interface SDImageCoderHelper : NSObject
+@interface FWImageCoderHelper : NSObject
 
 /**
  Return an animated image with frames array.
@@ -184,7 +184,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param frames The frames array. If no frames or frames is empty, return nil
  @return A animated image for rendering on UIImageView(UIKit) or NSImageView(AppKit)
  */
-+ (UIImage * _Nullable)animatedImageWithFrames:(NSArray<SDImageFrame *> * _Nullable)frames;
++ (UIImage * _Nullable)animatedImageWithFrames:(NSArray<FWImageFrame *> * _Nullable)frames;
 
 /**
  Return frames array from an animated image.
@@ -194,7 +194,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param animatedImage A animated image. If it's not animated, return nil
  @return The frames array
  */
-+ (NSArray<SDImageFrame *> * _Nullable)framesFromAnimatedImage:(UIImage * _Nullable)animatedImage;
++ (NSArray<FWImageFrame *> * _Nullable)framesFromAnimatedImage:(UIImage * _Nullable)animatedImage;
 
 /**
  Return the shared device-dependent RGB color space. This follows The Get Rule.
@@ -280,25 +280,25 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  *
  *  @param data the input image data
  *
- *  @return the image format as `SDImageFormat` (enum)
+ *  @return the image format as `FWImageFormat` (enum)
  */
-+ (SDImageFormat)sd_imageFormatForImageData:(nullable NSData *)data;
++ (FWImageFormat)fw_imageFormatForImageData:(nullable NSData *)data;
 
 /**
- *  Convert SDImageFormat to UTType
+ *  Convert FWImageFormat to UTType
  *
- *  @param format Format as SDImageFormat
+ *  @param format Format as FWImageFormat
  *  @return The UTType as CFStringRef
  */
-+ (nonnull CFStringRef)sd_UTTypeFromImageFormat:(SDImageFormat)format CF_RETURNS_NOT_RETAINED;
++ (nonnull CFStringRef)fw_UTTypeFromImageFormat:(FWImageFormat)format CF_RETURNS_NOT_RETAINED;
 
 /**
- *  Convert UTTyppe to SDImageFormat
+ *  Convert UTTyppe to FWImageFormat
  *
  *  @param uttype The UTType as CFStringRef
- *  @return The Format as SDImageFormat
+ *  @return The Format as FWImageFormat
  */
-+ (SDImageFormat)sd_imageFormatFromUTType:(nonnull CFStringRef)uttype;
++ (FWImageFormat)fw_imageFormatFromUTType:(nonnull CFStringRef)uttype;
 
 @end
 
@@ -314,7 +314,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  * The getter of this property will get the loop count from GIF imageRep
  * The setter of this property will set the loop count from GIF imageRep
  */
-@property (nonatomic, assign) NSUInteger sd_imageLoopCount;
+@property (nonatomic, assign) NSUInteger fw_imageLoopCount;
 
 /**
  * UIKit:
@@ -322,24 +322,24 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  * AppKit:
  * NSImage currently only support animated via GIF imageRep unlike UIImage. It will check the imageRep's frame count.
  */
-@property (nonatomic, assign, readonly) BOOL sd_isAnimated;
+@property (nonatomic, assign, readonly) BOOL fw_isAnimated;
 
 /**
  * The image format represent the original compressed image data format.
- * If you don't manually specify a format, this information is retrieve from CGImage using `CGImageGetUTType`, which may return nil for non-CG based image. At this time it will return `SDImageFormatUndefined` as default value.
+ * If you don't manually specify a format, this information is retrieve from CGImage using `CGImageGetUTType`, which may return nil for non-CG based image. At this time it will return `FWImageFormatUndefined` as default value.
  * @note Note that because of the limitations of categories this property can get out of sync if you create another instance with CGImage or other methods.
  */
-@property (nonatomic, assign) SDImageFormat sd_imageFormat;
+@property (nonatomic, assign) FWImageFormat fw_imageFormat;
 
 /**
  A bool value indicating whether the image is during incremental decoding and may not contains full pixels.
  */
-@property (nonatomic, assign) BOOL sd_isIncremental;
+@property (nonatomic, assign) BOOL fw_isIncremental;
 
 /**
  A bool value indicating whether the image has already been decoded. This can help to avoid extra force decode.
  */
-@property (nonatomic, assign) BOOL sd_isDecoded;
+@property (nonatomic, assign) BOOL fw_isDecoded;
 
 @end
 
@@ -354,7 +354,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param data The image data
  @return The created image
  */
-+ (nullable UIImage *)sd_imageWithData:(nullable NSData *)data;
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data;
 
 /**
  Create and decode a image with the specify image data and scale
@@ -363,7 +363,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param scale The image scale factor. Should be greater than or equal to 1.0.
  @return The created image
  */
-+ (nullable UIImage *)sd_imageWithData:(nullable NSData *)data scale:(CGFloat)scale;
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale;
 
 /**
  Create and decode a image with the specify image data and scale, allow specify animate/static control
@@ -373,7 +373,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param firstFrameOnly Even if the image data is animated image format, decode the first frame only as static image.
  @return The created image
  */
-+ (nullable UIImage *)sd_imageWithData:(nullable NSData *)data scale:(CGFloat)scale firstFrameOnly:(BOOL)firstFrameOnly;
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale firstFrameOnly:(BOOL)firstFrameOnly;
 
 #pragma mark - Encode
 /**
@@ -381,7 +381,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
 
  @return The encoded data. If can't encode, return nil
  */
-- (nullable NSData *)sd_imageData;
+- (nullable NSData *)fw_imageData;
 
 /**
  Encode the current image to data with the specify image format
@@ -389,7 +389,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param imageFormat The specify image format
  @return The encoded data. If can't encode, return nil
  */
-- (nullable NSData *)sd_imageDataAsFormat:(SDImageFormat)imageFormat;
+- (nullable NSData *)fw_imageDataAsFormat:(FWImageFormat)imageFormat;
 
 /**
  Encode the current image to data with the specify image format and compression quality
@@ -398,7 +398,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param compressionQuality The quality of the resulting image data. Value between 0.0-1.0. Some coders may not support compression quality.
  @return The encoded data. If can't encode, return nil
  */
-- (nullable NSData *)sd_imageDataAsFormat:(SDImageFormat)imageFormat compressionQuality:(double)compressionQuality;
+- (nullable NSData *)fw_imageDataAsFormat:(FWImageFormat)imageFormat compressionQuality:(double)compressionQuality;
 
 /**
  Encode the current image to data with the specify image format and compression quality, allow specify animate/static control
@@ -408,7 +408,7 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderEncodeCompressio
  @param firstFrameOnly Even if the image is animated image, encode the first frame only as static image.
  @return The encoded data. If can't encode, return nil
  */
-- (nullable NSData *)sd_imageDataAsFormat:(SDImageFormat)imageFormat compressionQuality:(double)compressionQuality firstFrameOnly:(BOOL)firstFrameOnly;
+- (nullable NSData *)fw_imageDataAsFormat:(FWImageFormat)imageFormat compressionQuality:(double)compressionQuality firstFrameOnly:(BOOL)firstFrameOnly;
 
 @end
 
