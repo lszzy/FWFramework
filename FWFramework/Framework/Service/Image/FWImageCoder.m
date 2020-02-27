@@ -405,8 +405,6 @@ FWImageCoderOption const FWImageCoderEncodeCompressionQuality = @"encodeCompress
     NSUInteger _frameCount;
     NSArray<FWImageIOCoderFrame *> *_frames;
     BOOL _finished;
-    BOOL _preserveAspectRatio;
-    CGSize _thumbnailSize;
 }
 
 - (void)dealloc
@@ -605,10 +603,6 @@ FWImageCoderOption const FWImageCoderEncodeCompressionQuality = @"encodeCompress
             scale = MAX([scaleFactor doubleValue], 1);
         }
         _scale = scale;
-        CGSize thumbnailSize = CGSizeZero;
-        _thumbnailSize = thumbnailSize;
-        BOOL preserveAspectRatio = YES;
-        _preserveAspectRatio = preserveAspectRatio;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;
@@ -745,10 +739,6 @@ FWImageCoderOption const FWImageCoderEncodeCompressionQuality = @"encodeCompress
             scale = MAX([scaleFactor doubleValue], 1);
         }
         _scale = scale;
-        CGSize thumbnailSize = CGSizeZero;
-        _thumbnailSize = thumbnailSize;
-        BOOL preserveAspectRatio = YES;
-        _preserveAspectRatio = preserveAspectRatio;
         _imageSource = imageSource;
         _imageData = data;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
