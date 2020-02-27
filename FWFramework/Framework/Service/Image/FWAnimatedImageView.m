@@ -20,7 +20,7 @@
 #define SD_UNLOCK(lock) dispatch_semaphore_signal(lock);
 #endif
 
-@interface SDAnimatedImageView () <CALayerDelegate> {
+@interface FWAnimatedImageView () <CALayerDelegate> {
     BOOL _initFinished; // Extra flag to mark the `commonInit` is called
     NSRunLoopMode _runLoopMode;
     NSUInteger _maxBufferSize;
@@ -32,12 +32,12 @@
 @property (nonatomic, assign, readwrite) NSUInteger currentLoopCount;
 @property (nonatomic, assign) BOOL shouldAnimate;
 @property (nonatomic, assign) BOOL isProgressive;
-@property (nonatomic,strong) SDAnimatedImagePlayer *player; // The animation player.
+@property (nonatomic,strong) FWAnimatedImagePlayer *player; // The animation player.
 @property (nonatomic) CALayer *imageViewLayer; // The actual rendering layer.
 
 @end
 
-@implementation SDAnimatedImageView
+@implementation FWAnimatedImageView
 
 @dynamic animationRepeatCount; // we re-use this property from `UIImageView` super class on iOS.
 
@@ -115,20 +115,20 @@
     
     // We need call super method to keep function. This will impliedly call `setNeedsDisplay`. But we have no way to avoid this when using animated image. So we call `setNeedsDisplay` again at the end.
     super.image = image;
-    if ([image.class conformsToProtocol:@protocol(SDAnimatedImage)]) {
+    if ([image.class conformsToProtocol:@protocol(FWAnimatedImage)]) {
         if (!self.player) {
-            id<SDAnimatedImageProvider> provider;
+            id<FWAnimatedImageProvider> provider;
             // Check progressive loading
             if (self.isProgressive) {
                 provider = [self progressiveAnimatedCoderForImage:image];
             } else {
-                provider = (id<SDAnimatedImage>)image;
+                provider = (id<FWAnimatedImage>)image;
             }
             // Create animted player
-            self.player = [SDAnimatedImagePlayer playerWithProvider:provider];
+            self.player = [FWAnimatedImagePlayer playerWithProvider:provider];
         } else {
             // Update Frame Count
-            self.player.totalFrameCount = [(id<SDAnimatedImage>)image animatedImageFrameCount];
+            self.player.totalFrameCount = [(id<FWAnimatedImage>)image animatedImageFrameCount];
         }
         
         if (!self.player) {
@@ -365,14 +365,14 @@
     }
     // We must use `image.class conformsToProtocol:` instead of `image conformsToProtocol:` here
     // Because UIKit on macOS, using internal hard-coded override method, which returns NO
-    id<SDAnimatedImageCoder> currentAnimatedCoder = [self progressiveAnimatedCoderForImage:image];
+    id<FWAnimatedImageCoder> currentAnimatedCoder = [self progressiveAnimatedCoderForImage:image];
     if (currentAnimatedCoder) {
         UIImage *previousImage = self.image;
         if (!previousImage) {
             // If current animated coder supports progressive, and no previous image to check, start progressive loading
             self.isProgressive = YES;
         } else {
-            id<SDAnimatedImageCoder> previousAnimatedCoder = [self progressiveAnimatedCoderForImage:previousImage];
+            id<FWAnimatedImageCoder> previousAnimatedCoder = [self progressiveAnimatedCoderForImage:previousImage];
             if (previousAnimatedCoder == currentAnimatedCoder) {
                 // If current animated coder is the same as previous, start progressive loading
                 self.isProgressive = YES;
@@ -382,12 +382,12 @@
 }
 
 // Check if image can represent a `Progressive Animated Image` during loading
-- (id<SDAnimatedImageCoder, SDProgressiveImageCoder>)progressiveAnimatedCoderForImage:(UIImage *)image
+- (id<FWAnimatedImageCoder, FWProgressiveImageCoder>)progressiveAnimatedCoderForImage:(UIImage *)image
 {
-    if ([image.class conformsToProtocol:@protocol(SDAnimatedImage)] && image.sd_isIncremental && [image respondsToSelector:@selector(animatedCoder)]) {
-        id<SDAnimatedImageCoder> animatedCoder = [(id<SDAnimatedImage>)image animatedCoder];
-        if ([animatedCoder conformsToProtocol:@protocol(SDProgressiveImageCoder)]) {
-            return (id<SDAnimatedImageCoder, SDProgressiveImageCoder>)animatedCoder;
+    if ([image.class conformsToProtocol:@protocol(FWAnimatedImage)] && image.fw_isIncremental && [image respondsToSelector:@selector(animatedCoder)]) {
+        id<FWAnimatedImageCoder> animatedCoder = [(id<FWAnimatedImage>)image animatedCoder];
+        if ([animatedCoder conformsToProtocol:@protocol(FWProgressiveImageCoder)]) {
+            return (id<FWAnimatedImageCoder, FWProgressiveImageCoder>)animatedCoder;
         }
     }
     return nil;
@@ -536,14 +536,14 @@
 
 @end
 
-@interface SDAnimatedImagePlayer () {
+@interface FWAnimatedImagePlayer () {
     NSRunLoopMode _runLoopMode;
 }
 
 @property (nonatomic, strong, readwrite) UIImage *currentFrame;
 @property (nonatomic, assign, readwrite) NSUInteger currentFrameIndex;
 @property (nonatomic, assign, readwrite) NSUInteger currentLoopCount;
-@property (nonatomic, strong) id<SDAnimatedImageProvider> animatedProvider;
+@property (nonatomic, strong) id<FWAnimatedImageProvider> animatedProvider;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, UIImage *> *frameBuffer;
 @property (nonatomic, assign) NSTimeInterval currentTime;
 @property (nonatomic, assign) BOOL bufferMiss;
@@ -555,9 +555,9 @@
 
 @end
 
-@implementation SDAnimatedImagePlayer
+@implementation FWAnimatedImagePlayer
 
-- (instancetype)initWithProvider:(id<SDAnimatedImageProvider>)provider {
+- (instancetype)initWithProvider:(id<FWAnimatedImageProvider>)provider {
     self = [super init];
     if (self) {
         NSUInteger animatedImageFrameCount = provider.animatedImageFrameCount;
@@ -575,8 +575,8 @@
     return self;
 }
 
-+ (instancetype)playerWithProvider:(id<SDAnimatedImageProvider>)provider {
-    SDAnimatedImagePlayer *player = [[SDAnimatedImagePlayer alloc] initWithProvider:provider];
++ (instancetype)playerWithProvider:(id<FWAnimatedImageProvider>)provider {
+    FWAnimatedImagePlayer *player = [[FWAnimatedImagePlayer alloc] initWithProvider:provider];
     return player;
 }
 
@@ -709,7 +709,7 @@
 
 - (void)stopPlaying {
     [_fetchQueue cancelAllOperations];
-    // Using `_displayLink` here because when UIImageView dealloc, it may trigger `[self stopAnimating]`, we already release the display link in SDAnimatedImageView's dealloc method.
+    // Using `_displayLink` here because when UIImageView dealloc, it may trigger `[self stopAnimating]`, we already release the display link in FWAnimatedImageView's dealloc method.
     [_displayLink stop];
     [self resetCurrentFrameIndex];
 }
@@ -846,7 +846,7 @@
     
     if (!fetchFrame && !bufferFull && self.fetchQueue.operationCount == 0) {
         // Prefetch next frame in background queue
-        id<SDAnimatedImageProvider> animatedProvider = self.animatedProvider;
+        id<FWAnimatedImageProvider> animatedProvider = self.animatedProvider;
         __weak __typeof__(self) self_weak_ = self;
         NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
             __typeof__(self) self = self_weak_;

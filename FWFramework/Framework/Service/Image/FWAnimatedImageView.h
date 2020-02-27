@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "FWAnimatedImage.h"
 
-@interface SDAnimatedImageView : UIImageView
+@interface FWAnimatedImageView : UIImageView
 
 /**
  Current display frame image. This value is KVO Compliance.
@@ -52,9 +52,9 @@
  */
 @property (nonatomic, assign) NSUInteger maxBufferSize;
 /**
- Whehter or not to enable incremental image load for animated image. This is for the animated image which `sd_isIncremental` is YES (See `UIImage+Metadata.h`). If enable, animated image rendering will stop at the last frame available currently, and continue when another `setImage:` trigger, where the new animated image's `animatedImageData` should be updated from the previous one. If the `sd_isIncremental` is NO. The incremental image load stop.
+ Whehter or not to enable incremental image load for animated image. This is for the animated image which `fw_isIncremental` is YES (See `UIImage+Metadata.h`). If enable, animated image rendering will stop at the last frame available currently, and continue when another `setImage:` trigger, where the new animated image's `animatedImageData` should be updated from the previous one. If the `fw_isIncremental` is NO. The incremental image load stop.
  @note If you are confused about this description, open Chrome browser to view some large GIF images with low network speed to see the animation behavior.
- @note The best practice to use incremental load is using `initWithAnimatedCoder:scale:` in `SDAnimatedImage` with animated coder which conform to `SDProgressiveImageCoder` as well. Then call incremental update and incremental decode method to produce the image.
+ @note The best practice to use incremental load is using `initWithAnimatedCoder:scale:` in `FWAnimatedImage` with animated coder which conform to `FWProgressiveImageCoder` as well. Then call incremental update and incremental decode method to produce the image.
  Default is YES. Set to NO to only render the static poster for incremental animated image.
  */
 @property (nonatomic, assign) BOOL shouldIncrementalLoad;
@@ -81,7 +81,7 @@
 @property (nonatomic, copy, nonnull) NSRunLoopMode runLoopMode;
 @end
 
-@interface SDAnimatedImagePlayer : NSObject
+@interface FWAnimatedImagePlayer : NSObject
 
 /// Current playing frame image. This value is KVO Compliance.
 @property (nonatomic, readonly, nullable) UIImage *currentFrame;
@@ -118,16 +118,16 @@
 @property (nonatomic, copy, nonnull) NSRunLoopMode runLoopMode;
 
 /// Create a player with animated image provider. If the provider's `animatedImageFrameCount` is less than 1, returns nil.
-/// The provider can be any protocol implementation, like `SDAnimatedImage`, `SDImageGIFCoder`, etc.
+/// The provider can be any protocol implementation, like `FWAnimatedImage`, `FWImageGIFCoder`, etc.
 /// @note This provider can represent mutable content, like prorgessive animated loading. But you need to update the frame count by yourself
 /// @param provider The animated provider
-- (nullable instancetype)initWithProvider:(nonnull id<SDAnimatedImageProvider>)provider;
+- (nullable instancetype)initWithProvider:(nonnull id<FWAnimatedImageProvider>)provider;
 
 /// Create a player with animated image provider. If the provider's `animatedImageFrameCount` is less than 1, returns nil.
-/// The provider can be any protocol implementation, like `SDAnimatedImage` or `SDImageGIFCoder`, etc.
+/// The provider can be any protocol implementation, like `FWAnimatedImage` or `FWImageGIFCoder`, etc.
 /// @note This provider can represent mutable content, like prorgessive animated loading. But you need to update the frame count by yourself
 /// @param provider The animated provider
-+ (nullable instancetype)playerWithProvider:(nonnull id<SDAnimatedImageProvider>)provider;
++ (nullable instancetype)playerWithProvider:(nonnull id<FWAnimatedImageProvider>)provider;
 
 /// The handler block when current frame and index changed.
 @property (nonatomic, copy, nullable) void (^animationFrameHandler)(NSUInteger index, UIImage * _Nonnull frame);

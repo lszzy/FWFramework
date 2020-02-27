@@ -20,21 +20,21 @@
 #define SD_UNLOCK(lock) dispatch_semaphore_signal(lock);
 #endif
 
-SDImageCoderOption const SDImageCoderDecodeFirstFrameOnly = @"decodeFirstFrameOnly";
-SDImageCoderOption const SDImageCoderDecodeScaleFactor = @"decodeScaleFactor";
+FWImageCoderOption const FWImageCoderDecodeFirstFrameOnly = @"decodeFirstFrameOnly";
+FWImageCoderOption const FWImageCoderDecodeScaleFactor = @"decodeScaleFactor";
 
-SDImageCoderOption const SDImageCoderEncodeFirstFrameOnly = @"encodeFirstFrameOnly";
-SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompressionQuality";
+FWImageCoderOption const FWImageCoderEncodeFirstFrameOnly = @"encodeFirstFrameOnly";
+FWImageCoderOption const FWImageCoderEncodeCompressionQuality = @"encodeCompressionQuality";
 
-@interface SDImageCodersManager ()
+@interface FWImageCodersManager ()
 
 @property (nonatomic, strong, nonnull) dispatch_semaphore_t codersLock;
 
 @end
 
-@implementation SDImageCodersManager
+@implementation FWImageCodersManager
 {
-    NSMutableArray<id<SDImageCoder>> *_imageCoders;
+    NSMutableArray<id<FWImageCoder>> *_imageCoders;
 }
 
 + (nonnull instancetype)sharedManager {
@@ -49,21 +49,21 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 - (instancetype)init {
     if (self = [super init]) {
         // initialize with default coders
-        _imageCoders = [NSMutableArray arrayWithArray:@[[SDImageIOCoder sharedCoder], [SDImageGIFCoder sharedCoder], [SDImageAPNGCoder sharedCoder]]];
+        _imageCoders = [NSMutableArray arrayWithArray:@[[FWImageIOCoder sharedCoder], [FWImageGIFCoder sharedCoder], [FWImageAPNGCoder sharedCoder]]];
         _codersLock = dispatch_semaphore_create(1);
     }
     return self;
 }
 
-- (NSArray<id<SDImageCoder>> *)coders
+- (NSArray<id<FWImageCoder>> *)coders
 {
     SD_LOCK(self.codersLock);
-    NSArray<id<SDImageCoder>> *coders = [_imageCoders copy];
+    NSArray<id<FWImageCoder>> *coders = [_imageCoders copy];
     SD_UNLOCK(self.codersLock);
     return coders;
 }
 
-- (void)setCoders:(NSArray<id<SDImageCoder>> *)coders
+- (void)setCoders:(NSArray<id<FWImageCoder>> *)coders
 {
     SD_LOCK(self.codersLock);
     [_imageCoders removeAllObjects];
@@ -75,8 +75,8 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 
 #pragma mark - Coder IO operations
 
-- (void)addCoder:(nonnull id<SDImageCoder>)coder {
-    if (![coder conformsToProtocol:@protocol(SDImageCoder)]) {
+- (void)addCoder:(nonnull id<FWImageCoder>)coder {
+    if (![coder conformsToProtocol:@protocol(FWImageCoder)]) {
         return;
     }
     SD_LOCK(self.codersLock);
@@ -84,8 +84,8 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     SD_UNLOCK(self.codersLock);
 }
 
-- (void)removeCoder:(nonnull id<SDImageCoder>)coder {
-    if (![coder conformsToProtocol:@protocol(SDImageCoder)]) {
+- (void)removeCoder:(nonnull id<FWImageCoder>)coder {
+    if (![coder conformsToProtocol:@protocol(FWImageCoder)]) {
         return;
     }
     SD_LOCK(self.codersLock);
@@ -93,10 +93,10 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     SD_UNLOCK(self.codersLock);
 }
 
-#pragma mark - SDImageCoder
+#pragma mark - FWImageCoder
 - (BOOL)canDecodeFromData:(NSData *)data {
-    NSArray<id<SDImageCoder>> *coders = self.coders;
-    for (id<SDImageCoder> coder in coders.reverseObjectEnumerator) {
+    NSArray<id<FWImageCoder>> *coders = self.coders;
+    for (id<FWImageCoder> coder in coders.reverseObjectEnumerator) {
         if ([coder canDecodeFromData:data]) {
             return YES;
         }
@@ -104,9 +104,9 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     return NO;
 }
 
-- (BOOL)canEncodeToFormat:(SDImageFormat)format {
-    NSArray<id<SDImageCoder>> *coders = self.coders;
-    for (id<SDImageCoder> coder in coders.reverseObjectEnumerator) {
+- (BOOL)canEncodeToFormat:(FWImageFormat)format {
+    NSArray<id<FWImageCoder>> *coders = self.coders;
+    for (id<FWImageCoder> coder in coders.reverseObjectEnumerator) {
         if ([coder canEncodeToFormat:format]) {
             return YES;
         }
@@ -114,13 +114,13 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     return NO;
 }
 
-- (UIImage *)decodedImageWithData:(NSData *)data options:(nullable SDImageCoderOptions *)options {
+- (UIImage *)decodedImageWithData:(NSData *)data options:(nullable FWImageCoderOptions *)options {
     if (!data) {
         return nil;
     }
     UIImage *image;
-    NSArray<id<SDImageCoder>> *coders = self.coders;
-    for (id<SDImageCoder> coder in coders.reverseObjectEnumerator) {
+    NSArray<id<FWImageCoder>> *coders = self.coders;
+    for (id<FWImageCoder> coder in coders.reverseObjectEnumerator) {
         if ([coder canDecodeFromData:data]) {
             image = [coder decodedImageWithData:data options:options];
             break;
@@ -130,12 +130,12 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     return image;
 }
 
-- (NSData *)encodedDataWithImage:(UIImage *)image format:(SDImageFormat)format options:(nullable SDImageCoderOptions *)options {
+- (NSData *)encodedDataWithImage:(UIImage *)image format:(FWImageFormat)format options:(nullable FWImageCoderOptions *)options {
     if (!image) {
         return nil;
     }
-    NSArray<id<SDImageCoder>> *coders = self.coders;
-    for (id<SDImageCoder> coder in coders.reverseObjectEnumerator) {
+    NSArray<id<FWImageCoder>> *coders = self.coders;
+    for (id<FWImageCoder> coder in coders.reverseObjectEnumerator) {
         if ([coder canEncodeToFormat:format]) {
             return [coder encodedDataWithImage:image format:format options:options];
         }
@@ -155,7 +155,7 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 // HEIC Sequence (Animated Image)
 #define kSDUTTypeHEICS ((__bridge CFStringRef)@"public.heics")
 
-@interface SDImageIOAnimatedCoder ()
+@interface FWImageIOAnimatedCoder ()
 
 + (NSTimeInterval)frameDurationAtIndex:(NSUInteger)index source:(nonnull CGImageSourceRef)source;
 + (NSUInteger)imageLoopCountWithSource:(nonnull CGImageSourceRef)source;
@@ -163,7 +163,7 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 
 @end
 
-@interface SDImageHEICCoder ()
+@interface FWImageHEICCoder ()
 
 + (BOOL)canDecodeFromHEICFormat;
 + (BOOL)canDecodeFromHEIFFormat;
@@ -172,7 +172,7 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 
 @end
 
-@implementation SDImageIOCoder {
+@implementation FWImageIOCoder {
     size_t _width, _height;
     CGImagePropertyOrientation _orientation;
     CGImageSourceRef _imageSource;
@@ -196,37 +196,37 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 }
 
 + (instancetype)sharedCoder {
-    static SDImageIOCoder *coder;
+    static FWImageIOCoder *coder;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        coder = [[SDImageIOCoder alloc] init];
+        coder = [[FWImageIOCoder alloc] init];
     });
     return coder;
 }
 
 #pragma mark - Decode
 - (BOOL)canDecodeFromData:(nullable NSData *)data {
-    switch ([NSData sd_imageFormatForImageData:data]) {
-        case SDImageFormatWebP:
+    switch ([NSData fw_imageFormatForImageData:data]) {
+        case FWImageFormatWebP:
             // Do not support WebP decoding
             return NO;
-        case SDImageFormatHEIC:
+        case FWImageFormatHEIC:
             // Check HEIC decoding compatibility
-            return [SDImageHEICCoder canDecodeFromHEICFormat];
-        case SDImageFormatHEIF:
+            return [FWImageHEICCoder canDecodeFromHEICFormat];
+        case FWImageFormatHEIF:
             // Check HEIF decoding compatibility
-            return [SDImageHEICCoder canDecodeFromHEIFFormat];
+            return [FWImageHEICCoder canDecodeFromHEIFFormat];
         default:
             return YES;
     }
 }
 
-- (UIImage *)decodedImageWithData:(NSData *)data options:(nullable SDImageCoderOptions *)options {
+- (UIImage *)decodedImageWithData:(NSData *)data options:(nullable FWImageCoderOptions *)options {
     if (!data) {
         return nil;
     }
     CGFloat scale = 1;
-    NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+    NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
     if (scaleFactor != nil) {
         scale = MAX([scaleFactor doubleValue], 1) ;
     }
@@ -236,13 +236,13 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
         return nil;
     }
     
-    UIImage *image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:source scale:scale];
+    UIImage *image = [FWImageIOAnimatedCoder createFrameAtIndex:0 source:source scale:scale];
     CFRelease(source);
     if (!image) {
         return nil;
     }
     
-    image.sd_imageFormat = [NSData sd_imageFormatForImageData:data];
+    image.fw_imageFormat = [NSData fw_imageFormatForImageData:data];
     return image;
 }
 
@@ -252,12 +252,12 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     return [self canDecodeFromData:data];
 }
 
-- (instancetype)initIncrementalWithOptions:(nullable SDImageCoderOptions *)options {
+- (instancetype)initIncrementalWithOptions:(nullable FWImageCoderOptions *)options {
     self = [super init];
     if (self) {
         _imageSource = CGImageSourceCreateIncremental(NULL);
         CGFloat scale = 1;
-        NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+        NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
@@ -300,20 +300,20 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     }
 }
 
-- (UIImage *)incrementalDecodedImageWithOptions:(SDImageCoderOptions *)options {
+- (UIImage *)incrementalDecodedImageWithOptions:(FWImageCoderOptions *)options {
     UIImage *image;
     
     if (_width + _height > 0) {
         // Create the image
         CGFloat scale = _scale;
-        NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+        NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
-        image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:_imageSource scale:scale];
+        image = [FWImageIOAnimatedCoder createFrameAtIndex:0 source:_imageSource scale:scale];
         if (image) {
             CFStringRef uttype = CGImageSourceGetType(_imageSource);
-            image.sd_imageFormat = [NSData sd_imageFormatFromUTType:uttype];
+            image.fw_imageFormat = [NSData fw_imageFormatFromUTType:uttype];
         }
     }
     
@@ -321,38 +321,38 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 }
 
 #pragma mark - Encode
-- (BOOL)canEncodeToFormat:(SDImageFormat)format {
+- (BOOL)canEncodeToFormat:(FWImageFormat)format {
     switch (format) {
-        case SDImageFormatWebP:
+        case FWImageFormatWebP:
             // Do not support WebP encoding
             return NO;
-        case SDImageFormatHEIC:
+        case FWImageFormatHEIC:
             // Check HEIC encoding compatibility
-            return [SDImageHEICCoder canEncodeToHEICFormat];
-        case SDImageFormatHEIF:
+            return [FWImageHEICCoder canEncodeToHEICFormat];
+        case FWImageFormatHEIF:
             // Check HEIF encoding compatibility
-            return [SDImageHEICCoder canEncodeToHEIFFormat];
+            return [FWImageHEICCoder canEncodeToHEIFFormat];
         default:
             return YES;
     }
 }
 
-- (NSData *)encodedDataWithImage:(UIImage *)image format:(SDImageFormat)format options:(nullable SDImageCoderOptions *)options {
+- (NSData *)encodedDataWithImage:(UIImage *)image format:(FWImageFormat)format options:(nullable FWImageCoderOptions *)options {
     if (!image) {
         return nil;
     }
     
-    if (format == SDImageFormatUndefined) {
-        BOOL hasAlpha = [SDImageCoderHelper CGImageContainsAlpha:image.CGImage];
+    if (format == FWImageFormatUndefined) {
+        BOOL hasAlpha = [FWImageCoderHelper CGImageContainsAlpha:image.CGImage];
         if (hasAlpha) {
-            format = SDImageFormatPNG;
+            format = FWImageFormatPNG;
         } else {
-            format = SDImageFormatJPEG;
+            format = FWImageFormatJPEG;
         }
     }
     
     NSMutableData *imageData = [NSMutableData data];
-    CFStringRef imageUTType = [NSData sd_UTTypeFromImageFormat:format];
+    CFStringRef imageUTType = [NSData fw_UTTypeFromImageFormat:format];
     
     // Create an image destination.
     CGImageDestinationRef imageDestination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)imageData, imageUTType, 1, NULL);
@@ -362,11 +362,11 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     }
     
     NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-    CGImagePropertyOrientation exifOrientation = [SDImageCoderHelper exifOrientationFromImageOrientation:image.imageOrientation];
+    CGImagePropertyOrientation exifOrientation = [FWImageCoderHelper exifOrientationFromImageOrientation:image.imageOrientation];
     properties[(__bridge NSString *)kCGImagePropertyOrientation] = @(exifOrientation);
     double compressionQuality = 1;
-    if (options[SDImageCoderEncodeCompressionQuality]) {
-        compressionQuality = [options[SDImageCoderEncodeCompressionQuality] doubleValue];
+    if (options[FWImageCoderEncodeCompressionQuality]) {
+        compressionQuality = [options[FWImageCoderEncodeCompressionQuality] doubleValue];
     }
     properties[(__bridge NSString *)kCGImageDestinationLossyCompressionQuality] = @(compressionQuality);
     
@@ -386,24 +386,24 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 
 @end
 
-@interface SDImageIOCoderFrame : NSObject
+@interface FWImageIOCoderFrame : NSObject
 
 @property (nonatomic, assign) NSUInteger index; // Frame index (zero based)
 @property (nonatomic, assign) NSTimeInterval duration; // Frame duration in seconds
 
 @end
 
-@implementation SDImageIOCoderFrame
+@implementation FWImageIOCoderFrame
 @end
 
-@implementation SDImageIOAnimatedCoder {
+@implementation FWImageIOAnimatedCoder {
     size_t _width, _height;
     CGImageSourceRef _imageSource;
     NSData *_imageData;
     CGFloat _scale;
     NSUInteger _loopCount;
     NSUInteger _frameCount;
-    NSArray<SDImageIOCoderFrame *> *_frames;
+    NSArray<FWImageIOCoderFrame *> *_frames;
     BOOL _finished;
     BOOL _preserveAspectRatio;
     CGSize _thumbnailSize;
@@ -429,45 +429,45 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 
 #pragma mark - Subclass Override
 
-+ (SDImageFormat)imageFormat {
++ (FWImageFormat)imageFormat {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
 + (NSString *)imageUTType {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
 + (NSString *)dictionaryProperty {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
 + (NSString *)unclampedDelayTimeProperty {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
 + (NSString *)delayTimeProperty {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
 + (NSString *)loopCountProperty {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
 + (NSUInteger)defaultLoopCount {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"For `SDImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
+                                   reason:[NSString stringWithFormat:@"For `FWImageIOAnimatedCoder` subclass, you must override %@ method", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
 
@@ -531,7 +531,7 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
         return nil;
     }
     
-    UIImageOrientation imageOrientation = [SDImageCoderHelper imageOrientationFromEXIFOrientation:exifOrientation];
+    UIImageOrientation imageOrientation = [FWImageCoderHelper imageOrientationFromEXIFOrientation:exifOrientation];
     UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:imageOrientation];
     CGImageRelease(imageRef);
     return image;
@@ -539,15 +539,15 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 
 #pragma mark - Decode
 - (BOOL)canDecodeFromData:(nullable NSData *)data {
-    return ([NSData sd_imageFormatForImageData:data] == self.class.imageFormat);
+    return ([NSData fw_imageFormatForImageData:data] == self.class.imageFormat);
 }
 
-- (UIImage *)decodedImageWithData:(NSData *)data options:(nullable SDImageCoderOptions *)options {
+- (UIImage *)decodedImageWithData:(NSData *)data options:(nullable FWImageCoderOptions *)options {
     if (!data) {
         return nil;
     }
     CGFloat scale = 1;
-    NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+    NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
     if (scaleFactor != nil) {
         scale = MAX([scaleFactor doubleValue], 1);
     }
@@ -559,11 +559,11 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     size_t count = CGImageSourceGetCount(source);
     UIImage *animatedImage;
     
-    BOOL decodeFirstFrame = [options[SDImageCoderDecodeFirstFrameOnly] boolValue];
+    BOOL decodeFirstFrame = [options[FWImageCoderDecodeFirstFrameOnly] boolValue];
     if (decodeFirstFrame || count <= 1) {
         animatedImage = [self.class createFrameAtIndex:0 source:source scale:scale];
     } else {
-        NSMutableArray<SDImageFrame *> *frames = [NSMutableArray array];
+        NSMutableArray<FWImageFrame *> *frames = [NSMutableArray array];
         
         for (size_t i = 0; i < count; i++) {
             UIImage *image = [self.class createFrameAtIndex:i source:source scale:scale];
@@ -573,16 +573,16 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
             
             NSTimeInterval duration = [self.class frameDurationAtIndex:i source:source];
             
-            SDImageFrame *frame = [SDImageFrame frameWithImage:image duration:duration];
+            FWImageFrame *frame = [FWImageFrame frameWithImage:image duration:duration];
             [frames addObject:frame];
         }
         
         NSUInteger loopCount = [self.class imageLoopCountWithSource:source];
         
-        animatedImage = [SDImageCoderHelper animatedImageWithFrames:frames];
-        animatedImage.sd_imageLoopCount = loopCount;
+        animatedImage = [FWImageCoderHelper animatedImageWithFrames:frames];
+        animatedImage.fw_imageLoopCount = loopCount;
     }
-    animatedImage.sd_imageFormat = self.class.imageFormat;
+    animatedImage.fw_imageFormat = self.class.imageFormat;
     CFRelease(source);
     
     return animatedImage;
@@ -591,16 +591,16 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 #pragma mark - Progressive Decode
 
 - (BOOL)canIncrementalDecodeFromData:(NSData *)data {
-    return ([NSData sd_imageFormatForImageData:data] == self.class.imageFormat);
+    return ([NSData fw_imageFormatForImageData:data] == self.class.imageFormat);
 }
 
-- (instancetype)initIncrementalWithOptions:(nullable SDImageCoderOptions *)options {
+- (instancetype)initIncrementalWithOptions:(nullable FWImageCoderOptions *)options {
     self = [super init];
     if (self) {
         NSString *imageUTType = self.class.imageUTType;
         _imageSource = CGImageSourceCreateIncremental((__bridge CFDictionaryRef)@{(__bridge NSString *)kCGImageSourceTypeIdentifierHint : imageUTType});
         CGFloat scale = 1;
-        NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+        NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
@@ -642,19 +642,19 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     [self scanAndCheckFramesValidWithImageSource:_imageSource];
 }
 
-- (UIImage *)incrementalDecodedImageWithOptions:(SDImageCoderOptions *)options {
+- (UIImage *)incrementalDecodedImageWithOptions:(FWImageCoderOptions *)options {
     UIImage *image;
     
     if (_width + _height > 0) {
         // Create the image
         CGFloat scale = _scale;
-        NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+        NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
-        image = [SDImageIOAnimatedCoder createFrameAtIndex:0 source:_imageSource scale:scale];
+        image = [FWImageIOAnimatedCoder createFrameAtIndex:0 source:_imageSource scale:scale];
         if (image) {
-            image.sd_imageFormat = self.class.imageFormat;
+            image.fw_imageFormat = self.class.imageFormat;
         }
     }
     
@@ -662,11 +662,11 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
 }
 
 #pragma mark - Encode
-- (BOOL)canEncodeToFormat:(SDImageFormat)format {
+- (BOOL)canEncodeToFormat:(FWImageFormat)format {
     return (format == self.class.imageFormat);
 }
 
-- (NSData *)encodedDataWithImage:(UIImage *)image format:(SDImageFormat)format options:(nullable SDImageCoderOptions *)options {
+- (NSData *)encodedDataWithImage:(UIImage *)image format:(FWImageFormat)format options:(nullable FWImageCoderOptions *)options {
     if (!image) {
         return nil;
     }
@@ -676,8 +676,8 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     }
     
     NSMutableData *imageData = [NSMutableData data];
-    CFStringRef imageUTType = [NSData sd_UTTypeFromImageFormat:format];
-    NSArray<SDImageFrame *> *frames = [SDImageCoderHelper framesFromAnimatedImage:image];
+    CFStringRef imageUTType = [NSData fw_UTTypeFromImageFormat:format];
+    NSArray<FWImageFrame *> *frames = [FWImageCoderHelper framesFromAnimatedImage:image];
     
     // Create an image destination. Animated Image does not support EXIF image orientation TODO
     // The `CGImageDestinationCreateWithData` will log a warning when count is 0, use 1 instead.
@@ -688,24 +688,24 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     }
     NSMutableDictionary *properties = [NSMutableDictionary dictionary];
     double compressionQuality = 1;
-    if (options[SDImageCoderEncodeCompressionQuality]) {
-        compressionQuality = [options[SDImageCoderEncodeCompressionQuality] doubleValue];
+    if (options[FWImageCoderEncodeCompressionQuality]) {
+        compressionQuality = [options[FWImageCoderEncodeCompressionQuality] doubleValue];
     }
     properties[(__bridge NSString *)kCGImageDestinationLossyCompressionQuality] = @(compressionQuality);
     
-    BOOL encodeFirstFrame = [options[SDImageCoderEncodeFirstFrameOnly] boolValue];
+    BOOL encodeFirstFrame = [options[FWImageCoderEncodeFirstFrameOnly] boolValue];
     if (encodeFirstFrame || frames.count == 0) {
         // for static single images
         CGImageDestinationAddImage(imageDestination, image.CGImage, (__bridge CFDictionaryRef)properties);
     } else {
         // for animated images
-        NSUInteger loopCount = image.sd_imageLoopCount;
+        NSUInteger loopCount = image.fw_imageLoopCount;
         NSDictionary *containerProperties = @{self.class.loopCountProperty : @(loopCount)};
         properties[self.class.dictionaryProperty] = containerProperties;
         CGImageDestinationSetProperties(imageDestination, (__bridge CFDictionaryRef)properties);
         
         for (size_t i = 0; i < frames.count; i++) {
-            SDImageFrame *frame = frames[i];
+            FWImageFrame *frame = frames[i];
             NSTimeInterval frameDuration = frame.duration;
             CGImageRef frameImageRef = frame.image.CGImage;
             NSDictionary *frameProperties = @{self.class.dictionaryProperty : @{self.class.delayTimeProperty : @(frameDuration)}};
@@ -723,8 +723,8 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     return [imageData copy];
 }
 
-#pragma mark - SDAnimatedImageCoder
-- (nullable instancetype)initWithAnimatedImageData:(nullable NSData *)data options:(nullable SDImageCoderOptions *)options {
+#pragma mark - FWAnimatedImageCoder
+- (nullable instancetype)initWithAnimatedImageData:(nullable NSData *)data options:(nullable FWImageCoderOptions *)options {
     if (!data) {
         return nil;
     }
@@ -740,7 +740,7 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
             return nil;
         }
         CGFloat scale = 1;
-        NSNumber *scaleFactor = options[SDImageCoderDecodeScaleFactor];
+        NSNumber *scaleFactor = options[FWImageCoderDecodeScaleFactor];
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
@@ -762,10 +762,10 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     }
     NSUInteger frameCount = CGImageSourceGetCount(imageSource);
     NSUInteger loopCount = [self.class imageLoopCountWithSource:imageSource];
-    NSMutableArray<SDImageIOCoderFrame *> *frames = [NSMutableArray array];
+    NSMutableArray<FWImageIOCoderFrame *> *frames = [NSMutableArray array];
     
     for (size_t i = 0; i < frameCount; i++) {
-        SDImageIOCoderFrame *frame = [[SDImageIOCoderFrame alloc] init];
+        FWImageIOCoderFrame *frame = [[FWImageIOCoderFrame alloc] init];
         frame.index = i;
         frame.duration = [self.class frameDurationAtIndex:i source:imageSource];
         [frames addObject:frame];
@@ -802,36 +802,36 @@ SDImageCoderOption const SDImageCoderEncodeCompressionQuality = @"encodeCompress
     if (!image) {
         return nil;
     }
-    image.sd_imageFormat = self.class.imageFormat;
+    image.fw_imageFormat = self.class.imageFormat;
     // Image/IO create CGImage does not decode, so we do this because this is called background queue, this can avoid main queue block when rendering(especially when one more imageViews use the same image instance)
-    CGImageRef imageRef = [SDImageCoderHelper CGImageCreateDecoded:image.CGImage];
+    CGImageRef imageRef = [FWImageCoderHelper CGImageCreateDecoded:image.CGImage];
     if (!imageRef) {
         return image;
     }
     image = [[UIImage alloc] initWithCGImage:imageRef scale:_scale orientation:image.imageOrientation];
     CGImageRelease(imageRef);
-    image.sd_isDecoded = YES;
-    image.sd_imageFormat = self.class.imageFormat;
+    image.fw_isDecoded = YES;
+    image.fw_imageFormat = self.class.imageFormat;
     return image;
 }
 
 @end
 
-@implementation SDImageGIFCoder
+@implementation FWImageGIFCoder
 
 + (instancetype)sharedCoder {
-    static SDImageGIFCoder *coder;
+    static FWImageGIFCoder *coder;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        coder = [[SDImageGIFCoder alloc] init];
+        coder = [[FWImageGIFCoder alloc] init];
     });
     return coder;
 }
 
 #pragma mark - Subclass Override
 
-+ (SDImageFormat)imageFormat {
-    return SDImageFormatGIF;
++ (FWImageFormat)imageFormat {
+    return FWImageFormatGIF;
 }
 
 + (NSString *)imageUTType {
@@ -866,21 +866,21 @@ const CFStringRef kCGImagePropertyAPNGDelayTime = (__bridge CFStringRef)@"DelayT
 const CFStringRef kCGImagePropertyAPNGUnclampedDelayTime = (__bridge CFStringRef)@"UnclampedDelayTime";
 #endif
 
-@implementation SDImageAPNGCoder
+@implementation FWImageAPNGCoder
 
 + (instancetype)sharedCoder {
-    static SDImageAPNGCoder *coder;
+    static FWImageAPNGCoder *coder;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        coder = [[SDImageAPNGCoder alloc] init];
+        coder = [[FWImageAPNGCoder alloc] init];
     });
     return coder;
 }
 
 #pragma mark - Subclass Override
 
-+ (SDImageFormat)imageFormat {
-    return SDImageFormatPNG;
++ (FWImageFormat)imageFormat {
+    return FWImageFormatPNG;
 }
 
 + (NSString *)imageUTType {
@@ -915,7 +915,7 @@ static NSString * kSDCGImagePropertyHEICSLoopCount = @"LoopCount";
 static NSString * kSDCGImagePropertyHEICSDelayTime = @"DelayTime";
 static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTime";
 
-@implementation SDImageHEICCoder
+@implementation FWImageHEICCoder
 
 + (void)initialize {
 #if __IPHONE_13_0 || __TVOS_13_0 || __MAC_10_15 || __WATCHOS_6_0
@@ -931,22 +931,22 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
 }
 
 + (instancetype)sharedCoder {
-    static SDImageHEICCoder *coder;
+    static FWImageHEICCoder *coder;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        coder = [[SDImageHEICCoder alloc] init];
+        coder = [[FWImageHEICCoder alloc] init];
     });
     return coder;
 }
 
-#pragma mark - SDImageCoder
+#pragma mark - FWImageCoder
 
 - (BOOL)canDecodeFromData:(nullable NSData *)data {
-    switch ([NSData sd_imageFormatForImageData:data]) {
-        case SDImageFormatHEIC:
+    switch ([NSData fw_imageFormatForImageData:data]) {
+        case FWImageFormatHEIC:
             // Check HEIC decoding compatibility
             return [self.class canDecodeFromHEICFormat];
-        case SDImageFormatHEIF:
+        case FWImageFormatHEIF:
             // Check HEIF decoding compatibility
             return [self.class canDecodeFromHEIFFormat];
         default:
@@ -958,12 +958,12 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     return [self canDecodeFromData:data];
 }
 
-- (BOOL)canEncodeToFormat:(SDImageFormat)format {
+- (BOOL)canEncodeToFormat:(FWImageFormat)format {
     switch (format) {
-        case SDImageFormatHEIC:
+        case FWImageFormatHEIC:
             // Check HEIC encoding compatibility
             return [self.class canEncodeToHEICFormat];
-        case SDImageFormatHEIF:
+        case FWImageFormatHEIF:
             // Check HEIF encoding compatibility
             return [self.class canEncodeToHEIFFormat];
         default:
@@ -973,8 +973,8 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
 
 #pragma mark - HEIF Format
 
-+ (BOOL)canDecodeFromFormat:(SDImageFormat)format {
-    CFStringRef imageUTType = [NSData sd_UTTypeFromImageFormat:format];
++ (BOOL)canDecodeFromFormat:(FWImageFormat)format {
+    CFStringRef imageUTType = [NSData fw_UTTypeFromImageFormat:format];
     NSArray *imageUTTypes = (__bridge_transfer NSArray *)CGImageSourceCopyTypeIdentifiers();
     if ([imageUTTypes containsObject:(__bridge NSString *)(imageUTType)]) {
         return YES;
@@ -986,7 +986,7 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     static BOOL canDecode = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        canDecode = [self canDecodeFromFormat:SDImageFormatHEIC];
+        canDecode = [self canDecodeFromFormat:FWImageFormatHEIC];
     });
     return canDecode;
 }
@@ -995,14 +995,14 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     static BOOL canDecode = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        canDecode = [self canDecodeFromFormat:SDImageFormatHEIF];
+        canDecode = [self canDecodeFromFormat:FWImageFormatHEIF];
     });
     return canDecode;
 }
 
-+ (BOOL)canEncodeToFormat:(SDImageFormat)format {
++ (BOOL)canEncodeToFormat:(FWImageFormat)format {
     NSMutableData *imageData = [NSMutableData data];
-    CFStringRef imageUTType = [NSData sd_UTTypeFromImageFormat:format];
+    CFStringRef imageUTType = [NSData fw_UTTypeFromImageFormat:format];
     
     // Create an image destination.
     CGImageDestinationRef imageDestination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)imageData, imageUTType, 1, NULL);
@@ -1020,7 +1020,7 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     static BOOL canEncode = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        canEncode = [self canEncodeToFormat:SDImageFormatHEIC];
+        canEncode = [self canEncodeToFormat:FWImageFormatHEIC];
     });
     return canEncode;
 }
@@ -1029,15 +1029,15 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     static BOOL canEncode = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        canEncode = [self canEncodeToFormat:SDImageFormatHEIF];
+        canEncode = [self canEncodeToFormat:FWImageFormatHEIF];
     });
     return canEncode;
 }
 
 #pragma mark - Subclass Override
 
-+ (SDImageFormat)imageFormat {
-    return SDImageFormatHEIC;
++ (FWImageFormat)imageFormat {
+    return FWImageFormatHEIC;
 }
 
 + (NSString *)imageUTType {
@@ -1081,9 +1081,9 @@ static CGFloat kDestImageLimitBytes = 60.f * kBytesPerMB;
 
 static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to overlap the seems where tiles meet.
 
-@implementation SDImageCoderHelper
+@implementation FWImageCoderHelper
 
-+ (UIImage *)animatedImageWithFrames:(NSArray<SDImageFrame *> *)frames {
++ (UIImage *)animatedImageWithFrames:(NSArray<FWImageFrame *> *)frames {
     NSUInteger frameCount = frames.count;
     if (frameCount == 0) {
         return nil;
@@ -1098,7 +1098,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
     NSUInteger const gcd = gcdArray(frameCount, durations);
     __block NSUInteger totalDuration = 0;
     NSMutableArray<UIImage *> *animatedImages = [NSMutableArray arrayWithCapacity:frameCount];
-    [frames enumerateObjectsUsingBlock:^(SDImageFrame * _Nonnull frame, NSUInteger idx, BOOL * _Nonnull stop) {
+    [frames enumerateObjectsUsingBlock:^(FWImageFrame * _Nonnull frame, NSUInteger idx, BOOL * _Nonnull stop) {
         UIImage *image = frame.image;
         NSUInteger duration = frame.duration * 1000;
         totalDuration += duration;
@@ -1118,12 +1118,12 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
     return animatedImage;
 }
 
-+ (NSArray<SDImageFrame *> *)framesFromAnimatedImage:(UIImage *)animatedImage {
++ (NSArray<FWImageFrame *> *)framesFromAnimatedImage:(UIImage *)animatedImage {
     if (!animatedImage) {
         return nil;
     }
     
-    NSMutableArray<SDImageFrame *> *frames = [NSMutableArray array];
+    NSMutableArray<FWImageFrame *> *frames = [NSMutableArray array];
     NSUInteger frameCount = 0;
     
     NSArray<UIImage *> *animatedImages = animatedImage.images;
@@ -1148,7 +1148,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         if ([image isEqual:previousImage]) {
             repeatCount++;
         } else {
-            SDImageFrame *frame = [SDImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
+            FWImageFrame *frame = [FWImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
             [frames addObject:frame];
             repeatCount = 1;
             index++;
@@ -1156,7 +1156,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         previousImage = image;
         // last one
         if (idx == frameCount - 1) {
-            SDImageFrame *frame = [SDImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
+            FWImageFrame *frame = [FWImageFrame frameWithImage:previousImage duration:avgDuration * repeatCount];
             [frames addObject:frame];
         }
     }];
@@ -1251,7 +1251,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
     UIImage *decodedImage = [[UIImage alloc] initWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
     CGImageRelease(imageRef);
     //SDImageCopyAssociatedObject(image, decodedImage);
-    decodedImage.sd_isDecoded = YES;
+    decodedImage.fw_isDecoded = YES;
     return decodedImage;
 }
 
@@ -1379,7 +1379,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
             return image;
         }
         //SDImageCopyAssociatedObject(image, destImage);
-        destImage.sd_isDecoded = YES;
+        destImage.fw_isDecoded = YES;
         return destImage;
     }
 }
@@ -1466,7 +1466,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
 #pragma mark - Helper Fuction
 + (BOOL)shouldDecodeImage:(nullable UIImage *)image {
     // Avoid extra decode
-    if (image.sd_isDecoded) {
+    if (image.fw_isDecoded) {
         return NO;
     }
     // Prevent "CGBitmapContextCreateImage: invalid context 0x0" error
@@ -1474,7 +1474,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         return NO;
     }
     // do not decode animated images
-    if (image.sd_isAnimated) {
+    if (image.fw_isAnimated) {
         return NO;
     }
     
@@ -1585,19 +1585,19 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
 
 @end
 
-#pragma mark - SDImageFrame
+#pragma mark - FWImageFrame
 
-@interface SDImageFrame ()
+@interface FWImageFrame ()
 
 @property (nonatomic, strong, readwrite, nonnull) UIImage *image;
 @property (nonatomic, readwrite, assign) NSTimeInterval duration;
 
 @end
 
-@implementation SDImageFrame
+@implementation FWImageFrame
 
 + (instancetype)frameWithImage:(UIImage *)image duration:(NSTimeInterval)duration {
-    SDImageFrame *frame = [[SDImageFrame alloc] init];
+    FWImageFrame *frame = [[FWImageFrame alloc] init];
     frame.image = image;
     frame.duration = duration;
     
@@ -1608,9 +1608,9 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
 
 @implementation NSData (ImageContentType)
 
-+ (SDImageFormat)sd_imageFormatForImageData:(nullable NSData *)data {
++ (FWImageFormat)fw_imageFormatForImageData:(nullable NSData *)data {
     if (!data) {
-        return SDImageFormatUndefined;
+        return FWImageFormatUndefined;
     }
     
     // File signatures table: http://www.garykessler.net/library/file_sigs.html
@@ -1618,20 +1618,20 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
     [data getBytes:&c length:1];
     switch (c) {
         case 0xFF:
-            return SDImageFormatJPEG;
+            return FWImageFormatJPEG;
         case 0x89:
-            return SDImageFormatPNG;
+            return FWImageFormatPNG;
         case 0x47:
-            return SDImageFormatGIF;
+            return FWImageFormatGIF;
         case 0x49:
         case 0x4D:
-            return SDImageFormatTIFF;
+            return FWImageFormatTIFF;
         case 0x52: {
             if (data.length >= 12) {
                 //RIFF....WEBP
                 NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, 12)] encoding:NSASCIIStringEncoding];
                 if ([testString hasPrefix:@"RIFF"] && [testString hasSuffix:@"WEBP"]) {
-                    return SDImageFormatWebP;
+                    return FWImageFormatWebP;
                 }
             }
             break;
@@ -1644,41 +1644,41 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
                     || [testString isEqualToString:@"ftypheix"]
                     || [testString isEqualToString:@"ftyphevc"]
                     || [testString isEqualToString:@"ftyphevx"]) {
-                    return SDImageFormatHEIC;
+                    return FWImageFormatHEIC;
                 }
                 //....ftypmif1 ....ftypmsf1
                 if ([testString isEqualToString:@"ftypmif1"] || [testString isEqualToString:@"ftypmsf1"]) {
-                    return SDImageFormatHEIF;
+                    return FWImageFormatHEIF;
                 }
             }
             break;
         }
     }
-    return SDImageFormatUndefined;
+    return FWImageFormatUndefined;
 }
 
-+ (nonnull CFStringRef)sd_UTTypeFromImageFormat:(SDImageFormat)format {
++ (nonnull CFStringRef)fw_UTTypeFromImageFormat:(FWImageFormat)format {
     CFStringRef UTType;
     switch (format) {
-        case SDImageFormatJPEG:
+        case FWImageFormatJPEG:
             UTType = kUTTypeJPEG;
             break;
-        case SDImageFormatPNG:
+        case FWImageFormatPNG:
             UTType = kUTTypePNG;
             break;
-        case SDImageFormatGIF:
+        case FWImageFormatGIF:
             UTType = kUTTypeGIF;
             break;
-        case SDImageFormatTIFF:
+        case FWImageFormatTIFF:
             UTType = kUTTypeTIFF;
             break;
-        case SDImageFormatWebP:
+        case FWImageFormatWebP:
             UTType = kSDUTTypeWebP;
             break;
-        case SDImageFormatHEIC:
+        case FWImageFormatHEIC:
             UTType = kSDUTTypeHEIC;
             break;
-        case SDImageFormatHEIF:
+        case FWImageFormatHEIF:
             UTType = kSDUTTypeHEIF;
             break;
         default:
@@ -1689,27 +1689,27 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
     return UTType;
 }
 
-+ (SDImageFormat)sd_imageFormatFromUTType:(CFStringRef)uttype {
++ (FWImageFormat)fw_imageFormatFromUTType:(CFStringRef)uttype {
     if (!uttype) {
-        return SDImageFormatUndefined;
+        return FWImageFormatUndefined;
     }
-    SDImageFormat imageFormat;
+    FWImageFormat imageFormat;
     if (CFStringCompare(uttype, kUTTypeJPEG, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatJPEG;
+        imageFormat = FWImageFormatJPEG;
     } else if (CFStringCompare(uttype, kUTTypePNG, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatPNG;
+        imageFormat = FWImageFormatPNG;
     } else if (CFStringCompare(uttype, kUTTypeGIF, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatGIF;
+        imageFormat = FWImageFormatGIF;
     } else if (CFStringCompare(uttype, kUTTypeTIFF, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatTIFF;
+        imageFormat = FWImageFormatTIFF;
     } else if (CFStringCompare(uttype, kSDUTTypeWebP, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatWebP;
+        imageFormat = FWImageFormatWebP;
     } else if (CFStringCompare(uttype, kSDUTTypeHEIC, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatHEIC;
+        imageFormat = FWImageFormatHEIC;
     } else if (CFStringCompare(uttype, kSDUTTypeHEIF, 0) == kCFCompareEqualTo) {
-        imageFormat = SDImageFormatHEIF;
+        imageFormat = FWImageFormatHEIF;
     } else {
-        imageFormat = SDImageFormatUndefined;
+        imageFormat = FWImageFormatUndefined;
     }
     return imageFormat;
 }
@@ -1718,27 +1718,27 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
 
 @implementation UIImage (Metadata)
 
-- (NSUInteger)sd_imageLoopCount {
+- (NSUInteger)fw_imageLoopCount {
     NSUInteger imageLoopCount = 0;
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_imageLoopCount));
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_imageLoopCount));
     if ([value isKindOfClass:[NSNumber class]]) {
         imageLoopCount = value.unsignedIntegerValue;
     }
     return imageLoopCount;
 }
 
-- (void)setSd_imageLoopCount:(NSUInteger)sd_imageLoopCount {
-    NSNumber *value = @(sd_imageLoopCount);
-    objc_setAssociatedObject(self, @selector(sd_imageLoopCount), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setSd_imageLoopCount:(NSUInteger)fw_imageLoopCount {
+    NSNumber *value = @(fw_imageLoopCount);
+    objc_setAssociatedObject(self, @selector(fw_imageLoopCount), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)sd_isAnimated {
+- (BOOL)fw_isAnimated {
     return (self.images != nil);
 }
 
-- (SDImageFormat)sd_imageFormat {
-    SDImageFormat imageFormat = SDImageFormatUndefined;
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_imageFormat));
+- (FWImageFormat)fw_imageFormat {
+    FWImageFormat imageFormat = FWImageFormatUndefined;
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_imageFormat));
     if ([value isKindOfClass:[NSNumber class]]) {
         imageFormat = value.integerValue;
         return imageFormat;
@@ -1746,68 +1746,68 @@ static NSUInteger gcdArray(size_t const count, NSUInteger const * const values) 
     // Check CGImage's UTType, may return nil for non-Image/IO based image
     if (@available(iOS 9.0, tvOS 9.0, macOS 10.11, watchOS 2.0, *)) {
         CFStringRef uttype = CGImageGetUTType(self.CGImage);
-        imageFormat = [NSData sd_imageFormatFromUTType:uttype];
+        imageFormat = [NSData fw_imageFormatFromUTType:uttype];
     }
     return imageFormat;
 }
 
-- (void)setSd_imageFormat:(SDImageFormat)sd_imageFormat {
-    objc_setAssociatedObject(self, @selector(sd_imageFormat), @(sd_imageFormat), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setSd_imageFormat:(FWImageFormat)fw_imageFormat {
+    objc_setAssociatedObject(self, @selector(fw_imageFormat), @(fw_imageFormat), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setSd_isIncremental:(BOOL)sd_isIncremental {
-    objc_setAssociatedObject(self, @selector(sd_isIncremental), @(sd_isIncremental), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setSd_isIncremental:(BOOL)fw_isIncremental {
+    objc_setAssociatedObject(self, @selector(fw_isIncremental), @(fw_isIncremental), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)sd_isIncremental {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_isIncremental));
+- (BOOL)fw_isIncremental {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_isIncremental));
     return value.boolValue;
 }
 
-- (BOOL)sd_isDecoded {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_isDecoded));
+- (BOOL)fw_isDecoded {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_isDecoded));
     return value.boolValue;
 }
 
-- (void)setSd_isDecoded:(BOOL)sd_isDecoded {
-    objc_setAssociatedObject(self, @selector(sd_isDecoded), @(sd_isDecoded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setSd_isDecoded:(BOOL)fw_isDecoded {
+    objc_setAssociatedObject(self, @selector(fw_isDecoded), @(fw_isDecoded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
 
 @implementation UIImage (MultiFormat)
 
-+ (nullable UIImage *)sd_imageWithData:(nullable NSData *)data {
-    return [self sd_imageWithData:data scale:1];
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data {
+    return [self fw_imageWithData:data scale:1];
 }
 
-+ (nullable UIImage *)sd_imageWithData:(nullable NSData *)data scale:(CGFloat)scale {
-    return [self sd_imageWithData:data scale:scale firstFrameOnly:NO];
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale {
+    return [self fw_imageWithData:data scale:scale firstFrameOnly:NO];
 }
 
-+ (nullable UIImage *)sd_imageWithData:(nullable NSData *)data scale:(CGFloat)scale firstFrameOnly:(BOOL)firstFrameOnly {
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale firstFrameOnly:(BOOL)firstFrameOnly {
     if (!data) {
         return nil;
     }
-    SDImageCoderOptions *options = @{SDImageCoderDecodeScaleFactor : @(MAX(scale, 1)), SDImageCoderDecodeFirstFrameOnly : @(firstFrameOnly)};
-    return [[SDImageCodersManager sharedManager] decodedImageWithData:data options:options];
+    FWImageCoderOptions *options = @{FWImageCoderDecodeScaleFactor : @(MAX(scale, 1)), FWImageCoderDecodeFirstFrameOnly : @(firstFrameOnly)};
+    return [[FWImageCodersManager sharedManager] decodedImageWithData:data options:options];
 }
 
-- (nullable NSData *)sd_imageData {
-    return [self sd_imageDataAsFormat:SDImageFormatUndefined];
+- (nullable NSData *)fw_imageData {
+    return [self fw_imageDataAsFormat:FWImageFormatUndefined];
 }
 
-- (nullable NSData *)sd_imageDataAsFormat:(SDImageFormat)imageFormat {
-    return [self sd_imageDataAsFormat:imageFormat compressionQuality:1];
+- (nullable NSData *)fw_imageDataAsFormat:(FWImageFormat)imageFormat {
+    return [self fw_imageDataAsFormat:imageFormat compressionQuality:1];
 }
 
-- (nullable NSData *)sd_imageDataAsFormat:(SDImageFormat)imageFormat compressionQuality:(double)compressionQuality {
-    return [self sd_imageDataAsFormat:imageFormat compressionQuality:compressionQuality firstFrameOnly:NO];
+- (nullable NSData *)fw_imageDataAsFormat:(FWImageFormat)imageFormat compressionQuality:(double)compressionQuality {
+    return [self fw_imageDataAsFormat:imageFormat compressionQuality:compressionQuality firstFrameOnly:NO];
 }
 
-- (nullable NSData *)sd_imageDataAsFormat:(SDImageFormat)imageFormat compressionQuality:(double)compressionQuality firstFrameOnly:(BOOL)firstFrameOnly {
-    SDImageCoderOptions *options = @{SDImageCoderEncodeCompressionQuality : @(compressionQuality), SDImageCoderEncodeFirstFrameOnly : @(firstFrameOnly)};
-    return [[SDImageCodersManager sharedManager] encodedDataWithImage:self format:imageFormat options:options];
+- (nullable NSData *)fw_imageDataAsFormat:(FWImageFormat)imageFormat compressionQuality:(double)compressionQuality firstFrameOnly:(BOOL)firstFrameOnly {
+    FWImageCoderOptions *options = @{FWImageCoderEncodeCompressionQuality : @(compressionQuality), FWImageCoderEncodeFirstFrameOnly : @(firstFrameOnly)};
+    return [[FWImageCodersManager sharedManager] encodedDataWithImage:self format:imageFormat options:options];
 }
 
 @end
