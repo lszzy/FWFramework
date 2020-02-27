@@ -20,9 +20,6 @@
 // THE SOFTWARE.
 
 #import <TargetConditionals.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV 
-
 #import <Foundation/Foundation.h>
 #import "FWAutoPurgingImageCache.h"
 #import "FWHTTPSessionManager.h"
@@ -167,7 +164,5 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 - (void)cancelTaskForImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt;
 
 @end
-
-#endif
 
 NS_ASSUME_NONNULL_END

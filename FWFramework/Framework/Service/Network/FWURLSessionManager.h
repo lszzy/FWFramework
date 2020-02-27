@@ -25,9 +25,7 @@
 #import "FWURLResponseSerialization.h"
 #import "FWURLRequestSerialization.h"
 #import "FWSecurityPolicy.h"
-#if !TARGET_OS_WATCH
 #import "FWNetworkReachabilityManager.h"
-#endif
 
 /**
  `FWURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
@@ -115,7 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
 
-#if !TARGET_OS_WATCH
 ///--------------------------------------
 /// @name Monitoring Network Reachability
 ///--------------------------------------
@@ -124,7 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
  The network reachability manager. `FWURLSessionManager` uses the `sharedManager` by default.
  */
 @property (readwrite, nonatomic, strong) FWNetworkReachabilityManager *reachabilityManager;
-#endif
 
 ///----------------------------
 /// @name Getting Session Tasks

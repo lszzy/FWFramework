@@ -20,32 +20,10 @@
 // THE SOFTWARE.
 
 #import "FWSecurityPolicy.h"
-
 #import <AssertMacros.h>
 
-#if !TARGET_OS_IOS && !TARGET_OS_WATCH && !TARGET_OS_TV
-static NSData * AFSecKeyGetData(SecKeyRef key) {
-    CFDataRef data = NULL;
-
-    __Require_noErr_Quiet(SecItemExport(key, kSecFormatUnknown, kSecItemPemArmour, NULL, &data), _out);
-
-    return (__bridge_transfer NSData *)data;
-
-_out:
-    if (data) {
-        CFRelease(data);
-    }
-
-    return nil;
-}
-#endif
-
 static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
-#if TARGET_OS_IOS || TARGET_OS_WATCH || TARGET_OS_TV
     return [(__bridge id)key1 isEqual:(__bridge id)key2];
-#else
-    return [AFSecKeyGetData(key1) isEqual:AFSecKeyGetData(key2)];
-#endif
 }
 
 static id AFPublicKeyForCertificate(NSData *certificate) {

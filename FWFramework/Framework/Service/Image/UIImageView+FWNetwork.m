@@ -21,29 +21,25 @@
 
 #import "UIImageView+FWNetwork.h"
 #import "NSURL+FWFramework.h"
-
 #import <objc/runtime.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV
-
 #import "FWImageDownloader.h"
 
 @interface UIImageView (FWInnerNetwork)
 
-@property (readwrite, nonatomic, strong, setter = af_setActiveImageDownloadReceipt:) FWImageDownloadReceipt *af_activeImageDownloadReceipt;
+@property (readwrite, nonatomic, strong, setter = fw_setActiveImageDownloadReceipt:) FWImageDownloadReceipt *fw_activeImageDownloadReceipt;
 
 @end
 
 @implementation UIImageView (FWInnerNetwork)
 
-- (FWImageDownloadReceipt *)af_activeImageDownloadReceipt
+- (FWImageDownloadReceipt *)fw_activeImageDownloadReceipt
 {
-    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(af_activeImageDownloadReceipt));
+    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(fw_activeImageDownloadReceipt));
 }
 
-- (void)af_setActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
+- (void)fw_setActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
 {
-    objc_setAssociatedObject(self, @selector(af_activeImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_activeImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
@@ -143,7 +139,7 @@
                    withReceiptID:downloadID
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                       if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                       if ([strongSelf.fw_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
                            if (success) {
                                success(request, response, responseObject);
                            } else if (responseObject) {
@@ -155,7 +151,7 @@
                    }
                    failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                        if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                        if ([strongSelf.fw_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
                             if (failure) {
                                 failure(request, response, error);
                             }
@@ -164,33 +160,31 @@
                    }
                    progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                       if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                       if ([strongSelf.fw_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
                            progress(downloadProgress);
                        }
                    } : nil)];
 
-        self.af_activeImageDownloadReceipt = receipt;
+        self.fw_activeImageDownloadReceipt = receipt;
     }
 }
 
 - (void)fwCancelImageDownloadTask
 {
-    if (self.af_activeImageDownloadReceipt != nil) {
-        [[self.class fwSharedImageDownloader] cancelTaskForImageDownloadReceipt:self.af_activeImageDownloadReceipt];
+    if (self.fw_activeImageDownloadReceipt != nil) {
+        [[self.class fwSharedImageDownloader] cancelTaskForImageDownloadReceipt:self.fw_activeImageDownloadReceipt];
         [self clearActiveDownloadInformation];
      }
 }
 
 - (void)clearActiveDownloadInformation
 {
-    self.af_activeImageDownloadReceipt = nil;
+    self.fw_activeImageDownloadReceipt = nil;
 }
 
 - (BOOL)isActiveTaskURLEqualToURLRequest:(NSURLRequest *)urlRequest
 {
-    return [self.af_activeImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString];
+    return [self.fw_activeImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString];
 }
 
 @end
-
-#endif

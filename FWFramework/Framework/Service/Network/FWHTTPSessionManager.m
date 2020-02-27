@@ -20,10 +20,10 @@
 // THE SOFTWARE.
 
 #import "FWHTTPSessionManager.h"
-
 #import "FWURLRequestSerialization.h"
 #import "FWURLResponseSerialization.h"
 
+#import <UIKit/UIKit.h>
 #import <Availability.h>
 #import <TargetConditionals.h>
 #import <Security/Security.h>
@@ -33,12 +33,6 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <netdb.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV
-#import <UIKit/UIKit.h>
-#elif TARGET_OS_WATCH
-#import <WatchKit/WatchKit.h>
-#endif
 
 @interface FWHTTPSessionManager ()
 @property (readwrite, nonatomic, strong) NSURL *baseURL;
