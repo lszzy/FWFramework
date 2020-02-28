@@ -1,9 +1,12 @@
 platform :ios, '8.0'
 use_frameworks!
 
-abstract_target "ExampleTarget" do
+target "Example2" do
     pod 'FWFramework', :path => '../'
     pod 'FWDebug', :configurations => ['Debug']
 
-    target "Example2"
+    flutter_application_path = 'Flutter/example'
+    load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+    install_all_flutter_pods(flutter_application_path)
 end
+
