@@ -70,6 +70,10 @@
     [FWTabAnimated sharedAnimated].closeCache = NO;
     [FWTabAnimated sharedAnimated].openLog = FWIsSimulator;
     [FWTabAnimated sharedAnimated].openAnimationTag = FWIsSimulator;
+    
+#if APP_TARGET == 2
+    [[FlutterManager sharedInstance] run];
+#endif
 }
 
 - (void)setupController
