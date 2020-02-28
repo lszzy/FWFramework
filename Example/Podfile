@@ -5,8 +5,12 @@ target "Example2" do
     pod 'FWFramework', :path => '../'
     pod 'FWDebug', :configurations => ['Debug']
 
-    flutter_application_path = 'Flutter/example'
-    load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
-    install_all_flutter_pods(flutter_application_path)
+    # 本地必须安装flutter
+    # flutter_application_path = 'Flutter/example'
+    # load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+    # install_all_flutter_pods(flutter_application_path)
+
+    # 本地无需安装flutter
+    pod 'Flutter', :podspec => 'Flutter/cocoapods/{build_mode}/Flutter.podspec'
 end
 
