@@ -516,32 +516,19 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 
-@interface UIImage (AFNetworkingSafeImageLoading)
-+ (UIImage *)fw_safeImageWithData:(NSData *)data;
-@end
-
-static NSLock* imageLock = nil;
-
-@implementation UIImage (AFNetworkingSafeImageLoading)
-
-+ (UIImage *)fw_safeImageWithData:(NSData *)data {
-    UIImage* image = nil;
+static UIImage * AFImageWithDataAtScale(NSData *data, CGFloat scale) {
+    static NSLock *imageLock = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageLock = [[NSLock alloc] init];
     });
     
+    UIImage *image = nil;
     [imageLock lock];
     // FWImage
     image = [UIImage imageWithData:data];
     [imageLock unlock];
-    return image;
-}
-
-@end
-
-static UIImage * AFImageWithDataAtScale(NSData *data, CGFloat scale) {
-    UIImage *image = [UIImage fw_safeImageWithData:data];
+    
     if (image.images) {
         return image;
     }
@@ -709,6 +696,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     FWImageResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.imageScale = self.imageScale;
     serializer.automaticallyInflatesResponseImage = self.automaticallyInflatesResponseImage;
+    
     return serializer;
 }
 
