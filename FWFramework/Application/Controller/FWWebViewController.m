@@ -11,7 +11,7 @@
 #import "NSURL+FWFramework.h"
 #import "UIView+FWFramework.h"
 #import "UIViewController+FWFramework.h"
-#import "UIWebView+FWFramework.h"
+#import "WKWebView+FWFramework.h"
 #import "UIApplication+FWFramework.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
