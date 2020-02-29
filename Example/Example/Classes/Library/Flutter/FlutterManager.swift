@@ -22,6 +22,7 @@ import FlutterPluginRegistrant
     
     func present() {
         let flutterController = FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil)
+        flutterController.modalPresentationStyle = .fullScreen
         FWRouter.present(flutterController, animated: true, completion: nil)
     }
 }
