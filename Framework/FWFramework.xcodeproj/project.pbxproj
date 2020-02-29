@@ -1092,22 +1092,22 @@
 		2F2121DC2408E80500F74653 /* Image */ = {
 			isa = PBXGroup;
 			children = (
-				2F2121DD2408E80500F74653 /* FWAnimatedImageView.h */,
-				2F2121DE2408E80500F74653 /* UIImageView+FWNetwork.m */,
-				2F2121DF2408E80500F74653 /* UIImage+FWGif.m */,
-				2F2121E02408E80500F74653 /* FWImageDownloader.h */,
-				2F2121E12408E80500F74653 /* FWAutoPurgingImageCache.m */,
 				2F2121E22408E80500F74653 /* FWAnimatedImage.h */,
-				2F2121E32408E80500F74653 /* FWImageCoder.m */,
-				2F2121E42408E80500F74653 /* FWImage.h */,
-				2F2121E52408E80500F74653 /* UIImage+FWGif.h */,
-				2F2121E62408E80500F74653 /* UIImageView+FWNetwork.h */,
-				2F2121E72408E80500F74653 /* FWAnimatedImageView.m */,
-				2F2121E82408E80500F74653 /* FWImageCoder.h */,
 				2F2121E92408E80500F74653 /* FWAnimatedImage.m */,
+				2F2121DD2408E80500F74653 /* FWAnimatedImageView.h */,
+				2F2121E72408E80500F74653 /* FWAnimatedImageView.m */,
 				2F2121EA2408E80500F74653 /* FWAutoPurgingImageCache.h */,
-				2F2121EB2408E80500F74653 /* FWImageDownloader.m */,
+				2F2121E12408E80500F74653 /* FWAutoPurgingImageCache.m */,
+				2F2121E42408E80500F74653 /* FWImage.h */,
 				2F2121EC2408E80500F74653 /* FWImage.m */,
+				2F2121E82408E80500F74653 /* FWImageCoder.h */,
+				2F2121E32408E80500F74653 /* FWImageCoder.m */,
+				2F2121E02408E80500F74653 /* FWImageDownloader.h */,
+				2F2121EB2408E80500F74653 /* FWImageDownloader.m */,
+				2F2121E52408E80500F74653 /* UIImage+FWGif.h */,
+				2F2121DF2408E80500F74653 /* UIImage+FWGif.m */,
+				2F2121E62408E80500F74653 /* UIImageView+FWNetwork.h */,
+				2F2121DE2408E80500F74653 /* UIImageView+FWNetwork.m */,
 			);
 			path = Image;
 			sourceTree = "<group>";
