@@ -282,11 +282,7 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
     if (!image) {
         return nil;
     }
-#if SD_MAC
-    self = [super initWithCGImage:image.CGImage scale:MAX(scale, 1) orientation:kCGImagePropertyOrientationUp];
-#else
     self = [super initWithCGImage:image.CGImage scale:MAX(scale, 1) orientation:image.imageOrientation];
-#endif
     if (self) {
         // Only keep the animated coder if frame count > 1, save RAM usage for non-animated image format (APNG/WebP)
         if (animatedCoder.animatedImageFrameCount > 1) {

@@ -665,11 +665,7 @@
     if ([self.animatedProvider isKindOfClass:[UIImage class]]) {
         UIImage *image = (UIImage *)self.animatedProvider;
         // Use the poster image if available
-        #if SD_MAC
-        UIImage *posterFrame = [[NSImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:kCGImagePropertyOrientationUp];
-        #else
         UIImage *posterFrame = [[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
-        #endif
         if (posterFrame) {
             self.currentFrame = posterFrame;
             SD_LOCK(self.lock);
