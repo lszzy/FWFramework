@@ -203,19 +203,13 @@
 		2F1E626922BD4A2B00A1AB49 /* UIView+FWLayoutChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */; };
 		2F2121D72408E49D00F74653 /* WKWebView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121D52408E49D00F74653 /* WKWebView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121D82408E49D00F74653 /* WKWebView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121D62408E49D00F74653 /* WKWebView+FWFramework.m */; };
-		2F2121ED2408E80500F74653 /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121DD2408E80500F74653 /* FWAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121EE2408E80600F74653 /* UIImageView+FWNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121DE2408E80500F74653 /* UIImageView+FWNetwork.m */; };
 		2F2121EF2408E80600F74653 /* UIImage+FWGif.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121DF2408E80500F74653 /* UIImage+FWGif.m */; };
 		2F2121F02408E80600F74653 /* FWImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121E02408E80500F74653 /* FWImageDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121F12408E80600F74653 /* FWAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121E12408E80500F74653 /* FWAutoPurgingImageCache.m */; };
-		2F2121F22408E80600F74653 /* FWAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121E22408E80500F74653 /* FWAnimatedImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F2121F32408E80600F74653 /* FWImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121E32408E80500F74653 /* FWImageCoder.m */; };
 		2F2121F42408E80600F74653 /* FWImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121E42408E80500F74653 /* FWImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121F52408E80600F74653 /* UIImage+FWGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121E52408E80500F74653 /* UIImage+FWGif.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121F62408E80600F74653 /* UIImageView+FWNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121E62408E80500F74653 /* UIImageView+FWNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F2121F72408E80600F74653 /* FWAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121E72408E80500F74653 /* FWAnimatedImageView.m */; };
-		2F2121F82408E80600F74653 /* FWImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121E82408E80500F74653 /* FWImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F2121F92408E80600F74653 /* FWAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121E92408E80500F74653 /* FWAnimatedImage.m */; };
 		2F2121FA2408E80600F74653 /* FWAutoPurgingImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121EA2408E80500F74653 /* FWAutoPurgingImageCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121FB2408E80600F74653 /* FWImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121EB2408E80500F74653 /* FWImageDownloader.m */; };
 		2F2121FC2408E80600F74653 /* FWImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121EC2408E80500F74653 /* FWImage.m */; };
@@ -1253,12 +1247,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F2121FA2408E80600F74653 /* FWAutoPurgingImageCache.h in Headers */,
-				2F2121F82408E80600F74653 /* FWImageCoder.h in Headers */,
 				2F2121F42408E80600F74653 /* FWImage.h in Headers */,
 				2F2121F62408E80600F74653 /* UIImageView+FWNetwork.h in Headers */,
 				2F2121F52408E80600F74653 /* UIImage+FWGif.h in Headers */,
-				2F2121F22408E80600F74653 /* FWAnimatedImage.h in Headers */,
-				2F2121ED2408E80500F74653 /* FWAnimatedImageView.h in Headers */,
 				2F2121F02408E80600F74653 /* FWImageDownloader.h in Headers */,
 				2F2121D72408E49D00F74653 /* WKWebView+FWFramework.h in Headers */,
 				2F8F3726240289CB003472B5 /* NSNull+FWFramework.h in Headers */,
@@ -1540,7 +1531,6 @@
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
-				2F2121F32408E80600F74653 /* FWImageCoder.m in Sources */,
 				2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,
@@ -1577,7 +1567,6 @@
 				2F6492AD2316880C002E15AC /* FWCollectionViewController.m in Sources */,
 				2F03A602216CF4B9001965A1 /* FWPlugin.m in Sources */,
 				2F03A5A4216CF4B9001965A1 /* UIView+FWFramework.m in Sources */,
-				2F2121F92408E80600F74653 /* FWAnimatedImage.m in Sources */,
 				2FC81A7E235032EF00BE660C /* FWViewModel.m in Sources */,
 				2F8F3727240289CB003472B5 /* NSNull+FWFramework.m in Sources */,
 				2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */,
@@ -1592,7 +1581,6 @@
 				2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */,
 				2F0CCE4421E4973C0018FA87 /* FWDatabaseManager.m in Sources */,
 				2FA99E99228E71DA0059DFDB /* FWNotificationManager.m in Sources */,
-				2F2121F72408E80600F74653 /* FWAnimatedImageView.m in Sources */,
 				2FCE514821D3A6A5009EA65E /* FWDatabaseAdditions.m in Sources */,
 				2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */,
 				2F03A581216CF4B9001965A1 /* UIButton+FWFramework.m in Sources */,
