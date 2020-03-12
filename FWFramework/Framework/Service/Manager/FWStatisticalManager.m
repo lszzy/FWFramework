@@ -155,7 +155,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        [NSObject fwSwizzleInstanceMethod:@selector(tableView:didSelectRowAtIndexPath:) in:((UITableView *)self).delegate.class identifier:@"FWStatisticalManager" withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [(NSObject *)((UITableView *)self).delegate fwSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(id<UITableViewDelegate> delegate, UITableView *tableView, NSIndexPath *indexPath) {
                 void (*originalMSG)(id, SEL, UITableView *, NSIndexPath *);
                 originalMSG = (void (*)(id, SEL, UITableView *, NSIndexPath *))originalIMP();
@@ -170,7 +170,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        [NSObject fwSwizzleInstanceMethod:@selector(collectionView:didSelectItemAtIndexPath:) in:((UICollectionView *)self).delegate.class identifier:@"FWStatisticalManager" withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [(NSObject *)((UICollectionView *)self).delegate fwSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(id<UICollectionViewDelegate> delegate, UICollectionView *collectionView, NSIndexPath *indexPath) {
                 void (*originalMSG)(id, SEL, UICollectionView *, NSIndexPath *);
                 originalMSG = (void (*)(id, SEL, UICollectionView *, NSIndexPath *))originalIMP();
