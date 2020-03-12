@@ -149,15 +149,14 @@
     
     IMP (^originalIMP)(void) = ^IMP(void) {
         IMP result = NULL;
-        if (!imp) {
-            result = imp_implementationWithBlock(^(id selfObject){});
+        if (isOverride) {
+            result = imp;
         } else {
-            if (isOverride) {
-                result = imp;
-            } else {
-                Class superclass = class_getSuperclass(originalClass);
-                result = class_getMethodImplementation(superclass, originalSelector);
-            }
+            Class superclass = class_getSuperclass(originalClass);
+            result = class_getMethodImplementation(superclass, originalSelector);
+        }
+        if (!result) {
+            result = imp_implementationWithBlock(^(id selfObject){});
         }
         return result;
     };
