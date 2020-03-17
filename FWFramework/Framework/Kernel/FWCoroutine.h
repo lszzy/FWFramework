@@ -26,7 +26,7 @@ typedef void (^FWCoroutineClosure)(FWCoroutineCallback callback);
 /*!
  @brief 协程类，兼容FWPromise
  
- @see https://github.com/renjinkui2719/FWIterator
+ @see https://github.com/renjinkui2719/RJIterator
  */
 @interface FWCoroutine : NSObject
 {
