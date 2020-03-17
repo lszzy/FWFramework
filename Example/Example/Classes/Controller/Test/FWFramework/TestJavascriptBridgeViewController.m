@@ -62,6 +62,17 @@
     [self.view insertSubview:reloadButton aboveSubview:webView];
     reloadButton.frame = CGRectMake(110, y, 100, 35);
     reloadButton.titleLabel.font = font;
+    
+    UIButton* jumpButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [jumpButton setTitle:@"Jump url" forState:UIControlStateNormal];
+    FWWeakifySelf();
+    [jumpButton fwAddTouchBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        self.webRequest = @"http://kvm.wuyong.site/test.php";
+    }];
+    [self.view insertSubview:jumpButton aboveSubview:webView];
+    jumpButton.frame = CGRectMake(210, y, 100, 35);
+    jumpButton.titleLabel.font = font;
 }
 
 - (void)callHandler:(id)sender {
