@@ -179,6 +179,8 @@
 		2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */; };
 		2F0FFF3021D20EA800049383 /* NSAttributedString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0FFF2E21D20EA800049383 /* NSAttributedString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0FFF3121D20EA800049383 /* NSAttributedString+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0FFF2F21D20EA800049383 /* NSAttributedString+FWFramework.m */; };
+		2F10013524211B3900C1CC3B /* WKWebView+FWJavascriptBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F10013324211B3900C1CC3B /* WKWebView+FWJavascriptBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F10013624211B3900C1CC3B /* WKWebView+FWJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F10013424211B3900C1CC3B /* WKWebView+FWJavascriptBridge.m */; };
 		2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */; };
 		2F17B6BA237D14E2007E1DCC /* UIView+FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F17B6B8237D14E2007E1DCC /* UIView+FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -525,6 +527,8 @@
 		2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAttributedLabel.m; sourceTree = "<group>"; };
 		2F0FFF2E21D20EA800049383 /* NSAttributedString+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+FWFramework.h"; sourceTree = "<group>"; };
 		2F0FFF2F21D20EA800049383 /* NSAttributedString+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+FWFramework.m"; sourceTree = "<group>"; };
+		2F10013324211B3900C1CC3B /* WKWebView+FWJavascriptBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+FWJavascriptBridge.h"; sourceTree = "<group>"; };
+		2F10013424211B3900C1CC3B /* WKWebView+FWJavascriptBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+FWJavascriptBridge.m"; sourceTree = "<group>"; };
 		2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
 		2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWFramework.m"; sourceTree = "<group>"; };
 		2F17B6B8237D14E2007E1DCC /* UIView+FWDrawerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWDrawerView.h"; sourceTree = "<group>"; };
@@ -851,6 +855,8 @@
 				2F03A511216CF4B9001965A1 /* UIWindow+FWFramework.m */,
 				2F2121D52408E49D00F74653 /* WKWebView+FWFramework.h */,
 				2F2121D62408E49D00F74653 /* WKWebView+FWFramework.m */,
+				2F10013324211B3900C1CC3B /* WKWebView+FWJavascriptBridge.h */,
+				2F10013424211B3900C1CC3B /* WKWebView+FWJavascriptBridge.m */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -1272,6 +1278,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F10013524211B3900C1CC3B /* WKWebView+FWJavascriptBridge.h in Headers */,
 				2F2121FA2408E80600F74653 /* FWAutoPurgingImageCache.h in Headers */,
 				2F2121F42408E80600F74653 /* FWImage.h in Headers */,
 				2F2121F62408E80600F74653 /* UIImageView+FWNetwork.h in Headers */,
@@ -1561,6 +1568,7 @@
 				2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */,
 				2F03A64F216CF882001965A1 /* FWURLRequestSerialization.m in Sources */,
 				2F03A5AB216CF4B9001965A1 /* UITextField+FWKeyboard.m in Sources */,
+				2F10013624211B3900C1CC3B /* WKWebView+FWJavascriptBridge.m in Sources */,
 				2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,

@@ -14,6 +14,10 @@
 		2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3821E496B30018FA87 /* FWDbModel.m */; };
 		2F0CCE3C21E496B30018FA87 /* FWDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */; };
 		2F0D05C623798FA4007FC50B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51D78B1E5C2357009FD40F /* AppDelegate.m */; };
+		2F10012D2421136500C1CC3B /* TestJavascriptBridgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */; };
+		2F10012E2421136500C1CC3B /* TestJavascriptBridgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */; };
+		2F1001312421139400C1CC3B /* JavascriptBridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F1001302421139400C1CC3B /* JavascriptBridge.html */; };
+		2F1001322421139400C1CC3B /* JavascriptBridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F1001302421139400C1CC3B /* JavascriptBridge.html */; };
 		2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */; };
 		2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B8521B039E600E0F820 /* AppConfig.m */; };
 		2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D93DB216F18B00021F936 /* TestWindowViewController.m */; };
@@ -226,6 +230,9 @@
 		2F0CCE3821E496B30018FA87 /* FWDbModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDbModel.m; sourceTree = "<group>"; };
 		2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabaseManager.m; sourceTree = "<group>"; };
 		2F0CCE3A21E496B30018FA87 /* FWDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabaseManager.h; sourceTree = "<group>"; };
+		2F10012B2421136500C1CC3B /* TestJavascriptBridgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestJavascriptBridgeViewController.h; sourceTree = "<group>"; };
+		2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestJavascriptBridgeViewController.m; sourceTree = "<group>"; };
+		2F1001302421139400C1CC3B /* JavascriptBridge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = JavascriptBridge.html; sourceTree = "<group>"; };
 		2F1D8B7E21B021A000E0F820 /* TestEmptyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyViewController.h; sourceTree = "<group>"; };
 		2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyViewController.m; sourceTree = "<group>"; };
 		2F1D8B8521B039E600E0F820 /* AppConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
@@ -648,6 +655,8 @@
 				2F1D93DB216F18B00021F936 /* TestWindowViewController.m */,
 				2FCD375422533B1F001E81DB /* TestWorkflowViewController.h */,
 				2FCD375322533B1F001E81DB /* TestWorkflowViewController.m */,
+				2F10012B2421136500C1CC3B /* TestJavascriptBridgeViewController.h */,
+				2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -760,13 +769,14 @@
 		2F51D7E61E5C2357009FD40F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				2F6EFC3E2403B33200C4AC7E /* Images */,
 				2F51D7E71E5C2357009FD40F /* Assets.xcassets */,
-				2FB90F1C21F5716800084D76 /* QrcodeSound.caf */,
-				2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */,
-				2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */,
+				2F6EFC3E2403B33200C4AC7E /* Images */,
 				2F30D8972153775B000F0A1D /* InfoPlist.strings */,
+				2F1001302421139400C1CC3B /* JavascriptBridge.html */,
+				2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */,
+				2FD375A322FFBE280066F308 /* LoadingPlaceholder.gif */,
 				2F30D89A2153775E000F0A1D /* Localizable.strings */,
+				2FB90F1C21F5716800084D76 /* QrcodeSound.caf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1017,6 +1027,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1001322421139400C1CC3B /* JavascriptBridge.html in Resources */,
 				2F62DAB32407DB22001B8F9F /* test.heif in Resources */,
 				2F6EFC4D2403B38200C4AC7E /* frame1.png in Resources */,
 				2F6EFC492403B38200C4AC7E /* test.gif in Resources */,
@@ -1041,6 +1052,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1001312421139400C1CC3B /* JavascriptBridge.html in Resources */,
 				2F62DAB22407DB22001B8F9F /* test.heif in Resources */,
 				2F6EFC4C2403B38200C4AC7E /* frame1.png in Resources */,
 				2F6EFC482403B38200C4AC7E /* test.gif in Resources */,
@@ -1157,6 +1169,7 @@
 				2F43856B2318F687003A683C /* TestMenuViewController.m in Sources */,
 				2F43856C2318F687003A683C /* TestNestScrollViewController.m in Sources */,
 				2F43856D2318F687003A683C /* TestTableScrollViewController.m in Sources */,
+				2F10012E2421136500C1CC3B /* TestJavascriptBridgeViewController.m in Sources */,
 				2F43856E2318F687003A683C /* TestIndicatorControlViewController.m in Sources */,
 				2F43856F2318F687003A683C /* TestBannerViewController.m in Sources */,
 				2F4385702318F687003A683C /* TestButtonViewController.m in Sources */,
@@ -1289,6 +1302,7 @@
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
 				2F8F3708240037D5003472B5 /* TestThreadViewController.m in Sources */,
 				2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */,
+				2F10012D2421136500C1CC3B /* TestJavascriptBridgeViewController.m in Sources */,
 				2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */,
 				2F4CFA45215522D200203A37 /* TestViewController.m in Sources */,
 				2FCD375522533B1F001E81DB /* TestWorkflowViewController.m in Sources */,
