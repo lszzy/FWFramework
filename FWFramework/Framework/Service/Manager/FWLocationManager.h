@@ -40,6 +40,9 @@ extern NSString *const FWHeadingUpdatedNotification;
  */
 @interface FWLocationManager : NSObject
 
+// 单例模式
+@property (class, nonatomic, readonly) FWLocationManager *sharedInstance;
+
 // 是否启用Always定位，默认NO，请求WhenInUse定位
 @property (nonatomic, assign) BOOL alwaysLocation;
 
@@ -49,17 +52,26 @@ extern NSString *const FWHeadingUpdatedNotification;
 // 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
 @property (nonatomic, assign) BOOL headingEnabled;
 
+// 是否发送通知，默认NO。如果需要通知，设为YES即可
+@property (nonatomic, assign) BOOL notificationEnabled;
+
+// 定位完成是否立即stop，默认NO。如果为YES，只会回调一次
+@property (nonatomic, assign) BOOL stopWhenCompleted;
+
 // 位置管理对象
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 
-// 当前位置
+// 当前位置，中途定位失败时不会重置
 @property (nullable, nonatomic, readonly) CLLocation *location;
 
 // 当前方向，headingEnabled启用后生效
 @property (nullable, nonatomic, readonly) CLHeading *heading;
 
-/*! @brief 单例模式 */
-@property (class, nonatomic, readonly) FWLocationManager *sharedInstance;
+// 当前错误，表示最近一次定位回调状态
+@property (nullable, nonatomic, readonly) NSError *error;
+
+// 定位改变block方式回调，可通过error判断是否定位成功
+@property (nullable, nonatomic, copy) void (^locationChanged)(void);
 
 // 开始更新位置
 - (void)startUpdateLocation;
