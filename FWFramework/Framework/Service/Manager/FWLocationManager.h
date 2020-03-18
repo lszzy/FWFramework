@@ -71,7 +71,7 @@ extern NSString *const FWHeadingUpdatedNotification;
 @property (nullable, nonatomic, readonly) NSError *error;
 
 // 定位改变block方式回调，可通过error判断是否定位成功
-@property (nullable, nonatomic, copy) void (^locationChanged)(void);
+@property (nullable, nonatomic, copy) void (^locationChanged)(FWLocationManager *manager);
 
 // 开始更新位置
 - (void)startUpdateLocation;
