@@ -52,6 +52,8 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 @interface FWLocationManager () <CLLocationManagerDelegate>
 
+@property (nonatomic, assign) BOOL isCompleted;
+
 @end
 
 @implementation FWLocationManager
@@ -98,6 +100,10 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 - (void)startUpdateLocation
 {
+    if (self.stopWhenCompleted) {
+        self.isCompleted = NO;
+    }
+    
     if (self.alwaysLocation) {
         [self.locationManager requestAlwaysAuthorization];
     } else {
@@ -117,6 +123,10 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 - (void)stopUpdateLocation
 {
+    if (self.stopWhenCompleted) {
+        self.isCompleted = YES;
+    }
+    
     if (self.backgroundLocation) {
         if (@available(iOS 9.0, *)) {
             [self.locationManager setAllowsBackgroundLocationUpdates:NO];
@@ -134,6 +144,11 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
+    if (self.stopWhenCompleted) {
+        if (self.isCompleted) return;
+        self.isCompleted = YES;
+    }
+    
     CLLocation *oldLocation = _location;
     CLLocation *newLocation = locations.lastObject;
     _location = newLocation;
@@ -148,10 +163,19 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
         if (newLocation) [userInfo setObject:newLocation forKey:NSKeyValueChangeNewKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationUpdatedNotification object:self userInfo:userInfo.copy];
     }
+    
+    if (self.stopWhenCompleted) {
+        [self stopUpdateLocation];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
 {
+    if (self.stopWhenCompleted) {
+        if (self.isCompleted) return;
+        self.isCompleted = YES;
+    }
+    
     CLHeading *oldHeading = _heading;
     _heading = newHeading;
     _error = nil;
@@ -165,11 +189,20 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
         if (newHeading) [userInfo setObject:newHeading forKey:NSKeyValueChangeNewKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:FWHeadingUpdatedNotification object:self userInfo:userInfo.copy];
     }
+    
+    if (self.stopWhenCompleted) {
+        [self stopUpdateLocation];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager
        didFailWithError:(NSError *)error
 {
+    if (self.stopWhenCompleted) {
+        if (self.isCompleted) return;
+        self.isCompleted = YES;
+    }
+    
     _error = error;
     
     if (self.locationChanged) {
@@ -179,6 +212,10 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         if (error) [userInfo setObject:error forKey:NSUnderlyingErrorKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationFailedNotification object:self userInfo:userInfo.copy];
+    }
+    
+    if (self.stopWhenCompleted) {
+        [self stopUpdateLocation];
     }
 }
 
