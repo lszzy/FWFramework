@@ -11,7 +11,7 @@ import Foundation
 @objcMembers class TestLocationViewController: BaseViewController {
     lazy var startButton: UIButton = {
         let view = UIButton.fwButton(with: UIFont.appFontNormal(), titleColor: UIColor.appColorBlackOpacityLarge(), title: "Start")
-        view.frame = CGRect(x: 20, y: 50, width: 100, height: 50)
+        view.frame = CGRect(x: 20, y: 50, width: 60, height: 50)
         view.fwAddTouch { (sender) in
             FWLocationManager.sharedInstance.startUpdateLocation()
         }
@@ -20,9 +20,18 @@ import Foundation
     
     lazy var stopButton: UIButton = {
         let view = UIButton.fwButton(with: UIFont.appFontNormal(), titleColor: UIColor.appColorBlackOpacityLarge(), title: "Stop")
-        view.frame = CGRect(x: 170, y: 50, width: 100, height: 50)
+        view.frame = CGRect(x: 100, y: 50, width: 60, height: 50)
         view.fwAddTouch { (sender) in
             FWLocationManager.sharedInstance.stopUpdateLocation()
+        }
+        return view
+    }()
+    
+    lazy var configButton: UIButton = {
+        let view = UIButton.fwButton(with: UIFont.appFontNormal(), titleColor: UIColor.appColorBlackOpacityLarge(), title: "Once")
+        view.frame = CGRect(x: 180, y: 50, width: 60, height: 50)
+        view.fwAddTouch { (sender) in
+            FWLocationManager.sharedInstance.stopWhenCompleted = !FWLocationManager.sharedInstance.stopWhenCompleted
         }
         return view
     }()
@@ -37,15 +46,17 @@ import Foundation
     override func renderView() {
         view.addSubview(startButton)
         view.addSubview(stopButton)
+        view.addSubview(configButton)
         view.addSubview(resultLabel)
     }
     
     override func renderModel() {
-        fwObserveNotification("FWLocationUpdatedNotification") { [weak self] (notification) in
-            self?.resultLabel.text = "\(notification.userInfo ?? [:])"
-        }
-        fwObserveNotification("FWLocationFailedNotification") { [weak self] (notification) in
-            self?.resultLabel.text = "\(notification.userInfo ?? [:])"
+        FWLocationManager.sharedInstance.locationChanged = { [weak self] in
+            if FWLocationManager.sharedInstance.error != nil {
+                self?.resultLabel.text = FWLocationManager.sharedInstance.error?.localizedDescription
+            } else {
+                self?.resultLabel.text = FWLocationStringWithCoordinate(FWLocationManager.sharedInstance.location?.coordinate ?? CLLocationCoordinate2DMake(0, 0));
+            }
         }
     }
 }

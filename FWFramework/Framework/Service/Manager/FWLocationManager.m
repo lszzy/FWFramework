@@ -137,33 +137,49 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
     CLLocation *oldLocation = _location;
     CLLocation *newLocation = locations.lastObject;
     _location = newLocation;
+    _error = nil;
     
-    // 发送位置改变通知
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    if (oldLocation) [userInfo setObject:oldLocation forKey:NSKeyValueChangeOldKey];
-    if (newLocation) [userInfo setObject:newLocation forKey:NSKeyValueChangeNewKey];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationUpdatedNotification object:self userInfo:userInfo.copy];
+    if (self.locationChanged) {
+        self.locationChanged();
+    }
+    if (self.notificationEnabled) {
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        if (oldLocation) [userInfo setObject:oldLocation forKey:NSKeyValueChangeOldKey];
+        if (newLocation) [userInfo setObject:newLocation forKey:NSKeyValueChangeNewKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationUpdatedNotification object:self userInfo:userInfo.copy];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
 {
     CLHeading *oldHeading = _heading;
     _heading = newHeading;
+    _error = nil;
     
-    // 发送方向改变通知
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    if (oldHeading) [userInfo setObject:oldHeading forKey:NSKeyValueChangeOldKey];
-    if (newHeading) [userInfo setObject:newHeading forKey:NSKeyValueChangeNewKey];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWHeadingUpdatedNotification object:self userInfo:userInfo.copy];
+    if (self.locationChanged) {
+        self.locationChanged();
+    }
+    if (self.notificationEnabled) {
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        if (oldHeading) [userInfo setObject:oldHeading forKey:NSKeyValueChangeOldKey];
+        if (newHeading) [userInfo setObject:newHeading forKey:NSKeyValueChangeNewKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWHeadingUpdatedNotification object:self userInfo:userInfo.copy];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager
        didFailWithError:(NSError *)error
 {
-    // 发送位置失败通知
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    if (error) [userInfo setObject:error forKey:NSUnderlyingErrorKey];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationFailedNotification object:self userInfo:userInfo.copy];
+    _error = error;
+    
+    if (self.locationChanged) {
+        self.locationChanged();
+    }
+    if (self.notificationEnabled) {
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        if (error) [userInfo setObject:error forKey:NSUnderlyingErrorKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationFailedNotification object:self userInfo:userInfo.copy];
+    }
 }
 
 @end
