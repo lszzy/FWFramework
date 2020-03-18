@@ -100,6 +100,7 @@
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              @[@"FWStorekitManager", @"TestStorekitViewController"],
+                                             @[@"FWLocationManager", [TestLocationViewController new]],
                                              @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              @[@"FWVersionManager", @"TestVersionViewController"],
@@ -143,10 +144,14 @@
     NSArray *sectionList = [sectionData objectAtIndex:1];
     NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
     
-    NSString *vcStr = [rowData objectAtIndex:1];
-    Class vcClass = NSClassFromString(vcStr);
-    UIViewController *vc = [[vcClass alloc] init];
-    vc.title = [rowData objectAtIndex:0];
+    id vc = [rowData objectAtIndex:1];
+    if ([vc isKindOfClass:[NSString class]]) {
+        Class vcClass = NSClassFromString(vc);
+        UIViewController *vc = [[vcClass alloc] init];
+        vc.title = [rowData objectAtIndex:0];
+    } else if ([vc isKindOfClass:[UIViewController class]]) {
+        ((UIViewController *)vc).title = [rowData objectAtIndex:0];
+    }
     [self.navigationController pushViewController:vc animated:YES];
 }
 
