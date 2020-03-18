@@ -155,7 +155,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
     _error = nil;
     
     if (self.locationChanged) {
-        self.locationChanged();
+        self.locationChanged(self);
     }
     if (self.notificationEnabled) {
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
@@ -181,7 +181,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
     _error = nil;
     
     if (self.locationChanged) {
-        self.locationChanged();
+        self.locationChanged(self);
     }
     if (self.notificationEnabled) {
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
@@ -206,7 +206,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
     _error = error;
     
     if (self.locationChanged) {
-        self.locationChanged();
+        self.locationChanged(self);
     }
     if (self.notificationEnabled) {
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
