@@ -51,11 +51,11 @@ import Foundation
     }
     
     override func renderModel() {
-        FWLocationManager.sharedInstance.locationChanged = { [weak self] in
-            if FWLocationManager.sharedInstance.error != nil {
-                self?.resultLabel.text = FWLocationManager.sharedInstance.error?.localizedDescription
+        FWLocationManager.sharedInstance.locationChanged = { [weak self] (manager) in
+            if manager.error != nil {
+                self?.resultLabel.text = manager.error?.localizedDescription
             } else {
-                self?.resultLabel.text = FWLocationStringWithCoordinate(FWLocationManager.sharedInstance.location?.coordinate ?? CLLocationCoordinate2DMake(0, 0));
+                self?.resultLabel.text = FWLocationStringWithCoordinate(manager.location?.coordinate ?? CLLocationCoordinate2DMake(0, 0));
             }
         }
     }
