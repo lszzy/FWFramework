@@ -35,6 +35,8 @@
 		2F2FBDD622432BF90037830E /* TestGradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FBDD522432BF90037830E /* TestGradientViewController.m */; };
 		2F30D8952153775B000F0A1D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D8972153775B000F0A1D /* InfoPlist.strings */; };
 		2F30D8982153775E000F0A1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F30D89A2153775E000F0A1D /* Localizable.strings */; };
+		2F40985A242237500034BCAF /* TestLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F409859242237500034BCAF /* TestLocationViewController.swift */; };
+		2F40985B242237500034BCAF /* TestLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F409859242237500034BCAF /* TestLocationViewController.swift */; };
 		2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */; };
 		2F4385662318F687003A683C /* ComplexView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F43E5C8217AC41D00BAEB59 /* ComplexView.m */; };
 		2F4385672318F687003A683C /* TestSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */; };
@@ -266,6 +268,7 @@
 		2F30D8992153775E000F0A1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F30D89B2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2F30D89C2153776B000F0A1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2F409859242237500034BCAF /* TestLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLocationViewController.swift; sourceTree = "<group>"; };
 		2F41A733229F9F3B0008E4E2 /* TestSegmentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSegmentViewController.h; sourceTree = "<group>"; };
 		2F41A734229F9F3B0008E4E2 /* TestSegmentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSegmentViewController.m; sourceTree = "<group>"; };
 		2F4385B22318F687003A683C /* Example2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -645,6 +648,7 @@
 				2F8F3707240037D5003472B5 /* TestThreadViewController.m */,
 				2F54B9BC223208AD008411EF /* TestTransitionViewController.h */,
 				2F54B9BE223208AD008411EF /* TestTransitionViewController.m */,
+				2F409859242237500034BCAF /* TestLocationViewController.swift */,
 				2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */,
 				2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */,
 				2FCD375022533AB6001E81DB /* TestVersionViewController.h */,
@@ -1212,6 +1216,7 @@
 				2F4385922318F687003A683C /* TestMapViewController.m in Sources */,
 				2F4385932318F687003A683C /* TestSocketViewController.m in Sources */,
 				2F4385942318F687003A683C /* BaseTableViewController.m in Sources */,
+				2F40985B242237500034BCAF /* TestLocationViewController.swift in Sources */,
 				2F4385952318F687003A683C /* AppStandard.m in Sources */,
 				2F4385962318F687003A683C /* AppConfig.m in Sources */,
 				2F4385972318F687003A683C /* TestAnimationViewController.m in Sources */,
@@ -1289,6 +1294,7 @@
 				2F20E3D022769156005D1F46 /* TestMapViewController.m in Sources */,
 				2F1E620C22AEAC2000A1AB49 /* TestSocketViewController.m in Sources */,
 				2F4CFA4E2155285500203A37 /* BaseTableViewController.m in Sources */,
+				2F40985A242237500034BCAF /* TestLocationViewController.swift in Sources */,
 				2F4CFA62215531A100203A37 /* AppStandard.m in Sources */,
 				2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */,
 				2FF39112236D4B740056DEEA /* TestTableReloadViewController.m in Sources */,
