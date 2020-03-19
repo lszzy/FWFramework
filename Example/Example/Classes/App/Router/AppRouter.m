@@ -16,6 +16,7 @@ FWDefStaticString(ROUTE_TEST, @"app://test/:id");
 FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
 FWDefStaticString(ROUTE_OBJECT, @"object://test2");
 FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
+FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
 
 + (void)load
 {
@@ -93,6 +94,22 @@ FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
         viewController.parameters = parameters;
         viewController.title = AppRouter.ROUTE_OBJECT;
         return viewController;
+    }];
+    
+    [FWRouter registerURL:AppRouter.ROUTE_JAVASCRIPT withHandler:^(NSDictionary *parameters) {
+        UIViewController *topController = [[UIWindow fwMainWindow] fwTopViewController];
+        if (![topController isKindOfClass:[BaseWebViewController class]] || !topController.isViewLoaded) return;
+        
+        NSString *param = [parameters[@"param"] fwAsNSString];
+        NSString *result = [NSString stringWithFormat:@"js:%@ => app:%@", param, @"2"];
+        
+        NSString *callback = [parameters[@"callback"] fwAsNSString];
+        NSString *javascript = [NSString stringWithFormat:@"%@('%@');", callback, result];
+        
+        BaseWebViewController *viewController = (BaseWebViewController *)topController;
+        [viewController.webView evaluateJavaScript:javascript completionHandler:^(id value, NSError *error) {
+            [[[UIWindow fwMainWindow] fwTopViewController] fwShowAlertWithTitle:@"App" message:[NSString stringWithFormat:@"app:%@ => js:%@", @"2", value] cancel:@"关闭" cancelBlock:nil];
+        }];
     }];
 }
 
