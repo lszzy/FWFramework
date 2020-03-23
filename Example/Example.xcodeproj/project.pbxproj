@@ -1105,6 +1105,7 @@
 				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
 				"${PODS_ROOT}/../Flutter/example/.ios/Flutter/engine/Flutter.framework",
 				"${PODS_ROOT}/../Flutter/example/.ios/Flutter/App.framework",
+				"${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -1112,6 +1113,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flutter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/App.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libwebp.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
