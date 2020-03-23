@@ -2,7 +2,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target "Example2" do
-    pod 'FWFramework', :path => '../'
+    pod 'FWFramework', :path => '../', :subspecs => ['Framework', 'Application', 'Image-Webp', 'Authorize-Contacts', 'Authorize-Microphone', 'Authorize-Calendar', 'Authorize-AppleMusic']
     pod 'FWDebug', :configurations => ['Debug']
 
     flutter_application_path = 'Flutter/example'
