@@ -162,7 +162,8 @@
     if ([nsurl.scheme hasPrefix:@"itms"]) {
         return YES;
     // https://itunes.apple.com/等
-    } else if ([nsurl.host isEqualToString:@"itunes.apple.com"]) {
+    } else if ([nsurl.host isEqualToString:@"itunes.apple.com"] ||
+               [nsurl.host isEqualToString:@"apps.apple.com"]) {
         return YES;
     }
     return NO;
