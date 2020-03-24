@@ -11,7 +11,7 @@
 
 @interface TestJavascriptBridgeViewController ()
 
-@property WKWebViewJavascriptBridge* bridge;
+@property FWWebViewJsBridge* bridge;
 
 @end
 
@@ -22,11 +22,11 @@
     [super viewWillAppear:animated];
     if (_bridge) return;
     
-    [WKWebViewJavascriptBridge enableLogging];
-    _bridge = [WKWebViewJavascriptBridge bridgeForWebView:self.webView];
+    [FWWebViewJsBridge enableLogging];
+    _bridge = [FWWebViewJsBridge bridgeForWebView:self.webView];
     [_bridge setWebViewDelegate:self];
     
-    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
+    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, FWJsBridgeResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
         responseCallback(@"Response from testObjcCallback");
     }];

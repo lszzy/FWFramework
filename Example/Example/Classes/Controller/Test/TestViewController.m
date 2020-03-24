@@ -73,7 +73,7 @@
                                              @[@"UIScrollView(FWEmptyView)", @"TestEmptyViewController"],
                                              @[@"UICollection(FWFramework)", @"TestCollectionViewController"],
                                              @[@"WKWebView(FWFramework)", @"TestWebViewController"],
-                                             @[@"WKWebView+FWJavascriptBridge", @"TestJavascriptBridgeViewController"],
+                                             @[@"WKWebView+FWJsBridge", @"TestJavascriptBridgeViewController"],
                                              @[@"UINavigationController(FWFramework)", @"TestNavigationViewController"],
                                              @[@"UIViewController(FWAlert)", @"TestAlertViewController"],
                                              @[@"UIViewController(FWBar)", @"TestBarViewController"],

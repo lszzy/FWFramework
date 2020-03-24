@@ -1,15 +1,15 @@
 /*!
- @header     WKWebView+FWJavascriptBridge.m
+ @header     WKWebView+FWJsBridge.m
  @indexgroup FWFramework
- @brief      WKWebView+FWJavascriptBridge
+ @brief      WKWebView+FWJsBridge
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/3/17
  */
 
-#import "WKWebView+FWJavascriptBridge.h"
+#import "WKWebView+FWJsBridge.h"
 
-@implementation WebViewJavascriptBridgeBase {
+@implementation FWWebViewJsBridgeBase {
     __weak id _webViewDelegate;
     long _uniqueId;
 }
@@ -42,7 +42,7 @@ static int logMaxLength = 500;
     _uniqueId = 0;
 }
 
-- (void)sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
+- (void)sendData:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback handlerName:(NSString*)handlerName {
     NSMutableDictionary* message = [NSMutableDictionary dictionary];
     
     if (data) {
@@ -68,8 +68,8 @@ static int logMaxLength = 500;
     }
 
     id messages = [self _deserializeMessageJSON:messageQueueString];
-    for (WVJBMessage* message in messages) {
-        if (![message isKindOfClass:[WVJBMessage class]]) {
+    for (FWJsBridgeMessage* message in messages) {
+        if (![message isKindOfClass:[FWJsBridgeMessage class]]) {
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
             continue;
         }
@@ -77,11 +77,11 @@ static int logMaxLength = 500;
         
         NSString* responseId = message[@"responseId"];
         if (responseId) {
-            WVJBResponseCallback responseCallback = _responseCallbacks[responseId];
+            FWJsBridgeResponseCallback responseCallback = _responseCallbacks[responseId];
             responseCallback(message[@"responseData"]);
             [self.responseCallbacks removeObjectForKey:responseId];
         } else {
-            WVJBResponseCallback responseCallback = NULL;
+            FWJsBridgeResponseCallback responseCallback = NULL;
             NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
@@ -89,7 +89,7 @@ static int logMaxLength = 500;
                         responseData = [NSNull null];
                     }
                     
-                    WVJBMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
+                    FWJsBridgeMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
                     [self _queueMessage:msg];
                 };
             } else {
@@ -98,7 +98,7 @@ static int logMaxLength = 500;
                 };
             }
             
-            WVJBHandler handler = self.messageHandlers[message[@"handlerName"]];
+            FWJsBridgeHandler handler = self.messageHandlers[message[@"handlerName"]];
             
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
@@ -111,7 +111,7 @@ static int logMaxLength = 500;
 }
 
 - (void)injectJavascriptFile {
-    NSString *js = WebViewJavascriptBridge_js();
+    NSString *js = FWWebViewJsBridge_js();
     [self _evaluateJavascript:js];
     if (self.startupMessageQueue) {
         NSArray* queue = self.startupMessageQueue;
@@ -167,7 +167,7 @@ static int logMaxLength = 500;
     [self.delegate _evaluateJavascript:javascriptCommand];
 }
 
-- (void)_queueMessage:(WVJBMessage*)message {
+- (void)_queueMessage:(FWJsBridgeMessage*)message {
     if (self.startupMessageQueue) {
         [self.startupMessageQueue addObject:message];
     } else {
@@ -175,7 +175,7 @@ static int logMaxLength = 500;
     }
 }
 
-- (void)_dispatchMessage:(WVJBMessage*)message {
+- (void)_dispatchMessage:(FWJsBridgeMessage*)message {
     NSString *messageJSON = [self _serializeMessage:message pretty:NO];
     [self _log:@"SEND" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
@@ -220,20 +220,20 @@ static int logMaxLength = 500;
 
 @end
 
-@implementation WKWebViewJavascriptBridge {
+@implementation FWWebViewJsBridge {
     __weak WKWebView* _webView;
     __weak id<WKNavigationDelegate> _webViewDelegate;
     long _uniqueId;
-    WebViewJavascriptBridgeBase *_base;
+    FWWebViewJsBridgeBase *_base;
 }
 
 /* API
  *****/
 
-+ (void)enableLogging { [WebViewJavascriptBridgeBase enableLogging]; }
++ (void)enableLogging { [FWWebViewJsBridgeBase enableLogging]; }
 
 + (instancetype)bridgeForWebView:(WKWebView*)webView {
-    WKWebViewJavascriptBridge* bridge = [[self alloc] init];
+    FWWebViewJsBridge* bridge = [[self alloc] init];
     [bridge _setupInstance:webView];
     [bridge reset];
     return bridge;
@@ -243,7 +243,7 @@ static int logMaxLength = 500;
     [self send:data responseCallback:nil];
 }
 
-- (void)send:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
+- (void)send:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback {
     [_base sendData:data responseCallback:responseCallback handlerName:nil];
 }
 
@@ -255,11 +255,11 @@ static int logMaxLength = 500;
     [self callHandler:handlerName data:data responseCallback:nil];
 }
 
-- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback {
     [_base sendData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
-- (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
+- (void)registerHandler:(NSString *)handlerName handler:(FWJsBridgeHandler)handler {
     _base.messageHandlers[handlerName] = [handler copy];
 }
 
@@ -296,7 +296,7 @@ static int logMaxLength = 500;
 - (void) _setupInstance:(WKWebView*)webView {
     _webView = webView;
     _webView.navigationDelegate = self;
-    _base = [[WebViewJavascriptBridgeBase alloc] init];
+    _base = [[FWWebViewJsBridgeBase alloc] init];
     _base.delegate = self;
 }
 
@@ -402,7 +402,7 @@ static int logMaxLength = 500;
 
 @end
 
-NSString * WebViewJavascriptBridge_js() {
+NSString * FWWebViewJsBridge_js() {
     #define __wvjb_js_func__(x) #x
     
     // BEGIN preprocessorJSCode
