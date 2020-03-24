@@ -1,7 +1,7 @@
 /*!
- @header     WKWebView+FWJavascriptBridge.h
+ @header     WKWebView+FWJsBridge.h
  @indexgroup FWFramework
- @brief      WKWebView+FWJavascriptBridge
+ @brief      WKWebView+FWJsBridge
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/3/17
@@ -9,26 +9,26 @@
 
 #import <WebKit/WebKit.h>
 
-typedef void (^WVJBResponseCallback)(id responseData);
-typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
-typedef NSDictionary WVJBMessage;
+typedef void (^FWJsBridgeResponseCallback)(id responseData);
+typedef void (^FWJsBridgeHandler)(id data, FWJsBridgeResponseCallback responseCallback);
+typedef NSDictionary FWJsBridgeMessage;
 
-@protocol WebViewJavascriptBridgeBaseDelegate <NSObject>
-- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand;
+@protocol FWWebViewJsBridgeDelegate <NSObject>
+- (NSString *)_evaluateJavascript:(NSString*)javascriptCommand;
 @end
 
-@interface WebViewJavascriptBridgeBase : NSObject
+@interface FWWebViewJsBridgeBase : NSObject
 
-@property (weak, nonatomic) id <WebViewJavascriptBridgeBaseDelegate> delegate;
+@property (weak, nonatomic) id <FWWebViewJsBridgeDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray* startupMessageQueue;
 @property (strong, nonatomic) NSMutableDictionary* responseCallbacks;
 @property (strong, nonatomic) NSMutableDictionary* messageHandlers;
-@property (strong, nonatomic) WVJBHandler messageHandler;
+@property (strong, nonatomic) FWJsBridgeHandler messageHandler;
 
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
 - (void)reset;
-- (void)sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
+- (void)sendData:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback handlerName:(NSString*)handlerName;
 - (void)flushMessageQueue:(NSString *)messageQueueString;
 - (void)injectJavascriptFile;
 - (BOOL)isWebViewJavascriptBridgeURL:(NSURL*)url;
@@ -46,20 +46,20 @@ typedef NSDictionary WVJBMessage;
 
 @see https://github.com/marcuswestin/WebViewJavascriptBridge
 */
-@interface WKWebViewJavascriptBridge : NSObject<WKNavigationDelegate, WebViewJavascriptBridgeBaseDelegate>
+@interface FWWebViewJsBridge : NSObject<WKNavigationDelegate, FWWebViewJsBridgeDelegate>
 
 + (instancetype)bridgeForWebView:(WKWebView*)webView;
 + (void)enableLogging;
 
-- (void)registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler;
+- (void)registerHandler:(NSString*)handlerName handler:(FWJsBridgeHandler)handler;
 - (void)removeHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
-- (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
+- (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback;
 - (void)reset;
 - (void)setWebViewDelegate:(id)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
 
 @end
 
-NSString * WebViewJavascriptBridge_js(void);
+NSString * FWWebViewJsBridge_js(void);
