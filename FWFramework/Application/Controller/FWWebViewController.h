@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FWWebViewJsBridge;
+
 /*!
  @brief 网页视图控制器协议，可覆写
  @discussion 默认实现并允许JS调用alert|confirm|prompt方法，如不需要可覆盖之。
@@ -38,6 +40,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 渲染网页视图布局，renderView之前调用，默认铺满
 - (void)renderWebLayout;
+
+// 渲染网页桥接，renderView之前调用，默认未实现
+- (void)renderWebBridge:(FWWebViewJsBridge *)bridge;
+
+// 是否开始加载，可用来拦截URL SCHEME、通用链接等，默认未实现
+- (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction;
+
+// 已经加载完成，可用来获取title、设置按钮等，默认未实现
+- (void)didFinishLoad:(WKNavigation *)navigation;
 
 @end
 

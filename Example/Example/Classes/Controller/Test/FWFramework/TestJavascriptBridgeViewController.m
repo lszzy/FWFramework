@@ -9,40 +9,30 @@
 
 #import "TestJavascriptBridgeViewController.h"
 
-@interface TestJavascriptBridgeViewController ()
-
-@property FWWebViewJsBridge* bridge;
-
-@end
-
 @implementation TestJavascriptBridgeViewController
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    if (_bridge) return;
-    
+- (void)renderWebBridge:(FWWebViewJsBridge *)bridge {
     [FWWebViewJsBridge enableLogging];
-    _bridge = [FWWebViewJsBridge bridgeForWebView:self.webView];
-    [_bridge setWebViewDelegate:self];
-    
-    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, FWJsBridgeResponseCallback responseCallback) {
+    [bridge registerHandler:@"testObjcCallback" handler:^(id data, FWJsBridgeResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
         responseCallback(@"Response from testObjcCallback");
     }];
-    
-    [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
-    
+    [bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
+}
+
+- (void)callHandler:(id)sender {
+    id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
+    [self.webView.fwJsBridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
+        NSLog(@"testJavascriptHandler responded: %@", response);
+    }];
+}
+
+- (void)renderView
+{
     [self renderButtons:self.webView];
-    [self loadExamplePage:self.webView];
-}
-
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidStartLoad");
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidFinishLoad");
+    
+    NSURL *htmlUrl = [[NSBundle mainBundle] URLForResource:@"JavascriptBridge" withExtension:@"html"];
+    self.webRequest = htmlUrl;
 }
 
 - (void)renderButtons:(WKWebView*)webView {
@@ -73,20 +63,6 @@
     [self.view insertSubview:jumpButton aboveSubview:webView];
     jumpButton.frame = CGRectMake(210, y, 100, 35);
     jumpButton.titleLabel.font = font;
-}
-
-- (void)callHandler:(id)sender {
-    id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
-    [_bridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
-        NSLog(@"testJavascriptHandler responded: %@", response);
-    }];
-}
-
-- (void)loadExamplePage:(WKWebView*)webView {
-    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"JavascriptBridge" ofType:@"html"];
-    NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
-    NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
-    [webView loadHTMLString:appHtml baseURL:baseURL];
 }
 
 @end
