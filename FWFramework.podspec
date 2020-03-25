@@ -33,28 +33,28 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'Image-Webp' do |subspec|
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWImageWebpEnabled=1'}
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWImageWebpEnabled=1' }
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'libwebp'
   end
 
   spec.subspec 'Authorize-Contacts' do |subspec|
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeContactsEnabled=1'}
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeContactsEnabled=1' }
     subspec.dependency 'FWFramework/Framework'
   end
 
   spec.subspec 'Authorize-Microphone' do |subspec|
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeMicrophoneEnabled=1'}
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeMicrophoneEnabled=1' }
     subspec.dependency 'FWFramework/Framework'
   end
 
   spec.subspec 'Authorize-Calendar' do |subspec|
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeCalendarEnabled=1'}
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeCalendarEnabled=1' }
     subspec.dependency 'FWFramework/Framework'
   end
 
   spec.subspec 'Authorize-AppleMusic' do |subspec|
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeAppleMusicEnabled=1'}
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeAppleMusicEnabled=1' }
     subspec.dependency 'FWFramework/Framework'
   end
 end
