@@ -19,7 +19,7 @@ typedef NSDictionary FWJsBridgeMessage;
 
 @interface FWWebViewJsBridgeBase : NSObject
 
-@property (weak, nonatomic) id <FWWebViewJsBridgeDelegate> delegate;
+@property (weak, nonatomic) id<FWWebViewJsBridgeDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray* startupMessageQueue;
 @property (strong, nonatomic) NSMutableDictionary* responseCallbacks;
 @property (strong, nonatomic) NSMutableDictionary* messageHandlers;
