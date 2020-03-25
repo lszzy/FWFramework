@@ -20,7 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WKWebView (FWFramework)
 
-@property (nullable, nonatomic, weak) id <FWWebViewNavigationDelegate> fwNavigationDelegate;
+@property (nullable, nonatomic, weak) id<FWWebViewNavigationDelegate> fwNavigationDelegate;
+
+@property (nullable, nonatomic, strong) FWWebViewJsBridge *fwJsBridge;
 
 @end
 
