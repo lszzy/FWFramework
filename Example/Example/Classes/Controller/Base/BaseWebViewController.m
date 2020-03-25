@@ -34,6 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (!self.requestUrl) return;
     
     // 分享按钮
     FWWeakifySelf();
@@ -48,19 +49,13 @@
     self.webRequest = urlRequest;
 }
 
-#pragma mark - WKNavigationDelegate
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+- (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction
 {
     if ([navigationAction.request.URL.scheme isEqualToString:@"app"]) {
         [FWRouter openURL:navigationAction.request.URL.absoluteString];
-        decisionHandler(WKNavigationActionPolicyCancel);
-    } else if ([UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
-        [UIApplication fwOpenURL:navigationAction.request.URL];
-        decisionHandler(WKNavigationActionPolicyCancel);
-    } else {
-        decisionHandler(WKNavigationActionPolicyAllow);
+        return NO;
     }
+    return YES;
 }
 
 @end
