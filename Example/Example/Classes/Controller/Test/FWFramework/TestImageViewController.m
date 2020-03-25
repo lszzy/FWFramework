@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong, readonly) UIImageView *systemView;
 
-//@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
+@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
 
 @end
 
@@ -32,9 +32,9 @@
         [self.contentView addSubview:_systemView];
         _systemView.fwLayoutChain.leftWithInset(10).topToBottomOfViewWithOffset(_nameLabel, 10).bottomWithInset(10).width(100);
         
-        //_animatedView = [FWAnimatedImageView new];
-        //[self.contentView addSubview:_animatedView];
-        //_animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
+        _animatedView = [FWAnimatedImageView new];
+        [self.contentView addSubview:_animatedView];
+        _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
     }
     return self;
 }
@@ -56,8 +56,6 @@
 
 - (void)renderModel
 {
-    //[[FWImageCodersManager sharedManager] addCoder:[FWImageHEICCoder sharedCoder]];
-    
     FWWeakifySelf();
     [self fwSetRightBarItem:@"Toggle" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
@@ -130,10 +128,11 @@
     if (progress > 1) progress = 1;
     NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
     /*
-    YYImageDecoder *decoder = [[YYImageDecoder alloc] initWithScale:[UIScreen mainScreen].scale];
+    FWImageDecoder *decoder = [[FWImageDecoder alloc] initWithScale:[UIScreen mainScreen].scale];
     [decoder updateData:subData final:NO];
-    YYImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
-    [self.tableData fwAddObject:image];*/
+    FWImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
+    imageView.image = frame.image;
+     */
 }
 
 #pragma mark - TableView
@@ -150,13 +149,13 @@
     if (self.isWebImage) {
         NSString *url = [NSString stringWithFormat:@"http://kvm.wuyong.site/images/%@", fileName];
         cell.systemView.image = nil;
-        //cell.animatedView.image = nil;
+        cell.animatedView.image = nil;
         [cell.systemView fwSetImageWithURL:url];
-        //[cell.animatedView fwSetImageWithURL:url];
+        [cell.animatedView fwSetImageWithURL:url];
     } else {
-        //UIImage *image = [FWAnimatedImage imageNamed:fileName];
-        //cell.systemView.image = image;
-        //cell.animatedView.image = image;
+        UIImage *image = [FWAnimatedImage imageNamed:fileName];
+        cell.systemView.image = image;
+        cell.animatedView.image = image;
     }
 }
 
