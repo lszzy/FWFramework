@@ -270,10 +270,10 @@
 		2FAD2228233B5FF500140359 /* FWTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAD2226233B5FF500140359 /* FWTuple.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FAF1703240A9BF6003EA766 /* FWAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF16FD240A9BF6003EA766 /* FWAnimatedImage.m */; };
 		2FAF1704240A9BF6003EA766 /* FWImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF16FE240A9BF6003EA766 /* FWImageCoder.m */; };
-		2FAF1705240A9BF6003EA766 /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAF16FF240A9BF6003EA766 /* FWAnimatedImageView.h */; };
+		2FAF1705240A9BF6003EA766 /* FWAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAF16FF240A9BF6003EA766 /* FWAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FAF1706240A9BF6003EA766 /* FWAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF1700240A9BF6003EA766 /* FWAnimatedImageView.m */; };
-		2FAF1707240A9BF6003EA766 /* FWImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAF1701240A9BF6003EA766 /* FWImageCoder.h */; };
-		2FAF1708240A9BF6003EA766 /* FWAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAF1702240A9BF6003EA766 /* FWAnimatedImage.h */; };
+		2FAF1707240A9BF6003EA766 /* FWImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAF1701240A9BF6003EA766 /* FWImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FAF1708240A9BF6003EA766 /* FWAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FAF1702240A9BF6003EA766 /* FWAnimatedImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB221C0F35D002E5412 /* UIImagePickerController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FB7CBB321C0F35D002E5412 /* UIImagePickerController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */; };
 		2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FB7CBC721C23728002E5412 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -553,19 +553,13 @@
 		2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWLayoutChain.m"; sourceTree = "<group>"; };
 		2F2121D52408E49D00F74653 /* WKWebView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+FWFramework.h"; sourceTree = "<group>"; };
 		2F2121D62408E49D00F74653 /* WKWebView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+FWFramework.m"; sourceTree = "<group>"; };
-		2F2121DD2408E80500F74653 /* FWAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImageView.h; sourceTree = "<group>"; };
 		2F2121DE2408E80500F74653 /* UIImageView+FWNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FWNetwork.m"; sourceTree = "<group>"; };
 		2F2121DF2408E80500F74653 /* UIImage+FWGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FWGif.m"; sourceTree = "<group>"; };
 		2F2121E02408E80500F74653 /* FWImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWImageDownloader.h; sourceTree = "<group>"; };
 		2F2121E12408E80500F74653 /* FWAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAutoPurgingImageCache.m; sourceTree = "<group>"; };
-		2F2121E22408E80500F74653 /* FWAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
-		2F2121E32408E80500F74653 /* FWImageCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImageCoder.m; sourceTree = "<group>"; };
 		2F2121E42408E80500F74653 /* FWImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWImage.h; sourceTree = "<group>"; };
 		2F2121E52408E80500F74653 /* UIImage+FWGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWGif.h"; sourceTree = "<group>"; };
 		2F2121E62408E80500F74653 /* UIImageView+FWNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FWNetwork.h"; sourceTree = "<group>"; };
-		2F2121E72408E80500F74653 /* FWAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImageView.m; sourceTree = "<group>"; };
-		2F2121E82408E80500F74653 /* FWImageCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWImageCoder.h; sourceTree = "<group>"; };
-		2F2121E92408E80500F74653 /* FWAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
 		2F2121EA2408E80500F74653 /* FWAutoPurgingImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAutoPurgingImageCache.h; sourceTree = "<group>"; };
 		2F2121EB2408E80500F74653 /* FWImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImageDownloader.m; sourceTree = "<group>"; };
 		2F2121EC2408E80500F74653 /* FWImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImage.m; sourceTree = "<group>"; };
@@ -930,7 +924,6 @@
 				2FCE515421D3B90F009EA65E /* Cache */,
 				2FCE512F21D3746B009EA65E /* Database */,
 				2F2121DC2408E80500F74653 /* Image */,
-				2FAF16F8240A9A67003EA766 /* Images */,
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
@@ -1105,16 +1098,16 @@
 		2F2121DC2408E80500F74653 /* Image */ = {
 			isa = PBXGroup;
 			children = (
-				2F2121E22408E80500F74653 /* FWAnimatedImage.h */,
-				2F2121E92408E80500F74653 /* FWAnimatedImage.m */,
-				2F2121DD2408E80500F74653 /* FWAnimatedImageView.h */,
-				2F2121E72408E80500F74653 /* FWAnimatedImageView.m */,
+				2FAF1702240A9BF6003EA766 /* FWAnimatedImage.h */,
+				2FAF16FD240A9BF6003EA766 /* FWAnimatedImage.m */,
+				2FAF16FF240A9BF6003EA766 /* FWAnimatedImageView.h */,
+				2FAF1700240A9BF6003EA766 /* FWAnimatedImageView.m */,
 				2F2121EA2408E80500F74653 /* FWAutoPurgingImageCache.h */,
 				2F2121E12408E80500F74653 /* FWAutoPurgingImageCache.m */,
 				2F2121E42408E80500F74653 /* FWImage.h */,
 				2F2121EC2408E80500F74653 /* FWImage.m */,
-				2F2121E82408E80500F74653 /* FWImageCoder.h */,
-				2F2121E32408E80500F74653 /* FWImageCoder.m */,
+				2FAF1701240A9BF6003EA766 /* FWImageCoder.h */,
+				2FAF16FE240A9BF6003EA766 /* FWImageCoder.m */,
 				2F2121E02408E80500F74653 /* FWImageDownloader.h */,
 				2F2121EB2408E80500F74653 /* FWImageDownloader.m */,
 				2F2121E52408E80500F74653 /* UIImage+FWGif.h */,
@@ -1173,19 +1166,6 @@
 				2F70EDDC2327810900498538 /* Plugin */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		2FAF16F8240A9A67003EA766 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				2FAF1702240A9BF6003EA766 /* FWAnimatedImage.h */,
-				2FAF16FD240A9BF6003EA766 /* FWAnimatedImage.m */,
-				2FAF16FF240A9BF6003EA766 /* FWAnimatedImageView.h */,
-				2FAF1700240A9BF6003EA766 /* FWAnimatedImageView.m */,
-				2FAF1701240A9BF6003EA766 /* FWImageCoder.h */,
-				2FAF16FE240A9BF6003EA766 /* FWImageCoder.m */,
-			);
-			path = Images;
 			sourceTree = "<group>";
 		};
 		2FC81A732350314500BE660C /* ViewModel */ = {
@@ -1278,6 +1258,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FAF1707240A9BF6003EA766 /* FWImageCoder.h in Headers */,
+				2FAF1705240A9BF6003EA766 /* FWAnimatedImageView.h in Headers */,
+				2FAF1708240A9BF6003EA766 /* FWAnimatedImage.h in Headers */,
 				2F10013524211B3900C1CC3B /* WKWebView+FWJsBridge.h in Headers */,
 				2F2121FA2408E80600F74653 /* FWAutoPurgingImageCache.h in Headers */,
 				2F2121F42408E80600F74653 /* FWImage.h in Headers */,
@@ -1342,10 +1325,8 @@
 				2FCE516521D3BA32009EA65E /* FWCacheKeychain.h in Headers */,
 				2FCE516421D3BA32009EA65E /* FWCacheFile.h in Headers */,
 				2FCE515021D3B14A009EA65E /* FWLocationManager.h in Headers */,
-				2FAF1707240A9BF6003EA766 /* FWImageCoder.h in Headers */,
 				2FCE515221D3B14A009EA65E /* FWStorekitManager.h in Headers */,
 				2FCE513F21D3A43E009EA65E /* FWDatabaseQueue.h in Headers */,
-				2FAF1705240A9BF6003EA766 /* FWAnimatedImageView.h in Headers */,
 				2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */,
 				2FCE514721D3A6A5009EA65E /* FWDatabaseAdditions.h in Headers */,
 				2FCE514321D3A457009EA65E /* FWResultSet.h in Headers */,
@@ -1353,7 +1334,6 @@
 				2F0FFF3021D20EA800049383 /* NSAttributedString+FWFramework.h in Headers */,
 				2F0FFF2B21D1DB1800049383 /* FWAttributedLabel.h in Headers */,
 				2F0FFF1E21D0B76400049383 /* UIScrollView+FWInfiniteScroll.h in Headers */,
-				2FAF1708240A9BF6003EA766 /* FWAnimatedImage.h in Headers */,
 				2F0FFF1921D0ACFA00049383 /* UIScrollView+FWPullRefresh.h in Headers */,
 				2FB7CBCD21C242D5002E5412 /* FWTagCollectionView.h in Headers */,
 				2FB7CBC921C23728002E5412 /* FWBannerView.h in Headers */,
