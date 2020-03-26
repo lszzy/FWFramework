@@ -12,7 +12,7 @@
 #import "UIImageView+FWNetwork.h"
 #import "FWImageDownloader.h"
 #import "FWAutoPurgingImageCache.h"
-#import "FWAnimatedImage.h"
+#import "FWAnimatedImageView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
