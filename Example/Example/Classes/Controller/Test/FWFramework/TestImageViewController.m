@@ -7,6 +7,7 @@
 //
 
 #import "TestImageViewController.h"
+#import "SDImageWebPCoder.h"
 
 @interface TestImageCell : UITableViewCell
 
@@ -56,6 +57,9 @@
 
 - (void)renderModel
 {
+#if APP_TARGET == 2
+    [[FWImageCodersManager sharedManager] addCoder:[FWImageWebPCoder sharedCoder]];
+#endif
     [[FWImageCodersManager sharedManager] addCoder:[FWImageHEICCoder sharedCoder]];
     
     FWWeakifySelf();

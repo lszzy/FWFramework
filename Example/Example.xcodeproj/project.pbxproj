@@ -18,6 +18,8 @@
 		2F10012E2421136500C1CC3B /* TestJavascriptBridgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */; };
 		2F1001312421139400C1CC3B /* JavascriptBridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F1001302421139400C1CC3B /* JavascriptBridge.html */; };
 		2F1001322421139400C1CC3B /* JavascriptBridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F1001302421139400C1CC3B /* JavascriptBridge.html */; };
+		2F1B249B242D0FC4009A0F83 /* SDImageWebPCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B2498242D0FA6009A0F83 /* SDImageWebPCoder.m */; };
+		2F1B249C242D0FC4009A0F83 /* SDImageWebPCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B2498242D0FA6009A0F83 /* SDImageWebPCoder.m */; };
 		2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */; };
 		2F1D8B8621B039E600E0F820 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D8B8521B039E600E0F820 /* AppConfig.m */; };
 		2F1D93DC216F18B00021F936 /* TestWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D93DB216F18B00021F936 /* TestWindowViewController.m */; };
@@ -235,6 +237,14 @@
 		2F10012B2421136500C1CC3B /* TestJavascriptBridgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestJavascriptBridgeViewController.h; sourceTree = "<group>"; };
 		2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestJavascriptBridgeViewController.m; sourceTree = "<group>"; };
 		2F1001302421139400C1CC3B /* JavascriptBridge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = JavascriptBridge.html; sourceTree = "<group>"; };
+		2F1B248D242D0F44009A0F83 /* FWAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
+		2F1B248F242D0F44009A0F83 /* FWAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImageView.h; sourceTree = "<group>"; };
+		2F1B2490242D0F44009A0F83 /* FWAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
+		2F1B2491242D0F44009A0F83 /* FWAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImageView.m; sourceTree = "<group>"; };
+		2F1B2492242D0F44009A0F83 /* FWImageCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWImageCoder.h; sourceTree = "<group>"; };
+		2F1B2493242D0F45009A0F83 /* FWImageCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImageCoder.m; sourceTree = "<group>"; };
+		2F1B2497242D0FA6009A0F83 /* SDImageWebPCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDImageWebPCoder.h; path = "../../../../../../../../Downloads/SDWebImageWebPCoder-master 2/SDWebImageWebPCoder/Classes/SDImageWebPCoder.h"; sourceTree = "<group>"; };
+		2F1B2498242D0FA6009A0F83 /* SDImageWebPCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SDImageWebPCoder.m; path = "../../../../../../../../Downloads/SDWebImageWebPCoder-master 2/SDWebImageWebPCoder/Classes/SDImageWebPCoder.m"; sourceTree = "<group>"; };
 		2F1D8B7E21B021A000E0F820 /* TestEmptyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyViewController.h; sourceTree = "<group>"; };
 		2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyViewController.m; sourceTree = "<group>"; };
 		2F1D8B8521B039E600E0F820 /* AppConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
@@ -437,6 +447,14 @@
 		2F0D292F215DFFEF005F1466 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				2F1B248D242D0F44009A0F83 /* FWAnimatedImage.h */,
+				2F1B2490242D0F44009A0F83 /* FWAnimatedImage.m */,
+				2F1B248F242D0F44009A0F83 /* FWAnimatedImageView.h */,
+				2F1B2491242D0F44009A0F83 /* FWAnimatedImageView.m */,
+				2F1B2492242D0F44009A0F83 /* FWImageCoder.h */,
+				2F1B2493242D0F45009A0F83 /* FWImageCoder.m */,
+				2F1B2497242D0FA6009A0F83 /* SDImageWebPCoder.h */,
+				2F1B2498242D0FA6009A0F83 /* SDImageWebPCoder.m */,
 				2F0CCE3A21E496B30018FA87 /* FWDatabaseManager.h */,
 				2F0CCE3921E496B30018FA87 /* FWDatabaseManager.m */,
 				2F0CCE3621E496B30018FA87 /* FWDbModel.h */,
@@ -1193,6 +1211,7 @@
 				2F43857B2318F687003A683C /* TestTableBackgroundViewController.m in Sources */,
 				2FC81A792350321800BE660C /* ComplexViewModel.m in Sources */,
 				2F43857C2318F687003A683C /* TestTableLayoutViewController.m in Sources */,
+				2F1B249C242D0FC4009A0F83 /* SDImageWebPCoder.m in Sources */,
 				2F43857D2318F687003A683C /* TestFaceViewController.m in Sources */,
 				2F43857E2318F687003A683C /* AppRouter.m in Sources */,
 				2F4385802318F687003A683C /* TestRouterViewController.m in Sources */,
@@ -1250,6 +1269,7 @@
 				2F03EEC9231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */,
 				2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */,
 				2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */,
+				2F1B249B242D0FC4009A0F83 /* SDImageWebPCoder.m in Sources */,
 				2F8F371024016C82003472B5 /* TestCrashViewController.m in Sources */,
 				2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */,
 				2F1E392F2178DFDF0051A6BB /* BaseCollectionViewController.m in Sources */,
