@@ -4,264 +4,86 @@
  @brief      FWAnimatedImage
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/2/24
+ @updated    2020/2/26
  */
 
-#import <UIKit/UIKit.h>
 #import "FWImageCoder.h"
-#import "FWAnimatedImageView.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-/*!
- @brief 动画image协议
- */
-@protocol FWAnimatedImage <NSObject>
+@protocol FWAnimatedImage <FWAnimatedImageProvider>
 
 @required
 
-// 动画image总frame数
-- (NSUInteger)animatedImageFrameCount;
+- (nullable instancetype)initWithData:(nonnull NSData *)data scale:(CGFloat)scale options:(nullable FWImageCoderOptions *)options;
 
-// 动画image循环次数，0为无限循环
-- (NSUInteger)animatedImageLoopCount;
-
-// 每帧的Bytes数
-- (NSUInteger)animatedImageBytesPerFrame;
-
-// 指定index的帧image，后台线程调用
-- (nullable UIImage *)animatedImageFrameAtIndex:(NSUInteger)index;
-
-// 指定index的帧时长
-- (NSTimeInterval)animatedImageDurationAtIndex:(NSUInteger)index;
+- (nullable instancetype)initWithAnimatedCoder:(nonnull id<FWAnimatedImageCoder>)animatedCoder scale:(CGFloat)scale;
 
 @optional
 
-// 指定index的动画图片区域，用于精灵动画
-- (CGRect)animatedImageContentsRectAtIndex:(NSUInteger)index;
+- (void)preloadAllFrames;
+
+- (void)unloadAllFrames;
+
+@property (nonatomic, assign, readonly, getter=isAllFramesLoaded) BOOL allFramesLoaded;
+
+@property (nonatomic, strong, readonly, nullable) id<FWAnimatedImageCoder> animatedCoder;
 
 @end
 
-/**
- A FWAnimatedImage object is a high-level way to display animated image data.
- 
- @discussion It is a fully compatible `UIImage` subclass. It extends the UIImage
- to support animated WebP, APNG and GIF format image data decoding. It also
- support NSCoding protocol to archive and unarchive multi-frame image data.
- 
- If the image is created from multi-frame image data, and you want to play the
- animation, try replace UIImageView with `FWAnimatedImageView`.
- 
- Sample Code:
- 
-     // animation@3x.webp
-     FWAnimatedImage *image = [FWAnimatedImage imageNamed:@"animation.webp"];
-     FWAnimatedImageView *imageView = [FWAnimatedImageView alloc] initWithImage:image];
-     [view addSubView:imageView];
-    
- */
 @interface FWAnimatedImage : UIImage <FWAnimatedImage>
 
-+ (nullable instancetype)imageNamed:(NSString *)name; // no cache!
-+ (nullable instancetype)imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle; // no cache!
-+ (nullable instancetype)imageWithContentsOfFile:(NSString *)path;
-+ (nullable instancetype)imageWithData:(NSData *)data;
-+ (nullable instancetype)imageWithData:(NSData *)data scale:(CGFloat)scale;
+// This class override these methods from UIImage(NSImage), and it supports NSSecureCoding.
+// You should use these methods to create a new animated image. Use other methods just call super instead.
+// Pay attention, when the animated image frame count <= 1, all the `FWAnimatedImageProvider` protocol methods will return nil or 0 value, you'd better check the frame count before usage and keep fallback.
++ (nullable instancetype)imageNamed:(nonnull NSString *)name; // Cache in memory, no Asset Catalog support
++ (nullable instancetype)imageNamed:(nonnull NSString *)name inBundle:(nullable NSBundle *)bundle; // Cache in memory, no Asset
++ (nullable instancetype)imageWithContentsOfFile:(nonnull NSString *)path;
++ (nullable instancetype)imageWithData:(nonnull NSData *)data;
++ (nullable instancetype)imageWithData:(nonnull NSData *)data scale:(CGFloat)scale;
+- (nullable instancetype)initWithContentsOfFile:(nonnull NSString *)path;
+- (nullable instancetype)initWithData:(nonnull NSData *)data;
+- (nullable instancetype)initWithData:(nonnull NSData *)data scale:(CGFloat)scale;
 
 /**
- If the image is created from data or file, then the value indicates the data type.
+ Current animated image format.
  */
-@property (nonatomic, readonly) FWImageType animatedImageType;
+@property (nonatomic, assign, readonly) FWImageFormat animatedImageFormat;
 
 /**
- If the image is created from animated image data (multi-frame GIF/APNG/WebP),
- this property stores the original image data.
+ Current animated image data, you can use this to grab the compressed format data and create another animated image instance.
+ If this image instance is an animated image created by using animated image coder (which means using the API listed above or using `initWithAnimatedCoder:scale:`), this property is non-nil.
  */
-@property (nullable, nonatomic, readonly) NSData *animatedImageData;
+@property (nonatomic, copy, readonly, nullable) NSData *animatedImageData;
 
 /**
- The total memory usage (in bytes) if all frame images was loaded into memory.
- The value is 0 if the image is not created from a multi-frame image data.
- */
-@property (nonatomic, readonly) NSUInteger animatedImageMemorySize;
-
-/**
- Preload all frame image to memory.
+ The scale factor of the image.
  
- @discussion Set this property to `YES` will block the calling thread to decode
- all animation frame image to memory, set to `NO` will release the preloaded frames.
- If the image is shared by lots of image views (such as emoticon), preload all
- frames will reduce the CPU cost.
- 
- See `animatedImageMemorySize` for memory cost.
+ @note For UIKit, this just call super instead.
+ @note For AppKit, `NSImage` can contains multiple image representations with different scales. However, this class does not do that from the design. We processs the scale like UIKit. This wil actually be calculated from image size and pixel size.
  */
-@property (nonatomic) BOOL preloadAllAnimatedImageFrames;
+@property (nonatomic, readonly) CGFloat scale;
+
+// By default, animated image frames are returned by decoding just in time without keeping into memory. But you can choose to preload them into memory as well, See the decsription in `FWAnimatedImage` protocol.
+// After preloaded, there is no huge difference on performance between this and UIImage's `animatedImageWithImages:duration:`. But UIImage's animation have some issues such like blanking and pausing during segue when using in `UIImageView`. It's recommend to use only if need.
+- (void)preloadAllFrames;
+- (void)unloadAllFrames;
+@property (nonatomic, assign, readonly, getter=isAllFramesLoaded) BOOL allFramesLoaded;
 
 @end
 
 /**
- An image to display frame-based animation.
- 
- @discussion It is a fully compatible `UIImage` subclass.
- It only support system image format such as png and jpeg.
- The animation can be played by FWAnimatedImageView.
- 
- Sample Code:
-     
-     NSArray *paths = @[@"/ani/frame1.png", @"/ani/frame2.png", @"/ani/frame3.png"];
-     NSArray *times = @[@0.1, @0.2, @0.1];
-     FWFrameImage *image = [FWFrameImage alloc] initWithImagePaths:paths frameDurations:times repeats:YES];
-     FWAnimatedImageView *imageView = [FWAnimatedImageView alloc] initWithImage:image];
-     [view addSubView:imageView];
+ UIImage category for memory cache cost.
  */
-@interface FWFrameImage : UIImage <FWAnimatedImage>
+@interface UIImage (MemoryCacheCost)
 
 /**
- Create a frame animated image from files.
+ The memory cache cost for specify image used by image cache. The cost function is the bytes size held in memory.
+ If you set some associated object to `UIImage`, you can set the custom value to indicate the memory cost.
  
- @param paths            An array of NSString objects, contains the full or
-                         partial path to each image file.
-                         e.g. @[@"/ani/1.png",@"/ani/2.png",@"/ani/3.png"]
- 
- @param oneFrameDuration The duration (in seconds) per frame.
- 
- @param loopCount        The animation loop count, 0 means infinite.
- 
- @return An initialized FWFrameImage object, or nil when an error occurs.
+ For `UIImage`, this method return the single frame bytes size when `image.images` is nil for static image. Retuen full frame bytes size when `image.images` is not nil for animated image.
+ For `NSImage`, this method return the single frame bytes size because `NSImage` does not store all frames in memory.
+ @note Note that because of the limitations of category this property can get out of sync if you create another instance with CGImage or other methods.
+ @note For custom animated class conforms to `FWAnimatedImage`, you can override this getter method in your subclass to return a more proper value instead, which representing the current frame's total bytes.
  */
-- (nullable instancetype)initWithImagePaths:(NSArray<NSString *> *)paths
-                           oneFrameDuration:(NSTimeInterval)oneFrameDuration
-                                  loopCount:(NSUInteger)loopCount;
-
-/**
- Create a frame animated image from files.
- 
- @param paths          An array of NSString objects, contains the full or
-                       partial path to each image file.
-                       e.g. @[@"/ani/frame1.png",@"/ani/frame2.png",@"/ani/frame3.png"]
- 
- @param frameDurations An array of NSNumber objects, contains the duration (in seconds) per frame.
-                       e.g. @[@0.1, @0.2, @0.3];
- 
- @param loopCount      The animation loop count, 0 means infinite.
- 
- @return An initialized FWFrameImage object, or nil when an error occurs.
- */
-- (nullable instancetype)initWithImagePaths:(NSArray<NSString *> *)paths
-                             frameDurations:(NSArray<NSNumber *> *)frameDurations
-                                  loopCount:(NSUInteger)loopCount;
-
-/**
- Create a frame animated image from an array of data.
- 
- @param dataArray        An array of NSData objects.
- 
- @param oneFrameDuration The duration (in seconds) per frame.
- 
- @param loopCount        The animation loop count, 0 means infinite.
- 
- @return An initialized FWFrameImage object, or nil when an error occurs.
- */
-- (nullable instancetype)initWithImageDataArray:(NSArray<NSData *> *)dataArray
-                               oneFrameDuration:(NSTimeInterval)oneFrameDuration
-                                      loopCount:(NSUInteger)loopCount;
-
-/**
- Create a frame animated image from an array of data.
- 
- @param dataArray      An array of NSData objects.
- 
- @param frameDurations An array of NSNumber objects, contains the duration (in seconds) per frame.
-                       e.g. @[@0.1, @0.2, @0.3];
- 
- @param loopCount      The animation loop count, 0 means infinite.
- 
- @return An initialized FWFrameImage object, or nil when an error occurs.
- */
-- (nullable instancetype)initWithImageDataArray:(NSArray<NSData *> *)dataArray
-                                 frameDurations:(NSArray *)frameDurations
-                                      loopCount:(NSUInteger)loopCount;
+@property (assign, nonatomic) NSUInteger fw_memoryCost;
 
 @end
-
-/**
- An image to display sprite sheet animation.
- 
- @discussion It is a fully compatible `UIImage` subclass.
- The animation can be played by FWAnimatedImageView.
- 
- Sample Code:
-  
-    // 8 * 12 sprites in a single sheet image
-    UIImage *spriteSheet = [UIImage imageNamed:@"sprite-sheet"];
-    NSMutableArray *contentRects = [NSMutableArray new];
-    NSMutableArray *durations = [NSMutableArray new];
-    for (int j = 0; j < 12; j++) {
-        for (int i = 0; i < 8; i++) {
-            CGRect rect;
-            rect.size = CGSizeMake(img.size.width / 8, img.size.height / 12);
-            rect.origin.x = img.size.width / 8 * i;
-            rect.origin.y = img.size.height / 12 * j;
-            [contentRects addObject:[NSValue valueWithCGRect:rect]];
-            [durations addObject:@(1 / 60.0)];
-        }
-    }
-    FWSpriteSheetImage *sprite;
-    sprite = [[FWSpriteSheetImage alloc] initWithSpriteSheetImage:img
-                                                     contentRects:contentRects
-                                                   frameDurations:durations
-                                                        loopCount:0];
-    FWAnimatedImageView *imgView = [FWAnimatedImageView new];
-    imgView.size = CGSizeMake(img.size.width / 8, img.size.height / 12);
-    imgView.image = sprite;
- 
- 
- 
- @discussion It can also be used to display single frame in sprite sheet image.
- Sample Code:
- 
-    FWSpriteSheetImage *sheet = ...;
-    UIImageView *imageView = ...;
-    imageView.image = sheet;
-    imageView.layer.contentsRect = [sheet contentsRectForCALayerAtIndex:6];
- 
- */
-@interface FWSpriteSheetImage : UIImage <FWAnimatedImage>
-
-/**
- Creates and returns an image object.
- 
- @param image          The sprite sheet image (contains all frames).
- 
- @param contentRects   The sprite sheet image frame rects in the image coordinates.
-     The rectangle should not outside the image's bounds. The objects in this array
-     should be created with [NSValue valueWithCGRect:].
- 
- @param frameDurations The sprite sheet image frame's durations in seconds.
-     The objects in this array should be NSNumber.
- 
- @param loopCount      Animation loop count, 0 means infinite looping.
- 
- @return An image object, or nil if an error occurs.
- */
-- (nullable instancetype)initWithSpriteSheetImage:(UIImage *)image
-                                     contentRects:(NSArray<NSValue *> *)contentRects
-                                   frameDurations:(NSArray<NSNumber *> *)frameDurations
-                                        loopCount:(NSUInteger)loopCount;
-
-@property (nonatomic, readonly) NSArray<NSValue *> *contentRects;
-@property (nonatomic, readonly) NSArray<NSValue *> *frameDurations;
-@property (nonatomic, readonly) NSUInteger loopCount;
-
-/**
- Get the contents rect for CALayer.
- See "contentsRect" property in CALayer for more information.
- 
- @param index Index of frame.
- @return Contents Rect.
- */
-- (CGRect)contentsRectForCALayerAtIndex:(NSUInteger)index;
-
-@end
-
-NS_ASSUME_NONNULL_END
