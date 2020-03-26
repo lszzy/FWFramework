@@ -4,16 +4,32 @@
  @brief      FWAnimatedImage
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/2/24
+ @updated    2020/2/26
  */
 
 #import "FWAnimatedImage.h"
+#import <objc/runtime.h>
 
-/**
- An array of NSNumber objects, shows the best order for path scale search.
- e.g. iPhone3GS:@[@1,@2,@3] iPhone5:@[@2,@3,@1]  iPhone6 Plus:@[@3,@2,@1]
- */
-static NSArray *_NSBundlePreferredScales() {
+#ifndef SD_LOCK
+#define SD_LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
+#endif
+
+#ifndef SD_UNLOCK
+#define SD_UNLOCK(lock) dispatch_semaphore_signal(lock);
+#endif
+
+@interface SDImageAssetManager : NSObject
+
+@property (nonatomic, strong, nonnull) NSMapTable<NSString *, UIImage *> *imageTable;
+
++ (nonnull instancetype)sharedAssetManager;
+- (nullable NSString *)getPathForName:(nonnull NSString *)name bundle:(nonnull NSBundle *)bundle preferredScale:(nonnull CGFloat *)scale;
+- (nullable UIImage *)imageForName:(nonnull NSString *)name;
+- (void)storeImage:(nonnull UIImage *)image forName:(nonnull NSString *)name;
+
+@end
+
+static NSArray *SDBundlePreferredScales() {
     static NSArray *scales;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -29,44 +45,124 @@ static NSArray *_NSBundlePreferredScales() {
     return scales;
 }
 
-/**
- Add scale modifier to the file name (without path extension),
- From @"name" to @"name@2x".
- 
- e.g.
- <table>
- <tr><th>Before     </th><th>After(scale:2)</th></tr>
- <tr><td>"icon"     </td><td>"icon@2x"     </td></tr>
- <tr><td>"icon "    </td><td>"icon @2x"    </td></tr>
- <tr><td>"icon.top" </td><td>"icon.top@2x" </td></tr>
- <tr><td>"/p/name"  </td><td>"/p/name@2x"  </td></tr>
- <tr><td>"/path/"   </td><td>"/path/"      </td></tr>
- </table>
- 
- @param scale Resource scale.
- @return String by add scale modifier, or just return if it's not end with file name.
- */
-static NSString *_NSStringByAppendingNameScale(NSString *string, CGFloat scale) {
-    if (!string) return nil;
-    if (fabs(scale - 1) <= __FLT_EPSILON__ || string.length == 0 || [string hasSuffix:@"/"]) return string.copy;
-    return [string stringByAppendingFormat:@"@%@x", @(scale)];
+@implementation SDImageAssetManager {
+    dispatch_semaphore_t _lock;
 }
 
-/**
- Return the path scale.
- 
- e.g.
- <table>
- <tr><th>Path            </th><th>Scale </th></tr>
- <tr><td>"icon.png"      </td><td>1     </td></tr>
- <tr><td>"icon@2x.png"   </td><td>2     </td></tr>
- <tr><td>"icon@2.5x.png" </td><td>2.5   </td></tr>
- <tr><td>"icon@2x"       </td><td>1     </td></tr>
- <tr><td>"icon@2x..png"  </td><td>1     </td></tr>
- <tr><td>"icon@2x.png/"  </td><td>1     </td></tr>
- </table>
- */
-static CGFloat _NSStringPathScale(NSString *string) {
++ (instancetype)sharedAssetManager {
+    static dispatch_once_t onceToken;
+    static SDImageAssetManager *assetManager;
+    dispatch_once(&onceToken, ^{
+        assetManager = [[SDImageAssetManager alloc] init];
+    });
+    return assetManager;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        NSPointerFunctionsOptions valueOptions;
+        // Apple says that UIImage use a strong reference to value
+        valueOptions = NSPointerFunctionsStrongMemory;
+        _imageTable = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsCopyIn valueOptions:valueOptions];
+        _lock = dispatch_semaphore_create(1);
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+}
+
+- (void)didReceiveMemoryWarning:(NSNotification *)notification {
+    SD_LOCK(_lock);
+    [self.imageTable removeAllObjects];
+    SD_UNLOCK(_lock);
+}
+
+- (NSString *)getPathForName:(NSString *)name bundle:(NSBundle *)bundle preferredScale:(CGFloat *)scale {
+    NSParameterAssert(name);
+    NSParameterAssert(bundle);
+    NSString *path;
+    if (name.length == 0) {
+        return path;
+    }
+    if ([name hasSuffix:@"/"]) {
+        return path;
+    }
+    NSString *extension = name.pathExtension;
+    if (extension.length == 0) {
+        // If no extension, follow Apple's doc, check PNG format
+        extension = @"png";
+    }
+    name = [name stringByDeletingPathExtension];
+    
+    CGFloat providedScale = *scale;
+    NSArray *scales = SDBundlePreferredScales();
+    
+    // Check if file name contains scale
+    for (size_t i = 0; i < scales.count; i++) {
+        NSNumber *scaleValue = scales[i];
+        if ([name hasSuffix:[NSString stringWithFormat:@"@%@x", scaleValue]]) {
+            path = [bundle pathForResource:name ofType:extension];
+            if (path) {
+                *scale = scaleValue.doubleValue; // override
+                return path;
+            }
+        }
+    }
+    
+    // Search with provided scale first
+    if (providedScale != 0) {
+        NSString *scaledName = [name stringByAppendingFormat:@"@%@x", @(providedScale)];
+        path = [bundle pathForResource:scaledName ofType:extension];
+        if (path) {
+            return path;
+        }
+    }
+    
+    // Search with preferred scale
+    for (size_t i = 0; i < scales.count; i++) {
+        NSNumber *scaleValue = scales[i];
+        if (scaleValue.doubleValue == providedScale) {
+            // Ignore provided scale
+            continue;
+        }
+        NSString *scaledName = [name stringByAppendingFormat:@"@%@x", scaleValue];
+        path = [bundle pathForResource:scaledName ofType:extension];
+        if (path) {
+            *scale = scaleValue.doubleValue; // override
+            return path;
+        }
+    }
+    
+    // Search without scale
+    path = [bundle pathForResource:name ofType:extension];
+    
+    return path;
+}
+
+- (UIImage *)imageForName:(NSString *)name {
+    NSParameterAssert(name);
+    UIImage *image;
+    SD_LOCK(_lock);
+    image = [self.imageTable objectForKey:name];
+    SD_UNLOCK(_lock);
+    return image;
+}
+
+- (void)storeImage:(UIImage *)image forName:(NSString *)name {
+    NSParameterAssert(image);
+    NSParameterAssert(name);
+    SD_LOCK(_lock);
+    [self.imageTable setObject:image forKey:name];
+    SD_UNLOCK(_lock);
+}
+
+@end
+
+static CGFloat SDImageScaleFromPath(NSString *string) {
     if (string.length == 0 || [string hasSuffix:@"/"]) return 1;
     NSString *name = string.stringByDeletingPathExtension;
     __block CGFloat scale = 1;
@@ -81,45 +177,53 @@ static CGFloat _NSStringPathScale(NSString *string) {
     return scale;
 }
 
+@interface FWAnimatedImage ()
 
-@implementation FWAnimatedImage {
-    FWImageDecoder *_decoder;
-    NSArray *_preloadedFrames;
-    dispatch_semaphore_t _preloadedLock;
-    NSUInteger _bytesPerFrame;
-}
+@property (nonatomic, strong) id<FWAnimatedImageCoder> animatedCoder;
+@property (nonatomic, assign, readwrite) FWImageFormat animatedImageFormat;
+@property (atomic, copy) NSArray<FWImageFrame *> *loadedAnimatedImageFrames; // Mark as atomic to keep thread-safe
+@property (nonatomic, assign, getter=isAllFramesLoaded) BOOL allFramesLoaded;
+
+@end
+
+@implementation FWAnimatedImage
+@dynamic scale; // call super
 
 + (instancetype)imageNamed:(NSString *)name {
     return [self imageNamed:name inBundle:nil];
 }
 
 + (instancetype)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle {
-    if (name.length == 0) return nil;
-    if ([name hasSuffix:@"/"]) return nil;
-    
-    NSString *res = name.stringByDeletingPathExtension;
-    NSString *ext = name.pathExtension;
-    NSString *path = nil;
-    CGFloat scale = 1;
-    
-    // If no extension, guess by system supported (same as UIImage).
-    NSArray *exts = ext.length > 0 ? @[ext] : @[@"", @"png", @"jpeg", @"jpg", @"gif", @"webp", @"apng"];
-    NSArray *scales = _NSBundlePreferredScales();
-    for (int s = 0; s < scales.count; s++) {
-        scale = ((NSNumber *)scales[s]).floatValue;
-        NSString *scaledName = _NSStringByAppendingNameScale(res, scale);
-        for (NSString *e in exts) {
-            path = [(bundle ? bundle : [NSBundle mainBundle]) pathForResource:scaledName ofType:e];
-            if (path) break;
-        }
-        if (path) break;
+    return [self imageNamed:name inBundle:bundle scale:0];
+}
+
+// 0 scale means automatically check
++ (instancetype)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle scale:(CGFloat)scale {
+    if (!name) {
+        return nil;
     }
-    if (path.length == 0) return nil;
-    
+    if (!bundle) {
+        bundle = [NSBundle mainBundle];
+    }
+    SDImageAssetManager *assetManager = [SDImageAssetManager sharedAssetManager];
+    FWAnimatedImage *image = (FWAnimatedImage *)[assetManager imageForName:name];
+    if ([image isKindOfClass:[FWAnimatedImage class]]) {
+        return image;
+    }
+    NSString *path = [assetManager getPathForName:name bundle:bundle preferredScale:&scale];
+    if (!path) {
+        return image;
+    }
     NSData *data = [NSData dataWithContentsOfFile:path];
-    if (data.length == 0) return nil;
+    if (!data) {
+        return image;
+    }
+    image = [[self alloc] initWithData:data scale:scale];
+    if (image) {
+        [assetManager storeImage:image forName:name];
+    }
     
-    return [[self alloc] initWithData:data scale:scale];
+    return image;
 }
 
 + (instancetype)imageWithContentsOfFile:(NSString *)path {
@@ -136,7 +240,7 @@ static CGFloat _NSStringPathScale(NSString *string) {
 
 - (instancetype)initWithContentsOfFile:(NSString *)path {
     NSData *data = [NSData dataWithContentsOfFile:path];
-    return [self initWithData:data scale:_NSStringPathScale(path)];
+    return [self initWithData:data scale:SDImageScaleFromPath(path)];
 }
 
 - (instancetype)initWithData:(NSData *)data {
@@ -144,290 +248,212 @@ static CGFloat _NSStringPathScale(NSString *string) {
 }
 
 - (instancetype)initWithData:(NSData *)data scale:(CGFloat)scale {
-    if (data.length == 0) return nil;
-    if (scale <= 0) scale = [UIScreen mainScreen].scale;
-    _preloadedLock = dispatch_semaphore_create(1);
-    @autoreleasepool {
-        FWImageDecoder *decoder = [FWImageDecoder decoderWithData:data scale:scale];
-        FWImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
-        UIImage *image = frame.image;
-        if (!image) return nil;
-        self = [self initWithCGImage:image.CGImage scale:decoder.scale orientation:image.imageOrientation];
-        if (!self) return nil;
-        _animatedImageType = decoder.type;
-        if (decoder.frameCount > 1) {
-            _decoder = decoder;
-            _bytesPerFrame = CGImageGetBytesPerRow(image.CGImage) * CGImageGetHeight(image.CGImage);
-            _animatedImageMemorySize = _bytesPerFrame * decoder.frameCount;
+    return [self initWithData:data scale:scale options:nil];
+}
+
+- (instancetype)initWithData:(NSData *)data scale:(CGFloat)scale options:(FWImageCoderOptions *)options {
+    if (!data || data.length == 0) {
+        return nil;
+    }
+    data = [data copy]; // avoid mutable data
+    id<FWAnimatedImageCoder> animatedCoder = nil;
+    for (id<FWImageCoder>coder in [FWImageCodersManager sharedManager].coders) {
+        if ([coder conformsToProtocol:@protocol(FWAnimatedImageCoder)]) {
+            if ([coder canDecodeFromData:data]) {
+                if (!options) {
+                    options = @{FWImageCoderDecodeScaleFactor : @(scale)};
+                }
+                animatedCoder = [[[coder class] alloc] initWithAnimatedImageData:data options:options];
+                break;
+            }
         }
-        self.fwIsDecodedForDisplay = YES;
+    }
+    if (!animatedCoder) {
+        return nil;
+    }
+    return [self initWithAnimatedCoder:animatedCoder scale:scale];
+}
+
+- (instancetype)initWithAnimatedCoder:(id<FWAnimatedImageCoder>)animatedCoder scale:(CGFloat)scale {
+    if (!animatedCoder) {
+        return nil;
+    }
+    UIImage *image = [animatedCoder animatedImageFrameAtIndex:0];
+    if (!image) {
+        return nil;
+    }
+    self = [super initWithCGImage:image.CGImage scale:MAX(scale, 1) orientation:image.imageOrientation];
+    if (self) {
+        // Only keep the animated coder if frame count > 1, save RAM usage for non-animated image format (APNG/WebP)
+        if (animatedCoder.animatedImageFrameCount > 1) {
+            _animatedCoder = animatedCoder;
+        }
+        NSData *data = [animatedCoder animatedImageData];
+        FWImageFormat format = [NSData fw_imageFormatForImageData:data];
+        _animatedImageFormat = format;
     }
     return self;
 }
 
-- (NSData *)animatedImageData {
-    return _decoder.data;
-}
-
-- (void)setPreloadAllAnimatedImageFrames:(BOOL)preloadAllAnimatedImageFrames {
-    if (_preloadAllAnimatedImageFrames != preloadAllAnimatedImageFrames) {
-        if (preloadAllAnimatedImageFrames && _decoder.frameCount > 0) {
-            NSMutableArray *frames = [NSMutableArray new];
-            for (NSUInteger i = 0, max = _decoder.frameCount; i < max; i++) {
-                UIImage *img = [self animatedImageFrameAtIndex:i];
-                if (img) {
-                    [frames addObject:img];
-                } else {
-                    [frames addObject:[NSNull null]];
-                }
-            }
-            dispatch_semaphore_wait(_preloadedLock, DISPATCH_TIME_FOREVER);
-            _preloadedFrames = frames;
-            dispatch_semaphore_signal(_preloadedLock);
-        } else {
-            dispatch_semaphore_wait(_preloadedLock, DISPATCH_TIME_FOREVER);
-            _preloadedFrames = nil;
-            dispatch_semaphore_signal(_preloadedLock);
+#pragma mark - Preload
+- (void)preloadAllFrames {
+    if (!_animatedCoder) {
+        return;
+    }
+    if (!self.isAllFramesLoaded) {
+        NSMutableArray<FWImageFrame *> *frames = [NSMutableArray arrayWithCapacity:self.animatedImageFrameCount];
+        for (size_t i = 0; i < self.animatedImageFrameCount; i++) {
+            UIImage *image = [self animatedImageFrameAtIndex:i];
+            NSTimeInterval duration = [self animatedImageDurationAtIndex:i];
+            FWImageFrame *frame = [FWImageFrame frameWithImage:image duration:duration]; // through the image should be nonnull, used as nullable for `animatedImageFrameAtIndex:`
+            [frames addObject:frame];
         }
+        self.loadedAnimatedImageFrames = frames;
+        self.allFramesLoaded = YES;
     }
 }
 
-#pragma mark - protocol NSCoding
+- (void)unloadAllFrames {
+    if (!_animatedCoder) {
+        return;
+    }
+    if (self.isAllFramesLoaded) {
+        self.loadedAnimatedImageFrames = nil;
+        self.allFramesLoaded = NO;
+    }
+}
 
+#pragma mark - NSSecureCoding
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    NSNumber *scale = [aDecoder decodeObjectForKey:@"FWImageScale"];
-    NSData *data = [aDecoder decodeObjectForKey:@"FWImageData"];
-    if (data.length) {
-        self = [self initWithData:data scale:scale.doubleValue];
-    } else {
-        self = [super initWithCoder:aDecoder];
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _animatedImageFormat = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(animatedImageFormat))];
+        NSData *animatedImageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(animatedImageData))];
+        if (!animatedImageData) {
+            return self;
+        }
+        CGFloat scale = self.scale;
+        id<FWAnimatedImageCoder> animatedCoder = nil;
+        for (id<FWImageCoder>coder in [FWImageCodersManager sharedManager].coders) {
+            if ([coder conformsToProtocol:@protocol(FWAnimatedImageCoder)]) {
+                if ([coder canDecodeFromData:animatedImageData]) {
+                    animatedCoder = [[[coder class] alloc] initWithAnimatedImageData:animatedImageData options:@{FWImageCoderDecodeScaleFactor : @(scale)}];
+                    break;
+                }
+            }
+        }
+        if (!animatedCoder) {
+            return self;
+        }
+        if (animatedCoder.animatedImageFrameCount > 1) {
+            _animatedCoder = animatedCoder;
+        }
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    if (_decoder.data.length) {
-        [aCoder encodeObject:@(self.scale) forKey:@"FWImageScale"];
-        [aCoder encodeObject:_decoder.data forKey:@"FWImageData"];
-    } else {
-        [super encodeWithCoder:aCoder]; // Apple use UIImagePNGRepresentation() to encode UIImage.
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeInteger:self.animatedImageFormat forKey:NSStringFromSelector(@selector(animatedImageFormat))];
+    NSData *animatedImageData = self.animatedImageData;
+    if (animatedImageData) {
+        [aCoder encodeObject:animatedImageData forKey:NSStringFromSelector(@selector(animatedImageData))];
     }
 }
 
 + (BOOL)supportsSecureCoding {
-    return  YES;
+    return YES;
 }
 
-#pragma mark - protocol FWAnimatedImage
+#pragma mark - FWAnimatedImageProvider
 
-- (NSUInteger)animatedImageFrameCount {
-    return _decoder.frameCount;
+- (NSData *)animatedImageData {
+    return [self.animatedCoder animatedImageData];
 }
 
 - (NSUInteger)animatedImageLoopCount {
-    return _decoder.loopCount;
+    return [self.animatedCoder animatedImageLoopCount];
 }
 
-- (NSUInteger)animatedImageBytesPerFrame {
-    return _bytesPerFrame;
+- (NSUInteger)animatedImageFrameCount {
+    return [self.animatedCoder animatedImageFrameCount];
 }
 
 - (UIImage *)animatedImageFrameAtIndex:(NSUInteger)index {
-    if (index >= _decoder.frameCount) return nil;
-    dispatch_semaphore_wait(_preloadedLock, DISPATCH_TIME_FOREVER);
-    UIImage *image = _preloadedFrames[index];
-    dispatch_semaphore_signal(_preloadedLock);
-    if (image) return image == (id)[NSNull null] ? nil : image;
-    return [_decoder frameAtIndex:index decodeForDisplay:YES].image;
+    if (index >= self.animatedImageFrameCount) {
+        return nil;
+    }
+    if (self.isAllFramesLoaded) {
+        FWImageFrame *frame = [self.loadedAnimatedImageFrames objectAtIndex:index];
+        return frame.image;
+    }
+    return [self.animatedCoder animatedImageFrameAtIndex:index];
 }
 
 - (NSTimeInterval)animatedImageDurationAtIndex:(NSUInteger)index {
-    NSTimeInterval duration = [_decoder frameDurationAtIndex:index];
-    
-    /*
-     http://opensource.apple.com/source/WebCore/WebCore-7600.1.25/platform/graphics/cg/ImageSourceCG.cpp
-     Many annoying ads specify a 0 duration to make an image flash as quickly as
-     possible. We follow Safari and Firefox's behavior and use a duration of 100 ms
-     for any frames that specify a duration of <= 10 ms.
-     See <rdar://problem/7689300> and <http://webkit.org/b/36082> for more information.
-     
-     See also: http://nullsleep.tumblr.com/post/16524517190/animated-gif-minimum-frame-delay-browser.
-     */
-    if (duration < 0.011f) return 0.100f;
-    return duration;
+    if (index >= self.animatedImageFrameCount) {
+        return 0;
+    }
+    if (self.isAllFramesLoaded) {
+        FWImageFrame *frame = [self.loadedAnimatedImageFrames objectAtIndex:index];
+        return frame.duration;
+    }
+    return [self.animatedCoder animatedImageDurationAtIndex:index];
 }
 
 @end
 
-@implementation FWFrameImage {
-    NSUInteger _loopCount;
-    NSUInteger _oneFrameBytes;
-    NSArray *_imagePaths;
-    NSArray *_imageDatas;
-    NSArray *_frameDurations;
-}
-
-- (instancetype)initWithImagePaths:(NSArray *)paths oneFrameDuration:(NSTimeInterval)oneFrameDuration loopCount:(NSUInteger)loopCount {
-    NSMutableArray *durations = [NSMutableArray new];
-    for (int i = 0, max = (int)paths.count; i < max; i++) {
-        [durations addObject:@(oneFrameDuration)];
+FOUNDATION_STATIC_INLINE NSUInteger SDMemoryCacheCostForImage(UIImage *image) {
+    CGImageRef imageRef = image.CGImage;
+    if (!imageRef) {
+        return 0;
     }
-    return [self initWithImagePaths:paths frameDurations:durations loopCount:loopCount];
+    NSUInteger bytesPerFrame = CGImageGetBytesPerRow(imageRef) * CGImageGetHeight(imageRef);
+    NSUInteger frameCount;
+    frameCount = image.images.count > 0 ? image.images.count : 1;
+    NSUInteger cost = bytesPerFrame * frameCount;
+    return cost;
 }
 
-- (instancetype)initWithImagePaths:(NSArray *)paths frameDurations:(NSArray *)frameDurations loopCount:(NSUInteger)loopCount {
-    if (paths.count == 0) return nil;
-    if (paths.count != frameDurations.count) return nil;
-    
-    NSString *firstPath = paths[0];
-    NSData *firstData = [NSData dataWithContentsOfFile:firstPath];
-    CGFloat scale = _NSStringPathScale(firstPath);
-    UIImage *firstCG = [[[UIImage alloc] initWithData:firstData] fwImageByDecoded];
-    self = [self initWithCGImage:firstCG.CGImage scale:scale orientation:firstCG.imageOrientation];
-    if (!self) return nil;
-    long frameByte = CGImageGetBytesPerRow(firstCG.CGImage) * CGImageGetHeight(firstCG.CGImage);
-    _oneFrameBytes = (NSUInteger)frameByte;
-    _imagePaths = paths.copy;
-    _frameDurations = frameDurations.copy;
-    _loopCount = loopCount;
-    
-    return self;
-}
+@implementation UIImage (MemoryCacheCost)
 
-- (instancetype)initWithImageDataArray:(NSArray *)dataArray oneFrameDuration:(NSTimeInterval)oneFrameDuration loopCount:(NSUInteger)loopCount {
-    NSMutableArray *durations = [NSMutableArray new];
-    for (int i = 0, max = (int)dataArray.count; i < max; i++) {
-        [durations addObject:@(oneFrameDuration)];
-    }
-    return [self initWithImageDataArray:dataArray frameDurations:durations loopCount:loopCount];
-}
-
-- (instancetype)initWithImageDataArray:(NSArray *)dataArray frameDurations:(NSArray *)frameDurations loopCount:(NSUInteger)loopCount {
-    if (dataArray.count == 0) return nil;
-    if (dataArray.count != frameDurations.count) return nil;
-    
-    NSData *firstData = dataArray[0];
-    CGFloat scale = [UIScreen mainScreen].scale;
-    UIImage *firstCG = [[[UIImage alloc] initWithData:firstData] fwImageByDecoded];
-    self = [self initWithCGImage:firstCG.CGImage scale:scale orientation:firstCG.imageOrientation];
-    if (!self) return nil;
-    long frameByte = CGImageGetBytesPerRow(firstCG.CGImage) * CGImageGetHeight(firstCG.CGImage);
-    _oneFrameBytes = (NSUInteger)frameByte;
-    _imageDatas = dataArray.copy;
-    _frameDurations = frameDurations.copy;
-    _loopCount = loopCount;
-    
-    return self;
-}
-
-#pragma mark - FWAnimtedImage
-
-- (NSUInteger)animatedImageFrameCount {
-    if (_imagePaths) {
-        return _imagePaths.count;
-    } else if (_imageDatas) {
-        return _imageDatas.count;
+- (NSUInteger)fw_memoryCost {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_memoryCost));
+    NSUInteger memoryCost;
+    if (value != nil) {
+        memoryCost = [value unsignedIntegerValue];
     } else {
-        return 1;
+        memoryCost = SDMemoryCacheCostForImage(self);
     }
+    return memoryCost;
 }
 
-- (NSUInteger)animatedImageLoopCount {
-    return _loopCount;
-}
-
-- (NSUInteger)animatedImageBytesPerFrame {
-    return _oneFrameBytes;
-}
-
-- (UIImage *)animatedImageFrameAtIndex:(NSUInteger)index {
-    if (_imagePaths) {
-        if (index >= _imagePaths.count) return nil;
-        NSString *path = _imagePaths[index];
-        CGFloat scale = _NSStringPathScale(path);
-        NSData *data = [NSData dataWithContentsOfFile:path];
-        return [[UIImage imageWithData:data scale:scale] fwImageByDecoded];
-    } else if (_imageDatas) {
-        if (index >= _imageDatas.count) return nil;
-        NSData *data = _imageDatas[index];
-        return [[UIImage imageWithData:data scale:[UIScreen mainScreen].scale] fwImageByDecoded];
-    } else {
-        return index == 0 ? self : nil;
-    }
-}
-
-- (NSTimeInterval)animatedImageDurationAtIndex:(NSUInteger)index {
-    if (index >= _frameDurations.count) return 0;
-    NSNumber *num = _frameDurations[index];
-    return [num doubleValue];
+- (void)setFw_memoryCost:(NSUInteger)fw_memoryCost {
+    objc_setAssociatedObject(self, @selector(fw_memoryCost), @(fw_memoryCost), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
 
-@implementation FWSpriteSheetImage
+@implementation FWAnimatedImage (MemoryCacheCost)
 
-- (instancetype)initWithSpriteSheetImage:(UIImage *)image
-                            contentRects:(NSArray *)contentRects
-                          frameDurations:(NSArray *)frameDurations
-                               loopCount:(NSUInteger)loopCount {
-    if (!image.CGImage) return nil;
-    if (contentRects.count < 1 || frameDurations.count < 1) return nil;
-    if (contentRects.count != frameDurations.count) return nil;
-    
-    self = [super initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
-    if (!self) return nil;
-    
-    _contentRects = contentRects.copy;
-    _frameDurations = frameDurations.copy;
-    _loopCount = loopCount;
-    return self;
-}
-
-- (CGRect)contentsRectForCALayerAtIndex:(NSUInteger)index {
-    CGRect layerRect = CGRectMake(0, 0, 1, 1);
-    if (index >= _contentRects.count) return layerRect;
-    
-    CGSize imageSize = self.size;
-    CGRect rect = [self animatedImageContentsRectAtIndex:index];
-    if (imageSize.width > 0.01 && imageSize.height > 0.01) {
-        layerRect.origin.x = rect.origin.x / imageSize.width;
-        layerRect.origin.y = rect.origin.y / imageSize.height;
-        layerRect.size.width = rect.size.width / imageSize.width;
-        layerRect.size.height = rect.size.height / imageSize.height;
-        layerRect = CGRectIntersection(layerRect, CGRectMake(0, 0, 1, 1));
-        if (CGRectIsNull(layerRect) || CGRectIsEmpty(layerRect)) {
-            layerRect = CGRectMake(0, 0, 1, 1);
-        }
+- (NSUInteger)fw_memoryCost {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_memoryCost));
+    if (value != nil) {
+        return value.unsignedIntegerValue;
     }
-    return layerRect;
-}
-
-#pragma mark @protocol FWAnimatedImage
-
-- (NSUInteger)animatedImageFrameCount {
-    return _contentRects.count;
-}
-
-- (NSUInteger)animatedImageLoopCount {
-    return _loopCount;
-}
-
-- (NSUInteger)animatedImageBytesPerFrame {
-    return 0;
-}
-
-- (UIImage *)animatedImageFrameAtIndex:(NSUInteger)index {
-    return self;
-}
-
-- (NSTimeInterval)animatedImageDurationAtIndex:(NSUInteger)index {
-    if (index >= _frameDurations.count) return 0;
-    return ((NSNumber *)_frameDurations[index]).doubleValue;
-}
-
-- (CGRect)animatedImageContentsRectAtIndex:(NSUInteger)index {
-    if (index >= _contentRects.count) return CGRectZero;
-    return ((NSValue *)_contentRects[index]).CGRectValue;
+    
+    CGImageRef imageRef = self.CGImage;
+    if (!imageRef) {
+        return 0;
+    }
+    NSUInteger bytesPerFrame = CGImageGetBytesPerRow(imageRef) * CGImageGetHeight(imageRef);
+    NSUInteger frameCount = 1;
+    if (self.isAllFramesLoaded) {
+        frameCount = self.animatedImageFrameCount;
+    }
+    frameCount = frameCount > 0 ? frameCount : 1;
+    NSUInteger cost = bytesPerFrame * frameCount;
+    return cost;
 }
 
 @end

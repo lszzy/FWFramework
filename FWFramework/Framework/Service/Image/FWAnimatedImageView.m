@@ -4,35 +4,523 @@
  @brief      FWAnimatedImageView
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/2/24
+ @updated    2020/2/27
  */
 
 #import "FWAnimatedImageView.h"
-#import "FWAnimatedImage.h"
-#import "FWImageCoder.h"
+#import <QuartzCore/QuartzCore.h>
 #import "FWProxy.h"
-#import <pthread.h>
 #import <mach/mach.h>
 
+#ifndef SD_LOCK
+#define SD_LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
+#endif
 
-#define BUFFER_SIZE (10 * 1024 * 1024) // 10MB (minimum memory buffer size)
+#ifndef SD_UNLOCK
+#define SD_UNLOCK(lock) dispatch_semaphore_signal(lock);
+#endif
 
-#define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
-__VA_ARGS__; \
-dispatch_semaphore_signal(self->_lock);
-
-#define LOCK_VIEW(...) dispatch_semaphore_wait(view->_lock, DISPATCH_TIME_FOREVER); \
-__VA_ARGS__; \
-dispatch_semaphore_signal(view->_lock);
-
-
-static int64_t _FWDeviceMemoryTotal() {
-    int64_t mem = [[NSProcessInfo processInfo] physicalMemory];
-    if (mem < -1) mem = -1;
-        return mem;
+@interface FWAnimatedImageView () <CALayerDelegate> {
+    BOOL _initFinished; // Extra flag to mark the `commonInit` is called
+    NSRunLoopMode _runLoopMode;
+    NSUInteger _maxBufferSize;
+    double _playbackRate;
 }
 
-static int64_t _FWDeviceMemoryFree() {
+@property (nonatomic, strong, readwrite) UIImage *currentFrame;
+@property (nonatomic, assign, readwrite) NSUInteger currentFrameIndex;
+@property (nonatomic, assign, readwrite) NSUInteger currentLoopCount;
+@property (nonatomic, assign) BOOL shouldAnimate;
+@property (nonatomic, assign) BOOL isProgressive;
+@property (nonatomic,strong) FWAnimatedImagePlayer *player; // The animation player.
+@property (nonatomic) CALayer *imageViewLayer; // The actual rendering layer.
+
+@end
+
+@implementation FWAnimatedImageView
+
+@dynamic animationRepeatCount; // we re-use this property from `UIImageView` super class on iOS.
+
+#pragma mark - Initializers
+
+// -initWithImage: isn't documented as a designated initializer of UIImageView, but it actually seems to be.
+// Using -initWithImage: doesn't call any of the other designated initializers.
+- (instancetype)initWithImage:(UIImage *)image
+{
+    self = [super initWithImage:image];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+// -initWithImage:highlightedImage: also isn't documented as a designated initializer of UIImageView, but it doesn't call any other designated initializers.
+- (instancetype)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage
+{
+    self = [super initWithImage:image highlightedImage:highlightedImage];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit
+{
+    // Pay attention that UIKit's `initWithImage:` will trigger a `setImage:` during initialization before this `commonInit`.
+    // So the properties which rely on this order, should using lazy-evaluation or do extra check in `setImage:`.
+    self.shouldCustomLoopCount = NO;
+    self.shouldIncrementalLoad = YES;
+    self.playbackRate = 1.0;
+    // Mark commonInit finished
+    _initFinished = YES;
+}
+
+#pragma mark - Accessors
+#pragma mark Public
+
+- (void)setImage:(UIImage *)image
+{
+    if (self.image == image) {
+        return;
+    }
+    
+    // Check Progressive rendering
+    [self updateIsProgressiveWithImage:image];
+    
+    if (!self.isProgressive) {
+        // Stop animating
+        self.player = nil;
+        self.currentFrame = nil;
+        self.currentFrameIndex = 0;
+        self.currentLoopCount = 0;
+    }
+    
+    // We need call super method to keep function. This will impliedly call `setNeedsDisplay`. But we have no way to avoid this when using animated image. So we call `setNeedsDisplay` again at the end.
+    super.image = image;
+    if ([image.class conformsToProtocol:@protocol(FWAnimatedImage)]) {
+        if (!self.player) {
+            id<FWAnimatedImageProvider> provider;
+            // Check progressive loading
+            if (self.isProgressive) {
+                provider = [self progressiveAnimatedCoderForImage:image];
+            } else {
+                provider = (id<FWAnimatedImage>)image;
+            }
+            // Create animted player
+            self.player = [FWAnimatedImagePlayer playerWithProvider:provider];
+        } else {
+            // Update Frame Count
+            self.player.totalFrameCount = [(id<FWAnimatedImage>)image animatedImageFrameCount];
+        }
+        
+        if (!self.player) {
+            // animated player nil means the image format is not supported, or frame count <= 1
+            return;
+        }
+        
+        // Custom Loop Count
+        if (self.shouldCustomLoopCount) {
+            self.player.totalLoopCount = self.animationRepeatCount;
+        }
+        
+        // RunLoop Mode
+        self.player.runLoopMode = self.runLoopMode;
+        
+        // Max Buffer Size
+        self.player.maxBufferSize = self.maxBufferSize;
+        
+        // Play Rate
+        self.player.playbackRate = self.playbackRate;
+        
+        // Setup handler
+        __weak __typeof__(self) self_weak_ = self;
+        self.player.animationFrameHandler = ^(NSUInteger index, UIImage * frame) {
+            __typeof__(self) self = self_weak_;
+            self.currentFrameIndex = index;
+            self.currentFrame = frame;
+            [self.imageViewLayer setNeedsDisplay];
+        };
+        self.player.animationLoopHandler = ^(NSUInteger loopCount) {
+            __typeof__(self) self = self_weak_;
+            // Progressive image reach the current last frame index. Keep the state and pause animating. Wait for later restart
+            if (self.isProgressive) {
+                NSUInteger lastFrameIndex = self.player.totalFrameCount - 1;
+                [self.player seekToFrameAtIndex:lastFrameIndex loopCount:0];
+                [self.player pausePlaying];
+            } else {
+                self.currentLoopCount = loopCount;
+            }
+        };
+        
+        // Ensure disabled highlighting; it's not supported (see `-setHighlighted:`).
+        super.highlighted = NO;
+        
+        // Start animating
+        [self startAnimating];
+
+        [self.imageViewLayer setNeedsDisplay];
+    }
+}
+
+#pragma mark - Configuration
+
+- (void)setRunLoopMode:(NSRunLoopMode)runLoopMode
+{
+    _runLoopMode = [runLoopMode copy];
+    self.player.runLoopMode = runLoopMode;
+}
+
+- (NSRunLoopMode)runLoopMode
+{
+    if (!_runLoopMode) {
+        _runLoopMode = [[self class] defaultRunLoopMode];
+    }
+    return _runLoopMode;
+}
+
++ (NSString *)defaultRunLoopMode {
+    // Key off `activeProcessorCount` (as opposed to `processorCount`) since the system could shut down cores in certain situations.
+    return [NSProcessInfo processInfo].activeProcessorCount > 1 ? NSRunLoopCommonModes : NSDefaultRunLoopMode;
+}
+
+- (void)setMaxBufferSize:(NSUInteger)maxBufferSize
+{
+    _maxBufferSize = maxBufferSize;
+    self.player.maxBufferSize = maxBufferSize;
+}
+
+- (NSUInteger)maxBufferSize {
+    return _maxBufferSize; // Defaults to 0
+}
+
+- (void)setPlaybackRate:(double)playbackRate
+{
+    _playbackRate = playbackRate;
+    self.player.playbackRate = playbackRate;
+}
+
+- (double)playbackRate
+{
+    if (!_initFinished) {
+        return 1.0; // Defaults to 1.0
+    }
+    return _playbackRate;
+}
+
+- (BOOL)shouldIncrementalLoad
+{
+    if (!_initFinished) {
+        return YES; // Defaults to YES
+    }
+    return _initFinished;
+}
+
+#pragma mark - UIView Method Overrides
+#pragma mark Observing View-Related Changes
+
+- (void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    
+    [self updateShouldAnimate];
+    if (self.shouldAnimate) {
+        [self startAnimating];
+    } else {
+        [self stopAnimating];
+    }
+}
+
+- (void)didMoveToWindow
+{
+    [super didMoveToWindow];
+    
+    [self updateShouldAnimate];
+    if (self.shouldAnimate) {
+        [self startAnimating];
+    } else {
+        [self stopAnimating];
+    }
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+    [super setAlpha:alpha];
+    
+    [self updateShouldAnimate];
+    if (self.shouldAnimate) {
+        [self startAnimating];
+    } else {
+        [self stopAnimating];
+    }
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+    [super setHidden:hidden];
+    
+    [self updateShouldAnimate];
+    if (self.shouldAnimate) {
+        [self startAnimating];
+    } else {
+        [self stopAnimating];
+    }
+}
+
+#pragma mark - UIImageView Method Overrides
+#pragma mark Image Data
+
+- (void)setAnimationRepeatCount:(NSInteger)animationRepeatCount
+{
+    [super setAnimationRepeatCount:animationRepeatCount];
+    
+    if (self.shouldCustomLoopCount) {
+        self.player.totalLoopCount = animationRepeatCount;
+    }
+}
+
+- (void)startAnimating
+{
+    if (self.player) {
+        [self updateShouldAnimate];
+        if (self.shouldAnimate) {
+            [self.player startPlaying];
+        }
+    } else {
+        [super startAnimating];
+    }
+}
+
+- (void)stopAnimating
+{
+    if (self.player) {
+        if (self.resetFrameIndexWhenStopped) {
+            [self.player stopPlaying];
+        } else {
+            [self.player pausePlaying];
+        }
+        if (self.clearBufferWhenStopped) {
+            [self.player clearFrameBuffer];
+        }
+    } else {
+        [super stopAnimating];
+    }
+}
+
+- (BOOL)isAnimating
+{
+    if (self.player) {
+        return self.player.isPlaying;
+    } else {
+        return [super isAnimating];
+    }
+}
+
+#pragma mark Highlighted Image Unsupport
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    // Highlighted image is unsupported for animated images, but implementing it breaks the image view when embedded in a UICollectionViewCell.
+    if (!self.player) {
+        [super setHighlighted:highlighted];
+    }
+}
+
+
+#pragma mark - Private Methods
+#pragma mark Animation
+
+// Don't repeatedly check our window & superview in `-displayDidRefresh:` for performance reasons.
+// Just update our cached value whenever the animated image or visibility (window, superview, hidden, alpha) is changed.
+- (void)updateShouldAnimate
+{
+    BOOL isVisible = self.window && self.superview && ![self isHidden] && self.alpha > 0.0;
+    self.shouldAnimate = self.player && isVisible;
+}
+
+// Update progressive status only after `setImage:` call.
+- (void)updateIsProgressiveWithImage:(UIImage *)image
+{
+    self.isProgressive = NO;
+    if (!self.shouldIncrementalLoad) {
+        // Early return
+        return;
+    }
+    // We must use `image.class conformsToProtocol:` instead of `image conformsToProtocol:` here
+    // Because UIKit on macOS, using internal hard-coded override method, which returns NO
+    id<FWAnimatedImageCoder> currentAnimatedCoder = [self progressiveAnimatedCoderForImage:image];
+    if (currentAnimatedCoder) {
+        UIImage *previousImage = self.image;
+        if (!previousImage) {
+            // If current animated coder supports progressive, and no previous image to check, start progressive loading
+            self.isProgressive = YES;
+        } else {
+            id<FWAnimatedImageCoder> previousAnimatedCoder = [self progressiveAnimatedCoderForImage:previousImage];
+            if (previousAnimatedCoder == currentAnimatedCoder) {
+                // If current animated coder is the same as previous, start progressive loading
+                self.isProgressive = YES;
+            }
+        }
+    }
+}
+
+// Check if image can represent a `Progressive Animated Image` during loading
+- (id<FWAnimatedImageCoder, FWProgressiveImageCoder>)progressiveAnimatedCoderForImage:(UIImage *)image
+{
+    if ([image.class conformsToProtocol:@protocol(FWAnimatedImage)] && image.fw_isIncremental && [image respondsToSelector:@selector(animatedCoder)]) {
+        id<FWAnimatedImageCoder> animatedCoder = [(id<FWAnimatedImage>)image animatedCoder];
+        if ([animatedCoder conformsToProtocol:@protocol(FWProgressiveImageCoder)]) {
+            return (id<FWAnimatedImageCoder, FWProgressiveImageCoder>)animatedCoder;
+        }
+    }
+    return nil;
+}
+
+
+#pragma mark Providing the Layer's Content
+#pragma mark - CALayerDelegate
+
+- (void)displayLayer:(CALayer *)layer
+{
+    UIImage *currentFrame = self.currentFrame;
+    if (currentFrame) {
+        layer.contentsScale = currentFrame.scale;
+        layer.contents = (__bridge id)currentFrame.CGImage;
+    }
+}
+
+// on iOS, it's the imageView itself's layer
+- (CALayer *)imageViewLayer {
+    return self.layer;
+}
+
+@end
+
+@interface SDDisplayLink : NSObject
+
+@property (readonly, nonatomic, weak, nullable) id target;
+@property (readonly, nonatomic, assign, nonnull) SEL selector;
+@property (readonly, nonatomic) CFTimeInterval duration;
+@property (readonly, nonatomic) BOOL isRunning;
+
++ (nonnull instancetype)displayLinkWithTarget:(nonnull id)target selector:(nonnull SEL)sel;
+
+- (void)addToRunLoop:(nonnull NSRunLoop *)runloop forMode:(nonnull NSRunLoopMode)mode;
+- (void)removeFromRunLoop:(nonnull NSRunLoop *)runloop forMode:(nonnull NSRunLoopMode)mode;
+
+- (void)start;
+- (void)stop;
+
+@end
+
+#define kSDDisplayLinkInterval 1.0 / 60
+
+@interface SDDisplayLink ()
+
+@property (nonatomic, strong) CADisplayLink *displayLink;
+
+@end
+
+@implementation SDDisplayLink
+
+- (void)dealloc {
+    [_displayLink invalidate];
+    _displayLink = nil;
+}
+
+- (instancetype)initWithTarget:(id)target selector:(SEL)sel {
+    self = [super init];
+    if (self) {
+        _target = target;
+        _selector = sel;
+        FWWeakProxy *weakProxy = [FWWeakProxy proxyWithTarget:self];
+        _displayLink = [CADisplayLink displayLinkWithTarget:weakProxy selector:@selector(displayLinkDidRefresh:)];
+    }
+    return self;
+}
+
++ (instancetype)displayLinkWithTarget:(id)target selector:(SEL)sel {
+    SDDisplayLink *displayLink = [[SDDisplayLink alloc] initWithTarget:target selector:sel];
+    return displayLink;
+}
+
+- (CFTimeInterval)duration {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    NSTimeInterval duration = self.displayLink.duration * self.displayLink.frameInterval;
+#pragma clang diagnostic pop
+    if (duration == 0) {
+        duration = kSDDisplayLinkInterval;
+    }
+    return duration;
+}
+
+- (BOOL)isRunning {
+    return !self.displayLink.isPaused;
+}
+
+- (void)addToRunLoop:(NSRunLoop *)runloop forMode:(NSRunLoopMode)mode {
+    if  (!runloop || !mode) {
+        return;
+    }
+    [self.displayLink addToRunLoop:runloop forMode:mode];
+}
+
+- (void)removeFromRunLoop:(NSRunLoop *)runloop forMode:(NSRunLoopMode)mode {
+    if  (!runloop || !mode) {
+        return;
+    }
+    [self.displayLink removeFromRunLoop:runloop forMode:mode];
+}
+
+- (void)start {
+    self.displayLink.paused = NO;
+}
+
+- (void)stop {
+    self.displayLink.paused = YES;
+}
+
+- (void)displayLinkDidRefresh:(id)displayLink {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [_target performSelector:_selector withObject:self];
+#pragma clang diagnostic pop
+}
+
+@end
+
+@interface SDDeviceHelper : NSObject
+
++ (NSUInteger)totalMemory;
++ (NSUInteger)freeMemory;
+
+@end
+
+@implementation SDDeviceHelper
+
++ (NSUInteger)totalMemory {
+    return (NSUInteger)[[NSProcessInfo processInfo] physicalMemory];
+}
+
++ (NSUInteger)freeMemory {
     mach_port_t host_port = mach_host_self();
     mach_msg_type_number_t host_size = sizeof(vm_statistics_data_t) / sizeof(integer_t);
     vm_size_t page_size;
@@ -40,570 +528,379 @@ static int64_t _FWDeviceMemoryFree() {
     kern_return_t kern;
     
     kern = host_page_size(host_port, &page_size);
-    if (kern != KERN_SUCCESS) return -1;
+    if (kern != KERN_SUCCESS) return 0;
     kern = host_statistics(host_port, HOST_VM_INFO, (host_info_t)&vm_stat, &host_size);
-    if (kern != KERN_SUCCESS) return -1;
+    if (kern != KERN_SUCCESS) return 0;
     return vm_stat.free_count * page_size;
 }
 
+@end
 
-typedef NS_ENUM(NSUInteger, FWAnimatedImageType) {
-    FWAnimatedImageTypeNone = 0,
-    FWAnimatedImageTypeImage,
-    FWAnimatedImageTypeHighlightedImage,
-    FWAnimatedImageTypeImages,
-    FWAnimatedImageTypeHighlightedImages,
-};
-
-@interface FWAnimatedImageView() {
-    @package
-    UIImage <FWAnimatedImage> *_curAnimatedImage;
-    
-    dispatch_semaphore_t _lock; ///< lock for _buffer
-    NSOperationQueue *_requestQueue; ///< image request queue, serial
-    
-    CADisplayLink *_link; ///< ticker for change frame
-    NSTimeInterval _time; ///< time after last frame
-    
-    UIImage *_curFrame; ///< current frame to display
-    NSUInteger _curIndex; ///< current frame index (from 0)
-    NSUInteger _totalFrameCount; ///< total frame count
-    
-    BOOL _loopEnd; ///< whether the loop is end.
-    NSUInteger _curLoop; ///< current loop count (from 0)
-    NSUInteger _totalLoop; ///< total loop count, 0 means infinity
-    
-    NSMutableDictionary *_buffer; ///< frame buffer
-    BOOL _bufferMiss; ///< whether miss frame on last opportunity
-    NSUInteger _maxBufferCount; ///< maximum buffer count
-    NSInteger _incrBufferCount; ///< current allowed buffer count (will increase by step)
-    
-    CGRect _curContentsRect;
-    BOOL _curImageHasContentsRect; ///< image has implementated "animatedImageContentsRectAtIndex:"
+@interface FWAnimatedImagePlayer () {
+    NSRunLoopMode _runLoopMode;
 }
-@property (nonatomic, readwrite) BOOL currentIsPlayingAnimation;
-- (void)calcMaxBufferCount;
+
+@property (nonatomic, strong, readwrite) UIImage *currentFrame;
+@property (nonatomic, assign, readwrite) NSUInteger currentFrameIndex;
+@property (nonatomic, assign, readwrite) NSUInteger currentLoopCount;
+@property (nonatomic, strong) id<FWAnimatedImageProvider> animatedProvider;
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, UIImage *> *frameBuffer;
+@property (nonatomic, assign) NSTimeInterval currentTime;
+@property (nonatomic, assign) BOOL bufferMiss;
+@property (nonatomic, assign) BOOL needsDisplayWhenImageBecomesAvailable;
+@property (nonatomic, assign) NSUInteger maxBufferCount;
+@property (nonatomic, strong) NSOperationQueue *fetchQueue;
+@property (nonatomic, strong) dispatch_semaphore_t lock;
+@property (nonatomic, strong) SDDisplayLink *displayLink;
+
 @end
 
-/// An operation for image fetch
-@interface _FWAnimatedImageViewFetchOperation : NSOperation
-@property (nonatomic, weak) FWAnimatedImageView *view;
-@property (nonatomic, assign) NSUInteger nextIndex;
-@property (nonatomic, strong) UIImage <FWAnimatedImage> *curImage;
-@end
+@implementation FWAnimatedImagePlayer
 
-@implementation _FWAnimatedImageViewFetchOperation
-- (void)main {
-    __strong FWAnimatedImageView *view = _view;
-    if (!view) return;
-    if ([self isCancelled]) return;
-    view->_incrBufferCount++;
-    if (view->_incrBufferCount == 0) [view calcMaxBufferCount];
-    if (view->_incrBufferCount > (NSInteger)view->_maxBufferCount) {
-        view->_incrBufferCount = view->_maxBufferCount;
-    }
-    NSUInteger idx = _nextIndex;
-    NSUInteger max = view->_incrBufferCount < 1 ? 1 : view->_incrBufferCount;
-    NSUInteger total = view->_totalFrameCount;
-    view = nil;
-    
-    for (int i = 0; i < max; i++, idx++) {
-        @autoreleasepool {
-            if (idx >= total) idx = 0;
-            if ([self isCancelled]) break;
-            __strong FWAnimatedImageView *view = _view;
-            if (!view) break;
-            LOCK_VIEW(BOOL miss = (view->_buffer[@(idx)] == nil));
-            
-            if (miss) {
-                UIImage *img = [_curImage animatedImageFrameAtIndex:idx];
-                img = img.fwImageByDecoded;
-                if ([self isCancelled]) break;
-                LOCK_VIEW(view->_buffer[@(idx)] = img ? img : [NSNull null]);
-                view = nil;
-            }
+- (instancetype)initWithProvider:(id<FWAnimatedImageProvider>)provider {
+    self = [super init];
+    if (self) {
+        NSUInteger animatedImageFrameCount = provider.animatedImageFrameCount;
+        // Check the frame count
+        if (animatedImageFrameCount <= 1) {
+            return nil;
         }
-    }
-}
-@end
-
-@implementation FWAnimatedImageView
-
-- (instancetype)init {
-    self = [super init];
-    _runloopMode = NSRunLoopCommonModes;
-    _autoPlayAnimatedImage = YES;
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    _runloopMode = NSRunLoopCommonModes;
-    _autoPlayAnimatedImage = YES;
-    return self;
-}
-
-- (instancetype)initWithImage:(UIImage *)image {
-    self = [super init];
-    _runloopMode = NSRunLoopCommonModes;
-    _autoPlayAnimatedImage = YES;
-    self.frame = (CGRect) {CGPointZero, image.size };
-    self.image = image;
-    return self;
-}
-
-- (instancetype)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage {
-    self = [super init];
-    _runloopMode = NSRunLoopCommonModes;
-    _autoPlayAnimatedImage = YES;
-    CGSize size = image ? image.size : highlightedImage.size;
-    self.frame = (CGRect) {CGPointZero, size };
-    self.image = image;
-    self.highlightedImage = highlightedImage;
-    return self;
-}
-
-// init the animated params.
-- (void)resetAnimated {
-    if (!_link) {
-        _lock = dispatch_semaphore_create(1);
-        _buffer = [NSMutableDictionary new];
-        _requestQueue = [[NSOperationQueue alloc] init];
-        _requestQueue.maxConcurrentOperationCount = 1;
-        _link = [CADisplayLink displayLinkWithTarget:[FWWeakProxy proxyWithTarget:self] selector:@selector(step:)];
-        if (_runloopMode) {
-            [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:_runloopMode];
-        }
-        _link.paused = YES;
-        
+        self.totalFrameCount = animatedImageFrameCount;
+        // Get the current frame and loop count.
+        self.totalLoopCount = provider.animatedImageLoopCount;
+        self.animatedProvider = provider;
+        self.playbackRate = 1.0;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
-    
-    [_requestQueue cancelAllOperations];
-    LOCK(
-         if (_buffer.count) {
-             NSMutableDictionary *holder = _buffer;
-             _buffer = [NSMutableDictionary new];
-             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                 // Capture the dictionary to global queue,
-                 // release these images in background to avoid blocking UI thread.
-                 [holder class];
-             });
-         }
-    );
-    _link.paused = YES;
-    _time = 0;
-    if (_curIndex != 0) {
-        [self willChangeValueForKey:@"currentAnimatedImageIndex"];
-        _curIndex = 0;
-        [self didChangeValueForKey:@"currentAnimatedImageIndex"];
-    }
-    _curAnimatedImage = nil;
-    _curFrame = nil;
-    _curLoop = 0;
-    _totalLoop = 0;
-    _totalFrameCount = 1;
-    _loopEnd = NO;
-    _bufferMiss = NO;
-    _incrBufferCount = 0;
+    return self;
 }
 
-- (void)setImage:(UIImage *)image {
-    if (self.image == image) return;
-    [self setImage:image withType:FWAnimatedImageTypeImage];
++ (instancetype)playerWithProvider:(id<FWAnimatedImageProvider>)provider {
+    FWAnimatedImagePlayer *player = [[FWAnimatedImagePlayer alloc] initWithProvider:provider];
+    return player;
 }
 
-- (void)setHighlightedImage:(UIImage *)highlightedImage {
-    if (self.highlightedImage == highlightedImage) return;
-    [self setImage:highlightedImage withType:FWAnimatedImageTypeHighlightedImage];
-}
-
-- (void)setAnimationImages:(NSArray *)animationImages {
-    if (self.animationImages == animationImages) return;
-    [self setImage:animationImages withType:FWAnimatedImageTypeImages];
-}
-
-- (void)setHighlightedAnimationImages:(NSArray *)highlightedAnimationImages {
-    if (self.highlightedAnimationImages == highlightedAnimationImages) return;
-    [self setImage:highlightedAnimationImages withType:FWAnimatedImageTypeHighlightedImages];
-}
-
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    if (_link) [self resetAnimated];
-    [self imageChanged];
-}
-
-- (id)imageForType:(FWAnimatedImageType)type {
-    switch (type) {
-        case FWAnimatedImageTypeNone: return nil;
-        case FWAnimatedImageTypeImage: return self.image;
-        case FWAnimatedImageTypeHighlightedImage: return self.highlightedImage;
-        case FWAnimatedImageTypeImages: return self.animationImages;
-        case FWAnimatedImageTypeHighlightedImages: return self.highlightedAnimationImages;
-    }
-    return nil;
-}
-
-- (FWAnimatedImageType)currentImageType {
-    FWAnimatedImageType curType = FWAnimatedImageTypeNone;
-    if (self.highlighted) {
-        if (self.highlightedAnimationImages.count) curType = FWAnimatedImageTypeHighlightedImages;
-        else if (self.highlightedImage) curType = FWAnimatedImageTypeHighlightedImage;
-    }
-    if (curType == FWAnimatedImageTypeNone) {
-        if (self.animationImages.count) curType = FWAnimatedImageTypeImages;
-        else if (self.image) curType = FWAnimatedImageTypeImage;
-    }
-    return curType;
-}
-
-- (void)setImage:(id)image withType:(FWAnimatedImageType)type {
-    [self stopAnimating];
-    if (_link) [self resetAnimated];
-    _curFrame = nil;
-    switch (type) {
-        case FWAnimatedImageTypeNone: break;
-        case FWAnimatedImageTypeImage: super.image = image; break;
-        case FWAnimatedImageTypeHighlightedImage: super.highlightedImage = image; break;
-        case FWAnimatedImageTypeImages: super.animationImages = image; break;
-        case FWAnimatedImageTypeHighlightedImages: super.highlightedAnimationImages = image; break;
-    }
-    [self imageChanged];
-}
-
-- (void)imageChanged {
-    FWAnimatedImageType newType = [self currentImageType];
-    id newVisibleImage = [self imageForType:newType];
-    NSUInteger newImageFrameCount = 0;
-    BOOL hasContentsRect = NO;
-    if ([newVisibleImage isKindOfClass:[UIImage class]] &&
-        [newVisibleImage conformsToProtocol:@protocol(FWAnimatedImage)]) {
-        newImageFrameCount = ((UIImage<FWAnimatedImage> *) newVisibleImage).animatedImageFrameCount;
-        if (newImageFrameCount > 1) {
-            hasContentsRect = [((UIImage<FWAnimatedImage> *) newVisibleImage) respondsToSelector:@selector(animatedImageContentsRectAtIndex:)];
-        }
-    }
-    if (!hasContentsRect && _curImageHasContentsRect) {
-        if (!CGRectEqualToRect(self.layer.contentsRect, CGRectMake(0, 0, 1, 1)) ) {
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            self.layer.contentsRect = CGRectMake(0, 0, 1, 1);
-            [CATransaction commit];
-        }
-    }
-    _curImageHasContentsRect = hasContentsRect;
-    if (hasContentsRect) {
-        CGRect rect = [((UIImage<FWAnimatedImage> *) newVisibleImage) animatedImageContentsRectAtIndex:0];
-        [self setContentsRect:rect forImage:newVisibleImage];
-    }
-    
-    if (newImageFrameCount > 1) {
-        [self resetAnimated];
-        _curAnimatedImage = newVisibleImage;
-        _curFrame = newVisibleImage;
-        _totalLoop = _curAnimatedImage.animatedImageLoopCount;
-        _totalFrameCount = _curAnimatedImage.animatedImageFrameCount;
-        [self calcMaxBufferCount];
-    }
-    [self setNeedsDisplay];
-    [self didMoved];
-}
-
-// dynamically adjust buffer size for current memory.
-- (void)calcMaxBufferCount {
-    int64_t bytes = (int64_t)_curAnimatedImage.animatedImageBytesPerFrame;
-    if (bytes == 0) bytes = 1024;
-    
-    int64_t total = _FWDeviceMemoryTotal();
-    int64_t free = _FWDeviceMemoryFree();
-    int64_t max = MIN(total * 0.2, free * 0.6);
-    max = MAX(max, BUFFER_SIZE);
-    if (_maxBufferSize) max = max > _maxBufferSize ? _maxBufferSize : max;
-    double maxBufferCount = (double)max / (double)bytes;
-    if (maxBufferCount < 1) maxBufferCount = 1;
-    else if (maxBufferCount > 512) maxBufferCount = 512;
-    _maxBufferCount = maxBufferCount;
-}
+#pragma mark - Life Cycle
 
 - (void)dealloc {
-    [_requestQueue cancelAllOperations];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [_link invalidate];
-}
-
-- (BOOL)isAnimating {
-    return self.currentIsPlayingAnimation;
-}
-
-- (void)stopAnimating {
-    [super stopAnimating];
-    [_requestQueue cancelAllOperations];
-    _link.paused = YES;
-    self.currentIsPlayingAnimation = NO;
-}
-
-- (void)startAnimating {
-    FWAnimatedImageType type = [self currentImageType];
-    if (type == FWAnimatedImageTypeImages || type == FWAnimatedImageTypeHighlightedImages) {
-        NSArray *images = [self imageForType:type];
-        if (images.count > 0) {
-            [super startAnimating];
-            self.currentIsPlayingAnimation = YES;
-        }
-    } else {
-        if (_curAnimatedImage && _link.paused) {
-            _curLoop = 0;
-            _loopEnd = NO;
-            _link.paused = NO;
-            self.currentIsPlayingAnimation = YES;
-        }
-    }
 }
 
 - (void)didReceiveMemoryWarning:(NSNotification *)notification {
-    [_requestQueue cancelAllOperations];
-    [_requestQueue addOperationWithBlock: ^{
-        self->_incrBufferCount = -60 - (int)(arc4random() % 120); // about 1~3 seconds to grow back..
-        NSNumber *next = @((self->_curIndex + 1) % self->_totalFrameCount);
-        LOCK(
-             NSArray * keys = self->_buffer.allKeys;
-             for (NSNumber * key in keys) {
-                 if (![key isEqualToNumber:next]) { // keep the next frame for smoothly animation
-                     [self->_buffer removeObjectForKey:key];
-                 }
-             }
-        )//LOCK
+    [_fetchQueue cancelAllOperations];
+    [_fetchQueue addOperationWithBlock:^{
+        NSNumber *currentFrameIndex = @(self.currentFrameIndex);
+        SD_LOCK(self.lock);
+        NSArray *keys = self.frameBuffer.allKeys;
+        // only keep the next frame for later rendering
+        for (NSNumber * key in keys) {
+            if (![key isEqualToNumber:currentFrameIndex]) {
+                [self.frameBuffer removeObjectForKey:key];
+            }
+        }
+        SD_UNLOCK(self.lock);
     }];
 }
 
-- (void)didEnterBackground:(NSNotification *)notification {
-    [_requestQueue cancelAllOperations];
-    NSNumber *next = @((_curIndex + 1) % _totalFrameCount);
-    LOCK(
-         NSArray * keys = _buffer.allKeys;
-         for (NSNumber * key in keys) {
-             if (![key isEqualToNumber:next]) { // keep the next frame for smoothly animation
-                 [_buffer removeObjectForKey:key];
-             }
-         }
-     )//LOCK
+#pragma mark - Private
+- (NSOperationQueue *)fetchQueue {
+    if (!_fetchQueue) {
+        _fetchQueue = [[NSOperationQueue alloc] init];
+        _fetchQueue.maxConcurrentOperationCount = 1;
+    }
+    return _fetchQueue;
 }
 
-- (void)step:(CADisplayLink *)link {
-    UIImage <FWAnimatedImage> *image = _curAnimatedImage;
-    NSMutableDictionary *buffer = _buffer;
-    UIImage *bufferedImage = nil;
-    NSUInteger nextIndex = (_curIndex + 1) % _totalFrameCount;
-    BOOL bufferIsFull = NO;
-    
-    if (!image) return;
-    if (_loopEnd) { // view will keep in last frame
-        [self stopAnimating];
+- (NSMutableDictionary<NSNumber *,UIImage *> *)frameBuffer {
+    if (!_frameBuffer) {
+        _frameBuffer = [NSMutableDictionary dictionary];
+    }
+    return _frameBuffer;
+}
+
+- (dispatch_semaphore_t)lock {
+    if (!_lock) {
+        _lock = dispatch_semaphore_create(1);
+    }
+    return _lock;
+}
+
+- (SDDisplayLink *)displayLink {
+    if (!_displayLink) {
+        _displayLink = [SDDisplayLink displayLinkWithTarget:self selector:@selector(displayDidRefresh:)];
+        [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:self.runLoopMode];
+        [_displayLink stop];
+    }
+    return _displayLink;
+}
+
+- (void)setRunLoopMode:(NSRunLoopMode)runLoopMode {
+    if ([_runLoopMode isEqual:runLoopMode]) {
+        return;
+    }
+    if (_displayLink) {
+        if (_runLoopMode) {
+            [_displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:_runLoopMode];
+        }
+        if (runLoopMode.length > 0) {
+            [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
+        }
+    }
+    _runLoopMode = [runLoopMode copy];
+}
+
+- (NSRunLoopMode)runLoopMode {
+    if (!_runLoopMode) {
+        _runLoopMode = [[self class] defaultRunLoopMode];
+    }
+    return _runLoopMode;
+}
+
+#pragma mark - State Control
+
+- (void)setupCurrentFrame {
+    if (self.currentFrameIndex != 0) {
+        return;
+    }
+    if ([self.animatedProvider isKindOfClass:[UIImage class]]) {
+        UIImage *image = (UIImage *)self.animatedProvider;
+        // Use the poster image if available
+        UIImage *posterFrame = [[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
+        if (posterFrame) {
+            self.currentFrame = posterFrame;
+            SD_LOCK(self.lock);
+            self.frameBuffer[@(self.currentFrameIndex)] = self.currentFrame;
+            SD_UNLOCK(self.lock);
+            [self handleFrameChange];
+        }
+    }
+}
+
+- (void)resetCurrentFrameIndex {
+    self.currentFrame = nil;
+    self.currentFrameIndex = 0;
+    self.currentLoopCount = 0;
+    self.currentTime = 0;
+    self.bufferMiss = NO;
+    self.needsDisplayWhenImageBecomesAvailable = NO;
+    [self handleFrameChange];
+}
+
+- (void)clearFrameBuffer {
+    SD_LOCK(self.lock);
+    [_frameBuffer removeAllObjects];
+    SD_UNLOCK(self.lock);
+}
+
+#pragma mark - Animation Control
+- (void)startPlaying {
+    [self.displayLink start];
+    // Calculate max buffer size
+    [self calculateMaxBufferCount];
+    // Setup frame
+    if (self.currentFrameIndex == 0 && !self.currentFrame) {
+        [self setupCurrentFrame];
+    }
+}
+
+- (void)stopPlaying {
+    [_fetchQueue cancelAllOperations];
+    // Using `_displayLink` here because when UIImageView dealloc, it may trigger `[self stopAnimating]`, we already release the display link in FWAnimatedImageView's dealloc method.
+    [_displayLink stop];
+    [self resetCurrentFrameIndex];
+}
+
+- (void)pausePlaying {
+    [_fetchQueue cancelAllOperations];
+    [_displayLink stop];
+}
+
+- (BOOL)isPlaying {
+    return _displayLink.isRunning;
+}
+
+- (void)seekToFrameAtIndex:(NSUInteger)index loopCount:(NSUInteger)loopCount {
+    if (index >= self.totalFrameCount) {
+        return;
+    }
+    self.currentFrameIndex = index;
+    self.currentLoopCount = loopCount;
+    [self handleFrameChange];
+}
+
+#pragma mark - Core Render
+- (void)displayDidRefresh:(SDDisplayLink *)displayLink {
+    // If for some reason a wild call makes it through when we shouldn't be animating, bail.
+    // Early return!
+    if (!self.isPlaying) {
         return;
     }
     
-    NSTimeInterval delay = 0;
-    if (!_bufferMiss) {
-        _time += link.duration;
-        delay = [image animatedImageDurationAtIndex:_curIndex];
-        if (_time < delay) return;
-        _time -= delay;
-        if (nextIndex == 0) {
-            _curLoop++;
-            if (_curLoop >= _totalLoop && _totalLoop != 0) {
-                _loopEnd = YES;
-                [self stopAnimating];
-                [self.layer setNeedsDisplay]; // let system call `displayLayer:` before runloop sleep
-                return; // stop at last frame
+    NSUInteger totalFrameCount = self.totalFrameCount;
+    if (totalFrameCount <= 1) {
+        // Total frame count less than 1, wrong configuration and stop animating
+        [self stopPlaying];
+        return;
+    }
+    
+    NSTimeInterval playbackRate = self.playbackRate;
+    if (playbackRate <= 0) {
+        // Does not support <= 0 play rate
+        [self stopPlaying];
+        return;
+    }
+    
+    // Calculate refresh duration
+    NSTimeInterval duration = self.displayLink.duration;
+    
+    NSUInteger currentFrameIndex = self.currentFrameIndex;
+    NSUInteger nextFrameIndex = (currentFrameIndex + 1) % totalFrameCount;
+    
+    // Check if we need to display new frame firstly
+    BOOL bufferFull = NO;
+    if (self.needsDisplayWhenImageBecomesAvailable) {
+        UIImage *currentFrame;
+        SD_LOCK(self.lock);
+        currentFrame = self.frameBuffer[@(currentFrameIndex)];
+        SD_UNLOCK(self.lock);
+        
+        // Update the current frame
+        if (currentFrame) {
+            SD_LOCK(self.lock);
+            // Remove the frame buffer if need
+            if (self.frameBuffer.count > self.maxBufferCount) {
+                self.frameBuffer[@(currentFrameIndex)] = nil;
+            }
+            // Check whether we can stop fetch
+            if (self.frameBuffer.count == totalFrameCount) {
+                bufferFull = YES;
+            }
+            SD_UNLOCK(self.lock);
+            
+            // Update the current frame immediately
+            self.currentFrame = currentFrame;
+            [self handleFrameChange];
+            
+            self.bufferMiss = NO;
+            self.needsDisplayWhenImageBecomesAvailable = NO;
+        }
+        else {
+            self.bufferMiss = YES;
+        }
+    }
+    
+    // Check if we have the frame buffer
+    if (!self.bufferMiss) {
+        // Then check if timestamp is reached
+        self.currentTime += duration;
+        NSTimeInterval currentDuration = [self.animatedProvider animatedImageDurationAtIndex:currentFrameIndex];
+        currentDuration = currentDuration / playbackRate;
+        if (self.currentTime < currentDuration) {
+            // Current frame timestamp not reached, return
+            return;
+        }
+        
+        // Otherwise, we shoudle be ready to display next frame
+        self.needsDisplayWhenImageBecomesAvailable = YES;
+        self.currentFrameIndex = nextFrameIndex;
+        self.currentTime -= currentDuration;
+        NSTimeInterval nextDuration = [self.animatedProvider animatedImageDurationAtIndex:nextFrameIndex];
+        nextDuration = nextDuration / playbackRate;
+        if (self.currentTime > nextDuration) {
+            // Do not skip frame
+            self.currentTime = nextDuration;
+        }
+        
+        // Update the loop count when last frame rendered
+        if (nextFrameIndex == 0) {
+            // Update the loop count
+            self.currentLoopCount++;
+            [self handleLoopChnage];
+            
+            // if reached the max loop count, stop animating, 0 means loop indefinitely
+            NSUInteger maxLoopCount = self.totalLoopCount;
+            if (maxLoopCount != 0 && (self.currentLoopCount >= maxLoopCount)) {
+                [self stopPlaying];
+                return;
             }
         }
-        delay = [image animatedImageDurationAtIndex:nextIndex];
-        if (_time > delay) _time = delay; // do not jump over frame
-    }
-    LOCK(
-         bufferedImage = buffer[@(nextIndex)];
-         if (bufferedImage) {
-             if ((int)_incrBufferCount < (int)_totalFrameCount) {
-                 [buffer removeObjectForKey:@(nextIndex)];
-             }
-             [self willChangeValueForKey:@"currentAnimatedImageIndex"];
-             _curIndex = nextIndex;
-             [self didChangeValueForKey:@"currentAnimatedImageIndex"];
-             if (_curIndex + 1 == _totalFrameCount && self.loopCompletionBlock) {
-                 self.loopCompletionBlock(_totalLoop - _curLoop);
-             }
-             _curFrame = bufferedImage == (id)[NSNull null] ? nil : bufferedImage;
-             if (_curImageHasContentsRect) {
-                 _curContentsRect = [image animatedImageContentsRectAtIndex:_curIndex];
-                 [self setContentsRect:_curContentsRect forImage:_curFrame];
-             }
-             nextIndex = (_curIndex + 1) % _totalFrameCount;
-             _bufferMiss = NO;
-             if (buffer.count == _totalFrameCount) {
-                 bufferIsFull = YES;
-             }
-         } else {
-             _bufferMiss = YES;
-         }
-    )//LOCK
-    
-    if (!_bufferMiss) {
-        [self.layer setNeedsDisplay]; // let system call `displayLayer:` before runloop sleep
     }
     
-    if (!bufferIsFull && _requestQueue.operationCount == 0) { // if some work not finished, wait for next opportunity
-        _FWAnimatedImageViewFetchOperation *operation = [_FWAnimatedImageViewFetchOperation new];
-        operation.view = self;
-        operation.nextIndex = nextIndex;
-        operation.curImage = image;
-        [_requestQueue addOperation:operation];
+    // Since we support handler, check animating state again
+    if (!self.isPlaying) {
+        return;
     }
-}
-
-- (void)displayLayer:(CALayer *)layer {
-    if (_curFrame) {
-        layer.contents = (__bridge id)_curFrame.CGImage;
-    }
-}
-
-- (void)setContentsRect:(CGRect)rect forImage:(UIImage *)image{
-    CGRect layerRect = CGRectMake(0, 0, 1, 1);
-    if (image) {
-        CGSize imageSize = image.size;
-        if (imageSize.width > 0.01 && imageSize.height > 0.01) {
-            layerRect.origin.x = rect.origin.x / imageSize.width;
-            layerRect.origin.y = rect.origin.y / imageSize.height;
-            layerRect.size.width = rect.size.width / imageSize.width;
-            layerRect.size.height = rect.size.height / imageSize.height;
-            layerRect = CGRectIntersection(layerRect, CGRectMake(0, 0, 1, 1));
-            if (CGRectIsNull(layerRect) || CGRectIsEmpty(layerRect)) {
-                layerRect = CGRectMake(0, 0, 1, 1);
+    
+    // Check if we should prefetch next frame or current frame
+    // When buffer miss, means the decode speed is slower than render speed, we fetch current miss frame
+    // Or, most cases, the decode speed is faster than render speed, we fetch next frame
+    NSUInteger fetchFrameIndex = self.bufferMiss? currentFrameIndex : nextFrameIndex;
+    UIImage *fetchFrame;
+    SD_LOCK(self.lock);
+    fetchFrame = self.bufferMiss? nil : self.frameBuffer[@(nextFrameIndex)];
+    SD_UNLOCK(self.lock);
+    
+    if (!fetchFrame && !bufferFull && self.fetchQueue.operationCount == 0) {
+        // Prefetch next frame in background queue
+        id<FWAnimatedImageProvider> animatedProvider = self.animatedProvider;
+        __weak __typeof__(self) self_weak_ = self;
+        NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+            __typeof__(self) self = self_weak_;
+            if (!self) {
+                return;
             }
-        }
-    }
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    self.layer.contentsRect = layerRect;
-    [CATransaction commit];
-}
+            UIImage *frame = [animatedProvider animatedImageFrameAtIndex:fetchFrameIndex];
 
-- (void)didMoved {
-    if (self.autoPlayAnimatedImage) {
-        if(self.superview && self.window) {
-            [self startAnimating];
-        } else {
-            [self stopAnimating];
-        }
+            BOOL isAnimating = self.displayLink.isRunning;
+            if (isAnimating) {
+                SD_LOCK(self.lock);
+                self.frameBuffer[@(fetchFrameIndex)] = frame;
+                SD_UNLOCK(self.lock);
+            }
+        }];
+        [self.fetchQueue addOperation:operation];
     }
 }
 
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    [self didMoved];
+- (void)handleFrameChange {
+    if (self.animationFrameHandler) {
+        self.animationFrameHandler(self.currentFrameIndex, self.currentFrame);
+    }
 }
 
-- (void)didMoveToSuperview {
-    [super didMoveToSuperview];
-    [self didMoved];
+- (void)handleLoopChnage {
+    if (self.animationLoopHandler) {
+        self.animationLoopHandler(self.currentLoopCount);
+    }
 }
 
-- (void)setCurrentAnimatedImageIndex:(NSUInteger)currentAnimatedImageIndex {
-    if (!_curAnimatedImage) return;
-    if (currentAnimatedImageIndex >= _curAnimatedImage.animatedImageFrameCount) return;
-    if (_curIndex == currentAnimatedImageIndex) return;
+#pragma mark - Util
+- (void)calculateMaxBufferCount {
+    NSUInteger bytes = CGImageGetBytesPerRow(self.currentFrame.CGImage) * CGImageGetHeight(self.currentFrame.CGImage);
+    if (bytes == 0) bytes = 1024;
     
-    void (^block)(void) = ^{
-        LOCK(
-             [self->_requestQueue cancelAllOperations];
-             [self->_buffer removeAllObjects];
-             [self willChangeValueForKey:@"currentAnimatedImageIndex"];
-             self->_curIndex = currentAnimatedImageIndex;
-             [self didChangeValueForKey:@"currentAnimatedImageIndex"];
-             self->_curFrame = [self->_curAnimatedImage animatedImageFrameAtIndex:self->_curIndex];
-             if (self->_curImageHasContentsRect) {
-                 self->_curContentsRect = [self->_curAnimatedImage animatedImageContentsRectAtIndex:self->_curIndex];
-             }
-             self->_time = 0;
-             self->_loopEnd = NO;
-             self->_bufferMiss = NO;
-             [self.layer setNeedsDisplay];
-        )//LOCK
-    };
-    
-    if (pthread_main_np()) {
-        block();
+    NSUInteger max = 0;
+    if (self.maxBufferSize > 0) {
+        max = self.maxBufferSize;
     } else {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
-}
-
-- (NSUInteger)currentAnimatedImageIndex {
-    return _curIndex;
-}
-
-- (void)setRunloopMode:(NSString *)runloopMode {
-    if ([_runloopMode isEqual:runloopMode]) return;
-    if (_link) {
-        if (_runloopMode) {
-            [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:_runloopMode];
-        }
-        if (runloopMode.length) {
-            [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:runloopMode];
-        }
-    }
-    _runloopMode = runloopMode.copy;
-}
-
-#pragma mark - Override NSObject(NSKeyValueObservingCustomization)
-
-+ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
-    if ([key isEqualToString:@"currentAnimatedImageIndex"]) {
-        return NO;
-    }
-    return [super automaticallyNotifiesObserversForKey:key];
-}
-
-#pragma mark - NSCoding
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    _runloopMode = [aDecoder decodeObjectForKey:@"runloopMode"];
-    if (_runloopMode.length == 0) _runloopMode = NSRunLoopCommonModes;
-    if ([aDecoder containsValueForKey:@"autoPlayAnimatedImage"]) {
-        _autoPlayAnimatedImage = [aDecoder decodeBoolForKey:@"autoPlayAnimatedImage"];
-    } else {
-        _autoPlayAnimatedImage = YES;
+        // Calculate based on current memory, these factors are by experience
+        NSUInteger total = [SDDeviceHelper totalMemory];
+        NSUInteger free = [SDDeviceHelper freeMemory];
+        max = MIN(total * 0.2, free * 0.6);
     }
     
-    UIImage *image = [aDecoder decodeObjectForKey:@"FWAnimatedImage"];
-    UIImage *highlightedImage = [aDecoder decodeObjectForKey:@"FWHighlightedAnimatedImage"];
-    if (image) {
-        self.image = image;
-        [self setImage:image withType:FWAnimatedImageTypeImage];
+    NSUInteger maxBufferCount = (double)max / (double)bytes;
+    if (!maxBufferCount) {
+        // At least 1 frame
+        maxBufferCount = 1;
     }
-    if (highlightedImage) {
-        self.highlightedImage = highlightedImage;
-        [self setImage:highlightedImage withType:FWAnimatedImageTypeHighlightedImage];
-    }
-    return self;
+    
+    self.maxBufferCount = maxBufferCount;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [super encodeWithCoder:aCoder];
-    [aCoder encodeObject:_runloopMode forKey:@"runloopMode"];
-    [aCoder encodeBool:_autoPlayAnimatedImage forKey:@"autoPlayAnimatedImage"];
-    
-    BOOL ani, multi;
-    ani = [self.image conformsToProtocol:@protocol(FWAnimatedImage)];
-    multi = (ani && ((UIImage <FWAnimatedImage> *)self.image).animatedImageFrameCount > 1);
-    if (multi) [aCoder encodeObject:self.image forKey:@"FWAnimatedImage"];
-    
-    ani = [self.highlightedImage conformsToProtocol:@protocol(FWAnimatedImage)];
-    multi = (ani && ((UIImage <FWAnimatedImage> *)self.highlightedImage).animatedImageFrameCount > 1);
-    if (multi) [aCoder encodeObject:self.highlightedImage forKey:@"FWHighlightedAnimatedImage"];
++ (NSString *)defaultRunLoopMode {
+    // Key off `activeProcessorCount` (as opposed to `processorCount`) since the system could shut down cores in certain situations.
+    return [NSProcessInfo processInfo].activeProcessorCount > 1 ? NSRunLoopCommonModes : NSDefaultRunLoopMode;
 }
 
 @end
