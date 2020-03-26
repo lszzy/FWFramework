@@ -56,6 +56,8 @@
 
 - (void)renderModel
 {
+    [[FWImageCodersManager sharedManager] addCoder:[FWImageHEICCoder sharedCoder]];
+    
     FWWeakifySelf();
     [self fwSetRightBarItem:@"Toggle" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
