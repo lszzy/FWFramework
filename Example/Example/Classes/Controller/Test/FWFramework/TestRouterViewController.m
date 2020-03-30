@@ -100,6 +100,9 @@
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
                                          @[@"打开http", @"onOpenHttp"],
+                                         @[@"跳转home", @"onOpenHome"],
+                                         @[@"冲突home", @"onOpenHome2"],
+                                         @[@"关闭close", @"onOpenClose"],
                                          ]];
 }
 
@@ -199,6 +202,21 @@
 - (void)onOpenHttp
 {
     [FWRouter openURL:@"http://www.wuyong.site"];
+}
+
+- (void)onOpenHome
+{
+    [FWRouter openURL:AppRouter.ROUTE_HOME];
+}
+
+- (void)onOpenHome2
+{
+    [FWRouter openURL:@"app://tabbar/home"];
+}
+
+- (void)onOpenClose
+{
+    [FWRouter openURL:AppRouter.ROUTE_CLOSE];
 }
 
 @end

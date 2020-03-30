@@ -17,6 +17,8 @@ FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
 FWDefStaticString(ROUTE_OBJECT, @"object://test2");
 FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
+FWDefStaticString(ROUTE_HOME, @"app://home");
+FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)load
 {
@@ -110,6 +112,50 @@ FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
         [viewController.webView evaluateJavaScript:javascript completionHandler:^(id value, NSError *error) {
             [[[UIWindow fwMainWindow] fwTopViewController] fwShowAlertWithTitle:@"App" message:[NSString stringWithFormat:@"app:%@ => js:%@", @"2", value] cancel:@"关闭" cancelBlock:nil];
         }];
+    }];
+    
+    [FWRouter registerURL:AppRouter.ROUTE_HOME withHandler:^(NSDictionary * _Nonnull parameters) {
+        UIViewController *rootController = [UIWindow fwMainWindow].rootViewController;
+        if (![rootController isKindOfClass:[UITabBarController class]]) {
+            return;
+        }
+        
+        UINavigationController *targetNav = nil;
+        UITabBarController *tabbarController = (UITabBarController *)rootController;
+        NSArray *navControllers = tabbarController.viewControllers;
+        for (UINavigationController *navController in navControllers) {
+            if ([navController isKindOfClass:[UINavigationController class]] &&
+                [navController.viewControllers.firstObject isKindOfClass:[ObjcController class]]) {
+                targetNav = navController;
+                break;
+            }
+        }
+        if (!targetNav) {
+            return;
+        }
+        
+        UINavigationController *currentNav = tabbarController.selectedViewController;
+        if (currentNav != targetNav) {
+            if ([currentNav isKindOfClass:[UINavigationController class]]) {
+                if (currentNav.viewControllers.count > 1) {
+                    [currentNav popToRootViewControllerAnimated:NO];
+                }
+            }
+            tabbarController.selectedViewController = targetNav;
+        }
+        
+        ObjcController *targetController = targetNav.viewControllers.firstObject;
+        if (targetNav.viewControllers.count > 1) {
+            [targetNav popToRootViewControllerAnimated:NO];
+            targetController.selectedIndex = 1;
+        } else {
+            targetController.selectedIndex = 1;
+        }
+    }];
+    
+    [FWRouter registerURL:AppRouter.ROUTE_CLOSE withHandler:^(NSDictionary * _Nonnull parameters) {
+        UIViewController *topController = [UIWindow.fwMainWindow fwTopViewController];
+        [topController fwCloseViewControllerAnimated:YES];
     }];
 }
 
