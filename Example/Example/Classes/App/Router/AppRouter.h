@@ -18,5 +18,7 @@ FWStaticString(ROUTE_WILDCARD);
 FWStaticString(ROUTE_OBJECT);
 FWStaticString(ROUTE_CONTROLLER);
 FWStaticString(ROUTE_JAVASCRIPT);
+FWStaticString(ROUTE_HOME);
+FWStaticString(ROUTE_CLOSE);
 
 @end
