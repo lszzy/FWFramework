@@ -132,8 +132,8 @@
     NSData *data = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
     float progress = 0.5;
     if (progress > 1) progress = 1;
-    NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
     /*
+    NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
     FWImageDecoder *decoder = [[FWImageDecoder alloc] initWithScale:[UIScreen mainScreen].scale];
     [decoder updateData:subData final:NO];
     FWImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
