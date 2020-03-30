@@ -53,6 +53,37 @@
     return presentedController;
 }
 
+- (UIViewController *)fwSelectTabBarController:(Class)viewController
+{
+    if (![self.rootViewController isKindOfClass:[UITabBarController class]]) return nil;
+    
+    UINavigationController *targetNavigation = nil;
+    UITabBarController *tabbarController = (UITabBarController *)self.rootViewController;
+    for (UINavigationController *navigationController in tabbarController.viewControllers) {
+        if ([navigationController isKindOfClass:[UINavigationController class]] &&
+            [navigationController.viewControllers.firstObject isKindOfClass:viewController]) {
+            targetNavigation = navigationController;
+            break;
+        }
+    }
+    if (!targetNavigation) return nil;
+    
+    UINavigationController *currentNavigation = tabbarController.selectedViewController;
+    if (currentNavigation != targetNavigation) {
+        if ([currentNavigation isKindOfClass:[UINavigationController class]] &&
+            currentNavigation.viewControllers.count > 1) {
+            [currentNavigation popToRootViewControllerAnimated:NO];
+        }
+        tabbarController.selectedViewController = targetNavigation;
+    }
+    
+    UIViewController *targetController = targetNavigation.viewControllers.firstObject;
+    if (targetNavigation.viewControllers.count > 1) {
+        [targetNavigation popToRootViewControllerAnimated:NO];
+    }
+    return targetController;
+}
+
 - (BOOL)fwPushViewController:(UIViewController *)viewController
                     animated:(BOOL)animated
 {
