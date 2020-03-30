@@ -101,7 +101,8 @@
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
                                          @[@"打开http", @"onOpenHttp"],
                                          @[@"跳转home", @"onOpenHome"],
-                                         @[@"冲突home", @"onOpenHome2"],
+                                         @[@"跳转home/test", @"onOpenHome2"],
+                                         @[@"不支持tabbar/home", @"onOpenHome3"],
                                          @[@"关闭close", @"onOpenClose"],
                                          ]];
 }
@@ -210,6 +211,11 @@
 }
 
 - (void)onOpenHome2
+{
+    [FWRouter openURL:@"app://home/test"];
+}
+
+- (void)onOpenHome3
 {
     [FWRouter openURL:@"app://tabbar/home"];
 }
