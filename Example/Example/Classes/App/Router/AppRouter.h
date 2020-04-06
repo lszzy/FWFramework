@@ -19,6 +19,7 @@ FWStaticString(ROUTE_OBJECT);
 FWStaticString(ROUTE_CONTROLLER);
 FWStaticString(ROUTE_JAVASCRIPT);
 FWStaticString(ROUTE_HOME);
+FWStaticString(ROUTE_HOME_TEST);
 FWStaticString(ROUTE_CLOSE);
 
 @end
