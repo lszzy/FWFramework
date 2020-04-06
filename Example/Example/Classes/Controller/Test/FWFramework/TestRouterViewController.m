@@ -101,8 +101,9 @@
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
                                          @[@"打开http", @"onOpenHttp"],
                                          @[@"跳转home", @"onOpenHome"],
-                                         @[@"跳转home/test", @"onOpenHome2"],
-                                         @[@"不支持tabbar/home", @"onOpenHome3"],
+                                         @[@"跳转test", @"onOpenHome2"],
+                                         @[@"跳转home/undefined", @"onOpenHome3"],
+                                         @[@"不支持tabbar/home", @"onOpenHome4"],
                                          @[@"关闭close", @"onOpenClose"],
                                          ]];
 }
@@ -216,6 +217,11 @@
 }
 
 - (void)onOpenHome3
+{
+    [FWRouter openURL:@"app://home/undefined"];
+}
+
+- (void)onOpenHome4
 {
     [FWRouter openURL:@"app://tabbar/home"];
 }
