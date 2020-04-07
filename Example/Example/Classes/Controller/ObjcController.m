@@ -43,16 +43,6 @@
     swiftButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 20, 150, 30);
     [self.view addSubview:swiftButton];
     [self.view fwAddTapGestureWithTarget:self action:@selector(onClose)];
-    
-#if APP_TARGET == 2
-    UIButton *flutterButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [flutterButton setTitle:@"Flutter" forState:UIControlStateNormal];
-    [flutterButton fwAddTouchBlock:^(id  _Nonnull sender) {
-        [[FlutterManager sharedInstance] present];
-    }];
-    flutterButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 70, 150, 30);
-    [self.view addSubview:flutterButton];
-#endif
 }
 
 #pragma mark - Action

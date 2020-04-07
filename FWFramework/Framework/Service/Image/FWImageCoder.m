@@ -20,24 +20,19 @@
 #import <zlib.h>
 
 
-
-#ifndef FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
 #if __has_include(<webp/decode.h>) && __has_include(<webp/encode.h>) && \
     __has_include(<webp/demux.h>)  && __has_include(<webp/mux.h>)
-#define FWIMAGE_WEBP_ENABLED 1
 #import <webp/decode.h>
 #import <webp/encode.h>
 #import <webp/demux.h>
 #import <webp/mux.h>
 #elif __has_include("webp/decode.h") && __has_include("webp/encode.h") && \
       __has_include("webp/demux.h")  && __has_include("webp/mux.h")
-#define FWIMAGE_WEBP_ENABLED 1
 #import "webp/decode.h"
 #import "webp/encode.h"
 #import "webp/demux.h"
 #import "webp/mux.h"
-#else
-#define FWIMAGE_WEBP_ENABLED 0
 #endif
 #endif
 
@@ -1189,7 +1184,7 @@ CFDataRef FWCGImageCreateEncodedData(CGImageRef imageRef, FWImageType type, CGFl
     quality = quality < 0 ? 0 : quality > 1 ? 1 : quality;
     
     if (type == FWImageTypeWebP) {
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
         if (quality == 1) {
             return FWCGImageCreateEncodedWebPData(imageRef, YES, quality, 4, FWImagePresetDefault);
         } else {
@@ -1226,7 +1221,7 @@ CFDataRef FWCGImageCreateEncodedData(CGImageRef imageRef, FWImageType type, CGFl
     return data;
 }
 
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
 
 BOOL FWImageWebPAvailable() {
     return YES;
@@ -1509,7 +1504,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
     BOOL _sourceTypeDetected;
     CGImageSourceRef _source;
     fw_png_info *_apngSource;
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
     WebPDemuxer *_webpSource;
 #endif
     
@@ -1524,7 +1519,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 - (void)dealloc {
     if (_source) CFRelease(_source);
     if (_apngSource) fw_png_info_release(_apngSource);
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
     if (_webpSource) WebPDemuxDelete(_webpSource);
 #endif
     if (_blendCanvas) CFRelease(_blendCanvas);
@@ -1739,7 +1734,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (void)_updateSourceWebP {
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
     _width = 0;
     _height = 0;
     _loopCount = 0;
@@ -2116,7 +2111,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
         return imageRef;
     }
     
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
     if (_webpSource) {
         WebPIterator iter;
         if (!WebPDemuxGetFrame(_webpSource, (int)(index + 1), &iter)) return NULL; // demux webp frame data
@@ -2325,7 +2320,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
         return nil;
     }
     
-#if !FWIMAGE_WEBP_ENABLED
+#if !FWImageWebpEnabled
     if (type == FWImageTypeWebP) {
         NSLog(@"[%s: %d] WebP is not available, check the documentation to see how to install WebP component: https://github.com/ibireme/FWImage#installation", __FUNCTION__, __LINE__);
         return nil;
@@ -2673,7 +2668,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (NSData *)_encodeWebP {
-#if FWIMAGE_WEBP_ENABLED
+#if FWImageWebpEnabled
     // encode webp
     NSMutableArray *webpDatas = [NSMutableArray new];
     for (NSUInteger i = 0; i < _images.count; i++) {

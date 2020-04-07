@@ -156,7 +156,6 @@
 		2F955BEE230E98F90019535A /* TestAttributedStringViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F955BED230E98F90019535A /* TestAttributedStringViewController.m */; };
 		2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
-		2FAF16CA24097314003EA766 /* FlutterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF16C924097314003EA766 /* FlutterManager.swift */; };
 		2FB38DC1215B7058009F0450 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB38DC0215B7058009F0450 /* TestModelViewController.m */; };
 		2FB4B9B623D0913800C0A351 /* TestStatisticalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */; };
 		2FB4B9B723D0913800C0A351 /* TestStatisticalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4B9B523D0913800C0A351 /* TestStatisticalViewController.m */; };
@@ -341,7 +340,6 @@
 		2FA32CC821B03B5B00C230EA /* AppRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppRouter.m; sourceTree = "<group>"; };
 		2FA32CCA21B0572900C230EA /* TestRouterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRouterViewController.h; sourceTree = "<group>"; };
 		2FA32CCB21B0572900C230EA /* TestRouterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterViewController.m; sourceTree = "<group>"; };
-		2FAF16C924097314003EA766 /* FlutterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlutterManager.swift; sourceTree = "<group>"; };
 		2FB38DBF215B7058009F0450 /* TestModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestModelViewController.h; sourceTree = "<group>"; };
 		2FB38DC0215B7058009F0450 /* TestModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestModelViewController.m; sourceTree = "<group>"; };
 		2FB4B9B423D0913800C0A351 /* TestStatisticalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestStatisticalViewController.h; sourceTree = "<group>"; };
@@ -516,7 +514,6 @@
 		2F4CFA3021551BC900203A37 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2FAF16C42409724E003EA766 /* Flutter */,
 				2F0D292F215DFFEF005F1466 /* Vendor */,
 			);
 			path = Library;
@@ -838,14 +835,6 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
-		2FAF16C42409724E003EA766 /* Flutter */ = {
-			isa = PBXGroup;
-			children = (
-				2FAF16C924097314003EA766 /* FlutterManager.swift */,
-			);
-			path = Flutter;
-			sourceTree = "<group>";
-		};
 		2FC81A74235031D000BE660C /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -889,7 +878,6 @@
 			buildConfigurationList = 2F4385AF2318F687003A683C /* Build configuration list for PBXNativeTarget "Example2" */;
 			buildPhases = (
 				B831888E2BF0166FF6CED862 /* [CP] Check Pods Manifest.lock */,
-				9E2AC08B27846C4B31DA811A /* [CP-User] Run Flutter Build Script */,
 				2F4385642318F687003A683C /* Sources */,
 				2F4385A62318F687003A683C /* Frameworks */,
 				2F4385A82318F687003A683C /* Resources */,
@@ -1103,38 +1091,18 @@
 				"${PODS_ROOT}/Target Support Files/Pods-Example2/Pods-Example2-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FWDebug/FWDebug.framework",
 				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
-				"${PODS_ROOT}/../Flutter/example/.ios/Flutter/engine/Flutter.framework",
-				"${PODS_ROOT}/../Flutter/example/.ios/Flutter/App.framework",
 				"${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWDebug.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flutter.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/App.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libwebp.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Example2/Pods-Example2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		9E2AC08B27846C4B31DA811A /* [CP-User] Run Flutter Build Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Flutter/example/.metadata",
-				"${SRCROOT}/Flutter/example/.ios/Flutter/App.framework/App",
-				"${SRCROOT}/Flutter/example/.ios/Flutter/engine/Flutter.framework/Flutter",
-				"${SRCROOT}/Flutter/example/.ios/Flutter/flutter_export_environment.sh",
-			);
-			name = "[CP-User] Run Flutter Build Script";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/Flutter/example/.ios/Flutter/flutter_export_environment.sh\"\n\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
 		};
 		B831888E2BF0166FF6CED862 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1212,7 +1180,6 @@
 				2F43858D2318F687003A683C /* TestWebViewController.m in Sources */,
 				2F43858E2318F687003A683C /* TestLayerViewController.m in Sources */,
 				2F43858F2318F687003A683C /* TestBorderViewController.m in Sources */,
-				2FAF16CA24097314003EA766 /* FlutterManager.swift in Sources */,
 				2F4385902318F687003A683C /* FWDatabaseManager.m in Sources */,
 				2F4385912318F687003A683C /* BaseScrollViewController.m in Sources */,
 				2F4385922318F687003A683C /* TestMapViewController.m in Sources */,
