@@ -19,26 +19,23 @@
 #import <pthread.h>
 #import <zlib.h>
 
-
-#if FWImageWebpEnabled
 #if __has_include(<webp/decode.h>) && __has_include(<webp/encode.h>) && \
     __has_include(<webp/demux.h>)  && __has_include(<webp/mux.h>)
+#define FWImageWebpEnabled 1
 #import <webp/decode.h>
 #import <webp/encode.h>
 #import <webp/demux.h>
 #import <webp/mux.h>
 #elif __has_include("webp/decode.h") && __has_include("webp/encode.h") && \
       __has_include("webp/demux.h")  && __has_include("webp/mux.h")
+#define FWImageWebpEnabled 1
 #import "webp/decode.h"
 #import "webp/encode.h"
 #import "webp/demux.h"
 #import "webp/mux.h"
+#else
+#define FWImageWebpEnabled 0
 #endif
-#endif
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Utility (for little endian platform)
