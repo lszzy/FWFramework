@@ -1618,7 +1618,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (FWImageFrame *)_frameAtIndex:(NSUInteger)index decodeForDisplay:(BOOL)decodeForDisplay {
-    if (index >= _frames.count) return 0;
+    if (index >= _frames.count) return nil;
     _FWImageDecoderFrame *frame = [(_FWImageDecoderFrame *)_frames[index] copy];
     BOOL decoded = NO;
     BOOL extendToCanvas = NO;
