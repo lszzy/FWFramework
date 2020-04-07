@@ -74,6 +74,8 @@
         @"test.heic",
         @"test.heif",
         @"animation.heic",
+        @"public_icon",
+        @"public_gif",
     ]];
     [self.tableView reloadData];
     
