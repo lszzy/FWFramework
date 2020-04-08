@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.author              = { 'Wu Yong' => 'admin@wuyong.site' }
   spec.source              = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => spec.version, :submodules => true }
 
-  spec.platform            = :ios, '8.0'
+  spec.platform            = :ios, '9.0'
   spec.swift_version       = '5.0'
   spec_mrr_files           = [
     'FWFramework/Framework/Kernel/FWCoroutine.m',
