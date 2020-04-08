@@ -112,11 +112,11 @@
 #pragma mark -
 
 - (NSURLSessionDataTask *)GET:(NSString *)URLString
-                   parameters:(id)parameters
+                   parameters:(nullable id)parameters
                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
-                     progress:(void (^)(NSProgress * _Nonnull))downloadProgress
-                      success:(void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success
-                      failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
+                     progress:(nullable void (^)(NSProgress * _Nonnull))downloadProgress
+                      success:(nullable void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success
+                      failure:(nullable void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
 {
     
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"GET"
@@ -134,10 +134,10 @@
 }
 
 - (NSURLSessionDataTask *)HEAD:(NSString *)URLString
-                    parameters:(id)parameters
-                       headers:(NSDictionary<NSString *,NSString *> *)headers
-                       success:(void (^)(NSURLSessionDataTask * _Nonnull))success
-                       failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
+                    parameters:(nullable id)parameters
+                       headers:(nullable NSDictionary<NSString *,NSString *> *)headers
+                       success:(nullable void (^)(NSURLSessionDataTask * _Nonnull))success
+                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
 {
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"HEAD" URLString:URLString parameters:parameters headers:headers uploadProgress:nil downloadProgress:nil success:^(NSURLSessionDataTask *task, __unused id responseObject) {
         if (success) {
@@ -165,11 +165,11 @@
 }
 
 - (NSURLSessionDataTask *)POST:(NSString *)URLString
-                    parameters:(id)parameters
-                       headers:(NSDictionary<NSString *,NSString *> *)headers
-     constructingBodyWithBlock:(void (^)(id<FWMultipartFormData> _Nonnull))block
-                      progress:(void (^)(NSProgress * _Nonnull))uploadProgress
-                       success:(void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
+                    parameters:(nullable id)parameters
+                       headers:(nullable NSDictionary<NSString *,NSString *> *)headers
+     constructingBodyWithBlock:(nullable void (^)(id<FWMultipartFormData> _Nonnull))block
+                      progress:(nullable void (^)(NSProgress * _Nonnull))uploadProgress
+                       success:(nullable void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
 {
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [self.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters constructingBodyWithBlock:block error:&serializationError];
@@ -204,10 +204,10 @@
 }
 
 - (NSURLSessionDataTask *)PUT:(NSString *)URLString
-                   parameters:(id)parameters
-                      headers:(NSDictionary<NSString *,NSString *> *)headers
-                      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
-                      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
+                   parameters:(nullable id)parameters
+                      headers:(nullable NSDictionary<NSString *,NSString *> *)headers
+                      success:(nullable void (^)(NSURLSessionDataTask *task, id responseObject))success
+                      failure:(nullable void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"PUT" URLString:URLString parameters:parameters headers:headers uploadProgress:nil downloadProgress:nil success:success failure:failure];
     
@@ -217,10 +217,10 @@
 }
 
 - (NSURLSessionDataTask *)PATCH:(NSString *)URLString
-                     parameters:(id)parameters
-                        headers:(NSDictionary<NSString *,NSString *> *)headers
-                        success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
-                        failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
+                     parameters:(nullable id)parameters
+                        headers:(nullable NSDictionary<NSString *,NSString *> *)headers
+                        success:(nullable void (^)(NSURLSessionDataTask *task, id responseObject))success
+                        failure:(nullable void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"PATCH" URLString:URLString parameters:parameters headers:headers uploadProgress:nil downloadProgress:nil success:success failure:failure];
     
@@ -230,10 +230,10 @@
 }
 
 - (NSURLSessionDataTask *)DELETE:(NSString *)URLString
-                      parameters:(id)parameters
-                         headers:(NSDictionary<NSString *,NSString *> *)headers
-                         success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
-                         failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
+                      parameters:(nullable id)parameters
+                         headers:(nullable NSDictionary<NSString *,NSString *> *)headers
+                         success:(nullable void (^)(NSURLSessionDataTask *task, id responseObject))success
+                         failure:(nullable void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"DELETE" URLString:URLString parameters:parameters headers:headers uploadProgress:nil downloadProgress:nil success:success failure:failure];
     
@@ -244,12 +244,12 @@
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
                                        URLString:(NSString *)URLString
-                                      parameters:(id)parameters
-                                         headers:(NSDictionary <NSString *, NSString *> *)headers
+                                      parameters:(nullable id)parameters
+                                         headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                                   uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgress
                                 downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgress
-                                         success:(void (^)(NSURLSessionDataTask *, id))success
-                                         failure:(void (^)(NSURLSessionDataTask *, NSError *))failure
+                                         success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                                         failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure
 {
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
@@ -303,11 +303,7 @@
     if (!configuration) {
         NSString *configurationIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:@"identifier"];
         if (configurationIdentifier) {
-#if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000) || (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1100)
             configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:configurationIdentifier];
-#else
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:configurationIdentifier];
-#endif
         }
     }
 
