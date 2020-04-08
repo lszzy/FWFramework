@@ -22,35 +22,6 @@
 #import "FWURLSessionManager.h"
 #import <objc/runtime.h>
 
-#ifndef NSFoundationVersionNumber_iOS_8_0
-#define NSFoundationVersionNumber_With_Fixed_5871104061079552_bug 1140.11
-#else
-#define NSFoundationVersionNumber_With_Fixed_5871104061079552_bug NSFoundationVersionNumber_iOS_8_0
-#endif
-
-static dispatch_queue_t url_session_manager_creation_queue() {
-    static dispatch_queue_t fw_url_session_manager_creation_queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        fw_url_session_manager_creation_queue = dispatch_queue_create("site.wuyong.networking.session.manager.creation", DISPATCH_QUEUE_SERIAL);
-    });
-
-    return fw_url_session_manager_creation_queue;
-}
-
-static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull block) {
-    if (block != NULL) {
-        if (NSFoundationVersionNumber < NSFoundationVersionNumber_With_Fixed_5871104061079552_bug) {
-            // Fix of bug
-            // Open Radar:http://openradar.appspot.com/radar?id=5871104061079552 (status: Fixed in iOS8)
-            // Issue about:https://github.com/AFNetworking/AFNetworking/issues/2093
-            dispatch_sync(url_session_manager_creation_queue(), block);
-        } else {
-            block();
-        }
-    }
-}
-
 static dispatch_queue_t url_session_manager_processing_queue() {
     static dispatch_queue_t fw_url_session_manager_processing_queue;
     static dispatch_once_t onceToken;
@@ -75,6 +46,7 @@ NSString * const FWNetworkingTaskDidResumeNotification = @"site.wuyong.networkin
 NSString * const FWNetworkingTaskDidCompleteNotification = @"site.wuyong.networking.task.complete";
 NSString * const FWNetworkingTaskDidSuspendNotification = @"site.wuyong.networking.task.suspend";
 NSString * const FWURLSessionDidInvalidateNotification = @"site.wuyong.networking.session.invalidate";
+NSString * const FWURLSessionDownloadTaskDidMoveFileSuccessfullyNotification = @"site.wuyong.networking.session.download.file-manager-succeed";
 NSString * const FWURLSessionDownloadTaskDidFailToMoveFileNotification = @"site.wuyong.networking.session.download.file-manager-error";
 
 NSString * const FWNetworkingTaskDidCompleteSerializedResponseKey = @"site.wuyong.networking.task.complete.serializedresponse";
@@ -86,32 +58,30 @@ NSString * const FWNetworkingTaskDidCompleteSessionTaskMetrics = @"site.wuyong.n
 
 static NSString * const FWURLSessionManagerLockName = @"site.wuyong.networking.session.manager.lock";
 
-static NSUInteger const AFMaximumNumberOfAttemptsToRecreateBackgroundSessionUploadTask = 3;
-
 typedef void (^FWURLSessionDidBecomeInvalidBlock)(NSURLSession *session, NSError *error);
 typedef NSURLSessionAuthChallengeDisposition (^FWURLSessionDidReceiveAuthenticationChallengeBlock)(NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential);
 
-typedef NSURLRequest * (^AFURLSessionTaskWillPerformHTTPRedirectionBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request);
-typedef NSURLSessionAuthChallengeDisposition (^AFURLSessionTaskDidReceiveAuthenticationChallengeBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential);
+typedef NSURLRequest * (^FWURLSessionTaskWillPerformHTTPRedirectionBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request);
+typedef NSURLSessionAuthChallengeDisposition (^FWURLSessionTaskDidReceiveAuthenticationChallengeBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential);
+typedef id (^FWURLSessionTaskAuthenticationChallengeBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, void (^completionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential));
 typedef void (^FWURLSessionDidFinishEventsForBackgroundURLSessionBlock)(NSURLSession *session);
 
-typedef NSInputStream * (^AFURLSessionTaskNeedNewBodyStreamBlock)(NSURLSession *session, NSURLSessionTask *task);
-typedef void (^AFURLSessionTaskDidSendBodyDataBlock)(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
-typedef void (^AFURLSessionTaskDidCompleteBlock)(NSURLSession *session, NSURLSessionTask *task, NSError *error);
-typedef void (^AFURLSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * metrics) NS_AVAILABLE_IOS(10_0);
+typedef NSInputStream * (^FWURLSessionTaskNeedNewBodyStreamBlock)(NSURLSession *session, NSURLSessionTask *task);
+typedef void (^FWURLSessionTaskDidSendBodyDataBlock)(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
+typedef void (^FWURLSessionTaskDidCompleteBlock)(NSURLSession *session, NSURLSessionTask *task, NSError *error);
+typedef void (^FWURLSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * metrics) NS_AVAILABLE_IOS(10_0);
 
-typedef NSURLSessionResponseDisposition (^AFURLSessionDataTaskDidReceiveResponseBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response);
-typedef void (^AFURLSessionDataTaskDidBecomeDownloadTaskBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask);
-typedef void (^AFURLSessionDataTaskDidReceiveDataBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data);
-typedef NSCachedURLResponse * (^AFURLSessionDataTaskWillCacheResponseBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSCachedURLResponse *proposedResponse);
+typedef NSURLSessionResponseDisposition (^FWURLSessionDataTaskDidReceiveResponseBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response);
+typedef void (^FWURLSessionDataTaskDidBecomeDownloadTaskBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask);
+typedef void (^FWURLSessionDataTaskDidReceiveDataBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data);
+typedef NSCachedURLResponse * (^FWURLSessionDataTaskWillCacheResponseBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSCachedURLResponse *proposedResponse);
 
-typedef NSURL * (^AFURLSessionDownloadTaskDidFinishDownloadingBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location);
-typedef void (^AFURLSessionDownloadTaskDidWriteDataBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
-typedef void (^AFURLSessionDownloadTaskDidResumeBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t fileOffset, int64_t expectedTotalBytes);
+typedef NSURL * (^FWURLSessionDownloadTaskDidFinishDownloadingBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location);
+typedef void (^FWURLSessionDownloadTaskDidWriteDataBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
+typedef void (^FWURLSessionDownloadTaskDidResumeBlock)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t fileOffset, int64_t expectedTotalBytes);
 typedef void (^FWURLSessionTaskProgressBlock)(NSProgress *);
 
-typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id responseObject, NSError *error);
-
+typedef void (^FWURLSessionTaskCompletionHandler)(NSURLResponse *response, id responseObject, NSError *error);
 
 #pragma mark -
 
@@ -123,10 +93,10 @@ typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
 @property (nonatomic, strong) NSProgress *downloadProgress;
 @property (nonatomic, copy) NSURL *downloadFileURL;
 @property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics NS_AVAILABLE_IOS(10_0);
-@property (nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
+@property (nonatomic, copy) FWURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
 @property (nonatomic, copy) FWURLSessionTaskProgressBlock uploadProgressBlock;
 @property (nonatomic, copy) FWURLSessionTaskProgressBlock downloadProgressBlock;
-@property (nonatomic, copy) AFURLSessionTaskCompletionHandler completionHandler;
+@property (nonatomic, copy) FWURLSessionTaskCompletionHandler completionHandler;
 @end
 
 @implementation FWURLSessionManagerTaskDelegate
@@ -153,7 +123,7 @@ typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
         progress.pausingHandler = ^{
             [weakTask suspend];
         };
-        if (@available(iOS 9, macOS 10.11, *))
+        if ([progress respondsToSelector:@selector(setResumingHandler:)])
         {
             progress.resumingHandler = ^{
                 [weakTask resume];
@@ -188,17 +158,35 @@ typedef void (^AFURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
     }
 }
 
+static const void * const AuthenticationChallengeErrorKey = &AuthenticationChallengeErrorKey;
+
+static NSError * ServerTrustError(SecTrustRef serverTrust, NSURL *url)
+{
+    NSBundle *CFNetworkBundle = [NSBundle bundleWithIdentifier:@"com.apple.CFNetwork"];
+    NSString *defaultValue = @"The certificate for this server is invalid. You might be connecting to a server that is pretending to be “%@” which could put your confidential information at risk.";
+    NSString *descriptionFormat = NSLocalizedStringWithDefaultValue(@"Err-1202.w", nil, CFNetworkBundle, defaultValue, @"") ?: defaultValue;
+    NSString *localizedDescription = [descriptionFormat componentsSeparatedByString:@"%@"].count <= 2 ? [NSString localizedStringWithFormat:descriptionFormat, url.host] : descriptionFormat;
+    NSDictionary *userInfo = @{
+        NSURLErrorFailingURLErrorKey: url,
+        NSURLErrorFailingURLStringErrorKey: url.absoluteString,
+        NSURLErrorFailingURLPeerTrustErrorKey: (__bridge id)serverTrust,
+        NSLocalizedDescriptionKey: localizedDescription
+    };
+    return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorServerCertificateUntrusted userInfo:userInfo];
+}
+
 #pragma mark - NSURLSessionTaskDelegate
 
 - (void)URLSession:(__unused NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error
 {
+    error = objc_getAssociatedObject(task, AuthenticationChallengeErrorKey) ?: error;
     __strong FWURLSessionManager *manager = self.manager;
 
     __block id responseObject = nil;
 
-    __block NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     userInfo[FWNetworkingTaskDidCompleteResponseSerializerKey] = manager.responseSerializer;
 
     //Performance Improvement from #2672
@@ -322,6 +310,8 @@ didFinishDownloadingToURL:(NSURL *)location
 
             if (![[NSFileManager defaultManager] moveItemAtURL:location toURL:self.downloadFileURL error:&fileManagerError]) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:FWURLSessionDownloadTaskDidFailToMoveFileNotification object:downloadTask userInfo:fileManagerError.userInfo];
+            } else {
+                [[NSNotificationCenter defaultCenter] postNotificationName:FWURLSessionDownloadTaskDidMoveFileSuccessfullyNotification object:downloadTask userInfo:nil];
             }
         }
     }
@@ -350,14 +340,14 @@ static inline BOOL fw_addMethod(Class theClass, SEL selector, Method method) {
     return class_addMethod(theClass, selector,  method_getImplementation(method),  method_getTypeEncoding(method));
 }
 
-static NSString * const AFNSURLSessionTaskDidResumeNotification  = @"site.wuyong.networking.nsurlsessiontask.resume";
-static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong.networking.nsurlsessiontask.suspend";
+static NSString * const FWNSURLSessionTaskDidResumeNotification  = @"site.wuyong.networking.nsurlsessiontask.resume";
+static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong.networking.nsurlsessiontask.suspend";
 
-@interface _AFURLSessionTaskSwizzling : NSObject
+@interface _FWURLSessionTaskSwizzling : NSObject
 
 @end
 
-@implementation _AFURLSessionTaskSwizzling
+@implementation _FWURLSessionTaskSwizzling
 
 + (void)load {
     /**
@@ -398,7 +388,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 #pragma GCC diagnostic ignored "-Wnonnull"
         NSURLSessionDataTask *localDataTask = [session dataTaskWithURL:nil];
 #pragma clang diagnostic pop
-        IMP originalAFResumeIMP = method_getImplementation(class_getInstanceMethod([self class], @selector(fw_resume)));
+        IMP originalFWResumeIMP = method_getImplementation(class_getInstanceMethod([self class], @selector(fw_resume)));
         Class currentClass = [localDataTask class];
         
         while (class_getInstanceMethod(currentClass, @selector(resume))) {
@@ -406,7 +396,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
             IMP classResumeIMP = method_getImplementation(class_getInstanceMethod(currentClass, @selector(resume)));
             IMP superclassResumeIMP = method_getImplementation(class_getInstanceMethod(superClass, @selector(resume)));
             if (classResumeIMP != superclassResumeIMP &&
-                originalAFResumeIMP != classResumeIMP) {
+                originalFWResumeIMP != classResumeIMP) {
                 [self swizzleResumeAndSuspendMethodForClass:currentClass];
             }
             currentClass = [currentClass superclass];
@@ -441,7 +431,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     [self fw_resume];
     
     if (state != NSURLSessionTaskStateRunning) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:AFNSURLSessionTaskDidResumeNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWNSURLSessionTaskDidResumeNotification object:self];
     }
 }
 
@@ -451,7 +441,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     [self fw_suspend];
     
     if (state != NSURLSessionTaskStateSuspended) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:AFNSURLSessionTaskDidSuspendNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWNSURLSessionTaskDidSuspendNotification object:self];
     }
 }
 @end
@@ -468,19 +458,19 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 @property (readwrite, nonatomic, copy) FWURLSessionDidBecomeInvalidBlock sessionDidBecomeInvalid;
 @property (readwrite, nonatomic, copy) FWURLSessionDidReceiveAuthenticationChallengeBlock sessionDidReceiveAuthenticationChallenge;
 @property (readwrite, nonatomic, copy) FWURLSessionDidFinishEventsForBackgroundURLSessionBlock didFinishEventsForBackgroundURLSession;
-@property (readwrite, nonatomic, copy) AFURLSessionTaskWillPerformHTTPRedirectionBlock taskWillPerformHTTPRedirection;
-@property (readwrite, nonatomic, copy) AFURLSessionTaskDidReceiveAuthenticationChallengeBlock taskDidReceiveAuthenticationChallenge;
-@property (readwrite, nonatomic, copy) AFURLSessionTaskNeedNewBodyStreamBlock taskNeedNewBodyStream;
-@property (readwrite, nonatomic, copy) AFURLSessionTaskDidSendBodyDataBlock taskDidSendBodyData;
-@property (readwrite, nonatomic, copy) AFURLSessionTaskDidCompleteBlock taskDidComplete;
-@property (readwrite, nonatomic, copy) AFURLSessionTaskDidFinishCollectingMetricsBlock taskDidFinishCollectingMetrics NS_AVAILABLE_IOS(10_0);
-@property (readwrite, nonatomic, copy) AFURLSessionDataTaskDidReceiveResponseBlock dataTaskDidReceiveResponse;
-@property (readwrite, nonatomic, copy) AFURLSessionDataTaskDidBecomeDownloadTaskBlock dataTaskDidBecomeDownloadTask;
-@property (readwrite, nonatomic, copy) AFURLSessionDataTaskDidReceiveDataBlock dataTaskDidReceiveData;
-@property (readwrite, nonatomic, copy) AFURLSessionDataTaskWillCacheResponseBlock dataTaskWillCacheResponse;
-@property (readwrite, nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
-@property (readwrite, nonatomic, copy) AFURLSessionDownloadTaskDidWriteDataBlock downloadTaskDidWriteData;
-@property (readwrite, nonatomic, copy) AFURLSessionDownloadTaskDidResumeBlock downloadTaskDidResume;
+@property (readwrite, nonatomic, copy) FWURLSessionTaskWillPerformHTTPRedirectionBlock taskWillPerformHTTPRedirection;
+@property (readwrite, nonatomic, copy) FWURLSessionTaskAuthenticationChallengeBlock authenticationChallengeHandler;
+@property (readwrite, nonatomic, copy) FWURLSessionTaskNeedNewBodyStreamBlock taskNeedNewBodyStream;
+@property (readwrite, nonatomic, copy) FWURLSessionTaskDidSendBodyDataBlock taskDidSendBodyData;
+@property (readwrite, nonatomic, copy) FWURLSessionTaskDidCompleteBlock taskDidComplete;
+@property (readwrite, nonatomic, copy) FWURLSessionTaskDidFinishCollectingMetricsBlock taskDidFinishCollectingMetrics NS_AVAILABLE_IOS(10_0);
+@property (readwrite, nonatomic, copy) FWURLSessionDataTaskDidReceiveResponseBlock dataTaskDidReceiveResponse;
+@property (readwrite, nonatomic, copy) FWURLSessionDataTaskDidBecomeDownloadTaskBlock dataTaskDidBecomeDownloadTask;
+@property (readwrite, nonatomic, copy) FWURLSessionDataTaskDidReceiveDataBlock dataTaskDidReceiveData;
+@property (readwrite, nonatomic, copy) FWURLSessionDataTaskWillCacheResponseBlock dataTaskWillCacheResponse;
+@property (readwrite, nonatomic, copy) FWURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
+@property (readwrite, nonatomic, copy) FWURLSessionDownloadTaskDidWriteDataBlock downloadTaskDidWriteData;
+@property (readwrite, nonatomic, copy) FWURLSessionDownloadTaskDidResumeBlock downloadTaskDidResume;
 @end
 
 @implementation FWURLSessionManager
@@ -727,13 +717,13 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 
 #pragma mark -
 - (void)addNotificationObserverForTask:(NSURLSessionTask *)task {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskDidResume:) name:AFNSURLSessionTaskDidResumeNotification object:task];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskDidSuspend:) name:AFNSURLSessionTaskDidSuspendNotification object:task];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskDidResume:) name:FWNSURLSessionTaskDidResumeNotification object:task];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskDidSuspend:) name:FWNSURLSessionTaskDidSuspendNotification object:task];
 }
 
 - (void)removeNotificationObserverForTask:(NSURLSessionTask *)task {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNSURLSessionTaskDidSuspendNotification object:task];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNSURLSessionTaskDidResumeNotification object:task];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:FWNSURLSessionTaskDidSuspendNotification object:task];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:FWNSURLSessionTaskDidResumeNotification object:task];
 }
 
 #pragma mark -
@@ -743,10 +733,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                              downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
                             completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler {
 
-    __block NSURLSessionDataTask *dataTask = nil;
-    url_session_manager_create_task_safely(^{
-        dataTask = [self.session dataTaskWithRequest:request];
-    });
+    NSURLSessionDataTask *dataTask = [self.session dataTaskWithRequest:request];
 
     [self addDelegateForDataTask:dataTask uploadProgress:uploadProgressBlock downloadProgress:downloadProgressBlock completionHandler:completionHandler];
 
@@ -760,17 +747,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                          progress:(void (^)(NSProgress *uploadProgress)) uploadProgressBlock
                                 completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
 {
-    __block NSURLSessionUploadTask *uploadTask = nil;
-    url_session_manager_create_task_safely(^{
-        uploadTask = [self.session uploadTaskWithRequest:request fromFile:fileURL];
-        
-        // uploadTask may be nil on iOS7 because uploadTaskWithRequest:fromFile: may return nil despite being documented as nonnull (https://devforums.apple.com/message/926113#926113)
-        if (!uploadTask && self.attemptsToRecreateUploadTasksForBackgroundSessions && self.session.configuration.identifier) {
-            for (NSUInteger attempts = 0; !uploadTask && attempts < AFMaximumNumberOfAttemptsToRecreateBackgroundSessionUploadTask; attempts++) {
-                uploadTask = [self.session uploadTaskWithRequest:request fromFile:fileURL];
-            }
-        }
-    });
+    NSURLSessionUploadTask *uploadTask = [self.session uploadTaskWithRequest:request fromFile:fileURL];
     
     if (uploadTask) {
         [self addDelegateForUploadTask:uploadTask
@@ -786,11 +763,8 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                          progress:(void (^)(NSProgress *uploadProgress)) uploadProgressBlock
                                 completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
 {
-    __block NSURLSessionUploadTask *uploadTask = nil;
-    url_session_manager_create_task_safely(^{
-        uploadTask = [self.session uploadTaskWithRequest:request fromData:bodyData];
-    });
-
+    NSURLSessionUploadTask *uploadTask = [self.session uploadTaskWithRequest:request fromData:bodyData];
+    
     [self addDelegateForUploadTask:uploadTask progress:uploadProgressBlock completionHandler:completionHandler];
 
     return uploadTask;
@@ -800,10 +774,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                                  progress:(void (^)(NSProgress *uploadProgress)) uploadProgressBlock
                                         completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
 {
-    __block NSURLSessionUploadTask *uploadTask = nil;
-    url_session_manager_create_task_safely(^{
-        uploadTask = [self.session uploadTaskWithStreamedRequest:request];
-    });
+    NSURLSessionUploadTask *uploadTask = [self.session uploadTaskWithStreamedRequest:request];
 
     [self addDelegateForUploadTask:uploadTask progress:uploadProgressBlock completionHandler:completionHandler];
 
@@ -817,11 +788,8 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                           destination:(NSURL * (^)(NSURL *targetPath, NSURLResponse *response))destination
                                     completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler
 {
-    __block NSURLSessionDownloadTask *downloadTask = nil;
-    url_session_manager_create_task_safely(^{
-        downloadTask = [self.session downloadTaskWithRequest:request];
-    });
-
+    NSURLSessionDownloadTask *downloadTask = [self.session downloadTaskWithRequest:request];
+    
     [self addDelegateForDownloadTask:downloadTask progress:downloadProgressBlock destination:destination completionHandler:completionHandler];
 
     return downloadTask;
@@ -832,10 +800,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                              destination:(NSURL * (^)(NSURL *targetPath, NSURLResponse *response))destination
                                        completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler
 {
-    __block NSURLSessionDownloadTask *downloadTask = nil;
-    url_session_manager_create_task_safely(^{
-        downloadTask = [self.session downloadTaskWithResumeData:resumeData];
-    });
+    NSURLSessionDownloadTask *downloadTask = [self.session downloadTaskWithResumeData:resumeData];
 
     [self addDelegateForDownloadTask:downloadTask progress:downloadProgressBlock destination:destination completionHandler:completionHandler];
 
@@ -875,10 +840,6 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     self.taskWillPerformHTTPRedirection = block;
 }
 
-- (void)setTaskDidReceiveAuthenticationChallengeBlock:(NSURLSessionAuthChallengeDisposition (^)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential))block {
-    self.taskDidReceiveAuthenticationChallenge = block;
-}
-
 - (void)setTaskDidSendBodyDataBlock:(void (^)(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend))block {
     self.taskDidSendBodyData = block;
 }
@@ -887,7 +848,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     self.taskDidComplete = block;
 }
 
-- (void)setTaskDidFinishCollectingMetricsBlock:(void (^)(NSURLSession * _Nonnull, NSURLSessionTask * _Nonnull, NSURLSessionTaskMetrics * _Nullable))block {
+- (void)setTaskDidFinishCollectingMetricsBlock:(void (^)(NSURLSession * _Nonnull, NSURLSessionTask * _Nonnull, NSURLSessionTaskMetrics * _Nullable))block NS_AVAILABLE_IOS(10_0) {
     self.taskDidFinishCollectingMetrics = block;
 }
 
@@ -930,7 +891,9 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 }
 
 - (BOOL)respondsToSelector:(SEL)selector {
-    if (selector == @selector(URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:)) {
+    if (selector == @selector(URLSession:didReceiveChallenge:completionHandler:)) {
+        return self.sessionDidReceiveAuthenticationChallenge != nil;
+    } else if (selector == @selector(URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:)) {
         return self.taskWillPerformHTTPRedirection != nil;
     } else if (selector == @selector(URLSession:dataTask:didReceiveResponse:completionHandler:)) {
         return self.dataTaskDidReceiveResponse != nil;
@@ -959,27 +922,10 @@ didBecomeInvalidWithError:(NSError *)error
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
 {
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    __block NSURLCredential *credential = nil;
+    NSAssert(self.sessionDidReceiveAuthenticationChallenge != nil, @"`respondsToSelector:` implementation forces `URLSession:didReceiveChallenge:completionHandler:` to be called only if `self.sessionDidReceiveAuthenticationChallenge` is not nil");
 
-    if (self.sessionDidReceiveAuthenticationChallenge) {
-        disposition = self.sessionDidReceiveAuthenticationChallenge(session, challenge, &credential);
-    } else {
-        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-            if ([self.securityPolicy evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:challenge.protectionSpace.host]) {
-                credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-                if (credential) {
-                    disposition = NSURLSessionAuthChallengeUseCredential;
-                } else {
-                    disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-                }
-            } else {
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
-            }
-        } else {
-            disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-        }
-    }
+    NSURLCredential *credential = nil;
+    NSURLSessionAuthChallengeDisposition disposition = self.sessionDidReceiveAuthenticationChallenge(session, challenge, &credential);
 
     if (completionHandler) {
         completionHandler(disposition, credential);
@@ -1010,21 +956,38 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
 {
+    BOOL evaluateServerTrust = NO;
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    __block NSURLCredential *credential = nil;
+    NSURLCredential *credential = nil;
 
-    if (self.taskDidReceiveAuthenticationChallenge) {
-        disposition = self.taskDidReceiveAuthenticationChallenge(session, task, challenge, &credential);
-    } else {
-        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-            if ([self.securityPolicy evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:challenge.protectionSpace.host]) {
-                disposition = NSURLSessionAuthChallengeUseCredential;
-                credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-            } else {
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
-            }
+    if (self.authenticationChallengeHandler) {
+        id result = self.authenticationChallengeHandler(session, task, challenge, completionHandler);
+        if (result == nil) {
+            return;
+        } else if ([result isKindOfClass:NSError.class]) {
+            objc_setAssociatedObject(task, AuthenticationChallengeErrorKey, result, OBJC_ASSOCIATION_RETAIN);
+            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+        } else if ([result isKindOfClass:NSURLCredential.class]) {
+            credential = result;
+            disposition = NSURLSessionAuthChallengeUseCredential;
+        } else if ([result isKindOfClass:NSNumber.class]) {
+            disposition = [result integerValue];
+            NSAssert(disposition == NSURLSessionAuthChallengePerformDefaultHandling || disposition == NSURLSessionAuthChallengeCancelAuthenticationChallenge || disposition == NSURLSessionAuthChallengeRejectProtectionSpace, @"");
+            evaluateServerTrust = disposition == NSURLSessionAuthChallengePerformDefaultHandling && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
         } else {
-            disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+            @throw [NSException exceptionWithName:@"Invalid Return Value" reason:@"The return value from the authentication challenge handler must be nil, an NSError, an NSURLCredential or an NSNumber." userInfo:nil];
+        }
+    } else {
+        evaluateServerTrust = YES;
+    }
+
+    if (evaluateServerTrust) {
+        if ([self.securityPolicy evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:challenge.protectionSpace.host]) {
+            disposition = NSURLSessionAuthChallengeUseCredential;
+            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        } else {
+            objc_setAssociatedObject(task, AuthenticationChallengeErrorKey, ServerTrustError(challenge.protectionSpace.serverTrust, task.currentRequest.URL), OBJC_ASSOCIATION_RETAIN);
+            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
         }
     }
 
@@ -1194,6 +1157,8 @@ didFinishDownloadingToURL:(NSURL *)location
             
             if (![[NSFileManager defaultManager] moveItemAtURL:location toURL:fileURL error:&error]) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:FWURLSessionDownloadTaskDidFailToMoveFileNotification object:downloadTask userInfo:error.userInfo];
+            } else {
+                [[NSNotificationCenter defaultCenter] postNotificationName:FWURLSessionDownloadTaskDidMoveFileSuccessfullyNotification object:downloadTask userInfo:nil];
             }
 
             return;
