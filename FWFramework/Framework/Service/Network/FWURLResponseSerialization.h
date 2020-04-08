@@ -63,11 +63,6 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 - (instancetype)init;
 
 /**
- The string encoding is never used. FWHTTPResponseSerializer only validates status codes and content types but does not try to decode the received data in any way.
- */
-@property (nonatomic, assign) NSStringEncoding stringEncoding;
-
-/**
  Creates and returns a serializer with default configuration.
  */
 + (instancetype)serializer;
