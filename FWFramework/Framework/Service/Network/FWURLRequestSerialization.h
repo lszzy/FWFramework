@@ -437,7 +437,7 @@ forHTTPHeaderField:(NSString *)field;
  ### Constants
 
  `FWURLRequestSerializationErrorDomain`
- AFURLRequestSerializer errors. Error codes for `FWURLRequestSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ FWURLRequestSerializer errors. Error codes for `FWURLRequestSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
 FOUNDATION_EXPORT NSString * const FWURLRequestSerializationErrorDomain;
 
