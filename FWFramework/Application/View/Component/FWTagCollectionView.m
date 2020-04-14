@@ -54,6 +54,7 @@
     _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     _scrollView.backgroundColor = [UIColor clearColor];
     _scrollView.userInteractionEnabled = YES;
+    _scrollView.scrollsToTop = NO;
     [self addSubview:_scrollView];
     
     _containerView = [[UIView alloc] initWithFrame:_scrollView.bounds];
