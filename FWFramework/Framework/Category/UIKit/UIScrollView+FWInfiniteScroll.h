@@ -52,6 +52,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 - (void)fwTriggerInfiniteScroll;
 
 @property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fwInfiniteScrollView;
+@property (nonatomic, assign) CGFloat fwInfiniteScrollHeight;
 @property (nonatomic, assign) BOOL fwShowInfiniteScroll;
 
 @end
