@@ -153,8 +153,6 @@
     } else if ([vc isKindOfClass:[UIViewController class]]) {
         ((UIViewController *)vc).title = [rowData objectAtIndex:0];
     }
-    UIViewController *vc = [[vcClass alloc] init];
-    vc.title = [rowData objectAtIndex:0];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
