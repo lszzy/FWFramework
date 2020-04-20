@@ -286,9 +286,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
-        
-        CGFloat yOrigin = -FWPullRefreshViewHeight;
-        self.frame = CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight);
+        self.frame = CGRectMake(0, -self.scrollView.fwPullRefreshHeight, self.bounds.size.width, self.scrollView.fwPullRefreshHeight);
     }
     else if([keyPath isEqualToString:@"frame"])
         [self layoutSubviews];
@@ -297,7 +295,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != FWPullRefreshStateLoading) {
         if(self.progressBlock) {
-            CGFloat progress = 1.f - (FWPullRefreshViewHeight + contentOffset.y) / FWPullRefreshViewHeight;
+            CGFloat progress = 1.f - (self.scrollView.fwPullRefreshHeight + contentOffset.y) / self.scrollView.fwPullRefreshHeight;
             self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         }
         
@@ -310,7 +308,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
         } else if(contentOffset.y >= scrollOffsetThreshold && self.state != FWPullRefreshStateStopped)
             self.state = FWPullRefreshStateStopped;
         else if(contentOffset.y >= scrollOffsetThreshold && self.state == FWPullRefreshStateStopped)
-            self.pullingPercent = MAX(MIN(1.f - (FWPullRefreshViewHeight + contentOffset.y) / FWPullRefreshViewHeight, 1.f), 0.f);
+            self.pullingPercent = MAX(MIN(1.f - (self.scrollView.fwPullRefreshHeight + contentOffset.y) / self.scrollView.fwPullRefreshHeight, 1.f), 0.f);
     } else {
         UIEdgeInsets currentInset = self.scrollView.contentInset;
         currentInset.top = self.originalTopInset + self.bounds.size.height;
@@ -534,8 +532,7 @@ static char UIScrollViewFWPullRefreshView;
 - (void)fwAddPullRefreshWithBlock:(void (^)(void))block target:(id)target action:(SEL)action {
     [self.fwPullRefreshView removeFromSuperview];
     
-    CGFloat yOrigin = -FWPullRefreshViewHeight;
-    FWPullRefreshView *view = [[FWPullRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight)];
+    FWPullRefreshView *view = [[FWPullRefreshView alloc] initWithFrame:CGRectMake(0, -self.fwPullRefreshHeight, self.bounds.size.width, self.fwPullRefreshHeight)];
     view.pullRefreshBlock = block;
     view.target = target;
     view.action = action;
@@ -567,6 +564,19 @@ static char UIScrollViewFWPullRefreshView;
     return objc_getAssociatedObject(self, &UIScrollViewFWPullRefreshView);
 }
 
+- (void)setFwPullRefreshHeight:(CGFloat)fwPullRefreshHeight {
+    objc_setAssociatedObject(self, @selector(fwPullRefreshHeight), @(fwPullRefreshHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)fwPullRefreshHeight {
+#if CGFLOAT_IS_DOUBLE
+    CGFloat height = [objc_getAssociatedObject(self, @selector(fwPullRefreshHeight)) doubleValue];
+#else
+    CGFloat height = [objc_getAssociatedObject(self, @selector(fwPullRefreshHeight)) floatValue];
+#endif
+    return height > 0 ? height : FWPullRefreshViewHeight;
+}
+
 - (void)setFwShowPullRefresh:(BOOL)fwShowPullRefresh {
     if(!self.fwPullRefreshView)return;
     
@@ -587,10 +597,9 @@ static char UIScrollViewFWPullRefreshView;
             [self addObserver:self.fwPullRefreshView forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
             self.fwPullRefreshView.isObserving = YES;
             
-            CGFloat yOrigin = -FWPullRefreshViewHeight;
             [self.fwPullRefreshView setNeedsLayout];
             [self.fwPullRefreshView layoutIfNeeded];
-            self.fwPullRefreshView.frame = CGRectMake(0, yOrigin, self.bounds.size.width, FWPullRefreshViewHeight);
+            self.fwPullRefreshView.frame = CGRectMake(0, -self.fwPullRefreshHeight, self.bounds.size.width, self.fwPullRefreshHeight);
         }
     }
 }
