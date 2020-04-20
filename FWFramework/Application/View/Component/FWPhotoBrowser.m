@@ -9,7 +9,7 @@
 
 #import "FWPhotoBrowser.h"
 #import "UIImageView+FWNetwork.h"
-#import "FWImage.h"
+#import "FWAnimatedImage.h"
 #import "FWPlugin.h"
 #import "FWProgressView.h"
 
@@ -399,7 +399,7 @@
     self.maximumZoomScale = 2;
     
     // 添加 imageView
-    Class imageClass = [UIImageView class];
+    Class imageClass = [FWAnimatedImageView class];
     id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
         imageClass = [imagePlugin fwImageViewAnimatedClass];
@@ -546,7 +546,7 @@
         }
     } else {
         // FWImage
-        UIImage *image = [UIImage fwImageMake:urlString];
+        UIImage *image = [FWAnimatedImage imageNamed:urlString];
         if (image) {
             // FWImage
             self.imageView.image = image;

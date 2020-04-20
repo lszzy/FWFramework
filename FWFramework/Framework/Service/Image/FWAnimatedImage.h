@@ -10,6 +10,9 @@
 #import <UIKit/UIKit.h>
 #import "FWImageCoder.h"
 #import "FWAnimatedImageView.h"
+#import "UIImageView+FWNetwork.h"
+#import "FWImageDownloader.h"
+#import "FWAutoPurgingImageCache.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
