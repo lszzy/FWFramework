@@ -147,8 +147,8 @@
     id vc = [rowData objectAtIndex:1];
     if ([vc isKindOfClass:[NSString class]]) {
         Class vcClass = NSClassFromString(vc);
-        UIViewController *vc = [[vcClass alloc] init];
-        vc.title = [rowData objectAtIndex:0];
+        vc = [[vcClass alloc] init];
+        ((UIViewController *)vc).title = [rowData objectAtIndex:0];
     } else if ([vc isKindOfClass:[UIViewController class]]) {
         ((UIViewController *)vc).title = [rowData objectAtIndex:0];
     }

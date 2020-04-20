@@ -58,6 +58,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 - (void)fwTriggerPullRefresh;
 
 @property (nullable, nonatomic, strong, readonly) FWPullRefreshView *fwPullRefreshView;
+@property (nonatomic, assign) CGFloat fwPullRefreshHeight;
 @property (nonatomic, assign) BOOL fwShowPullRefresh;
 
 @end

@@ -89,7 +89,9 @@
 
 - (void)renderView
 {
+    self.tableView.fwPullRefreshHeight = FWPullRefreshView.height + UIScreen.fwSafeAreaInsets.top;
     [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    self.tableView.fwInfiniteScrollHeight = FWInfiniteScrollView.height + UIScreen.fwSafeAreaInsets.bottom;
     [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
     
     self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableReloadCell class] cellHeight:100];
