@@ -145,9 +145,13 @@
     NSArray *sectionList = [sectionData objectAtIndex:1];
     NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
     
-    Class vcClass = [rowData objectAtIndex:1];
-    if ([vcClass isKindOfClass:[NSString class]]) {
-        vcClass = NSClassFromString((NSString *)vcClass);
+    id vc = [rowData objectAtIndex:1];
+    if ([vc isKindOfClass:[NSString class]]) {
+        Class vcClass = NSClassFromString(vc);
+        vc = [[vcClass alloc] init];
+        ((UIViewController *)vc).title = [rowData objectAtIndex:0];
+    } else if ([vc isKindOfClass:[UIViewController class]]) {
+        ((UIViewController *)vc).title = [rowData objectAtIndex:0];
     }
     UIViewController *vc = [[vcClass alloc] init];
     vc.title = [rowData objectAtIndex:0];

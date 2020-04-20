@@ -100,7 +100,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 - (void)setScrollViewContentInsetForInfiniteScrolling {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
-    currentInsets.bottom = self.originalBottomInset + FWInfiniteScrollViewHeight;
+    currentInsets.bottom = self.originalBottomInset + self.scrollView.fwInfiniteScrollHeight;
     [self setScrollViewContentInset:currentInsets];
 }
 
@@ -126,7 +126,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
-        self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.bounds.size.width, FWInfiniteScrollViewHeight);
+        self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.bounds.size.width, self.scrollView.fwInfiniteScrollHeight);
     }
 }
 
@@ -134,7 +134,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if(self.state != FWInfiniteScrollStateLoading && self.enabled) {
         if(self.progressBlock) {
             CGFloat scrollHeight = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
-            CGFloat progress = (FWInfiniteScrollViewHeight + contentOffset.y - scrollHeight) / FWInfiniteScrollViewHeight;
+            CGFloat progress = (self.scrollView.fwInfiniteScrollHeight + contentOffset.y - scrollHeight) / self.scrollView.fwInfiniteScrollHeight;
             self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         }
         
@@ -306,7 +306,7 @@ static char UIScrollViewFWInfiniteScrollView;
 - (void)fwAddInfiniteScrollWithBlock:(void (^)(void))block target:(id)target action:(SEL)action {
     [self.fwInfiniteScrollView removeFromSuperview];
     
-    FWInfiniteScrollView *view = [[FWInfiniteScrollView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.bounds.size.width, FWInfiniteScrollViewHeight)];
+    FWInfiniteScrollView *view = [[FWInfiniteScrollView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.bounds.size.width, self.fwInfiniteScrollHeight)];
     view.infiniteScrollBlock = block;
     view.target = target;
     view.action = action;
@@ -338,6 +338,19 @@ static char UIScrollViewFWInfiniteScrollView;
     return objc_getAssociatedObject(self, &UIScrollViewFWInfiniteScrollView);
 }
 
+- (void)setFwInfiniteScrollHeight:(CGFloat)fwInfiniteScrollHeight {
+    objc_setAssociatedObject(self, @selector(fwInfiniteScrollHeight), @(fwInfiniteScrollHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)fwInfiniteScrollHeight {
+#if CGFLOAT_IS_DOUBLE
+    CGFloat height = [objc_getAssociatedObject(self, @selector(fwInfiniteScrollHeight)) doubleValue];
+#else
+    CGFloat height = [objc_getAssociatedObject(self, @selector(fwInfiniteScrollHeight)) floatValue];
+#endif
+    return height > 0 ? height : FWInfiniteScrollViewHeight;
+}
+
 - (void)setFwShowInfiniteScroll:(BOOL)fwShowInfiniteScroll {
     if(!self.fwInfiniteScrollView)return;
     
@@ -361,7 +374,7 @@ static char UIScrollViewFWInfiniteScrollView;
             
             [self.fwInfiniteScrollView setNeedsLayout];
             [self.fwInfiniteScrollView layoutIfNeeded];
-            self.fwInfiniteScrollView.frame = CGRectMake(0, self.contentSize.height, self.fwInfiniteScrollView.bounds.size.width, FWInfiniteScrollViewHeight);
+            self.fwInfiniteScrollView.frame = CGRectMake(0, self.contentSize.height, self.fwInfiniteScrollView.bounds.size.width, self.fwInfiniteScrollHeight);
         }
     }
 }
