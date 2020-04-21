@@ -7,7 +7,7 @@
  @updated    2018-09-17
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "NSBundle+FWLanguage.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,10 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @interface NSBundle (FWFramework)
 
-// 读取主bundle本地化字符串
+// 指定名称读取并创建bundle对象，bundle文件需位于mainBundle
++ (nullable instancetype)fwBundleWithName:(NSString *)name;
+
+// 读取本地化字符串，strings文件需位于mainBundle
 + (NSString *)fwLocalizedString:(NSString *)key;
 
-// 读取主bundle本地化字符串，指定table
+// 读取本地化字符串，指定table，strings文件需位于mainBundle
 + (NSString *)fwLocalizedString:(NSString *)key table:(nullable NSString *)table;
 
 @end

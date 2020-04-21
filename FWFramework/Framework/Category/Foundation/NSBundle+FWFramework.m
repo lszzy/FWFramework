@@ -11,6 +11,12 @@
 
 @implementation NSBundle (FWFramework)
 
++ (instancetype)fwBundleWithName:(NSString *)name
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:([name hasSuffix:@".bundle"] ? nil : @"bundle")];
+    return path ? [NSBundle bundleWithPath:path] : nil;
+}
+
 + (NSString *)fwLocalizedString:(NSString *)key
 {
     return [self fwLocalizedString:key table:nil];
@@ -20,5 +26,7 @@
 {
     return [[NSBundle mainBundle] localizedStringForKey:key value:nil table:table];
 }
+
+
 
 @end
