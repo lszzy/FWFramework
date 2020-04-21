@@ -119,27 +119,27 @@
 
 #pragma mark - Alert
 
-- (UIAlertController *)fwShowAlertWithTitle:(NSString *)title
-                                    message:(NSString *)message
-                                     cancel:(NSString *)cancel
-                                cancelBlock:(void (^)(void))cancelBlock
+- (void)fwShowAlertWithTitle:(NSString *)title
+                     message:(NSString *)message
+                      cancel:(NSString *)cancel
+                 cancelBlock:(void (^)(void))cancelBlock
 {
-    return [self fwShowAlertWithTitle:title
-                              message:message
-                               cancel:cancel
-                              actions:nil
-                          actionBlock:nil
-                          cancelBlock:cancelBlock
-                             priority:FWAlertPriorityNormal];
+    [self fwShowAlertWithTitle:title
+                       message:message
+                        cancel:cancel
+                       actions:nil
+                   actionBlock:nil
+                   cancelBlock:cancelBlock
+                      priority:FWAlertPriorityNormal];
 }
 
-- (UIAlertController *)fwShowAlertWithTitle:(NSString *)title
-                                    message:(NSString *)message
-                                     cancel:(NSString *)cancel
-                                    actions:(NSArray<NSString *> *)actions
-                                actionBlock:(void (^)(NSInteger))actionBlock
-                                cancelBlock:(void (^)(void))cancelBlock
-                                   priority:(FWAlertPriority)priority
+- (void)fwShowAlertWithTitle:(NSString *)title
+                     message:(NSString *)message
+                      cancel:(NSString *)cancel
+                     actions:(NSArray<NSString *> *)actions
+                 actionBlock:(void (^)(NSInteger))actionBlock
+                 cancelBlock:(void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority
 {
     // 初始化Alert
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
@@ -185,69 +185,68 @@
     // 显示Alert
     alertController.priority = priority;
     [alertController presentInViewController:self];
-    return alertController;
 }
 
-- (UIAlertController *)fwShowConfirmWithTitle:(NSString *)title
-                                      message:(NSString *)message
-                                       cancel:(NSString *)cancel
-                                      confirm:(NSString *)confirm
-                                 confirmBlock:(void (^)(void))confirmBlock
+- (void)fwShowConfirmWithTitle:(NSString *)title
+                       message:(NSString *)message
+                        cancel:(NSString *)cancel
+                       confirm:(NSString *)confirm
+                  confirmBlock:(void (^)(void))confirmBlock
 {
-    return [self fwShowConfirmWithTitle:title
-                                message:message
-                                 cancel:cancel
-                                confirm:confirm
-                           confirmBlock:confirmBlock
-                            cancelBlock:nil
-                               priority:FWAlertPriorityNormal];
+    [self fwShowConfirmWithTitle:title
+                         message:message
+                          cancel:cancel
+                         confirm:confirm
+                    confirmBlock:confirmBlock
+                     cancelBlock:nil
+                        priority:FWAlertPriorityNormal];
 }
 
-- (UIAlertController *)fwShowConfirmWithTitle:(NSString *)title
-                                      message:(NSString *)message
-                                       cancel:(NSString *)cancel
-                                      confirm:(NSString *)confirm
-                                 confirmBlock:(void (^)(void))confirmBlock
-                                  cancelBlock:(void (^)(void))cancelBlock
-                                     priority:(FWAlertPriority)priority
+- (void)fwShowConfirmWithTitle:(NSString *)title
+                       message:(NSString *)message
+                        cancel:(NSString *)cancel
+                       confirm:(NSString *)confirm
+                  confirmBlock:(void (^)(void))confirmBlock
+                   cancelBlock:(void (^)(void))cancelBlock
+                      priority:(FWAlertPriority)priority
 {
-    return [self fwShowAlertWithTitle:title
-                              message:message
-                               cancel:cancel
-                              actions:[NSArray arrayWithObjects:confirm, nil]
-                          actionBlock:^(NSInteger index) {
-                              if (confirmBlock) {
-                                  confirmBlock();
-                              }
-                          }
-                          cancelBlock:cancelBlock
-                             priority:priority];
+    [self fwShowAlertWithTitle:title
+                       message:message
+                        cancel:cancel
+                       actions:[NSArray arrayWithObjects:confirm, nil]
+                   actionBlock:^(NSInteger index) {
+                       if (confirmBlock) {
+                           confirmBlock();
+                       }
+                   }
+                   cancelBlock:cancelBlock
+                      priority:priority];
 }
 
-- (UIAlertController *)fwShowPromptWithTitle:(NSString *)title
-                                     message:(NSString *)message
-                                      cancel:(NSString *)cancel
-                                     confirm:(NSString *)confirm
-                                confirmBlock:(void (^)(NSString *text))confirmBlock
+- (void)fwShowPromptWithTitle:(NSString *)title
+                      message:(NSString *)message
+                       cancel:(NSString *)cancel
+                      confirm:(NSString *)confirm
+                 confirmBlock:(void (^)(NSString *text))confirmBlock
 {
-    return [self fwShowPromptWithTitle:title
-                               message:message
-                                cancel:cancel
-                               confirm:confirm
-                           promptBlock:nil
-                          confirmBlock:confirmBlock
-                           cancelBlock:nil
-                              priority:FWAlertPriorityNormal];
+    [self fwShowPromptWithTitle:title
+                        message:message
+                         cancel:cancel
+                        confirm:confirm
+                    promptBlock:nil
+                   confirmBlock:confirmBlock
+                    cancelBlock:nil
+                       priority:FWAlertPriorityNormal];
 }
 
-- (UIAlertController *)fwShowPromptWithTitle:(NSString *)title
-                                     message:(NSString *)message
-                                      cancel:(NSString *)cancel
-                                     confirm:(NSString *)confirm
-                                 promptBlock:(void (^)(UITextField *textField))promptBlock
-                                confirmBlock:(void (^)(NSString *text))confirmBlock
-                                 cancelBlock:(void (^)(void))cancelBlock
-                                    priority:(FWAlertPriority)priority
+- (void)fwShowPromptWithTitle:(NSString *)title
+                      message:(NSString *)message
+                       cancel:(NSString *)cancel
+                      confirm:(NSString *)confirm
+                  promptBlock:(void (^)(UITextField *textField))promptBlock
+                 confirmBlock:(void (^)(NSString *text))confirmBlock
+                  cancelBlock:(void (^)(void))cancelBlock
+                     priority:(FWAlertPriority)priority
 {
     // 初始化Alert
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
@@ -294,30 +293,29 @@
     // 显示Alert
     alertController.priority = priority;
     [alertController presentInViewController:self];
-    return alertController;
 }
 
 #pragma mark - Sheet
 
-- (UIAlertController *)fwShowSheetWithTitle:(NSString *)title
-                                     cancel:(NSString *)cancel
-                                    actions:(NSArray<NSString *> *)actions
-                                actionBlock:(void (^)(NSInteger))actionBlock
+- (void)fwShowSheetWithTitle:(NSString *)title
+                      cancel:(NSString *)cancel
+                     actions:(NSArray<NSString *> *)actions
+                 actionBlock:(void (^)(NSInteger))actionBlock
 {
-    return [self fwShowSheetWithTitle:title
-                               cancel:cancel
-                              actions:actions
-                          actionBlock:actionBlock
-                          cancelBlock:nil
-                             priority:FWAlertPriorityNormal];
+    [self fwShowSheetWithTitle:title
+                        cancel:cancel
+                       actions:actions
+                   actionBlock:actionBlock
+                   cancelBlock:nil
+                      priority:FWAlertPriorityNormal];
 }
 
-- (UIAlertController *)fwShowSheetWithTitle:(NSString *)title
-                                     cancel:(NSString *)cancel
-                                    actions:(NSArray<NSString *> *)actions
-                                actionBlock:(void (^)(NSInteger))actionBlock
-                                cancelBlock:(void (^)(void))cancelBlock
-                                   priority:(FWAlertPriority)priority
+- (void)fwShowSheetWithTitle:(NSString *)title
+                      cancel:(NSString *)cancel
+                     actions:(NSArray<NSString *> *)actions
+                 actionBlock:(void (^)(NSInteger))actionBlock
+                 cancelBlock:(void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority
 {
     // 初始化ActionSheet
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
@@ -363,7 +361,6 @@
     // 显示ActionSheet
     alertController.priority = priority;
     [alertController presentInViewController:self];
-    return alertController;
 }
 
 @end
