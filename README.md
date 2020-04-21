@@ -13,7 +13,7 @@ iOS开发框架，方便iOS开发。
 ### CocoaPods
 本框架支持CocoaPods，Podfile示例：
 
-	platform :ios, '8.0'
+	platform :ios, '9.0'
 	use_frameworks!
 
 	target 'Example' do
