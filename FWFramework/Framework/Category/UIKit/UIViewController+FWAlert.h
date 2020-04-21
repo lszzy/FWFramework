@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
     FWAlertPrioritySuper,
 };
 
+#pragma mark - UIViewController+FWAlert
+
 // 视图控制器系统弹出框分类，支持优先级
 @interface UIViewController (FWAlert)
 
@@ -32,12 +34,12 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title       警告框标题
  *  @param message     警告框消息
- *  @param cancel      取消按钮标题
+ *  @param cancel      取消按钮标题，支持UIAlertAction
  *  @param cancelBlock 取消按钮事件
  */
 - (void)fwShowAlertWithTitle:(nullable NSString *)title
                      message:(nullable NSString *)message
-                      cancel:(nullable NSString *)cancel
+                      cancel:(nullable id)cancel
                  cancelBlock:(nullable void (^)(void))cancelBlock;
 
 /**
@@ -45,16 +47,16 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title       警告框标题
  *  @param message     警告框消息
- *  @param cancel      取消按钮标题
- *  @param actions     动作按钮标题列表，iOS8支持UIAlertActionStyle样式，示例:@"确定:2"
+ *  @param cancel      取消按钮标题，支持UIAlertAction
+ *  @param actions     动作按钮标题列表，支持UIAlertAction
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  *  @param cancelBlock 取消按钮事件
  *  @param priority    警告框优先级
  */
 - (void)fwShowAlertWithTitle:(nullable NSString *)title
                      message:(nullable NSString *)message
-                      cancel:(nullable NSString *)cancel
-                     actions:(nullable NSArray<NSString *> *)actions
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
                  actionBlock:(nullable void (^)(NSInteger index))actionBlock
                  cancelBlock:(nullable void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority;
@@ -64,14 +66,14 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        确认框标题
  *  @param message      确认框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，支持UIAlertAction
+ *  @param confirm      确认按钮文字，支持UIAlertAction
  *  @param confirmBlock 确认按钮事件
  */
 - (void)fwShowConfirmWithTitle:(nullable NSString *)title
                        message:(nullable NSString *)message
-                        cancel:(nullable NSString *)cancel
-                       confirm:(nullable NSString *)confirm
+                        cancel:(nullable id)cancel
+                       confirm:(nullable id)confirm
                   confirmBlock:(nullable void (^)(void))confirmBlock;
 
 /**
@@ -79,16 +81,16 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        确认框标题
  *  @param message      确认框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，支持UIAlertAction
+ *  @param confirm      确认按钮文字，支持UIAlertAction
  *  @param confirmBlock 确认按钮事件
  *  @param cancelBlock  取消按钮事件
  *  @param priority     警告框优先级
  */
 - (void)fwShowConfirmWithTitle:(nullable NSString *)title
                        message:(nullable NSString *)message
-                        cancel:(nullable NSString *)cancel
-                       confirm:(nullable NSString *)confirm
+                        cancel:(nullable id)cancel
+                       confirm:(nullable id)confirm
                   confirmBlock:(nullable void (^)(void))confirmBlock
                    cancelBlock:(nullable void (^)(void))cancelBlock
                       priority:(FWAlertPriority)priority;
@@ -98,14 +100,14 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        输入框标题
  *  @param message      输入框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，支持UIAlertAction
+ *  @param confirm      确认按钮文字，支持UIAlertAction
  *  @param confirmBlock 确认按钮事件
  */
 - (void)fwShowPromptWithTitle:(nullable NSString *)title
                       message:(nullable NSString *)message
-                       cancel:(nullable NSString *)cancel
-                      confirm:(nullable NSString *)confirm
+                       cancel:(nullable id)cancel
+                      confirm:(nullable id)confirm
                  confirmBlock:(nullable void (^)(NSString *text))confirmBlock;
 
 /**
@@ -113,8 +115,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        输入框标题
  *  @param message      输入框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，支持UIAlertAction
+ *  @param confirm      确认按钮文字，支持UIAlertAction
  *  @param promptBlock  输入框初始化事件
  *  @param confirmBlock 确认按钮事件
  *  @param cancelBlock  取消按钮事件
@@ -122,8 +124,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  */
 - (void)fwShowPromptWithTitle:(nullable NSString *)title
                       message:(nullable NSString *)message
-                       cancel:(nullable NSString *)cancel
-                      confirm:(nullable NSString *)confirm
+                       cancel:(nullable id)cancel
+                      confirm:(nullable id)confirm
                   promptBlock:(nullable void (^)(UITextField *textField))promptBlock
                  confirmBlock:(nullable void (^)(NSString *text))confirmBlock
                   cancelBlock:(nullable void (^)(void))cancelBlock
@@ -135,31 +137,48 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  显示操作表(简单版)
  *
  *  @param title       操作表标题
- *  @param cancel      取消按钮标题
- *  @param actions     动作按钮标题列表，iOS8支持UIAlertActionStyle样式，示例:@"确定:2"
+ *  @param message     操作表消息
+ *  @param cancel      取消按钮标题，支持UIAlertAction
+ *  @param actions     动作按钮标题列表，支持UIAlertAction
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  */
 - (void)fwShowSheetWithTitle:(nullable NSString *)title
-                      cancel:(nullable NSString *)cancel
-                     actions:(nullable NSArray<NSString *> *)actions
+                     message:(nullable NSString *)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
                  actionBlock:(nullable void (^)(NSInteger index))actionBlock;
 
 /**
  *  显示操作表(详细版)
  *
  *  @param title       操作表标题
- *  @param cancel      取消按钮标题
- *  @param actions     动作按钮标题列表，iOS8支持UIAlertActionStyle样式，示例:@"确定:2"
+ *  @param message     操作表消息
+ *  @param cancel      取消按钮标题，支持UIAlertAction
+ *  @param actions     动作按钮标题列表，支持UIAlertAction
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  *  @param cancelBlock 取消按钮事件
  *  @param priority    操作表优先级
  */
 - (void)fwShowSheetWithTitle:(nullable NSString *)title
-                      cancel:(nullable NSString *)cancel
-                     actions:(nullable NSArray<NSString *> *)actions
+                     message:(nullable NSString *)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
                  actionBlock:(nullable void (^)(NSInteger index))actionBlock
                  cancelBlock:(nullable void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority;
+
+@end
+
+#pragma mark - UIAlertAction+FWAlert
+
+// 视图控制器系统弹出行为分类，自定义属性
+@interface UIAlertAction (FWAlert)
+
+// 快速创建弹出行为
++ (instancetype)fwActionWithTitle:(nullable NSString *)title style:(UIAlertActionStyle)style;
+
+// 是否是首选行为
+@property (nonatomic, assign) BOOL fwIsPreferred;
 
 @end
 

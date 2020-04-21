@@ -11,7 +11,6 @@
 
 #pragma mark - FWAlertController
 
-// 弹出框控制器，支持优先级
 @interface FWAlertController : UIAlertController
 
 // 弹出优先级
@@ -114,14 +113,13 @@
 
 #pragma mark - UIViewController+FWAlert
 
-// 视图控制器系统弹出框分类，支持优先级
 @implementation UIViewController (FWAlert)
 
 #pragma mark - Alert
 
 - (void)fwShowAlertWithTitle:(NSString *)title
                      message:(NSString *)message
-                      cancel:(NSString *)cancel
+                      cancel:(id)cancel
                  cancelBlock:(void (^)(void))cancelBlock
 {
     [self fwShowAlertWithTitle:title
@@ -135,8 +133,8 @@
 
 - (void)fwShowAlertWithTitle:(NSString *)title
                      message:(NSString *)message
-                      cancel:(NSString *)cancel
-                     actions:(NSArray<NSString *> *)actions
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
@@ -189,8 +187,8 @@
 
 - (void)fwShowConfirmWithTitle:(NSString *)title
                        message:(NSString *)message
-                        cancel:(NSString *)cancel
-                       confirm:(NSString *)confirm
+                        cancel:(id)cancel
+                       confirm:(id)confirm
                   confirmBlock:(void (^)(void))confirmBlock
 {
     [self fwShowConfirmWithTitle:title
@@ -204,8 +202,8 @@
 
 - (void)fwShowConfirmWithTitle:(NSString *)title
                        message:(NSString *)message
-                        cancel:(NSString *)cancel
-                       confirm:(NSString *)confirm
+                        cancel:(id)cancel
+                       confirm:(id)confirm
                   confirmBlock:(void (^)(void))confirmBlock
                    cancelBlock:(void (^)(void))cancelBlock
                       priority:(FWAlertPriority)priority
@@ -225,8 +223,8 @@
 
 - (void)fwShowPromptWithTitle:(NSString *)title
                       message:(NSString *)message
-                       cancel:(NSString *)cancel
-                      confirm:(NSString *)confirm
+                       cancel:(id)cancel
+                      confirm:(id)confirm
                  confirmBlock:(void (^)(NSString *text))confirmBlock
 {
     [self fwShowPromptWithTitle:title
@@ -241,8 +239,8 @@
 
 - (void)fwShowPromptWithTitle:(NSString *)title
                       message:(NSString *)message
-                       cancel:(NSString *)cancel
-                      confirm:(NSString *)confirm
+                       cancel:(id)cancel
+                      confirm:(id)confirm
                   promptBlock:(void (^)(UITextField *textField))promptBlock
                  confirmBlock:(void (^)(NSString *text))confirmBlock
                   cancelBlock:(void (^)(void))cancelBlock
@@ -298,11 +296,13 @@
 #pragma mark - Sheet
 
 - (void)fwShowSheetWithTitle:(NSString *)title
-                      cancel:(NSString *)cancel
-                     actions:(NSArray<NSString *> *)actions
+                     message:(NSString *)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
 {
     [self fwShowSheetWithTitle:title
+                       message:message
                         cancel:cancel
                        actions:actions
                    actionBlock:actionBlock
@@ -311,15 +311,16 @@
 }
 
 - (void)fwShowSheetWithTitle:(NSString *)title
-                      cancel:(NSString *)cancel
-                     actions:(NSArray<NSString *> *)actions
+                     message:(NSString *)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
     // 初始化ActionSheet
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
-                                                                             message:nil
+                                                                             message:message
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
     
     // 添加动作按钮，支持样式
@@ -361,6 +362,27 @@
     // 显示ActionSheet
     alertController.priority = priority;
     [alertController presentInViewController:self];
+}
+
+@end
+
+#pragma mark - UIAlertAction+FWAlert
+
+@implementation UIAlertAction (FWAlert)
+
++ (instancetype)fwActionWithTitle:(NSString *)title style:(UIAlertActionStyle)style
+{
+    return [self actionWithTitle:title style:style handler:nil];
+}
+
+- (BOOL)fwIsPreferred
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
+}
+
+- (void)setFwIsPreferred:(BOOL)fwIsPreferred
+{
+    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
