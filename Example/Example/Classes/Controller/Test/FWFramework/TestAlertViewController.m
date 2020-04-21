@@ -131,6 +131,7 @@
 - (void)onSheet1
 {
     [self fwShowSheetWithTitle:@"操作表标题"
+                       message:@"操作表消息"
                         cancel:@"取消"
                        actions:@[@"操作1:2", @"操作2"]
                    actionBlock:^(NSInteger index) {
@@ -141,6 +142,7 @@
 - (void)onSheet2
 {
     [self fwShowSheetWithTitle:@"操作表标题"
+                       message:@"操作表消息"
                         cancel:@"取消"
                        actions:@[@"操作1:2", @"操作2"]
                    actionBlock:^(NSInteger index) {
