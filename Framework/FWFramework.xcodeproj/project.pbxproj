@@ -342,6 +342,8 @@
 		2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */; };
 		2FDD34EE2303A63900624BBD /* NSAttributedString+FWOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDD34EF2303A63900624BBD /* NSAttributedString+FWOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */; };
+		2FDF9B06244EED91000BB1E3 /* NSBundle+FWLanguage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDF9B04244EED90000BB1E3 /* NSBundle+FWLanguage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FDF9B07244EED91000BB1E3 /* NSBundle+FWLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF9B05244EED91000BB1E3 /* NSBundle+FWLanguage.m */; };
 		2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE6519423167C280078ECE4 /* FWTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -687,6 +689,8 @@
 		2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+FWFramework.m"; sourceTree = "<group>"; };
 		2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+FWOption.h"; sourceTree = "<group>"; };
 		2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+FWOption.m"; sourceTree = "<group>"; };
+		2FDF9B04244EED90000BB1E3 /* NSBundle+FWLanguage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+FWLanguage.h"; sourceTree = "<group>"; };
+		2FDF9B05244EED91000BB1E3 /* NSBundle+FWLanguage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+FWLanguage.m"; sourceTree = "<group>"; };
 		2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBack.h"; sourceTree = "<group>"; };
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FE6519423167C280078ECE4 /* FWTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTableViewController.h; sourceTree = "<group>"; };
@@ -862,6 +866,8 @@
 				2F03A546216CF4B9001965A1 /* NSBundle+FWFramework.h */,
 				2F03A531216CF4B9001965A1 /* NSBundle+FWFramework.m */,
 				2FBFB70722C5045400E669B6 /* NSBundle+FWFramework.swift */,
+				2FDF9B04244EED90000BB1E3 /* NSBundle+FWLanguage.h */,
+				2FDF9B05244EED91000BB1E3 /* NSBundle+FWLanguage.m */,
 				2F03A550216CF4B9001965A1 /* NSData+FWFramework.h */,
 				2F03A53A216CF4B9001965A1 /* NSData+FWFramework.m */,
 				2F03A54E216CF4B9001965A1 /* NSDate+FWFramework.h */,
@@ -1246,6 +1252,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FDF9B06244EED91000BB1E3 /* NSBundle+FWLanguage.h in Headers */,
 				2F1B2487242D0336009A0F83 /* FWAnimatedImageView.h in Headers */,
 				2F1B2486242D0336009A0F83 /* FWImageCoder.h in Headers */,
 				2F1B248B242D0336009A0F83 /* FWAnimatedImage.h in Headers */,
@@ -1561,6 +1568,7 @@
 				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
 				2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */,
 				2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */,
+				2FDF9B07244EED91000BB1E3 /* NSBundle+FWLanguage.m in Sources */,
 				2FBFB73722C5D98400E669B6 /* UIColor+FWFramework.swift in Sources */,
 				2FD1A52121D4B71600A215C2 /* FWView.m in Sources */,
 				2FCE513421D3746B009EA65E /* FWDatabase.m in Sources */,
