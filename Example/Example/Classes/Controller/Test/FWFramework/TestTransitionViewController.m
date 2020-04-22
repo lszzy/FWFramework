@@ -109,6 +109,9 @@
 
 @interface TestTransitionAlertViewController : UIViewController
 
+@property (nonatomic, assign) BOOL useAnimator;
+@property (nonatomic, strong) UIDynamicAnimator *animator;
+
 @property (nonatomic, weak) UIView *contentView;
 
 @end
@@ -159,6 +162,9 @@
     FWWeakifySelf();
     [contentView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
+        if (self.useAnimator) {
+            [self configAnimator];
+        }
         [self fwCloseViewControllerAnimated:YES];
     }];
     
@@ -167,6 +173,29 @@
     // [self.view layoutIfNeeded];
     // FWPresentationController *presentation = (FWPresentationController *)self.fwModalTransition.presentationController;
     // presentation.presentedSize = centerView.bounds.size;
+}
+
+- (void)configAnimator
+{
+    self.fwModalTransition = nil;
+    
+    // 测试仿真动画
+    static int index = 0;
+    double radian = M_PI;
+    if (index++ % 2 == 0) {
+        radian = 2 * radian;
+    } else {
+        radian = -1 * radian;
+    }
+    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.contentView];
+    
+    UIGravityBehavior *gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[self.contentView]];
+    gravityBehavior.gravityDirection = CGVectorMake(0, 10);
+    [self.animator addBehavior:gravityBehavior];
+    
+    UIDynamicItemBehavior *itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.contentView]];
+    [itemBehavior addAngularVelocity:radian forItem:self.view];
+    [self.animator addBehavior:itemBehavior];
 }
 
 @end
@@ -201,6 +230,7 @@
                                           @[@"swipe present", @"onPresentSwipe"],
                                           @[@"自定义controller", @"onPresentController"],
                                           @[@"自定义alert", @"onPresentAlert"],
+                                          @[@"自定义animator", @"onPresentAnimator"],
                                           @[@"interactive present", @"onPresentInteractive"],
                                           @[@"present without animation", @"onPresentNoAnimate"],
                                           @[@"System Push", @"onPush"],
@@ -343,6 +373,13 @@
 - (void)onPresentAlert
 {
     TestTransitionAlertViewController *vc = [TestTransitionAlertViewController new];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)onPresentAnimator
+{
+    TestTransitionAlertViewController *vc = [TestTransitionAlertViewController new];
+    vc.useAnimator = YES;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
