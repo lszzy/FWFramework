@@ -297,4 +297,19 @@
     return nil;
 }
 
+- (id)fwPerformPropertySelector:(NSString *)name withObject:(id)object
+{
+    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
+    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
+    
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@", ucfirstName]);
+    if ([self respondsToSelector:selector]) return [self performSelector:selector withObject:object];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@", name]);
+    if ([self respondsToSelector:selector]) return [self performSelector:selector withObject:object];
+    #pragma clang diagnostic pop
+    return nil;
+}
+
 @end
