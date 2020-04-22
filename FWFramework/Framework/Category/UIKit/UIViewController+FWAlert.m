@@ -395,4 +395,20 @@
     objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (UIAlertAction *(^)(BOOL))fwPreferred
+{
+    return ^UIAlertAction *(BOOL preferred) {
+        self.fwIsPreferred = preferred;
+        return self;
+    };
+}
+
+- (UIAlertAction *(^)(BOOL))fwEnabled
+{
+    return ^UIAlertAction *(BOOL enabled) {
+        self.enabled = enabled;
+        return self;
+    };
+}
+
 @end
