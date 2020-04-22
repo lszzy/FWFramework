@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 #pragma mark - FWSwipeAnimatedTransition
 
-// 滑动转场动画类
+// 滑动转场动画类，默认上下
 @interface FWSwipeAnimatedTransition : FWAnimatedTransition
 
 // 创建滑动转场，指定进入(push|present)和消失(pop|dismiss)方向
@@ -108,10 +108,19 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @end
 
-#pragma mark - FWScaleAnimatedTransition
+#pragma mark - FWTransformAnimatedTransition
 
-// 缩放转场动画类
-@interface FWScaleAnimatedTransition : FWAnimatedTransition
+// 形变转场动画类，默认缩放
+@interface FWTransformAnimatedTransition : FWAnimatedTransition
+
+// 创建形变转场，指定进入(push|present)和消失(pop|dismiss)形变
++ (instancetype)transitionWithInTransform:(CGAffineTransform)inTransform
+                             outTransform:(CGAffineTransform)outTransform;
+
+// 指定进入(push|present)形变，默认缩放0.01
+@property (nonatomic, assign) CGAffineTransform inTransform;
+// 指定消失(pop|dismiss)形变，默认缩放0.01
+@property (nonatomic, assign) CGAffineTransform outTransform;
 
 @end
 
