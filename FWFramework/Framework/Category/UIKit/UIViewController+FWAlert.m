@@ -143,45 +143,44 @@
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *preferredAction = nil;
     
     // 添加取消按钮
-    if (cancel.length > 0) {
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancel
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:^(UIAlertAction *action) {
-                                                                 if (cancelBlock) {
-                                                                     cancelBlock();
-                                                                 }
-                                                             }];
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        if (cancelAction.fwIsPreferred) {
+            preferredAction = cancelAction;
+        }
         [alertController addAction:cancelAction];
     }
     
-    // 添加动作按钮，支持样式
+    // 添加动作按钮
     NSInteger actionsCount = actions ? actions.count : 0;
     if (actionsCount > 0) {
         for (NSInteger index = 0; index < actionsCount; index++) {
-            // 解析标题样式，格式@"标题:style"
-            NSString *actionTitle = [actions objectAtIndex:index];
-            UIAlertActionStyle actionStyle = UIAlertActionStyleDefault;
-            if ([actionTitle rangeOfString:@":"].location != NSNotFound) {
-                NSArray *titleComps = [actionTitle componentsSeparatedByString:@":"];
-                actionTitle = [titleComps firstObject];
-                actionStyle = (UIAlertActionStyle)[[titleComps lastObject] integerValue];
+            UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:[actions objectAtIndex:index] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                if (actionBlock) {
+                    actionBlock(index);
+                }
+            }];
+            if (alertAction.fwIsPreferred) {
+                preferredAction = alertAction;
             }
-            
-            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:actionTitle
-                                                                  style:actionStyle
-                                                                handler:^(UIAlertAction *action) {
-                                                                    if (actionBlock) {
-                                                                        actionBlock(index);
-                                                                    }
-                                                                }];
             [alertController addAction:alertAction];
         }
     }
     
     // 显示Alert
     alertController.priority = priority;
+    if (@available(iOS 9.0, *)) {
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
+        }
+    }
     [alertController presentInViewController:self];
 }
 
@@ -250,46 +249,45 @@
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *preferredAction = nil;
     
     // 添加输入框并初始化输入框
     [alertController addTextFieldWithConfigurationHandler:promptBlock];
     
     // 添加取消按钮
-    if (cancel.length > 0) {
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancel
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:^(UIAlertAction *action) {
-                                                                 if (cancelBlock) {
-                                                                     cancelBlock();
-                                                                 }
-                                                             }];
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        if (cancelAction.fwIsPreferred) {
+            preferredAction = cancelAction;
+        }
         [alertController addAction:cancelAction];
     }
     
-    // 添加确定按钮，支持样式
-    if (confirm.length > 0) {
-        // 解析标题样式，格式@"标题:style"
-        NSString *actionTitle = confirm;
-        UIAlertActionStyle actionStyle = UIAlertActionStyleDefault;
-        if ([actionTitle rangeOfString:@":"].location != NSNotFound) {
-            NSArray *titleComps = [actionTitle componentsSeparatedByString:@":"];
-            actionTitle = [titleComps firstObject];
-            actionStyle = (UIAlertActionStyle)[[titleComps lastObject] integerValue];
+    // 添加确定按钮
+    if (confirm != nil) {
+        UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:confirm style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            if (confirmBlock) {
+                // 回调输入框的值
+                confirmBlock([alertController.textFields objectAtIndex:0].text);
+            }
+        }];
+        if (alertAction.fwIsPreferred) {
+            preferredAction = alertAction;
         }
-        
-        UIAlertAction *alertAction = [UIAlertAction actionWithTitle:actionTitle
-                                                              style:actionStyle
-                                                            handler:^(UIAlertAction *action) {
-                                                                if (confirmBlock) {
-                                                                    // 回调输入框的值
-                                                                    confirmBlock([alertController.textFields objectAtIndex:0].text);
-                                                                }
-                                                            }];
         [alertController addAction:alertAction];
     }
     
     // 显示Alert
     alertController.priority = priority;
+    if (@available(iOS 9.0, *)) {
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
+        }
+    }
     [alertController presentInViewController:self];
 }
 
@@ -322,45 +320,44 @@
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:title
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *preferredAction = nil;
     
-    // 添加动作按钮，支持样式
+    // 添加动作按钮
     NSInteger actionsCount = actions ? actions.count : 0;
     if (actionsCount > 0) {
         for (NSInteger index = 0; index < actionsCount; index++) {
-            // 解析样式，格式@"标题:style"
-            NSString *actionTitle = [actions objectAtIndex:index];
-            UIAlertActionStyle actionStyle = UIAlertActionStyleDefault;
-            if ([actionTitle rangeOfString:@":"].location != NSNotFound) {
-                NSArray *titleComps = [actionTitle componentsSeparatedByString:@":"];
-                actionTitle = [titleComps objectAtIndex:0];
-                actionStyle = (UIAlertActionStyle)[[titleComps objectAtIndex:1] integerValue];
+            UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:[actions objectAtIndex:index] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                if (actionBlock) {
+                    actionBlock(index);
+                }
+            }];
+            if (alertAction.fwIsPreferred) {
+                preferredAction = alertAction;
             }
-            
-            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:actionTitle
-                                                                  style:actionStyle
-                                                                handler:^(UIAlertAction *action) {
-                                                                    if (actionBlock) {
-                                                                        actionBlock(index);
-                                                                    }
-                                                                }];
             [alertController addAction:alertAction];
         }
     }
     
     // 添加取消按钮
-    if (cancel.length > 0) {
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancel
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:^(UIAlertAction *action) {
-                                                                 if (cancelBlock) {
-                                                                     cancelBlock();
-                                                                 }
-                                                             }];
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        if (cancelAction.fwIsPreferred) {
+            preferredAction = cancelAction;
+        }
         [alertController addAction:cancelAction];
     }
     
     // 显示ActionSheet
     alertController.priority = priority;
+    if (@available(iOS 9.0, *)) {
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
+        }
+    }
     [alertController presentInViewController:self];
 }
 
@@ -373,6 +370,19 @@
 + (instancetype)fwActionWithTitle:(NSString *)title style:(UIAlertActionStyle)style
 {
     return [self actionWithTitle:title style:style handler:nil];
+}
+
++ (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
+{
+    UIAlertAction *action = [object isKindOfClass:[UIAlertAction class]] ? (UIAlertAction *)object : nil;
+    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(action ? action.title : object)
+                                                          style:(action ? action.style : style)
+                                                         handler:handler];
+    if (action) {
+        alertAction.enabled = action.enabled;
+        alertAction.fwIsPreferred = action.fwIsPreferred;
+    }
+    return alertAction;
 }
 
 - (BOOL)fwIsPreferred
