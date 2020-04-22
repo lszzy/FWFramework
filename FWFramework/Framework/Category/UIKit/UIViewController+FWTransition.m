@@ -323,7 +323,18 @@
 
 - (void)animate
 {
-    // 子类重写
+    // 子类可重写，默认alpha动画
+    FWAnimatedTransitionType transitionType = [self transitionType];
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    UIView *transitionView = transitionIn ? [self.transitionContext viewForKey:UITransitionContextToViewKey] : [self.transitionContext viewForKey:UITransitionContextFromViewKey];
+    
+    [self start];
+    transitionView.alpha = transitionIn ? 0.0 : 1.0;
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
+        transitionView.alpha = transitionIn ? 1.0 : 0.0;
+    } completion:^(BOOL finished) {
+        [self complete];
+    }];
 }
 
 - (void)complete
@@ -436,6 +447,27 @@
 
 @end
 
+#pragma mark - FWScaleAnimatedTransition
+
+@implementation FWScaleAnimatedTransition
+
+- (void)animate
+{
+    FWAnimatedTransitionType transitionType = [self transitionType];
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    UIView *transitionView = transitionIn ? [self.transitionContext viewForKey:UITransitionContextToViewKey] : [self.transitionContext viewForKey:UITransitionContextFromViewKey];
+    
+    [self start];
+    transitionView.transform = CGAffineTransformMakeScale(transitionIn ? 0.01 : 1.0, transitionIn ? 0.01 : 1.0);
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
+        transitionView.transform = CGAffineTransformMakeScale(transitionIn ? 1.0 : 0.01, transitionIn ? 1.0 : 0.01);
+    } completion:^(BOOL finished) {
+        [self complete];
+    }];
+}
+
+@end
+
 #pragma mark - FWPresentationController
 
 @interface FWPresentationController ()
@@ -454,6 +486,7 @@
     if (self) {
         _showDimming = YES;
         _dimmingClick = YES;
+        _dimmingAnimated = YES;
         _rectCorner = UIRectCornerTopLeft | UIRectCornerTopRight;
         _cornerRadius = 0;
         _presentedFrame = CGRectZero;
@@ -512,19 +545,23 @@
     self.dimmingView.frame = self.containerView.bounds;
     [self.containerView insertSubview:self.dimmingView atIndex:0];
     
-    self.dimmingView.alpha = 0;
-    [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.dimmingView.alpha = 1.0;
-    } completion:nil];
+    if (self.dimmingAnimated) {
+        self.dimmingView.alpha = 0;
+        [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            self.dimmingView.alpha = 1.0;
+        } completion:nil];
+    }
 }
 
 - (void)dismissalTransitionWillBegin
 {
     [super dismissalTransitionWillBegin];
     
-    [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.dimmingView.alpha = 0;
-    } completion:nil];
+    if (self.dimmingAnimated) {
+        [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            self.dimmingView.alpha = 0;
+        } completion:nil];
+    }
 }
 
 - (void)dismissalTransitionDidEnd:(BOOL)completed

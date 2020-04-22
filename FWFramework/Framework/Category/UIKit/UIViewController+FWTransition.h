@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @class FWPanGestureRecognizer;
 
-// 转场动画类
+// 转场动画类，默认透明度变化
 @interface FWAnimatedTransition : UIPercentDrivenInteractiveTransition <UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
 #pragma mark - Public
@@ -108,6 +108,13 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 @end
 
+#pragma mark - FWScaleAnimatedTransition
+
+// 缩放转场动画类
+@interface FWScaleAnimatedTransition : FWAnimatedTransition
+
+@end
+
 #pragma mark - FWPresentationController
 
 // 自定义展示控制器。present时建议设置modalPresentationStyle为UIModalPresentationCustom
@@ -118,6 +125,9 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 
 // 是否可以点击暗色背景关闭，默认YES
 @property (nonatomic, assign) BOOL dimmingClick;
+
+// 是否执行暗黑背景透明度动画，默认YES
+@property (nonatomic, assign) BOOL dimmingAnimated;
 
 // 设置弹出视图的圆角位置，默认左上和右上
 @property (nonatomic, assign) UIRectCorner rectCorner;
