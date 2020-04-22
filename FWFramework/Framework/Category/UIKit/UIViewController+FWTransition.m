@@ -329,9 +329,9 @@
     UIView *transitionView = transitionIn ? [self.transitionContext viewForKey:UITransitionContextToViewKey] : [self.transitionContext viewForKey:UITransitionContextFromViewKey];
     
     [self start];
-    transitionView.alpha = transitionIn ? 0.0 : 1.0;
-    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
-        transitionView.alpha = transitionIn ? 1.0 : 0.0;
+    if (transitionIn) transitionView.alpha = 0;
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        transitionView.alpha = transitionIn ? 1 : 0;
     } completion:^(BOOL finished) {
         [self complete];
     }];
@@ -447,9 +447,28 @@
 
 @end
 
-#pragma mark - FWScaleAnimatedTransition
+#pragma mark - FWTransformAnimatedTransition
 
-@implementation FWScaleAnimatedTransition
+@implementation FWTransformAnimatedTransition
+
++ (instancetype)transitionWithInTransform:(CGAffineTransform)inTransform
+                             outTransform:(CGAffineTransform)outTransform
+{
+    FWTransformAnimatedTransition *transition = [[self alloc] init];
+    transition.inTransform = inTransform;
+    transition.outTransform = outTransform;
+    return transition;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _inTransform = CGAffineTransformMakeScale(0.01, 0.01);
+        _outTransform = CGAffineTransformMakeScale(0.01, 0.01);
+    }
+    return self;
+}
 
 - (void)animate
 {
@@ -458,9 +477,13 @@
     UIView *transitionView = transitionIn ? [self.transitionContext viewForKey:UITransitionContextToViewKey] : [self.transitionContext viewForKey:UITransitionContextFromViewKey];
     
     [self start];
-    transitionView.transform = CGAffineTransformMakeScale(transitionIn ? 0.01 : 1.0, transitionIn ? 0.01 : 1.0);
-    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
-        transitionView.transform = CGAffineTransformMakeScale(transitionIn ? 1.0 : 0.01, transitionIn ? 1.0 : 0.01);
+    if (transitionIn) {
+        transitionView.transform = self.inTransform;
+        transitionView.alpha = 0;
+    }
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        transitionView.transform = transitionIn ? CGAffineTransformIdentity : self.outTransform;
+        transitionView.alpha = transitionIn ? 1 : 0;
     } completion:^(BOOL finished) {
         [self complete];
     }];
