@@ -174,8 +174,11 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 // 视图控制器系统弹出行为分类，自定义属性
 @interface UIAlertAction (FWAlert)
 
-// 快速创建弹出行为
+// 快速创建弹出行为，支持标题和样式
 + (instancetype)fwActionWithTitle:(nullable NSString *)title style:(UIAlertActionStyle)style;
+
+// 快速创建弹出行为，支持字符串和UIAlertAction(拷贝)
++ (instancetype)fwActionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler;
 
 // 是否是首选行为
 @property (nonatomic, assign) BOOL fwIsPreferred;

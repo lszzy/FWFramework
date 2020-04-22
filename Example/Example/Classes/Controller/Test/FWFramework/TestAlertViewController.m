@@ -62,7 +62,7 @@
     [self fwShowAlertWithTitle:@"警告框标题"
                        message:@"警告框消息"
                         cancel:@"取消"
-                       actions:@[@"按钮1:2", @"按钮2"]
+                       actions:@[[UIAlertAction fwActionWithTitle:@"按钮1" style:UIAlertActionStyleDestructive], @"按钮2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的按钮index: %@", @(index));
                    }
@@ -133,7 +133,7 @@
     [self fwShowSheetWithTitle:@"操作表标题"
                        message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[@"操作1:2", @"操作2"]
+                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive], @"操作2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }];
@@ -141,10 +141,13 @@
 
 - (void)onSheet2
 {
+    UIAlertAction *action = [UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive];
+    action.enabled = NO;
+    action.fwIsPreferred = YES;
     [self fwShowSheetWithTitle:@"操作表标题"
                        message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[@"操作1:2", @"操作2"]
+                       actions:@[action, @"操作2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }
