@@ -10,7 +10,7 @@ import Foundation
 
 /// UIAlertAction链式调用扩展
 extension UIAlertAction {
-    /// 快捷设置首选行为
+    /// 快捷设置首选动作
     @discardableResult
     public func fwPreferred(_ preferred: Bool) -> UIAlertAction {
         self.fwIsPreferred = preferred;
