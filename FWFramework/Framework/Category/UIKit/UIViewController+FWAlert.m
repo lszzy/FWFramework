@@ -7,7 +7,48 @@
 //
 
 #import "UIViewController+FWAlert.h"
+#import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
+
+#pragma mark - UIViewController+FWAlertPriority
+
+// 控制器默认实现了优先级方法，这样可以支持自定义控制器。但是为了不影响系统方法，只有声明该协议的类才会生效
+@interface UIViewController (FWAlertPriority)
+
+@end
+
+@implementation UIViewController (FWAlertPriority)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(viewDidAppear:) with:@selector(fwInnerPriorityViewDidAppear:)];
+        [self fwSwizzleInstanceMethod:@selector(viewDidDisappear:) with:@selector(fwInnerPriorityViewDidDisappear:)];
+    });
+}
+
+- (void)fwInnerPriorityViewDidAppear:(BOOL)animated
+{
+    [self fwInnerPriorityViewDidAppear:animated];
+}
+
+- (void)fwInnerPriorityViewDidDisappear:(BOOL)animated
+{
+    [self fwInnerPriorityViewDidDisappear:animated];
+}
+
+@end
+
+#pragma mark - FWAlertPriorityController
+
+@interface FWAlertPriorityController : UIAlertController <FWAlertPriorityProtocol>
+
+@end
+
+@implementation FWAlertPriorityController
+
+@end
 
 #pragma mark - FWAlertController
 
@@ -117,8 +158,8 @@
 
 #pragma mark - Alert
 
-- (void)fwShowAlertWithTitle:(NSString *)title
-                     message:(NSString *)message
+- (void)fwShowAlertWithTitle:(id)title
+                     message:(id)message
                       cancel:(id)cancel
                  cancelBlock:(void (^)(void))cancelBlock
 {
@@ -131,8 +172,8 @@
                       priority:FWAlertPriorityNormal];
 }
 
-- (void)fwShowAlertWithTitle:(NSString *)title
-                     message:(NSString *)message
+- (void)fwShowAlertWithTitle:(id)title
+                     message:(id)message
                       cancel:(id)cancel
                      actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
@@ -184,8 +225,8 @@
     [alertController presentInViewController:self];
 }
 
-- (void)fwShowConfirmWithTitle:(NSString *)title
-                       message:(NSString *)message
+- (void)fwShowConfirmWithTitle:(id)title
+                       message:(id)message
                         cancel:(id)cancel
                        confirm:(id)confirm
                   confirmBlock:(void (^)(void))confirmBlock
@@ -199,8 +240,8 @@
                         priority:FWAlertPriorityNormal];
 }
 
-- (void)fwShowConfirmWithTitle:(NSString *)title
-                       message:(NSString *)message
+- (void)fwShowConfirmWithTitle:(id)title
+                       message:(id)message
                         cancel:(id)cancel
                        confirm:(id)confirm
                   confirmBlock:(void (^)(void))confirmBlock
@@ -220,8 +261,8 @@
                       priority:priority];
 }
 
-- (void)fwShowPromptWithTitle:(NSString *)title
-                      message:(NSString *)message
+- (void)fwShowPromptWithTitle:(id)title
+                      message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
                  confirmBlock:(void (^)(NSString *text))confirmBlock
@@ -236,8 +277,8 @@
                        priority:FWAlertPriorityNormal];
 }
 
-- (void)fwShowPromptWithTitle:(NSString *)title
-                      message:(NSString *)message
+- (void)fwShowPromptWithTitle:(id)title
+                      message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
                   promptBlock:(void (^)(UITextField *textField))promptBlock
@@ -293,8 +334,8 @@
 
 #pragma mark - Sheet
 
-- (void)fwShowSheetWithTitle:(NSString *)title
-                     message:(NSString *)message
+- (void)fwShowSheetWithTitle:(id)title
+                     message:(id)message
                       cancel:(id)cancel
                      actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
@@ -308,8 +349,8 @@
                       priority:FWAlertPriorityNormal];
 }
 
-- (void)fwShowSheetWithTitle:(NSString *)title
-                     message:(NSString *)message
+- (void)fwShowSheetWithTitle:(id)title
+                     message:(id)message
                       cancel:(id)cancel
                      actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
@@ -359,6 +400,27 @@
         }
     }
     [alertController presentInViewController:self];
+}
+
+@end
+
+#pragma mark - UIAlertController+FWAlert
+
+@implementation UIAlertController (FWAlert)
+
++ (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle
+{
+    NSAttributedString *attributedTitle = [title isKindOfClass:[NSAttributedString class]] ? title : nil;
+    NSAttributedString *attributedMessage = [message isKindOfClass:[NSAttributedString class]] ? message : nil;
+    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:(attributedTitle ? nil : title)
+                                                                               message:(attributedMessage ? nil : message) preferredStyle:preferredStyle];
+    if (attributedTitle) {
+        
+    }
+    if (attributedMessage) {
+        
+    }
+    return alertController;
 }
 
 @end
