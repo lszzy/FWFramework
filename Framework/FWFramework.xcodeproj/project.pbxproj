@@ -344,6 +344,7 @@
 		2FDD34EF2303A63900624BBD /* NSAttributedString+FWOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */; };
 		2FDF9B06244EED91000BB1E3 /* NSBundle+FWLanguage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDF9B04244EED90000BB1E3 /* NSBundle+FWLanguage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDF9B07244EED91000BB1E3 /* NSBundle+FWLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF9B05244EED91000BB1E3 /* NSBundle+FWLanguage.m */; };
+		2FDF9B1A244FE97B000BB1E3 /* UIViewController+FWAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF9B19244FE97B000BB1E3 /* UIViewController+FWAlert.swift */; };
 		2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE6519423167C280078ECE4 /* FWTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -691,6 +692,7 @@
 		2FDD34ED2303A63900624BBD /* NSAttributedString+FWOption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+FWOption.m"; sourceTree = "<group>"; };
 		2FDF9B04244EED90000BB1E3 /* NSBundle+FWLanguage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+FWLanguage.h"; sourceTree = "<group>"; };
 		2FDF9B05244EED91000BB1E3 /* NSBundle+FWLanguage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+FWLanguage.m"; sourceTree = "<group>"; };
+		2FDF9B19244FE97B000BB1E3 /* UIViewController+FWAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+FWAlert.swift"; sourceTree = "<group>"; };
 		2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWBack.h"; sourceTree = "<group>"; };
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FE6519423167C280078ECE4 /* FWTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTableViewController.h; sourceTree = "<group>"; };
@@ -833,6 +835,7 @@
 				2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
 				2F03A4F6216CF4B9001965A1 /* UIViewController+FWAlert.m */,
+				2FDF9B19244FE97B000BB1E3 /* UIViewController+FWAlert.swift */,
 				2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */,
 				2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */,
 				2F03A50E216CF4B9001965A1 /* UIViewController+FWBar.h */,
@@ -1675,6 +1678,7 @@
 				2F69A650230D223D0063D95A /* FWPagerView.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
 				2FBFB76C22C680A800E669B6 /* FWTest.swift in Sources */,
+				2FDF9B1A244FE97B000BB1E3 /* UIViewController+FWAlert.swift in Sources */,
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,
 				2F03A5BC216CF4B9001965A1 /* UIView+FWIndicator.m in Sources */,

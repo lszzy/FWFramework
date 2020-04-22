@@ -183,6 +183,12 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 // 是否是首选行为
 @property (nonatomic, assign) BOOL fwIsPreferred;
 
+// 快捷设置首选行为
+@property (nonatomic, copy, readonly) UIAlertAction *(^fwPreferred)(BOOL preferred) NS_REFINED_FOR_SWIFT;
+
+// 快捷设置是否禁用
+@property (nonatomic, copy, readonly) UIAlertAction *(^fwEnabled)(BOOL enabled) NS_REFINED_FOR_SWIFT;
+
 @end
 
 NS_ASSUME_NONNULL_END
