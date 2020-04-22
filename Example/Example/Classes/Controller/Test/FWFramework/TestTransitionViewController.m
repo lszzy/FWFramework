@@ -109,6 +109,8 @@
 
 @interface TestTransitionAlertViewController : UIViewController
 
+@property (nonatomic, weak) UIView *contentView;
+
 @end
 
 @implementation TestTransitionAlertViewController
@@ -119,9 +121,19 @@
     if (self) {
         self.modalPresentationStyle = UIModalPresentationCustom;
         
+        // 也可以封装present方法，手工指定UIPresentationController，无需使用block
         FWScaleAnimatedTransition *transition = [[FWScaleAnimatedTransition alloc] init];
+        FWWeakifySelf();
         transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
-            return [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+            FWStrongifySelf();
+            FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+            presentation.cornerRadius = 10;
+            presentation.rectCorner = UIRectCornerAllCorners;
+            // 方式1：自动布局view，更新frame
+            [presented.view setNeedsLayout];
+            [presented.view layoutIfNeeded];
+            presentation.presentedFrame = self.contentView.frame;
+            return presentation;
         };
         self.fwModalTransition = transition;
     }
@@ -132,14 +144,16 @@
 {
     [super viewDidLoad];
     
-    UIView *centerView = [UIView fwAutoLayoutView];
-    centerView.backgroundColor = UIColor.whiteColor;
-    [self.view addSubview:centerView];
-    centerView.fwLayoutChain.center();
-    
+    // 方式2：不指定presentedFrame，背景手势不生效，自己添加手势和圆角即可
     UIView *contentView = [UIView fwAutoLayoutView];
-    [centerView addSubview:contentView];
-    contentView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
+    _contentView = contentView;
+    contentView.backgroundColor = UIColor.whiteColor;
+    [self.view addSubview:contentView];
+    contentView.fwLayoutChain.center();
+    
+    UIView *childView = [UIView fwAutoLayoutView];
+    [contentView addSubview:childView];
+    childView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
     
     FWWeakifySelf();
     [contentView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
@@ -147,15 +161,11 @@
         [self fwCloseViewControllerAnimated:YES];
     }];
     
-    // 更新子视图frame
-    [self.view setNeedsLayout];
-    [self.view layoutIfNeeded];
-    
-    // 更新动画参数
-    FWPresentationController *presentation = (FWPresentationController *)self.fwModalTransition.presentationController;
-    presentation.cornerRadius = 10;
-    presentation.rectCorner = UIRectCornerAllCorners;
-    presentation.presentedSize = centerView.bounds.size;
+    // 方式3：手工指定动画参数
+    // [self.view setNeedsLayout];
+    // [self.view layoutIfNeeded];
+    // FWPresentationController *presentation = (FWPresentationController *)self.fwModalTransition.presentationController;
+    // presentation.presentedSize = centerView.bounds.size;
 }
 
 @end

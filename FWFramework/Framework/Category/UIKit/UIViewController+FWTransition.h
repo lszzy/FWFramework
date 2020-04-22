@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 是否显示暗色背景，默认YES
 @property (nonatomic, assign) BOOL showDimming;
 
-// 是否可以点击暗色背景关闭，默认YES
+// 是否可以点击暗色背景关闭，默认YES。如果presentedView占满containerView，手势不生效
 @property (nonatomic, assign) BOOL dimmingClick;
 
 // 是否执行暗黑背景透明度动画，默认YES
@@ -135,10 +135,13 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 设置弹出视图的圆角半径，默认0无圆角
 @property (nonatomic, assign) CGFloat cornerRadius;
 
-// 设置弹出视图的frame，默认CGRectZero不生效，优先级高
+// 自定义弹出视图的frame计算block，默认nil，优先级高
+@property (nonatomic, copy, nullable) CGRect (^frameBlock)(FWPresentationController *presentationController);
+
+// 设置弹出视图的frame，默认CGRectZero不生效，优先级中
 @property (nonatomic, assign) CGRect presentedFrame;
 
-// 设置弹出视图的居中size，默认CGSizeZero不生效，优先级高
+// 设置弹出视图的居中size，默认CGSizeZero不生效，优先级中
 @property (nonatomic, assign) CGSize presentedSize;
 
 // 设置弹出视图的顶部距离，默认0不生效，优先级低

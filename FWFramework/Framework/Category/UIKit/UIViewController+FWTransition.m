@@ -575,7 +575,9 @@
 
 - (CGRect)frameOfPresentedViewInContainerView
 {
-    if (!CGRectEqualToRect(self.presentedFrame, CGRectZero)) {
+    if (self.frameBlock) {
+        return self.frameBlock(self);
+    } else if (!CGRectEqualToRect(self.presentedFrame, CGRectZero)) {
         return self.presentedFrame;
     } else if (!CGSizeEqualToSize(self.presentedSize, CGSizeZero)) {
         CGRect presentedFrame = CGRectMake(0, 0, self.presentedSize.width, self.presentedSize.height);
