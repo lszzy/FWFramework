@@ -376,8 +376,8 @@
 - (void)animate
 {
     FWAnimatedTransitionType transitionType = [self transitionType];
-    BOOL swipeIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
-    UISwipeGestureRecognizerDirection direction = swipeIn ? self.inDirection : self.outDirection;
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    UISwipeGestureRecognizerDirection direction = transitionIn ? self.inDirection : self.outDirection;
     CGVector offset;
     switch (direction) {
         case UISwipeGestureRecognizerDirectionLeft: {
@@ -403,21 +403,21 @@
     CGRect toFrame = [self.transitionContext finalFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
     UIView *fromView = [self.transitionContext viewForKey:UITransitionContextFromViewKey];
     UIView *toView = [self.transitionContext viewForKey:UITransitionContextToViewKey];
-    if (swipeIn) {
+    if (transitionIn) {
         [self.transitionContext.containerView addSubview:toView];
-        toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:YES show:swipeIn];
+        toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:YES show:transitionIn];
         fromView.frame = fromFrame;
     } else {
         [self.transitionContext.containerView insertSubview:toView belowSubview:fromView];
-        fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:YES show:swipeIn];
+        fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:YES show:transitionIn];
         toView.frame = toFrame;
     }
     
     [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
-        if (swipeIn) {
-            toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:NO show:swipeIn];
+        if (transitionIn) {
+            toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:NO show:transitionIn];
         } else {
-            fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:NO show:swipeIn];
+            fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:NO show:transitionIn];
         }
     } completion:^(BOOL finished) {
         BOOL cancelled = [self.transitionContext transitionWasCancelled];
