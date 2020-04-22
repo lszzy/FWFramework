@@ -454,8 +454,10 @@
     if (self) {
         _showDimming = YES;
         _dimmingClick = YES;
+        _rectCorner = UIRectCornerTopLeft | UIRectCornerTopRight;
         _cornerRadius = 0;
         _presentedFrame = CGRectZero;
+        _presentedSize = CGSizeZero;
         _verticalInset = 0;
     }
     return self;
@@ -498,11 +500,15 @@
 {
     [super presentationTransitionWillBegin];
     
+    self.presentedView.frame = [self frameOfPresentedViewInContainerView];
     if (self.cornerRadius > 0) {
         self.presentedView.layer.masksToBounds = YES;
-        [self.presentedView fwSetCornerLayer:(UIRectCornerTopLeft | UIRectCornerTopRight) radius:self.cornerRadius];
+        if ((self.rectCorner & UIRectCornerAllCorners) == UIRectCornerAllCorners) {
+            self.presentedView.layer.cornerRadius = self.cornerRadius;
+        } else {
+            [self.presentedView fwSetCornerLayer:self.rectCorner radius:self.cornerRadius];
+        }
     }
-    self.presentedView.frame = [self frameOfPresentedViewInContainerView];
     self.dimmingView.frame = self.containerView.bounds;
     [self.containerView insertSubview:self.dimmingView atIndex:0];
     
@@ -534,6 +540,11 @@
 {
     if (!CGRectEqualToRect(self.presentedFrame, CGRectZero)) {
         return self.presentedFrame;
+    } else if (!CGSizeEqualToSize(self.presentedSize, CGSizeZero)) {
+        CGRect presentedFrame = CGRectMake(0, 0, self.presentedSize.width, self.presentedSize.height);
+        presentedFrame.origin.x = (self.containerView.bounds.size.width - self.presentedSize.width) / 2;
+        presentedFrame.origin.y = (self.containerView.bounds.size.height - self.presentedSize.height) / 2;
+        return presentedFrame;
     } else if (self.verticalInset != 0) {
         CGRect presentedFrame = self.containerView.bounds;
         presentedFrame.origin.y = self.verticalInset;

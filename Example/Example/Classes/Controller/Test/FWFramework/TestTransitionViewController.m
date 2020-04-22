@@ -107,6 +107,59 @@
 
 @end
 
+@interface TestTransitionAlertViewController : UIViewController
+
+@end
+
+@implementation TestTransitionAlertViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationCustom;
+        
+        FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
+        transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
+            return [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        };
+        self.fwModalTransition = transition;
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    UIView *centerView = [UIView fwAutoLayoutView];
+    centerView.backgroundColor = UIColor.whiteColor;
+    [self.view addSubview:centerView];
+    centerView.fwLayoutChain.center();
+    
+    UIView *contentView = [UIView fwAutoLayoutView];
+    [centerView addSubview:contentView];
+    contentView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
+    
+    FWWeakifySelf();
+    [contentView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self fwCloseViewControllerAnimated:YES];
+    }];
+    
+    // 更新子视图frame
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
+    
+    // 更新动画参数
+    FWPresentationController *presentation = (FWPresentationController *)self.fwModalTransition.presentationController;
+    presentation.cornerRadius = 10;
+    presentation.rectCorner = UIRectCornerAllCorners;
+    presentation.presentedSize = centerView.bounds.size;
+}
+
+@end
+
 #define TestTransitinDuration 0.35
 
 @interface TestTransitionViewController ()
@@ -136,6 +189,7 @@
                                           @[@"自定义present", @"onPresentAnimation"],
                                           @[@"swipe present", @"onPresentSwipe"],
                                           @[@"自定义controller", @"onPresentController"],
+                                          @[@"自定义alert", @"onPresentAlert"],
                                           @[@"interactive present", @"onPresentInteractive"],
                                           @[@"present without animation", @"onPresentNoAnimate"],
                                           @[@"System Push", @"onPush"],
@@ -273,6 +327,12 @@
     nav.modalPresentationStyle = UIModalPresentationCustom;
     nav.fwModalTransition = transition;
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onPresentAlert
+{
+    TestTransitionAlertViewController *vc = [TestTransitionAlertViewController new];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)onPresentInteractive
