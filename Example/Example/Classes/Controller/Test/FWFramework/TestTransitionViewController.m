@@ -119,7 +119,7 @@
     if (self) {
         self.modalPresentationStyle = UIModalPresentationCustom;
         
-        FWSwipeAnimatedTransition *transition = [[FWSwipeAnimatedTransition alloc] init];
+        FWScaleAnimatedTransition *transition = [[FWScaleAnimatedTransition alloc] init];
         transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
             return [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
         };
