@@ -144,7 +144,7 @@
     [self fwShowSheetWithTitle:@"操作表标题"
                        message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive].fwEnabled(NO).fwPreferred(YES), @"操作2"]
+                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive].fwPreferred(YES), @"操作2", [UIAlertAction fwActionWithTitle:@"操作3" style:UIAlertActionStyleDefault].fwEnabled(NO)]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }

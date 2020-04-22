@@ -191,4 +191,54 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 
 @end
 
+#pragma mark - FWAlertConfig
+
+/*! @brief 弹出框全局配置单例类，默认系统样式 */
+@interface FWAlertConfig : NSObject
+
+/*! @brief 单例模式 */
+@property (class, nonatomic, readonly) FWAlertConfig *sharedInstance;
+
+/*! @brief 背景颜色 */
+@property (nonatomic, strong, nullable) UIColor *backgroundColor;
+/*! @brief 分割线颜色 */
+@property (nonatomic, strong, nullable) UIColor *separatorColor;
+
+/*! @brief 标题颜色 */
+@property (nonatomic, strong, nullable) UIColor *titleColor;
+/*! @brief 标题字体 */
+@property (nonatomic, strong, nullable) UIFont *titleFont;
+
+/*! @brief 消息颜色 */
+@property (nonatomic, strong, nullable) UIColor *messageColor;
+/*! @brief 消息字体 */
+@property (nonatomic, strong, nullable) UIFont *messageFont;
+
+/*! @brief 默认动作颜色 */
+@property (nonatomic, strong, nullable) UIColor *defaultActionColor;
+/*! @brief 默认动作字体 */
+@property (nonatomic, strong, nullable) UIFont *defaultActionFont;
+
+/*! @brief 取消动作颜色 */
+@property (nonatomic, strong, nullable) UIColor *cancelActionColor;
+/*! @brief 取消动作字体 */
+@property (nonatomic, strong, nullable) UIFont *cancelActionFont;
+
+/*! @brief 警告动作颜色 */
+@property (nonatomic, strong, nullable) UIColor *destructiveActionColor;
+/*! @brief 警告动作字体 */
+@property (nonatomic, strong, nullable) UIFont *destructiveActionFont;
+
+/*! @brief 首选动作颜色 */
+@property (nonatomic, strong, nullable) UIColor *preferredActionColor;
+/*! @brief 首选动作字体 */
+@property (nonatomic, strong, nullable) UIFont *preferredActionFont;
+
+/*! @brief 禁用动作颜色 */
+@property (nonatomic, strong, nullable) UIColor *disabledActionColor;
+/*! @brief 禁用动作字体 */
+@property (nonatomic, strong, nullable) UIFont *disabledActionFont;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -412,3 +412,19 @@
 }
 
 @end
+
+#pragma mark - FWAlertConfig
+
+@implementation FWAlertConfig
+
++ (FWAlertConfig *)sharedInstance
+{
+    static FWAlertConfig *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWAlertConfig alloc] init];
+    });
+    return instance;
+}
+
+@end
