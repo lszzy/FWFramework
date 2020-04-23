@@ -427,10 +427,10 @@
                                                                              message:(attributedMessage ? nil : message)
                                                                       preferredStyle:preferredStyle];
     if (attributedTitle) {
-        
+        [alertController fwPerformPropertySelector:@"attributedTitle" withObject:attributedTitle];
     }
     if (attributedMessage) {
-        
+        [alertController fwPerformPropertySelector:@"attributedMessage" withObject:attributedMessage];
     }
     return alertController;
 }

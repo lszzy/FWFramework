@@ -304,9 +304,9 @@
     
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@", ucfirstName]);
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
     if ([self respondsToSelector:selector]) return [self performSelector:selector withObject:object];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@", name]);
+    selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
     if ([self respondsToSelector:selector]) return [self performSelector:selector withObject:object];
     #pragma clang diagnostic pop
     return nil;
