@@ -22,19 +22,6 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
     FWAlertPrioritySuper,
 };
 
-// 弹出框优先级协议。控制器必须声明该协议后优先级才会生效
-@protocol FWAlertPriorityProtocol <NSObject>
-
-@optional
-
-// 设置弹出框优先级，默认普通
-@property (nonatomic, assign) FWAlertPriority *fwAlertPriority;
-
-// 根据优先级在视图控制器中显示弹出框，必须调用此方法才生效
-- (void)fwAlertPresentInViewController:(UIViewController *)viewController;
-
-@end
-
 #pragma mark - UIViewController+FWAlert
 
 // 视图控制器系统弹出框分类，支持优先级
