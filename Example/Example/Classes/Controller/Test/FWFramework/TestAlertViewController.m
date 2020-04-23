@@ -158,4 +158,37 @@
                       priority:FWAlertPriorityNormal];
 }
 
+- (void)onAlertA
+{
+    [self fwShowAlertWithTitle:[[NSAttributedString alloc] initWithString:@"警告框标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
+                       message:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor]}]
+                        cancel:@"确定"
+                   cancelBlock:nil];
+}
+
+- (void)onSheetA
+{
+    [self fwShowSheetWithTitle:[[NSAttributedString alloc] initWithString:@"操作表标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
+                       message:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor]}]
+                        cancel:@"取消"
+                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive], @"操作2"]
+                   actionBlock:^(NSInteger index) {
+                       NSLog(@"点击的操作index: %@", @(index));
+                   }];
+}
+
+- (void)onAlertP
+{
+    [self fwShowAlertWithTitle:@"普通优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
+    [self fwShowAlertWithTitle:@"低优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
+    [self fwShowAlertWithTitle:@"高优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+}
+
+- (void)onSheetP
+{
+    [self fwShowSheetWithTitle:@"普通优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
+    [self fwShowSheetWithTitle:@"高优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+    [self fwShowSheetWithTitle:@"低优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
+}
+
 @end
