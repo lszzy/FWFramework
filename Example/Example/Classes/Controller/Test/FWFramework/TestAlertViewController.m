@@ -161,7 +161,7 @@
 - (void)onAlertA
 {
     [self fwShowAlertWithTitle:[[NSAttributedString alloc] initWithString:@"警告框标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
-                       message:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor]}]
+                       message:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor], NSFontAttributeName: [UIFont appFontSize:12]}]
                         cancel:@"确定"
                    cancelBlock:nil];
 }
@@ -169,7 +169,7 @@
 - (void)onSheetA
 {
     [self fwShowSheetWithTitle:[[NSAttributedString alloc] initWithString:@"操作表标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
-                       message:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor]}]
+                       message:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor], NSFontAttributeName: [UIFont appFontSize:12]}]
                         cancel:@"取消"
                        actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive], @"操作2"]
                    actionBlock:^(NSInteger index) {
