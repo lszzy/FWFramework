@@ -120,31 +120,71 @@ static CGFloat const kAppOpacityLow    = 0.25;
 
 @interface UIFont (AppStandard)
 
-// 普通，最大号字体，金额等重要内容
+// Regular普通，超大号，导航栏标题，18
 + (UIFont *)appFontHuge;
-// 普通，大号字体，按钮标题等
+// Regular普通，大号字体，表格标题等，17
 + (UIFont *)appFontLarge;
-// 普通，普通字体，普通文本，表格标题等
+// Regular普通，普通字体，文字，15
 + (UIFont *)appFontNormal;
-// 普通，小号字体，表格副标题等
+// Regular普通，小号字体，13
 + (UIFont *)appFontSmall;
-// 普通，最小号字体，最不重要内容等
+// Regular普通，超小号字体，10
 + (UIFont *)appFontTiny;
+
+// Bold粗体，超大号粗体，导航栏标题，18
++ (UIFont *)appFontBoldHuge;
+// Bold粗体，大号粗体，表格标题等，17
++ (UIFont *)appFontBoldLarge;
+// Bold粗体，普通粗体，文字，15
++ (UIFont *)appFontBoldNormal;
+// Bold粗体，小号粗体，13
++ (UIFont *)appFontBoldSmall;
+// Bold粗体，超小号粗体，10
++ (UIFont *)appFontBoldTiny;
+
+// Light细体，超大号粗体，导航栏标题，18
++ (UIFont *)appFontLightHuge;
+// Light细体，大号粗体，表格标题等，17
++ (UIFont *)appFontLightLarge;
+// Light细体，普通粗体，文字，15
++ (UIFont *)appFontLightNormal;
+// Light细体，小号粗体，13
++ (UIFont *)appFontLightSmall;
+// Light细体，超小号粗体，10
++ (UIFont *)appFontLightTiny;
+
+// Medium中黑，超大号粗体，导航栏标题，18
++ (UIFont *)appFontMediumHuge;
+// Medium中黑，大号粗体，表格标题等，17
++ (UIFont *)appFontMediumLarge;
+// Medium中黑，普通粗体，文字，15
++ (UIFont *)appFontMediumNormal;
+// Medium中黑，小号粗体，13
++ (UIFont *)appFontMediumSmall;
+// Medium中黑，超小号粗体，10
++ (UIFont *)appFontMediumTiny;
+
+// SemiBold中粗，超大号粗体，导航栏标题，18
++ (UIFont *)appFontSemiBoldHuge;
+// SemiBold中粗，大号粗体，表格标题等，17
++ (UIFont *)appFontSemiBoldLarge;
+// SemiBold中粗，普通粗体，文字，15
++ (UIFont *)appFontSemiBoldNormal;
+// SemiBold中粗，小号粗体，13
++ (UIFont *)appFontSemiBoldSmall;
+// SemiBold中粗，超小号粗体，10
++ (UIFont *)appFontSemiBoldTiny;
+
 // 普通，自定义字号
 + (UIFont *)appFontSize:(CGFloat)size;
-
-// 粗体，最大号字体，金额等重要内容
-+ (UIFont *)appFontBoldHuge;
-// 粗体，大号字体，按钮标题等
-+ (UIFont *)appFontBoldLarge;
-// 粗体，普通字体，普通文本，表格标题等
-+ (UIFont *)appFontBoldNormal;
-// 粗体，小号字体，表格副标题等
-+ (UIFont *)appFontBoldSmall;
-// 粗体，最小号字体，最不重要内容等
-+ (UIFont *)appFontBoldTiny;
 // 粗体，自定义字号
 + (UIFont *)appFontBoldSize:(CGFloat)size;
+// 细体，自定义字号
++ (UIFont *)appFontLightSize:(CGFloat)size;
+// 中黑，自定义字号
++ (UIFont *)appFontMediumSize:(CGFloat)size;
+// 中粗，自定义字号
++ (UIFont *)appFontSemiBoldSize:(CGFloat)size;
 
 @end
 
