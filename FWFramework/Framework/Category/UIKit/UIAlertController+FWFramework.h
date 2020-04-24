@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @interface UIAlertController (FWFramework)
 
-// 快速创建弹出控制器，支持NSString|NSAttributedString
+// 快速创建弹出控制器，title和message仅支持NSString
 + (instancetype)fwAlertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle;
 
 #pragma mark - Appearance
@@ -42,14 +42,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 系统弹出框动作分类，自定义属性
- @discussion 系统弹出框action仅支持NSString和UIAlertAction，如果需要支持NSAttributedString等，请使用FWAlertController
+ @discussion 系统弹出动作title仅支持NSString和UIAlertAction，如果需要支持NSAttributedString等，请使用FWAlertController
 */
 @interface UIAlertAction (FWFramework)
 
 // 快速创建弹出动作，支持标题和样式
 + (instancetype)fwActionWithTitle:(nullable NSString *)title style:(UIAlertActionStyle)style;
 
-// 快速创建弹出动作，支持NSString|UIAlertAction(拷贝)
+// 快速创建弹出动作，title仅支持NSString和UIAlertAction(拷贝)
 + (instancetype)fwActionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler;
 
 // 是否是首选动作
