@@ -21,15 +21,42 @@ static UIAlertController *fwAlertControllerAppearance = nil;
 {
     NSAttributedString *attributedTitle = [title isKindOfClass:[NSAttributedString class]] ? title : nil;
     NSAttributedString *attributedMessage = [message isKindOfClass:[NSAttributedString class]] ? message : nil;
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:(attributedTitle ? nil : title)
-                                                                             message:(attributedMessage ? nil : message)
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:(attributedTitle ? attributedTitle.string : title)
+                                                                             message:(attributedMessage ? attributedMessage.string : message)
                                                                       preferredStyle:preferredStyle];
+    
+    if (!attributedTitle && fwAlertControllerAppearance && alertController.title) {
+        NSMutableDictionary *titleAttributes = [NSMutableDictionary new];
+        if (fwAlertControllerAppearance.fwTitleFont) {
+            titleAttributes[NSFontAttributeName] = fwAlertControllerAppearance.fwTitleFont;
+        }
+        if (fwAlertControllerAppearance.fwTitleColor) {
+            titleAttributes[NSForegroundColorAttributeName] = fwAlertControllerAppearance.fwTitleColor;
+        }
+        if (titleAttributes.count > 0) {
+            attributedTitle = [[NSAttributedString alloc] initWithString:alertController.title attributes:titleAttributes];
+        }
+    }
     if (attributedTitle) {
         [alertController fwPerformPropertySelector:@"attributedTitle" withObject:attributedTitle];
+    }
+    
+    if (!attributedMessage && fwAlertControllerAppearance && alertController.message) {
+        NSMutableDictionary *messageAttributes = [NSMutableDictionary new];
+        if (fwAlertControllerAppearance.fwMessageFont) {
+            messageAttributes[NSFontAttributeName] = fwAlertControllerAppearance.fwMessageFont;
+        }
+        if (fwAlertControllerAppearance.fwMessageColor) {
+            messageAttributes[NSForegroundColorAttributeName] = fwAlertControllerAppearance.fwMessageColor;
+        }
+        if (messageAttributes.count > 0) {
+            attributedMessage = [[NSAttributedString alloc] initWithString:alertController.message attributes:messageAttributes];
+        }
     }
     if (attributedMessage) {
         [alertController fwPerformPropertySelector:@"attributedMessage" withObject:attributedMessage];
     }
+    
     return alertController;
 }
 
@@ -99,14 +126,35 @@ static UIAlertAction *fwAlertActionAppearance = nil;
 
 + (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
 {
-    UIAlertAction *action = [object isKindOfClass:[UIAlertAction class]] ? (UIAlertAction *)object : nil;
-    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(action ? action.title : object)
+    UIAlertAction *action = [object isKindOfClass:[UIAlertAction class]] ? object : nil;
+    NSAttributedString *attributedTitle = [object isKindOfClass:[NSAttributedString class]] ? object : nil;
+    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(action ? action.title : (attributedTitle ? attributedTitle.string : object))
                                                           style:(action ? action.style : style)
                                                          handler:handler];
+    
     if (action) {
         alertAction.enabled = action.enabled;
         alertAction.fwIsPreferred = action.fwIsPreferred;
     }
+    
+    if (fwAlertActionAppearance && alertAction.title) {
+        UIColor *titleColor = nil;
+        if (!alertAction.enabled) {
+            titleColor = fwAlertActionAppearance.fwDisabledActionColor;
+        } else if (alertAction.fwIsPreferred) {
+            titleColor = fwAlertActionAppearance.fwPreferredActionColor;
+        } else if (alertAction.style == UIAlertActionStyleDestructive) {
+            titleColor = fwAlertActionAppearance.fwDestructiveActionColor;
+        } else if (alertAction.style == UIAlertActionStyleCancel) {
+            titleColor = fwAlertActionAppearance.fwCancelActionColor;
+        } else {
+            titleColor = fwAlertActionAppearance.fwDefaultActionColor;
+        }
+        if (titleColor) {
+            [alertAction fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+        }
+    }
+    
     return alertAction;
 }
 
