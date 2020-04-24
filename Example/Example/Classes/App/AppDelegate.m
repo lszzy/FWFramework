@@ -78,15 +78,15 @@
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
     UIAlertController.fwAppearance.fwTitleFont = [UIFont appFontBoldSize:16];
-    UIAlertController.fwAppearance.fwTitleColor = [UIColor appColorHex:0x111111];
+    UIAlertController.fwAppearance.fwTitleColor = [UIColor purpleColor];
     UIAlertController.fwAppearance.fwMessageFont = [UIFont appFontSize:13];
-    UIAlertController.fwAppearance.fwMessageColor = [UIColor appColorHex:0x111111];
+    UIAlertController.fwAppearance.fwMessageColor = [UIColor cyanColor];
     
-    UIAlertAction.fwAppearance.fwCancelActionColor = [UIColor appColorHex:0x111111];
-    UIAlertAction.fwAppearance.fwDefaultActionColor = [UIColor appColorHex:0xBFA300];
-    UIAlertAction.fwAppearance.fwDestructiveActionColor = [UIColor appColorHex:0xC69B00 alpha:0.5];
-    UIAlertAction.fwAppearance.fwDisabledActionColor = [UIColor appColorHex:0x111111 alpha:0.5];
-    UIAlertAction.fwAppearance.fwPreferredActionColor = [UIColor appColorHex:0xC69B00];
+    UIAlertAction.fwAppearance.fwCancelActionColor = [UIColor blackColor];
+    UIAlertAction.fwAppearance.fwDefaultActionColor = [UIColor blueColor];
+    UIAlertAction.fwAppearance.fwDestructiveActionColor = [UIColor redColor];
+    UIAlertAction.fwAppearance.fwDisabledActionColor = [UIColor grayColor];
+    UIAlertAction.fwAppearance.fwPreferredActionColor = [UIColor greenColor];
     
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
