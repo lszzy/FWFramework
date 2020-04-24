@@ -148,6 +148,25 @@
     }
 }
 
+- (BOOL)presentationEnabled
+{
+    return self.presentationBlock != nil || self.presentationController != nil;
+}
+
+- (void)setPresentationEnabled:(BOOL)presentationEnabled
+{
+    if (presentationEnabled == self.presentationEnabled) return;
+    
+    if (presentationEnabled) {
+        self.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
+            return [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        };
+    } else {
+        self.presentationBlock = nil;
+        self.presentationController = nil;
+    }
+}
+
 - (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
     if (self.transitionType == FWAnimatedTransitionTypeDismiss || self.transitionType == FWAnimatedTransitionTypePop) {
@@ -510,6 +529,7 @@
         _showDimming = YES;
         _dimmingClick = YES;
         _dimmingAnimated = YES;
+        _dimmingColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         _rectCorner = UIRectCornerTopLeft | UIRectCornerTopRight;
         _cornerRadius = 0;
         _presentedFrame = CGRectZero;
@@ -525,7 +545,7 @@
 {
     if (!_dimmingView) {
         _dimmingView = [[UIView alloc] initWithFrame:self.containerView.bounds];
-        _dimmingView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        _dimmingView.backgroundColor = self.dimmingColor;
         
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAction:)];
         [_dimmingView addGestureRecognizer:tapGesture];
