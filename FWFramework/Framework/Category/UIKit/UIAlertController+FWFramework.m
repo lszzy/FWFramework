@@ -138,29 +138,24 @@ static UIAlertAction *fwAlertActionAppearance = nil;
     }
     
     if (fwAlertActionAppearance && alertAction.title) {
-        [alertAction fwAlertActionUpdateStyle];
+        UIColor *titleColor = nil;
+        if (!alertAction.enabled) {
+            titleColor = fwAlertActionAppearance.fwDisabledActionColor;
+        } else if (alertAction.fwIsPreferred) {
+            titleColor = fwAlertActionAppearance.fwPreferredActionColor;
+        } else if (alertAction.style == UIAlertActionStyleDestructive) {
+            titleColor = fwAlertActionAppearance.fwDestructiveActionColor;
+        } else if (alertAction.style == UIAlertActionStyleCancel) {
+            titleColor = fwAlertActionAppearance.fwCancelActionColor;
+        } else {
+            titleColor = fwAlertActionAppearance.fwDefaultActionColor;
+        }
+        if (titleColor) {
+            [alertAction fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+        }
     }
     
     return alertAction;
-}
-
-- (void)fwAlertActionUpdateStyle
-{
-    UIColor *titleColor = nil;
-    if (!self.enabled) {
-        titleColor = fwAlertActionAppearance.fwDisabledActionColor;
-    } else if (self.fwIsPreferred) {
-        titleColor = fwAlertActionAppearance.fwPreferredActionColor;
-    } else if (self.style == UIAlertActionStyleDestructive) {
-        titleColor = fwAlertActionAppearance.fwDestructiveActionColor;
-    } else if (self.style == UIAlertActionStyleCancel) {
-        titleColor = fwAlertActionAppearance.fwCancelActionColor;
-    } else {
-        titleColor = fwAlertActionAppearance.fwDefaultActionColor;
-    }
-    if (titleColor) {
-        [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
-    }
 }
 
 - (BOOL)fwIsPreferred
@@ -171,10 +166,6 @@ static UIAlertAction *fwAlertActionAppearance = nil;
 - (void)setFwIsPreferred:(BOOL)fwIsPreferred
 {
     objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (fwAlertActionAppearance && self.title) {
-        [self fwAlertActionUpdateStyle];
-    }
 }
 
 - (UIAlertAction *(^)(BOOL))fwPreferred

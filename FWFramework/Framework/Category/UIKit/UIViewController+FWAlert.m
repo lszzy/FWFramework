@@ -228,11 +228,9 @@
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (!preferredAction) {
-            preferredAction = alertController.actions.firstObject;
-            preferredAction.fwIsPreferred = YES;
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
         }
-        alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
@@ -338,11 +336,9 @@
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (!preferredAction) {
-            preferredAction = alertController.actions.firstObject;
-            preferredAction.fwIsPreferred = YES;
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
         }
-        alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
@@ -411,11 +407,9 @@
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (!preferredAction) {
-            preferredAction = alertController.actions.firstObject;
-            preferredAction.fwIsPreferred = YES;
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
         }
-        alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
