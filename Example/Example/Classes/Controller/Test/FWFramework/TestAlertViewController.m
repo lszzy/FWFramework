@@ -162,8 +162,11 @@
 {
     [self fwShowAlertWithTitle:[[NSAttributedString alloc] initWithString:@"警告框标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
                        message:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor], NSFontAttributeName: [UIFont appFontSize:12]}]
-                        cancel:@"确定"
-                   cancelBlock:nil];
+                        cancel:@"取消"
+                       actions:@[[UIAlertAction fwActionWithTitle:@"按钮1" style:UIAlertActionStyleDestructive].fwPreferred(YES), [UIAlertAction fwActionWithTitle:@"按钮2" style:UIAlertActionStyleDestructive], @"按钮3", [UIAlertAction fwActionWithTitle:@"按钮4" style:UIAlertActionStyleDestructive].fwEnabled(NO)]
+                   actionBlock:nil
+                   cancelBlock:nil
+                      priority:FWAlertPriorityNormal];
 }
 
 - (void)onSheetA
@@ -171,7 +174,7 @@
     [self fwShowSheetWithTitle:[[NSAttributedString alloc] initWithString:@"操作表标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
                        message:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor], NSFontAttributeName: [UIFont appFontSize:12]}]
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive], @"操作2"]
+                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive].fwPreferred(YES), [UIAlertAction fwActionWithTitle:@"操作2" style:UIAlertActionStyleDestructive], @"操作3", [UIAlertAction fwActionWithTitle:@"操作4" style:UIAlertActionStyleDestructive].fwEnabled(NO)]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }];
