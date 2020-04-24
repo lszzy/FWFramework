@@ -195,19 +195,6 @@
                                                                         preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *preferredAction = nil;
     
-    // 添加取消按钮
-    if (cancel != nil) {
-        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
-        }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
-        [alertController addAction:cancelAction];
-    }
-    
     // 添加动作按钮
     NSInteger actionsCount = actions ? actions.count : 0;
     if (actionsCount > 0) {
@@ -224,13 +211,28 @@
         }
     }
     
+    // 添加取消按钮
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        if (cancelAction.fwIsPreferred) {
+            preferredAction = cancelAction;
+        }
+        [alertController addAction:cancelAction];
+    }
+    
     // 显示Alert
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
+        if (!preferredAction) {
+            preferredAction = alertController.actions.firstObject;
+            preferredAction.fwIsPreferred = YES;
         }
+        alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
@@ -305,19 +307,6 @@
     // 添加输入框并初始化输入框
     [alertController addTextFieldWithConfigurationHandler:promptBlock];
     
-    // 添加取消按钮
-    if (cancel != nil) {
-        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
-        }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
-        [alertController addAction:cancelAction];
-    }
-    
     // 添加确定按钮
     if (confirm != nil) {
         UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:confirm style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -332,13 +321,28 @@
         [alertController addAction:alertAction];
     }
     
+    // 添加取消按钮
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        if (cancelAction.fwIsPreferred) {
+            preferredAction = cancelAction;
+        }
+        [alertController addAction:cancelAction];
+    }
+    
     // 显示Alert
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
+        if (!preferredAction) {
+            preferredAction = alertController.actions.firstObject;
+            preferredAction.fwIsPreferred = YES;
         }
+        alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
@@ -407,9 +411,11 @@
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
+        if (!preferredAction) {
+            preferredAction = alertController.actions.firstObject;
+            preferredAction.fwIsPreferred = YES;
         }
+        alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
