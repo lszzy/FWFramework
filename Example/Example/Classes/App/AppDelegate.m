@@ -77,6 +77,17 @@
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
+    UIAlertController.fwAppearance.fwTitleFont = [UIFont appFontBoldSize:16];
+    UIAlertController.fwAppearance.fwTitleColor = [UIColor appColorHex:0x111111];
+    UIAlertController.fwAppearance.fwMessageFont = [UIFont appFontSize:13];
+    UIAlertController.fwAppearance.fwMessageColor = [UIColor appColorHex:0x111111];
+    
+    UIAlertAction.fwAppearance.fwCancelActionColor = [UIColor appColorHex:0x111111];
+    UIAlertAction.fwAppearance.fwDefaultActionColor = [UIColor appColorHex:0xBFA300];
+    UIAlertAction.fwAppearance.fwDestructiveActionColor = [UIColor appColorHex:0xC69B00 alpha:0.5];
+    UIAlertAction.fwAppearance.fwDisabledActionColor = [UIColor appColorHex:0x111111 alpha:0.5];
+    UIAlertAction.fwAppearance.fwPreferredActionColor = [UIColor appColorHex:0xC69B00];
+    
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];

@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Appearance
 
 // Appearance单例，统一设置样式
-+ (instancetype)appearance;
++ (instancetype)fwAppearance;
 
 // 默认动作颜色，仅全局生效
 @property (nonatomic, strong, nullable) UIColor *fwDefaultActionColor;

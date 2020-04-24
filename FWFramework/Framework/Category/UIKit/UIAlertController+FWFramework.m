@@ -88,7 +88,7 @@ static UIAlertController *fwAlertControllerAppearance = nil;
 
 #pragma mark - UIAlertAction+FWFramework
 
-static UIAlertController *fwAlertActionAppearance = nil;
+static UIAlertAction *fwAlertActionAppearance = nil;
 
 @implementation UIAlertAction (FWFramework)
 
