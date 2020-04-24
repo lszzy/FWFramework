@@ -53,6 +53,10 @@ static CGFloat const kAppOpacityHigh   = 0.75;
 static CGFloat const kAppOpacityNormal = 0.5;
 static CGFloat const kAppOpacityLow    = 0.25;
 
+// 适配
+#define kAppScaleFactorWidth ([UIScreen mainScreen].bounds.size.width / 375.f)
+#define kAppScaleFactorHeight ([UIScreen mainScreen].bounds.size.height / 812.f)
+
 #pragma mark - UIColor+AppStandard
 
 @interface UIColor (AppStandard)
