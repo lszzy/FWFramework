@@ -221,6 +221,8 @@
 		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
 		2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
+		2F46B77A24534E8100EEEFF0 /* UIAlertController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F46B77824534E8100EEEFF0 /* UIAlertController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F46B77B24534E8100EEEFF0 /* UIAlertController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F46B77924534E8100EEEFF0 /* UIAlertController+FWFramework.m */; };
 		2F54320821AFC8F70061D742 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F54320921AFC8F70061D742 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */; };
 		2F6492AC2316880C002E15AC /* FWCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6492AA2316880C002E15AC /* FWCollectionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -568,6 +570,8 @@
 		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
 		2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+FWFramework.h"; sourceTree = "<group>"; };
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
+		2F46B77824534E8100EEEFF0 /* UIAlertController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+FWFramework.h"; sourceTree = "<group>"; };
+		2F46B77924534E8100EEEFF0 /* UIAlertController+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+FWFramework.m"; sourceTree = "<group>"; };
 		2F54320621AFC8F70061D742 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2F54320721AFC8F70061D742 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
 		2F6492AA2316880C002E15AC /* FWCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWCollectionViewController.h; sourceTree = "<group>"; };
@@ -833,6 +837,8 @@
 				2FBFB77822C71A3500E669B6 /* UIView+FWLayoutChain.swift */,
 				2FACF02C2303A90B007AFC16 /* UIView+FWTheme.h */,
 				2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */,
+				2F46B77824534E8100EEEFF0 /* UIAlertController+FWFramework.h */,
+				2F46B77924534E8100EEEFF0 /* UIAlertController+FWFramework.m */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
 				2F03A4F6216CF4B9001965A1 /* UIViewController+FWAlert.m */,
 				2FDF9B19244FE97B000BB1E3 /* UIViewController+FWAlert.swift */,
@@ -1255,6 +1261,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F46B77A24534E8100EEEFF0 /* UIAlertController+FWFramework.h in Headers */,
 				2FDF9B06244EED91000BB1E3 /* NSBundle+FWLanguage.h in Headers */,
 				2F1B2487242D0336009A0F83 /* FWAnimatedImageView.h in Headers */,
 				2F1B2486242D0336009A0F83 /* FWImageCoder.h in Headers */,
@@ -1527,6 +1534,7 @@
 				2FCE515121D3B14A009EA65E /* FWLocationManager.m in Sources */,
 				2F03A5FC216CF4B9001965A1 /* FWPromise.m in Sources */,
 				2F1B248A242D0336009A0F83 /* FWAnimatedImage.m in Sources */,
+				2F46B77B24534E8100EEEFF0 /* UIAlertController+FWFramework.m in Sources */,
 				2F03A579216CF4B9001965A1 /* UIView+FWAutoLayout.m in Sources */,
 				2FCE516221D3BA32009EA65E /* FWCacheMemory.m in Sources */,
 				2F92114023E912F800183311 /* FWStatisticalManager.m in Sources */,

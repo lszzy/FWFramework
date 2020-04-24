@@ -7,6 +7,7 @@
 //
 
 #import "UIViewController+FWAlert.h"
+#import "UIAlertController+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
@@ -411,94 +412,6 @@
         }
     }
     [alertController fwPresentInViewController:self];
-}
-
-@end
-
-#pragma mark - UIAlertController+FWAlert
-
-@implementation UIAlertController (FWAlert)
-
-+ (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle
-{
-    NSAttributedString *attributedTitle = [title isKindOfClass:[NSAttributedString class]] ? title : nil;
-    NSAttributedString *attributedMessage = [message isKindOfClass:[NSAttributedString class]] ? message : nil;
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:(attributedTitle ? nil : title)
-                                                                             message:(attributedMessage ? nil : message)
-                                                                      preferredStyle:preferredStyle];
-    if (attributedTitle) {
-        [alertController fwPerformPropertySelector:@"attributedTitle" withObject:attributedTitle];
-    }
-    if (attributedMessage) {
-        [alertController fwPerformPropertySelector:@"attributedMessage" withObject:attributedMessage];
-    }
-    return alertController;
-}
-
-@end
-
-#pragma mark - UIAlertAction+FWAlert
-
-@implementation UIAlertAction (FWAlert)
-
-+ (instancetype)fwActionWithTitle:(NSString *)title style:(UIAlertActionStyle)style
-{
-    return [self actionWithTitle:title style:style handler:nil];
-}
-
-+ (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
-{
-    UIAlertAction *action = [object isKindOfClass:[UIAlertAction class]] ? (UIAlertAction *)object : nil;
-    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(action ? action.title : object)
-                                                          style:(action ? action.style : style)
-                                                         handler:handler];
-    if (action) {
-        alertAction.enabled = action.enabled;
-        alertAction.fwIsPreferred = action.fwIsPreferred;
-    }
-    return alertAction;
-}
-
-- (BOOL)fwIsPreferred
-{
-    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
-}
-
-- (void)setFwIsPreferred:(BOOL)fwIsPreferred
-{
-    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIAlertAction *(^)(BOOL))fwPreferred
-{
-    return ^UIAlertAction *(BOOL preferred) {
-        self.fwIsPreferred = preferred;
-        return self;
-    };
-}
-
-- (UIAlertAction *(^)(BOOL))fwEnabled
-{
-    return ^UIAlertAction *(BOOL enabled) {
-        self.enabled = enabled;
-        return self;
-    };
-}
-
-@end
-
-#pragma mark - FWAlertConfig
-
-@implementation FWAlertConfig
-
-+ (FWAlertConfig *)sharedInstance
-{
-    static FWAlertConfig *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWAlertConfig alloc] init];
-    });
-    return instance;
 }
 
 @end
