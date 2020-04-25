@@ -1407,30 +1407,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
 }
 
-// 专门处理第三方IQKeyboardManager,非自定义view时禁用IQKeyboardManager移动textView/textField效果，自定义view时取消禁用
-- (void)handleIQKeyboardManager {
-    SEL selector = NSSelectorFromString(@"sharedManager");
-    IMP imp = [NSClassFromString(@"IQKeyboardManager") methodForSelector:selector];
-    if (imp != NULL) {
-        NSObject *(*func)(id, SEL) = (void *)imp;
-        NSObject *mgr = func(NSClassFromString(@"IQKeyboardManager"), selector);
-        if ([mgr isKindOfClass:NSClassFromString(@"IQKeyboardManager")]) {
-            @try {
-                NSMutableSet *disabledDistanceHandlingClasses = [mgr valueForKey:@"_disabledDistanceHandlingClasses"];
-                NSMutableSet *disabledToolbarClasses = [mgr valueForKey:@"_disabledToolbarClasses"];
-                if (![disabledDistanceHandlingClasses containsObject:NSClassFromString(@"FWAlertController")]) {
-                    [disabledDistanceHandlingClasses addObject:NSClassFromString(@"FWAlertController")];
-                    [disabledToolbarClasses addObject:NSClassFromString(@"FWAlertController")];
-                }
-            } @catch (NSException *exception) {
-                NSLog(@"exception = %@",exception);
-            } @finally {
-                
-            }
-        }
-    }
-}
-
 - (void)configureHeaderView {
     if (self.image) {
         self.headerView.imageLimitSize = _imageLimitSize;
@@ -1526,8 +1502,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [self handleIQKeyboardManager];
     
     if (!_isForceOffset && !_customAlertView && !_customHeaderView && !_customActionSequenceView && !_componentView) {
         // 监听键盘改变frame，键盘frame改变需要移动对话框
