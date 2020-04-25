@@ -146,6 +146,8 @@
 		2F6EFC552403B38200C4AC7E /* frame3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F6EFC462403B38200C4AC7E /* frame3.png */; };
 		2F6EFC562403B38200C4AC7E /* progressive.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2F6EFC472403B38200C4AC7E /* progressive.jpg */; };
 		2F6EFC572403B38200C4AC7E /* progressive.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2F6EFC472403B38200C4AC7E /* progressive.jpg */; };
+		2F8552A9245479C3001639FD /* TestCustomerAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8552A8245479C3001639FD /* TestCustomerAlertController.m */; };
+		2F8552AA245479C3001639FD /* TestCustomerAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8552A8245479C3001639FD /* TestCustomerAlertController.m */; };
 		2F8901B92284228E00EDC7D4 /* TestMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8901B82284228E00EDC7D4 /* TestMenuViewController.m */; };
 		2F8EB34221ED881900BB24AB /* TestNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8EB34121ED881900BB24AB /* TestNavigationViewController.m */; };
 		2F8EB35321F0211500BB24AB /* TestBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8EB35221F0211500BB24AB /* TestBarViewController.m */; };
@@ -324,6 +326,8 @@
 		2F6EFC462403B38200C4AC7E /* frame3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = frame3.png; sourceTree = "<group>"; };
 		2F6EFC472403B38200C4AC7E /* progressive.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = progressive.jpg; sourceTree = "<group>"; };
 		2F7E423220FC327D00CE3E2F /* SwiftHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
+		2F8552A7245479C3001639FD /* TestCustomerAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCustomerAlertController.h; sourceTree = "<group>"; };
+		2F8552A8245479C3001639FD /* TestCustomerAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCustomerAlertController.m; sourceTree = "<group>"; };
 		2F8901B72284228E00EDC7D4 /* TestMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMenuViewController.h; sourceTree = "<group>"; };
 		2F8901B82284228E00EDC7D4 /* TestMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestMenuViewController.m; sourceTree = "<group>"; };
 		2F8EB34021ED881900BB24AB /* TestNavigationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNavigationViewController.h; sourceTree = "<group>"; };
@@ -558,6 +562,8 @@
 			children = (
 				2FCD374B22533825001E81DB /* TestAlertViewController.h */,
 				2FCD374C22533825001E81DB /* TestAlertViewController.m */,
+				2F8552A7245479C3001639FD /* TestCustomerAlertController.h */,
+				2F8552A8245479C3001639FD /* TestCustomerAlertController.m */,
 				2FCD375622533B3B001E81DB /* TestAnimationViewController.h */,
 				2FCD375722533B3C001E81DB /* TestAnimationViewController.m */,
 				2F955BEC230E98F90019535A /* TestAttributedStringViewController.h */,
@@ -1176,6 +1182,7 @@
 				2F43858B2318F687003A683C /* ObjcController.m in Sources */,
 				2F43858C2318F687003A683C /* SwiftController.swift in Sources */,
 				2F5B1EE6231CADBF007884EC /* BaseWebViewController.m in Sources */,
+				2F8552AA245479C3001639FD /* TestCustomerAlertController.m in Sources */,
 				2FB4B9B723D0913800C0A351 /* TestStatisticalViewController.m in Sources */,
 				2F43858D2318F687003A683C /* TestWebViewController.m in Sources */,
 				2F43858E2318F687003A683C /* TestLayerViewController.m in Sources */,
@@ -1255,6 +1262,7 @@
 				2FBFB70922C5047700E669B6 /* SwiftController.swift in Sources */,
 				2F5B1EE5231CADBF007884EC /* BaseWebViewController.m in Sources */,
 				2FB4B9B623D0913800C0A351 /* TestStatisticalViewController.m in Sources */,
+				2F8552A9245479C3001639FD /* TestCustomerAlertController.m in Sources */,
 				2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */,
 				2FCD376122533BA1001E81DB /* TestLayerViewController.m in Sources */,
 				2FCD375D22533B5A001E81DB /* TestBorderViewController.m in Sources */,

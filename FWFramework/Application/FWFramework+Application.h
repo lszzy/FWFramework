@@ -31,6 +31,7 @@
 
 // View
 #import "FWView.h"
+#import "FWAlertController.h"
 #import "FWAttributedLabel.h"
 #import "FWBannerView.h"
 #import "FWCollectionViewFlowLayout.h"

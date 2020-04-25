@@ -89,6 +89,7 @@
                                              @[@"FWIndicatorControl", @"TestIndicatorControlViewController"],
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
+                                             @[@"FWAlertController", @"TestCustomerAlertController"],
                                              @[@"MapView", @"TestMapViewController"],
                                              @[@"DrawerView", @"TestDrawerViewController"],
                                              @[@"MenuView", @"TestMenuViewController"],

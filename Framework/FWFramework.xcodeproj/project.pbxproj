@@ -242,7 +242,7 @@
 		2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */; };
 		2F8480CF23A3BC3100FAAAC0 /* FWTabAnimated.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
-		2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8AA7322454720F00C57232 /* FWAlertController.h */; };
+		2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8AA7322454720F00C57232 /* FWAlertController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8AA7352454720F00C57232 /* FWAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AA7332454720F00C57232 /* FWAlertController.m */; };
 		2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F370224002D79003472B5 /* NSObject+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F370324002D79003472B5 /* NSObject+FWThread.m */; };
@@ -1267,6 +1267,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */,
 				2F46B77A24534E8100EEEFF0 /* UIAlertController+FWFramework.h in Headers */,
 				2FDF9B06244EED91000BB1E3 /* NSBundle+FWLanguage.h in Headers */,
 				2F1B2487242D0336009A0F83 /* FWAnimatedImageView.h in Headers */,
@@ -1337,7 +1338,6 @@
 				2FCE515221D3B14A009EA65E /* FWStorekitManager.h in Headers */,
 				2FCE513F21D3A43E009EA65E /* FWDatabaseQueue.h in Headers */,
 				2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */,
-				2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */,
 				2FCE514721D3A6A5009EA65E /* FWDatabaseAdditions.h in Headers */,
 				2FCE514321D3A457009EA65E /* FWResultSet.h in Headers */,
 				2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */,
