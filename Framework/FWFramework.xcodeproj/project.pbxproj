@@ -242,6 +242,8 @@
 		2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */; };
 		2F8480CF23A3BC3100FAAAC0 /* FWTabAnimated.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
+		2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8AA7322454720F00C57232 /* FWAlertController.h */; };
+		2F8AA7352454720F00C57232 /* FWAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AA7332454720F00C57232 /* FWAlertController.m */; };
 		2F8F370424002D79003472B5 /* NSObject+FWThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F370224002D79003472B5 /* NSObject+FWThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8F370524002D79003472B5 /* NSObject+FWThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8F370324002D79003472B5 /* NSObject+FWThread.m */; };
 		2F8F3726240289CB003472B5 /* NSNull+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -592,6 +594,8 @@
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTabAnimated.h; sourceTree = "<group>"; };
 		2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTabAnimated.m; sourceTree = "<group>"; };
+		2F8AA7322454720F00C57232 /* FWAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAlertController.h; sourceTree = "<group>"; };
+		2F8AA7332454720F00C57232 /* FWAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAlertController.m; sourceTree = "<group>"; };
 		2F8F370224002D79003472B5 /* NSObject+FWThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWThread.h"; sourceTree = "<group>"; };
 		2F8F370324002D79003472B5 /* NSObject+FWThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWThread.m"; sourceTree = "<group>"; };
 		2F8F3724240289CB003472B5 /* NSNull+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNull+FWFramework.h"; sourceTree = "<group>"; };
@@ -1223,6 +1227,8 @@
 		2FD1A52321D4B83E00A215C2 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				2F8AA7322454720F00C57232 /* FWAlertController.h */,
+				2F8AA7332454720F00C57232 /* FWAlertController.m */,
 				2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */,
 				2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */,
 				2FB7CBC721C23728002E5412 /* FWBannerView.h */,
@@ -1331,6 +1337,7 @@
 				2FCE515221D3B14A009EA65E /* FWStorekitManager.h in Headers */,
 				2FCE513F21D3A43E009EA65E /* FWDatabaseQueue.h in Headers */,
 				2FCE513B21D3A41D009EA65E /* FWDatabasePool.h in Headers */,
+				2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */,
 				2FCE514721D3A6A5009EA65E /* FWDatabaseAdditions.h in Headers */,
 				2FCE514321D3A457009EA65E /* FWResultSet.h in Headers */,
 				2FCE513621D3746B009EA65E /* FWDatabase.h in Headers */,
@@ -1574,6 +1581,7 @@
 				2FCE514421D3A457009EA65E /* FWResultSet.m in Sources */,
 				2F03A5E3216CF4B9001965A1 /* NSObject+FWSafeType.m in Sources */,
 				2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */,
+				2F8AA7352454720F00C57232 /* FWAlertController.m in Sources */,
 				2FD1A51821D4B41D00A215C2 /* FWModel.m in Sources */,
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
 				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
