@@ -286,13 +286,13 @@
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
     selector = NSSelectorFromString(name);
-    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
     selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
     selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
-    if ([self respondsToSelector:selector]) return [self performSelector:selector];
+    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
     #pragma clang diagnostic pop
     return nil;
 }
@@ -305,9 +305,9 @@
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self performSelector:selector withObject:object];
+    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector withObject:object];
     selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self performSelector:selector withObject:object];
+    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector withObject:object];
     #pragma clang diagnostic pop
     return nil;
 }
