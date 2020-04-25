@@ -183,6 +183,8 @@
 		2F10013624211B3900C1CC3B /* WKWebView+FWJsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F10013424211B3900C1CC3B /* WKWebView+FWJsBridge.m */; };
 		2F159BE121B4E3C6002DE322 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F159BE221B4E3C6002DE322 /* NSURL+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */; };
+		2F160C2D24548A4E00F68AB4 /* FWAppAlertPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F160C2B24548A4E00F68AB4 /* FWAppAlertPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F160C2E24548A4E00F68AB4 /* FWAppAlertPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F160C2C24548A4E00F68AB4 /* FWAppAlertPlugin.m */; };
 		2F17B6BA237D14E2007E1DCC /* UIView+FWDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F17B6B8237D14E2007E1DCC /* UIView+FWDrawerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F17B6BB237D14E2007E1DCC /* UIView+FWDrawerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F17B6B9237D14E2007E1DCC /* UIView+FWDrawerView.m */; };
 		2F1B2486242D0336009A0F83 /* FWImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1B2480242D0335009A0F83 /* FWImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -534,6 +536,8 @@
 		2F10013424211B3900C1CC3B /* WKWebView+FWJsBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+FWJsBridge.m"; sourceTree = "<group>"; };
 		2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
 		2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWFramework.m"; sourceTree = "<group>"; };
+		2F160C2B24548A4E00F68AB4 /* FWAppAlertPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAppAlertPlugin.h; sourceTree = "<group>"; };
+		2F160C2C24548A4E00F68AB4 /* FWAppAlertPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppAlertPlugin.m; sourceTree = "<group>"; };
 		2F17B6B8237D14E2007E1DCC /* UIView+FWDrawerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+FWDrawerView.h"; sourceTree = "<group>"; };
 		2F17B6B9237D14E2007E1DCC /* UIView+FWDrawerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWDrawerView.m"; sourceTree = "<group>"; };
 		2F1B2480242D0335009A0F83 /* FWImageCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWImageCoder.h; sourceTree = "<group>"; };
@@ -1134,6 +1138,8 @@
 				2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */,
 				2F70EDE12327867100498538 /* FWAppRefreshPlugin.h */,
 				2F70EDE22327867100498538 /* FWAppRefreshPlugin.m */,
+				2F160C2B24548A4E00F68AB4 /* FWAppAlertPlugin.h */,
+				2F160C2C24548A4E00F68AB4 /* FWAppAlertPlugin.m */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -1267,6 +1273,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F160C2D24548A4E00F68AB4 /* FWAppAlertPlugin.h in Headers */,
 				2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */,
 				2F46B77A24534E8100EEEFF0 /* UIAlertController+FWFramework.h in Headers */,
 				2FDF9B06244EED91000BB1E3 /* NSBundle+FWLanguage.h in Headers */,
@@ -1691,6 +1698,7 @@
 				2F0FFF1A21D0ACFA00049383 /* UIScrollView+FWPullRefresh.m in Sources */,
 				2F03A58B216CF4B9001965A1 /* UIView+FWBorder.m in Sources */,
 				2F03A644216CF882001965A1 /* FWRequest.m in Sources */,
+				2F160C2E24548A4E00F68AB4 /* FWAppAlertPlugin.m in Sources */,
 				2F2121D82408E49D00F74653 /* WKWebView+FWFramework.m in Sources */,
 				2F69A650230D223D0063D95A /* FWPagerView.m in Sources */,
 				2F0FFF2C21D1DB1800049383 /* FWAttributedLabel.m in Sources */,
