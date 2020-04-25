@@ -296,51 +296,23 @@
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
-    // 初始化Alert
-    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *preferredAction = nil;
-    
-    // 添加输入框并初始化输入框
-    [alertController addTextFieldWithConfigurationHandler:promptBlock];
-    
-    // 添加确定按钮
-    if (confirm != nil) {
-        UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:confirm style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            if (confirmBlock) {
-                // 回调输入框的值
-                confirmBlock([alertController.textFields objectAtIndex:0].text);
-            }
-        }];
-        if (alertAction.fwIsPreferred) {
-            preferredAction = alertAction;
-        }
-        [alertController addAction:alertAction];
-    }
-    
-    // 添加取消按钮
-    if (cancel != nil) {
-        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
-        }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
-        [alertController addAction:cancelAction];
-    }
-    
-    // 显示Alert
-    alertController.fwPriorityEnabled = YES;
-    alertController.fwPriority = priority;
-    if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
-        }
-    }
-    [alertController fwPresentInViewController:self];
+    [self fwShowPromptWithTitle:title
+                        message:message
+                         cancel:cancel
+                        confirm:confirm
+                    promptCount:1
+                    promptBlock:^(UITextField *textField, NSInteger index) {
+                        if (promptBlock) {
+                            promptBlock(textField);
+                        }
+                    }
+                   confirmBlock:^(NSArray<NSString *> *texts) {
+                        if (confirmBlock) {
+                            confirmBlock(texts.firstObject);
+                        }
+                    }
+                    cancelBlock:cancelBlock
+                       priority:priority];
 }
 
 - (void)fwShowPromptWithTitle:(id)title
