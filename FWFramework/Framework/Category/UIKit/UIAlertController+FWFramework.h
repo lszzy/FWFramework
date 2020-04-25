@@ -22,19 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 快速创建弹出控制器，title和message仅支持NSString
 + (instancetype)fwAlertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle;
 
-#pragma mark - Appearance
+// 设置属性标题
+@property (nonatomic, copy, nullable) NSAttributedString *fwAttributedTitle;
 
-// 样式单例，全局设置样式
-+ (instancetype)fwAppearance;
-
-// 标题颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
-// 标题字体，仅全局生效
-@property (nonatomic, strong, nullable) UIFont *fwTitleFont;
-// 消息颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwMessageColor;
-// 消息字体，仅全局生效
-@property (nonatomic, strong, nullable) UIFont *fwMessageFont;
+// 设置属性消息
+@property (nonatomic, copy, nullable) NSAttributedString *fwAttributedMessage;
 
 @end
 
@@ -55,27 +47,54 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否是首选动作
 @property (nonatomic, assign) BOOL fwIsPreferred;
 
+// 指定标题颜色
+@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
+
 // 快捷设置首选动作
 @property (nonatomic, copy, readonly) UIAlertAction *(^fwPreferred)(BOOL preferred) NS_REFINED_FOR_SWIFT;
 
 // 快捷设置是否禁用
 @property (nonatomic, copy, readonly) UIAlertAction *(^fwEnabled)(BOOL enabled) NS_REFINED_FOR_SWIFT;
 
-#pragma mark - Appearance
+// 快捷设置标题颜色
+@property (nonatomic, copy, readonly) UIAlertAction *(^fwColor)(UIColor * _Nullable color) NS_REFINED_FOR_SWIFT;
 
-// Appearance单例，统一设置样式
-+ (instancetype)fwAppearance;
+@end
 
+#pragma mark - FWAlertAppearance
+
+/*!
+ @brief 系统弹出框样式配置类，由于系统兼容性，建议优先使用FWAlertController
+ @discussion 如果未自定义样式，显示效果和系统一致，不会产生任何影响
+*/
+@interface FWAlertAppearance : NSObject
+
+// 单例模式，统一设置样式
++ (instancetype)appearance;
+
+// 是否启用Controller样式，设置后自动启用
+@property (nonatomic, assign, readonly) BOOL controllerEnabled;
+// 标题颜色，仅全局生效
+@property (nonatomic, strong, nullable) UIColor *titleColor;
+// 标题字体，仅全局生效
+@property (nonatomic, strong, nullable) UIFont *titleFont;
+// 消息颜色，仅全局生效
+@property (nonatomic, strong, nullable) UIColor *messageColor;
+// 消息字体，仅全局生效
+@property (nonatomic, strong, nullable) UIFont *messageFont;
+
+// 是否启用Action样式，设置后自动启用
+@property (nonatomic, assign, readonly) BOOL actionEnabled;
 // 默认动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwDefaultActionColor;
+@property (nonatomic, strong, nullable) UIColor *defaultActionColor;
 // 取消动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwCancelActionColor;
+@property (nonatomic, strong, nullable) UIColor *cancelActionColor;
 // 警告动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwDestructiveActionColor;
+@property (nonatomic, strong, nullable) UIColor *destructiveActionColor;
 // 禁用动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwDisabledActionColor;
+@property (nonatomic, strong, nullable) UIColor *disabledActionColor;
 // 首选动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *fwPreferredActionColor;
+@property (nonatomic, strong, nullable) UIColor *preferredActionColor;
 
 @end
 
