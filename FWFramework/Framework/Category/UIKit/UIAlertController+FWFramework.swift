@@ -1,8 +1,8 @@
 //
-//  UIViewController+FWAlert.swift
+//  UIAlertController+FWFramework.swift
 //  FWFramework
 //
-//  Created by wuyong on 2020/4/22.
+//  Created by wuyong on 2020/4/25.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
@@ -21,6 +21,13 @@ extension UIAlertAction {
     @discardableResult
     public func fwEnabled(_ enabled: Bool) -> UIAlertAction {
         self.isEnabled = enabled
+        return self
+    }
+    
+    /// 快捷设置标题颜色
+    @discardableResult
+    public func fwColor(_ color: UIColor?) -> UIAlertAction {
+        self.fwTitleColor = color
         return self
     }
 }

@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  @discussion 系统弹出框仅支持参数类型如下：
     1.title和message仅支持NSString
     2.action仅支持NSString和UIAlertAction
-    如果需要支持NSAttributedString等，请使用FWAlertController
+    如果需要支持NSAttributedString等，建议优先使用FWAlertController
  */
 @interface UIViewController (FWAlert)
 

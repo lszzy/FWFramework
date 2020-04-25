@@ -8,14 +8,48 @@
  */
 
 #import "UIAlertController+FWFramework.h"
+#import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIAlertController+FWFramework
 
-static UIAlertController *fwAlertControllerAppearance = nil;
-
 @implementation UIAlertController (FWFramework)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerAlertViewDidLoad)];
+    });
+}
+
+- (void)fwInnerAlertViewDidLoad
+{
+    [self fwInnerAlertViewDidLoad];
+    if (self.preferredStyle != UIAlertControllerStyleActionSheet) return;
+    if (!self.fwAttributedTitle && !self.fwAttributedMessage) return;
+    
+    // 兼容iOS13操作表设置title和message样式不生效问题
+    if (@available(iOS 13.0, *)) {
+        Class targetClass = objc_getClass("_UIInterfaceActionGroupHeaderScrollView");
+        if (!targetClass) return;
+        
+        [self.view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
+            if (![view isKindOfClass:targetClass]) return NO;
+            
+            [view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
+                if ([view isKindOfClass:[UIVisualEffectView class]]) {
+                    // 取消effect效果，否则样式不生效，全是灰色
+                    ((UIVisualEffectView *)view).effect = nil;
+                    return YES;
+                }
+                return NO;
+            }];
+            return YES;
+        }];
+    }
+}
 
 + (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle
 {
@@ -25,97 +59,60 @@ static UIAlertController *fwAlertControllerAppearance = nil;
                                                                              message:(attributedMessage ? attributedMessage.string : message)
                                                                       preferredStyle:preferredStyle];
     
-    if (!attributedTitle && fwAlertControllerAppearance && alertController.title) {
-        NSMutableDictionary *titleAttributes = [NSMutableDictionary new];
-        if (fwAlertControllerAppearance.fwTitleFont) {
-            titleAttributes[NSFontAttributeName] = fwAlertControllerAppearance.fwTitleFont;
-        }
-        if (fwAlertControllerAppearance.fwTitleColor) {
-            titleAttributes[NSForegroundColorAttributeName] = fwAlertControllerAppearance.fwTitleColor;
-        }
-        if (titleAttributes.count > 0) {
-            attributedTitle = [[NSAttributedString alloc] initWithString:alertController.title attributes:titleAttributes];
-        }
-    }
     if (attributedTitle) {
-        [alertController fwPerformPropertySelector:@"attributedTitle" withObject:attributedTitle];
+        alertController.fwAttributedTitle = attributedTitle;
+    } else if (alertController.title.length > 0 && FWAlertAppearance.appearance.controllerEnabled) {
+        NSMutableDictionary *titleAttributes = [NSMutableDictionary new];
+        if (FWAlertAppearance.appearance.titleFont) {
+            titleAttributes[NSFontAttributeName] = FWAlertAppearance.appearance.titleFont;
+        }
+        if (FWAlertAppearance.appearance.titleColor) {
+            titleAttributes[NSForegroundColorAttributeName] = FWAlertAppearance.appearance.titleColor;
+        }
+        alertController.fwAttributedTitle = [[NSAttributedString alloc] initWithString:alertController.title attributes:titleAttributes];
     }
     
-    if (!attributedMessage && fwAlertControllerAppearance && alertController.message) {
-        NSMutableDictionary *messageAttributes = [NSMutableDictionary new];
-        if (fwAlertControllerAppearance.fwMessageFont) {
-            messageAttributes[NSFontAttributeName] = fwAlertControllerAppearance.fwMessageFont;
-        }
-        if (fwAlertControllerAppearance.fwMessageColor) {
-            messageAttributes[NSForegroundColorAttributeName] = fwAlertControllerAppearance.fwMessageColor;
-        }
-        if (messageAttributes.count > 0) {
-            attributedMessage = [[NSAttributedString alloc] initWithString:alertController.message attributes:messageAttributes];
-        }
-    }
     if (attributedMessage) {
-        [alertController fwPerformPropertySelector:@"attributedMessage" withObject:attributedMessage];
+        alertController.fwAttributedMessage = attributedMessage;
+    } else if (alertController.message.length > 0 && FWAlertAppearance.appearance.controllerEnabled) {
+        NSMutableDictionary *messageAttributes = [NSMutableDictionary new];
+        if (FWAlertAppearance.appearance.messageFont) {
+            messageAttributes[NSFontAttributeName] = FWAlertAppearance.appearance.messageFont;
+        }
+        if (FWAlertAppearance.appearance.messageColor) {
+            messageAttributes[NSForegroundColorAttributeName] = FWAlertAppearance.appearance.messageColor;
+        }
+        alertController.fwAttributedMessage = [[NSAttributedString alloc] initWithString:alertController.message attributes:messageAttributes];
     }
     
     return alertController;
 }
 
-#pragma mark - Appearance
-
-+ (instancetype)fwAppearance
+- (NSAttributedString *)fwAttributedTitle
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        fwAlertControllerAppearance = [[self alloc] init];
-    });
-    return fwAlertControllerAppearance;
+    return objc_getAssociatedObject(self, @selector(fwAttributedTitle));
 }
 
-- (UIColor *)fwTitleColor
+- (void)setFwAttributedTitle:(NSAttributedString *)fwAttributedTitle
 {
-    return objc_getAssociatedObject(self, @selector(fwTitleColor));
+    objc_setAssociatedObject(self, @selector(fwAttributedTitle), fwAttributedTitle, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self fwPerformPropertySelector:@"attributedTitle" withObject:fwAttributedTitle];
 }
 
-- (void)setFwTitleColor:(UIColor *)fwTitleColor
+- (NSAttributedString *)fwAttributedMessage
 {
-    objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return objc_getAssociatedObject(self, @selector(fwAttributedMessage));
 }
 
-- (UIFont *)fwTitleFont
+- (void)setFwAttributedMessage:(NSAttributedString *)fwAttributedMessage
 {
-    return objc_getAssociatedObject(self, @selector(fwTitleFont));
-}
-
-- (void)setFwTitleFont:(UIFont *)fwTitleFont
-{
-    objc_setAssociatedObject(self, @selector(fwTitleFont), fwTitleFont, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIColor *)fwMessageColor
-{
-    return objc_getAssociatedObject(self, @selector(fwMessageColor));
-}
-
-- (void)setFwMessageColor:(UIColor *)fwMessageColor
-{
-    objc_setAssociatedObject(self, @selector(fwMessageColor), fwMessageColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIFont *)fwMessageFont
-{
-    return objc_getAssociatedObject(self, @selector(fwMessageFont));
-}
-
-- (void)setFwMessageFont:(UIFont *)fwMessageFont
-{
-    objc_setAssociatedObject(self, @selector(fwMessageFont), fwMessageFont, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwAttributedMessage), fwAttributedMessage, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self fwPerformPropertySelector:@"attributedMessage" withObject:fwAttributedMessage];
 }
 
 @end
 
 #pragma mark - UIAlertAction+FWFramework
-
-static UIAlertAction *fwAlertActionAppearance = nil;
 
 @implementation UIAlertAction (FWFramework)
 
@@ -137,22 +134,22 @@ static UIAlertAction *fwAlertActionAppearance = nil;
         alertAction.fwIsPreferred = action.fwIsPreferred;
     }
     
-    if (fwAlertActionAppearance && alertAction.title) {
+    if (action.fwTitleColor) {
+        alertAction.fwTitleColor = action.fwTitleColor;
+    } else if (alertAction.title.length > 0 && FWAlertAppearance.appearance.actionEnabled) {
         UIColor *titleColor = nil;
         if (!alertAction.enabled) {
-            titleColor = fwAlertActionAppearance.fwDisabledActionColor;
+            titleColor = FWAlertAppearance.appearance.disabledActionColor;
         } else if (alertAction.fwIsPreferred) {
-            titleColor = fwAlertActionAppearance.fwPreferredActionColor;
+            titleColor = FWAlertAppearance.appearance.preferredActionColor;
         } else if (alertAction.style == UIAlertActionStyleDestructive) {
-            titleColor = fwAlertActionAppearance.fwDestructiveActionColor;
+            titleColor = FWAlertAppearance.appearance.destructiveActionColor;
         } else if (alertAction.style == UIAlertActionStyleCancel) {
-            titleColor = fwAlertActionAppearance.fwCancelActionColor;
+            titleColor = FWAlertAppearance.appearance.cancelActionColor;
         } else {
-            titleColor = fwAlertActionAppearance.fwDefaultActionColor;
+            titleColor = FWAlertAppearance.appearance.defaultActionColor;
         }
-        if (titleColor) {
-            [alertAction fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
-        }
+        alertAction.fwTitleColor = titleColor;
     }
     
     return alertAction;
@@ -166,6 +163,17 @@ static UIAlertAction *fwAlertActionAppearance = nil;
 - (void)setFwIsPreferred:(BOOL)fwIsPreferred
 {
     objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIColor *)fwTitleColor
+{
+    return objc_getAssociatedObject(self, @selector(fwTitleColor));
+}
+
+- (void)setFwTitleColor:(UIColor *)fwTitleColor
+{
+    objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwPerformPropertySelector:@"titleTextColor" withObject:fwTitleColor];
 }
 
 - (UIAlertAction *(^)(BOOL))fwPreferred
@@ -184,65 +192,40 @@ static UIAlertAction *fwAlertActionAppearance = nil;
     };
 }
 
-#pragma mark - Appearance
-
-+ (instancetype)fwAppearance
+- (UIAlertAction *(^)(UIColor *))fwColor
 {
+    return ^UIAlertAction *(UIColor *color) {
+        self.fwTitleColor = color;
+        return self;
+    };
+}
+
+@end
+
+#pragma mark - FWAlertAppearance
+
+@implementation FWAlertAppearance
+
++ (instancetype)appearance
+{
+    static FWAlertAppearance *appearance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        fwAlertActionAppearance = [[self alloc] init];
+        appearance = [[self alloc] init];
     });
-    return fwAlertActionAppearance;
+    return appearance;
 }
 
-- (UIColor *)fwDefaultActionColor
+- (BOOL)controllerEnabled
 {
-    return objc_getAssociatedObject(self, @selector(fwDefaultActionColor));
+    return self.titleColor || self.titleFont ||
+           self.messageColor || self.messageFont;
 }
 
-- (void)setFwDefaultActionColor:(UIColor *)fwDefaultActionColor
+- (BOOL)actionEnabled
 {
-    objc_setAssociatedObject(self, @selector(fwDefaultActionColor), fwDefaultActionColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIColor *)fwCancelActionColor
-{
-    return objc_getAssociatedObject(self, @selector(fwCancelActionColor));
-}
-
-- (void)setFwCancelActionColor:(UIColor *)fwCancelActionColor
-{
-    objc_setAssociatedObject(self, @selector(fwCancelActionColor), fwCancelActionColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIColor *)fwDestructiveActionColor
-{
-    return objc_getAssociatedObject(self, @selector(fwDestructiveActionColor));
-}
-
-- (void)setFwDestructiveActionColor:(UIColor *)fwDestructiveActionColor
-{
-    objc_setAssociatedObject(self, @selector(fwDestructiveActionColor), fwDestructiveActionColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIColor *)fwDisabledActionColor
-{
-    return objc_getAssociatedObject(self, @selector(fwDisabledActionColor));
-}
-
-- (void)setFwDisabledActionColor:(UIColor *)fwDisabledActionColor
-{
-    objc_setAssociatedObject(self, @selector(fwDisabledActionColor), fwDisabledActionColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIColor *)fwPreferredActionColor
-{
-    return objc_getAssociatedObject(self, @selector(fwPreferredActionColor));
-}
-
-- (void)setFwPreferredActionColor:(UIColor *)fwPreferredActionColor
-{
-    objc_setAssociatedObject(self, @selector(fwPreferredActionColor), fwPreferredActionColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return self.cancelActionColor || self.defaultActionColor || self.destructiveActionColor ||
+           self.disabledActionColor || self.preferredActionColor;
 }
 
 @end
