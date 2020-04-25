@@ -72,10 +72,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 单例模式，统一设置样式
 + (instancetype)appearance;
 
-// 是否默认设置第一个动作为首选动作，默认NO同系统
+// 是否默认设置第一个动作为首选动作，先渲染actions再cancel，默认NO
 @property (nonatomic, assign) BOOL preferredFirstAction;
-// 是否默认设置取消动作为首选动作，默认NO同系统
-@property (nonatomic, assign) BOOL preferredCancelAction;
+// 是否默认设置最后一个动作为首选动作，先渲染actions再cancel，默认NO
+@property (nonatomic, assign) BOOL preferredLastAction;
 
 // 是否启用Controller样式，设置后自动启用
 @property (nonatomic, assign, readonly) BOOL controllerEnabled;

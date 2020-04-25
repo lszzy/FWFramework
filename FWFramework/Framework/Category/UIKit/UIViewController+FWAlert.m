@@ -416,7 +416,7 @@
         if (FWAlertAppearance.appearance.preferredFirstAction) {
             preferredAction = alertController.actions.firstObject;
             preferredAction.fwIsPreferred = YES;
-        } else if (FWAlertAppearance.appearance.preferredCancelAction) {
+        } else if (FWAlertAppearance.appearance.preferredLastAction) {
             preferredAction = alertController.actions.lastObject;
             preferredAction.fwIsPreferred = YES;
         }
