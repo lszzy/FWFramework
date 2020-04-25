@@ -9,6 +9,7 @@
 #import "UIViewController+FWAlert.h"
 #import "UIAlertController+FWFramework.h"
 #import "NSObject+FWRuntime.h"
+#import "FWPlugin.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIViewController+FWAlert
@@ -203,6 +204,13 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
+    // 优先调用插件
+    id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
+    if (alertPlugin && [alertPlugin respondsToSelector:@selector(fwViewController:showAlert:title:message:cancel:actions:promptCount:promptBlock:actionBlock:cancelBlock:priority:)]) {
+        [alertPlugin fwViewController:self showAlert:style title:title message:message cancel:cancel actions:actions promptCount:promptCount promptBlock:promptBlock actionBlock:actionBlock cancelBlock:cancelBlock priority:priority];
+        return;
+    }
+    
     // 初始化Alert
     UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
                                                                                message:message
