@@ -215,7 +215,6 @@
     UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
                                                                                message:message
                                                                         preferredStyle:style];
-    UIAlertAction *preferredAction = nil;
     
     // 添加输入框并初始化输入框
     for (NSInteger promptIndex = 0; promptIndex < promptCount; promptIndex++) {
@@ -225,6 +224,7 @@
     }
     
     // 添加动作按钮
+    UIAlertAction *preferredAction = nil;
     for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
         UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:actions[actionIndex] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if (actionBlock) {

@@ -14,6 +14,18 @@
 
 @implementation TestAlertViewController
 
+- (void)renderModel
+{
+    [self fwSetRightBarItem:@"切换插件" block:^(id  _Nonnull sender) {
+        id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
+        if (alertPlugin) {
+            [[FWPluginManager sharedInstance] unloadPlugin:@protocol(FWAlertPlugin)];
+        } else {
+            [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAppAlertPlugin class]];
+        }
+    }];
+}
+
 - (void)renderData
 {
     [self.tableData addObjectsFromArray:@[
