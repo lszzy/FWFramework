@@ -77,12 +77,15 @@
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
+    FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
+        return alertController.actions.firstObject;
+    };
+    
     FWAlertAppearance.appearance.titleFont = [UIFont appFontBoldSize:16];
     FWAlertAppearance.appearance.titleColor = [UIColor purpleColor];
     FWAlertAppearance.appearance.messageFont = [UIFont appFontSize:13];
     FWAlertAppearance.appearance.messageColor = [UIColor cyanColor];
     
-    FWAlertAppearance.appearance.preferredFirstAction = YES;
     FWAlertAppearance.appearance.cancelActionColor = [UIColor blackColor];
     FWAlertAppearance.appearance.defaultActionColor = [UIColor blueColor];
     FWAlertAppearance.appearance.destructiveActionColor = [UIColor redColor];

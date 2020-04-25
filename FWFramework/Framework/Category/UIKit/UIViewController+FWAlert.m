@@ -197,9 +197,7 @@
                    promptCount:0
                    promptBlock:nil
                    actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
-                       if (actionBlock) {
-                           actionBlock(index);
-                       }
+                       if (actionBlock) actionBlock(index);
                    }
                    cancelBlock:cancelBlock
                       priority:priority];
@@ -233,9 +231,7 @@
                         cancel:cancel
                        actions:[NSArray arrayWithObjects:confirm, nil]
                    actionBlock:^(NSInteger index) {
-                       if (confirmBlock) {
-                           confirmBlock();
-                       }
+                       if (confirmBlock) confirmBlock();
                    }
                    cancelBlock:cancelBlock
                       priority:priority];
@@ -272,14 +268,10 @@
                         confirm:confirm
                     promptCount:1
                     promptBlock:^(UITextField *textField, NSInteger index) {
-                        if (promptBlock) {
-                            promptBlock(textField);
-                        }
+                        if (promptBlock) promptBlock(textField);
                     }
                    confirmBlock:^(NSArray<NSString *> *values) {
-                        if (confirmBlock) {
-                            confirmBlock(values.firstObject);
-                        }
+                        if (confirmBlock) confirmBlock(values.firstObject);
                     }
                     cancelBlock:cancelBlock
                        priority:priority];
@@ -303,9 +295,7 @@
                    promptCount:promptCount
                    promptBlock:promptBlock
                    actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
-                       if (confirmBlock) {
-                           confirmBlock(values);
-                       }
+                       if (confirmBlock) confirmBlock(values);
                    }
                    cancelBlock:cancelBlock
                       priority:priority];
@@ -344,9 +334,7 @@
                    promptCount:0
                    promptBlock:nil
                    actionBlock:^(NSArray<NSString *> * _Nonnull values, NSInteger index) {
-                       if (actionBlock) {
-                           actionBlock(index);
-                       }
+                       if (actionBlock) actionBlock(index);
                    }
                    cancelBlock:cancelBlock
                       priority:priority];
@@ -374,9 +362,7 @@
     // 添加输入框并初始化输入框
     for (NSInteger promptIndex = 0; promptIndex < promptCount; promptIndex++) {
         [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-            if (promptBlock) {
-                promptBlock(textField, promptIndex);
-            }
+            if (promptBlock) promptBlock(textField, promptIndex);
         }];
     }
     
@@ -392,33 +378,24 @@
                 actionBlock(values.copy, actionIndex);
             }
         }];
-        if (alertAction.fwIsPreferred) {
-            preferredAction = alertAction;
-        }
+        if (alertAction.fwIsPreferred) preferredAction = alertAction;
         [alertController addAction:alertAction];
     }
     
     // 添加取消按钮
     if (cancel != nil) {
         UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
+            if (cancelBlock) cancelBlock();
         }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
+        if (cancelAction.fwIsPreferred) preferredAction = cancelAction;
         [alertController addAction:cancelAction];
     }
     
     // 添加首选按钮
     if (!preferredAction && alertController.actions.count > 0) {
-        if (FWAlertAppearance.appearance.preferredFirstAction) {
-            preferredAction = alertController.actions.firstObject;
-            preferredAction.fwIsPreferred = YES;
-        } else if (FWAlertAppearance.appearance.preferredLastAction) {
-            preferredAction = alertController.actions.lastObject;
-            preferredAction.fwIsPreferred = YES;
+        if (FWAlertAppearance.appearance.preferredActionBlock) {
+            preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
+            if (preferredAction) preferredAction.fwIsPreferred = YES;
         }
     }
     
@@ -426,9 +403,7 @@
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
-        }
+        if (preferredAction != nil) alertController.preferredAction = preferredAction;
     }
     [alertController fwPresentInViewController:self];
 }
