@@ -23,6 +23,7 @@
                                          @[@"确认框(详细)", @"onConfirm2"],
                                          @[@"输入框(简单)", @"onPrompt1"],
                                          @[@"输入框(详细)", @"onPrompt2"],
+                                         @[@"输入框(复杂)", @"onPrompt3"],
                                          @[@"操作表(简单)", @"onSheet1"],
                                          @[@"操作表(详细)", @"onSheet2"],
                                          @[@"警告框(样式)", @"onAlertA"],
@@ -126,6 +127,31 @@
                    confirmBlock:^(NSString *text){
                        NSLog(@"输入内容：%@", text);
                    }
+                    cancelBlock:^{
+                        NSLog(@"点击了取消按钮");
+                    }
+                       priority:FWAlertPriorityNormal];
+}
+
+- (void)onPrompt3
+{
+    [self fwShowPromptWithTitle:@"输入框标题"
+                        message:@"输入框消息"
+                         cancel:@"取消"
+                        confirm:@"确定"
+                    promptCount:2
+                    promptBlock:^(UITextField * _Nonnull textField, NSInteger index) {
+                        if (index == 0) {
+                            textField.placeholder = @"请输入用户名";
+                            textField.secureTextEntry = NO;
+                        } else {
+                            textField.placeholder = @"请输入密码";
+                            textField.secureTextEntry = YES;
+                        }
+                    }
+                   confirmBlock:^(NSArray<NSString *> * _Nonnull texts) {
+                        NSLog(@"输入内容：%@", texts);
+                    }
                     cancelBlock:^{
                         NSLog(@"点击了取消按钮");
                     }
