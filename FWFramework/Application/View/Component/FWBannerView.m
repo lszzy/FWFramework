@@ -820,7 +820,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             }
         } else {
             // FWImage
-            UIImage *image = [FWAnimatedImage imageNamed:imagePath];
+            UIImage *image = [UIImage imageNamed:imagePath];
             // FWImage
             cell.imageView.image = image ?: self.placeholderImage;
         }
