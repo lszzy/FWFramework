@@ -860,7 +860,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, strong) NSMutableArray *actionSequenceViewConstraints;
 @property (nonatomic, assign) FWAlertControllerStyle preferredStyle;
 @property (nonatomic, assign) FWAlertAnimationType animationType;
-@property (nonatomic, assign) SPBackgroundViewAppearanceStyle backgroundViewAppearanceStyle;
+@property (nonatomic, assign) FWBackgroundViewAppearanceStyle backgroundViewAppearanceStyle;
 @property (nonatomic, assign) CGFloat backgroundViewAlpha;
 
 // action数组
@@ -933,7 +933,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     if (!self.isForceLayout) { // 如果为NO,说明外界没有设置actionAxis，此时按照默认方式排列
         if (self.preferredStyle == FWAlertControllerStyleAlert) {
-            if (self.actions.count > _maxNumberOfActionHorizontalArrangementForAlert) { // alert样式下，action的个数大于2时垂直排列,这里不等式右边写_maxNumberOfActionHorizontalArrangementForAlert是为了让被废弃的_maxNumberOfActionHorizontalArrangementForAlert依然生效
+            if (self.actions.count > 2) { // alert样式下，action的个数大于2时垂直排列,这里不等式右边写_maxNumberOfActionHorizontalArrangementForAlert是为了让被废弃的_maxNumberOfActionHorizontalArrangementForAlert依然生效
                 _actionAxis = UILayoutConstraintAxisVertical; // 本框架任何一处都不允许调用actionAxis的setter方法，如果调用了则无法判断是外界调用还是内部调用
                 [self updateActionAxis];
             } else { // action的个数小于等于2，action水平排列
@@ -1042,7 +1042,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return 0.0;
 }
 
-- (void)setBackgroundViewAppearanceStyle:(SPBackgroundViewAppearanceStyle)style alpha:(CGFloat)alpha {
+- (void)setBackgroundViewAppearanceStyle:(FWBackgroundViewAppearanceStyle)style alpha:(CGFloat)alpha {
     _backgroundViewAppearanceStyle = style;
     _backgroundViewAlpha = alpha;
 }
@@ -1069,12 +1069,10 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
     _animationType = animationType;
     if (preferredStyle == FWAlertControllerStyleAlert) {
-        _maxMarginForAlert = (MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT) - 275) / 2.0;
         _minDistanceToEdges = (MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT) - 275) / 2.0;
         _cornerRadius = 6.0;
     } else {
         _minDistanceToEdges = 70;
-        _maxTopMarginForActionSheet = 70;
         _cornerRadius = 13.0;
     }
     if (preferredStyle == FWAlertControllerStyleAlert) {
@@ -1109,11 +1107,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     _messageColor = [UIColor grayColor];
     _textAlignment = NSTextAlignmentCenter;
     _imageLimitSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
-    _cornerRadiusForAlert = 6.0;
     _backgroundViewAlpha = 0.5;
     _tapBackgroundViewDismiss = YES;
     _needDialogBlur = NO;
-    _maxNumberOfActionHorizontalArrangementForAlert = 2;
 }
 
 - (void)layoutAlertControllerView {
@@ -1167,7 +1163,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (void)layoutAlertControllerViewForActionSheetStyle {
     switch (self.animationType) {
         case FWAlertAnimationTypeFromBottom:
-        case FWAlertAnimationTypeRaiseUp:
         default:
             [self layoutAlertControllerViewForAnimationTypeWithHV:@"H"
                                                    equalAttribute:NSLayoutAttributeBottom
@@ -1175,7 +1170,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
                                             lessOrGreaterRelation:NSLayoutRelationGreaterThanOrEqual];
             break;
         case FWAlertAnimationTypeFromTop:
-        case FWAlertAnimationTypeDropDown:
             [self layoutAlertControllerViewForAnimationTypeWithHV:@"H"
                                                    equalAttribute:NSLayoutAttributeTop
                                                 notEqualAttribute:NSLayoutAttributeBottom
@@ -1504,19 +1498,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
 }
 
-// 该方法是保证被废弃的maxNumberOfActionHorizontalArrangementForAlert属性的有效性
-- (void)setupActionAxis {
-    if (self.preferredStyle == FWAlertControllerStyleAlert) {
-        if (self.actions.count > self.maxNumberOfActionHorizontalArrangementForAlert) {
-            _actionAxis = UILayoutConstraintAxisVertical;
-            [self updateActionAxis];
-        } else {
-            _actionAxis = UILayoutConstraintAxisHorizontal;
-            [self updateActionAxis];
-        }
-    }
-}
-
 - (void)makeViewOffsetWithAnimated:(BOOL)animated {
     if (!self.beingPresented && !self.beingDismissed) {
         [self layoutAlertControllerView];
@@ -1722,18 +1703,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
 }
 
-// 该属性3.0版本开始被废弃
-- (void)setMaxMarginForAlert:(CGFloat)maxMarginForAlert {
-    _maxMarginForAlert = maxMarginForAlert;
-    self.minDistanceToEdges = _maxMarginForAlert;
-}
-
-// 该属性3.0版本开始被废弃
-- (void)setMaxTopMarginForActionSheet:(CGFloat)maxTopMarginForActionSheet {
-    _maxTopMarginForActionSheet = maxTopMarginForActionSheet;
-    self.minDistanceToEdges = _maxTopMarginForActionSheet;
-}
-
 - (void)setMinDistanceToEdges:(CGFloat)minDistanceToEdges {
     _minDistanceToEdges = minDistanceToEdges;
     if (self.isViewLoaded) {
@@ -1780,22 +1749,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
 }
 
-- (void)setCornerRadiusForAlert:(CGFloat)cornerRadiusForAlert {
-    _cornerRadiusForAlert = cornerRadiusForAlert;
-    _cornerRadius = cornerRadiusForAlert;
-    if (self.preferredStyle == FWAlertControllerStyleAlert) {
-        self.containerView.layer.cornerRadius = _cornerRadiusForAlert;
-        self.containerView.layer.masksToBounds = YES;
-    }
-}
-
-// 此属性3.0版本开始被废弃
-- (void)setMaxNumberOfActionHorizontalArrangementForAlert:(NSInteger)maxNumberOfActionHorizontalArrangementForAlert {
-    _maxNumberOfActionHorizontalArrangementForAlert = maxNumberOfActionHorizontalArrangementForAlert;
-    // 被废弃的maxNumberOfActionHorizontalArrangementForAlert属性需要的方法
-    [self setupActionAxis];
-}
-
 - (void)setActionAxis:(UILayoutConstraintAxis)actionAxis {
     _actionAxis = actionAxis;
     // 调用该setter方法则认为是强制布局，该setter方法只有外界能调，这样才能判断外界有没有调用actionAxis的setter方法，从而是否按照外界的指定布局方式进行布局
@@ -1808,13 +1761,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     _offsetForAlert = offsetForAlert;
     _isForceOffset = YES;
     [self makeViewOffsetWithAnimated:NO];
-}
-
-// 被废弃
-- (void)setOffsetYForAlert:(CGFloat)offsetYForAlert {
-    _offsetYForAlert = offsetYForAlert;
-    _offsetForAlert.y = _offsetYForAlert;
-    _isForceOffset = YES;
 }
 
 - (void)setNeedDialogBlur:(BOOL)needDialogBlur {
@@ -2053,25 +1999,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return [[FWAlertPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
 }
 
-#pragma mark - 被废弃的方法
-
-+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType customView:(UIView *)customView {
-    FWAlertController *alertVc = [[FWAlertController alloc] initWithTitle:nil message:nil customAlertView:customView customHeaderView:nil customActionSequenceView:nil componentView:nil preferredStyle:preferredStyle animationType:animationType];
-    return alertVc;
-}
-+ (instancetype)alertControllerWithPreferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType customHeaderView:(nullable UIView *)customHeaderView {
-    FWAlertController *alertVc = [[FWAlertController alloc] initWithTitle:nil message:nil customAlertView:nil customHeaderView:customHeaderView customActionSequenceView:nil componentView:nil preferredStyle:preferredStyle animationType:animationType];
-    return alertVc;
-}
-+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType customCenterView:(UIView *)customCenterView {
-    FWAlertController *alertVc = [[FWAlertController alloc] initWithTitle:title message:message customAlertView:nil customHeaderView:nil customActionSequenceView:nil componentView:customCenterView preferredStyle:preferredStyle animationType:animationType];
-    return alertVc;
-}
-+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType customFooterView:(UIView *)customFooterView {
-    FWAlertController *alertVc = [[FWAlertController alloc] initWithTitle:title message:message customAlertView:nil customHeaderView:nil customActionSequenceView:customFooterView componentView:nil preferredStyle:preferredStyle animationType:animationType];
-    return alertVc;
-}
-
 @end
 
 #pragma mark ---------------------------- FWAlertController end --------------------------------
@@ -2089,9 +2016,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
     return self;
 }
-- (void)setAppearanceStyle:(SPBackgroundViewAppearanceStyle)appearanceStyle alpha:(CGFloat)alpha {
+- (void)setAppearanceStyle:(FWBackgroundViewAppearanceStyle)appearanceStyle alpha:(CGFloat)alpha {
     switch (appearanceStyle) {
-        case SPBackgroundViewAppearanceStyleTranslucent: {
+        case FWBackgroundViewAppearanceStyleTranslucent: {
             [self.effectView removeFromSuperview];
             self.effectView = nil;
             if (alpha < 0) {
@@ -2101,17 +2028,17 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
             self.alpha = 0;
         }
             break;
-        case SPBackgroundViewAppearanceStyleBlurExtraLight: {
+        case FWBackgroundViewAppearanceStyleBlurExtraLight: {
             UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
             [self createVisualEffectViewWithBlur:blur alpha:alpha];
         }
             break;
-        case SPBackgroundViewAppearanceStyleBlurLight: {
+        case FWBackgroundViewAppearanceStyleBlurLight: {
             UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
             [self createVisualEffectViewWithBlur:blur alpha:alpha];
         }
             break;
-        case SPBackgroundViewAppearanceStyleBlurDark: {
+        case FWBackgroundViewAppearanceStyleBlurDark: {
             UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
             [self createVisualEffectViewWithBlur:blur alpha:alpha];
         }
@@ -2174,8 +2101,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
     if ([alertController.delegate respondsToSelector:@selector(willPresentAlertController:)]) {
         [alertController.delegate willPresentAlertController:alertController];
-    }  else if ([alertController.delegate respondsToSelector:@selector(sp_alertControllerWillShow:)]) { // 支持老版本
-        [alertController.delegate sp_alertControllerWillShow:alertController];
     }
 }
 
@@ -2185,8 +2110,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertController *alertController = (FWAlertController *)self.presentedViewController;
     if ([alertController.delegate respondsToSelector:@selector(didPresentAlertController:)]) {
         [alertController.delegate didPresentAlertController:alertController];
-    } else if ([alertController.delegate respondsToSelector:@selector(sp_alertControllerDidShow:)]) { // 支持老版本
-        [alertController.delegate sp_alertControllerDidShow:alertController];
     }
 }
 
@@ -2204,8 +2127,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertController *alertController = (FWAlertController *)self.presentedViewController;
     if ([alertController.delegate respondsToSelector:@selector(willDismissAlertController:)]) {
         [alertController.delegate willDismissAlertController:alertController];
-    } else if ([alertController.delegate respondsToSelector:@selector(sp_alertControllerWillHide:)]) { // 支持老版本
-        [alertController.delegate sp_alertControllerWillHide:alertController];
     }
 }
 
@@ -2218,8 +2139,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertController *alertController = (FWAlertController *)self.presentedViewController;
     if ([alertController.delegate respondsToSelector:@selector(didDismissAlertController:)]) {
         [alertController.delegate didDismissAlertController:alertController];
-    } else if ([alertController.delegate respondsToSelector:@selector(sp_alertControllerDidHide:)]) { // 支持老版本
-        [alertController.delegate sp_alertControllerDidHide:alertController];
     }
 }
 
@@ -2290,21 +2209,18 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertController *alertController = (FWAlertController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
 
     switch (alertController.animationType) {
-        case FWAlertAnimationTypeRaiseUp:
         case FWAlertAnimationTypeFromBottom:
             [self raiseUpWhenPresentForController:alertController transition:transitionContext];
             break;
         case FWAlertAnimationTypeFromRight:
             [self fromRightWhenPresentForController:alertController transition:transitionContext];
             break;
-        case FWAlertAnimationTypeDropDown:
         case FWAlertAnimationTypeFromTop:
             [self dropDownWhenPresentForController:alertController transition:transitionContext];
             break;
         case FWAlertAnimationTypeFromLeft:
             [self fromLeftWhenPresentForController:alertController transition:transitionContext];
             break;
-        case FWAlertAnimationTypeAlpha:
         case FWAlertAnimationTypeFade:
             [self alphaWhenPresentForController:alertController transition:transitionContext];
             break;
@@ -2326,7 +2242,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertController *alertController = (FWAlertController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     if ([alertController isKindOfClass:[FWAlertController class]]) {
         switch (alertController.animationType) {
-            case FWAlertAnimationTypeRaiseUp:
             case FWAlertAnimationTypeFromBottom:
                 [self dismissCorrespondingRaiseUpForController:alertController transition:transitionContext];
                 break;
@@ -2336,11 +2251,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
             case FWAlertAnimationTypeFromLeft:
                 [self dismissCorrespondingFromLeftForController:alertController transition:transitionContext];
                 break;
-            case FWAlertAnimationTypeDropDown:
             case FWAlertAnimationTypeFromTop:
                 [self dismissCorrespondingDropDownForController:alertController transition:transitionContext];
                 break;
-            case FWAlertAnimationTypeAlpha:
             case FWAlertAnimationTypeFade:
                 [self dismissCorrespondingAlphaForController:alertController transition:transitionContext];
                 break;
