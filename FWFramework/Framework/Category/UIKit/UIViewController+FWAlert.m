@@ -411,6 +411,17 @@
         [alertController addAction:cancelAction];
     }
     
+    // 添加首选按钮
+    if (!preferredAction && alertController.actions.count > 0) {
+        if (FWAlertAppearance.appearance.preferredFirstAction) {
+            preferredAction = alertController.actions.firstObject;
+            preferredAction.fwIsPreferred = YES;
+        } else if (FWAlertAppearance.appearance.preferredCancelAction) {
+            preferredAction = alertController.actions.lastObject;
+            preferredAction.fwIsPreferred = YES;
+        }
+    }
+    
     // 显示Alert
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;

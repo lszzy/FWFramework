@@ -82,6 +82,7 @@
     FWAlertAppearance.appearance.messageFont = [UIFont appFontSize:13];
     FWAlertAppearance.appearance.messageColor = [UIColor cyanColor];
     
+    FWAlertAppearance.appearance.preferredFirstAction = YES;
     FWAlertAppearance.appearance.cancelActionColor = [UIColor blackColor];
     FWAlertAppearance.appearance.defaultActionColor = [UIColor blueColor];
     FWAlertAppearance.appearance.destructiveActionColor = [UIColor redColor];
