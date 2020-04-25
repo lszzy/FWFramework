@@ -7,19 +7,16 @@
 //
 
 #import "FWAlertController.h"
+#import "UIScreen+FWFramework.h"
 
-#define SP_SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
-#define SP_SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-#define SP_LINE_COLOR [[UIColor grayColor] colorWithAlphaComponent:0.3]
-#define SP_NORMAL_COLOR [[UIColor whiteColor] colorWithAlphaComponent:0.7]
-#define SP_SELECTED_COLOR [UIColor colorWithWhite:1 alpha:0.4]
-#define SP_LINE_WIDTH 1.0 / [UIScreen mainScreen].scale
-#define Is_iPhoneX MAX(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT) >= 812
-#define SP_STATUS_BAR_HEIGHT (Is_iPhoneX ? 44 : 20)
-#define SP_ACTION_TITLE_FONTSIZE 18
-#define SP_ACTION_HEIGHT 55.0
+#define FW_LINE_COLOR [[UIColor grayColor] colorWithAlphaComponent:0.3]
+#define FW_NORMAL_COLOR [[UIColor whiteColor] colorWithAlphaComponent:0.7]
+#define FW_SELECTED_COLOR [UIColor colorWithWhite:1 alpha:0.4]
+#define FW_LINE_WIDTH 1.0 / [UIScreen mainScreen].scale
+#define FW_ACTION_TITLE_FONTSIZE 18
+#define FW_ACTION_HEIGHT 55.0
 
-#pragma mark ---------------------------- FWAlertAction begin --------------------------------
+#pragma mark - FWAlertAction
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -64,13 +61,13 @@
     self.handler = handler;
     if (style == FWAlertActionStyleDestructive) {
         self.titleColor = [UIColor redColor];
-        self.titleFont = [UIFont systemFontOfSize:SP_ACTION_TITLE_FONTSIZE];
+        self.titleFont = [UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
     } else if (style == FWAlertActionStyleCancel) {
         self.titleColor = [UIColor blackColor];
-        self.titleFont = [UIFont boldSystemFontOfSize:SP_ACTION_TITLE_FONTSIZE];
+        self.titleFont = [UIFont boldSystemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
     } else {
         self.titleColor = [UIColor blackColor];
-        self.titleFont = [UIFont systemFontOfSize:SP_ACTION_TITLE_FONTSIZE];
+        self.titleFont = [UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
     }
     return self;
 }
@@ -85,7 +82,7 @@
 - (void)initialize {
     _enabled = YES; // 默认能点击
     _titleColor = [UIColor blackColor];
-    _titleFont = [UIFont systemFontOfSize:SP_ACTION_TITLE_FONTSIZE];
+    _titleFont = [UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
     _titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 15);
 }
 
@@ -140,31 +137,28 @@
 
 @end
 
-#pragma mark ---------------------------- FWAlertAction end ----------------------------
+#pragma mark - FWInterfaceActionItemSeparatorView
 
-#pragma mark ---------------------------- SPInterfaceActionItemSeparatorView begin --------------------------------
-
-@interface SPInterfaceActionItemSeparatorView : UIView
+@interface FWInterfaceActionItemSeparatorView : UIView
 @end
-@implementation SPInterfaceActionItemSeparatorView
+@implementation FWInterfaceActionItemSeparatorView
 - (instancetype)init {
     if (self = [super init]) {
-        self.backgroundColor = SP_LINE_COLOR;
+        self.backgroundColor = FW_LINE_COLOR;
     }
     return self;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.backgroundColor = self.frame.size.height > SP_LINE_WIDTH ? [[UIColor grayColor] colorWithAlphaComponent:0.15] : SP_LINE_COLOR;
+    self.backgroundColor = self.frame.size.height > FW_LINE_WIDTH ? [[UIColor grayColor] colorWithAlphaComponent:0.15] : FW_LINE_COLOR;
 }
 
 @end
-#pragma mark ---------------------------- FWAlertControllerActionView end --------------------------------
 
-#pragma mark ---------------------------- SPInterfaceHeaderScrollView begin ----------------------------
+#pragma mark - FWInterfaceHeaderScrollView
 
-@interface SPInterfaceHeaderScrollView : UIScrollView
+@interface FWInterfaceHeaderScrollView : UIScrollView
 @property (nonatomic, weak) UIView *contentView;
 @property (nonatomic, weak) UILabel *titleLabel;
 @property (nonatomic, weak) UILabel *messageLabel;
@@ -176,7 +170,7 @@
 @property (nonatomic, copy) void(^headerViewSfeAreaDidChangBlock)(void);
 @end
 
-@implementation SPInterfaceHeaderScrollView
+@implementation FWInterfaceHeaderScrollView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -374,9 +368,7 @@
 
 @end
 
-#pragma mark ---------------------------- SPInterfaceHeaderScrollView end ----------------------------
-
-#pragma mark ---------------------------- FWAlertControllerActionView begin --------------------------------
+#pragma mark - FWAlertControllerActionView
 
 @interface FWAlertControllerActionView : UIView
 @property (nonatomic, weak) id target;
@@ -392,7 +384,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _afterSpacing = SP_LINE_WIDTH;
+        _afterSpacing = FW_LINE_WIDTH;
     }
     return self;
 }
@@ -448,14 +440,14 @@
 - (void)touchDown:(UIButton *)sender {
     FWAlertController *alert = [self findAlertController];
     if (alert.needDialogBlur) {
-        sender.backgroundColor = SP_SELECTED_COLOR; // 需要毛玻璃时，只有白色带透明，毛玻璃效果才更加清澈
+        sender.backgroundColor = FW_SELECTED_COLOR; // 需要毛玻璃时，只有白色带透明，毛玻璃效果才更加清澈
     } else {
         sender.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.1]; // 该颜色比'取消action'上的分割线的颜色浅一些
     }
 }
 
 - (void)touchDragExit:(UIButton *)sender {
-    sender.backgroundColor = SP_NORMAL_COLOR;
+    sender.backgroundColor = FW_NORMAL_COLOR;
 }
 
 - (FWAlertController *)findAlertController {
@@ -501,8 +493,8 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     CGFloat labelH = actionButton.titleLabel.intrinsicContentSize.height;
     // 按钮的上下内边距之和
     CGFloat topBottom_insetsSum = actionButton.contentEdgeInsets.top+actionButton.contentEdgeInsets.bottom;
-    // 文字的上下间距之和,等于SP_ACTION_HEIGHT-默认字体大小,这是为了保证文字上下有一个固定间距值，不至于使文字靠按钮太紧，,由于按钮内容默认垂直居中，所以最终的顶部或底部间距为topBottom_marginSum/2.0,这个间距，几乎等于18号字体时，最小高度为49时的上下间距
-    CGFloat topBottom_marginSum = SP_ACTION_HEIGHT-[UIFont systemFontOfSize:SP_ACTION_TITLE_FONTSIZE].lineHeight;
+    // 文字的上下间距之和,等于FW_ACTION_HEIGHT-默认字体大小,这是为了保证文字上下有一个固定间距值，不至于使文字靠按钮太紧，,由于按钮内容默认垂直居中，所以最终的顶部或底部间距为topBottom_marginSum/2.0,这个间距，几乎等于18号字体时，最小高度为49时的上下间距
+    CGFloat topBottom_marginSum = FW_ACTION_HEIGHT-[UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE].lineHeight;
     // 按钮高度
     CGFloat buttonH = labelH+topBottom_insetsSum+topBottom_marginSum;
     UIStackView *stackView = (UIStackView *)self.superview;
@@ -510,12 +502,12 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     if ([stackView isKindOfClass:[UIStackView class]] && stackView.axis == UILayoutConstraintAxisHorizontal) {
         relation = NSLayoutRelationGreaterThanOrEqual;
     }
-    // 如果字体保持默认18号，只有一行文字时最终结果约等于SP_ACTION_HEIGHT
+    // 如果字体保持默认18号，只有一行文字时最终结果约等于FW_ACTION_HEIGHT
     NSLayoutConstraint *buttonHonstraint = [NSLayoutConstraint constraintWithItem:actionButton attribute:NSLayoutAttributeHeight relatedBy:relation toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:buttonH];
     buttonHonstraint.priority = 999;
     [actionButtonConstraints addObject:buttonHonstraint];
     // 给一个最小高度，当按钮字体很小时，如果还按照上面的高度计算，高度会比较小
-    NSLayoutConstraint *minHConstraint = [NSLayoutConstraint constraintWithItem:actionButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:SP_ACTION_HEIGHT+topBottom_insetsSum];
+    NSLayoutConstraint *minHConstraint = [NSLayoutConstraint constraintWithItem:actionButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FW_ACTION_HEIGHT+topBottom_insetsSum];
     minHConstraint.priority = UILayoutPriorityRequired;
     [self addConstraints:actionButtonConstraints];
     self.actionButtonConstraints = actionButtonConstraints;
@@ -524,7 +516,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (UIButton *)actionButton {
     if (!_actionButton) {
         UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        actionButton.backgroundColor = SP_NORMAL_COLOR;
+        actionButton.backgroundColor = FW_NORMAL_COLOR;
         actionButton.translatesAutoresizingMaskIntoConstraints = NO;
         actionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         actionButton.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -540,15 +532,14 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 }
 
 @end
-#pragma mark ---------------------------- FWAlertControllerActionView end --------------------------------
 
-#pragma mark ---------------------------- SPInterfaceActionSequenceView begin --------------------------------
+#pragma mark - FWInterfaceActionSequenceView
 
-@interface SPInterfaceActionSequenceView : UIView
+@interface FWInterfaceActionSequenceView : UIView
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIView *contentView;
 @property (nonatomic, weak) UIView *cancelView;
-@property (nonatomic, weak) SPInterfaceActionItemSeparatorView *cancelActionLine;
+@property (nonatomic, weak) FWInterfaceActionItemSeparatorView *cancelActionLine;
 @property (nonatomic, weak) UIStackView *stackView;
 @property (nonatomic, strong) FWAlertAction *cancelAction;
 @property (nonatomic, strong) NSMutableArray *actionLineConstraints;
@@ -558,7 +549,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, copy) void (^buttonClickedInActionViewBlock)(NSInteger index);
 @end
 
-@implementation SPInterfaceActionSequenceView
+@implementation FWInterfaceActionSequenceView
 
 - (void)setAxis:(UILayoutConstraintAxis)axis {
     _axis = axis;
@@ -632,7 +623,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 // 为stackView添加分割线(细节)
 - (void)addLineForStackView:(UIStackView *)stackView {
-    SPInterfaceActionItemSeparatorView *actionLine = [[SPInterfaceActionItemSeparatorView alloc] init];
+    FWInterfaceActionItemSeparatorView *actionLine = [[FWInterfaceActionItemSeparatorView alloc] init];
     actionLine.translatesAutoresizingMaskIntoConstraints = NO;
     // 这里必须用addSubview:，不能用addArrangedSubview:,因为分割线不参与排列布局
     [stackView addSubview:actionLine];
@@ -661,7 +652,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         self.actionLineConstraints = nil;
     }
     for (int i = 0; i < lines.count; i++) {
-        SPInterfaceActionItemSeparatorView *actionLine = lines[i];
+        FWInterfaceActionItemSeparatorView *actionLine = lines[i];
         FWAlertControllerActionView *actionView1 = arrangedSubviews[i];
         FWAlertControllerActionView *actionView2 = arrangedSubviews[i+1];
         if (self.axis == UILayoutConstraintAxisHorizontal) {
@@ -685,7 +676,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     UIView *scrollView = self.scrollView;
     UIView *contentView = self.contentView;
     UIView *cancelView = self.cancelView;
-    SPInterfaceActionItemSeparatorView *cancelActionLine = self.cancelActionLine;
+    FWInterfaceActionItemSeparatorView *cancelActionLine = self.cancelActionLine;
 
     [NSLayoutConstraint deactivateConstraints:self.constraints];
     if (scrollView && scrollView.superview) {
@@ -706,26 +697,26 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(contentView)]];
         [[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0] setActive:YES];
         NSLayoutConstraint *equalHeightConstraint = [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0];
-        // 计算scrolView的最小和最大高度，下面这个if语句是保证当actions的g总个数大于4时，scrollView的高度至少为4个半SP_ACTION_HEIGHT的高度，否则自适应内容
+        // 计算scrolView的最小和最大高度，下面这个if语句是保证当actions的g总个数大于4时，scrollView的高度至少为4个半FW_ACTION_HEIGHT的高度，否则自适应内容
         CGFloat minHeight = 0.0;
         if (_axis == UILayoutConstraintAxisVertical) {
             if (self.cancelAction) {
-                if (self.actions.count > 4) { // 如果有取消按钮且action总个数大于4，则除去取消按钮之外的其余部分的高度至少为3个半SP_ACTION_HEIGHT的高度,即加上取消按钮就是总高度至少为4个半SP_ACTION_HEIGHT的高度
-                    minHeight = SP_ACTION_HEIGHT * 3.5;
+                if (self.actions.count > 4) { // 如果有取消按钮且action总个数大于4，则除去取消按钮之外的其余部分的高度至少为3个半FW_ACTION_HEIGHT的高度,即加上取消按钮就是总高度至少为4个半FW_ACTION_HEIGHT的高度
+                    minHeight = FW_ACTION_HEIGHT * 3.5;
                     equalHeightConstraint.priority = 997.0f; // 优先级为997，必须小于998.0，因为头部如果内容过多时高度也会有限制，头部的优先级为998.0.这里定的规则是，当头部和action部分同时过多时，头部的优先级更高，但是它不能高到以至于action部分小于最小高度
                 } else { // 如果有取消按钮但action的个数大不于4，则该多高就显示多高
                     equalHeightConstraint.priority = 1000.0f; // 由子控件撑起
                 }
             } else {
                 if (self.actions.count > 4) {
-                    minHeight = SP_ACTION_HEIGHT * 4.5;
+                    minHeight = FW_ACTION_HEIGHT * 4.5;
                     equalHeightConstraint.priority = 997.0f;
                 } else {
                     equalHeightConstraint.priority = 1000.0f;
                 }
             }
         } else {
-            minHeight = SP_ACTION_HEIGHT;
+            minHeight = FW_ACTION_HEIGHT;
         }
         NSLayoutConstraint *minHeightConstraint = [NSLayoutConstraint constraintWithItem:scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:minHeight];
         minHeightConstraint.priority = 999.0;// 优先级不能大于对话框的最小顶部间距的优先级(999.0)
@@ -793,7 +784,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         UIStackView *stackView = [[UIStackView alloc] init];
         stackView.translatesAutoresizingMaskIntoConstraints = NO;
         stackView.distribution = UIStackViewDistributionFillProportionally;
-        stackView.spacing = SP_LINE_WIDTH; // 该间距腾出来的空间显示分割线
+        stackView.spacing = FW_LINE_WIDTH; // 该间距腾出来的空间显示分割线
         stackView.axis = UILayoutConstraintAxisVertical;
         [self.contentView addSubview:stackView];
         _stackView = stackView;
@@ -813,9 +804,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return _cancelView;
 }
 
-- (SPInterfaceActionItemSeparatorView *)cancelActionLine {
+- (FWInterfaceActionItemSeparatorView *)cancelActionLine {
     if (!_cancelActionLine) {
-        SPInterfaceActionItemSeparatorView *cancelActionLine = [[SPInterfaceActionItemSeparatorView alloc] init];
+        FWInterfaceActionItemSeparatorView *cancelActionLine = [[FWInterfaceActionItemSeparatorView alloc] init];
         cancelActionLine.translatesAutoresizingMaskIntoConstraints = NO;
         if (self.cancelView.superview && self.scrollView.superview) {
             [self addSubview:cancelActionLine];
@@ -833,25 +824,23 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 }
 
 @end
-#pragma mark ---------------------------- SPInterfaceActionSequenceView end --------------------------------
 
-
-#pragma mark ---------------------------- FWAlertController begin --------------------------------
+#pragma mark - FWAlertController
 
 @interface FWAlertController () <UIViewControllerTransitioningDelegate>
 @property (nonatomic, strong) UIView *alertControllerView;
 @property (nonatomic, weak) UIView *containerView;
 @property (nonatomic, weak) UIView *alertView;
 @property (nonatomic, strong) UIView *customAlertView;
-@property (nonatomic, weak) SPInterfaceHeaderScrollView *headerView;
+@property (nonatomic, weak) FWInterfaceHeaderScrollView *headerView;
 @property (nonatomic, strong) UIView *customHeaderView;
-@property (nonatomic, weak) SPInterfaceActionSequenceView *actionSequenceView;
+@property (nonatomic, weak) FWInterfaceActionSequenceView *actionSequenceView;
 @property (nonatomic, strong) UIView *customActionSequenceView;
 @property (nonatomic, strong) UIView *componentView;
 @property (nonatomic, assign) CGSize customViewSize;
-@property (nonatomic, weak) SPInterfaceActionItemSeparatorView *headerActionLine;
+@property (nonatomic, weak) FWInterfaceActionItemSeparatorView *headerActionLine;
 @property (nonatomic, strong) NSMutableArray *headerActionLineConstraints;
-@property (nonatomic, weak) SPInterfaceActionItemSeparatorView *componentActionLine;
+@property (nonatomic, weak) FWInterfaceActionItemSeparatorView *componentActionLine;
 @property (nonatomic, strong) NSMutableArray *componentViewConstraints;
 @property (nonatomic, strong) NSMutableArray *componentActionLineConstraints;
 @property (nonatomic, strong) UIView *dimmingKnockoutBackdropView;
@@ -993,7 +982,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     textField.translatesAutoresizingMaskIntoConstraints = NO;
     textField.backgroundColor = [UIColor whiteColor];
     // 系统的UITextBorderStyleLine样式线条过于黑，所以自己设置
-    textField.layer.borderWidth = SP_LINE_WIDTH;
+    textField.layer.borderWidth = FW_LINE_WIDTH;
     textField.layer.borderColor = [UIColor grayColor].CGColor;
     // 在左边设置一张view，充当光标左边的间距，否则光标紧贴textField不美观
     textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 0)];
@@ -1069,7 +1058,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
     _animationType = animationType;
     if (preferredStyle == FWAlertControllerStyleAlert) {
-        _minDistanceToEdges = (MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT) - 275) / 2.0;
+        _minDistanceToEdges = (MIN(FWScreenWidth, FWScreenHeight) - 275) / 2.0;
         _cornerRadius = 6.0;
     } else {
         _minDistanceToEdges = 70;
@@ -1130,10 +1119,10 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     NSMutableArray *alertControllerViewConstraints = [NSMutableArray array];
     CGFloat topValue = _minDistanceToEdges;
     CGFloat bottomValue = _minDistanceToEdges;
-    CGFloat maxWidth = MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT)-_minDistanceToEdges * 2;
-    CGFloat maxHeight = SP_SCREEN_HEIGHT-topValue-bottomValue;
+    CGFloat maxWidth = MIN(FWScreenWidth, FWScreenHeight)-_minDistanceToEdges * 2;
+    CGFloat maxHeight = FWScreenHeight-topValue-bottomValue;
     if (!self.customAlertView) {
-        // 当屏幕旋转的时候，为了保持alert样式下的宽高不变，因此取MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT)
+        // 当屏幕旋转的时候，为了保持alert样式下的宽高不变，因此取MIN(FWScreenWidth, FWScreenHeight)
         [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:maxWidth]];
     } else {
         [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:maxWidth]];
@@ -1204,18 +1193,18 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (_customViewSize.width) { // 如果宽度没有值，则会假定customAlertViewh水平方向能由子控件撑起
             CGFloat alertControllerViewWidth = 0.0;
             if ([hv isEqualToString:@"H"]) {
-                alertControllerViewWidth = MIN(_customViewSize.width, SP_SCREEN_WIDTH);
+                alertControllerViewWidth = MIN(_customViewSize.width, FWScreenWidth);
             } else {
-                alertControllerViewWidth = MIN(_customViewSize.width, SP_SCREEN_WIDTH-_minDistanceToEdges);
+                alertControllerViewWidth = MIN(_customViewSize.width, FWScreenWidth-_minDistanceToEdges);
             }
             [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:alertControllerViewWidth]];
         }
         if (_customViewSize.height) { // 如果高度没有值，则会假定customAlertViewh垂直方向能由子控件撑起
             CGFloat alertControllerViewHeight = 0.0;
             if ([hv isEqualToString:@"H"]) {
-                alertControllerViewHeight = MIN(_customViewSize.height, SP_SCREEN_HEIGHT-_minDistanceToEdges);
+                alertControllerViewHeight = MIN(_customViewSize.height, FWScreenHeight-_minDistanceToEdges);
             } else {
-                alertControllerViewHeight = MIN(_customViewSize.height, SP_SCREEN_HEIGHT);
+                alertControllerViewHeight = MIN(_customViewSize.height, FWScreenHeight);
             }
             [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:alertControllerViewHeight]];
         }
@@ -1294,7 +1283,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     if (!self.componentView.superview) {
         [headerActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:headerActionLine attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:actionSequenceView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     }
-    [headerActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:headerActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:SP_LINE_WIDTH]];
+    [headerActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:headerActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FW_LINE_WIDTH]];
 
     [NSLayoutConstraint activateConstraints:headerActionLineConstraints];
     self.headerActionLineConstraints = headerActionLineConstraints;
@@ -1339,7 +1328,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
     [componentActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:componentActionLine attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.actionSequenceView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     [componentActionLineConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[componentActionLine]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(componentActionLine)]];
-    [componentActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:componentActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:SP_LINE_WIDTH]];
+    [componentActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:componentActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FW_LINE_WIDTH]];
     [NSLayoutConstraint activateConstraints:componentActionLineConstraints];
     self.componentActionLineConstraints = componentActionLineConstraints;
 }
@@ -1383,9 +1372,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 - (CGFloat)maxWidth {
     if (self.preferredStyle == FWAlertControllerStyleAlert) {
-        return MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT)-_minDistanceToEdges * 2;
+        return MIN(FWScreenWidth, FWScreenHeight)-_minDistanceToEdges * 2;
     } else {
-        return SP_SCREEN_WIDTH;
+        return FWScreenWidth;
     }
 }
 
@@ -1396,17 +1385,17 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (self.preferredStyle == FWAlertControllerStyleAlert) {
             for (FWAlertAction *action in self.actions) {
                 // 预估按钮宽度
-                CGFloat preButtonWidth = (MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT) - _minDistanceToEdges * 2 - SP_LINE_WIDTH * (self.actions.count - 1)) / self.actions.count - action.titleEdgeInsets.left - action.titleEdgeInsets.right;
+                CGFloat preButtonWidth = (MIN(FWScreenWidth, FWScreenHeight) - _minDistanceToEdges * 2 - FW_LINE_WIDTH * (self.actions.count - 1)) / self.actions.count - action.titleEdgeInsets.left - action.titleEdgeInsets.right;
                 // 如果action的标题文字总宽度，大于按钮的contentRect的宽度，则说明水平排列会导致文字显示不全，此时垂直排列
                 if (action.attributedTitle) {
-                    if (ceil([action.attributedTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, SP_ACTION_HEIGHT) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.width) > preButtonWidth) {
+                    if (ceil([action.attributedTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FW_ACTION_HEIGHT) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.width) > preButtonWidth) {
                         _actionAxis = UILayoutConstraintAxisVertical;
                         [self updateActionAxis];
                         [self.actionSequenceView setNeedsUpdateConstraints];
                         break; // 一定要break，只要有一个按钮文字过长就垂直排列
                     }
                 } else {
-                    if (ceil([action.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, SP_ACTION_HEIGHT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:action.titleFont} context:nil].size.width) > preButtonWidth) {
+                    if (ceil([action.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FW_ACTION_HEIGHT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:action.titleFont} context:nil].size.width) > preButtonWidth) {
                         _actionAxis = UILayoutConstraintAxisVertical;
                         [self updateActionAxis];
                         [self.actionSequenceView setNeedsUpdateConstraints];
@@ -1472,9 +1461,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 - (void)setupPreferredMaxLayoutWidthForLabel:(UILabel *)textLabel {
     if (self.preferredStyle == FWAlertControllerStyleAlert) {
-        textLabel.preferredMaxLayoutWidth = MIN(SP_SCREEN_WIDTH, SP_SCREEN_HEIGHT) - self.minDistanceToEdges * 2 - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
+        textLabel.preferredMaxLayoutWidth = MIN(FWScreenWidth, FWScreenHeight) - self.minDistanceToEdges * 2 - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
     } else {
-        textLabel.preferredMaxLayoutWidth  = SP_SCREEN_WIDTH - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
+        textLabel.preferredMaxLayoutWidth  = FWScreenWidth - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
     }
 }
 
@@ -1594,7 +1583,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     if (!_isForceOffset) {
         CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGFloat keyboardEndY = keyboardEndFrame.origin.y;
-        CGFloat diff = fabs((SP_SCREEN_HEIGHT-keyboardEndY)*0.5);
+        CGFloat diff = fabs((FWScreenHeight-keyboardEndY)*0.5);
         _offsetForAlert.y = -diff;
         [self makeViewOffsetWithAnimated:YES];
     }
@@ -1857,10 +1846,10 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return _customAlertView;
 }
 
-- (SPInterfaceHeaderScrollView *)headerView {
+- (FWInterfaceHeaderScrollView *)headerView {
     if (!_headerView) {
-        SPInterfaceHeaderScrollView *headerView = [[SPInterfaceHeaderScrollView alloc] init];
-        headerView.backgroundColor = SP_NORMAL_COLOR;
+        FWInterfaceHeaderScrollView *headerView = [[FWInterfaceHeaderScrollView alloc] init];
+        headerView.backgroundColor = FW_NORMAL_COLOR;
         headerView.translatesAutoresizingMaskIntoConstraints = NO;
         __weak typeof(self) weakSelf = self;
         headerView.headerViewSfeAreaDidChangBlock = ^{
@@ -1891,9 +1880,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return _customHeaderView;
 }
 
-- (SPInterfaceActionSequenceView *)actionSequenceView {
+- (FWInterfaceActionSequenceView *)actionSequenceView {
     if (!_actionSequenceView) {
-        SPInterfaceActionSequenceView *actionSequenceView = [[SPInterfaceActionSequenceView alloc] init];
+        FWInterfaceActionSequenceView *actionSequenceView = [[FWInterfaceActionSequenceView alloc] init];
         actionSequenceView.translatesAutoresizingMaskIntoConstraints = NO;
         __weak typeof(self) weakSelf = self;
         actionSequenceView.buttonClickedInActionViewBlock = ^(NSInteger index) {
@@ -1925,9 +1914,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return _customActionSequenceView;
 }
 
-- (SPInterfaceActionItemSeparatorView *)headerActionLine {
+- (FWInterfaceActionItemSeparatorView *)headerActionLine {
     if (!_headerActionLine) {
-        SPInterfaceActionItemSeparatorView *headerActionLine = [[SPInterfaceActionItemSeparatorView alloc] init];
+        FWInterfaceActionItemSeparatorView *headerActionLine = [[FWInterfaceActionItemSeparatorView alloc] init];
         headerActionLine.translatesAutoresizingMaskIntoConstraints = NO;
         if ((self.headerView.superview || self.customHeaderView.superview) && (self.actionSequenceView.superview || self.customActionSequenceView.superview)) {
             [self.alertView addSubview:headerActionLine];
@@ -1951,9 +1940,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return _componentView;
 }
 
-- (SPInterfaceActionItemSeparatorView *)componentActionLine {
+- (FWInterfaceActionItemSeparatorView *)componentActionLine {
     if (!_componentActionLine) {
-        SPInterfaceActionItemSeparatorView *componentActionLine = [[SPInterfaceActionItemSeparatorView alloc] init];
+        FWInterfaceActionItemSeparatorView *componentActionLine = [[FWInterfaceActionItemSeparatorView alloc] init];
         componentActionLine.translatesAutoresizingMaskIntoConstraints = NO;
         // 必须组件view和action部分同时存在
         if (self.componentView.superview && (self.actionSequenceView.superview || self.customActionSequenceView.superview)) {
@@ -2001,14 +1990,14 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 @end
 
-#pragma mark ---------------------------- FWAlertController end --------------------------------
+#pragma mark - FWOverlayView
 
-@interface SPOverlayView: UIView
+@interface FWOverlayView: UIView
 @property (nonatomic, strong) UIView *presentedView;
 @property (nonatomic, strong) UIVisualEffectView *effectView;
 @end
 
-@implementation SPOverlayView
+@implementation FWOverlayView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -2059,10 +2048,10 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 @end
 
-#pragma mark ---------------------------- FWAlertPresentationController begin --------------------------------
+#pragma mark - FWAlertPresentationController
 
 @interface FWAlertPresentationController()
-@property (nonatomic, strong) SPOverlayView *overlayView;
+@property (nonatomic, strong) FWOverlayView *overlayView;
 @end
 
 @implementation FWAlertPresentationController
@@ -2157,9 +2146,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (SPOverlayView *)overlayView {
+- (FWOverlayView *)overlayView {
     if (!_overlayView) {
-        _overlayView = [[SPOverlayView alloc] init];
+        _overlayView = [[FWOverlayView alloc] init];
         _overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOverlayView)];
         [_overlayView addGestureRecognizer:tap];
@@ -2170,10 +2159,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 @end
 
-#pragma mark ---------------------------- FWAlertPresentationController end --------------------------------
-
-
-#pragma mark ---------------------------- FWAlertAnimation begin --------------------------------
+#pragma mark - FWAlertAnimation
 
 @interface FWAlertAnimation()
 @property (nonatomic, assign) BOOL presenting;
@@ -2284,15 +2270,15 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
     CGRect controlViewFrame = alertController.view.frame;
-    controlViewFrame.origin.y = SP_SCREEN_HEIGHT;
+    controlViewFrame.origin.y = FWScreenHeight;
     alertController.view.frame = controlViewFrame;
 
     [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect controlViewFrame = alertController.view.frame;
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
-            controlViewFrame.origin.y = SP_SCREEN_HEIGHT-controlViewFrame.size.height;
+            controlViewFrame.origin.y = FWScreenHeight-controlViewFrame.size.height;
         } else {
-            controlViewFrame.origin.y = (SP_SCREEN_HEIGHT-controlViewFrame.size.height) / 2.0;
+            controlViewFrame.origin.y = (FWScreenHeight-controlViewFrame.size.height) / 2.0;
             [self offSetCenter:alertController];
         }
         alertController.view.frame = controlViewFrame;
@@ -2307,7 +2293,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         CGRect controlViewFrame = alertController.view.frame;
-        controlViewFrame.origin.y = SP_SCREEN_HEIGHT;
+        controlViewFrame.origin.y = FWScreenHeight;
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:finished];
@@ -2327,7 +2313,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
     CGRect controlViewFrame = alertController.view.frame;
-    controlViewFrame.origin.x = SP_SCREEN_WIDTH;
+    controlViewFrame.origin.x = FWScreenWidth;
     alertController.view.frame = controlViewFrame;
     
     if (alertController.preferredStyle == FWAlertControllerStyleAlert) {
@@ -2336,9 +2322,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect controlViewFrame = alertController.view.frame;
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
-            controlViewFrame.origin.x = SP_SCREEN_WIDTH-controlViewFrame.size.width;
+            controlViewFrame.origin.x = FWScreenWidth-controlViewFrame.size.width;
         } else {
-            controlViewFrame.origin.x = (SP_SCREEN_WIDTH-controlViewFrame.size.width) / 2.0;
+            controlViewFrame.origin.x = (FWScreenWidth-controlViewFrame.size.width) / 2.0;
         }
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
@@ -2352,7 +2338,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         CGRect controlViewFrame = alertController.view.frame;
-        controlViewFrame.origin.x = SP_SCREEN_WIDTH;
+        controlViewFrame.origin.x = FWScreenWidth;
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:finished];
@@ -2383,7 +2369,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
             controlViewFrame.origin.x = 0;
         } else {
-            controlViewFrame.origin.x = (SP_SCREEN_WIDTH-controlViewFrame.size.width) / 2.0;
+            controlViewFrame.origin.x = (FWScreenWidth-controlViewFrame.size.width) / 2.0;
         }
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
@@ -2425,7 +2411,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
             controlViewFrame.origin.y = 0;
         } else {
-            controlViewFrame.origin.y = (SP_SCREEN_HEIGHT-controlViewFrame.size.height) / 2.0;
+            controlViewFrame.origin.y = (FWScreenHeight-controlViewFrame.size.height) / 2.0;
             [self offSetCenter:alertController];
         }
         alertController.view.frame = controlViewFrame;
@@ -2558,14 +2544,11 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (void)offSetCenter:(FWAlertController *)alertController {
     if (!CGPointEqualToPoint(alertController.offsetForAlert, CGPointZero)) {
         CGPoint controlViewCenter = alertController.view.center;
-        controlViewCenter.x = SP_SCREEN_WIDTH / 2.0 + alertController.offsetForAlert.x;
-        controlViewCenter.y = SP_SCREEN_HEIGHT / 2.0 + alertController.offsetForAlert.y;
+        controlViewCenter.x = FWScreenWidth / 2.0 + alertController.offsetForAlert.x;
+        controlViewCenter.y = FWScreenHeight / 2.0 + alertController.offsetForAlert.y;
         alertController.view.center = controlViewCenter;
     }
 }
 
 @end
 #pragma clang diagnostic pop
-
-#pragma mark ---------------------------- FWAlertAnimation end --------------------------------
-
