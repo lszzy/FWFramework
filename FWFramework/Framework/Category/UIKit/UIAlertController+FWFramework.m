@@ -136,23 +136,31 @@
     
     if (action.fwTitleColor) {
         alertAction.fwTitleColor = action.fwTitleColor;
-    } else if (alertAction.title.length > 0 && FWAlertAppearance.appearance.actionEnabled) {
-        UIColor *titleColor = nil;
-        if (!alertAction.enabled) {
-            titleColor = FWAlertAppearance.appearance.disabledActionColor;
-        } else if (alertAction.fwIsPreferred) {
-            titleColor = FWAlertAppearance.appearance.preferredActionColor;
-        } else if (alertAction.style == UIAlertActionStyleDestructive) {
-            titleColor = FWAlertAppearance.appearance.destructiveActionColor;
-        } else if (alertAction.style == UIAlertActionStyleCancel) {
-            titleColor = FWAlertAppearance.appearance.cancelActionColor;
-        } else {
-            titleColor = FWAlertAppearance.appearance.defaultActionColor;
-        }
-        alertAction.fwTitleColor = titleColor;
+    } else {
+        [alertAction fwReloadActionStyle];
     }
     
     return alertAction;
+}
+
+- (void)fwReloadActionStyle
+{
+    if (self.fwTitleColor || self.title.length < 1) return;
+    if (!FWAlertAppearance.appearance.actionEnabled) return;
+    
+    UIColor *titleColor = nil;
+    if (!self.enabled) {
+        titleColor = FWAlertAppearance.appearance.disabledActionColor;
+    } else if (self.fwIsPreferred) {
+        titleColor = FWAlertAppearance.appearance.preferredActionColor;
+    } else if (self.style == UIAlertActionStyleDestructive) {
+        titleColor = FWAlertAppearance.appearance.destructiveActionColor;
+    } else if (self.style == UIAlertActionStyleCancel) {
+        titleColor = FWAlertAppearance.appearance.cancelActionColor;
+    } else {
+        titleColor = FWAlertAppearance.appearance.defaultActionColor;
+    }
+    [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
 }
 
 - (BOOL)fwIsPreferred
@@ -163,6 +171,7 @@
 - (void)setFwIsPreferred:(BOOL)fwIsPreferred
 {
     objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwReloadActionStyle];
 }
 
 - (UIColor *)fwTitleColor
