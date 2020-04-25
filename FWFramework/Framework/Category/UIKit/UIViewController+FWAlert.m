@@ -275,7 +275,7 @@
                       message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
-                 confirmBlock:(void (^)(NSString *text))confirmBlock
+                 confirmBlock:(void (^)(NSString *))confirmBlock
 {
     [self fwShowPromptWithTitle:title
                         message:message
@@ -291,8 +291,8 @@
                       message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
-                  promptBlock:(void (^)(UITextField *textField))promptBlock
-                 confirmBlock:(void (^)(NSString *text))confirmBlock
+                  promptBlock:(void (^)(UITextField *))promptBlock
+                 confirmBlock:(void (^)(NSString *))confirmBlock
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
@@ -306,9 +306,9 @@
                             promptBlock(textField);
                         }
                     }
-                   confirmBlock:^(NSArray<NSString *> *texts) {
+                   confirmBlock:^(NSArray<UITextField *> *textFields) {
                         if (confirmBlock) {
-                            confirmBlock(texts.firstObject);
+                            confirmBlock(textFields.firstObject.text ?: @"");
                         }
                     }
                     cancelBlock:cancelBlock
@@ -344,13 +344,12 @@
     if (confirm != nil) {
         UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:confirm style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if (confirmBlock) {
-                // 回调输入框的值
-                NSMutableArray *texts = [NSMutableArray new];
+                NSMutableArray *values = [NSMutableArray new];
                 for (NSInteger index = 0; index < promptCount; index++) {
                     UITextField *textField = alertController.textFields[index];
-                    [texts addObject:textField.text ?: @""];
+                    [values addObject:textField.text ?: @""];
                 }
-                confirmBlock(texts);
+                confirmBlock(values.copy);
             }
         }];
         if (alertAction.fwIsPreferred) {
@@ -444,6 +443,76 @@
     }
     
     // 显示ActionSheet
+    alertController.fwPriorityEnabled = YES;
+    alertController.fwPriority = priority;
+    if (@available(iOS 9.0, *)) {
+        if (preferredAction != nil) {
+            alertController.preferredAction = preferredAction;
+        }
+    }
+    [alertController fwPresentInViewController:self];
+}
+
+#pragma mark - Style
+
+- (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
+                       title:(id)title
+                     message:(id)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
+                 promptCount:(NSInteger)promptCount
+                 promptBlock:(void (^)(UITextField *, NSInteger))promptBlock
+                 actionBlock:(void (^)(NSArray<NSString *> *, NSInteger))actionBlock
+                 cancelBlock:(void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority
+{
+    // 初始化Alert
+    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
+                                                                               message:message
+                                                                        preferredStyle:style];
+    UIAlertAction *preferredAction = nil;
+    
+    // 添加输入框并初始化输入框
+    for (NSInteger promptIndex = 0; promptIndex < promptCount; promptIndex++) {
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            if (promptBlock) {
+                promptBlock(textField, promptIndex);
+            }
+        }];
+    }
+    
+    // 添加动作按钮
+    for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
+        UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:actions[actionIndex] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            if (actionBlock) {
+                NSMutableArray *values = [NSMutableArray new];
+                for (NSInteger fieldIndex = 0; fieldIndex < promptCount; fieldIndex++) {
+                    UITextField *textField = alertController.textFields[fieldIndex];
+                    [values addObject:textField.text ?: @""];
+                }
+                actionBlock(values.copy, actionIndex);
+            }
+        }];
+        if (alertAction.fwIsPreferred) {
+            preferredAction = alertAction;
+        }
+        [alertController addAction:alertAction];
+    }
+    
+    // 添加取消按钮
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        if (cancelAction.fwIsPreferred) {
+            preferredAction = cancelAction;
+        }
+        [alertController addAction:cancelAction];
+    }
+    
+    // 显示Alert
     alertController.fwPriorityEnabled = YES;
     alertController.fwPriority = priority;
     if (@available(iOS 9.0, *)) {

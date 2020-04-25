@@ -27,6 +27,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)fwFilterWithBlock:(BOOL (^)(ObjectType obj))block;
 
 /*!
+ @brief 映射数组元素
+ 
+ @param block 返回的obj重新组装成一个数组
+ @return 新的数组
+ */
+- (NSArray *)fwMapWithBlock:(id _Nullable (^)(ObjectType obj))block;
+
+/*!
+ @brief 匹配数组第一个元素
+ 
+ @param block 返回满足条件的第一个obj
+ @return 指定对象
+ */
+- (nullable ObjectType)fwMatchWithBlock:(BOOL (^)(ObjectType obj))block;
+
+/*!
  @brief 从数组中随机取出对象，如@[@"a", @"b", @"c"]随机取出@"b"
  
  @return 随机对象

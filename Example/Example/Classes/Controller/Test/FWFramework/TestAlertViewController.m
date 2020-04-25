@@ -26,6 +26,7 @@
                                          @[@"输入框(复杂)", @"onPrompt3"],
                                          @[@"操作表(简单)", @"onSheet1"],
                                          @[@"操作表(详细)", @"onSheet2"],
+                                         @[@"弹出框(完整)", @"onAlertF"],
                                          @[@"警告框(样式)", @"onAlertA"],
                                          @[@"操作表(样式)", @"onSheetA"],
                                          @[@"警告框(优先)", @"onAlertP"],
@@ -140,7 +141,7 @@
                          cancel:@"取消"
                         confirm:@"确定"
                     promptCount:2
-                    promptBlock:^(UITextField * _Nonnull textField, NSInteger index) {
+                    promptBlock:^(UITextField *textField, NSInteger index) {
                         if (index == 0) {
                             textField.placeholder = @"请输入用户名";
                             textField.secureTextEntry = NO;
@@ -149,8 +150,8 @@
                             textField.secureTextEntry = YES;
                         }
                     }
-                   confirmBlock:^(NSArray<NSString *> * _Nonnull texts) {
-                        NSLog(@"输入内容：%@", texts);
+                   confirmBlock:^(NSArray<NSString *> *values) {
+                        NSLog(@"输入内容：%@", values);
                     }
                     cancelBlock:^{
                         NSLog(@"点击了取消按钮");
@@ -181,6 +182,38 @@
                    cancelBlock:^{
                        NSLog(@"点击了取消操作");
                    }
+                      priority:FWAlertPriorityNormal];
+}
+
+- (void)onAlertF
+{
+    FWWeakifySelf();
+    [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
+                         title:@"请输入账号信息"
+                       message:@"账户信息必填"
+                        cancel:@"取消"
+                       actions:@[@"重试", @"确定"]
+                   promptCount:2
+                   promptBlock:^(UITextField *textField, NSInteger index) {
+                        if (index == 0) {
+                            textField.placeholder = @"请输入用户名";
+                            textField.secureTextEntry = NO;
+                        } else {
+                            textField.placeholder = @"请输入密码";
+                            textField.secureTextEntry = YES;
+                        }
+                    }
+                   actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
+                        FWStrongifySelf();
+                        if (index == 0) {
+                            [self onAlertF];
+                        } else {
+                            NSLog(@"输入内容：%@", values);
+                        }
+                    }
+                   cancelBlock:^{
+                        NSLog(@"点击了取消按钮");
+                    }
                       priority:FWAlertPriorityNormal];
 }
 

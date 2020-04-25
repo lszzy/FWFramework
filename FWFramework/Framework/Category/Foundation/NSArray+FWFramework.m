@@ -15,18 +15,43 @@
 
 - (instancetype)fwFilterWithBlock:(BOOL (^)(id))block
 {
-    if (!block) {
-        return self;
-    }
+    NSParameterAssert(block != nil);
     
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < self.count; i++) {
-        id obj = self[i];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if (block(obj)) {
             [result addObject:obj];
         }
-    }
-    return [result copy];
+    }];
+    return result;
+}
+
+- (NSArray *)fwMapWithBlock:(id (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        id value = block(obj);
+        if (value) {
+            [result addObject:value];
+        }
+    }];
+    return result;
+}
+
+- (id)fwMatchWithBlock:(BOOL (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    __block id result = nil;
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (block(obj)) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
 }
 
 - (id)fwRandomObject

@@ -12,6 +12,47 @@
 
 @implementation NSDictionary (FWFramework)
 
+- (instancetype)fwFilterWithBlock:(BOOL (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (block(key, obj)) {
+            result[key] = obj;
+        }
+    }];
+    return result;
+}
+
+- (NSDictionary *)fwMapWithBlock:(id (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        id value = block(key, obj);
+        if (value) {
+            result[key] = value;
+        }
+    }];
+    return result;
+}
+
+- (id)fwMatchWithBlock:(BOOL (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+    
+    __block id result = nil;
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (block(key, obj)) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
 - (id)fwRandomKey
 {
     if (self.count < 1) return nil;

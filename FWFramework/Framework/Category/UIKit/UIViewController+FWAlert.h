@@ -108,13 +108,13 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param message      输入框消息
  *  @param cancel       取消按钮文字
  *  @param confirm      确认按钮文字
- *  @param confirmBlock 确认按钮事件
+ *  @param confirmBlock 确认按钮事件，参数为输入值
  */
 - (void)fwShowPromptWithTitle:(nullable id)title
                       message:(nullable id)message
                        cancel:(nullable id)cancel
                       confirm:(nullable id)confirm
-                 confirmBlock:(nullable void (^)(NSString *text))confirmBlock;
+                 confirmBlock:(nullable void (^)(NSString *value))confirmBlock;
 
 /**
  *  显示输入框(详细版)
@@ -123,8 +123,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param message      输入框消息
  *  @param cancel       取消按钮文字
  *  @param confirm      确认按钮文字
- *  @param promptBlock  输入框初始化事件
- *  @param confirmBlock 确认按钮事件
+ *  @param promptBlock  输入框初始化事件，参数为输入框
+ *  @param confirmBlock 确认按钮事件，参数为输入值
  *  @param cancelBlock  取消按钮事件
  *  @param priority     警告框优先级
  */
@@ -133,7 +133,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                        cancel:(nullable id)cancel
                       confirm:(nullable id)confirm
                   promptBlock:(nullable void (^)(UITextField *textField))promptBlock
-                 confirmBlock:(nullable void (^)(NSString *text))confirmBlock
+                 confirmBlock:(nullable void (^)(NSString *value))confirmBlock
                   cancelBlock:(nullable void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority;
 
@@ -145,8 +145,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param cancel       取消按钮文字
  *  @param confirm      确认按钮文字
  *  @param promptCount  输入框数量
- *  @param promptBlock  输入框初始化事件
- *  @param confirmBlock 确认按钮事件
+ *  @param promptBlock  输入框初始化事件，参数为输入框和索引index
+ *  @param confirmBlock 确认按钮事件，参数为输入值数组
  *  @param cancelBlock  取消按钮事件
  *  @param priority     警告框优先级
  */
@@ -156,7 +156,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                       confirm:(nullable id)confirm
                   promptCount:(NSInteger)promptCount
                   promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
-                 confirmBlock:(nullable void (^)(NSArray<NSString *> *texts))confirmBlock
+                 confirmBlock:(nullable void (^)(NSArray<NSString *> *values))confirmBlock
                   cancelBlock:(nullable void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority;
 
@@ -193,6 +193,33 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                       cancel:(nullable id)cancel
                      actions:(nullable NSArray *)actions
                  actionBlock:(nullable void (^)(NSInteger index))actionBlock
+                 cancelBlock:(nullable void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority;
+
+#pragma mark - Style
+
+/**
+ *  显示弹出框(完整版)
+ *
+ *  @param style       弹出框样式
+ *  @param title       操作表标题
+ *  @param message     操作表消息
+ *  @param cancel      取消按钮标题
+ *  @param actions     动作按钮标题列表
+ *  @param promptCount 输入框数量
+ *  @param promptBlock 输入框初始化事件，参数为输入框和索引index
+ *  @param actionBlock 动作按钮点击事件，参数为输入值数组和索引index
+ *  @param cancelBlock 取消按钮事件
+ *  @param priority    操作表优先级
+ */
+- (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
+                       title:(nullable id)title
+                     message:(nullable id)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
+                 promptCount:(NSInteger)promptCount
+                 promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
+                 actionBlock:(nullable void (^)(NSArray<NSString *> *values, NSInteger index))actionBlock
                  cancelBlock:(nullable void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority;
 
