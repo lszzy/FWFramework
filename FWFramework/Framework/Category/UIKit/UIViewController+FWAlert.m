@@ -189,50 +189,20 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
-    // 初始化Alert
-    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *preferredAction = nil;
-    
-    // 添加动作按钮
-    NSInteger actionsCount = actions ? actions.count : 0;
-    if (actionsCount > 0) {
-        for (NSInteger index = 0; index < actionsCount; index++) {
-            UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:[actions objectAtIndex:index] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                if (actionBlock) {
-                    actionBlock(index);
-                }
-            }];
-            if (alertAction.fwIsPreferred) {
-                preferredAction = alertAction;
-            }
-            [alertController addAction:alertAction];
-        }
-    }
-    
-    // 添加取消按钮
-    if (cancel != nil) {
-        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
-        }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
-        [alertController addAction:cancelAction];
-    }
-    
-    // 显示Alert
-    alertController.fwPriorityEnabled = YES;
-    alertController.fwPriority = priority;
-    if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
-        }
-    }
-    [alertController fwPresentInViewController:self];
+    [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
+                         title:title
+                       message:message
+                        cancel:cancel
+                       actions:actions
+                   promptCount:0
+                   promptBlock:nil
+                   actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
+                       if (actionBlock) {
+                           actionBlock(index);
+                       }
+                   }
+                   cancelBlock:cancelBlock
+                      priority:priority];
 }
 
 - (void)fwShowConfirmWithTitle:(id)title
@@ -306,9 +276,9 @@
                             promptBlock(textField);
                         }
                     }
-                   confirmBlock:^(NSArray<UITextField *> *textFields) {
+                   confirmBlock:^(NSArray<NSString *> *values) {
                         if (confirmBlock) {
-                            confirmBlock(textFields.firstObject.text ?: @"");
+                            confirmBlock(values.firstObject);
                         }
                     }
                     cancelBlock:cancelBlock
@@ -325,61 +295,20 @@
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
-    // 初始化Alert
-    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *preferredAction = nil;
-    
-    // 添加输入框并初始化输入框
-    for (NSInteger index = 0; index < promptCount; index++) {
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-            if (promptBlock) {
-                promptBlock(textField, index);
-            }
-        }];
-    }
-    
-    // 添加确定按钮
-    if (confirm != nil) {
-        UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:confirm style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            if (confirmBlock) {
-                NSMutableArray *values = [NSMutableArray new];
-                for (NSInteger index = 0; index < promptCount; index++) {
-                    UITextField *textField = alertController.textFields[index];
-                    [values addObject:textField.text ?: @""];
-                }
-                confirmBlock(values.copy);
-            }
-        }];
-        if (alertAction.fwIsPreferred) {
-            preferredAction = alertAction;
-        }
-        [alertController addAction:alertAction];
-    }
-    
-    // 添加取消按钮
-    if (cancel != nil) {
-        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
-        }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
-        [alertController addAction:cancelAction];
-    }
-    
-    // 显示Alert
-    alertController.fwPriorityEnabled = YES;
-    alertController.fwPriority = priority;
-    if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
-        }
-    }
-    [alertController fwPresentInViewController:self];
+    [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
+                         title:title
+                       message:message
+                        cancel:cancel
+                       actions:(confirm ? @[confirm] : nil)
+                   promptCount:promptCount
+                   promptBlock:promptBlock
+                   actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
+                       if (confirmBlock) {
+                           confirmBlock(values);
+                       }
+                   }
+                   cancelBlock:cancelBlock
+                      priority:priority];
 }
 
 #pragma mark - Sheet
@@ -407,50 +336,20 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
-    // 初始化ActionSheet
-    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *preferredAction = nil;
-    
-    // 添加动作按钮
-    NSInteger actionsCount = actions ? actions.count : 0;
-    if (actionsCount > 0) {
-        for (NSInteger index = 0; index < actionsCount; index++) {
-            UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:[actions objectAtIndex:index] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                if (actionBlock) {
-                    actionBlock(index);
-                }
-            }];
-            if (alertAction.fwIsPreferred) {
-                preferredAction = alertAction;
-            }
-            [alertController addAction:alertAction];
-        }
-    }
-    
-    // 添加取消按钮
-    if (cancel != nil) {
-        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            if (cancelBlock) {
-                cancelBlock();
-            }
-        }];
-        if (cancelAction.fwIsPreferred) {
-            preferredAction = cancelAction;
-        }
-        [alertController addAction:cancelAction];
-    }
-    
-    // 显示ActionSheet
-    alertController.fwPriorityEnabled = YES;
-    alertController.fwPriority = priority;
-    if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) {
-            alertController.preferredAction = preferredAction;
-        }
-    }
-    [alertController fwPresentInViewController:self];
+    [self fwShowAlertWithStyle:UIAlertControllerStyleActionSheet
+                         title:title
+                       message:message
+                        cancel:cancel
+                       actions:actions
+                   promptCount:0
+                   promptBlock:nil
+                   actionBlock:^(NSArray<NSString *> * _Nonnull values, NSInteger index) {
+                       if (actionBlock) {
+                           actionBlock(index);
+                       }
+                   }
+                   cancelBlock:cancelBlock
+                      priority:priority];
 }
 
 #pragma mark - Style
