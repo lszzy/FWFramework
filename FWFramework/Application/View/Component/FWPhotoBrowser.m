@@ -546,7 +546,7 @@
         }
     } else {
         // FWImage
-        UIImage *image = [FWAnimatedImage imageNamed:urlString];
+        UIImage *image = [UIImage imageNamed:urlString];
         if (image) {
             // FWImage
             self.imageView.image = image;
