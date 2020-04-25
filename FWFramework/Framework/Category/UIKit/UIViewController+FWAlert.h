@@ -137,6 +137,29 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                   cancelBlock:(nullable void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority;
 
+/**
+ *  显示输入框(复杂版)
+ *
+ *  @param title        输入框标题
+ *  @param message      输入框消息
+ *  @param cancel       取消按钮文字
+ *  @param confirm      确认按钮文字
+ *  @param promptCount  输入框数量
+ *  @param promptBlock  输入框初始化事件
+ *  @param confirmBlock 确认按钮事件
+ *  @param cancelBlock  取消按钮事件
+ *  @param priority     警告框优先级
+ */
+- (void)fwShowPromptWithTitle:(nullable id)title
+                      message:(nullable id)message
+                       cancel:(nullable id)cancel
+                      confirm:(nullable id)confirm
+                  promptCount:(NSInteger)promptCount
+                  promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
+                 confirmBlock:(nullable void (^)(NSArray<NSString *> *texts))confirmBlock
+                  cancelBlock:(nullable void (^)(void))cancelBlock
+                     priority:(FWAlertPriority)priority;
+
 #pragma mark - Sheet
 
 /**
