@@ -160,8 +160,26 @@
 
 - (void)onAlertA
 {
-    [self fwShowAlertWithTitle:[[NSAttributedString alloc] initWithString:@"警告框标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
-                       message:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor], NSFontAttributeName: [UIFont appFontSize:12]}]
+    NSMutableAttributedString *title = [NSMutableAttributedString new];
+    NSTextAttachment *attachment = [NSTextAttachment new];
+    attachment.image = [[UIImage imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    attachment.bounds = CGRectMake(0, -20, 30, 30);
+    [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+    NSDictionary *attrs = @{
+        NSFontAttributeName: [UIFont appFontBoldSize:17],
+        NSForegroundColorAttributeName: [UIColor redColor],
+    };
+    [title appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n警告框标题" attributes:attrs]];
+        
+    NSMutableAttributedString *message = [NSMutableAttributedString new];
+    attrs = @{
+        NSFontAttributeName: [UIFont appFontSize:15],
+        NSForegroundColorAttributeName: [UIColor greenColor],
+    };
+    [message appendAttributedString:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:attrs]];
+    
+    [self fwShowAlertWithTitle:title
+                       message:message
                         cancel:@"取消"
                        actions:@[[UIAlertAction fwActionWithTitle:@"按钮1" style:UIAlertActionStyleDestructive].fwPreferred(YES), [UIAlertAction fwActionWithTitle:@"按钮2" style:UIAlertActionStyleDestructive], @"按钮3", [UIAlertAction fwActionWithTitle:@"按钮4" style:UIAlertActionStyleDestructive].fwEnabled(NO)]
                    actionBlock:nil
@@ -171,8 +189,26 @@
 
 - (void)onSheetA
 {
-    [self fwShowSheetWithTitle:[[NSAttributedString alloc] initWithString:@"操作表标题" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]
-                       message:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor], NSFontAttributeName: [UIFont appFontSize:12]}]
+    NSMutableAttributedString *title = [NSMutableAttributedString new];
+    NSTextAttachment *attachment = [NSTextAttachment new];
+    attachment.image = [[UIImage imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    attachment.bounds = CGRectMake(0, -20, 30, 30);
+    [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+    NSDictionary *attrs = @{
+        NSFontAttributeName: [UIFont appFontBoldSize:17],
+        NSForegroundColorAttributeName: [UIColor redColor],
+    };
+    [title appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n操作表标题" attributes:attrs]];
+        
+    NSMutableAttributedString *message = [NSMutableAttributedString new];
+    attrs = @{
+        NSFontAttributeName: [UIFont appFontSize:15],
+        NSForegroundColorAttributeName: [UIColor greenColor],
+    };
+    [message appendAttributedString:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:attrs]];
+    
+    [self fwShowSheetWithTitle:title
+                       message:message
                         cancel:@"取消"
                        actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive].fwPreferred(YES), [UIAlertAction fwActionWithTitle:@"操作2" style:UIAlertActionStyleDestructive], @"操作3", [UIAlertAction fwActionWithTitle:@"操作4" style:UIAlertActionStyleDestructive].fwEnabled(NO)]
                    actionBlock:^(NSInteger index) {
