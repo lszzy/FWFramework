@@ -101,8 +101,9 @@
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
                                          @[@"跳转home", @"onOpenHome"],
                                          @[@"跳转test", @"onOpenHome2"],
-                                         @[@"跳转home/undefined", @"onOpenHome3"],
-                                         @[@"不支持tabbar/home", @"onOpenHome4"],
+                                         @[@"跳转settings", @"onOpenHome3"],
+                                         @[@"跳转home/undefined", @"onOpenHome4"],
+                                         @[@"不支持tabbar/home", @"onOpenHome5"],
                                          @[@"关闭close", @"onOpenClose"],
                                          @[@"内部web", @"onOpenHttp"],
                                          @[@"外部safari", @"onOpenUrl"],
@@ -215,10 +216,15 @@
 
 - (void)onOpenHome3
 {
-    [FWRouter openURL:@"app://home/undefined"];
+    [FWRouter openURL:@"app://home/settings"];
 }
 
 - (void)onOpenHome4
+{
+    [FWRouter openURL:@"app://home/undefined"];
+}
+
+- (void)onOpenHome5
 {
     [FWRouter openURL:@"app://tabbar/home"];
 }

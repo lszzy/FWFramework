@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ObjcController.h"
 #import "TestViewController.h"
+#import "SettingsViewController.h"
 
 @interface AppDelegate () <UITabBarControllerDelegate>
 
@@ -105,10 +106,15 @@
     testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
     testNav.tabBarItem.title = @"测试";
     
+    UIViewController *settingsController = [SettingsViewController new];
+    settingsController.hidesBottomBarWhenPushed = NO;
+    settingsController.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
+    settingsController.tabBarItem.title = @"设置";
+    
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
     tabBarController.delegate = self;
     tabBarController.definesPresentationContext = YES;
-    tabBarController.viewControllers = @[homeNav, testNav];
+    tabBarController.viewControllers = @[homeNav, testNav, settingsController];
     self.window.backgroundColor = [UIColor whiteColor];
     self.window.rootViewController = tabBarController;
 }
