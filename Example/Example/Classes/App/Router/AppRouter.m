@@ -9,6 +9,7 @@
 #import "AppRouter.h"
 #import "BaseWebViewController.h"
 #import "TestViewController.h"
+#import "SettingsViewController.h"
 #import "TestRouterViewController.h"
 
 @implementation AppRouter
@@ -20,6 +21,7 @@ FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
 FWDefStaticString(ROUTE_HOME, @"app://home");
 FWDefStaticString(ROUTE_HOME_TEST, @"app://home/test");
+FWDefStaticString(ROUTE_HOME_SETTINGS, @"app://home/settings");
 FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)load
@@ -123,6 +125,10 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     
     [FWRouter registerURL:AppRouter.ROUTE_HOME_TEST withHandler:^(NSDictionary * _Nonnull parameters) {
         [UIWindow.fwMainWindow fwSelectTabBarController:[TestViewController class]];
+    }];
+    
+    [FWRouter registerURL:AppRouter.ROUTE_HOME_SETTINGS withHandler:^(NSDictionary * _Nonnull parameters) {
+        [UIWindow.fwMainWindow fwSelectTabBarController:[SettingsViewController class]];
     }];
     
     [FWRouter registerURL:AppRouter.ROUTE_CLOSE withHandler:^(NSDictionary * _Nonnull parameters) {

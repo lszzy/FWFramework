@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2F03EEC9231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */; };
 		2F03EECA231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */; };
+		2F0615BD2455D79D001D23A6 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0615BC2455D79D001D23A6 /* SettingsViewController.m */; };
+		2F0615BE2455D79D001D23A6 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0615BC2455D79D001D23A6 /* SettingsViewController.m */; };
 		2F06BE5F2097137C000F8587 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F06BE5E2097137C000F8587 /* ObjcController.m */; };
 		2F071B7121DF387000F47DFD /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F071B7021DF387000F47DFD /* TestWebViewController.m */; };
 		2F0CCE3B21E496B30018FA87 /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0CCE3821E496B30018FA87 /* FWDbModel.m */; };
@@ -223,6 +225,8 @@
 		18BA4A82B7569CFB7681EB14 /* Pods_Example2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F03EEC7231EAF3C009D2A22 /* TestNotificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNotificationViewController.h; sourceTree = "<group>"; };
 		2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNotificationViewController.m; sourceTree = "<group>"; };
+		2F0615BB2455D79D001D23A6 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		2F0615BC2455D79D001D23A6 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2F06BE5D2097137C000F8587 /* ObjcController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcController.h; sourceTree = "<group>"; };
 		2F06BE5E2097137C000F8587 /* ObjcController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcController.m; sourceTree = "<group>"; };
 		2F06BE6420971483000F8587 /* SwiftController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftController.swift; sourceTree = "<group>"; };
@@ -436,6 +440,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F0615BA2455D77F001D23A6 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				2F0615BB2455D79D001D23A6 /* SettingsViewController.h */,
+				2F0615BC2455D79D001D23A6 /* SettingsViewController.m */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		2F0D292F215DFFEF005F1466 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
@@ -526,6 +539,9 @@
 		2F4CFA41215522D200203A37 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				2F06BE5D2097137C000F8587 /* ObjcController.h */,
+				2F06BE5E2097137C000F8587 /* ObjcController.m */,
+				2F06BE6420971483000F8587 /* SwiftController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -763,12 +779,10 @@
 			children = (
 				2F4CFA4B2155280800203A37 /* Base */,
 				2F43E5B6217AC38F00BAEB59 /* Complex */,
-				2F4CFA41215522D200203A37 /* Home */,
-				2F06BE5D2097137C000F8587 /* ObjcController.h */,
-				2F06BE5E2097137C000F8587 /* ObjcController.m */,
 				2F43E5BB217AC38F00BAEB59 /* Simple */,
-				2F06BE6420971483000F8587 /* SwiftController.swift */,
+				2F4CFA41215522D200203A37 /* Home */,
 				2F4CFA42215522D200203A37 /* Test */,
+				2F0615BA2455D77F001D23A6 /* Settings */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1142,6 +1156,7 @@
 				2F4385662318F687003A683C /* ComplexView.m in Sources */,
 				2F03EECA231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */,
 				2F4385672318F687003A683C /* TestSegmentViewController.m in Sources */,
+				2F0615BE2455D79D001D23A6 /* SettingsViewController.m in Sources */,
 				2F4385682318F687003A683C /* TestUrlViewController.m in Sources */,
 				2F4385692318F687003A683C /* TestIndicatorViewController.m in Sources */,
 				2F8F371124016C82003472B5 /* TestCrashViewController.m in Sources */,
@@ -1222,6 +1237,7 @@
 				2F51D7F01E5C2357009FD40F /* AppDelegate.m in Sources */,
 				2F43E5C9217AC41D00BAEB59 /* ComplexView.m in Sources */,
 				2F03EEC9231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */,
+				2F0615BD2455D79D001D23A6 /* SettingsViewController.m in Sources */,
 				2F41A735229F9F3B0008E4E2 /* TestSegmentViewController.m in Sources */,
 				2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */,
 				2F8F371024016C82003472B5 /* TestCrashViewController.m in Sources */,
