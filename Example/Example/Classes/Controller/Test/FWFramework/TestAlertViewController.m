@@ -80,7 +80,7 @@
     [self fwShowAlertWithTitle:@"警告框标题"
                        message:@"警告框消息"
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"按钮1" style:UIAlertActionStyleDestructive], @"按钮2"]
+                       actions:@[@"按钮1", @"按钮2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的按钮index: %@", @(index));
                    }
@@ -176,7 +176,7 @@
     [self fwShowSheetWithTitle:@"操作表标题"
                        message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive], @"操作2"]
+                       actions:@[@"操作1", @"操作2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }];
@@ -187,7 +187,7 @@
     [self fwShowSheetWithTitle:@"操作表标题"
                        message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive].fwPreferred(YES), @"操作2", [UIAlertAction fwActionWithTitle:@"操作3" style:UIAlertActionStyleDefault].fwEnabled(NO)]
+                       actions:@[@"操作1", @"操作2", @"操作3"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }
@@ -204,7 +204,7 @@
                          title:@"请输入账号信息"
                        message:@"账户信息必填"
                         cancel:@"取消"
-                       actions:@[@"重试", @"确定"]
+                       actions:@[@"重试", @"高亮", @"禁用", @"确定"]
                    promptCount:2
                    promptBlock:^(UITextField *textField, NSInteger index) {
                         if (index == 0) {
@@ -225,6 +225,12 @@
                     }
                    cancelBlock:^{
                         NSLog(@"点击了取消按钮");
+                    }
+                   customBlock:^(UIAlertController *alertController) {
+                        alertController.actions[0].fwIsPreferred = NO;
+                        alertController.actions[1].fwIsPreferred = YES;
+                        alertController.actions[2].enabled = NO;
+                        alertController.preferredAction = alertController.actions[1];
                     }
                       priority:FWAlertPriorityNormal];
 }
@@ -252,7 +258,7 @@
     [self fwShowAlertWithTitle:title
                        message:message
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"按钮1" style:UIAlertActionStyleDestructive].fwPreferred(YES), [UIAlertAction fwActionWithTitle:@"按钮2" style:UIAlertActionStyleDestructive], @"按钮3", [UIAlertAction fwActionWithTitle:@"按钮4" style:UIAlertActionStyleDestructive].fwEnabled(NO)]
+                       actions:@[@"按钮1", @"按钮2", @"按钮3", @"按钮4"]
                    actionBlock:nil
                    cancelBlock:nil
                       priority:FWAlertPriorityNormal];
@@ -281,7 +287,7 @@
     [self fwShowSheetWithTitle:title
                        message:message
                         cancel:@"取消"
-                       actions:@[[UIAlertAction fwActionWithTitle:@"操作1" style:UIAlertActionStyleDestructive].fwPreferred(YES), [UIAlertAction fwActionWithTitle:@"操作2" style:UIAlertActionStyleDestructive], @"操作3", [UIAlertAction fwActionWithTitle:@"操作4" style:UIAlertActionStyleDestructive].fwEnabled(NO)]
+                       actions:@[@"操作1", @"操作2", @"操作3", @"操作4"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }];

@@ -116,42 +116,32 @@
 
 @implementation UIAlertAction (FWFramework)
 
-+ (instancetype)fwActionWithTitle:(NSString *)title style:(UIAlertActionStyle)style
-{
-    return [self actionWithTitle:title style:style handler:nil];
-}
-
 + (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
 {
-    UIAlertAction *action = [object isKindOfClass:[UIAlertAction class]] ? object : nil;
     NSAttributedString *attributedTitle = [object isKindOfClass:[NSAttributedString class]] ? object : nil;
-    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(action ? action.title : (attributedTitle ? attributedTitle.string : object))
-                                                          style:(action ? action.style : style)
+    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(attributedTitle ? attributedTitle.string : object)
+                                                          style:style
                                                          handler:handler];
     
-    if (action) {
-        alertAction.enabled = action.enabled;
-        alertAction.fwIsPreferred = action.fwIsPreferred;
-    }
-    
-    if (action.fwTitleColor) {
-        alertAction.fwTitleColor = action.fwTitleColor;
-    } else {
-        [alertAction fwReloadActionStyle];
-    }
+    alertAction.fwIsPreferred = NO;
     
     return alertAction;
 }
 
-- (void)fwReloadActionStyle
+- (BOOL)fwIsPreferred
 {
-    if (self.fwTitleColor || self.title.length < 1) return;
-    if (!FWAlertAppearance.appearance.actionEnabled) return;
+    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
+}
+
+- (void)setFwIsPreferred:(BOOL)fwIsPreferred
+{
+    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (self.fwTitleColor || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
     
     UIColor *titleColor = nil;
     if (!self.enabled) {
         titleColor = FWAlertAppearance.appearance.disabledActionColor;
-    } else if (self.fwIsPreferred) {
+    } else if (fwIsPreferred) {
         titleColor = FWAlertAppearance.appearance.preferredActionColor;
     } else if (self.style == UIAlertActionStyleDestructive) {
         titleColor = FWAlertAppearance.appearance.destructiveActionColor;
@@ -163,17 +153,6 @@
     [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
 }
 
-- (BOOL)fwIsPreferred
-{
-    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
-}
-
-- (void)setFwIsPreferred:(BOOL)fwIsPreferred
-{
-    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwReloadActionStyle];
-}
-
 - (UIColor *)fwTitleColor
 {
     return objc_getAssociatedObject(self, @selector(fwTitleColor));
@@ -183,30 +162,6 @@
 {
     objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self fwPerformPropertySelector:@"titleTextColor" withObject:fwTitleColor];
-}
-
-- (UIAlertAction *(^)(BOOL))fwPreferred
-{
-    return ^UIAlertAction *(BOOL preferred) {
-        self.fwIsPreferred = preferred;
-        return self;
-    };
-}
-
-- (UIAlertAction *(^)(BOOL))fwEnabled
-{
-    return ^UIAlertAction *(BOOL enabled) {
-        self.enabled = enabled;
-        return self;
-    };
-}
-
-- (UIAlertAction *(^)(UIColor *))fwColor
-{
-    return ^UIAlertAction *(UIColor *color) {
-        self.fwTitleColor = color;
-        return self;
-    };
 }
 
 @end

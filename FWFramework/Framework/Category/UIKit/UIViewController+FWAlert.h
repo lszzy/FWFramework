@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  @brief 视图控制器系统弹出框分类，支持优先级
  @discussion 系统弹出框仅支持参数类型如下：
     1.title和message仅支持NSString
-    2.action仅支持NSString和UIAlertAction
+    2.action仅支持NSString
     如果需要支持NSAttributedString等，建议优先使用FWAlertController
  */
 @interface UIViewController (FWAlert)
@@ -210,6 +210,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param promptBlock 输入框初始化事件，参数为输入框和索引index
  *  @param actionBlock 动作按钮点击事件，参数为输入值数组和索引index
  *  @param cancelBlock 取消按钮事件
+ *  @param customBlock 自定义弹出框事件
  *  @param priority    操作表优先级
  */
 - (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
@@ -221,6 +222,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
                  promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
                  actionBlock:(nullable void (^)(NSArray<NSString *> *values, NSInteger index))actionBlock
                  cancelBlock:(nullable void (^)(void))cancelBlock
+                 customBlock:(nullable void (^)(id alertController))customBlock
                     priority:(FWAlertPriority)priority;
 
 @end
@@ -259,6 +261,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
              promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
              actionBlock:(nullable void (^)(NSArray<NSString *> *values, NSInteger index))actionBlock
              cancelBlock:(nullable void (^)(void))cancelBlock
+             customBlock:(nullable void (^)(id alertController))customBlock
                 priority:(FWAlertPriority)priority;
 
 @end
