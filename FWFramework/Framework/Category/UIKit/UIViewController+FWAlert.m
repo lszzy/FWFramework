@@ -51,6 +51,7 @@
                        if (actionBlock) actionBlock(index);
                    }
                    cancelBlock:cancelBlock
+                   customBlock:nil
                       priority:priority];
 }
 
@@ -149,6 +150,7 @@
                        if (confirmBlock) confirmBlock(values);
                    }
                    cancelBlock:cancelBlock
+                   customBlock:nil
                       priority:priority];
 }
 
@@ -188,6 +190,7 @@
                        if (actionBlock) actionBlock(index);
                    }
                    cancelBlock:cancelBlock
+                   customBlock:nil
                       priority:priority];
 }
 
@@ -202,12 +205,13 @@
                  promptBlock:(void (^)(UITextField *, NSInteger))promptBlock
                  actionBlock:(void (^)(NSArray<NSString *> *, NSInteger))actionBlock
                  cancelBlock:(void (^)(void))cancelBlock
+                 customBlock:(nullable void (^)(id))customBlock
                     priority:(FWAlertPriority)priority
 {
     // 优先调用插件
     id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
-    if (alertPlugin && [alertPlugin respondsToSelector:@selector(fwViewController:showAlert:title:message:cancel:actions:promptCount:promptBlock:actionBlock:cancelBlock:priority:)]) {
-        [alertPlugin fwViewController:self showAlert:style title:title message:message cancel:cancel actions:actions promptCount:promptCount promptBlock:promptBlock actionBlock:actionBlock cancelBlock:cancelBlock priority:priority];
+    if (alertPlugin && [alertPlugin respondsToSelector:@selector(fwViewController:showAlert:title:message:cancel:actions:promptCount:promptBlock:actionBlock:cancelBlock:customBlock:priority:)]) {
+        [alertPlugin fwViewController:self showAlert:style title:title message:message cancel:cancel actions:actions promptCount:promptCount promptBlock:promptBlock actionBlock:actionBlock cancelBlock:cancelBlock customBlock:customBlock priority:priority];
         return;
     }
     
@@ -252,17 +256,26 @@
     // 添加首选按钮
     if (!preferredAction && alertController.actions.count > 0) {
         if (FWAlertAppearance.appearance.preferredActionBlock) {
-            preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
-            if (preferredAction) preferredAction.fwIsPreferred = YES;
+            preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController.actions);
         }
+    }
+    
+    // 应用首选按钮
+    if (preferredAction != nil) {
+        if (@available(iOS 9.0, *)) {
+            alertController.preferredAction = preferredAction;
+        }
+        preferredAction.fwIsPreferred = YES;
+    }
+    
+    // 自定义Alert
+    if (customBlock) {
+        customBlock(alertController);
     }
     
     // 显示Alert
     alertController.fwAlertPriorityEnabled = YES;
     alertController.fwAlertPriority = priority;
-    if (@available(iOS 9.0, *)) {
-        if (preferredAction != nil) alertController.preferredAction = preferredAction;
-    }
     [alertController fwAlertPriorityPresentIn:self];
 }
 

@@ -344,7 +344,6 @@
 		2FD1A52621D4BD4100A215C2 /* FWScrollViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */; };
 		2FD36A0023B5D5E500741EAC /* FWTabAnimated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD369FF23B5D5E500741EAC /* FWTabAnimated.swift */; };
-		2FD50D922454196700248E80 /* UIAlertController+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD50D912454196700248E80 /* UIAlertController+FWFramework.swift */; };
 		2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */; };
 		2FDD34EE2303A63900624BBD /* NSAttributedString+FWOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -698,7 +697,6 @@
 		2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWScrollViewController.h; sourceTree = "<group>"; };
 		2FD1A52521D4BD4100A215C2 /* FWScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWScrollViewController.m; sourceTree = "<group>"; };
 		2FD369FF23B5D5E500741EAC /* FWTabAnimated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTabAnimated.swift; sourceTree = "<group>"; };
-		2FD50D912454196700248E80 /* UIAlertController+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+FWFramework.swift"; sourceTree = "<group>"; };
 		2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+FWFramework.h"; sourceTree = "<group>"; };
 		2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+FWFramework.m"; sourceTree = "<group>"; };
 		2FDD34EC2303A63900624BBD /* NSAttributedString+FWOption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+FWOption.h"; sourceTree = "<group>"; };
@@ -847,7 +845,6 @@
 				2FACF02D2303A90B007AFC16 /* UIView+FWTheme.m */,
 				2F46B77824534E8100EEEFF0 /* UIAlertController+FWFramework.h */,
 				2F46B77924534E8100EEEFF0 /* UIAlertController+FWFramework.m */,
-				2FD50D912454196700248E80 /* UIAlertController+FWFramework.swift */,
 				2F03A517216CF4B9001965A1 /* UIViewController+FWAlert.h */,
 				2F03A4F6216CF4B9001965A1 /* UIViewController+FWAlert.m */,
 				2FE4EFF62212B2750077876A /* UIViewController+FWBack.h */,
@@ -1638,7 +1635,6 @@
 				2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,
 				2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */,
-				2FD50D922454196700248E80 /* UIAlertController+FWFramework.swift in Sources */,
 				2FCE516121D3BA32009EA65E /* FWCacheKeychain.m in Sources */,
 				2F03A5F9216CF4B9001965A1 /* FWAspect.m in Sources */,
 				2FBFB73E22C6103F00E669B6 /* UIDevice+FWFramework.swift in Sources */,

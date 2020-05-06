@@ -34,14 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 系统弹出框动作分类，自定义属性
- @discussion 系统弹出动作title仅支持NSString和UIAlertAction，如果需要支持NSAttributedString等，请使用FWAlertController
+ @discussion 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
 */
 @interface UIAlertAction (FWFramework)
 
-// 快速创建弹出动作，支持标题和样式
-+ (instancetype)fwActionWithTitle:(nullable NSString *)title style:(UIAlertActionStyle)style;
-
-// 快速创建弹出动作，title仅支持NSString和UIAlertAction(拷贝)
+// 快速创建弹出动作，title仅支持NSString
 + (instancetype)fwActionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler;
 
 // 是否是首选动作
@@ -49,15 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 指定标题颜色
 @property (nonatomic, strong, nullable) UIColor *fwTitleColor;
-
-// 快捷设置首选动作
-@property (nonatomic, copy, readonly) UIAlertAction *(^fwPreferred)(BOOL preferred) NS_REFINED_FOR_SWIFT;
-
-// 快捷设置是否禁用
-@property (nonatomic, copy, readonly) UIAlertAction *(^fwEnabled)(BOOL enabled) NS_REFINED_FOR_SWIFT;
-
-// 快捷设置标题颜色
-@property (nonatomic, copy, readonly) UIAlertAction *(^fwColor)(UIColor * _Nullable color) NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -73,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)appearance;
 
 // 自定义首选动作句柄，默认nil，跟随系统
-@property (nonatomic, copy, nullable) UIAlertAction * _Nullable (^preferredActionBlock)(UIAlertController *alertController);
+@property (nonatomic, copy, nullable) id _Nullable (^preferredActionBlock)(NSArray *alertActions);
 
 // 是否启用Controller样式，设置后自动启用
 @property (nonatomic, assign, readonly) BOOL controllerEnabled;

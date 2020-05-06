@@ -78,8 +78,8 @@
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
-    FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
-        return alertController.actions.firstObject;
+    FWAlertAppearance.appearance.preferredActionBlock = ^id (NSArray *alertActions) {
+        return alertActions.firstObject;
     };
     
     FWAlertAppearance.appearance.titleFont = [UIFont appFontBoldSize:16];
