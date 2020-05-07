@@ -87,6 +87,8 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 - (void)addAction:(FWAlertAction *)action;
 @property (nonatomic, readonly) NSArray<FWAlertAction *> *actions;
 
+@property (nullable, nonatomic, strong) FWAlertAction *preferredAction;
+
 /* 添加文本输入框
  * 一旦添加后就会回调一次(仅回调一次,因此可以在这个block块里面自由定制textFiled,如设置textField的属性,设置代理,添加addTarget,监听通知等);
  */

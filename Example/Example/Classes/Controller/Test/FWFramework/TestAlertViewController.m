@@ -20,6 +20,7 @@
         id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
         if (alertPlugin) {
             [[FWPluginManager sharedInstance] unloadPlugin:@protocol(FWAlertPlugin)];
+            [[FWPluginManager sharedInstance] unregisterPlugin:@protocol(FWAlertPlugin)];
         } else {
             [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAppAlertPlugin class]];
         }
