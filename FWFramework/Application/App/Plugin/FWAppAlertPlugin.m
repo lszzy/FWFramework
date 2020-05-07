@@ -170,6 +170,7 @@
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:(attributedTitle ? nil : title)
                                                                              message:(attributedMessage ? nil : message)
                                                                       preferredStyle:preferredStyle];
+    alertController.tapBackgroundViewDismiss = (preferredStyle == FWAlertControllerStyleActionSheet);
     
     if (attributedTitle) {
         alertController.attributedTitle = attributedTitle;
