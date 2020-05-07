@@ -11,6 +11,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - UIAlertAction+FWFramework
+
+/*!
+ @brief 系统弹出框动作分类，自定义属性
+ @discussion 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
+*/
+@interface UIAlertAction (FWFramework)
+
+// 快速创建弹出动作，title仅支持NSString
++ (instancetype)fwActionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler;
+
+// 指定标题颜色
+@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
+
+@end
+
 #pragma mark - UIAlertController+FWFramework
 
 /*!
@@ -27,25 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 设置属性消息
 @property (nonatomic, copy, nullable) NSAttributedString *fwAttributedMessage;
-
-@end
-
-#pragma mark - UIAlertAction+FWFramework
-
-/*!
- @brief 系统弹出框动作分类，自定义属性
- @discussion 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
-*/
-@interface UIAlertAction (FWFramework)
-
-// 快速创建弹出动作，title仅支持NSString
-+ (instancetype)fwActionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler;
-
-// 是否是首选动作
-@property (nonatomic, assign) BOOL fwIsPreferred;
-
-// 指定标题颜色
-@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
 
 @end
 

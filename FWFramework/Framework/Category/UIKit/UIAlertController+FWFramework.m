@@ -12,6 +12,60 @@
 #import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
+#pragma mark - UIAlertAction+FWFramework
+
+@implementation UIAlertAction (FWFramework)
+
++ (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
+{
+    NSAttributedString *attributedTitle = [object isKindOfClass:[NSAttributedString class]] ? object : nil;
+    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(attributedTitle ? attributedTitle.string : object)
+                                                          style:style
+                                                         handler:handler];
+    
+    alertAction.fwIsPreferred = NO;
+    
+    return alertAction;
+}
+
+- (BOOL)fwIsPreferred
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
+}
+
+- (void)setFwIsPreferred:(BOOL)fwIsPreferred
+{
+    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (self.fwTitleColor || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
+    
+    UIColor *titleColor = nil;
+    if (!self.enabled) {
+        titleColor = FWAlertAppearance.appearance.disabledActionColor;
+    } else if (fwIsPreferred) {
+        titleColor = FWAlertAppearance.appearance.preferredActionColor;
+    } else if (self.style == UIAlertActionStyleDestructive) {
+        titleColor = FWAlertAppearance.appearance.destructiveActionColor;
+    } else if (self.style == UIAlertActionStyleCancel) {
+        titleColor = FWAlertAppearance.appearance.cancelActionColor;
+    } else {
+        titleColor = FWAlertAppearance.appearance.defaultActionColor;
+    }
+    [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+}
+
+- (UIColor *)fwTitleColor
+{
+    return objc_getAssociatedObject(self, @selector(fwTitleColor));
+}
+
+- (void)setFwTitleColor:(UIColor *)fwTitleColor
+{
+    objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwPerformPropertySelector:@"titleTextColor" withObject:fwTitleColor];
+}
+
+@end
+
 #pragma mark - UIAlertController+FWFramework
 
 @implementation UIAlertController (FWFramework)
@@ -21,6 +75,9 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerAlertViewDidLoad)];
+        if (@available(iOS 9.0, *)) {
+            [self fwSwizzleInstanceMethod:@selector(setPreferredAction:) with:@selector(fwInnerSetPreferredAction:)];
+        }
     });
 }
 
@@ -49,6 +106,16 @@
             return YES;
         }];
     }
+}
+
+- (void)fwInnerSetPreferredAction:(UIAlertAction *)preferredAction
+{
+    [self fwInnerSetPreferredAction:preferredAction];
+    
+    [self.actions enumerateObjectsUsingBlock:^(UIAlertAction *obj, NSUInteger idx, BOOL *stop) {
+        if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
+    }];
+    preferredAction.fwIsPreferred = YES;
 }
 
 + (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle
@@ -108,60 +175,6 @@
 {
     objc_setAssociatedObject(self, @selector(fwAttributedMessage), fwAttributedMessage, OBJC_ASSOCIATION_COPY_NONATOMIC);
     [self fwPerformPropertySelector:@"attributedMessage" withObject:fwAttributedMessage];
-}
-
-@end
-
-#pragma mark - UIAlertAction+FWFramework
-
-@implementation UIAlertAction (FWFramework)
-
-+ (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
-{
-    NSAttributedString *attributedTitle = [object isKindOfClass:[NSAttributedString class]] ? object : nil;
-    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:(attributedTitle ? attributedTitle.string : object)
-                                                          style:style
-                                                         handler:handler];
-    
-    alertAction.fwIsPreferred = NO;
-    
-    return alertAction;
-}
-
-- (BOOL)fwIsPreferred
-{
-    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
-}
-
-- (void)setFwIsPreferred:(BOOL)fwIsPreferred
-{
-    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (self.fwTitleColor || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
-    
-    UIColor *titleColor = nil;
-    if (!self.enabled) {
-        titleColor = FWAlertAppearance.appearance.disabledActionColor;
-    } else if (fwIsPreferred) {
-        titleColor = FWAlertAppearance.appearance.preferredActionColor;
-    } else if (self.style == UIAlertActionStyleDestructive) {
-        titleColor = FWAlertAppearance.appearance.destructiveActionColor;
-    } else if (self.style == UIAlertActionStyleCancel) {
-        titleColor = FWAlertAppearance.appearance.cancelActionColor;
-    } else {
-        titleColor = FWAlertAppearance.appearance.defaultActionColor;
-    }
-    [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
-}
-
-- (UIColor *)fwTitleColor
-{
-    return objc_getAssociatedObject(self, @selector(fwTitleColor));
-}
-
-- (void)setFwTitleColor:(UIColor *)fwTitleColor
-{
-    objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwPerformPropertySelector:@"titleTextColor" withObject:fwTitleColor];
 }
 
 @end
