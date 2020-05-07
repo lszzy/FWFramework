@@ -90,16 +90,18 @@
         return alertController.actions.firstObject;
     };
     
-    FWAlertAppearance.appearance.titleFont = [UIFont appFontBoldSize:16];
-    FWAlertAppearance.appearance.titleColor = [UIColor purpleColor];
+    FWAlertAppearance.appearance.titleFont = [UIFont appFontSemiBoldSize:16];
+    FWAlertAppearance.appearance.titleColor = [UIColor appColorHex:0x111111];
     FWAlertAppearance.appearance.messageFont = [UIFont appFontSize:13];
-    FWAlertAppearance.appearance.messageColor = [UIColor cyanColor];
+    FWAlertAppearance.appearance.messageColor = [UIColor appColorHex:0x111111];
     
-    FWAlertAppearance.appearance.cancelActionColor = [UIColor blackColor];
-    FWAlertAppearance.appearance.defaultActionColor = [UIColor blueColor];
+    FWAlertAppearance.appearance.actionColor = [UIColor appColorHex:0xBFA300];
+    FWAlertAppearance.appearance.actionFont = [UIFont appFontSize:16];
+    FWAlertAppearance.appearance.preferredActionColor = [UIColor appColorHex:0xC69B00];
+    FWAlertAppearance.appearance.preferredActionFont = [UIFont appFontSemiBoldSize:16];
+    FWAlertAppearance.appearance.cancelActionColor = [UIColor appColorHex:0x111111];
     FWAlertAppearance.appearance.destructiveActionColor = [UIColor redColor];
-    FWAlertAppearance.appearance.disabledActionColor = [UIColor grayColor];
-    FWAlertAppearance.appearance.preferredActionColor = [UIColor greenColor];
+    FWAlertAppearance.appearance.disabledActionColor = [UIColor lightGrayColor];
     
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;

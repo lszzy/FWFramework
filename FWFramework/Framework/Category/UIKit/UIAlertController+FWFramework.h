@@ -74,15 +74,19 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否启用Action样式，设置后自动启用
 @property (nonatomic, assign, readonly) BOOL actionEnabled;
 // 默认动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *defaultActionColor;
+@property (nonatomic, strong, nullable) UIColor *actionColor;
+// 默认动作字体，仅FWAlertController支持，仅全局生效
+@property (nonatomic, strong, nullable) UIFont *actionFont;
+// 首选动作颜色，仅全局生效
+@property (nonatomic, strong, nullable) UIColor *preferredActionColor;
+// 首选动作字体，仅FWAlertController支持，仅全局生效
+@property (nonatomic, strong, nullable) UIFont *preferredActionFont;
 // 取消动作颜色，仅全局生效
 @property (nonatomic, strong, nullable) UIColor *cancelActionColor;
 // 警告动作颜色，仅全局生效
 @property (nonatomic, strong, nullable) UIColor *destructiveActionColor;
 // 禁用动作颜色，仅全局生效
 @property (nonatomic, strong, nullable) UIColor *disabledActionColor;
-// 首选动作颜色，仅全局生效
-@property (nonatomic, strong, nullable) UIColor *preferredActionColor;
 
 @end
 
