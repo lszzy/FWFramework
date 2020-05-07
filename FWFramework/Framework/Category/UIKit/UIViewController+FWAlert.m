@@ -252,7 +252,7 @@
     
     // 添加首选按钮
     if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
-        UIAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController.actions);
+        UIAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
         if (preferredAction) {
             if (@available(iOS 9.0, *)) {
                 alertController.preferredAction = preferredAction;
