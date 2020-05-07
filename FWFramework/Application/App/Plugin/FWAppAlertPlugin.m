@@ -22,6 +22,7 @@
              promptBlock:(void (^)(UITextField * _Nonnull, NSInteger))promptBlock
              actionBlock:(void (^)(NSArray<NSString *> * _Nonnull, NSInteger))actionBlock
              cancelBlock:(void (^)(void))cancelBlock
+             customBlock:(void (^)(id))customBlock
                 priority:(FWAlertPriority)priority
 {
     // 初始化Alert
@@ -37,7 +38,6 @@
     }
     
     // 添加动作按钮
-    FWAlertAction *preferredAction = nil;
     for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
         FWAlertAction *alertAction = [self actionWithObject:actions[actionIndex] style:FWAlertActionStyleDefault handler:^(FWAlertAction *action) {
             if (actionBlock) {
@@ -49,7 +49,6 @@
                 actionBlock(values.copy, actionIndex);
             }
         }];
-        // if (alertAction.fwIsPreferred) preferredAction = alertAction;
         [alertController addAction:alertAction];
     }
     
@@ -58,22 +57,25 @@
         FWAlertAction *cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
             if (cancelBlock) cancelBlock();
         }];
-        // if (cancelAction.fwIsPreferred) preferredAction = cancelAction;
         [alertController addAction:cancelAction];
     }
     
     // 添加首选按钮
-    if (!preferredAction && alertController.actions.count > 0) {
-        if (FWAlertAppearance.appearance.preferredActionBlock) {
-            // preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
-            // if (preferredAction) preferredAction.fwIsPreferred = YES;
+    if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
+        FWAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController.actions);
+        if (preferredAction) {
+            alertController.preferredAction = preferredAction;
         }
+    }
+    
+    // 自定义Alert
+    if (customBlock) {
+        customBlock(alertController);
     }
     
     // 显示Alert
     alertController.fwAlertPriorityEnabled = YES;
     alertController.fwAlertPriority = priority;
-    // if (preferredAction != nil) alertController.preferredAction = preferredAction;
     [alertController fwAlertPriorityPresentIn:viewController];
 }
 
@@ -116,24 +118,16 @@
 
 - (FWAlertAction *)actionWithObject:(id)object style:(FWAlertActionStyle)style handler:(void (^)(FWAlertAction *))handler
 {
-    UIAlertAction *action = [object isKindOfClass:[UIAlertAction class]] ? object : nil;
     NSAttributedString *attributedTitle = [object isKindOfClass:[NSAttributedString class]] ? object : nil;
-    FWAlertAction *alertAction = [FWAlertAction actionWithTitle:(action ? action.title : (attributedTitle ? nil : object))
-                                                          style:(action ? (FWAlertActionStyle)action.style : style)
+    FWAlertAction *alertAction = [FWAlertAction actionWithTitle:(attributedTitle ? nil : object)
+                                                          style:style
                                                          handler:handler];
     
     if (attributedTitle) {
         alertAction.attributedTitle = attributedTitle;
     }
     
-    if (action) {
-        alertAction.enabled = action.enabled;
-        // alertAction.fwIsPreferred = action.fwIsPreferred;
-    }
-    
-    if (action.fwTitleColor) {
-        alertAction.titleColor = action.fwTitleColor;
-    } else if (alertAction.title.length > 0 && FWAlertAppearance.appearance.actionEnabled) {
+    if (alertAction.title.length > 0 && FWAlertAppearance.appearance.actionEnabled) {
         UIColor *titleColor = nil;
         if (!alertAction.enabled) {
             titleColor = FWAlertAppearance.appearance.disabledActionColor;
@@ -151,5 +145,35 @@
     
     return alertAction;
 }
+
+/*
+- (void)action:(FWAlertAction *)alertAction
+{
+    - (BOOL)fwIsPreferred
+    {
+        return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
+    }
+
+    - (void)setFwIsPreferred:(BOOL)fwIsPreferred
+    {
+        objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if (self.fwTitleColor || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
+        
+        UIColor *titleColor = nil;
+        if (!self.enabled) {
+            titleColor = FWAlertAppearance.appearance.disabledActionColor;
+        } else if (fwIsPreferred) {
+            titleColor = FWAlertAppearance.appearance.preferredActionColor;
+        } else if (self.style == UIAlertActionStyleDestructive) {
+            titleColor = FWAlertAppearance.appearance.destructiveActionColor;
+        } else if (self.style == UIAlertActionStyleCancel) {
+            titleColor = FWAlertAppearance.appearance.cancelActionColor;
+        } else {
+            titleColor = FWAlertAppearance.appearance.defaultActionColor;
+        }
+        [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+    }
+}
+ */
 
 @end
