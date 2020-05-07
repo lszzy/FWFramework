@@ -202,8 +202,8 @@
 {
     FWWeakifySelf();
     [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
-                         title:@"请输入账号信息"
-                       message:@"账户信息必填"
+                         title:@"请输入账号信息，我是很长很长很长很长很长很长的标题"
+                       message:@"账户信息必填，我是很长很长很长很长很长很长的消息"
                         cancel:@"取消"
                        actions:@[@"重试", @"高亮", @"禁用", @"确定"]
                    promptCount:2
