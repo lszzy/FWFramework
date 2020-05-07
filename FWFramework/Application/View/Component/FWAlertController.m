@@ -14,6 +14,7 @@
 #define FW_NORMAL_COLOR [[UIColor whiteColor] colorWithAlphaComponent:0.7]
 #define FW_SELECTED_COLOR [UIColor colorWithWhite:1 alpha:0.4]
 #define FW_LINE_WIDTH 1.0 / [UIScreen mainScreen].scale
+#define FW_CONTENT_INSETS UIEdgeInsetsMake(20, 15, 20, 15)
 #define FW_ACTION_TITLE_FONTSIZE 18
 #define FW_ACTION_HEIGHT 55.0
 
@@ -179,7 +180,7 @@
         if (@available(iOS 11.0, *)) {
             self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        self.contentEdgeInsets = UIEdgeInsetsMake(20, 15, 20, 15);
+        self.contentEdgeInsets = FW_CONTENT_INSETS;
     }
     return self;
 }
@@ -202,10 +203,10 @@
 
 - (void)safeAreaInsetsDidChange {
     [super safeAreaInsetsDidChange];
-    CGFloat safeTop    = self.safeAreaInsets.top < 20 ? 20 : self.safeAreaInsets.top+10;
-    CGFloat safeLeft   = self.safeAreaInsets.left < 15 ? 15 : self.safeAreaInsets.left;
-    CGFloat safeBottom = self.safeAreaInsets.bottom < 20 ? 20 : self.safeAreaInsets.bottom+6;
-    CGFloat safeRight = self.safeAreaInsets.right < 15 ? 15 : self.safeAreaInsets.right;
+    CGFloat safeTop    = self.safeAreaInsets.top < FW_CONTENT_INSETS.top ? FW_CONTENT_INSETS.top : self.safeAreaInsets.top+10;
+    CGFloat safeLeft   = self.safeAreaInsets.left < FW_CONTENT_INSETS.left ? FW_CONTENT_INSETS.left : self.safeAreaInsets.left;
+    CGFloat safeBottom = self.safeAreaInsets.bottom < FW_CONTENT_INSETS.bottom ? FW_CONTENT_INSETS.bottom : self.safeAreaInsets.bottom+6;
+    CGFloat safeRight = self.safeAreaInsets.right < FW_CONTENT_INSETS.right ? FW_CONTENT_INSETS.right : self.safeAreaInsets.right;
     _contentEdgeInsets = UIEdgeInsetsMake(safeTop, safeLeft, safeBottom, safeRight);
     // 这个block，主要是更新Label的最大预估宽度
     if (self.headerViewSfeAreaDidChangBlock) {
