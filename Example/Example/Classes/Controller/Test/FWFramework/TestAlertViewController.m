@@ -227,10 +227,8 @@
                         NSLog(@"点击了取消按钮");
                     }
                    customBlock:^(UIAlertController *alertController) {
-                        alertController.actions[0].fwIsPreferred = NO;
-                        alertController.actions[1].fwIsPreferred = YES;
-                        alertController.actions[2].enabled = NO;
                         alertController.preferredAction = alertController.actions[1];
+                        alertController.actions[2].enabled = NO;
                     }
                       priority:FWAlertPriorityNormal];
 }

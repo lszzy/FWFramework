@@ -228,7 +228,6 @@
     }
     
     // 添加动作按钮
-    UIAlertAction *preferredAction = nil;
     for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
         UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:actions[actionIndex] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if (actionBlock) {
@@ -240,7 +239,6 @@
                 actionBlock(values.copy, actionIndex);
             }
         }];
-        if (alertAction.fwIsPreferred) preferredAction = alertAction;
         [alertController addAction:alertAction];
     }
     
@@ -249,23 +247,17 @@
         UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
             if (cancelBlock) cancelBlock();
         }];
-        if (cancelAction.fwIsPreferred) preferredAction = cancelAction;
         [alertController addAction:cancelAction];
     }
     
     // 添加首选按钮
-    if (!preferredAction && alertController.actions.count > 0) {
-        if (FWAlertAppearance.appearance.preferredActionBlock) {
-            preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController.actions);
+    if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
+        UIAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController.actions);
+        if (preferredAction) {
+            if (@available(iOS 9.0, *)) {
+                alertController.preferredAction = preferredAction;
+            }
         }
-    }
-    
-    // 应用首选按钮
-    if (preferredAction != nil) {
-        if (@available(iOS 9.0, *)) {
-            alertController.preferredAction = preferredAction;
-        }
-        preferredAction.fwIsPreferred = YES;
     }
     
     // 自定义Alert
