@@ -37,7 +37,22 @@
         }];
     }
     
+    // 添加取消按钮，Alert仅有两个按钮时取消按钮放在左边，和系统一致
+    FWAlertAction *cancelAction = nil;
+    BOOL isHorizontal = NO;
+    if (cancel != nil) {
+        cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
+            if (cancelBlock) cancelBlock();
+        }];
+        if (alertController.preferredStyle == FWAlertControllerStyleAlert && actions.count == 1) {
+            isHorizontal = YES;
+        }
+    }
+    
     // 添加动作按钮
+    if (cancelAction && isHorizontal) {
+        [alertController addAction:cancelAction];
+    }
     for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
         FWAlertAction *alertAction = [self actionWithObject:actions[actionIndex] style:FWAlertActionStyleDefault handler:^(FWAlertAction *action) {
             if (actionBlock) {
@@ -51,18 +66,13 @@
         }];
         [alertController addAction:alertAction];
     }
-    
-    // 添加取消按钮
-    if (cancel != nil) {
-        FWAlertAction *cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
-            if (cancelBlock) cancelBlock();
-        }];
+    if (cancelAction && !isHorizontal) {
         [alertController addAction:cancelAction];
     }
     
     // 添加首选按钮
     if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
-        FWAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController.actions);
+        FWAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
         if (preferredAction) {
             alertController.preferredAction = preferredAction;
         }

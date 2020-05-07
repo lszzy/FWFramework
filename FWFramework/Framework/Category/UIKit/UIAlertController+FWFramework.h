@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)appearance;
 
 // 自定义首选动作句柄，默认nil，跟随系统
-@property (nonatomic, copy, nullable) id _Nullable (^preferredActionBlock)(NSArray *alertActions);
+@property (nonatomic, copy, nullable) id _Nullable (^preferredActionBlock)(id alertController);
 
 // 是否启用Controller样式，设置后自动启用
 @property (nonatomic, assign, readonly) BOOL controllerEnabled;

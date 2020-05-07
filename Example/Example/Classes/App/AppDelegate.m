@@ -78,8 +78,16 @@
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
-    FWAlertAppearance.appearance.preferredActionBlock = ^id (NSArray *alertActions) {
-        return alertActions.firstObject;
+    // 优先查找非cancel按钮，找不到则默认cancel
+    FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
+        if (alertController.preferredStyle == UIAlertControllerStyleAlert) {
+            for (UIAlertAction *alertAction in alertController.actions) {
+                if (alertAction.style != UIAlertActionStyleCancel) {
+                    return alertAction;
+                }
+            }
+        }
+        return alertController.actions.firstObject;
     };
     
     FWAlertAppearance.appearance.titleFont = [UIFont appFontBoldSize:16];
