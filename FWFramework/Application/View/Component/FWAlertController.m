@@ -597,7 +597,12 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertControllerActionView *currentActionView = [[FWAlertControllerActionView alloc] init];
     currentActionView.action = action;
     [currentActionView addTarget:self action:@selector(buttonClickedInActionView:)];
-    [stackView addArrangedSubview:currentActionView];
+    // Alert仅有两个按钮时取消按钮始终在左边，和系统一致
+    if (self.actions.count == 2 && action.style == FWAlertActionStyleCancel) {
+        [stackView insertArrangedSubview:currentActionView atIndex:0];
+    } else {
+        [stackView addArrangedSubview:currentActionView];
+    }
 
     if (stackView.arrangedSubviews.count > 1) { // arrangedSubviews个数大于1，说明本次添加至少是第2次添加，此时要加一条分割线
         [self addLineForStackView:stackView];
