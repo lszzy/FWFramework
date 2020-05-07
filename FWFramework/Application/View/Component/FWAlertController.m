@@ -8,6 +8,7 @@
 
 #import "FWAlertController.h"
 #import "UIScreen+FWFramework.h"
+#import "UIFont+FWFramework.h"
 
 #define FW_LINE_COLOR [[UIColor grayColor] colorWithAlphaComponent:0.3]
 #define FW_NORMAL_COLOR [[UIColor whiteColor] colorWithAlphaComponent:0.7]
@@ -597,12 +598,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     FWAlertControllerActionView *currentActionView = [[FWAlertControllerActionView alloc] init];
     currentActionView.action = action;
     [currentActionView addTarget:self action:@selector(buttonClickedInActionView:)];
-    // Alert仅有两个按钮时取消按钮始终在左边，和系统一致
-    if (self.actions.count == 2 && action.style == FWAlertActionStyleCancel) {
-        [stackView insertArrangedSubview:currentActionView atIndex:0];
-    } else {
-        [stackView addArrangedSubview:currentActionView];
-    }
+    [stackView addArrangedSubview:currentActionView];
 
     if (stackView.arrangedSubviews.count > 1) { // arrangedSubviews个数大于1，说明本次添加至少是第2次添加，此时要加一条分割线
         [self addLineForStackView:stackView];
@@ -978,6 +974,18 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
             [strongSelf.actionSequenceView setNeedsUpdateConstraints];
         }
     };
+}
+
+// 设置首选action
+- (void)setPreferredAction:(FWAlertAction *)preferredAction {
+    _preferredAction = preferredAction;
+    
+    [self.actions enumerateObjectsUsingBlock:^(FWAlertAction *obj, NSUInteger idx, BOOL *stop) {
+        if (obj.titleFont.fwIsBold) {
+            obj.titleFont = obj.titleFont.fwNormalFont;
+        }
+    }];
+    preferredAction.titleFont = preferredAction.titleFont.fwBoldFont;
 }
 
 // 添加文本输入框
