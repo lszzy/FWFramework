@@ -9,6 +9,73 @@
 #import "FWAppAlertPlugin.h"
 #import "UIAlertController+FWFramework.h"
 #import "FWAlertController.h"
+#import "NSObject+FWRuntime.h"
+#import <objc/runtime.h>
+
+#pragma mark - FWAlertAction+FWAlertPlugin
+
+@interface FWAlertAction (FWAlertPlugin)
+
+@end
+
+@implementation FWAlertAction (FWAlertPlugin)
+
+- (BOOL)fwIsPreferred
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
+}
+
+- (void)setFwIsPreferred:(BOOL)fwIsPreferred
+{
+    objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (self.attributedTitle || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
+    
+    UIColor *titleColor = nil;
+    if (!self.enabled) {
+        titleColor = FWAlertAppearance.appearance.disabledActionColor;
+    } else if (fwIsPreferred) {
+        titleColor = FWAlertAppearance.appearance.preferredActionColor;
+    } else if (self.style == UIAlertActionStyleDestructive) {
+        titleColor = FWAlertAppearance.appearance.destructiveActionColor;
+    } else if (self.style == UIAlertActionStyleCancel) {
+        titleColor = FWAlertAppearance.appearance.cancelActionColor;
+    } else {
+        titleColor = FWAlertAppearance.appearance.defaultActionColor;
+    }
+    self.titleColor = titleColor;
+}
+
+@end
+
+#pragma mark - FWAlertController+FWAlertPlugin
+
+@interface FWAlertController (FWAlertPlugin)
+
+@end
+
+@implementation FWAlertController (FWAlertPlugin)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(setPreferredAction:) with:@selector(fwInnerSetPreferredAction:)];
+    });
+}
+
+- (void)fwInnerSetPreferredAction:(FWAlertAction *)preferredAction
+{
+    [self fwInnerSetPreferredAction:preferredAction];
+    
+    [self.actions enumerateObjectsUsingBlock:^(FWAlertAction *obj, NSUInteger idx, BOOL *stop) {
+        if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
+    }];
+    preferredAction.fwIsPreferred = YES;
+}
+
+@end
+
+#pragma mark - FWAppAlertPlugin
 
 @implementation FWAppAlertPlugin
 
@@ -135,55 +202,11 @@
     
     if (attributedTitle) {
         alertAction.attributedTitle = attributedTitle;
-    }
-    
-    if (alertAction.title.length > 0 && FWAlertAppearance.appearance.actionEnabled) {
-        UIColor *titleColor = nil;
-        if (!alertAction.enabled) {
-            titleColor = FWAlertAppearance.appearance.disabledActionColor;
-        //} else if (alertAction.fwIsPreferred) {
-            //titleColor = FWAlertAppearance.appearance.preferredActionColor;
-        } else if (alertAction.style == UIAlertActionStyleDestructive) {
-            titleColor = FWAlertAppearance.appearance.destructiveActionColor;
-        } else if (alertAction.style == UIAlertActionStyleCancel) {
-            titleColor = FWAlertAppearance.appearance.cancelActionColor;
-        } else {
-            titleColor = FWAlertAppearance.appearance.defaultActionColor;
-        }
-        alertAction.titleColor = titleColor;
+    } else {
+        alertAction.fwIsPreferred = NO;
     }
     
     return alertAction;
 }
-
-/*
-- (void)action:(FWAlertAction *)alertAction
-{
-    - (BOOL)fwIsPreferred
-    {
-        return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
-    }
-
-    - (void)setFwIsPreferred:(BOOL)fwIsPreferred
-    {
-        objc_setAssociatedObject(self, @selector(fwIsPreferred), @(fwIsPreferred), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        if (self.fwTitleColor || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
-        
-        UIColor *titleColor = nil;
-        if (!self.enabled) {
-            titleColor = FWAlertAppearance.appearance.disabledActionColor;
-        } else if (fwIsPreferred) {
-            titleColor = FWAlertAppearance.appearance.preferredActionColor;
-        } else if (self.style == UIAlertActionStyleDestructive) {
-            titleColor = FWAlertAppearance.appearance.destructiveActionColor;
-        } else if (self.style == UIAlertActionStyleCancel) {
-            titleColor = FWAlertAppearance.appearance.cancelActionColor;
-        } else {
-            titleColor = FWAlertAppearance.appearance.defaultActionColor;
-        }
-        [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
-    }
-}
- */
 
 @end
