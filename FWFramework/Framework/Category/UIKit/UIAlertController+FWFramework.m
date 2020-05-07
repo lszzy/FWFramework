@@ -48,7 +48,7 @@
     } else if (self.style == UIAlertActionStyleCancel) {
         titleColor = FWAlertAppearance.appearance.cancelActionColor;
     } else {
-        titleColor = FWAlertAppearance.appearance.defaultActionColor;
+        titleColor = FWAlertAppearance.appearance.actionColor;
     }
     [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
 }
@@ -201,8 +201,9 @@
 
 - (BOOL)actionEnabled
 {
-    return self.cancelActionColor || self.defaultActionColor || self.destructiveActionColor ||
-           self.disabledActionColor || self.preferredActionColor;
+    return self.actionColor || self.actionFont ||
+           self.preferredActionColor || self.preferredActionFont ||
+           self.cancelActionColor || self.destructiveActionColor || self.disabledActionColor;
 }
 
 @end
