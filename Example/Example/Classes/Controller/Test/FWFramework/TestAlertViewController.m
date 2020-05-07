@@ -230,6 +230,9 @@
                    customBlock:^(UIAlertController *alertController) {
                         alertController.preferredAction = alertController.actions[1];
                         alertController.actions[2].enabled = NO;
+                        if ([alertController isKindOfClass:[FWAlertController class]]) {
+                            ((FWAlertController *)alertController).image = [UIImage fwImageWithAppIcon];
+                        }
                     }
                       priority:FWAlertPriorityNormal];
 }
