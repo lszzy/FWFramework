@@ -210,12 +210,12 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion
 {
     NSString *rewriteURL = [self rewriteURL:URL];
-    URL = [rewriteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
-            parameters[key] = [obj stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            parameters[key] = [obj stringByRemovingPercentEncoding];
         }
     }];
     
@@ -264,12 +264,12 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
 {
     NSString *rewriteURL = [self rewriteURL:URL];
-    URL = [rewriteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
         if ([obj isKindOfClass:[NSString class]]) {
-            parameters[key] = [obj stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            parameters[key] = [obj stringByRemovingPercentEncoding];
         }
     }];
     

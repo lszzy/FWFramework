@@ -160,14 +160,7 @@
 
 - (NSString *)fwUrlDecodeComponent
 {
-    CFStringEncoding cfEncoding = kCFStringEncodingUTF8;
-    NSString *str = (__bridge NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
-                                                                                                 NULL,
-                                                                                                 (CFStringRef)self,
-                                                                                                 CFSTR(""),
-                                                                                                 cfEncoding
-                                                                                                 );
-    return str;
+    return (__bridge NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR(""));
 }
 
 - (NSString *)fwUrlEncode
@@ -207,7 +200,7 @@
         if([contents count] == 2) {
             NSString *key = [contents objectAtIndex:0];
             NSString *value = [contents objectAtIndex:1];
-            value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            value = [value stringByRemovingPercentEncoding];
             if (key && value) {
                 [dict setObject:value forKey:key];
             }
