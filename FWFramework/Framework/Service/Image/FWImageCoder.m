@@ -2784,6 +2784,8 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (void)fwSaveToAlbumWithCompletionBlock:(void(^)(NSURL *assetURL, NSError *error))completionBlock {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = [self fw_dataRepresentationForSystem:YES];
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -2798,6 +2800,7 @@ CGImageRef FWCGImageCreateWithWebPData(CFDataRef webpData,
             }
         }];
     });
+#pragma clang diagnostic pop
 }
 
 - (NSData *)fwImageDataRepresentation {
