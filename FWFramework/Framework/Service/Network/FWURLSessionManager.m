@@ -160,21 +160,6 @@ typedef void (^FWURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
 
 static const void * const AuthenticationChallengeErrorKey = &AuthenticationChallengeErrorKey;
 
-static NSError * ServerTrustError(SecTrustRef serverTrust, NSURL *url)
-{
-    NSBundle *CFNetworkBundle = [NSBundle bundleWithIdentifier:@"com.apple.CFNetwork"];
-    NSString *defaultValue = @"The certificate for this server is invalid. You might be connecting to a server that is pretending to be “%@” which could put your confidential information at risk.";
-    NSString *descriptionFormat = NSLocalizedStringWithDefaultValue(@"Err-1202.w", nil, CFNetworkBundle, defaultValue, @"") ?: defaultValue;
-    NSString *localizedDescription = [descriptionFormat componentsSeparatedByString:@"%@"].count <= 2 ? [NSString localizedStringWithFormat:descriptionFormat, url.host] : descriptionFormat;
-    NSDictionary *userInfo = @{
-        NSURLErrorFailingURLErrorKey: url,
-        NSURLErrorFailingURLStringErrorKey: url.absoluteString,
-        NSURLErrorFailingURLPeerTrustErrorKey: (__bridge id)serverTrust,
-        NSLocalizedDescriptionKey: localizedDescription
-    };
-    return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorServerCertificateUntrusted userInfo:userInfo];
-}
-
 #pragma mark - NSURLSessionTaskDelegate
 
 - (void)URLSession:(__unused NSURLSession *)session
@@ -978,7 +963,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
             @throw [NSException exceptionWithName:@"Invalid Return Value" reason:@"The return value from the authentication challenge handler must be nil, an NSError, an NSURLCredential or an NSNumber." userInfo:nil];
         }
     } else {
-        evaluateServerTrust = YES;
+        evaluateServerTrust = [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
     }
 
     if (evaluateServerTrust) {
@@ -986,7 +971,9 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
             disposition = NSURLSessionAuthChallengeUseCredential;
             credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
         } else {
-            objc_setAssociatedObject(task, AuthenticationChallengeErrorKey, ServerTrustError(challenge.protectionSpace.serverTrust, task.currentRequest.URL), OBJC_ASSOCIATION_RETAIN);
+            objc_setAssociatedObject(task, AuthenticationChallengeErrorKey,
+                                     [self serverTrustErrorForServerTrust:challenge.protectionSpace.serverTrust url:task.currentRequest.URL],
+                                     OBJC_ASSOCIATION_RETAIN);
             disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
         }
     }
@@ -994,6 +981,31 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     if (completionHandler) {
         completionHandler(disposition, credential);
     }
+}
+
+- (nonnull NSError *)serverTrustErrorForServerTrust:(nullable SecTrustRef)serverTrust url:(nullable NSURL *)url
+{
+    NSBundle *CFNetworkBundle = [NSBundle bundleWithIdentifier:@"com.apple.CFNetwork"];
+    NSString *defaultValue = @"The certificate for this server is invalid. You might be connecting to a server that is pretending to be “%@” which could put your confidential information at risk.";
+    NSString *descriptionFormat = NSLocalizedStringWithDefaultValue(@"Err-1202.w", nil, CFNetworkBundle, defaultValue, @"") ?: defaultValue;
+    NSString *localizedDescription = [descriptionFormat componentsSeparatedByString:@"%@"].count <= 2 ? [NSString localizedStringWithFormat:descriptionFormat, url.host] : descriptionFormat;
+    NSMutableDictionary *userInfo = [@{
+        NSLocalizedDescriptionKey: localizedDescription
+    } mutableCopy];
+
+    if (serverTrust) {
+        userInfo[NSURLErrorFailingURLPeerTrustErrorKey] = (__bridge id)serverTrust;
+    }
+
+    if (url) {
+        userInfo[NSURLErrorFailingURLErrorKey] = url;
+
+        if (url.absoluteString) {
+            userInfo[NSURLErrorFailingURLStringErrorKey] = url.absoluteString;
+        }
+    }
+
+    return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorServerCertificateUntrusted userInfo:userInfo];
 }
 
 - (void)URLSession:(NSURLSession *)session
