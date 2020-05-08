@@ -31,7 +31,7 @@
     }
 }
 
-- (void)fwSetPropertyWeak:(id)object forName:(NSString *)name
+- (void)fwSetPropertyAssign:(id)object forName:(NSString *)name
 {
     if (object != [self fwPropertyForName:name]) {
         [self willChangeValueForKey:name];
@@ -61,7 +61,7 @@
     objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwSetAssociatedObjectWeak:(id)object forKey:(const void *)key
+- (void)fwSetAssociatedObjectAssign:(id)object forKey:(const void *)key
 {
     objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_ASSIGN);
 }
