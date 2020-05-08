@@ -10,6 +10,7 @@
 #import "UINavigationController+FWBar.h"
 #import "UIViewController+FWBar.h"
 #import "NSObject+FWRuntime.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
 #pragma mark - UINavigationController+FWBarInternal
@@ -427,12 +428,13 @@
 
 - (UIViewController *)fwTransitionContextToViewController
 {
-    return objc_getAssociatedObject(self, @selector(fwTransitionContextToViewController));
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwTransitionContextToViewController));
+    return value.object;
 }
 
 - (void)setFwTransitionContextToViewController:(UIViewController *)viewController
 {
-    objc_setAssociatedObject(self, @selector(fwTransitionContextToViewController), viewController, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(fwTransitionContextToViewController), [[FWWeakObject alloc] initWithObject:viewController], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

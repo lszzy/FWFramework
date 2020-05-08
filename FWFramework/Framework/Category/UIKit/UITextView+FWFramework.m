@@ -193,13 +193,14 @@
 
 - (UIResponder *)fwReturnResponder
 {
-    return objc_getAssociatedObject(self, @selector(fwReturnResponder));
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
+    return value.object;
 }
 
 - (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
 {
     // 此处weak引用responder
-    objc_setAssociatedObject(self, @selector(fwReturnResponder), fwReturnResponder, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.fwDelegateProxyEnabled = YES;
 }
 
