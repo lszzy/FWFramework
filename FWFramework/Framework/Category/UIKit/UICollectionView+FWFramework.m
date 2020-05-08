@@ -36,7 +36,7 @@
 {
     if (fwModel != self.fwModel) {
         [self willChangeValueForKey:@"fwModel"];
-        objc_setAssociatedObject(self, @selector(fwModel), fwModel, fwModel ? OBJC_ASSOCIATION_RETAIN_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwModel), fwModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self didChangeValueForKey:@"fwModel"];
     }
 }
@@ -88,7 +88,7 @@
 {
     if (fwModel != self.fwModel) {
         [self willChangeValueForKey:@"fwModel"];
-        objc_setAssociatedObject(self, @selector(fwModel), fwModel, fwModel ? OBJC_ASSOCIATION_RETAIN_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwModel), fwModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self didChangeValueForKey:@"fwModel"];
     }
 }
