@@ -114,9 +114,15 @@ static CGFloat _NSStringPathScale(NSString *string) {
         }
         if (path) break;
     }
-    if (path.length == 0) return nil;
     
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    // If no path in mainBundle, support UIImage.imageNamed
+    NSData *data = nil;
+    if (path.length > 0) {
+        data = [NSData dataWithContentsOfFile:path];
+    } else if (bundle == nil || bundle == [NSBundle mainBundle]) {
+        data = [[UIImage imageNamed:name] fwImageDataRepresentation];
+        scale = 0;
+    }
     if (data.length == 0) return nil;
     
     return [[self alloc] initWithData:data scale:scale];

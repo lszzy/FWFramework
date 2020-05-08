@@ -437,6 +437,8 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
                 }
                 parameters[newKey] = newPathComponent;
                 break;
+            } else {
+                wildcardMatched = NO;
             }
         }
         

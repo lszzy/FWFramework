@@ -44,10 +44,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic, assign) FWSSLPinningMode SSLPinningMode;
 
 /**
- The certificates used to evaluate server trust according to the SSL pinning mode.
+ The certificates used to evaluate server trust according to the SSL pinning mode. 
  
  Note that if pinning is enabled, `evaluateServerTrust:forDomain:` will return true if any pinned certificate matches.
- 
+
  @see policyWithPinningMode:withPinnedCertificates:
  */
 @property (nonatomic, strong, nullable) NSSet <NSData *> *pinnedCertificates;
@@ -92,23 +92,23 @@ NS_ASSUME_NONNULL_BEGIN
  Creates and returns a security policy with the specified pinning mode.
  
  Certificates with the `.cer` extension found in the main bundle will be pinned. If you want more control over which certificates are pinned, please use `policyWithPinningMode:withPinnedCertificates:` instead.
- 
+
  @param pinningMode The SSL pinning mode.
- 
+
  @return A new security policy.
- 
+
  @see -policyWithPinningMode:withPinnedCertificates:
  */
 + (instancetype)policyWithPinningMode:(FWSSLPinningMode)pinningMode;
 
 /**
  Creates and returns a security policy with the specified pinning mode.
- 
+
  @param pinningMode The SSL pinning mode.
  @param pinnedCertificates The certificates to pin against.
- 
+
  @return A new security policy.
- 
+
  @see +certificatesInBundle:
  @see -pinnedCertificates
 */

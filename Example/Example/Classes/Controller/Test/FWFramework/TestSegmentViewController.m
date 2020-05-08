@@ -27,10 +27,7 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@"Save" block:^(id sender) {
         FWStrongifySelf();
-        NSData *imageData = [UIImage fwGifDataWithImage:self.gifImageView.image];
-        if (imageData) {
-            [UIImage fwSaveGifData:imageData completion:NULL];
-        }
+        [self.gifImageView.image fwSaveToAlbumWithCompletionBlock:nil];
     }];
 }
 

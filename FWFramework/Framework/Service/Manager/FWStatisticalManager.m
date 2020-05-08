@@ -40,6 +40,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 {
     self = [super init];
     if (self) {
+        _runLoopMode = NSDefaultRunLoopMode;
         _eventHandlers = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -419,7 +420,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     
     if (![self fwStatisticalExposureIsRegistered]) return;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
-    [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+    [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
 }
 
 #pragma mark - Exposure
@@ -614,7 +615,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     
     if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock || [self fwStatisticalExposureIsProxy]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
-        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
     }
 }
 
@@ -644,7 +645,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 
     if (self.fwStatisticalExposure || self.fwStatisticalExposureBlock || [self fwStatisticalExposureIsProxy]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
-        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        [self performSelector:@selector(fwStatisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
     }
     
     [self.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {

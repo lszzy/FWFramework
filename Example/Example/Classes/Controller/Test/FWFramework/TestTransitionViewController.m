@@ -107,6 +107,170 @@
 
 @end
 
+@interface TestTransitionAlertViewController : UIViewController
+
+@property (nonatomic, assign) BOOL useAnimator;
+@property (nonatomic, strong) UIDynamicAnimator *animator;
+
+@property (nonatomic, weak) UIView *contentView;
+
+@end
+
+@implementation TestTransitionAlertViewController
+
+FWDealloc();
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationCustom;
+        
+        // 也可以封装present方法，手工指定UIPresentationController，无需使用block
+        // FWTransformAnimatedTransition *transition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(1.1, 1.1) outTransform:CGAffineTransformIdentity];
+        FWTransformAnimatedTransition *transition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(0.9, 0.9) outTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+        FWWeakifySelf();
+        transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
+            FWStrongifySelf();
+            FWPresentationController *presentation = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+            presentation.cornerRadius = 10;
+            presentation.rectCorner = UIRectCornerAllCorners;
+            // 方式1：自动布局view，更新frame
+            [presented.view setNeedsLayout];
+            [presented.view layoutIfNeeded];
+            presentation.presentedFrame = self.contentView.frame;
+            return presentation;
+        };
+        self.fwModalTransition = transition;
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // 方式2：不指定presentedFrame，背景手势不生效，自己添加手势和圆角即可
+    UIView *contentView = [UIView fwAutoLayoutView];
+    _contentView = contentView;
+    contentView.backgroundColor = UIColor.whiteColor;
+    [self.view addSubview:contentView];
+    contentView.fwLayoutChain.center();
+    
+    UIView *childView = [UIView fwAutoLayoutView];
+    [contentView addSubview:childView];
+    childView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
+    
+    FWWeakifySelf();
+    [contentView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        if (self.useAnimator) {
+            [self configAnimator];
+        }
+        [self fwCloseViewControllerAnimated:YES];
+    }];
+    
+    // 方式3：手工指定动画参数
+    // [self.view setNeedsLayout];
+    // [self.view layoutIfNeeded];
+    // FWPresentationController *presentation = (FWPresentationController *)self.fwModalTransition.presentationController;
+    // presentation.presentedSize = centerView.bounds.size;
+}
+
+- (void)configAnimator
+{
+    self.fwModalTransition = nil;
+    
+    // 测试仿真动画
+    static int index = 0;
+    double radian = M_PI;
+    if (index++ % 2 == 0) {
+        radian = 2 * radian;
+    } else {
+        radian = -1 * radian;
+    }
+    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.contentView];
+    
+    UIGravityBehavior *gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[self.contentView]];
+    gravityBehavior.gravityDirection = CGVectorMake(0, 10);
+    [self.animator addBehavior:gravityBehavior];
+    
+    UIDynamicItemBehavior *itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.contentView]];
+    [itemBehavior addAngularVelocity:radian forItem:self.view];
+    [self.animator addBehavior:itemBehavior];
+}
+
+@end
+
+@interface TestTransitionCustomViewController : UIViewController
+
+@property (nonatomic, weak) UIView *contentView;
+
+@end
+
+@implementation TestTransitionCustomViewController
+
+FWDealloc();
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationCustom;
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    UIView *contentView = [UIView fwAutoLayoutView];
+    _contentView = contentView;
+    contentView.layer.masksToBounds = YES;
+    contentView.layer.cornerRadius = 10;
+    contentView.backgroundColor = UIColor.whiteColor;
+    [self.view addSubview:contentView];
+    contentView.fwLayoutChain.center();
+    
+    UIView *childView = [UIView fwAutoLayoutView];
+    [contentView addSubview:childView];
+    childView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
+    
+    FWWeakifySelf();
+    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self dismiss];
+    }];
+}
+
+- (void)presentInViewController:(UIViewController *)viewController
+{
+    [viewController presentViewController:self animated:NO completion:^{
+        self.view.alpha = 0;
+        self.contentView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        [UIView animateWithDuration:0.35 animations:^{
+            self.view.alpha = 1;
+            self.contentView.transform = CGAffineTransformIdentity;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
+}
+
+- (void)dismiss
+{
+    [UIView animateWithDuration:0.35 animations:^{
+        self.view.alpha = 0;
+        self.contentView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+    } completion:^(BOOL finished) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }];
+}
+
+@end
+
 #define TestTransitinDuration 0.35
 
 @interface TestTransitionViewController ()
@@ -136,6 +300,9 @@
                                           @[@"自定义present", @"onPresentAnimation"],
                                           @[@"swipe present", @"onPresentSwipe"],
                                           @[@"自定义controller", @"onPresentController"],
+                                          @[@"自定义alert", @"onPresentAlert"],
+                                          @[@"自定义animator", @"onPresentAnimator"],
+                                          @[@"自定义custom", @"onPresentCustom"],
                                           @[@"interactive present", @"onPresentInteractive"],
                                           @[@"present without animation", @"onPresentNoAnimate"],
                                           @[@"System Push", @"onPush"],
@@ -273,6 +440,25 @@
     nav.modalPresentationStyle = UIModalPresentationCustom;
     nav.fwModalTransition = transition;
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onPresentAlert
+{
+    TestTransitionAlertViewController *vc = [TestTransitionAlertViewController new];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)onPresentAnimator
+{
+    TestTransitionAlertViewController *vc = [TestTransitionAlertViewController new];
+    vc.useAnimator = YES;
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)onPresentCustom
+{
+    TestTransitionCustomViewController *vc = [TestTransitionCustomViewController new];
+    [vc presentInViewController:self];
 }
 
 - (void)onPresentInteractive

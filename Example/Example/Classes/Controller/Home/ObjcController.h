@@ -10,4 +10,6 @@
 
 @interface ObjcController : UIViewController
 
+@property (nonatomic, assign) NSInteger selectedIndex;
+
 @end

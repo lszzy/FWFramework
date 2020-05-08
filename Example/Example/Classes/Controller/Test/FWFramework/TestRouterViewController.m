@@ -99,7 +99,15 @@
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
-                                         @[@"打开http", @"onOpenHttp"],
+                                         @[@"跳转home", @"onOpenHome"],
+                                         @[@"跳转test", @"onOpenHome2"],
+                                         @[@"跳转settings", @"onOpenHome3"],
+                                         @[@"跳转home/undefined", @"onOpenHome4"],
+                                         @[@"不支持tabbar/home", @"onOpenHome5"],
+                                         @[@"关闭close", @"onOpenClose"],
+                                         @[@"内部web", @"onOpenHttp"],
+                                         @[@"外部safari", @"onOpenUrl"],
+                                         @[@"内部safari", @"onOpenSafari"],
                                          ]];
 }
 
@@ -196,9 +204,51 @@
     [FWRouter openURL:@"https://www.baidu.com/filter/1"];
 }
 
+- (void)onOpenHome
+{
+    [FWRouter openURL:AppRouter.ROUTE_HOME];
+}
+
+- (void)onOpenHome2
+{
+    [FWRouter openURL:@"app://home/test"];
+}
+
+- (void)onOpenHome3
+{
+    [FWRouter openURL:@"app://home/settings"];
+}
+
+- (void)onOpenHome4
+{
+    [FWRouter openURL:@"app://home/undefined"];
+}
+
+- (void)onOpenHome5
+{
+    [FWRouter openURL:@"app://tabbar/home"];
+}
+
+- (void)onOpenClose
+{
+    [FWRouter openURL:AppRouter.ROUTE_CLOSE];
+}
+
 - (void)onOpenHttp
 {
-    [FWRouter openURL:@"http://www.wuyong.site"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
+}
+
+- (void)onOpenUrl
+{
+    [UIApplication fwOpenSafari:@"http://kvm.wuyong.site/test.php"];
+}
+
+- (void)onOpenSafari
+{
+    [UIApplication fwOpenSafariController:@"http://kvm.wuyong.site/test.php" completionHandler:^{
+        FWLogDebug(@"SafariController completionHandler");
+    }];
 }
 
 @end

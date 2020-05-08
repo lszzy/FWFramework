@@ -8,13 +8,14 @@
  */
 
 #import "FWPlugin.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWPlugin
 
 typedef NS_ENUM(NSInteger, FWPluginType) {
-    FWPluginTypeClass,
     FWPluginTypeObject,
     FWPluginTypeBlock,
+    FWPluginTypeFactory,
 };
 
 @interface FWPlugin : NSObject
@@ -64,11 +65,6 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 #pragma mark - Public
 
-- (BOOL)registerDefault:(Protocol *)protocol withClass:(Class)cls
-{
-    return [self registerPlugin:protocol withValue:cls type:FWPluginTypeClass isDefault:YES];
-}
-
 - (BOOL)registerDefault:(Protocol *)protocol withObject:(id)obj
 {
     return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isDefault:YES];
@@ -79,9 +75,9 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isDefault:YES];
 }
 
-- (BOOL)registerPlugin:(Protocol *)protocol withClass:(Class)cls
+- (BOOL)registerDefault:(Protocol *)protocol withFactory:(id (^)(void))factory
 {
-    return [self registerPlugin:protocol withValue:cls type:FWPluginTypeClass isDefault:NO];
+    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isDefault:YES];
 }
 
 - (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
@@ -94,6 +90,11 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isDefault:NO];
 }
 
+- (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
+{
+    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isDefault:NO];
+}
+
 - (BOOL)registerPlugin:(Protocol *)protocol withValue:(id)value type:(FWPluginType)type isDefault:(BOOL)isDefault
 {
     if (!protocol || !value) {
@@ -102,7 +103,7 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     
     // 插件必须实现插件协议，否则抛出异常
     NSString *protocolName = NSStringFromProtocol(protocol);
-    if (type == FWPluginTypeClass || type == FWPluginTypeObject) {
+    if (type == FWPluginTypeObject) {
         if (![value conformsToProtocol:protocol]) {
             @throw [NSException exceptionWithName:@"FWFramework"
                                            reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", value, protocolName]
@@ -156,23 +157,31 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     
     // 初始化插件
     plugin.locked = YES;
+    id instance = nil;
     switch (plugin.type) {
-        case FWPluginTypeClass: {
-            Class cls = (Class)plugin.value;
-            if ([cls respondsToSelector:@selector(sharedInstance)]) {
-                plugin.instance = [cls sharedInstance];
-            } else {
-                plugin.instance = [[cls alloc] init];
-            }
-            break;
-        }
         case FWPluginTypeObject: {
-            plugin.instance = plugin.value;
+            if (object_isClass(plugin.value)) {
+                Class cls = (Class)plugin.value;
+                if ([cls respondsToSelector:@selector(sharedInstance)]) {
+                    plugin.instance = [cls sharedInstance];
+                } else {
+                    plugin.instance = [[cls alloc] init];
+                }
+            } else {
+                plugin.instance = plugin.value;
+            }
+            instance = plugin.instance;
             break;
         }
         case FWPluginTypeBlock: {
             id (^block)(void) = plugin.value;
             plugin.instance = block();
+            instance = plugin.instance;
+            break;
+        }
+        case FWPluginTypeFactory: {
+            id (^block)(void) = plugin.value;
+            instance = block();
             break;
         }
         default: {
@@ -181,13 +190,13 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     }
     
     // 插件必须实现插件协议，否则抛出异常
-    if (![plugin.instance conformsToProtocol:protocol]) {
+    if (![instance conformsToProtocol:protocol]) {
         @throw [NSException exceptionWithName:@"FWFramework"
-                                       reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", plugin.instance, protocolName]
+                                       reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", instance, protocolName]
                                      userInfo:nil];
     }
     
-    return plugin.instance;
+    return instance;
 }
 
 - (void)unloadPlugin:(Protocol *)protocol

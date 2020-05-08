@@ -35,8 +35,11 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 /// 是否启用通知，默认NO
 @property (nonatomic, assign) BOOL notificationEnabled;
 
+/// 设置运行模式，默认Default滚动时不计算曝光
+@property (nonatomic, copy) NSRunLoopMode runLoopMode;
+
 /// 设置全局事件处理器
-@property (nonatomic, copy) FWStatisticalBlock globalHandler;
+@property (nonatomic, copy, nullable) FWStatisticalBlock globalHandler;
 
 /// 注册单个事件处理器
 - (void)registerEvent:(NSString *)name withHandler:(FWStatisticalBlock)handler;
