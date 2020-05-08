@@ -9,13 +9,15 @@
 
 #import "WKWebView+FWFramework.h"
 #import "FWMessage.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
 @implementation WKWebView (FWFramework)
 
 - (id<FWWebViewNavigationDelegate>)fwNavigationDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwNavigationDelegate));
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwNavigationDelegate));
+    return value.object;
 }
 
 - (void)setFwNavigationDelegate:(id<FWWebViewNavigationDelegate>)fwNavigationDelegate
@@ -32,7 +34,7 @@
         }];
     }
     
-    objc_setAssociatedObject(self, @selector(fwNavigationDelegate), fwNavigationDelegate, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(fwNavigationDelegate), [[FWWeakObject alloc] initWithObject:fwNavigationDelegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     self.navigationDelegate = fwNavigationDelegate;
 }
