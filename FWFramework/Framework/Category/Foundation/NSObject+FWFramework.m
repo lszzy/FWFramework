@@ -23,7 +23,7 @@
 {
     if (fwTempObject != self.fwTempObject) {
         [self willChangeValueForKey:@"fwTempObject"];
-        objc_setAssociatedObject(self, @selector(fwTempObject), fwTempObject, fwTempObject ? OBJC_ASSOCIATION_RETAIN_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwTempObject), fwTempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self didChangeValueForKey:@"fwTempObject"];
     }
 }
