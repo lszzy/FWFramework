@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return url编码字符串
  */
-- (NSString *)fwUrlEncodeComponent;
+- (nullable NSString *)fwUrlEncodeComponent;
 
 /**
  *  url参数解码，适用于query参数解码
@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 原字符串
  */
-- (NSString *)fwUrlDecodeComponent;
+- (nullable NSString *)fwUrlDecodeComponent;
 
 /**
  *  url编码，适用于整个url编码
