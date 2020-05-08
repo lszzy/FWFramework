@@ -189,14 +189,16 @@ NS_ASSUME_NONNULL_BEGIN
     @dynamic name; \
     - (type)name \
     { \
-        FWWeakObject *value = objc_getAssociatedObject(self, #name); \
-        return value.object; \
+        id (^block)(void) = objc_getAssociatedObject(self, #name); \
+        return block ? block() : nil; \
     } \
     - (void)setter:(type)object \
     { \
         if (object != [self name]) { \
             [self willChangeValueForKey:@#name]; \
-            objc_setAssociatedObject(self, #name, [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
+            id __weak weakObject = object; \
+            id (^block)(void) = ^{ return weakObject; }; \
+            objc_setAssociatedObject(self, #name, block, OBJC_ASSOCIATION_COPY_NONATOMIC); \
             [self didChangeValueForKey:@#name]; \
         } \
     }
