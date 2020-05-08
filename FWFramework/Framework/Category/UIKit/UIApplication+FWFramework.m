@@ -8,8 +8,41 @@
  */
 
 #import "UIApplication+FWFramework.h"
+#import "UIWindow+FWFramework.h"
 #import "NSURL+FWFramework.h"
 #import <StoreKit/StoreKit.h>
+#import <SafariServices/SafariServices.h>
+#import <objc/runtime.h>
+
+#pragma mark - FWSafariViewControllerDelegate
+
+@interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate>
+
+@end
+
+@implementation FWSafariViewControllerDelegate
+
++ (FWSafariViewControllerDelegate *)sharedInstance
+{
+    static FWSafariViewControllerDelegate *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWSafariViewControllerDelegate alloc] init];
+    });
+    return instance;
+}
+
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
+{
+    void (^completion)(void) = objc_getAssociatedObject(controller, @selector(safariViewControllerDidFinish:));
+    if (completion) {
+        completion();
+    }
+}
+
+@end
+
+#pragma mark - UIApplication+FWFramework
 
 @implementation UIApplication (FWFramework)
 
@@ -126,6 +159,22 @@
     [self fwOpenURL:url];
 }
 
++ (void)fwOpenSafariController:(id)url
+{
+    [self fwOpenSafariController:url completionHandler:nil];
+}
+
++ (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion
+{
+    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    SFSafariViewController *safariController = [[SFSafariViewController alloc] initWithURL:nsurl];
+    if (completion) {
+        objc_setAssociatedObject(safariController, @selector(safariViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        safariController.delegate = [FWSafariViewControllerDelegate sharedInstance];
+    }
+    [UIWindow.fwMainWindow fwPresentViewController:safariController animated:YES completion:nil];
+}
+
 + (void)fwOpenAppSettings
 {
     [self fwOpenURL:UIApplicationOpenSettingsURLString];
@@ -162,7 +211,8 @@
     if ([nsurl.scheme hasPrefix:@"itms"]) {
         return YES;
     // https://itunes.apple.com/等
-    } else if ([nsurl.host isEqualToString:@"itunes.apple.com"]) {
+    } else if ([nsurl.host isEqualToString:@"itunes.apple.com"] ||
+               [nsurl.host isEqualToString:@"apps.apple.com"]) {
         return YES;
     }
     return NO;

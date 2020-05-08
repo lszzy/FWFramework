@@ -30,11 +30,7 @@
     #import "FWURLRequestSerialization.h"
     #import "FWURLResponseSerialization.h"
     #import "FWSecurityPolicy.h"
-
-#if !TARGET_OS_WATCH
     #import "FWNetworkReachabilityManager.h"
-#endif
-
     #import "FWURLSessionManager.h"
     #import "FWHTTPSessionManager.h"
 

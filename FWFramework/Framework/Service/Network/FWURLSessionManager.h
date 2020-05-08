@@ -25,9 +25,7 @@
 #import "FWURLResponseSerialization.h"
 #import "FWURLRequestSerialization.h"
 #import "FWSecurityPolicy.h"
-#if !TARGET_OS_WATCH
 #import "FWNetworkReachabilityManager.h"
-#endif
 
 /**
  `FWURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
@@ -64,7 +62,7 @@
  ### `NSURLSessionDownloadDelegate`
 
  - `URLSession:downloadTask:didFinishDownloadingToURL:`
- - `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesWritten:totalBytesExpectedToWrite:`
+ - `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:`
  - `URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:`
 
  If any of these methods are overridden in a subclass, they _must_ call the `super` implementation first.
@@ -115,7 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
 
-#if !TARGET_OS_WATCH
 ///--------------------------------------
 /// @name Monitoring Network Reachability
 ///--------------------------------------
@@ -124,7 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
  The network reachability manager. `FWURLSessionManager` uses the `sharedManager` by default.
  */
 @property (readwrite, nonatomic, strong) FWNetworkReachabilityManager *reachabilityManager;
-#endif
 
 ///----------------------------
 /// @name Getting Session Tasks
@@ -163,19 +159,6 @@ NS_ASSUME_NONNULL_BEGIN
  The dispatch group for `completionBlock`. If `NULL` (default), a private dispatch group is used.
  */
 @property (nonatomic, strong, nullable) dispatch_group_t completionGroup;
-
-///---------------------------------
-/// @name Working Around System Bugs
-///---------------------------------
-
-/**
- Whether to attempt to retry creation of upload tasks for background sessions when initial call returns `nil`. `NO` by default.
-
- @bug As of iOS 7.0, there is a bug where upload tasks created for background tasks are sometimes `nil`. As a workaround, if this property is `YES`, AFNetworking will follow Apple's recommendation to try creating the task again.
-
- @see https://github.com/AFNetworking/AFNetworking/issues/1675
- */
-@property (nonatomic, assign) BOOL attemptsToRecreateUploadTasksForBackgroundSessions;
 
 ///---------------------
 /// @name Initialization
@@ -327,6 +310,11 @@ NS_ASSUME_NONNULL_BEGIN
  Sets a block to be executed when a connection level authentication challenge has occurred, as handled by the `NSURLSessionDelegate` method `URLSession:didReceiveChallenge:completionHandler:`.
 
  @param block A block object to be executed when a connection level authentication challenge has occurred. The block returns the disposition of the authentication challenge, and takes three arguments: the session, the authentication challenge, and a pointer to the credential that should be used to resolve the challenge.
+
+ @warning Implementing a session authentication challenge handler yourself totally bypasses FWNetworking's security policy defined in `FWSecurityPolicy`. Make sure you fully understand the implications before implementing a custom session authentication challenge handler. If you do not want to bypass FWNetworking's security policy, use `setTaskDidReceiveAuthenticationChallengeBlock:` instead.
+
+ @see -securityPolicy
+ @see -setTaskDidReceiveAuthenticationChallengeBlock:
  */
 - (void)setSessionDidReceiveAuthenticationChallengeBlock:(nullable NSURLSessionAuthChallengeDisposition (^)(NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * _Nullable __autoreleasing * _Nullable credential))block;
 
@@ -350,10 +338,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Sets a block to be executed when a session task has received a request specific authentication challenge, as handled by the `NSURLSessionTaskDelegate` method `URLSession:task:didReceiveChallenge:completionHandler:`.
-
- @param block A block object to be executed when a session task has received a request specific authentication challenge. The block returns the disposition of the authentication challenge, and takes four arguments: the session, the task, the authentication challenge, and a pointer to the credential that should be used to resolve the challenge.
+ 
+ @param authenticationChallengeHandler A block object to be executed when a session task has received a request specific authentication challenge.
+ 
+ When implementing an authentication challenge handler, you should check the authentication method first (`challenge.protectionSpace.authenticationMethod `) to decide if you want to handle the authentication challenge yourself or if you want FWNetworking to handle it. If you want FWNetworking to handle the authentication challenge, just return `@(NSURLSessionAuthChallengePerformDefaultHandling)`. For example, you certainly want FWNetworking to handle certificate validation (i.e. authentication method == `NSURLAuthenticationMethodServerTrust`) as defined by the security policy. If you want to handle the challenge yourself, you have four options:
+ 
+ 1. Return `nil` from the authentication challenge handler. You **MUST** call the completion handler with a disposition and credentials yourself. Use this if you need to present a user interface to let the user enter their credentials.
+ 2. Return an `NSError` object from the authentication challenge handler. You **MUST NOT** call the completion handler when returning an `NSError `. The returned error will be reported in the completion handler of the task. Use this if you need to abort an authentication challenge with a specific error.
+ 3. Return an `NSURLCredential` object from the authentication challenge handler. You **MUST NOT** call the completion handler when returning an `NSURLCredential`. The returned credentials will be used to fulfil the challenge. Use this when you can get credentials without presenting a user interface.
+ 4. Return an `NSNumber` object wrapping an `NSURLSessionAuthChallengeDisposition`. Supported values are `@(NSURLSessionAuthChallengePerformDefaultHandling)`, `@(NSURLSessionAuthChallengeCancelAuthenticationChallenge)` and `@(NSURLSessionAuthChallengeRejectProtectionSpace)`. You **MUST NOT** call the completion handler when returning an `NSNumber`.
+ 
+ If you return anything else from the authentication challenge handler, an exception will be thrown.
+ 
+ For more information about how URL sessions handle the different types of authentication challenges, see [NSURLSession](https://developer.apple.com/reference/foundation/nsurlsession?language=objc) and [URL Session Programming Guide](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/URLLoadingSystem/URLLoadingSystem.html).
+ 
+ @see -securityPolicy
  */
-- (void)setTaskDidReceiveAuthenticationChallengeBlock:(nullable NSURLSessionAuthChallengeDisposition (^)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, NSURLCredential * _Nullable __autoreleasing * _Nullable credential))block;
+- (void)setAuthenticationChallengeHandler:(id (^)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, void (^completionHandler)(NSURLSessionAuthChallengeDisposition , NSURLCredential * _Nullable)))authenticationChallengeHandler;
 
 /**
  Sets a block to be executed periodically to track upload progress, as handled by the `NSURLSessionTaskDelegate` method `URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:`.
@@ -426,7 +427,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDownloadTaskDidFinishDownloadingBlock:(nullable NSURL * _Nullable  (^)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location))block;
 
 /**
- Sets a block to be executed periodically to track download progress, as handled by the `NSURLSessionDownloadDelegate` method `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesWritten:totalBytesExpectedToWrite:`.
+ Sets a block to be executed periodically to track download progress, as handled by the `NSURLSessionDownloadDelegate` method `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:`.
 
  @param block A block object to be called when an undetermined number of bytes have been downloaded from the server. This block has no return value and takes five arguments: the session, the download task, the number of bytes read since the last time the download progress block was called, the total bytes read, and the total bytes expected to be read during the request, as initially determined by the expected content size of the `NSHTTPURLResponse` object. This block may be called multiple times, and will execute on the session manager operation queue.
  */
@@ -464,6 +465,11 @@ FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidSuspendNotification;
  Posted when a session is invalidated.
  */
 FOUNDATION_EXPORT NSString * const FWURLSessionDidInvalidateNotification;
+
+/**
+ Posted when a session download task finished moving the temporary download file to a specified destination successfully.
+ */
+FOUNDATION_EXPORT NSString * const FWURLSessionDownloadTaskDidMoveFileSuccessfullyNotification;
 
 /**
  Posted when a session download task encountered an error when moving the temporary download file to a specified destination.

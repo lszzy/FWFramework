@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 弹出框优先级。优先级越高越先显示，同优先级顺序显示
+// 弹出框优先级枚举。优先级越高越先显示，同优先级顺序显示
 typedef NS_ENUM(NSInteger, FWAlertPriority) {
     // 最低优先级
     FWAlertPriorityLow = -1,
@@ -22,7 +22,15 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
     FWAlertPrioritySuper,
 };
 
-// 视图控制器系统弹出框分类，支持优先级
+#pragma mark - UIViewController+FWAlert
+
+/*!
+ @brief 视图控制器系统弹出框分类，支持优先级
+ @discussion 系统弹出框仅支持参数类型如下：
+    1.title和message仅支持NSString
+    2.action仅支持NSString
+    如果需要支持NSAttributedString等，建议优先使用FWAlertController
+ */
 @interface UIViewController (FWAlert)
 
 #pragma mark - Alert
@@ -34,12 +42,11 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param message     警告框消息
  *  @param cancel      取消按钮标题
  *  @param cancelBlock 取消按钮事件
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowAlertWithTitle:(nullable NSString *)title
-                                    message:(nullable NSString *)message
-                                     cancel:(nullable NSString *)cancel
-                                cancelBlock:(nullable void (^)(void))cancelBlock;
+- (void)fwShowAlertWithTitle:(nullable id)title
+                     message:(nullable id)message
+                      cancel:(nullable id)cancel
+                 cancelBlock:(nullable void (^)(void))cancelBlock;
 
 /**
  *  显示警告框(详细版)
@@ -47,19 +54,18 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param title       警告框标题
  *  @param message     警告框消息
  *  @param cancel      取消按钮标题
- *  @param actions     动作按钮标题列表，iOS8支持UIAlertActionStyle样式，示例:@"确定:2"
+ *  @param actions     动作按钮标题列表
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  *  @param cancelBlock 取消按钮事件
  *  @param priority    警告框优先级
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowAlertWithTitle:(nullable NSString *)title
-                                    message:(nullable NSString *)message
-                                     cancel:(nullable NSString *)cancel
-                                    actions:(nullable NSArray<NSString *> *)actions
-                                actionBlock:(nullable void (^)(NSInteger index))actionBlock
-                                cancelBlock:(nullable void (^)(void))cancelBlock
-                                   priority:(FWAlertPriority)priority;
+- (void)fwShowAlertWithTitle:(nullable id)title
+                     message:(nullable id)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
+                 actionBlock:(nullable void (^)(NSInteger index))actionBlock
+                 cancelBlock:(nullable void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority;
 
 /**
  *  显示确认框(简单版)
@@ -69,13 +75,12 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param cancel       取消按钮文字
  *  @param confirm      确认按钮文字
  *  @param confirmBlock 确认按钮事件
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowConfirmWithTitle:(nullable NSString *)title
-                                      message:(nullable NSString *)message
-                                       cancel:(nullable NSString *)cancel
-                                      confirm:(nullable NSString *)confirm
-                                 confirmBlock:(nullable void (^)(void))confirmBlock;
+- (void)fwShowConfirmWithTitle:(nullable id)title
+                       message:(nullable id)message
+                        cancel:(nullable id)cancel
+                       confirm:(nullable id)confirm
+                  confirmBlock:(nullable void (^)(void))confirmBlock;
 
 /**
  *  显示确认框(详细版)
@@ -87,15 +92,14 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param confirmBlock 确认按钮事件
  *  @param cancelBlock  取消按钮事件
  *  @param priority     警告框优先级
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowConfirmWithTitle:(nullable NSString *)title
-                                      message:(nullable NSString *)message
-                                       cancel:(nullable NSString *)cancel
-                                      confirm:(nullable NSString *)confirm
-                                 confirmBlock:(nullable void (^)(void))confirmBlock
-                                  cancelBlock:(nullable void (^)(void))cancelBlock
-                                     priority:(FWAlertPriority)priority;
+- (void)fwShowConfirmWithTitle:(nullable id)title
+                       message:(nullable id)message
+                        cancel:(nullable id)cancel
+                       confirm:(nullable id)confirm
+                  confirmBlock:(nullable void (^)(void))confirmBlock
+                   cancelBlock:(nullable void (^)(void))cancelBlock
+                      priority:(FWAlertPriority)priority;
 
 /**
  *  显示输入框(简单版)
@@ -104,14 +108,13 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param message      输入框消息
  *  @param cancel       取消按钮文字
  *  @param confirm      确认按钮文字
- *  @param confirmBlock 确认按钮事件
- *  @return 弹出控制器
+ *  @param confirmBlock 确认按钮事件，参数为输入值
  */
-- (UIAlertController *)fwShowPromptWithTitle:(nullable NSString *)title
-                                     message:(nullable NSString *)message
-                                      cancel:(nullable NSString *)cancel
-                                     confirm:(nullable NSString *)confirm
-                                confirmBlock:(nullable void (^)(NSString *text))confirmBlock;
+- (void)fwShowPromptWithTitle:(nullable id)title
+                      message:(nullable id)message
+                       cancel:(nullable id)cancel
+                      confirm:(nullable id)confirm
+                 confirmBlock:(nullable void (^)(NSString *value))confirmBlock;
 
 /**
  *  显示输入框(详细版)
@@ -120,20 +123,42 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param message      输入框消息
  *  @param cancel       取消按钮文字
  *  @param confirm      确认按钮文字
- *  @param promptBlock  输入框初始化事件
- *  @param confirmBlock 确认按钮事件
+ *  @param promptBlock  输入框初始化事件，参数为输入框
+ *  @param confirmBlock 确认按钮事件，参数为输入值
  *  @param cancelBlock  取消按钮事件
  *  @param priority     警告框优先级
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowPromptWithTitle:(nullable NSString *)title
-                                     message:(nullable NSString *)message
-                                      cancel:(nullable NSString *)cancel
-                                     confirm:(nullable NSString *)confirm
-                                 promptBlock:(nullable void (^)(UITextField *textField))promptBlock
-                                confirmBlock:(nullable void (^)(NSString *text))confirmBlock
-                                 cancelBlock:(nullable void (^)(void))cancelBlock
-                                    priority:(FWAlertPriority)priority;
+- (void)fwShowPromptWithTitle:(nullable id)title
+                      message:(nullable id)message
+                       cancel:(nullable id)cancel
+                      confirm:(nullable id)confirm
+                  promptBlock:(nullable void (^)(UITextField *textField))promptBlock
+                 confirmBlock:(nullable void (^)(NSString *value))confirmBlock
+                  cancelBlock:(nullable void (^)(void))cancelBlock
+                     priority:(FWAlertPriority)priority;
+
+/**
+ *  显示输入框(复杂版)
+ *
+ *  @param title        输入框标题
+ *  @param message      输入框消息
+ *  @param cancel       取消按钮文字
+ *  @param confirm      确认按钮文字
+ *  @param promptCount  输入框数量
+ *  @param promptBlock  输入框初始化事件，参数为输入框和索引index
+ *  @param confirmBlock 确认按钮事件，参数为输入值数组
+ *  @param cancelBlock  取消按钮事件
+ *  @param priority     警告框优先级
+ */
+- (void)fwShowPromptWithTitle:(nullable id)title
+                      message:(nullable id)message
+                       cancel:(nullable id)cancel
+                      confirm:(nullable id)confirm
+                  promptCount:(NSInteger)promptCount
+                  promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
+                 confirmBlock:(nullable void (^)(NSArray<NSString *> *values))confirmBlock
+                  cancelBlock:(nullable void (^)(void))cancelBlock
+                     priority:(FWAlertPriority)priority;
 
 #pragma mark - Sheet
 
@@ -141,33 +166,103 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  显示操作表(简单版)
  *
  *  @param title       操作表标题
+ *  @param message     操作表消息
  *  @param cancel      取消按钮标题
- *  @param actions     动作按钮标题列表，iOS8支持UIAlertActionStyle样式，示例:@"确定:2"
+ *  @param actions     动作按钮标题列表
  *  @param actionBlock 动作按钮点击事件，参数为索引index
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowSheetWithTitle:(nullable NSString *)title
-                                     cancel:(nullable NSString *)cancel
-                                    actions:(nullable NSArray<NSString *> *)actions
-                                actionBlock:(nullable void (^)(NSInteger index))actionBlock;
+- (void)fwShowSheetWithTitle:(nullable id)title
+                     message:(nullable id)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
+                 actionBlock:(nullable void (^)(NSInteger index))actionBlock;
 
 /**
  *  显示操作表(详细版)
  *
  *  @param title       操作表标题
+ *  @param message     操作表消息
  *  @param cancel      取消按钮标题
- *  @param actions     动作按钮标题列表，iOS8支持UIAlertActionStyle样式，示例:@"确定:2"
+ *  @param actions     动作按钮标题列表
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  *  @param cancelBlock 取消按钮事件
  *  @param priority    操作表优先级
- *  @return 弹出控制器
  */
-- (UIAlertController *)fwShowSheetWithTitle:(nullable NSString *)title
-                                     cancel:(nullable NSString *)cancel
-                                    actions:(nullable NSArray<NSString *> *)actions
-                                actionBlock:(nullable void (^)(NSInteger index))actionBlock
-                                cancelBlock:(nullable void (^)(void))cancelBlock
-                                   priority:(FWAlertPriority)priority;
+- (void)fwShowSheetWithTitle:(nullable id)title
+                     message:(nullable id)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
+                 actionBlock:(nullable void (^)(NSInteger index))actionBlock
+                 cancelBlock:(nullable void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority;
+
+#pragma mark - Style
+
+/**
+ *  显示弹出框(完整版)
+ *
+ *  @param style       弹出框样式
+ *  @param title       操作表标题
+ *  @param message     操作表消息
+ *  @param cancel      取消按钮标题
+ *  @param actions     动作按钮标题列表
+ *  @param promptCount 输入框数量
+ *  @param promptBlock 输入框初始化事件，参数为输入框和索引index
+ *  @param actionBlock 动作按钮点击事件，参数为输入值数组和索引index
+ *  @param cancelBlock 取消按钮事件
+ *  @param customBlock 自定义弹出框事件
+ *  @param priority    操作表优先级
+ */
+- (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
+                       title:(nullable id)title
+                     message:(nullable id)message
+                      cancel:(nullable id)cancel
+                     actions:(nullable NSArray *)actions
+                 promptCount:(NSInteger)promptCount
+                 promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
+                 actionBlock:(nullable void (^)(NSArray<NSString *> *values, NSInteger index))actionBlock
+                 cancelBlock:(nullable void (^)(void))cancelBlock
+                 customBlock:(nullable void (^)(id alertController))customBlock
+                    priority:(FWAlertPriority)priority;
+
+@end
+
+#pragma mark - UIViewController+FWAlertPriority
+
+// 视图控制器弹窗优先级分类，支持优先级
+@interface UIViewController (FWAlertPriority)
+
+// 启用弹出框优先级，未启用不生效
+@property (nonatomic, assign) BOOL fwAlertPriorityEnabled;
+
+// 设置弹出优先级，默认普通
+@property (nonatomic, assign) FWAlertPriority fwAlertPriority;
+
+// 设置弹出框在指定控制器中按照优先级显示
+- (void)fwAlertPriorityPresentIn:(UIViewController *)viewController;
+
+@end
+
+#pragma mark - FWAlertPlugin
+
+// 弹窗插件协议，应用可自定义弹窗实现
+@protocol FWAlertPlugin <NSObject>
+
+@required
+
+// 显示弹出框插件方法，默认使用系统UIAlertController
+- (void)fwViewController:(UIViewController *)viewController
+               showAlert:(UIAlertControllerStyle)style
+                   title:(nullable id)title
+                 message:(nullable id)message
+                  cancel:(nullable id)cancel
+                 actions:(nullable NSArray *)actions
+             promptCount:(NSInteger)promptCount
+             promptBlock:(nullable void (^)(UITextField *textField, NSInteger index))promptBlock
+             actionBlock:(nullable void (^)(NSArray<NSString *> *values, NSInteger index))actionBlock
+             cancelBlock:(nullable void (^)(void))cancelBlock
+             customBlock:(nullable void (^)(id alertController))customBlock
+                priority:(FWAlertPriority)priority;
 
 @end
 

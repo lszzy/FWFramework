@@ -13,12 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 标记时间调试开始
 #define FWBenchmarkBegin( x ) \
-    NSDate *fwBenchmarkBegin_##x = [NSDate date];
+    [NSDate fwBenchmarkBegin:@(#x)];
 
 // 标记时间调试结束并打印消耗时间
 #define FWBenchmarkEnd( x ) \
-    NSDate *fwBenchmarkEnd_##x = [NSDate date]; \
-    NSLog(@"FWBenchmark-%@: %.3fms", @(#x), [fwBenchmarkEnd_##x timeIntervalSince1970] * 1000 - [fwBenchmarkBegin_##x timeIntervalSince1970] * 1000);
+    [NSDate fwBenchmarkEnd:@(#x)];
 
 /*!
  @brief NSDate+FWFramework
@@ -41,6 +40,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 获取系统启动时间
 + (nullable NSDate *)fwSystemBoottime;
+
+#pragma mark - Benchmark
+
+// 标记时间调试开始
++ (void)fwBenchmarkBegin:(NSString *)name;
+
+// 标记时间调试结束并打印消耗时间
++ (NSTimeInterval)fwBenchmarkEnd:(NSString *)name;
 
 #pragma mark - Convert
 

@@ -20,9 +20,6 @@
 // THE SOFTWARE.
 
 #import <TargetConditionals.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV 
-
 #import <Foundation/Foundation.h>
 #import "FWAutoPurgingImageCache.h"
 #import "FWHTTPSessionManager.h"
@@ -67,7 +64,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 /**
  Defines the order prioritization of incoming download requests being inserted into the queue. `FWImageDownloadPrioritizationFIFO` by default.
  */
-@property (nonatomic, assign) FWImageDownloadPrioritization downloadPrioritizaton;
+@property (nonatomic, assign) FWImageDownloadPrioritization downloadPrioritization;
 
 /**
  The shared default instance of `FWImageDownloader` initialized with default values.
@@ -167,7 +164,5 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 - (void)cancelTaskForImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt;
 
 @end
-
-#endif
 
 NS_ASSUME_NONNULL_END

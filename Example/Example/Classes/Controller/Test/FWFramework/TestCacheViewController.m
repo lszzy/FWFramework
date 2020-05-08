@@ -111,7 +111,7 @@
     [self fwSetRightBarItem:@"切换" block:^(id sender) {
         FWStrongifySelf();
         
-        [self fwShowSheetWithTitle:@"选择缓存类型" cancel:@"取消" actions:@[@"FWCacheMemory", @"FWCacheUserDefaults", @"FWCacheKeychain", @"FWCacheFile", @"FWCacheSqlite"] actionBlock:^(NSInteger index) {
+        [self fwShowSheetWithTitle:@"选择缓存类型" message:nil cancel:@"取消" actions:@[@"FWCacheMemory", @"FWCacheUserDefaults", @"FWCacheKeychain", @"FWCacheFile", @"FWCacheSqlite"] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
             if (index == 0) {

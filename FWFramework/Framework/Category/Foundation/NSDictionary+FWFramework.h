@@ -18,6 +18,30 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSDictionary<__covariant KeyType, __covariant ObjectType> (FWFramework)
 
 /*!
+ @brief 过滤字典元素
+ 
+ @param block 如果block返回NO，则去掉该元素
+ @return 新的字典
+ */
+- (instancetype)fwFilterWithBlock:(BOOL (^)(KeyType key, ObjectType obj))block;
+
+/*!
+ @brief 映射字典元素
+ 
+ @param block 返回的obj重新组装成一个字典
+ @return 新的字典
+ */
+- (NSDictionary *)fwMapWithBlock:(id _Nullable (^)(KeyType key, ObjectType obj))block;
+
+/*!
+ @brief 匹配字典第一个元素
+ 
+ @param block 返回满足条件的第一个obj
+ @return 指定对象
+ */
+- (nullable ObjectType)fwMatchWithBlock:(BOOL (^)(KeyType key, ObjectType obj))block;
+
+/*!
  @brief 从字典中随机取出Key，如@{@"a"=>@2, @"b"=>@8, @"c"=>@0}随机取出@"b"
  
  @return 随机Key
