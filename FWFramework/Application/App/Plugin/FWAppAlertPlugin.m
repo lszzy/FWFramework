@@ -48,8 +48,8 @@
         titleColor = FWAlertAppearance.appearance.actionColor;
         titleFont = FWAlertAppearance.appearance.actionFont;
     }
-    self.titleColor = titleColor;
-    self.titleFont = titleFont;
+    if (titleColor) self.titleColor = titleColor;
+    if (titleFont) self.titleFont = titleFont;
 }
 
 @end

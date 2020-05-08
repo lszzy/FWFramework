@@ -9,14 +9,15 @@
 #import "FWAlertController.h"
 #import "UIScreen+FWFramework.h"
 #import "UIFont+FWFramework.h"
+#import "UIAlertController+FWFramework.h"
 
-#define FW_LINE_COLOR [[UIColor grayColor] colorWithAlphaComponent:0.3]
-#define FW_NORMAL_COLOR [[UIColor whiteColor] colorWithAlphaComponent:0.7]
-#define FW_SELECTED_COLOR [UIColor colorWithWhite:1 alpha:0.4]
-#define FW_LINE_WIDTH 1.0 / [UIScreen mainScreen].scale
-#define FW_CONTENT_INSETS UIEdgeInsetsMake(20, 15, 20, 15)
-#define FW_ACTION_TITLE_FONTSIZE 18
-#define FW_ACTION_HEIGHT 55.0
+#define FW_LINE_COLOR (FWAlertAppearance.appearance.lineColor ?: [[UIColor grayColor] colorWithAlphaComponent:0.3])
+#define FW_NORMAL_COLOR (FWAlertAppearance.appearance.normalColor ?: [[UIColor whiteColor] colorWithAlphaComponent:0.7])
+#define FW_SELECTED_COLOR (FWAlertAppearance.appearance.selectedColor ?: [UIColor colorWithWhite:1 alpha:0.4])
+#define FW_LINE_WIDTH (FWAlertAppearance.appearance.lineWidth > 0 ? FWAlertAppearance.appearance.lineWidth : (1.0 / [UIScreen mainScreen].scale))
+#define FW_CONTENT_INSETS (!UIEdgeInsetsEqualToEdgeInsets(FWAlertAppearance.appearance.contentInsets, UIEdgeInsetsZero) ? FWAlertAppearance.appearance.contentInsets : UIEdgeInsetsMake(20, 15, 20, 15))
+#define FW_ACTION_TITLE_FONTSIZE (FWAlertAppearance.appearance.actionFontSize > 0 ? FWAlertAppearance.appearance.actionFontSize : 18)
+#define FW_ACTION_HEIGHT (FWAlertAppearance.appearance.actionHeight > 0 ? FWAlertAppearance.appearance.actionHeight : 55.0)
 
 #pragma mark - FWAlertAction
 

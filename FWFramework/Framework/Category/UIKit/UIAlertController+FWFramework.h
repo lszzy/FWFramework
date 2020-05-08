@@ -62,31 +62,46 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 是否启用Controller样式，设置后自动启用
 @property (nonatomic, assign, readonly) BOOL controllerEnabled;
-// 标题颜色，仅全局生效
+// 标题颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *titleColor;
-// 标题字体，仅全局生效
+// 标题字体，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIFont *titleFont;
-// 消息颜色，仅全局生效
+// 消息颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *messageColor;
-// 消息字体，仅全局生效
+// 消息字体，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIFont *messageFont;
 
 // 是否启用Action样式，设置后自动启用
 @property (nonatomic, assign, readonly) BOOL actionEnabled;
-// 默认动作颜色，仅全局生效
+// 默认动作颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *actionColor;
-// 默认动作字体，仅FWAlertController支持，仅全局生效
-@property (nonatomic, strong, nullable) UIFont *actionFont;
-// 首选动作颜色，仅全局生效
+// 首选动作颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *preferredActionColor;
-// 首选动作字体，仅FWAlertController支持，仅全局生效
-@property (nonatomic, strong, nullable) UIFont *preferredActionFont;
-// 取消动作颜色，仅全局生效
+// 取消动作颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *cancelActionColor;
-// 警告动作颜色，仅全局生效
+// 警告动作颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *destructiveActionColor;
-// 禁用动作颜色，仅全局生效
+// 禁用动作颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *disabledActionColor;
+
+// 默认动作字体，仅FWAlertController支持，默认nil
+@property (nonatomic, strong, nullable) UIFont *actionFont;
+// 首选动作字体，仅FWAlertController支持，默认nil
+@property (nonatomic, strong, nullable) UIFont *preferredActionFont;
+// 分割线颜色，仅FWAlertController支持，默认nil
+@property (nonatomic, strong, nullable) UIColor *lineColor;
+// 普通颜色，仅FWAlertController支持，默认nil
+@property (nonatomic, strong, nullable) UIColor *normalColor;
+// 已选中颜色，仅FWAlertController支持，默认nil
+@property (nonatomic, strong, nullable) UIColor *selectedColor;
+// 分割线宽度，仅FWAlertController支持，默认0不自定义
+@property (nonatomic, assign) CGFloat lineWidth;
+// 弹窗内容边距，仅FWAlertController支持，默认Zero不自定义
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+// action标题字号，仅FWAlertController支持，默认0不自定义
+@property (nonatomic, assign) CGFloat actionFontSize;
+// action高度，仅FWAlertController支持，默认0不自定义
+@property (nonatomic, assign) CGFloat actionHeight;
 
 @end
 
