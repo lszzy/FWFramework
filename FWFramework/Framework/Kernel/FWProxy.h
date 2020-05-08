@@ -39,6 +39,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWWeakObject
+
+/*!
+ @brief 弱引用对象容器类，用于解决关联对象weak引用等
+ */
+@interface FWWeakObject : NSObject
+
+// 弱引用对象，释放后自动变为nil，不会产生野指针
+@property (nonatomic, weak, nullable) id object;
+
+// 构造方法，快速创建弱引用容器对象
+- (instancetype)initWithObject:(nullable id)object;
+
+@end
+
 #pragma mark - FWBlockProxy
 
 /*!
