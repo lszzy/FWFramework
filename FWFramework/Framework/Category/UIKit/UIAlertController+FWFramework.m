@@ -50,7 +50,9 @@
     } else {
         titleColor = FWAlertAppearance.appearance.actionColor;
     }
-    [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+    if (titleColor) {
+        [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+    }
 }
 
 - (UIColor *)fwTitleColor
