@@ -11,7 +11,7 @@
 #import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
 #import "UIImageView+FWNetwork.h"
-#import "FWImage.h"
+#import "FWAnimatedImage.h"
 #import "FWPlugin.h"
 #import "FWPageControl.h"
 #import "FWStatisticalManager.h"
@@ -820,7 +820,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             }
         } else {
             // FWImage
-            UIImage *image = [UIImage fwImageMake:imagePath];
+            UIImage *image = [UIImage imageNamed:imagePath];
             // FWImage
             cell.imageView.image = image ?: self.placeholderImage;
         }
@@ -1029,7 +1029,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupImageView
 {
-    Class imageClass = [UIImageView class];
+    Class imageClass = [FWAnimatedImageView class];
     id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
         imageClass = [imagePlugin fwImageViewAnimatedClass];

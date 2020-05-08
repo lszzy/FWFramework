@@ -15,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief 权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
  @discussion 开启指定权限方法：
- 一、Pod项目：在Podfile最后添加：
+ 一、Pod项目：添加pod时同时指定
+ pod 'FWFramework', :subspecs => ['Authorize-Contacts']
+ 二、Pod项目：在Podfile最后添加
  post_install do |installer_representation|
     installer_representation.pods_project.targets.each do |target|
         if target.name == 'FWFramework'
@@ -26,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
         end
     end
  end
- 二、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWAuthorizeContactsEnabled=1
+ 三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWAuthorizeContactsEnabled=1
  */
 typedef NS_ENUM(NSInteger, FWAuthorizeType) {
     // 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription

@@ -103,6 +103,8 @@
         Class classType = classes[i];
         if (class_isMetaClass(classType)) continue;
         if (class_getSuperclass(classType) == nil) continue;
+        // 屏蔽WKObject(未继承NSObject)引起的报错
+        if (!class_conformsToProtocol(classType, @protocol(NSObject))) continue;
         if (classType == superClass) continue;
         if (![classType isSubclassOfClass:superClass]) continue;
         

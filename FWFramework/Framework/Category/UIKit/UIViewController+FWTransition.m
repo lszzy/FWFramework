@@ -148,6 +148,25 @@
     }
 }
 
+- (BOOL)presentationEnabled
+{
+    return self.presentationBlock != nil || self.presentationController != nil;
+}
+
+- (void)setPresentationEnabled:(BOOL)presentationEnabled
+{
+    if (presentationEnabled == self.presentationEnabled) return;
+    
+    if (presentationEnabled) {
+        self.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
+            return [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        };
+    } else {
+        self.presentationBlock = nil;
+        self.presentationController = nil;
+    }
+}
+
 - (id<UIViewControllerInteractiveTransitioning>)interactiveTransitionForTransition:(id<UIViewControllerAnimatedTransitioning>)transition
 {
     if (self.transitionType == FWAnimatedTransitionTypeDismiss || self.transitionType == FWAnimatedTransitionTypePop) {
@@ -323,7 +342,18 @@
 
 - (void)animate
 {
-    // 子类重写
+    // 子类可重写，默认alpha动画
+    FWAnimatedTransitionType transitionType = [self transitionType];
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    UIView *transitionView = transitionIn ? [self.transitionContext viewForKey:UITransitionContextToViewKey] : [self.transitionContext viewForKey:UITransitionContextFromViewKey];
+    
+    [self start];
+    if (transitionIn) transitionView.alpha = 0;
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        transitionView.alpha = transitionIn ? 1 : 0;
+    } completion:^(BOOL finished) {
+        [self complete];
+    }];
 }
 
 - (void)complete
@@ -365,8 +395,8 @@
 - (void)animate
 {
     FWAnimatedTransitionType transitionType = [self transitionType];
-    BOOL swipeIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
-    UISwipeGestureRecognizerDirection direction = swipeIn ? self.inDirection : self.outDirection;
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    UISwipeGestureRecognizerDirection direction = transitionIn ? self.inDirection : self.outDirection;
     CGVector offset;
     switch (direction) {
         case UISwipeGestureRecognizerDirectionLeft: {
@@ -392,21 +422,21 @@
     CGRect toFrame = [self.transitionContext finalFrameForViewController:[self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
     UIView *fromView = [self.transitionContext viewForKey:UITransitionContextFromViewKey];
     UIView *toView = [self.transitionContext viewForKey:UITransitionContextToViewKey];
-    if (swipeIn) {
+    if (transitionIn) {
         [self.transitionContext.containerView addSubview:toView];
-        toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:YES show:swipeIn];
+        toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:YES show:transitionIn];
         fromView.frame = fromFrame;
     } else {
         [self.transitionContext.containerView insertSubview:toView belowSubview:fromView];
-        fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:YES show:swipeIn];
+        fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:YES show:transitionIn];
         toView.frame = toFrame;
     }
     
     [UIView animateWithDuration:[self transitionDuration:self.transitionContext] animations:^{
-        if (swipeIn) {
-            toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:NO show:swipeIn];
+        if (transitionIn) {
+            toView.frame = [self animateFrameWithFrame:toFrame offset:offset initial:NO show:transitionIn];
         } else {
-            fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:NO show:swipeIn];
+            fromView.frame = [self animateFrameWithFrame:fromFrame offset:offset initial:NO show:transitionIn];
         }
     } completion:^(BOOL finished) {
         BOOL cancelled = [self.transitionContext transitionWasCancelled];
@@ -436,6 +466,50 @@
 
 @end
 
+#pragma mark - FWTransformAnimatedTransition
+
+@implementation FWTransformAnimatedTransition
+
++ (instancetype)transitionWithInTransform:(CGAffineTransform)inTransform
+                             outTransform:(CGAffineTransform)outTransform
+{
+    FWTransformAnimatedTransition *transition = [[self alloc] init];
+    transition.inTransform = inTransform;
+    transition.outTransform = outTransform;
+    return transition;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _inTransform = CGAffineTransformMakeScale(0.01, 0.01);
+        _outTransform = CGAffineTransformMakeScale(0.01, 0.01);
+    }
+    return self;
+}
+
+- (void)animate
+{
+    FWAnimatedTransitionType transitionType = [self transitionType];
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    UIView *transitionView = transitionIn ? [self.transitionContext viewForKey:UITransitionContextToViewKey] : [self.transitionContext viewForKey:UITransitionContextFromViewKey];
+    
+    [self start];
+    if (transitionIn) {
+        transitionView.transform = self.inTransform;
+        transitionView.alpha = 0;
+    }
+    [UIView animateWithDuration:[self transitionDuration:self.transitionContext] delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        transitionView.transform = transitionIn ? CGAffineTransformIdentity : self.outTransform;
+        transitionView.alpha = transitionIn ? 1 : 0;
+    } completion:^(BOOL finished) {
+        [self complete];
+    }];
+}
+
+@end
+
 #pragma mark - FWPresentationController
 
 @interface FWPresentationController ()
@@ -454,8 +528,12 @@
     if (self) {
         _showDimming = YES;
         _dimmingClick = YES;
+        _dimmingAnimated = YES;
+        _dimmingColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        _rectCorner = UIRectCornerTopLeft | UIRectCornerTopRight;
         _cornerRadius = 0;
         _presentedFrame = CGRectZero;
+        _presentedSize = CGSizeZero;
         _verticalInset = 0;
     }
     return self;
@@ -467,7 +545,7 @@
 {
     if (!_dimmingView) {
         _dimmingView = [[UIView alloc] initWithFrame:self.containerView.bounds];
-        _dimmingView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        _dimmingView.backgroundColor = self.dimmingColor;
         
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAction:)];
         [_dimmingView addGestureRecognizer:tapGesture];
@@ -498,27 +576,35 @@
 {
     [super presentationTransitionWillBegin];
     
+    self.presentedView.frame = [self frameOfPresentedViewInContainerView];
     if (self.cornerRadius > 0) {
         self.presentedView.layer.masksToBounds = YES;
-        [self.presentedView fwSetCornerLayer:(UIRectCornerTopLeft | UIRectCornerTopRight) radius:self.cornerRadius];
+        if ((self.rectCorner & UIRectCornerAllCorners) == UIRectCornerAllCorners) {
+            self.presentedView.layer.cornerRadius = self.cornerRadius;
+        } else {
+            [self.presentedView fwSetCornerLayer:self.rectCorner radius:self.cornerRadius];
+        }
     }
-    self.presentedView.frame = [self frameOfPresentedViewInContainerView];
     self.dimmingView.frame = self.containerView.bounds;
     [self.containerView insertSubview:self.dimmingView atIndex:0];
     
-    self.dimmingView.alpha = 0;
-    [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.dimmingView.alpha = 1.0;
-    } completion:nil];
+    if (self.dimmingAnimated) {
+        self.dimmingView.alpha = 0;
+        [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            self.dimmingView.alpha = 1.0;
+        } completion:nil];
+    }
 }
 
 - (void)dismissalTransitionWillBegin
 {
     [super dismissalTransitionWillBegin];
     
-    [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.dimmingView.alpha = 0;
-    } completion:nil];
+    if (self.dimmingAnimated) {
+        [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            self.dimmingView.alpha = 0;
+        } completion:nil];
+    }
 }
 
 - (void)dismissalTransitionDidEnd:(BOOL)completed
@@ -532,8 +618,15 @@
 
 - (CGRect)frameOfPresentedViewInContainerView
 {
-    if (!CGRectEqualToRect(self.presentedFrame, CGRectZero)) {
+    if (self.frameBlock) {
+        return self.frameBlock(self);
+    } else if (!CGRectEqualToRect(self.presentedFrame, CGRectZero)) {
         return self.presentedFrame;
+    } else if (!CGSizeEqualToSize(self.presentedSize, CGSizeZero)) {
+        CGRect presentedFrame = CGRectMake(0, 0, self.presentedSize.width, self.presentedSize.height);
+        presentedFrame.origin.x = (self.containerView.bounds.size.width - self.presentedSize.width) / 2;
+        presentedFrame.origin.y = (self.containerView.bounds.size.height - self.presentedSize.height) / 2;
+        return presentedFrame;
     } else if (self.verticalInset != 0) {
         CGRect presentedFrame = self.containerView.bounds;
         presentedFrame.origin.y = self.verticalInset;

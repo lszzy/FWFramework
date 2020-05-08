@@ -193,7 +193,11 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
         // 目标动作存在，则添加点击手势，可设置target为空取消响应
         if (barItem.target && barItem.action) {
             // 进行self转发，模拟实际action回调参数
-            [(UIView *)object fwAddTapGestureWithTarget:barItem action:@selector(fwInnerTargetAction:)];
+            if ([object isKindOfClass:[UIControl class]]) {
+                [(UIControl *)object fwAddTouchTarget:barItem action:@selector(fwInnerTargetAction:)];
+            } else {
+                [(UIView *)object fwAddTapGestureWithTarget:barItem action:@selector(fwInnerTargetAction:)];
+            }
         }
     // Other
     } else {
@@ -227,7 +231,7 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
     if (self.target && self.action && [self.target respondsToSelector:self.action]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        // 第一个参数UIBarButtonItem，第二个参数手势对象
+        // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
         [self.target performSelector:self.action withObject:self withObject:sender];
 #pragma clang diagnostic pop
     }

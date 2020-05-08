@@ -62,7 +62,9 @@
             });
         } else {
             NSLog(@"detect %lu faces", (unsigned long)features.count);
-            [self fwFaceMark:features size:CGSizeMake(CGImageGetWidth(aImage.CGImage), CGImageGetHeight(aImage.CGImage))];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self fwFaceMark:features size:CGSizeMake(CGImageGetWidth(aImage.CGImage), CGImageGetHeight(aImage.CGImage))];
+            });
         }
     });
 }
@@ -119,11 +121,9 @@
         offset.y = - offset.y;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CALayer *layer = [self fwFaceLayer:YES];
-        layer.frame = CGRectMake(offset.x, offset.y, finalSize.width, finalSize.height);
-        layer.contents = (id)self.image.CGImage;
-    });
+    CALayer *layer = [self fwFaceLayer:YES];
+    layer.frame = CGRectMake(offset.x, offset.y, finalSize.width, finalSize.height);
+    layer.contents = (id)self.image.CGImage;
 }
 
 - (CALayer *)fwFaceLayer:(BOOL)lazyload

@@ -32,6 +32,7 @@
         @"webRequest" : @"fwInnerWebRequest",
         @"setWebRequest:" : @"fwInnerSetWebRequest:",
         @"renderWebLayout" : @"fwInnerRenderWebLayout",
+        @"webView:didFinishNavigation:" : @"fwInnerWebView:didFinishNavigation:",
         @"webView:decidePolicyForNavigationAction:decisionHandler:" : @"fwInnerWebView:decidePolicyForNavigationAction:decisionHandler:",
         @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
         @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
@@ -61,6 +62,9 @@
     [webView fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {
         [weakProgressView fwSetProgress:webView.estimatedProgress];
     }];
+    if (@available(iOS 9.0, *)) {
+        webView.customUserAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
+    }
     
     if ([viewController respondsToSelector:@selector(renderWebView)]) {
         [viewController renderWebView];
@@ -69,6 +73,15 @@
     [viewController renderWebLayout];
     [webView setNeedsLayout];
     [webView layoutIfNeeded];
+    
+    if ([viewController respondsToSelector:@selector(renderWebBridge:)]) {
+        id<WKNavigationDelegate> delegate = webView.navigationDelegate;
+        FWWebViewJsBridge *bridge = [FWWebViewJsBridge bridgeForWebView:webView];
+        [bridge setWebViewDelegate:delegate];
+        webView.fwJsBridge = bridge;
+        
+        [viewController renderWebBridge:bridge];
+    }
 }
 
 - (void)webViewControllerViewDidLoad:(UIViewController<FWWebViewController> *)viewController
@@ -131,7 +144,7 @@
         if (requestUrl.isFileURL) {
             NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
             if (htmlString) {
-                [webView loadHTMLString:htmlString baseURL:nil];
+                [webView loadHTMLString:htmlString baseURL:requestUrl];
             }
         } else {
             [webView loadRequest:[NSURLRequest requestWithURL:requestUrl]];
@@ -204,12 +217,24 @@
 
 - (void)fwInnerWebView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
+    if ([self respondsToSelector:@selector(shouldStartLoad:)] &&
+        ![(id<FWWebViewController>)self shouldStartLoad:navigationAction]) {
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
     if ([UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
         [UIApplication fwOpenURL:navigationAction.request.URL];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     decisionHandler(WKNavigationActionPolicyAllow);
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+{
+    if ([self respondsToSelector:@selector(didFinishLoad:)]) {
+        [(id<FWWebViewController>)self didFinishLoad:navigation];
+    }
 }
 
 #pragma mark - WKUIDelegate

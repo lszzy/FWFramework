@@ -112,7 +112,7 @@
         [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
     } else {
         // FWImage
-        self.myImageView.fwAnimationImage = [UIImage fwImageMake:object.imageUrl];
+        self.myImageView.image = [FWAnimatedImage imageNamed:object.imageUrl];
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
@@ -432,17 +432,10 @@
     FWPhotoView *photoView = (FWPhotoView *)button.superview;
     UIImage *image = photoView.imageView.image;
     FWWeakifySelf();
-    if ([image fwIsGifImage]) {
-        [UIImage fwSaveGifData:[UIImage fwGifDataWithImage:image] completion:^(NSError *error) {
-            FWStrongifySelf();
-            [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
-        }];
-    } else {
-        [image fwSaveImageWithBlock:^(NSError *error) {
-            FWStrongifySelf();
-            [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
-        }];
-    }
+    [image fwSaveToAlbumWithCompletionBlock:^(NSURL * _Nullable assetURL, NSError * _Nullable error) {
+        FWStrongifySelf();
+        [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
+    }];
 }
 
 @end

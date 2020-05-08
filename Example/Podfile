@@ -1,9 +1,8 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
-abstract_target "ExampleTarget" do
-    pod 'FWFramework', :path => '../'
+target "Example2" do
+    pod 'FWFramework', :path => '../', :subspecs => ['Framework', 'Application', 'Image-Webp', 'Authorize-Contacts', 'Authorize-Microphone', 'Authorize-Calendar', 'Authorize-AppleMusic']
     pod 'FWDebug', :configurations => ['Debug']
-
-    target "Example2"
 end
+

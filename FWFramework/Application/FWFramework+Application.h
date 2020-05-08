@@ -14,6 +14,7 @@
 #import "FWAppToastPlugin.h"
 #import "FWAppLoadingPlugin.h"
 #import "FWAppRefreshPlugin.h"
+#import "FWAppAlertPlugin.h"
 
 // Controller
 #import "FWViewController.h"
@@ -31,6 +32,7 @@
 
 // View
 #import "FWView.h"
+#import "FWAlertController.h"
 #import "FWAttributedLabel.h"
 #import "FWBannerView.h"
 #import "FWCollectionViewFlowLayout.h"
