@@ -179,14 +179,27 @@ NS_ASSUME_NONNULL_BEGIN
     FWDefDynamicPolicy_( type, name, setter, OBJC_ASSOCIATION_RETAIN_NONATOMIC )
 
 /*!
- @brief 定义弱引用动态属性实现
+ @brief 定义弱引用动态属性实现，注意可能会产生野指针
  
  @param type 属性类型
  @param name 属性名称
  @param setter 属性setter
  */
 #define FWDefDynamicWeak( type, name, setter ) \
-    FWDefDynamicPolicy_( type, name, setter, OBJC_ASSOCIATION_ASSIGN )
+    @dynamic name; \
+    - (type)name \
+    { \
+        FWWeakObject *value = objc_getAssociatedObject(self, #name); \
+        return value.object; \
+    } \
+    - (void)setter:(type)object \
+    { \
+        if (object != [self name]) { \
+            [self willChangeValueForKey:@#name]; \
+            objc_setAssociatedObject(self, #name, [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
+            [self didChangeValueForKey:@#name]; \
+        } \
+    }
 
 /*!
  @brief 定义赋值动态属性实现
@@ -355,6 +368,8 @@ NS_ASSUME_NONNULL_BEGIN
     - (NSString *)name { return [[self class] name]; } \
     + (NSString *)name { return value; }
 
+#pragma mark - NSObject+FWRuntime
+
 /*!
  @brief NSObject运行时分类
  @discussion 注意load可能被子类super调用导致调用多次，需dispatch_once避免；
@@ -381,12 +396,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwSetProperty:(nullable id)object forName:(NSString *)name;
 
 /*!
- @brief 设置弱关联属性，支持KVO
+ @brief 设置赋值关联属性，支持KVO，注意可能会产生野指针
  
  @param object 属性值
  @param name   属性名称
  */
-- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
+- (void)fwSetPropertyAssign:(nullable id)object forName:(NSString *)name;
 
 /*!
  @brief 设置拷贝关联属性，支持KVO
@@ -420,12 +435,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwSetAssociatedObject:(nullable id)object forKey:(const void *)key;
 
 /*!
- @brief 设置弱关联对象，不含KVO
+ @brief 设置赋值关联对象，不含KVO，注意可能会产生野指针
  
  @param object 关联对象
  @param key 键名
  */
-- (void)fwSetAssociatedObjectWeak:(nullable id)object forKey:(const void *)key;
+- (void)fwSetAssociatedObjectAssign:(nullable id)object forKey:(const void *)key;
 
 /*!
  @brief 设置拷贝关联对象，不含KVO
