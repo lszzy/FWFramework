@@ -19,10 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <TargetConditionals.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV
-
 #import "FWImageDownloader.h"
 #import "FWHTTPSessionManager.h"
 
@@ -112,20 +108,18 @@
 @implementation FWImageDownloader
 
 + (NSURLCache *)defaultURLCache {
-    
-    // It's been discovered that a crash will occur on certain versions
-    // of iOS if you customize the cache.
-    //
-    // More info can be found here: https://devforums.apple.com/message/1102182#1102182
-    //
-    // When iOS 7 support is dropped, this should be modified to use
-    // NSProcessInfo methods instead.
-    if ([[[UIDevice currentDevice] systemVersion] compare:@"8.2" options:NSNumericSearch] == NSOrderedAscending) {
-        return [NSURLCache sharedURLCache];
-    }
-    return [[NSURLCache alloc] initWithMemoryCapacity:20 * 1024 * 1024
-                                         diskCapacity:150 * 1024 * 1024
-                                             diskPath:@"site.wuyong.imagedownloader"];
+    NSUInteger memoryCapacity = 20 * 1024 * 1024; // 20MB
+    NSUInteger diskCapacity = 150 * 1024 * 1024; // 150MB
+    NSURL *cacheURL = [[[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory
+                                                              inDomain:NSUserDomainMask
+                                                     appropriateForURL:nil
+                                                                create:YES
+                                                                 error:nil]
+                       URLByAppendingPathComponent:@"site.wuyong.imagedownloader"];
+
+    return [[NSURLCache alloc] initWithMemoryCapacity:memoryCapacity
+                                         diskCapacity:diskCapacity
+                                             diskPath:[cacheURL path]];
 }
 
 + (NSURLSessionConfiguration *)defaultURLSessionConfiguration {
@@ -166,7 +160,7 @@
     if (self = [super init]) {
         self.sessionManager = sessionManager;
 
-        self.downloadPrioritizaton = downloadPrioritization;
+        self.downloadPrioritization = downloadPrioritization;
         self.maximumActiveDownloads = maximumActiveDownloads;
         self.imageCache = imageCache;
 
@@ -355,7 +349,7 @@
             }
         }
 
-        if (mergedTask.responseHandlers.count == 0 && mergedTask.task.state == NSURLSessionTaskStateSuspended) {
+        if (mergedTask.responseHandlers.count == 0) {
             [mergedTask.task cancel];
             [self removeMergedTaskWithURLIdentifier:URLIdentifier];
         }
@@ -405,7 +399,7 @@
 }
 
 - (void)enqueueMergedTask:(FWImageDownloaderMergedTask *)mergedTask {
-    switch (self.downloadPrioritizaton) {
+    switch (self.downloadPrioritization) {
         case FWImageDownloadPrioritizationFIFO:
             [self.queuedMergedTasks addObject:mergedTask];
             break;
@@ -435,5 +429,3 @@
 }
 
 @end
-
-#endif

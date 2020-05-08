@@ -21,12 +21,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TargetConditionals.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
-#elif TARGET_OS_WATCH
-#import <WatchKit/WatchKit.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -442,7 +437,7 @@ forHTTPHeaderField:(NSString *)field;
  ### Constants
 
  `FWURLRequestSerializationErrorDomain`
- AFURLRequestSerializer errors. Error codes for `FWURLRequestSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ FWURLRequestSerializer errors. Error codes for `FWURLRequestSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
 FOUNDATION_EXPORT NSString * const FWURLRequestSerializationErrorDomain;
 

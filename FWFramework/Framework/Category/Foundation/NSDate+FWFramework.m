@@ -88,6 +88,31 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return nil;
 }
 
+#pragma mark - Benchmark
+
++ (NSMutableDictionary *)fwBenchmarkTimes
+{
+    static NSMutableDictionary *benchmarkTimes = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        benchmarkTimes = [[NSMutableDictionary alloc] init];
+    });
+    return benchmarkTimes;
+}
+
++ (void)fwBenchmarkBegin:(NSString *)name
+{
+    self.fwBenchmarkTimes[name] = [NSDate date];
+}
+
++ (NSTimeInterval)fwBenchmarkEnd:(NSString *)name
+{
+    NSDate *beginTime = self.fwBenchmarkTimes[name] ?: [NSDate date];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970] - [beginTime timeIntervalSince1970];
+    NSLog(@"FWBenchmark-%@: %.3fms", name, timeInterval * 1000);
+    return timeInterval;
+}
+
 #pragma mark - Convert
 
 + (NSDate *)fwDateWithString:(NSString *)string

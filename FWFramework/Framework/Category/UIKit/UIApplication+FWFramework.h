@@ -68,8 +68,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
 + (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
-// 打开浏览器，支持NSString|NSURL
+// 打开外部浏览器，支持NSString|NSURL
 + (void)fwOpenSafari:(id)url;
+
+// 打开内部浏览器，支持NSString|NSURL
++ (void)fwOpenSafariController:(id)url;
+
+// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
++ (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
 
 // 打开应用设置
 + (void)fwOpenAppSettings;

@@ -14,6 +14,19 @@
 
 @implementation TestAlertViewController
 
+- (void)renderModel
+{
+    [self fwSetRightBarItem:@"切换插件" block:^(id  _Nonnull sender) {
+        id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
+        if (alertPlugin) {
+            [[FWPluginManager sharedInstance] unloadPlugin:@protocol(FWAlertPlugin)];
+            [[FWPluginManager sharedInstance] unregisterPlugin:@protocol(FWAlertPlugin)];
+        } else {
+            [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAppAlertPlugin class]];
+        }
+    }];
+}
+
 - (void)renderData
 {
     [self.tableData addObjectsFromArray:@[
@@ -23,8 +36,14 @@
                                          @[@"确认框(详细)", @"onConfirm2"],
                                          @[@"输入框(简单)", @"onPrompt1"],
                                          @[@"输入框(详细)", @"onPrompt2"],
+                                         @[@"输入框(复杂)", @"onPrompt3"],
                                          @[@"操作表(简单)", @"onSheet1"],
                                          @[@"操作表(详细)", @"onSheet2"],
+                                         @[@"弹出框(完整)", @"onAlertF"],
+                                         @[@"警告框(样式)", @"onAlertA"],
+                                         @[@"操作表(样式)", @"onSheetA"],
+                                         @[@"警告框(优先)", @"onAlertP"],
+                                         @[@"操作表(优先)", @"onSheetP"],
                                          ]];
 }
 
@@ -62,7 +81,7 @@
     [self fwShowAlertWithTitle:@"警告框标题"
                        message:@"警告框消息"
                         cancel:@"取消"
-                       actions:@[@"按钮1:2", @"按钮2"]
+                       actions:@[@"按钮1", @"按钮2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的按钮index: %@", @(index));
                    }
@@ -128,11 +147,37 @@
                        priority:FWAlertPriorityNormal];
 }
 
+- (void)onPrompt3
+{
+    [self fwShowPromptWithTitle:@"输入框标题"
+                        message:@"输入框消息"
+                         cancel:@"取消"
+                        confirm:@"确定"
+                    promptCount:2
+                    promptBlock:^(UITextField *textField, NSInteger index) {
+                        if (index == 0) {
+                            textField.placeholder = @"请输入用户名";
+                            textField.secureTextEntry = NO;
+                        } else {
+                            textField.placeholder = @"请输入密码";
+                            textField.secureTextEntry = YES;
+                        }
+                    }
+                   confirmBlock:^(NSArray<NSString *> *values) {
+                        NSLog(@"输入内容：%@", values);
+                    }
+                    cancelBlock:^{
+                        NSLog(@"点击了取消按钮");
+                    }
+                       priority:FWAlertPriorityNormal];
+}
+
 - (void)onSheet1
 {
     [self fwShowSheetWithTitle:@"操作表标题"
+                       message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[@"操作1:2", @"操作2"]
+                       actions:@[@"操作1", @"操作2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }];
@@ -141,8 +186,9 @@
 - (void)onSheet2
 {
     [self fwShowSheetWithTitle:@"操作表标题"
+                       message:@"操作表消息"
                         cancel:@"取消"
-                       actions:@[@"操作1:2", @"操作2"]
+                       actions:@[@"操作1", @"操作2", @"操作3"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的操作index: %@", @(index));
                    }
@@ -150,6 +196,117 @@
                        NSLog(@"点击了取消操作");
                    }
                       priority:FWAlertPriorityNormal];
+}
+
+- (void)onAlertF
+{
+    FWWeakifySelf();
+    [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
+                         title:@"请输入账号信息，我是很长很长很长很长很长很长的标题"
+                       message:@"账户信息必填，我是很长很长很长很长很长很长的消息"
+                        cancel:@"取消"
+                       actions:@[@"重试", @"高亮", @"禁用", @"确定"]
+                   promptCount:2
+                   promptBlock:^(UITextField *textField, NSInteger index) {
+                        if (index == 0) {
+                            textField.placeholder = @"请输入用户名";
+                            textField.secureTextEntry = NO;
+                        } else {
+                            textField.placeholder = @"请输入密码";
+                            textField.secureTextEntry = YES;
+                        }
+                    }
+                   actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
+                        FWStrongifySelf();
+                        if (index == 0) {
+                            [self onAlertF];
+                        } else {
+                            NSLog(@"输入内容：%@", values);
+                        }
+                    }
+                   cancelBlock:^{
+                        NSLog(@"点击了取消按钮");
+                    }
+                   customBlock:^(UIAlertController *alertController) {
+                        alertController.preferredAction = alertController.actions[1];
+                        alertController.actions[2].enabled = NO;
+                        if ([alertController isKindOfClass:[FWAlertController class]]) {
+                            ((FWAlertController *)alertController).image = [UIImage fwImageWithAppIcon];
+                        }
+                    }
+                      priority:FWAlertPriorityNormal];
+}
+
+- (void)onAlertA
+{
+    NSMutableAttributedString *title = [NSMutableAttributedString new];
+    NSTextAttachment *attachment = [NSTextAttachment new];
+    attachment.image = [[UIImage imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    attachment.bounds = CGRectMake(0, -20, 30, 30);
+    [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+    NSDictionary *attrs = @{
+        NSFontAttributeName: [UIFont appFontBoldSize:17],
+        NSForegroundColorAttributeName: [UIColor redColor],
+    };
+    [title appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n警告框标题" attributes:attrs]];
+        
+    NSMutableAttributedString *message = [NSMutableAttributedString new];
+    attrs = @{
+        NSFontAttributeName: [UIFont appFontSize:15],
+        NSForegroundColorAttributeName: [UIColor greenColor],
+    };
+    [message appendAttributedString:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:attrs]];
+    
+    [self fwShowAlertWithTitle:title
+                       message:message
+                        cancel:@"取消"
+                       actions:@[@"按钮1", @"按钮2", @"按钮3", @"按钮4"]
+                   actionBlock:nil
+                   cancelBlock:nil
+                      priority:FWAlertPriorityNormal];
+}
+
+- (void)onSheetA
+{
+    NSMutableAttributedString *title = [NSMutableAttributedString new];
+    NSTextAttachment *attachment = [NSTextAttachment new];
+    attachment.image = [[UIImage imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    attachment.bounds = CGRectMake(0, -20, 30, 30);
+    [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+    NSDictionary *attrs = @{
+        NSFontAttributeName: [UIFont appFontBoldSize:17],
+        NSForegroundColorAttributeName: [UIColor redColor],
+    };
+    [title appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n操作表标题" attributes:attrs]];
+        
+    NSMutableAttributedString *message = [NSMutableAttributedString new];
+    attrs = @{
+        NSFontAttributeName: [UIFont appFontSize:15],
+        NSForegroundColorAttributeName: [UIColor greenColor],
+    };
+    [message appendAttributedString:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:attrs]];
+    
+    [self fwShowSheetWithTitle:title
+                       message:message
+                        cancel:@"取消"
+                       actions:@[@"操作1", @"操作2", @"操作3", @"操作4"]
+                   actionBlock:^(NSInteger index) {
+                       NSLog(@"点击的操作index: %@", @(index));
+                   }];
+}
+
+- (void)onAlertP
+{
+    [self fwShowAlertWithTitle:@"普通优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
+    [self fwShowAlertWithTitle:@"低优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
+    [self fwShowAlertWithTitle:@"高优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+}
+
+- (void)onSheetP
+{
+    [self fwShowSheetWithTitle:@"普通优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
+    [self fwShowSheetWithTitle:@"高优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+    [self fwShowSheetWithTitle:@"低优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
 }
 
 @end

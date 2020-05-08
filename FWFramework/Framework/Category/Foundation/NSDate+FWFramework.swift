@@ -21,7 +21,10 @@ public func FWBenchmarkBegin(_ name: String = "") {
 /// 标记时间调试结束并打印消耗时间
 ///
 /// - Parameter name: 调试标签，默认空字符串
-public func FWBenchmarkEnd(_ name: String = "") {
-    let beginTime = FWBenchmarkTimes.removeValue(forKey: name) ?? Date()
-    print(String(format: "FWBenchmark-%@: %.3fms", name, Date().timeIntervalSince1970 * 1000 - beginTime.timeIntervalSince1970 * 1000))
+/// - Returns: 消耗时间
+public func FWBenchmarkEnd(_ name: String = "") -> TimeInterval {
+    let beginTime = FWBenchmarkTimes[name] ?? Date()
+    let timeInterval = Date().timeIntervalSince1970 - beginTime.timeIntervalSince1970
+    print(String(format: "FWBenchmark-%@: %.3fms", name, timeInterval * 1000))
+    return timeInterval
 }

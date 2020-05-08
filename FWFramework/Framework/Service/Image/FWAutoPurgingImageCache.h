@@ -21,8 +21,6 @@
 
 #import <TargetConditionals.h>
 #import <Foundation/Foundation.h>
-
-#if TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -155,6 +153,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif
-

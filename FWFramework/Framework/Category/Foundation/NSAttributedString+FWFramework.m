@@ -30,6 +30,29 @@
     return [[self alloc] initWithString:string attributes:attr];
 }
 
+#pragma mark - Html
+
++ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
+{
+    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[self alloc] initWithData:htmlData options:@{
+        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding),
+    } documentAttributes:nil error:nil];
+}
+
+- (NSString *)fwHtmlString
+{
+    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
+        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+    } error:nil];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+}
+
 #pragma mark - Size
 
 - (CGSize)fwSize

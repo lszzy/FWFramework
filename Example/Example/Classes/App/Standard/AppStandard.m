@@ -14,15 +14,15 @@
     [UIColor colorWithRed:((float)((hex & 0xFF0000) >> 16))/255.0 green:((float)((hex & 0xFF00) >> 8))/255.0 blue:((float)(hex & 0xFF))/255.0 alpha:opacity]
 
 #define AppColorImpl( name, hex, opacity ) \
-+ (UIColor *)name \
-{ \
-    static UIColor *name##_color; \
-    static dispatch_once_t name##_onceToken; \
-    dispatch_once(&name##_onceToken, ^{ \
-        name##_color = AppColorHex(hex, opacity); \
-    }); \
-    return name##_color; \
-}
+    + (UIColor *)name \
+    { \
+        static UIColor *name##_color; \
+        static dispatch_once_t name##_onceToken; \
+        dispatch_once(&name##_onceToken, ^{ \
+            name##_color = AppColorHex(hex, opacity); \
+        }); \
+        return name##_color; \
+    }
 
 @implementation UIColor (AppStandard)
 
@@ -70,38 +70,71 @@ AppColorImpl(appColorBlackOpacityTiny, 0x000000, 0.15);
 
 #pragma mark - UIFont+AppStandard
 
-#define AppFontImpl( name, size, bold ) \
-+ (UIFont *)name \
-{ \
-    if (bold) { \
-        return [UIFont boldSystemFontOfSize:size]; \
-    } else { \
-        return [UIFont systemFontOfSize:size]; \
-    } \
-}
+typedef NS_ENUM(NSInteger, AppFontStyle) {
+    AppFontStyleRegular = 0,
+    AppFontStyleLight,
+    AppFontStyleMedium,
+    AppFontStyleBold,
+    AppFontStyleSemiBold,
+};
+
+#define AppFontImpl( name, size, style ) \
+    + (UIFont *)name \
+    { \
+        return [UIFont appFontStyle:style andSize:size]; \
+    }
 
 @implementation UIFont (AppStandard)
 
-AppFontImpl(appFontHuge, 24, NO);
-AppFontImpl(appFontLarge, 18, NO);
-AppFontImpl(appFontNormal, 16, NO);
-AppFontImpl(appFontSmall, 14, NO);
-AppFontImpl(appFontTiny, 12, NO);
+AppFontImpl(appFontHuge, 18, AppFontStyleRegular);
+AppFontImpl(appFontLarge, 17, AppFontStyleRegular);
+AppFontImpl(appFontNormal, 15, AppFontStyleRegular);
+AppFontImpl(appFontSmall, 13, AppFontStyleRegular);
+AppFontImpl(appFontTiny, 10, AppFontStyleRegular);
 
-+ (UIFont *)appFontSize:(CGFloat)size
-{
-    return [UIFont systemFontOfSize:size];
-}
+AppFontImpl(appFontBoldHuge, 18, AppFontStyleBold);
+AppFontImpl(appFontBoldLarge, 17, AppFontStyleBold);
+AppFontImpl(appFontBoldNormal, 15, AppFontStyleBold);
+AppFontImpl(appFontBoldSmall, 13, AppFontStyleBold);
+AppFontImpl(appFontBoldTiny, 10, AppFontStyleBold);
 
-AppFontImpl(appFontBoldHuge, 24, YES);
-AppFontImpl(appFontBoldLarge, 18, YES);
-AppFontImpl(appFontBoldNormal, 16, YES);
-AppFontImpl(appFontBoldSmall, 14, YES);
-AppFontImpl(appFontBoldTiny, 12, YES);
+AppFontImpl(appFontLightHuge, 18, AppFontStyleLight);
+AppFontImpl(appFontLightLarge, 17, AppFontStyleLight);
+AppFontImpl(appFontLightNormal, 15, AppFontStyleLight);
+AppFontImpl(appFontLightSmall, 13, AppFontStyleLight);
+AppFontImpl(appFontLightTiny, 10, AppFontStyleLight);
 
-+ (UIFont *)appFontBoldSize:(CGFloat)size
-{
-    return [UIFont boldSystemFontOfSize:size];
+AppFontImpl(appFontMediumHuge, 18, AppFontStyleMedium);
+AppFontImpl(appFontMediumLarge, 17, AppFontStyleMedium);
+AppFontImpl(appFontMediumNormal, 15, AppFontStyleMedium);
+AppFontImpl(appFontMediumSmall, 13, AppFontStyleMedium);
+AppFontImpl(appFontMediumTiny, 10, AppFontStyleMedium);
+
+AppFontImpl(appFontSemiBoldHuge, 18, AppFontStyleSemiBold);
+AppFontImpl(appFontSemiBoldLarge, 17, AppFontStyleSemiBold);
+AppFontImpl(appFontSemiBoldNormal, 15, AppFontStyleSemiBold);
+AppFontImpl(appFontSemiBoldSmall, 13, AppFontStyleSemiBold);
+AppFontImpl(appFontSemiBoldTiny, 10, AppFontStyleSemiBold);
+
++ (UIFont *)appFontSize:(CGFloat)size { return [UIFont appFontStyle:AppFontStyleRegular andSize:size]; }
++ (UIFont *)appFontBoldSize:(CGFloat)size { return [UIFont appFontStyle:AppFontStyleBold andSize:size]; }
++ (UIFont *)appFontLightSize:(CGFloat)size { return [UIFont appFontStyle:AppFontStyleLight andSize:size]; }
++ (UIFont *)appFontMediumSize:(CGFloat)size { return [UIFont appFontStyle:AppFontStyleMedium andSize:size]; }
++ (UIFont *)appFontSemiBoldSize:(CGFloat)size { return [UIFont appFontStyle:AppFontStyleSemiBold andSize:size]; }
+
++ (UIFont *)appFontStyle:(AppFontStyle)style andSize:(CGFloat)size {
+    switch (style) {
+        case AppFontStyleLight:
+            return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
+        case AppFontStyleMedium:
+            return [UIFont systemFontOfSize:size weight:UIFontWeightMedium];
+        case AppFontStyleBold:
+            return [UIFont systemFontOfSize:size weight:UIFontWeightBold];
+        case AppFontStyleSemiBold:
+            return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
+        default:
+            return [UIFont systemFontOfSize:size weight:UIFontWeightRegular];
+    }
 }
 
 @end

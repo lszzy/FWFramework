@@ -20,27 +20,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, readonly) FWPluginManager *sharedInstance;
 
 /*!
- @brief 注册默认插件，仅当插件未注册时生效
-
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param cls 插件类，必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerDefault:(Protocol *)protocol withClass:(Class)cls;
-
-/*!
- @brief 注册默认插件，仅当插件未注册时生效
+ @brief 注册默认单例插件，仅当插件未注册时生效
  
  @exception NSException 插件未实现插件协议时抛出异常
  @param protocol 插件协议
- @param obj 插件对象，必须实现protocol
+ @param obj 插件类或对象，必须实现protocol
  @return 是否注册成功
  */
 - (BOOL)registerDefault:(Protocol *)protocol withObject:(id)obj;
 
 /*!
- @brief 注册默认插件，仅当插件未注册时生效
+ @brief 注册默认单例插件，仅当插件未注册时生效
  
  @exception NSException 插件未实现插件协议时抛出异常
  @param protocol 插件协议
@@ -50,27 +40,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)registerDefault:(Protocol *)protocol withBlock:(id (^)(void))block;
 
 /*!
- @brief 注册插件，仅当插件未使用时生效
+ @brief 注册默认工厂插件，仅当插件未注册时生效
  
  @exception NSException 插件未实现插件协议时抛出异常
  @param protocol 插件协议
- @param cls 插件类，必须实现protocol
+ @param factory 插件块，返回的对象必须实现protocol
  @return 是否注册成功
  */
-- (BOOL)registerPlugin:(Protocol *)protocol withClass:(Class)cls;
+- (BOOL)registerDefault:(Protocol *)protocol withFactory:(id (^)(void))factory;
 
 /*!
- @brief 注册插件，仅当插件未使用时生效
+ @brief 注册单例插件，仅当插件未使用时生效
  
  @exception NSException 插件未实现插件协议时抛出异常
  @param protocol 插件协议
- @param obj 插件对象，必须实现protocol
+ @param obj 插件类或对象，必须实现protocol
  @return 是否注册成功
  */
 - (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj;
 
 /*!
- @brief 注册插件，仅当插件未使用时生效
+ @brief 注册单例插件，仅当插件未使用时生效
  
  @exception NSException 插件未实现插件协议时抛出异常
  @param protocol 插件协议
@@ -78,6 +68,16 @@ NS_ASSUME_NONNULL_BEGIN
  @return 是否注册成功
  */
 - (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block;
+
+/*!
+ @brief 注册工厂插件，仅当插件未使用时生效
+ 
+ @exception NSException 插件未实现插件协议时抛出异常
+ @param protocol 插件协议
+ @param factory 插件块，返回的对象必须实现protocol
+ @return 是否注册成功
+ */
+- (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
 
 /*!
  @brief 取消插件注册，仅当插件未使用时生效
