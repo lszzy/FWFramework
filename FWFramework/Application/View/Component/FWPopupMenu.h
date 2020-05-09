@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, FWPopupMenuArrowDirection) {
  */
 @property (nonatomic, assign) BOOL autoRotateWhenDeviceOrientationChanged;
 
-@property (nonatomic, copy) void (^deviceOrientDidChangeHandle) (UIInterfaceOrientation orientation);
+@property (nonatomic, copy, nullable) void (^deviceOrientDidChangeHandle) (UIInterfaceOrientation orientation);
 
 + (id <FWPopupMenuDeviceOrientationManager>)manager;
 
@@ -91,25 +91,25 @@ typedef NS_ENUM(NSInteger,FWPopupMenuAnimationStyle) {
 /**
  显示动画，自定义可用
  */
-@property (nonatomic, strong) CAAnimation * showAnimation;
+@property (nonatomic, strong, nullable) CAAnimation * showAnimation;
 
 /**
  隐藏动画，自定义可用
  */
-@property (nonatomic, strong) CAAnimation * dismissAnimation;
+@property (nonatomic, strong, nullable) CAAnimation * dismissAnimation;
 
 /**
  弹出和隐藏动画的时间，Default is 0.25
  */
 @property CFTimeInterval duration;
 
-@property (nonatomic, weak) UIView * animationView;
+@property (nonatomic, weak, nullable) UIView * animationView;
 
 + (id <FWPopupMenuAnimationManager>)manager;
 
-- (void)displayShowAnimationCompletion:(void (^) (void))completion;
+- (void)displayShowAnimationCompletion:(nullable void (^) (void))completion;
 
-- (void)displayDismissAnimationCompletion:(void (^) (void))completion;
+- (void)displayDismissAnimationCompletion:(nullable void (^) (void))completion;
 
 @end
 
@@ -173,12 +173,12 @@ typedef NS_ENUM(NSInteger , FWPopupMenuPriorityDirection) {
 /**
  标题数组 只读属性
  */
-@property (nonatomic, strong, readonly) NSArray  * titles;
+@property (nonatomic, strong, readonly, nullable) NSArray  * titles;
 
 /**
  图片数组 只读属性
  */
-@property (nonatomic, strong, readonly) NSArray  * images;
+@property (nonatomic, strong, readonly, nullable) NSArray  * images;
 
 /**
  tableView  Default separatorStyle is UITableViewCellSeparatorStyleNone
@@ -313,7 +313,7 @@ typedef NS_ENUM(NSInteger , FWPopupMenuPriorityDirection) {
 /**
  代理
  */
-@property (nonatomic, weak) id <FWPopupMenuDelegate> delegate;
+@property (nonatomic, weak, nullable) id <FWPopupMenuDelegate> delegate;
 
 /**
  在指定位置弹出
@@ -325,24 +325,25 @@ typedef NS_ENUM(NSInteger , FWPopupMenuPriorityDirection) {
  @param otherSetting   其他设置
  */
 + (FWPopupMenu *)showAtPoint:(CGPoint)point
-                      titles:(NSArray *)titles
-                       icons:(NSArray *)icons
+                      titles:(nullable NSArray *)titles
+                       icons:(nullable NSArray *)icons
                    menuWidth:(CGFloat)itemWidth
-               otherSettings:(void (^) (FWPopupMenu * popupMenu))otherSetting;
+               otherSettings:(nullable void (^) (FWPopupMenu * popupMenu))otherSetting;
 
 /**
  依赖指定view弹出
 
+ @param view           依赖的视图
  @param titles         标题数组  数组里是NSString/NSAttributedString
  @param icons          图标数组  数组里是NSString/UIImage
  @param itemWidth      菜单宽度
  @param otherSetting   其他设置
  */
 + (FWPopupMenu *)showRelyOnView:(UIView *)view
-                         titles:(NSArray *)titles
-                          icons:(NSArray *)icons
+                         titles:(nullable NSArray *)titles
+                          icons:(nullable NSArray *)icons
                       menuWidth:(CGFloat)itemWidth
-                  otherSettings:(void (^) (FWPopupMenu * popupMenu))otherSetting;
+                  otherSettings:(nullable void (^) (FWPopupMenu * popupMenu))otherSetting;
 
 /**
  消失
