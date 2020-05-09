@@ -26,12 +26,12 @@
     // 仅当值发生改变才触发KVO，下同
     if (object != [self fwPropertyForName:name]) {
         [self willChangeValueForKey:name];
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, object ? OBJC_ASSOCIATION_RETAIN_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self didChangeValueForKey:name];
     }
 }
 
-- (void)fwSetPropertyWeak:(id)object forName:(NSString *)name
+- (void)fwSetPropertyAssign:(id)object forName:(NSString *)name
 {
     if (object != [self fwPropertyForName:name]) {
         [self willChangeValueForKey:name];
@@ -44,7 +44,7 @@
 {
     if (object != [self fwPropertyForName:name]) {
         [self willChangeValueForKey:name];
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, object ? OBJC_ASSOCIATION_COPY_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [self didChangeValueForKey:name];
     }
 }
@@ -58,17 +58,17 @@
 
 - (void)fwSetAssociatedObject:(id)object forKey:(const void *)key
 {
-    objc_setAssociatedObject(self, key, object, object ? OBJC_ASSOCIATION_RETAIN_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwSetAssociatedObjectWeak:(id)object forKey:(const void *)key
+- (void)fwSetAssociatedObjectAssign:(id)object forKey:(const void *)key
 {
     objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (void)fwSetAssociatedObjectCopy:(id)object forKey:(const void *)key
 {
-    objc_setAssociatedObject(self, key, object, object ? OBJC_ASSOCIATION_COPY_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (void)fwRemoveAssociatedObjectForKey:(const void *)key

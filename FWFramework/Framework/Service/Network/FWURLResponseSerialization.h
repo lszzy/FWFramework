@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Recursively removes `NSNull` values from a JSON object.
 */
-id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions);
+FOUNDATION_EXPORT id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions);
 
 /**
  The `FWURLResponseSerialization` protocol is adopted by an object that decodes data into a more useful object representation, according to details in the server response. Response serializers may additionally perform validation on the incoming response and data.

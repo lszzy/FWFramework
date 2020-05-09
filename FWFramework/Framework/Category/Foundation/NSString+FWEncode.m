@@ -147,27 +147,12 @@
 
 - (NSString *)fwUrlEncodeComponent
 {
-    CFStringEncoding cfEncoding = kCFStringEncodingUTF8;
-    NSString *str = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                                 NULL,
-                                                                                 (CFStringRef)self,
-                                                                                 NULL,
-                                                                                 CFSTR("!*'();:@&=+$,/?%#[]"),
-                                                                                 cfEncoding
-                                                                                 );
-    return str;
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
 }
 
 - (NSString *)fwUrlDecodeComponent
 {
-    CFStringEncoding cfEncoding = kCFStringEncodingUTF8;
-    NSString *str = (__bridge NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
-                                                                                                 NULL,
-                                                                                                 (CFStringRef)self,
-                                                                                                 CFSTR(""),
-                                                                                                 cfEncoding
-                                                                                                 );
-    return str;
+    return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
 }
 
 - (NSString *)fwUrlEncode
@@ -189,11 +174,9 @@
         if ([string length]) {
             [string appendString:@"&"];
         }
-        CFStringRef escaped = CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef)[[dictionary objectForKey:key] description],
-                                                                      NULL,(CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                      kCFStringEncodingUTF8);
-        [string appendFormat:@"%@=%@", key, escaped];
-        CFRelease(escaped);
+        NSString *value = [[dictionary objectForKey:key] description];
+        value = [value stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
+        [string appendFormat:@"%@=%@", key, value];
     }
     return string;
 }
@@ -202,12 +185,12 @@
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSArray *parameters = [self componentsSeparatedByString:@"&"];
-    for(NSString *parameter in parameters) {
+    for (NSString *parameter in parameters) {
         NSArray *contents = [parameter componentsSeparatedByString:@"="];
-        if([contents count] == 2) {
+        if ([contents count] == 2) {
             NSString *key = [contents objectAtIndex:0];
             NSString *value = [contents objectAtIndex:1];
-            value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            value = [value stringByRemovingPercentEncoding];
             if (key && value) {
                 [dict setObject:value forKey:key];
             }

@@ -10,6 +10,7 @@
 #import "UIGestureRecognizer+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
 #import "NSObject+FWRuntime.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
 @implementation UIScrollView (FWFramework)
@@ -234,12 +235,13 @@
 
 - (id<UIGestureRecognizerDelegate>)fwPanGestureRecognizerDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate));
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate));
+    return value.object;
 }
 
 - (void)setFwPanGestureRecognizerDelegate:(id<UIGestureRecognizerDelegate>)fwPanGestureRecognizerDelegate
 {
-    objc_setAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate), fwPanGestureRecognizerDelegate, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate), [[FWWeakObject alloc] initWithObject:fwPanGestureRecognizerDelegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL (^)(UIGestureRecognizer *))fwShouldBegin

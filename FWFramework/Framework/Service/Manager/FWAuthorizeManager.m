@@ -39,6 +39,8 @@
                 return FWAuthorizeStatusNotDetermined;
         }
     } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
         switch (status) {
             case kABAuthorizationStatusRestricted:
@@ -51,6 +53,7 @@
             default:
                 return FWAuthorizeStatusNotDetermined;
         }
+#pragma clang diagnostic pop
     }
 }
 
@@ -66,6 +69,8 @@
             }
         }];
     } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
         ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
             FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
@@ -75,6 +80,7 @@
                 });
             }
         });
+#pragma clang diagnostic pop
     }
 }
 
