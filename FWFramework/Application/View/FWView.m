@@ -8,13 +8,15 @@
  */
 
 #import "FWView.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
 @implementation UIView (FWEvent)
 
 - (id<FWViewDelegate>)fwViewDelegate
 {
-    return objc_getAssociatedObject(self, @selector(fwViewDelegate));
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwViewDelegate));
+    return value.object;
 }
 
 - (void)setFwViewDelegate:(id<FWViewDelegate>)fwViewDelegate
@@ -22,7 +24,7 @@
     // 仅当值发生改变才触发KVO，下同
     if (fwViewDelegate != [self fwViewDelegate]) {
         [self willChangeValueForKey:@"fwViewDelegate"];
-        objc_setAssociatedObject(self, @selector(fwViewDelegate), fwViewDelegate, OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwViewDelegate), [[FWWeakObject alloc] initWithObject:fwViewDelegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self didChangeValueForKey:@"fwViewDelegate"];
     }
 }

@@ -81,27 +81,35 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  url参数编码，适用于query参数编码
+ *  示例：http://test.com?id=我是中文 =>
+ *       http%3A%2F%2Ftest.com%3Fid%3D%E6%88%91%E6%98%AF%E4%B8%AD%E6%96%87
  *
  *  @return url编码字符串
  */
-- (NSString *)fwUrlEncodeComponent;
+- (nullable NSString *)fwUrlEncodeComponent;
 
 /**
- *  url参数解码
+ *  url参数解码，适用于query参数解码
+ *  示例：http%3A%2F%2Ftest.com%3Fid%3D%E6%88%91%E6%98%AF%E4%B8%AD%E6%96%87 =>
+ *       http://test.com?id=我是中文
  *
  *  @return 原字符串
  */
-- (NSString *)fwUrlDecodeComponent;
+- (nullable NSString *)fwUrlDecodeComponent;
 
 /**
  *  url编码，适用于整个url编码
+ *  示例：http://test.com?id=我是中文 =>
+ *       http://test.com?id=%E6%88%91%E6%98%AF%E4%B8%AD%E6%96%87
  *
  *  @return url编码地址
  */
 - (nullable NSString *)fwUrlEncode;
 
 /**
- *  url解码
+ *  url解码，适用于整个url解码
+ *  示例：http://test.com?id=%E6%88%91%E6%98%AF%E4%B8%AD%E6%96%87 =>
+ *       http://test.com?id=我是中文
  *
  *  @return 原url地址
  */

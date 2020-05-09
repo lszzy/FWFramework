@@ -28,7 +28,7 @@
 {
     if (fwWorkflowName != self.fwWorkflowName) {
         [self willChangeValueForKey:@"fwWorkflowName"];
-        objc_setAssociatedObject(self, @selector(fwWorkflowName), fwWorkflowName, fwWorkflowName ? OBJC_ASSOCIATION_COPY_NONATOMIC : OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwWorkflowName), fwWorkflowName, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [self didChangeValueForKey:@"fwWorkflowName"];
     }
 }

@@ -60,13 +60,18 @@ FWModelArray(TestModelUser);
 @interface TestModelViewController ()
 
 FWPropertyStrong(UITextView *, textView);
+FWPropertyWeak(UIViewController *, weakController);
 
 @end
 
 @implementation TestModelViewController
 
+FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
+
 - (void)renderView
 {
+    self.weakController = self;
+    
     self.textView = [[UITextView alloc] initWithFrame:self.view.bounds];
     self.textView.editable = NO;
     [self.view addSubview:self.textView];

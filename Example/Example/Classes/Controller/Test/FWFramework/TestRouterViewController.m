@@ -68,6 +68,15 @@
 
 @implementation TestRouterViewController
 
+- (void)renderModel
+{
+    NSString *url = @"http://test.com?id=我是中文";
+    NSLog(@"fwUrlEncode: %@", [url fwUrlEncode]);
+    NSLog(@"fwUrlDecode: %@", [[url fwUrlEncode] fwUrlDecode]);
+    NSLog(@"fwUrlEncodeComponent: %@", [url fwUrlEncodeComponent]);
+    NSLog(@"fwUrlDecodeComponent: %@", [[url fwUrlEncodeComponent] fwUrlDecodeComponent]);
+}
+
 - (void)renderData
 {
     NSString *str = @"http://test.com?id=我是中文";

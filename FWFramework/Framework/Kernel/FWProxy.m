@@ -98,6 +98,21 @@
 
 @end
 
+#pragma mark - FWWeakObject
+
+@implementation FWWeakObject
+
+- (instancetype)initWithObject:(id)object
+{
+    self = [super init];
+    if (self) {
+        _object = object;
+    }
+    return self;
+}
+
+@end
+
 #pragma mark - FWBlockProxy
 
 // 内部block

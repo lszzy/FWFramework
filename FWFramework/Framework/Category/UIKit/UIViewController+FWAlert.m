@@ -10,6 +10,7 @@
 #import "UIAlertController+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import "FWPlugin.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIViewController+FWAlert
@@ -302,12 +303,13 @@
 
 - (UIViewController *)fwAlertPriorityParentController
 {
-    return objc_getAssociatedObject(self, @selector(fwAlertPriorityParentController));
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwAlertPriorityParentController));
+    return value.object;
 }
 
 - (void)setFwAlertPriorityParentController:(UIViewController *)fwAlertPriorityParentController
 {
-    objc_setAssociatedObject(self, @selector(fwAlertPriorityParentController), fwAlertPriorityParentController, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(fwAlertPriorityParentController), [[FWWeakObject alloc] initWithObject:fwAlertPriorityParentController], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSInteger)fwAlertPriorityDismissState
