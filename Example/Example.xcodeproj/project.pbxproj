@@ -192,6 +192,8 @@
 		2FF3873E22F7C8B000C1375E /* TestLabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */; };
 		2FF39112236D4B740056DEEA /* TestTableReloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */; };
 		2FF39113236D4B740056DEEA /* TestTableReloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */; };
+		2FF661F024667FC900B65883 /* TestPopupMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF661EF24667FC900B65883 /* TestPopupMenuViewController.m */; };
+		2FF661F124667FC900B65883 /* TestPopupMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF661EF24667FC900B65883 /* TestPopupMenuViewController.m */; };
 		2FF98EF222FEADBD004B6BE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */; };
 		2FFDDFC02203F67200F4A462 /* TestUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */; };
 		BEE6DEE11F6566DE45721A68 /* Pods_Example2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18BA4A82B7569CFB7681EB14 /* Pods_Example2.framework */; };
@@ -397,6 +399,8 @@
 		2FF3873D22F7C8B000C1375E /* TestLabelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLabelViewController.m; sourceTree = "<group>"; };
 		2FF39110236D4B740056DEEA /* TestTableReloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableReloadViewController.h; sourceTree = "<group>"; };
 		2FF39111236D4B740056DEEA /* TestTableReloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableReloadViewController.m; sourceTree = "<group>"; };
+		2FF661EE24667FC900B65883 /* TestPopupMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPopupMenuViewController.h; sourceTree = "<group>"; };
+		2FF661EF24667FC900B65883 /* TestPopupMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPopupMenuViewController.m; sourceTree = "<group>"; };
 		2FF98EF122FEADBD004B6BE1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FFDDFBE2203F67200F4A462 /* TestUrlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestUrlViewController.h; sourceTree = "<group>"; };
 		2FFDDFBF2203F67200F4A462 /* TestUrlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestUrlViewController.m; sourceTree = "<group>"; };
@@ -680,6 +684,8 @@
 				2FCD375322533B1F001E81DB /* TestWorkflowViewController.m */,
 				2F10012B2421136500C1CC3B /* TestJavascriptBridgeViewController.h */,
 				2F10012C2421136500C1CC3B /* TestJavascriptBridgeViewController.m */,
+				2FF661EE24667FC900B65883 /* TestPopupMenuViewController.h */,
+				2FF661EF24667FC900B65883 /* TestPopupMenuViewController.m */,
 			);
 			path = FWFramework;
 			sourceTree = "<group>";
@@ -1218,6 +1224,7 @@
 				2F43859C2318F687003A683C /* TestEmptyViewController.m in Sources */,
 				2F43859D2318F687003A683C /* BaseViewController.m in Sources */,
 				2F43859E2318F687003A683C /* TestBadgeViewController.m in Sources */,
+				2FF661F124667FC900B65883 /* TestPopupMenuViewController.m in Sources */,
 				2F43859F2318F687003A683C /* TestQrcodeViewController.m in Sources */,
 				2F8F3709240037D5003472B5 /* TestThreadViewController.m in Sources */,
 				2F4385A02318F687003A683C /* TestGradientViewController.m in Sources */,
@@ -1299,6 +1306,7 @@
 				2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */,
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
+				2FF661F024667FC900B65883 /* TestPopupMenuViewController.m in Sources */,
 				2F8F3708240037D5003472B5 /* TestThreadViewController.m in Sources */,
 				2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */,
 				2F10012D2421136500C1CC3B /* TestJavascriptBridgeViewController.m in Sources */,
