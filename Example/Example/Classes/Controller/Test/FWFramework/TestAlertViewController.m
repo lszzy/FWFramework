@@ -107,7 +107,7 @@
     [self fwShowConfirmWithTitle:@"确认框标题"
                          message:@"确认框消息"
                           cancel:@"取消"
-                         confirm:@"确定"
+                         confirm:@"我是很长的确定按钮"
                     confirmBlock:^{
                         NSLog(@"点击了确定按钮");
                     }

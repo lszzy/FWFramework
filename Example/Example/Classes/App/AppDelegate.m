@@ -80,13 +80,6 @@
     
     // 优先查找非cancel按钮，找不到则默认cancel
     FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
-        if (alertController.preferredStyle == UIAlertControllerStyleAlert) {
-            for (UIAlertAction *alertAction in alertController.actions) {
-                if (alertAction.style != UIAlertActionStyleCancel) {
-                    return alertAction;
-                }
-            }
-        }
         return alertController.actions.firstObject;
     };
     
