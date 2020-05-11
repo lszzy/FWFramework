@@ -546,7 +546,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, weak) UIStackView *stackView;
 @property (nonatomic, strong) FWAlertAction *cancelAction;
 @property (nonatomic, strong) NSMutableArray *actionLineConstraints;
-@property (nonatomic, strong) NSMutableArray *actions;
+@property (nonatomic, strong) NSMutableArray<FWAlertAction *> *actions;
 @property (nonatomic, assign) UIStackViewDistribution stackViewDistribution;
 @property (nonatomic, assign) UILayoutConstraintAxis axis;
 @property (nonatomic, copy) void (^buttonClickedInActionViewBlock)(NSInteger index);
@@ -700,6 +700,19 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         [NSLayoutConstraint activateConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(contentView)]];
         [[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0] setActive:YES];
         NSLayoutConstraint *equalHeightConstraint = [NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:scrollView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0];
+        // 横向两个按钮时取消始终在左边，纵向两个按钮时取消始终在下边，和系统一致
+        if (self.actions.count == 2 && self.actions.lastObject.style == FWAlertActionStyleCancel) {
+            FWAlertControllerActionView *actionView = self.stackView.arrangedSubviews.lastObject;
+            if (_axis == UILayoutConstraintAxisVertical) {
+                if (actionView.action.style != FWAlertActionStyleCancel) {
+                    [self.stackView insertArrangedSubview:actionView atIndex:0];
+                }
+            } else {
+                if (actionView.action.style == FWAlertActionStyleCancel) {
+                    [self.stackView insertArrangedSubview:actionView atIndex:0];
+                }
+            }
+        }
         // 计算scrolView的最小和最大高度，下面这个if语句是保证当actions的g总个数大于4时，scrollView的高度至少为4个半FW_ACTION_HEIGHT的高度，否则自适应内容
         CGFloat minHeight = 0.0;
         if (_axis == UILayoutConstraintAxisVertical) {
@@ -819,7 +832,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     return _cancelActionLine;
 }
 
-- (NSMutableArray *)actions {
+- (NSMutableArray<FWAlertAction *> *)actions {
     if (!_actions) {
         _actions = [[NSMutableArray alloc] init];
     }
