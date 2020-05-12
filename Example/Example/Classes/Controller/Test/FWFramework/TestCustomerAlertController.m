@@ -2301,7 +2301,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
     alertController.needDialogBlur = NO; // 去除对话框的毛玻璃
     alertController.cornerRadius = 0; // 去除圆角半径
     // 设置背景遮罩为毛玻璃样式
-    [alertController setBackgroundViewAppearanceStyle:FWBackgroundViewAppearanceStyleBlurExtraLight alpha:1.0];
+    [alertController setBackgroundViewAppearanceStyle:UIBlurEffectStyleExtraLight alpha:1.0];
     [self presentViewController:alertController animated:NO completion:^{
         // 执行popView的弹出动画
         [popView open];
@@ -2508,13 +2508,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
     [alertController addAction:action2];
     [alertController addAction:action3];
     
-    FWBackgroundViewAppearanceStyle appearanceStyle = FWBackgroundViewAppearanceStyleBlurDark;
-    if (appearanceStyle == FWBackgroundViewAppearanceStyleTranslucent) {
-        // 0.5是半透明(默认),设置1为不透明,0为全透明
-        [alertController setBackgroundViewAppearanceStyle:appearanceStyle alpha:0.5];
-    } else {
-        [alertController setBackgroundViewAppearanceStyle:appearanceStyle alpha:1];
-    }
+    [alertController setBackgroundViewAppearanceStyle:UIBlurEffectStyleDark alpha:0.5];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
@@ -2539,13 +2533,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
     [alertController addAction:action2];
     [alertController addAction:action3];
     
-    FWBackgroundViewAppearanceStyle appearanceStyle = FWBackgroundViewAppearanceStyleBlurLight;
-    if (appearanceStyle == FWBackgroundViewAppearanceStyleTranslucent) {
-        // 0.5是半透明(默认),设置1为不透明,0为全透明
-        [alertController setBackgroundViewAppearanceStyle:appearanceStyle alpha:0.5];
-    } else {
-        [alertController setBackgroundViewAppearanceStyle:appearanceStyle alpha:1];
-    }
+    [alertController setBackgroundViewAppearanceStyle:UIBlurEffectStyleLight alpha:0.5];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
