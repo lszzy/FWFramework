@@ -94,11 +94,10 @@
     FWAlertAppearance.appearance.destructiveActionColor = [UIColor redColor];
     FWAlertAppearance.appearance.disabledActionColor = [UIColor lightGrayColor];
     
-    // FWAlertAppearance.appearance.actionFont = [UIFont appFontSize:16];
-    // FWAlertAppearance.appearance.preferredActionFont = [UIFont appFontSemiBoldSize:16];
-    FWAlertAppearance.appearance.lineColor = [UIColor appColorHex:0xDDDDDD];
-    FWAlertAppearance.appearance.contentInsets = UIEdgeInsetsMake(32, 16, 24, 16);
-    FWAlertAppearance.appearance.actionFontSize = 16;
+    FWAlertStyle.appearance.lineColor = [UIColor appColorHex:0xDDDDDD];
+    FWAlertStyle.appearance.contentInsets = UIEdgeInsetsMake(32, 16, 24, 16);
+    FWAlertStyle.appearance.actionFont = [UIFont appFontSize:16];
+    FWAlertStyle.appearance.actionBoldFont = [UIFont appFontSemiBoldSize:16];
     
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;

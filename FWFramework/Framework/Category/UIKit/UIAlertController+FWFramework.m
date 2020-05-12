@@ -197,15 +197,12 @@
 
 - (BOOL)controllerEnabled
 {
-    return self.titleColor || self.titleFont ||
-           self.messageColor || self.messageFont;
+    return self.titleColor || self.titleFont || self.messageColor || self.messageFont;
 }
 
 - (BOOL)actionEnabled
 {
-    return self.actionColor || self.actionFont ||
-           self.preferredActionColor || self.preferredActionFont ||
-           self.cancelActionColor || self.destructiveActionColor || self.disabledActionColor;
+    return self.actionColor || self.preferredActionColor || self.cancelActionColor || self.destructiveActionColor || self.disabledActionColor;
 }
 
 @end
