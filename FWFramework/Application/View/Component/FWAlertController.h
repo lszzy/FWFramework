@@ -210,4 +210,25 @@ typedef NS_ENUM(NSInteger, FWAlertActionStyle) {
 + (instancetype)animationIsPresenting:(BOOL)presenting;
 @end
 
+@interface FWAlertStyle : NSObject
++ (instancetype)appearance;
+@property (nonatomic, assign) CGFloat lineWidth;
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+@property (nonatomic, assign) CGFloat actionHeight;
+@property (nonatomic, strong) UIFont *actionFont;
+@property (nonatomic, strong) UIFont *actionBoldFont;
+
+@property (nonatomic, strong) UIColor *normalColor;
+@property (nonatomic, strong) UIColor *selectedColor;
+@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, strong) UIColor *line2Color;
+@property (nonatomic, strong) UIColor *lightLineColor;
+@property (nonatomic, strong) UIColor *darkLineColor;
+@property (nonatomic, strong) UIColor *lightWhite_DarkBlackColor;
+@property (nonatomic, strong) UIColor *lightBlack_DarkWhiteColor;
+@property (nonatomic, strong) UIColor *textViewBackgroundColor;
+@property (nonatomic, strong) UIColor *alertRedColor;
+@property (nonatomic, strong) UIColor *grayColor;
+@end
+
 NS_ASSUME_NONNULL_END

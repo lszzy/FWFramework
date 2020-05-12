@@ -8,83 +8,50 @@
 
 #import "FWAlertController.h"
 #import "UIScreen+FWFramework.h"
-#import "UIFont+FWFramework.h"
 #import "UIAlertController+FWFramework.h"
 
-#define FW_LINE_WIDTH (FWAlertAppearance.appearance.lineWidth > 0 ? FWAlertAppearance.appearance.lineWidth : (1.0 / [UIScreen mainScreen].scale))
-#define FW_CONTENT_INSETS (!UIEdgeInsetsEqualToEdgeInsets(FWAlertAppearance.appearance.contentInsets, UIEdgeInsetsZero) ? FWAlertAppearance.appearance.contentInsets : UIEdgeInsetsMake(20, 15, 20, 15))
-#define FW_ACTION_TITLE_FONTSIZE (FWAlertAppearance.appearance.actionFontSize > 0 ? FWAlertAppearance.appearance.actionFontSize : 18)
-#define FW_ACTION_HEIGHT (FWAlertAppearance.appearance.actionHeight > 0 ? FWAlertAppearance.appearance.actionHeight : 55.0)
+#pragma mark ---------------------------- FWAlertStyle begin --------------------------------
 
-@interface FWColorStyle : NSObject
+@implementation FWAlertStyle
 
-+ (UIColor *)normalColor;
-+ (UIColor *)selectedColor;
-+ (UIColor *)lineColor;
-+ (UIColor *)line2Color;
-+ (UIColor *)lightLineColor;
-+ (UIColor *)darkLineColor;
-+ (UIColor *)lightWhite_DarkBlackColor;
-+ (UIColor *)lightBlack_DarkWhiteColor;
-+ (UIColor *)textViewBackgroundColor;
-+ (UIColor *)alertRedColor;
-+ (UIColor *)grayColor;
-
-+ (UIColor *)colorPairsWithDynamicLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor;
-+ (UIColor *)colorPairsWithStaticLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor;
-@end
-
-@implementation FWColorStyle
-
-+ (UIColor *)normalColor {
-    return [self colorPairsWithDynamicLightColor:[[UIColor whiteColor] colorWithAlphaComponent:0.7]
-                                       darkColor:[UIColor colorWithRed:44.0 / 255.0 green:44.0 / 255.0 blue:44.0 / 255.0 alpha:1.0]];
++ (instancetype)appearance {
+    static FWAlertStyle *appearance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        appearance = [[FWAlertStyle alloc] init];
+    });
+    return appearance;
 }
 
-+ (UIColor *)selectedColor {
-    return [self colorPairsWithDynamicLightColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]
-                                       darkColor:[UIColor colorWithRed:55.0 / 255.0 green:55.0 / 255.0 blue:55.0 / 255.0 alpha:1.0]];
-}
-
-+ (UIColor *)lineColor {
-    return [self colorPairsWithDynamicLightColor:[self lightLineColor]
-                                       darkColor:[self darkLineColor]];
-}
-
-+ (UIColor *)line2Color {
-    return [self colorPairsWithDynamicLightColor:[[UIColor grayColor] colorWithAlphaComponent:0.15]
-                                       darkColor:[UIColor colorWithRed:29.0 / 255.0 green:29.0 / 255.0 blue:29.0 / 255.0 alpha:1.0]];
-}
-
-+ (UIColor *)lightWhite_DarkBlackColor {
-    return [self colorPairsWithDynamicLightColor:[UIColor whiteColor]
-                                       darkColor:[UIColor blackColor]];
-}
-
-+ (UIColor *)lightBlack_DarkWhiteColor {
-    return [self colorPairsWithDynamicLightColor:[UIColor blackColor]
-                                       darkColor:[UIColor whiteColor]];
-}
-
-+ (UIColor *)lightLineColor {
-    return [[UIColor grayColor] colorWithAlphaComponent:0.3];
-}
-
-+ (UIColor *)darkLineColor {
-    return [UIColor colorWithRed:60.0 / 255.0 green:60.0 / 255.0 blue:60.0 / 255.0 alpha:1.0];
-}
-
-+ (UIColor *)textViewBackgroundColor {
-    return [self colorPairsWithDynamicLightColor:[UIColor colorWithRed:247.0 / 255.0 green:247.0 / 255.0 blue:247.0 / 255.0 alpha:1.0]
-                                       darkColor:[UIColor colorWithRed:54.0 / 255.0 green:54.0 / 255.0 blue:54.0 / 255.0 alpha:1.0]];
-}
-
-+ (UIColor *)alertRedColor {
-    return [UIColor systemRedColor];
-}
-
-+ (UIColor *)grayColor {
-    return [UIColor grayColor];
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _lineWidth = (1.0 / [UIScreen mainScreen].scale);
+        _contentInsets = UIEdgeInsetsMake(20, 15, 20, 15);
+        _actionHeight = 55.0;
+        _actionFont = [UIFont systemFontOfSize:18];
+        _actionBoldFont = [UIFont boldSystemFontOfSize:18];
+        
+        _normalColor = [FWAlertStyle colorPairsWithDynamicLightColor:[[UIColor whiteColor] colorWithAlphaComponent:0.7]
+                                                           darkColor:[UIColor colorWithRed:44.0 / 255.0 green:44.0 / 255.0 blue:44.0 / 255.0 alpha:1.0]];
+        _selectedColor = [FWAlertStyle colorPairsWithDynamicLightColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]
+                                                             darkColor:[UIColor colorWithRed:55.0 / 255.0 green:55.0 / 255.0 blue:55.0 / 255.0 alpha:1.0]];
+        _lightLineColor = [[UIColor grayColor] colorWithAlphaComponent:0.3];
+        _darkLineColor = [UIColor colorWithRed:60.0 / 255.0 green:60.0 / 255.0 blue:60.0 / 255.0 alpha:1.0];
+        _lineColor = [FWAlertStyle colorPairsWithDynamicLightColor:_lightLineColor
+                                                         darkColor:_darkLineColor];
+        _line2Color = [FWAlertStyle colorPairsWithDynamicLightColor:[[UIColor grayColor] colorWithAlphaComponent:0.15]
+                                                          darkColor:[UIColor colorWithRed:29.0 / 255.0 green:29.0 / 255.0 blue:29.0 / 255.0 alpha:1.0]];
+        _lightWhite_DarkBlackColor = [FWAlertStyle colorPairsWithDynamicLightColor:[UIColor whiteColor]
+                                                                         darkColor:[UIColor blackColor]];
+        _lightBlack_DarkWhiteColor = [FWAlertStyle colorPairsWithDynamicLightColor:[UIColor blackColor]
+                                                                         darkColor:[UIColor whiteColor]];
+        _textViewBackgroundColor = [FWAlertStyle colorPairsWithDynamicLightColor:[UIColor colorWithRed:247.0 / 255.0 green:247.0 / 255.0 blue:247.0 / 255.0 alpha:1.0]
+                                                                       darkColor:[UIColor colorWithRed:54.0 / 255.0 green:54.0 / 255.0 blue:54.0 / 255.0 alpha:1.0]];
+        _alertRedColor = [UIColor systemRedColor];
+        _grayColor = [UIColor grayColor];
+    }
+    return self;
 }
 
 + (UIColor *)colorPairsWithDynamicLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
@@ -116,6 +83,8 @@
 }
 
 @end
+
+#pragma mark ---------------------------- FWAlertStyle end ----------------------------
 
 #pragma mark ---------------------------- FWAlertAction begin --------------------------------
 
@@ -162,14 +131,14 @@
     self.style = style;
     self.handler = handler;
     if (style == FWAlertActionStyleDestructive) {
-        self.titleColor = [FWColorStyle alertRedColor];
-        self.titleFont = [UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
+        self.titleColor = [FWAlertStyle.appearance alertRedColor];
+        self.titleFont = [FWAlertStyle.appearance actionFont];
     } else if (style == FWAlertActionStyleCancel) {
-        self.titleColor = [FWColorStyle lightBlack_DarkWhiteColor];
-        self.titleFont = [UIFont boldSystemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
+        self.titleColor = [FWAlertStyle.appearance lightBlack_DarkWhiteColor];
+        self.titleFont = [FWAlertStyle.appearance actionBoldFont];
     } else {
-        self.titleColor = [FWColorStyle lightBlack_DarkWhiteColor];
-        self.titleFont = [UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
+        self.titleColor = [FWAlertStyle.appearance lightBlack_DarkWhiteColor];
+        self.titleFont = [FWAlertStyle.appearance actionFont];
     }
     return self;
 }
@@ -183,8 +152,8 @@
 
 - (void)initialize {
     _enabled = YES; // 默认能点击
-    _titleColor = [FWColorStyle lightBlack_DarkWhiteColor];
-    _titleFont = [UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE];
+    _titleColor = [FWAlertStyle.appearance lightBlack_DarkWhiteColor];
+    _titleFont = [FWAlertStyle.appearance actionFont];
     _titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 15);
 }
 
@@ -248,14 +217,14 @@
 @implementation FWInterfaceActionItemSeparatorView
 - (instancetype)init {
     if (self = [super init]) {
-        self.backgroundColor = [FWColorStyle lineColor];
+        self.backgroundColor = [FWAlertStyle.appearance lineColor];
     }
     return self;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.backgroundColor = MIN(self.frame.size.width, self.frame.size.height) > FW_LINE_WIDTH ? [FWColorStyle line2Color] : [FWColorStyle lineColor];
+    self.backgroundColor = MIN(self.frame.size.width, self.frame.size.height) > FWAlertStyle.appearance.lineWidth ? [FWAlertStyle.appearance line2Color] : [FWAlertStyle.appearance lineColor];
 }
 
 @end
@@ -283,7 +252,7 @@
         if (@available(iOS 11.0, *)) {
             self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        self.contentEdgeInsets = FW_CONTENT_INSETS;
+        self.contentEdgeInsets = [FWAlertStyle.appearance contentInsets];
     }
     return self;
 }
@@ -301,7 +270,7 @@
     [super traitCollectionDidChange:previousTraitCollection];
     if (@available(iOS 13.0, *)) {
         // 设置CGColor，不要传previousTraitCollection,previousTraitCollection指的是上一次的模式
-        UIColor *resolvedColor = [[FWColorStyle lineColor] resolvedColorWithTraitCollection:self.traitCollection];
+        UIColor *resolvedColor = [[FWAlertStyle.appearance lineColor] resolvedColorWithTraitCollection:self.traitCollection];
         for (UITextField *textField in self.textFields) {
             textField.layer.borderColor = resolvedColor.CGColor;
         }
@@ -317,10 +286,10 @@
 
 - (void)safeAreaInsetsDidChange {
     [super safeAreaInsetsDidChange];
-    CGFloat safeTop    = self.safeAreaInsets.top < FW_CONTENT_INSETS.top ? FW_CONTENT_INSETS.top : self.safeAreaInsets.top+10;
-    CGFloat safeLeft   = self.safeAreaInsets.left < FW_CONTENT_INSETS.left ? FW_CONTENT_INSETS.left : self.safeAreaInsets.left;
-    CGFloat safeBottom = self.safeAreaInsets.bottom < FW_CONTENT_INSETS.bottom ? FW_CONTENT_INSETS.bottom : self.safeAreaInsets.bottom+6;
-    CGFloat safeRight  = self.safeAreaInsets.right < FW_CONTENT_INSETS.right ? FW_CONTENT_INSETS.right : self.safeAreaInsets.right;
+    CGFloat safeTop    = self.safeAreaInsets.top < FWAlertStyle.appearance.contentInsets.top ? FWAlertStyle.appearance.contentInsets.top : self.safeAreaInsets.top+10;
+    CGFloat safeLeft   = self.safeAreaInsets.left < FWAlertStyle.appearance.contentInsets.left ? FWAlertStyle.appearance.contentInsets.left : self.safeAreaInsets.left;
+    CGFloat safeBottom = self.safeAreaInsets.bottom < FWAlertStyle.appearance.contentInsets.bottom ? FWAlertStyle.appearance.contentInsets.bottom : self.safeAreaInsets.bottom+6;
+    CGFloat safeRight  = self.safeAreaInsets.right < FWAlertStyle.appearance.contentInsets.right ? FWAlertStyle.appearance.contentInsets.right : self.safeAreaInsets.right;
     _contentEdgeInsets = UIEdgeInsetsMake(safeTop, safeLeft, safeBottom, safeRight);
     // 这个block，主要是更新Label的最大预估宽度
     if (self.headerViewSfeAreaDidChangBlock) {
@@ -435,7 +404,7 @@
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textAlignment = NSTextAlignmentCenter;
-        titleLabel.textColor = [FWColorStyle lightBlack_DarkWhiteColor];
+        titleLabel.textColor = [FWAlertStyle.appearance lightBlack_DarkWhiteColor];
         titleLabel.numberOfLines = 0;
         titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:titleLabel];
@@ -449,7 +418,7 @@
         UILabel *messageLabel = [[UILabel alloc] init];
         messageLabel.font = [UIFont systemFontOfSize:18];
         messageLabel.textAlignment = NSTextAlignmentCenter;
-        messageLabel.textColor = [FWColorStyle grayColor];
+        messageLabel.textColor = [FWAlertStyle.appearance grayColor];
         messageLabel.numberOfLines = 0;
         messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:messageLabel];
@@ -502,7 +471,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _afterSpacing = FW_LINE_WIDTH;
+        _afterSpacing = FWAlertStyle.appearance.lineWidth;
     }
     return self;
 }
@@ -523,7 +492,7 @@
     self.actionButton.tintColor = action.tintColor;
     if (action.attributedTitle) {
         // 这里之所以要设置按钮颜色为黑色，是因为如果外界在addAction:之后设置按钮的富文本，那么富文本的颜色在没有采用NSForegroundColorAttributeName的情况下会自动读取按钮上普通文本的颜色，在addAction:之前设置会保持默认色(黑色)，为了在addAction:前后设置富文本保持统一，这里先将按钮置为黑色，富文本就会是黑色
-        [self.actionButton setTitleColor:[FWColorStyle lightBlack_DarkWhiteColor] forState:UIControlStateNormal];
+        [self.actionButton setTitleColor:[FWAlertStyle.appearance lightBlack_DarkWhiteColor] forState:UIControlStateNormal];
         
         if ([action.attributedTitle.string containsString:@"\n"] || [action.attributedTitle.string containsString:@"\r"]) {
             self.actionButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -557,11 +526,11 @@
 }
 
 - (void)touchDown:(UIButton *)sender {
-    sender.backgroundColor = [FWColorStyle selectedColor];
+    sender.backgroundColor = [FWAlertStyle.appearance selectedColor];
 }
 
 - (void)touchDragExit:(UIButton *)sender {
-    sender.backgroundColor = [FWColorStyle normalColor];
+    sender.backgroundColor = [FWAlertStyle.appearance normalColor];
 }
 
 - (FWAlertController *)findAlertController {
@@ -605,7 +574,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     // 按钮的上下内边距之和
     CGFloat topBottom_insetsSum = actionButton.contentEdgeInsets.top+actionButton.contentEdgeInsets.bottom;
     // 文字的上下间距之和,等于FW_ACTION_HEIGHT-默认字体大小,这是为了保证文字上下有一个固定间距值，不至于使文字靠按钮太紧，,由于按钮内容默认垂直居中，所以最终的顶部或底部间距为topBottom_marginSum/2.0,这个间距，几乎等于18号字体时，最小高度为49时的上下间距
-    CGFloat topBottom_marginSum = FW_ACTION_HEIGHT-[UIFont systemFontOfSize:FW_ACTION_TITLE_FONTSIZE].lineHeight;
+    CGFloat topBottom_marginSum = FWAlertStyle.appearance.actionHeight-FWAlertStyle.appearance.actionFont.lineHeight;
     // 按钮高度
     CGFloat buttonH = labelH+topBottom_insetsSum+topBottom_marginSum;
     UIStackView *stackView = (UIStackView *)self.superview;
@@ -618,7 +587,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     buttonHonstraint.priority = 999;
     [actionButtonConstraints addObject:buttonHonstraint];
     // 给一个最小高度，当按钮字体很小时，如果还按照上面的高度计算，高度会比较小
-    NSLayoutConstraint *minHConstraint = [NSLayoutConstraint constraintWithItem:actionButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FW_ACTION_HEIGHT+topBottom_insetsSum];
+    NSLayoutConstraint *minHConstraint = [NSLayoutConstraint constraintWithItem:actionButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FWAlertStyle.appearance.actionHeight+topBottom_insetsSum];
     minHConstraint.priority = UILayoutPriorityRequired;
     [self addConstraints:actionButtonConstraints];
     self.actionButtonConstraints = actionButtonConstraints;
@@ -627,7 +596,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (UIButton *)actionButton {
     if (!_actionButton) {
         UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        actionButton.backgroundColor = [FWColorStyle normalColor];
+        actionButton.backgroundColor = [FWAlertStyle.appearance normalColor];
         actionButton.translatesAutoresizingMaskIntoConstraints = NO;
         actionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         actionButton.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -827,21 +796,21 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (_axis == UILayoutConstraintAxisVertical) {
             if (self.cancelAction) {
                 if (self.actions.count > 4) { // 如果有取消按钮且action总个数大于4，则除去取消按钮之外的其余部分的高度至少为3个半FW_ACTION_HEIGHT的高度,即加上取消按钮就是总高度至少为4个半FW_ACTION_HEIGHT的高度
-                    minHeight = FW_ACTION_HEIGHT * 3.5;
+                    minHeight = FWAlertStyle.appearance.actionHeight * 3.5;
                     equalHeightConstraint.priority = 997.0f; // 优先级为997，必须小于998.0，因为头部如果内容过多时高度也会有限制，头部的优先级为998.0.这里定的规则是，当头部和action部分同时过多时，头部的优先级更高，但是它不能高到以至于action部分小于最小高度
                 } else { // 如果有取消按钮但action的个数大不于4，则该多高就显示多高
                     equalHeightConstraint.priority = 1000.0f; // 由子控件撑起
                 }
             } else {
                 if (self.actions.count > 4) {
-                    minHeight = FW_ACTION_HEIGHT * 4.5;
+                    minHeight = FWAlertStyle.appearance.actionHeight * 4.5;
                     equalHeightConstraint.priority = 997.0f;
                 } else {
                     equalHeightConstraint.priority = 1000.0f;
                 }
             }
         } else {
-            minHeight = FW_ACTION_HEIGHT;
+            minHeight = FWAlertStyle.appearance.actionHeight;
         }
         NSLayoutConstraint *minHeightConstraint = [NSLayoutConstraint constraintWithItem:scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:minHeight];
         minHeightConstraint.priority = 999.0;// 优先级不能大于对话框的最小顶部间距的优先级(999.0)
@@ -909,7 +878,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         UIStackView *stackView = [[UIStackView alloc] init];
         stackView.translatesAutoresizingMaskIntoConstraints = NO;
         stackView.distribution = UIStackViewDistributionFillProportionally;
-        stackView.spacing = FW_LINE_WIDTH; // 该间距腾出来的空间显示分割线
+        stackView.spacing = FWAlertStyle.appearance.lineWidth; // 该间距腾出来的空间显示分割线
         stackView.axis = UILayoutConstraintAxisVertical;
         [self.contentView addSubview:stackView];
         _stackView = stackView;
@@ -1107,11 +1076,11 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     _preferredAction = preferredAction;
     
     [self.actions enumerateObjectsUsingBlock:^(FWAlertAction *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.titleFont.fwIsBold) {
-            obj.titleFont = obj.titleFont.fwNormalFont;
+        if (obj.titleFont == FWAlertStyle.appearance.actionBoldFont) {
+            obj.titleFont = FWAlertStyle.appearance.actionFont;
         }
     }];
-    preferredAction.titleFont = preferredAction.titleFont.fwBoldFont;
+    preferredAction.titleFont = FWAlertStyle.appearance.actionBoldFont;
 }
 
 // 添加文本输入框
@@ -1119,11 +1088,11 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     NSAssert(self.preferredStyle == FWAlertControllerStyleAlert,@"FWAlertController does not allow 'addTextFieldWithConfigurationHandler:' to be called in the style of FWAlertControllerStyleActionSheet");
     UITextField *textField = [[UITextField alloc] init];
     textField.translatesAutoresizingMaskIntoConstraints = NO;
-    textField.backgroundColor = [FWColorStyle textViewBackgroundColor];
+    textField.backgroundColor = [FWAlertStyle.appearance textViewBackgroundColor];
     // 系统的UITextBorderStyleLine样式线条过于黑，所以自己设置
-    textField.layer.borderWidth = FW_LINE_WIDTH;
+    textField.layer.borderWidth = FWAlertStyle.appearance.lineWidth;
     // 这里设置的颜色是静态的，动态设置CGColor,还需要监听深浅模式的切换
-    textField.layer.borderColor = [FWColorStyle colorPairsWithStaticLightColor:[FWColorStyle lineColor] darkColor:[FWColorStyle darkLineColor]].CGColor;
+    textField.layer.borderColor = [FWAlertStyle colorPairsWithStaticLightColor:[FWAlertStyle.appearance lineColor] darkColor:[FWAlertStyle.appearance darkLineColor]].CGColor;
     // 在左边设置一张view，充当光标左边的间距，否则光标紧贴textField不美观
     textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 0)];
     textField.leftView.userInteractionEnabled = NO;
@@ -1231,9 +1200,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     self.transitioningDelegate = self;
     
     _titleFont = [UIFont boldSystemFontOfSize:18];
-    _titleColor = [FWColorStyle lightBlack_DarkWhiteColor];
+    _titleColor = [FWAlertStyle.appearance lightBlack_DarkWhiteColor];
     _messageFont = [UIFont systemFontOfSize:16];
-    _messageColor = [FWColorStyle grayColor];
+    _messageColor = [FWAlertStyle.appearance grayColor];
     _textAlignment = NSTextAlignmentCenter;
     _imageLimitSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
     _backgroundViewAppearanceStyle = -1;
@@ -1424,7 +1393,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     if (!self.componentView.superview) {
         [headerActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:headerActionLine attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:actionSequenceView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     }
-    [headerActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:headerActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FW_LINE_WIDTH]];
+    [headerActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:headerActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FWAlertStyle.appearance.lineWidth]];
 
     [NSLayoutConstraint activateConstraints:headerActionLineConstraints];
     self.headerActionLineConstraints = headerActionLineConstraints;
@@ -1469,7 +1438,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     }
     [componentActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:componentActionLine attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.actionSequenceView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     [componentActionLineConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[componentActionLine]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(componentActionLine)]];
-    [componentActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:componentActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FW_LINE_WIDTH]];
+    [componentActionLineConstraints addObject:[NSLayoutConstraint constraintWithItem:componentActionLine attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:FWAlertStyle.appearance.lineWidth]];
     [NSLayoutConstraint activateConstraints:componentActionLineConstraints];
     self.componentActionLineConstraints = componentActionLineConstraints;
 }
@@ -1526,17 +1495,17 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (self.preferredStyle == FWAlertControllerStyleAlert) {
             for (FWAlertAction *action in self.actions) {
                 // 预估按钮宽度
-                CGFloat preButtonWidth = (MIN(FWScreenWidth, FWScreenHeight) - _minDistanceToEdges * 2 - FW_LINE_WIDTH * (self.actions.count - 1)) / self.actions.count - action.titleEdgeInsets.left - action.titleEdgeInsets.right;
+                CGFloat preButtonWidth = (MIN(FWScreenWidth, FWScreenHeight) - _minDistanceToEdges * 2 - FWAlertStyle.appearance.lineWidth * (self.actions.count - 1)) / self.actions.count - action.titleEdgeInsets.left - action.titleEdgeInsets.right;
                 // 如果action的标题文字总宽度，大于按钮的contentRect的宽度，则说明水平排列会导致文字显示不全，此时垂直排列
                 if (action.attributedTitle) {
-                    if (ceil([action.attributedTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FW_ACTION_HEIGHT) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.width) > preButtonWidth) {
+                    if (ceil([action.attributedTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FWAlertStyle.appearance.actionHeight) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.width) > preButtonWidth) {
                         _actionAxis = UILayoutConstraintAxisVertical;
                         [self updateActionAxis];
                         [self.actionSequenceView setNeedsUpdateConstraints];
                         break; // 一定要break，只要有一个按钮文字过长就垂直排列
                     }
                 } else {
-                    if (ceil([action.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FW_ACTION_HEIGHT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:action.titleFont} context:nil].size.width) > preButtonWidth) {
+                    if (ceil([action.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FWAlertStyle.appearance.actionHeight) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:action.titleFont} context:nil].size.width) > preButtonWidth) {
                         _actionAxis = UILayoutConstraintAxisVertical;
                         [self updateActionAxis];
                         [self.actionSequenceView setNeedsUpdateConstraints];
@@ -1906,7 +1875,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (_customAlertView) {
             self.containerView.backgroundColor = [UIColor clearColor];
         } else {
-            self.containerView.backgroundColor = [FWColorStyle lightWhite_DarkBlackColor];
+            self.containerView.backgroundColor = [FWAlertStyle.appearance lightWhite_DarkBlackColor];
         }
     }
 }
@@ -1974,7 +1943,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (FWInterfaceHeaderScrollView *)headerView {
     if (!_headerView) {
         FWInterfaceHeaderScrollView *headerView = [[FWInterfaceHeaderScrollView alloc] init];
-        headerView.backgroundColor = [FWColorStyle normalColor];
+        headerView.backgroundColor = [FWAlertStyle.appearance normalColor];
         headerView.translatesAutoresizingMaskIntoConstraints = NO;
         __weak typeof(self) weakSelf = self;
         headerView.headerViewSfeAreaDidChangBlock = ^{

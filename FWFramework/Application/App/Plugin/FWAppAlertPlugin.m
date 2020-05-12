@@ -31,25 +31,18 @@
     if (self.attributedTitle || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
     
     UIColor *titleColor = nil;
-    UIFont *titleFont = nil;
     if (!self.enabled) {
         titleColor = FWAlertAppearance.appearance.disabledActionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     } else if (fwIsPreferred) {
         titleColor = FWAlertAppearance.appearance.preferredActionColor;
-        titleFont = FWAlertAppearance.appearance.preferredActionFont;
     } else if (self.style == UIAlertActionStyleDestructive) {
         titleColor = FWAlertAppearance.appearance.destructiveActionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     } else if (self.style == UIAlertActionStyleCancel) {
         titleColor = FWAlertAppearance.appearance.cancelActionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     } else {
         titleColor = FWAlertAppearance.appearance.actionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     }
     if (titleColor) self.titleColor = titleColor;
-    if (titleFont) self.titleFont = titleFont;
 }
 
 @end

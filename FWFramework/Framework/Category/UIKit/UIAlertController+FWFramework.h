@@ -84,25 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 禁用动作颜色，仅全局生效，默认nil
 @property (nonatomic, strong, nullable) UIColor *disabledActionColor;
 
-// 默认动作字体，仅FWAlertController支持，默认nil
-@property (nonatomic, strong, nullable) UIFont *actionFont;
-// 首选动作字体，仅FWAlertController支持，默认nil
-@property (nonatomic, strong, nullable) UIFont *preferredActionFont;
-// 分割线颜色，仅FWAlertController支持，默认nil
-@property (nonatomic, strong, nullable) UIColor *lineColor;
-// 普通颜色，仅FWAlertController支持，默认nil
-@property (nonatomic, strong, nullable) UIColor *normalColor;
-// 已选中颜色，仅FWAlertController支持，默认nil
-@property (nonatomic, strong, nullable) UIColor *selectedColor;
-// 分割线宽度，仅FWAlertController支持，默认0不自定义
-@property (nonatomic, assign) CGFloat lineWidth;
-// 弹窗内容边距，仅FWAlertController支持，默认Zero不自定义
-@property (nonatomic, assign) UIEdgeInsets contentInsets;
-// action标题字号，仅FWAlertController支持，默认0不自定义
-@property (nonatomic, assign) CGFloat actionFontSize;
-// action高度，仅FWAlertController支持，默认0不自定义
-@property (nonatomic, assign) CGFloat actionHeight;
-
 @end
 
 NS_ASSUME_NONNULL_END
