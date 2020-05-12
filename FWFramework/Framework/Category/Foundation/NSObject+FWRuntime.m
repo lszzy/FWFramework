@@ -8,6 +8,7 @@
  */
 
 #import "NSObject+FWRuntime.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <UIKit/UIKit.h>
@@ -74,6 +75,34 @@
 - (void)fwRemoveAssociatedObjectForKey:(const void *)key
 {
     objc_setAssociatedObject(self, key, nil, OBJC_ASSOCIATION_ASSIGN);
+}
+
+#pragma mark - Weak
+
+- (id)fwPropertyWeakForName:(NSString *)name
+{
+    FWWeakObject *weakObject = objc_getAssociatedObject(self, NSSelectorFromString(name));
+    return weakObject.object;
+}
+
+- (void)fwSetPropertyWeak:(id)object forName:(NSString *)name
+{
+    if (object != [self fwPropertyForName:name]) {
+        [self willChangeValueForKey:name];
+        objc_setAssociatedObject(self, NSSelectorFromString(name), [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:name];
+    }
+}
+
+- (id)fwAssociatedObjectWeakForKey:(const void *)key
+{
+    FWWeakObject *weakObject = objc_getAssociatedObject(self, key);
+    return weakObject.object;
+}
+
+- (void)fwSetAssociatedObjectWeak:(id)object forKey:(const void *)key
+{
+    objc_setAssociatedObject(self, key, [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - Swizzle
