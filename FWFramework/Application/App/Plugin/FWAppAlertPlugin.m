@@ -20,6 +20,20 @@
 
 @implementation FWAlertAction (FWAlertPlugin)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(setEnabled:) with:@selector(fwInnerSetEnabled:)];
+    });
+}
+
+- (void)fwInnerSetEnabled:(BOOL)enabled
+{
+    [self fwInnerSetEnabled:enabled];
+    self.fwIsPreferred = self.fwIsPreferred;
+}
+
 - (BOOL)fwIsPreferred
 {
     return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
