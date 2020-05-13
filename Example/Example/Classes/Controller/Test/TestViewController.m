@@ -98,6 +98,7 @@
                                              @[@"FWState", @"TestStateViewController"],
                                              @[@"FWSegmentedControl", @"TestSegmentViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
+                                             @[@"FWPopupMenu", @"TestPopupMenuViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],

@@ -20,6 +20,20 @@
 
 @implementation FWAlertAction (FWAlertPlugin)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self fwSwizzleInstanceMethod:@selector(setEnabled:) with:@selector(fwInnerSetEnabled:)];
+    });
+}
+
+- (void)fwInnerSetEnabled:(BOOL)enabled
+{
+    [self fwInnerSetEnabled:enabled];
+    self.fwIsPreferred = self.fwIsPreferred;
+}
+
 - (BOOL)fwIsPreferred
 {
     return [objc_getAssociatedObject(self, @selector(fwIsPreferred)) boolValue];
@@ -31,25 +45,18 @@
     if (self.attributedTitle || self.title.length < 1 || !FWAlertAppearance.appearance.actionEnabled) return;
     
     UIColor *titleColor = nil;
-    UIFont *titleFont = nil;
     if (!self.enabled) {
         titleColor = FWAlertAppearance.appearance.disabledActionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     } else if (fwIsPreferred) {
         titleColor = FWAlertAppearance.appearance.preferredActionColor;
-        titleFont = FWAlertAppearance.appearance.preferredActionFont;
     } else if (self.style == UIAlertActionStyleDestructive) {
         titleColor = FWAlertAppearance.appearance.destructiveActionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     } else if (self.style == UIAlertActionStyleCancel) {
         titleColor = FWAlertAppearance.appearance.cancelActionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     } else {
         titleColor = FWAlertAppearance.appearance.actionColor;
-        titleFont = FWAlertAppearance.appearance.actionFont;
     }
     if (titleColor) self.titleColor = titleColor;
-    if (titleFont) self.titleFont = titleFont;
 }
 
 @end
@@ -104,29 +111,14 @@
                                                                 message:message
                                                          preferredStyle:(FWAlertControllerStyle)style];
     
-    // 添加输入框并初始化输入框
+    // 添加输入框
     for (NSInteger promptIndex = 0; promptIndex < promptCount; promptIndex++) {
         [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
             if (promptBlock) promptBlock(textField, promptIndex);
         }];
     }
     
-    // 添加取消按钮，Alert仅有两个按钮时取消按钮放在左边，和系统一致
-    FWAlertAction *cancelAction = nil;
-    BOOL isHorizontal = NO;
-    if (cancel != nil) {
-        cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
-            if (cancelBlock) cancelBlock();
-        }];
-        if (alertController.preferredStyle == FWAlertControllerStyleAlert && actions.count == 1) {
-            isHorizontal = YES;
-        }
-    }
-    
     // 添加动作按钮
-    if (cancelAction && isHorizontal) {
-        [alertController addAction:cancelAction];
-    }
     for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
         FWAlertAction *alertAction = [self actionWithObject:actions[actionIndex] style:FWAlertActionStyleDefault handler:^(FWAlertAction *action) {
             if (actionBlock) {
@@ -140,7 +132,12 @@
         }];
         [alertController addAction:alertAction];
     }
-    if (cancelAction && !isHorizontal) {
+    
+    // 添加取消按钮
+    if (cancel != nil) {
+        FWAlertAction *cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
+            if (cancelBlock) cancelBlock();
+        }];
         [alertController addAction:cancelAction];
     }
     

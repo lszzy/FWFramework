@@ -41,6 +41,7 @@
 #import "FWPageControl.h"
 #import "FWPagerView.h"
 #import "FWPhotoBrowser.h"
+#import "FWPopupMenu.h"
 #import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"

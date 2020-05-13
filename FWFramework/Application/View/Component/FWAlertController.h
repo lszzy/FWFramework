@@ -35,18 +35,10 @@ typedef NS_ENUM(NSInteger, FWAlertActionStyle) {
     FWAlertActionStyleDestructive   // 红色字体样式
 };
 
-typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
-    FWBackgroundViewAppearanceStyleTranslucent = 0,  // 无毛玻璃效果,黑色透明(默认是0.5透明)
-    FWBackgroundViewAppearanceStyleBlurDark,
-    FWBackgroundViewAppearanceStyleBlurExtraLight,
-    FWBackgroundViewAppearanceStyleBlurLight,
-};
-
-#pragma mark - FWAlertAction
+// ===================================================== FWAlertAction =====================================================
 
 @interface FWAlertAction : NSObject <NSCopying>
 
-/** 创建一个action */
 + (instancetype)actionWithTitle:(nullable NSString *)title style:(FWAlertActionStyle)style handler:(void (^ __nullable)(FWAlertAction *action))handler;
 
 /** action的标题 */
@@ -57,8 +49,8 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 @property(nullable, nonatomic, copy) UIImage *image;
 /** title跟image之间的间距 */
 @property (nonatomic, assign) CGFloat imageTitleSpacing;
-/** 样式 */
-@property(nonatomic, readonly) FWAlertActionStyle style;
+/** 渲染颜色,当外部的图片使用了UIImageRenderingModeAlwaysTemplate时,使用该属性可改变图片的颜色 */
+@property (nonatomic, strong) UIColor *tintColor;
 /** 是否能点击,默认为YES */
 @property(nonatomic, getter=isEnabled) BOOL enabled;
 /** action的标题颜色,这个颜色只是普通文本的颜色，富文本颜色需要用NSForegroundColorAttributeName */
@@ -68,21 +60,24 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 /** action的标题的内边距，如果在不改变字体的情况下想增大action的高度，可以设置该属性的top和bottom值,默认UIEdgeInsetsMake(0, 15, 0, 15) */
 @property(nonatomic, assign) UIEdgeInsets titleEdgeInsets;
 
+/** 样式 */
+@property(nonatomic, readonly) FWAlertActionStyle style;
+
 @end
 
-#pragma mark - FWAlertController
+// ===================================================== FWAlertController =====================================================
 
 @protocol FWAlertControllerDelegate;
 
 /*!
  @brief FWAlertController
- 
- @see https://github.com/SPStore/SPAlertController
+
+ @see https://github.com/FWStore/FWAlertController
  */
 @interface FWAlertController : UIViewController
 
 + (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle;
-+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType; // animationType传FWAlertAnimationTypeDefault则跟第一个类方法等效
++ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType;
 
 - (void)addAction:(FWAlertAction *)action;
 @property (nonatomic, readonly) NSArray<FWAlertAction *> *actions;
@@ -118,6 +113,8 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 @property(nonatomic, assign) NSTextAlignment textAlignment;
 /** 头部图标的限制大小,默认无穷大 */
 @property (nonatomic, assign) CGSize imageLimitSize;
+/** 图片的tintColor,当外部的图片使用了UIImageRenderingModeAlwaysTemplate时,该属性可起到作用 */
+@property (nonatomic, strong) UIColor *imageTintColor;
 
 /*
  * action水平排列还是垂直排列
@@ -156,11 +153,13 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 - (CGFloat)customSpacingAfterAction:(FWAlertAction *)action API_AVAILABLE(ios(11.0));
 
 /** 设置蒙层的外观样式,可通过alpha调整透明度 */
-- (void)setBackgroundViewAppearanceStyle:(FWBackgroundViewAppearanceStyle)style alpha:(CGFloat)alpha;
+- (void)setBackgroundViewAppearanceStyle:(UIBlurEffectStyle)style alpha:(CGFloat)alpha;
 
 // 插入一个组件view，位置处于头部和action部分之间，要求头部和action部分同时存在
 - (void)insertComponentView:(nonnull UIView *)componentView;
 
+
+// ---------------------------------------------- custom -----------------------------------------------------
 /**
  创建控制器(自定义整个对话框)
  
@@ -197,13 +196,11 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 @end
 
 @protocol FWAlertControllerDelegate <NSObject>
-
 @optional;
 - (void)willPresentAlertController:(FWAlertController *)alertController; // 将要present
 - (void)didPresentAlertController:(FWAlertController *)alertController;  // 已经present
 - (void)willDismissAlertController:(FWAlertController *)alertController; // 将要dismiss
 - (void)didDismissAlertController:(FWAlertController *)alertController;  // 已经dismiss
-
 @end
 
 @interface FWAlertPresentationController : UIPresentationController
@@ -211,6 +208,27 @@ typedef NS_ENUM(NSInteger, FWBackgroundViewAppearanceStyle) {
 
 @interface FWAlertAnimation : NSObject <UIViewControllerAnimatedTransitioning>
 + (instancetype)animationIsPresenting:(BOOL)presenting;
+@end
+
+@interface FWAlertStyle : NSObject
++ (instancetype)appearance;
+@property (nonatomic, assign) CGFloat lineWidth;
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+@property (nonatomic, assign) CGFloat actionHeight;
+@property (nonatomic, strong) UIFont *actionFont;
+@property (nonatomic, strong) UIFont *actionBoldFont;
+
+@property (nonatomic, strong) UIColor *normalColor;
+@property (nonatomic, strong) UIColor *selectedColor;
+@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, strong) UIColor *line2Color;
+@property (nonatomic, strong) UIColor *lightLineColor;
+@property (nonatomic, strong) UIColor *darkLineColor;
+@property (nonatomic, strong) UIColor *lightWhite_DarkBlackColor;
+@property (nonatomic, strong) UIColor *lightBlack_DarkWhiteColor;
+@property (nonatomic, strong) UIColor *textViewBackgroundColor;
+@property (nonatomic, strong) UIColor *alertRedColor;
+@property (nonatomic, strong) UIColor *grayColor;
 @end
 
 NS_ASSUME_NONNULL_END

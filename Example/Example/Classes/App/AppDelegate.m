@@ -80,13 +80,6 @@
     
     // 优先查找非cancel按钮，找不到则默认cancel
     FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
-        if (alertController.preferredStyle == UIAlertControllerStyleAlert) {
-            for (UIAlertAction *alertAction in alertController.actions) {
-                if (alertAction.style != UIAlertActionStyleCancel) {
-                    return alertAction;
-                }
-            }
-        }
         return alertController.actions.firstObject;
     };
     
@@ -101,11 +94,10 @@
     FWAlertAppearance.appearance.destructiveActionColor = [UIColor redColor];
     FWAlertAppearance.appearance.disabledActionColor = [UIColor lightGrayColor];
     
-    // FWAlertAppearance.appearance.actionFont = [UIFont appFontSize:16];
-    // FWAlertAppearance.appearance.preferredActionFont = [UIFont appFontSemiBoldSize:16];
-    FWAlertAppearance.appearance.lineColor = [UIColor appColorHex:0xDDDDDD];
-    FWAlertAppearance.appearance.contentInsets = UIEdgeInsetsMake(32, 16, 24, 16);
-    FWAlertAppearance.appearance.actionFontSize = 16;
+    FWAlertStyle.appearance.lineColor = [UIColor appColorHex:0xDDDDDD];
+    FWAlertStyle.appearance.contentInsets = UIEdgeInsetsMake(32, 16, 24, 16);
+    FWAlertStyle.appearance.actionFont = [UIFont appFontSize:16];
+    FWAlertStyle.appearance.actionBoldFont = [UIFont appFontSemiBoldSize:16];
     
     UIViewController *homeController = [ObjcController new];
     homeController.hidesBottomBarWhenPushed = NO;
