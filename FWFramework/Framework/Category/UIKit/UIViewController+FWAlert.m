@@ -221,7 +221,7 @@
                                                                                message:message
                                                                         preferredStyle:style];
     
-    // 添加输入框并初始化输入框
+    // 添加输入框
     for (NSInteger promptIndex = 0; promptIndex < promptCount; promptIndex++) {
         [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
             if (promptBlock) promptBlock(textField, promptIndex);

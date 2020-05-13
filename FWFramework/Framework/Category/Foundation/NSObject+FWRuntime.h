@@ -459,6 +459,40 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)fwRemoveAssociatedObjectForKey:(const void *)key;
 
+#pragma mark - Weak
+
+/*!
+ @brief 读取弱引用关联属性，需和fwSetPropertyWeak配套使用(OC不支持weak关联属性)
+ 
+ @param name 属性名称
+ @return 属性值
+ */
+- (nullable id)fwPropertyWeakForName:(NSString *)name;
+
+/*!
+ @brief 设置弱引用关联属性，支持KVO，需和fwPropertyWeakForName配套使用(OC不支持weak关联属性)
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 读取弱引用关联对象，需和fwSetAssociatedObjectWeak配套使用(OC不支持weak关联属性)
+ 
+ @param key 键名
+ @return 返回关联对象
+ */
+- (nullable id)fwAssociatedObjectWeakForKey:(const void *)key;
+
+/*!
+ @brief 设置弱引用关联对象，不含KVO，需和fwAssociatedObjectWeakForKey配套使用(OC不支持weak关联属性)
+ 
+ @param object 关联对象
+ @param key 键名
+ */
+- (void)fwSetAssociatedObjectWeak:(nullable id)object forKey:(const void *)key;
+
 #pragma mark - Swizzle
 
 /*!
