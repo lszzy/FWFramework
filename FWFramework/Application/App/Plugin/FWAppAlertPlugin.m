@@ -93,6 +93,16 @@
 
 @implementation FWAppAlertPlugin
 
++ (FWAppAlertPlugin *)sharedInstance
+{
+    static FWAppAlertPlugin *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWAppAlertPlugin alloc] init];
+    });
+    return instance;
+}
+
 - (void)fwViewController:(UIViewController *)viewController
                showAlert:(UIAlertControllerStyle)style
                    title:(id)title
@@ -129,6 +139,57 @@
                 }
                 actionBlock(values.copy, actionIndex);
             }
+        }];
+        [alertController addAction:alertAction];
+    }
+    
+    // 添加取消按钮
+    if (cancel != nil) {
+        FWAlertAction *cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
+            if (cancelBlock) cancelBlock();
+        }];
+        [alertController addAction:cancelAction];
+    }
+    
+    // 添加首选按钮
+    if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
+        FWAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
+        if (preferredAction) {
+            alertController.preferredAction = preferredAction;
+        }
+    }
+    
+    // 自定义Alert
+    if (customBlock) {
+        customBlock(alertController);
+    }
+    
+    // 显示Alert
+    alertController.fwAlertPriorityEnabled = YES;
+    alertController.fwAlertPriority = priority;
+    [alertController fwAlertPriorityPresentIn:viewController];
+}
+
+- (void)fwViewController:(UIViewController *)viewController
+               showAlert:(UIAlertControllerStyle)style
+              headerView:(UIView *)headerView
+                  cancel:(id)cancel
+                 actions:(NSArray *)actions
+             actionBlock:(void (^)(NSInteger))actionBlock
+             cancelBlock:(void (^)(void))cancelBlock
+             customBlock:(void (^)(id _Nonnull))customBlock
+                priority:(FWAlertPriority)priority
+{
+    // 初始化Alert
+    FWAlertController *alertController = [FWAlertController alertControllerWithCustomHeaderView:headerView
+                                                                                 preferredStyle:(FWAlertControllerStyle)style
+                                                                                  animationType:FWAlertAnimationTypeDefault];
+    alertController.tapBackgroundViewDismiss = (alertController.preferredStyle == FWAlertControllerStyleActionSheet);
+    
+    // 添加动作按钮
+    for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
+        FWAlertAction *alertAction = [self actionWithObject:actions[actionIndex] style:FWAlertActionStyleDefault handler:^(FWAlertAction *action) {
+            if (actionBlock) actionBlock(actionIndex);
         }];
         [alertController addAction:alertAction];
     }
