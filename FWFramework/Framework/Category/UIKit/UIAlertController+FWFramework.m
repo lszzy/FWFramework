@@ -10,6 +10,7 @@
 #import "UIAlertController+FWFramework.h"
 #import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIAlertAction+FWFramework
@@ -77,9 +78,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerAlertViewDidLoad)];
-        if (@available(iOS 9.0, *)) {
-            [self fwSwizzleInstanceMethod:@selector(setPreferredAction:) with:@selector(fwInnerSetPreferredAction:)];
-        }
     });
 }
 
@@ -108,16 +106,6 @@
             return YES;
         }];
     }
-}
-
-- (void)fwInnerSetPreferredAction:(UIAlertAction *)preferredAction
-{
-    [self fwInnerSetPreferredAction:preferredAction];
-    
-    [self.actions enumerateObjectsUsingBlock:^(UIAlertAction *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
-    }];
-    preferredAction.fwIsPreferred = YES;
 }
 
 + (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle
@@ -152,6 +140,15 @@
             messageAttributes[NSForegroundColorAttributeName] = FWAlertAppearance.appearance.messageColor;
         }
         alertController.fwAttributedMessage = [[NSAttributedString alloc] initWithString:alertController.message attributes:messageAttributes];
+    }
+    
+    if (@available(iOS 9.0, *)) {
+        [alertController fwObserveProperty:@"preferredAction" block:^(UIAlertController *object, NSDictionary *change) {
+            [object.actions enumerateObjectsUsingBlock:^(UIAlertAction *obj, NSUInteger idx, BOOL *stop) {
+                if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
+            }];
+            object.preferredAction.fwIsPreferred = YES;
+        }];
     }
     
     return alertController;

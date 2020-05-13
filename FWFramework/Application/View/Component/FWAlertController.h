@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, FWAlertActionStyle) {
 /*!
  @brief FWAlertController
 
- @see https://github.com/FWStore/FWAlertController
+ @see https://github.com/SPStore/SPAlertController
  */
 @interface FWAlertController : UIViewController
 

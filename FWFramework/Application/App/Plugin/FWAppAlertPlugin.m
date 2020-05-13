@@ -9,7 +9,7 @@
 #import "FWAppAlertPlugin.h"
 #import "UIAlertController+FWFramework.h"
 #import "FWAlertController.h"
-#import "NSObject+FWRuntime.h"
+#import "FWMessage.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWAlertAction+FWAlertPlugin
@@ -19,20 +19,6 @@
 @end
 
 @implementation FWAlertAction (FWAlertPlugin)
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(setEnabled:) with:@selector(fwInnerSetEnabled:)];
-    });
-}
-
-- (void)fwInnerSetEnabled:(BOOL)enabled
-{
-    [self fwInnerSetEnabled:enabled];
-    self.fwIsPreferred = self.fwIsPreferred;
-}
 
 - (BOOL)fwIsPreferred
 {
@@ -61,37 +47,19 @@
 
 @end
 
-#pragma mark - FWAlertController+FWAlertPlugin
-
-@interface FWAlertController (FWAlertPlugin)
-
-@end
-
-@implementation FWAlertController (FWAlertPlugin)
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(setPreferredAction:) with:@selector(fwInnerSetPreferredAction:)];
-    });
-}
-
-- (void)fwInnerSetPreferredAction:(FWAlertAction *)preferredAction
-{
-    [self fwInnerSetPreferredAction:preferredAction];
-    
-    [self.actions enumerateObjectsUsingBlock:^(FWAlertAction *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
-    }];
-    preferredAction.fwIsPreferred = YES;
-}
-
-@end
-
 #pragma mark - FWAppAlertPlugin
 
 @implementation FWAppAlertPlugin
+
++ (FWAppAlertPlugin *)sharedInstance
+{
+    static FWAppAlertPlugin *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWAppAlertPlugin alloc] init];
+    });
+    return instance;
+}
 
 - (void)fwViewController:(UIViewController *)viewController
                showAlert:(UIAlertControllerStyle)style
@@ -160,6 +128,55 @@
     [alertController fwAlertPriorityPresentIn:viewController];
 }
 
+- (void)fwViewController:(UIViewController *)viewController
+               showAlert:(UIAlertControllerStyle)style
+              headerView:(UIView *)headerView
+                  cancel:(id)cancel
+                 actions:(NSArray *)actions
+             actionBlock:(void (^)(NSInteger))actionBlock
+             cancelBlock:(void (^)(void))cancelBlock
+             customBlock:(void (^)(id _Nonnull))customBlock
+                priority:(FWAlertPriority)priority
+{
+    // 初始化Alert
+    FWAlertController *alertController = [self alertControllerWithHeaderView:headerView
+                                                              preferredStyle:(FWAlertControllerStyle)style];
+    
+    // 添加动作按钮
+    for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
+        FWAlertAction *alertAction = [self actionWithObject:actions[actionIndex] style:FWAlertActionStyleDefault handler:^(FWAlertAction *action) {
+            if (actionBlock) actionBlock(actionIndex);
+        }];
+        [alertController addAction:alertAction];
+    }
+    
+    // 添加取消按钮
+    if (cancel != nil) {
+        FWAlertAction *cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel handler:^(FWAlertAction *action) {
+            if (cancelBlock) cancelBlock();
+        }];
+        [alertController addAction:cancelAction];
+    }
+    
+    // 添加首选按钮
+    if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
+        FWAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
+        if (preferredAction) {
+            alertController.preferredAction = preferredAction;
+        }
+    }
+    
+    // 自定义Alert
+    if (customBlock) {
+        customBlock(alertController);
+    }
+    
+    // 显示Alert
+    alertController.fwAlertPriorityEnabled = YES;
+    alertController.fwAlertPriority = priority;
+    [alertController fwAlertPriorityPresentIn:viewController];
+}
+
 - (FWAlertController *)alertControllerWithTitle:(id)title message:(id)message preferredStyle:(FWAlertControllerStyle)preferredStyle
 {
     NSAttributedString *attributedTitle = [title isKindOfClass:[NSAttributedString class]] ? title : nil;
@@ -195,6 +212,30 @@
         alertController.attributedMessage = [[NSAttributedString alloc] initWithString:alertController.message attributes:messageAttributes];
     }
     
+    [alertController fwObserveProperty:@"preferredAction" block:^(FWAlertController *object, NSDictionary *change) {
+        [object.actions enumerateObjectsUsingBlock:^(FWAlertAction *obj, NSUInteger idx, BOOL *stop) {
+            if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
+        }];
+        object.preferredAction.fwIsPreferred = YES;
+    }];
+    
+    return alertController;
+}
+
+- (FWAlertController *)alertControllerWithHeaderView:(UIView *)headerView preferredStyle:(FWAlertControllerStyle)preferredStyle
+{
+    FWAlertController *alertController = [FWAlertController alertControllerWithCustomHeaderView:headerView
+                                                                                 preferredStyle:preferredStyle
+                                                                                  animationType:FWAlertAnimationTypeDefault];
+    alertController.tapBackgroundViewDismiss = (preferredStyle == FWAlertControllerStyleActionSheet);
+    
+    [alertController fwObserveProperty:@"preferredAction" block:^(FWAlertController *object, NSDictionary *change) {
+        [object.actions enumerateObjectsUsingBlock:^(FWAlertAction *obj, NSUInteger idx, BOOL *stop) {
+            if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
+        }];
+        object.preferredAction.fwIsPreferred = YES;
+    }];
+    
     return alertController;
 }
 
@@ -210,6 +251,10 @@
     } else {
         alertAction.fwIsPreferred = NO;
     }
+    
+    [alertAction fwObserveProperty:@"enabled" block:^(FWAlertAction *object, NSDictionary *change) {
+        object.fwIsPreferred = object.fwIsPreferred;
+    }];
     
     return alertAction;
 }

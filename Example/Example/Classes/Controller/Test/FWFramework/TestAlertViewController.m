@@ -40,6 +40,8 @@
                                          @[@"操作表(简单)", @"onSheet1"],
                                          @[@"操作表(详细)", @"onSheet2"],
                                          @[@"弹出框(完整)", @"onAlertF"],
+                                         @[@"弹出框(头部视图)", @"onAlertH"],
+                                         @[@"弹出框(整个视图)", @"onAlertV"],
                                          @[@"警告框(样式)", @"onAlertA"],
                                          @[@"操作表(样式)", @"onSheetA"],
                                          @[@"警告框(优先)", @"onAlertP"],
@@ -235,6 +237,49 @@
                         }
                     }
                       priority:FWAlertPriorityNormal];
+}
+
+- (void)onAlertH
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+    headerView.backgroundColor = UIColor.whiteColor;
+    
+    [[FWAppAlertPlugin sharedInstance] fwViewController:self
+                                              showAlert:UIAlertControllerStyleAlert
+                                             headerView:headerView
+                                                 cancel:@"取消"
+                                                actions:@[@"确定"]
+                                            actionBlock:^(NSInteger index) {
+                                                NSLog(@"点击了确定按钮");
+                                            }
+                                            cancelBlock:^{
+                                                NSLog(@"点击了取消按钮");
+                                            }
+                                            customBlock:nil
+                                               priority:FWAlertPriorityNormal];
+}
+
+- (void)onAlertV
+{
+    UIView *alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+    alertView.backgroundColor = UIColor.whiteColor;
+    FWWeakifySelf();
+    [alertView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [[FWAppAlertPlugin sharedInstance] fwViewController:self
+                                              showAlert:UIAlertControllerStyleAlert
+                                             headerView:alertView
+                                                 cancel:nil
+                                                actions:nil
+                                            actionBlock:nil
+                                            cancelBlock:nil
+                                            customBlock:^(FWAlertController *alertController) {
+                                                alertController.tapBackgroundViewDismiss = YES;
+                                            }
+                                               priority:FWAlertPriorityNormal];
 }
 
 - (void)onAlertA
