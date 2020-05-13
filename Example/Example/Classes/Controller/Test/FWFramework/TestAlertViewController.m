@@ -234,9 +234,6 @@
                         alertController.actions[2].enabled = NO;
                         if ([alertController isKindOfClass:[FWAlertController class]]) {
                             ((FWAlertController *)alertController).image = [UIImage fwImageWithAppIcon];
-                            UIView *componentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-                            componentView.backgroundColor = UIColor.redColor;
-                            [(FWAlertController *)alertController insertComponentView:componentView];
                         }
                     }
                       priority:FWAlertPriorityNormal];
