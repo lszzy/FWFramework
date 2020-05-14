@@ -89,8 +89,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 打开AppStore评论页
 + (void)fwOpenAppReview:(NSString *)appId;
 
-// 判断URL是否是App Store链接，支持NSString|NSURL
+// 判断URL是否是AppStore链接，支持NSString|NSURL
 + (BOOL)fwIsAppStoreURL:(id)url;
+
+// 判断URL是否是安全的AppScheme链接(如AppStore|电话|设置等)，支持NSString|NSURL
++ (BOOL)fwIsAppSchemeURL:(id)url;
 
 // 发送邮件
 + (void)fwSendEmail:(NSString *)email;
