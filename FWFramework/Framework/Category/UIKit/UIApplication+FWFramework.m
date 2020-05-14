@@ -218,20 +218,35 @@
     return NO;
 }
 
++ (BOOL)fwIsAppSchemeURL:(id)url
+{
+    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    if (nsurl.scheme && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme]) {
+        return YES;
+    }
+    if ([self fwIsAppStoreURL:nsurl]) {
+        return YES;
+    }
+    if (nsurl.absoluteString && [nsurl.absoluteString isEqualToString:UIApplicationOpenSettingsURLString]) {
+        return YES;
+    }
+    return NO;
+}
+
 + (void)fwSendEmail:(NSString *)email
 {
-    [self fwOpenURL:[NSString stringWithFormat:@"mailto://%@", email]];
+    [self fwOpenURL:[NSString stringWithFormat:@"mailto:%@", email]];
 }
 
 + (void)fwSendSms:(NSString *)phone
 {
-    [self fwOpenURL:[NSString stringWithFormat:@"sms://%@", phone]];
+    [self fwOpenURL:[NSString stringWithFormat:@"sms:%@", phone]];
 }
 
 + (void)fwMakeCall:(NSString *)phone
 {
     // tel:为直接拨打电话
-    [self fwOpenURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
+    [self fwOpenURL:[NSString stringWithFormat:@"telprompt:%@", phone]];
 }
 
 + (AVAudioPlayer *)fwPlaySound:(NSString *)file
