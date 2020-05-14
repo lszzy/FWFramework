@@ -278,7 +278,8 @@
 
 - (BOOL)fwIsFormatUrl
 {
-    return [self fwIsFormatRegex:@"http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?"];
+    // return [self fwIsFormatRegex:@"http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?"];
+    return [self hasPrefix:@"http://"] || [self hasPrefix:@"https://"];
 }
 
 - (BOOL)fwIsFormatEmail
