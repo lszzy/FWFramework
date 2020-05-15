@@ -213,6 +213,7 @@
 		2F1E626922BD4A2B00A1AB49 /* UIView+FWLayoutChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */; };
 		2F1F98CE246E673D0025DA26 /* FWModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F98CC246E673D0025DA26 /* FWModel.m */; };
 		2F1F98CF246E673D0025DA26 /* FWModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1F98CD246E673D0025DA26 /* FWModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1F98D1246E68190025DA26 /* FWModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F98D0246E68190025DA26 /* FWModel.swift */; };
 		2F2121D72408E49D00F74653 /* WKWebView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2121D52408E49D00F74653 /* WKWebView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2121D82408E49D00F74653 /* WKWebView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121D62408E49D00F74653 /* WKWebView+FWFramework.m */; };
 		2F2121EE2408E80600F74653 /* UIImageView+FWNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121DE2408E80500F74653 /* UIImageView+FWNetwork.m */; };
@@ -567,6 +568,7 @@
 		2F1E626722BD4A2B00A1AB49 /* UIView+FWLayoutChain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWLayoutChain.m"; sourceTree = "<group>"; };
 		2F1F98CC246E673D0025DA26 /* FWModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWModel.m; sourceTree = "<group>"; };
 		2F1F98CD246E673D0025DA26 /* FWModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWModel.h; sourceTree = "<group>"; };
+		2F1F98D0246E68190025DA26 /* FWModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWModel.swift; sourceTree = "<group>"; };
 		2F2121D52408E49D00F74653 /* WKWebView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+FWFramework.h"; sourceTree = "<group>"; };
 		2F2121D62408E49D00F74653 /* WKWebView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+FWFramework.m"; sourceTree = "<group>"; };
 		2F2121DE2408E80500F74653 /* UIImageView+FWNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FWNetwork.m"; sourceTree = "<group>"; };
@@ -987,6 +989,7 @@
 				2F03A568216CF4B9001965A1 /* FWMessage.m */,
 				2F1F98CD246E673D0025DA26 /* FWModel.h */,
 				2F1F98CC246E673D0025DA26 /* FWModel.m */,
+				2F1F98D0246E68190025DA26 /* FWModel.swift */,
 				2F03A566216CF4B9001965A1 /* FWPlugin.h */,
 				2F03A570216CF4B9001965A1 /* FWPlugin.m */,
 				2F03A562216CF4B9001965A1 /* FWPromise.h */,
@@ -1595,6 +1598,7 @@
 				2F8AA7352454720F00C57232 /* FWAlertController.m in Sources */,
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
 				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
+				2F1F98D1246E68190025DA26 /* FWModel.swift in Sources */,
 				2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */,
 				2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */,
 				2FDF9B07244EED91000BB1E3 /* NSBundle+FWLanguage.m in Sources */,
