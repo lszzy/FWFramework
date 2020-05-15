@@ -88,6 +88,8 @@
     return [self handleOpenURL:url options:options];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [self handleOpenURL:url options:nil];
@@ -97,6 +99,7 @@
 {
     return [self handleOpenURL:url options:nil];
 }
+#pragma clang diagnostic pop
 
 /*
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
