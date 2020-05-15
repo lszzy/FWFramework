@@ -84,28 +84,28 @@ import Foundation
             ])
 
         // Getting a double from a JSON Array
-        json["array"][0].double
+        let _ = json["array"][0].double
 
         // Getting an array of string from a JSON Array
         let arrayOfString = json["users"].arrayValue.map({$0["info"]["name"]})
         print(arrayOfString)
 
         // Getting a string from a JSON Dictionary
-        json["users"][0]["info"]["name"].stringValue
+        let _ = json["users"][0]["info"]["name"].stringValue
 
         // Getting a string using a path to the element
-        let path = ["users", 1, "info", "name"] as [FWJSONSubscriptType]
-        var name = json["users", 1, "info", "name"].string
+        let _ = ["users", 1, "info", "name"] as [FWJSONSubscriptType]
+        let _ = json["users", 1, "info", "name"].string
 
         // With a custom way
         let keys: [FWJSONSubscriptType] = ["users", 1, "info", "name"]
-        name = json[keys].string
+        let _ = json[keys].string
 
         // Just the same
-        name = json["users"][1]["info"]["name"].string
+        let _ = json["users"][1]["info"]["name"].string
 
         // Alternatively
-        name = json["users", 1, "info", "name"].string
+        let _ = json["users", 1, "info", "name"].string
         
         // If json is .Dictionary
         for (key, subJson):(String, FWJSON) in json {
@@ -250,9 +250,9 @@ import Foundation
         jsonSetter.arrayObject = [1, 2, 3, 4]
         jsonSetter.dictionaryObject = ["name": "Jeff", "age": 20]
         
-        let rawObject: Any = jsonSetter.object
+        let _: Any = jsonSetter.object
 
-        let rawValue: Any = jsonSetter.rawValue
+        let _: Any = jsonSetter.rawValue
 
         //convert the JSON to raw NSData
         do {
@@ -275,22 +275,22 @@ import Foundation
         }
 
         // StringLiteralConvertible
-        let jsonLiteralString: FWJSON = "I'm a json"
+        let _: FWJSON = "I'm a json"
 
         // IntegerLiteralConvertible
-        let jsonLiteralInt: FWJSON =  12345
+        let _: FWJSON =  12345
 
         // BooleanLiteralConvertible
-        let jsonLiteralBool: FWJSON =  true
+        let _: FWJSON =  true
 
         // FloatLiteralConvertible
-        let jsonLiteralFloat: FWJSON =  2.8765
+        let _: FWJSON =  2.8765
 
         // DictionaryLiteralConvertible
-        let jsonLiteralDictionary: FWJSON =  ["I": "am", "a": "json"]
+        let _: FWJSON =  ["I": "am", "a": "json"]
 
         // ArrayLiteralConvertible
-        let jsonLiteralArray: FWJSON =  ["I", "am", "a", "json"]
+        let _: FWJSON =  ["I", "am", "a", "json"]
 
         // With subscript in array
         var jsonSubscriptArray: FWJSON =  [1, 2, 3]
@@ -315,7 +315,7 @@ import Foundation
 
         // With other JSON objects
         let user: FWJSON = ["username": "Steve", "password": "supersecurepassword"]
-        let auth: FWJSON = [
+        let _: FWJSON = [
             "user": user.object, //use user.object instead of just user
             "apikey": "supersecretapitoken"
         ]
