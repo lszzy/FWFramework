@@ -65,6 +65,11 @@ public enum FWJSONType: Int {
 
 // MARK: - JSON Base
 
+/**
+ FWJSON
+ 
+ - see: [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
+ */
 public struct FWJSON {
 
     /**
