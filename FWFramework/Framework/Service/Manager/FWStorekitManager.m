@@ -285,7 +285,10 @@
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:jsonData];
     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+#pragma clang diagnostic pop
     if (conn) {
         self.receiptRequestData = [[NSMutableData alloc] init];
     } else {

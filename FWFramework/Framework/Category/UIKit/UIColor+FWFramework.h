@@ -34,10 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - String
 
-// 从十六进制字符串初始化，支持RGB、RGBA、RRGGBB、RRGGBBAA，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0
+// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
++ (void)fwColorStandardARGB:(BOOL)enabled;
+
+// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0
 + (nullable UIColor *)fwColorWithHexString:(NSString *)hexString;
 
-// 从十六进制字符串初始化，支持RGB、RGBA、RRGGBB、RRGGBBAA，格式：@"20B2AA", @"#FFFFFF"，自定义透明度
+// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度
 + (nullable UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
 
 // 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0
@@ -67,13 +70,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Value
 
-// 读取颜色的十六进制值，不含透明度
+// 读取颜色的十六进制值RGB，不含透明度
 - (long)fwHexValue;
 
-// 读取颜色的十六进制字符串，不含透明度
+// 读取颜色的十六进制字符串RGB，不含透明度
 - (NSString *)fwHexString;
 
-// 读取颜色的十六进制字符串，包含透明度
+// 读取颜色的十六进制字符串RGBA|ARGB，包含透明度
 - (NSString *)fwHexStringWithAlpha;
 
 // 读取颜色的透明度值，范围0~1

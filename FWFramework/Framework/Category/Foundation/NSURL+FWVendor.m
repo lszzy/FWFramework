@@ -17,7 +17,7 @@
     NSMutableString *urlString = [[NSMutableString alloc] initWithString:string];
     [urlString appendString:@"?"];
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
-        NSString *valueStr = [[[NSString stringWithFormat:@"%@", value] stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *valueStr = [[[NSString stringWithFormat:@"%@", value] stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         [urlString appendFormat:@"%@=%@&", key, valueStr];
     }];
     return [self URLWithString:[urlString substringToIndex:urlString.length - 1]];

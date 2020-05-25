@@ -108,6 +108,8 @@
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
+                                         @[@"跳转telprompt", @"onOpenTel"],
+                                         @[@"跳转设置", @"onOpenSettings"],
                                          @[@"跳转home", @"onOpenHome"],
                                          @[@"跳转test", @"onOpenHome2"],
                                          @[@"跳转settings", @"onOpenHome3"],
@@ -211,6 +213,16 @@
 - (void)onRewriteFilter
 {
     [FWRouter openURL:@"https://www.baidu.com/filter/1"];
+}
+
+- (void)onOpenTel
+{
+    [FWRouter openURL:@"telprompt:10000"];
+}
+
+- (void)onOpenSettings
+{
+    [FWRouter openURL:UIApplicationOpenSettingsURLString];
 }
 
 - (void)onOpenHome

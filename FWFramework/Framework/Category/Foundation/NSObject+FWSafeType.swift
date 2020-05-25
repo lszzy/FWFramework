@@ -135,3 +135,23 @@ extension Dictionary: FWSafelyUnwrappable {
     public static var fwSafeValue: Dictionary<Key, Value> { return [:] }
     public func fwIsEmpty() -> Bool { return self.isEmpty }
 }
+
+/// 常用类快捷OC桥接属性
+extension Array {
+    public var fwNSArray: NSArray { return self as NSArray }
+}
+extension Data {
+    public var fwNSData: NSData { return self as NSData }
+}
+extension Date {
+    public var fwNSDate: NSDate { return self as NSDate }
+}
+extension Dictionary {
+    public var fwNSDictionary: NSDictionary { return self as NSDictionary }
+}
+extension String {
+    public var fwNSString: NSString { return self as NSString }
+}
+extension URL {
+    public var fwNSURL: NSURL { return self as NSURL }
+}
