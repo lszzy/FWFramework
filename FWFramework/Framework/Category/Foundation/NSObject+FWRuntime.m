@@ -115,10 +115,8 @@
         return NO;
     }
     
-    // 添加当前类方法实现，防止影响到父类方法
     if (originalMethod) {
         class_addMethod(self, originalSelector, class_getMethodImplementation(self, originalSelector), method_getTypeEncoding(originalMethod));
-    // 当前类方法不存在，添加空实现
     } else {
         class_addMethod(self, originalSelector, imp_implementationWithBlock(^(id selfObject){}), "v@:");
     }
