@@ -10,6 +10,8 @@
 #import "UIColor+FWFramework.h"
 #import "UIBezierPath+FWFramework.h"
 
+static BOOL fwStaticColorARGB = NO;
+
 @implementation UIColor (FWFramework)
 
 #pragma mark - Hex
@@ -29,6 +31,11 @@
 
 #pragma mark - String
 
++ (void)fwColorStandardARGB:(BOOL)enabled
+{
+    fwStaticColorARGB = enabled;
+}
+
 + (UIColor *)fwColorWithHexString:(NSString *)hexString
 {
     return [UIColor fwColorWithHexString:hexString alpha:1.0f];
@@ -37,41 +44,49 @@
 + (UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha
 {
     // 处理参数
-    hexString = hexString ? hexString.uppercaseString : @"";
-    if ([hexString hasPrefix:@"0X"]) {
-        hexString = [hexString substringFromIndex:2];
+    NSString *string = hexString ? hexString.uppercaseString : @"";
+    if ([string hasPrefix:@"0X"]) {
+        string = [string substringFromIndex:2];
     }
-    if ([hexString hasPrefix:@"#"]) {
-        hexString = [hexString substringFromIndex:1];
+    if ([string hasPrefix:@"#"]) {
+        string = [string substringFromIndex:1];
     }
     
     // 检查长度
-    NSUInteger length = hexString.length;
+    NSUInteger length = string.length;
     if (length != 3 && length != 4 && length != 6 && length != 8) {
         return nil;
     }
     
     // 解析颜色
     NSString *strR = nil, *strG = nil, *strB = nil, *strA = nil;
-    // RGB，RGBA
     if (length < 5) {
-        NSString *tmpR = [hexString substringWithRange:NSMakeRange(0, 1)];
-        NSString *tmpG = [hexString substringWithRange:NSMakeRange(1, 1)];
-        NSString *tmpB = [hexString substringWithRange:NSMakeRange(2, 1)];
+        // ARGB
+        if (fwStaticColorARGB && length == 4) {
+            string = [NSString stringWithFormat:@"%@%@", [string substringWithRange:NSMakeRange(1, 3)], [string substringWithRange:NSMakeRange(0, 1)]];
+        }
+        // RGB|RGBA
+        NSString *tmpR = [string substringWithRange:NSMakeRange(0, 1)];
+        NSString *tmpG = [string substringWithRange:NSMakeRange(1, 1)];
+        NSString *tmpB = [string substringWithRange:NSMakeRange(2, 1)];
         strR = [NSString stringWithFormat:@"%@%@", tmpR, tmpR];
         strG = [NSString stringWithFormat:@"%@%@", tmpG, tmpG];
         strB = [NSString stringWithFormat:@"%@%@", tmpB, tmpB];
         if (length == 4) {
-            NSString *tmpA = [hexString substringWithRange:NSMakeRange(3, 1)];
+            NSString *tmpA = [string substringWithRange:NSMakeRange(3, 1)];
             strA = [NSString stringWithFormat:@"%@%@", tmpA, tmpA];
         }
-        // RRGGBB，RRGGBBAA
     } else {
-        strR = [hexString substringWithRange:NSMakeRange(0, 2)];
-        strG = [hexString substringWithRange:NSMakeRange(2, 2)];
-        strB = [hexString substringWithRange:NSMakeRange(4, 2)];
+        // AARRGGBB
+        if (fwStaticColorARGB && length == 8) {
+            string = [NSString stringWithFormat:@"%@%@", [string substringWithRange:NSMakeRange(2, 6)], [string substringWithRange:NSMakeRange(0, 2)]];
+        }
+        // RRGGBB|RRGGBBAA
+        strR = [string substringWithRange:NSMakeRange(0, 2)];
+        strG = [string substringWithRange:NSMakeRange(2, 2)];
+        strB = [string substringWithRange:NSMakeRange(4, 2)];
         if (length == 8) {
-            strA = [hexString substringWithRange:NSMakeRange(6, 2)];
+            strA = [string substringWithRange:NSMakeRange(6, 2)];
         }
     }
     
@@ -218,10 +233,7 @@
 {
     const CGFloat *components = CGColorGetComponents(self.CGColor);
     CGFloat r = components[0], g = components[1], b = components[2];
-    return [NSString stringWithFormat:@"#%02lX%02lX%02lX",
-            lroundf(r * 255),
-            lroundf(g * 255),
-            lroundf(b * 255)];
+    return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
 }
 
 - (NSString *)fwHexStringWithAlpha
@@ -229,11 +241,11 @@
     const CGFloat *components = CGColorGetComponents(self.CGColor);
     CGFloat r = components[0], g = components[1], b = components[2];
     CGFloat a = CGColorGetAlpha(self.CGColor);
-    return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX",
-            lroundf(r * 255),
-            lroundf(g * 255),
-            lroundf(b * 255),
-            lround(a * 255)];
+    if (fwStaticColorARGB) {
+        return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
+    } else {
+        return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255), lround(a * 255)];
+    }
 }
 
 - (CGFloat)fwAlpha
