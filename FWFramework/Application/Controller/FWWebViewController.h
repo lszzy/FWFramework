@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 渲染网页桥接，renderView之前调用，默认未实现
 - (void)renderWebBridge:(FWWebViewJsBridge *)bridge;
 
-// 是否开始加载，可用来拦截URL SCHEME、通用链接等，默认未实现
+// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认未实现
 - (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction;
 
 // 已经加载完成，可用来获取title、设置按钮等，默认未实现

@@ -222,7 +222,7 @@
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
-    if ([UIApplication fwIsAppStoreURL:navigationAction.request.URL]) {
+    if ([UIApplication fwIsAppSchemeURL:navigationAction.request.URL]) {
         [UIApplication fwOpenURL:navigationAction.request.URL];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;

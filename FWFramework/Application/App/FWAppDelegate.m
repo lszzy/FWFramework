@@ -88,6 +88,7 @@
     return [self handleOpenURL:url options:options];
 }
 
+/*
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [self handleOpenURL:url options:nil];
@@ -97,6 +98,7 @@
 {
     return [self handleOpenURL:url options:nil];
 }
+*/
 
 /*
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
