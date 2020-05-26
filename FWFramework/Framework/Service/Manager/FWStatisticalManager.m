@@ -155,12 +155,13 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        [(NSObject *)((UITableView *)self).delegate fwSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [(NSObject *)((UITableView *)self).delegate fwSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager" withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(id<UITableViewDelegate> delegate, UITableView *tableView, NSIndexPath *indexPath) {
                 void (*originalMSG)(id, SEL, UITableView *, NSIndexPath *);
                 originalMSG = (void (*)(id, SEL, UITableView *, NSIndexPath *))originalIMP();
                 originalMSG(delegate, originalCMD, tableView, indexPath);
                 
+                if (![(NSObject *)delegate fwIsSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
                 if (![tableView fwStatisticalClickIsRegistered]) return;
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 [tableView fwStatisticalClickHandler:cell indexPath:indexPath];
@@ -170,12 +171,13 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        [(NSObject *)((UICollectionView *)self).delegate fwSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [(NSObject *)((UICollectionView *)self).delegate fwSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager" withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(id<UICollectionViewDelegate> delegate, UICollectionView *collectionView, NSIndexPath *indexPath) {
                 void (*originalMSG)(id, SEL, UICollectionView *, NSIndexPath *);
                 originalMSG = (void (*)(id, SEL, UICollectionView *, NSIndexPath *))originalIMP();
                 originalMSG(delegate, originalCMD, collectionView, indexPath);
                 
+                if (![(NSObject *)delegate fwIsSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
                 if (![collectionView fwStatisticalClickIsRegistered]) return;
                 UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
                 [collectionView fwStatisticalClickHandler:cell indexPath:indexPath];
