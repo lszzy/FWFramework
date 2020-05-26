@@ -24,6 +24,7 @@
 #import "FWWebViewController.h"
 
 // Model
+#import "FWModel.h"
 #import "FWDbModel.h"
 
 // ViewModel

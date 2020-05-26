@@ -19,7 +19,6 @@
 #import "FWLog.h"
 #import "FWMacro.h"
 #import "FWMessage.h"
-#import "FWModel.h"
 #import "FWPlugin.h"
 #import "FWPromise.h"
 #import "FWProxy.h"
