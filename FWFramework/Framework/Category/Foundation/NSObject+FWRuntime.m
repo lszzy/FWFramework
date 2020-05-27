@@ -169,7 +169,11 @@
         const char *typeEncoding = method_getTypeEncoding(originalMethod);
         if (!typeEncoding) {
             NSMethodSignature *methodSignature = [originalClass instanceMethodSignatureForSelector:originalSelector];
-            NSString *typeString = [methodSignature fwPerformSelector:NSSelectorFromString([NSString stringWithFormat:@"_%@String", @"type"])];
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            SEL typeSelector = NSSelectorFromString([NSString stringWithFormat:@"_%@String", @"type"]);
+            NSString *typeString = [methodSignature respondsToSelector:typeSelector] ? [methodSignature performSelector:typeSelector] : nil;
+            #pragma clang diagnostic pop
             typeEncoding = typeString.UTF8String;
         }
         
