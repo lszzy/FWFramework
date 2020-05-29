@@ -380,21 +380,27 @@
         [FWTestCase_FWRuntime_Student fwSwizzleInstanceMethod:@selector(sayHello) with:@selector(s_sayHello)];
         [FWTestCase_FWRuntime_Person fwSwizzleInstanceMethod:@selector(sayHello) with:@selector(p_sayHello)];
         
-        [NSObject fwSwizzleInstanceMethod:@selector(sayHello3) in:[FWTestCase_FWRuntime_Student class] withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-            return ^(FWTestCase_FWRuntime_Student *obj) {
-                void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
-                originalMSG(obj, originalCMD);
+        Class studentClass = [FWTestCase_FWRuntime_Student class];
+        [NSObject fwSwizzleInstanceMethod:@selector(sayHello3) in:studentClass withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
+            return ^(FWTestCase_FWRuntime_Student *selfObject) {
+                void (*originalMSG)(id, SEL);
+                originalMSG = (void (*)(id, SEL))originalIMP();
+                originalMSG(selfObject, originalCMD);
                 
-                obj.count += 2;
+                // 防止父类子类重复调用
+                BOOL isSelf = (studentClass == [selfObject class]);
+                if (isSelf) {
+                    selfObject.count += 2;
+                }
             };
         }];
         
-        [NSObject fwSwizzleInstanceMethod:@selector(sayHello3) in:[FWTestCase_FWRuntime_Person class] withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-            return ^(FWTestCase_FWRuntime_Person *obj) {
+        [NSObject fwSwizzleInstanceMethod:@selector(sayHello3) in:[FWTestCase_FWRuntime_Person class] identifier:@"Test" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
+            return ^(FWTestCase_FWRuntime_Person *selfObject) {
                 void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
-                originalMSG(obj, originalCMD);
+                originalMSG(selfObject, originalCMD);
                 
-                obj.count += 3;
+                selfObject.count += 3;
             };
         }];
     });
@@ -422,21 +428,20 @@
     
     student = [FWTestCase_FWRuntime_Student new];
     [student fwSwizzleMethod:@selector(sayHello2) identifier:@"s_sayHello2" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return ^(FWTestCase_FWRuntime_Student *obj) {
-            void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
-            originalMSG(obj, originalCMD);
+        return ^(FWTestCase_FWRuntime_Student *selfObject) {
+            ((void (*)(id, SEL))originalIMP())(selfObject, originalCMD);
             
-            if (![obj fwIsSwizzleMethod:@selector(sayHello2) identifier:@"s_sayHello2"]) return;
-            obj.count += 2;
+            // 防止影响其它对象
+            if (![selfObject fwIsSwizzleMethod:@selector(sayHello2) identifier:@"s_sayHello2"]) return;
+            selfObject.count += 2;
         };
     }];
     [student fwSwizzleMethod:@selector(sayHello2) identifier:@"p_sayHello2" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return ^(FWTestCase_FWRuntime_Person *obj) {
-            void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
-            originalMSG(obj, originalCMD);
+        return ^(FWTestCase_FWRuntime_Person *selfObject) {
+            ((void (*)(id, SEL))originalIMP())(selfObject, originalCMD);
             
-            if (![obj fwIsSwizzleMethod:@selector(sayHello2) identifier:@"p_sayHello2"]) return;
-            obj.count += 3;
+            if (![selfObject fwIsSwizzleMethod:@selector(sayHello2) identifier:@"p_sayHello2"]) return;
+            selfObject.count += 3;
         };
     }];
     [student sayHello2];
