@@ -8,7 +8,7 @@
  */
 
 #import "UIViewController+FWBack.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
 

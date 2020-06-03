@@ -8,7 +8,7 @@
  */
 
 #import "FWViewController.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIViewController+FWViewController
