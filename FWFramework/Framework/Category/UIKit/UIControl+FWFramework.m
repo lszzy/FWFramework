@@ -17,7 +17,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [NSObject fwSwizzleInstanceMethod:@selector(sendAction:to:forEvent:) in:[UIControl class] withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [NSObject fwSwizzleMethod:[UIControl class] selector:@selector(sendAction:to:forEvent:) withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(UIControl *selfObject, SEL action, id target, UIEvent *event) {
                 // 仅拦截Touch事件，且配置了间隔时间的Event
                 if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {

@@ -148,7 +148,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(layoutSubviews) in:objc_getClass("UITabBarButton") withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [self fwSwizzleMethod:objc_getClass("UITabBarButton") selector:@selector(layoutSubviews) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(UIView *tabBarButton) {
                 void (*originalMSG)(id, SEL);
                 originalMSG = (void (*)(id, SEL))originalIMP();
