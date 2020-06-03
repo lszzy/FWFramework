@@ -17,25 +17,23 @@
 #ifndef DEBUG
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerNullMethodSignatureForSelector:)];
-        [self fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerNullForwardInvocation:)];
+        [NSObject fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) in:[NSNull class] withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^NSMethodSignature *(NSNull *selfObject, SEL selector) {
+                NSMethodSignature *signature = ((NSMethodSignature *(*)(id, SEL, SEL))originalIMP())(selfObject, originalCMD, selector);
+                if (!signature) {
+                    return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+                }
+                return signature;
+            };
+        }];
+        [NSObject fwSwizzleInstanceMethod:@selector(forwardInvocation:) in:[NSNull class] withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^(NSNull *selfObject, NSInvocation *invocation) {
+                invocation.target = nil;
+                [invocation invoke];
+            };
+        }];
     });
 #endif
-}
-
-- (NSMethodSignature *)fwInnerNullMethodSignatureForSelector:(SEL)selector
-{
-    NSMethodSignature *signature = [self fwInnerNullMethodSignatureForSelector:selector];
-    if (!signature) {
-        return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
-    }
-    return signature;
-}
-
-- (void)fwInnerNullForwardInvocation:(NSInvocation *)invocation
-{
-    invocation.target = nil;
-    [invocation invoke];
 }
 
 @end
