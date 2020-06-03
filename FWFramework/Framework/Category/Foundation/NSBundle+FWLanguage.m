@@ -8,7 +8,7 @@
  */
 
 #import "NSBundle+FWLanguage.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageChangedNotification";

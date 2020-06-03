@@ -9,7 +9,7 @@
 #import "UIViewController+FWBar.h"
 #import "UIView+FWBlock.h"
 #import "UIScreen+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>

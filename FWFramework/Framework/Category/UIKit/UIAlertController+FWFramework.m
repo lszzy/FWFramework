@@ -9,7 +9,7 @@
 
 #import "UIAlertController+FWFramework.h"
 #import "UIView+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWFramework.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 

@@ -9,7 +9,7 @@
 
 #import "UISearchBar+FWFramework.h"
 #import "UIView+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "UIScreen+FWFramework.h"
 #import "NSString+FWFramework.h"
