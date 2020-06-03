@@ -26,7 +26,7 @@
         
         // iOS13因为层级关系变化，兼容处理
         if (@available(iOS 13, *)) {
-            [self fwSwizzleInstanceMethod:@selector(setFrame:) in:objc_getClass("UISearchBarTextField") withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            [self fwSwizzleMethod:objc_getClass("UISearchBarTextField") selector:@selector(setFrame:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
                 return ^(UITextField *textField, CGRect frame) {
                     UISearchBar *searchBar = nil;
                     if (@available(iOS 13.0, *)) {

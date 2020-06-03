@@ -338,7 +338,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         [self fwSwizzleInstanceMethod:@selector(setBounds:) with:@selector(fwInnerUIViewSetBounds:)];
         [self fwSwizzleInstanceMethod:@selector(didMoveToWindow) with:@selector(fwInnerUIViewDidMoveToWindow)];
         
-        [self fwSwizzleInstanceMethod:@selector(reloadData) in:[UITableView class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [self fwSwizzleMethod:[UITableView class] selector:@selector(reloadData) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(UITableView *tableView) {
                 void (*originalMSG)(id, SEL);
                 originalMSG = (void (*)(id, SEL))originalIMP();
@@ -347,7 +347,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
                 [tableView fwStatisticalExposureUpdate];
             };
         }];
-        [self fwSwizzleInstanceMethod:@selector(reloadData) in:[UICollectionView class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [self fwSwizzleMethod:[UICollectionView class] selector:@selector(reloadData) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(UICollectionView *collectionView) {
                 void (*originalMSG)(id, SEL);
                 originalMSG = (void (*)(id, SEL))originalIMP();
@@ -357,7 +357,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
             };
         }];
         
-        [self fwSwizzleInstanceMethod:@selector(didMoveToSuperview) in:[UITableViewCell class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [self fwSwizzleMethod:[UITableViewCell class] selector:@selector(didMoveToSuperview) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(UITableViewCell *cell) {
                 void (*originalMSG)(id, SEL);
                 originalMSG = (void (*)(id, SEL))originalIMP();
@@ -371,7 +371,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
                 }
             };
         }];
-        [self fwSwizzleInstanceMethod:@selector(didMoveToSuperview) in:[UICollectionViewCell class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        [self fwSwizzleMethod:[UICollectionViewCell class] selector:@selector(didMoveToSuperview) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^(UICollectionViewCell *cell) {
                 void (*originalMSG)(id, SEL);
                 originalMSG = (void (*)(id, SEL))originalIMP();
