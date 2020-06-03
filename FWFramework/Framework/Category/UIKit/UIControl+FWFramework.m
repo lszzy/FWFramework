@@ -17,21 +17,20 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(sendAction:to:forEvent:) with:@selector(fwInnerUIControlSendAction:to:forEvent:)];
+        [NSObject fwSwizzleInstanceMethod:@selector(sendAction:to:forEvent:) in:[UIControl class] withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^(UIControl *selfObject, SEL action, id target, UIEvent *event) {
+                // 仅拦截Touch事件，且配置了间隔时间的Event
+                if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {
+                    if (event.timestamp - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
+                        return;
+                    }
+                    selfObject.fwTouchEventTimestamp = event.timestamp;
+                }
+                
+                ((void (*)(id, SEL, SEL, id, UIEvent *))originalIMP())(selfObject, originalCMD, action, target, event);
+            };
+        }];
     });
-}
-
-- (void)fwInnerUIControlSendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
-{
-    // 仅拦截Touch事件，且配置了间隔时间的Event
-    if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && self.fwTouchEventInterval > 0) {
-        if (event.timestamp - self.fwTouchEventTimestamp < self.fwTouchEventInterval) {
-            return;
-        }
-        self.fwTouchEventTimestamp = event.timestamp;
-    }
-    
-    [self fwInnerUIControlSendAction:action to:target forEvent:event];
 }
 
 - (NSTimeInterval)fwTouchEventInterval
