@@ -148,8 +148,8 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleMethod(objc_getClass("UITabBarButton"), @selector(layoutSubviews), nil, UIView *, void, FWSwizzleArguments(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        FWSwizzleMethod(objc_getClass("UITabBarButton"), @selector(layoutSubviews), nil, FWClassType(UIView *), FWReturnType(void), FWArguments(), FWCode({
+            FWCallOriginal();
             
             // 解决因为层级关系变化导致的badgeView被遮挡问题
             for (UIView *subview in selfObject.subviews) {
