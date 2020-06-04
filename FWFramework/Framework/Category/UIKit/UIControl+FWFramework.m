@@ -17,7 +17,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIControl, @selector(sendAction:to:forEvent:), FWReturnType(void), FWArguments(SEL action, id target, UIEvent *event), FWCode({
+        FWSwizzleClass(UIControl, @selector(sendAction:to:forEvent:), FWSwizzleReturn(void), FWSwizzleArgs(SEL action, id target, UIEvent *event), FWSwizzleCode({
             // 仅拦截Touch事件，且配置了间隔时间的Event
             if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {
                 if (event.timestamp - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
@@ -26,7 +26,7 @@
                 selfObject.fwTouchEventTimestamp = event.timestamp;
             }
             
-            FWCallOriginal(action, target, event);
+            FWSwizzleOriginal(action, target, event);
         }));
     });
 }

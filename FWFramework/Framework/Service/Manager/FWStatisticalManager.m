@@ -156,8 +156,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"FWStatisticalManager", FWClassType(id<UITableViewDelegate>), FWReturnType(void), FWArguments(UITableView *tableView, NSIndexPath *indexPath), FWCode({
-            FWCallOriginal(tableView, indexPath);
+        FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(id<UITableViewDelegate>), FWSwizzleReturn(void), FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), FWSwizzleCode({
+            FWSwizzleOriginal(tableView, indexPath);
             
             if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
             if (![tableView fwStatisticalClickIsRegistered]) return;
@@ -168,8 +168,8 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"FWStatisticalManager", FWClassType(id<UICollectionViewDelegate>), FWReturnType(void), FWArguments(UICollectionView *collectionView, NSIndexPath *indexPath), FWCode({
-            FWCallOriginal(collectionView, indexPath);
+        FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(id<UICollectionViewDelegate>), FWSwizzleReturn(void), FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), FWSwizzleCode({
+            FWSwizzleOriginal(collectionView, indexPath);
             
             if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
             if (![collectionView fwStatisticalClickIsRegistered]) return;
@@ -331,18 +331,18 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         [self fwSwizzleInstanceMethod:@selector(setBounds:) with:@selector(fwInnerUIViewSetBounds:)];
         [self fwSwizzleInstanceMethod:@selector(didMoveToWindow) with:@selector(fwInnerUIViewDidMoveToWindow)];
         
-        FWSwizzleClass(UITableView, @selector(reloadData), FWReturnType(void), FWArguments(), FWCode({
-            FWCallOriginal();
+        FWSwizzleClass(UITableView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
             
             [selfObject fwStatisticalExposureUpdate];
         }));
-        FWSwizzleClass(UICollectionView, @selector(reloadData), FWReturnType(void), FWArguments(), FWCode({
-            FWCallOriginal();
+        FWSwizzleClass(UICollectionView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
             
             [selfObject fwStatisticalExposureUpdate];
         }));
-        FWSwizzleClass(UITableViewCell, @selector(didMoveToSuperview), FWReturnType(void), FWArguments(), FWCode({
-            FWCallOriginal();
+        FWSwizzleClass(UITableViewCell, @selector(didMoveToSuperview), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
             
             if (selfObject.fwStatisticalClick || selfObject.fwStatisticalClickBlock) {
                 [selfObject fwStatisticalClickCellRegister];
@@ -351,8 +351,8 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
                 [selfObject fwStatisticalExposureCellRegister];
             }
         }));
-        FWSwizzleClass(UICollectionViewCell, @selector(didMoveToSuperview), FWReturnType(void), FWArguments(), FWCode({
-            FWCallOriginal();
+        FWSwizzleClass(UICollectionViewCell, @selector(didMoveToSuperview), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
             
             if (selfObject.fwStatisticalClick || selfObject.fwStatisticalClickBlock) {
                 [selfObject fwStatisticalClickCellRegister];

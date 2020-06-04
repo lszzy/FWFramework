@@ -101,9 +101,9 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 动态替换initWithPath:拦截处理。如果不需要处理三方SDK和系统组件，则不替换
-        FWSwizzleClass(NSBundle, @selector(initWithPath:), FWReturnType(NSBundle *), FWArguments(NSString *path), FWCode({
+        FWSwizzleClass(NSBundle, @selector(initWithPath:), FWSwizzleReturn(NSBundle *), FWSwizzleArgs(NSString *path), FWSwizzleCode({
             // bundle不存在或者已经处理过，直接返回
-            NSBundle *bundle = FWCallOriginal(path);
+            NSBundle *bundle = FWSwizzleOriginal(path);
             if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {
                 return bundle;
             }
