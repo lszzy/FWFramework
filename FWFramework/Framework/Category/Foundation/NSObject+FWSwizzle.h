@@ -11,6 +11,52 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - Macro
+
+/// 方法交换快速定义宏
+#define FWSwizzleMethod( clazz, selector, FWSwizzleReturn, FWSwizzleArguments, FWSwizzleCode ) \
+    FWSwizzleMethod_( clazz, selector, FWSwizzleReturn, FWSwizzleArgsWrap_(FWSwizzleArguments), FWSwizzleArgsWrap_(FWSwizzleCode) )
+#define FWSwizzleMethod_( clazz, sel, FWSwizzleReturn, FWSwizzleArguments, FWSwizzleCode ) \
+    [NSObject fwSwizzleMethod:[clazz class] selector:sel withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) { \
+        return ^FWSwizzleReturn (FWSwizzleArgsDel2_(clazz *selfObject, FWSwizzleArguments)) \
+        { \
+            FWSwizzleReturn (*originalMSG)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArguments)); \
+            originalMSG = (FWSwizzleReturn (*)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArguments)))originalIMP(); \
+            FWSwizzleCode \
+        }; \
+    }];
+/// 方法交换句柄实现宏
+#define FWSwizzleBlock( clazz, FWSwizzleReturn, FWSwizzleArguments, FWSwizzleCode ) \
+    FWSwizzleBlock_( clazz, FWSwizzleReturn, FWSwizzleArgsWrap_(FWSwizzleArguments), FWSwizzleArgsWrap_(FWSwizzleCode) )
+#define FWSwizzleBlock_( clazz, FWSwizzleReturn, FWSwizzleArguments, FWSwizzleCode ) \
+    ^FWSwizzleReturn (FWSwizzleArgsDel2_(clazz *selfObject, FWSwizzleArguments)) \
+    { \
+        FWSwizzleReturn (*originalMSG)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArguments)); \
+        originalMSG = (FWSwizzleReturn (*)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArguments)))originalIMP(); \
+        FWSwizzleCode \
+    };
+
+/// 包裹返回类型宏
+#define FWSwizzleReturn( type ) type
+
+/// 包裹交换方法参数宏
+#define FWSwizzleArguments( arguments... ) FWSwizzleArguments_(arguments)
+#define FWSwizzleArguments_( arguments... ) DEL, ##arguments
+
+/// 包裹方法实现宏
+#define FWSwizzleCode( code... ) code
+
+/// 包裹原始方法调用宏
+#define FWSwizzleOriginal( arguments... ) FWSwizzleOriginal_(arguments)
+#define FWSwizzleOriginal_( arguments... ) originalMSG(selfObject, originalCMD, ##arguments)
+
+/// 包裹参数处理宏，防止编译警告
+#define FWSwizzleArgsWrap_( args... ) args
+#define FWSwizzleArgsDel2_( a1, a2, args... ) a1, ##args
+#define FWSwizzleArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
+
+#pragma mark - NSObject+FWSwizzle
+
 /*!
  @brief NSObject方法交换分类
  */
