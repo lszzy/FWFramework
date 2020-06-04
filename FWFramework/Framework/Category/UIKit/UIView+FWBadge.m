@@ -148,20 +148,18 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleMethod:objc_getClass("UITabBarButton") selector:@selector(layoutSubviews) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UIView *tabBarButton) {
-                void (*originalMSG)(id, SEL);
-                originalMSG = (void (*)(id, SEL))originalIMP();
-                originalMSG(tabBarButton, originalCMD);
+        [NSObject fwSwizzleMethod:objc_getClass("UITabBarButton") selector:@selector(layoutSubviews) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return FWSwizzleBlock(UIView, FWSwizzleReturn(void), FWSwizzleArguments(), FWSwizzleCode({
+                FWSwizzleOriginal();
                 
                 // 解决因为层级关系变化导致的badgeView被遮挡问题
-                for (UIView *subview in tabBarButton.subviews) {
+                for (UIView *subview in selfObject.subviews) {
                     if ([subview isKindOfClass:[FWBadgeView class]]) {
-                        [tabBarButton bringSubviewToFront:subview];
+                        [selfObject bringSubviewToFront:subview];
                         break;
                     }
                 }
-            };
+            }));
         }];
     });
 }

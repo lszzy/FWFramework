@@ -17,19 +17,17 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [NSObject fwSwizzleMethod:[UIControl class] selector:@selector(sendAction:to:forEvent:) withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UIControl *selfObject, SEL action, id target, UIEvent *event) {
-                // 仅拦截Touch事件，且配置了间隔时间的Event
-                if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {
-                    if (event.timestamp - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
-                        return;
-                    }
-                    selfObject.fwTouchEventTimestamp = event.timestamp;
+        FWSwizzleMethod(UIControl, @selector(sendAction:to:forEvent:), FWSwizzleReturn(void), FWSwizzleArguments(SEL action, id target, UIEvent *event), FWSwizzleCode({
+            // 仅拦截Touch事件，且配置了间隔时间的Event
+            if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {
+                if (event.timestamp - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
+                    return;
                 }
-                
-                ((void (*)(id, SEL, SEL, id, UIEvent *))originalIMP())(selfObject, originalCMD, action, target, event);
-            };
-        }];
+                selfObject.fwTouchEventTimestamp = event.timestamp;
+            }
+            
+            FWSwizzleOriginal(action, target, event);
+        }));
     });
 }
 

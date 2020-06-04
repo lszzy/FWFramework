@@ -101,34 +101,32 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 动态替换initWithPath:拦截处理。如果不需要处理三方SDK和系统组件，则不替换
-        [NSObject fwSwizzleMethod:[NSBundle class] selector:@selector(initWithPath:) withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^NSBundle *(NSBundle *selfObject, NSString *path) {
-                // bundle不存在或者已经处理过，直接返回
-                NSBundle *bundle = ((NSBundle *(*)(id, SEL, NSString *))originalIMP())(selfObject, originalCMD, path);
-                if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {
-                    return bundle;
-                }
-                
-                // 过滤bundle是否需要查找本地化语言
-                BOOL (^filter)(NSBundle *bundle) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFilter:));
-                if (filter && filter(bundle)) {
-                    if (![bundle isKindOfClass:[FWInnerBundle class]]) {
-                        // 处理bundle语言，使用通知方式
-                        object_setClass(bundle, [FWInnerBundle class]);
-                        
-                        // 自动加载上一次语言设置
-                        NSString *language = [NSBundle fwLocalizedLanguage];
-                        if (language) {
-                            [bundle fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
-                        }
-                        
-                        // 监听语言改变通知，切换bundle语言
-                        [[NSNotificationCenter defaultCenter] addObserver:bundle selector:@selector(fwLocalizedLanguageChanged:) name:FWLocalizedLanguageChangedNotification object:nil];
-                    }
-                }
+        FWSwizzleMethod(NSBundle, @selector(initWithPath:), FWSwizzleReturn(NSBundle *), FWSwizzleArguments(NSString *path), FWSwizzleCode({
+            // bundle不存在或者已经处理过，直接返回
+            NSBundle *bundle = FWSwizzleOriginal(path);
+            if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {
                 return bundle;
-            };
-        }];
+            }
+            
+            // 过滤bundle是否需要查找本地化语言
+            BOOL (^filter)(NSBundle *bundle) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFilter:));
+            if (filter && filter(bundle)) {
+                if (![bundle isKindOfClass:[FWInnerBundle class]]) {
+                    // 处理bundle语言，使用通知方式
+                    object_setClass(bundle, [FWInnerBundle class]);
+                    
+                    // 自动加载上一次语言设置
+                    NSString *language = [NSBundle fwLocalizedLanguage];
+                    if (language) {
+                        [bundle fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
+                    }
+                    
+                    // 监听语言改变通知，切换bundle语言
+                    [[NSNotificationCenter defaultCenter] addObserver:bundle selector:@selector(fwLocalizedLanguageChanged:) name:FWLocalizedLanguageChangedNotification object:nil];
+                }
+            }
+            return bundle;
+        }));
     });
     
     // 保存自定义过滤block到mainBundle

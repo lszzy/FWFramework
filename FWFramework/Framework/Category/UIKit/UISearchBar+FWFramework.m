@@ -26,13 +26,13 @@
         
         // iOS13因为层级关系变化，兼容处理
         if (@available(iOS 13, *)) {
-            [self fwSwizzleMethod:objc_getClass("UISearchBarTextField") selector:@selector(setFrame:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-                return ^(UITextField *textField, CGRect frame) {
+            [NSObject fwSwizzleMethod:objc_getClass("UISearchBarTextField") selector:@selector(setFrame:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+                return FWSwizzleBlock(UITextField, FWSwizzleReturn(void), FWSwizzleArguments(CGRect frame), FWSwizzleCode({
                     UISearchBar *searchBar = nil;
                     if (@available(iOS 13.0, *)) {
-                        searchBar = (UISearchBar *)textField.superview.superview.superview;
+                        searchBar = (UISearchBar *)selfObject.superview.superview.superview;
                     } else {
-                        searchBar = (UISearchBar *)textField.superview.superview;
+                        searchBar = (UISearchBar *)selfObject.superview.superview;
                     }
                     if ([searchBar isKindOfClass:[UISearchBar class]]) {
                         NSValue *contentInsetValue = objc_getAssociatedObject(searchBar, @selector(fwContentInset));
@@ -42,10 +42,8 @@
                         }
                     }
                     
-                    void (*originalMSG)(id, SEL, CGRect);
-                    originalMSG = (void (*)(id, SEL, CGRect))originalIMP();
-                    originalMSG(textField, originalCMD, frame);
-                };
+                    FWSwizzleOriginal(frame);
+                }));
             }];
         }
     });
