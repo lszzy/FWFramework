@@ -14,46 +14,46 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Macro
 
 /// 方法交换快速定义宏
-#define FWSwizzleClass( clazz, selector, FWReturnType, FWArguments, FWCode ) \
-    FWSwizzleMethod_( [clazz class], selector, nil, clazz *, FWReturnType, FWArgsWrap_(FWArguments), FWArgsWrap_(FWCode) )
-#define FWSwizzleMethod( target, selector, identifier, FWClassType, FWReturnType, FWArguments, FWCode ) \
-    FWSwizzleMethod_( target, selector, identifier, FWClassType, FWReturnType, FWArgsWrap_(FWArguments), FWArgsWrap_(FWCode) )
-#define FWSwizzleMethod_( target, sel, identity, FWClassType, FWReturnType, FWArguments, FWCode ) \
+#define FWSwizzleClass( clazz, selector, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
+    FWSwizzleMethod_( [clazz class], selector, nil, clazz *, FWSwizzleReturn, FWSwizzleArgsWrap_(FWSwizzleArgs), FWSwizzleArgsWrap_(FWSwizzleCode) )
+#define FWSwizzleMethod( target, selector, identifier, FWSwizzleType, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
+    FWSwizzleMethod_( target, selector, identifier, FWSwizzleType, FWSwizzleReturn, FWSwizzleArgsWrap_(FWSwizzleArgs), FWSwizzleArgsWrap_(FWSwizzleCode) )
+#define FWSwizzleMethod_( target, sel, identity, FWSwizzleType, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
     [FWSwizzle swizzleMethod:target selector:sel identifier:identity withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) { \
-        return ^FWReturnType (FWArgsDel2_(FWClassType selfObject, FWArguments)) \
+        return ^FWSwizzleReturn (FWSwizzleArgsDel2_(FWSwizzleType selfObject, FWSwizzleArgs)) \
         { \
-            FWReturnType (*originalMSG)(FWArgsDel3_(id, SEL, FWArguments)); \
-            originalMSG = (FWReturnType (*)(FWArgsDel3_(id, SEL, FWArguments)))originalIMP(); \
-            FWCode \
+            FWSwizzleReturn (*originalMSG)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArgs)); \
+            originalMSG = (FWSwizzleReturn (*)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArgs)))originalIMP(); \
+            FWSwizzleCode \
         }; \
     }];
 
 /// 方法交换句柄实现宏
-#define FWSwizzleBlock( FWClassType, FWReturnType, FWArguments, FWCode ) \
-    FWSwizzleBlock_( FWClassType, FWReturnType, FWArgsWrap_(FWArguments), FWArgsWrap_(FWCode) )
-#define FWSwizzleBlock_( FWClassType, FWReturnType, FWArguments, FWCode ) \
-    ^FWReturnType (FWArgsDel2_(FWClassType selfObject, FWArguments)) \
+#define FWSwizzleBlock( FWSwizzleType, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
+    FWSwizzleBlock_( FWSwizzleType, FWSwizzleReturn, FWSwizzleArgsWrap_(FWSwizzleArgs), FWSwizzleArgsWrap_(FWSwizzleCode) )
+#define FWSwizzleBlock_( FWSwizzleType, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
+    ^FWSwizzleReturn (FWSwizzleArgsDel2_(FWSwizzleType selfObject, FWSwizzleArgs)) \
     { \
-        FWReturnType (*originalMSG)(FWArgsDel3_(id, SEL, FWArguments)); \
-        originalMSG = (FWReturnType (*)(FWArgsDel3_(id, SEL, FWArguments)))originalIMP(); \
-        FWCode \
+        FWSwizzleReturn (*originalMSG)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArgs)); \
+        originalMSG = (FWSwizzleReturn (*)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArgs)))originalIMP(); \
+        FWSwizzleCode \
     };
 
 /// 包裹参数类型、参数列表和句柄实现宏
-#define FWReturnType( type ) type
-#define FWClassType( type ) type
-#define FWArguments( arguments... ) FWArguments_(arguments)
-#define FWArguments_( arguments... ) DEL, ##arguments
-#define FWCode( code... ) code
+#define FWSwizzleReturn( type ) type
+#define FWSwizzleType( type ) type
+#define FWSwizzleArgs( args... ) FWSwizzleArgs_(args)
+#define FWSwizzleArgs_( args... ) DEL, ##args
+#define FWSwizzleCode( code... ) code
 
 /// 包裹原始方法调用宏
-#define FWCallOriginal( arguments... ) FWCallOriginal_(arguments)
-#define FWCallOriginal_( arguments... ) originalMSG(selfObject, originalCMD, ##arguments)
+#define FWSwizzleOriginal( args... ) FWSwizzleOriginal_(args)
+#define FWSwizzleOriginal_( args... ) originalMSG(selfObject, originalCMD, ##args)
 
 /// 包裹参数处理宏，防止编译警告
-#define FWArgsWrap_( args... ) args
-#define FWArgsDel2_( a1, a2, args... ) a1, ##args
-#define FWArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
+#define FWSwizzleArgsWrap_( args... ) args
+#define FWSwizzleArgsDel2_( a1, a2, args... ) a1, ##args
+#define FWSwizzleArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
 
 #pragma mark - FWSwizzle
 

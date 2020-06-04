@@ -27,7 +27,7 @@
         
         // iOS13因为层级关系变化，兼容处理
         if (@available(iOS 13, *)) {
-            FWSwizzleMethod(objc_getClass("UISearchBarTextField"), @selector(setFrame:), nil, FWClassType(UITextField *), FWReturnType(void), FWArguments(CGRect frame), FWCode({
+            FWSwizzleMethod(objc_getClass("UISearchBarTextField"), @selector(setFrame:), nil, FWSwizzleType(UITextField *), FWSwizzleReturn(void), FWSwizzleArgs(CGRect frame), FWSwizzleCode({
                 UISearchBar *searchBar = nil;
                 if (@available(iOS 13.0, *)) {
                     searchBar = (UISearchBar *)selfObject.superview.superview.superview;
@@ -42,7 +42,7 @@
                     }
                 }
                 
-                FWCallOriginal(frame);
+                FWSwizzleOriginal(frame);
             }));
         }
     });
