@@ -44,21 +44,6 @@
 
 @implementation UINavigationBar (FWBarTransition)
 
-+ (void)fwInnerEnableNavigationBarTransition
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
-            
-            UIView *backgroundView = selfObject.fwBackgroundView;
-            CGRect frame = backgroundView.frame;
-            frame.size.height = selfObject.frame.size.height + fabs(frame.origin.y);
-            backgroundView.frame = frame;
-        }));
-    });
-}
-
 - (BOOL)fwIsFakeBar
 {
     return [objc_getAssociatedObject(self, @selector(fwIsFakeBar)) boolValue];
@@ -81,106 +66,9 @@
 
 @end
 
-#pragma mark - UIView+FWBarTransition
-
-@interface UIView (FWBarTransition)
-
-@end
-
-@implementation UIView (FWBarTransition)
-
-+ (void)fwInnerEnableNavigationBarTransition
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWSwizzleMethod(objc_getClass("_UIBarBackground"), @selector(setHidden:), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
-            UIResponder *responder = (UIResponder *)selfObject;
-            while (responder) {
-                if ([responder isKindOfClass:[UINavigationBar class]] && ((UINavigationBar *)responder).fwIsFakeBar) {
-                    return;
-                }
-                if ([responder isKindOfClass:[UINavigationController class]]) {
-                    FWSwizzleOriginal(((UINavigationController *)responder).fwBackgroundViewHidden);
-                    return;
-                }
-                responder = responder.nextResponder;
-            }
-            
-            FWSwizzleOriginal(hidden);
-        }));
-        FWSwizzleMethod(objc_getClass("_UIParallaxDimmingView"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
-            
-            // 处理导航栏左侧阴影占不满的问题。兼容iOS13下如果navigationBar是磨砂的，则每个视图内部都会有一个磨砂，而磨砂再包裹了imageView等subview
-            if ([selfObject.subviews.firstObject isKindOfClass:[UIImageView class]] ||
-                [selfObject.subviews.firstObject isKindOfClass:[UIVisualEffectView class]]) {
-                UIView *shadowView = selfObject.subviews.firstObject;
-                if (selfObject.frame.origin.y > 0 && shadowView.frame.origin.y == 0) {
-                    shadowView.frame = CGRectMake(shadowView.frame.origin.x,
-                                                  shadowView.frame.origin.y - selfObject.frame.origin.y,
-                                                  shadowView.frame.size.width,
-                                                  shadowView.frame.size.height + selfObject.frame.origin.y);
-                }
-            }
-        }));
-    });
-}
-
-@end
-
 #pragma mark - UIViewController+FWBarTransition
 
 @implementation UIViewController (FWBarTransition)
-
-#pragma mark - Hook
-
-+ (void)fwInnerEnableNavigationBarTransition
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
-            UIViewController *transitionViewController = selfObject.navigationController.fwTransitionContextToViewController;
-            if (selfObject.fwTransitionNavigationBar) {
-                [selfObject.navigationController.navigationBar fwReplaceStyleWithNavigationBar:selfObject.fwTransitionNavigationBar];
-                if (!transitionViewController || [transitionViewController isEqual:selfObject]) {
-                    [selfObject.fwTransitionNavigationBar removeFromSuperview];
-                    selfObject.fwTransitionNavigationBar = nil;
-                }
-            }
-            if ([transitionViewController isEqual:selfObject]) {
-                selfObject.navigationController.fwTransitionContextToViewController = nil;
-            }
-            selfObject.navigationController.fwBackgroundViewHidden = NO;
-            FWSwizzleOriginal(animated);
-        }));
-        FWSwizzleClass(UIViewController, @selector(viewWillLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            id<UIViewControllerTransitionCoordinator> tc = selfObject.transitionCoordinator;
-            UIViewController *fromViewController = [tc viewControllerForKey:UITransitionContextFromViewControllerKey];
-            UIViewController *toViewController = [tc viewControllerForKey:UITransitionContextToViewControllerKey];
-            if (![selfObject fwShouldCustomTransitionFrom:fromViewController to:toViewController]) {
-                FWSwizzleOriginal();
-                return;
-            }
-            
-            if ([selfObject isEqual:selfObject.navigationController.viewControllers.lastObject] && [toViewController isEqual:selfObject] && tc.presentationStyle == UIModalPresentationNone) {
-                if (selfObject.navigationController.navigationBar.translucent) {
-                    [tc containerView].backgroundColor = [selfObject.navigationController fwContainerViewBackgroundColor];
-                }
-                fromViewController.view.clipsToBounds = NO;
-                toViewController.view.clipsToBounds = NO;
-                if (!selfObject.fwTransitionNavigationBar) {
-                    [selfObject fwAddTransitionNavigationBarIfNeeded];
-                    selfObject.navigationController.fwBackgroundViewHidden = YES;
-                }
-                [selfObject fwResizeTransitionNavigationBarFrame];
-            }
-            if (selfObject.fwTransitionNavigationBar) {
-                [selfObject.view bringSubviewToFront:selfObject.fwTransitionNavigationBar];
-            }
-            FWSwizzleOriginal();
-        }));
-    });
-}
 
 #pragma mark - Accessor
 
@@ -265,19 +153,88 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [UINavigationBar fwInnerEnableNavigationBarTransition];
-        [UIView fwInnerEnableNavigationBarTransition];
-        [UIViewController fwInnerEnableNavigationBarTransition];
-        [UINavigationController fwInnerEnableNavigationBarTransition];
-    });
-}
-
-#pragma mark - Hook
-
-+ (void)fwInnerEnableNavigationBarTransition
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            UIView *backgroundView = selfObject.fwBackgroundView;
+            CGRect frame = backgroundView.frame;
+            frame.size.height = selfObject.frame.size.height + fabs(frame.origin.y);
+            backgroundView.frame = frame;
+        }));
+        
+        FWSwizzleMethod(objc_getClass("_UIBarBackground"), @selector(setHidden:), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
+            UIResponder *responder = (UIResponder *)selfObject;
+            while (responder) {
+                if ([responder isKindOfClass:[UINavigationBar class]] && ((UINavigationBar *)responder).fwIsFakeBar) {
+                    return;
+                }
+                if ([responder isKindOfClass:[UINavigationController class]]) {
+                    FWSwizzleOriginal(((UINavigationController *)responder).fwBackgroundViewHidden);
+                    return;
+                }
+                responder = responder.nextResponder;
+            }
+            
+            FWSwizzleOriginal(hidden);
+        }));
+        FWSwizzleMethod(objc_getClass("_UIParallaxDimmingView"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            // 处理导航栏左侧阴影占不满的问题。兼容iOS13下如果navigationBar是磨砂的，则每个视图内部都会有一个磨砂，而磨砂再包裹了imageView等subview
+            if ([selfObject.subviews.firstObject isKindOfClass:[UIImageView class]] ||
+                [selfObject.subviews.firstObject isKindOfClass:[UIVisualEffectView class]]) {
+                UIView *shadowView = selfObject.subviews.firstObject;
+                if (selfObject.frame.origin.y > 0 && shadowView.frame.origin.y == 0) {
+                    shadowView.frame = CGRectMake(shadowView.frame.origin.x,
+                                                  shadowView.frame.origin.y - selfObject.frame.origin.y,
+                                                  shadowView.frame.size.width,
+                                                  shadowView.frame.size.height + selfObject.frame.origin.y);
+                }
+            }
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            UIViewController *transitionViewController = selfObject.navigationController.fwTransitionContextToViewController;
+            if (selfObject.fwTransitionNavigationBar) {
+                [selfObject.navigationController.navigationBar fwReplaceStyleWithNavigationBar:selfObject.fwTransitionNavigationBar];
+                if (!transitionViewController || [transitionViewController isEqual:selfObject]) {
+                    [selfObject.fwTransitionNavigationBar removeFromSuperview];
+                    selfObject.fwTransitionNavigationBar = nil;
+                }
+            }
+            if ([transitionViewController isEqual:selfObject]) {
+                selfObject.navigationController.fwTransitionContextToViewController = nil;
+            }
+            selfObject.navigationController.fwBackgroundViewHidden = NO;
+            FWSwizzleOriginal(animated);
+        }));
+        FWSwizzleClass(UIViewController, @selector(viewWillLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            id<UIViewControllerTransitionCoordinator> tc = selfObject.transitionCoordinator;
+            UIViewController *fromViewController = [tc viewControllerForKey:UITransitionContextFromViewControllerKey];
+            UIViewController *toViewController = [tc viewControllerForKey:UITransitionContextToViewControllerKey];
+            if (![selfObject fwShouldCustomTransitionFrom:fromViewController to:toViewController]) {
+                FWSwizzleOriginal();
+                return;
+            }
+            
+            if ([selfObject isEqual:selfObject.navigationController.viewControllers.lastObject] && [toViewController isEqual:selfObject] && tc.presentationStyle == UIModalPresentationNone) {
+                if (selfObject.navigationController.navigationBar.translucent) {
+                    [tc containerView].backgroundColor = [selfObject.navigationController fwContainerViewBackgroundColor];
+                }
+                fromViewController.view.clipsToBounds = NO;
+                toViewController.view.clipsToBounds = NO;
+                if (!selfObject.fwTransitionNavigationBar) {
+                    [selfObject fwAddTransitionNavigationBarIfNeeded];
+                    selfObject.navigationController.fwBackgroundViewHidden = YES;
+                }
+                [selfObject fwResizeTransitionNavigationBarFrame];
+            }
+            if (selfObject.fwTransitionNavigationBar) {
+                [selfObject.view bringSubviewToFront:selfObject.fwTransitionNavigationBar];
+            }
+            FWSwizzleOriginal();
+        }));
+        
         FWSwizzleClass(UINavigationController, @selector(pushViewController:animated:), FWSwizzleReturn(void), FWSwizzleArgs(UIViewController *viewController, BOOL animated), FWSwizzleCode({
             UIViewController *disappearingViewController = selfObject.viewControllers.lastObject;
             if (!disappearingViewController) {
