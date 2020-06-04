@@ -196,12 +196,12 @@
         [FWTestCase_FWRuntime_Person fwSwizzleInstanceMethod:@selector(sayHello:) with:@selector(p_sayHello:)];
         
         SEL swizzleSelector1 = [NSObject fwSwizzleSelectorForSelector:@selector(sayHello4:)];
-        [FWTestCase_FWRuntime_Student fwSwizzleInstanceMethod:@selector(sayHello4:) with:swizzleSelector1 block:^(FWTestCase_FWRuntime_Student *selfObject, BOOL value){
+        [FWTestCase_FWRuntime_Student fwSwizzleInstanceMethod:@selector(sayHello4:) with:swizzleSelector1 block:^(__unsafe_unretained FWTestCase_FWRuntime_Student *selfObject, BOOL value){
             ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector1, value);
             selfObject.count += 2;
         }];
         SEL swizzleSelector2 = [NSObject fwSwizzleSelectorForSelector:@selector(sayHello4:)];
-        [FWTestCase_FWRuntime_Person fwSwizzleInstanceMethod:@selector(sayHello4:) with:swizzleSelector2 block:^(FWTestCase_FWRuntime_Person *selfObject, BOOL value){
+        [FWTestCase_FWRuntime_Person fwSwizzleInstanceMethod:@selector(sayHello4:) with:swizzleSelector2 block:^(__unsafe_unretained FWTestCase_FWRuntime_Person *selfObject, BOOL value){
             ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector2, value);
             selfObject.count += 3;
         }];
@@ -218,7 +218,7 @@
         }));
         
         [FWSwizzle swizzleClass:[FWTestCase_FWRuntime_Person class] selector:@selector(sayHello3:) identifier:@"Test" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-            return ^(FWTestCase_FWRuntime_Person *selfObject, BOOL value) {
+            return ^(__unsafe_unretained FWTestCase_FWRuntime_Person *selfObject, BOOL value) {
                 void (*originalMSG)(id, SEL, BOOL) = (void (*)(id, SEL, BOOL))originalIMP();
                 originalMSG(selfObject, originalCMD, value);
                 selfObject.count += 3;

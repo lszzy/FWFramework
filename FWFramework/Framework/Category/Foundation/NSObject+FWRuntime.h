@@ -515,7 +515,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 使用swizzle替换类实例方法为block实现。复杂情况可能会冲突
- @discussion swizzleBlock示例：^(UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+ @discussion swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
  
  @param originalSelector 原始方法
  @param swizzleSelector  替换方法
@@ -526,7 +526,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 使用swizzle替换类静态方法为block实现。复杂情况可能会冲突
- @discussion swizzleBlock示例：^(UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+ @discussion swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
  
  @param originalSelector 原始方法
  @param swizzleSelector  替换方法
