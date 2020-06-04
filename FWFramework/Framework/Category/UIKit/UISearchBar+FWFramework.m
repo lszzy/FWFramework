@@ -9,11 +9,12 @@
 
 #import "UISearchBar+FWFramework.h"
 #import "UIView+FWFramework.h"
-#import "NSObject+FWFramework.h"
+#import "NSObject+FWRuntime.h"
 #import "UIImage+FWFramework.h"
 #import "UIScreen+FWFramework.h"
 #import "NSString+FWFramework.h"
 #import "FWMessage.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)
@@ -26,25 +27,23 @@
         
         // iOS13因为层级关系变化，兼容处理
         if (@available(iOS 13, *)) {
-            [NSObject fwSwizzleMethod:objc_getClass("UISearchBarTextField") selector:@selector(setFrame:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-                return FWSwizzleBlock(UITextField, FWSwizzleReturn(void), FWSwizzleArguments(CGRect frame), FWSwizzleCode({
-                    UISearchBar *searchBar = nil;
-                    if (@available(iOS 13.0, *)) {
-                        searchBar = (UISearchBar *)selfObject.superview.superview.superview;
-                    } else {
-                        searchBar = (UISearchBar *)selfObject.superview.superview;
+            FWSwizzleMethod(objc_getClass("UISearchBarTextField"), @selector(setFrame:), nil, UITextField *, void, FWSwizzleArguments(CGRect frame), FWSwizzleCode({
+                UISearchBar *searchBar = nil;
+                if (@available(iOS 13.0, *)) {
+                    searchBar = (UISearchBar *)selfObject.superview.superview.superview;
+                } else {
+                    searchBar = (UISearchBar *)selfObject.superview.superview;
+                }
+                if ([searchBar isKindOfClass:[UISearchBar class]]) {
+                    NSValue *contentInsetValue = objc_getAssociatedObject(searchBar, @selector(fwContentInset));
+                    if (contentInsetValue) {
+                        UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                        frame = CGRectMake(contentInset.left, contentInset.top, searchBar.bounds.size.width - contentInset.left - contentInset.right, searchBar.bounds.size.height - contentInset.top - contentInset.bottom);
                     }
-                    if ([searchBar isKindOfClass:[UISearchBar class]]) {
-                        NSValue *contentInsetValue = objc_getAssociatedObject(searchBar, @selector(fwContentInset));
-                        if (contentInsetValue) {
-                            UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
-                            frame = CGRectMake(contentInset.left, contentInset.top, searchBar.bounds.size.width - contentInset.left - contentInset.right, searchBar.bounds.size.height - contentInset.top - contentInset.bottom);
-                        }
-                    }
-                    
-                    FWSwizzleOriginal(frame);
-                }));
-            }];
+                }
+                
+                FWSwizzleOriginal(frame);
+            }));
         }
     });
 }

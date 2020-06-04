@@ -9,7 +9,7 @@
 
 #import "UINavigationController+FWBar.h"
 #import "UIViewController+FWBar.h"
-#import "NSObject+FWSwizzle.h"
+#import "NSObject+FWRuntime.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
