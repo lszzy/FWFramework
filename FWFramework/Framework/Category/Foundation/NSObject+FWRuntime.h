@@ -493,6 +493,56 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)fwSetAssociatedObjectWeak:(nullable id)object forKey:(const void *)key;
 
+#pragma mark - Swizzle
+
+/*!
+ @brief 使用swizzle替换类实例方法。复杂情况可能会冲突
+ 
+ @param originalSelector 原始方法
+ @param swizzleSelector  替换方法
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
+
+/*!
+ @brief 使用swizzle替换类静态方法。复杂情况可能会冲突
+ 
+ @param originalSelector 原始方法
+ @param swizzleSelector  替换方法
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
+
+/*!
+ @brief 使用swizzle替换类实例方法为block实现。复杂情况可能会冲突
+ @discussion swizzleBlock示例：^(UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+ 
+ @param originalSelector 原始方法
+ @param swizzleSelector  替换方法
+ @param swizzleBlock 实现block
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock;
+
+/*!
+ @brief 使用swizzle替换类静态方法为block实现。复杂情况可能会冲突
+ @discussion swizzleBlock示例：^(UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+ 
+ @param originalSelector 原始方法
+ @param swizzleSelector  替换方法
+ @param swizzleBlock 实现block
+ @return 是否成功
+ */
++ (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock;
+
+/*!
+ @brief 生成原始方法对应的随机替换方法
+ 
+ @param selector 原始方法
+ @return 替换方法
+ */
++ (SEL)fwSwizzleSelectorForSelector:(SEL)selector;
+
 #pragma mark - Selector
 
 /*!

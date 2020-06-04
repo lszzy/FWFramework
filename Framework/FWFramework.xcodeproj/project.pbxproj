@@ -221,8 +221,8 @@
 		2F2121FB2408E80600F74653 /* FWImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2121EB2408E80500F74653 /* FWImageDownloader.m */; };
 		2F217937218DEC6900B16AED /* UIPageControl+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */; };
-		2F3E513524877B6400262AFB /* NSObject+FWSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F3E513324877B6400262AFB /* NSObject+FWSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F3E513624877B6400262AFB /* NSObject+FWSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E513424877B6400262AFB /* NSObject+FWSwizzle.m */; };
+		2F3E513B2488997700262AFB /* FWSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F3E51392488997700262AFB /* FWSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F3E513C2488997700262AFB /* FWSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E513A2488997700262AFB /* FWSwizzle.m */; };
 		2F41A74822A106980008E4E2 /* UICollectionView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F41A74922A106980008E4E2 /* UICollectionView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */; };
 		2F46B77A24534E8100EEEFF0 /* UIAlertController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F46B77824534E8100EEEFF0 /* UIAlertController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -578,8 +578,8 @@
 		2F2121EB2408E80500F74653 /* FWImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWImageDownloader.m; sourceTree = "<group>"; };
 		2F217935218DEC6900B16AED /* UIPageControl+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIPageControl+FWFramework.h"; sourceTree = "<group>"; };
 		2F217936218DEC6900B16AED /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
-		2F3E513324877B6400262AFB /* NSObject+FWSwizzle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWSwizzle.h"; sourceTree = "<group>"; };
-		2F3E513424877B6400262AFB /* NSObject+FWSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWSwizzle.m"; sourceTree = "<group>"; };
+		2F3E51392488997700262AFB /* FWSwizzle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSwizzle.h; sourceTree = "<group>"; };
+		2F3E513A2488997700262AFB /* FWSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSwizzle.m; sourceTree = "<group>"; };
 		2F41A74622A106980008E4E2 /* UICollectionView+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+FWFramework.h"; sourceTree = "<group>"; };
 		2F41A74722A106980008E4E2 /* UICollectionView+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+FWFramework.m"; sourceTree = "<group>"; };
 		2F46B77824534E8100EEEFF0 /* UIAlertController+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+FWFramework.h"; sourceTree = "<group>"; };
@@ -915,8 +915,6 @@
 				2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */,
 				2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */,
 				2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */,
-				2F3E513324877B6400262AFB /* NSObject+FWSwizzle.h */,
-				2F3E513424877B6400262AFB /* NSObject+FWSwizzle.m */,
 				2F03A535216CF4B9001965A1 /* NSObject+FWSafeType.h */,
 				2F03A54D216CF4B9001965A1 /* NSObject+FWSafeType.m */,
 				2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */,
@@ -1003,6 +1001,8 @@
 				2F1D8B8221B02ED400E0F820 /* FWRouter.m */,
 				2F03A565216CF4B9001965A1 /* FWState.h */,
 				2F03A56B216CF4B9001965A1 /* FWState.m */,
+				2F3E51392488997700262AFB /* FWSwizzle.h */,
+				2F3E513A2488997700262AFB /* FWSwizzle.m */,
 				2FBFB76622C6766B00E669B6 /* FWTest.h */,
 				2FBFB76722C6766B00E669B6 /* FWTest.m */,
 				2FBFB76B22C680A800E669B6 /* FWTest.swift */,
@@ -1285,7 +1285,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F3E513524877B6400262AFB /* NSObject+FWSwizzle.h in Headers */,
+				2F3E513B2488997700262AFB /* FWSwizzle.h in Headers */,
 				2FAC8524247CCAE300E5ED36 /* FWModel.h in Headers */,
 				2FD1BD0624667377005B1100 /* FWPopupMenu.h in Headers */,
 				2F160C2D24548A4E00F68AB4 /* FWAppAlertPlugin.h in Headers */,
@@ -1572,7 +1572,6 @@
 				2F1B2489242D0336009A0F83 /* FWImageCoder.m in Sources */,
 				2FCE514021D3A43E009EA65E /* FWDatabaseQueue.m in Sources */,
 				2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */,
-				2F3E513624877B6400262AFB /* NSObject+FWSwizzle.m in Sources */,
 				2FA99EA8228E80810059DFDB /* UISwitch+FWFramework.m in Sources */,
 				2F1E61F922AE90F400A1AB49 /* FWAsyncSocket.m in Sources */,
 				2F03A640216CF882001965A1 /* FWNetworkAgent.m in Sources */,
@@ -1608,6 +1607,7 @@
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
 				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
 				2F03A5DB216CF4B9001965A1 /* NSNumber+FWFramework.m in Sources */,
+				2F3E513C2488997700262AFB /* FWSwizzle.m in Sources */,
 				2F03A652216CF882001965A1 /* FWSecurityPolicy.m in Sources */,
 				2FDF9B07244EED91000BB1E3 /* NSBundle+FWLanguage.m in Sources */,
 				2FBFB73722C5D98400E669B6 /* UIColor+FWFramework.swift in Sources */,

@@ -24,6 +24,7 @@
 #import "FWProxy.h"
 #import "FWRouter.h"
 #import "FWState.h"
+#import "FWSwizzle.h"
 #import "FWTest.h"
 #import "FWTuple.h"
 

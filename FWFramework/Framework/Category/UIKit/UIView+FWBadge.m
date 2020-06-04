@@ -9,7 +9,7 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIViewController+FWBar.h"
-#import "NSObject+FWSwizzle.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWBadgeView
@@ -148,19 +148,17 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [NSObject fwSwizzleMethod:objc_getClass("UITabBarButton") selector:@selector(layoutSubviews) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return FWSwizzleBlock(UIView, FWSwizzleReturn(void), FWSwizzleArguments(), FWSwizzleCode({
-                FWSwizzleOriginal();
-                
-                // 解决因为层级关系变化导致的badgeView被遮挡问题
-                for (UIView *subview in selfObject.subviews) {
-                    if ([subview isKindOfClass:[FWBadgeView class]]) {
-                        [selfObject bringSubviewToFront:subview];
-                        break;
-                    }
+        FWSwizzleMethod(objc_getClass("UITabBarButton"), @selector(layoutSubviews), nil, UIView *, void, FWSwizzleArguments(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            // 解决因为层级关系变化导致的badgeView被遮挡问题
+            for (UIView *subview in selfObject.subviews) {
+                if ([subview isKindOfClass:[FWBadgeView class]]) {
+                    [selfObject bringSubviewToFront:subview];
+                    break;
                 }
-            }));
-        }];
+            }
+        }));
     });
 }
 

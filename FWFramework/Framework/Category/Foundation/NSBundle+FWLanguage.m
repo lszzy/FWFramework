@@ -8,7 +8,7 @@
  */
 
 #import "NSBundle+FWLanguage.h"
-#import "NSObject+FWSwizzle.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageChangedNotification";
@@ -101,7 +101,7 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 动态替换initWithPath:拦截处理。如果不需要处理三方SDK和系统组件，则不替换
-        FWSwizzleMethod(NSBundle, @selector(initWithPath:), FWSwizzleReturn(NSBundle *), FWSwizzleArguments(NSString *path), FWSwizzleCode({
+        FWSwizzleMethod([NSBundle class], @selector(initWithPath:), nil, FWSwizzleType(NSBundle *), FWSwizzleType(NSBundle *), FWSwizzleArguments(NSString *path), FWSwizzleCode({
             // bundle不存在或者已经处理过，直接返回
             NSBundle *bundle = FWSwizzleOriginal(path);
             if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {

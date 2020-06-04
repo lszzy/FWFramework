@@ -105,6 +105,54 @@
     objc_setAssociatedObject(self, key, [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+#pragma mark - Swizzle
+
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector
+{
+    Method originalMethod = class_getInstanceMethod(self, originalSelector);
+    Method swizzleMethod = class_getInstanceMethod(self, swizzleSelector);
+    if (!swizzleMethod) {
+        return NO;
+    }
+    
+    if (originalMethod) {
+        class_addMethod(self, originalSelector, class_getMethodImplementation(self, originalSelector), method_getTypeEncoding(originalMethod));
+    } else {
+        class_addMethod(self, originalSelector, imp_implementationWithBlock(^(id selfObject){}), "v@:");
+    }
+    class_addMethod(self, swizzleSelector, class_getMethodImplementation(self, swizzleSelector), method_getTypeEncoding(swizzleMethod));
+    
+    method_exchangeImplementations(class_getInstanceMethod(self, originalSelector), class_getInstanceMethod(self, swizzleSelector));
+    return YES;
+}
+
++ (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector
+{
+    return [object_getClass((id)self) fwSwizzleInstanceMethod:originalSelector with:swizzleSelector];
+}
+
++ (BOOL)fwSwizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock
+{
+    Method originalMethod = class_getInstanceMethod(self, originalSelector);
+    Method swizzleMethod = class_getInstanceMethod(self, swizzleSelector);
+    if (!originalMethod || swizzleMethod) return NO;
+    
+    class_addMethod(self, originalSelector, class_getMethodImplementation(self, originalSelector), method_getTypeEncoding(originalMethod));
+    class_addMethod(self, swizzleSelector, imp_implementationWithBlock(swizzleBlock), method_getTypeEncoding(originalMethod));
+    method_exchangeImplementations(class_getInstanceMethod(self, originalSelector), class_getInstanceMethod(self, swizzleSelector));
+    return YES;
+}
+
++ (BOOL)fwSwizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock
+{
+    return [object_getClass((id)self) fwSwizzleInstanceMethod:originalSelector with:swizzleSelector block:swizzleBlock];
+}
+
++ (SEL)fwSwizzleSelectorForSelector:(SEL)selector
+{
+    return NSSelectorFromString([NSString stringWithFormat:@"fw_swizzle_%x_%@", arc4random(), NSStringFromSelector(selector)]);
+}
+
 #pragma mark - Selector
 
 - (id)fwPerformSelector:(SEL)aSelector

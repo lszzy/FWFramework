@@ -8,7 +8,7 @@
 
 #import "UIViewController+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
-#import "NSObject+FWSwizzle.h"
+#import "NSObject+FWRuntime.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerPresentationTarget
