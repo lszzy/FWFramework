@@ -207,19 +207,15 @@
         }];
         
         Class studentClass = [FWTestCase_FWRuntime_Student class];
-        [FWSwizzle swizzleClass:studentClass selector:@selector(sayHello3:) withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-            return ^(FWTestCase_FWRuntime_Student *selfObject, BOOL value) {
-                void (*originalMSG)(id, SEL, BOOL);
-                originalMSG = (void (*)(id, SEL, BOOL value))originalIMP();
-                originalMSG(selfObject, originalCMD, value);
-                
-                // 防止父类子类重复调用
-                BOOL isSelf = (studentClass == [selfObject class]);
-                if (isSelf) {
-                    selfObject.count += 2;
-                }
-            };
-        }];
+        FWSwizzleClass(FWTestCase_FWRuntime_Student, @selector(sayHello3:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL value), FWSwizzleCode({
+            FWSwizzleOriginal(value);
+            
+            // 防止父类子类重复调用
+            BOOL isSelf = (studentClass == [selfObject class]);
+            if (isSelf) {
+                selfObject.count += 2;
+            }
+        }));
         
         [FWSwizzle swizzleClass:[FWTestCase_FWRuntime_Person class] selector:@selector(sayHello3:) identifier:@"Test" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
             return ^(FWTestCase_FWRuntime_Person *selfObject, BOOL value) {
@@ -256,22 +252,20 @@
     FWAssertTrue(student.count == 1);
     
     student = [FWTestCase_FWRuntime_Student new];
-    [FWSwizzle swizzleObject:student selector:@selector(sayHello2:) identifier:@"s_sayHello2:" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return ^(FWTestCase_FWRuntime_Student *selfObject, BOOL value) {
-            ((void (*)(id, SEL, BOOL))originalIMP())(selfObject, originalCMD, value);
-            
-            // 防止影响其它对象
-            if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(sayHello2:) identifier:@"s_sayHello2:"]) return;
-            selfObject.count += 2;
-        };
-    }];
+    FWSwizzleMethod(student, @selector(sayHello2:), @"s_sayHello2:", FWSwizzleType(FWTestCase_FWRuntime_Student *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL value), FWSwizzleCode({
+        ((void (*)(id, SEL, BOOL))originalIMP())(selfObject, originalCMD, value);
+        
+        // 防止影响其它对象
+        if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(sayHello2:) identifier:@"s_sayHello2:"]) return;
+        selfObject.count += 2;
+    }));
     [FWSwizzle swizzleObject:student selector:@selector(sayHello2:) identifier:@"p_sayHello2:" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return ^(FWTestCase_FWRuntime_Person *selfObject, BOOL value) {
-            ((void (*)(id, SEL, BOOL))originalIMP())(selfObject, originalCMD, value);
+        return FWSwizzleBlock(FWSwizzleType(FWTestCase_FWRuntime_Person *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL value), FWSwizzleCode({
+            originalMSG(selfObject, originalCMD, value);
             
             if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(sayHello2:) identifier:@"p_sayHello2:"]) return;
             selfObject.count += 3;
-        };
+        }));
     }];
     [student sayHello2:YES];
     FWAssertTrue(student.count == 6);
