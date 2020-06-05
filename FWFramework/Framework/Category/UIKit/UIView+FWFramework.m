@@ -9,7 +9,7 @@
 
 #import "UIView+FWFramework.h"
 #import "UIImage+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation UIView (FWFramework)
@@ -18,7 +18,14 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUIViewIntrinsicContentSize)];
+        FWSwizzleClass(UIView, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
+            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwSetIntrinsicContentSize:));
+            if (value) {
+                return [value CGSizeValue];
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
     });
 }
 
@@ -52,16 +59,6 @@
         objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), nil, OBJC_ASSOCIATION_ASSIGN);
     } else {
         objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), [NSValue valueWithCGSize:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-- (CGSize)fwInnerUIViewIntrinsicContentSize
-{
-    NSValue *value = objc_getAssociatedObject(self, @selector(fwSetIntrinsicContentSize:));
-    if (value) {
-        return [value CGSizeValue];
-    } else {
-        return [self fwInnerUIViewIntrinsicContentSize];
     }
 }
 

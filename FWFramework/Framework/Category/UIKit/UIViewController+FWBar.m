@@ -9,8 +9,9 @@
 #import "UIViewController+FWBar.h"
 #import "UIView+FWBlock.h"
 #import "UIScreen+FWFramework.h"
-#import "NSObject+FWFramework.h"
 #import "UIImage+FWFramework.h"
+#import "NSObject+FWRuntime.h"
+#import "FWSwizzle.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 
@@ -20,8 +21,22 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(prefersStatusBarHidden) with:@selector(fwInnerPrefersStatusBarHidden)];
-        [self fwSwizzleInstanceMethod:@selector(preferredStatusBarStyle) with:@selector(fwInnerPreferredStatusBarStyle)];
+        FWSwizzleClass(UIViewController, @selector(prefersStatusBarHidden), FWSwizzleReturn(BOOL), FWSwizzleArgs(), FWSwizzleCode({
+            NSNumber *hiddenValue = objc_getAssociatedObject(selfObject, @selector(fwStatusBarHidden));
+            if (hiddenValue) {
+                return [hiddenValue boolValue];
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
+        FWSwizzleClass(UIViewController, @selector(preferredStatusBarStyle), FWSwizzleReturn(UIStatusBarStyle), FWSwizzleArgs(), FWSwizzleCode({
+            NSNumber *styleValue = objc_getAssociatedObject(selfObject, @selector(fwStatusBarStyle));
+            if (styleValue) {
+                return [styleValue integerValue];
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
     });
 }
 
@@ -58,26 +73,6 @@
         
         // 视图控制器生效
         [self setNeedsStatusBarAppearanceUpdate];
-    }
-}
-
-- (BOOL)fwInnerPrefersStatusBarHidden
-{
-    NSNumber *hiddenValue = objc_getAssociatedObject(self, @selector(fwStatusBarHidden));
-    if (hiddenValue) {
-        return [hiddenValue boolValue];
-    } else {
-        return [self fwInnerPrefersStatusBarHidden];
-    }
-}
-
-- (UIStatusBarStyle)fwInnerPreferredStatusBarStyle
-{
-    NSNumber *styleValue = objc_getAssociatedObject(self, @selector(fwStatusBarStyle));
-    if (styleValue) {
-        return [styleValue integerValue];
-    } else {
-        return [self fwInnerPreferredStatusBarStyle];
     }
 }
 

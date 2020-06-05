@@ -7,7 +7,7 @@
 //
 
 #import "UITableView+FWTemplateLayout.h"
-#import "NSObject+FWRuntime.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - UITableView+FWTemplateLayout
@@ -94,7 +94,25 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(updateConstraints) with:@selector(fwInnerUIViewUpdateConstraints)];
+        FWSwizzleClass(UIView, @selector(updateConstraints), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (selfObject.fwAutoCollapse && selfObject.fwInnerCollapseConstraints.count > 0) {
+                // Absent意味着视图没有固有size，即{-1, -1}
+                const CGSize absentIntrinsicContentSize = CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric);
+                
+                // 计算固有尺寸
+                const CGSize contentSize = [selfObject intrinsicContentSize];
+                
+                // 如果视图没有固定尺寸，自动设置约束
+                if (CGSizeEqualToSize(contentSize, absentIntrinsicContentSize) ||
+                    CGSizeEqualToSize(contentSize, CGSizeZero)) {
+                    selfObject.fwCollapsed = YES;
+                } else {
+                    selfObject.fwCollapsed = NO;
+                }
+            }
+        }));
     });
 }
 
@@ -140,27 +158,6 @@
         objc_setAssociatedObject(self, _cmd, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return constraints;
-}
-
-- (void)fwInnerUIViewUpdateConstraints
-{
-    [self fwInnerUIViewUpdateConstraints];
-    
-    if (self.fwAutoCollapse && self.fwInnerCollapseConstraints.count > 0) {
-        // Absent意味着视图没有固有size，即{-1, -1}
-        const CGSize absentIntrinsicContentSize = CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric);
-        
-        // 计算固有尺寸
-        const CGSize contentSize = [self intrinsicContentSize];
-        
-        // 如果视图没有固定尺寸，自动设置约束
-        if (CGSizeEqualToSize(contentSize, absentIntrinsicContentSize) ||
-            CGSizeEqualToSize(contentSize, CGSizeZero)) {
-            self.fwCollapsed = YES;
-        } else {
-            self.fwCollapsed = NO;
-        }
-    }
 }
 
 - (CGFloat)fwTemplateHeightWithWidth:(CGFloat)width
