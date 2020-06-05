@@ -325,11 +325,33 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(setFrame:) with:@selector(fwInnerUIViewSetFrame:)];
-        [self fwSwizzleInstanceMethod:@selector(setHidden:) with:@selector(fwInnerUIViewSetHidden:)];
-        [self fwSwizzleInstanceMethod:@selector(setAlpha:) with:@selector(fwInnerUIViewSetAlpha:)];
-        [self fwSwizzleInstanceMethod:@selector(setBounds:) with:@selector(fwInnerUIViewSetBounds:)];
-        [self fwSwizzleInstanceMethod:@selector(didMoveToWindow) with:@selector(fwInnerUIViewDidMoveToWindow)];
+        FWSwizzleClass(UIView, @selector(setFrame:), FWSwizzleReturn(void), FWSwizzleArgs(CGRect frame), FWSwizzleCode({
+            FWSwizzleOriginal(frame);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(setHidden:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
+            FWSwizzleOriginal(hidden);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(setAlpha:), FWSwizzleReturn(void), FWSwizzleArgs(CGFloat alpha), FWSwizzleCode({
+            FWSwizzleOriginal(alpha);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(setBounds:), FWSwizzleReturn(void), FWSwizzleArgs(CGRect bounds), FWSwizzleCode({
+            FWSwizzleOriginal(bounds);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(didMoveToWindow), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (![selfObject fwStatisticalExposureIsRegistered]) return;
+            [NSObject cancelPreviousPerformRequestsWithTarget:selfObject selector:@selector(fwStatisticalExposureCalculate) object:nil];
+            [selfObject performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
+        }));
         
         FWSwizzleClass(UITableView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
@@ -362,43 +384,6 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
             }
         }));
     });
-}
-
-- (void)fwInnerUIViewSetFrame:(CGRect)frame
-{
-    [self fwInnerUIViewSetFrame:frame];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewSetBounds:(CGRect)bounds
-{
-    [self fwInnerUIViewSetBounds:bounds];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewSetHidden:(BOOL)hidden
-{
-    [self fwInnerUIViewSetHidden:hidden];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewSetAlpha:(CGFloat)alpha
-{
-    [self fwInnerUIViewSetAlpha:alpha];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewDidMoveToWindow
-{
-    [self fwInnerUIViewDidMoveToWindow];
-    
-    if (![self fwStatisticalExposureIsRegistered]) return;
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
-    [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
 }
 
 #pragma mark - Exposure
