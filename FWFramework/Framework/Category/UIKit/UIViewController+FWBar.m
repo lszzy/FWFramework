@@ -11,7 +11,7 @@
 #import "UIScreen+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "NSObject+FWRuntime.h"
-#import "FWSwizzle.h"
+#import "NSObject+FWSwizzle.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 

@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "NSObject+FWBlock.h"
 #import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import "NSObject+FWSafeType.h"
 #import "NSObject+FWThread.h"
 

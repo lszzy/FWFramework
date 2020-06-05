@@ -7,7 +7,7 @@
 //
 
 #import "UITableView+FWTemplateLayout.h"
-#import "FWSwizzle.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - UITableView+FWTemplateLayout
