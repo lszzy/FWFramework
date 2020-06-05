@@ -359,6 +359,7 @@
 		2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE6519523167C280078ECE4 /* FWTableViewController.m */; };
 		2FF7EEC1248A1FBE00B3CA39 /* NSObject+FWSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF7EEBF248A1FBE00B3CA39 /* NSObject+FWSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF7EEC2248A1FBE00B3CA39 /* NSObject+FWSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EEC0248A1FBE00B3CA39 /* NSObject+FWSwizzle.m */; };
+		2FF7EED1248A3BFF00B3CA39 /* FWViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */; };
 /* End PBXBuildFile section */
@@ -717,6 +718,7 @@
 		2FE6519523167C280078ECE4 /* FWTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTableViewController.m; sourceTree = "<group>"; };
 		2FF7EEBF248A1FBE00B3CA39 /* NSObject+FWSwizzle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWSwizzle.h"; sourceTree = "<group>"; };
 		2FF7EEC0248A1FBE00B3CA39 /* NSObject+FWSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWSwizzle.m"; sourceTree = "<group>"; };
+		2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWViewController.swift; sourceTree = "<group>"; };
 		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
 		2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWVendor.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1030,6 +1032,7 @@
 			children = (
 				2FD1A51A21D4B5EA00A215C2 /* FWViewController.h */,
 				2FD1A51B21D4B5EA00A215C2 /* FWViewController.m */,
+				2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */,
 				2F6492AA2316880C002E15AC /* FWCollectionViewController.h */,
 				2F6492AB2316880C002E15AC /* FWCollectionViewController.m */,
 				2FD1A52421D4BD4100A215C2 /* FWScrollViewController.h */,
@@ -1640,6 +1643,7 @@
 				2FB7CBCE21C242D5002E5412 /* FWTagCollectionView.m in Sources */,
 				2F03A581216CF4B9001965A1 /* UIButton+FWFramework.m in Sources */,
 				2F70EDE02327864700498538 /* FWAppToastPlugin.m in Sources */,
+				2FF7EED1248A3BFF00B3CA39 /* FWViewController.swift in Sources */,
 				2F03A5B6216CF4B9001965A1 /* UIView+FWBadge.m in Sources */,
 				2F03A5DD216CF4B9001965A1 /* NSFileManager+FWFramework.m in Sources */,
 				2F03A632216CF882001965A1 /* FWNetworkConfig.m in Sources */,
