@@ -9,7 +9,7 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIViewController+FWBar.h"
-#import "FWSwizzle.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWBadgeView

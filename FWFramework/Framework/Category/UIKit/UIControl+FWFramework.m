@@ -8,7 +8,7 @@
  */
 
 #import "UIControl+FWFramework.h"
-#import "FWSwizzle.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation UIControl (FWFramework)

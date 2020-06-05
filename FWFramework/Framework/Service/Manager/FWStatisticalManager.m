@@ -12,7 +12,7 @@
 #import "UIView+FWFramework.h"
 #import "UITableView+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
-#import "FWSwizzle.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWStatistical
@@ -156,10 +156,10 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(id<UITableViewDelegate>), FWSwizzleReturn(void), FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), FWSwizzleCode({
+        FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(NSObject<UITableViewDelegate> *), FWSwizzleReturn(void), FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), FWSwizzleCode({
             FWSwizzleOriginal(tableView, indexPath);
             
-            if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
+            if (![selfObject fwIsSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
             if (![tableView fwStatisticalClickIsRegistered]) return;
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [tableView fwStatisticalClickHandler:cell indexPath:indexPath];
@@ -168,10 +168,10 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(id<UICollectionViewDelegate>), FWSwizzleReturn(void), FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), FWSwizzleCode({
+        FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(NSObject<UICollectionViewDelegate> *), FWSwizzleReturn(void), FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), FWSwizzleCode({
             FWSwizzleOriginal(collectionView, indexPath);
             
-            if (![FWSwizzle isSwizzleObject:selfObject selector:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
+            if (![selfObject fwIsSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
             if (![collectionView fwStatisticalClickIsRegistered]) return;
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             [collectionView fwStatisticalClickHandler:cell indexPath:indexPath];

@@ -8,7 +8,7 @@
 
 #import "UIViewController+FWAlert.h"
 #import "UIAlertController+FWFramework.h"
-#import "FWSwizzle.h"
+#import "NSObject+FWSwizzle.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
