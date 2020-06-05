@@ -60,6 +60,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 调用控制器拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
 - (nullable id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object;
 
+// 调用控制器拦截方法默认实现并返回，可携带参数(如setWebRequest:等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
+- (nullable id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object parameter:(nullable id)parameter;
+
 @end
 
 NS_ASSUME_NONNULL_END

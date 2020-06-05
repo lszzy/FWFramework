@@ -84,6 +84,23 @@
     return nil;
 }
 
+- (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object parameter:(id)parameter
+{
+    SEL forwardSelector = [object fwInnerIntercepterForwardSelector:intercepter];
+    if (forwardSelector) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        char *type = method_copyReturnType(class_getInstanceMethod([object class], forwardSelector));
+        if (type && *type == 'v') {
+            [object performSelector:forwardSelector withObject:parameter];
+        } else {
+            return [object performSelector:forwardSelector withObject:parameter];
+        }
+#pragma clang diagnostic pop
+    }
+    return nil;
+}
+
 - (NSArray *)protocolsWithClass:(Class)clazz
 {
     static NSMutableDictionary *classProtocols = nil;

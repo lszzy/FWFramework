@@ -100,6 +100,7 @@
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWPopupMenu", @"TestPopupMenuViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
+                                             @[@"FWViewController(Swift)", [TestSwiftViewController new]],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              @[@"FWStorekitManager", @"TestStorekitViewController"],
