@@ -8,7 +8,7 @@
 
 #import "UIViewController+FWAlert.h"
 #import "UIAlertController+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "FWSwizzle.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
@@ -328,40 +328,34 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(viewDidAppear:) with:@selector(fwInnerAlertViewDidAppear:)];
-        [self fwSwizzleInstanceMethod:@selector(viewDidDisappear:) with:@selector(fwInnerAlertViewDidDisappear:)];
+        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            if (!selfObject.fwAlertPriorityEnabled) return;
+            
+            // 替换弹出框时显示完成立即隐藏
+            if (selfObject.fwAlertPriorityDismissState == 1) {
+                selfObject.fwAlertPriorityDismissState = 2;
+                [selfObject dismissViewControllerAnimated:YES completion:nil];
+            }
+        }));
+        FWSwizzleClass(UIViewController, @selector(viewDidDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            if (!selfObject.fwAlertPriorityEnabled) return;
+            
+            // 立即隐藏不移除队列，正常隐藏移除队列
+            NSMutableArray *alertControllers = [selfObject fwInnerAlertPriorityControllers:NO];
+            if (selfObject.fwAlertPriorityDismissState > 0) {
+                selfObject.fwAlertPriorityDismissState = 0;
+            } else {
+                [alertControllers removeObject:selfObject];
+            }
+            
+            // 按优先级显示下一个弹出框
+            if (alertControllers.count > 0) {
+                [selfObject.fwAlertPriorityParentController presentViewController:[alertControllers firstObject] animated:YES completion:nil];
+            }
+        }));
     });
-}
-
-- (void)fwInnerAlertViewDidAppear:(BOOL)animated
-{
-    [self fwInnerAlertViewDidAppear:animated];
-    if (!self.fwAlertPriorityEnabled) return;
-    
-    // 替换弹出框时显示完成立即隐藏
-    if (self.fwAlertPriorityDismissState == 1) {
-        self.fwAlertPriorityDismissState = 2;
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-}
-
-- (void)fwInnerAlertViewDidDisappear:(BOOL)animated
-{
-    [self fwInnerAlertViewDidDisappear:animated];
-    if (!self.fwAlertPriorityEnabled) return;
-    
-    // 立即隐藏不移除队列，正常隐藏移除队列
-    NSMutableArray *alertControllers = [self fwInnerAlertPriorityControllers:NO];
-    if (self.fwAlertPriorityDismissState > 0) {
-        self.fwAlertPriorityDismissState = 0;
-    } else {
-        [alertControllers removeObject:self];
-    }
-    
-    // 按优先级显示下一个弹出框
-    if (alertControllers.count > 0) {
-        [self.fwAlertPriorityParentController presentViewController:[alertControllers firstObject] animated:YES completion:nil];
-    }
 }
 
 - (void)fwAlertPriorityPresentIn:(UIViewController *)viewController
