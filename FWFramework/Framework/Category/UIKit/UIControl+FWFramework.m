@@ -8,7 +8,7 @@
  */
 
 #import "UIControl+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation UIControl (FWFramework)
@@ -17,21 +17,18 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(sendAction:to:forEvent:) with:@selector(fwInnerUIControlSendAction:to:forEvent:)];
+        FWSwizzleClass(UIControl, @selector(sendAction:to:forEvent:), FWSwizzleReturn(void), FWSwizzleArgs(SEL action, id target, UIEvent *event), FWSwizzleCode({
+            // 仅拦截Touch事件，且配置了间隔时间的Event
+            if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {
+                if (event.timestamp - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
+                    return;
+                }
+                selfObject.fwTouchEventTimestamp = event.timestamp;
+            }
+            
+            FWSwizzleOriginal(action, target, event);
+        }));
     });
-}
-
-- (void)fwInnerUIControlSendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
-{
-    // 仅拦截Touch事件，且配置了间隔时间的Event
-    if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && self.fwTouchEventInterval > 0) {
-        if (event.timestamp - self.fwTouchEventTimestamp < self.fwTouchEventInterval) {
-            return;
-        }
-        self.fwTouchEventTimestamp = event.timestamp;
-    }
-    
-    [self fwInnerUIControlSendAction:action to:target forEvent:event];
 }
 
 - (NSTimeInterval)fwTouchEventInterval

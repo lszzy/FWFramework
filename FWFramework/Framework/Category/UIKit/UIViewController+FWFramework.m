@@ -8,7 +8,7 @@
 
 #import "UIViewController+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerPresentationTarget
@@ -62,33 +62,23 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     if (@available(iOS 13.0, *)) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            [UIViewController fwSwizzleInstanceMethod:@selector(setModalPresentationStyle:) with:@selector(fwInnerSetModalPresentationStyle:)];
-            [UIViewController fwSwizzleInstanceMethod:@selector(presentViewController:animated:completion:) with:@selector(fwInnerPresentViewController:animated:completion:)];
+            FWSwizzleClass(UIViewController, @selector(setModalPresentationStyle:), FWSwizzleReturn(void), FWSwizzleArgs(UIModalPresentationStyle style), FWSwizzleCode({
+                objc_setAssociatedObject(selfObject, @selector(fwDefaultModalPresentationStyle:), @(style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                FWSwizzleOriginal(style);
+            }));
+            FWSwizzleClass(UIViewController, @selector(presentViewController:animated:completion:), FWSwizzleReturn(void), FWSwizzleArgs(UIViewController *viewController, BOOL animated, void (^completion)(void)), FWSwizzleCode({
+                if (!objc_getAssociatedObject(viewController, @selector(fwDefaultModalPresentationStyle:)) &&
+                    fwStaticModalPresentationStyle != UIModalPresentationAutomatic) {
+                    if (viewController.modalPresentationStyle == UIModalPresentationAutomatic ||
+                        viewController.modalPresentationStyle == UIModalPresentationPageSheet) {
+                        viewController.modalPresentationStyle = fwStaticModalPresentationStyle;
+                    }
+                }
+                FWSwizzleOriginal(viewController, animated, completion);
+            }));
         });
         fwStaticModalPresentationStyle = style;
     }
-}
-
-- (void)fwInnerSetModalPresentationStyle:(UIModalPresentationStyle)style
-{
-    if (@available(iOS 13.0, *)) {
-        objc_setAssociatedObject(self, @selector(fwInnerSetModalPresentationStyle:), @(style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    [self fwInnerSetModalPresentationStyle:style];
-}
-
-- (void)fwInnerPresentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
-{
-    if (@available(iOS 13.0, *)) {
-        if (!objc_getAssociatedObject(viewController, @selector(fwInnerSetModalPresentationStyle:)) &&
-            fwStaticModalPresentationStyle != UIModalPresentationAutomatic) {
-            if (viewController.modalPresentationStyle == UIModalPresentationAutomatic ||
-                viewController.modalPresentationStyle == UIModalPresentationPageSheet) {
-                [viewController fwInnerSetModalPresentationStyle:fwStaticModalPresentationStyle];
-            }
-        }
-    }
-    [self fwInnerPresentViewController:viewController animated:animated completion:completion];
 }
 
 - (void (^)(void))fwPresentationDidDismiss
@@ -123,24 +113,21 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [UIViewController fwSwizzleInstanceMethod:@selector(dismissViewControllerAnimated:completion:) with:@selector(fwInnerDismissViewControllerAnimated:completion:)];
+        FWSwizzleClass(UIViewController, @selector(dismissViewControllerAnimated:completion:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated, void (^completion)(void)), FWSwizzleCode({
+            UIViewController *viewController = selfObject.presentedViewController ?: selfObject;
+            void (^dismissBlock)(void) = viewController.fwDismissBlock ?: viewController.navigationController.fwDismissBlock;
+            if (dismissBlock) {
+                FWSwizzleOriginal(animated, ^{
+                    if (completion) completion();
+                    if (dismissBlock) dismissBlock();
+                });
+            } else {
+                FWSwizzleOriginal(animated, completion);
+            }
+        }));
     });
     
     objc_setAssociatedObject(self, @selector(fwDismissBlock), fwDismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (void)fwInnerDismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion
-{
-    UIViewController *viewController = self.presentedViewController ?: self;
-    void (^dismissBlock)(void) = viewController.fwDismissBlock ?: viewController.navigationController.fwDismissBlock;
-    if (dismissBlock) {
-        [self fwInnerDismissViewControllerAnimated:flag completion:^{
-            if (completion) completion();
-            if (dismissBlock) dismissBlock();
-        }];
-    } else {
-        [self fwInnerDismissViewControllerAnimated:flag completion:completion];
-    }
 }
 
 #pragma mark - Popup

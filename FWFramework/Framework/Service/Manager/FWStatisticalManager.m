@@ -12,6 +12,7 @@
 #import "UIView+FWFramework.h"
 #import "UITableView+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWStatistical
@@ -155,32 +156,26 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        [(NSObject *)((UITableView *)self).delegate fwSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(id<UITableViewDelegate> delegate, UITableView *tableView, NSIndexPath *indexPath) {
-                void (*originalMSG)(id, SEL, UITableView *, NSIndexPath *);
-                originalMSG = (void (*)(id, SEL, UITableView *, NSIndexPath *))originalIMP();
-                originalMSG(delegate, originalCMD, tableView, indexPath);
-                
-                if (![tableView fwStatisticalClickIsRegistered]) return;
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                [tableView fwStatisticalClickHandler:cell indexPath:indexPath];
-            };
-        }];
+        FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(NSObject<UITableViewDelegate> *), FWSwizzleReturn(void), FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), FWSwizzleCode({
+            FWSwizzleOriginal(tableView, indexPath);
+            
+            if (![selfObject fwIsSwizzleMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
+            if (![tableView fwStatisticalClickIsRegistered]) return;
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            [tableView fwStatisticalClickHandler:cell indexPath:indexPath];
+        }));
         return;
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        [(NSObject *)((UICollectionView *)self).delegate fwSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(id<UICollectionViewDelegate> delegate, UICollectionView *collectionView, NSIndexPath *indexPath) {
-                void (*originalMSG)(id, SEL, UICollectionView *, NSIndexPath *);
-                originalMSG = (void (*)(id, SEL, UICollectionView *, NSIndexPath *))originalIMP();
-                originalMSG(delegate, originalCMD, collectionView, indexPath);
-                
-                if (![collectionView fwStatisticalClickIsRegistered]) return;
-                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                [collectionView fwStatisticalClickHandler:cell indexPath:indexPath];
-            };
-        }];
+        FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"FWStatisticalManager", FWSwizzleType(NSObject<UICollectionViewDelegate> *), FWSwizzleReturn(void), FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), FWSwizzleCode({
+            FWSwizzleOriginal(collectionView, indexPath);
+            
+            if (![selfObject fwIsSwizzleMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
+            if (![collectionView fwStatisticalClickIsRegistered]) return;
+            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+            [collectionView fwStatisticalClickHandler:cell indexPath:indexPath];
+        }));
         return;
     }
     
@@ -330,97 +325,65 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(setFrame:) with:@selector(fwInnerUIViewSetFrame:)];
-        [self fwSwizzleInstanceMethod:@selector(setHidden:) with:@selector(fwInnerUIViewSetHidden:)];
-        [self fwSwizzleInstanceMethod:@selector(setAlpha:) with:@selector(fwInnerUIViewSetAlpha:)];
-        [self fwSwizzleInstanceMethod:@selector(setBounds:) with:@selector(fwInnerUIViewSetBounds:)];
-        [self fwSwizzleInstanceMethod:@selector(didMoveToWindow) with:@selector(fwInnerUIViewDidMoveToWindow)];
+        FWSwizzleClass(UIView, @selector(setFrame:), FWSwizzleReturn(void), FWSwizzleArgs(CGRect frame), FWSwizzleCode({
+            FWSwizzleOriginal(frame);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(setHidden:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
+            FWSwizzleOriginal(hidden);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(setAlpha:), FWSwizzleReturn(void), FWSwizzleArgs(CGFloat alpha), FWSwizzleCode({
+            FWSwizzleOriginal(alpha);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(setBounds:), FWSwizzleReturn(void), FWSwizzleArgs(CGRect bounds), FWSwizzleCode({
+            FWSwizzleOriginal(bounds);
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UIView, @selector(didMoveToWindow), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (![selfObject fwStatisticalExposureIsRegistered]) return;
+            [NSObject cancelPreviousPerformRequestsWithTarget:selfObject selector:@selector(fwStatisticalExposureCalculate) object:nil];
+            [selfObject performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
+        }));
         
-        [self fwSwizzleInstanceMethod:@selector(reloadData) in:[UITableView class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UITableView *tableView) {
-                void (*originalMSG)(id, SEL);
-                originalMSG = (void (*)(id, SEL))originalIMP();
-                originalMSG(tableView, originalCMD);
-                
-                [tableView fwStatisticalExposureUpdate];
-            };
-        }];
-        [self fwSwizzleInstanceMethod:@selector(reloadData) in:[UICollectionView class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UICollectionView *collectionView) {
-                void (*originalMSG)(id, SEL);
-                originalMSG = (void (*)(id, SEL))originalIMP();
-                originalMSG(collectionView, originalCMD);
-                
-                [collectionView fwStatisticalExposureUpdate];
-            };
-        }];
-        
-        [self fwSwizzleInstanceMethod:@selector(didMoveToSuperview) in:[UITableViewCell class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UITableViewCell *cell) {
-                void (*originalMSG)(id, SEL);
-                originalMSG = (void (*)(id, SEL))originalIMP();
-                originalMSG(cell, originalCMD);
-                
-                if (cell.fwStatisticalClick || cell.fwStatisticalClickBlock) {
-                    [cell fwStatisticalClickCellRegister];
-                }
-                if (cell.fwStatisticalExposure || cell.fwStatisticalExposureBlock) {
-                    [cell fwStatisticalExposureCellRegister];
-                }
-            };
-        }];
-        [self fwSwizzleInstanceMethod:@selector(didMoveToSuperview) in:[UICollectionViewCell class] withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UICollectionViewCell *cell) {
-                void (*originalMSG)(id, SEL);
-                originalMSG = (void (*)(id, SEL))originalIMP();
-                originalMSG(cell, originalCMD);
-                
-                if (cell.fwStatisticalClick || cell.fwStatisticalClickBlock) {
-                    [cell fwStatisticalClickCellRegister];
-                }
-                if (cell.fwStatisticalExposure || cell.fwStatisticalExposureBlock) {
-                    [cell fwStatisticalExposureCellRegister];
-                }
-            };
-        }];
+        FWSwizzleClass(UITableView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UICollectionView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            [selfObject fwStatisticalExposureUpdate];
+        }));
+        FWSwizzleClass(UITableViewCell, @selector(didMoveToSuperview), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (selfObject.fwStatisticalClick || selfObject.fwStatisticalClickBlock) {
+                [selfObject fwStatisticalClickCellRegister];
+            }
+            if (selfObject.fwStatisticalExposure || selfObject.fwStatisticalExposureBlock) {
+                [selfObject fwStatisticalExposureCellRegister];
+            }
+        }));
+        FWSwizzleClass(UICollectionViewCell, @selector(didMoveToSuperview), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (selfObject.fwStatisticalClick || selfObject.fwStatisticalClickBlock) {
+                [selfObject fwStatisticalClickCellRegister];
+            }
+            if (selfObject.fwStatisticalExposure || selfObject.fwStatisticalExposureBlock) {
+                [selfObject fwStatisticalExposureCellRegister];
+            }
+        }));
     });
-}
-
-- (void)fwInnerUIViewSetFrame:(CGRect)frame
-{
-    [self fwInnerUIViewSetFrame:frame];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewSetBounds:(CGRect)bounds
-{
-    [self fwInnerUIViewSetBounds:bounds];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewSetHidden:(BOOL)hidden
-{
-    [self fwInnerUIViewSetHidden:hidden];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewSetAlpha:(CGFloat)alpha
-{
-    [self fwInnerUIViewSetAlpha:alpha];
-    
-    [self fwStatisticalExposureUpdate];
-}
-
-- (void)fwInnerUIViewDidMoveToWindow
-{
-    [self fwInnerUIViewDidMoveToWindow];
-    
-    if (![self fwStatisticalExposureIsRegistered]) return;
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwStatisticalExposureCalculate) object:nil];
-    [self performSelector:@selector(fwStatisticalExposureUpdate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
 }
 
 #pragma mark - Exposure

@@ -9,7 +9,7 @@
 #import "UIView+FWBadge.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIViewController+FWBar.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWBadgeView
@@ -148,21 +148,17 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(layoutSubviews) in:objc_getClass("UITabBarButton") withBlock:^id (__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
-            return ^(UIView *tabBarButton) {
-                void (*originalMSG)(id, SEL);
-                originalMSG = (void (*)(id, SEL))originalIMP();
-                originalMSG(tabBarButton, originalCMD);
-                
-                // 解决因为层级关系变化导致的badgeView被遮挡问题
-                for (UIView *subview in tabBarButton.subviews) {
-                    if ([subview isKindOfClass:[FWBadgeView class]]) {
-                        [tabBarButton bringSubviewToFront:subview];
-                        break;
-                    }
+        FWSwizzleMethod(objc_getClass("UITabBarButton"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            // 解决因为层级关系变化导致的badgeView被遮挡问题
+            for (UIView *subview in selfObject.subviews) {
+                if ([subview isKindOfClass:[FWBadgeView class]]) {
+                    [selfObject bringSubviewToFront:subview];
+                    break;
                 }
-            };
-        }];
+            }
+        }));
     });
 }
 

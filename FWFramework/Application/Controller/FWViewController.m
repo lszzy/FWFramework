@@ -9,6 +9,7 @@
 
 #import "FWViewController.h"
 #import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIViewController+FWViewController
@@ -77,6 +78,23 @@
             [object performSelector:forwardSelector];
         } else {
             return [object performSelector:forwardSelector];
+        }
+#pragma clang diagnostic pop
+    }
+    return nil;
+}
+
+- (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object parameter:(id)parameter
+{
+    SEL forwardSelector = [object fwInnerIntercepterForwardSelector:intercepter];
+    if (forwardSelector) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        char *type = method_copyReturnType(class_getInstanceMethod([object class], forwardSelector));
+        if (type && *type == 'v') {
+            [object performSelector:forwardSelector withObject:parameter];
+        } else {
+            return [object performSelector:forwardSelector withObject:parameter];
         }
 #pragma clang diagnostic pop
     }
@@ -231,35 +249,24 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [UIViewController fwSwizzleInstanceMethod:@selector(initWithNibName:bundle:) with:@selector(fwInnerIntercepterInitWithNibName:bundle:)];
-        [UIViewController fwSwizzleInstanceMethod:@selector(loadView) with:@selector(fwInnerIntercepterLoadView)];
-        [UIViewController fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerIntercepterViewDidLoad)];
+        FWSwizzleClass(UIViewController, @selector(initWithNibName:bundle:), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(NSString *nibNameOrNil, NSBundle *nibBundleOrNil), FWSwizzleCode({
+            UIViewController *viewController = FWSwizzleOriginal(nibNameOrNil, nibBundleOrNil);
+            [[FWViewControllerManager sharedInstance] hookInit:viewController];
+            return viewController;
+        }));
+        FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            [[FWViewControllerManager sharedInstance] hookLoadView:selfObject];
+        }));
+        FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            [[FWViewControllerManager sharedInstance] hookViewDidLoad:selfObject];
+        }));
         
         [UIViewController fwSwizzleInstanceMethod:@selector(respondsToSelector:) with:@selector(fwInnerIntercepterRespondsToSelector:)];
         [UIViewController fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerIntercepterMethodSignatureForSelector:)];
         [UIViewController fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerIntercepterForwardInvocation:)];
     });
-}
-
-#pragma mark - Hook
-
-- (instancetype)fwInnerIntercepterInitWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    id instance = [self fwInnerIntercepterInitWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    [[FWViewControllerManager sharedInstance] hookInit:instance];
-    return instance;
-}
-
-- (void)fwInnerIntercepterLoadView
-{
-    [self fwInnerIntercepterLoadView];
-    [[FWViewControllerManager sharedInstance] hookLoadView:self];
-}
-
-- (void)fwInnerIntercepterViewDidLoad
-{
-    [self fwInnerIntercepterViewDidLoad];
-    [[FWViewControllerManager sharedInstance] hookViewDidLoad:self];
 }
 
 #pragma mark - Forward

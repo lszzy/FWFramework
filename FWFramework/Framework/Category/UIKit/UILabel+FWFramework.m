@@ -9,7 +9,7 @@
 
 #import "UILabel+FWFramework.h"
 #import "UIView+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation UILabel (FWFramework)
@@ -18,8 +18,39 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(drawTextInRect:) with:@selector(fwInnerUILabelDrawTextInRect:)];
-        [self fwSwizzleInstanceMethod:@selector(intrinsicContentSize) with:@selector(fwInnerUILabelIntrinsicContentSize)];
+        FWSwizzleClass(UILabel, @selector(drawTextInRect:), FWSwizzleReturn(void), FWSwizzleArgs(CGRect rect), FWSwizzleCode({
+            NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
+            if (contentInsetValue) {
+                rect = UIEdgeInsetsInsetRect(rect, [contentInsetValue UIEdgeInsetsValue]);
+            }
+            
+            UIControlContentVerticalAlignment verticalAlignment = [objc_getAssociatedObject(selfObject, @selector(fwVerticalAlignment)) integerValue];
+            if (verticalAlignment == UIControlContentVerticalAlignmentTop) {
+                CGSize fitsSize = [selfObject sizeThatFits:rect.size];
+                rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, fitsSize.height);
+            } else if (verticalAlignment == UIControlContentVerticalAlignmentBottom) {
+                CGSize fitsSize = [selfObject sizeThatFits:rect.size];
+                rect = CGRectMake(rect.origin.x, rect.origin.y + (rect.size.height - fitsSize.height), rect.size.width, fitsSize.height);
+            }
+            
+            FWSwizzleOriginal(rect);
+        }));
+        FWSwizzleClass(UILabel, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
+            // 兼容UIView自定义估算
+            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwSetIntrinsicContentSize:));
+            if (value) {
+                return [value CGSizeValue];
+            }
+            
+            // 无自定义估算时动态计算
+            CGSize size = FWSwizzleOriginal();
+            NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
+            if (contentInsetValue) {
+                UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                size = CGSizeMake(size.width + contentInset.left + contentInset.right, size.height + contentInset.top + contentInset.bottom);
+            }
+            return size;
+        }));
     });
 }
 
@@ -45,43 +76,6 @@
     objc_setAssociatedObject(self, @selector(fwVerticalAlignment), @(fwVerticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [self setNeedsDisplay];
-}
-
-- (void)fwInnerUILabelDrawTextInRect:(CGRect)rect
-{
-    NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
-    if (contentInsetValue) {
-        rect = UIEdgeInsetsInsetRect(rect, [contentInsetValue UIEdgeInsetsValue]);
-    }
-    
-    UIControlContentVerticalAlignment verticalAlignment = [objc_getAssociatedObject(self, @selector(fwVerticalAlignment)) integerValue];
-    if (verticalAlignment == UIControlContentVerticalAlignmentTop) {
-        CGSize fitsSize = [self sizeThatFits:rect.size];
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, fitsSize.height);
-    } else if (verticalAlignment == UIControlContentVerticalAlignmentBottom) {
-        CGSize fitsSize = [self sizeThatFits:rect.size];
-        rect = CGRectMake(rect.origin.x, rect.origin.y + (rect.size.height - fitsSize.height), rect.size.width, fitsSize.height);
-    }
-    
-    [self fwInnerUILabelDrawTextInRect:rect];
-}
-
-- (CGSize)fwInnerUILabelIntrinsicContentSize
-{
-    // 兼容UIView自定义估算
-    NSValue *value = objc_getAssociatedObject(self, @selector(fwSetIntrinsicContentSize:));
-    if (value) {
-        return [value CGSizeValue];
-    }
-    
-    // 无自定义估算时动态计算
-    CGSize size = [self fwInnerUILabelIntrinsicContentSize];
-    NSValue *contentInsetValue = objc_getAssociatedObject(self, @selector(fwContentInset));
-    if (contentInsetValue) {
-        UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
-        size = CGSizeMake(size.width + contentInset.left + contentInset.right, size.height + contentInset.top + contentInset.bottom);
-    }
-    return size;
 }
 
 - (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text

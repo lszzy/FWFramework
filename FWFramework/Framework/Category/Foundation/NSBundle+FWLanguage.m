@@ -8,7 +8,7 @@
  */
 
 #import "NSBundle+FWLanguage.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import <objc/runtime.h>
 
 NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageChangedNotification";
@@ -101,7 +101,32 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 动态替换initWithPath:拦截处理。如果不需要处理三方SDK和系统组件，则不替换
-        [self fwSwizzleInstanceMethod:@selector(initWithPath:) with:@selector(fwInnerInitWithPath:)];
+        FWSwizzleClass(NSBundle, @selector(initWithPath:), FWSwizzleReturn(NSBundle *), FWSwizzleArgs(NSString *path), FWSwizzleCode({
+            // bundle不存在或者已经处理过，直接返回
+            NSBundle *bundle = FWSwizzleOriginal(path);
+            if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {
+                return bundle;
+            }
+            
+            // 过滤bundle是否需要查找本地化语言
+            BOOL (^filter)(NSBundle *bundle) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFilter:));
+            if (filter && filter(bundle)) {
+                if (![bundle isKindOfClass:[FWInnerBundle class]]) {
+                    // 处理bundle语言，使用通知方式
+                    object_setClass(bundle, [FWInnerBundle class]);
+                    
+                    // 自动加载上一次语言设置
+                    NSString *language = [NSBundle fwLocalizedLanguage];
+                    if (language) {
+                        [bundle fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
+                    }
+                    
+                    // 监听语言改变通知，切换bundle语言
+                    [[NSNotificationCenter defaultCenter] addObserver:bundle selector:@selector(fwLocalizedLanguageChanged:) name:FWLocalizedLanguageChangedNotification object:nil];
+                }
+            }
+            return bundle;
+        }));
     });
     
     // 保存自定义过滤block到mainBundle
@@ -117,34 +142,6 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
 - (NSBundle *)fwLocalizedBundle:(NSString *)language
 {
     return language ? [NSBundle bundleWithPath:[self pathForResource:language ofType:@"lproj"]] : nil;
-}
-
-- (instancetype)fwInnerInitWithPath:(NSString *)path
-{
-    // bundle不存在或者已经处理过，直接返回
-    NSBundle *bundle = [self fwInnerInitWithPath:path];
-    if (!bundle || [bundle isKindOfClass:[FWInnerBundle class]]) {
-        return bundle;
-    }
-    
-    // 过滤bundle是否需要查找本地化语言
-    BOOL (^filter)(NSBundle *bundle) = objc_getAssociatedObject(NSBundle.mainBundle, @selector(fwSetBundleFilter:));
-    if (filter && filter(bundle)) {
-        if (![bundle isKindOfClass:[FWInnerBundle class]]) {
-            // 处理bundle语言，使用通知方式
-            object_setClass(bundle, [FWInnerBundle class]);
-            
-            // 自动加载上一次语言设置
-            NSString *language = [NSBundle fwLocalizedLanguage];
-            if (language) {
-                [bundle fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
-            }
-            
-            // 监听语言改变通知，切换bundle语言
-            [[NSNotificationCenter defaultCenter] addObserver:bundle selector:@selector(fwLocalizedLanguageChanged:) name:FWLocalizedLanguageChangedNotification object:nil];
-        }
-    }
-    return bundle;
 }
 
 - (void)fwLocalizedLanguageChanged:(NSNotification *)notification

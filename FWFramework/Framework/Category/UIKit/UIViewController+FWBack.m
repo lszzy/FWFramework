@@ -8,7 +8,7 @@
  */
 
 #import "UIViewController+FWBack.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
@@ -112,23 +112,55 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerNavigationViewDidLoad)];
-        [self fwSwizzleInstanceMethod:@selector(navigationBar:shouldPopItem:) with:@selector(fwInnerNavigationBar:shouldPopItem:)];
-        [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarHidden) with:@selector(fwInnerChildViewControllerForStatusBarHidden)];
-        [self fwSwizzleInstanceMethod:@selector(childViewControllerForStatusBarStyle) with:@selector(fwInnerChildViewControllerForStatusBarStyle)];
+        FWSwizzleClass(UINavigationController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            // 拦截系统返回手势事件代理，加载自定义代理方法
+            if (selfObject.interactivePopGestureRecognizer.delegate != selfObject.fwDelegateProxy) {
+                selfObject.fwDelegateProxy.delegate = selfObject.interactivePopGestureRecognizer.delegate;
+                selfObject.fwDelegateProxy.navigationController = selfObject;
+                selfObject.interactivePopGestureRecognizer.delegate = selfObject.fwDelegateProxy;
+            }
+        }));
+        FWSwizzleClass(UINavigationController, @selector(navigationBar:shouldPopItem:), FWSwizzleReturn(BOOL), FWSwizzleArgs(UINavigationBar *navigationBar, UINavigationItem *item), FWSwizzleCode({
+            // 检查返回按钮点击事件钩子
+            if (selfObject.viewControllers.count >= navigationBar.items.count &&
+                [selfObject.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+                // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+                if (![selfObject.topViewController fwPopBackBarItem]) {
+                    if (@available(iOS 11, *)) {
+                    } else {
+                        // 处理iOS7.1导航栏透明度bug
+                        [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                            if (subview.alpha < 1.0) {
+                                [UIView animateWithDuration:.25 animations:^{
+                                    subview.alpha = 1.0;
+                                }];
+                            }
+                        }];
+                    }
+                    return NO;
+                }
+            }
+            
+            return FWSwizzleOriginal(navigationBar, item);
+        }));
+        FWSwizzleClass(UINavigationController, @selector(childViewControllerForStatusBarHidden), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(), FWSwizzleCode({
+            if (selfObject.topViewController) {
+                return selfObject.topViewController;
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
+        FWSwizzleClass(UINavigationController, @selector(childViewControllerForStatusBarStyle), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(), FWSwizzleCode({
+            // 调用setNeedsStatusBarAppearanceUpdate时，系统会调用window的rootViewController的preferredStatusBarStyle方法。如果root为导航栏，会导致视图控制器的preferredStatusBarStyle不调用。重写此方法使视图控制器的状态栏样式生效
+            if (selfObject.topViewController) {
+                return selfObject.topViewController;
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
     });
-}
-
-- (void)fwInnerNavigationViewDidLoad
-{
-    [self fwInnerNavigationViewDidLoad];
-    
-    // 拦截系统返回手势事件代理，加载自定义代理方法
-    if (self.interactivePopGestureRecognizer.delegate != self.fwDelegateProxy) {
-        self.fwDelegateProxy.delegate = self.interactivePopGestureRecognizer.delegate;
-        self.fwDelegateProxy.navigationController = self;
-        self.interactivePopGestureRecognizer.delegate = self.fwDelegateProxy;
-    }
 }
 
 - (FWGestureRecognizerDelegateProxy *)fwDelegateProxy
@@ -139,53 +171,6 @@
         objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return proxy;
-}
-
-- (BOOL)fwInnerNavigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
-{
-    // 检查返回按钮点击事件钩子
-    if (self.viewControllers.count >= navigationBar.items.count &&
-        [self.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
-        // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
-        if (![self.topViewController fwPopBackBarItem]) {
-            if (@available(iOS 11, *)) {
-            } else {
-                // 处理iOS7.1导航栏透明度bug
-                [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
-                    if (subview.alpha < 1.0) {
-                        [UIView animateWithDuration:.25 animations:^{
-                            subview.alpha = 1.0;
-                        }];
-                    }
-                }];
-            }
-            return NO;
-        }
-    }
-    
-    return [self fwInnerNavigationBar:navigationBar shouldPopItem:item];
-}
-
-/**
- * 调用setNeedsStatusBarAppearanceUpdate时，系统会调用window的rootViewController的preferredStatusBarStyle方法。
- * 如果root为导航栏，会导致视图控制器的preferredStatusBarStyle不调用。重写此方法使视图控制器的状态栏样式生效
- */
-- (UIViewController *)fwInnerChildViewControllerForStatusBarStyle
-{
-    if (self.topViewController) {
-        return self.topViewController;
-    } else {
-        return [self fwInnerChildViewControllerForStatusBarStyle];
-    }
-}
-
-- (UIViewController *)fwInnerChildViewControllerForStatusBarHidden
-{
-    if (self.topViewController) {
-        return self.topViewController;
-    } else {
-        return [self fwInnerChildViewControllerForStatusBarHidden];
-    }
 }
 
 @end
