@@ -360,6 +360,8 @@
 		2FF7EEC1248A1FBE00B3CA39 /* NSObject+FWSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF7EEBF248A1FBE00B3CA39 /* NSObject+FWSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF7EEC2248A1FBE00B3CA39 /* NSObject+FWSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EEC0248A1FBE00B3CA39 /* NSObject+FWSwizzle.m */; };
 		2FF7EED1248A3BFF00B3CA39 /* FWViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */; };
+		2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF7EED9248BD14B00B3CA39 /* FWBarrageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */; };
 		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */; };
 /* End PBXBuildFile section */
@@ -719,6 +721,8 @@
 		2FF7EEBF248A1FBE00B3CA39 /* NSObject+FWSwizzle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWSwizzle.h"; sourceTree = "<group>"; };
 		2FF7EEC0248A1FBE00B3CA39 /* NSObject+FWSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWSwizzle.m"; sourceTree = "<group>"; };
 		2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWViewController.swift; sourceTree = "<group>"; };
+		2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBarrageView.h; sourceTree = "<group>"; };
+		2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBarrageView.m; sourceTree = "<group>"; };
 		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
 		2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWVendor.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1252,6 +1256,8 @@
 				2F0FFF2A21D1DB1800049383 /* FWAttributedLabel.m */,
 				2FB7CBC721C23728002E5412 /* FWBannerView.h */,
 				2FB7CBC821C23728002E5412 /* FWBannerView.m */,
+				2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */,
+				2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
 				2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */,
 				2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */,
@@ -1288,6 +1294,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */,
 				2FF7EEC1248A1FBE00B3CA39 /* NSObject+FWSwizzle.h in Headers */,
 				2FAC8524247CCAE300E5ED36 /* FWModel.h in Headers */,
 				2FD1BD0624667377005B1100 /* FWPopupMenu.h in Headers */,
@@ -1588,6 +1595,7 @@
 				2F10013624211B3900C1CC3B /* WKWebView+FWJsBridge.m in Sources */,
 				2FDBDCBC2237B3540048607A /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2FB90F1B21F55B1400084D76 /* FWQrcodeScanView.m in Sources */,
+				2FF7EED9248BD14B00B3CA39 /* FWBarrageView.m in Sources */,
 				2F03A649216CF882001965A1 /* FWURLResponseSerialization.m in Sources */,
 				2F03A588216CF4B9001965A1 /* UITextView+FWPlaceholder.m in Sources */,
 				2FC5E008221551D9008A56A7 /* UINavigationController+FWBar.m in Sources */,

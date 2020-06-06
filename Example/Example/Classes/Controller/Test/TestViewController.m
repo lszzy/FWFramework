@@ -98,6 +98,7 @@
                                              @[@"FWState", @"TestStateViewController"],
                                              @[@"FWSegmentedControl", @"TestSegmentViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
+                                             @[@"FWBarrageView", @"TestBarrageViewController"],
                                              @[@"FWPopupMenu", @"TestPopupMenuViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
                                              @[@"FWViewController(Swift)", [TestSwiftViewController new]],
