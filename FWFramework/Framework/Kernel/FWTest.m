@@ -102,10 +102,12 @@
     for (unsigned int i = 0; i < classesCount; ++i) {
         Class classType = classes[i];
         if (class_isMetaClass(classType)) continue;
-        if (class_getSuperclass(classType) == nil) continue;
-        // 屏蔽WKObject(未继承NSObject)引起的报错
-        if (!class_conformsToProtocol(classType, @protocol(NSObject))) continue;
-        if (classType == superClass) continue;
+        if (class_getSuperclass(classType) == nil || classType == superClass) continue;
+        // 屏蔽iOS11以下WKObject引起的报错(未继承NSObject无法调用isSubclassOfClass:)
+        if (@available(iOS 11.0, *)) { } else {
+            Class wkClass = objc_getClass("WKObject");
+            if (class_getSuperclass(classType) == wkClass || classType == wkClass) continue;
+        }
         if (![classType isSubclassOfClass:superClass]) continue;
         
         [testCases addObject:classType];

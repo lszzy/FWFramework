@@ -8,7 +8,7 @@
  */
 
 #import "NSNull+FWFramework.h"
-#import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 
 @implementation NSNull (FWFramework)
 
@@ -17,25 +17,19 @@
 #ifndef DEBUG
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(methodSignatureForSelector:) with:@selector(fwInnerNullMethodSignatureForSelector:)];
-        [self fwSwizzleInstanceMethod:@selector(forwardInvocation:) with:@selector(fwInnerNullForwardInvocation:)];
+        FWSwizzleClass(NSNull, @selector(methodSignatureForSelector:), FWSwizzleReturn(NSMethodSignature *), FWSwizzleArgs(SEL selector), FWSwizzleCode({
+            NSMethodSignature *signature = FWSwizzleOriginal(selector);
+            if (!signature) {
+                return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+            }
+            return signature;
+        }));
+        FWSwizzleClass(NSNull, @selector(forwardInvocation:), FWSwizzleReturn(void), FWSwizzleArgs(NSInvocation *invocation), FWSwizzleCode({
+            invocation.target = nil;
+            [invocation invoke];
+        }));
     });
 #endif
-}
-
-- (NSMethodSignature *)fwInnerNullMethodSignatureForSelector:(SEL)selector
-{
-    NSMethodSignature *signature = [self fwInnerNullMethodSignatureForSelector:selector];
-    if (!signature) {
-        return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
-    }
-    return signature;
-}
-
-- (void)fwInnerNullForwardInvocation:(NSInvocation *)invocation
-{
-    invocation.target = nil;
-    [invocation invoke];
 }
 
 @end

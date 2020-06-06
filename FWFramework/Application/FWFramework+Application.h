@@ -24,6 +24,7 @@
 #import "FWWebViewController.h"
 
 // Model
+#import "FWModel.h"
 #import "FWDbModel.h"
 
 // ViewModel
@@ -34,6 +35,7 @@
 #import "FWAlertController.h"
 #import "FWAttributedLabel.h"
 #import "FWBannerView.h"
+#import "FWBarrageView.h"
 #import "FWCollectionViewFlowLayout.h"
 #import "FWIndicatorControl.h"
 #import "FWMarqueeLabel.h"

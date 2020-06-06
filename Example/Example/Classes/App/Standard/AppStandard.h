@@ -69,6 +69,8 @@ static CGFloat const kAppOpacityLow    = 0.25;
 + (UIColor *)appColorFill;
 // 背景色，用于页面底色
 + (UIColor *)appColorBg;
+// 表格色，用于表格底色
++ (UIColor *)appColorTable;
 // 边框色，用于边框及分割线
 + (UIColor *)appColorBorder;
 // 遮罩色，用于浅色背景的透明弹窗

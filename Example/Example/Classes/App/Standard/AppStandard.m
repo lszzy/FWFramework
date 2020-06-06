@@ -30,6 +30,7 @@ AppColorImpl(appColorMain, 0x806beb, 1.0);
 AppColorImpl(appColorSub, 0x14ccca, 1.0);
 AppColorImpl(appColorFill, 0xc8c8c8, 1.0);
 AppColorImpl(appColorBg, 0xf0f0f0, 1.0);
+AppColorImpl(appColorTable, 0xf5f6f8, 1.0);
 AppColorImpl(appColorBorder, 0xc8c8c8, 1.0);
 AppColorImpl(appColorCover, 0x000000, 0.9);
 

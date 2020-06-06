@@ -19,10 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 // 滚动视图，默认不显示滚动条
-@property (nonatomic, readonly) UIScrollView *scrollView;
+@property (nonatomic, readonly) UIScrollView *scrollView NS_SWIFT_UNAVAILABLE("");
 
 // 内容容器视图，自动撑开，子视图需要添加到此视图上
-@property (nonatomic, readonly) UIView *contentView;
+@property (nonatomic, readonly) UIView *contentView NS_SWIFT_UNAVAILABLE("");
 
 // 渲染滚动视图，renderView之前调用，默认未实现
 - (void)renderScrollView;

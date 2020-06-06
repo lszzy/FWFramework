@@ -10,6 +10,7 @@
 #import "UIAlertController+FWFramework.h"
 #import "UIView+FWFramework.h"
 #import "NSObject+FWRuntime.h"
+#import "NSObject+FWSwizzle.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 
@@ -77,35 +78,33 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(viewDidLoad) with:@selector(fwInnerAlertViewDidLoad)];
-    });
-}
-
-- (void)fwInnerAlertViewDidLoad
-{
-    [self fwInnerAlertViewDidLoad];
-    if (self.preferredStyle != UIAlertControllerStyleActionSheet) return;
-    if (!self.fwAttributedTitle && !self.fwAttributedMessage) return;
-    
-    // 兼容iOS13操作表设置title和message样式不生效问题
-    if (@available(iOS 13.0, *)) {
-        Class targetClass = objc_getClass("_UIInterfaceActionGroupHeaderScrollView");
-        if (!targetClass) return;
-        
-        [self.view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
-            if (![view isKindOfClass:targetClass]) return NO;
+        FWSwizzleClass(UIAlertController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
             
-            [view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
-                if ([view isKindOfClass:[UIVisualEffectView class]]) {
-                    // 取消effect效果，否则样式不生效，全是灰色
-                    ((UIVisualEffectView *)view).effect = nil;
+            if (selfObject.preferredStyle != UIAlertControllerStyleActionSheet) return;
+            if (!selfObject.fwAttributedTitle && !selfObject.fwAttributedMessage) return;
+            
+            // 兼容iOS13操作表设置title和message样式不生效问题
+            if (@available(iOS 13.0, *)) {
+                Class targetClass = objc_getClass("_UIInterfaceActionGroupHeaderScrollView");
+                if (!targetClass) return;
+                
+                [selfObject.view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
+                    if (![view isKindOfClass:targetClass]) return NO;
+                    
+                    [view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
+                        if ([view isKindOfClass:[UIVisualEffectView class]]) {
+                            // 取消effect效果，否则样式不生效，全是灰色
+                            ((UIVisualEffectView *)view).effect = nil;
+                            return YES;
+                        }
+                        return NO;
+                    }];
                     return YES;
-                }
-                return NO;
-            }];
-            return YES;
-        }];
-    }
+                }];
+            }
+        }));
+    });
 }
 
 + (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle
