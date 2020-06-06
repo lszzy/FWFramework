@@ -10,41 +10,89 @@ import Foundation
 
 extension FWCollectionViewController where Self: UIViewController {
     @nonobjc public var collectionView: UICollectionView {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("collectionView"), withObject: self) as! UICollectionView
+        if let result = fwProperty(forName: "collectionView") as? UICollectionView {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("collectionView"), withObject: self) as! UICollectionView
+            fwSetProperty(result, forName: "collectionView")
+            return result
+        }
     }
     
     @nonobjc public var collectionData: NSMutableArray {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("collectionData"), withObject: self) as! NSMutableArray
+        if let result = fwProperty(forName: "collectionData") as? NSMutableArray {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("collectionData"), withObject: self) as! NSMutableArray
+            fwSetProperty(result, forName: "collectionData")
+            return result
+        }
     }
 }
 
 extension FWScrollViewController where Self: UIViewController {
     @nonobjc public var scrollView: UIScrollView {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("scrollView"), withObject: self) as! UIScrollView
+        if let result = fwProperty(forName: "scrollView") as? UIScrollView {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("scrollView"), withObject: self) as! UIScrollView
+            fwSetProperty(result, forName: "scrollView")
+            return result
+        }
     }
     
     @nonobjc public var contentView: UIView {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("contentView"), withObject: self) as! UIView
+        if let result = fwProperty(forName: "contentView") as? UIView {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("contentView"), withObject: self) as! UIView
+            fwSetProperty(result, forName: "contentView")
+            return result
+        }
     }
 }
 
 extension FWTableViewController where Self: UIViewController {
     @nonobjc public var tableView: UITableView {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("tableView"), withObject: self) as! UITableView
+        if let result = fwProperty(forName: "tableView") as? UITableView {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("tableView"), withObject: self) as! UITableView
+            fwSetProperty(result, forName: "tableView")
+            return result
+        }
     }
     
     @nonobjc public var tableData: NSMutableArray {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("tableData"), withObject: self) as! NSMutableArray
+        if let result = fwProperty(forName: "tableData") as? NSMutableArray {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("tableData"), withObject: self) as! NSMutableArray
+            fwSetProperty(result, forName: "tableData")
+            return result
+        }
     }
 }
 
 extension FWWebViewController where Self: UIViewController {
     @nonobjc public var webView: WKWebView {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webView"), withObject: self) as! WKWebView
+        if let result = fwProperty(forName: "webView") as? WKWebView {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webView"), withObject: self) as! WKWebView
+            fwSetProperty(result, forName: "webView")
+            return result
+        }
     }
     
     @nonobjc public var progressView: UIProgressView {
-        return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("progressView"), withObject: self) as! UIProgressView
+        if let result = fwProperty(forName: "progressView") as? UIProgressView {
+            return result
+        } else {
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("progressView"), withObject: self) as! UIProgressView
+            fwSetProperty(result, forName: "progressView")
+            return result
+        }
     }
     
     @nonobjc public var webItems: NSArray? {
