@@ -8,25 +8,25 @@
 
 #import "TestBarrageViewController.h"
 
-@interface OCBarrageGradientBackgroundColorDescriptor : OCBarrageTextDescriptor
+@interface FWBarrageGradientBackgroundColorDescriptor : FWBarrageTextDescriptor
 
 @property (nonatomic, strong, nullable) UIColor *gradientColor;
 
 @end
 
-@implementation OCBarrageGradientBackgroundColorDescriptor
+@implementation FWBarrageGradientBackgroundColorDescriptor
 
 @end
 
-@interface OCBarrageGradientBackgroundColorCell : OCBarrageTextCell {
+@interface FWBarrageGradientBackgroundColorCell : FWBarrageTextCell {
     CAGradientLayer *_gradientLayer;
 }
 
-@property (nonatomic, strong, nullable) OCBarrageGradientBackgroundColorDescriptor *gradientDescriptor;
+@property (nonatomic, strong, nullable) FWBarrageGradientBackgroundColorDescriptor *gradientDescriptor;
 
 @end
 
-@implementation OCBarrageGradientBackgroundColorCell
+@implementation FWBarrageGradientBackgroundColorCell
 
 - (void)updateSubviewsData {
     [super updateSubviewsData];
@@ -46,7 +46,7 @@
 }
 
 - (void)convertContentToImage {
-    UIImage *contentImage = [self.layer convertContentToImageWithSize:_gradientLayer.frame.size];
+    UIImage *contentImage = [self.layer fwConvertContentToImageWithSize:_gradientLayer.frame.size];
     [self.layer setContents:(__bridge id)contentImage.CGImage];
 }
 
@@ -83,14 +83,14 @@
     [self.layer insertSublayer:gradientLayer atIndex:0];
 }
 
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     [super setBarrageDescriptor:barrageDescriptor];
-    self.gradientDescriptor = (OCBarrageGradientBackgroundColorDescriptor *)barrageDescriptor;
+    self.gradientDescriptor = (FWBarrageGradientBackgroundColorDescriptor *)barrageDescriptor;
 }
 
 @end
 
-@interface OCBarrageWalkBannerDescriptor : OCBarrageTextDescriptor
+@interface FWBarrageWalkBannerDescriptor : FWBarrageTextDescriptor
 
 @property (nonatomic, copy) NSString *bannerLeftImageSrc;
 @property (nonatomic, strong) UIColor *bannerMiddleColor;
@@ -98,11 +98,11 @@
 
 @end
 
-@implementation OCBarrageWalkBannerDescriptor
+@implementation FWBarrageWalkBannerDescriptor
 
 @end
 
-@interface OCBarrageWalkBannerCell : OCBarrageTextCell {
+@interface FWBarrageWalkBannerCell : FWBarrageTextCell {
     CGRect _contentRect;
 }
 
@@ -110,14 +110,14 @@
 @property (nonatomic, strong) UIImageView *middleImageView;
 @property (nonatomic, strong) UIImageView *rightImageView;
 
-@property (nonatomic, strong) OCBarrageWalkBannerDescriptor *walkBannerDescriptor;
+@property (nonatomic, strong) FWBarrageWalkBannerDescriptor *walkBannerDescriptor;
 
 @end
 
 #define ImageWidth 89.0
 #define ImageHeight 57.0
 
-@implementation OCBarrageWalkBannerCell
+@implementation FWBarrageWalkBannerCell
 
 - (instancetype)init {
     self = [super init];
@@ -173,7 +173,7 @@
 }
 
 - (void)convertContentToImage {
-    UIImage *contentImage = [self.layer convertContentToImageWithSize:CGSizeMake(CGRectGetMaxX(self.rightImageView.frame), CGRectGetMaxY(self.rightImageView.frame))];
+    UIImage *contentImage = [self.layer fwConvertContentToImageWithSize:CGSizeMake(CGRectGetMaxX(self.rightImageView.frame), CGRectGetMaxY(self.rightImageView.frame))];
     [self.layer setContents:(__bridge id)contentImage.CGImage];
 }
 
@@ -183,9 +183,9 @@
 }
 
 #pragma mark ---- setter
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     [super setBarrageDescriptor:barrageDescriptor];
-    self.walkBannerDescriptor = (OCBarrageWalkBannerDescriptor *)barrageDescriptor;
+    self.walkBannerDescriptor = (FWBarrageWalkBannerDescriptor *)barrageDescriptor;
 }
 
 #pragma mark ---- getter
@@ -216,24 +216,24 @@
 
 @end
 
-@interface OCBarrageBecomeNobleDescriptor : OCBarrageTextDescriptor
+@interface FWBarrageBecomeNobleDescriptor : FWBarrageTextDescriptor
 
 @property (nonatomic, strong) UIImage *backgroundImage;
 
 @end
 
-@implementation OCBarrageBecomeNobleDescriptor
+@implementation FWBarrageBecomeNobleDescriptor
 
 @end
 
-@interface OCBarrageBecomeNobleCell : OCBarrageTextCell
+@interface FWBarrageBecomeNobleCell : FWBarrageTextCell
 
-@property (nonatomic, strong) OCBarrageBecomeNobleDescriptor *nobleDescriptor;
+@property (nonatomic, strong) FWBarrageBecomeNobleDescriptor *nobleDescriptor;
 @property (nonatomic, strong) CALayer *backgroundImageLayer;
 
 @end
 
-@implementation OCBarrageBecomeNobleCell
+@implementation FWBarrageBecomeNobleCell
 
 - (instancetype)init {
     self = [super init];
@@ -270,7 +270,7 @@
 }
 
 - (void)convertContentToImage {
-    UIImage *image = [self.layer convertContentToImageWithSize:CGSizeMake(self.nobleDescriptor.backgroundImage.size.width, self.nobleDescriptor.backgroundImage.size.height)];
+    UIImage *image = [self.layer fwConvertContentToImageWithSize:CGSizeMake(self.nobleDescriptor.backgroundImage.size.width, self.nobleDescriptor.backgroundImage.size.height)];
     [self.layer setContents:(__bridge id)image.CGImage];
 }
 
@@ -292,13 +292,13 @@
     walkAnimation.removedOnCompletion = NO;
     walkAnimation.fillMode = kCAFillModeForwards;
     
-    [self.layer addAnimation:walkAnimation forKey:kBarrageAnimation];
+    [self.layer addAnimation:walkAnimation forKey:FWBarrageAnimation];
 }
 
 #pragma mark ---- setter
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     [super setBarrageDescriptor:barrageDescriptor];
-    self.nobleDescriptor = (OCBarrageBecomeNobleDescriptor *)barrageDescriptor;
+    self.nobleDescriptor = (FWBarrageBecomeNobleDescriptor *)barrageDescriptor;
 }
 
 #pragma mark ---- getter
@@ -312,13 +312,13 @@
 
 @end
 
-@interface OCBarrageMixedImageAndTextCell : OCBarrageTextCell
+@interface FWBarrageMixedImageAndTextCell : FWBarrageTextCell
 
 @property (nonatomic, strong) FWAttributedLabel *miaxedImageAndTextLabel;
 
 @end
 
-@implementation OCBarrageMixedImageAndTextCell
+@implementation FWBarrageMixedImageAndTextCell
 
 - (instancetype)init {
     self = [super init];
@@ -364,24 +364,24 @@
 
 @end
 
-@interface OCBarrageGifDescriptor : OCBarrageDescriptor
+@interface FWBarrageGifDescriptor : FWBarrageDescriptor
 
 @property (nonatomic, strong) FWAnimatedImage *image;
 
 @end
 
-@implementation OCBarrageGifDescriptor
+@implementation FWBarrageGifDescriptor
 
 @end
 
-@interface OCBarrageGifCell : OCBarrageCell
+@interface FWBarrageGifCell : FWBarrageCell
 
-@property (nonatomic, strong) OCBarrageGifDescriptor *gifDescriptor;
+@property (nonatomic, strong) FWBarrageGifDescriptor *gifDescriptor;
 @property (nonatomic, strong) FWAnimatedImageView *imageView;
 
 @end
 
-@implementation OCBarrageGifCell
+@implementation FWBarrageGifCell
 
 - (instancetype)init {
     self = [super init];
@@ -421,7 +421,7 @@
     walkAnimation.removedOnCompletion = NO;
     walkAnimation.fillMode = kCAFillModeForwards;
     
-    [self.layer addAnimation:walkAnimation forKey:kBarrageAnimation];
+    [self.layer addAnimation:walkAnimation forKey:FWBarrageAnimation];
 }
 
 - (void)removeSubViewsAndSublayers {
@@ -429,9 +429,9 @@
 }
 
 #pragma mark ---- setter
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     [super setBarrageDescriptor:barrageDescriptor];
-    self.gifDescriptor = (OCBarrageGifDescriptor *)barrageDescriptor;
+    self.gifDescriptor = (FWBarrageGifDescriptor *)barrageDescriptor;
 }
 
 #pragma mark ---- getter
@@ -447,20 +447,20 @@
 
 @end
 
-@interface OCBarrageVerticalTextDescriptor : OCBarrageTextDescriptor
+@interface FWBarrageVerticalTextDescriptor : FWBarrageTextDescriptor
 
 @end
 
-@implementation OCBarrageVerticalTextDescriptor
+@implementation FWBarrageVerticalTextDescriptor
 
 @end
 
-@interface OCBarrageVerticalAnimationCell : OCBarrageTextCell
+@interface FWBarrageVerticalAnimationCell : FWBarrageTextCell
 
-@property (nonatomic, strong) OCBarrageVerticalTextDescriptor *verticalTextDescriptor;
+@property (nonatomic, strong) FWBarrageVerticalTextDescriptor *verticalTextDescriptor;
 @end
 
-@implementation OCBarrageVerticalAnimationCell
+@implementation FWBarrageVerticalAnimationCell
 
 - (void)addBarrageAnimationWithDelegate:(id<CAAnimationDelegate>)animationDelegate {
     if (!self.superview) {
@@ -479,13 +479,13 @@
     walkAnimation.removedOnCompletion = NO;
     walkAnimation.fillMode = kCAFillModeForwards;
     
-    [self.layer addAnimation:walkAnimation forKey:kBarrageAnimation];
+    [self.layer addAnimation:walkAnimation forKey:FWBarrageAnimation];
 }
 
 #pragma mark ---- setter
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     [super setBarrageDescriptor:barrageDescriptor];
-    self.verticalTextDescriptor = (OCBarrageVerticalTextDescriptor *)barrageDescriptor;
+    self.verticalTextDescriptor = (FWBarrageVerticalTextDescriptor *)barrageDescriptor;
 }
 
 @end
@@ -493,7 +493,7 @@
 @interface TestBarrageViewController ()
 
 @property (nonatomic, strong) CATextLayer *textlayer;
-@property (nonatomic, strong) OCBarrageManager *barrageManager;
+@property (nonatomic, strong) FWBarrageManager *barrageManager;
 @property (nonatomic, assign) int times;
 @property (nonatomic, assign) int stopY;
 
@@ -510,7 +510,7 @@
     
     // Do any additional setup after loading the view, typically from a nib.
     self.view.fwHeight = FWScreenHeight - FWTopBarHeight;
-    self.barrageManager = [[OCBarrageManager alloc] init];
+    self.barrageManager = [[FWBarrageManager alloc] init];
     [self.view addSubview:self.barrageManager.renderView];
     self.barrageManager.renderView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 //    self.barrageManager.renderView.center = self.view.center;
@@ -559,9 +559,11 @@
     [super viewDidDisappear:animated];
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addNormalBarrage) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addFixedSpeedAnimationCell) object:nil];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addWalkBannerBarrage) object:nil];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addGifBarrage) object:nil];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addStopoverBarrage) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addVerticalAnimationCell) object:nil];
 }
 
 - (void)addBarrage {
@@ -576,15 +578,15 @@
 - (void)addNormalBarrage {
     [self updateTitle];
     
-    OCBarrageTextDescriptor *textDescriptor = [[OCBarrageTextDescriptor alloc] init];
-    textDescriptor.text = [NSString stringWithFormat:@"~OCBarrage~"];
+    FWBarrageTextDescriptor *textDescriptor = [[FWBarrageTextDescriptor alloc] init];
+    textDescriptor.text = [NSString stringWithFormat:@"~FWBarrage~"];
     textDescriptor.textColor = [UIColor grayColor];
-    textDescriptor.positionPriority = OCBarragePositionLow;
+    textDescriptor.positionPriority = FWBarragePositionLow;
     textDescriptor.textFont = [UIFont systemFontOfSize:17.0];
     textDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     textDescriptor.strokeWidth = -1;
     textDescriptor.animationDuration = arc4random()%5 + 5;
-    textDescriptor.barrageCellClass = [OCBarrageTextCell class];
+    textDescriptor.barrageCellClass = [FWBarrageTextCell class];
     
     [self.barrageManager renderBarrageDescriptor:textDescriptor];
     
@@ -592,15 +594,15 @@
 }
 
 - (void)addFixedSpeedAnimationCell {
-    OCBarrageGradientBackgroundColorDescriptor *gradientBackgroundDescriptor = [[OCBarrageGradientBackgroundColorDescriptor alloc] init];
+    FWBarrageGradientBackgroundColorDescriptor *gradientBackgroundDescriptor = [[FWBarrageGradientBackgroundColorDescriptor alloc] init];
     gradientBackgroundDescriptor.text = [NSString stringWithFormat:@"~等速弹幕~"];
     gradientBackgroundDescriptor.textColor = [UIColor whiteColor];
-    gradientBackgroundDescriptor.positionPriority = OCBarragePositionLow;
+    gradientBackgroundDescriptor.positionPriority = FWBarragePositionLow;
     gradientBackgroundDescriptor.textFont = [UIFont systemFontOfSize:17.0];
     gradientBackgroundDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     gradientBackgroundDescriptor.strokeWidth = -1;
     gradientBackgroundDescriptor.fixedSpeed = 50.0;//用fixedSpeed属性设定速度
-    gradientBackgroundDescriptor.barrageCellClass = [OCBarrageGradientBackgroundColorCell class];
+    gradientBackgroundDescriptor.barrageCellClass = [FWBarrageGradientBackgroundColorCell class];
     gradientBackgroundDescriptor.gradientColor = [UIColor fwRandomColor];
     
     [self.barrageManager renderBarrageDescriptor:gradientBackgroundDescriptor];
@@ -609,33 +611,33 @@
 }
 
 - (void)addWalkBannerBarrage {
-    OCBarrageWalkBannerDescriptor *bannerDescriptor = [[OCBarrageWalkBannerDescriptor alloc] init];
-    bannerDescriptor.cellTouchedAction = ^(OCBarrageDescriptor *__weak descriptor, OCBarrageCell *__weak cell) {
+    FWBarrageWalkBannerDescriptor *bannerDescriptor = [[FWBarrageWalkBannerDescriptor alloc] init];
+    bannerDescriptor.cellTouchedAction = ^(FWBarrageDescriptor *__weak descriptor, FWBarrageCell *__weak cell) {
         FWIgnoredBegin();
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"OCBarrage" message:@"全民超人为您服务" delegate:nil cancelButtonTitle:@"朕知道了" otherButtonTitles:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"FWBarrage" message:@"全民超人为您服务" delegate:nil cancelButtonTitle:@"朕知道了" otherButtonTitles:nil];
         [alertView show];
         FWIgnoredEnd();
         
-        OCBarrageWalkBannerCell *walkBannerCell = (OCBarrageWalkBannerCell *)cell;
+        FWBarrageWalkBannerCell *walkBannerCell = (FWBarrageWalkBannerCell *)cell;
         walkBannerCell.textLabel.backgroundColor = [UIColor redColor];
     };
     
     bannerDescriptor.text = [NSString stringWithFormat:@"~欢迎全民超人大驾光临~"];
     bannerDescriptor.textColor = [UIColor fwRandomColor];
     bannerDescriptor.textFont = [UIFont systemFontOfSize:17.0];
-    bannerDescriptor.positionPriority = OCBarragePositionMiddle;
+    bannerDescriptor.positionPriority = FWBarragePositionMiddle;
     bannerDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     bannerDescriptor.strokeWidth = -1;
     bannerDescriptor.animationDuration = arc4random()%5 + 5;
-    bannerDescriptor.barrageCellClass = [OCBarrageWalkBannerCell class];
+    bannerDescriptor.barrageCellClass = [FWBarrageWalkBannerCell class];
     [self.barrageManager renderBarrageDescriptor:bannerDescriptor];
     
     [self performSelector:@selector(addWalkBannerBarrage) withObject:nil afterDelay:1.0];
 }
 
 - (void)addStopoverBarrage {
-    OCBarrageBecomeNobleDescriptor *becomeNobleDescriptor = [[OCBarrageBecomeNobleDescriptor alloc] init];
-    NSMutableAttributedString *mAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"~OCBarrage~全民直播~荣誉出品~"]];
+    FWBarrageBecomeNobleDescriptor *becomeNobleDescriptor = [[FWBarrageBecomeNobleDescriptor alloc] init];
+    NSMutableAttributedString *mAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"~FWBarrage~全民直播~荣誉出品~"]];
     [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, mAttributedString.length)];
     [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor greenColor] range:NSMakeRange(1, 9)];
     [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor cyanColor] range:NSMakeRange(11, 4)];
@@ -646,9 +648,9 @@
     CGFloat minOriginY = CGRectGetMidY(self.view.frame) - bannerHeight;
     CGFloat maxOriginY = CGRectGetMidY(self.view.frame) + bannerHeight;
     becomeNobleDescriptor.renderRange = NSMakeRange(minOriginY, maxOriginY);
-    becomeNobleDescriptor.positionPriority = OCBarragePositionVeryHigh;
+    becomeNobleDescriptor.positionPriority = FWBarragePositionVeryHigh;
     becomeNobleDescriptor.animationDuration = 4.0;
-    becomeNobleDescriptor.barrageCellClass = [OCBarrageBecomeNobleCell class];
+    becomeNobleDescriptor.barrageCellClass = [FWBarrageBecomeNobleCell class];
     becomeNobleDescriptor.backgroundImage = [UIImage imageNamed:@"qrcode_grid"];
     [self.barrageManager renderBarrageDescriptor:becomeNobleDescriptor];
     
@@ -662,15 +664,15 @@
 }
 
 - (void)addVerticalAnimationCell {
-    OCBarrageVerticalTextDescriptor *verticalTextDescriptor = [[OCBarrageVerticalTextDescriptor alloc] init];
+    FWBarrageVerticalTextDescriptor *verticalTextDescriptor = [[FWBarrageVerticalTextDescriptor alloc] init];
     verticalTextDescriptor.text = [NSString stringWithFormat:@"~从上往下的动画~"];
     verticalTextDescriptor.textColor = [UIColor grayColor];
-    verticalTextDescriptor.positionPriority = OCBarragePositionLow;
+    verticalTextDescriptor.positionPriority = FWBarragePositionLow;
     verticalTextDescriptor.textFont = [UIFont systemFontOfSize:17.0];
     verticalTextDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     verticalTextDescriptor.strokeWidth = -1;
     verticalTextDescriptor.animationDuration = 5;
-    verticalTextDescriptor.barrageCellClass = [OCBarrageVerticalAnimationCell class];
+    verticalTextDescriptor.barrageCellClass = [FWBarrageVerticalAnimationCell class];
     
     [self.barrageManager renderBarrageDescriptor:verticalTextDescriptor];
     
@@ -678,13 +680,13 @@
 }
 
 - (void)addGifBarrage {
-    OCBarrageGifDescriptor *gifDescriptor = [[OCBarrageGifDescriptor alloc] init];
+    FWBarrageGifDescriptor *gifDescriptor = [[FWBarrageGifDescriptor alloc] init];
     
     FWAnimatedImage *image = [FWAnimatedImage imageNamed:@"test.gif"];
     gifDescriptor.image = image;
-    gifDescriptor.positionPriority = OCBarragePositionHigh;
+    gifDescriptor.positionPriority = FWBarragePositionHigh;
     gifDescriptor.animationDuration = arc4random()%5 + 5;
-    gifDescriptor.barrageCellClass = [OCBarrageGifCell class];
+    gifDescriptor.barrageCellClass = [FWBarrageGifCell class];
     [self.barrageManager renderBarrageDescriptor:gifDescriptor];
     
     [self performSelector:@selector(addGifBarrage) withObject:nil afterDelay:3.0];

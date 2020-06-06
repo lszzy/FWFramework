@@ -9,9 +9,11 @@
 
 #import "FWBarrageView.h"
 
-#pragma mark - OCBarrageManager
+NSString *const FWBarrageAnimation = @"FWBarrageAnimation";
 
-@implementation OCBarrageManager
+#pragma mark - FWBarrageManager
+
+@implementation FWBarrageManager
 
 - (void)dealloc {
     NSLog(@"%s", __func__);
@@ -21,7 +23,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _renderView = [[OCBarrageRenderView alloc] init];
+        _renderView = [[FWBarrageRenderView alloc] init];
 
     }
     
@@ -44,15 +46,15 @@
     [self.renderView stop];
 }
 
-- (void)renderBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)renderBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     if (!barrageDescriptor) {
         return;
     }
-    if (![barrageDescriptor isKindOfClass:[OCBarrageDescriptor class]]) {
+    if (![barrageDescriptor isKindOfClass:[FWBarrageDescriptor class]]) {
         return;
     }
     
-    OCBarrageCell *barrageCell = [self.renderView dequeueReusableCellWithClass:barrageDescriptor.barrageCellClass];
+    FWBarrageCell *barrageCell = [self.renderView dequeueReusableCellWithClass:barrageDescriptor.barrageCellClass];
     if (!barrageCell) {
         return;
     }
@@ -61,17 +63,17 @@
 }
 
 #pragma mark ------ getter
-- (OCBarrageRenderView *)renderView {
+- (FWBarrageRenderView *)renderView {
     return _renderView;
 }
 
 @end
 
-#pragma mark - OCBarrageRenderView
+#pragma mark - FWBarrageRenderView
 
 #define kNextAvailableTimeKey(identifier, index) [NSString stringWithFormat:@"%@_%d", identifier, index]
 
-@implementation OCBarrageRenderView
+@implementation FWBarrageRenderView
 
 - (void)dealloc {
     NSLog(@"%s", __func__);
@@ -98,11 +100,11 @@
     return self;
 }
 
-- (nullable OCBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass {
-    OCBarrageCell *barrageCell = nil;
+- (nullable FWBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass {
+    FWBarrageCell *barrageCell = nil;
     
     dispatch_semaphore_wait(_idleCellsLock, DISPATCH_TIME_FOREVER);
-    for (OCBarrageCell *cell in self.idleCells) {
+    for (FWBarrageCell *cell in self.idleCells) {
         if ([NSStringFromClass([cell class]) isEqualToString:NSStringFromClass(barrageCellClass)]) {
             barrageCell = cell;
             break;
@@ -115,16 +117,16 @@
         barrageCell = [self newCellWithClass:barrageCellClass];
     }
     dispatch_semaphore_signal(_idleCellsLock);
-    if (![barrageCell isKindOfClass:[OCBarrageCell class]]) {
+    if (![barrageCell isKindOfClass:[FWBarrageCell class]]) {
         return nil;
     }
     
     return barrageCell;
 }
 
-- (OCBarrageCell *)newCellWithClass:(Class)barrageCellClass {
-    OCBarrageCell *barrageCell = [[barrageCellClass alloc] init];
-    if (![barrageCell isKindOfClass:[OCBarrageCell class]]) {
+- (FWBarrageCell *)newCellWithClass:(Class)barrageCellClass {
+    FWBarrageCell *barrageCell = [[barrageCellClass alloc] init];
+    if (![barrageCell isKindOfClass:[FWBarrageCell class]]) {
         return nil;
     }
     
@@ -133,17 +135,17 @@
 
 - (void)start {
     switch (self.renderStatus) {
-        case OCBarrageRenderStarted: {
+        case FWBarrageRenderStarted: {
             return;
         }
             break;
-        case OCBarrageRenderPaused: {
+        case FWBarrageRenderPaused: {
             [self resume];
             return;
         }
             break;
         default: {
-            _renderStatus = OCBarrageRenderStarted;
+            _renderStatus = FWBarrageRenderStarted;
         }
             break;
     }
@@ -151,11 +153,11 @@
 
 - (void)pause {
     switch (self.renderStatus) {
-        case OCBarrageRenderStarted: {
-            _renderStatus = OCBarrageRenderPaused;
+        case FWBarrageRenderStarted: {
+            _renderStatus = FWBarrageRenderPaused;
         }
             break;
-        case OCBarrageRenderPaused: {
+        case FWBarrageRenderPaused: {
             return;
         }
             break;
@@ -167,7 +169,7 @@
     
     dispatch_semaphore_wait(_animatingCellsLock, DISPATCH_TIME_FOREVER);
     NSEnumerator *enumerator = [self.animatingCells reverseObjectEnumerator];
-    OCBarrageCell *cell = nil;
+    FWBarrageCell *cell = nil;
     while (cell = [enumerator nextObject]){
         CFTimeInterval pausedTime = [cell.layer convertTime:CACurrentMediaTime() fromLayer:nil];
         cell.layer.speed = 0.0;
@@ -178,12 +180,12 @@
 
 - (void)resume {
     switch (self.renderStatus) {
-        case OCBarrageRenderStarted: {
+        case FWBarrageRenderStarted: {
             return;
         }
             break;
-        case OCBarrageRenderPaused: {
-            _renderStatus = OCBarrageRenderStarted;
+        case FWBarrageRenderPaused: {
+            _renderStatus = FWBarrageRenderStarted;
         }
             break;
         default: {
@@ -194,7 +196,7 @@
     
     dispatch_semaphore_wait(_animatingCellsLock, DISPATCH_TIME_FOREVER);
     NSEnumerator *enumerator = [self.animatingCells reverseObjectEnumerator];
-    OCBarrageCell *cell = nil;
+    FWBarrageCell *cell = nil;
     while (cell = [enumerator nextObject]){
         CFTimeInterval pausedTime = cell.layer.timeOffset;
         cell.layer.speed = 1.0;
@@ -208,12 +210,12 @@
 
 - (void)stop {
     switch (self.renderStatus) {
-        case OCBarrageRenderStarted: {
-            _renderStatus = OCBarrageRenderStoped;
+        case FWBarrageRenderStarted: {
+            _renderStatus = FWBarrageRenderStoped;
         }
             break;
-        case OCBarrageRenderPaused: {
-            _renderStatus = OCBarrageRenderStoped;
+        case FWBarrageRenderPaused: {
+            _renderStatus = FWBarrageRenderStoped;
         }
             break;
         default: {
@@ -228,7 +230,7 @@
     
     dispatch_semaphore_wait(_animatingCellsLock, DISPATCH_TIME_FOREVER);
     NSEnumerator *animatingEnumerator = [self.animatingCells reverseObjectEnumerator];
-    OCBarrageCell *animatingCell = nil;
+    FWBarrageCell *animatingCell = nil;
     while (animatingCell = [animatingEnumerator nextObject]){
         CFTimeInterval pausedTime = [animatingCell.layer convertTime:CACurrentMediaTime() fromLayer:nil];
         animatingCell.layer.speed = 0.0;
@@ -248,13 +250,13 @@
     dispatch_semaphore_signal(_trackInfoLock);
 }
 
-- (void)fireBarrageCell:(OCBarrageCell *)barrageCell {
+- (void)fireBarrageCell:(FWBarrageCell *)barrageCell {
     switch (self.renderStatus) {
-        case OCBarrageRenderStarted: {
+        case FWBarrageRenderStarted: {
             
         }
             break;
-        case OCBarrageRenderPaused: {
+        case FWBarrageRenderPaused: {
             
             return;
         }
@@ -266,7 +268,7 @@
     if (!barrageCell) {
         return;
     }
-    if (![barrageCell isKindOfClass:[OCBarrageCell class]]) {
+    if (![barrageCell isKindOfClass:[FWBarrageCell class]]) {
         return;
     }
     [barrageCell clearContents];
@@ -292,17 +294,17 @@
     _lastestCell = barrageCell;
 }
 
-- (void)addBarrageCell:(OCBarrageCell *)barrageCell WithPositionPriority:(OCBarragePositionPriority)positionPriority {
+- (void)addBarrageCell:(FWBarrageCell *)barrageCell WithPositionPriority:(FWBarragePositionPriority)positionPriority {
     switch (positionPriority) {
-        case OCBarragePositionMiddle: {
+        case FWBarragePositionMiddle: {
             [self insertSubview:barrageCell aboveSubview:_middlePositionView];
         }
             break;
-        case OCBarragePositionHigh: {
+        case FWBarragePositionHigh: {
             [self insertSubview:barrageCell belowSubview:_highPositionView];
         }
             break;
-        case OCBarragePositionVeryHigh: {
+        case FWBarragePositionVeryHigh: {
             [self insertSubview:barrageCell belowSubview:_veryHighPositionView];
         }
             break;
@@ -313,7 +315,7 @@
     }
 }
 
-- (CGRect)calculationBarrageCellFrame:(OCBarrageCell *)barrageCell {
+- (CGRect)calculationBarrageCellFrame:(FWBarrageCell *)barrageCell {
     CGRect cellFrame = barrageCell.bounds;
     cellFrame.origin.x = CGRectGetMaxX(self.frame);
     
@@ -336,23 +338,23 @@
         int trackIndex = arc4random_uniform(trackCount);//用户改变行高(比如弹幕文字大小不会引起显示bug, 因为虽然是同一个类, 但是trackCount变小了, 所以不会出现trackIndex*cellHeight超出屏幕边界的情况)
         
         dispatch_semaphore_wait(_trackInfoLock, DISPATCH_TIME_FOREVER);
-        OCBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), trackIndex)];
+        FWBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), trackIndex)];
         if (trackInfo && trackInfo.nextAvailableTime > CACurrentMediaTime()) {//当前行暂不可用
             
             NSMutableArray *availableTrackInfos = [NSMutableArray array];
-            for (OCBarrageTrackInfo *info in _trackNextAvailableTime.allValues) {
+            for (FWBarrageTrackInfo *info in _trackNextAvailableTime.allValues) {
                 if (CACurrentMediaTime() > info.nextAvailableTime && [info.trackIdentifier containsString:NSStringFromClass([barrageCell class])]) {//只在同类弹幕中判断是否有可用的轨道
                     [availableTrackInfos addObject:info];
                 }
             }
             if (availableTrackInfos.count > 0) {
-                OCBarrageTrackInfo *randomInfo = [availableTrackInfos objectAtIndex:arc4random_uniform((int)availableTrackInfos.count)];
+                FWBarrageTrackInfo *randomInfo = [availableTrackInfos objectAtIndex:arc4random_uniform((int)availableTrackInfos.count)];
                 trackIndex = randomInfo.trackIndex;
             } else {
                 if (_trackNextAvailableTime.count < trackCount) {//刚开始不是每一条轨道都跑过弹幕, 还有空轨道
                     NSMutableArray *numberArray = [NSMutableArray array];
                     for (int index = 0; index < trackCount; index++) {
-                        OCBarrageTrackInfo *emptyTrackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), index)];
+                        FWBarrageTrackInfo *emptyTrackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), index)];
                         if (!emptyTrackInfo) {
                             [numberArray addObject:[NSNumber numberWithInt:index]];
                         }
@@ -370,13 +372,13 @@
         cellFrame.origin.y = trackIndex*cellHeight+minOriginY;
     } else {
         switch (self.renderPositionStyle) {
-            case OCBarrageRenderPositionRandom: {
+            case FWBarrageRenderPositionRandom: {
                 CGFloat maxY = CGRectGetHeight(self.bounds) - CGRectGetHeight(cellFrame);
                 int originY = floorl(maxY);
                 cellFrame.origin.y = arc4random_uniform(originY);
             }
                 break;
-            case OCBarrageRenderPositionIncrease: {
+            case FWBarrageRenderPositionIncrease: {
                 if (_lastestCell) {
                     CGRect lastestFrame = _lastestCell.frame;
                     cellFrame.origin.y = CGRectGetMaxY(lastestFrame);
@@ -392,22 +394,22 @@
                 int trackIndex = arc4random_uniform(trackCount);//用户改变行高(比如弹幕文字大小不会引起显示bug, 因为虽然是同一个类, 但是trackCount变小了, 所以不会出现trackIndex*cellHeight超出屏幕边界的情况)
                 
                 dispatch_semaphore_wait(_trackInfoLock, DISPATCH_TIME_FOREVER);
-                OCBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), trackIndex)];
+                FWBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), trackIndex)];
                 if (trackInfo && trackInfo.nextAvailableTime > CACurrentMediaTime()) {//当前行暂不可用
                     NSMutableArray *availableTrackInfos = [NSMutableArray array];
-                    for (OCBarrageTrackInfo *info in _trackNextAvailableTime.allValues) {
+                    for (FWBarrageTrackInfo *info in _trackNextAvailableTime.allValues) {
                         if (CACurrentMediaTime() > info.nextAvailableTime && [info.trackIdentifier containsString:NSStringFromClass([barrageCell class])]) {//只在同类弹幕中判断是否有可用的轨道
                             [availableTrackInfos addObject:info];
                         }
                     }
                     if (availableTrackInfos.count > 0) {
-                        OCBarrageTrackInfo *randomInfo = [availableTrackInfos objectAtIndex:arc4random_uniform((int)availableTrackInfos.count)];
+                        FWBarrageTrackInfo *randomInfo = [availableTrackInfos objectAtIndex:arc4random_uniform((int)availableTrackInfos.count)];
                         trackIndex = randomInfo.trackIndex;
                     } else {
                         if (_trackNextAvailableTime.count < trackCount) {//刚开始不是每一条轨道都跑过弹幕, 还有空轨道
                             NSMutableArray *numberArray = [NSMutableArray array];
                             for (int index = 0; index < trackCount; index++) {
-                                OCBarrageTrackInfo *emptyTrackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), index)];
+                                FWBarrageTrackInfo *emptyTrackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), index)];
                                 if (!emptyTrackInfo) {
                                     [numberArray addObject:[NSNumber numberWithInt:index]];
                                 }
@@ -441,7 +443,7 @@
     dispatch_semaphore_wait(_idleCellsLock, DISPATCH_TIME_FOREVER);
     NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970];
     NSEnumerator *enumerator = [self.idleCells reverseObjectEnumerator];
-    OCBarrageCell *cell;
+    FWBarrageCell *cell;
     while (cell = [enumerator nextObject]){
         CGFloat time = timeInterval - cell.idleTime;
         if (time > 5.0 && cell.idleTime > 0) {
@@ -457,7 +459,7 @@
     dispatch_semaphore_signal(_idleCellsLock);
 }
 
-- (void)recordTrackInfoWithBarrageCell:(OCBarrageCell *)barrageCell {
+- (void)recordTrackInfoWithBarrageCell:(FWBarrageCell *)barrageCell {
     NSString *nextAvalibleTimeKey = kNextAvailableTimeKey(NSStringFromClass([barrageCell class]), barrageCell.trackIndex);
     CFTimeInterval duration = barrageCell.barrageAnimation.duration;
     NSValue *fromValue = nil;
@@ -486,9 +488,9 @@
         CGPoint toPoint = [toValue CGPointValue];
         
         dispatch_semaphore_wait(_trackInfoLock, DISPATCH_TIME_FOREVER);
-        OCBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:nextAvalibleTimeKey];
+        FWBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:nextAvalibleTimeKey];
         if (!trackInfo) {
-            trackInfo = [[OCBarrageTrackInfo alloc] init];
+            trackInfo = [[FWBarrageTrackInfo alloc] init];
             trackInfo.trackIdentifier = nextAvalibleTimeKey;
             trackInfo.trackIndex = barrageCell.trackIndex;
         }
@@ -540,12 +542,12 @@
         return;
     }
     
-    if (self.renderStatus == OCBarrageRenderStoped) {
+    if (self.renderStatus == FWBarrageRenderStoped) {
         return;
     }
-    OCBarrageCell *animationedCell = nil;
+    FWBarrageCell *animationedCell = nil;
     dispatch_semaphore_wait(_animatingCellsLock, DISPATCH_TIME_FOREVER);
-    for (OCBarrageCell *cell in self.animatingCells) {
+    for (FWBarrageCell *cell in self.animatingCells) {
         CAAnimation *barrageAnimation = [cell barrageAnimation];
         if (barrageAnimation == anim) {
             animationedCell = cell;
@@ -560,7 +562,7 @@
     }
     
     dispatch_semaphore_wait(_trackInfoLock, DISPATCH_TIME_FOREVER);
-    OCBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([animationedCell class]), animationedCell.trackIndex)];
+    FWBarrageTrackInfo *trackInfo = [_trackNextAvailableTime objectForKey:kNextAvailableTimeKey(NSStringFromClass([animationedCell class]), animationedCell.trackIndex)];
     if (trackInfo) {
         trackInfo.barrageCount--;
     }
@@ -588,7 +590,7 @@
         dispatch_semaphore_wait(_animatingCellsLock, DISPATCH_TIME_FOREVER);
         NSInteger count = self.animatingCells.count;
         for (int i = 0; i < count; i++) {
-            OCBarrageCell *barrageCell = [self.animatingCells objectAtIndex:i];
+            FWBarrageCell *barrageCell = [self.animatingCells objectAtIndex:i];
             if ([barrageCell.layer.presentationLayer hitTest:touchPoint]) {
                 if (barrageCell.barrageDescriptor.cellTouchedAction) {
                     barrageCell.barrageDescriptor.cellTouchedAction(barrageCell.barrageDescriptor, barrageCell);
@@ -601,7 +603,7 @@
 }
 
 #pragma mark ----- getter
-- (NSMutableArray<OCBarrageCell *> *)animatingCells {
+- (NSMutableArray<FWBarrageCell *> *)animatingCells {
     if (!_animatingCells) {
         _animatingCells = [[NSMutableArray alloc] init];
     }
@@ -609,7 +611,7 @@
     return _animatingCells;
 }
 
-- (NSMutableArray<OCBarrageCell *> *)idleCells {
+- (NSMutableArray<FWBarrageCell *> *)idleCells {
     if (!_idleCells) {
         _idleCells = [[NSMutableArray alloc] init];
     }
@@ -617,15 +619,15 @@
     return _idleCells;
 }
 
-- (OCBarrageRenderStatus)renderStatus {
+- (FWBarrageRenderStatus)renderStatus {
     return _renderStatus;
 }
 
 @end
 
-#pragma mark - OCBarrageDescriptor
+#pragma mark - FWBarrageDescriptor
 
-@implementation OCBarrageDescriptor
+@implementation FWBarrageDescriptor
 
 - (instancetype)init {
     self = [super init];
@@ -638,9 +640,9 @@
 
 @end
 
-#pragma mark - OCBarrageCell
+#pragma mark - FWBarrageCell
 
-@implementation OCBarrageCell
+@implementation FWBarrageCell
 
 - (instancetype)init {
     self = [super init];
@@ -652,7 +654,7 @@
 }
 
 - (void)prepareForReuse {
-    [self.layer removeAnimationForKey:kBarrageAnimation];
+    [self.layer removeAnimationForKey:FWBarrageAnimation];
     _barrageDescriptor = nil;
     if (!_idle) {
         _idle = YES;
@@ -660,7 +662,7 @@
     _trackIndex = -1;
 }
 
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     _barrageDescriptor = barrageDescriptor;
 }
 
@@ -738,14 +740,14 @@
 }
 
 - (CAAnimation *)barrageAnimation {
-    return [self.layer animationForKey:kBarrageAnimation];
+    return [self.layer animationForKey:FWBarrageAnimation];
 }
 
 @end
 
-#pragma mark - OCBarrageTextDescriptor
+#pragma mark - FWBarrageTextDescriptor
 
-@implementation OCBarrageTextDescriptor
+@implementation FWBarrageTextDescriptor
 
 @synthesize textFont = _textFont, textColor = _textColor, shadowColor = _shadowColor, attributedText = _attributedText;
 
@@ -856,9 +858,9 @@
 
 @end
 
-#pragma mark - OCBarrageTextCell
+#pragma mark - FWBarrageTextCell
 
-@implementation OCBarrageTextCell
+@implementation FWBarrageTextCell
 
 - (instancetype)init {
     self = [super init];
@@ -894,7 +896,7 @@
 }
 
 - (void)convertContentToImage {
-    UIImage *contentImage = [self.layer convertContentToImageWithSize:_textLabel.frame.size];
+    UIImage *contentImage = [self.layer fwConvertContentToImageWithSize:_textLabel.frame.size];
     [self.layer setContents:(__bridge id)contentImage.CGImage];
 }
 
@@ -929,7 +931,7 @@
     walkAnimation.removedOnCompletion = NO;
     walkAnimation.fillMode = kCAFillModeForwards;
     
-    [self.layer addAnimation:walkAnimation forKey:kBarrageAnimation];
+    [self.layer addAnimation:walkAnimation forKey:FWBarrageAnimation];
 }
 
 - (UILabel *)textLabel {
@@ -941,28 +943,27 @@
     return _textLabel;
 }
 
-- (void)setBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor {
+- (void)setBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor {
     [super setBarrageDescriptor:barrageDescriptor];
-    self.textDescriptor = (OCBarrageTextDescriptor *)barrageDescriptor;
+    self.textDescriptor = (FWBarrageTextDescriptor *)barrageDescriptor;
 }
 
 @end
 
-#pragma mark - OCBarrageTrackInfo
+#pragma mark - FWBarrageTrackInfo
 
-@implementation OCBarrageTrackInfo
+@implementation FWBarrageTrackInfo
 
 @end
 
-@implementation CALayer (OCBarrage)
+@implementation CALayer (FWBarrage)
 
-- (UIImage *)convertContentToImageWithSize:(CGSize)contentSize {
+- (UIImage *)fwConvertContentToImageWithSize:(CGSize)contentSize {
     UIGraphicsBeginImageContextWithOptions(contentSize, 0.0, [UIScreen mainScreen].scale);
     //self为需要截屏的UI控件 即通过改变此参数可以截取特定的UI控件
     [self renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image= UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
     return image;
 }
 

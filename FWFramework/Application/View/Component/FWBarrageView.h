@@ -11,57 +11,58 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kBarrageAnimation @"kBarrageAnimation"
-@class OCBarrageDescriptor;
-@class OCBarrageCell;
+@class FWBarrageDescriptor;
+@class FWBarrageCell;
 
-typedef void(^OCBarrageTouchAction)(__weak OCBarrageDescriptor *descriptor);
-typedef void(^OCBarrageCellTouchedAction)(__weak OCBarrageDescriptor *descriptor, __weak OCBarrageCell *cell);
+FOUNDATION_EXPORT NSString *const FWBarrageAnimation;
 
-typedef NS_ENUM(NSInteger, OCBarragePositionPriority) {
-    OCBarragePositionLow = 0,
-    OCBarragePositionMiddle,
-    OCBarragePositionHigh,
-    OCBarragePositionVeryHigh
+typedef void(^FWBarrageTouchAction)(__weak FWBarrageDescriptor *descriptor);
+typedef void(^FWBarrageCellTouchedAction)(__weak FWBarrageDescriptor *descriptor, __weak FWBarrageCell *cell);
+
+typedef NS_ENUM(NSInteger, FWBarragePositionPriority) {
+    FWBarragePositionLow = 0,
+    FWBarragePositionMiddle,
+    FWBarragePositionHigh,
+    FWBarragePositionVeryHigh
 };
 
-typedef NS_ENUM(NSInteger, OCBarrageRenderPositionStyle) {//新加的cell的y坐标的类型
-    OCBarrageRenderPositionRandomTracks = 0, //将OCBarrageRenderView分成几条轨道, 随机选一条展示
-    OCBarrageRenderPositionRandom, // y坐标随机
-    OCBarrageRenderPositionIncrease, //y坐标递增, 循环
+typedef NS_ENUM(NSInteger, FWBarrageRenderPositionStyle) {//新加的cell的y坐标的类型
+    FWBarrageRenderPositionRandomTracks = 0, //将FWBarrageRenderView分成几条轨道, 随机选一条展示
+    FWBarrageRenderPositionRandom, // y坐标随机
+    FWBarrageRenderPositionIncrease, //y坐标递增, 循环
 };
 
-#pragma mark - OCBarrageRenderView
+#pragma mark - FWBarrageRenderView
 
-typedef NS_ENUM(NSInteger, OCBarrageRenderStatus) {
-    OCBarrageRenderStoped = 0,
-    OCBarrageRenderStarted,
-    OCBarrageRenderPaused
+typedef NS_ENUM(NSInteger, FWBarrageRenderStatus) {
+    FWBarrageRenderStoped = 0,
+    FWBarrageRenderStarted,
+    FWBarrageRenderPaused
 };
 
-@interface OCBarrageRenderView : UIView <CAAnimationDelegate> {
-    NSMutableArray<OCBarrageCell *> *_animatingCells;
-    NSMutableArray<OCBarrageCell *> *_idleCells;
+@interface FWBarrageRenderView : UIView <CAAnimationDelegate> {
+    NSMutableArray<FWBarrageCell *> *_animatingCells;
+    NSMutableArray<FWBarrageCell *> *_idleCells;
     dispatch_semaphore_t _animatingCellsLock;
     dispatch_semaphore_t _idleCellsLock;
     dispatch_semaphore_t _trackInfoLock;
-    OCBarrageCell *_lastestCell;
+    FWBarrageCell *_lastestCell;
     UIView *_lowPositionView;
     UIView *_middlePositionView;
     UIView *_highPositionView;
     UIView *_veryHighPositionView;
     BOOL _autoClear;
-    OCBarrageRenderStatus _renderStatus;
+    FWBarrageRenderStatus _renderStatus;
     NSMutableDictionary *_trackNextAvailableTime;
 }
 
-@property (nonatomic, strong, readonly) NSMutableArray<OCBarrageCell *> *animatingCells;
-@property (nonatomic, strong, readonly) NSMutableArray<OCBarrageCell *> *idleCells;
-@property (nonatomic, assign) OCBarrageRenderPositionStyle renderPositionStyle;
-@property (nonatomic, assign, readonly) OCBarrageRenderStatus renderStatus;
+@property (nonatomic, strong, readonly) NSMutableArray<FWBarrageCell *> *animatingCells;
+@property (nonatomic, strong, readonly) NSMutableArray<FWBarrageCell *> *idleCells;
+@property (nonatomic, assign) FWBarrageRenderPositionStyle renderPositionStyle;
+@property (nonatomic, assign, readonly) FWBarrageRenderStatus renderStatus;
 
-- (nullable OCBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass;
-- (void)fireBarrageCell:(OCBarrageCell *)barrageCell;
+- (nullable FWBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass;
+- (void)fireBarrageCell:(FWBarrageCell *)barrageCell;
 
 - (void)start;
 - (void)pause;
@@ -70,39 +71,39 @@ typedef NS_ENUM(NSInteger, OCBarrageRenderStatus) {
 
 @end
 
-#pragma mark - OCBarrageManager
+#pragma mark - FWBarrageManager
 
 /*!
  @brief 弹幕管理器
  
  @see https://github.com/w1531724247/OCBarrage
  */
-@interface OCBarrageManager : NSObject {
-    OCBarrageRenderView *_renderView;
+@interface FWBarrageManager : NSObject {
+    FWBarrageRenderView *_renderView;
 }
 
-@property (nonatomic, strong, readonly) OCBarrageRenderView *renderView;
-@property (nonatomic, assign, readonly) OCBarrageRenderStatus renderStatus;
+@property (nonatomic, strong, readonly) FWBarrageRenderView *renderView;
+@property (nonatomic, assign, readonly) FWBarrageRenderStatus renderStatus;
 
 - (void)start;
 - (void)pause;
 - (void)resume;
 - (void)stop;
 
-- (void)renderBarrageDescriptor:(OCBarrageDescriptor *)barrageDescriptor;
+- (void)renderBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor;
 
 @end
 
-#pragma mark - OCBarrageDescriptor
+#pragma mark - FWBarrageDescriptor
 
-@interface OCBarrageDescriptor : NSObject
+@interface FWBarrageDescriptor : NSObject
 
 @property (nonatomic, assign, nullable) Class barrageCellClass;
-@property (nonatomic, assign) OCBarragePositionPriority positionPriority;//显示位置normal型的渲染在low型的上面, height型的渲染在normal上面
+@property (nonatomic, assign) FWBarragePositionPriority positionPriority;//显示位置normal型的渲染在low型的上面, height型的渲染在normal上面
 @property (nonatomic, assign) CGFloat animationDuration;//动画时间, 时间越长速度越慢, 时间越短速度越快
 @property (nonatomic, assign) CGFloat fixedSpeed;//固定速度, 可以防止弹幕在有空闲轨道的情况下重叠, 取值0.0~100.0, animationDuration与fixedSpeed只能选择一个, fixedSpeed设置之后可以不用设置animationDuration
 
-@property (nonatomic, copy, nullable) OCBarrageCellTouchedAction cellTouchedAction;//新属性里回传了被点击的cell, 可以在代码块里更改被点击的cell的属性, 比如之前有用户需要在弹幕被点击的时候修改被点击的弹幕的文字颜色等等. 用来替代旧版本的touchAction
+@property (nonatomic, copy, nullable) FWBarrageCellTouchedAction cellTouchedAction;//新属性里回传了被点击的cell, 可以在代码块里更改被点击的cell的属性, 比如之前有用户需要在弹幕被点击的时候修改被点击的弹幕的文字颜色等等. 用来替代旧版本的touchAction
 @property (nonatomic, strong, nullable) UIColor *borderColor; // Default is no border
 @property (nonatomic, assign) CGFloat borderWidth; // Default is 0
 @property (nonatomic, assign) CGFloat cornerRadius; // Default is 8
@@ -111,14 +112,14 @@ typedef NS_ENUM(NSInteger, OCBarrageRenderStatus) {
 
 @end
 
-#pragma mark - OCBarrageCell
+#pragma mark - FWBarrageCell
 
-@protocol OCBarrageCellDelegate;
+@protocol FWBarrageCellDelegate;
 
-@interface OCBarrageCell : UIView
+@interface FWBarrageCell : UIView
 @property (nonatomic, assign, getter=isIdle) BOOL idle;//是否是空闲状态
 @property (nonatomic, assign) NSTimeInterval idleTime;//开始闲置的时间, 闲置超过5秒的, 自动回收内存
-@property (nonatomic, strong, nullable) OCBarrageDescriptor *barrageDescriptor;
+@property (nonatomic, strong, nullable) FWBarrageDescriptor *barrageDescriptor;
 @property (nonatomic, strong, readonly, nullable) CAAnimation *barrageAnimation;
 @property (nonatomic, assign) int trackIndex;
 
@@ -135,13 +136,13 @@ typedef NS_ENUM(NSInteger, OCBarrageRenderStatus) {
 
 @end
 
-@protocol OCBarrageCellDelegate <NSObject, CAAnimationDelegate>
+@protocol FWBarrageCellDelegate <NSObject, CAAnimationDelegate>
 
 @end
 
-#pragma mark - OCBarrageTextDescriptor
+#pragma mark - FWBarrageTextDescriptor
 
-@interface OCBarrageTextDescriptor : OCBarrageDescriptor {
+@interface FWBarrageTextDescriptor : FWBarrageDescriptor {
     NSMutableDictionary *_textAttribute;
 }
 
@@ -165,18 +166,18 @@ typedef NS_ENUM(NSInteger, OCBarrageRenderStatus) {
 
 @end
 
-#pragma mark - OCBarrageTextCell
+#pragma mark - FWBarrageTextCell
 
-@interface OCBarrageTextCell : OCBarrageCell
+@interface FWBarrageTextCell : FWBarrageCell
 
 @property (nonatomic, strong) UILabel *textLabel;
-@property (nonatomic, strong, nullable) OCBarrageTextDescriptor *textDescriptor;
+@property (nonatomic, strong, nullable) FWBarrageTextDescriptor *textDescriptor;
 
 @end
 
-#pragma mark - OCBarrageTrackInfo
+#pragma mark - FWBarrageTrackInfo
 
-@interface OCBarrageTrackInfo : NSObject
+@interface FWBarrageTrackInfo : NSObject
 
 @property (nonatomic, assign) int trackIndex;
 @property (nonatomic, copy, nullable) NSString *trackIdentifier;
@@ -186,9 +187,9 @@ typedef NS_ENUM(NSInteger, OCBarrageRenderStatus) {
 
 @end
 
-@interface CALayer (OCBarrage)
+@interface CALayer (FWBarrage)
 
-- (nullable UIImage *)convertContentToImageWithSize:(CGSize)contentSize;
+- (nullable UIImage *)fwConvertContentToImageWithSize:(CGSize)contentSize;
 
 @end
 
