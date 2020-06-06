@@ -63,6 +63,7 @@ typedef NS_ENUM(NSInteger, FWBarrageRenderStatus) {
 
 - (nullable FWBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass;
 - (void)fireBarrageCell:(FWBarrageCell *)barrageCell;
+- (BOOL)trigerActionWithPoint:(CGPoint)touchPoint;
 
 - (void)start;
 - (void)pause;
