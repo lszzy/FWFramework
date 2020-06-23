@@ -8,7 +8,7 @@
 
 #import "TestMenuViewController.h"
 
-@interface TestMenuViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FWCropViewControllerDelegate>
+@interface TestMenuViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIImageView *imageView;
@@ -34,10 +34,8 @@
         [drawerView setPosition:position animated:YES];
     }];
     
-    UIBarButtonItem *systemItem = [UIBarButtonItem fwBarItemWithObject:@"系统" target:self action:@selector(onPhotoSheet:)];
-    systemItem.fwTempObject = @NO;
+    UIBarButtonItem *systemItem = [UIBarButtonItem fwBarItemWithObject:@"系统" target:self action:@selector(onSystemSheet:)];
     UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:@"自定义" target:self action:@selector(onPhotoSheet:)];
-    customItem.fwTempObject = @YES;
     self.navigationItem.rightBarButtonItems = @[systemItem, customItem];
 }
 
@@ -86,6 +84,31 @@
     imageView.fwLayoutChain.center().size(CGSizeMake(200, 200));
 }
 
+- (void)onSystemSheet:(UIBarButtonItem *)sender
+{
+    FWWeakifySelf();
+    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"拍照", @"选择照片", @"选取相册"] actionBlock:^(NSInteger index) {
+        FWStrongifySelf();
+        if (index == 0) {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera completion:^(NSDictionary * _Nonnull info, BOOL cancel) {
+                    [self onPickerResult:cancel ? nil : info[UIImagePickerControllerEditedImage] cancelled:cancel];
+                }];
+                pickerController.allowsEditing = YES;
+                [self presentViewController:pickerController animated:YES completion:nil];
+            } else {
+                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
+            }
+        } else {
+            UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:(index == 1) ? UIImagePickerControllerSourceTypePhotoLibrary : UIImagePickerControllerSourceTypeSavedPhotosAlbum completion:^(NSDictionary * _Nonnull info, BOOL cancel) {
+                [self onPickerResult:cancel ? nil : info[UIImagePickerControllerEditedImage] cancelled:cancel];
+            }];
+            pickerController.allowsEditing = YES;
+            [self presentViewController:pickerController animated:YES completion:nil];
+        }
+    }];
+}
+
 - (void)onPhotoSheet:(UIBarButtonItem *)sender
 {
     FWWeakifySelf();
@@ -96,12 +119,7 @@
                 UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
                 pickerController.delegate = self;
                 pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-                if ([sender.fwTempObject fwAsBool]) {
-                    pickerController.allowsEditing = NO;
-                } else {
-                    pickerController.allowsEditing = YES;
-                }
-                pickerController.fwTempObject = sender.fwTempObject;
+                pickerController.allowsEditing = NO;
                 [self presentViewController:pickerController animated:YES completion:nil];
             } else {
                 [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
@@ -110,12 +128,7 @@
             UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
             pickerController.delegate = self;
             pickerController.sourceType = (index == 1) ? UIImagePickerControllerSourceTypePhotoLibrary : UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-            if ([sender.fwTempObject fwAsBool]) {
-                pickerController.allowsEditing = NO;
-            } else {
-                pickerController.allowsEditing = YES;
-            }
-            pickerController.fwTempObject = sender.fwTempObject;
+            pickerController.allowsEditing = NO;
             [self presentViewController:pickerController animated:YES completion:nil];
         }
     }];
@@ -130,37 +143,34 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info
 {
-    if ([picker.fwTempObject fwAsBool]) {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
-        
-        FWCropViewController *cropController = [[FWCropViewController alloc] initWithCroppingStyle:FWCropViewCroppingStyleDefault image:image];
-        cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare;
-        cropController.aspectRatioLockEnabled = YES;
-        cropController.resetAspectRatioEnabled = NO;
-        cropController.aspectRatioPickerButtonHidden = YES;
-        cropController.delegate = self;
-        [picker pushViewController:cropController animated:YES];
-    } else {
-        UIImage *image = info[UIImagePickerControllerEditedImage];
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    
+    FWCropViewController *cropController = [[FWCropViewController alloc] initWithImage:image];
+    cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare;
+    cropController.aspectRatioLockEnabled = YES;
+    cropController.resetAspectRatioEnabled = NO;
+    cropController.aspectRatioPickerButtonHidden = YES;
+    cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
         [picker dismissViewControllerAnimated:YES completion:^{
             [self onPickerResult:image cancelled:NO];
         }];
-    }
+    };
+    cropController.onDidFinishCancelled = ^(BOOL isFinished) {
+        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+            [picker dismissViewControllerAnimated:YES completion:^{
+                [self onPickerResult:nil cancelled:YES];
+            }];
+        } else {
+            [picker popViewControllerAnimated:YES];
+        }
+    };
+    [picker pushViewController:cropController animated:YES];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [picker dismissViewControllerAnimated:YES completion:^{
         [self onPickerResult:nil cancelled:YES];
-    }];
-}
-
-#pragma mark - FWCropViewControllerDelegate
-
-- (void)cropViewController:(FWCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
-{
-    [cropViewController dismissViewControllerAnimated:YES completion:^{
-        [self onPickerResult:image cancelled:NO];
     }];
 }
 
