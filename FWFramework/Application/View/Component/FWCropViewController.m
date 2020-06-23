@@ -12,7 +12,7 @@
 static const CGFloat kFWCropViewControllerTitleTopPadding = 14.0f;
 static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
-@interface FWCropViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, FWCropViewDelegate>
+@interface FWCropViewController () <FWCropViewDelegate>
 
 /* The target image */
 @property (nonatomic, readwrite) UIImage *image;
@@ -26,14 +26,10 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 @property (nonatomic, strong) UIView *toolbarSnapshotView;
 @property (nonatomic, strong, readwrite) UILabel *titleLabel;
 
-/* Transition animation controller */
-@property (nonatomic, copy) void (^prepareForTransitionHandler)(void);
-@property (nonatomic, strong) FWCropViewControllerTransitioning *transitionController;
-@property (nonatomic, assign) BOOL inTransition;
-
 /* If pushed from a navigation controller, the visibility of that controller's bars. */
 @property (nonatomic, assign) BOOL navigationBarHidden;
 @property (nonatomic, assign) BOOL toolbarHidden;
+@property (nonatomic, assign) BOOL inTransition;
 
 /* State for whether content is being laid out vertically or horizontally */
 @property (nonatomic, readonly) BOOL verticalLayout;
@@ -68,9 +64,6 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
         self.modalPresentationStyle = UIModalPresentationFullScreen;
         self.automaticallyAdjustsScrollViewInsets = NO;
         self.hidesNavigationBar = true;
-        
-        // Controller object that handles the transition animation when presenting / dismissing this app
-        _transitionController = [[FWCropViewControllerTransitioning alloc] init];
 
         // Default initial behaviour
         _aspectRatioPreset = FWCropViewControllerAspectRatioPresetOriginal;
@@ -90,7 +83,6 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
     [super viewDidLoad];
 
     // Set up view controller properties
-    self.transitioningDelegate = self;
     self.view.backgroundColor = self.cropView.backgroundColor;
     
     BOOL circularMode = (self.croppingStyle == FWCropViewCroppingStyleCircular);
@@ -548,19 +540,15 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
     //Depending on the shape of the image, work out if horizontal, or vertical options are required
     BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
     
-    // Get the resource bundle depending on the framework/dependency manager we're using
-    NSBundle *resourceBundle = FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(self);
-    
     //Prepare the localized options
-    NSString *cancelButtonTitle = NSLocalizedStringFromTableInBundle(@"Cancel", @"FWCropViewControllerLocalizable", resourceBundle, nil);
-    NSString *originalButtonTitle = NSLocalizedStringFromTableInBundle(@"Original", @"FWCropViewControllerLocalizable", resourceBundle, nil);
-    NSString *squareButtonTitle = NSLocalizedStringFromTableInBundle(@"Square", @"FWCropViewControllerLocalizable", resourceBundle, nil);
+    NSString *cancelButtonTitle = NSLocalizedString(@"取消", nil);
+    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : NSLocalizedString(@"原有", nil);
     
     //Prepare the list that will be fed to the alert view/controller
     
     // Ratio titles according to the order of enum FWCropViewControllerAspectRatioPreset
-    NSArray<NSString *> *portraitRatioTitles = @[originalButtonTitle, squareButtonTitle, @"2:3", @"3:5", @"3:4", @"4:5", @"5:7", @"9:16"];
-    NSArray<NSString *> *landscapeRatioTitles = @[originalButtonTitle, squareButtonTitle, @"3:2", @"5:3", @"4:3", @"5:4", @"7:5", @"16:9"];
+    NSArray<NSString *> *portraitRatioTitles = @[originalButtonTitle, @"1:1", @"2:3", @"3:5", @"3:4", @"4:5", @"5:7", @"9:16"];
+    NSArray<NSString *> *landscapeRatioTitles = @[originalButtonTitle, @"1:1", @"3:2", @"5:3", @"4:3", @"5:4", @"7:5", @"16:9"];
 
     NSMutableArray *ratioValues = [NSMutableArray array];
     NSMutableArray *itemStrings = [NSMutableArray array];
@@ -682,176 +670,8 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
     self.toolbar.resetButtonEnabled = NO;
 }
 
-#pragma mark - Presentation Handling -
-- (void)presentAnimatedFromParentViewController:(UIViewController *)viewController
-                                       fromView:(UIView *)fromView
-                                      fromFrame:(CGRect)fromFrame
-                                          setup:(void (^)(void))setup
-                                     completion:(void (^)(void))completion
-{
-    [self presentAnimatedFromParentViewController:viewController fromImage:nil fromView:fromView fromFrame:fromFrame
-                                            angle:0 toImageFrame:CGRectZero setup:setup completion:completion];
-}
-
-- (void)presentAnimatedFromParentViewController:(UIViewController *)viewController
-                                      fromImage:(UIImage *)image
-                                       fromView:(UIView *)fromView
-                                      fromFrame:(CGRect)fromFrame
-                                          angle:(NSInteger)angle
-                                   toImageFrame:(CGRect)toFrame
-                                          setup:(void (^)(void))setup
-                                     completion:(void (^)(void))completion
-{
-    self.transitionController.image     = image ? image : self.image;
-    self.transitionController.fromFrame = fromFrame;
-    self.transitionController.fromView  = fromView;
-    self.prepareForTransitionHandler    = setup;
-    
-    if (self.angle != 0 || !CGRectIsEmpty(toFrame)) {
-        self.angle = angle;
-        self.imageCropFrame = toFrame;
-    }
-    
-    __weak typeof (self) weakSelf = self;
-    [viewController presentViewController:self.parentViewController ? self.parentViewController : self
-                                 animated:YES
-                               completion:^
-    {
-        typeof (self) strongSelf = weakSelf;
-        if (completion) {
-            completion();
-        }
-        
-        [strongSelf.cropView setCroppingViewsHidden:NO animated:YES];
-        if (!CGRectIsEmpty(fromFrame)) {
-            [strongSelf.cropView setGridOverlayHidden:NO animated:YES];
-        }
-    }];
-}
-
-- (void)dismissAnimatedFromParentViewController:(UIViewController *)viewController
-                                         toView:(UIView *)toView
-                                        toFrame:(CGRect)frame
-                                          setup:(void (^)(void))setup
-                                     completion:(void (^)(void))completion
-{
-    [self dismissAnimatedFromParentViewController:viewController withCroppedImage:nil toView:toView toFrame:frame setup:setup completion:completion];
-}
-
-- (void)dismissAnimatedFromParentViewController:(UIViewController *)viewController
-                               withCroppedImage:(UIImage *)image
-                                         toView:(UIView *)toView
-                                        toFrame:(CGRect)frame
-                                          setup:(void (^)(void))setup
-                                     completion:(void (^)(void))completion
-{
-    // If a cropped image was supplied, use that, and only zoom out from the crop box
-    if (image) {
-        self.transitionController.image     = image ? image : self.image;
-        self.transitionController.fromFrame = [self.cropView convertRect:self.cropView.cropBoxFrame toView:self.view];
-    }
-    else { // else use the main image, and zoom out from its entirety
-        self.transitionController.image     = self.image;
-        self.transitionController.fromFrame = [self.cropView convertRect:self.cropView.imageViewFrame toView:self.view];
-    }
-    
-    self.transitionController.toView    = toView;
-    self.transitionController.toFrame   = frame;
-    self.prepareForTransitionHandler    = setup;
-
-    [viewController dismissViewControllerAnimated:YES completion:^ {
-        if (completion) { completion(); }
-    }];
-}
-
-- (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
-{
-    if (self.navigationController || self.modalTransitionStyle == UIModalTransitionStyleCoverVertical) {
-        return nil;
-    }
-    
-    self.cropView.simpleRenderMode = YES;
-    
-    __weak typeof (self) weakSelf = self;
-    self.transitionController.prepareForTransitionHandler = ^{
-        typeof (self) strongSelf = weakSelf;
-        FWCropViewControllerTransitioning *transitioning = strongSelf.transitionController;
-
-        transitioning.toFrame = [strongSelf.cropView convertRect:strongSelf.cropView.cropBoxFrame toView:strongSelf.view];
-        if (!CGRectIsEmpty(transitioning.fromFrame) || transitioning.fromView) {
-            strongSelf.cropView.croppingViewsHidden = YES;
-        }
-
-        if (strongSelf.prepareForTransitionHandler) {
-            strongSelf.prepareForTransitionHandler();
-        }
-        
-        strongSelf.prepareForTransitionHandler = nil;
-    };
-    
-    self.transitionController.isDismissing = NO;
-    return self.transitionController;
-}
-
-- (id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
-{
-    if (self.navigationController || self.modalTransitionStyle == UIModalTransitionStyleCoverVertical) {
-        return nil;
-    }
-    
-    __weak typeof (self) weakSelf = self;
-    self.transitionController.prepareForTransitionHandler = ^{
-        typeof (self) strongSelf = weakSelf;
-        FWCropViewControllerTransitioning *transitioning = strongSelf.transitionController;
-        
-        if (!CGRectIsEmpty(transitioning.toFrame) || transitioning.toView) {
-            strongSelf.cropView.croppingViewsHidden = YES;
-        }
-        else {
-            strongSelf.cropView.simpleRenderMode = YES;
-        }
-        
-        if (strongSelf.prepareForTransitionHandler) {
-            strongSelf.prepareForTransitionHandler();
-        }
-    };
-    
-    self.transitionController.isDismissing = YES;
-    return self.transitionController;
-}
-
 #pragma mark - Button Feedback -
 - (void)cancelButtonTapped
-{
-    if (!self.showCancelConfirmationDialog) {
-        [self dismissCropViewController];
-        return;
-    }
-
-    // Get the resource bundle depending on the framework/dependency manager we're using
-    NSBundle *resourceBundle = FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(self);
-
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:nil
-                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
-    alertController.popoverPresentationController.sourceView = self.toolbar.visibleCancelButton;
-
-    NSString *yesButtonTitle = NSLocalizedStringFromTableInBundle(@"Delete Changes", @"FWCropViewControllerLocalizable", resourceBundle, nil);
-    NSString *noButtonTitle = NSLocalizedStringFromTableInBundle(@"Cancel", @"FWCropViewControllerLocalizable", resourceBundle, nil);
-
-    __weak typeof (self) weakSelf = self;
-    UIAlertAction *yesAction = [UIAlertAction actionWithTitle:yesButtonTitle style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        [weakSelf dismissCropViewController];
-    }];
-    [alertController addAction:yesAction];
-
-    UIAlertAction *noAction = [UIAlertAction actionWithTitle:noButtonTitle style:UIAlertActionStyleCancel handler:nil];
-    [alertController addAction:noAction];
-
-    [weakSelf presentViewController:alertController animated:YES completion: nil];
-}
-
-- (void)dismissCropViewController
 {
     bool isDelegateOrCallbackHandled = NO;
 
@@ -883,51 +703,6 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 {
     CGRect cropFrame = self.cropView.imageCropFrame;
     NSInteger angle = self.cropView.angle;
-
-    //If desired, when the user taps done, show an activity sheet
-    if (self.showActivitySheetOnDone) {
-        FWActivityCroppedImageProvider *imageItem = [[FWActivityCroppedImageProvider alloc] initWithImage:self.image cropFrame:cropFrame angle:angle circular:(self.croppingStyle == FWCropViewCroppingStyleCircular)];
-        FWCroppedImageAttributes *attributes = [[FWCroppedImageAttributes alloc] initWithCroppedFrame:cropFrame angle:angle originalImageSize:self.image.size];
-        
-        NSMutableArray *activityItems = [@[imageItem, attributes] mutableCopy];
-        if (self.activityItems) {
-            [activityItems addObjectsFromArray:self.activityItems];
-        }
-        
-        UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:self.applicationActivities];
-        activityController.excludedActivityTypes = self.excludedActivityTypes;
-
-        activityController.modalPresentationStyle = UIModalPresentationPopover;
-        activityController.popoverPresentationController.sourceView = self.toolbar;
-        activityController.popoverPresentationController.sourceRect = self.toolbar.doneButtonFrame;
-        [self presentViewController:activityController animated:YES completion:nil];
-
-        __weak typeof(activityController) blockController = activityController;
-
-        activityController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
-            if (!completed) {
-                return;
-            }
-            
-            bool isCallbackOrDelegateHandled = NO;
-            
-            if (self.onDidFinishCancelled != nil) {
-                self.onDidFinishCancelled(NO);
-                isCallbackOrDelegateHandled = YES;
-            }
-            if ([self.delegate respondsToSelector:@selector(cropViewController:didFinishCancelled:)]) {
-                [self.delegate cropViewController:self didFinishCancelled:NO];
-                isCallbackOrDelegateHandled = YES;
-            }
-            
-            if (!isCallbackOrDelegateHandled) {
-                [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-                blockController.completionWithItemsHandler = nil;
-            }
-        };
-
-        return;
-    }
     
     BOOL isCallbackOrDelegateHandled = NO;
     
@@ -1311,177 +1086,6 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 @end
 
-@implementation FWCropViewControllerTransitioning
-
-- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext
-{
-    return 0.45f;
-}
-
-- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext
-{
-    // Get the master view where the animation takes place
-    UIView *containerView = [transitionContext containerView];
-    
-    // Get the origin/destination view controllers
-    UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    
-    // Work out which one is the crop view controller
-    UIViewController *cropViewController = (self.isDismissing == NO) ? toViewController : fromViewController;
-    UIViewController *previousController = (self.isDismissing == NO) ? fromViewController : toViewController;
-    
-    // Just in case, match up the frame sizes
-    cropViewController.view.frame = containerView.bounds;
-    if (self.isDismissing) {
-        previousController.view.frame = containerView.bounds;
-    }
-    
-    // Add the view layers beforehand as this will trigger the initial sets of layouts
-    if (self.isDismissing == NO) {
-        [containerView addSubview:cropViewController.view];
-
-        //Force a relayout now that the view is in the view hierarchy (so things like the safe area insets are now valid)
-        [cropViewController viewDidLayoutSubviews];
-    }
-    else {
-        [containerView insertSubview:previousController.view belowSubview:cropViewController.view];
-    }
-    
-    // Perform any last UI updates now so we can potentially factor them into our calculations, but after
-    // the container views have been set up
-    if (self.prepareForTransitionHandler) {
-        self.prepareForTransitionHandler();
-    }
-        
-    // If origin/destination views were supplied, use them to supplant the
-    // frames
-    if (!self.isDismissing && self.fromView) {
-        self.fromFrame = [self.fromView.superview convertRect:self.fromView.frame toView:containerView];
-    }
-    else if (self.isDismissing && self.toView) {
-        self.toFrame = [self.toView.superview convertRect:self.toView.frame toView:containerView];
-    }
-        
-    UIImageView *imageView = nil;
-    if ((self.isDismissing && !CGRectIsEmpty(self.toFrame)) || (!self.isDismissing && !CGRectIsEmpty(self.fromFrame))) {
-        imageView = [[UIImageView alloc] initWithImage:self.image];
-        imageView.frame = self.fromFrame;
-        [containerView addSubview:imageView];
-        
-        if (@available(iOS 11.0, *)) {
-            imageView.accessibilityIgnoresInvertColors = YES;
-        }
-    }
-    
-    cropViewController.view.alpha = (self.isDismissing ? 1.0f : 0.0f);
-    if (imageView) {
-        [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:0.7f options:0 animations:^{
-            imageView.frame = self.toFrame;
-        } completion:^(BOOL complete) {
-            [UIView animateWithDuration:0.25f animations:^{
-                imageView.alpha = 0.0f;
-            }completion:^(BOOL complete) {
-                [imageView removeFromSuperview];
-            }];
-        }];
-    }
-    
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-        cropViewController.view.alpha = (self.isDismissing ? 0.0f : 1.0f);
-    } completion:^(BOOL complete) {
-        [self reset];
-        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-    }];
-}
-
-- (void)reset
-{
-    self.image = nil;
-    self.toView = nil;
-    self.fromView = nil;
-    self.fromFrame = CGRectZero;
-    self.toFrame = CGRectZero;
-    self.prepareForTransitionHandler = nil;
-}
-
-@end
-
-@interface FWActivityCroppedImageProvider ()
-
-@property (nonatomic, strong, readwrite) UIImage *image;
-@property (nonatomic, assign, readwrite) CGRect cropFrame;
-@property (nonatomic, assign, readwrite) NSInteger angle;
-@property (nonatomic, assign, readwrite) BOOL circular;
-
-@property (atomic, strong) UIImage *croppedImage;
-
-@end
-
-@implementation FWActivityCroppedImageProvider
-
-- (instancetype)initWithImage:(UIImage *)image cropFrame:(CGRect)cropFrame angle:(NSInteger)angle circular:(BOOL)circular
-{
-    if (self = [super initWithPlaceholderItem:[UIImage new]]) {
-        _image = image;
-        _cropFrame = cropFrame;
-        _angle = angle;
-        _circular = circular;
-    }
-    
-    return self;
-}
-
-#pragma mark - UIActivity Protocols -
-- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController
-{
-    return [[UIImage alloc] init];
-}
-
-- (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType
-{
-    return self.croppedImage;
-}
-
-#pragma mark - Image Generation -
-- (id)item
-{
-    //If the user didn't touch the image, just forward along the original
-    if (self.angle == 0 && CGRectEqualToRect(self.cropFrame, (CGRect){CGPointZero, self.image.size})) {
-        self.croppedImage = self.image;
-        return self.croppedImage;
-    }
-    
-    UIImage *image = [self.image fwCroppedImageWithFrame:self.cropFrame angle:self.angle circularClip:self.circular];
-    self.croppedImage = image;
-    return self.croppedImage;
-}
-
-@end
-
-@interface FWCroppedImageAttributes ()
-
-@property (nonatomic, assign, readwrite) NSInteger angle;
-@property (nonatomic, assign, readwrite) CGRect croppedFrame;
-@property (nonatomic, assign, readwrite) CGSize originalImageSize;
-
-@end
-
-@implementation FWCroppedImageAttributes
-
-- (instancetype)initWithCroppedFrame:(CGRect)croppedFrame angle:(NSInteger)angle originalImageSize:(CGSize)originalSize
-{
-    if (self = [super init]) {
-        _angle = angle;
-        _croppedFrame = croppedFrame;
-        _originalImageSize = originalSize;
-    }
-    
-    return self;
-}
-
-@end
-
 static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
 
 @interface FWCropOverlayView ()
@@ -1718,8 +1322,6 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
 
 @end
 
-#define FWCROPFWOLBAR_DEBUG_SHOWING_BUTFWNS_CONTAINER_RECT 0   // convenience debug toggle
-
 @interface FWCropToolbar()
 
 @property (nonatomic, strong) UIView *backgroundView;
@@ -1763,15 +1365,9 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
         self.reverseContentLayout = [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"ar"];
     }
     
-    // Get the resource bundle depending on the framework/dependency manager we're using
-    NSBundle *resourceBundle = FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(self);
-    
     _doneTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_doneTextButton setTitle: _doneTextButtonTitle ?
-        _doneTextButtonTitle : NSLocalizedStringFromTableInBundle(@"Done",
-                                                                  @"FWCropViewControllerLocalizable",
-                                                                  resourceBundle,
-                                                                  nil)
+        _doneTextButtonTitle : NSLocalizedString(@"完成", nil)
                      forState:UIControlStateNormal];
     [_doneTextButton setTitleColor:[UIColor colorWithRed:1.0f green:0.8f blue:0.0f alpha:1.0f] forState:UIControlStateNormal];
     [_doneTextButton.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -1788,10 +1384,7 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
     _cancelTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     
     [_cancelTextButton setTitle: _cancelTextButtonTitle ?
-        _cancelTextButtonTitle : NSLocalizedStringFromTableInBundle(@"Cancel",
-                                                                    @"FWCropViewControllerLocalizable",
-                                                                    resourceBundle,
-                                                                    nil)
+        _cancelTextButtonTitle : NSLocalizedString(@"取消", nil)
                        forState:UIControlStateNormal];
     [_cancelTextButton.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
     [_cancelTextButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -1854,16 +1447,6 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
     frame.size.height += self.backgroundViewOutsets.bottom;
     self.backgroundView.frame = frame;
     
-#if FWCROPFWOLBAR_DEBUG_SHOWING_BUTFWNS_CONTAINER_RECT
-    static UIView *containerView = nil;
-    if (!containerView) {
-        containerView = [[UIView alloc] initWithFrame:CGRectZero];
-        containerView.backgroundColor = [UIColor redColor];
-        containerView.alpha = 0.1;
-        [self addSubview:containerView];
-    }
-#endif
-    
     if (verticalLayout == NO) {
         CGFloat insetPadding = 10.0f;
         
@@ -1904,10 +1487,6 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
         }
         
         CGRect containerRect = CGRectIntegral((CGRect){x,frame.origin.y,width,44.0f});
-
-#if FWCROPFWOLBAR_DEBUG_SHOWING_BUTFWNS_CONTAINER_RECT
-        containerView.frame = containerRect;
-#endif
         
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         
@@ -1942,10 +1521,6 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
         self.doneIconButton.frame = frame;
         
         CGRect containerRect = (CGRect){0,CGRectGetMaxY(self.doneIconButton.frame),44.0f,CGRectGetMinY(self.cancelIconButton.frame)-CGRectGetMaxY(self.doneIconButton.frame)};
-        
-#if FWCROPFWOLBAR_DEBUG_SHOWING_BUTFWNS_CONTAINER_RECT
-        containerView.frame = containerRect;
-#endif
         
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         

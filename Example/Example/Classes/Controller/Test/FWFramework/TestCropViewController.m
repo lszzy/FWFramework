@@ -36,10 +36,10 @@
     //cropController.imageCropFrame = CGRectMake(0,0,2848,4288); //The initial frame that the crop controller will have visible.
     
     // -- Uncomment the following lines of code to test out the aspect ratio features --
-    cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare; //Set the initial aspect ratio as a square
-    cropController.aspectRatioLockEnabled = YES; // The crop box is locked to the aspect ratio and can't be resized away from it
-    cropController.resetAspectRatioEnabled = NO; // When tapping 'reset', the aspect ratio will NOT be reset back to default
-    cropController.aspectRatioPickerButtonHidden = YES;
+    //cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare; //Set the initial aspect ratio as a square
+    //cropController.aspectRatioLockEnabled = YES; // The crop box is locked to the aspect ratio and can't be resized away from it
+    //cropController.resetAspectRatioEnabled = NO; // When tapping 'reset', the aspect ratio will NOT be reset back to default
+    //cropController.aspectRatioPickerButtonHidden = YES;
 
     // -- Uncomment this line of code to place the toolbar at the top of the view controller --
     //cropController.toolbarPosition = FWCropViewControllerToolbarPositionTop;
@@ -54,9 +54,6 @@
     
     //cropController.doneButtonTitle = @"Title";
     //cropController.cancelButtonTitle = @"Title";
-
-    // -- Uncomment this line of code to show a confirmation dialog when cancelling --
-    //cropController.showCancelConfirmationDialog = YES;
 
     // Uncomment this if you wish to always show grid
     //cropController.cropView.alwaysShowCroppingGrid = YES;
@@ -95,15 +92,7 @@
     // When tapping the image view, restore the image to the previous cropping state
     FWCropViewController *cropController = [[FWCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
     cropController.delegate = self;
-    CGRect viewFrame = [self.view convertRect:self.imageView.frame toView:self.navigationController.view];
-    [cropController presentAnimatedFromParentViewController:self
-                                                  fromImage:self.imageView.image
-                                                   fromView:nil
-                                                  fromFrame:viewFrame
-                                                      angle:self.angle
-                                               toImageFrame:self.croppedFrame
-                                                      setup:^{ self.imageView.hidden = YES; }
-                                                 completion:nil];
+    [self presentViewController:cropController animated:YES completion:nil];
 }
 
 #pragma mark - Cropper Delegate -
@@ -130,13 +119,7 @@
     
     if (cropViewController.croppingStyle != FWCropViewCroppingStyleCircular) {
         self.imageView.hidden = YES;
-        [cropViewController dismissAnimatedFromParentViewController:self
-                                                   withCroppedImage:image
-                                                             toView:self.imageView
-                                                            toFrame:CGRectZero
-                                                              setup:^{ [self layoutImageView]; }
-                                                         completion:
-         ^{
+        [cropViewController dismissViewControllerAnimated:YES completion:^{
             self.imageView.hidden = NO;
         }];
     }

@@ -43,21 +43,6 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
     FWCropViewControllerToolbarPositionTop     // Bar is placed along the top in portrait (Respects the status bar)
 };
 
-static inline NSBundle *FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object) {
-    NSBundle *resourceBundle = nil;
-    
-    NSBundle *classBundle = [NSBundle bundleForClass:object.class];
-    NSURL *resourceBundleURL = [classBundle URLForResource:@"FWCropViewControllerBundle" withExtension:@"bundle"];
-    if (resourceBundleURL) {
-        resourceBundle = [[NSBundle alloc] initWithURL:resourceBundleURL];
-    }
-    else {
-        resourceBundle = classBundle;
-    }
-    
-    return resourceBundle;
-}
-
 @class FWCropViewController;
 @class FWCropView;
 @class FWCropToolbar;
@@ -141,12 +126,6 @@ static inline NSBundle *FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object
 @property (nullable, nonatomic, weak) id<FWCropViewControllerDelegate> delegate;
 
 /**
- If true, when the user hits 'Done', a UIActivityController will appear
- before the view controller ends.
- */
-@property (nonatomic, assign) BOOL showActivitySheetOnDone;
-
-/**
  The crop view managed by this view controller.
  */
 @property (nonnull, nonatomic, strong, readonly) FWCropView *cropView;
@@ -197,6 +176,12 @@ static inline NSBundle *FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object
 @property (nullable, nonatomic, copy) NSString *customAspectRatioName;
 
 /**
+ The original aspect ratio
+ will be shown as first choice in the list of aspect ratios. (Default is `nil`)
+ */
+@property (nullable, nonatomic, copy) NSString *originalAspectRatioName;
+
+/**
  Title label which can be used to show instruction on the top of the crop view controller
  */
 @property (nullable, nonatomic, readonly) UILabel *titleLabel;
@@ -212,12 +197,6 @@ static inline NSBundle *FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object
  Setting this will override the Default which is a localized string for "Cancel".
  */
 @property (nullable, nonatomic, copy) NSString *cancelButtonTitle;
-
-/**
- Shows a confirmation dialog when the user hits 'Cancel' and there are pending changes.
- (Default is NO)
- */
-@property (nonatomic, assign) BOOL showCancelConfirmationDialog;
 
 /**
  If true, a custom aspect ratio is set, and the aspectRatioLockEnabled is set to YES, the crop box
@@ -303,27 +282,6 @@ static inline NSBundle *FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object
 @property (nonatomic, assign) BOOL cancelButtonHidden;
 
 /**
- If `showActivitySheetOnDone` is true, then these activity items will
- be supplied to that UIActivityViewController in addition to the
- `FWActivityCroppedImageProvider` object.
- */
-@property (nullable, nonatomic, strong) NSArray *activityItems;
-
-/**
- If `showActivitySheetOnDone` is true, then you may specify any
- custom activities your app implements in this array. If your activity requires
- access to the cropping information, it can be accessed in the supplied
- `FWActivityCroppedImageProvider` object
- */
-@property (nullable, nonatomic, strong) NSArray<UIActivity *> *applicationActivities;
-
-/**
- If `showActivitySheetOnDone` is true, then you may expliclty
- set activities that won't appear in the share sheet here.
- */
-@property (nullable, nonatomic, strong) NSArray<UIActivityType> *excludedActivityTypes;
-
-/**
  An array of `FWCropViewControllerAspectRatioPreset` enum values denoting which
  aspect ratios the crop view controller may display (Default is nil. All are shown)
  */
@@ -399,129 +357,10 @@ static inline NSBundle *FW_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object
  */
 - (void)setAspectRatioPreset:(FWCropViewControllerAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated NS_SWIFT_NAME(setAspectRatioPresent(_:animated:));
 
-/**
- Play a custom animation of the target image zooming to its position in
- the crop controller while the background fades in.
- 
- @param viewController The parent controller that this view controller would be presenting from.
- @param fromView A view that's frame will be used as the origin for this animation. Optional if `fromFrame` has a value.
- @param fromFrame In the screen's coordinate space, the frame from which the image should animate from. Optional if `fromView` has a value.
- @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
- @param completion A block that is called once the transition animation is completed.
- */
-- (void)presentAnimatedFromParentViewController:(nonnull UIViewController *)viewController
-                                       fromView:(nullable UIView *)fromView
-                                      fromFrame:(CGRect)fromFrame
-                                          setup:(nullable void (^)(void))setup
-                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(presentAnimatedFrom(_:view:frame:setup:completion:));
-
-/**
- Play a custom animation of the target image zooming to its position in
- the crop controller while the background fades in. Additionally, if you're
- 'restoring' to a previous crop setup, this method lets you provide a previously
- cropped copy of the image, and the previous crop settings to transition back to
- where the user would have left off.
- 
- @param viewController The parent controller that this view controller would be presenting from.
- @param image The previously cropped image that can be used in the transition animation.
- @param fromView A view that's frame will be used as the origin for this animation. Optional if `fromFrame` has a value.
- @param fromFrame In the screen's coordinate space, the frame from which the image should animate from.
- @param angle The rotation angle in which the image was rotated when it was originally cropped.
- @param toFrame In the image's coordinate space, the previous crop frame that created the previous crop
- @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
- @param completion A block that is called once the transition animation is completed.
- */
-- (void)presentAnimatedFromParentViewController:(nonnull UIViewController *)viewController
-                                      fromImage:(nullable UIImage *)image
-                                       fromView:(nullable UIView *)fromView
-                                      fromFrame:(CGRect)fromFrame
-                                          angle:(NSInteger)angle
-                                   toImageFrame:(CGRect)toFrame
-                                          setup:(nullable void (^)(void))setup
-                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(presentAnimatedFrom(_:fromImage:fromView:fromFrame:angle:toFrame:setup:completion:));
-
-/**
- Play a custom animation of the supplied cropped image zooming out from
- the cropped frame to the specified frame as the rest of the content fades out.
- If any view configurations need to be done before the animation starts,
- 
- @param viewController The parent controller that this view controller would be presenting from.
- @param toView A view who's frame will be used to establish the destination frame
- @param frame The target frame that the image will animate to
- @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
- @param completion A block that is called once the transition animation is completed.
- */
-- (void)dismissAnimatedFromParentViewController:(nonnull UIViewController *)viewController
-                                         toView:(nullable UIView *)toView
-                                        toFrame:(CGRect)frame
-                                          setup:(nullable void (^)(void))setup
-                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(dismissAnimatedFrom(_:toView:toFrame:setup:completion:));
-
-/**
- Play a custom animation of the supplied cropped image zooming out from
- the cropped frame to the specified frame as the rest of the content fades out.
- If any view configurations need to be done before the animation starts,
- 
- @param viewController The parent controller that this view controller would be presenting from.
- @param image The resulting 'cropped' image. If supplied, will animate out of the crop box zone. If nil, the default image will entirely zoom out
- @param toView A view who's frame will be used to establish the destination frame
- @param frame The target frame that the image will animate to
- @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
- @param completion A block that is called once the transition animation is completed.
- */
-- (void)dismissAnimatedFromParentViewController:(nonnull UIViewController *)viewController
-                               withCroppedImage:(nullable UIImage *)image
-                                         toView:(nullable UIView *)toView
-                                        toFrame:(CGRect)frame
-                                          setup:(nullable void (^)(void))setup
-                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(dismissAnimatedFrom(_:croppedImage:toView:toFrame:setup:completion:));
-
 @end
 
 @interface UIImage (FWCropRotate)
 - (nonnull UIImage *)fwCroppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circularClip:(BOOL)circular;
-@end
-
-@interface FWCropViewControllerTransitioning : NSObject <UIViewControllerAnimatedTransitioning>
-
-/* State Tracking */
-@property (nonatomic, assign) BOOL isDismissing; // Whether this animation is presenting or dismissing
-@property (nullable, nonatomic, strong) UIImage *image;    // The image that will be used in this animation
-
-/* Destination/Origin points */
-@property (nullable, nonatomic, strong) UIView *fromView;  // The origin view who's frame the image will be animated from
-@property (nullable, nonatomic, strong) UIView *toView;    // The destination view who's frame the image will animate to
-
-@property (nonatomic, assign) CGRect fromFrame;  // An origin frame that the image will be animated from
-@property (nonatomic, assign) CGRect toFrame;    // A destination frame the image will aniamte to
-
-/* A block called just before the transition to perform any last-second UI configuration */
-@property (nullable, nonatomic, copy) void (^prepareForTransitionHandler)(void);
-
-/* Empties all of the properties in this object */
-- (void)reset;
-
-@end
-
-@interface FWActivityCroppedImageProvider : UIActivityItemProvider
-
-@property (nonnull, nonatomic, readonly) UIImage *image;
-@property (nonatomic, readonly) CGRect cropFrame;
-@property (nonatomic, readonly) NSInteger angle;
-@property (nonatomic, readonly) BOOL circular;
-
-- (nonnull instancetype)initWithImage:(nonnull UIImage *)image cropFrame:(CGRect)cropFrame angle:(NSInteger)angle circular:(BOOL)circular;
-
-@end
-
-@interface FWCroppedImageAttributes : NSObject
-
-@property (nonatomic, readonly) NSInteger angle;
-@property (nonatomic, readonly) CGRect croppedFrame;
-@property (nonatomic, readonly) CGSize originalImageSize;
-
-- (instancetype)initWithCroppedFrame:(CGRect)croppedFrame angle:(NSInteger)angle originalImageSize:(CGSize)originalSize;
-
 @end
 
 @interface FWCropOverlayView : UIView
@@ -767,19 +606,6 @@ The minimum croping aspect ratio. If set, user is prevented from setting croppin
  crop box. (Default is NO)
  */
 @property (nonatomic, assign) BOOL translucencyAlwaysHidden;
-
-///*
-// if YES it will always show grid
-// if NO it will never show grid
-// NOTE : Do not use this method if you want to keep grid hide/show animation
-// */
-//- (void)setAlwaysShowGrid:(BOOL)showGrid;
-//
-///*
-// if YES it will disable translucency effect
-// */
-//- (void)setTranslucencyOff:(BOOL)disableTranslucency;
-
 
 /**
  Create a default instance of the crop view with the supplied image
