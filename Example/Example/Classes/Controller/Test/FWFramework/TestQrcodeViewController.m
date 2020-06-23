@@ -182,7 +182,7 @@
     [self stopScanManager];
     
     FWWeakifySelf();
-    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary completion:^(NSDictionary *info, BOOL cancel) {
+    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary shouldDismiss:YES completion:^(UIImagePickerController *picker, NSDictionary *info, BOOL cancel) {
         FWStrongifySelf();
         if (cancel) {
             [self startScanManager];

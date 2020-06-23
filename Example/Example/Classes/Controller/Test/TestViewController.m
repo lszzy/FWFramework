@@ -90,6 +90,7 @@
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"FWAlertController", @"TestCustomerAlertController"],
+                                             @[@"FWCropViewController", @"TestCropViewController"],
                                              @[@"MapView", @"TestMapViewController"],
                                              @[@"DrawerView", @"TestDrawerViewController"],
                                              @[@"MenuView", @"TestMenuViewController"],

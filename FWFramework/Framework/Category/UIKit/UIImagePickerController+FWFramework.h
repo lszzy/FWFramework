@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief UIImagePickerController+FWFramework
  */
-@interface UIImagePickerController (FWFramework) <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface UIImagePickerController (FWFramework)
 
 /*!
  @brief 快速创建照片选择器，自动设置delegate
@@ -23,7 +23,20 @@ NS_ASSUME_NONNULL_BEGIN
  @param completion 完成回调。参数1为回调数据，参数2为是否取消
  @return 照片选择器，不支持的返回nil
  */
-+ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType completion:(nullable void (^)(NSDictionary *info, BOOL cancel))completion;
++ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType
+                                               completion:(void (^)(NSDictionary * _Nullable info, BOOL cancel))completion;
+
+/*!
+ @brief 快速创建照片选择器，可自定义dismiss流程，自动设置delegate
+ 
+ @param sourceType 选择器类型
+ @param shouldDismiss 是否先关闭照片选择器再回调，如果先关闭则回调参数1为nil
+ @param completion 完成回调。参数1为照片选择器，2为回调数据，参数3为是否取消
+ @return 照片选择器，不支持的返回nil
+ */
++ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType
+                                            shouldDismiss:(BOOL)shouldDismiss
+                                               completion:(void (^)(UIImagePickerController * _Nullable picker, NSDictionary * _Nullable info, BOOL cancel))completion;
 
 @end
 

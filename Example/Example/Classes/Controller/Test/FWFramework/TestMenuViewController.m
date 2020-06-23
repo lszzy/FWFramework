@@ -8,9 +8,10 @@
 
 #import "TestMenuViewController.h"
 
-@interface TestMenuViewController ()
+@interface TestMenuViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
@@ -32,6 +33,10 @@
         CGFloat position = (drawerView.position == drawerView.openPosition) ? drawerView.closePosition : drawerView.openPosition;
         [drawerView setPosition:position animated:YES];
     }];
+    
+    UIBarButtonItem *systemItem = [UIBarButtonItem fwBarItemWithObject:@"系统" target:self action:@selector(onSystemSheet:)];
+    UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:@"自定义" target:self action:@selector(onPhotoSheet:)];
+    self.navigationItem.rightBarButtonItems = @[systemItem, customItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -71,6 +76,65 @@
                     positions:@[@(-FWScreenWidth / 2.0), @(0)]
                kickbackHeight:25
                      callback:nil];
+    
+    UIImageView *imageView = [UIImageView new];
+    _imageView = imageView;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.view addSubview:imageView];
+    imageView.fwLayoutChain.center().size(CGSizeMake(200, 200));
+}
+
+- (void)onSystemSheet:(UIBarButtonItem *)sender
+{
+    FWWeakifySelf();
+    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"拍照", @"选择照片", @"选取相册"] actionBlock:^(NSInteger index) {
+        FWStrongifySelf();
+        if (index == 0) {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera completion:^(NSDictionary * _Nonnull info, BOOL cancel) {
+                    [self onPickerResult:cancel ? nil : info[UIImagePickerControllerEditedImage] cancelled:cancel];
+                }];
+                pickerController.allowsEditing = YES;
+                [self presentViewController:pickerController animated:YES completion:nil];
+            } else {
+                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
+            }
+        } else {
+            UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:(index == 1) ? UIImagePickerControllerSourceTypePhotoLibrary : UIImagePickerControllerSourceTypeSavedPhotosAlbum completion:^(NSDictionary * _Nonnull info, BOOL cancel) {
+                [self onPickerResult:cancel ? nil : info[UIImagePickerControllerEditedImage] cancelled:cancel];
+            }];
+            pickerController.allowsEditing = YES;
+            [self presentViewController:pickerController animated:YES completion:nil];
+        }
+    }];
+}
+
+- (void)onPhotoSheet:(UIBarButtonItem *)sender
+{
+    FWWeakifySelf();
+    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"拍照", @"选择照片", @"选取相册"] actionBlock:^(NSInteger index) {
+        FWStrongifySelf();
+        if (index == 0) {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera cropController:nil completion:^(UIImage * _Nonnull image, BOOL cancel) {
+                    [self onPickerResult:cancel ? nil : image cancelled:cancel];
+                }];
+                [self presentViewController:pickerController animated:YES completion:nil];
+            } else {
+                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
+            }
+        } else {
+            UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:(index == 1) ? UIImagePickerControllerSourceTypePhotoLibrary : UIImagePickerControllerSourceTypeSavedPhotosAlbum cropController:nil completion:^(UIImage * _Nullable image, BOOL cancel) {
+                [self onPickerResult:cancel ? nil : image cancelled:cancel];
+            }];
+            [self presentViewController:pickerController animated:YES completion:nil];
+        }
+    }];
+}
+
+- (void)onPickerResult:(UIImage *)image cancelled:(BOOL)cancelled
+{
+    self.imageView.image = cancelled ? nil : image;
 }
 
 @end
