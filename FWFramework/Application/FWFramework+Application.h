@@ -37,6 +37,7 @@
 #import "FWBannerView.h"
 #import "FWBarrageView.h"
 #import "FWCollectionViewFlowLayout.h"
+#import "FWCropViewController.h"
 #import "FWIndicatorControl.h"
 #import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
