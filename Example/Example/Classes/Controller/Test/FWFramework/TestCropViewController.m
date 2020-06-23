@@ -231,6 +231,12 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
 #endif
     
+    FWWeakifySelf();
+    [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self fwCloseViewControllerAnimated:YES];
+    }];
+    
     self.imageView = [[UIImageView alloc] init];
     self.imageView.userInteractionEnabled = YES;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
