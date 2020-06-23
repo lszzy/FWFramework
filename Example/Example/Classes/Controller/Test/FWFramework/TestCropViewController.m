@@ -8,12 +8,12 @@
 
 #import "TestCropViewController.h"
 
-@interface TestCropViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, TOCropViewControllerDelegate>
+@interface TestCropViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FWCropViewControllerDelegate>
 
 @property (nonatomic, strong) UIImage *image;           // The image we'll be cropping
 @property (nonatomic, strong) UIImageView *imageView;   // The image view to present the cropped image
 
-@property (nonatomic, assign) TOCropViewCroppingStyle croppingStyle; //The cropping style
+@property (nonatomic, assign) FWCropViewCroppingStyle croppingStyle; //The cropping style
 @property (nonatomic, assign) CGRect croppedFrame;
 @property (nonatomic, assign) NSInteger angle;
 
@@ -25,7 +25,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    TOCropViewController *cropController = [[TOCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:image];
+    FWCropViewController *cropController = [[FWCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:image];
     cropController.delegate = self;
 
     // Uncomment this if you wish to provide extra instructions via a title label
@@ -36,18 +36,18 @@
     //cropController.imageCropFrame = CGRectMake(0,0,2848,4288); //The initial frame that the crop controller will have visible.
     
     // -- Uncomment the following lines of code to test out the aspect ratio features --
-    //cropController.aspectRatioPreset = TOCropViewControllerAspectRatioPresetSquare; //Set the initial aspect ratio as a square
-    //cropController.aspectRatioLockEnabled = YES; // The crop box is locked to the aspect ratio and can't be resized away from it
-    //cropController.resetAspectRatioEnabled = NO; // When tapping 'reset', the aspect ratio will NOT be reset back to default
-    //cropController.aspectRatioPickerButtonHidden = YES;
+    cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare; //Set the initial aspect ratio as a square
+    cropController.aspectRatioLockEnabled = YES; // The crop box is locked to the aspect ratio and can't be resized away from it
+    cropController.resetAspectRatioEnabled = NO; // When tapping 'reset', the aspect ratio will NOT be reset back to default
+    cropController.aspectRatioPickerButtonHidden = YES;
 
     // -- Uncomment this line of code to place the toolbar at the top of the view controller --
-    //cropController.toolbarPosition = TOCropViewControllerToolbarPositionTop;
+    //cropController.toolbarPosition = FWCropViewControllerToolbarPositionTop;
     
     // -- Uncomment this line of code to include only certain type of preset ratios
-    //cropController.allowedAspectRatios = @[@(TOCropViewControllerAspectRatioPresetOriginal),
-    //                                       @(TOCropViewControllerAspectRatioPresetSquare),
-    //                                       @(TOCropViewControllerAspectRatioPreset3x2)];
+    //cropController.allowedAspectRatios = @[@(FWCropViewControllerAspectRatioPresetOriginal),
+    //                                       @(FWCropViewControllerAspectRatioPresetSquare),
+    //                                       @(FWCropViewControllerAspectRatioPreset3x2)];
 
     //cropController.rotateButtonsHidden = YES;
     //cropController.rotateClockwiseButtonHidden = NO;
@@ -67,7 +67,7 @@
     self.image = image;
     
     //If profile picture, push onto the same navigation stack
-    if (self.croppingStyle == TOCropViewCroppingStyleCircular) {
+    if (self.croppingStyle == FWCropViewCroppingStyleCircular) {
         if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             [picker dismissViewControllerAnimated:YES completion:^{
                 [self presentViewController:cropController animated:YES completion:nil];
@@ -93,7 +93,7 @@
 - (void)didTapImageView
 {
     // When tapping the image view, restore the image to the previous cropping state
-    TOCropViewController *cropController = [[TOCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
+    FWCropViewController *cropController = [[FWCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
     cropController.delegate = self;
     CGRect viewFrame = [self.view convertRect:self.imageView.frame toView:self.navigationController.view];
     [cropController presentAnimatedFromParentViewController:self
@@ -107,28 +107,28 @@
 }
 
 #pragma mark - Cropper Delegate -
-- (void)cropViewController:(TOCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
+- (void)cropViewController:(FWCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
 {
     self.croppedFrame = cropRect;
     self.angle = angle;
     [self updateImageViewWithImage:image fromCropViewController:cropViewController];
 }
 
-- (void)cropViewController:(TOCropViewController *)cropViewController didCropToCircularImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
+- (void)cropViewController:(FWCropViewController *)cropViewController didCropToCircularImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
 {
     self.croppedFrame = cropRect;
     self.angle = angle;
     [self updateImageViewWithImage:image fromCropViewController:cropViewController];
 }
 
-- (void)updateImageViewWithImage:(UIImage *)image fromCropViewController:(TOCropViewController *)cropViewController
+- (void)updateImageViewWithImage:(UIImage *)image fromCropViewController:(FWCropViewController *)cropViewController
 {
     self.imageView.image = image;
     [self layoutImageView];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
-    if (cropViewController.croppingStyle != TOCropViewCroppingStyleCircular) {
+    if (cropViewController.croppingStyle != FWCropViewCroppingStyleCircular) {
         self.imageView.hidden = YES;
         [cropViewController dismissAnimatedFromParentViewController:self
                                                    withCroppedImage:image
@@ -184,7 +184,7 @@
     UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Crop Image", @"")
                                              style:UIAlertActionStyleDefault
                                            handler:^(UIAlertAction *action) {
-                                               self.croppingStyle = TOCropViewCroppingStyleDefault;
+                                               self.croppingStyle = FWCropViewCroppingStyleDefault;
                                                
                                                UIImagePickerController *standardPicker = [[UIImagePickerController alloc] init];
                                                standardPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -196,7 +196,7 @@
     UIAlertAction *profileAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Make Profile Picture", @"")
                                            style:UIAlertActionStyleDefault
                                          handler:^(UIAlertAction *action) {
-                                             self.croppingStyle = TOCropViewCroppingStyleCircular;
+                                             self.croppingStyle = FWCropViewCroppingStyleCircular;
                                              
                                              UIImagePickerController *profilePicker = [[UIImagePickerController alloc] init];
                                              profilePicker.modalPresentationStyle = UIModalPresentationPopover;
@@ -235,7 +235,7 @@
 #pragma mark - View Creation/Lifecycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"TOCropViewController", @"");
+    self.title = NSLocalizedString(@"FWCropViewController", @"");
     
     self.navigationController.navigationBar.translucent = NO;
     
