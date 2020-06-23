@@ -1,0 +1,875 @@
+/*!
+ @header     FWCropViewController.h
+ @indexgroup FWFramework
+ @brief      FWCropViewController
+ @author     wuyong
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/6/22
+ */
+
+#import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ The shape of the cropping region of this crop view controller
+ */
+typedef NS_ENUM(NSInteger, TOCropViewCroppingStyle) {
+    TOCropViewCroppingStyleDefault,     // The regular, rectangular crop box
+    TOCropViewCroppingStyleCircular     // A fixed, circular crop box
+};
+
+/**
+ Preset values of the most common aspect ratios that can be used to quickly configure
+ the crop view controller.
+ */
+typedef NS_ENUM(NSInteger, TOCropViewControllerAspectRatioPreset) {
+    TOCropViewControllerAspectRatioPresetOriginal,
+    TOCropViewControllerAspectRatioPresetSquare,
+    TOCropViewControllerAspectRatioPreset3x2,
+    TOCropViewControllerAspectRatioPreset5x3,
+    TOCropViewControllerAspectRatioPreset4x3,
+    TOCropViewControllerAspectRatioPreset5x4,
+    TOCropViewControllerAspectRatioPreset7x5,
+    TOCropViewControllerAspectRatioPreset16x9,
+    TOCropViewControllerAspectRatioPresetCustom
+};
+
+/**
+ Whether the control toolbar is placed at the bottom or the top
+ */
+typedef NS_ENUM(NSInteger, TOCropViewControllerToolbarPosition) {
+    TOCropViewControllerToolbarPositionBottom,  // Bar is placed along the bottom in portrait
+    TOCropViewControllerToolbarPositionTop     // Bar is placed along the top in portrait (Respects the status bar)
+};
+
+static inline NSBundle *TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object) {
+    NSBundle *resourceBundle = nil;
+    
+    NSBundle *classBundle = [NSBundle bundleForClass:object.class];
+    NSURL *resourceBundleURL = [classBundle URLForResource:@"TOCropViewControllerBundle" withExtension:@"bundle"];
+    if (resourceBundleURL) {
+        resourceBundle = [[NSBundle alloc] initWithURL:resourceBundleURL];
+    }
+    else {
+        resourceBundle = classBundle;
+    }
+    
+    return resourceBundle;
+}
+
+@class TOCropViewController;
+@class TOCropView;
+@class TOCropToolbar;
+
+///------------------------------------------------
+/// @name Delegate
+///------------------------------------------------
+
+@protocol TOCropViewControllerDelegate <NSObject>
+@optional
+
+/**
+ Called when the user has committed the crop action, and provides
+ just the cropping rectangle.
+
+ @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ @param angle The angle of the image when it was cropped
+ */
+- (void)cropViewController:(nonnull TOCropViewController *)cropViewController
+        didCropImageToRect:(CGRect)cropRect
+                     angle:(NSInteger)angle;
+
+/**
+ Called when the user has committed the crop action, and provides
+ both the original image with crop co-ordinates.
+ 
+ @param image The newly cropped image.
+ @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ @param angle The angle of the image when it was cropped
+ */
+- (void)cropViewController:(nonnull TOCropViewController *)cropViewController
+            didCropToImage:(nonnull UIImage *)image withRect:(CGRect)cropRect
+                     angle:(NSInteger)angle;
+
+/**
+ If the cropping style is set to circular, implementing this delegate will return a circle-cropped version of the selected
+ image, as well as it's cropping co-ordinates
+ 
+ @param image The newly cropped image, clipped to a circle shape
+ @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ @param angle The angle of the image when it was cropped
+ */
+- (void)cropViewController:(nonnull TOCropViewController *)cropViewController
+    didCropToCircularImage:(nonnull UIImage *)image withRect:(CGRect)cropRect
+                     angle:(NSInteger)angle;
+
+/**
+ If implemented, when the user hits cancel, or completes a
+ UIActivityViewController operation, this delegate will be called,
+ giving you a chance to manually dismiss the view controller
+
+ @param cancelled Whether a cropping action was actually performed, or if the user explicitly hit 'Cancel'
+ 
+ */
+- (void)cropViewController:(nonnull TOCropViewController *)cropViewController
+        didFinishCancelled:(BOOL)cancelled;
+
+@end
+
+/*!
+ @brief FWCropViewController
+
+ @see https://github.com/TimOliver/TOCropViewController
+ */
+@interface TOCropViewController : UIViewController
+
+/**
+ The original, uncropped image that was passed to this controller.
+ */
+@property (nonnull, nonatomic, readonly) UIImage *image;
+
+/**
+ The minimum croping aspect ratio. If set, user is prevented from setting cropping rectangle to lower aspect ratio than defined by the parameter.
+ */
+@property (nonatomic, assign) CGFloat minimumAspectRatio;
+
+/**
+ The view controller's delegate that will receive the resulting
+ cropped image, as well as crop information.
+ */
+@property (nullable, nonatomic, weak) id<TOCropViewControllerDelegate> delegate;
+
+/**
+ If true, when the user hits 'Done', a UIActivityController will appear
+ before the view controller ends.
+ */
+@property (nonatomic, assign) BOOL showActivitySheetOnDone;
+
+/**
+ The crop view managed by this view controller.
+ */
+@property (nonnull, nonatomic, strong, readonly) TOCropView *cropView;
+
+/**
+ In the coordinate space of the image itself, the region that is currently
+ being highlighted by the crop box.
+ 
+ This property can be set before the controller is presented to have
+ the image 'restored' to a previous cropping layout.
+ */
+@property (nonatomic, assign) CGRect imageCropFrame;
+
+/**
+ The angle in which the image is rotated in the crop view.
+ This can only be in 90 degree increments (eg, 0, 90, 180, 270).
+ 
+ This property can be set before the controller is presented to have
+ the image 'restored' to a previous cropping layout.
+ */
+@property (nonatomic, assign) NSInteger angle;
+
+/**
+ The toolbar view managed by this view controller.
+ */
+@property (nonnull, nonatomic, strong, readonly) TOCropToolbar *toolbar;
+
+/**
+ The cropping style of this particular crop view controller
+ */
+@property (nonatomic, readonly) TOCropViewCroppingStyle croppingStyle;
+
+/**
+ A choice from one of the pre-defined aspect ratio presets
+ */
+@property (nonatomic, assign) TOCropViewControllerAspectRatioPreset aspectRatioPreset;
+
+/**
+ A CGSize value representing a custom aspect ratio, not listed in the presets.
+ E.g. A ratio of 4:3 would be represented as (CGSize){4.0f, 3.0f}
+ */
+@property (nonatomic, assign) CGSize customAspectRatio;
+
+/**
+ If this is set alongside `customAspectRatio`, the custom aspect ratio
+ will be shown as a selectable choice in the list of aspect ratios. (Default is `nil`)
+ */
+@property (nullable, nonatomic, copy) NSString *customAspectRatioName;
+
+/**
+ Title label which can be used to show instruction on the top of the crop view controller
+ */
+@property (nullable, nonatomic, readonly) UILabel *titleLabel;
+
+/**
+ Title for the 'Done' button.
+ Setting this will override the Default which is a localized string for "Done".
+ */
+@property (nullable, nonatomic, copy) NSString *doneButtonTitle;
+
+/**
+ Title for the 'Cancel' button.
+ Setting this will override the Default which is a localized string for "Cancel".
+ */
+@property (nullable, nonatomic, copy) NSString *cancelButtonTitle;
+
+/**
+ Shows a confirmation dialog when the user hits 'Cancel' and there are pending changes.
+ (Default is NO)
+ */
+@property (nonatomic, assign) BOOL showCancelConfirmationDialog;
+
+/**
+ If true, a custom aspect ratio is set, and the aspectRatioLockEnabled is set to YES, the crop box
+ will swap it's dimensions depending on portrait or landscape sized images.
+ This value also controls whether the dimensions can swap when the image is rotated.
+ 
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL aspectRatioLockDimensionSwapEnabled;
+
+/**
+ If true, while it can still be resized, the crop box will be locked to its current aspect ratio.
+ 
+ If this is set to YES, and `resetAspectRatioEnabled` is set to NO, then the aspect ratio
+ button will automatically be hidden from the toolbar.
+ 
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL aspectRatioLockEnabled;
+
+/**
+ If true, tapping the reset button will also reset the aspect ratio back to the image
+ default ratio. Otherwise, the reset will just zoom out to the current aspect ratio.
+ 
+ If this is set to NO, and `aspectRatioLockEnabled` is set to YES, then the aspect ratio
+ button will automatically be hidden from the toolbar.
+ 
+ Default is YES
+ */
+@property (nonatomic, assign) BOOL resetAspectRatioEnabled;
+
+/**
+ The position of the Toolbar the default value is `TOCropViewControllerToolbarPositionBottom`.
+ */
+@property (nonatomic, assign) TOCropViewControllerToolbarPosition toolbarPosition;
+
+/**
+ When disabled, an additional rotation button that rotates the canvas in
+ 90-degree segments in a clockwise direction is shown in the toolbar.
+ 
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL rotateClockwiseButtonHidden;
+
+/*
+ If this controller is embedded in UINavigationController its navigation bar is hidden by default. Set this property to false to show the navigation bar. This must be set before this controller is presented.
+ */
+@property (nonatomic, assign) BOOL hidesNavigationBar;
+
+/**
+ When enabled, hides the rotation button, as well as the alternative rotation
+ button visible when `showClockwiseRotationButton` is set to YES.
+ 
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL rotateButtonsHidden;
+
+/**
+ When enabled, hides the 'Reset' button on the toolbar.
+
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL resetButtonHidden;
+/**
+ When enabled, hides the 'Aspect Ratio Picker' button on the toolbar.
+ 
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL aspectRatioPickerButtonHidden;
+
+/**
+ When enabled, hides the 'Done' button on the toolbar.
+
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL doneButtonHidden;
+
+/**
+ When enabled, hides the 'Cancel' button on the toolbar.
+
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL cancelButtonHidden;
+
+/**
+ If `showActivitySheetOnDone` is true, then these activity items will
+ be supplied to that UIActivityViewController in addition to the
+ `TOActivityCroppedImageProvider` object.
+ */
+@property (nullable, nonatomic, strong) NSArray *activityItems;
+
+/**
+ If `showActivitySheetOnDone` is true, then you may specify any
+ custom activities your app implements in this array. If your activity requires
+ access to the cropping information, it can be accessed in the supplied
+ `TOActivityCroppedImageProvider` object
+ */
+@property (nullable, nonatomic, strong) NSArray<UIActivity *> *applicationActivities;
+
+/**
+ If `showActivitySheetOnDone` is true, then you may expliclty
+ set activities that won't appear in the share sheet here.
+ */
+@property (nullable, nonatomic, strong) NSArray<UIActivityType> *excludedActivityTypes;
+
+/**
+ An array of `TOCropViewControllerAspectRatioPreset` enum values denoting which
+ aspect ratios the crop view controller may display (Default is nil. All are shown)
+ */
+@property (nullable, nonatomic, strong) NSArray<NSNumber *> *allowedAspectRatios;
+
+/**
+ When the user hits cancel, or completes a
+ UIActivityViewController operation, this block will be called,
+ giving you a chance to manually dismiss the view controller
+ */
+@property (nullable, nonatomic, strong) void (^onDidFinishCancelled)(BOOL isFinished);
+
+/**
+ Called when the user has committed the crop action, and provides
+ just the cropping rectangle.
+ 
+ @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ @param angle The angle of the image when it was cropped
+ */
+@property (nullable, nonatomic, strong) void (^onDidCropImageToRect)(CGRect cropRect, NSInteger angle);
+
+/**
+ Called when the user has committed the crop action, and provides
+ both the cropped image with crop co-ordinates.
+ 
+ @param image The newly cropped image.
+ @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ @param angle The angle of the image when it was cropped
+ */
+@property (nullable, nonatomic, strong) void (^onDidCropToRect)(UIImage* _Nonnull image, CGRect cropRect, NSInteger angle);
+
+/**
+ If the cropping style is set to circular, this block will return a circle-cropped version of the selected
+ image, as well as it's cropping co-ordinates
+ 
+ @param image The newly cropped image, clipped to a circle shape
+ @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ @param angle The angle of the image when it was cropped
+ */
+@property (nullable, nonatomic, strong) void (^onDidCropToCircleImage)(UIImage* _Nonnull image, CGRect cropRect, NSInteger angle);
+
+
+///------------------------------------------------
+/// @name Object Creation
+///------------------------------------------------
+
+/**
+ Creates a new instance of a crop view controller with the supplied image
+ 
+ @param image The image that will be used to crop.
+ */
+- (nonnull instancetype)initWithImage:(nonnull UIImage *)image NS_SWIFT_NAME(init(image:));
+
+/**
+ Creates a new instance of a crop view controller with the supplied image and cropping style
+ 
+ @param style The cropping style that will be used with this view controller (eg, rectangular, or circular)
+ @param image The image that will be cropped
+ */
+- (nonnull instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(nonnull UIImage *)image NS_SWIFT_NAME(init(croppingStyle:image:));
+
+/**
+ Resets object of TOCropViewController class as if user pressed reset button in the bottom bar themself
+ */
+- (void)resetCropViewLayout;
+
+/**
+ Set the aspect ratio to be one of the available preset options. These presets have specific behaviour
+ such as swapping their dimensions depending on portrait or landscape sized images.
+ 
+ @param aspectRatioPreset The aspect ratio preset
+ @param animated Whether the transition to the aspect ratio is animated
+ */
+- (void)setAspectRatioPreset:(TOCropViewControllerAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated NS_SWIFT_NAME(setAspectRatioPresent(_:animated:));
+
+/**
+ Play a custom animation of the target image zooming to its position in
+ the crop controller while the background fades in.
+ 
+ @param viewController The parent controller that this view controller would be presenting from.
+ @param fromView A view that's frame will be used as the origin for this animation. Optional if `fromFrame` has a value.
+ @param fromFrame In the screen's coordinate space, the frame from which the image should animate from. Optional if `fromView` has a value.
+ @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
+ @param completion A block that is called once the transition animation is completed.
+ */
+- (void)presentAnimatedFromParentViewController:(nonnull UIViewController *)viewController
+                                       fromView:(nullable UIView *)fromView
+                                      fromFrame:(CGRect)fromFrame
+                                          setup:(nullable void (^)(void))setup
+                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(presentAnimatedFrom(_:view:frame:setup:completion:));
+
+/**
+ Play a custom animation of the target image zooming to its position in
+ the crop controller while the background fades in. Additionally, if you're
+ 'restoring' to a previous crop setup, this method lets you provide a previously
+ cropped copy of the image, and the previous crop settings to transition back to
+ where the user would have left off.
+ 
+ @param viewController The parent controller that this view controller would be presenting from.
+ @param image The previously cropped image that can be used in the transition animation.
+ @param fromView A view that's frame will be used as the origin for this animation. Optional if `fromFrame` has a value.
+ @param fromFrame In the screen's coordinate space, the frame from which the image should animate from.
+ @param angle The rotation angle in which the image was rotated when it was originally cropped.
+ @param toFrame In the image's coordinate space, the previous crop frame that created the previous crop
+ @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
+ @param completion A block that is called once the transition animation is completed.
+ */
+- (void)presentAnimatedFromParentViewController:(nonnull UIViewController *)viewController
+                                      fromImage:(nullable UIImage *)image
+                                       fromView:(nullable UIView *)fromView
+                                      fromFrame:(CGRect)fromFrame
+                                          angle:(NSInteger)angle
+                                   toImageFrame:(CGRect)toFrame
+                                          setup:(nullable void (^)(void))setup
+                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(presentAnimatedFrom(_:fromImage:fromView:fromFrame:angle:toFrame:setup:completion:));
+
+/**
+ Play a custom animation of the supplied cropped image zooming out from
+ the cropped frame to the specified frame as the rest of the content fades out.
+ If any view configurations need to be done before the animation starts,
+ 
+ @param viewController The parent controller that this view controller would be presenting from.
+ @param toView A view who's frame will be used to establish the destination frame
+ @param frame The target frame that the image will animate to
+ @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
+ @param completion A block that is called once the transition animation is completed.
+ */
+- (void)dismissAnimatedFromParentViewController:(nonnull UIViewController *)viewController
+                                         toView:(nullable UIView *)toView
+                                        toFrame:(CGRect)frame
+                                          setup:(nullable void (^)(void))setup
+                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(dismissAnimatedFrom(_:toView:toFrame:setup:completion:));
+
+/**
+ Play a custom animation of the supplied cropped image zooming out from
+ the cropped frame to the specified frame as the rest of the content fades out.
+ If any view configurations need to be done before the animation starts,
+ 
+ @param viewController The parent controller that this view controller would be presenting from.
+ @param image The resulting 'cropped' image. If supplied, will animate out of the crop box zone. If nil, the default image will entirely zoom out
+ @param toView A view who's frame will be used to establish the destination frame
+ @param frame The target frame that the image will animate to
+ @param setup A block that is called just before the transition starts. Recommended for hiding any necessary image views.
+ @param completion A block that is called once the transition animation is completed.
+ */
+- (void)dismissAnimatedFromParentViewController:(nonnull UIViewController *)viewController
+                               withCroppedImage:(nullable UIImage *)image
+                                         toView:(nullable UIView *)toView
+                                        toFrame:(CGRect)frame
+                                          setup:(nullable void (^)(void))setup
+                                     completion:(nullable void (^)(void))completion NS_SWIFT_NAME(dismissAnimatedFrom(_:croppedImage:toView:toFrame:setup:completion:));
+
+@end
+
+@interface UIImage (TOCropRotate)
+- (nonnull UIImage *)croppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circularClip:(BOOL)circular;
+@end
+
+@interface TOCropViewControllerTransitioning : NSObject <UIViewControllerAnimatedTransitioning>
+
+/* State Tracking */
+@property (nonatomic, assign) BOOL isDismissing; // Whether this animation is presenting or dismissing
+@property (nullable, nonatomic, strong) UIImage *image;    // The image that will be used in this animation
+
+/* Destination/Origin points */
+@property (nullable, nonatomic, strong) UIView *fromView;  // The origin view who's frame the image will be animated from
+@property (nullable, nonatomic, strong) UIView *toView;    // The destination view who's frame the image will animate to
+
+@property (nonatomic, assign) CGRect fromFrame;  // An origin frame that the image will be animated from
+@property (nonatomic, assign) CGRect toFrame;    // A destination frame the image will aniamte to
+
+/* A block called just before the transition to perform any last-second UI configuration */
+@property (nullable, nonatomic, copy) void (^prepareForTransitionHandler)(void);
+
+/* Empties all of the properties in this object */
+- (void)reset;
+
+@end
+
+@interface TOActivityCroppedImageProvider : UIActivityItemProvider
+
+@property (nonnull, nonatomic, readonly) UIImage *image;
+@property (nonatomic, readonly) CGRect cropFrame;
+@property (nonatomic, readonly) NSInteger angle;
+@property (nonatomic, readonly) BOOL circular;
+
+- (nonnull instancetype)initWithImage:(nonnull UIImage *)image cropFrame:(CGRect)cropFrame angle:(NSInteger)angle circular:(BOOL)circular;
+
+@end
+
+@interface TOCroppedImageAttributes : NSObject
+
+@property (nonatomic, readonly) NSInteger angle;
+@property (nonatomic, readonly) CGRect croppedFrame;
+@property (nonatomic, readonly) CGSize originalImageSize;
+
+- (instancetype)initWithCroppedFrame:(CGRect)croppedFrame angle:(NSInteger)angle originalImageSize:(CGSize)originalSize;
+
+@end
+
+@interface TOCropOverlayView : UIView
+
+/** Hides the interior grid lines, sans animation. */
+@property (nonatomic, assign) BOOL gridHidden;
+
+/** Add/Remove the interior horizontal grid lines. */
+@property (nonatomic, assign) BOOL displayHorizontalGridLines;
+
+/** Add/Remove the interior vertical grid lines. */
+@property (nonatomic, assign) BOOL displayVerticalGridLines;
+
+/** Shows and hides the interior grid lines with an optional crossfade animation. */
+- (void)setGridHidden:(BOOL)hidden animated:(BOOL)animated;
+
+@end
+
+/*
+ Subclassing UIScrollView was necessary in order to directly capture
+ touch events that weren't otherwise accessible via UIGestureRecognizer objects.
+ */
+@interface TOCropScrollView : UIScrollView
+
+@property (nullable, nonatomic, copy) void (^touchesBegan)(void);
+@property (nullable, nonatomic, copy) void (^touchesCancelled)(void);
+@property (nullable, nonatomic, copy) void (^touchesEnded)(void);
+
+@end
+
+@interface TOCropToolbar : UIView
+
+/* In horizontal mode, offsets all of the buttons vertically by height of status bar. */
+@property (nonatomic, assign) CGFloat statusBarHeightInset;
+
+/* Set an inset that will expand the background view beyond the bounds. */
+@property (nonatomic, assign) UIEdgeInsets backgroundViewOutsets;
+
+/* The 'Done' buttons to commit the crop. The text button is displayed
+ in portrait mode and the icon one, in landscape. */
+@property (nonatomic, strong, readonly) UIButton *doneTextButton;
+@property (nonatomic, strong, readonly) UIButton *doneIconButton;
+@property (nonatomic, copy) NSString *doneTextButtonTitle;
+
+
+/* The 'Cancel' buttons to cancel the crop. The text button is displayed
+ in portrait mode and the icon one, in landscape. */
+@property (nonatomic, strong, readonly) UIButton *cancelTextButton;
+@property (nonatomic, strong, readonly) UIButton *cancelIconButton;
+@property (nonatomic, readonly) UIView *visibleCancelButton;
+@property (nonatomic, copy) NSString *cancelTextButtonTitle;
+
+/* The cropper control buttons */
+@property (nonatomic, strong, readonly)  UIButton *rotateCounterclockwiseButton;
+@property (nonatomic, strong, readonly)  UIButton *resetButton;
+@property (nonatomic, strong, readonly)  UIButton *clampButton;
+@property (nullable, nonatomic, strong, readonly) UIButton *rotateClockwiseButton;
+
+@property (nonatomic, readonly) UIButton *rotateButton; // Points to `rotateCounterClockwiseButton`
+
+/* Button feedback handler blocks */
+@property (nullable, nonatomic, copy) void (^cancelButtonTapped)(void);
+@property (nullable, nonatomic, copy) void (^doneButtonTapped)(void);
+@property (nullable, nonatomic, copy) void (^rotateCounterclockwiseButtonTapped)(void);
+@property (nullable, nonatomic, copy) void (^rotateClockwiseButtonTapped)(void);
+@property (nullable, nonatomic, copy) void (^clampButtonTapped)(void);
+@property (nullable, nonatomic, copy) void (^resetButtonTapped)(void);
+
+/* State management for the 'clamp' button */
+@property (nonatomic, assign) BOOL clampButtonGlowing;
+@property (nonatomic, readonly) CGRect clampButtonFrame;
+
+/* Aspect ratio button visibility settings */
+@property (nonatomic, assign) BOOL clampButtonHidden;
+@property (nonatomic, assign) BOOL rotateCounterclockwiseButtonHidden;
+@property (nonatomic, assign) BOOL rotateClockwiseButtonHidden;
+@property (nonatomic, assign) BOOL resetButtonHidden;
+@property (nonatomic, assign) BOOL doneButtonHidden;
+@property (nonatomic, assign) BOOL cancelButtonHidden;
+
+/* Enable the reset button */
+@property (nonatomic, assign) BOOL resetButtonEnabled;
+
+/* Done button frame for popover controllers */
+@property (nonatomic, readonly) CGRect doneButtonFrame;
+
+@end
+
+@class TOCropView;
+
+@protocol TOCropViewDelegate<NSObject>
+
+- (void)cropViewDidBecomeResettable:(nonnull TOCropView *)cropView;
+- (void)cropViewDidBecomeNonResettable:(nonnull TOCropView *)cropView;
+
+@end
+
+@interface TOCropView : UIView
+
+/**
+ The image that the crop view is displaying. This cannot be changed once the crop view is instantiated.
+ */
+@property (nonnull, nonatomic, strong, readonly) UIImage *image;
+
+/**
+ The cropping style of the crop view (eg, rectangular or circular)
+ */
+@property (nonatomic, assign, readonly) TOCropViewCroppingStyle croppingStyle;
+
+/**
+ A grid view overlaid on top of the foreground image view's container.
+ */
+@property (nonnull, nonatomic, strong, readonly) TOCropOverlayView *gridOverlayView;
+
+/**
+ A container view that clips the a copy of the image so it appears over the dimming view
+ */
+@property (nonnull, nonatomic, readonly) UIView *foregroundContainerView;
+
+/**
+ A delegate object that receives notifications from the crop view
+ */
+@property (nullable, nonatomic, weak) id<TOCropViewDelegate> delegate;
+
+/**
+ If false, the user cannot resize the crop box frame using a pan gesture from a corner.
+ Default vaue is YES.
+ */
+@property (nonatomic, assign) BOOL cropBoxResizeEnabled;
+
+/**
+ Whether the user has manipulated the crop view to the point where it can be reset
+ */
+@property (nonatomic, readonly) BOOL canBeReset;
+
+/**
+ The frame of the cropping box in the coordinate space of the crop view
+ */
+@property (nonatomic, readonly) CGRect cropBoxFrame;
+
+/**
+ The frame of the entire image in the backing scroll view
+ */
+@property (nonatomic, readonly) CGRect imageViewFrame;
+
+/**
+ Inset the workable region of the crop view in case in order to make space for accessory views
+ */
+@property (nonatomic, assign) UIEdgeInsets cropRegionInsets;
+
+/**
+ Disable the dynamic translucency in order to smoothly relayout the view
+ */
+@property (nonatomic, assign) BOOL simpleRenderMode;
+
+/**
+ When performing manual content layout (such as during screen rotation), disable any internal layout
+ */
+@property (nonatomic, assign) BOOL internalLayoutDisabled;
+
+/**
+ A width x height ratio that the crop box will be rescaled to (eg 4:3 is {4.0f, 3.0f})
+ Setting it to CGSizeZero will reset the aspect ratio to the image's own ratio.
+ */
+@property (nonatomic, assign) CGSize aspectRatio;
+
+/**
+ When the cropping box is locked to its current aspect ratio (But can still be resized)
+ */
+@property (nonatomic, assign) BOOL aspectRatioLockEnabled;
+
+/**
+ If true, a custom aspect ratio is set, and the aspectRatioLockEnabled is set to YES,
+ the crop box will swap it's dimensions depending on portrait or landscape sized images.
+ This value also controls whether the dimensions can swap when the image is rotated.
+ 
+ Default is NO.
+ */
+@property (nonatomic, assign) BOOL aspectRatioLockDimensionSwapEnabled;
+
+/**
+ When the user taps 'reset', whether the aspect ratio will also be reset as well
+ Default is YES
+ */
+@property (nonatomic, assign) BOOL resetAspectRatioEnabled;
+
+/**
+ True when the height of the crop box is bigger than the width
+ */
+@property (nonatomic, readonly) BOOL cropBoxAspectRatioIsPortrait;
+
+/**
+ The rotation angle of the crop view (Will always be negative as it rotates in a counter-clockwise direction)
+ */
+@property (nonatomic, assign) NSInteger angle;
+
+/**
+ Hide all of the crop elements for transition animations
+ */
+@property (nonatomic, assign) BOOL croppingViewsHidden;
+
+/**
+ In relation to the coordinate space of the image, the frame that the crop view is focusing on
+ */
+@property (nonatomic, assign) CGRect imageCropFrame;
+
+/**
+ Set the grid overlay graphic to be hidden
+ */
+@property (nonatomic, assign) BOOL gridOverlayHidden;
+
+///**
+// Paddings of the crop rectangle. Default to 14.0
+// */
+@property (nonatomic) CGFloat cropViewPadding;
+
+/**
+ Delay before crop frame is adjusted according new crop area. Default to 0.8
+ */
+@property (nonatomic) NSTimeInterval cropAdjustingDelay;
+
+/**
+The minimum croping aspect ratio. If set, user is prevented from setting cropping
+ rectangle to lower aspect ratio than defined by the parameter.
+*/
+@property (nonatomic, assign) CGFloat minimumAspectRatio;
+
+/**
+ The maximum scale that user can apply to image by pinching to zoom. Small values
+ are only recomended with aspectRatioLockEnabled set to true. Default to 15.0
+ */
+@property (nonatomic, assign) CGFloat maximumZoomScale;
+
+/**
+ Always show the cropping grid lines, even when the user isn't interacting.
+ This also disables the fading animation.
+ (Default is NO)
+ */
+@property (nonatomic, assign) BOOL alwaysShowCroppingGrid;
+
+/**
+ Permanently hides the translucency effect covering the outside bounds of the
+ crop box. (Default is NO)
+ */
+@property (nonatomic, assign) BOOL translucencyAlwaysHidden;
+
+///*
+// if YES it will always show grid
+// if NO it will never show grid
+// NOTE : Do not use this method if you want to keep grid hide/show animation
+// */
+//- (void)setAlwaysShowGrid:(BOOL)showGrid;
+//
+///*
+// if YES it will disable translucency effect
+// */
+//- (void)setTranslucencyOff:(BOOL)disableTranslucency;
+
+
+/**
+ Create a default instance of the crop view with the supplied image
+ */
+- (nonnull instancetype)initWithImage:(nonnull UIImage *)image;
+
+/**
+ Create a new instance of the crop view with the specified image and cropping
+ */
+- (nonnull instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(nonnull UIImage *)image;
+
+/**
+ Performs the initial set up, including laying out the image and applying any restore properties.
+ This should be called once the crop view has been added to a parent that is in its final layout frame.
+ */
+- (void)performInitialSetup;
+
+/**
+ When performing large size transitions (eg, orientation rotation),
+ set simple mode to YES to temporarily graphically heavy effects like translucency.
+ 
+ @param simpleMode Whether simple mode is enabled or not
+ 
+ */
+- (void)setSimpleRenderMode:(BOOL)simpleMode animated:(BOOL)animated;
+
+/**
+ When performing a screen rotation that will change the size of the scroll view, this takes
+ a snapshot of all of the scroll view data before it gets manipulated by iOS.
+ Please call this in your view controller, before the rotation animation block is committed.
+ */
+- (void)prepareforRotation;
+
+/**
+ Performs the realignment of the crop view while the screen is rotating.
+ Please call this inside your view controller's screen rotation animation block.
+ */
+- (void)performRelayoutForRotation;
+
+/**
+ Reset the crop box and zoom scale back to the initial layout
+ 
+ @param animated The reset is animated
+ */
+- (void)resetLayoutToDefaultAnimated:(BOOL)animated;
+
+/**
+ Changes the aspect ratio of the crop box to match the one specified
+ 
+ @param aspectRatio The aspect ratio (For example 16:9 is 16.0f/9.0f). 'CGSizeZero' will reset it to the image's own ratio
+ @param animated Whether the locking effect is animated
+ */
+- (void)setAspectRatio:(CGSize)aspectRatio animated:(BOOL)animated;
+
+/**
+ Rotates the entire canvas to a 90-degree angle. The default rotation is counterclockwise.
+ 
+ @param animated Whether the transition is animated
+ */
+- (void)rotateImageNinetyDegreesAnimated:(BOOL)animated;
+
+/**
+ Rotates the entire canvas to a 90-degree angle
+ 
+ @param animated Whether the transition is animated
+ @param clockwise Whether the rotation is clockwise. Passing 'NO' means counterclockwise
+ */
+- (void)rotateImageNinetyDegreesAnimated:(BOOL)animated clockwise:(BOOL)clockwise;
+
+/**
+ Animate the grid overlay graphic to be visible
+ */
+- (void)setGridOverlayHidden:(BOOL)gridOverlayHidden animated:(BOOL)animated;
+
+/**
+ Animate the cropping component views to become visible
+ */
+- (void)setCroppingViewsHidden:(BOOL)hidden animated:(BOOL)animated;
+
+/**
+ Animate the background image view to become visible
+ */
+- (void)setBackgroundImageViewHidden:(BOOL)hidden animated:(BOOL)animated;
+
+/**
+ When triggered, the crop view will perform a relayout to ensure the crop box
+ fills the entire crop view region
+ */
+- (void)moveCroppedContentToCenterAnimated:(BOOL)animated;
+
+@end
+
+NS_ASSUME_NONNULL_END

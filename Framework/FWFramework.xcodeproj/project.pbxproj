@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F0001C824A0B1610021AF4D /* FWCropViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0001C624A0B1610021AF4D /* FWCropViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F0001C924A0B1610021AF4D /* FWCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0001C724A0B1610021AF4D /* FWCropViewController.m */; };
 		2F03A577216CF4B9001965A1 /* UIView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4E0216CF4B9001965A1 /* UIView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A579216CF4B9001965A1 /* UIView+FWAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A4E2216CF4B9001965A1 /* UIView+FWAutoLayout.m */; };
 		2F03A57A216CF4B9001965A1 /* UIView+FWDrag.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A4E3216CF4B9001965A1 /* UIView+FWDrag.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -367,6 +369,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F0001C624A0B1610021AF4D /* FWCropViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWCropViewController.h; sourceTree = "<group>"; };
+		2F0001C724A0B1610021AF4D /* FWCropViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWCropViewController.m; sourceTree = "<group>"; };
 		2F03A4E0216CF4B9001965A1 /* UIView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A4E2216CF4B9001965A1 /* UIView+FWAutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWAutoLayout.m"; sourceTree = "<group>"; };
 		2F03A4E3216CF4B9001965A1 /* UIView+FWDrag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWDrag.h"; sourceTree = "<group>"; };
@@ -1260,6 +1264,8 @@
 				2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */,
 				2F1E39662178F9DF0051A6BB /* FWCollectionViewFlowLayout.h */,
 				2F1E39672178F9DF0051A6BB /* FWCollectionViewFlowLayout.m */,
+				2F0001C624A0B1610021AF4D /* FWCropViewController.h */,
+				2F0001C724A0B1610021AF4D /* FWCropViewController.m */,
 				2F1E39372178F0B80051A6BB /* FWIndicatorControl.h */,
 				2F1E39392178F0B90051A6BB /* FWIndicatorControl.m */,
 				2FB90F0D21F4A00C00084D76 /* FWMarqueeLabel.h */,
@@ -1294,6 +1300,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F0001C824A0B1610021AF4D /* FWCropViewController.h in Headers */,
 				2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */,
 				2FF7EEC1248A1FBE00B3CA39 /* NSObject+FWSwizzle.h in Headers */,
 				2FAC8524247CCAE300E5ED36 /* FWModel.h in Headers */,
@@ -1734,6 +1741,7 @@
 				2FBFB76522C6434300E669B6 /* FWLog.swift in Sources */,
 				2FCE516321D3BA32009EA65E /* FWCacheUserDefaults.m in Sources */,
 				2F03A5BC216CF4B9001965A1 /* UIView+FWIndicator.m in Sources */,
+				2F0001C924A0B1610021AF4D /* FWCropViewController.m in Sources */,
 				2FAD221F233B12E400140359 /* FWCoroutine.m in Sources */,
 				2FBFB70822C5045400E669B6 /* NSBundle+FWFramework.swift in Sources */,
 				2F6F275322D4D6C40078D648 /* UIBezierPath+FWShape.m in Sources */,

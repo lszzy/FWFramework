@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F0001CC24A0B86B0021AF4D /* TestCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0001CB24A0B86B0021AF4D /* TestCropViewController.m */; };
+		2F0001CD24A0B86B0021AF4D /* TestCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0001CB24A0B86B0021AF4D /* TestCropViewController.m */; };
 		2F03EEC9231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */; };
 		2F03EECA231EAF3C009D2A22 /* TestNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */; };
 		2F0615BD2455D79D001D23A6 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0615BC2455D79D001D23A6 /* SettingsViewController.m */; };
@@ -229,6 +231,8 @@
 
 /* Begin PBXFileReference section */
 		18BA4A82B7569CFB7681EB14 /* Pods_Example2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F0001CA24A0B86B0021AF4D /* TestCropViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCropViewController.h; sourceTree = "<group>"; };
+		2F0001CB24A0B86B0021AF4D /* TestCropViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCropViewController.m; sourceTree = "<group>"; };
 		2F03EEC7231EAF3C009D2A22 /* TestNotificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestNotificationViewController.h; sourceTree = "<group>"; };
 		2F03EEC8231EAF3C009D2A22 /* TestNotificationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestNotificationViewController.m; sourceTree = "<group>"; };
 		2F0615BB2455D79D001D23A6 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -619,6 +623,8 @@
 				2FD1A52921D4BF4800A215C2 /* TestControllerViewController.m */,
 				2F8F370E24016C82003472B5 /* TestCrashViewController.h */,
 				2F8F370F24016C82003472B5 /* TestCrashViewController.m */,
+				2F0001CA24A0B86B0021AF4D /* TestCropViewController.h */,
+				2F0001CB24A0B86B0021AF4D /* TestCropViewController.m */,
 				2FCA005C228020BE00611399 /* TestDrawerViewController.h */,
 				2FCA005D228020BE00611399 /* TestDrawerViewController.m */,
 				2F1D8B7E21B021A000E0F820 /* TestEmptyViewController.h */,
@@ -1203,6 +1209,7 @@
 				2F4385802318F687003A683C /* TestRouterViewController.m in Sources */,
 				2F4385812318F687003A683C /* TestKeyboardViewController.m in Sources */,
 				2F4385822318F687003A683C /* TestAttributedStringViewController.m in Sources */,
+				2F0001CD24A0B86B0021AF4D /* TestCropViewController.m in Sources */,
 				2F4385832318F687003A683C /* TestAlertViewController.m in Sources */,
 				2F4385842318F687003A683C /* TestStateViewController.m in Sources */,
 				2F4385862318F687003A683C /* TestChainViewController.m in Sources */,
@@ -1287,6 +1294,7 @@
 				2FC5DFDD2213FE09008A56A7 /* TestKeyboardViewController.m in Sources */,
 				2F955BEE230E98F90019535A /* TestAttributedStringViewController.m in Sources */,
 				2FCD374D22533825001E81DB /* TestAlertViewController.m in Sources */,
+				2F0001CC24A0B86B0021AF4D /* TestCropViewController.m in Sources */,
 				2FCD376922533C10001E81DB /* TestStateViewController.m in Sources */,
 				2F1E623D22BA32DA00A1AB49 /* TestChainViewController.m in Sources */,
 				2F43E5C6217AC40B00BAEB59 /* ComplexModel.m in Sources */,
