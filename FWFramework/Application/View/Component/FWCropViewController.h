@@ -360,7 +360,16 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
 @end
 
 @interface UIImage (FWCropRotate)
+
 - (nonnull UIImage *)fwCroppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circularClip:(BOOL)circular;
+
+@end
+
+@interface UIImagePickerController (FWCropRotate)
+
+/** Custom cropController for UIImagePickerController, if nil, consistent with the system effect  */
++ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
+
 @end
 
 @interface FWCropOverlayView : UIView

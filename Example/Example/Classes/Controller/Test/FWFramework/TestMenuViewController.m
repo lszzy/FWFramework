@@ -116,19 +116,17 @@
         FWStrongifySelf();
         if (index == 0) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
-                pickerController.delegate = self;
-                pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-                pickerController.allowsEditing = NO;
+                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera cropController:nil completion:^(UIImage * _Nonnull image, BOOL cancel) {
+                    [self onPickerResult:cancel ? nil : image cancelled:cancel];
+                }];
                 [self presentViewController:pickerController animated:YES completion:nil];
             } else {
                 [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
             }
         } else {
-            UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
-            pickerController.delegate = self;
-            pickerController.sourceType = (index == 1) ? UIImagePickerControllerSourceTypePhotoLibrary : UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-            pickerController.allowsEditing = NO;
+            UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:(index == 1) ? UIImagePickerControllerSourceTypePhotoLibrary : UIImagePickerControllerSourceTypeSavedPhotosAlbum cropController:nil completion:^(UIImage * _Nullable image, BOOL cancel) {
+                [self onPickerResult:cancel ? nil : image cancelled:cancel];
+            }];
             [self presentViewController:pickerController animated:YES completion:nil];
         }
     }];
@@ -137,41 +135,6 @@
 - (void)onPickerResult:(UIImage *)image cancelled:(BOOL)cancelled
 {
     self.imageView.image = cancelled ? nil : image;
-}
-
-#pragma mark - UIImagePickerControllerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info
-{
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    
-    FWCropViewController *cropController = [[FWCropViewController alloc] initWithImage:image];
-    cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare;
-    cropController.aspectRatioLockEnabled = YES;
-    cropController.resetAspectRatioEnabled = NO;
-    cropController.aspectRatioPickerButtonHidden = YES;
-    cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
-        [picker dismissViewControllerAnimated:YES completion:^{
-            [self onPickerResult:image cancelled:NO];
-        }];
-    };
-    cropController.onDidFinishCancelled = ^(BOOL isFinished) {
-        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
-            [picker dismissViewControllerAnimated:YES completion:^{
-                [self onPickerResult:nil cancelled:YES];
-            }];
-        } else {
-            [picker popViewControllerAnimated:YES];
-        }
-    };
-    [picker pushViewController:cropController animated:YES];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:^{
-        [self onPickerResult:nil cancelled:YES];
-    }];
 }
 
 @end
