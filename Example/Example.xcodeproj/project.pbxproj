@@ -64,7 +64,6 @@
 		2F4385792318F687003A683C /* TestStorekitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD376822533C10001E81DB /* TestStorekitViewController.m */; };
 		2F43857B2318F687003A683C /* TestTableBackgroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE533E82181645300CA54E6 /* TestTableBackgroundViewController.m */; };
 		2F43857C2318F687003A683C /* TestTableLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F4CFA592155302E00203A37 /* TestTableLayoutViewController.m */; };
-		2F43857D2318F687003A683C /* TestFaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375B22533B5A001E81DB /* TestFaceViewController.m */; };
 		2F43857E2318F687003A683C /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CC821B03B5B00C230EA /* AppRouter.m */; };
 		2F4385802318F687003A683C /* TestRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA32CCB21B0572900C230EA /* TestRouterViewController.m */; };
 		2F4385812318F687003A683C /* TestKeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC5DFDC2213FE09008A56A7 /* TestKeyboardViewController.m */; };
@@ -174,6 +173,8 @@
 		2FC81A782350321800BE660C /* ComplexViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC81A772350321800BE660C /* ComplexViewModel.m */; };
 		2FC81A792350321800BE660C /* ComplexViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC81A772350321800BE660C /* ComplexViewModel.m */; };
 		2FCA005E228020BE00611399 /* TestDrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA005D228020BE00611399 /* TestDrawerViewController.m */; };
+		2FCB53FF24A26794004CC639 /* TestFacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCB53FE24A26794004CC639 /* TestFacesViewController.m */; };
+		2FCB540024A26794004CC639 /* TestFacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCB53FE24A26794004CC639 /* TestFacesViewController.m */; };
 		2FCBAEB424041FCA00507F59 /* TestImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCBAEB324041FCA00507F59 /* TestImageViewController.m */; };
 		2FCBAEB524041FCA00507F59 /* TestImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCBAEB324041FCA00507F59 /* TestImageViewController.m */; };
 		2FCD374D22533825001E81DB /* TestAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD374C22533825001E81DB /* TestAlertViewController.m */; };
@@ -181,7 +182,6 @@
 		2FCD375522533B1F001E81DB /* TestWorkflowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375322533B1F001E81DB /* TestWorkflowViewController.m */; };
 		2FCD375822533B3C001E81DB /* TestAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375722533B3C001E81DB /* TestAnimationViewController.m */; };
 		2FCD375D22533B5A001E81DB /* TestBorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375922533B59001E81DB /* TestBorderViewController.m */; };
-		2FCD375E22533B5A001E81DB /* TestFaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375B22533B5A001E81DB /* TestFaceViewController.m */; };
 		2FCD376122533BA1001E81DB /* TestLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD375F22533BA1001E81DB /* TestLayerViewController.m */; };
 		2FCD376922533C10001E81DB /* TestStateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD376722533C10001E81DB /* TestStateViewController.m */; };
 		2FCD376A22533C10001E81DB /* TestStorekitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD376822533C10001E81DB /* TestStorekitViewController.m */; };
@@ -375,6 +375,8 @@
 		2FC81A772350321800BE660C /* ComplexViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComplexViewModel.m; sourceTree = "<group>"; };
 		2FCA005C228020BE00611399 /* TestDrawerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestDrawerViewController.h; sourceTree = "<group>"; };
 		2FCA005D228020BE00611399 /* TestDrawerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestDrawerViewController.m; sourceTree = "<group>"; };
+		2FCB53FD24A26794004CC639 /* TestFacesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestFacesViewController.h; sourceTree = "<group>"; };
+		2FCB53FE24A26794004CC639 /* TestFacesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestFacesViewController.m; sourceTree = "<group>"; };
 		2FCBAEB224041FCA00507F59 /* TestImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestImageViewController.h; sourceTree = "<group>"; };
 		2FCBAEB324041FCA00507F59 /* TestImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestImageViewController.m; sourceTree = "<group>"; };
 		2FCD374B22533825001E81DB /* TestAlertViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertViewController.h; sourceTree = "<group>"; };
@@ -387,8 +389,6 @@
 		2FCD375722533B3C001E81DB /* TestAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAnimationViewController.m; sourceTree = "<group>"; };
 		2FCD375922533B59001E81DB /* TestBorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestBorderViewController.m; sourceTree = "<group>"; };
 		2FCD375A22533B5A001E81DB /* TestBorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestBorderViewController.h; sourceTree = "<group>"; };
-		2FCD375B22533B5A001E81DB /* TestFaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestFaceViewController.m; path = "../../../../../../../../bitbucket/ios-library/FWApplication/Example/Example/Classes/Controller/Test/Kernel/TestFaceViewController.m"; sourceTree = "<group>"; };
-		2FCD375C22533B5A001E81DB /* TestFaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFaceViewController.h; path = "../../../../../../../../bitbucket/ios-library/FWApplication/Example/Example/Classes/Controller/Test/Kernel/TestFaceViewController.h"; sourceTree = "<group>"; };
 		2FCD375F22533BA1001E81DB /* TestLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestLayerViewController.m; sourceTree = "<group>"; };
 		2FCD376022533BA1001E81DB /* TestLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestLayerViewController.h; sourceTree = "<group>"; };
 		2FCD376522533C0F001E81DB /* TestStateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestStateViewController.h; sourceTree = "<group>"; };
@@ -629,8 +629,8 @@
 				2FCA005D228020BE00611399 /* TestDrawerViewController.m */,
 				2F1D8B7E21B021A000E0F820 /* TestEmptyViewController.h */,
 				2F1D8B7F21B021A000E0F820 /* TestEmptyViewController.m */,
-				2FCD375C22533B5A001E81DB /* TestFaceViewController.h */,
-				2FCD375B22533B5A001E81DB /* TestFaceViewController.m */,
+				2FCB53FD24A26794004CC639 /* TestFacesViewController.h */,
+				2FCB53FE24A26794004CC639 /* TestFacesViewController.m */,
 				2F2FBDD422432BF90037830E /* TestGradientViewController.h */,
 				2F2FBDD522432BF90037830E /* TestGradientViewController.m */,
 				2FCBAEB224041FCA00507F59 /* TestImageViewController.h */,
@@ -998,7 +998,6 @@
 				TargetAttributes = {
 					2F51D76D1E5C1330009FD40F = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 3HYKLRGGZ2;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -1205,7 +1204,6 @@
 				2F43857B2318F687003A683C /* TestTableBackgroundViewController.m in Sources */,
 				2FC81A792350321800BE660C /* ComplexViewModel.m in Sources */,
 				2F43857C2318F687003A683C /* TestTableLayoutViewController.m in Sources */,
-				2F43857D2318F687003A683C /* TestFaceViewController.m in Sources */,
 				2F43857E2318F687003A683C /* AppRouter.m in Sources */,
 				2F4385802318F687003A683C /* TestRouterViewController.m in Sources */,
 				2F4385812318F687003A683C /* TestKeyboardViewController.m in Sources */,
@@ -1244,6 +1242,7 @@
 				2F43859C2318F687003A683C /* TestEmptyViewController.m in Sources */,
 				2F43859D2318F687003A683C /* BaseViewController.m in Sources */,
 				2F43859E2318F687003A683C /* TestBadgeViewController.m in Sources */,
+				2FCB540024A26794004CC639 /* TestFacesViewController.m in Sources */,
 				2FF661F124667FC900B65883 /* TestPopupMenuViewController.m in Sources */,
 				2F43859F2318F687003A683C /* TestQrcodeViewController.m in Sources */,
 				2F8F3709240037D5003472B5 /* TestThreadViewController.m in Sources */,
@@ -1289,7 +1288,6 @@
 				2FE533E92181645300CA54E6 /* TestTableBackgroundViewController.m in Sources */,
 				2FC81A782350321800BE660C /* ComplexViewModel.m in Sources */,
 				2F4CFA5A2155302E00203A37 /* TestTableLayoutViewController.m in Sources */,
-				2FCD375E22533B5A001E81DB /* TestFaceViewController.m in Sources */,
 				2FA32CC921B03B5B00C230EA /* AppRouter.m in Sources */,
 				2FA32CCC21B0572900C230EA /* TestRouterViewController.m in Sources */,
 				2FC5DFDD2213FE09008A56A7 /* TestKeyboardViewController.m in Sources */,
@@ -1329,6 +1327,7 @@
 				2F1D8B8021B021A000E0F820 /* TestEmptyViewController.m in Sources */,
 				2F4CFA5121552A7700203A37 /* BaseViewController.m in Sources */,
 				2F4CFA5521552CFF00203A37 /* TestBadgeViewController.m in Sources */,
+				2FCB53FF24A26794004CC639 /* TestFacesViewController.m in Sources */,
 				2FF661F024667FC900B65883 /* TestPopupMenuViewController.m in Sources */,
 				2F8F3708240037D5003472B5 /* TestThreadViewController.m in Sources */,
 				2FB90F2121F571EA00084D76 /* TestQrcodeViewController.m in Sources */,
@@ -1566,7 +1565,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 3HYKLRGGZ2;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = Example/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1580,7 +1579,7 @@
 					"$(inherited)",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example111;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = Example/BridgingHeader.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1594,7 +1593,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 3HYKLRGGZ2;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = Example/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1607,7 +1606,7 @@
 					"$(inherited)",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example111;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = Example/BridgingHeader.h;
 				SWIFT_VERSION = 5.0;

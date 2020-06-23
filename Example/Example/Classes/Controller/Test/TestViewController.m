@@ -61,7 +61,7 @@
                                              @[@"UIView(FWChain)", @"TestChainViewController"],
                                              @[@"UIView(FWLayer)", @"TestLayerViewController"],
                                              @[@"UIView(FWStatistical)", @"TestStatisticalViewController"],
-                                             @[@"UIImageView(FWFace)", @"TestFaceViewController"],
+                                             @[@"UIImageView(FWFace)", @"TestFacesViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
                                              @[@"FWScroll", @"TestTableScrollViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
