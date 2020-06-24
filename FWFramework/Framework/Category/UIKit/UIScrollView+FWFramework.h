@@ -91,9 +91,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Gesture
 
-// 设置pan手势识别代理，注意不能设置为scrollView自身
-@property (nullable, nonatomic, weak) id<UIGestureRecognizerDelegate> fwPanGestureRecognizerDelegate;
-
 // 是否开始识别pan手势
 @property (nullable, nonatomic, copy) BOOL (^fwShouldBegin)(UIGestureRecognizer *gestureRecognizer);
 
