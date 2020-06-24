@@ -93,6 +93,24 @@
     return YES;
 }
 
+// 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
+- (BOOL)_gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(_gestureRecognizer:shouldReceiveEvent:)]) {
+            BOOL shouldReceive = [self.delegate _gestureRecognizer:gestureRecognizer shouldReceiveEvent:event];
+            if (!shouldReceive &&
+                self.navigationController.viewControllers.count > 1 &&
+                self.navigationController.interactivePopGestureRecognizer.enabled &&
+                self.navigationController.topViewController.fwForcePopGesture) {
+                return YES;
+            }
+            return shouldReceive;
+        }
+    }
+    return YES;
+}
+
 @end
 
 #pragma mark - UINavigationController+FWBack
