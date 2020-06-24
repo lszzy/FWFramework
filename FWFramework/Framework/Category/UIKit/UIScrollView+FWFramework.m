@@ -10,7 +10,6 @@
 #import "UIGestureRecognizer+FWFramework.h"
 #import "UIView+FWAutoLayout.h"
 #import "NSObject+FWSwizzle.h"
-#import "FWProxy.h"
 #import <objc/runtime.h>
 
 @implementation UIScrollView (FWFramework)
@@ -23,10 +22,6 @@
         [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
         [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldRequireFailureOfGestureRecognizer:)];
         [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:) with:@selector(fwInnerGestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)];
-        [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldReceiveTouch:) with:@selector(fwInnerGestureRecognizer:shouldReceiveTouch:)];
-        if (@available(iOS 9.0, *)) {
-            [self fwSwizzleInstanceMethod:@selector(gestureRecognizer:shouldReceivePress:) with:@selector(fwInnerGestureRecognizer:shouldReceivePress:)];
-        }
     });
 }
 
@@ -233,17 +228,6 @@
 
 #pragma mark - Gesture
 
-- (id<UIGestureRecognizerDelegate>)fwPanGestureRecognizerDelegate
-{
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate));
-    return value.object;
-}
-
-- (void)setFwPanGestureRecognizerDelegate:(id<UIGestureRecognizerDelegate>)fwPanGestureRecognizerDelegate
-{
-    objc_setAssociatedObject(self, @selector(fwPanGestureRecognizerDelegate), [[FWWeakObject alloc] initWithObject:fwPanGestureRecognizerDelegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (BOOL (^)(UIGestureRecognizer *))fwShouldBegin
 {
     return objc_getAssociatedObject(self, @selector(fwShouldBegin));
@@ -286,10 +270,6 @@
 
 - (BOOL)fwInnerGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
-        return [self.fwPanGestureRecognizerDelegate gestureRecognizerShouldBegin:gestureRecognizer];
-    }
-    
     BOOL (^shouldBlock)(UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldBegin));
     if (shouldBlock) {
         return shouldBlock(gestureRecognizer);
@@ -300,10 +280,6 @@
 
 - (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)]) {
-        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
-    }
-    
     BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldRecognizeSimultaneously));
     if (shouldBlock) {
         return shouldBlock(gestureRecognizer, otherGestureRecognizer);
@@ -314,10 +290,6 @@
 
 - (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)]) {
-        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
-    }
-    
     BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldRequireFailure));
     if (shouldBlock) {
         return shouldBlock(gestureRecognizer, otherGestureRecognizer);
@@ -328,34 +300,12 @@
 
 - (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)]) {
-        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
-    }
-    
     BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fwShouldBeRequiredToFail));
     if (shouldBlock) {
         return shouldBlock(gestureRecognizer, otherGestureRecognizer);
     }
     
     return [self fwInnerGestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
-}
-
-- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
-        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
-    }
-    
-    return [self fwInnerGestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
-}
-
-- (BOOL)fwInnerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceivePress:(UIPress *)press API_AVAILABLE(ios(9.0))
-{
-    if (self.fwPanGestureRecognizerDelegate && [self.fwPanGestureRecognizerDelegate respondsToSelector:@selector(gestureRecognizer:shouldReceivePress:)]) {
-        return [self.fwPanGestureRecognizerDelegate gestureRecognizer:gestureRecognizer shouldReceivePress:press];
-    }
-    
-    return [self fwInnerGestureRecognizer:gestureRecognizer shouldReceivePress:press];
 }
 
 #pragma mark - Hover
