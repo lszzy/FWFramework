@@ -359,12 +359,12 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
          
          The current solution:
             1) Grab an instance of `__NSCFLocalDataTask` by asking an instance of `NSURLSession` for a data task.
-            2) Grab a pointer to the original implementation of `fw_resume`
+            2) Grab a pointer to the original implementation of `af_resume`
             3) Check to see if the current class has an implementation of resume. If so, continue to step 4.
             4) Grab the super class of the current class.
             5) Grab a pointer for the current class to the current implementation of `resume`.
             6) Grab a pointer for the super class to the current implementation of `resume`.
-            7) If the current class implementation of `resume` is not equal to the super class implementation of `resume` AND the current implementation of `resume` is not equal to the original implementation of `fw_resume`, THEN swizzle the methods
+            7) If the current class implementation of `resume` is not equal to the super class implementation of `resume` AND the current implementation of `resume` is not equal to the original implementation of `af_resume`, THEN swizzle the methods
             8) Set the current class to the super class, and repeat steps 3-8
          */
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
@@ -373,7 +373,7 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 #pragma GCC diagnostic ignored "-Wnonnull"
         NSURLSessionDataTask *localDataTask = [session dataTaskWithURL:nil];
 #pragma clang diagnostic pop
-        IMP originalFWResumeIMP = method_getImplementation(class_getInstanceMethod([self class], @selector(fw_resume)));
+        IMP originalFWResumeIMP = method_getImplementation(class_getInstanceMethod([self class], @selector(af_resume)));
         Class currentClass = [localDataTask class];
         
         while (class_getInstanceMethod(currentClass, @selector(resume))) {
@@ -393,15 +393,15 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 }
 
 + (void)swizzleResumeAndSuspendMethodForClass:(Class)theClass {
-    Method fwResumeMethod = class_getInstanceMethod(self, @selector(fw_resume));
-    Method fwSuspendMethod = class_getInstanceMethod(self, @selector(fw_suspend));
+    Method fwResumeMethod = class_getInstanceMethod(self, @selector(af_resume));
+    Method fwSuspendMethod = class_getInstanceMethod(self, @selector(af_suspend));
 
-    if (fw_addMethod(theClass, @selector(fw_resume), fwResumeMethod)) {
-        fw_swizzleSelector(theClass, @selector(resume), @selector(fw_resume));
+    if (fw_addMethod(theClass, @selector(af_resume), fwResumeMethod)) {
+        fw_swizzleSelector(theClass, @selector(resume), @selector(af_resume));
     }
 
-    if (fw_addMethod(theClass, @selector(fw_suspend), fwSuspendMethod)) {
-        fw_swizzleSelector(theClass, @selector(suspend), @selector(fw_suspend));
+    if (fw_addMethod(theClass, @selector(af_suspend), fwSuspendMethod)) {
+        fw_swizzleSelector(theClass, @selector(suspend), @selector(af_suspend));
     }
 }
 
@@ -410,20 +410,20 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     return NSURLSessionTaskStateCanceling;
 }
 
-- (void)fw_resume {
+- (void)af_resume {
     NSAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");
     NSURLSessionTaskState state = [self state];
-    [self fw_resume];
+    [self af_resume];
     
     if (state != NSURLSessionTaskStateRunning) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FWNSURLSessionTaskDidResumeNotification object:self];
     }
 }
 
-- (void)fw_suspend {
+- (void)af_suspend {
     NSAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");
     NSURLSessionTaskState state = [self state];
-    [self fw_suspend];
+    [self af_suspend];
     
     if (state != NSURLSessionTaskStateSuspended) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FWNSURLSessionTaskDidSuspendNotification object:self];
