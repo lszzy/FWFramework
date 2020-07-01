@@ -75,7 +75,9 @@
     [self fwShowAlertWithTitle:@"警告框标题"
                        message:@"警告框消息"
                         cancel:@"确定"
-                   cancelBlock:nil];
+                   cancelBlock:^{
+                        NSLog(@"顶部控制器：%@", UIWindow.fwMainWindow.fwTopPresentedController);
+                    }];
 }
 
 - (void)onAlert2
