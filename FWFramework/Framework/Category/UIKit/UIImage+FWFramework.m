@@ -598,8 +598,10 @@
 - (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
 {
     CGFloat compress = 1.f;
-    CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.05f;
-    NSData *data = UIImageJPEGRepresentation(self, compress);
+    CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.1f;
+    NSData *data = self.fwHasAlpha
+        ? UIImagePNGRepresentation(self)
+        : UIImageJPEGRepresentation(self, compress);
     while (data.length > maxLength && compress > stepCompress) {
         compress -= stepCompress;
         data = UIImageJPEGRepresentation(self, compress);
