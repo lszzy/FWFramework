@@ -145,10 +145,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Compress
 
-// 压缩图片到指定字节，图片改为JPG格式。不保证图片大小一定小于该大小
+// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
 - (nullable UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
 
-// 压缩图片到指定字节，图片改为JPG格式，可设置递减压缩率，默认0.05。不保证图片大小一定小于该大小
+// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
 - (nullable NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
 
 // 长边压缩图片尺寸，获取等比例的图片
