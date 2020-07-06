@@ -39,9 +39,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param viewController push的控制器
  @param animated 是否执行动画
- @return pop的控制器数组
  */
-- (nullable NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated;
+- (void)fwPushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated;
+
+/*!
+ @brief push控制器，并清理非根控制器（只保留根控制器）
+ @discussion 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */
+- (void)fwPushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated;
 
 /*!
  @brief push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
@@ -50,18 +58,16 @@ NS_ASSUME_NONNULL_BEGIN
  @param viewController push的控制器
  @param workflows 指定工作流
  @param animated 是否执行动画
- @return pop的控制器数组
  */
-- (nullable NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
+- (void)fwPushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
 
 /*!
  @brief pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
  @discussion 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
  
  @param animated 是否执行动画
- @return pop的控制器数组
  */
-- (nullable NSArray<UIViewController *> *)fwPopTopWorkflowAnimated:(BOOL)animated;
+- (void)fwPopTopWorkflowAnimated:(BOOL)animated;
 
 /*!
  @brief pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
@@ -69,9 +75,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param workflows 指定工作流
  @param animated  是否执行动画
- @return pop的控制器数组
  */
-- (nullable NSArray<UIViewController *> *)fwPopWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
+- (void)fwPopWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
 
 @end
 

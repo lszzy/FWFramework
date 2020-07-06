@@ -42,17 +42,29 @@
     return [self.topViewController fwWorkflowName];
 }
 
-- (NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated
+- (void)fwPushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated
 {
     NSArray *workflows = [NSArray arrayWithObjects:self.fwTopWorkflowName, nil];
-    return [self fwPushViewController:viewController popWorkflows:workflows animated:animated];
+    [self fwPushViewController:viewController popWorkflows:workflows animated:animated];
 }
 
-- (NSArray<UIViewController *> *)fwPushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
+- (void)fwPushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated
+{
+    if (self.viewControllers.count < 2) {
+        [self pushViewController:viewController animated:animated];
+        return;
+    }
+    
+    NSMutableArray *viewControllers = [NSMutableArray arrayWithObject:self.viewControllers.firstObject];
+    [viewControllers addObject:viewController];
+    [self setViewControllers:viewControllers animated:animated];
+}
+
+- (void)fwPushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
 {
     if (workflows.count < 1) {
         [self pushViewController:viewController animated:animated];
-        return nil;
+        return;
     }
     
     // 从外到内查找移除的控制器列表
@@ -79,26 +91,24 @@
     
     if (popControllers.count < 1) {
         [self pushViewController:viewController animated:animated];
-        return nil;
     } else {
         NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.viewControllers];
         [viewControllers removeObjectsInArray:popControllers];
         [viewControllers addObject:viewController];
         [self setViewControllers:viewControllers animated:animated];
-        return popControllers;
     }
 }
 
-- (NSArray<UIViewController *> *)fwPopTopWorkflowAnimated:(BOOL)animated
+- (void)fwPopTopWorkflowAnimated:(BOOL)animated
 {
     NSArray *workflows = [NSArray arrayWithObjects:self.fwTopWorkflowName, nil];
-    return [self fwPopWorkflows:workflows animated:animated];
+    [self fwPopWorkflows:workflows animated:animated];
 }
 
-- (NSArray<UIViewController *> *)fwPopWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
+- (void)fwPopWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
 {
     if (workflows.count < 1) {
-        return nil;
+        return;
     }
     
     // 从外到内查找停止目标控制器
@@ -123,10 +133,10 @@
     }];
     
     if (toController) {
-        return [self popToViewController:toController animated:animated];
+        [self popToViewController:toController animated:animated];
     } else {
         // 至少保留一个根控制器
-        return [self popToRootViewControllerAnimated:animated];
+        [self popToRootViewControllerAnimated:animated];
     }
 }
 
