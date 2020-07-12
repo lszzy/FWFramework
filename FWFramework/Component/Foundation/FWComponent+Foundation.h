@@ -1,15 +1,15 @@
-/*!
- @header     Foundation+FWFramework.h
- @indexgroup FWFramework
- @brief      Foundation框架FWFramework分类
- @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018-05-15
- */
+//
+//  FWComponent+Foundation.h
+//  FWFramework
+//
+//  Created by wuyong on 2020/7/12.
+//  Copyright © 2020 wuyong.site. All rights reserved.
+//
 
-#ifndef Foundation_FWFramework_h
-#define Foundation_FWFramework_h
+#ifndef FWComponent_Foundation_h
+#define FWComponent_Foundation_h
 
+// Extension
 #import "NSArray+FWFramework.h"
 #import "NSAttributedString+FWFramework.h"
 #import "NSBundle+FWFramework.h"
@@ -25,4 +25,4 @@
 #import "NSURL+FWFramework.h"
 #import "NSUserDefaults+FWFramework.h"
 
-#endif /* Foundation_FWFramework_h */
+#endif /* FWComponent_Foundation_h */
