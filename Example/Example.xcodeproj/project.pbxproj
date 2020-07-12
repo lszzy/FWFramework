@@ -632,7 +632,6 @@
 				2F51D78C1E5C2357009FD40F /* Controller */,
 				2F30D89E215377E8000F0A1D /* Model */,
 				2F30D89F215377ED000F0A1D /* View */,
-				2FC81A7A2350324C00BE660C /* ViewModel */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -717,13 +716,6 @@
 			children = (
 				2FC81A762350321800BE660C /* ComplexViewModel.h */,
 				2FC81A772350321800BE660C /* ComplexViewModel.m */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		2FC81A7A2350324C00BE660C /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
 			);
 			path = ViewModel;
 			sourceTree = "<group>";

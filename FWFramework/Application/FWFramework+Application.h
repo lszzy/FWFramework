@@ -15,6 +15,7 @@
 #import "FWAppLoadingPlugin.h"
 #import "FWAppRefreshPlugin.h"
 #import "FWAppAlertPlugin.h"
+#import "UIKit+FWFramework.h"
 
 // Controller
 #import "FWViewController.h"
@@ -26,8 +27,6 @@
 // Model
 #import "FWModel.h"
 #import "FWDbModel.h"
-
-// ViewModel
 #import "FWViewModel.h"
 
 // View
