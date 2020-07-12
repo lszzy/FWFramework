@@ -9,10 +9,6 @@
 #ifndef FWFramework_Framework_h
 #define FWFramework_Framework_h
 
-// Category
-#import "Foundation+FWFramework.h"
-#import "UIKit+FWFramework.h"
-
 // Kernel
 #import "FWCoroutine.h"
 #import "FWLog.h"
@@ -43,5 +39,8 @@
 #import "FWAsyncUdpSocket.h"
 #import "FWDatabaseManager.h"
 #import "FWCacheManager.h"
+
+// Toolkit
+#import "Foundation+FWFramework.h"
 
 #endif /* FWFramework_Framework_h */

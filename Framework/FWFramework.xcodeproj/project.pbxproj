@@ -738,20 +738,11 @@
 			isa = PBXGroup;
 			children = (
 				2FA99DBA228AAB660059DFDB /* FWFramework+Framework.h */,
-				2F03A4DE216CF4B9001965A1 /* Category */,
 				2F03A560216CF4B9001965A1 /* Kernel */,
 				2F03A551216CF4B9001965A1 /* Service */,
+				2F65FF9024BABE6A008C7F03 /* Toolkit */,
 			);
 			path = Framework;
-			sourceTree = "<group>";
-		};
-		2F03A4DE216CF4B9001965A1 /* Category */ = {
-			isa = PBXGroup;
-			children = (
-				2F03A527216CF4B9001965A1 /* Foundation */,
-				2F03A4DF216CF4B9001965A1 /* UIKit */,
-			);
-			path = Category;
 			sourceTree = "<group>";
 		};
 		2F03A4DF216CF4B9001965A1 /* UIKit */ = {
@@ -1018,7 +1009,6 @@
 				2F03A574216CF4B9001965A1 /* Controller */,
 				2F03A575216CF4B9001965A1 /* Model */,
 				2F03A576216CF4B9001965A1 /* View */,
-				2FC81A732350314500BE660C /* ViewModel */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -1049,6 +1039,8 @@
 				2FAC8523247CCAE300E5ED36 /* FWModel.swift */,
 				2F0CCE3D21E496EE0018FA87 /* FWDbModel.h */,
 				2F0CCE3E21E496EE0018FA87 /* FWDbModel.m */,
+				2FC81A7B235032EF00BE660C /* FWViewModel.h */,
+				2FC81A7C235032EF00BE660C /* FWViewModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1138,6 +1130,22 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
+		2F65FF8F24BABE4F008C7F03 /* Toolkit */ = {
+			isa = PBXGroup;
+			children = (
+				2F03A4DF216CF4B9001965A1 /* UIKit */,
+			);
+			path = Toolkit;
+			sourceTree = "<group>";
+		};
+		2F65FF9024BABE6A008C7F03 /* Toolkit */ = {
+			isa = PBXGroup;
+			children = (
+				2F03A527216CF4B9001965A1 /* Foundation */,
+			);
+			path = Toolkit;
+			sourceTree = "<group>";
+		};
 		2F70EDDC2327810900498538 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
@@ -1186,17 +1194,9 @@
 				2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */,
 				2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */,
 				2F70EDDC2327810900498538 /* Plugin */,
+				2F65FF8F24BABE4F008C7F03 /* Toolkit */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		2FC81A732350314500BE660C /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2FC81A7B235032EF00BE660C /* FWViewModel.h */,
-				2FC81A7C235032EF00BE660C /* FWViewModel.m */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		2FCE512F21D3746B009EA65E /* Database */ = {
