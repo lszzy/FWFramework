@@ -11,5 +11,6 @@
 
 #import "Foundation+FWFramework.h"
 #import "UIKit+FWFramework.h"
+#import "UIKit+FWComponent.h"
 
 #endif /* FWFramework_Component_h */
