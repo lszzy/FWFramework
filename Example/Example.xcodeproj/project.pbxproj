@@ -50,7 +50,7 @@
 		2F51D8141E5C2357009FD40F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F51D7E71E5C2357009FD40F /* Assets.xcassets */; };
 		2F54B9BF223208AD008411EF /* TestTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F54B9BE223208AD008411EF /* TestTransitionViewController.m */; };
 		2F593FDD21560B000022137F /* TestIndicatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F593FDC21560B000022137F /* TestIndicatorViewController.m */; };
-		2F5A5BE61FB1B18B00EA39D0 /* FWFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5A5BE51FB1B18600EA39D0 /* FWFramework.framework */; };
+		2F5A5BE61FB1B18B00EA39D0 /* FWFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5A5BE51FB1B18600EA39D0 /* FWFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2F5B1EE5231CADBF007884EC /* BaseWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5B1EE4231CADBF007884EC /* BaseWebViewController.m */; };
 		2F62DAAE2407DB22001B8F9F /* test.heic in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAA2407DB22001B8F9F /* test.heic */; };
 		2F62DAB02407DB22001B8F9F /* animation.heic in Resources */ = {isa = PBXBuildFile; fileRef = 2F62DAAC2407DB22001B8F9F /* animation.heic */; };
@@ -852,10 +852,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FWDebug/FWDebug.framework",
+				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWDebug.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

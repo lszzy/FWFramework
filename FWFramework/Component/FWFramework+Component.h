@@ -9,9 +9,7 @@
 #ifndef FWFramework_Component_h
 #define FWFramework_Component_h
 
-#import "Foundation+FWFramework.h"
-#import "Foundation+FWComponent.h"
-#import "UIKit+FWFramework.h"
-#import "UIKit+FWComponent.h"
+#import "FWComponent+Foundation.h"
+#import "FWComponent+UIKit.h"
 
 #endif /* FWFramework_Component_h */

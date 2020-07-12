@@ -1,15 +1,15 @@
-/*!
- @header     UIKit+FWFramework.h
- @indexgroup FWFramework
- @brief      UIKit框架FWFramework分类
- @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018-05-15
- */
+//
+//  FWComponent+UIKit.h
+//  FWFramework
+//
+//  Created by wuyong on 2020/7/12.
+//  Copyright © 2020 wuyong.site. All rights reserved.
+//
 
-#ifndef UIKit_FWFramework_h
-#define UIKit_FWFramework_h
+#ifndef FWComponent_UIKit_h
+#define FWComponent_UIKit_h
 
+// Extension
 #import "UIApplication+FWFramework.h"
 #import "UIBezierPath+FWFramework.h"
 #import "UIButton+FWFramework.h"
@@ -39,4 +39,23 @@
 #import "UIWindow+FWFramework.h"
 #import "WKWebView+FWFramework.h"
 
-#endif /* UIKit_FWFramework_h */
+// Component
+#import "FWAlertController.h"
+#import "FWAttributedLabel.h"
+#import "FWBannerView.h"
+#import "FWBarrageView.h"
+#import "FWCollectionViewFlowLayout.h"
+#import "FWCropViewController.h"
+#import "FWIndicatorControl.h"
+#import "FWMarqueeLabel.h"
+#import "FWPageControl.h"
+#import "FWPagerView.h"
+#import "FWPhotoBrowser.h"
+#import "FWPopupMenu.h"
+#import "FWProgressView.h"
+#import "FWQrcodeScanView.h"
+#import "FWSegmentedControl.h"
+#import "FWTabAnimated.h"
+#import "FWTagCollectionView.h"
+
+#endif /* FWComponent_UIKit_h */
