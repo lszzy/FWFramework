@@ -10,6 +10,7 @@
 #define FWFramework_Component_h
 
 #import "Foundation+FWFramework.h"
+#import "Foundation+FWComponent.h"
 #import "UIKit+FWFramework.h"
 #import "UIKit+FWComponent.h"
 
