@@ -9,7 +9,7 @@
 
 #import "UILabel+FWFramework.h"
 #import "UIView+FWFramework.h"
-#import "NSObject+FWSwizzle.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation UILabel (FWFramework)
