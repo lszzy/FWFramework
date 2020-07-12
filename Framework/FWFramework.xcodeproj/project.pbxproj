@@ -229,12 +229,9 @@
 		2F6492B123168828002E15AC /* FWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AF23168828002E15AC /* FWWebViewController.m */; };
 		2F65FF8C24BAB8BE008C7F03 /* FWSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FF8A24BAB8BE008C7F03 /* FWSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F65FF8D24BAB8BE008C7F03 /* FWSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F65FF8B24BAB8BE008C7F03 /* FWSwizzle.m */; };
-		2F65FFAB24BAD175008C7F03 /* FWComponent+Foundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FFAA24BAD175008C7F03 /* FWComponent+Foundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F65FFAD24BAD1A5008C7F03 /* FWComponent+UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FFAC24BAD1A5008C7F03 /* FWComponent+UIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F65FFB424BAD8C3008C7F03 /* FWFramework+Kernel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FFB324BAD8C3008C7F03 /* FWFramework+Kernel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F65FFB624BAD910008C7F03 /* FWFramework+Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FFB524BAD910008C7F03 /* FWFramework+Service.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F65FFB824BAD93A008C7F03 /* FWFramework+Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FFB724BAD93A008C7F03 /* FWFramework+Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F65FFBA24BAD951008C7F03 /* FWFramework+Component.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FFB924BAD951008C7F03 /* FWFramework+Component.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -246,7 +243,8 @@
 		2F70EDE72327882F00498538 /* FWAppLoadingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F70EDE52327882F00498538 /* FWAppLoadingPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F70EDE82327882F00498538 /* FWAppLoadingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */; };
 		2F777E4E2369631B00361961 /* NSObject+FWSafeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */; };
-		2F7F9EEE24BAE679008E2A62 /* FWFramework+Application_UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7F9EED24BAE679008E2A62 /* FWFramework+Application_UIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7F9EF724BAED76008E2A62 /* Foundation+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7F9EF624BAED76008E2A62 /* Foundation+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F7F9EF924BAEE82008E2A62 /* UIKit+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F7F9EF824BAEE82008E2A62 /* UIKit+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8480CF23A3BC3100FAAAC0 /* FWTabAnimated.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F8480D023A3BC3100FAAAC0 /* FWTabAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */; };
 		2F8AA7342454720F00C57232 /* FWAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8AA7322454720F00C57232 /* FWAlertController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -586,12 +584,9 @@
 		2F6492AF23168828002E15AC /* FWWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebViewController.m; sourceTree = "<group>"; };
 		2F65FF8A24BAB8BE008C7F03 /* FWSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWSwizzle.h; sourceTree = "<group>"; };
 		2F65FF8B24BAB8BE008C7F03 /* FWSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWSwizzle.m; sourceTree = "<group>"; };
-		2F65FFAA24BAD175008C7F03 /* FWComponent+Foundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWComponent+Foundation.h"; sourceTree = "<group>"; };
-		2F65FFAC24BAD1A5008C7F03 /* FWComponent+UIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWComponent+UIKit.h"; sourceTree = "<group>"; };
 		2F65FFB324BAD8C3008C7F03 /* FWFramework+Kernel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Kernel.h"; sourceTree = "<group>"; };
 		2F65FFB524BAD910008C7F03 /* FWFramework+Service.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Service.h"; sourceTree = "<group>"; };
 		2F65FFB724BAD93A008C7F03 /* FWFramework+Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Application.h"; sourceTree = "<group>"; };
-		2F65FFB924BAD951008C7F03 /* FWFramework+Component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Component.h"; sourceTree = "<group>"; };
 		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
@@ -604,7 +599,8 @@
 		2F70EDE62327882F00498538 /* FWAppLoadingPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAppLoadingPlugin.m; sourceTree = "<group>"; };
 		2F777E4D2369631B00361961 /* NSObject+FWSafeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+FWSafeType.swift"; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F7F9EED24BAE679008E2A62 /* FWFramework+Application_UIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Application_UIKit.h"; sourceTree = "<group>"; };
+		2F7F9EF624BAED76008E2A62 /* Foundation+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Foundation+FWFramework.h"; sourceTree = "<group>"; };
+		2F7F9EF824BAEE82008E2A62 /* UIKit+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIKit+FWFramework.h"; sourceTree = "<group>"; };
 		2F8480CD23A3BC3100FAAAC0 /* FWTabAnimated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTabAnimated.h; sourceTree = "<group>"; };
 		2F8480CE23A3BC3100FAAAC0 /* FWTabAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTabAnimated.m; sourceTree = "<group>"; };
 		2F8AA7322454720F00C57232 /* FWAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAlertController.h; sourceTree = "<group>"; };
@@ -732,33 +728,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2F03A4DF216CF4B9001965A1 /* UIKit */ = {
-			isa = PBXGroup;
-			children = (
-				2F65FFAC24BAD1A5008C7F03 /* FWComponent+UIKit.h */,
-				2F65FF9824BAC77A008C7F03 /* Extension */,
-				2FD1A52321D4B83E00A215C2 /* Component */,
-			);
-			path = UIKit;
-			sourceTree = "<group>";
-		};
-		2F03A527216CF4B9001965A1 /* Foundation */ = {
-			isa = PBXGroup;
-			children = (
-				2F65FFAA24BAD175008C7F03 /* FWComponent+Foundation.h */,
-				2F65FF9624BAC72B008C7F03 /* Extension */,
-				2F65FF9C24BAC882008C7F03 /* Component */,
-			);
-			path = Foundation;
-			sourceTree = "<group>";
-		};
 		2F03A551216CF4B9001965A1 /* Service */ = {
 			isa = PBXGroup;
 			children = (
 				2F65FFB524BAD910008C7F03 /* FWFramework+Service.h */,
 				2FCE515421D3B90F009EA65E /* Cache */,
-				2F2121DC2408E80500F74653 /* Image */,
 				2FCE512F21D3746B009EA65E /* Database */,
+				2F65FF9624BAC72B008C7F03 /* Foundation */,
 				2F03A552216CF4B9001965A1 /* Manager */,
 				2F03A61F216CF882001965A1 /* Network */,
 				2F03A60B216CF882001965A1 /* Request */,
@@ -826,8 +802,10 @@
 			isa = PBXGroup;
 			children = (
 				2F65FFB724BAD93A008C7F03 /* FWFramework+Application.h */,
-				2F65FF9924BAC7FA008C7F03 /* UIKit */,
-				2F65FF9A24BAC800008C7F03 /* SwiftUI */,
+				2FA99D9A228A74DF0059DFDB /* App */,
+				2F03A574216CF4B9001965A1 /* Controller */,
+				2F03A575216CF4B9001965A1 /* Model */,
+				2F03A576216CF4B9001965A1 /* View */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -865,6 +843,7 @@
 			children = (
 				2FD1A51E21D4B71600A215C2 /* FWView.h */,
 				2FD1A51F21D4B71600A215C2 /* FWView.m */,
+				2FD1A52321D4B83E00A215C2 /* Component */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -944,27 +923,10 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
-		2F65FF9224BAC1C0008C7F03 /* Component */ = {
+		2F65FF9624BAC72B008C7F03 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
-				2F65FFB924BAD951008C7F03 /* FWFramework+Component.h */,
-				2F03A527216CF4B9001965A1 /* Foundation */,
-				2F03A4DF216CF4B9001965A1 /* UIKit */,
-				2F65FF9524BAC57C008C7F03 /* SwiftUI */,
-			);
-			path = Component;
-			sourceTree = "<group>";
-		};
-		2F65FF9524BAC57C008C7F03 /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
-		2F65FF9624BAC72B008C7F03 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
+				2F7F9EF624BAED76008E2A62 /* Foundation+FWFramework.h */,
 				2F03A539216CF4B9001965A1 /* NSArray+FWFramework.h */,
 				2F03A549216CF4B9001965A1 /* NSArray+FWFramework.m */,
 				2F92114123E914ED00183311 /* NSArray+FWThread.h */,
@@ -1023,12 +985,13 @@
 				2F03A538216CF4B9001965A1 /* NSUserDefaults+FWFramework.h */,
 				2F03A54A216CF4B9001965A1 /* NSUserDefaults+FWFramework.m */,
 			);
-			path = Extension;
+			path = Foundation;
 			sourceTree = "<group>";
 		};
 		2F65FF9824BAC77A008C7F03 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				2F7F9EF824BAEE82008E2A62 /* UIKit+FWFramework.h */,
 				2F03A501216CF4B9001965A1 /* UIApplication+FWFramework.h */,
 				2F03A521216CF4B9001965A1 /* UIApplication+FWFramework.m */,
 				2FBFB75D22C616BD00E669B6 /* UIApplication+FWFramework.swift */,
@@ -1148,32 +1111,6 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		2F65FF9924BAC7FA008C7F03 /* UIKit */ = {
-			isa = PBXGroup;
-			children = (
-				2F7F9EED24BAE679008E2A62 /* FWFramework+Application_UIKit.h */,
-				2FA99D9A228A74DF0059DFDB /* App */,
-				2F03A574216CF4B9001965A1 /* Controller */,
-				2F03A575216CF4B9001965A1 /* Model */,
-				2F03A576216CF4B9001965A1 /* View */,
-			);
-			path = UIKit;
-			sourceTree = "<group>";
-		};
-		2F65FF9A24BAC800008C7F03 /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
-		2F65FF9C24BAC882008C7F03 /* Component */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Component;
-			sourceTree = "<group>";
-		};
 		2F70EDDC2327810900498538 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
@@ -1211,11 +1148,18 @@
 				2FA99DA3228AA9CF0059DFDB /* FWFramework.h */,
 				2F03A560216CF4B9001965A1 /* Kernel */,
 				2F03A551216CF4B9001965A1 /* Service */,
-				2F65FF9224BAC1C0008C7F03 /* Component */,
 				2F03A573216CF4B9001965A1 /* Application */,
+				2F7F9EF224BAEBB2008E2A62 /* SwiftUI */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
+			sourceTree = "<group>";
+		};
+		2F7F9EF224BAEBB2008E2A62 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		2FA99D9A228A74DF0059DFDB /* App */ = {
@@ -1223,6 +1167,7 @@
 			children = (
 				2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */,
 				2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */,
+				2F65FF9824BAC77A008C7F03 /* Extension */,
 				2F70EDDC2327810900498538 /* Plugin */,
 			);
 			path = App;
@@ -1271,6 +1216,7 @@
 		2FD1A52321D4B83E00A215C2 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				2F2121DC2408E80500F74653 /* Image */,
 				2F8AA7322454720F00C57232 /* FWAlertController.h */,
 				2F8AA7332454720F00C57232 /* FWAlertController.m */,
 				2F0FFF2921D1DB1800049383 /* FWAttributedLabel.h */,
@@ -1317,13 +1263,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F7F9EEE24BAE679008E2A62 /* FWFramework+Application_UIKit.h in Headers */,
+				2F7F9EF724BAED76008E2A62 /* Foundation+FWFramework.h in Headers */,
+				2F7F9EF924BAEE82008E2A62 /* UIKit+FWFramework.h in Headers */,
 				2F65FFB424BAD8C3008C7F03 /* FWFramework+Kernel.h in Headers */,
 				2F65FFB824BAD93A008C7F03 /* FWFramework+Application.h in Headers */,
-				2F65FFBA24BAD951008C7F03 /* FWFramework+Component.h in Headers */,
 				2F65FFB624BAD910008C7F03 /* FWFramework+Service.h in Headers */,
-				2F65FFAB24BAD175008C7F03 /* FWComponent+Foundation.h in Headers */,
-				2F65FFAD24BAD1A5008C7F03 /* FWComponent+UIKit.h in Headers */,
 				2F65FF8C24BAB8BE008C7F03 /* FWSwizzle.h in Headers */,
 				2F0001C824A0B1610021AF4D /* FWCropViewController.h in Headers */,
 				2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */,

@@ -9,6 +9,7 @@
 #ifndef FWFramework_Service_h
 #define FWFramework_Service_h
 
+#import "Foundation+FWFramework.h"
 #import "FWAuthorizeManager.h"
 #import "FWKeychainManager.h"
 #import "FWTaskManager.h"
@@ -17,7 +18,6 @@
 #import "FWStatisticalManager.h"
 #import "FWStorekitManager.h"
 #import "FWNotificationManager.h"
-#import "FWAnimatedImage.h"
 #import "FWNetwork.h"
 #import "FWRequest.h"
 #import "FWNetworkPrivate.h"

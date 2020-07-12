@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc        = spec_arc_files
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
-  spec.default_subspecs    = [ 'Kernel', 'Service', 'Component', 'Application' ]
+  spec.default_subspecs    = [ 'Kernel', 'Service', 'Application' ]
 
   spec.subspec 'Kernel' do |subspec|
     subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Kernel/**/*.{h,m,swift}'
@@ -26,12 +26,6 @@ Pod::Spec.new do |spec|
   spec.subspec 'Service' do |subspec|
     subspec.source_files = 'FWFramework/Service/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Service/**/*.h'
-    subspec.dependency 'FWFramework/Kernel'
-  end
-
-  spec.subspec 'Component' do |subspec|
-    subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/Component/**/*.h'
     subspec.dependency 'FWFramework/Kernel'
   end
 

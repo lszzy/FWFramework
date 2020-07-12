@@ -1,15 +1,14 @@
 //
-//  FWComponent+Foundation.h
+//  Foundation+FWFramework.h
 //  FWFramework
 //
 //  Created by wuyong on 2020/7/12.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#ifndef FWComponent_Foundation_h
-#define FWComponent_Foundation_h
+#ifndef Foundation_FWFramework_h
+#define Foundation_FWFramework_h
 
-// Extension
 #import "NSArray+FWFramework.h"
 #import "NSAttributedString+FWFramework.h"
 #import "NSBundle+FWFramework.h"
@@ -25,4 +24,4 @@
 #import "NSURL+FWFramework.h"
 #import "NSUserDefaults+FWFramework.h"
 
-#endif /* FWComponent_Foundation_h */
+#endif /* Foundation_FWFramework_h */
