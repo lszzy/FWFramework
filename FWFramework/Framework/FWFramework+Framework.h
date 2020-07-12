@@ -14,7 +14,6 @@
 #import "UIKit+FWFramework.h"
 
 // Kernel
-#import "FWAspect.h"
 #import "FWCoroutine.h"
 #import "FWLog.h"
 #import "FWMacro.h"
@@ -24,8 +23,8 @@
 #import "FWProxy.h"
 #import "FWRouter.h"
 #import "FWState.h"
+#import "FWSwizzle.h"
 #import "FWTest.h"
-#import "FWTuple.h"
 
 // Service
 #import "FWAuthorizeManager.h"

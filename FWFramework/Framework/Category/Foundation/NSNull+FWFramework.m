@@ -8,7 +8,7 @@
  */
 
 #import "NSNull+FWFramework.h"
-#import "NSObject+FWSwizzle.h"
+#import "FWSwizzle.h"
 
 @implementation NSNull (FWFramework)
 
