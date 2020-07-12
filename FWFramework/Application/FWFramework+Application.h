@@ -15,7 +15,6 @@
 #import "FWAppLoadingPlugin.h"
 #import "FWAppRefreshPlugin.h"
 #import "FWAppAlertPlugin.h"
-#import "UIKit+FWFramework.h"
 
 // Controller
 #import "FWViewController.h"

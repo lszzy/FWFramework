@@ -40,7 +40,4 @@
 #import "FWDatabaseManager.h"
 #import "FWCacheManager.h"
 
-// Toolkit
-#import "Foundation+FWFramework.h"
-
 #endif /* FWFramework_Framework_h */

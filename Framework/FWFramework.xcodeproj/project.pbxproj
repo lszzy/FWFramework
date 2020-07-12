@@ -233,6 +233,7 @@
 		2F6492B123168828002E15AC /* FWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6492AF23168828002E15AC /* FWWebViewController.m */; };
 		2F65FF8C24BAB8BE008C7F03 /* FWSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FF8A24BAB8BE008C7F03 /* FWSwizzle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F65FF8D24BAB8BE008C7F03 /* FWSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F65FF8B24BAB8BE008C7F03 /* FWSwizzle.m */; };
+		2F65FF9424BAC25F008C7F03 /* FWFramework+Component.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65FF9324BAC25F008C7F03 /* FWFramework+Component.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A64F230D223D0063D95A /* FWPagerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F69A64D230D223D0063D95A /* FWPagerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69A650230D223D0063D95A /* FWPagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F69A64E230D223D0063D95A /* FWPagerView.m */; };
 		2F6F275222D4D6C40078D648 /* UIBezierPath+FWShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -591,6 +592,7 @@
 		2F6492AF23168828002E15AC /* FWWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebViewController.m; sourceTree = "<group>"; };
 		2F65FF8A24BAB8BE008C7F03 /* FWSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWSwizzle.h; sourceTree = "<group>"; };
 		2F65FF8B24BAB8BE008C7F03 /* FWSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWSwizzle.m; sourceTree = "<group>"; };
+		2F65FF9324BAC25F008C7F03 /* FWFramework+Component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Component.h"; sourceTree = "<group>"; };
 		2F69A64D230D223D0063D95A /* FWPagerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPagerView.h; sourceTree = "<group>"; };
 		2F69A64E230D223D0063D95A /* FWPagerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWPagerView.m; sourceTree = "<group>"; };
 		2F6F275022D4D6C40078D648 /* UIBezierPath+FWShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+FWShape.h"; sourceTree = "<group>"; };
@@ -740,7 +742,6 @@
 				2FA99DBA228AAB660059DFDB /* FWFramework+Framework.h */,
 				2F03A560216CF4B9001965A1 /* Kernel */,
 				2F03A551216CF4B9001965A1 /* Service */,
-				2F65FF9024BABE6A008C7F03 /* Toolkit */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -1130,20 +1131,22 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
-		2F65FF8F24BABE4F008C7F03 /* Toolkit */ = {
+		2F65FF9224BAC1C0008C7F03 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				2F65FF9324BAC25F008C7F03 /* FWFramework+Component.h */,
+				2F03A527216CF4B9001965A1 /* Foundation */,
 				2F03A4DF216CF4B9001965A1 /* UIKit */,
+				2F65FF9524BAC57C008C7F03 /* SwiftUI */,
 			);
-			path = Toolkit;
+			path = Component;
 			sourceTree = "<group>";
 		};
-		2F65FF9024BABE6A008C7F03 /* Toolkit */ = {
+		2F65FF9524BAC57C008C7F03 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				2F03A527216CF4B9001965A1 /* Foundation */,
 			);
-			path = Toolkit;
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		2F70EDDC2327810900498538 /* Plugin */ = {
@@ -1182,6 +1185,7 @@
 			children = (
 				2FA99DA3228AA9CF0059DFDB /* FWFramework.h */,
 				2F03A4DD216CF4B9001965A1 /* Framework */,
+				2F65FF9224BAC1C0008C7F03 /* Component */,
 				2F03A573216CF4B9001965A1 /* Application */,
 			);
 			name = FWFramework;
@@ -1194,7 +1198,6 @@
 				2FA99D9B228A753B0059DFDB /* FWAppDelegate.h */,
 				2FA99D9C228A753B0059DFDB /* FWAppDelegate.m */,
 				2F70EDDC2327810900498538 /* Plugin */,
-				2F65FF8F24BABE4F008C7F03 /* Toolkit */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1288,6 +1291,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F65FF9424BAC25F008C7F03 /* FWFramework+Component.h in Headers */,
 				2F65FF8C24BAB8BE008C7F03 /* FWSwizzle.h in Headers */,
 				2F0001C824A0B1610021AF4D /* FWCropViewController.h in Headers */,
 				2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */,
