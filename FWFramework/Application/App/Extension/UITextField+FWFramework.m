@@ -9,11 +9,25 @@
 #import "UITextField+FWFramework.h"
 #import "NSString+FWEncode.h"
 #import "FWProxy.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - UITextField+FWFramework
 
 @implementation UITextField (FWFramework)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UITextField, @selector(canPerformAction:withSender:), FWSwizzleReturn(BOOL), FWSwizzleArgs(SEL action, id sender), FWSwizzleCode({
+            if (selfObject.fwMenuDisabled) {
+                return NO;
+            }
+            return FWSwizzleOriginal(action, sender);
+        }));
+    });
+}
 
 #pragma mark - Length
 
@@ -160,15 +174,6 @@
 - (void)setFwMenuDisabled:(BOOL)fwMenuDisabled
 {
     objc_setAssociatedObject(self, @selector(fwMenuDisabled), @(fwMenuDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-    if (self.fwMenuDisabled) {
-        return NO;
-    }
-    
-    return [super canPerformAction:action withSender:sender];
 }
 
 #pragma mark - Select

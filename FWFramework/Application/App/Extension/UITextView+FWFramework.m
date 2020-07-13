@@ -10,6 +10,7 @@
 #import "NSObject+FWRuntime.h"
 #import "FWMessage.h"
 #import "FWProxy.h"
+#import "FWSwizzle.h"
 #import "NSString+FWEncode.h"
 #import <objc/runtime.h>
 
@@ -55,6 +56,19 @@
 #pragma mark - UITextView+FWFramework
 
 @implementation UITextView (FWFramework)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UITextView, @selector(canPerformAction:withSender:), FWSwizzleReturn(BOOL), FWSwizzleArgs(SEL action, id sender), FWSwizzleCode({
+            if (selfObject.fwMenuDisabled) {
+                return NO;
+            }
+            return FWSwizzleOriginal(action, sender);
+        }));
+    });
+}
 
 #pragma mark - Delegate
 
@@ -225,15 +239,6 @@
 - (void)setFwMenuDisabled:(BOOL)fwMenuDisabled
 {
     objc_setAssociatedObject(self, @selector(fwMenuDisabled), @(fwMenuDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-    if (self.fwMenuDisabled) {
-        return NO;
-    }
-    
-    return [super canPerformAction:action withSender:sender];
 }
 
 #pragma mark - Select
