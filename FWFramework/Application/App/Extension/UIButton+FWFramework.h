@@ -16,9 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIButton (FWFramework)
 
-// 设置额外热区
-@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
-
 // 设置图片的居中边位置。需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距。利用titleEdgeInsets和imageEdgeInsets实现
 - (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
 

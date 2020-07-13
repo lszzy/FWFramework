@@ -8,35 +8,8 @@
  */
 
 #import "UIButton+FWFramework.h"
-#import <objc/runtime.h>
 
 @implementation UIButton (FWFramework)
-
-- (UIEdgeInsets)fwTouchInsets
-{
-    return [objc_getAssociatedObject(self, @selector(fwTouchInsets)) UIEdgeInsetsValue];
-}
-
-- (void)setFwTouchInsets:(UIEdgeInsets)fwTouchInsets
-{
-    objc_setAssociatedObject(self, @selector(fwTouchInsets), [NSValue valueWithUIEdgeInsets:fwTouchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
-    NSValue *insetsValue = objc_getAssociatedObject(self, @selector(fwTouchInsets));
-    if (insetsValue) {
-        UIEdgeInsets touchInsets = [insetsValue UIEdgeInsetsValue];
-        CGRect bounds = self.bounds;
-        bounds = CGRectMake(bounds.origin.x - touchInsets.left,
-                            bounds.origin.y - touchInsets.top,
-                            bounds.size.width + touchInsets.left + touchInsets.right,
-                            bounds.size.height + touchInsets.top + touchInsets.bottom);
-        return CGRectContainsPoint(bounds, point);
-    }
-    
-    return [super pointInside:point withEvent:event];
-}
 
 - (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
 {

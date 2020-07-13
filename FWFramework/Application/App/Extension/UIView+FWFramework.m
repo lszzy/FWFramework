@@ -18,6 +18,21 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UIView, @selector(pointInside:withEvent:), FWSwizzleReturn(BOOL), FWSwizzleArgs(CGPoint point, UIEvent *event), FWSwizzleCode({
+            NSValue *insetsValue = objc_getAssociatedObject(selfObject, @selector(fwTouchInsets));
+            if (insetsValue) {
+                UIEdgeInsets touchInsets = [insetsValue UIEdgeInsetsValue];
+                CGRect bounds = selfObject.bounds;
+                bounds = CGRectMake(bounds.origin.x - touchInsets.left,
+                                    bounds.origin.y - touchInsets.top,
+                                    bounds.size.width + touchInsets.left + touchInsets.right,
+                                    bounds.size.height + touchInsets.top + touchInsets.bottom);
+                return CGRectContainsPoint(bounds, point);
+            }
+            
+            return FWSwizzleOriginal(point, event);
+        }));
+        
         FWSwizzleClass(UIView, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
             NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwSetIntrinsicContentSize:));
             if (value) {
@@ -27,6 +42,18 @@
             }
         }));
     });
+}
+
+#pragma mark - Touch
+
+- (UIEdgeInsets)fwTouchInsets
+{
+    return [objc_getAssociatedObject(self, @selector(fwTouchInsets)) UIEdgeInsetsValue];
+}
+
+- (void)setFwTouchInsets:(UIEdgeInsets)fwTouchInsets
+{
+    objc_setAssociatedObject(self, @selector(fwTouchInsets), [NSValue valueWithUIEdgeInsets:fwTouchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - Transform

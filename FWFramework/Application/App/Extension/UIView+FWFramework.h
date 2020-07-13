@@ -29,6 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWFramework)
 
+#pragma mark - Touch
+
+// 设置额外热区(点击区域)
+@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
+
 #pragma mark - Transform
 
 // 获取当前view的transform scale x
