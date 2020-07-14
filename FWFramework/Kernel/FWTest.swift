@@ -49,13 +49,13 @@ class FWTestCase_FWTest_Swift: FWTestCase {
 
     @objc func testAsync() {
         var result = 0
-        fwSyncPerformAsyncBlock { completionHanlder in
-            DispatchQueue(label: "FWTestCase_FWTest_Swift").async {
-                Thread.sleep(forTimeInterval: 0.1)
-                result = 1
-                completionHanlder()
-            }
+        let semaphore = DispatchSemaphore(value: 0)
+        DispatchQueue(label: "FWTestCase_FWTest_Swift").async {
+            Thread.sleep(forTimeInterval: 0.1)
+            result = 1
+            semaphore.signal()
         }
+        semaphore.wait()
         assertTrue(value + result == 1)
     }
 }
