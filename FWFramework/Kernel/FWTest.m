@@ -10,7 +10,6 @@
 #import "FWTest.h"
 #import "FWLog.h"
 #import <objc/runtime.h>
-#import <UIKit/UIKit.h>
 
 #ifdef DEBUG
 
@@ -56,7 +55,6 @@
 
 @property (nonatomic, strong) NSMutableArray<Class> *testCases;
 @property (nonatomic, strong) NSString *testLogs;
-@property (nonatomic, strong) id testRunner;
 
 @end
 
@@ -68,28 +66,18 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self runTests];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 自动添加测试用例，创建队列执行单元测试并打印结果
+            [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
+            if ([FWUnitTest sharedInstance].testCases.count > 0) {
+                dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
+                dispatch_async(queue, ^{
+                    [[FWUnitTest sharedInstance] runTests];
+                    FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
+                });
+            }
+        });
     });
-}
-
-+ (void)runTests
-{
-    // 监听应用启动通知，自动执行框架单元测试
-    [FWUnitTest sharedInstance].testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
-        // 移除应用启动通知
-        [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
-        [FWUnitTest sharedInstance].testRunner = nil;
-        
-        // 自动添加测试用例，创建队列执行单元测试并打印结果
-        [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
-        if ([FWUnitTest sharedInstance].testCases.count > 0) {
-            dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
-            dispatch_async(queue, ^{
-                [[FWUnitTest sharedInstance] runTests];
-                FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
-            });
-        }
-    }];
 }
 
 + (NSArray<Class> *)testSuite
