@@ -22,13 +22,14 @@
 //  THE SOFTWARE.
 
 #import "FWBaseRequest.h"
-
 #import "FWNetworkAgent.h"
 #import "FWBatchRequest.h"
 #import "FWBatchRequestAgent.h"
 #import "FWChainRequest.h"
 #import "FWChainRequestAgent.h"
 #import "FWNetworkConfig.h"
+
+#import "FWCoroutine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -96,13 +97,7 @@ NS_ENUM(NSInteger) {
 
 @end
 
-NS_ASSUME_NONNULL_END
-
 #pragma mark - FWRequest+FWPromise
-
-#import "FWCoroutine.h"
-
-NS_ASSUME_NONNULL_BEGIN
 
 @class FWPromise;
 
