@@ -24,6 +24,7 @@
 #import "FWNetworkConfig.h"
 #import "FWRequest.h"
 #import "FWNetworkPrivate.h"
+#import "FWPromise.h"
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11
@@ -430,8 +431,6 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 @end
 
 #pragma mark - FWRequest+FWPromise
-
-#import "FWPromise.h"
 
 @implementation FWBaseRequest (FWPromise)
 

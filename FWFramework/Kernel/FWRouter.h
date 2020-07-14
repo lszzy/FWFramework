@@ -264,19 +264,4 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 
 @end
 
-#pragma mark - FWRouter+Navigation
-
-/*!
- @brief URL路由导航
- */
-@interface FWRouter (Navigation)
-
-// 使用最顶部的导航栏控制器打开控制器
-+ (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
-
-// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
-+ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
-
-@end
-
 NS_ASSUME_NONNULL_END
