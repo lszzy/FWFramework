@@ -274,8 +274,6 @@
 
 #pragma mark - Test
 
-#import "NSObject+FWBlock.h"
-
 @interface FWTestCase_FWTest_Objc : FWTestCase
 
 @property (nonatomic, assign) NSInteger value;
@@ -304,14 +302,14 @@
 - (void)testAsync
 {
     __block NSInteger result = 0;
-    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
-        dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
-        dispatch_async(queue, ^{
-            [NSThread sleepForTimeInterval:0.1];
-            result = 1;
-            completionHandler();
-        });
-    }];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:0.1];
+        result = 1;
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     FWAssertTrue(self.value + result == 1);
 }
 

@@ -8,7 +8,6 @@
  */
 
 #import "FWRouter.h"
-#import "NSURL+FWFramework.h"
 
 #pragma mark - FWRouter
 
@@ -386,7 +385,11 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         }
     }
     
-    for (NSString *pathComponent in [[NSURL fwURLWithString:URL] pathComponents]) {
+    NSURL *nsurl = [NSURL URLWithString:URL];
+    if (!nsurl && URL.length > 0) {
+        nsurl = [NSURL URLWithString:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    for (NSString *pathComponent in [nsurl pathComponents]) {
         if ([pathComponent isEqualToString:@"/"]) continue;
         if ([[pathComponent substringToIndex:1] isEqualToString:@"?"]) break;
         [pathComponents addObject:pathComponent];
@@ -448,7 +451,10 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     }
     
     // Extract Params From Query.
-    NSURL *nsurl = [NSURL fwURLWithString:url];
+    NSURL *nsurl = [NSURL URLWithString:url];
+    if (!nsurl && url.length > 0) {
+        nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
     if (nsurl) {
         NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
         

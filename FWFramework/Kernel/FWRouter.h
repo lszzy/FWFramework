@@ -7,7 +7,7 @@
  @updated    2018/11/29
  */
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -167,7 +167,6 @@
 #pragma mark - Test
 
 #import "FWTest.h"
-#import "NSObject+FWRuntime.h"
 #import <objc/message.h>
 
 @interface FWTestCase_FWRuntime : FWTestCase
