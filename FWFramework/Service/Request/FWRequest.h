@@ -97,3 +97,36 @@ NS_ENUM(NSInteger) {
 @end
 
 NS_ASSUME_NONNULL_END
+
+#pragma mark - FWRequest+FWPromise
+
+#import "FWCoroutine.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@class FWPromise;
+
+/*!
+ @brief FWRequest约定分类
+ */
+@interface FWBaseRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为request|error
+- (FWPromise *)promise;
+
+// 创建coroutine对象并开始请求，参数为request|error
+- (FWCoroutineClosure)coroutine;
+
+@end
+
+@interface FWBatchRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为request|error
+- (FWPromise *)promise;
+
+// 创建coroutine对象并开始请求，参数为request|error
+- (FWCoroutineClosure)coroutine;
+
+@end
+
+NS_ASSUME_NONNULL_END
