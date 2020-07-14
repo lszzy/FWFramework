@@ -24,6 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
 @property (nonatomic, assign) NSInteger fwMaxUnicodeLength;
 
+#pragma mark - AutoComplete
+
+// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval UI_APPEARANCE_SELECTOR;
+
+// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
+@property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
+
 #pragma mark - Return
 
 // 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate

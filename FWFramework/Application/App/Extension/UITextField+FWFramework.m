@@ -7,7 +7,7 @@
 //
 
 #import "UITextField+FWFramework.h"
-#import "NSString+FWEncode.h"
+#import "NSString+FWFramework.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
@@ -51,6 +51,40 @@
 {
     objc_setAssociatedObject(self, @selector(fwMaxUnicodeLength), @(fwMaxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self fwInnerLengthEvent];
+}
+
+#pragma mark - AutoComplete
+
+- (NSTimeInterval)fwAutoCompleteInterval
+{
+    NSTimeInterval interval = [objc_getAssociatedObject(self, @selector(fwAutoCompleteInterval)) doubleValue];
+    return interval > 0 ? interval : 1.0;
+}
+
+- (void)setFwAutoCompleteInterval:(NSTimeInterval)fwAutoCompleteInterval
+{
+    objc_setAssociatedObject(self, @selector(fwAutoCompleteInterval), @(fwAutoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void (^)(NSString *))fwAutoCompleteBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwAutoCompleteBlock));
+}
+
+- (void)setFwAutoCompleteBlock:(void (^)(NSString *))fwAutoCompleteBlock
+{
+    objc_setAssociatedObject(self, @selector(fwAutoCompleteBlock), fwAutoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self fwInnerLengthEvent];
+}
+
+- (NSTimeInterval)fwAutoCompleteTimestamp
+{
+    return [objc_getAssociatedObject(self, @selector(fwAutoCompleteTimestamp)) doubleValue];
+}
+
+- (void)setFwAutoCompleteTimestamp:(NSTimeInterval)fwAutoCompleteTimestamp
+{
+    objc_setAssociatedObject(self, @selector(fwAutoCompleteTimestamp), @(fwAutoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fwInnerLengthEvent
@@ -99,6 +133,22 @@
             if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
                 self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
             }
+        }
+    }
+    
+    // 自动完成回调
+    if (self.fwAutoCompleteBlock) {
+        self.fwAutoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
+        NSString *inputText = self.text;
+        if (inputText.fwTrimString.length < 1) {
+            self.fwAutoCompleteBlock(@"");
+        } else {
+            NSTimeInterval currentTimestamp = self.fwAutoCompleteTimestamp;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fwAutoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (currentTimestamp == self.fwAutoCompleteTimestamp) {
+                    self.fwAutoCompleteBlock(inputText);
+                }
+            });
         }
     }
 }

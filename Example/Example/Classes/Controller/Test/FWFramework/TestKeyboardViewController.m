@@ -20,6 +20,8 @@ FWPropertyStrong(UITextView *, inputView);
 
 FWPropertyStrong(UIButton *, submitButton);
 
+FWPropertyStrong(FWPopupMenu *, popupMenu);
+
 @end
 
 @implementation TestKeyboardViewController
@@ -79,6 +81,7 @@ FWPropertyStrong(UIButton *, submitButton);
     inputView.fwPlaceholder = @"建议，最多20个英文";
     inputView.returnKeyType = UIReturnKeyDone;
     inputView.fwReturnResign = YES;
+    inputView.fwKeyboardSpacing = 80;
     textView.fwReturnResponder = inputView;
     inputView.fwDelegate = self;
     [inputView fwAddDoneButton:UIBarStyleDefault title:nil];
@@ -93,6 +96,42 @@ FWPropertyStrong(UIButton *, submitButton);
     [self.view addSubview:submitButton];
     [submitButton fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:inputView withOffset:kAppPaddingLarge];
     [submitButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+}
+
+- (void)renderModel
+{
+    FWWeakifySelf();
+    self.mobileField.fwAutoCompleteBlock = ^(NSString * _Nonnull text) {
+        FWStrongifySelf();
+        if (text.length < 1) {
+            [self.popupMenu dismiss];
+        } else {
+            [self.popupMenu dismiss];
+            self.popupMenu = [FWPopupMenu showRelyOnView:self.mobileField
+                                                  titles:@[text]
+                                                   icons:nil
+                                               menuWidth:self.mobileField.fwWidth
+                                           otherSettings:^(FWPopupMenu * _Nonnull popupMenu) {
+                popupMenu.showMaskView = NO;
+            }];
+        }
+    };
+    
+    self.inputView.fwAutoCompleteBlock = ^(NSString * _Nonnull text) {
+        FWStrongifySelf();
+        if (text.length < 1) {
+            [self.popupMenu dismiss];
+        } else {
+            [self.popupMenu dismiss];
+            self.popupMenu = [FWPopupMenu showRelyOnView:self.inputView
+                                                  titles:@[text]
+                                                   icons:nil
+                                               menuWidth:self.inputView.fwWidth
+                                           otherSettings:^(FWPopupMenu * _Nonnull popupMenu) {
+                popupMenu.showMaskView = NO;
+            }];
+        }
+    };
 }
 
 #pragma mark - Action
