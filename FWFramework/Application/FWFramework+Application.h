@@ -45,6 +45,7 @@
 #import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"
+#import "FWStatisticalManager.h"
 #import "FWTabAnimated.h"
 #import "FWTagCollectionView.h"
 
