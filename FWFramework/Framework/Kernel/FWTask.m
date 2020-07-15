@@ -1,12 +1,12 @@
 //
-//  FWTaskManager.m
+//  FWTask.m
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/12.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "FWTaskManager.h"
+#import "FWTask.h"
 
 #pragma mark - FWTask
 
