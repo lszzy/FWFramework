@@ -15,7 +15,6 @@
 #import "FWTaskManager.h"
 #import "FWVersionManager.h"
 #import "FWLocationManager.h"
-#import "FWStatisticalManager.h"
 #import "FWStorekitManager.h"
 #import "FWNotificationManager.h"
 #import "FWNetwork.h"
