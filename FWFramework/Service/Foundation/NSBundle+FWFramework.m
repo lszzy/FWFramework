@@ -27,6 +27,4 @@
     return [[NSBundle mainBundle] localizedStringForKey:key value:nil table:table];
 }
 
-
-
 @end
