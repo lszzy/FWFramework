@@ -14,13 +14,8 @@
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-// Kernel
-#import <FWFramework/FWFramework+Kernel.h>
-
-// Service
-#if __has_include(<FWFramework/FWFramework+Service.h>)
-#import <FWFramework/FWFramework+Service.h>
-#endif
+// Framework
+#import <FWFramework/FWFramework+Framework.h>
 
 // Component
 #if __has_include(<FWFramework/FWFramework+Component.h>)
@@ -34,13 +29,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
 #else
 
-// Kernel
-#import "FWFramework+Kernel.h"
-
-// Service
-#if __has_include("FWFramework+Service.h")
-#import "FWFramework+Service.h"
-#endif
+// Framework
+#import "FWFramework+Framework.h"
 
 // Component
 #if __has_include("FWFramework+Component.h")
