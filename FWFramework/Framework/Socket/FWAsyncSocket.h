@@ -42,9 +42,13 @@ extern NSString *const FWAsyncSocketSSLProtocolVersionMax;
 extern NSString *const FWAsyncSocketSSLSessionOptionFalseStart;
 extern NSString *const FWAsyncSocketSSLSessionOptionSendOneByteRecord;
 extern NSString *const FWAsyncSocketSSLCipherSuites;
+extern NSString *const FWAsyncSocketSSLALPN;
 #if !TARGET_OS_IPHONE
 extern NSString *const FWAsyncSocketSSLDiffieHellmanParameters;
 #endif
+
+#define FWAsyncSocketLoggingContext 65535
+
 
 typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
 	FWAsyncSocketNoError = 0,           // Never used
@@ -84,7 +88,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
 - (instancetype)init;
 - (instancetype)initWithSocketQueue:(nullable dispatch_queue_t)sq;
 - (instancetype)initWithDelegate:(nullable id<FWAsyncSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq;
-- (instancetype)initWithDelegate:(nullable id<FWAsyncSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq socketQueue:(nullable dispatch_queue_t)sq;
+- (instancetype)initWithDelegate:(nullable id<FWAsyncSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq socketQueue:(nullable dispatch_queue_t)sq NS_DESIGNATED_INITIALIZER;
 
 /**
  * Create FWAsyncSocket from already connect BSD socket file descriptor
@@ -251,7 +255,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
  * struct sockaddr sa  -> NSData *dsa = [NSData dataWithBytes:&remoteAddr length:remoteAddr.sa_len];
  * struct sockaddr *sa -> NSData *dsa = [NSData dataWithBytes:remoteAddr length:remoteAddr->sa_len];
  * 
- * This method invokes connectToAdd
+ * This method invokes connectToAddress:remoteAddr viaInterface:nil withTimeout:-1 error:errPtr.
 **/
 - (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
 
@@ -432,7 +436,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
  * The given buffer will automatically be increased in size if needed.
  * 
  * If the timeout value is negative, the read operation will not use a timeout.
- * If the buffer if nil, the socket will create a buffer for you.
+ * If the buffer is nil, the socket will create a buffer for you.
  * 
  * If the bufferOffset is greater than the length of the given buffer,
  * the method will do nothing, and the delegate will not be called.
@@ -454,7 +458,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
  * A maximum of length bytes will be read.
  * 
  * If the timeout value is negative, the read operation will not use a timeout.
- * If the buffer if nil, a buffer will automatically be created for you.
+ * If the buffer is nil, a buffer will automatically be created for you.
  * If maxLength is zero, no length restriction is enforced.
  * 
  * If the bufferOffset is greater than the length of the given buffer,
@@ -486,7 +490,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
  * The given buffer will automatically be increased in size if needed.
  * 
  * If the timeout value is negative, the read operation will not use a timeout.
- * If the buffer if nil, a buffer will automatically be created for you.
+ * If the buffer is nil, a buffer will automatically be created for you.
  * 
  * If the length is 0, this method does nothing and the delegate is not called.
  * If the bufferOffset is greater than the length of the given buffer,
@@ -532,7 +536,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
  * The given buffer will automatically be increased in size if needed.
  * 
  * If the timeout value is negative, the read operation will not use a timeout.
- * If the buffer if nil, a buffer will automatically be created for you.
+ * If the buffer is nil, a buffer will automatically be created for you.
  * 
  * If the bufferOffset is greater than the length of the given buffer,
  * the method will do nothing (except maybe print a warning), and the delegate will not be called.
@@ -597,7 +601,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
  * The given buffer will automatically be increased in size if needed.
  * 
  * If the timeout value is negative, the read operation will not use a timeout.
- * If the buffer if nil, a buffer will automatically be created for you.
+ * If the buffer is nil, a buffer will automatically be created for you.
  * 
  * If maxLength is zero, no length restriction is enforced.
  * Otherwise if maxLength bytes are read without completing the read,
@@ -1113,7 +1117,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
 /**
  * Called when a socket has read in data, but has not yet completed the read.
  * This would occur if using readToData: or readToLength: methods.
- * It may be used to for things such as updating progress bars.
+ * It may be used for things such as updating progress bars.
 **/
 - (void)socket:(FWAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength tag:(long)tag;
 
@@ -1124,7 +1128,7 @@ typedef NS_ERROR_ENUM(FWAsyncSocketErrorDomain, FWAsyncSocketError) {
 
 /**
  * Called when a socket has written some data, but has not yet completed the entire write.
- * It may be used to for things such as updating progress bars.
+ * It may be used for things such as updating progress bars.
 **/
 - (void)socket:(FWAsyncSocket *)sock didWritePartialDataOfLength:(NSUInteger)partialLength tag:(long)tag;
 

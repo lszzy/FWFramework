@@ -34,8 +34,15 @@
 #define LogError(frmt, ...)     FWLogError(frmt, ##__VA_ARGS__)
 #define LogWarn(frmt, ...)      FWLogWarn(frmt, ##__VA_ARGS__)
 #define LogInfo(frmt, ...)      FWLogInfo(frmt, ##__VA_ARGS__)
-#define LogVerbose(frmt, ...)   {}
-#define LogTrace()              {}
+#define LogVerbose(frmt, ...)   FWLogVerbose(frmt, ##__VA_ARGS__)
+#define LogTrace()              FWLogVerbose(@"%@", NSStringFromSelector(_cmd))
+
+/**
+ * Seeing a return statements within an inner block
+ * can sometimes be mistaken for a return point of the enclosing method.
+ * This makes inline blocks a bit easier to read.
+**/
+#define return_from_block  return
 
 /**
  * A socket file descriptor is really just an integer.
@@ -61,6 +68,7 @@ NSString *const FWAsyncSocketSSLProtocolVersionMax = @"FWAsyncSocketSSLProtocolV
 NSString *const FWAsyncSocketSSLSessionOptionFalseStart = @"FWAsyncSocketSSLSessionOptionFalseStart";
 NSString *const FWAsyncSocketSSLSessionOptionSendOneByteRecord = @"FWAsyncSocketSSLSessionOptionSendOneByteRecord";
 NSString *const FWAsyncSocketSSLCipherSuites = @"FWAsyncSocketSSLCipherSuites";
+NSString *const FWAsyncSocketSSLALPN = @"FWAsyncSocketSSLALPN";
 #if !TARGET_OS_IPHONE
 NSString *const FWAsyncSocketSSLDiffieHellmanParameters = @"FWAsyncSocketSSLDiffieHellmanParameters";
 #endif
@@ -138,7 +146,7 @@ enum FWAsyncSocketConfig
 	uint8_t *writePointer;
 }
 
-- (id)initWithCapacity:(size_t)numBytes;
+- (instancetype)initWithCapacity:(size_t)numBytes NS_DESIGNATED_INITIALIZER;
 
 - (void)ensureCapacityForWrite:(size_t)numBytes;
 
@@ -161,7 +169,14 @@ enum FWAsyncSocketConfig
 
 @implementation FWAsyncSocketPreBuffer
 
-- (id)initWithCapacity:(size_t)numBytes
+// Cover the superclass' designated initializer
+- (instancetype)init NS_UNAVAILABLE
+{
+	NSAssert(0, @"Use the designated initializer");
+	return nil;
+}
+
+- (instancetype)initWithCapacity:(size_t)numBytes
 {
 	if ((self = [super init]))
 	{
@@ -284,13 +299,13 @@ enum FWAsyncSocketConfig
 	NSUInteger originalBufferLength;
 	long tag;
 }
-- (id)initWithData:(NSMutableData *)d
-       startOffset:(NSUInteger)s
-         maxLength:(NSUInteger)m
-           timeout:(NSTimeInterval)t
-        readLength:(NSUInteger)l
-        terminator:(NSData *)e
-               tag:(long)i;
+- (instancetype)initWithData:(NSMutableData *)d
+                 startOffset:(NSUInteger)s
+                   maxLength:(NSUInteger)m
+                     timeout:(NSTimeInterval)t
+                  readLength:(NSUInteger)l
+                  terminator:(NSData *)e
+                         tag:(long)i NS_DESIGNATED_INITIALIZER;
 
 - (void)ensureCapacityForAdditionalDataOfLength:(NSUInteger)bytesToRead;
 
@@ -306,13 +321,20 @@ enum FWAsyncSocketConfig
 
 @implementation FWAsyncReadPacket
 
-- (id)initWithData:(NSMutableData *)d
-       startOffset:(NSUInteger)s
-         maxLength:(NSUInteger)m
-           timeout:(NSTimeInterval)t
-        readLength:(NSUInteger)l
-        terminator:(NSData *)e
-               tag:(long)i
+// Cover the superclass' designated initializer
+- (instancetype)init NS_UNAVAILABLE
+{
+	NSAssert(0, @"Use the designated initializer");
+	return nil;
+}
+
+- (instancetype)initWithData:(NSMutableData *)d
+                 startOffset:(NSUInteger)s
+                   maxLength:(NSUInteger)m
+                     timeout:(NSTimeInterval)t
+                  readLength:(NSUInteger)l
+                  terminator:(NSData *)e
+                         tag:(long)i
 {
 	if((self = [super init]))
 	{
@@ -743,12 +765,19 @@ enum FWAsyncSocketConfig
 	long tag;
 	NSTimeInterval timeout;
 }
-- (id)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i;
+- (instancetype)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i NS_DESIGNATED_INITIALIZER;
 @end
 
 @implementation FWAsyncWritePacket
 
-- (id)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i
+// Cover the superclass' designated initializer
+- (instancetype)init NS_UNAVAILABLE
+{
+	NSAssert(0, @"Use the designated initializer");
+	return nil;
+}
+
+- (instancetype)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i
 {
 	if((self = [super init]))
 	{
@@ -776,12 +805,19 @@ enum FWAsyncSocketConfig
   @public
 	NSDictionary *tlsSettings;
 }
-- (id)initWithTLSSettings:(NSDictionary *)settings;
+- (instancetype)initWithTLSSettings:(NSDictionary <NSString*,NSObject*>*)settings NS_DESIGNATED_INITIALIZER;
 @end
 
 @implementation FWAsyncSpecialPacket
 
-- (id)initWithTLSSettings:(NSDictionary *)settings
+// Cover the superclass' designated initializer
+- (instancetype)init NS_UNAVAILABLE
+{
+	NSAssert(0, @"Use the designated initializer");
+	return nil;
+}
+
+- (instancetype)initWithTLSSettings:(NSDictionary <NSString*,NSObject*>*)settings
 {
 	if((self = [super init]))
 	{
@@ -852,27 +888,31 @@ enum FWAsyncSocketConfig
     NSTimeInterval alternateAddressDelay;
 }
 
-- (id)init
+- (instancetype)init
 {
 	return [self initWithDelegate:nil delegateQueue:NULL socketQueue:NULL];
 }
 
-- (id)initWithSocketQueue:(dispatch_queue_t)sq
+- (instancetype)initWithSocketQueue:(dispatch_queue_t)sq
 {
 	return [self initWithDelegate:nil delegateQueue:NULL socketQueue:sq];
 }
 
-- (id)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq
+- (instancetype)initWithDelegate:(id<FWAsyncSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq
 {
 	return [self initWithDelegate:aDelegate delegateQueue:dq socketQueue:NULL];
 }
 
-- (id)initWithDelegate:(id<FWAsyncSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq
+- (instancetype)initWithDelegate:(id<FWAsyncSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq
 {
 	if((self = [super init]))
 	{
 		delegate = aDelegate;
 		delegateQueue = dq;
+		
+		#if !OS_OBJECT_USE_OBJC
+		if (dq) dispatch_retain(dq);
+		#endif
 		
 		socket4FD = SOCKET_NULL;
 		socket6FD = SOCKET_NULL;
@@ -890,6 +930,9 @@ enum FWAsyncSocketConfig
 			         @"The given socketQueue parameter must not be a concurrent queue.");
 			
 			socketQueue = sq;
+			#if !OS_OBJECT_USE_OBJC
+			dispatch_retain(sq);
+			#endif
 		}
 		else
 		{
@@ -951,8 +994,14 @@ enum FWAsyncSocketConfig
 	
 	delegate = nil;
 	
+	#if !OS_OBJECT_USE_OBJC
+	if (delegateQueue) dispatch_release(delegateQueue);
+	#endif
 	delegateQueue = NULL;
 	
+	#if !OS_OBJECT_USE_OBJC
+	if (socketQueue) dispatch_release(socketQueue);
+	#endif
 	socketQueue = NULL;
 	
 	LogInfo(@"%@ - %@ (finish)", NSStringFromSelector(_cmd), self);
@@ -984,7 +1033,7 @@ enum FWAsyncSocketConfig
                                                            @"FWAsyncSocket", [NSBundle mainBundle],
                                                            @"Attempt to create socket from socket FD failed. getpeername() failed", nil);
       
-      NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+      NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 
       errorOccured = YES;
       if (error)
@@ -1006,7 +1055,7 @@ enum FWAsyncSocketConfig
                                                            @"FWAsyncSocket", [NSBundle mainBundle],
                                                            @"Attempt to create socket from socket FD failed. socket FD is neither IPv4 nor IPv6", nil);
       
-      NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+      NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
       
       errorOccured = YES;
       if (error)
@@ -1060,12 +1109,12 @@ enum FWAsyncSocketConfig
 	}
 }
 
-- (void)setDelegate:(id)newDelegate
+- (void)setDelegate:(id<FWAsyncSocketDelegate>)newDelegate
 {
 	[self setDelegate:newDelegate synchronously:NO];
 }
 
-- (void)synchronouslySetDelegate:(id)newDelegate
+- (void)synchronouslySetDelegate:(id<FWAsyncSocketDelegate>)newDelegate
 {
 	[self setDelegate:newDelegate synchronously:YES];
 }
@@ -1091,6 +1140,11 @@ enum FWAsyncSocketConfig
 - (void)setDelegateQueue:(dispatch_queue_t)newDelegateQueue synchronously:(BOOL)synchronously
 {
 	dispatch_block_t block = ^{
+		
+		#if !OS_OBJECT_USE_OBJC
+        if (self->delegateQueue) dispatch_release(self->delegateQueue);
+		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
+		#endif
 		
         self->delegateQueue = newDelegateQueue;
 	};
@@ -1144,6 +1198,11 @@ enum FWAsyncSocketConfig
 		
         self->delegate = newDelegate;
 		
+		#if !OS_OBJECT_USE_OBJC
+        if (self->delegateQueue) dispatch_release(self->delegateQueue);
+		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
+		#endif
+		
         self->delegateQueue = newDelegateQueue;
 	};
 	
@@ -1158,12 +1217,12 @@ enum FWAsyncSocketConfig
 	}
 }
 
-- (void)setDelegate:(id)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
+- (void)setDelegate:(id<FWAsyncSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
 {
 	[self setDelegate:newDelegate delegateQueue:newDelegateQueue synchronously:NO];
 }
 
-- (void)synchronouslySetDelegate:(id)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
+- (void)synchronouslySetDelegate:(id<FWAsyncSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
 {
 	[self setDelegate:newDelegate delegateQueue:newDelegateQueue synchronously:YES];
 }
@@ -1436,7 +1495,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate. Set a delegate first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
         if (self->delegateQueue == NULL) // Must have delegate queue set
@@ -1444,7 +1503,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate queue. Set a delegate queue first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
         BOOL isIPv4Disabled = (self->config & kIPv4Disabled) ? YES : NO;
@@ -1455,7 +1514,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Both IPv4 and IPv6 have been disabled. Must enable at least one protocol first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (![self isDisconnected]) // Must be disconnected
@@ -1463,7 +1522,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept while connected or accepting connections. Disconnect first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Clear queues (spurious read/write requests post disconnect)
@@ -1482,7 +1541,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Unknown interface. Specify valid interface by name (e.g. \"en1\") or IP address.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (isIPv4Disabled && (interface6 == nil))
@@ -1490,7 +1549,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv4 has been disabled and specified interface doesn't support IPv6.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (isIPv6Disabled && (interface4 == nil))
@@ -1498,7 +1557,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv6 has been disabled and specified interface doesn't support IPv4.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		BOOL enableIPv4 = !isIPv4Disabled && (interface4 != nil);
@@ -1513,7 +1572,7 @@ enum FWAsyncSocketConfig
 			
             if (self->socket4FD == SOCKET_NULL)
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -1541,7 +1600,7 @@ enum FWAsyncSocketConfig
                     self->socket4FD = SOCKET_NULL;
 				}
 				
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -1561,7 +1620,7 @@ enum FWAsyncSocketConfig
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
 				
 				__strong FWAsyncSocket *strongSelf = weakSelf;
-				if (strongSelf == nil) return;
+				if (strongSelf == nil) return_from_block;
 				
 				LogVerbose(@"event4Block");
 				
@@ -1579,6 +1638,11 @@ enum FWAsyncSocketConfig
             dispatch_source_set_cancel_handler(self->accept4Source, ^{
 			#pragma clang diagnostic push
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
+				
+				#if !OS_OBJECT_USE_OBJC
+				LogVerbose(@"dispatch_release(accept4Source)");
+				dispatch_release(acceptSource);
+				#endif
 				
 				LogVerbose(@"close(socket4FD)");
 				close(socketFD);
@@ -1604,7 +1668,7 @@ enum FWAsyncSocketConfig
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
 				
 				__strong FWAsyncSocket *strongSelf = weakSelf;
-				if (strongSelf == nil) return;
+				if (strongSelf == nil) return_from_block;
 				
 				LogVerbose(@"event6Block");
 				
@@ -1621,6 +1685,11 @@ enum FWAsyncSocketConfig
             dispatch_source_set_cancel_handler(self->accept6Source, ^{
 			#pragma clang diagnostic push
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
+				
+				#if !OS_OBJECT_USE_OBJC
+				LogVerbose(@"dispatch_release(accept6Source)");
+				dispatch_release(acceptSource);
+				#endif
 				
 				LogVerbose(@"close(socket6FD)");
 				close(socketFD);
@@ -1653,7 +1722,7 @@ enum FWAsyncSocketConfig
 	return result;
 }
 
-- (BOOL)acceptOnUrl:(NSURL *)url error:(NSError **)errPtr;
+- (BOOL)acceptOnUrl:(NSURL *)url error:(NSError **)errPtr
 {
 	LogTrace();
 	
@@ -1740,7 +1809,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate. Set a delegate first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
         if (self->delegateQueue == NULL) // Must have delegate queue set
@@ -1748,7 +1817,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate queue. Set a delegate queue first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (![self isDisconnected]) // Must be disconnected
@@ -1756,7 +1825,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept while connected or accepting connections. Disconnect first.";
 			err = [self badConfigError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Clear queues (spurious read/write requests post disconnect)
@@ -1773,7 +1842,7 @@ enum FWAsyncSocketConfig
 				NSString *msg = @"Could not remove previous unix domain socket at given url.";
 				err = [self otherError:msg];
 				
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -1786,7 +1855,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Invalid unix domain url. Specify a valid file url that does not exist (e.g. \"file:///tmp/socket\")";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Create sockets, configure, bind, and listen
@@ -1796,7 +1865,7 @@ enum FWAsyncSocketConfig
 		
         if (self->socketUN == SOCKET_NULL)
 		{
-			return;
+			return_from_block;
 		}
 		
         self->socketUrl = url;
@@ -1808,7 +1877,11 @@ enum FWAsyncSocketConfig
         int socketFD = self->socketUN;
         dispatch_source_t acceptSource = self->acceptUNSource;
 		
+		__weak FWAsyncSocket *weakSelf = self;
+		
         dispatch_source_set_event_handler(self->acceptUNSource, ^{ @autoreleasepool {
+			
+			__strong FWAsyncSocket *strongSelf = weakSelf;
 			
 			LogVerbose(@"eventUNBlock");
 			
@@ -1817,12 +1890,12 @@ enum FWAsyncSocketConfig
 			
 			LogVerbose(@"numPendingConnections: %lu", numPendingConnections);
 			
-			while ([self doAccept:socketFD] && (++i < numPendingConnections));
+			while ([strongSelf doAccept:socketFD] && (++i < numPendingConnections));
 		}});
 		
         dispatch_source_set_cancel_handler(self->acceptUNSource, ^{
 			
-#if NEEDS_DISPATCH_RETAIN_RELEASE
+#if !OS_OBJECT_USE_OBJC
 			LogVerbose(@"dispatch_release(acceptUNSource)");
 			dispatch_release(acceptSource);
 #endif
@@ -1935,7 +2008,7 @@ enum FWAsyncSocketConfig
 	
 	if (delegateQueue)
 	{
-		__strong id theDelegate = delegate;
+		__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 		
 		dispatch_async(delegateQueue, ^{ @autoreleasepool {
 			
@@ -1977,6 +2050,11 @@ enum FWAsyncSocketConfig
 			{
 				[theDelegate socket:self didAcceptNewSocket:acceptedSocket];
 			}
+			
+			// Release the socket queue returned from the delegate (it was retained by acceptedSocket)
+			#if !OS_OBJECT_USE_OBJC
+			if (childSocketQueue) dispatch_release(childSocketQueue);
+			#endif
 			
 			// The accepted socket should have been retained by the delegate.
 			// Otherwise it gets properly released when exiting the block.
@@ -2182,14 +2260,14 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Invalid host parameter (nil or \"\"). Should be a domain name or IP address string.";
 			preConnectErr = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Run through standard pre-connect checks
 		
 		if (![self preConnectWithInterface:interface error:&preConnectErr])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// We've made it past all the checks.
@@ -2217,7 +2295,7 @@ enum FWAsyncSocketConfig
 			NSMutableArray *addresses = [[self class] lookupHost:hostCpy port:port error:&lookupErr];
 			
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return;
+			if (strongSelf == nil) return_from_block;
 			
 			if (lookupErr)
 			{
@@ -2323,7 +2401,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"A valid IPv4 or IPv6 address was not given";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
         BOOL isIPv4Disabled = (self->config & kIPv4Disabled) ? YES : NO;
@@ -2334,7 +2412,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv4 has been disabled and an IPv4 address was passed.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (isIPv6Disabled && (address6 != nil))
@@ -2342,14 +2420,14 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv6 has been disabled and an IPv6 address was passed.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Run through standard pre-connect checks
 		
 		if (![self preConnectWithInterface:interface error:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// We've made it past all the checks.
@@ -2357,7 +2435,7 @@ enum FWAsyncSocketConfig
 		
 		if (![self connectWithAddress4:address4 address6:address6 error:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
         self->flags |= kSocketStarted;
@@ -2381,7 +2459,7 @@ enum FWAsyncSocketConfig
 	return result;
 }
 
-- (BOOL)connectToUrl:(NSURL *)url withTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr;
+- (BOOL)connectToUrl:(NSURL *)url withTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr
 {
 	LogTrace();
 	
@@ -2397,14 +2475,14 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Invalid unix domain socket url.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Run through standard pre-connect checks
 		
 		if (![self preConnectWithUrl:url error:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// We've made it past all the checks.
@@ -2419,7 +2497,7 @@ enum FWAsyncSocketConfig
 		{
 			[self closeWithError:connectError];
 			
-			return;
+			return_from_block;
 		}
 
 		[self startConnectTimeout:timeout];
@@ -2611,14 +2689,14 @@ enum FWAsyncSocketConfig
         int err = errno;
         
         __strong FWAsyncSocket *strongSelf = weakSelf;
-        if (strongSelf == nil) return;
+        if (strongSelf == nil) return_from_block;
         
         dispatch_async(strongSelf->socketQueue, ^{ @autoreleasepool {
             
             if (strongSelf.isConnected)
             {
                 [strongSelf closeSocket:socketFD];
-                return;
+                return_from_block;
             }
             
             if (result == 0)
@@ -2906,7 +2984,7 @@ enum FWAsyncSocketConfig
 	uint16_t port = [self connectedPort];
 	NSURL *url = [self connectedUrl];
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 	if (delegateQueue && host != nil && [theDelegate respondsToSelector:@selector(socket:didConnectToHost:port:)])
 	{
@@ -2999,12 +3077,25 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return;
+			if (strongSelf == nil) return_from_block;
 			
 			[strongSelf doConnectTimeout];
 			
 		#pragma clang diagnostic pop
 		}});
+		
+		#if !OS_OBJECT_USE_OBJC
+		dispatch_source_t theConnectTimer = connectTimer;
+		dispatch_source_set_cancel_handler(connectTimer, ^{
+		#pragma clang diagnostic push
+		#pragma clang diagnostic warning "-Wimplicit-retain-self"
+			
+			LogVerbose(@"dispatch_release(connectTimer)");
+			dispatch_release(theConnectTimer);
+			
+		#pragma clang diagnostic pop
+		});
+		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC));
 		dispatch_source_set_timer(connectTimer, tt, DISPATCH_TIME_FOREVER, 0);
@@ -3214,7 +3305,7 @@ enum FWAsyncSocketConfig
 	
 	if (shouldCallDelegate)
 	{
-		__strong id theDelegate = delegate;
+		__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 		__strong id theSelf = isDeallocating ? nil : self;
 		
 		if (delegateQueue && [theDelegate respondsToSelector: @selector(socketDidDisconnect:withError:)])
@@ -3329,14 +3420,14 @@ enum FWAsyncSocketConfig
 
 - (NSError *)badConfigError:(NSString *)errMsg
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketBadConfigError userInfo:userInfo];
 }
 
 - (NSError *)badParamError:(NSString *)errMsg
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketBadParamError userInfo:userInfo];
 }
@@ -3344,7 +3435,7 @@ enum FWAsyncSocketConfig
 + (NSError *)gaiError:(int)gai_error
 {
 	NSString *errMsg = [NSString stringWithCString:gai_strerror(gai_error) encoding:NSASCIIStringEncoding];
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:@"kCFStreamErrorDomainNetDB" code:gai_error userInfo:userInfo];
 }
@@ -3352,8 +3443,8 @@ enum FWAsyncSocketConfig
 - (NSError *)errorWithErrno:(int)err reason:(NSString *)reason
 {
 	NSString *errMsg = [NSString stringWithUTF8String:strerror(err)];
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:errMsg, NSLocalizedDescriptionKey,
-	                                                                    reason, NSLocalizedFailureReasonErrorKey, nil];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg,
+							   NSLocalizedFailureReasonErrorKey : reason};
 	
 	return [NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:userInfo];
 }
@@ -3361,7 +3452,7 @@ enum FWAsyncSocketConfig
 - (NSError *)errnoError
 {
 	NSString *errMsg = [NSString stringWithUTF8String:strerror(errno)];
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:userInfo];
 }
@@ -3369,7 +3460,7 @@ enum FWAsyncSocketConfig
 - (NSError *)sslError:(OSStatus)ssl_error
 {
 	NSString *msg = @"Error code definition can be found in Apple's SecureTransport.h";
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:msg forKey:NSLocalizedRecoverySuggestionErrorKey];
+	NSDictionary *userInfo = @{NSLocalizedRecoverySuggestionErrorKey : msg};
 	
 	return [NSError errorWithDomain:@"kCFStreamErrorDomainSSL" code:ssl_error userInfo:userInfo];
 }
@@ -3380,7 +3471,7 @@ enum FWAsyncSocketConfig
 	                                                     @"FWAsyncSocket", [NSBundle mainBundle],
 	                                                     @"Attempt to connect to host timed out", nil);
 	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketConnectTimeoutError userInfo:userInfo];
 }
@@ -3394,7 +3485,7 @@ enum FWAsyncSocketConfig
 														 @"FWAsyncSocket", [NSBundle mainBundle],
 														 @"Read operation reached set maximum length", nil);
 	
-	NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *info = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketReadMaxedOutError userInfo:info];
 }
@@ -3408,7 +3499,7 @@ enum FWAsyncSocketConfig
 	                                                     @"FWAsyncSocket", [NSBundle mainBundle],
 	                                                     @"Read operation timed out", nil);
 	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketReadTimeoutError userInfo:userInfo];
 }
@@ -3422,7 +3513,7 @@ enum FWAsyncSocketConfig
 	                                                     @"FWAsyncSocket", [NSBundle mainBundle],
 	                                                     @"Write operation timed out", nil);
 	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketWriteTimeoutError userInfo:userInfo];
 }
@@ -3433,14 +3524,14 @@ enum FWAsyncSocketConfig
 	                                                     @"FWAsyncSocket", [NSBundle mainBundle],
 	                                                     @"Socket closed by remote peer", nil);
 	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketClosedError userInfo:userInfo];
 }
 
 - (NSError *)otherError:(NSString *)errMsg
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncSocketErrorDomain code:FWAsyncSocketOtherError userInfo:userInfo];
 }
@@ -3946,7 +4037,8 @@ enum FWAsyncSocketConfig
 	}
 	if ([components count] > 1 && port == 0)
 	{
-		long portL = strtol([[components objectAtIndex:1] UTF8String], NULL, 10);
+		NSString *temp = [components objectAtIndex:1];
+		long portL = strtol([temp UTF8String], NULL, 10);
 		
 		if (portL > 0 && portL <= UINT16_MAX)
 		{
@@ -4086,7 +4178,7 @@ enum FWAsyncSocketConfig
 	if (interfaceAddr6Ptr) *interfaceAddr6Ptr = addr6;
 }
 
-- (NSData *)getInterfaceAddressFromUrl:(NSURL *)url;
+- (NSData *)getInterfaceAddressFromUrl:(NSURL *)url
 {
 	NSString *path = url.path;
 	if (path.length == 0) {
@@ -4116,7 +4208,7 @@ enum FWAsyncSocketConfig
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		__strong FWAsyncSocket *strongSelf = weakSelf;
-		if (strongSelf == nil) return;
+		if (strongSelf == nil) return_from_block;
 		
 		LogVerbose(@"readEventBlock");
 		
@@ -4136,7 +4228,7 @@ enum FWAsyncSocketConfig
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		__strong FWAsyncSocket *strongSelf = weakSelf;
-		if (strongSelf == nil) return;
+		if (strongSelf == nil) return_from_block;
 		
 		LogVerbose(@"writeEventBlock");
 		
@@ -4150,11 +4242,21 @@ enum FWAsyncSocketConfig
 	
 	__block int socketFDRefCount = 2;
 	
+	#if !OS_OBJECT_USE_OBJC
+	dispatch_source_t theReadSource = readSource;
+	dispatch_source_t theWriteSource = writeSource;
+	#endif
+	
 	dispatch_source_set_cancel_handler(readSource, ^{
 	#pragma clang diagnostic push
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		LogVerbose(@"readCancelBlock");
+		
+		#if !OS_OBJECT_USE_OBJC
+		LogVerbose(@"dispatch_release(readSource)");
+		dispatch_release(theReadSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -4170,6 +4272,11 @@ enum FWAsyncSocketConfig
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		LogVerbose(@"writeCancelBlock");
+		
+		#if !OS_OBJECT_USE_OBJC
+		LogVerbose(@"dispatch_release(writeSource)");
+		dispatch_release(theWriteSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -5386,7 +5493,7 @@ enum FWAsyncSocketConfig
 		// that upperbound could be smaller than the desired length.
 		waiting = YES;
 
-		__strong id theDelegate = delegate;
+		__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 		
 		if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:didReadPartialDataOfLength:tag:)])
 		{
@@ -5500,7 +5607,7 @@ enum FWAsyncSocketConfig
 			
 			// Notify the delegate that we're going half-duplex
 			
-			__strong id theDelegate = delegate;
+			__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 			if (delegateQueue && [theDelegate respondsToSelector:@selector(socketDidCloseReadStream:)])
 			{
@@ -5592,7 +5699,7 @@ enum FWAsyncSocketConfig
 		result = [NSData dataWithBytesNoCopy:buffer length:currentRead->bytesDone freeWhenDone:NO];
 	}
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:didReadData:withTag:)])
 	{
@@ -5631,12 +5738,25 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 			
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return;
+			if (strongSelf == nil) return_from_block;
 			
 			[strongSelf doReadTimeout];
 			
 		#pragma clang diagnostic pop
 		}});
+		
+		#if !OS_OBJECT_USE_OBJC
+		dispatch_source_t theReadTimer = readTimer;
+		dispatch_source_set_cancel_handler(readTimer, ^{
+		#pragma clang diagnostic push
+		#pragma clang diagnostic warning "-Wimplicit-retain-self"
+			
+			LogVerbose(@"dispatch_release(readTimer)");
+			dispatch_release(theReadTimer);
+			
+		#pragma clang diagnostic pop
+		});
+		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC));
 		
@@ -5654,7 +5774,7 @@ enum FWAsyncSocketConfig
 	
 	flags |= kReadsPaused;
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:shouldTimeoutReadWithTag:elapsed:bytesDone:)])
 	{
@@ -6191,7 +6311,7 @@ enum FWAsyncSocketConfig
 		{
 			// We're not done with the entire write, but we have written some bytes
 			
-			__strong id theDelegate = delegate;
+			__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 			if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:didWritePartialDataOfLength:tag:)])
 			{
@@ -6222,7 +6342,7 @@ enum FWAsyncSocketConfig
 	NSAssert(currentWrite, @"Trying to complete current write when there is no current write.");
 	
 
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 	
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:didWriteDataWithTag:)])
 	{
@@ -6261,12 +6381,25 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 			
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return;
+			if (strongSelf == nil) return_from_block;
 			
 			[strongSelf doWriteTimeout];
 			
 		#pragma clang diagnostic pop
 		}});
+		
+		#if !OS_OBJECT_USE_OBJC
+		dispatch_source_t theWriteTimer = writeTimer;
+		dispatch_source_set_cancel_handler(writeTimer, ^{
+		#pragma clang diagnostic push
+		#pragma clang diagnostic warning "-Wimplicit-retain-self"
+			
+			LogVerbose(@"dispatch_release(writeTimer)");
+			dispatch_release(theWriteTimer);
+			
+		#pragma clang diagnostic pop
+		});
+		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC));
 		
@@ -6284,7 +6417,7 @@ enum FWAsyncSocketConfig
 	
 	flags |= kWritesPaused;
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:shouldTimeoutWriteWithTag:elapsed:bytesDone:)])
 	{
@@ -6673,7 +6806,8 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// Create SSLContext, and setup IO callbacks and connection ref
 	
-	BOOL isServer = [[tlsSettings objectForKey:(__bridge NSString *)kCFStreamSSLIsServer] boolValue];
+	NSNumber *isServerNumber = [tlsSettings objectForKey:(__bridge NSString *)kCFStreamSSLIsServer];
+	BOOL isServer = [isServerNumber boolValue];
 	
 	#if TARGET_OS_IPHONE || (__MAC_OS_X_VERSION_MIN_REQUIRED >= 1080)
 	{
@@ -6714,8 +6848,8 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	}
 
 
-	BOOL shouldManuallyEvaluateTrust = [[tlsSettings objectForKey:FWAsyncSocketManuallyEvaluateTrust] boolValue];
-	if (shouldManuallyEvaluateTrust)
+	NSNumber *shouldManuallyEvaluateTrust = [tlsSettings objectForKey:FWAsyncSocketManuallyEvaluateTrust];
+	if ([shouldManuallyEvaluateTrust boolValue])
 	{
 		if (isServer)
 		{
@@ -6761,6 +6895,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	//  7. FWAsyncSocketSSLSessionOptionSendOneByteRecord
 	//  8. FWAsyncSocketSSLCipherSuites
 	//  9. FWAsyncSocketSSLDiffieHellmanParameters (Mac)
+    // 10. FWAsyncSocketSSLALPN
 	//
 	// Deprecated (throw error):
 	// 10. kCFStreamSSLAllowsAnyRoot
@@ -6769,7 +6904,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	// 13. kCFStreamSSLValidatesCertificateChain
 	// 14. kCFStreamSSLLevel
 	
-	id value;
+	NSObject *value;
 	
 	// 1. kCFStreamSSLPeerName
 	
@@ -6801,9 +6936,9 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	value = [tlsSettings objectForKey:(__bridge NSString *)kCFStreamSSLCertificates];
 	if ([value isKindOfClass:[NSArray class]])
 	{
-		CFArrayRef certs = (__bridge CFArrayRef)value;
+		NSArray *certs = (NSArray *)value;
 		
-		status = SSLSetCertificate(sslContext, certs);
+		status = SSLSetCertificate(sslContext, (__bridge CFArrayRef)certs);
 		if (status != noErr)
 		{
 			[self closeWithError:[self otherError:@"Error in SSLSetCertificate"]];
@@ -6895,7 +7030,8 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	value = [tlsSettings objectForKey:FWAsyncSocketSSLSessionOptionFalseStart];
 	if ([value isKindOfClass:[NSNumber class]])
 	{
-		status = SSLSetSessionOption(sslContext, kSSLSessionOptionFalseStart, [value boolValue]);
+		NSNumber *falseStart = (NSNumber *)value;
+		status = SSLSetSessionOption(sslContext, kSSLSessionOptionFalseStart, [falseStart boolValue]);
 		if (status != noErr)
 		{
 			[self closeWithError:[self otherError:@"Error in SSLSetSessionOption (kSSLSessionOptionFalseStart)"]];
@@ -6915,7 +7051,8 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	value = [tlsSettings objectForKey:FWAsyncSocketSSLSessionOptionSendOneByteRecord];
 	if ([value isKindOfClass:[NSNumber class]])
 	{
-		status = SSLSetSessionOption(sslContext, kSSLSessionOptionSendOneByteRecord, [value boolValue]);
+		NSNumber *oneByteRecord = (NSNumber *)value;
+		status = SSLSetSessionOption(sslContext, kSSLSessionOptionSendOneByteRecord, [oneByteRecord boolValue]);
 		if (status != noErr)
 		{
 			[self closeWithError:
@@ -6986,7 +7123,36 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		return;
 	}
 	#endif
-	
+
+    // 10. kCFStreamSSLCertificates
+    value = [tlsSettings objectForKey:FWAsyncSocketSSLALPN];
+    if ([value isKindOfClass:[NSArray class]])
+    {
+        if (@available(iOS 11.0, macOS 10.13, tvOS 11.0, *))
+        {
+            CFArrayRef protocols = (__bridge CFArrayRef)((NSArray *) value);
+            status = SSLSetALPNProtocols(sslContext, protocols);
+            if (status != noErr)
+            {
+                [self closeWithError:[self otherError:@"Error in SSLSetALPNProtocols"]];
+                return;
+            }
+        }
+        else
+        {
+            NSAssert(NO, @"Security option unavailable - FWAsyncSocketSSLALPN"
+                     @" - iOS 11.0, macOS 10.13 required");
+            [self closeWithError:[self otherError:@"Security option unavailable - FWAsyncSocketSSLALPN"]];
+        }
+    }
+    else if (value)
+    {
+        NSAssert(NO, @"Invalid value for FWAsyncSocketSSLALPN. Value must be of type NSArray.");
+        
+        [self closeWithError:[self otherError:@"Invalid value for FWAsyncSocketSSLALPN."]];
+        return;
+    }
+    
 	// DEPRECATED checks
 	
 	// 10. kCFStreamSSLAllowsAnyRoot
@@ -7112,7 +7278,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		
 		flags |=  kSocketSecure;
 		
-		__strong id theDelegate = delegate;
+		__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 		if (delegateQueue && [theDelegate respondsToSelector:@selector(socketDidSecure:)])
 		{
@@ -7166,7 +7332,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		#pragma clang diagnostic pop
 		}};
 		
-		__strong id theDelegate = delegate;
+		__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 		
 		if (delegateQueue && [theDelegate respondsToSelector:@selector(socket:didReceiveTrust:completionHandler:)])
 		{
@@ -7250,7 +7416,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		
 		flags |= kSocketSecure;
 		
-		__strong id theDelegate = delegate;
+		__strong id<FWAsyncSocketDelegate> theDelegate = delegate;
 
 		if (delegateQueue && [theDelegate respondsToSelector:@selector(socketDidSecure:)])
 		{
@@ -7395,7 +7561,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		if (++cfstreamThreadRetainCount == 1)
 		{
 			cfstreamThread = [[NSThread alloc] initWithTarget:self
-			                                         selector:@selector(cfstreamThread)
+			                                         selector:@selector(cfstreamThread:)
 			                                           object:nil];
 			[cfstreamThread start];
 		}
@@ -7421,7 +7587,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		if (cfstreamThreadRetainCount == 0)
 		{
 			LogWarn(@"Logic error concerning cfstreamThread start / stop");
-			return;
+			return_from_block;
 		}
 		
 		if (--cfstreamThreadRetainCount == 0)
@@ -7441,7 +7607,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	}});
 }
 
-+ (void)cfstreamThread { @autoreleasepool
++ (void)cfstreamThread:(id)unused { @autoreleasepool
 {
 	[[NSThread currentThread] setName:FWAsyncSocketThreadName];
 	
@@ -7509,7 +7675,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 				LogVerbose(@"CFReadStreamCallback - HasBytesAvailable");
 				
 				if (asyncSocket->readStream != stream)
-					return;
+					return_from_block;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7545,7 +7711,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 				LogVerbose(@"CFReadStreamCallback - Other");
 				
 				if (asyncSocket->readStream != stream)
-					return;
+					return_from_block;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7576,7 +7742,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 				LogVerbose(@"CFWriteStreamCallback - CanAcceptBytes");
 				
 				if (asyncSocket->writeStream != stream)
-					return;
+					return_from_block;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7612,7 +7778,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 				LogVerbose(@"CFWriteStreamCallback - Other");
 				
 				if (asyncSocket->writeStream != stream)
-					return;
+					return_from_block;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7977,7 +8143,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	r1 = CFReadStreamSetProperty(readStream, kCFStreamNetworkServiceType, kCFStreamNetworkServiceTypeVoIP);
 	r2 = CFWriteStreamSetProperty(writeStream, kCFStreamNetworkServiceType, kCFStreamNetworkServiceTypeVoIP);
 #pragma clang diagnostic pop
-	
+
 	if (!r1 || !r2)
 	{
 		return NO;
@@ -8125,7 +8291,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 					// Found IPv6 address.
 					// Wrap the native address structure, and add to results.
 					
-					struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *)res->ai_addr;
+					struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *)(void *)res->ai_addr;
 					in_port_t *portPtr = &sockaddr->sin6_port;
 					if ((portPtr != NULL) && (*portPtr == 0)) {
 					        *portPtr = htons(port);

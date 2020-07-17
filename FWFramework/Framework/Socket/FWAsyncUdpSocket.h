@@ -180,22 +180,22 @@ typedef BOOL (^FWAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, l
 **/
 - (instancetype)init;
 - (instancetype)initWithSocketQueue:(nullable dispatch_queue_t)sq;
-- (instancetype)initWithDelegate:(nullable id <FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq;
-- (instancetype)initWithDelegate:(nullable id <FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq socketQueue:(nullable dispatch_queue_t)sq;
+- (instancetype)initWithDelegate:(nullable id<FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq;
+- (instancetype)initWithDelegate:(nullable id<FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq socketQueue:(nullable dispatch_queue_t)sq NS_DESIGNATED_INITIALIZER;
 
 #pragma mark Configuration
 
-- (nullable id <FWAsyncUdpSocketDelegate>)delegate;
-- (void)setDelegate:(nullable id <FWAsyncUdpSocketDelegate>)delegate;
-- (void)synchronouslySetDelegate:(nullable id <FWAsyncUdpSocketDelegate>)delegate;
+- (nullable id<FWAsyncUdpSocketDelegate>)delegate;
+- (void)setDelegate:(nullable id<FWAsyncUdpSocketDelegate>)delegate;
+- (void)synchronouslySetDelegate:(nullable id<FWAsyncUdpSocketDelegate>)delegate;
 
 - (nullable dispatch_queue_t)delegateQueue;
 - (void)setDelegateQueue:(nullable dispatch_queue_t)delegateQueue;
 - (void)synchronouslySetDelegateQueue:(nullable dispatch_queue_t)delegateQueue;
 
-- (void)getDelegate:(id <FWAsyncUdpSocketDelegate> __nullable * __nullable)delegatePtr delegateQueue:(dispatch_queue_t __nullable * __nullable)delegateQueuePtr;
-- (void)setDelegate:(nullable id <FWAsyncUdpSocketDelegate>)delegate delegateQueue:(nullable dispatch_queue_t)delegateQueue;
-- (void)synchronouslySetDelegate:(nullable id <FWAsyncUdpSocketDelegate>)delegate delegateQueue:(nullable dispatch_queue_t)delegateQueue;
+- (void)getDelegate:(id<FWAsyncUdpSocketDelegate> __nullable * __nullable)delegatePtr delegateQueue:(dispatch_queue_t __nullable * __nullable)delegateQueuePtr;
+- (void)setDelegate:(nullable id<FWAsyncUdpSocketDelegate>)delegate delegateQueue:(nullable dispatch_queue_t)delegateQueue;
+- (void)synchronouslySetDelegate:(nullable id<FWAsyncUdpSocketDelegate>)delegate delegateQueue:(nullable dispatch_queue_t)delegateQueue;
 
 /**
  * By default, both IPv4 and IPv6 are enabled.
