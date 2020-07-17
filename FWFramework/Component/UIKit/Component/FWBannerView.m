@@ -819,13 +819,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
                 [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
             }
         } else {
-            // FWImage
             UIImage *image = [UIImage imageNamed:imagePath];
-            // FWImage
             cell.imageView.image = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
-        // FWImage
         cell.imageView.image = (UIImage *)imagePath;
     }
     

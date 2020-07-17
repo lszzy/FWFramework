@@ -755,7 +755,6 @@ static NSString * const kEmptyViewImageAnimationKey = @"emptyViewImageAnimation"
             
             // Configure Image
             if (image) {
-                // FWImage
                 view.imageView.image = [image imageWithRenderingMode:renderingMode];
                 view.imageView.tintColor = imageTintColor;
             }
