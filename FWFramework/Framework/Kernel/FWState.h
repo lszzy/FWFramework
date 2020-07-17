@@ -100,7 +100,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 状态改变通知
 extern NSString *const FWStateChangedNotification;
 
-// 有限状态机，参考：https://github.com/blakewatters/TransitionKit
+/*!
+ @brief 有限状态机
+ 
+ @see https://github.com/blakewatters/TransitionKit
+ */
 @interface FWStateMachine : NSObject
 
 // 状态列表，只读

@@ -267,14 +267,36 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     return self;
 }
 
+- (NSInteger)maxConcurrentTaskCount
+{
+    return _taskQueue.maxConcurrentOperationCount;
+}
+
 - (void)setMaxConcurrentTaskCount:(NSInteger)maxConcurrentTaskCount
 {
     _taskQueue.maxConcurrentOperationCount = maxConcurrentTaskCount;
 }
 
-- (NSInteger)maxConcurrentTaskCount
+- (BOOL)isSuspended
 {
-    return _taskQueue.maxConcurrentOperationCount;
+    return _taskQueue.isSuspended;
+}
+
+- (void)setIsSuspended:(BOOL)isSuspended
+{
+    _taskQueue.suspended = isSuspended;
+}
+
+- (void)addTask:(NSOperation *)task
+{
+    [_taskQueue addOperation:task];
+}
+
+- (void)addTasks:(NSArray<NSOperation *> *)tasks
+{
+    if (tasks.count > 0) {
+        [_taskQueue addOperations:tasks waitUntilFinished:NO];
+    }
 }
 
 - (void)addTaskConfig:(NSArray<NSDictionary *> *)config
@@ -282,13 +304,13 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     NSMutableDictionary *taskMap = [[NSMutableDictionary alloc] init];
     
     for (NSDictionary *taskInfo in config) {
-        //className
+        // className
         NSString *className = [taskInfo objectForKey:@"className"];
         Class clazz = NSClassFromString(className);
         if ([clazz isSubclassOfClass:[NSOperation class]]) {
             NSOperation *task = [[clazz alloc] init];
             [taskMap setObject:task forKey:className];
-            //dependency
+            // dependency
             NSArray *dependencyList = [[taskInfo objectForKey:@"dependency"] componentsSeparatedByString:@","];
             if (dependencyList.count) {
                 for (NSString *depedencyClass in dependencyList) {
@@ -302,16 +324,14 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     [self addTasks:[taskMap allValues]];
 }
 
-- (void)addTasks:(NSArray<NSOperation *> *)tasks
+- (void)cancelAllTasks
 {
-    if (tasks.count) {
-        [_taskQueue addOperations:tasks waitUntilFinished:NO];
-    }
+    [_taskQueue cancelAllOperations];
 }
 
-- (void)addTask:(NSOperation *)task
+- (void)waitUntilFinished
 {
-    [_taskQueue addOperation:task];
+    [_taskQueue waitUntilAllOperationsAreFinished];
 }
 
 @end
