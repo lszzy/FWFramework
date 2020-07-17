@@ -533,7 +533,6 @@ static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
     
     UIImage *image = nil;
     [imageLock lock];
-    // FWImage
     image = [UIImage imageWithData:data];
     [imageLock unlock];
     
