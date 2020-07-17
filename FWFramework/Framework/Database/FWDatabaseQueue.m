@@ -1,13 +1,13 @@
-/*!
- @header     FWDatabaseQueue.m
- @indexgroup FWFramework
- @brief      FWDatabaseQueue
- @author     wuyong
- @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/26
- */
+//
+//  FWDatabaseQueue.m
+//  fmdb
+//
+//  Created by August Mueller on 6/22/11.
+//  Copyright 2011 Flying Meat Inc. All rights reserved.
+//
 
 #import "FWDatabaseQueue.h"
+#import "FWDatabase.h"
 #import <sqlite3.h>
 
 typedef NS_ENUM(NSInteger, FWDBTransaction) {
@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, FWDBTransaction) {
 
 /*
  
- Note: we call [self retain]; before using dispatch_sync, just incase
+ Note: we call [self retain]; before using dispatch_sync, just incase 
  FWDatabaseQueue is released on another thread and we're in the middle of doing
  something in dispatch_sync
  
@@ -84,7 +84,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         
         _path = aPath;
         
-        _queue = dispatch_queue_create([[NSString stringWithFormat:@"fwdb.%@", self] UTF8String], NULL);
+        _queue = dispatch_queue_create([[NSString stringWithFormat:@"fmdb.%@", self] UTF8String], NULL);
         dispatch_queue_set_specific(_queue, kDispatchQueueSpecificKey, (__bridge void *)self, NULL);
         _openFlags = openFlags;
         _vfsName = [vfsName copy];
@@ -134,7 +134,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 - (FWDatabase*)database {
     if (![_db isOpen]) {
         if (!_db) {
-            _db = [[[self class] databaseClass] databaseWithPath:_path];
+           _db = [[[self class] databaseClass] databaseWithPath:_path];
         }
         
 #if SQLITE_VERSION_NUMBER >= 3005000
@@ -181,10 +181,10 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 }
 
 - (void)beginTransaction:(FWDBTransaction)transaction withBlock:(void (^)(FWDatabase *db, BOOL *rollback))block {
-    dispatch_sync(_queue, ^() {
+    dispatch_sync(_queue, ^() { 
         
         BOOL shouldRollback = NO;
-        
+
         switch (transaction) {
             case FWDBTransactionExclusive:
                 [[self database] beginTransaction];
@@ -228,7 +228,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 #if SQLITE_VERSION_NUMBER >= 3007000
     static unsigned long savePointIdx = 0;
     __block NSError *err = 0x00;
-    dispatch_sync(_queue, ^() {
+    dispatch_sync(_queue, ^() { 
         
         NSString *name = [NSString stringWithFormat:@"savePoint%ld", savePointIdx++];
         
@@ -267,15 +267,11 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 - (BOOL)checkpoint:(FWDBCheckpointMode)mode name:(NSString *)name logFrameCount:(int * _Nullable)logFrameCount checkpointCount:(int * _Nullable)checkpointCount error:(NSError * __autoreleasing _Nullable * _Nullable)error
 {
     __block BOOL result;
-    __block NSError *blockError;
-    
+
     dispatch_sync(_queue, ^() {
-        result = [self.database checkpoint:mode name:name logFrameCount:NULL checkpointCount:NULL error:&blockError];
+        result = [self.database checkpoint:mode name:name logFrameCount:logFrameCount checkpointCount:checkpointCount error:error];
     });
     
-    if (error) {
-        *error = blockError;
-    }
     return result;
 }
 

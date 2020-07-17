@@ -8,5 +8,7 @@
  */
 
 #import "FWDatabase.h"
+#import "FWResultSet.h"
 #import "FWDatabaseAdditions.h"
 #import "FWDatabaseQueue.h"
+#import "FWDatabasePool.h"

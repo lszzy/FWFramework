@@ -1,32 +1,33 @@
-/*!
- @header     FWDatabaseAdditions.m
- @indexgroup FWFramework
- @brief      FWDatabaseAdditions
- @author     wuyong
- @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/26
- */
+//
+//  FWDatabaseAdditions.m
+//  fmdb
+//
+//  Created by August Mueller on 10/30/05.
+//  Copyright 2005 Flying Meat Inc.. All rights reserved.
+//
 
+#import "FWDatabase.h"
 #import "FWDatabaseAdditions.h"
 #import "TargetConditionals.h"
 #import <sqlite3.h>
 
 @interface FWDatabase (PrivateStuff)
-- (FWResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args;
+- (FWResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args shouldBind:(BOOL)shouldBind;
 @end
 
-@implementation FWDatabase (Addition)
+@implementation FWDatabase (FWDatabaseAdditions)
 
 #define RETURN_RESULT_FOR_QUERY_WITH_SELECTOR(type, sel)             \
 va_list args;                                                        \
 va_start(args, query);                                               \
-FWResultSet *resultSet = [self executeQuery:query withArgumentsInArray:0x00 orDictionary:0x00 orVAList:args];   \
+FWResultSet *resultSet = [self executeQuery:query withArgumentsInArray:0x00 orDictionary:0x00 orVAList:args shouldBind:true];   \
 va_end(args);                                                        \
 if (![resultSet next]) { return (type)0; }                           \
 type ret = [resultSet sel:0];                                        \
 [resultSet close];                                                   \
 [resultSet setParentDB:nil];                                         \
 return ret;
+
 
 - (NSString *)stringForQuery:(NSString*)query, ... {
     RETURN_RESULT_FOR_QUERY_WITH_SELECTOR(NSString *, stringForColumnIndex);
@@ -75,7 +76,7 @@ return ret;
 /*
  get table with list of tables: result colums: type[STRING], name[STRING],tbl_name[STRING],rootpage[INTEGER],sql[STRING]
  check if table exist in database  (patch from OZLB)
- */
+*/
 - (FWResultSet * _Nullable)getSchema {
     
     //result colums: type[STRING], name[STRING],tbl_name[STRING],rootpage[INTEGER],sql[STRING]
@@ -84,9 +85,9 @@ return ret;
     return rs;
 }
 
-/*
+/* 
  get table schema: result colums: cid[INTEGER], name,type [STRING], notnull[INTEGER], dflt_value[],pk[INTEGER]
- */
+*/
 - (FWResultSet * _Nullable)getTableSchema:(NSString*)tableName {
     
     //result colums: cid[INTEGER], name,type [STRING], notnull[INTEGER], dflt_value[],pk[INTEGER]
@@ -152,41 +153,6 @@ return ret;
 #endif
 }
 
-
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
-
-- (NSString*)applicationIDString {
-#if SQLITE_VERSION_NUMBER >= 3007017
-    NSString *s = NSFileTypeForHFSTypeCode([self applicationID]);
-    
-    assert([s length] == 6);
-    
-    s = [s substringWithRange:NSMakeRange(1, 4)];
-    
-    
-    return s;
-#else
-    NSString *errorMessage = NSLocalizedStringFromTable(@"Application ID functions require SQLite 3.7.17", @"FWDB", nil);
-    if (self.logsErrors) NSLog(@"%@", errorMessage);
-    return nil;
-#endif
-}
-
-- (void)setApplicationIDString:(NSString*)s {
-#if SQLITE_VERSION_NUMBER >= 3007017
-    if ([s length] != 4) {
-        NSLog(@"setApplicationIDString: string passed is not exactly 4 chars long. (was %ld)", [s length]);
-    }
-    
-    [self setApplicationID:NSHFSTypeCodeFromFileType([NSString stringWithFormat:@"'%@'", s])];
-#else
-    NSString *errorMessage = NSLocalizedStringFromTable(@"Application ID functions require SQLite 3.7.17", @"FWDB", nil);
-    if (self.logsErrors) NSLog(@"%@", errorMessage);
-#endif
-}
-
-#endif
-
 - (uint32_t)userVersion {
     uint32_t r = 0;
     
@@ -207,7 +173,7 @@ return ret;
     [rs close];
 }
 
-- (BOOL)validateSQL:(NSString*)sql error:(NSError**)error {
+- (BOOL)validateSQL:(NSString*)sql error:(NSError * _Nullable __autoreleasing *)error {
     sqlite3_stmt *pStmt = NULL;
     BOOL validationSucceeded = YES;
     
