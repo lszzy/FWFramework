@@ -28,8 +28,15 @@
 #define LogError(frmt, ...)     FWLogError(frmt, ##__VA_ARGS__)
 #define LogWarn(frmt, ...)      FWLogWarn(frmt, ##__VA_ARGS__)
 #define LogInfo(frmt, ...)      FWLogInfo(frmt, ##__VA_ARGS__)
-#define LogVerbose(frmt, ...)   {}
-#define LogTrace()              {}
+#define LogVerbose(frmt, ...)   FWLogVerbose(frmt, ##__VA_ARGS__)
+#define LogTrace()              FWLogVerbose(@"%@", NSStringFromSelector(_cmd))
+
+/**
+ * Seeing a return statements within an inner block
+ * can sometimes be mistaken for a return point of the enclosing method.
+ * This makes inline blocks a bit easier to read.
+**/
+#define return_from_block  return
 
 /**
  * A socket file descriptor is really just an integer.
@@ -197,7 +204,7 @@ enum FWAsyncUdpSocketConfig
 
 #if TARGET_OS_IPHONE
 // Forward declaration
-+ (void)listenerThread;
++ (void)listenerThread:(id)unused;
 #endif
 
 @end
@@ -225,13 +232,20 @@ enum FWAsyncUdpSocketConfig
 	int addressFamily;
 }
 
-- (id)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i;
+- (instancetype)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @implementation FWAsyncUdpSendPacket
 
-- (id)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i
+// Cover the superclass' designated initializer
+- (instancetype)init NS_UNAVAILABLE
+{
+	NSAssert(0, @"Use the designated initializer");
+	return nil;
+}
+
+- (instancetype)initWithData:(NSData *)d timeout:(NSTimeInterval)t tag:(long)i
 {
 	if ((self = [super init]))
 	{
@@ -261,13 +275,13 @@ enum FWAsyncUdpSocketConfig
 	NSError *error;
 }
 
-- (id)init;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @implementation FWAsyncUdpSpecialPacket
 
-- (id)init
+- (instancetype)init
 {
 	self = [super init];
 	return self;
@@ -282,28 +296,28 @@ enum FWAsyncUdpSocketConfig
 
 @implementation FWAsyncUdpSocket
 
-- (id)init
+- (instancetype)init
 {
 	LogTrace();
 	
 	return [self initWithDelegate:nil delegateQueue:NULL socketQueue:NULL];
 }
 
-- (id)initWithSocketQueue:(dispatch_queue_t)sq
+- (instancetype)initWithSocketQueue:(dispatch_queue_t)sq
 {
 	LogTrace();
 	
 	return [self initWithDelegate:nil delegateQueue:NULL socketQueue:sq];
 }
 
-- (id)initWithDelegate:(id <FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq
+- (instancetype)initWithDelegate:(id<FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq
 {
 	LogTrace();
 	
 	return [self initWithDelegate:aDelegate delegateQueue:dq socketQueue:NULL];
 }
 
-- (id)initWithDelegate:(id <FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq
+- (instancetype)initWithDelegate:(id<FWAsyncUdpSocketDelegate>)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq
 {
 	LogTrace();
 	
@@ -314,6 +328,9 @@ enum FWAsyncUdpSocketConfig
 		if (dq)
 		{
 			delegateQueue = dq;
+			#if !OS_OBJECT_USE_OBJC
+			dispatch_retain(delegateQueue);
+			#endif
 		}
 		
 		max4ReceiveSize = 65535;
@@ -334,6 +351,9 @@ enum FWAsyncUdpSocketConfig
 			         @"The given socketQueue parameter must not be a concurrent queue.");
 			
 			socketQueue = sq;
+			#if !OS_OBJECT_USE_OBJC
+			dispatch_retain(socketQueue);
+			#endif
 		}
 		else
 		{
@@ -395,9 +415,14 @@ enum FWAsyncUdpSocketConfig
 	}
 	
 	delegate = nil;
-
+	#if !OS_OBJECT_USE_OBJC
+	if (delegateQueue) dispatch_release(delegateQueue);
+	#endif
 	delegateQueue = NULL;
 	
+	#if !OS_OBJECT_USE_OBJC
+	if (socketQueue) dispatch_release(socketQueue);
+	#endif
 	socketQueue = NULL;
 	
 	LogInfo(@"%@ - %@ (finish)", NSStringFromSelector(_cmd), self);
@@ -407,7 +432,7 @@ enum FWAsyncUdpSocketConfig
 #pragma mark Configuration
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (id)delegate
+- (id<FWAsyncUdpSocketDelegate>)delegate
 {
 	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
@@ -425,7 +450,7 @@ enum FWAsyncUdpSocketConfig
 	}
 }
 
-- (void)setDelegate:(id <FWAsyncUdpSocketDelegate>)newDelegate synchronously:(BOOL)synchronously
+- (void)setDelegate:(id<FWAsyncUdpSocketDelegate>)newDelegate synchronously:(BOOL)synchronously
 {
 	dispatch_block_t block = ^{
         self->delegate = newDelegate;
@@ -442,12 +467,12 @@ enum FWAsyncUdpSocketConfig
 	}
 }
 
-- (void)setDelegate:(id <FWAsyncUdpSocketDelegate>)newDelegate
+- (void)setDelegate:(id<FWAsyncUdpSocketDelegate>)newDelegate
 {
 	[self setDelegate:newDelegate synchronously:NO];
 }
 
-- (void)synchronouslySetDelegate:(id <FWAsyncUdpSocketDelegate>)newDelegate
+- (void)synchronouslySetDelegate:(id<FWAsyncUdpSocketDelegate>)newDelegate
 {
 	[self setDelegate:newDelegate synchronously:YES];
 }
@@ -474,6 +499,11 @@ enum FWAsyncUdpSocketConfig
 {
 	dispatch_block_t block = ^{
 		
+		#if !OS_OBJECT_USE_OBJC
+        if (self->delegateQueue) dispatch_release(self->delegateQueue);
+		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
+		#endif
+		
         self->delegateQueue = newDelegateQueue;
 	};
 	
@@ -498,7 +528,7 @@ enum FWAsyncUdpSocketConfig
 	[self setDelegateQueue:newDelegateQueue synchronously:YES];
 }
 
-- (void)getDelegate:(id <FWAsyncUdpSocketDelegate> *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr
+- (void)getDelegate:(id<FWAsyncUdpSocketDelegate> *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr
 {
 	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
@@ -520,11 +550,16 @@ enum FWAsyncUdpSocketConfig
 	}
 }
 
-- (void)setDelegate:(id <FWAsyncUdpSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue synchronously:(BOOL)synchronously
+- (void)setDelegate:(id<FWAsyncUdpSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue synchronously:(BOOL)synchronously
 {
 	dispatch_block_t block = ^{
 		
         self->delegate = newDelegate;
+		
+		#if !OS_OBJECT_USE_OBJC
+        if (self->delegateQueue) dispatch_release(self->delegateQueue);
+		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
+		#endif
 		
         self->delegateQueue = newDelegateQueue;
 	};
@@ -540,12 +575,12 @@ enum FWAsyncUdpSocketConfig
 	}
 }
 
-- (void)setDelegate:(id <FWAsyncUdpSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
+- (void)setDelegate:(id<FWAsyncUdpSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
 {
 	[self setDelegate:newDelegate delegateQueue:newDelegateQueue synchronously:NO];
 }
 
-- (void)synchronouslySetDelegate:(id <FWAsyncUdpSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
+- (void)synchronouslySetDelegate:(id<FWAsyncUdpSocketDelegate>)newDelegate delegateQueue:(dispatch_queue_t)newDelegateQueue
 {
 	[self setDelegate:newDelegate delegateQueue:newDelegateQueue synchronously:YES];
 }
@@ -864,7 +899,7 @@ enum FWAsyncUdpSocketConfig
 {
 	LogTrace();
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncUdpSocketDelegate> theDelegate = delegate;
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(udpSocket:didConnectToAddress:)])
 	{
 		NSData *address = [anAddress copy]; // In case param is NSMutableData
@@ -880,7 +915,7 @@ enum FWAsyncUdpSocketConfig
 {
 	LogTrace();
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncUdpSocketDelegate> theDelegate = delegate;
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(udpSocket:didNotConnect:)])
 	{
 		dispatch_async(delegateQueue, ^{ @autoreleasepool {
@@ -894,7 +929,7 @@ enum FWAsyncUdpSocketConfig
 {
 	LogTrace();
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncUdpSocketDelegate> theDelegate = delegate;
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(udpSocket:didSendDataWithTag:)])
 	{
 		dispatch_async(delegateQueue, ^{ @autoreleasepool {
@@ -908,7 +943,7 @@ enum FWAsyncUdpSocketConfig
 {
 	LogTrace();
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncUdpSocketDelegate> theDelegate = delegate;
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(udpSocket:didNotSendDataWithTag:dueToError:)])
 	{
 		dispatch_async(delegateQueue, ^{ @autoreleasepool {
@@ -924,7 +959,7 @@ enum FWAsyncUdpSocketConfig
 	
 	SEL selector = @selector(udpSocket:didReceiveData:fromAddress:withFilterContext:);
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncUdpSocketDelegate> theDelegate = delegate;
 	if (delegateQueue && [theDelegate respondsToSelector:selector])
 	{
 		dispatch_async(delegateQueue, ^{ @autoreleasepool {
@@ -938,7 +973,7 @@ enum FWAsyncUdpSocketConfig
 {
 	LogTrace();
 	
-	__strong id theDelegate = delegate;
+	__strong id<FWAsyncUdpSocketDelegate> theDelegate = delegate;
 	if (delegateQueue && [theDelegate respondsToSelector:@selector(udpSocketDidClose:withError:)])
 	{
 		dispatch_async(delegateQueue, ^{ @autoreleasepool {
@@ -954,7 +989,7 @@ enum FWAsyncUdpSocketConfig
 
 - (NSError *)badConfigError:(NSString *)errMsg
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncUdpSocketErrorDomain
 	                           code:FWAsyncUdpSocketBadConfigError
@@ -963,7 +998,7 @@ enum FWAsyncUdpSocketConfig
 
 - (NSError *)badParamError:(NSString *)errMsg
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncUdpSocketErrorDomain
 	                           code:FWAsyncUdpSocketBadParamError
@@ -973,7 +1008,7 @@ enum FWAsyncUdpSocketConfig
 - (NSError *)gaiError:(int)gai_error
 {
 	NSString *errMsg = [NSString stringWithCString:gai_strerror(gai_error) encoding:NSASCIIStringEncoding];
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:@"kCFStreamErrorDomainNetDB" code:gai_error userInfo:userInfo];
 }
@@ -984,10 +1019,10 @@ enum FWAsyncUdpSocketConfig
 	NSDictionary *userInfo;
 	
 	if (reason)
-		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:errMsg, NSLocalizedDescriptionKey,
-		                                                      reason, NSLocalizedFailureReasonErrorKey, nil];
+		userInfo = @{NSLocalizedDescriptionKey : errMsg,
+					 NSLocalizedFailureReasonErrorKey : reason};
 	else
-		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:errMsg, NSLocalizedDescriptionKey, nil];
+		userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:userInfo];
 }
@@ -1006,7 +1041,7 @@ enum FWAsyncUdpSocketConfig
 	                                                     @"FWAsyncUdpSocket", [NSBundle mainBundle],
 	                                                     @"Send operation timed out", nil);
 	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncUdpSocketErrorDomain
 	                           code:FWAsyncUdpSocketSendTimeoutError
@@ -1019,14 +1054,14 @@ enum FWAsyncUdpSocketConfig
 	                                                     @"FWAsyncUdpSocket", [NSBundle mainBundle],
 	                                                     @"Socket closed", nil);
 	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncUdpSocketErrorDomain code:FWAsyncUdpSocketClosedError userInfo:userInfo];
 }
 
 - (NSError *)otherError:(NSString *)errMsg
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+	NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errMsg};
 	
 	return [NSError errorWithDomain:FWAsyncUdpSocketErrorDomain
 	                           code:FWAsyncUdpSocketOtherError
@@ -1160,7 +1195,7 @@ enum FWAsyncUdpSocketConfig
 
                         // Fixes connection issues with IPv6, it is the same solution for udp socket.
                         // https://github.com/robbiehanson/CocoaAsyncSocket/issues/429#issuecomment-222477158
-                        struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *)res->ai_addr;
+                        struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *)(void *)res->ai_addr;
                         in_port_t *portPtr = &sockaddr->sin6_port;
                         if ((portPtr != NULL) && (*portPtr == 0)) {
                             *portPtr = htons(port);
@@ -1409,7 +1444,7 @@ enum FWAsyncUdpSocketConfig
 				{
 					// IPv4
 					
-					struct sockaddr_in *addr = (struct sockaddr_in *)cursor->ifa_addr;
+					struct sockaddr_in *addr = (struct sockaddr_in *)(void *)cursor->ifa_addr;
 					
 					if (strcmp(cursor->ifa_name, iface) == 0)
 					{
@@ -1442,7 +1477,7 @@ enum FWAsyncUdpSocketConfig
 				{
 					// IPv6
 					
-					struct sockaddr_in6 *addr = (struct sockaddr_in6 *)cursor->ifa_addr;
+					const struct sockaddr_in6 *addr = (const struct sockaddr_in6 *)(const void *)cursor->ifa_addr;
 					
 					if (strcmp(cursor->ifa_name, iface) == 0)
 					{
@@ -1543,8 +1578,8 @@ enum FWAsyncUdpSocketConfig
 		return NO;
 	}
 	
-	const struct sockaddr_in *sSockaddr4 = (struct sockaddr_in *)[someAddr4 bytes];
-	const struct sockaddr_in *cSockaddr4 = (struct sockaddr_in *)[cachedConnectedAddress bytes];
+	const struct sockaddr_in *sSockaddr4 = (const struct sockaddr_in *)[someAddr4 bytes];
+	const struct sockaddr_in *cSockaddr4 = (const struct sockaddr_in *)[cachedConnectedAddress bytes];
 	
 	if (memcmp(&sSockaddr4->sin_addr, &cSockaddr4->sin_addr, sizeof(struct in_addr)) != 0)
 	{
@@ -1569,8 +1604,8 @@ enum FWAsyncUdpSocketConfig
 		return NO;
 	}
 	
-	const struct sockaddr_in6 *sSockaddr6 = (struct sockaddr_in6 *)[someAddr6 bytes];
-	const struct sockaddr_in6 *cSockaddr6 = (struct sockaddr_in6 *)[cachedConnectedAddress bytes];
+	const struct sockaddr_in6 *sSockaddr6 = (const struct sockaddr_in6 *)[someAddr6 bytes];
+	const struct sockaddr_in6 *cSockaddr6 = (const struct sockaddr_in6 *)[cachedConnectedAddress bytes];
 	
 	if (memcmp(&sSockaddr6->sin6_addr, &cSockaddr6->sin6_addr, sizeof(struct in6_addr)) != 0)
 	{
@@ -1592,7 +1627,7 @@ enum FWAsyncUdpSocketConfig
 		return 0;
 	
 	int result = 0;
-	struct sockaddr_in *ifaceAddr = (struct sockaddr_in *)[interfaceAddr4 bytes];
+	const struct sockaddr_in *ifaceAddr = (const struct sockaddr_in *)[interfaceAddr4 bytes];
 	
 	struct ifaddrs *addrs;
 	const struct ifaddrs *cursor;
@@ -1606,7 +1641,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				// IPv4
 				
-				struct sockaddr_in *addr = (struct sockaddr_in *)cursor->ifa_addr;
+				const struct sockaddr_in *addr = (const struct sockaddr_in *)(const void *)cursor->ifa_addr;
 				
 				if (memcmp(&addr->sin_addr, &ifaceAddr->sin_addr, sizeof(struct in_addr)) == 0)
 				{
@@ -1632,7 +1667,7 @@ enum FWAsyncUdpSocketConfig
 		return 0;
 	
 	int result = 0;
-	struct sockaddr_in6 *ifaceAddr = (struct sockaddr_in6 *)[interfaceAddr6 bytes];
+	const struct sockaddr_in6 *ifaceAddr = (const struct sockaddr_in6 *)[interfaceAddr6 bytes];
 	
 	struct ifaddrs *addrs;
 	const struct ifaddrs *cursor;
@@ -1646,7 +1681,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				// IPv6
 				
-				struct sockaddr_in6 *addr = (struct sockaddr_in6 *)cursor->ifa_addr;
+				const struct sockaddr_in6 *addr = (const struct sockaddr_in6 *)(const void *)cursor->ifa_addr;
 				
 				if (memcmp(&addr->sin6_addr, &ifaceAddr->sin6_addr, sizeof(struct in6_addr)) == 0)
 				{
@@ -1677,7 +1712,7 @@ enum FWAsyncUdpSocketConfig
 	dispatch_source_set_event_handler(send4Source, ^{ @autoreleasepool {
 		
 		LogVerbose(@"send4EventBlock");
-		LogVerbose(@"dispatch_source_get_data(send4Source) = %lu", dispatch_source_get_data(send4Source));
+        LogVerbose(@"dispatch_source_get_data(send4Source) = %lu", dispatch_source_get_data(self->send4Source));
 		
         self->flags |= kSock4CanAcceptBytes;
 		
@@ -1711,7 +1746,7 @@ enum FWAsyncUdpSocketConfig
 		LogVerbose(@"receive4EventBlock");
 		
         self->socket4FDBytesAvailable = dispatch_source_get_data(self->receive4Source);
-		LogVerbose(@"socket4FDBytesAvailable: %lu", socket4FDBytesAvailable);
+        LogVerbose(@"socket4FDBytesAvailable: %lu", self->socket4FDBytesAvailable);
 		
         if (self->socket4FDBytesAvailable > 0)
 			[self doReceive];
@@ -1726,9 +1761,19 @@ enum FWAsyncUdpSocketConfig
 	
 	int theSocketFD = socket4FD;
 	
+	#if !OS_OBJECT_USE_OBJC
+	dispatch_source_t theSendSource = send4Source;
+	dispatch_source_t theReceiveSource = receive4Source;
+	#endif
+	
 	dispatch_source_set_cancel_handler(send4Source, ^{
 		
 		LogVerbose(@"send4CancelBlock");
+		
+		#if !OS_OBJECT_USE_OBJC
+		LogVerbose(@"dispatch_release(send4Source)");
+		dispatch_release(theSendSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -1740,6 +1785,11 @@ enum FWAsyncUdpSocketConfig
 	dispatch_source_set_cancel_handler(receive4Source, ^{
 		
 		LogVerbose(@"receive4CancelBlock");
+		
+		#if !OS_OBJECT_USE_OBJC
+		LogVerbose(@"dispatch_release(receive4Source)");
+		dispatch_release(theReceiveSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -1773,7 +1823,7 @@ enum FWAsyncUdpSocketConfig
 	dispatch_source_set_event_handler(send6Source, ^{ @autoreleasepool {
 		
 		LogVerbose(@"send6EventBlock");
-		LogVerbose(@"dispatch_source_get_data(send6Source) = %lu", dispatch_source_get_data(send6Source));
+        LogVerbose(@"dispatch_source_get_data(send6Source) = %lu", dispatch_source_get_data(self->send6Source));
 		
         self->flags |= kSock6CanAcceptBytes;
 		
@@ -1807,7 +1857,7 @@ enum FWAsyncUdpSocketConfig
 		LogVerbose(@"receive6EventBlock");
 		
         self->socket6FDBytesAvailable = dispatch_source_get_data(self->receive6Source);
-		LogVerbose(@"socket6FDBytesAvailable: %lu", socket6FDBytesAvailable);
+        LogVerbose(@"socket6FDBytesAvailable: %lu", self->socket6FDBytesAvailable);
 		
         if (self->socket6FDBytesAvailable > 0)
 			[self doReceive];
@@ -1822,9 +1872,19 @@ enum FWAsyncUdpSocketConfig
 	
 	int theSocketFD = socket6FD;
 	
+	#if !OS_OBJECT_USE_OBJC
+	dispatch_source_t theSendSource = send6Source;
+	dispatch_source_t theReceiveSource = receive6Source;
+	#endif
+	
 	dispatch_source_set_cancel_handler(send6Source, ^{
 		
 		LogVerbose(@"send6CancelBlock");
+		
+		#if !OS_OBJECT_USE_OBJC
+		LogVerbose(@"dispatch_release(send6Source)");
+		dispatch_release(theSendSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -1836,6 +1896,11 @@ enum FWAsyncUdpSocketConfig
 	dispatch_source_set_cancel_handler(receive6Source, ^{
 		
 		LogVerbose(@"receive6CancelBlock");
+		
+		#if !OS_OBJECT_USE_OBJC
+		LogVerbose(@"dispatch_release(receive6Source)");
+		dispatch_release(theReceiveSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -2720,7 +2785,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preBind:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// Check the given interface
@@ -2735,7 +2800,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Unknown interface. Specify valid interface by name (e.g. \"en1\") or IP address.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
         BOOL isIPv4Disabled = (self->config & kIPv4Disabled) ? YES : NO;
@@ -2746,7 +2811,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv4 has been disabled and specified interface doesn't support IPv6.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (isIPv6Disabled && (interface4 == nil))
@@ -2754,7 +2819,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv6 has been disabled and specified interface doesn't support IPv4.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Determine protocol(s)
@@ -2768,7 +2833,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSocket4:useIPv4 socket6:useIPv6 error:&err])
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -2778,7 +2843,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (useIPv4)
 		{
-            int status = bind(self->socket4FD, (struct sockaddr *)[interface4 bytes], (socklen_t)[interface4 length]);
+            int status = bind(self->socket4FD, (const struct sockaddr *)[interface4 bytes], (socklen_t)[interface4 length]);
 			if (status == -1)
 			{
 				[self closeSockets];
@@ -2786,13 +2851,13 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return;
+				return_from_block;
 			}
 		}
 		
 		if (useIPv6)
 		{
-            int status = bind(self->socket6FD, (struct sockaddr *)[interface6 bytes], (socklen_t)[interface6 length]);
+            int status = bind(self->socket6FD, (const struct sockaddr *)[interface6 bytes], (socklen_t)[interface6 length]);
 			if (status == -1)
 			{
 				[self closeSockets];
@@ -2800,7 +2865,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -2840,7 +2905,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preBind:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// Check the given address
@@ -2852,7 +2917,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"A valid IPv4 or IPv6 address was not given";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		NSData *localAddr4 = (addressFamily == AF_INET)  ? localAddr : nil;
@@ -2866,7 +2931,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv4 has been disabled and an IPv4 address was passed.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		if (isIPv6Disabled && localAddr6)
@@ -2874,7 +2939,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv6 has been disabled and an IPv6 address was passed.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Determine protocol(s)
@@ -2888,7 +2953,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSocket4:useIPv4 socket6:useIPv6 error:&err])
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -2900,7 +2965,7 @@ enum FWAsyncUdpSocketConfig
 					   [[self class] hostFromAddress:localAddr4],
 					   [[self class] portFromAddress:localAddr4]);
 			
-            int status = bind(self->socket4FD, (struct sockaddr *)[localAddr4 bytes], (socklen_t)[localAddr4 length]);
+            int status = bind(self->socket4FD, (const struct sockaddr *)[localAddr4 bytes], (socklen_t)[localAddr4 length]);
 			if (status == -1)
 			{
 				[self closeSockets];
@@ -2908,7 +2973,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return;
+				return_from_block;
 			}
 		}
 		else
@@ -2917,7 +2982,7 @@ enum FWAsyncUdpSocketConfig
 					   [[self class] hostFromAddress:localAddr6],
 					   [[self class] portFromAddress:localAddr6]);
 			
-            int status = bind(self->socket6FD, (struct sockaddr *)[localAddr6 bytes], (socklen_t)[localAddr6 length]);
+            int status = bind(self->socket6FD, (const struct sockaddr *)[localAddr6 bytes], (socklen_t)[localAddr6 length]);
 			if (status == -1)
 			{
 				[self closeSockets];
@@ -2925,7 +2990,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -3006,7 +3071,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preConnect:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// Check parameter(s)
@@ -3016,7 +3081,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"The host param is nil. Should be domain name or IP address string.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Create the socket(s) if needed
@@ -3025,7 +3090,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSockets:&err])
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -3087,7 +3152,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preConnect:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// Check parameter(s)
@@ -3097,7 +3162,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"The address param is nil. Should be a valid address.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Create the socket(s) if needed
@@ -3106,7 +3171,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSockets:&err])
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -3213,7 +3278,7 @@ enum FWAsyncUdpSocketConfig
 	LogTrace();
 	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
-	int status = connect(socket4FD, (struct sockaddr *)[address4 bytes], (socklen_t)[address4 length]);
+	int status = connect(socket4FD, (const struct sockaddr *)[address4 bytes], (socklen_t)[address4 length]);
 	if (status != 0)
 	{
 		if (errPtr)
@@ -3233,7 +3298,7 @@ enum FWAsyncUdpSocketConfig
 	LogTrace();
 	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
-	int status = connect(socket6FD, (struct sockaddr *)[address6 bytes], (socklen_t)[address6 length]);
+	int status = connect(socket6FD, (const struct sockaddr *)[address6 bytes], (socklen_t)[address6 length]);
 	if (status != 0)
 	{
 		if (errPtr)
@@ -3318,7 +3383,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preJoin:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
 		// Convert group to address
@@ -3333,7 +3398,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Unknown group. Specify valid group IP address.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Convert interface to address
@@ -3348,15 +3413,15 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Unknown interface. Specify valid interface by name (e.g. \"en1\") or IP address.";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 		// Perform join
 		
         if ((self->socket4FD != SOCKET_NULL) && groupAddr4 && interfaceAddr4)
 		{
-			const struct sockaddr_in *nativeGroup = (struct sockaddr_in *)[groupAddr4 bytes];
-			const struct sockaddr_in *nativeIface = (struct sockaddr_in *)[interfaceAddr4 bytes];
+			const struct sockaddr_in *nativeGroup = (const struct sockaddr_in *)[groupAddr4 bytes];
+			const struct sockaddr_in *nativeIface = (const struct sockaddr_in *)[interfaceAddr4 bytes];
 			
 			struct ip_mreq imreq;
 			imreq.imr_multiaddr = nativeGroup->sin_addr;
@@ -3367,7 +3432,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return;
+				return_from_block;
 			}
 			
 			// Using IPv4 only
@@ -3377,7 +3442,7 @@ enum FWAsyncUdpSocketConfig
 		}
         else if ((self->socket6FD != SOCKET_NULL) && groupAddr6 && interfaceAddr6)
 		{
-			const struct sockaddr_in6 *nativeGroup = (struct sockaddr_in6 *)[groupAddr6 bytes];
+			const struct sockaddr_in6 *nativeGroup = (const struct sockaddr_in6 *)[groupAddr6 bytes];
 			
 			struct ipv6_mreq imreq;
 			imreq.ipv6mr_multiaddr = nativeGroup->sin6_addr;
@@ -3388,7 +3453,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return;
+				return_from_block;
 			}
 			
 			// Using IPv6 only
@@ -3401,7 +3466,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Socket, group, and interface do not have matching IP versions";
 			err = [self badParamError:msg];
 			
-			return;
+			return_from_block;
 		}
 		
 	}};
@@ -3430,14 +3495,14 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preOp:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
         if ((self->flags & kDidCreateSockets) == 0)
 		{
 			if (![self createSockets:&err])
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -3450,7 +3515,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return;
+				return_from_block;
 			}
 			result = YES;
 		}
@@ -3463,7 +3528,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return;
+				return_from_block;
 			}
 			result = YES;
 		}
@@ -3494,14 +3559,14 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preOp:&err])
 		{
-			return;
+			return_from_block;
 		}
 		
         if ((self->flags & kDidCreateSockets) == 0)
 		{
 			if (![self createSockets:&err])
 			{
-				return;
+				return_from_block;
 			}
 		}
 		
@@ -3514,7 +3579,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return;
+				return_from_block;
 			}
 			result = YES;
 		}
@@ -3649,9 +3714,16 @@ enum FWAsyncUdpSocketConfig
 		
 		newFilterBlock = [filterBlock copy];
 		newFilterQueue = filterQueue;
+		#if !OS_OBJECT_USE_OBJC
+		dispatch_retain(newFilterQueue);
+		#endif
 	}
 	
 	dispatch_block_t block = ^{
+		
+		#if !OS_OBJECT_USE_OBJC
+        if (self->sendFilterQueue) dispatch_release(self->sendFilterQueue);
+		#endif
 		
         self->sendFilterBlock = newFilterBlock;
         self->sendFilterQueue = newFilterQueue;
@@ -4015,6 +4087,9 @@ enum FWAsyncUdpSocketConfig
 	if (sendTimer)
 	{
 		dispatch_source_cancel(sendTimer);
+		#if !OS_OBJECT_USE_OBJC
+		dispatch_release(sendTimer);
+		#endif
 		sendTimer = NULL;
 	}
 	
@@ -4078,7 +4153,7 @@ enum FWAsyncUdpSocketConfig
 				@"You can do this explicitly via bind, or implicitly via connect or by sending data.";
 				
 				err = [self badConfigError:msg];
-				return;
+				return_from_block;
 			}
 			
             self->flags |=  kReceiveOnce;       // Enable
@@ -4124,7 +4199,7 @@ enum FWAsyncUdpSocketConfig
 								@"You can do this explicitly via bind, or implicitly via connect or by sending data.";
 				
 				err = [self badConfigError:msg];
-				return;
+				return_from_block;
 			}
 			
             self->flags |= kReceiveContinuous; // Enable
@@ -4194,9 +4269,16 @@ enum FWAsyncUdpSocketConfig
 		
 		newFilterBlock = [filterBlock copy];
 		newFilterQueue = filterQueue;
+		#if !OS_OBJECT_USE_OBJC
+		dispatch_retain(newFilterQueue);
+		#endif
 	}
 	
 	dispatch_block_t block = ^{
+		
+		#if !OS_OBJECT_USE_OBJC
+        if (self->receiveFilterQueue) dispatch_release(self->receiveFilterQueue);
+		#endif
 		
         self->receiveFilterBlock = newFilterBlock;
         self->receiveFilterQueue = newFilterQueue;
@@ -4614,13 +4696,13 @@ static NSThread *listenerThread;
 	dispatch_once(&predicate, ^{
 		
 		listenerThread = [[NSThread alloc] initWithTarget:self
-		                                         selector:@selector(listenerThread)
+		                                         selector:@selector(listenerThread:)
 		                                           object:nil];
 		[listenerThread start];
 	});
 }
 
-+ (void)listenerThread
++ (void)listenerThread:(id)unused
 {
 	@autoreleasepool {
 	
@@ -4717,7 +4799,7 @@ static void CFReadStreamCallback(CFReadStreamRef stream, CFStreamEventType type,
 					    stream != asyncUdpSocket->readStream6  )
 					{
 						LogVerbose(@"CFReadStreamCallback - Ignored");
-						return;
+						return_from_block;
 					}
 					
 					[asyncUdpSocket closeWithError:error];
@@ -4769,7 +4851,7 @@ static void CFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType typ
 					    stream != asyncUdpSocket->writeStream6  )
 					{
 						LogVerbose(@"CFWriteStreamCallback - Ignored");
-						return;
+						return_from_block;
 					}
 					
 					[asyncUdpSocket closeWithError:error];
@@ -5061,6 +5143,7 @@ Failed:
 
 #endif
 
+#if TARGET_OS_IPHONE
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
 	LogTrace();
@@ -5079,6 +5162,7 @@ Failed:
 	else
 		dispatch_async(socketQueue, block);
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Advanced
@@ -5350,7 +5434,7 @@ Failed:
 		{
 			if ([address length] >= sizeof(struct sockaddr_in))
 			{
-				const struct sockaddr_in *addr4 = (const struct sockaddr_in *)addrX;
+				const struct sockaddr_in *addr4 = (const struct sockaddr_in *)(const void *)addrX;
 				
 				if (hostPtr) *hostPtr = [self hostFromSockaddr4:addr4];
 				if (portPtr) *portPtr = [self portFromSockaddr4:addr4];
@@ -5363,7 +5447,7 @@ Failed:
 		{
 			if ([address length] >= sizeof(struct sockaddr_in6))
 			{
-				const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)addrX;
+				const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)(const void *)addrX;
 				
 				if (hostPtr) *hostPtr = [self hostFromSockaddr6:addr6];
 				if (portPtr) *portPtr = [self portFromSockaddr6:addr6];
