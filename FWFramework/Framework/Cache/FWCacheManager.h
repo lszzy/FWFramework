@@ -15,13 +15,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, FWCacheType) {
-    FWCacheTypeMemory = 1,
-    FWCacheTypeUserDefaults,
-    FWCacheTypeKeychain,
-    FWCacheTypeFile,
-    FWCacheTypeSqlite,
-};
+/// 缓存类型枚举
+typedef NSInteger FWCacheType NS_TYPED_EXTENSIBLE_ENUM;
+/// 内存缓存
+static const FWCacheType FWCacheTypeMemory = 1;
+/// NSUserDefaults缓存
+static const FWCacheType FWCacheTypeUserDefaults = 2;
+/// Keychain缓存
+static const FWCacheType FWCacheTypeKeychain = 3;
+/// 文件缓存
+static const FWCacheType FWCacheTypeFile = 4;
+/// Sqlite数据库缓存
+static const FWCacheType FWCacheTypeSqlite = 5;
 
 /*!
  @brief FWCacheManager

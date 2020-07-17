@@ -9,95 +9,49 @@
 
 #import "UIFont+FWFramework.h"
 
-UIFont * FWFontLight(CGFloat fontSize) {
-    return [UIFont fontWithName:([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) ? @".SFUIText-Light" : @"HelveticaNeue-Light" size:fontSize];
+UIFont * FWFontLight(CGFloat size) {
+    return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
 }
 
-UIFont * FWFontNormal(CGFloat fontSize) {
-    return [UIFont systemFontOfSize:fontSize];
+UIFont * FWFontRegular(CGFloat size) {
+    return [UIFont systemFontOfSize:size];
 }
 
-UIFont * FWFontBold(CGFloat fontSize) {
-    return [UIFont boldSystemFontOfSize:fontSize];
+UIFont * FWFontBold(CGFloat size) {
+    return [UIFont boldSystemFontOfSize:size];
 }
 
-UIFont * FWFontItalic(CGFloat fontSize) {
-    return [UIFont italicSystemFontOfSize:fontSize];
+UIFont * FWFontItalic(CGFloat size) {
+    return [UIFont italicSystemFontOfSize:size];
 }
-
-#pragma mark - UIFont+FWFramework
 
 @implementation UIFont (FWFramework)
 
 #pragma mark - Static
 
-+ (UIFont *)fwLightSystemFontOfSize:(CGFloat)fontSize
++ (UIFont *)fwLightFontOfSize:(CGFloat)size
 {
-    return [UIFont fontWithName:([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) ? @".SFUIText-Light" : @"HelveticaNeue-Light" size:fontSize];
+    return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
 }
 
-+ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize
++ (UIFont *)fwFontOfSize:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:fontSize];
+    return [UIFont systemFontOfSize:size];
 }
 
-+ (UIFont *)fwBoldSystemFontOfSize:(CGFloat)fontSize
++ (UIFont *)fwBoldFontOfSize:(CGFloat)size
 {
-    return [UIFont boldSystemFontOfSize:fontSize];
+    return [UIFont boldSystemFontOfSize:size];
 }
 
-+ (UIFont *)fwItalicSystemFontOfSize:(CGFloat)fontSize
++ (UIFont *)fwItalicFontOfSize:(CGFloat)size
 {
-    return [UIFont italicSystemFontOfSize:fontSize];
+    return [UIFont italicSystemFontOfSize:size];
 }
 
-#pragma mark - Weight
-
-+ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize weight:(FWFontWeight)weight
++ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight
 {
-    return [self fwSystemFontOfSize:fontSize weight:weight italic:NO];
-}
-
-+ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize weight:(FWFontWeight)weight italic:(BOOL)italic
-{
-    UIFont *font = nil;
-    
-    // weight
-    if (@available(iOS 8.2, *)) {
-        switch (weight) {
-            case FWFontWeightLight:
-                font = [UIFont systemFontOfSize:fontSize weight:UIFontWeightLight];
-                break;
-            case FWFontWeightBold:
-                font = [UIFont systemFontOfSize:fontSize weight:UIFontWeightBold];
-                break;
-            case FWFontWeightNormal:
-            default:
-                font = [UIFont systemFontOfSize:fontSize weight:UIFontWeightRegular];
-                break;
-        }
-    } else {
-        switch (weight) {
-            case FWFontWeightLight:
-                font = [UIFont fwLightSystemFontOfSize:fontSize];
-                break;
-            case FWFontWeightBold:
-                font = [UIFont boldSystemFontOfSize:fontSize];
-                break;
-            case FWFontWeightNormal:
-            default:
-                font = [UIFont systemFontOfSize:fontSize];
-                break;
-        }
-    }
-    
-    // italic
-    if (italic) {
-        UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits | UIFontDescriptorTraitItalic;
-        font = [UIFont fontWithDescriptor:[font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:font.pointSize];
-    }
-    
-    return font;
+    return [UIFont systemFontOfSize:size weight:weight];
 }
 
 #pragma mark - Font
@@ -112,27 +66,27 @@ UIFont * FWFontItalic(CGFloat fontSize) {
     return (self.fontDescriptor.symbolicTraits & UIFontDescriptorTraitItalic) > 0;
 }
 
-- (UIFont *)fwNormalFont
-{
-    UIFontDescriptorSymbolicTraits symbolicTraits = self.fontDescriptor.symbolicTraits ^ UIFontDescriptorTraitBold;
-    return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:self.pointSize];
-}
-
 - (UIFont *)fwBoldFont
 {
     UIFontDescriptorSymbolicTraits symbolicTraits = self.fontDescriptor.symbolicTraits | UIFontDescriptorTraitBold;
     return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:self.pointSize];
 }
 
-- (UIFont *)fwRegularFont
+- (UIFont *)fwNonBoldFont
 {
-    UIFontDescriptorSymbolicTraits symbolicTraits = self.fontDescriptor.symbolicTraits ^ UIFontDescriptorTraitItalic;
+    UIFontDescriptorSymbolicTraits symbolicTraits = self.fontDescriptor.symbolicTraits ^ UIFontDescriptorTraitBold;
     return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:self.pointSize];
 }
 
 - (UIFont *)fwItalicFont
 {
     UIFontDescriptorSymbolicTraits symbolicTraits = self.fontDescriptor.symbolicTraits | UIFontDescriptorTraitItalic;
+    return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:self.pointSize];
+}
+
+- (UIFont *)fwNonItalicFont
+{
+    UIFontDescriptorSymbolicTraits symbolicTraits = self.fontDescriptor.symbolicTraits ^ UIFontDescriptorTraitItalic;
     return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:self.pointSize];
 }
 
@@ -152,8 +106,6 @@ UIFont * FWFontItalic(CGFloat fontSize) {
 {
     return self.lineHeight - self.pointSize;
 }
-
-#pragma mark - Line
 
 - (CGFloat)fwLineSpacingWithMultiplier:(CGFloat)multiplier
 {

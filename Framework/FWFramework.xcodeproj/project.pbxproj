@@ -352,6 +352,7 @@
 		2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */; };
 		2FE6519623167C280078ECE4 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE6519423167C280078ECE4 /* FWTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE6519523167C280078ECE4 /* FWTableViewController.m */; };
+		2FF43D1324C144ED00ADD72C /* UIFont+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF43D1224C144ED00ADD72C /* UIFont+FWFramework.swift */; };
 		2FF7EED1248A3BFF00B3CA39 /* FWViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */; };
 		2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF7EED9248BD14B00B3CA39 /* FWBarrageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */; };
@@ -706,6 +707,7 @@
 		2FE4EFF72212B2750077876A /* UIViewController+FWBack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWBack.m"; sourceTree = "<group>"; };
 		2FE6519423167C280078ECE4 /* FWTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWTableViewController.h; sourceTree = "<group>"; };
 		2FE6519523167C280078ECE4 /* FWTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTableViewController.m; sourceTree = "<group>"; };
+		2FF43D1224C144ED00ADD72C /* UIFont+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+FWFramework.swift"; sourceTree = "<group>"; };
 		2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWViewController.swift; sourceTree = "<group>"; };
 		2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBarrageView.h; sourceTree = "<group>"; };
 		2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBarrageView.m; sourceTree = "<group>"; };
@@ -1184,6 +1186,7 @@
 				2FBFB73D22C6103F00E669B6 /* UIDevice+FWFramework.swift */,
 				2F03A4E8216CF4B9001965A1 /* UIFont+FWFramework.h */,
 				2F03A505216CF4B9001965A1 /* UIFont+FWFramework.m */,
+				2FF43D1224C144ED00ADD72C /* UIFont+FWFramework.swift */,
 				2FDBDCB92237B3540048607A /* UIGestureRecognizer+FWFramework.h */,
 				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
@@ -1651,6 +1654,7 @@
 				2F03A5A8216CF4B9001965A1 /* UIWindow+FWFramework.m in Sources */,
 				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
 				2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */,
+				2FF43D1324C144ED00ADD72C /* UIFont+FWFramework.swift in Sources */,
 				2FB90F1021F4A00C00084D76 /* FWMarqueeLabel.m in Sources */,
 				2FBFB71022C59E6600E669B6 /* NSFileManager+FWFramework.swift in Sources */,
 				2F03A63C216CF882001965A1 /* FWBaseRequest.m in Sources */,

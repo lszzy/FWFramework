@@ -79,26 +79,26 @@
     [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:10];
     
     NSMutableAttributedString *attrStr = [NSMutableAttributedString new];
-    UIFont *attrFont = [UIFont fwLightSystemFontOfSize:16];
+    UIFont *attrFont = FWFontLight(16);
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"细体16 " withFont:attrFont]];
-    attrFont = [UIFont fwSystemFontOfSize:16];
+    attrFont = FWFontRegular(16);
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"常规16 " withFont:attrFont]];
-    attrFont = [UIFont fwBoldSystemFontOfSize:16];
+    attrFont = FWFontBold(16);
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗体16 " withFont:attrFont]];
-    attrFont = [UIFont fwItalicSystemFontOfSize:16];
+    attrFont = FWFontItalic(16);
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"斜体16 " withFont:attrFont]];
-    attrFont = [[UIFont fwItalicSystemFontOfSize:16] fwBoldFont];
+    attrFont = [FWFontItalic(16) fwBoldFont];
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗斜体16 " withFont:attrFont]];
     
-    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightLight];
+    attrFont = [UIFont fwFontOfSize:16 weight:UIFontWeightLight];
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"\n细体16 " withFont:attrFont]];
-    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightNormal];
+    attrFont = [UIFont fwFontOfSize:16 weight:UIFontWeightRegular];
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"常规16 " withFont:attrFont]];
-    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightBold];
+    attrFont = [UIFont fwFontOfSize:16 weight:UIFontWeightBold];
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗体16 " withFont:attrFont]];
-    attrFont = [UIFont fwSystemFontOfSize:16 weight:FWFontWeightNormal italic:YES];
+    attrFont = [[UIFont fwFontOfSize:16 weight:UIFontWeightRegular] fwItalicFont];
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"斜体16 " withFont:attrFont]];
-    attrFont = [[[[[UIFont fwSystemFontOfSize:16 weight:FWFontWeightBold italic:YES] fwNormalFont] fwBoldFont] fwRegularFont] fwItalicFont];
+    attrFont = [[[[[[UIFont fwFontOfSize:16 weight:UIFontWeightBold] fwItalicFont] fwNonBoldFont] fwBoldFont] fwNonItalicFont] fwItalicFont];
     [attrStr appendAttributedString:[NSAttributedString fwAttributedString:@"粗斜体16 " withFont:attrFont]];
     textLabel.attributedText = attrStr;
     
@@ -137,7 +137,7 @@
         [self.tagCollectionView addTag:tagName withConfig:self.textTagConfig];
     }
     
-    FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontNormal(16) textColor:[UIColor blackColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
+    FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontRegular(16) textColor:[UIColor blackColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
     [self.view addSubview:marqueeLabel];
     [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
     [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
