@@ -1,34 +1,33 @@
-/*!
- @header     FWResultSet.m
- @indexgroup FWFramework
- @brief      FWResultSet
- @author     wuyong
- @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/26
- */
-
 #import "FWResultSet.h"
 #import "FWDatabase.h"
 #import <unistd.h>
 #import <sqlite3.h>
 
+// MARK: - FWDatabase Private Extension
+
 @interface FWDatabase ()
 - (void)resultSetDidClose:(FWResultSet *)resultSet;
+- (BOOL)bindStatement:(sqlite3_stmt *)pStmt WithArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args;
 @end
+
+// MARK: - FWResultSet Private Extension
 
 @interface FWResultSet () {
     NSMutableDictionary *_columnNameToIndexMap;
 }
+@property (nonatomic) BOOL shouldAutoClose;
 @end
+
+// MARK: - FWResultSet
 
 @implementation FWResultSet
 
-+ (instancetype)resultSetWithStatement:(FWStatement *)statement usingParentDatabase:(FWDatabase*)aDB {
-    
++ (instancetype)resultSetWithStatement:(FWStatement *)statement usingParentDatabase:(FWDatabase*)aDB shouldAutoClose:(BOOL)shouldAutoClose {
     FWResultSet *rs = [[FWResultSet alloc] init];
     
     [rs setStatement:statement];
     [rs setParentDB:aDB];
+    [rs setShouldAutoClose:shouldAutoClose];
     
     NSParameterAssert(![statement inUse]);
     [statement setInUse:YES]; // weak reference
@@ -114,15 +113,25 @@
     return nil;
 }
 
-
-
-
 - (BOOL)next {
     return [self nextWithError:nil];
 }
 
-- (BOOL)nextWithError:(NSError **)outErr {
-    
+- (BOOL)nextWithError:(NSError * _Nullable __autoreleasing *)outErr {
+    int rc = [self internalStepWithError:outErr];
+    return rc == SQLITE_ROW;
+}
+
+- (BOOL)step {
+    return [self stepWithError:nil];
+}
+
+- (BOOL)stepWithError:(NSError * _Nullable __autoreleasing *)outErr {
+    int rc = [self internalStepWithError:outErr];
+    return rc == SQLITE_DONE;
+}
+
+- (int)internalStepWithError:(NSError * _Nullable __autoreleasing *)outErr {
     int rc = sqlite3_step([_statement statement]);
     
     if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc) {
@@ -164,13 +173,12 @@
             *outErr = [_parentDB lastError];
         }
     }
-    
-    
-    if (rc != SQLITE_ROW) {
+
+    if (rc != SQLITE_ROW && _shouldAutoClose) {
         [self close];
     }
     
-    return (rc == SQLITE_ROW);
+    return rc;
 }
 
 - (BOOL)hasAnotherRow {
@@ -285,7 +293,7 @@
     
     const char *dataBuffer = sqlite3_column_blob([_statement statement], columnIdx);
     int dataSize = sqlite3_column_bytes([_statement statement], columnIdx);
-    
+
     if (dataBuffer == NULL) {
         return nil;
     }
@@ -303,7 +311,7 @@
     if (sqlite3_column_type([_statement statement], columnIdx) == SQLITE_NULL || (columnIdx < 0) || columnIdx >= sqlite3_column_count([_statement statement])) {
         return nil;
     }
-    
+  
     const char *dataBuffer = sqlite3_column_blob([_statement statement], columnIdx);
     int dataSize = sqlite3_column_bytes([_statement statement], columnIdx);
     
@@ -379,6 +387,21 @@
 
 - (id)objectForKeyedSubscript:(NSString *)columnName {
     return [self objectForColumn:columnName];
+}
+
+// MARK: Bind
+
+- (BOOL)bindWithArray:(NSArray*)array orDictionary:(NSDictionary *)dictionary orVAList:(va_list)args {
+    [_statement reset];
+    return [_parentDB bindStatement:_statement.statement WithArgumentsInArray:array orDictionary:dictionary orVAList:args];
+}
+
+- (BOOL)bindWithArray:(NSArray*)array {
+    return [self bindWithArray:array orDictionary:nil orVAList:nil];
+}
+
+- (BOOL)bindWithDictionary:(NSDictionary *)dictionary {
+    return [self bindWithArray:nil orDictionary:dictionary orVAList:nil];
 }
 
 @end

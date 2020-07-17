@@ -1,15 +1,14 @@
-/*!
- @header     FWDatabasePool.m
- @indexgroup FWFramework
- @brief      FWDatabasePool
- @author     wuyong
- @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/26
- */
+//
+//  FWDatabasePool.m
+//  fmdb
+//
+//  Created by August Mueller on 6/22/11.
+//  Copyright 2011 Flying Meat Inc. All rights reserved.
+//
 
+#import <sqlite3.h>
 #import "FWDatabasePool.h"
 #import "FWDatabase.h"
-#import <sqlite3.h>
 
 typedef NS_ENUM(NSInteger, FWDBTransaction) {
     FWDBTransactionExclusive,
@@ -63,7 +62,7 @@ typedef NS_ENUM(NSInteger, FWDBTransaction) {
     
     if (self != nil) {
         _path               = [aPath copy];
-        _lockQueue          = dispatch_queue_create([[NSString stringWithFormat:@"fwdb.%@", self] UTF8String], NULL);
+        _lockQueue          = dispatch_queue_create([[NSString stringWithFormat:@"fmdb.%@", self] UTF8String], NULL);
         _databaseInPool     = [NSMutableArray array];
         _databaseOutPool    = [NSMutableArray array];
         _openFlags          = openFlags;
@@ -99,9 +98,7 @@ typedef NS_ENUM(NSInteger, FWDBTransaction) {
 }
 
 - (void)dealloc {
-    
     _delegate = 0x00;
-    
     if (_lockQueue) {
         _lockQueue = 0x00;
     }
