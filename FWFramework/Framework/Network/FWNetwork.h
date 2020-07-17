@@ -24,14 +24,9 @@
 #import <Availability.h>
 #import <TargetConditionals.h>
 
-#ifndef _FWNETWORKING_
-    #define _FWNETWORKING_
-
-    #import "FWURLRequestSerialization.h"
-    #import "FWURLResponseSerialization.h"
-    #import "FWSecurityPolicy.h"
-    #import "FWNetworkReachabilityManager.h"
-    #import "FWURLSessionManager.h"
-    #import "FWHTTPSessionManager.h"
-
-#endif /* _FWNETWORKING_ */
+#import "FWURLRequestSerialization.h"
+#import "FWURLResponseSerialization.h"
+#import "FWSecurityPolicy.h"
+#import "FWNetworkReachabilityManager.h"
+#import "FWURLSessionManager.h"
+#import "FWHTTPSessionManager.h"
