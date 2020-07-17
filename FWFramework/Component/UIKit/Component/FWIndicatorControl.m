@@ -220,7 +220,6 @@
             self.imageView = [UIImageView fwAutoLayoutView];
             self.imageView.userInteractionEnabled = NO;
             self.imageView.backgroundColor = [UIColor clearColor];
-            // FWImage
             self.imageView.image = self.indicatorImage;
             [centerView addSubview:self.imageView];
             [self.imageView fwSetDimensionsToSize:self.indicatorSize];

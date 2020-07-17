@@ -501,7 +501,6 @@
         void (^completionBlock)(UIImage *image, NSError *error) = ^(UIImage *image, NSError *error){
             __typeof__(self) self = self_weak_;
             if (image) {
-                // FWImage
                 self.imageView.image = image;
                 self.progressView.hidden = true;
                 self.userInteractionEnabled = true;
@@ -545,15 +544,12 @@
             }];
         }
     } else {
-        // FWImage
         UIImage *image = [UIImage imageNamed:urlString];
         if (image) {
-            // FWImage
             self.imageView.image = image;
             // 计算图片的大小
             [self setPictureSize:image.size];
         } else {
-            // FWImage
             self.imageView.image = self.placeholderImage;
         }
         self.progressView.hidden = true;
