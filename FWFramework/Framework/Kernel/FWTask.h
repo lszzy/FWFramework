@@ -12,66 +12,51 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTask
 
-// 任务基类
+/// 任务基类
 @interface FWTask : NSOperation
 
-/**
- *  错误信息
- */
+/*! @brief 错误信息 */
 @property (nonatomic, readonly, nullable) NSError *error;
 
-/**
- *  子类重写，任务执行完成，需调用finishWithError:
- */
+/// 子类重写，任务执行完成，需调用finishWithError:
 - (void)executeTask;
 
-/**
- *  标记任务完成，error为空表示任务成功
- *
- *  @param error 任务错误信息
- */
+/// 标记任务完成，error为空表示任务成功
 - (void)finishWithError:(nullable NSError *)error;
 
-/**
- *  是否需要主线程执行，会阻碍UI渲染，默认NO
- */
+/// 是否需要主线程执行，会阻碍UI渲染，默认NO
 - (BOOL)needMainThread;
 
 @end
 
 #pragma mark - FWTaskManager
 
-// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
+/// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
 @interface FWTaskManager : NSObject
 
 /*! @brief 单例模式 */
 @property (class, nonatomic, readonly) FWTaskManager *sharedInstance;
 
-/**
- *  并发操作的最大任务数
- */
+/*! @brief 并发操作的最大任务数 */
 @property (nonatomic, assign) NSInteger maxConcurrentTaskCount;
 
-/**
- *  从配置数组添加任务
- *
- *  @param config 配置信息
- */
-- (void)addTaskConfig:(NSArray<NSDictionary *> *)config;
+/*! @brief 是否暂停，可恢复 */
+@property (nonatomic, assign) BOOL isSuspended;
 
-/**
- *  添加单个任务
- *
- *  @param task 任务
- */
+/// 添加单个任务
 - (void)addTask:(NSOperation *)task;
 
-/**
- *  批量添加任务
- *
- *  @param tasks 任务数组
- */
+/// 批量添加任务
 - (void)addTasks:(NSArray<NSOperation *> *)tasks;
+
+/// 从配置数组按顺序添加任务，支持className|dependency
+- (void)addTaskConfig:(NSArray<NSDictionary *> *)config;
+
+/// 取消所有任务
+- (void)cancelAllTasks;
+
+/// 等待所有任务执行完成，会阻塞线程
+- (void)waitUntilFinished;
 
 @end
 
