@@ -11,46 +11,41 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 快速创建系统字体，字重可选，默认Regular
+#define FWFontSize( size, ... ) \
+    [UIFont systemFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
+
 /*!
  @brief 快速创建细字体
  
- @param fontSize 字号
+ @param size 字号
  @return UIFont
  */
-FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat fontSize);
+FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
 
 /*!
  @brief 快速创建普通字体
  
- @param fontSize 字号
+ @param size 字号
  @return UIFont
  */
-FOUNDATION_EXPORT UIFont * FWFontNormal(CGFloat fontSize);
+FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size);
 
 /*!
  @brief 快速创建粗体字体
  
- @param fontSize 字号
+ @param size 字号
  @return UIFont
  */
-FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat fontSize);
+FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
 
 /*!
  @brief 快速创建斜体字体
  
- @param fontSize 字号
+ @param size 字号
  @return UIFont
  */
-FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat fontSize);
-
-#pragma mark - UIFont+FWFramework
-
-// 字体weight枚举
-typedef NS_ENUM(NSUInteger, FWFontWeight) {
-    FWFontWeightLight,
-    FWFontWeightNormal,
-    FWFontWeightBold,
-};
+FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 /*!
  @brief UIFont+FWFramework
@@ -60,24 +55,19 @@ typedef NS_ENUM(NSUInteger, FWFontWeight) {
 #pragma mark - Static
 
 // 返回系统字体的细体
-+ (UIFont *)fwLightSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont *)fwLightFontOfSize:(CGFloat)size;
 
 // 返回系统字体的普通体
-+ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont *)fwFontOfSize:(CGFloat)size;
 
 // 返回系统字体的粗体
-+ (UIFont *)fwBoldSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont *)fwBoldFontOfSize:(CGFloat)size;
 
 // 返回系统字体的斜体
-+ (UIFont *)fwItalicSystemFontOfSize:(CGFloat)fontSize;
-
-#pragma mark - Weight
++ (UIFont *)fwItalicFontOfSize:(CGFloat)size;
 
 // 创建指定尺寸和weight的系统字体
-+ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize weight:(FWFontWeight)weight;
-
-// 创建指定尺寸和weight和倾斜的系统字体
-+ (UIFont *)fwSystemFontOfSize:(CGFloat)fontSize weight:(FWFontWeight)weight italic:(BOOL)italic;
++ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
 
 #pragma mark - Font
 
@@ -87,17 +77,17 @@ typedef NS_ENUM(NSUInteger, FWFontWeight) {
 // 是否是斜体
 - (BOOL)fwIsItalic;
 
-// 当前字体的普通字体
-- (UIFont *)fwNormalFont;
-
 // 当前字体的粗体字体
 - (UIFont *)fwBoldFont;
 
-// 当前字体的常规字体(非斜体)
-- (UIFont *)fwRegularFont;
+// 当前字体的非粗体字体
+- (UIFont *)fwNonBoldFont;
 
 // 当前字体的斜体字体
 - (UIFont *)fwItalicFont;
+
+// 当前字体的非斜体字体
+- (UIFont *)fwNonItalicFont;
 
 #pragma mark - Height
 
@@ -109,8 +99,6 @@ typedef NS_ENUM(NSUInteger, FWFontWeight) {
 
 // 字体空白高度(上下之和)
 - (CGFloat)fwSpaceHeight;
-
-#pragma mark - Line
 
 // 根据字体计算指定倍数行间距的实际行距值(减去空白高度)，示例：行间距为0.5倍实际高度
 - (CGFloat)fwLineSpacingWithMultiplier:(CGFloat)multiplier;

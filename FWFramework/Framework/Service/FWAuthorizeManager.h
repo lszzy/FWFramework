@@ -30,28 +30,27 @@ NS_ASSUME_NONNULL_BEGIN
  end
  三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWAuthorizeContactsEnabled=1
  */
-typedef NS_ENUM(NSInteger, FWAuthorizeType) {
-    // 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
-    FWAuthorizeTypeLocationWhenInUse = 1,
-    // 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
-    FWAuthorizeTypeLocationAlways = 2,
-    // 麦克风，需配置FWAuthorizeMicrophoneEnabled=1，Info.plst需配置NSMicrophoneUsageDescription
-    FWAuthorizeTypeMicrophone = 3,
-    // 相册，Info.plst需配置NSPhotoLibraryUsageDescription
-    FWAuthorizeTypePhotoLibrary = 4,
-    // 照相机，Info.plst需配置NSCameraUsageDescription
-    FWAuthorizeTypeCamera = 5,
-    // 联系人，需配置FWAuthorizeContactsEnabled=1，Info.plst需配置NSContactsUsageDescription
-    FWAuthorizeTypeContacts = 6,
-    // 日历，需配置FWAuthorizeCalendarEnabled=1，Info.plst需配置NSCalendarsUsageDescription
-    FWAuthorizeTypeCalendars = 7,
-    // 提醒，需配置FWAuthorizeCalendarEnabled=1，Info.plst需配置NSRemindersUsageDescription
-    FWAuthorizeTypeReminders = 8,
-    // 音乐，需配置FWAuthorizeAppleMusicEnabled=1，Info.plst需配置NSAppleMusicUsageDescription
-    FWAuthorizeTypeAppleMusic = 9,
-    // 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-    FWAuthorizeTypeNotifications = 10,
-};
+typedef NSInteger FWAuthorizeType NS_TYPED_EXTENSIBLE_ENUM;
+/// 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeLocationWhenInUse = 1;
+/// 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeLocationAlways = 2;
+/// 麦克风，需配置FWAuthorizeMicrophoneEnabled=1，Info.plst需配置NSMicrophoneUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeMicrophone = 3;
+/// 相册，Info.plst需配置NSPhotoLibraryUsageDescription
+static const FWAuthorizeType FWAuthorizeTypePhotoLibrary = 4;
+/// 照相机，Info.plst需配置NSCameraUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeCamera = 5;
+/// 联系人，需配置FWAuthorizeContactsEnabled=1，Info.plst需配置NSContactsUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeContacts = 6;
+/// 日历，需配置FWAuthorizeCalendarEnabled=1，Info.plst需配置NSCalendarsUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeCalendars = 7;
+/// 提醒，需配置FWAuthorizeCalendarEnabled=1，Info.plst需配置NSRemindersUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeReminders = 8;
+/// 音乐，需配置FWAuthorizeAppleMusicEnabled=1，Info.plst需配置NSAppleMusicUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeAppleMusic = 9;
+/// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
+static const FWAuthorizeType FWAuthorizeTypeNotifications = 10;
 
 // 权限状态枚举
 typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
