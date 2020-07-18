@@ -22,14 +22,6 @@
 //  THE SOFTWARE.
 
 #import "FWBaseRequest.h"
-#import "FWNetworkAgent.h"
-#import "FWBatchRequest.h"
-#import "FWBatchRequestAgent.h"
-#import "FWChainRequest.h"
-#import "FWChainRequestAgent.h"
-#import "FWNetworkConfig.h"
-
-#import "FWCoroutine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -94,33 +86,6 @@ NS_ENUM(NSInteger) {
 
 ///  Whether cache is asynchronously written to storage. Default is YES.
 - (BOOL)writeCacheAsynchronously;
-
-@end
-
-#pragma mark - FWRequest+FWPromise
-
-@class FWPromise;
-
-/*!
- @brief FWRequest约定分类
- */
-@interface FWBaseRequest (FWPromise)
-
-// 创建promise对象并开始请求，参数为request|error
-- (FWPromise *)promise;
-
-// 创建coroutine对象并开始请求，参数为request|error
-- (FWCoroutineClosure)coroutine;
-
-@end
-
-@interface FWBatchRequest (FWPromise)
-
-// 创建promise对象并开始请求，参数为request|error
-- (FWPromise *)promise;
-
-// 创建coroutine对象并开始请求，参数为request|error
-- (FWCoroutineClosure)coroutine;
 
 @end
 

@@ -23,8 +23,7 @@
 
 #import "FWNetworkConfig.h"
 #import "FWBaseRequest.h"
-
-#import "FWNetwork.h"
+#import "FWNetworkManager.h"
 
 @implementation FWNetworkConfig {
     NSMutableArray<id<FWUrlFilterProtocol>> *_urlFilters;

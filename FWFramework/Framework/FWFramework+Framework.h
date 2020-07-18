@@ -28,11 +28,10 @@
 #import "FWNotificationManager.h"
 
 #import "FWCacheManager.h"
-#import "FWDatabaseManager.h"
 #import "FWModel.h"
-#import "FWNetwork.h"
-#import "FWRequest.h"
-#import "FWNetworkPrivate.h"
+#import "FWDatabaseManager.h"
+#import "FWNetworkManager.h"
+#import "FWRequestManager.h"
 #import "FWAsyncSocket.h"
 #import "FWAsyncUdpSocket.h"
 

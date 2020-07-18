@@ -24,8 +24,7 @@
 #import "FWBaseRequest.h"
 #import "FWNetworkAgent.h"
 #import "FWNetworkPrivate.h"
-
-#import "FWNetwork.h"
+#import "FWNetworkManager.h"
 
 NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validation";
 
