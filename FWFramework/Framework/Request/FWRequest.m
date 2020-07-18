@@ -24,7 +24,6 @@
 #import "FWNetworkConfig.h"
 #import "FWRequest.h"
 #import "FWNetworkPrivate.h"
-#import "FWPromise.h"
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11
@@ -426,64 +425,6 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     NSString *path = [self cacheBasePath];
     path = [path stringByAppendingPathComponent:cacheMetadataFileName];
     return path;
-}
-
-@end
-
-#pragma mark - FWRequest+FWPromise
-
-@implementation FWBaseRequest (FWPromise)
-
-- (FWPromise *)promise
-{
-    FWPromise *promise = [FWPromise promise];
-    [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
-        [promise resolve:request];
-    } failure:^(__kindof FWBaseRequest *request) {
-        [promise reject:request.error];
-    }];
-    return promise;
-}
-
-- (FWCoroutineClosure)coroutine
-{
-    __weak __typeof__(self) self_weak_ = self;
-    return ^(FWCoroutineCallback callback){
-        __typeof__(self) self = self_weak_;
-        [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
-            callback(request, nil);
-        } failure:^(__kindof FWBaseRequest *request) {
-            callback(nil, request.error);
-        }];
-    };
-}
-
-@end
-
-@implementation FWBatchRequest (FWPromise)
-
-- (FWPromise *)promise
-{
-    FWPromise *promise = [FWPromise promise];
-    [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
-        [promise resolve:batchRequest];
-    } failure:^(FWBatchRequest *batchRequest) {
-        [promise reject:batchRequest.failedRequest.error];
-    }];
-    return promise;
-}
-
-- (FWCoroutineClosure)coroutine
-{
-    __weak __typeof__(self) self_weak_ = self;
-    return ^(FWCoroutineCallback callback){
-        __typeof__(self) self = self_weak_;
-        [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
-            callback(batchRequest, nil);
-        } failure:^(FWBatchRequest *batchRequest) {
-            callback(nil, batchRequest.failedRequest.error);
-        }];
-    };
 }
 
 @end
