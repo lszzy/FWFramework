@@ -962,12 +962,12 @@
 		2FCE512F21D3746B009EA65E /* Database */ = {
 			isa = PBXGroup;
 			children = (
+				2F0CCE4121E4973C0018FA87 /* FWDatabaseManager.h */,
+				2F0CCE4221E4973C0018FA87 /* FWDatabaseManager.m */,
 				2FCE513221D3746B009EA65E /* FWDatabase.h */,
 				2FCE513021D3746B009EA65E /* FWDatabase.m */,
 				2FCE514521D3A6A5009EA65E /* FWDatabaseAdditions.h */,
 				2FCE514621D3A6A5009EA65E /* FWDatabaseAdditions.m */,
-				2F0CCE4121E4973C0018FA87 /* FWDatabaseManager.h */,
-				2F0CCE4221E4973C0018FA87 /* FWDatabaseManager.m */,
 				2FCE513921D3A41D009EA65E /* FWDatabasePool.h */,
 				2FCE513A21D3A41D009EA65E /* FWDatabasePool.m */,
 				2FCE513D21D3A43E009EA65E /* FWDatabaseQueue.h */,
