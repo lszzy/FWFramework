@@ -38,13 +38,6 @@
 #define LogTrace()              FWLogVerbose(@"%@", NSStringFromSelector(_cmd))
 
 /**
- * Seeing a return statements within an inner block
- * can sometimes be mistaken for a return point of the enclosing method.
- * This makes inline blocks a bit easier to read.
-**/
-#define return_from_block  return
-
-/**
  * A socket file descriptor is really just an integer.
  * It represents the index of the socket within the kernel.
  * This makes invalid file descriptor comparisons easier to read.
@@ -1495,7 +1488,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate. Set a delegate first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
         if (self->delegateQueue == NULL) // Must have delegate queue set
@@ -1503,7 +1496,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate queue. Set a delegate queue first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
         BOOL isIPv4Disabled = (self->config & kIPv4Disabled) ? YES : NO;
@@ -1514,7 +1507,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Both IPv4 and IPv6 have been disabled. Must enable at least one protocol first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (![self isDisconnected]) // Must be disconnected
@@ -1522,7 +1515,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept while connected or accepting connections. Disconnect first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Clear queues (spurious read/write requests post disconnect)
@@ -1541,7 +1534,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Unknown interface. Specify valid interface by name (e.g. \"en1\") or IP address.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (isIPv4Disabled && (interface6 == nil))
@@ -1549,7 +1542,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv4 has been disabled and specified interface doesn't support IPv6.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (isIPv6Disabled && (interface4 == nil))
@@ -1557,7 +1550,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv6 has been disabled and specified interface doesn't support IPv4.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		BOOL enableIPv4 = !isIPv4Disabled && (interface4 != nil);
@@ -1572,7 +1565,7 @@ enum FWAsyncSocketConfig
 			
             if (self->socket4FD == SOCKET_NULL)
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -1600,7 +1593,7 @@ enum FWAsyncSocketConfig
                     self->socket4FD = SOCKET_NULL;
 				}
 				
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -1620,7 +1613,7 @@ enum FWAsyncSocketConfig
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
 				
 				__strong FWAsyncSocket *strongSelf = weakSelf;
-				if (strongSelf == nil) return_from_block;
+				if (strongSelf == nil) return;
 				
 				LogVerbose(@"event4Block");
 				
@@ -1668,7 +1661,7 @@ enum FWAsyncSocketConfig
 			#pragma clang diagnostic warning "-Wimplicit-retain-self"
 				
 				__strong FWAsyncSocket *strongSelf = weakSelf;
-				if (strongSelf == nil) return_from_block;
+				if (strongSelf == nil) return;
 				
 				LogVerbose(@"event6Block");
 				
@@ -1809,7 +1802,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate. Set a delegate first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
         if (self->delegateQueue == NULL) // Must have delegate queue set
@@ -1817,7 +1810,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept without a delegate queue. Set a delegate queue first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (![self isDisconnected]) // Must be disconnected
@@ -1825,7 +1818,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Attempting to accept while connected or accepting connections. Disconnect first.";
 			err = [self badConfigError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Clear queues (spurious read/write requests post disconnect)
@@ -1842,7 +1835,7 @@ enum FWAsyncSocketConfig
 				NSString *msg = @"Could not remove previous unix domain socket at given url.";
 				err = [self otherError:msg];
 				
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -1855,7 +1848,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Invalid unix domain url. Specify a valid file url that does not exist (e.g. \"file:///tmp/socket\")";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Create sockets, configure, bind, and listen
@@ -1865,7 +1858,7 @@ enum FWAsyncSocketConfig
 		
         if (self->socketUN == SOCKET_NULL)
 		{
-			return_from_block;
+			return;
 		}
 		
         self->socketUrl = url;
@@ -2260,14 +2253,14 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Invalid host parameter (nil or \"\"). Should be a domain name or IP address string.";
 			preConnectErr = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Run through standard pre-connect checks
 		
 		if (![self preConnectWithInterface:interface error:&preConnectErr])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// We've made it past all the checks.
@@ -2295,7 +2288,7 @@ enum FWAsyncSocketConfig
 			NSMutableArray *addresses = [[self class] lookupHost:hostCpy port:port error:&lookupErr];
 			
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return_from_block;
+			if (strongSelf == nil) return;
 			
 			if (lookupErr)
 			{
@@ -2401,7 +2394,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"A valid IPv4 or IPv6 address was not given";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
         BOOL isIPv4Disabled = (self->config & kIPv4Disabled) ? YES : NO;
@@ -2412,7 +2405,7 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv4 has been disabled and an IPv4 address was passed.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (isIPv6Disabled && (address6 != nil))
@@ -2420,14 +2413,14 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"IPv6 has been disabled and an IPv6 address was passed.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Run through standard pre-connect checks
 		
 		if (![self preConnectWithInterface:interface error:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// We've made it past all the checks.
@@ -2435,7 +2428,7 @@ enum FWAsyncSocketConfig
 		
 		if (![self connectWithAddress4:address4 address6:address6 error:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
         self->flags |= kSocketStarted;
@@ -2475,14 +2468,14 @@ enum FWAsyncSocketConfig
 			NSString *msg = @"Invalid unix domain socket url.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Run through standard pre-connect checks
 		
 		if (![self preConnectWithUrl:url error:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// We've made it past all the checks.
@@ -2497,7 +2490,7 @@ enum FWAsyncSocketConfig
 		{
 			[self closeWithError:connectError];
 			
-			return_from_block;
+			return;
 		}
 
 		[self startConnectTimeout:timeout];
@@ -2689,14 +2682,14 @@ enum FWAsyncSocketConfig
         int err = errno;
         
         __strong FWAsyncSocket *strongSelf = weakSelf;
-        if (strongSelf == nil) return_from_block;
+        if (strongSelf == nil) return;
         
         dispatch_async(strongSelf->socketQueue, ^{ @autoreleasepool {
             
             if (strongSelf.isConnected)
             {
                 [strongSelf closeSocket:socketFD];
-                return_from_block;
+                return;
             }
             
             if (result == 0)
@@ -3077,7 +3070,7 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return_from_block;
+			if (strongSelf == nil) return;
 			
 			[strongSelf doConnectTimeout];
 			
@@ -4208,7 +4201,7 @@ enum FWAsyncSocketConfig
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		__strong FWAsyncSocket *strongSelf = weakSelf;
-		if (strongSelf == nil) return_from_block;
+		if (strongSelf == nil) return;
 		
 		LogVerbose(@"readEventBlock");
 		
@@ -4228,7 +4221,7 @@ enum FWAsyncSocketConfig
 	#pragma clang diagnostic warning "-Wimplicit-retain-self"
 		
 		__strong FWAsyncSocket *strongSelf = weakSelf;
-		if (strongSelf == nil) return_from_block;
+		if (strongSelf == nil) return;
 		
 		LogVerbose(@"writeEventBlock");
 		
@@ -5738,7 +5731,7 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 			
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return_from_block;
+			if (strongSelf == nil) return;
 			
 			[strongSelf doReadTimeout];
 			
@@ -6381,7 +6374,7 @@ enum FWAsyncSocketConfig
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 			
 			__strong FWAsyncSocket *strongSelf = weakSelf;
-			if (strongSelf == nil) return_from_block;
+			if (strongSelf == nil) return;
 			
 			[strongSelf doWriteTimeout];
 			
@@ -7587,7 +7580,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		if (cfstreamThreadRetainCount == 0)
 		{
 			LogWarn(@"Logic error concerning cfstreamThread start / stop");
-			return_from_block;
+			return;
 		}
 		
 		if (--cfstreamThreadRetainCount == 0)
@@ -7675,7 +7668,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 				LogVerbose(@"CFReadStreamCallback - HasBytesAvailable");
 				
 				if (asyncSocket->readStream != stream)
-					return_from_block;
+					return;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7711,7 +7704,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 				LogVerbose(@"CFReadStreamCallback - Other");
 				
 				if (asyncSocket->readStream != stream)
-					return_from_block;
+					return;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7742,7 +7735,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 				LogVerbose(@"CFWriteStreamCallback - CanAcceptBytes");
 				
 				if (asyncSocket->writeStream != stream)
-					return_from_block;
+					return;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{
@@ -7778,7 +7771,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 				LogVerbose(@"CFWriteStreamCallback - Other");
 				
 				if (asyncSocket->writeStream != stream)
-					return_from_block;
+					return;
 				
 				if ((asyncSocket->flags & kStartingReadTLS) && (asyncSocket->flags & kStartingWriteTLS))
 				{

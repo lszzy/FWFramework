@@ -32,13 +32,6 @@
 #define LogTrace()              FWLogVerbose(@"%@", NSStringFromSelector(_cmd))
 
 /**
- * Seeing a return statements within an inner block
- * can sometimes be mistaken for a return point of the enclosing method.
- * This makes inline blocks a bit easier to read.
-**/
-#define return_from_block  return
-
-/**
  * A socket file descriptor is really just an integer.
  * It represents the index of the socket within the kernel.
  * This makes invalid file descriptor comparisons easier to read.
@@ -2785,7 +2778,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preBind:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// Check the given interface
@@ -2800,7 +2793,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Unknown interface. Specify valid interface by name (e.g. \"en1\") or IP address.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
         BOOL isIPv4Disabled = (self->config & kIPv4Disabled) ? YES : NO;
@@ -2811,7 +2804,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv4 has been disabled and specified interface doesn't support IPv6.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (isIPv6Disabled && (interface4 == nil))
@@ -2819,7 +2812,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv6 has been disabled and specified interface doesn't support IPv4.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Determine protocol(s)
@@ -2833,7 +2826,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSocket4:useIPv4 socket6:useIPv6 error:&err])
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -2851,7 +2844,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -2865,7 +2858,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -2905,7 +2898,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preBind:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// Check the given address
@@ -2917,7 +2910,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"A valid IPv4 or IPv6 address was not given";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		NSData *localAddr4 = (addressFamily == AF_INET)  ? localAddr : nil;
@@ -2931,7 +2924,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv4 has been disabled and an IPv4 address was passed.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		if (isIPv6Disabled && localAddr6)
@@ -2939,7 +2932,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"IPv6 has been disabled and an IPv6 address was passed.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Determine protocol(s)
@@ -2953,7 +2946,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSocket4:useIPv4 socket6:useIPv6 error:&err])
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -2973,7 +2966,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return_from_block;
+				return;
 			}
 		}
 		else
@@ -2990,7 +2983,7 @@ enum FWAsyncUdpSocketConfig
 				NSString *reason = @"Error in bind() function";
 				err = [self errnoErrorWithReason:reason];
 				
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -3071,7 +3064,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preConnect:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// Check parameter(s)
@@ -3081,7 +3074,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"The host param is nil. Should be domain name or IP address string.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Create the socket(s) if needed
@@ -3090,7 +3083,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSockets:&err])
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -3152,7 +3145,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preConnect:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// Check parameter(s)
@@ -3162,7 +3155,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"The address param is nil. Should be a valid address.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Create the socket(s) if needed
@@ -3171,7 +3164,7 @@ enum FWAsyncUdpSocketConfig
 		{
 			if (![self createSockets:&err])
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -3383,7 +3376,7 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preJoin:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
 		// Convert group to address
@@ -3398,7 +3391,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Unknown group. Specify valid group IP address.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Convert interface to address
@@ -3413,7 +3406,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Unknown interface. Specify valid interface by name (e.g. \"en1\") or IP address.";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 		// Perform join
@@ -3432,7 +3425,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return_from_block;
+				return;
 			}
 			
 			// Using IPv4 only
@@ -3453,7 +3446,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return_from_block;
+				return;
 			}
 			
 			// Using IPv6 only
@@ -3466,7 +3459,7 @@ enum FWAsyncUdpSocketConfig
 			NSString *msg = @"Socket, group, and interface do not have matching IP versions";
 			err = [self badParamError:msg];
 			
-			return_from_block;
+			return;
 		}
 		
 	}};
@@ -3495,14 +3488,14 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preOp:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
         if ((self->flags & kDidCreateSockets) == 0)
 		{
 			if (![self createSockets:&err])
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -3515,7 +3508,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return_from_block;
+				return;
 			}
 			result = YES;
 		}
@@ -3528,7 +3521,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return_from_block;
+				return;
 			}
 			result = YES;
 		}
@@ -3559,14 +3552,14 @@ enum FWAsyncUdpSocketConfig
 		
 		if (![self preOp:&err])
 		{
-			return_from_block;
+			return;
 		}
 		
         if ((self->flags & kDidCreateSockets) == 0)
 		{
 			if (![self createSockets:&err])
 			{
-				return_from_block;
+				return;
 			}
 		}
 		
@@ -3579,7 +3572,7 @@ enum FWAsyncUdpSocketConfig
 			{
 				err = [self errnoErrorWithReason:@"Error in setsockopt() function"];
 				
-				return_from_block;
+				return;
 			}
 			result = YES;
 		}
@@ -4153,7 +4146,7 @@ enum FWAsyncUdpSocketConfig
 				@"You can do this explicitly via bind, or implicitly via connect or by sending data.";
 				
 				err = [self badConfigError:msg];
-				return_from_block;
+				return;
 			}
 			
             self->flags |=  kReceiveOnce;       // Enable
@@ -4199,7 +4192,7 @@ enum FWAsyncUdpSocketConfig
 								@"You can do this explicitly via bind, or implicitly via connect or by sending data.";
 				
 				err = [self badConfigError:msg];
-				return_from_block;
+				return;
 			}
 			
             self->flags |= kReceiveContinuous; // Enable
@@ -4799,7 +4792,7 @@ static void CFReadStreamCallback(CFReadStreamRef stream, CFStreamEventType type,
 					    stream != asyncUdpSocket->readStream6  )
 					{
 						LogVerbose(@"CFReadStreamCallback - Ignored");
-						return_from_block;
+						return;
 					}
 					
 					[asyncUdpSocket closeWithError:error];
@@ -4851,7 +4844,7 @@ static void CFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType typ
 					    stream != asyncUdpSocket->writeStream6  )
 					{
 						LogVerbose(@"CFWriteStreamCallback - Ignored");
-						return_from_block;
+						return;
 					}
 					
 					[asyncUdpSocket closeWithError:error];
