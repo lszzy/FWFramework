@@ -524,18 +524,30 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 
-static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
-    static NSLock *imageLock = nil;
+@interface UIImage (FWNetworkingSafeImageLoading)
++ (UIImage *)fwSafeImageWithData:(NSData *)data;
+@end
+
+@implementation UIImage (FWNetworkingSafeImageLoading)
+
++ (UIImage *)fwSafeImageWithData:(NSData *)data {
+    UIImage* image = nil;
+    static NSLock* imageLock = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageLock = [[NSLock alloc] init];
     });
     
-    UIImage *image = nil;
     [imageLock lock];
     image = [UIImage imageWithData:data];
     [imageLock unlock];
-    
+    return image;
+}
+
+@end
+
+static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
+    UIImage *image = [UIImage fwSafeImageWithData:data];
     if (image.images) {
         return image;
     }
@@ -643,7 +655,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
         return nil;
     }
 
-    self.acceptableContentTypes = [[NSSet alloc] initWithObjects:@"image/tiff", @"image/jpeg", @"image/gif", @"image/png", @"image/ico", @"image/x-icon", @"image/bmp", @"image/x-bmp", @"image/x-xbitmap", @"image/x-ms-bmp", @"image/x-win-bitmap", @"application/octet-stream", nil];
+    self.acceptableContentTypes = [[NSSet alloc] initWithObjects:@"image/tiff", @"image/jpeg", @"image/gif", @"image/png", @"image/ico", @"image/x-icon", @"image/bmp", @"image/x-bmp", @"image/x-xbitmap", @"image/x-win-bitmap", nil];
 
     self.imageScale = [[UIScreen mainScreen] scale];
     self.automaticallyInflatesResponseImage = YES;
