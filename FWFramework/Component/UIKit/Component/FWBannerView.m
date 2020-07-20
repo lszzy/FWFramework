@@ -10,8 +10,7 @@
 #import "FWBannerView.h"
 #import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
-#import "UIImageView+FWNetwork.h"
-#import "FWAnimatedImage.h"
+#import "FWNetworkManager.h"
 #import "FWPlugin.h"
 #import "FWPageControl.h"
 #import "FWStatisticalManager.h"
@@ -1026,7 +1025,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupImageView
 {
-    Class imageClass = [FWAnimatedImageView class];
+    Class imageClass = [UIImageView class];
     id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
         imageClass = [imagePlugin fwImageViewAnimatedClass];

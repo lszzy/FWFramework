@@ -27,7 +27,7 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@"Save" block:^(id sender) {
         FWStrongifySelf();
-        [self.gifImageView.image fwSaveToAlbumWithCompletionBlock:nil];
+        [self.gifImageView.image fwSaveImageWithBlock:nil];
     }];
 }
 

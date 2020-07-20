@@ -33,7 +33,7 @@
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 4;
-    cycleView.placeholderImage = [FWAnimatedImage imageNamed:@"loading"];
+    cycleView.placeholderImage = [UIImage imageNamed:@"loading"];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];

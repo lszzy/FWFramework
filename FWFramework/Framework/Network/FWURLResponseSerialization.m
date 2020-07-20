@@ -524,11 +524,11 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 
-@interface UIImage (FWNetworkingSafeImageLoading)
+@interface UIImage (FWInnerNetwork)
 + (UIImage *)fwSafeImageWithData:(NSData *)data;
 @end
 
-@implementation UIImage (FWNetworkingSafeImageLoading)
+@implementation UIImage (FWInnerNetwork)
 
 + (UIImage *)fwSafeImageWithData:(NSData *)data {
     UIImage* image = nil;
