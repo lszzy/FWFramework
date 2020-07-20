@@ -289,7 +289,7 @@
     size.height -= insets.top + insets.bottom;
     if (size.width <= 0 || size.height <= 0) return nil;
     CGRect rect = CGRectMake(-insets.left, -insets.top, image.size.width, image.size.height);
-    UIGraphicsBeginImageContextWithOptions(size, NO, image.scale);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     [image drawInRect:rect];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

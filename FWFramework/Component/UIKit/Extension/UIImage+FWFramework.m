@@ -424,7 +424,7 @@
 - (UIImage *)fwImageWithScaleSize:(CGSize)size
 {
     if (size.width <= 0 || size.height <= 0) return nil;
-    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -434,7 +434,7 @@
 - (UIImage *)fwImageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode
 {
     if (size.width <= 0 || size.height <= 0) return nil;
-    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     [self fwDrawInRect:CGRectMake(0, 0, size.width, size.height) withContentMode:contentMode clipsToBounds:NO];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -560,7 +560,7 @@
     size.height -= insets.top + insets.bottom;
     if (size.width <= 0 || size.height <= 0) return nil;
     CGRect rect = CGRectMake(-insets.left, -insets.top, self.size.width, self.size.height);
-    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (color) {
         CGContextSetFillColorWithColor(context, color.CGColor);
@@ -612,7 +612,7 @@
 - (UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth
 {
     CGSize newSize = [self fwScaleSizeWithMaxWidth:maxWidth];
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, self.scale);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
     [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
