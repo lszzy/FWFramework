@@ -12,7 +12,6 @@
 #import "Foundation+FWFramework.h"
 #import "UIKit+FWFramework.h"
 
-#import "FWAnimatedImage.h"
 #import "FWAlertController.h"
 #import "FWAttributedLabel.h"
 #import "FWBannerView.h"

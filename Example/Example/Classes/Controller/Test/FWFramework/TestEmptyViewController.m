@@ -35,7 +35,7 @@
 
 - (UIImage *)fwImageForEmptyView:(UIScrollView *)scrollView
 {
-    return [FWAnimatedImage imageNamed:@"loading"];
+    return [UIImage imageNamed:@"loading"];
 }
 
 - (CAAnimation *)fwImageAnimationForEmptyView:(UIScrollView *)scrollView
