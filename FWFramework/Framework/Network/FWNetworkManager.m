@@ -601,26 +601,6 @@
 
 #pragma mark - UIImageView+FWNetwork
 
-@interface UIImageView (FWInnerNetwork)
-
-@property (readwrite, nonatomic, strong, setter = fwSetActiveImageDownloadReceipt:) FWImageDownloadReceipt *fwActiveImageDownloadReceipt;
-
-@end
-
-@implementation UIImageView (FWInnerNetwork)
-
-- (FWImageDownloadReceipt *)fwActiveImageDownloadReceipt
-{
-    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(fwActiveImageDownloadReceipt));
-}
-
-- (void)fwSetActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
-{
-    objc_setAssociatedObject(self, @selector(fwActiveImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
 @implementation UIImageView (FWNetwork)
 
 + (FWImageDownloader *)fwSharedImageDownloader
@@ -633,7 +613,15 @@
     objc_setAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-#pragma mark -
+- (FWImageDownloadReceipt *)fwActiveImageDownloadReceipt
+{
+    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(fwActiveImageDownloadReceipt));
+}
+
+- (void)setFwActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
+{
+    objc_setAssociatedObject(self, @selector(fwActiveImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (void)fwSetImageWithURL:(id)url
 {
