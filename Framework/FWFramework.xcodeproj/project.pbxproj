@@ -1008,7 +1008,6 @@
 				2F65FFB524BAD910008C7F03 /* FWFramework+Component.h */,
 				2F65FF9624BAC72B008C7F03 /* Foundation */,
 				2F65FF9824BAC77A008C7F03 /* UIKit */,
-				2FF43D0724BEEE8E00ADD72C /* SwiftUI */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1052,13 +1051,6 @@
 				2FAC8523247CCAE300E5ED36 /* FWModel.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		2FF43D0724BEEE8E00ADD72C /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		2FF43D0824BEEEA600ADD72C /* Extension */ = {
