@@ -11,7 +11,6 @@
 #import "UIView+FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
 #import "FWNetworkManager.h"
-#import "FWPlugin.h"
 #import "FWPageControl.h"
 #import "FWStatisticalManager.h"
 
@@ -811,12 +810,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     
     if (!self.onlyDisplayText && [imagePath isKindOfClass:[NSString class]]) {
         if ([imagePath hasPrefix:@"http"]) {
-            id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-            if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageUrl:placeholder:completion:progress:)]) {
-                [imagePlugin fwImageView:cell.imageView setImageUrl:imagePath placeholder:self.placeholderImage completion:nil progress:nil];
-            } else {
-                [cell.imageView fwSetImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
-            }
+            [cell.imageView fwSetImageWithURL:imagePath placeholderImage:self.placeholderImage];
         } else {
             UIImage *image = [UIImage imageNamed:imagePath];
             cell.imageView.image = image ?: self.placeholderImage;
@@ -1025,12 +1019,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupImageView
 {
-    Class imageClass = [UIImageView class];
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
-        imageClass = [imagePlugin fwImageViewAnimatedClass];
-    }
-    
+    Class imageClass = [UIImageView fwImageViewAnimatedClass];
     UIImageView *imageView = [[imageClass alloc] init];
     _imageView = imageView;
     imageView.layer.masksToBounds = YES;

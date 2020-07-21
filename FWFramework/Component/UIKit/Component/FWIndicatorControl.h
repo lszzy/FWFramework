@@ -63,7 +63,7 @@ typedef NS_ENUM(NSInteger, FWIndicatorControlType) {
 @property (nonatomic, copy, nullable) NSAttributedString *attributedTitle;
 
 // 当前指示器进度值，范围0~1，仅Progress生效，一直生效
-@property (nonatomic, assign) float progress;
+@property (nonatomic, assign) CGFloat progress;
 
 // 完成回调句柄
 @property (nonatomic, copy, nullable) void (^completionBlock)(void);

@@ -22,6 +22,9 @@
 #import "FWURLResponseSerialization.h"
 #import <TargetConditionals.h>
 #import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import "FWNetworkManager.h"
+#import "FWPlugin.h"
 
 NSString * const FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
 NSString * const FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
@@ -521,37 +524,31 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #pragma mark -
 
-#import <CoreGraphics/CoreGraphics.h>
-#import <UIKit/UIKit.h>
-
-@interface UIImage (FWInnerNetwork)
-+ (UIImage *)fwSafeImageWithData:(NSData *)data;
-@end
-
-@implementation UIImage (FWInnerNetwork)
-
-+ (UIImage *)fwSafeImageWithData:(NSData *)data {
-    UIImage* image = nil;
-    static NSLock* imageLock = nil;
+static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
+    if (!data || [data length] == 0) {
+        return nil;
+    }
+    
+    static NSLock *imageLock = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageLock = [[NSLock alloc] init];
     });
     
+    UIImage *image = nil;
     [imageLock lock];
-    image = [UIImage imageWithData:data];
+    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecodeWithData:scale:)]) {
+        image = [imagePlugin fwImageDecodeWithData:data scale:scale];
+    } else {
+        image = [UIImage imageWithData:data];
+    }
     [imageLock unlock];
-    return image;
-}
-
-@end
-
-static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
-    UIImage *image = [UIImage fwSafeImageWithData:data];
-    if (image.images) {
+    
+    if (image.images || !image) {
         return image;
     }
-    
+
     return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
 }
 

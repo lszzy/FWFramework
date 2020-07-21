@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) UIColor *progressColor;
 
-@property (nonatomic, assign) float progress;
+@property (nonatomic, assign) CGFloat progress;
 
 @end
 
@@ -44,7 +44,7 @@
     [processPath stroke];
 }
 
-- (void)setProgress:(float)progress
+- (void)setProgress:(CGFloat)progress
 {
     _progress = progress;
     [self setNeedsDisplay];
@@ -118,7 +118,7 @@
     }
 }
 
-- (void)setProgress:(float)progress
+- (void)setProgress:(CGFloat)progress
 {
     _progress = progress;
     if (self.progressView) {

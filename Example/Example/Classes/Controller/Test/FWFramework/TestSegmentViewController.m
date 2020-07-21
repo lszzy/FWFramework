@@ -53,13 +53,13 @@
     NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
     progressView.progress = 0;
     progressView.hidden = NO;
-    [imageView fwSetImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:gifImageUrl]] placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+    [imageView fwSetImageWithURL:gifImageUrl placeholderImage:nil completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
         progressView.hidden = YES;
-        imageView.image = image;
-    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-        progressView.hidden = YES;
-    } progress:^(NSProgress * _Nonnull downloadProgress) {
-        progressView.progress = downloadProgress.fractionCompleted;
+        if (image) {
+            imageView.image = image;
+        }
+    } progress:^(double progress) {
+        progressView.progress = progress;
     }];
     
     CGSize activitySize = CGSizeMake(30, 30);

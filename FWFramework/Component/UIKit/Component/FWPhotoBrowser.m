@@ -9,7 +9,6 @@
 
 #import "FWPhotoBrowser.h"
 #import "FWNetworkManager.h"
-#import "FWPlugin.h"
 #import "FWProgressView.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
@@ -398,12 +397,7 @@
     self.maximumZoomScale = 2;
     
     // 添加 imageView
-    Class imageClass = [UIImageView class];
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
-        imageClass = [imagePlugin fwImageViewAnimatedClass];
-    }
-    
+    Class imageClass = [UIImageView fwImageViewAnimatedClass];
     UIImageView *imageView = [[imageClass alloc] init];
     imageView.clipsToBounds = true;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -497,7 +491,7 @@
         self.userInteractionEnabled = false;
         // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
-        void (^completionBlock)(UIImage *image, NSError *error) = ^(UIImage *image, NSError *error){
+        [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             if (image) {
                 self.imageView.image = image;
@@ -523,25 +517,10 @@
                 
                 [self.pictureDelegate photoViewLoaded:self];
             }
-        };
-        void (^progressBlock)(float progress) = ^(float progress){
+        } progress:^(double progress) {
             __typeof__(self) self = self_weak_;
             self.progressView.progress = progress;
-        };
-        id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-        if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageUrl:placeholder:completion:progress:)]) {
-            [imagePlugin fwImageView:self.imageView setImageUrl:urlString placeholder:self.placeholderImage completion:completionBlock progress:progressBlock];
-        } else {
-            NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-            [urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-            [self.imageView fwSetImageWithURLRequest:urlRequest placeholderImage:self.placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-                completionBlock(image, nil);
-            } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-                completionBlock(nil, error);
-            } progress:^(NSProgress * _Nonnull downloadProgress) {
-                progressBlock(downloadProgress.fractionCompleted);
-            }];
-        }
+        }];
     } else {
         UIImage *image = [UIImage imageNamed:urlString];
         if (image) {

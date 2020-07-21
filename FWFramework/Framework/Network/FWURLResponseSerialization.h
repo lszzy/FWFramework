@@ -224,6 +224,7 @@ FOUNDATION_EXPORT id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJ
 
  By default, `FWImageResponseSerializer` accepts the following MIME types, which correspond to the image formats supported by UIImage or NSImage:
 
+ - `application/octet-stream`
  - `image/tiff`
  - `image/jpeg`
  - `image/gif`
@@ -233,6 +234,7 @@ FOUNDATION_EXPORT id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJ
  - `image/bmp`
  - `image/x-bmp`
  - `image/x-xbitmap`
+ - `image/x-ms-bmp`
  - `image/x-win-bitmap`
  */
 @interface FWImageResponseSerializer : FWHTTPResponseSerializer
