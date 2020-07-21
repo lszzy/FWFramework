@@ -16,38 +16,38 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
  @discussion 开启指定权限方法：
  一、Pod项目：添加pod时同时指定
- pod 'FWFramework', :subspecs => ['Authorize-Contacts']
+ pod 'FWFramework', :subspecs => ['Component-Contacts']
  二、Pod项目：在Podfile最后添加
  post_install do |installer_representation|
     installer_representation.pods_project.targets.each do |target|
         if target.name == 'FWFramework'
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
-                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FWAuthorizeContactsEnabled=1'
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FWComponentContactsEnabled=1'
             end
         end
     end
  end
- 三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWAuthorizeContactsEnabled=1
+ 三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWComponentContactsEnabled=1
  */
 typedef NSInteger FWAuthorizeType NS_TYPED_EXTENSIBLE_ENUM;
 /// 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeLocationWhenInUse = 1;
 /// 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeLocationAlways = 2;
-/// 麦克风，需配置FWAuthorizeMicrophoneEnabled=1，Info.plst需配置NSMicrophoneUsageDescription
+/// 麦克风，需配置FWComponentMicrophoneEnabled=1，Info.plst需配置NSMicrophoneUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeMicrophone = 3;
 /// 相册，Info.plst需配置NSPhotoLibraryUsageDescription
 static const FWAuthorizeType FWAuthorizeTypePhotoLibrary = 4;
 /// 照相机，Info.plst需配置NSCameraUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeCamera = 5;
-/// 联系人，需配置FWAuthorizeContactsEnabled=1，Info.plst需配置NSContactsUsageDescription
+/// 联系人，需配置FWComponentContactsEnabled=1，Info.plst需配置NSContactsUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeContacts = 6;
-/// 日历，需配置FWAuthorizeCalendarEnabled=1，Info.plst需配置NSCalendarsUsageDescription
+/// 日历，需配置FWComponentCalendarEnabled=1，Info.plst需配置NSCalendarsUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeCalendars = 7;
-/// 提醒，需配置FWAuthorizeCalendarEnabled=1，Info.plst需配置NSRemindersUsageDescription
+/// 提醒，需配置FWComponentCalendarEnabled=1，Info.plst需配置NSRemindersUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeReminders = 8;
-/// 音乐，需配置FWAuthorizeAppleMusicEnabled=1，Info.plst需配置NSAppleMusicUsageDescription
+/// 音乐，需配置FWComponentAppleMusicEnabled=1，Info.plst需配置NSAppleMusicUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeAppleMusic = 9;
 /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
 static const FWAuthorizeType FWAuthorizeTypeNotifications = 10;
@@ -88,7 +88,7 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
 
 /**
  @brief 权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用
- @discussion 部分权限需配置编译时FWAuthorizeContactsEnabled为1才可用，如麦克风、日历、联系人等
+ @discussion 部分权限需配置编译时FWComponentContactsEnabled为1才可用，如麦克风、日历、联系人等
  */
 @interface FWAuthorizeManager : NSObject <FWAuthorizeProtocol>
 
