@@ -655,7 +655,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
         return nil;
     }
 
-    self.acceptableContentTypes = [[NSSet alloc] initWithObjects:@"image/tiff", @"image/jpeg", @"image/gif", @"image/png", @"image/ico", @"image/x-icon", @"image/bmp", @"image/x-bmp", @"image/x-xbitmap", @"image/x-win-bitmap", nil];
+    self.acceptableContentTypes = [[NSSet alloc] initWithObjects:@"application/octet-stream", @"image/tiff", @"image/jpeg", @"image/gif", @"image/png", @"image/ico", @"image/x-icon", @"image/bmp", @"image/x-bmp", @"image/x-xbitmap", @"image/x-ms-bmp", @"image/x-win-bitmap", nil];
 
     self.imageScale = [[UIScreen mainScreen] scale];
     self.automaticallyInflatesResponseImage = YES;
