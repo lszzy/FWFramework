@@ -118,23 +118,31 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 /// 异步加载网络图片分类
 @interface UIImageView (FWNetwork)
 
+/// 默认框架公用图片下载器
 @property (class, nonatomic, strong) FWImageDownloader *fwSharedImageDownloader;
 
+/// 动画ImageView视图类，优先加载插件，默认UIImageView
+@property (class, nonatomic, unsafe_unretained) Class fwImageViewAnimatedClass;
+
+/// 加载网络图片，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url;
 
+/// 加载网络图片，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage;
 
+/// 加载网络图片，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 
-- (void)fwSetImageWithURLRequest:(NSURLRequest *)urlRequest
-                placeholderImage:(nullable UIImage *)placeholderImage
-                         success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *image))success
-                         failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
-                         progress:(nullable void (^)(NSProgress *downloadProgress))progress;
+/// 加载网络图片，优先加载插件，默认使用框架网络库
+- (void)fwSetImageWithURL:(id)url
+         placeholderImage:(nullable UIImage *)placeholderImage
+               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                 progress:(nullable void (^)(double progress))progress;
 
+/// 取消默认框架图片下载任务
 - (void)fwCancelImageDownloadTask;
 
 @end
@@ -148,6 +156,9 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 @optional
 
+// 解析框架网络库图片插件方法，默认使用UIImage系统方法
+- (nullable UIImage *)fwImageDecodeWithData:(NSData *)data scale:(CGFloat)scale;
+
 // imageView动画视图类插件方法，默认使用UIImageView
 - (Class)fwImageViewAnimatedClass;
 
@@ -156,7 +167,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
         setImageUrl:(NSString *)imageUrl
         placeholder:(nullable UIImage *)placeholder
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
-           progress:(nullable void (^)(float progress))progress;
+           progress:(nullable void (^)(double progress))progress;
 
 @end
 

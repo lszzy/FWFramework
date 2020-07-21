@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWProgressView : UIView
 
 // 进度值，0.0到1.0
-@property (nonatomic, assign) float progress;
+@property (nonatomic, assign) CGFloat progress;
 
 // 进度值颜色，默认白色
 @property (nonatomic, strong, nullable) UIColor *progressTintColor;
