@@ -603,20 +603,20 @@
 
 @interface UIImageView (FWInnerNetwork)
 
-@property (readwrite, nonatomic, strong, setter = fw_setActiveImageDownloadReceipt:) FWImageDownloadReceipt *fw_activeImageDownloadReceipt;
+@property (readwrite, nonatomic, strong, setter = fwSetActiveImageDownloadReceipt:) FWImageDownloadReceipt *fwActiveImageDownloadReceipt;
 
 @end
 
 @implementation UIImageView (FWInnerNetwork)
 
-- (FWImageDownloadReceipt *)fw_activeImageDownloadReceipt
+- (FWImageDownloadReceipt *)fwActiveImageDownloadReceipt
 {
-    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(fw_activeImageDownloadReceipt));
+    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(fwActiveImageDownloadReceipt));
 }
 
-- (void)fw_setActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
+- (void)fwSetActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
 {
-    objc_setAssociatedObject(self, @selector(fw_activeImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwActiveImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
@@ -715,7 +715,7 @@
                    withReceiptID:downloadID
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                       if ([strongSelf.fw_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                       if ([strongSelf.fwActiveImageDownloadReceipt.receiptID isEqual:downloadID]) {
                            if (success) {
                                success(request, response, responseObject);
                            } else if (responseObject) {
@@ -726,7 +726,7 @@
                    }
                    failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                        if ([strongSelf.fw_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                        if ([strongSelf.fwActiveImageDownloadReceipt.receiptID isEqual:downloadID]) {
                             if (failure) {
                                 failure(request, response, error);
                             }
@@ -735,31 +735,31 @@
                    }
                    progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                       if ([strongSelf.fw_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                       if ([strongSelf.fwActiveImageDownloadReceipt.receiptID isEqual:downloadID]) {
                            progress(downloadProgress);
                        }
                    } : nil)];
 
-        self.fw_activeImageDownloadReceipt = receipt;
+        self.fwActiveImageDownloadReceipt = receipt;
     }
 }
 
 - (void)fwCancelImageDownloadTask
 {
-    if (self.fw_activeImageDownloadReceipt != nil) {
-        [[self.class fwSharedImageDownloader] cancelTaskForImageDownloadReceipt:self.fw_activeImageDownloadReceipt];
+    if (self.fwActiveImageDownloadReceipt != nil) {
+        [[self.class fwSharedImageDownloader] cancelTaskForImageDownloadReceipt:self.fwActiveImageDownloadReceipt];
         [self clearActiveDownloadInformation];
      }
 }
 
 - (void)clearActiveDownloadInformation
 {
-    self.fw_activeImageDownloadReceipt = nil;
+    self.fwActiveImageDownloadReceipt = nil;
 }
 
 - (BOOL)isActiveTaskURLEqualToURLRequest:(NSURLRequest *)urlRequest
 {
-    return [self.fw_activeImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString];
+    return [self.fwActiveImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString];
 }
 
 @end
