@@ -628,7 +628,8 @@
     return objc_getAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader)) ?: [FWImageDownloader defaultInstance];
 }
 
-+ (void)fwSetSharedImageDownloader:(FWImageDownloader *)imageDownloader {
++ (void)setFwSharedImageDownloader:(FWImageDownloader *)imageDownloader
+{
     objc_setAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
