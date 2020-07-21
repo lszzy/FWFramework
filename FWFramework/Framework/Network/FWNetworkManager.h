@@ -149,9 +149,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 #pragma mark - FWImagePlugin
 
-/*!
- @brief 图片插件协议，应用可自定义图片实现
- */
+/// 图片插件协议，应用可自定义图片插件
 @protocol FWImagePlugin <NSObject>
 
 @optional
@@ -169,6 +167,13 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 @end
 
 #if FWComponentSDWebImageEnabled
+
+/// SDWebImage图片插件
+@interface FWSDWebImagePlugin : NSObject <FWImagePlugin>
+
+@property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
+
+@end
 
 #endif
 

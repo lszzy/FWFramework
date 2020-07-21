@@ -784,3 +784,67 @@
 }
 
 @end
+
+#if FWComponentSDWebImageEnabled
+
+@import SDWebImage;
+
+@implementation FWSDWebImagePlugin
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[FWPluginManager sharedInstance] registerDefault:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
+    });
+}
+
++ (FWSDWebImagePlugin *)sharedInstance
+{
+    static FWSDWebImagePlugin *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWSDWebImagePlugin alloc] init];
+    });
+    return instance;
+}
+
+- (Class)fwImageViewAnimatedClass
+{
+    return [SDAnimatedImageView class];
+}
+
+- (void)fwImageView:(UIImageView *)imageView
+        setImageUrl:(NSString *)imageUrl
+        placeholder:(UIImage *)placeholder
+         completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+           progress:(void (^)(double))progress
+{
+    NSURL *url = imageUrl.length > 0 ? [NSURL URLWithString:imageUrl] : nil;
+    if (!url && imageUrl.length > 0) {
+        url = [NSURL URLWithString:[imageUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    
+    [imageView sd_setImageWithURL:url
+                 placeholderImage:placeholder
+                          options:0
+                          context:nil
+                         progress:progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+                            if (expectedSize > 0) {
+                                if ([NSThread isMainThread]) {
+                                    progress(receivedSize / (double)expectedSize);
+                                } else {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        progress(receivedSize / (double)expectedSize);
+                                    });
+                                }
+                            }
+                        } : nil
+                        completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                            completion(image, error);
+                        } : nil];
+}
+
+@end
+
+#endif
