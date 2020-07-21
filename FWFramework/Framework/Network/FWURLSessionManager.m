@@ -22,24 +22,24 @@
 #import "FWURLSessionManager.h"
 #import <objc/runtime.h>
 
-static dispatch_queue_t url_session_manager_processing_queue() {
-    static dispatch_queue_t fw_url_session_manager_processing_queue;
+static dispatch_queue_t fw_url_session_manager_processing_queue() {
+    static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        fw_url_session_manager_processing_queue = dispatch_queue_create("site.wuyong.networking.session.manager.processing", DISPATCH_QUEUE_CONCURRENT);
+        queue = dispatch_queue_create("site.wuyong.networking.session.manager.processing", DISPATCH_QUEUE_CONCURRENT);
     });
 
-    return fw_url_session_manager_processing_queue;
+    return queue;
 }
 
-static dispatch_group_t url_session_manager_completion_group() {
-    static dispatch_group_t fw_url_session_manager_completion_group;
+static dispatch_group_t fw_url_session_manager_completion_group() {
+    static dispatch_group_t group;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        fw_url_session_manager_completion_group = dispatch_group_create();
+        group = dispatch_group_create();
     });
 
-    return fw_url_session_manager_completion_group;
+    return group;
 }
 
 NSString * const FWNetworkingTaskDidResumeNotification = @"site.wuyong.networking.task.resume";
@@ -197,7 +197,7 @@ didCompleteWithError:(NSError *)error
     if (error) {
         userInfo[FWNetworkingTaskDidCompleteErrorKey] = error;
 
-        dispatch_group_async(manager.completionGroup ?: url_session_manager_completion_group(), manager.completionQueue ?: dispatch_get_main_queue(), ^{
+        dispatch_group_async(manager.completionGroup ?: fw_url_session_manager_completion_group(), manager.completionQueue ?: dispatch_get_main_queue(), ^{
             if (self.completionHandler) {
                 self.completionHandler(task.response, responseObject, error);
             }
@@ -207,7 +207,7 @@ didCompleteWithError:(NSError *)error
             });
         });
     } else {
-        dispatch_async(url_session_manager_processing_queue(), ^{
+        dispatch_async(fw_url_session_manager_processing_queue(), ^{
             NSError *serializationError = nil;
             responseObject = [manager.responseSerializer responseObjectForResponse:task.response data:data error:&serializationError];
 
@@ -223,7 +223,7 @@ didCompleteWithError:(NSError *)error
                 userInfo[FWNetworkingTaskDidCompleteErrorKey] = serializationError;
             }
 
-            dispatch_group_async(manager.completionGroup ?: url_session_manager_completion_group(), manager.completionQueue ?: dispatch_get_main_queue(), ^{
+            dispatch_group_async(manager.completionGroup ?: fw_url_session_manager_completion_group(), manager.completionQueue ?: dispatch_get_main_queue(), ^{
                 if (self.completionHandler) {
                     self.completionHandler(task.response, responseObject, serializationError);
                 }
