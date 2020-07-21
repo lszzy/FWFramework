@@ -127,16 +127,16 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 /// 加载网络图片，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url;
 
-/// 加载网络图片，优先加载插件，默认使用框架网络库
+/// 加载网络图片，支持占位，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage;
 
-/// 加载网络图片，优先加载插件，默认使用框架网络库
+/// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 
-/// 加载网络图片，优先加载插件，默认使用框架网络库
+/// 加载网络图片，支持占位、回调和进度，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
@@ -167,5 +167,9 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
            progress:(nullable void (^)(double progress))progress;
 
 @end
+
+#if FWComponentSDWebImageEnabled
+
+#endif
 
 NS_ASSUME_NONNULL_END

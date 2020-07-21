@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc        = spec_arc_files
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
-  spec.default_subspecs    = [ 'Framework', 'Component', 'Application' ]
+  spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
 
   spec.subspec 'Framework' do |subspec|
     subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}'
@@ -29,29 +29,36 @@ Pod::Spec.new do |spec|
     subspec.dependency 'FWFramework/Framework'
   end
 
+  spec.subspec 'Component-Contacts' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentContactsEnabled=1' }
+  end
+
+  spec.subspec 'Component-Microphone' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentMicrophoneEnabled=1' }
+  end
+
+  spec.subspec 'Component-Calendar' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentCalendarEnabled=1' }
+  end
+
+  spec.subspec 'Component-AppleMusic' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentAppleMusicEnabled=1' }
+  end
+  
+  spec.subspec 'Component-SDWebImage' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.dependency 'SDWebImage'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentSDWebImageEnabled=1' }
+  end
+  
   spec.subspec 'Application' do |subspec|
     subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/**/*.h'
     subspec.dependency 'FWFramework/Framework'
-  end
-
-  spec.subspec 'Authorize-Contacts' do |subspec|
-    subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeContactsEnabled=1' }
-  end
-
-  spec.subspec 'Authorize-Microphone' do |subspec|
-    subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeMicrophoneEnabled=1' }
-  end
-
-  spec.subspec 'Authorize-Calendar' do |subspec|
-    subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeCalendarEnabled=1' }
-  end
-
-  spec.subspec 'Authorize-AppleMusic' do |subspec|
-    subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAuthorizeAppleMusicEnabled=1' }
+    subspec.dependency 'FWFramework/Component'
   end
 end
