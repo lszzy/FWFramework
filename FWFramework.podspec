@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc        = spec_arc_files
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
-  spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
+  spec.default_subspecs    = [ 'Framework', 'Component', 'Application' ]
 
   spec.subspec 'Framework' do |subspec|
     subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}'
@@ -31,28 +31,28 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'Component-Contacts' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentContactsEnabled=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
   end
 
   spec.subspec 'Component-Microphone' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentMicrophoneEnabled=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_MICROPHONE_ENABLED=1' }
   end
 
   spec.subspec 'Component-Calendar' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentCalendarEnabled=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CALENDAR_ENABLED=1' }
   end
 
   spec.subspec 'Component-AppleMusic' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentAppleMusicEnabled=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
   end
   
   spec.subspec 'Component-SDWebImage' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'SDWebImage'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWComponentSDWebImageEnabled=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
   end
   
   spec.subspec 'Application' do |subspec|

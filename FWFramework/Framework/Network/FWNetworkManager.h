@@ -166,7 +166,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 @end
 
-#if FWComponentSDWebImageEnabled
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
 
 /// SDWebImage图片插件
 @interface FWSDWebImagePlugin : NSObject <FWImagePlugin>

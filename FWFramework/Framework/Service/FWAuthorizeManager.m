@@ -11,7 +11,7 @@
 
 #pragma mark - FWAuthorizeContacts
 
-#if FWComponentContactsEnabled
+#if FWCOMPONENT_CONTACTS_ENABLED
 
 #import <Contacts/Contacts.h>
 #import <AddressBook/AddressBook.h>
@@ -90,7 +90,7 @@
 
 #pragma mark - FWAuthorizeEventKit
 
-#if FWComponentCalendarEnabled
+#if FWCOMPONENT_CALENDAR_ENABLED
 
 #import <EventKit/EventKit.h>
 
@@ -249,7 +249,7 @@
 
 #pragma mark - FWAuthorizeMicrophone
 
-#if FWComponentMicrophoneEnabled
+#if FWCOMPONENT_MICROPHONE_ENABLED
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -377,7 +377,7 @@
 
 #pragma mark - FWAuthorizeAppleMusic
 
-#if FWComponentAppleMusicEnabled
+#if FWCOMPONENT_APPLEMUSIC_ENABLED
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -620,7 +620,7 @@
         case FWAuthorizeTypeLocationAlways:
             object = [[FWAuthorizeLocation alloc] initWithIsAlways:YES];
             break;
-#if FWComponentMicrophoneEnabled
+#if FWCOMPONENT_MICROPHONE_ENABLED
         case FWAuthorizeTypeMicrophone:
             object = [[FWAuthorizeMicrophone alloc] init];
             break;
@@ -631,12 +631,12 @@
         case FWAuthorizeTypeCamera:
             object = [[FWAuthorizeCamera alloc] init];
             break;
-#if FWComponentContactsEnabled
+#if FWCOMPONENT_CONTACTS_ENABLED
         case FWAuthorizeTypeContacts:
             object = [[FWAuthorizeContacts alloc] init];
             break;
 #endif
-#if FWComponentCalendarEnabled
+#if FWCOMPONENT_CALENDAR_ENABLED
         case FWAuthorizeTypeCalendars:
             object = [[FWAuthorizeEventKit alloc] initWithType:EKEntityTypeEvent];
             break;
@@ -644,7 +644,7 @@
             object = [[FWAuthorizeEventKit alloc] initWithType:EKEntityTypeReminder];
             break;
 #endif
-#if FWComponentAppleMusicEnabled
+#if FWCOMPONENT_APPLEMUSIC_ENABLED
         case FWAuthorizeTypeAppleMusic:
             object = [[FWAuthorizeAppleMusic alloc] init];
             break;
