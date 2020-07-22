@@ -49,11 +49,8 @@ typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
 @property (nonatomic,assign)                CTLineBreakMode lineBreakMode;          //LineBreakMode
 @property (nonatomic,assign)                CGFloat lineSpacing;                    //行间距
 @property (nonatomic,assign)                CGFloat paragraphSpacing;               //段间距
-@property (nonatomic,copy,nullable)         NSString *text;                         //普通文本
-@property (nonatomic,copy,nullable)         NSAttributedString *attributedText;     //属性文本
-
-//重置标签
-- (void)resetAll;
+@property (nonatomic,copy,nullable)         NSString *text;                         //普通文本，设置nil可重置
+@property (nonatomic,copy,nullable)         NSAttributedString *attributedText;     //属性文本，设置nil可重置
 
 //添加文本
 - (void)appendText:(NSString *)text;
