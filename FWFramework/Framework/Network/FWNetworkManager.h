@@ -4,7 +4,7 @@
  @brief      FWNetworkManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/7/18
+ @updated    2020/07/22
  */
 
 #import "FWURLRequestSerialization.h"

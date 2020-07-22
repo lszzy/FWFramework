@@ -4,7 +4,7 @@
  @brief      FWAttributedLabel
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/13
+ @updated    2020/07/22
  */
 
 #import <UIKit/UIKit.h>
@@ -22,14 +22,8 @@ typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
 @class FWAttributedLabel;
 
 @protocol FWAttributedLabelDelegate <NSObject>
-- (void)attributedLabel:(FWAttributedLabel *)label
-          clickedOnLink:(id)linkData;
-
+- (void)attributedLabel:(FWAttributedLabel *)label clickedOnLink:(id)linkData;
 @end
-
-typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text);
-
-@class FWAttributedLabelURL;
 
 #pragma mark - FWAttributedLabel
 
@@ -57,7 +51,6 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
 @property (nonatomic,assign)                CGFloat paragraphSpacing;               //段间距
 @property (nonatomic,copy,nullable)         NSString *text;                         //普通文本
 @property (nonatomic,copy,nullable)         NSAttributedString *attributedText;     //属性文本
-@property (nonatomic,assign)                NSUInteger maxSyncDetectLength;         //UI 线程做 link 检查的文字最大长度
 
 //重置标签
 - (void)resetAll;
@@ -66,7 +59,7 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
 - (void)appendText:(NSString *)text;
 - (void)appendAttributedText:(NSAttributedString *)attributedText;
 
-//图片，默认居中
+//图片
 - (void)appendImage:(UIImage *)image;
 - (void)appendImage:(UIImage *)image
             maxSize:(CGSize)maxSize;
@@ -78,14 +71,13 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
              margin:(UIEdgeInsets)margin
           alignment:(FWAttributedAlignment)alignment;
 
-//UI控件，默认居中
+//UI控件
 - (void)appendView:(UIView *)view;
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin;
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin
          alignment:(FWAttributedAlignment)alignment;
-
 
 //添加自定义链接
 - (void)addCustomLink:(id)linkData
@@ -95,30 +87,39 @@ typedef NSArray * _Nullable (^FWCustomDetectLinkBlock)(NSString * _Nullable text
              forRange:(NSRange)range
             linkColor:(UIColor *)color;
 
-
 //大小
 - (CGSize)sizeThatFits:(CGSize)size;
-
-//设置全局的自定义Link检测Block(详见M80AttributedLabelURL)
-+ (void)setCustomDetectMethod:(nullable FWCustomDetectLinkBlock)block;
 
 @end
 
 #pragma mark - FWAttributedLabelURL
 
 @interface FWAttributedLabelURL : NSObject
-@property (nonatomic,strong)                id      linkData;
-@property (nonatomic,assign)                NSRange range;
-@property (nonatomic,strong,nullable)       UIColor *color;
+
+@property (nonatomic,strong)          id      linkData;
+@property (nonatomic,assign)          NSRange range;
+@property (nonatomic,strong,nullable) UIColor *color;
 
 + (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
                                     range:(NSRange)range
                                     color:(nullable UIColor *)color;
 
+@end
 
-+ (nullable NSArray *)detectLinks:(nullable NSString *)plainText;
+#pragma mark - FWAttributedLabelURLDetector
 
-+ (void)setCustomDetectMethod:(nullable FWCustomDetectLinkBlock)block;
+typedef void(^FWAttributedLinkDetectCompletion)(NSArray<FWAttributedLabelURL *> * _Nullable links);
+
+@protocol FWAttributedLabelCustomURLDetector <NSObject>
+- (void)detectLinks:(nullable NSString *)plainText completion:(FWAttributedLinkDetectCompletion)completion;
+@end
+
+@interface FWAttributedLabelURLDetector : NSObject
+@property (nonatomic,strong) id<FWAttributedLabelCustomURLDetector> detector;
+
++ (instancetype)shared;
+
+- (void)detectLinks:(nullable NSString *)plainText completion:(FWAttributedLinkDetectCompletion)completion;
 @end
 
 #pragma mark - FWAttributedLabelAttachment
@@ -129,12 +130,13 @@ CGFloat fwAttributedDescentCallback(void *ref);
 CGFloat fwAttributedWidthCallback(void* ref);
 
 @interface FWAttributedLabelAttachment : NSObject
-@property (nonatomic,strong)    id                  content;
-@property (nonatomic,assign)    UIEdgeInsets        margin;
-@property (nonatomic,assign)    FWAttributedAlignment   alignment;
-@property (nonatomic,assign)    CGFloat             fontAscent;
-@property (nonatomic,assign)    CGFloat             fontDescent;
-@property (nonatomic,assign)    CGSize              maxSize;
+
+@property (nonatomic,strong) id                    content;
+@property (nonatomic,assign) UIEdgeInsets          margin;
+@property (nonatomic,assign) FWAttributedAlignment alignment;
+@property (nonatomic,assign) CGFloat               fontAscent;
+@property (nonatomic,assign) CGFloat               fontDescent;
+@property (nonatomic,assign) CGSize                maxSize;
 
 
 + (FWAttributedLabelAttachment *)attachmentWith:(id)content
