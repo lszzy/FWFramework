@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong, readonly) UIImageView *systemView;
 
-@property (nonatomic, strong, readonly) FWAnimatedImageView *animatedView;
+@property (nonatomic, strong, readonly) UIImageView *animatedView;
 
 @end
 
@@ -32,7 +32,7 @@
         [self.contentView addSubview:_systemView];
         _systemView.fwLayoutChain.leftWithInset(10).topToBottomOfViewWithOffset(_nameLabel, 10).bottomWithInset(10).width(100);
         
-        _animatedView = [FWAnimatedImageView new];
+        _animatedView = [UIImageView new];
         [self.contentView addSubview:_animatedView];
         _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
     }
@@ -127,7 +127,7 @@
     NSString *name = @"progressive.jpg";
     
     NSData *data = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
-    float progress = 0.5;
+    double progress = 0.5;
     if (progress > 1) progress = 1;
      
     NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
@@ -150,13 +150,13 @@
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = fileName;
     if (self.isWebImage) {
-        NSString *url = [NSString stringWithFormat:@"http://kvm.wuyong.site/images/%@", fileName];
+        NSString *url = [NSString stringWithFormat:@"http://kvm.wuyong.site/images/images/%@", fileName];
         cell.systemView.image = nil;
         cell.animatedView.image = nil;
         [cell.systemView fwSetImageWithURL:url];
         [cell.animatedView fwSetImageWithURL:url];
     } else {
-        UIImage *image = [FWAnimatedImage imageNamed:fileName];
+        UIImage *image = [UIImage imageNamed:fileName];
         cell.systemView.image = image;
         cell.animatedView.image = image;
     }

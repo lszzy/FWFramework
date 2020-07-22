@@ -9,8 +9,9 @@
 
 #import "FWTest.h"
 #import "FWLog.h"
-#import <objc/runtime.h>
+#import "FWPlugin.h"
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
 
 #ifdef DEBUG
 
@@ -56,7 +57,6 @@
 
 @property (nonatomic, strong) NSMutableArray<Class> *testCases;
 @property (nonatomic, strong) NSString *testLogs;
-@property (nonatomic, strong) id testRunner;
 
 @end
 
@@ -68,28 +68,23 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self runTests];
+        // 监听应用启动完成通知，自动异步执行框架单元测试并打印结果
+        static id testRunner = nil;
+        testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+            [[NSNotificationCenter defaultCenter] removeObserver:testRunner];
+            testRunner = nil;
+            
+            [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
+            if ([FWUnitTest sharedInstance].testCases.count > 0) {
+                dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
+                dispatch_async(queue, ^{
+                    [[FWUnitTest sharedInstance] runTests];
+                    FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
+                    FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
+                });
+            }
+        }];
     });
-}
-
-+ (void)runTests
-{
-    // 监听应用启动通知，自动执行框架单元测试
-    [FWUnitTest sharedInstance].testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
-        // 移除应用启动通知
-        [[NSNotificationCenter defaultCenter] removeObserver:[FWUnitTest sharedInstance].testRunner];
-        [FWUnitTest sharedInstance].testRunner = nil;
-        
-        // 自动添加测试用例，创建队列执行单元测试并打印结果
-        [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
-        if ([FWUnitTest sharedInstance].testCases.count > 0) {
-            dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
-            dispatch_async(queue, ^{
-                [[FWUnitTest sharedInstance] runTests];
-                FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
-            });
-        }
-    }];
 }
 
 + (NSArray<Class> *)testSuite
@@ -274,8 +269,6 @@
 
 #pragma mark - Test
 
-#import "NSObject+FWBlock.h"
-
 @interface FWTestCase_FWTest_Objc : FWTestCase
 
 @property (nonatomic, assign) NSInteger value;
@@ -304,14 +297,14 @@
 - (void)testAsync
 {
     __block NSInteger result = 0;
-    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
-        dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
-        dispatch_async(queue, ^{
-            [NSThread sleepForTimeInterval:0.1];
-            result = 1;
-            completionHandler();
-        });
-    }];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_queue_t queue = dispatch_queue_create("FWTestCase_FWTest_Objc", NULL);
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:0.1];
+        result = 1;
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     FWAssertTrue(self.value + result == 1);
 }
 

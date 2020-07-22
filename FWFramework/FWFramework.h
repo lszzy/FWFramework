@@ -6,7 +6,7 @@
 //  Copyright © 2019 wuyong.site. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 #if __has_include(<FWFramework/FWFramework.h>)
 
@@ -14,8 +14,13 @@
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-// FWFramework
+// Framework
 #import <FWFramework/FWFramework+Framework.h>
+
+// Component
+#if __has_include(<FWFramework/FWFramework+Component.h>)
+#import <FWFramework/FWFramework+Component.h>
+#endif
 
 // Application
 #if __has_include(<FWFramework/FWFramework+Application.h>)
@@ -24,8 +29,13 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
 #else
 
-// FWFramework
+// Framework
 #import "FWFramework+Framework.h"
+
+// Component
+#if __has_include("FWFramework+Component.h")
+#import "FWFramework+Component.h"
+#endif
 
 // Application
 #if __has_include("FWFramework+Application.h")
