@@ -4,7 +4,7 @@
  @brief      FWAttributedLabel
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
- @updated    2018/12/13
+ @updated    2020/07/22
  */
 
 #import "FWAttributedLabel.h"
@@ -13,26 +13,15 @@
 
 static NSString* const FWEllipsesCharacter = @"\u2026";
 
-static dispatch_queue_t static_attributed_label_parse_queue;
-static dispatch_queue_t get_static_attributed_label_parse_queue() \
-{
-    if (static_attributed_label_parse_queue == NULL) {
-        static_attributed_label_parse_queue = dispatch_queue_create("site.wuyong.parse_queue", 0);
-    }
-    return static_attributed_label_parse_queue;
-}
-
 @interface FWAttributedLabel ()
-{
-    NSMutableArray              *_attachments;
-    NSMutableArray              *_linkLocations;
-    CTFrameRef                  _textFrame;
-    CGFloat                     _fontAscent;
-    CGFloat                     _fontDescent;
-    CGFloat                     _fontHeight;
-}
-@property (nonatomic,strong)    NSMutableAttributedString *attributedString;
-@property (nonatomic,strong)    FWAttributedLabelURL *touchedLink;
+@property (nonatomic,strong)    NSMutableAttributedString   *attributedString;
+@property (nonatomic,strong)    NSMutableArray              *attachments;
+@property (nonatomic,strong)    NSMutableArray              *linkLocations;
+@property (nonatomic,strong)    FWAttributedLabelURL        *touchedLink;
+@property (nonatomic,assign)    CTFrameRef textFrame;
+@property (nonatomic,assign)    CGFloat fontAscent;
+@property (nonatomic,assign)    CGFloat fontDescent;
+@property (nonatomic,assign)    CGFloat fontHeight;
 @property (nonatomic,assign)    BOOL linkDetected;
 @property (nonatomic,assign)    BOOL ignoreRedraw;
 @end
@@ -65,7 +54,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     {
         CFRelease(_textFrame);
     }
-    
 }
 
 #pragma mark - 初始化
@@ -87,7 +75,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     _autoDetectLinks        = YES;
     _lineSpacing            = 0.0;
     _paragraphSpacing       = 0.0;
-    _maxSyncDetectLength    = 100;
 
     if (self.backgroundColor == nil)
     {
@@ -112,7 +99,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [self resetTextFrame];
 }
 
-
 - (void)resetTextFrame
 {
     if (_textFrame)
@@ -128,7 +114,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
 
 - (void)resetFont
 {
-    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)self.font.fontName, self.font.pointSize, NULL);
+    CTFontRef fontRef = CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)self.font.fontDescriptor, self.font.pointSize, NULL);
     if (fontRef)
     {
         _fontAscent     = CTFontGetAscent(fontRef);
@@ -418,7 +404,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     return nil;
 }
 
-
 - (id)linkDataForPoint:(CGPoint)point
 {
     FWAttributedLabelURL *url = [self urlForPoint:point];
@@ -452,7 +437,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     }
     return nil;
 }
-
 
 - (CGRect)rectForRange:(NSRange)range
                 inLine:(CTLineRef)line
@@ -567,7 +551,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [self resetTextFrame];
 }
 
-
 #pragma mark - 添加图片
 - (void)appendImage:(UIImage *)image
 {
@@ -599,9 +582,9 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
           alignment:(FWAttributedAlignment)alignment
 {
     FWAttributedLabelAttachment *attachment = [FWAttributedLabelAttachment attachmentWith:image
-                                                                                     margin:margin
-                                                                             alignment:alignment
-                                                                               maxSize:maxSize];
+                                                                                   margin:margin
+                                                                                alignment:alignment
+                                                                                  maxSize:maxSize];
     [self appendAttachment:attachment];
 }
 
@@ -626,9 +609,9 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
          alignment:(FWAttributedAlignment)alignment
 {
     FWAttributedLabelAttachment *attachment = [FWAttributedLabelAttachment attachmentWith:view
-                                                                                     margin:margin
-                                                                                  alignment:alignment
-                                                                                    maxSize:CGSizeZero];
+                                                                                   margin:margin
+                                                                                alignment:alignment
+                                                                                  maxSize:CGSizeZero];
     [self appendAttachment:attachment];
 }
 
@@ -639,7 +622,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     [self addCustomLink:linkData
                forRange:range
               linkColor:self.linkColor];
-    
 }
 
 - (void)addCustomLink:(id)linkData
@@ -661,6 +643,7 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     {
         return CGSizeZero;
     }
+    size = CGSizeMake(size.width > 0 ? size.width : CGFLOAT_MAX, size.height > 0 ? size.height : CGFLOAT_MAX);
     CFAttributedStringRef attributedStringRef = (__bridge CFAttributedStringRef)drawString;
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attributedStringRef);
     CFRange range = CFRangeMake(0, 0);
@@ -689,21 +672,13 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     {
         CFRelease(framesetter);
     }
+    
     return CGSizeMake(MIN(ceilf(newSize.width), size.width), MIN(ceilf(newSize.height), size.height));
 }
 
 - (CGSize)intrinsicContentSize
 {
     return [self sizeThatFits:CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX)];
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    if (!CGSizeEqualToSize(self.frame.size, [self intrinsicContentSize])) {
-        [self invalidateIntrinsicContentSize];
-    }
 }
 
 #pragma mark - 绘制方法
@@ -1055,51 +1030,32 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     {
         return;
     }
-    BOOL sync = length <= self.maxSyncDetectLength;
-    [self computeLink:text
-                 sync:sync];
+    [self computeLink:text];
 }
 
 - (void)computeLink:(NSString *)text
-               sync:(BOOL)sync
 {
     __weak typeof(self) weakSelf = self;
-    typedef void (^M80LinkBlock) (NSArray *);
-    M80LinkBlock block = ^(NSArray *links)
-    {
-        weakSelf.linkDetected = YES;
-        if ([links count])
-        {
-            for (FWAttributedLabelURL *link in links)
-            {
-                [weakSelf addAutoDetectedLink:link];
-            }
-            [weakSelf resetTextFrame];
-        }
-    };
+    self.ignoreRedraw = YES;
     
-    if (sync)
-    {
-        _ignoreRedraw = YES;
-        NSArray *links = [FWAttributedLabelURL detectLinks:text];
-        block(links);
-        _ignoreRedraw = NO;
-    }
-    else
-    {
-        dispatch_async(get_static_attributed_label_parse_queue(), ^{
-        
-            NSArray *links = [FWAttributedLabelURL detectLinks:text];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSString *plainText = [[weakSelf attributedString] string];
-                if ([plainText isEqualToString:text])
-                {
-                    block(links);
-                }
-            });
-        });
-    }
+    [FWAttributedLabelURLDetector.shared detectLinks:text
+                                           completion:^(NSArray<FWAttributedLabelURL *> * _Nullable links) {
+                                               __strong typeof(weakSelf) strongSelf = weakSelf;
+                                               NSString *plainText = [[strongSelf attributedString] string];
+                                               if ([text isEqualToString:plainText])
+                                               {
+                                                   strongSelf.linkDetected = YES;
+                                                   if ([links count])
+                                                   {
+                                                       for (FWAttributedLabelURL *link in links)
+                                                       {
+                                                           [strongSelf addAutoDetectedLink:link];
+                                                       }
+                                                       [strongSelf resetTextFrame];
+                                                   }
+                                                   strongSelf.ignoreRedraw = NO;
+                                               }
+                                            }];
 }
 
 - (void)addAutoDetectedLink:(FWAttributedLabelURL *)link
@@ -1125,7 +1081,6 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
         CGPoint point = [touch locationInView:self];
         self.touchedLink =  [self urlForPoint:point];
     }
-    
     
     if (self.touchedLink)
     {
@@ -1202,24 +1157,15 @@ static dispatch_queue_t get_static_attributed_label_parse_queue() \
     }
 }
 
-#pragma mark - 设置自定义的连接检测block
-+ (void)setCustomDetectMethod:(FWCustomDetectLinkBlock)block
-{
-    [FWAttributedLabelURL setCustomDetectMethod:block];
-}
-
-
 @end
 
 #pragma mark - FWAttributedLabelURL
 
-static FWCustomDetectLinkBlock customDetectBlock = nil;
-
 @implementation FWAttributedLabelURL
 
 + (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
-                                    range:(NSRange)range
-                                    color:(UIColor *)color
+                                     range:(NSRange)range
+                                     color:(UIColor *)color
 {
     FWAttributedLabelURL *url  = [[FWAttributedLabelURL alloc]init];
     url.linkData                = linkData;
@@ -1229,20 +1175,41 @@ static FWCustomDetectLinkBlock customDetectBlock = nil;
     
 }
 
+@end
 
-+ (NSArray *)detectLinks:(NSString *)plainText
+#pragma mark - FWAttributedLabelURLDetector
+
+@implementation FWAttributedLabelURLDetector
++ (instancetype)shared
 {
-    if (customDetectBlock)
-        {
-        return customDetectBlock(plainText);
-        }
+    static FWAttributedLabelURLDetector *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [FWAttributedLabelURLDetector new];
+    });
+    return instance;
+}
+
+- (void)detectLinks:(nullable NSString *)plainText
+         completion:(FWAttributedLinkDetectCompletion)completion
+{
+    if (completion == nil)
+    {
+        return;
+    }
+    
+    if (self.detector)
+    {
+        [self.detector detectLinks:plainText
+                        completion:completion];
+    }
     else
-        {
+    {
         NSMutableArray *links = nil;
         if ([plainText length])
-            {
+        {
             links = [NSMutableArray array];
-            NSDataDetector *detector = [FWAttributedLabelURL linkDetector];
+            NSDataDetector *detector = [self linkDetector];
             [detector enumerateMatchesInString:plainText
                                        options:0
                                          range:NSMakeRange(0, [plainText length])
@@ -1250,37 +1217,31 @@ static FWCustomDetectLinkBlock customDetectBlock = nil;
                                         NSRange range = result.range;
                                         NSString *text = [plainText substringWithRange:range];
                                         FWAttributedLabelURL *link = [FWAttributedLabelURL urlWithLinkData:text
-                                                                                                     range:range
-                                                                                                     color:nil];
+                                                                                                       range:range
+                                                                                                       color:nil];
                                         [links addObject:link];
                                     }];
-            }
-        return links;
         }
+        completion(links);
+    }
 }
 
-+ (NSDataDetector *)linkDetector
+- (NSDataDetector *)linkDetector
 {
-    static NSString *M80LinkDetectorKey = @"M80LinkDetectorKey";
+    static NSString *FWLinkDetectorKey = @"FWLinkDetectorKey";
     
     NSMutableDictionary *dict = [[NSThread currentThread] threadDictionary];
-    NSDataDetector *detector = dict[M80LinkDetectorKey];
+    NSDataDetector *detector = dict[FWLinkDetectorKey];
     if (detector == nil)
-        {
+    {
         detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber
                                                    error:nil];
         if (detector)
-            {
-            dict[M80LinkDetectorKey] = detector;
-            }
+        {
+            dict[FWLinkDetectorKey] = detector;
         }
+    }
     return detector;
-}
-
-
-+ (void)setCustomDetectMethod:(FWCustomDetectLinkBlock)block
-{
-    customDetectBlock = [block copy];
 }
 
 @end
@@ -1300,21 +1261,21 @@ CGFloat fwAttributedAscentCallback(void *ref)
     switch (image.alignment)
     {
         case FWAttributedAlignmentTop:
-        ascent = image.fontAscent;
-        break;
+            ascent = image.fontAscent;
+            break;
         case FWAttributedAlignmentCenter:
         {
-        CGFloat fontAscent  = image.fontAscent;
-        CGFloat fontDescent = image.fontDescent;
-        CGFloat baseLine = (fontAscent + fontDescent) / 2 - fontDescent;
-        ascent = height / 2 + baseLine;
+            CGFloat fontAscent  = image.fontAscent;
+            CGFloat fontDescent = image.fontDescent;
+            CGFloat baseLine = (fontAscent + fontDescent) / 2 - fontDescent;
+            ascent = height / 2 + baseLine;
         }
-        break;
+            break;
         case FWAttributedAlignmentBottom:
-        ascent = height - image.fontDescent;
-        break;
+            ascent = height - image.fontDescent;
+            break;
         default:
-        break;
+            break;
     }
     return ascent;
 }
@@ -1328,28 +1289,27 @@ CGFloat fwAttributedDescentCallback(void *ref)
     {
         case FWAttributedAlignmentTop:
         {
-        descent = height - image.fontAscent;
-        break;
+            descent = height - image.fontAscent;
+            break;
         }
         case FWAttributedAlignmentCenter:
         {
-        CGFloat fontAscent  = image.fontAscent;
-        CGFloat fontDescent = image.fontDescent;
-        CGFloat baseLine = (fontAscent + fontDescent) / 2 - fontDescent;
-        descent = height / 2 - baseLine;
+            CGFloat fontAscent  = image.fontAscent;
+            CGFloat fontDescent = image.fontDescent;
+            CGFloat baseLine = (fontAscent + fontDescent) / 2 - fontDescent;
+            descent = height / 2 - baseLine;
         }
-        break;
+            break;
         case FWAttributedAlignmentBottom:
         {
-        descent = image.fontDescent;
-        break;
+            descent = image.fontDescent;
+            break;
         }
         default:
-        break;
+            break;
     }
     
     return descent;
-    
 }
 
 CGFloat fwAttributedWidthCallback(void* ref)
@@ -1358,7 +1318,6 @@ CGFloat fwAttributedWidthCallback(void* ref)
     return [image boxSize].width;
 }
 
-#pragma mark - M80AttributedLabelImage
 @interface FWAttributedLabelAttachment ()
 - (CGSize)calculateContentSize;
 - (CGSize)attachmentSize;
@@ -1366,13 +1325,10 @@ CGFloat fwAttributedWidthCallback(void* ref)
 
 @implementation FWAttributedLabelAttachment
 
-
-
-
 + (FWAttributedLabelAttachment *)attachmentWith:(id)content
-                                         margin:(UIEdgeInsets)margin
-                                      alignment:(FWAttributedAlignment)alignment
-                                        maxSize:(CGSize)maxSize
+                                          margin:(UIEdgeInsets)margin
+                                       alignment:(FWAttributedAlignment)alignment
+                                         maxSize:(CGSize)maxSize
 {
     FWAttributedLabelAttachment *attachment    = [[FWAttributedLabelAttachment alloc]init];
     attachment.content                          = content;
@@ -1382,15 +1338,14 @@ CGFloat fwAttributedWidthCallback(void* ref)
     return attachment;
 }
 
-
 - (CGSize)boxSize
 {
     CGSize contentSize = [self attachmentSize];
     if (_maxSize.width > 0 &&_maxSize.height > 0 &&
         contentSize.width > 0 && contentSize.height > 0)
-        {
+    {
         contentSize = [self calculateContentSize];
-        }
+    }
     return CGSizeMake(contentSize.width + _margin.left + _margin.right,
                       contentSize.height+ _margin.top  + _margin.bottom);
 }
@@ -1406,18 +1361,18 @@ CGFloat fwAttributedWidthCallback(void* ref)
     CGFloat newHeight       = _maxSize.height;
     if (width <= newWidth &&
         height<= newHeight)
-        {
+    {
         return attachmentSize;
-        }
+    }
     CGSize size;
     if (width / height > newWidth / newHeight)
-        {
+    {
         size = CGSizeMake(newWidth, newWidth * height / width);
-        }
+    }
     else
-        {
+    {
         size = CGSizeMake(newHeight * width / height, newHeight);
-        }
+    }
     return size;
 }
 
@@ -1425,13 +1380,13 @@ CGFloat fwAttributedWidthCallback(void* ref)
 {
     CGSize size = CGSizeZero;
     if ([_content isKindOfClass:[UIImage class]])
-        {
+    {
         size = [((UIImage *)_content) size];
-        }
+    }
     else if ([_content isKindOfClass:[UIView class]])
-        {
+    {
         size = [((UIView *)_content) bounds].size;
-        }
+    }
     return size;
 }
 @end
@@ -1449,15 +1404,12 @@ CGFloat fwAttributedWidthCallback(void* ref)
 {
     [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
     if (color.CGColor)
-        {
-        
-        
+    {
         [self addAttribute:(NSString *)kCTForegroundColorAttributeName
                      value:(id)color.CGColor
                      range:range];
-        }
+    }
 }
-
 
 - (void)fwSetFont:(UIFont*)font
 {
@@ -1467,16 +1419,16 @@ CGFloat fwAttributedWidthCallback(void* ref)
 - (void)fwSetFont:(UIFont*)font range:(NSRange)range
 {
     if (font)
-        {
+    {
         [self removeAttribute:(NSString*)kCTFontAttributeName range:range];
         
-        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)font.fontName, font.pointSize, nil);
+        CTFontRef fontRef = CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)font.fontDescriptor, font.pointSize, nil);
         if (nil != fontRef)
-            {
+        {
             [self addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)fontRef range:range];
             CFRelease(fontRef);
-            }
         }
+    }
 }
 
 - (void)fwSetUnderlineStyle:(CTUnderlineStyle)style
@@ -1495,7 +1447,6 @@ CGFloat fwAttributedWidthCallback(void* ref)
     [self addAttribute:(NSString *)kCTUnderlineStyleAttributeName
                  value:[NSNumber numberWithInt:(style|modifier)]
                  range:range];
-    
 }
 
 @end
