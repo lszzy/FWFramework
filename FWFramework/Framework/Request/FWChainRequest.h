@@ -62,7 +62,7 @@ typedef void (^FWChainCallback)(FWChainRequest *chainRequest, FWBaseRequest *bas
 ///  The delegate object of the chain request. Default is nil.
 @property (nonatomic, weak, nullable) id<FWChainRequestDelegate> delegate;
 
-///  This can be used to add several accossories object. Note if you use `addAccessory` to add acceesory
+///  This can be used to add several accessories object. Note if you use `addAccessory` to add accessory
 ///  this array will be automatically created. Default is nil.
 @property (nonatomic, strong, nullable) NSMutableArray<id<FWRequestAccessory>> *requestAccessories;
 

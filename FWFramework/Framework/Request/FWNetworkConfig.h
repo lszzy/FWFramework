@@ -98,7 +98,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///  Whether to enable mock response when failed in debug mode. Default is NO.
 @property (nonatomic, assign) BOOL debugMockEnabled;
 ///  SessionConfiguration will be used to initialize FWHTTPSessionManager. Default is nil.
-@property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
+@property (nonatomic, strong, nullable) NSURLSessionConfiguration *sessionConfiguration;
+///  NSURLSessionTaskMetrics
+@property (nonatomic, copy, nullable) void (^collectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * _Nullable metrics) NS_AVAILABLE_IOS(10_0);
 
 ///  Add a new URL filter.
 - (void)addUrlFilter:(id<FWUrlFilterProtocol>)filter;
