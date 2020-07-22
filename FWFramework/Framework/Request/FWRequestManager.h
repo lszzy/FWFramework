@@ -19,8 +19,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// TODO: FWRequestManager
-
 #pragma mark - FWRequest+FWPromise
 
 @class FWPromise;
