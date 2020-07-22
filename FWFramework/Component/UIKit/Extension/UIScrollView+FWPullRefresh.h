@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 /*!
  @brief UIScrollView+FWPullRefresh
+ @discussion FWRefreshPlugin
  
  @see https://github.com/samvermette/SVPullToRefresh
  */

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UIView+FWIndicator
+ @discussion FWToastPlugin、FWLoadingPlugin
  */
 @interface UIView (FWIndicator)
 
