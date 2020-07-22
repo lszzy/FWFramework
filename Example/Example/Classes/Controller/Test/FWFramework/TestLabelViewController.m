@@ -116,12 +116,10 @@
     
     self.attrLabel.text = [self testText];
     size = [self.attrLabel fwFitSize];
-    self.attrLabel.fwLayoutChain.height(size.height);
     [resultText appendFormat:@"attrLabel: %@\n", NSStringFromCGSize(size)];
     
     self.attrLabel2.attributedText = [self testAttrText];
     size = [self.attrLabel2 fwFitSize];
-    self.attrLabel2.fwLayoutChain.height(size.height);
     [resultText appendFormat:@"attrLabel2: %@\n", NSStringFromCGSize(size)];
     
     self.textView.text = [self testText];
