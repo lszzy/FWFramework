@@ -785,7 +785,7 @@
 
 @end
 
-#if FWComponentSDWebImageEnabled
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
 
 @import SDWebImage;
 
