@@ -36,27 +36,27 @@ Pod::Spec.new do |spec|
     subspec.dependency 'FWFramework/Component'
   end
 
-  spec.subspec 'Component-Contacts' do |subspec|
+  spec.subspec 'Component_Contacts' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
   end
 
-  spec.subspec 'Component-Microphone' do |subspec|
+  spec.subspec 'Component_Microphone' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_MICROPHONE_ENABLED=1' }
   end
 
-  spec.subspec 'Component-Calendar' do |subspec|
+  spec.subspec 'Component_Calendar' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CALENDAR_ENABLED=1' }
   end
 
-  spec.subspec 'Component-AppleMusic' do |subspec|
+  spec.subspec 'Component_AppleMusic' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
   end
   
-  spec.subspec 'Component-SDWebImage' do |subspec|
+  spec.subspec 'Component_SDWebImage' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'SDWebImage'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
