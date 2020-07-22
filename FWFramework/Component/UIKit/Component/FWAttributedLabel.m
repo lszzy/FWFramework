@@ -85,7 +85,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     [self resetFont];
 }
 
-- (void)resetLabel
+- (void)cleanAll
 {
     _ignoreRedraw = NO;
     _linkDetected = NO;
@@ -108,6 +108,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     }
     if ([NSThread isMainThread] && !_ignoreRedraw)
     {
+        [self invalidateIntrinsicContentSize];
         [self setNeedsDisplay];
     }
 }
@@ -509,12 +510,6 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     [self appendAttributedText:attachText];
 }
 
-#pragma mark - 重置标签
-- (void)resetAll
-{
-    [self setText:nil];
-}
-
 #pragma mark - 设置文本
 - (void)setText:(NSString *)text
 {
@@ -525,7 +520,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
     _attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:attributedText];
-    [self resetLabel];
+    [self cleanAll];
 }
 
 - (NSString *)text
