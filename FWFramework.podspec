@@ -29,6 +29,13 @@ Pod::Spec.new do |spec|
     subspec.dependency 'FWFramework/Framework'
   end
 
+  spec.subspec 'Application' do |subspec|
+    subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
+    subspec.dependency 'FWFramework/Component'
+  end
+
   spec.subspec 'Component-Contacts' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
@@ -53,12 +60,5 @@ Pod::Spec.new do |spec|
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'SDWebImage'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
-  end
-  
-  spec.subspec 'Application' do |subspec|
-    subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/Application/**/*.h'
-    subspec.dependency 'FWFramework/Framework'
-    subspec.dependency 'FWFramework/Component'
   end
 end
