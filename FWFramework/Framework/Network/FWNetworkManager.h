@@ -159,7 +159,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 // imageView加载网络图片插件方法，默认使用框架网络库
 - (void)fwImageView:(UIImageView *)imageView
-        setImageUrl:(NSString *)imageUrl
+        setImageURL:(NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;

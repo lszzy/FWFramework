@@ -22,7 +22,7 @@
             [[FWPluginManager sharedInstance] unloadPlugin:@protocol(FWAlertPlugin)];
             [[FWPluginManager sharedInstance] unregisterPlugin:@protocol(FWAlertPlugin)];
         } else {
-            [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAppAlertPlugin class]];
+            [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
         }
     }];
 }
@@ -246,7 +246,7 @@
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
     headerView.backgroundColor = UIColor.whiteColor;
     
-    [[FWAppAlertPlugin sharedInstance] fwViewController:self
+    [[FWAlertControllerPlugin sharedInstance] fwViewController:self
                                               showAlert:UIAlertControllerStyleAlert
                                              headerView:headerView
                                                  cancel:@"取消"
@@ -271,7 +271,7 @@
         [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     }];
     
-    [[FWAppAlertPlugin sharedInstance] fwViewController:self
+    [[FWAlertControllerPlugin sharedInstance] fwViewController:self
                                               showAlert:UIAlertControllerStyleAlert
                                              headerView:alertView
                                                  cancel:nil
