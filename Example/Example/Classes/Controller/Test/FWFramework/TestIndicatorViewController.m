@@ -116,7 +116,7 @@
 
 - (void)mockProgress
 {
-    float progress = 0.0f;
+    double progress = 0.0f;
     while (progress < 1.0f) {
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;
@@ -149,7 +149,7 @@
 
 - (void)mockProgressWindow
 {
-    float progress = 0.0f;
+    double progress = 0.0f;
     while (progress < 1.0f) {
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;

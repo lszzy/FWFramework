@@ -105,7 +105,6 @@
                                              @[@"FWViewController(Swift)", [TestSwiftViewController new]],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
-                                             @[@"FWStorekitManager", @"TestStorekitViewController"],
                                              @[@"FWLocationManager", [TestLocationViewController new]],
                                              @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],

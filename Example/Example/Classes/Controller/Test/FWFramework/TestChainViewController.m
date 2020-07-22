@@ -34,6 +34,14 @@
     image.image = [UIImage fwImageWithAppIcon];
     [self.view addSubview:image];
     image.fwLayoutChain.attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view).attribute(NSLayoutAttributeHeight, NSLayoutAttributeHeight, view).centerYToView(view).attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
+    
+    FWAttributedLabel *attr = [[FWAttributedLabel alloc] init];
+    attr.text = @"attr";
+    attr.backgroundColor = [UIColor grayColor];
+    attr.textAlignment = kCTTextAlignmentCenter;
+    [self.view addSubview:attr];
+    attr.fwLayoutChain.leftToView(view).topToBottomOfViewWithOffset(view, 20);
+    [attr appendImage:[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)]];
 }
 
 @end

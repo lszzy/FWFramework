@@ -366,7 +366,7 @@
 
 @interface FWBarrageGifDescriptor : FWBarrageDescriptor
 
-@property (nonatomic, strong) FWAnimatedImage *image;
+@property (nonatomic, strong) UIImage *image;
 
 @end
 
@@ -377,7 +377,7 @@
 @interface FWBarrageGifCell : FWBarrageCell
 
 @property (nonatomic, strong) FWBarrageGifDescriptor *gifDescriptor;
-@property (nonatomic, strong) FWAnimatedImageView *imageView;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
@@ -436,12 +436,10 @@
 
 #pragma mark ---- getter
 
-- (FWAnimatedImageView *)imageView {
+- (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView = [[FWAnimatedImageView alloc] init];
-        _imageView.autoPlayAnimatedImage = YES;
+        _imageView = [[UIImageView alloc] init];
     }
-    
     return _imageView;
 }
 
@@ -682,7 +680,7 @@
 - (void)addGifBarrage {
     FWBarrageGifDescriptor *gifDescriptor = [[FWBarrageGifDescriptor alloc] init];
     
-    FWAnimatedImage *image = [FWAnimatedImage imageNamed:@"test.gif"];
+    UIImage *image = [UIImage imageNamed:@"test.gif"];
     gifDescriptor.image = image;
     gifDescriptor.positionPriority = FWBarragePositionHigh;
     gifDescriptor.animationDuration = arc4random()%5 + 5;

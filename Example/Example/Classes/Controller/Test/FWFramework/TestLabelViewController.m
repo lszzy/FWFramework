@@ -17,6 +17,7 @@
 @property (nonatomic, weak) UITextView *textView;
 @property (nonatomic, weak) UITextView *textView2;
 @property (nonatomic, weak) UILabel *resultLabel;
+@property (nonatomic, assign) NSInteger count;
 
 @end
 
@@ -82,36 +83,53 @@
     resultLabel.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(textView2, 10);
 }
 
-- (void)renderData
+- (NSString *)testText
 {
     NSString *text = @"I am a very long text I am a very long text I veryverylongword bad I am a very long text finish!";
-    //NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSParagraphStyleAttributeName: [NSMutableParagraphStyle fwParagraphStyleWithLineSpacing:[self.label.font fwLineSpacingWithMultiplier:1.5] textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping]}];
-    NSAttributedString *attrText = nil;
+    return [NSString stringWithFormat:@"%@: %@", @(++self.count), text];
+}
+
+- (NSAttributedString *)testAttrText
+{
+    FWAttributedOption *option = [FWAttributedOption new];
+    option.font = [UIFont systemFontOfSize:16];
+    option.lineSpacingMultiplier = 0.5;
+    option.paragraphStyle = [NSMutableParagraphStyle new];
+    option.paragraphStyle.alignment = NSTextAlignmentLeft;
+    option.paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+    NSAttributedString *attrText = [NSAttributedString fwAttributedString:[self testText] withOption:option];
+    return attrText;
+}
+
+- (void)renderData
+{
     CGSize size = CGSizeZero;
     NSMutableString *resultText = [NSMutableString new];
     
-    self.label.text = text;
+    self.label.text = [self testText];
     size = [self.label fwTextSize];
     [resultText appendFormat:@"label: %@\n", NSStringFromCGSize(size)];
     
-    self.label2.attributedText = attrText;
+    self.label2.attributedText = [self testAttrText];
     size = [self.label2 fwAttributedTextSize];
     [resultText appendFormat:@"label2: %@\n", NSStringFromCGSize(size)];
     
-    self.attrLabel.text = text;
+    self.attrLabel.text = [self testText];
     size = [self.attrLabel fwFitSize];
+    self.attrLabel.fwLayoutChain.height(size.height);
     [resultText appendFormat:@"attrLabel: %@\n", NSStringFromCGSize(size)];
     
-    self.attrLabel2.text = text;
+    self.attrLabel2.attributedText = [self testAttrText];
     size = [self.attrLabel2 fwFitSize];
+    self.attrLabel2.fwLayoutChain.height(size.height);
     [resultText appendFormat:@"attrLabel2: %@\n", NSStringFromCGSize(size)];
     
-    self.textView.text = text;
+    self.textView.text = [self testText];
     size = [self.textView fwTextSize];
     [resultText appendFormat:@"textView: %@\n", NSStringFromCGSize(size)];
     self.textView.fwLayoutChain.height(size.height);
     
-    self.textView2.attributedText = attrText;
+    self.textView2.attributedText = [self testAttrText];
     size = [self.textView2 fwAttributedTextSize];
     [resultText appendFormat:@"textView2: %@", NSStringFromCGSize(size)];
     self.textView2.fwLayoutChain.height(size.height);

@@ -42,6 +42,30 @@
     button.frame = CGRectMake(20, 300, 200, 50);
     [button fwAddTouchTarget:self action:@selector(onClick5:)];
     [self.view addSubview:button];
+    
+    UIView *view = [UIView new];
+    view.backgroundColor = [UIColor appColorFill];
+    view.frame = CGRectMake(30, 370, 70, 70);
+    [self.view addSubview:view];
+    
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.backgroundColor = [UIColor grayColor];
+    button.frame = CGRectMake(50, 390, 30, 30);
+    button.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
+    [button fwAddTouchTarget:self action:@selector(onClick6:)];
+    [self.view addSubview:button];
+    
+    view = [UIView new];
+    view.backgroundColor = [UIColor appColorFill];
+    view.frame = CGRectMake(130, 370, 70, 70);
+    [self.view addSubview:view];
+    
+    view = [UIView new];
+    view.backgroundColor = [UIColor grayColor];
+    view.frame = CGRectMake(150, 390, 30, 30);
+    view.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
+    [view fwAddTapGestureWithTarget:self action:@selector(onClick6:)];
+    [self.view addSubview:view];
 }
 
 #pragma mark - Action
@@ -83,6 +107,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"Button1秒内不可重复点击触发事件");
     });
+}
+
+- (void)onClick6:(id)sender
+{
+    NSLog(@"触发点击: %@", NSStringFromClass([sender class]));
 }
 
 @end

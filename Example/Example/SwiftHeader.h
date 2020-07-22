@@ -11,8 +11,6 @@
 
 #if APP_TARGET == 1
 #import "Example-Swift.h"
-#elif APP_TARGET == 2
-#import "Example2-Swift.h"
 #endif
 
 #endif /* SwiftHeader_h */

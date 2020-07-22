@@ -453,70 +453,12 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 
 @end
 
-#pragma mark - FWRequest+FWPromise
-
-@implementation FWBaseRequest (FWPromise)
-
-- (FWPromise *)promise
-{
-    FWPromise *promise = [FWPromise promise];
-    [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
-        [promise resolve:request];
-    } failure:^(__kindof FWBaseRequest *request) {
-        [promise reject:request.error];
-    }];
-    return promise;
-}
-
-- (FWCoroutineClosure)coroutine
-{
-    __weak __typeof__(self) self_weak_ = self;
-    return ^(FWCoroutineCallback callback){
-        __typeof__(self) self = self_weak_;
-        [self startWithCompletionBlockWithSuccess:^(__kindof FWBaseRequest *request) {
-            callback(request, nil);
-        } failure:^(__kindof FWBaseRequest *request) {
-            callback(nil, request.error);
-        }];
-    };
-}
-
-@end
-
-@implementation FWBatchRequest (FWPromise)
-
-- (FWPromise *)promise
-{
-    FWPromise *promise = [FWPromise promise];
-    [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
-        [promise resolve:batchRequest];
-    } failure:^(FWBatchRequest *batchRequest) {
-        [promise reject:batchRequest.failedRequest.error];
-    }];
-    return promise;
-}
-
-- (FWCoroutineClosure)coroutine
-{
-    __weak __typeof__(self) self_weak_ = self;
-    return ^(FWCoroutineCallback callback){
-        __typeof__(self) self = self_weak_;
-        [self startWithCompletionBlockWithSuccess:^(FWBatchRequest *batchRequest) {
-            callback(batchRequest, nil);
-        } failure:^(FWBatchRequest *batchRequest) {
-            callback(nil, batchRequest.failedRequest.error);
-        }];
-    };
-}
-
-@end
-
 #ifdef DEBUG
 
 #pragma mark - Test
 
 #import "FWTest.h"
-#import "NSObject+FWBlock.h"
+#import "FWCoroutine.h"
 
 @interface FWTestCase_FWPromise : FWTestCase
 
@@ -587,30 +529,30 @@ typedef NS_ENUM(NSInteger, FWPromiseState) {
 - (void)testCoroutine
 {
     __block NSInteger value = 0;
-    [self fwSyncPerformAsyncBlock:^(void (^completionHandler)(void)) {
-        fw_async(^{
-            FWResult *result = nil;
-            
-            result = fw_await([self login:@"test" pwd:@"123"]);
-            FWAssertTrue(!result.error);
-            
-            NSDictionary *user = result.value;
-            value = [user[@"uid"] integerValue];
-            FWAssertTrue([user[@"uid"] isEqualToString:@"1"]);
-            
-            result = fw_await([self query:user[@"uid"] token:user[@"token"]]);
-            FWAssertTrue(!result.error);
-            
-            NSDictionary *info = result.value;
-            FWAssertTrue([info[@"name"] isEqualToString:@"test"]);
-            
-            result = fw_await([self login:@"test" pwd:@""]);
-            FWAssertTrue(result.error);
-        }).finally(^{
-            value++;
-            completionHandler();
-        });
-    }];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    fw_async(^{
+        FWResult *result = nil;
+        
+        result = fw_await([self login:@"test" pwd:@"123"]);
+        FWAssertTrue(!result.error);
+        
+        NSDictionary *user = result.value;
+        value = [user[@"uid"] integerValue];
+        FWAssertTrue([user[@"uid"] isEqualToString:@"1"]);
+        
+        result = fw_await([self query:user[@"uid"] token:user[@"token"]]);
+        FWAssertTrue(!result.error);
+        
+        NSDictionary *info = result.value;
+        FWAssertTrue([info[@"name"] isEqualToString:@"test"]);
+        
+        result = fw_await([self login:@"test" pwd:@""]);
+        FWAssertTrue(result.error);
+    }).finally(^{
+        value++;
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     FWAssertTrue(value == 2);
 }
 
