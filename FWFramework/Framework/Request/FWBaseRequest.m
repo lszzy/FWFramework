@@ -89,6 +89,7 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validatio
     // nil out to break the retain cycle.
     self.successCompletionBlock = nil;
     self.failureCompletionBlock = nil;
+    self.uploadProgressBlock = nil;
 }
 
 - (void)addAccessory:(id<FWRequestAccessory>)accessory {

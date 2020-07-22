@@ -68,6 +68,9 @@
         // Take over the status code validation
         _manager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
         _manager.completionQueue = _processingQueue;
+        if (@available(iOS 10, *)) {
+            [_manager setTaskDidFinishCollectingMetricsBlock:_config.collectingMetricsBlock];
+        }
     }
     return self;
 }
@@ -126,7 +129,7 @@
             baseUrl = [_config baseUrl];
         }
     }
-    // URL slash compability
+    // URL slash compatibility
     NSURL *url = [NSURL URLWithString:baseUrl];
 
     if (baseUrl.length > 0 && ![baseUrl hasSuffix:@"/"]) {
@@ -170,6 +173,7 @@
     NSString *url = [self buildRequestUrl:request];
     id param = request.requestArgument;
     FWConstructingBlock constructingBlock = [request constructingBodyBlock];
+    FWURLSessionTaskProgressBlock uploadProgressBlock = [request uploadProgressBlock];
     FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
 
     switch (method) {
@@ -180,11 +184,11 @@
                 return [self dataTaskWithHTTPMethod:@"GET" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
             }
         case FWRequestMethodPOST:
-            return [self dataTaskWithHTTPMethod:@"POST" request:request requestSerializer:requestSerializer URLString:url parameters:param constructingBodyWithBlock:constructingBlock error:error];
+            return [self dataTaskWithHTTPMethod:@"POST" request:request requestSerializer:requestSerializer URLString:url parameters:param uploadProgress:uploadProgressBlock constructingBodyWithBlock:constructingBlock error:error];
         case FWRequestMethodHEAD:
             return [self dataTaskWithHTTPMethod:@"HEAD" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
         case FWRequestMethodPUT:
-            return [self dataTaskWithHTTPMethod:@"PUT" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
+            return [self dataTaskWithHTTPMethod:@"PUT" request:request requestSerializer:requestSerializer URLString:url parameters:param uploadProgress:uploadProgressBlock constructingBodyWithBlock:constructingBlock error:error];
         case FWRequestMethodDELETE:
             return [self dataTaskWithHTTPMethod:@"DELETE" request:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
         case FWRequestMethodPATCH:
@@ -477,7 +481,7 @@
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
                                            error:(NSError * _Nullable __autoreleasing *)error {
-    return [self dataTaskWithHTTPMethod:method request:request requestSerializer:requestSerializer URLString:URLString parameters:parameters constructingBodyWithBlock:nil error:error];
+    return [self dataTaskWithHTTPMethod:method request:request requestSerializer:requestSerializer URLString:URLString parameters:parameters uploadProgress:nil constructingBodyWithBlock:nil error:error];
 }
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
@@ -485,6 +489,7 @@
                                requestSerializer:(FWHTTPRequestSerializer *)requestSerializer
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
+                                  uploadProgress:(FWURLSessionTaskProgressBlock)uploadProgress
                        constructingBodyWithBlock:(nullable void (^)(id <FWMultipartFormData> formData))block
                                            error:(NSError * _Nullable __autoreleasing *)error {
     NSMutableURLRequest *urlRequest = nil;
@@ -508,7 +513,7 @@
 
     __block NSURLSessionDataTask *dataTask = nil;
     dataTask = [_manager dataTaskWithRequest:urlRequest
-                              uploadProgress:nil
+                              uploadProgress:uploadProgress
                             downloadProgress:nil
                            completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *_error) {
                                [self handleRequestResult:dataTask responseObject:responseObject error:_error];
