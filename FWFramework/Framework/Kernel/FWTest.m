@@ -9,6 +9,8 @@
 
 #import "FWTest.h"
 #import "FWLog.h"
+#import "FWPlugin.h"
+#import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
 #ifdef DEBUG
@@ -66,17 +68,22 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // 自动添加测试用例，创建队列执行单元测试并打印结果
+        // 监听应用启动完成通知，自动异步执行框架单元测试并打印结果
+        static id testRunner = nil;
+        testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+            [[NSNotificationCenter defaultCenter] removeObserver:testRunner];
+            testRunner = nil;
+            
             [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
             if ([FWUnitTest sharedInstance].testCases.count > 0) {
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
                     FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
+                    FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
                 });
             }
-        });
+        }];
     });
 }
 
