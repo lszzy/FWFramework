@@ -11,17 +11,12 @@
 
 #import "FWAppDelegate.h"
 
-#import "FWAppToastPlugin.h"
-#import "FWAppLoadingPlugin.h"
-#import "FWAppRefreshPlugin.h"
-#import "FWAppAlertPlugin.h"
-
 #import "FWViewController.h"
 #import "FWCollectionViewController.h"
 #import "FWScrollViewController.h"
 #import "FWTableViewController.h"
 #import "FWWebViewController.h"
-
+#import "FWViewModel.h"
 #import "FWView.h"
 
 #endif /* FWFramework_Application_h */

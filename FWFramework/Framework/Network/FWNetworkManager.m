@@ -663,17 +663,20 @@
                  progress:(void (^)(double))progress
 {
     id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageUrl:placeholder:completion:progress:)]) {
-        NSString *urlString = nil;
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:completion:progress:)]) {
+        NSURL *imageURL = nil;
         if ([url isKindOfClass:[NSString class]]) {
-            urlString = url;
+            imageURL = [NSURL URLWithString:url];
+            if (!imageURL && [url length] > 0) {
+                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            }
         } else if ([url isKindOfClass:[NSURL class]]) {
-            urlString = [url absoluteString];
+            imageURL = url;
         } else if ([url isKindOfClass:[NSURLRequest class]]) {
-            urlString = [url URL].absoluteString;
+            imageURL = [url URL];
         }
         
-        [imagePlugin fwImageView:self setImageUrl:urlString placeholder:placeholderImage completion:completion progress:progress];
+        [imagePlugin fwImageView:self setImageURL:imageURL placeholder:placeholderImage completion:completion progress:progress];
         return;
     }
     
@@ -691,9 +694,8 @@
             }
         }
         
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:nsurl];
-        [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-        urlRequest = request;
+        urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
+        [(NSMutableURLRequest *)urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
     }
     
     if ([urlRequest URL] == nil) {
@@ -815,17 +817,12 @@
 }
 
 - (void)fwImageView:(UIImageView *)imageView
-        setImageUrl:(NSString *)imageUrl
+        setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-    NSURL *url = imageUrl.length > 0 ? [NSURL URLWithString:imageUrl] : nil;
-    if (!url && imageUrl.length > 0) {
-        url = [NSURL URLWithString:[imageUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
-    
-    [imageView sd_setImageWithURL:url
+    [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:0
                           context:nil
