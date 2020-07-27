@@ -163,7 +163,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    // [self.pagerView setMainTableViewToMaxContentOffsetY];
+    [self.pagerView setMainTableViewToMaxContentOffsetY];
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] animated:YES scrollPosition:UITableViewScrollPositionTop];
 }
 
@@ -323,7 +323,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
         FWStrongifySelf();
-        [self.pagerView.listContainerView didClickSelectedItemAt:index];
+        [self.pagerView scrollToIndex:index animated:NO];
     };
     
     if (self.refreshList) {
