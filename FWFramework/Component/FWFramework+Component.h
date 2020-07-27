@@ -21,7 +21,6 @@
 #import "FWIndicatorControl.h"
 #import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
-#import "FWPagerView.h"
 #import "FWPhotoBrowser.h"
 #import "FWPopupMenu.h"
 #import "FWProgressView.h"
