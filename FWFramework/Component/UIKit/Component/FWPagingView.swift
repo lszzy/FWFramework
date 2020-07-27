@@ -117,7 +117,7 @@ open class FWPagingListContainerView: UIView {
         }
     }
     weak var delegate: FWPagingListContainerViewDelegate?
-    private var currentIndex: Int = 0
+    public private(set) var currentIndex: Int = 0
     private var collectionView: UICollectionView!
     private var containerVC: FWPagingListContainerViewController!
     private var willAppearIndex: Int = -1
@@ -500,10 +500,10 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if willAppearIndex != -1 || willDisappearIndex != -1 {
-            listWillDisappear(at: willAppearIndex)
-            listWillAppear(at: willDisappearIndex)
-            listDidDisappear(at: willAppearIndex)
-            listDidAppear(at: willDisappearIndex)
+            listWillDisappear(at: willDisappearIndex)
+            listWillAppear(at: willAppearIndex)
+            listDidDisappear(at: willDisappearIndex)
+            listDidAppear(at: willAppearIndex)
             willDisappearIndex = -1
             willAppearIndex = -1
         }
@@ -683,7 +683,18 @@ open class FWPagingView: UIView {
     public var automaticallyDisplayListVerticalScrollIndicator = true
     public var currentScrollingListView: UIScrollView?
     public var currentList: FWPagingViewListViewDelegate?
-    private var currentIndex: Int = 0
+    public var currentIndex: Int {
+        get {
+            return listContainerView.currentIndex
+        }
+        set {
+            if listContainerView.currentIndex == newValue { return }
+            
+            let diffIndex = labs(listContainerView.currentIndex - newValue)
+            listContainerView.contentScrollView().setContentOffset(CGPoint(x: listContainerView.contentScrollView().bounds.size.width * CGFloat(newValue), y: 0), animated: diffIndex < 2)
+            listContainerView.didClickSelectedItem(at: newValue)
+        }
+    }
     private weak var delegate: FWPagingViewDelegate?
     private var tableHeaderContainerView: UIView!
     private let cellIdentifier = "cell"
@@ -862,11 +873,6 @@ open class FWPagingView: UIView {
     func listViewDidScroll(scrollView: UIScrollView) {
         currentScrollingListView = scrollView
         preferredProcessListViewDidScroll(scrollView: scrollView)
-    }
-    
-    public func scrollToIndex(_ index: Int, animated: Bool = true) {
-        listContainerView.contentScrollView().setContentOffset(CGPoint(x: listContainerView.contentScrollView().bounds.size.width * CGFloat(index), y: 0), animated: animated)
-        listContainerView.didClickSelectedItem(at: index)
     }
 }
 

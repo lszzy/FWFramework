@@ -323,7 +323,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
         FWStrongifySelf();
-        [self.pagerView scrollToIndex:index animated:NO];
+        self.pagerView.currentIndex = index;
     };
     
     if (self.refreshList) {
