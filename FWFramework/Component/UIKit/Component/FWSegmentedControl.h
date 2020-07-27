@@ -11,8 +11,10 @@
 
 @class FWSegmentedControl;
 
-typedef void (^FWIndexChangeBlock)(NSInteger index);
-typedef NSAttributedString *(^FWTitleFormatterBlock)(FWSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^FWIndexChangeBlock)(NSUInteger index);
+typedef NSAttributedString *_Nonnull(^FWTitleFormatterBlock)(FWSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected);
 
 typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionStyle) {
     FWSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
@@ -22,8 +24,8 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionStyle) {
 };
 
 typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionIndicatorLocation) {
-    FWSegmentedControlSelectionIndicatorLocationUp,
-    FWSegmentedControlSelectionIndicatorLocationDown,
+    FWSegmentedControlSelectionIndicatorLocationTop,
+    FWSegmentedControlSelectionIndicatorLocationBottom,
     FWSegmentedControlSelectionIndicatorLocationNone // No selection indicator
 };
 
@@ -40,9 +42,8 @@ typedef NS_OPTIONS(NSInteger, FWSegmentedControlBorderType) {
     FWSegmentedControlBorderTypeRight = (1 << 3)
 };
 
-enum {
-    FWSegmentedControlNoSegment = -1   // Segment index for no selected segment
-};
+/// Segment index for no selected segment
+FOUNDATION_EXPORT NSUInteger FWSegmentedControlNoSegment;
 
 typedef NS_ENUM(NSInteger, FWSegmentedControlType) {
     FWSegmentedControlTypeText,
@@ -60,33 +61,28 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
 
 /*!
  @brief FWSegmentedControl
- 
+
  @see https://github.com/HeshamMegid/HMSegmentedControl
  */
 @interface FWSegmentedControl : UIControl
 
-@property (nonatomic, strong) NSArray<NSString *> *sectionTitles;
-@property (nonatomic, strong) NSArray<UIImage *> *sectionImages;
-@property (nonatomic, strong) NSArray<UIImage *> *sectionSelectedImages;
+@property (nonatomic, strong, nullable) NSArray<NSString *> *sectionTitles;
+@property (nonatomic, strong, nullable) NSArray<UIImage *> *sectionImages;
+@property (nonatomic, strong, nullable) NSArray<UIImage *> *sectionSelectedImages;
 
 /**
  Provide a block to be executed when selected index is changed.
  
  Alternativly, you could use `addTarget:action:forControlEvents:`
  */
-@property (nonatomic, copy) FWIndexChangeBlock indexChangeBlock;
+@property (nonatomic, copy, nullable) FWIndexChangeBlock indexChangeBlock;
 
 /**
  Used to apply custom text styling to titles when set.
  
  When this block is set, no additional styling is applied to the `NSAttributedString` object returned from this block.
  */
-@property (nonatomic, copy) FWTitleFormatterBlock titleFormatter;
-
-/**
- Alignment mode to apply to item title text, default center.
- */
-@property (nonatomic, copy) CATextLayerAlignmentMode titleAlignmentMode;
+@property (nonatomic, copy, nullable) FWTitleFormatterBlock titleFormatter;
 
 /**
  Text attributes to apply to item title text.
@@ -225,7 +221,7 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
 /**
  Index of the currently selected segment.
  */
-@property (nonatomic, assign) NSInteger selectedSegmentIndex;
+@property (nonatomic, assign) NSUInteger selectedSegmentIndex;
 
 /**
  Height of the selection indicator. Only effective when `FWSegmentedControlSelectionStyle` is either `FWSegmentedControlSelectionStyleTextWidthStripe` or `FWSegmentedControlSelectionStyleFullWidthStripe`.
@@ -243,9 +239,9 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
  When FWSegmentedControlSelectionIndicatorLocationDown is selected, top edge insets are not used
  
  Defaults are top: 0.0f
- left: 0.0f
- bottom: 0.0f
- right: 0.0f
+             left: 0.0f
+           bottom: 0.0f
+            right: 0.0f
  */
 @property (nonatomic, readwrite) UIEdgeInsets selectionIndicatorEdgeInsets;
 
@@ -263,11 +259,14 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
  */
 @property (nonatomic) BOOL shouldAnimateUserSelection;
 
-- (id)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles;
-- (id)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages;
+- (instancetype)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles;
+- (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages;
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles;
+
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated;
 - (void)setIndexChangeBlock:(FWIndexChangeBlock)indexChangeBlock;
 - (void)setTitleFormatter:(FWTitleFormatterBlock)titleFormatter;
 
 @end
+
+NS_ASSUME_NONNULL_END

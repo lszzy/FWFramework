@@ -321,7 +321,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     self.segmentedControl = [FWSegmentedControl new];
     self.segmentedControl.sectionTitles = @[@"下单", @"评价", @"商家"];
     FWWeakifySelf();
-    self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
+    self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
         FWStrongifySelf();
         [self.pagerView scrollToIndex:index animated:NO];
     };

@@ -153,8 +153,7 @@
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
-    self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
-    self.segmentedControl.titleAlignmentMode = kCAAlignmentRight;
+    self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
     self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
     self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
     [self.view addSubview:self.segmentedControl];
@@ -163,7 +162,7 @@
     [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
     [self.segmentedControl fwSetDimension:NSLayoutAttributeHeight toSize:50];
     FWWeakifySelf();
-    self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
+    self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
         FWStrongifySelf();
         [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth * index, 0, FWScreenWidth, 100) animated:YES];
     };
