@@ -90,8 +90,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
     self.segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
-    self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationDown;
-    self.segmentedControl.titleAlignmentMode = kCAAlignmentRight;
+    self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
     self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
     self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
     [headerView addSubview:self.segmentedControl];
@@ -187,7 +186,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
         [self clickHandler:currentIndex];
     };
     
-    self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
+    self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
         FWStrongifySelf();
         self.segmentedControl.selectionIndicatorBoxColor = [UIColor fwRandomColor];
     };
