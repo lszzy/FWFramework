@@ -46,14 +46,14 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 @end
 
-@interface TestNestChildController : BaseTableViewController <FWCollectionViewController, FWPagerViewListViewDelegate>
+@interface TestNestChildController : BaseTableViewController <FWCollectionViewController, FWPagingViewListViewDelegate>
 
 @property (nonatomic, assign) BOOL refreshList;
 @property (nonatomic, assign) NSInteger rows;
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, assign) BOOL cart;
 @property (nonatomic, assign) BOOL isRefreshed;
-@property (nonatomic, weak) FWPagerView *pagerView;
+@property (nonatomic, weak) FWPagingView *pagerView;
 
 @property (nonatomic, copy) void(^scrollCallback)(UIScrollView *scrollView);
 
@@ -163,7 +163,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.pagerView setMainTableViewToMaxContentOffsetY];
+    // [self.pagerView setMainTableViewToMaxContentOffsetY];
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] animated:YES scrollPosition:UITableViewScrollPositionTop];
 }
 
@@ -238,29 +238,29 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     }
 }
 
-#pragma mark - FWPagerViewListViewDelegate
+#pragma mark - FWPagingViewListViewDelegate
 
-- (UIView *)pagerListView
+- (UIView *)listView
 {
     return self.view;
 }
 
-- (UIScrollView *)pagerListScrollView
+- (UIScrollView *)listScrollView
 {
     return self.tableView;
 }
 
-- (void)pagerListViewDidScrollCallback:(void (^)(UIScrollView *))callback
+- (void)listViewDidScrollCallbackWithCallback:(void (^)(UIScrollView * _Nonnull))callback
 {
     self.scrollCallback = callback;
 }
 
 @end
 
-@interface TestNestScrollViewController () <FWPagerViewDelegate>
+@interface TestNestScrollViewController () <FWPagingViewDelegate>
 
 @property (nonatomic, assign) BOOL refreshList;
-@property (nonatomic, strong) FWPagerView *pagerView;
+@property (nonatomic, strong) FWPagingView *pagerView;
 @property (nonatomic, strong) UIImageView *headerView;
 @property (nonatomic, strong) FWSegmentedControl *segmentedControl;
 @property (nonatomic, strong) UIView *cartView;
@@ -323,13 +323,13 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSInteger index) {
         FWStrongifySelf();
-        [self.pagerView scrollToIndex:index];
+        [self.pagerView.listContainerView didClickSelectedItemAt:index];
     };
     
     if (self.refreshList) {
-        self.pagerView = [[FWPagerRefreshView alloc] initWithDelegate:self];
+        self.pagerView = [[FWPagingListRefreshView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
     } else {
-        self.pagerView = [[FWPagerView alloc] initWithDelegate:self];
+        self.pagerView = [[FWPagingView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
     }
     self.pagerView.pinSectionHeaderVerticalOffset = FWTopBarHeight;
     [self.view addSubview:self.pagerView];
@@ -347,37 +347,37 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     [cartView addSubview:cartLabel];
 }
 
-#pragma mark - FWPagerViewDelegate
+#pragma mark - FWPagingViewDelegate
 
-- (NSUInteger)tableHeaderViewHeightInPagerView:(FWPagerView *)pagerView
+-(NSInteger)tableHeaderViewHeightIn:(FWPagingView *)pagingView
 {
     return HeaderViewHeight;
 }
 
-- (UIView *)tableHeaderViewInPagerView:(FWPagerView *)pagerView
+- (UIView *)tableHeaderViewIn:(FWPagingView *)pagingView
 {
     return self.headerView;
 }
 
-- (NSUInteger)pinSectionHeaderHeightInPagerView:(FWPagerView *)pagerView
+- (NSInteger)heightForPinSectionHeaderIn:(FWPagingView *)pagingView
 {
     return SegmentViewHeight;
 }
 
-- (UIView *)pinSectionHeaderInPagerView:(FWPagerView *)pagerView
+- (UIView *)viewForPinSectionHeaderIn:(FWPagingView *)pagingView
 {
     return self.segmentedControl;
 }
 
-- (NSInteger)numberOfListViewsInPagerView:(FWPagerView *)pagerView
+- (NSInteger)numberOfListsIn:(FWPagingView *)pagingView
 {
     return self.segmentedControl.sectionTitles.count;
 }
 
-- (id<FWPagerViewListViewDelegate>)pagerView:(FWPagerView *)pagerView listViewAtIndex:(NSInteger)index
+- (id<FWPagingViewListViewDelegate>)pagingView:(FWPagingView *)pagingView initListAtIndex:(NSInteger)index
 {
     TestNestChildController *listView = [TestNestChildController new];
-    listView.pagerView = pagerView;
+    listView.pagerView = pagingView;
     listView.refreshList = self.refreshList;
     listView.isRefreshed = self.isRefreshed;
     if (index == 0) {
@@ -392,7 +392,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     return listView;
 }
 
-- (void)pagerView:(FWPagerView *)pagerView mainTableViewDidScroll:(UIScrollView *)scrollView
+- (void)pagingView:(FWPagingView *)pagingView mainTableViewDidScroll:(UIScrollView *)scrollView
 {
     // 导航栏透明度
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
@@ -409,7 +409,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     }
 }
 
-- (void)pagerView:(FWPagerView *)pagerView didScrollToIndex:(NSInteger)index
+- (void)pagingView:(FWPagingView *)pagingView didScrollToIndex:(NSInteger)index
 {
     self.segmentedControl.selectedSegmentIndex = index;
     self.cartView.hidden = (index != 0);
