@@ -606,7 +606,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     }
     
     // Add the selection indicators
-    if (self.selectedSegmentIndex != FWSegmentedControlNoSegment) {
+    if (self.selectedSegmentIndex != FWSegmentedControlNoSegment && [self sectionCount] > 0) {
         if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
             if (!self.selectionIndicatorArrowLayer.superlayer) {
                 [self setArrowFrame];
@@ -1000,7 +1000,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
     
-    if (index == FWSegmentedControlNoSegment) {
+    if (index == FWSegmentedControlNoSegment || [self sectionCount] < 1) {
         [self.selectionIndicatorArrowLayer removeFromSuperlayer];
         [self.selectionIndicatorStripLayer removeFromSuperlayer];
         [self.selectionIndicatorBoxLayer removeFromSuperlayer];

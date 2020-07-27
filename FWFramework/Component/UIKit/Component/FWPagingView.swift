@@ -644,7 +644,7 @@ open class FWPagingMainTableView: UITableView, UIGestureRecognizerDelegate {
     @objc optional func pagingView(_ pagingView: FWPagingView, mainTableViewDidEndDecelerating scrollView: UIScrollView)
     @objc optional func pagingView(_ pagingView: FWPagingView, mainTableViewDidEndScrollingAnimation scrollView: UIScrollView)
     
-    /// FWFramework，滚动到指定index内容视图时回调方法
+    /// 滚动到指定index内容视图时回调方法
     @objc optional func pagingView(_ pagingView: FWPagingView, didScrollToIndex index: Int)
 
     /// 返回自定义UIScrollView或UICollectionView的Class
@@ -838,7 +838,6 @@ open class FWPagingView: UIView {
         return CGFloat(delegate.tableHeaderViewHeight(in: self)) - CGFloat(pinSectionHeaderVerticalOffset)
     }
 
-    // FWFramework，主表格滚动到悬停位置
     public func setMainTableViewToMaxContentOffsetY() {
         mainTableView.contentOffset = CGPoint(x: 0, y: mainTableViewMaxContentOffsetY())
     }
@@ -865,7 +864,6 @@ open class FWPagingView: UIView {
         preferredProcessListViewDidScroll(scrollView: scrollView)
     }
     
-    // FWFramework，滚动到指定index内容视图
     public func scrollToIndex(_ index: Int, animated: Bool = true) {
         listContainerView.contentScrollView().setContentOffset(CGPoint(x: listContainerView.contentScrollView().bounds.size.width * CGFloat(index), y: 0), animated: animated)
         listContainerView.didClickSelectedItem(at: index)
