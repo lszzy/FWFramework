@@ -190,6 +190,7 @@
         
         [self onLoading];
     }];
+    self.tableView.fwInfiniteScrollView.preloadHeight = 200;
     self.tableView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         
