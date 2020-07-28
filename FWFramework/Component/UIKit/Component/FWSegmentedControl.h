@@ -59,10 +59,10 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
     FWSegmentedControlImagePositionBelowText
 };
 
-/*!
- @brief FWSegmentedControl
-
- @see https://github.com/HeshamMegid/HMSegmentedControl
+/**
+ FWSegmentedControl
+ 
+ [HMSegmentedControl 1.5.6](https://github.com/HeshamMegid/HMSegmentedControl)
  */
 @interface FWSegmentedControl : UIControl
 
