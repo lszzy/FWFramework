@@ -96,88 +96,6 @@ typedef struct {
 
 @end
 
-@class FWTabComponentManager, FWTabTableAnimated, FWTabCollectionAnimated;
-
-extern NSString * const FWTabCacheManagerFolderName;
-
-@interface FWTabAnimatedCacheManager : NSObject
-
-// 当前App版本
-@property (nonatomic, copy, readonly) NSString *currentSystemVersion;
-// 本地的缓存
-@property (nonatomic, strong, readonly) NSMutableArray *cacheModelArray;
-// 内存中的骨架屏管理单元
-@property (nonatomic, strong, readonly) NSMutableDictionary *cacheManagerDict;
-
-/**
- * 加载该用户常点击的骨架屏plist文件到内存
- * 按`loadCount`降序排列
- */
-- (void)install;
-
-/**
- * 存储骨架屏管理单元到指定沙盒目录
- * @param manager 骨架屏管理单元
- */
-- (void)cacheComponentManager:(FWTabComponentManager *)manager;
-
-/**
- * 获取指定骨架屏管理单元
- * @param fileName 文件名
- */
-- (nullable FWTabComponentManager *)getComponentManagerWithFileName:(NSString *)fileName;
-
-/**
- * 更新该viewAnimated下所有骨架屏管理单元的loadCount
- * @param viewAnimated 骨架屏配置对象
- */
-- (void)updateCacheModelLoadCountWithTableAnimated:(FWTabTableAnimated *)viewAnimated;
-
-/**
- * 更新该viewAnimated下所有骨架屏管理单元的loadCount
- * @param viewAnimated 骨架屏配置对象
- */
-- (void)updateCacheModelLoadCountWithCollectionAnimated:(FWTabCollectionAnimated *)viewAnimated;
-
-@end
-
-@interface FWTabAnimatedCacheModel : NSObject<NSSecureCoding>
-
-@property (nonatomic, copy) NSString *fileName;
-@property (nonatomic, assign) NSInteger loadCount;
-
-@end
-
-@interface FWTabAnimatedDocumentMethod : NSObject
-
-+ (void)writeToFileWithData:(id)data
-                   filePath:(NSString *)filePath;
-
-+ (id)getCacheData:(NSString *)filePath
-       targetClass:(Class)targetClass;
-
-+ (NSArray <NSString *> *)getAllFileNameWithFolderPath:(NSString *)folderPath;
-
-// 获取Documents目录下对应一级目录和文件名，不创建
-+ (NSString *)getPathByCreateDocumentFile:(NSString *)filePacketName
-                             documentName:(NSString *)documentName;
-
-// 获取Documents目录下对应的文件名，不创建
-+ (NSString *)getPathByCreateDocumentName:(NSString *)documentName;
-
-// 获取FWTabCache下对应filePacketName目录
-+ (NSString *)getFWTabPathByFilePacketName:(NSString *)filePacketName;
-
-// 创建文件/文件夹
-+ (BOOL)createFile:(NSString *)file
-             isDir:(BOOL)isdir;
-
-// 判断文件/文件夹是否存在
-+ (BOOL)isExistFile:(NSString *)path
-              isDir:(BOOL)isDir;
-
-@end
-
 @class FWTabViewAnimated, FWTabBaseComponent, FWTabComponentManager;
 
 @interface UIView (FWTabAnimated)
@@ -936,16 +854,6 @@ typedef NSArray <FWTabBaseComponent *> * _Nullable (^FWTabBaseComponentArrayWith
  * 豆瓣动画
  */
 @property (nonatomic, strong) NSMutableArray <NSArray *> *entireIndexArray;
-
-/**
- * 该cell类型存储到本地的文件名
- */
-@property (nonatomic, copy) NSString *fileName;
-
-/**
- * 该cell类型映射到本地文件的最后一次版本号
- */
-@property (nonatomic, copy) NSString *version;
 
 /**
  * 框架会自动为该属性赋值
@@ -2031,12 +1939,6 @@ typedef NS_ENUM(NSInteger, FWTabAnimationType) {
  */
 @property (nonatomic, assign) CGFloat animatedHeight;
 
-/**
- * An object that manages  skeleton screen cache.
- * 管理骨架屏缓存的全局对象
- */
-@property (nonatomic, strong, readonly) FWTabAnimatedCacheManager *cacheManager;
-
 #pragma mark - Other
 
 /**
@@ -2058,16 +1960,6 @@ typedef NS_ENUM(NSInteger, FWTabAnimationType) {
  * 开启后，会在每一个动画元素上增加一个红色的数字，该数字表示该动画元素所在的下标，方便快速定位某个动画元素。
  */
 @property (nonatomic, assign) BOOL openAnimationTag;
-
-/**
- * 关闭缓存功能
- * DEBUG环境下，默认关闭缓存功能（为了方便调试预处理回调），即为YES
- * RELEASE环境下，默认开启缓存功能，即为NO
- *
- * 如果你想在DEBUG环境下测试缓存功能，可以手动置为YES
- * 如果你始终都不想使用缓存功能，可以手动置为NO
- */
-@property (nonatomic, assign) BOOL closeCache;
 
 #pragma mark - Dark Mode
 
