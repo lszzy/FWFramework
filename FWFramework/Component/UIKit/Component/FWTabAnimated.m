@@ -594,8 +594,6 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             
         }else {
             
-//            self.userInteractionEnabled = self.fwTabAnimated.oldEnable;
-            
             [FWTabManagerMethod resetData:self];
             [FWTabManagerMethod removeMask:self];
             [FWTabManagerMethod endAnimationToSubViews:self];
@@ -986,68 +984,36 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 - (FWTabBaseComponentFloatBlock)left {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_left:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x - offset, self.layer.frame.origin.y, self.layer.frame.size.width, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_left:(NSNumber *)number {
-    [self result_left:[number floatValue]];
-}
-
-- (void)result_left:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x - offset, self.layer.frame.origin.y, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
 #pragma mark - right
 
 - (FWTabBaseComponentFloatBlock)right {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_right:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x + offset, self.layer.frame.origin.y, self.layer.frame.size.width, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_right:(NSNumber *)number {
-    [self result_right:[number floatValue]];
-}
-
-- (void)result_right:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x + offset, self.layer.frame.origin.y, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
 #pragma mark - up
 
 - (FWTabBaseComponentFloatBlock)up {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_up:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y - offset, self.layer.frame.size.width, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_up:(NSNumber *)number {
-    [self result_up:[number floatValue]];
-}
-
-- (void)result_up:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y - offset, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
 #pragma mark - down
 
 - (FWTabBaseComponentFloatBlock)down {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_down:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y + offset, self.layer.frame.size.width, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_down:(NSNumber *)number {
-    [self result_down:[number floatValue]];
-}
-
-- (void)result_down:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y + offset, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
 #pragma mark - width
@@ -1059,18 +1025,10 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             return self;
         }
         
-        [self result_width:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y, offset, self.layer.frame.size.height);
         
         return self;
     };
-}
-
-- (void)preview_width:(NSNumber *)number {
-    [self result_width:[number floatValue]];
-}
-
-- (void)result_width:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y, offset, self.layer.frame.size.height);
 }
 
 #pragma mark - height
@@ -1082,292 +1040,156 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             return self;
         }
         
-        [self result_height:offset];
+        self.layer.tabViewHeight = offset;
         
         return self;
     };
-}
-
-- (void)preview_height:(NSNumber *)number {
-    [self result_height:[number floatValue]];
-}
-
-- (void)result_height:(CGFloat)offset {
-    self.layer.tabViewHeight = offset;
 }
 
 #pragma mark - radius
 
 - (FWTabBaseComponentFloatBlock)radius {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_radius:offset];
+        self.layer.cornerRadius = offset;
         return self;
     };
-}
-
-- (void)preview_radius:(NSNumber *)number {
-    [self result_radius:[number floatValue]];
-}
-
-- (void)result_radius:(CGFloat)offset {
-    self.layer.cornerRadius = offset;
 }
 
 #pragma mark - reducedWidth
 
 - (FWTabBaseComponentFloatBlock)reducedWidth {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_reducedWidth:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y, self.layer.frame.size.width - offset, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_reducedWidth:(NSNumber *)number {
-    [self result_reducedWidth:[number floatValue]];
-}
-
-- (void)result_reducedWidth:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x, self.layer.frame.origin.y, self.layer.frame.size.width - offset, self.layer.frame.size.height);
 }
 
 #pragma mark - reducedHeight
 
 - (FWTabBaseComponentFloatBlock)reducedHeight {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_reducedHeight:offset];
+        self.layer.tabViewHeight = self.layer.frame.size.height - offset;
         return self;
     };
-}
-
-- (void)preview_reducedHeight:(NSNumber *)number {
-    [self result_reducedHeight:[number floatValue]];
-}
-
-- (void)result_reducedHeight:(CGFloat)offset {
-    self.layer.tabViewHeight = self.layer.frame.size.height - offset;
 }
 
 #pragma mark - reducedRadius
 
 - (FWTabBaseComponentFloatBlock)reducedRadius {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_reducedRadius:offset];
+        self.layer.cornerRadius = self.layer.cornerRadius - offset;
         return self;
     };
-}
-
-- (void)preview_reducedRadius:(NSNumber *)number {
-    [self result_reducedRadius:[number floatValue]];
-}
-
-- (void)result_reducedRadius:(CGFloat)offset {
-    self.layer.cornerRadius = self.layer.cornerRadius - offset;
 }
 
 #pragma mark - x
 
 - (FWTabBaseComponentFloatBlock)x {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_x:offset];
+        self.layer.frame = CGRectMake(offset, self.layer.frame.origin.y, self.layer.frame.size.width, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_x:(NSNumber *)number {
-    [self result_x:[number floatValue]];
-}
-
-- (void)result_x:(CGFloat)offset {
-    self.layer.frame = CGRectMake(offset, self.layer.frame.origin.y, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
 #pragma mark - y
 
 - (FWTabBaseComponentFloatBlock)y {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_y:offset];
+        self.layer.frame = CGRectMake(self.layer.frame.origin.x, offset, self.layer.frame.size.width, self.layer.frame.size.height);
         return self;
     };
-}
-
-- (void)preview_y:(NSNumber *)number {
-    [self result_y:[number floatValue]];
-}
-
-- (void)result_y:(CGFloat)offset {
-    self.layer.frame = CGRectMake(self.layer.frame.origin.x, offset, self.layer.frame.size.width, self.layer.frame.size.height);
 }
 
 #pragma mark - z
 
 - (FWTabBaseComponentFloatBlock)z {
     return ^FWTabBaseComponent *(CGFloat offset) {
-        [self result_z:offset];
+        self.layer.zPosition = offset;
         return self;
     };
-}
-
-- (void)preview_z:(NSNumber *)number {
-    [self result_z:[number floatValue]];
-}
-
-- (void)result_z:(CGFloat)offset {
-    self.layer.zPosition = offset;
 }
 
 #pragma mark - line
 
 - (FWTabBaseComponentIntegerBlock)line {
     return ^FWTabBaseComponent *(NSInteger value) {
-        [self result_line:value];
+        self.layer.numberOflines = value;
         return self;
     };
-}
-
-- (void)preview_line:(NSNumber *)number {
-    [self result_line:[number floatValue]];
-}
-
-- (void)result_line:(CGFloat)offset {
-    self.layer.numberOflines = offset;
 }
 
 #pragma mark - space
 
 - (FWTabBaseComponentFloatBlock)space {
     return ^FWTabBaseComponent *(CGFloat value) {
-        [self result_space:value];
+        self.layer.lineSpace = value;
         return self;
     };
-}
-
-- (void)preview_space:(NSNumber *)number {
-    [self result_space:[number floatValue]];
-}
-
-- (void)result_space:(CGFloat)offset {
-    self.layer.lineSpace = offset;
 }
 
 #pragma mark - lastLineScale
 
 - (FWTabBaseComponentFloatBlock)lastLineScale {
     return ^FWTabBaseComponent *(CGFloat value) {
-        [self result_lastLineScale:value];
+        self.layer.lastScale = value;
         return self;
     };
-}
-
-- (void)preview_lastLineScale:(NSNumber *)number {
-    [self result_lastLineScale:[number floatValue]];
-}
-
-- (void)result_lastLineScale:(CGFloat)offset {
-    self.layer.lastScale = offset;
 }
 
 #pragma mark - remove
 
 - (FWTabBaseComponentVoidBlock)remove {
     return ^FWTabBaseComponent *(void) {
-        [self result_remove];
+        self.layer.loadStyle = FWTabViewLoadAnimationRemove;
         return self;
     };
-}
-
-- (void)preview_remove {
-    [self result_remove];
-}
-
-- (void)result_remove {
-    self.layer.loadStyle = FWTabViewLoadAnimationRemove;
 }
 
 #pragma mark - placeholder
 
 - (FWTabBaseComponentStringBlock)placeholder {
-    return ^FWTabBaseComponent *(NSString *string) {
-        [self result_placeholder:string];
+    return ^FWTabBaseComponent *(NSString *value) {
+        self.layer.placeholderName = value;
+        self.layer.contents = (id)[UIImage imageNamed:value].CGImage;
         return self;
     };
-}
-
-- (void)preview_placeholder:(NSString *)value {
-    [self result_placeholder:value];
-}
-
-- (void)result_placeholder:(NSString *)value {
-    self.layer.placeholderName = value;
-    self.layer.contents = (id)[UIImage imageNamed:value].CGImage;
 }
 
 #pragma mark - toLongAnimation
 
 - (FWTabBaseComponentVoidBlock)toLongAnimation {
     return ^FWTabBaseComponent *(void) {
-        [self result_toLongAnimation];
+        self.layer.loadStyle = FWTabViewLoadAnimationToLong;
         return self;
     };
-}
-
-- (void)preview_toLongAnimation {
-    [self result_toLongAnimation];
-}
-
-- (void)result_toLongAnimation {
-    self.layer.loadStyle = FWTabViewLoadAnimationToLong;
 }
 
 #pragma mark - toShortAnimation
 
 - (FWTabBaseComponentVoidBlock)toShortAnimation {
     return ^FWTabBaseComponent *(void) {
-        [self result_toShortAnimation];
+        self.layer.loadStyle = FWTabViewLoadAnimationToShort;
         return self;
     };
-}
-
-- (void)preview_toShortAnimation {
-    [self result_toShortAnimation];
-}
-
-- (void)result_toShortAnimation {
-    self.layer.loadStyle = FWTabViewLoadAnimationToShort;
 }
 
 #pragma mark - cancelAlignCenter
 
 - (FWTabBaseComponentVoidBlock)cancelAlignCenter {
     return ^FWTabBaseComponent *(void) {
-        [self result_cancelAlignCenter];
+        self.layer.isCancelAlignCenter = YES;
         return self;
     };
-}
-
-- (void)preview_cancelAlignCenter {
-    [self result_cancelAlignCenter];
-}
-
-- (void)result_cancelAlignCenter {
-    self.layer.isCancelAlignCenter = YES;
 }
 
 #pragma mark - color
 
 - (FWTabBaseComponentColorBlock)color {
     return ^FWTabBaseComponent *(UIColor *color) {
-        [self result_color:color];
+        self.layer.currentColor = color;
+        self.layer.backgroundColor = color.CGColor;
         return self;
     };
-}
-
-- (void)preview_color:(UIColor *)color {
-    [self result_color:color];
-}
-
-- (void)result_color:(UIColor *)color {
-    self.layer.currentColor = color;
-    self.layer.backgroundColor = color.CGColor;
 }
 
 #pragma mark - 豆瓣动画
@@ -1375,68 +1197,36 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
 
 - (FWTabBaseComponentIntegerBlock)dropIndex {
     return ^FWTabBaseComponent *(NSInteger value) {
-        [self result_dropIndex:value];
+        self.layer.dropAnimationIndex = value;
         return self;
     };
-}
-
-- (void)preview_dropIndex:(NSNumber *)number {
-    [self result_dropIndex:[number integerValue]];
-}
-
-- (void)result_dropIndex:(NSInteger)value {
-    self.layer.dropAnimationIndex = value;
 }
 
 #pragma mark - dropFromIndex
 
 - (FWTabBaseComponentIntegerBlock)dropFromIndex {
     return ^FWTabBaseComponent *(NSInteger value) {
-        [self result_dropFromIndex:value];
+        self.layer.dropAnimationFromIndex = value;
         return self;
     };
-}
-
-- (void)preview_dropFromIndex:(NSNumber *)number {
-    [self result_dropFromIndex:[number integerValue]];
-}
-
-- (void)result_dropFromIndex:(NSInteger)value {
-    self.layer.dropAnimationFromIndex = value;
 }
 
 #pragma mark - removeOnDrop
 
 - (FWTabBaseComponentVoidBlock)removeOnDrop {
     return ^FWTabBaseComponent *(void) {
-        [self result_removeOnDrop];
+        self.layer.removeOnDropAnimation = YES;
         return self;
     };
-}
-
-- (void)preview_removeOnDrop {
-    [self result_removeOnDrop];
-}
-
-- (void)result_removeOnDrop {
-    self.layer.removeOnDropAnimation = YES;
 }
 
 #pragma mark - dropStayTime
 
 - (FWTabBaseComponentFloatBlock)dropStayTime {
     return ^FWTabBaseComponent *(CGFloat value) {
-        [self result_dropStayTime:value];
+        self.layer.dropAnimationStayTime = value;
         return self;
     };
-}
-
-- (void)preview_dropStayTime:(NSNumber *)number {
-    [self result_dropStayTime:[number floatValue]];
-}
-
-- (void)result_dropStayTime:(CGFloat)value {
-    self.layer.dropAnimationStayTime = value;
 }
 
 @end
