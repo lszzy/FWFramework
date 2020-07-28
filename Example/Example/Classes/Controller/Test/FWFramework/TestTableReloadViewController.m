@@ -93,6 +93,11 @@
     [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
     self.tableView.fwInfiniteScrollHeight = FWInfiniteScrollView.height + UIScreen.fwSafeAreaInsets.bottom;
     [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    
+    self.tableView.fwTabAnimated = [FWTabTableAnimated animatedWithCellClass:[TestTableReloadCell class] cellHeight:100];
+    self.tableView.fwTabAnimated.adjustBlock = ^(FWTabComponentManager * _Nonnull manager) {
+        manager.animation(0).width(100);
+    };
 }
 
 - (void)renderData
@@ -130,7 +135,9 @@
     } else {
         NSLog(@"开始刷新");
     }
+    [self.tableView fwTabStartAnimation];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView fwTabEndAnimation];
         if (isTimer) {
             NSLog(@"自动刷新完成");
         } else {
