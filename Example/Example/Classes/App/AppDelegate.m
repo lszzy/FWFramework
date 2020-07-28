@@ -74,7 +74,6 @@
     };
     
     [[FWTabAnimated sharedAnimated] initWithOnlySkeleton];
-    [FWTabAnimated sharedAnimated].closeCache = NO;
     [FWTabAnimated sharedAnimated].openLog = FWIsSimulator;
     [FWTabAnimated sharedAnimated].openAnimationTag = FWIsSimulator;
 }

@@ -129,480 +129,6 @@ static FWTabShimmerTransition transitionMaker(FWTabShimmerDirection dir, FWTabSh
 
 @end
 
-NSString * const FWTabCacheManagerFolderName = @"FWTabAnimated";
-NSString * const FWTabCacheManagerCacheModelFolderName = @"CacheModel";
-NSString * const FWTabCacheManagerCacheManagerFolderName = @"CacheManager";
-
-static const NSInteger kMemeoryModelMaxCount = 20;
-
-@interface FWTabAnimatedCacheManager()
-
-@property (nonatomic, strong) NSRecursiveLock *lock;
-
-// 当前App版本
-@property (nonatomic, copy, readwrite) NSString *currentSystemVersion;
-// 本地的缓存
-@property (nonatomic, strong, readwrite) NSMutableArray *cacheModelArray;
-// 内存中的骨架屏管理单元
-@property (nonatomic, strong, readwrite) NSMutableDictionary *cacheManagerDict;
-
-@end
-
-@implementation FWTabAnimatedCacheManager
-
-+ (dispatch_queue_t)updateQueue {
-    static dispatch_queue_t queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        queue = dispatch_queue_create("com.tigerAndBull.FWTabAnimated.updateQueue", DISPATCH_QUEUE_SERIAL);
-        dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
-    });
-    return queue;
-}
-
-+ (void)updateThreadMain:(id)object {
-    @autoreleasepool {
-        [[NSThread currentThread] setName:@"com.tigerAndBull.FWTabAnimated.updateThread"];
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
-        [runLoop run];
-    }
-}
-
-+ (NSThread *)updateThread {
-    static NSThread *thread = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        thread = [[NSThread alloc] initWithTarget:self selector:@selector(updateThreadMain:) object:nil];
-        if ([thread respondsToSelector:@selector(setQualityOfService:)]) {
-            thread.qualityOfService = NSQualityOfServiceBackground;
-        }
-        [thread start];
-    });
-    return thread;
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        _cacheModelArray = @[].mutableCopy;
-        _cacheManagerDict = @{}.mutableCopy;
-        _lock = [NSRecursiveLock new];
-    }
-    return self;
-}
-
-#pragma mark - Public Methods
-
-- (void)install {
-    
-    // 获取App版本
-    NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    if (currentVersion == nil && currentVersion.length <= 0) {
-        return;
-    }
-    _currentSystemVersion = currentVersion;
-    
-
-    NSString *documentDir = [FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:FWTabCacheManagerFolderName];
-    if (![FWTabAnimatedDocumentMethod isExistFile:documentDir
-                                          isDir:YES]) {
-        [FWTabAnimatedDocumentMethod createFile:documentDir
-                                        isDir:YES];
-    }
-
-    NSString *modelDirPath = [documentDir stringByAppendingPathComponent:FWTabCacheManagerCacheModelFolderName];
-    NSString *managerDirPath = [documentDir stringByAppendingPathComponent:FWTabCacheManagerCacheManagerFolderName];
-    
-    if (![FWTabAnimatedDocumentMethod isExistFile:modelDirPath
-                                          isDir:YES] ||
-        ![FWTabAnimatedDocumentMethod isExistFile:managerDirPath
-                                          isDir:YES]) {
-        [FWTabAnimatedDocumentMethod createFile:modelDirPath
-                                        isDir:YES];
-        [FWTabAnimatedDocumentMethod createFile:managerDirPath
-                                        isDir:YES];
-    }else {
-        dispatch_async([self.class updateQueue], ^{
-            [self performSelector:@selector(_loadDataToMemory:)
-                         onThread:[self.class updateThread]
-                       withObject:modelDirPath
-                    waitUntilDone:NO];
-        });
-    }
-}
-
-- (void)cacheComponentManager:(FWTabComponentManager *)manager {
-    
-    if ((manager == nil) ||
-        (manager.fileName == nil) ||
-        (manager.fileName.length == 0)) return;
-    
-    if ((_currentSystemVersion == nil) ||
-        (_currentSystemVersion.length == 0)) return;
-    
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        __strong typeof(weakSelf) self = weakSelf;
-        [self.lock lock];
-        manager.version = self.currentSystemVersion.copy;
-        [self.cacheManagerDict setObject:manager.copy forKey:manager.fileName];
-        
-        FWTabAnimatedCacheModel *cacheModel = FWTabAnimatedCacheModel.new;
-        cacheModel.fileName = manager.fileName;
-        [self.cacheModelArray addObject:cacheModel];
-        [self.lock unlock];
-        
-        NSArray *writeArray = @[cacheModel,manager];
-        dispatch_async([self.class updateQueue], ^{
-            [self performSelector:@selector(didReceiveWriteRequest:)
-                         onThread:[self.class updateThread]
-                       withObject:writeArray
-                    waitUntilDone:NO];
-        });
-    });
-}
-
-- (nullable FWTabComponentManager *)getComponentManagerWithFileName:(NSString *)fileName {
-    
-    if ([FWTabAnimated sharedAnimated].closeCache) return nil;
-    
-    // 从内存中查找
-    FWTabComponentManager *manager;
-    manager = [self.cacheManagerDict objectForKey:fileName];
-    if (manager) {
-        if (!manager.needUpdate) {
-            return manager.copy;
-        }
-        return nil;
-    }
-    
-    // 从沙盒中读取，并存储到内存中
-    NSString *filePath = [self _getCacheManagerFilePathWithFileName:fileName];
-    if (filePath != nil && filePath.length > 0) {
-        FWTabComponentManager *manager = (FWTabComponentManager *)[FWTabAnimatedDocumentMethod getCacheData:filePath targetClass:[FWTabComponentManager class]];
-        if (manager) {
-            if (!manager.needUpdate) {
-                [self.cacheManagerDict setObject:manager.copy forKey:manager.fileName];
-                return manager.copy;
-            }else {
-                return nil;
-            }
-        }else {
-            return nil;
-        }
-    }
-    
-    return nil;
-}
-
-- (void)updateCacheModelLoadCountWithTableAnimated:(FWTabTableAnimated *)viewAnimated {
-
-    if (viewAnimated == nil) return;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        if (viewAnimated == nil) return;
-        
-        NSString *controllerName = viewAnimated.targetControllerClassName;
-        
-        for (Class class in viewAnimated.cellClassArray) {
-            [self updateCacheModelLoadCountWithClass:class controllerName:controllerName];
-        }
-        
-        for (Class class in viewAnimated.headerClassArray) {
-            [self updateCacheModelLoadCountWithClass:class controllerName:controllerName];
-        }
-        
-        for (Class class in viewAnimated.footerClassArray) {
-            [self updateCacheModelLoadCountWithClass:class controllerName:controllerName];
-        }
-    });
-}
-
-- (void)updateCacheModelLoadCountWithCollectionAnimated:(FWTabCollectionAnimated *)viewAnimated {
-    
-    if (viewAnimated == nil) return;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-
-        if (viewAnimated == nil) return;
-        
-        NSString *controllerName = viewAnimated.targetControllerClassName;
-    
-        for (Class class in viewAnimated.cellClassArray) {
-            [self updateCacheModelLoadCountWithClass:class controllerName:controllerName];
-        }
-        
-        for (Class class in viewAnimated.headerClassArray) {
-            [self updateCacheModelLoadCountWithClass:class controllerName:controllerName];
-        }
-        
-        for (Class class in viewAnimated.footerClassArray) {
-            [self updateCacheModelLoadCountWithClass:class controllerName:controllerName];
-        }
-    });
-}
-
-#pragma mark - Private Method
-
-- (void)_loadDataToMemory:(NSString *)modelDirPath {
-
-    if (modelDirPath == nil ||
-        modelDirPath.length == 0) return;
-    
-    NSError *error;
-    NSArray <NSString *> *fileArray =
-    [[NSFileManager defaultManager] contentsOfDirectoryAtPath:modelDirPath
-                                                        error:&error];
-    
-    if (error) return;
-    
-    @autoreleasepool {
-        
-        [_lock lock];
-        
-        NSMutableArray *cacheModelArray = @[].mutableCopy;
-        for (NSString *filePath in fileArray) {
-            NSString *resultFilePath = [[FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:FWTabCacheManagerFolderName] stringByAppendingString:[NSString stringWithFormat:@"/%@/%@",FWTabCacheManagerCacheModelFolderName,filePath]];
-            FWTabAnimatedCacheModel *model =
-            (FWTabAnimatedCacheModel *)[FWTabAnimatedDocumentMethod
-                                           getCacheData:resultFilePath
-                                            targetClass:[FWTabAnimatedCacheModel class]];
-            if (model) {
-                [cacheModelArray addObject:model];
-            }
-        }
-        
-        _cacheModelArray = [NSMutableArray arrayWithArray:[cacheModelArray sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-            FWTabAnimatedCacheModel *model1 = obj1;
-            FWTabAnimatedCacheModel *model2 = obj2;
-            if (model1.loadCount > model2.loadCount) {
-                return NSOrderedAscending;
-            }else{
-                return NSOrderedDescending;
-            }
-        }]];
-
-        [_lock unlock];
-        
-        if (_cacheModelArray == nil || _cacheModelArray.count == 0) return;
-        
-        NSInteger maxCount = (_cacheModelArray.count > kMemeoryModelMaxCount) ? kMemeoryModelMaxCount : _cacheModelArray.count;
-        
-        for (NSInteger i = 0; i < maxCount; i++) {
-            
-            FWTabAnimatedCacheModel *model = _cacheModelArray[i];
-            NSString *filePath = [self _getCacheManagerFilePathWithFileName:model.fileName];
-            
-            [_lock lock];
-            FWTabComponentManager *manager =
-            (FWTabComponentManager *)[FWTabAnimatedDocumentMethod getCacheData:filePath
-                                                               targetClass:[FWTabComponentManager class]];
-            if (manager &&
-                manager.fileName &&
-                manager.fileName.length > 0) {
-                [_cacheManagerDict setObject:manager.copy forKey:manager.fileName];
-            }
-            [_lock unlock];
-        }
-    }
-}
-
-- (void)updateCacheModelLoadCountWithClass:(Class)class
-                            controllerName:(NSString *)controllerName {
-    if (class) {
-        NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",controllerName]];
-        if (fileName) {
-            dispatch_async([self.class updateQueue], ^{
-                [self performSelector:@selector(updateCacheModelLoadCountWithTargetFileName:)
-                             onThread:[self.class updateThread]
-                           withObject:fileName
-                        waitUntilDone:NO];
-            });
-        }
-    }
-}
-
-- (void)updateCacheModelLoadCountWithTargetFileName:(NSString *)targetFileName {
-    
-    if (targetFileName == nil || targetFileName.length == 0) return;
-    
-    [_lock lock];
-    
-    FWTabAnimatedCacheModel *targetCacheModel;
-    for (FWTabAnimatedCacheModel *model in self.cacheModelArray) {
-        if ([model.fileName isEqualToString:targetFileName]) {
-            targetCacheModel = model;
-            break;
-        }
-    }
-    
-    if (targetCacheModel) {
-        
-        ++targetCacheModel.loadCount;
-        
-        NSString *filePath = [self _getCacheModelFilePathWithFileName:targetCacheModel.fileName];
-        if (filePath && filePath.length > 0) {
-            if ([FWTabAnimatedDocumentMethod isExistFile:filePath
-                                                  isDir:NO]) {
-                [FWTabAnimatedDocumentMethod writeToFileWithData:targetCacheModel
-                                                      filePath:filePath];
-            }
-        }
-    }
-    
-    [_lock unlock];
-}
-
-- (void)didReceiveWriteRequest:(NSArray *)array {
-    
-    if (array == nil || array.count != 2) return;
-    
-    [_lock lock];
-    FWTabAnimatedCacheModel *cacheModel = array[0];
-    FWTabComponentManager *manager = array[1];
-    if (manager && cacheModel) {
-        NSString *managerFilePath = [self _getCacheManagerFilePathWithFileName:manager.fileName];
-        [FWTabAnimatedDocumentMethod writeToFileWithData:manager
-                                              filePath:managerFilePath];
-        NSString *modelFilePath = [self _getCacheModelFilePathWithFileName:manager.fileName];
-        [FWTabAnimatedDocumentMethod writeToFileWithData:cacheModel
-                                              filePath:modelFilePath];
-    }
-    [_lock unlock];
-}
-
-- (NSString *)_getCacheManagerFilePathWithFileName:(NSString *)fileName {
-    return [FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:[NSString stringWithFormat:@"/%@/%@/%@.plist",FWTabCacheManagerFolderName,FWTabCacheManagerCacheManagerFolderName,fileName]];
-}
-
-- (NSString *)_getCacheModelFilePathWithFileName:(NSString *)fileName {
-    return [FWTabAnimatedDocumentMethod getFWTabPathByFilePacketName:[NSString stringWithFormat:@"/%@/%@/%@.plist",FWTabCacheManagerFolderName,FWTabCacheManagerCacheModelFolderName,fileName]];
-}
-
-@end
-
-@interface FWTabAnimatedCacheModel()
-
-@property (nonatomic, assign, readwrite) BOOL needUpdate;
-
-@end
-
-@implementation FWTabAnimatedCacheModel
-
-- (instancetype)init {
-    if (self = [super init]) {
-        _loadCount = 1;
-    }
-    return self;
-}
-
-+ (BOOL)supportsSecureCoding {
-    return YES;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_fileName forKey:@"fileName"];
-    [aCoder encodeInteger:_loadCount forKey:@"loadCount"];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super init]) {
-        self.fileName = [aDecoder decodeObjectForKey:@"fileName"];
-        self.loadCount = [aDecoder decodeIntegerForKey:@"loadCount"];
-    }
-    return self;
-}
-
-@end
-
-#define kAnimatedFileManager [NSFileManager defaultManager]
-
-@implementation FWTabAnimatedDocumentMethod
-
-+ (NSString *)documentPath {
-    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-}
-
-+ (NSString *)getFWTabPathByFilePacketName:(NSString *)filePacketName {
-    return [[self documentPath] stringByAppendingPathComponent:filePacketName];
-}
-
-+ (void)writeToFileWithData:(id)data
-                   filePath:(NSString *)filePath {
-    if (@available(iOS 11.0, *)) {
-        NSData *newData = [NSKeyedArchiver archivedDataWithRootObject:data requiringSecureCoding:YES error:NULL];
-        if (newData) {
-            [newData writeToFile:filePath atomically:YES];
-        }
-    }else {
-        [NSKeyedArchiver archiveRootObject:data toFile:filePath];
-    }
-}
-
-+ (id)getCacheData:(NSString *)filePath
-       targetClass:(nonnull Class)targetClass {
-    if (@available(iOS 11.0, *)) {
-        NSData *data = [NSData dataWithContentsOfFile:filePath];
-        return [NSKeyedUnarchiver unarchivedObjectOfClass:targetClass
-                                                 fromData:data
-                                                    error:NULL];
-    }
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-}
-
-+ (NSArray <NSString *> *)getAllFileNameWithFolderPath:(NSString *)folderPath {
-    NSError *error = nil;
-    NSArray *fileList = [kAnimatedFileManager contentsOfDirectoryAtPath:folderPath error:&error];
-    if (error) {
-        return nil;
-    }
-    return fileList;
-}
-
-+ (NSString *)getPathByCreateDocumentFile:(NSString *)filePacketName
-                             documentName:(NSString *)documentName {
-    NSString *documentPath = [self documentPath];
-    NSString *path = [documentPath stringByAppendingPathComponent:filePacketName];
-    NSString *filePath = [path stringByAppendingPathComponent:documentName];
-    return filePath;
-}
-
-+ (NSString *)getPathByCreateDocumentName:(NSString *)documentName {
-    NSString *documentPath = [self documentPath];
-    NSString *filePath = [documentPath stringByAppendingPathComponent:documentName];
-    return filePath;
-}
-
-+ (BOOL)createFile:(NSString *)file
-             isDir:(BOOL)isDir {
-    
-    if (![FWTabAnimatedDocumentMethod isExistFile:file
-                                          isDir:isDir]) {
-        if (isDir) {
-            return [kAnimatedFileManager createDirectoryAtPath:file
-                                   withIntermediateDirectories:YES
-                                                    attributes:nil
-                                                         error:nil];
-        }else {
-            return [kAnimatedFileManager createFileAtPath:file
-                                                 contents:nil
-                                               attributes:nil];
-        }
-    }
-    
-    return YES;
-}
-
-+ (BOOL)isExistFile:(NSString *)path
-              isDir:(BOOL)isDir {
-    isDir = [kAnimatedFileManager fileExistsAtPath:path
-                                 isDirectory:&isDir];
-    return isDir;
-}
-
-@end
-
 #define tabAnimatedLog(x) {if([FWTabAnimated sharedAnimated].openLog) NSLog(x);}
 #define tab_kColor(s) [UIColor colorWithRed:(((s&0xFF0000)>>16))/255.0 green:(((s&0xFF00)>>8))/255.0 blue:((s&0xFF))/255.0 alpha:1.]
 #define tab_RGB(R,G,B) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1.]
@@ -895,11 +421,6 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             [collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
         }
         
-        // 更新loadCount
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithCollectionAnimated:collectionView.fwTabAnimated];
-        });
-        
     }else if ([self isKindOfClass:[UITableView class]]) {
         
         UITableView *tableView = (UITableView *)self;
@@ -991,11 +512,6 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }
         }
         
-        // 更新loadCount
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[FWTabAnimated sharedAnimated].cacheManager updateCacheModelLoadCountWithTableAnimated:tableView.fwTabAnimated];
-        });
-        
     }else {
         if (nil == self.fwTabComponentManager) {
             
@@ -1005,9 +521,6 @@ static const NSTimeInterval kDelayReloadDataTime = .4;
             }else {
                 targetView = self;
             }
-            
-//            self.fwTabAnimated.oldEnable = self.userInteractionEnabled;
-//            self.userInteractionEnabled = NO;
             
             [FWTabManagerMethod fullData:self];
             [self setNeedsLayout];
@@ -2777,7 +2290,6 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 - (id)copyWithZone:(NSZone *)zone {
     
     FWTabComponentManager *manager = [[[self class] allocWithZone:zone] init];
-    manager.fileName = self.fileName;
     
     manager.resultLayerArray = @[].mutableCopy;
     for (FWTabComponentLayer *layer in self.resultLayerArray) {
@@ -2791,14 +2303,12 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     manager.cancelGlobalCornerRadius = self.cancelGlobalCornerRadius;
     manager.dropAnimationCount = self.dropAnimationCount;
     manager.entireIndexArray = self.entireIndexArray.mutableCopy;
-    manager.version = self.version;
     manager.needChangeRowStatus = self.needChangeRowStatus;
 
     return manager;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_fileName forKey:@"fileName"];
     [aCoder encodeObject:_resultLayerArray forKey:@"resultLayerArray"];
     
     [aCoder encodeObject:_animatedColor forKey:@"animatedColor"];
@@ -2810,13 +2320,11 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
     [aCoder encodeInteger:_dropAnimationCount forKey:@"dropAnimationCount"];
     [aCoder encodeObject:_entireIndexArray forKey:@"entireIndexArray"];
     
-    [aCoder encodeObject:_version forKey:@"version"];
     [aCoder encodeBool:_needChangeRowStatus forKey:@"needChangeRowStatus"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        self.fileName = [aDecoder decodeObjectForKey:@"fileName"];
         self.resultLayerArray = [aDecoder decodeObjectForKey:@"resultLayerArray"];
         
         self.animatedColor = [aDecoder decodeObjectForKey:@"animatedColor"];
@@ -2828,7 +2336,6 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         self.dropAnimationCount = [aDecoder decodeIntegerForKey:@"dropAnimationCount"];
         self.entireIndexArray = [aDecoder decodeObjectForKey:@"entireIndexArray"];
         
-        self.version = [aDecoder decodeObjectForKey:@"version"];
         self.needChangeRowStatus = [aDecoder decodeBoolForKey:@"needChangeRowStatus"];
     }
     return self;
@@ -2837,14 +2344,6 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
 #pragma mark - Getter / Setter
 
 - (BOOL)needUpdate {
-    if (self.version && self.version.length > 0 &&
-        [FWTabAnimated sharedAnimated].cacheManager.currentSystemVersion &&
-        [FWTabAnimated sharedAnimated].cacheManager.currentSystemVersion.length > 0) {
-        if ([self.version isEqualToString:[FWTabAnimated sharedAnimated].cacheManager.currentSystemVersion]) {
-            return NO;
-        }
-        return YES;
-    }
     return YES;
 }
 
@@ -3038,51 +2537,26 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
-        
         if (nil == cell.fwTabComponentManager) {
             
-            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
-
-            if (manager &&
-                !manager.needChangeRowStatus) {
+            [FWTabManagerMethod fullData:cell];
+            cell.fwTabComponentManager = [FWTabComponentManager initWithView:cell
+                                                               superView:tableView tabAnimated:tableView.fwTabAnimated];
+            cell.fwTabComponentManager.currentSection = indexPath.section;
+            cell.fwTabComponentManager.tabTargetClass = currentClass;
+        
+            __weak typeof(cell) weakCell = cell;
+            dispatch_async(dispatch_get_main_queue(), ^{
                 
-                manager.fileName = fileName;
-                manager.isLoad = YES;
-                manager.tabTargetClass = currentClass;
-                manager.currentSection = indexPath.section;
-                cell.fwTabComponentManager = manager;
+                FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.fwTabAnimated;
                 
-                [manager reAddToView:cell
-                           superView:tableView];
-                
-                [FWTabManagerMethod startAnimationToSubViews:cell
-                                                  rootView:cell];
-                [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
-                                                      targetView:cell
-                                                         manager:cell.fwTabComponentManager];
-            }else {
-                
-                [FWTabManagerMethod fullData:cell];
-                cell.fwTabComponentManager = [FWTabComponentManager initWithView:cell
-                                                                   superView:tableView tabAnimated:tableView.fwTabAnimated];
-                cell.fwTabComponentManager.currentSection = indexPath.section;
-                cell.fwTabComponentManager.fileName = fileName;
-                cell.fwTabComponentManager.tabTargetClass = currentClass;
-            
-                __weak typeof(cell) weakCell = cell;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.fwTabAnimated;
-                    
-                    if (weakCell && tabAnimated && weakCell.fwTabComponentManager) {
-                        [FWTabManagerMethod runAnimationWithSuperView:tableView
-                                                         targetView:weakCell
-                                                             isCell:YES
-                                                            manager:weakCell.fwTabComponentManager];
-                    }
-                });
-            }
+                if (weakCell && tabAnimated && weakCell.fwTabComponentManager) {
+                    [FWTabManagerMethod runAnimationWithSuperView:tableView
+                                                     targetView:weakCell
+                                                         isCell:YES
+                                                        manager:weakCell.fwTabComponentManager];
+                }
+            });
         
         }else {
             if (cell.fwTabComponentManager.tabLayer.hidden) {
@@ -3197,47 +2671,27 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
             [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
-            
             if (nil == headerFooterView.fwTabComponentManager) {
                 
-                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                [FWTabManagerMethod fullData:headerFooterView];
+                headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
+                headerFooterView.fwTabComponentManager.currentSection = section;
                 
-                if (manager) {
-                    manager.fileName = fileName;
-                    manager.isLoad = YES;
-                    manager.tabTargetClass = class;
-                    manager.currentSection = section;
-                    [manager reAddToView:headerFooterView
-                               superView:tableView];
-                    headerFooterView.fwTabComponentManager = manager;
-                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
-                                                      rootView:headerFooterView];
-                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
-                                                          targetView:headerFooterView
-                                                             manager:headerFooterView.fwTabComponentManager];
-                }else {
-                    [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
-                    headerFooterView.fwTabComponentManager.currentSection = section;
-                    headerFooterView.fwTabComponentManager.fileName = fileName;
-                    
-                    __weak typeof(headerFooterView) weakView = headerFooterView;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.fwTabComponentManager) {
-                            
-                            BOOL isCell = NO;
-                            if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
-                                isCell = YES;
-                            }
-                            
-                            [FWTabManagerMethod runAnimationWithSuperView:tableView
-                                                             targetView:weakView
-                                                                 isCell:isCell
-                                                                manager:weakView.fwTabComponentManager];
+                __weak typeof(headerFooterView) weakView = headerFooterView;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (weakView && weakView.fwTabComponentManager) {
+                        
+                        BOOL isCell = NO;
+                        if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
+                            isCell = YES;
                         }
-                    });
-                }
+                        
+                        [FWTabManagerMethod runAnimationWithSuperView:tableView
+                                                         targetView:weakView
+                                                             isCell:isCell
+                                                            manager:weakView.fwTabComponentManager];
+                    }
+                });
             }else {
                 if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
                     headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
@@ -3276,49 +2730,27 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
             headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
             [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
-            
             if (nil == headerFooterView.fwTabComponentManager) {
                 
-                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                [FWTabManagerMethod fullData:headerFooterView];
+                headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
+                headerFooterView.fwTabComponentManager.currentSection = section;
                 
-                if (manager) {
-                    manager.fileName = fileName;
-                    manager.isLoad = YES;
-                    manager.tabTargetClass = class;
-                    manager.currentSection = section;
-                    [manager reAddToView:headerFooterView
-                               superView:tableView];
-                    headerFooterView.fwTabComponentManager = manager;
-                    
-                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
-                                                      rootView:headerFooterView];
-                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
-                                                          targetView:headerFooterView
-                                                             manager:headerFooterView.fwTabComponentManager];
-                    
-                }else {
-                    [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
-                    headerFooterView.fwTabComponentManager.currentSection = section;
-                    headerFooterView.fwTabComponentManager.fileName = fileName;
-                    
-                    __weak typeof(headerFooterView) weakView = headerFooterView;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.fwTabComponentManager) {
-                            
-                            BOOL isCell = NO;
-                            if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
-                                isCell = YES;
-                            }
-                            
-                            [FWTabManagerMethod runAnimationWithSuperView:tableView
-                                                             targetView:weakView
-                                                                 isCell:isCell
-                                                                manager:weakView.fwTabComponentManager];
+                __weak typeof(headerFooterView) weakView = headerFooterView;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (weakView && weakView.fwTabComponentManager) {
+                        
+                        BOOL isCell = NO;
+                        if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
+                            isCell = YES;
                         }
-                    });
-                }
+                        
+                        [FWTabManagerMethod runAnimationWithSuperView:tableView
+                                                         targetView:weakView
+                                                             isCell:isCell
+                                                            manager:weakView.fwTabComponentManager];
+                    }
+                });
             }else {
                 if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
                     headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
@@ -3511,47 +2943,25 @@ static NSString * const kTagDefaultFontName = @"HiraKakuProN-W3";
         
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
-        
         if (nil == cell.fwTabComponentManager) {
             
-            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
-
-            if (manager &&
-                !manager.needChangeRowStatus) {
-                manager.fileName = fileName;
-                manager.isLoad = YES;
-                manager.tabTargetClass = currentClass;
-                manager.currentSection = indexPath.section;
-                cell.fwTabComponentManager = manager;
-                [manager reAddToView:cell
-                           superView:collectionView];
-                [FWTabManagerMethod startAnimationToSubViews:cell
-                                                  rootView:cell];
-                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
-                                                      targetView:cell
-                                                         manager:cell.fwTabComponentManager];
-
-            }else {
-                [FWTabManagerMethod fullData:cell];
-                cell.fwTabComponentManager =
-                [FWTabComponentManager initWithView:cell
-                                        superView:collectionView  tabAnimated:collectionView.fwTabAnimated];
-                cell.fwTabComponentManager.currentSection = indexPath.section;
-                cell.fwTabComponentManager.fileName = fileName;
-                
-                __weak typeof(cell) weakCell = cell;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakCell && weakCell.fwTabComponentManager) {
-                        weakCell.fwTabComponentManager.tabTargetClass = weakCell.class;
-                        // 加载动画
-                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
-                                                         targetView:weakCell
-                                                             isCell:YES
-                                                            manager:weakCell.fwTabComponentManager];
-                    }
-                });
-            }
+            [FWTabManagerMethod fullData:cell];
+            cell.fwTabComponentManager =
+            [FWTabComponentManager initWithView:cell
+                                    superView:collectionView  tabAnimated:collectionView.fwTabAnimated];
+            cell.fwTabComponentManager.currentSection = indexPath.section;
+            
+            __weak typeof(cell) weakCell = cell;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (weakCell && weakCell.fwTabComponentManager) {
+                    weakCell.fwTabComponentManager.tabTargetClass = weakCell.class;
+                    // 加载动画
+                    [FWTabManagerMethod runAnimationWithSuperView:collectionView
+                                                     targetView:weakCell
+                                                         isCell:YES
+                                                        manager:weakCell.fwTabComponentManager];
+                }
+            });
         
         }else {
             if (cell.fwTabComponentManager.tabLayer.hidden) {
@@ -3720,52 +3130,31 @@ referenceSizeForFooterInSection:(NSInteger)section {
                                                                      forIndexPath:indexPath];
         }
         
-        NSString *fileName = [NSStringFromClass(resuableClass) stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
-        
         if (nil == reusableView.fwTabComponentManager) {
             
-            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            [FWTabManagerMethod fullData:reusableView];
+            reusableView.fwTabComponentManager =
+            [FWTabComponentManager initWithView:reusableView
+                                    superView:collectionView
+                                  tabAnimated:collectionView.fwTabAnimated];
+            reusableView.fwTabComponentManager.currentSection = indexPath.section;
+            reusableView.fwTabComponentManager.tabTargetClass = resuableClass;
             
-            if (manager &&
-                !manager.needChangeRowStatus) {
-                manager.fileName = fileName;
-                manager.isLoad = YES;
-                manager.tabTargetClass = resuableClass;
-                manager.currentSection = indexPath.section;
-                [manager reAddToView:reusableView
-                           superView:collectionView];
-                reusableView.fwTabComponentManager = manager;
-                [FWTabManagerMethod startAnimationToSubViews:reusableView
-                                                  rootView:reusableView];
-                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
-                                                      targetView:reusableView
-                                                         manager:reusableView.fwTabComponentManager];
-            }else {
-                [FWTabManagerMethod fullData:reusableView];
-                reusableView.fwTabComponentManager =
-                [FWTabComponentManager initWithView:reusableView
-                                        superView:collectionView
-                                      tabAnimated:collectionView.fwTabAnimated];
-                reusableView.fwTabComponentManager.currentSection = indexPath.section;
-                reusableView.fwTabComponentManager.tabTargetClass = resuableClass;
-                reusableView.fwTabComponentManager.fileName = fileName;
-                
-                __weak typeof(reusableView) weakView = reusableView;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakView && weakView.fwTabComponentManager) {
-                        
-                        BOOL isCell = NO;
-                        if ([weakView isKindOfClass:[UICollectionReusableView class]]) {
-                            isCell = YES;
-                        }
-                        
-                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
-                                                         targetView:weakView
-                                                             isCell:isCell
-                                                            manager:weakView.fwTabComponentManager];
+            __weak typeof(reusableView) weakView = reusableView;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (weakView && weakView.fwTabComponentManager) {
+                    
+                    BOOL isCell = NO;
+                    if ([weakView isKindOfClass:[UICollectionReusableView class]]) {
+                        isCell = YES;
                     }
-                });
-            }
+                    
+                    [FWTabManagerMethod runAnimationWithSuperView:collectionView
+                                                     targetView:weakView
+                                                         isCell:isCell
+                                                        manager:weakView.fwTabComponentManager];
+                }
+            });
         }else {
             if (reusableView.fwTabComponentManager.tabLayer.hidden) {
                 reusableView.fwTabComponentManager.tabLayer.hidden = NO;
@@ -4177,8 +3566,6 @@ static NSString * const kLongDataString = @"tab_testtesttesttesttesttesttesttest
         if (targetView.fwTabComponentManager.nestView) {
             [targetView.fwTabComponentManager.nestView fwTabStartAnimation];
         }
-        
-        [[FWTabAnimated sharedAnimated].cacheManager cacheComponentManager:targetView.fwTabComponentManager];
     }
 
     // 结束动画
@@ -5139,50 +4526,25 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
-        
         if (nil == cell.fwTabComponentManager) {
             
-            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
-
-            if (manager && !manager.needChangeRowStatus) {
+            [FWTabManagerMethod fullData:cell];
                 
-                manager.fileName = fileName;
-                manager.isLoad = YES;
-                manager.tabTargetClass = currentClass;
-                manager.currentSection = indexPath.section;
-                cell.fwTabComponentManager = manager;
-                
-                [manager reAddToView:cell
-                           superView:tableView];
-                
-                [FWTabManagerMethod hiddenAllView:cell];
-                [FWTabManagerMethod startAnimationToSubViews:cell
-                                                  rootView:cell];
-                [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
-                                                      targetView:cell
-                                                         manager:cell.fwTabComponentManager];
-            }else {
-                
-                [FWTabManagerMethod fullData:cell];
-                
-                cell.fwTabComponentManager = [FWTabComponentManager initWithView:cell
-                                                                   superView:tableView tabAnimated:tableView.fwTabAnimated];
-                cell.fwTabComponentManager.currentSection = indexPath.section;
-                cell.fwTabComponentManager.fileName = fileName;
-                cell.fwTabComponentManager.tabTargetClass = currentClass;
-            
-                __weak typeof(cell) weakCell = cell;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.fwTabAnimated;
-                    if (weakCell && tabAnimated && weakCell.fwTabComponentManager) {
-                        [FWTabManagerMethod runAnimationWithSuperView:tableView
-                                                         targetView:weakCell
-                                                             isCell:YES
-                                                            manager:weakCell.fwTabComponentManager];
-                    }
-                });
-            }
+            cell.fwTabComponentManager = [FWTabComponentManager initWithView:cell
+                                                               superView:tableView tabAnimated:tableView.fwTabAnimated];
+            cell.fwTabComponentManager.currentSection = indexPath.section;
+            cell.fwTabComponentManager.tabTargetClass = currentClass;
+        
+            __weak typeof(cell) weakCell = cell;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                FWTabTableAnimated *tabAnimated = (FWTabTableAnimated *)tableView.fwTabAnimated;
+                if (weakCell && tabAnimated && weakCell.fwTabComponentManager) {
+                    [FWTabManagerMethod runAnimationWithSuperView:tableView
+                                                     targetView:weakCell
+                                                         isCell:YES
+                                                        manager:weakCell.fwTabComponentManager];
+                }
+            });
         
         }else {
             if (cell.fwTabComponentManager.tabLayer.hidden) {
@@ -5297,51 +4659,31 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
             [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
-            
             if (nil == headerFooterView.fwTabComponentManager) {
                 
-                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                [FWTabManagerMethod fullData:headerFooterView];
+                headerFooterView.fwTabComponentManager =
+                [FWTabComponentManager initWithView:headerFooterView
+                                        superView:tableView
+                                      tabAnimated:tableView.fwTabAnimated];
+                headerFooterView.fwTabComponentManager.currentSection = section;
+                headerFooterView.fwTabComponentManager.tabTargetClass = class;
                 
-                if (manager) {
-                    manager.fileName = fileName;
-                    manager.isLoad = YES;
-                    manager.tabTargetClass = class;
-                    manager.currentSection = section;
-                    [manager reAddToView:headerFooterView
-                               superView:tableView];
-                    headerFooterView.fwTabComponentManager = manager;
-                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
-                                                      rootView:headerFooterView];
-                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
-                                                          targetView:headerFooterView
-                                                             manager:headerFooterView.fwTabComponentManager];
-                }else {
-                    [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.fwTabComponentManager =
-                    [FWTabComponentManager initWithView:headerFooterView
-                                            superView:tableView
-                                          tabAnimated:tableView.fwTabAnimated];
-                    headerFooterView.fwTabComponentManager.currentSection = section;
-                    headerFooterView.fwTabComponentManager.fileName = fileName;
-                    headerFooterView.fwTabComponentManager.tabTargetClass = class;
-                    
-                    __weak typeof(headerFooterView) weakView = headerFooterView;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.fwTabComponentManager) {
-                            
-                            BOOL isCell = NO;
-                            if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
-                                isCell = YES;
-                            }
-                            
-                            [FWTabManagerMethod runAnimationWithSuperView:tableView
-                                                             targetView:weakView
-                                                                 isCell:isCell
-                                                                manager:weakView.fwTabComponentManager];
+                __weak typeof(headerFooterView) weakView = headerFooterView;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (weakView && weakView.fwTabComponentManager) {
+                        
+                        BOOL isCell = NO;
+                        if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
+                            isCell = YES;
                         }
-                    });
-                }
+                        
+                        [FWTabManagerMethod runAnimationWithSuperView:tableView
+                                                         targetView:weakView
+                                                             isCell:isCell
+                                                            manager:weakView.fwTabComponentManager];
+                    }
+                });
             }else {
                 if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
                     headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
@@ -5380,49 +4722,27 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
             headerFooterView.fwTabAnimated = FWTabViewAnimated.new;
             [headerFooterView fwTabStartAnimation];
             
-            NSString *fileName = [NSStringFromClass(class) stringByAppendingString:[NSString stringWithFormat:@"_%@",tableView.fwTabAnimated.targetControllerClassName]];
-            
             if (nil == headerFooterView.fwTabComponentManager) {
                 
-                FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+                [FWTabManagerMethod fullData:headerFooterView];
+                headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
+                headerFooterView.fwTabComponentManager.currentSection = section;
                 
-                if (manager) {
-                    manager.fileName = fileName;
-                    manager.isLoad = YES;
-                    manager.tabTargetClass = class;
-                    manager.currentSection = section;
-                    [manager reAddToView:headerFooterView
-                               superView:tableView];
-                    headerFooterView.fwTabComponentManager = manager;
-                    
-                    [FWTabManagerMethod startAnimationToSubViews:headerFooterView
-                                                      rootView:headerFooterView];
-                    [FWTabManagerMethod addExtraAnimationWithSuperView:tableView
-                                                          targetView:headerFooterView
-                                                             manager:headerFooterView.fwTabComponentManager];
-                    
-                }else {
-                    [FWTabManagerMethod fullData:headerFooterView];
-                    headerFooterView.fwTabComponentManager = [FWTabComponentManager initWithView:headerFooterView superView:tableView tabAnimated:tableView.fwTabAnimated];
-                    headerFooterView.fwTabComponentManager.currentSection = section;
-                    headerFooterView.fwTabComponentManager.fileName = fileName;
-                    
-                    __weak typeof(headerFooterView) weakView = headerFooterView;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakView && weakView.fwTabComponentManager) {
-                            
-                            BOOL isCell = NO;
-                            if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
-                                isCell = YES;
-                            }
-                            
-                            [FWTabManagerMethod runAnimationWithSuperView:tableView
-                                                             targetView:weakView
-                                                                 isCell:isCell
-                                                                manager:weakView.fwTabComponentManager];
+                __weak typeof(headerFooterView) weakView = headerFooterView;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (weakView && weakView.fwTabComponentManager) {
+                        
+                        BOOL isCell = NO;
+                        if ([weakView isKindOfClass:[UITableViewHeaderFooterView class]]) {
+                            isCell = YES;
                         }
-                    });
-                }
+                        
+                        [FWTabManagerMethod runAnimationWithSuperView:tableView
+                                                         targetView:weakView
+                                                             isCell:isCell
+                                                            manager:weakView.fwTabComponentManager];
+                    }
+                });
             }else {
                 if (headerFooterView.fwTabComponentManager.tabLayer.hidden) {
                     headerFooterView.fwTabComponentManager.tabLayer.hidden = NO;
@@ -6068,48 +5388,26 @@ NSString * const FWTabViewAnimatedDefaultSuffixString = @"default_resuable_view"
         
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"tab_%@",className] forIndexPath:indexPath];
         
-        NSString *fileName = [className stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
-        
         if (nil == cell.fwTabComponentManager) {
             
-            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
-
-            if (manager &&
-                !manager.needChangeRowStatus) {
-                manager.fileName = fileName;
-                manager.isLoad = YES;
-                manager.tabTargetClass = currentClass;
-                manager.currentSection = indexPath.section;
-                cell.fwTabComponentManager = manager;
-                [manager reAddToView:cell
-                           superView:collectionView];
-                [FWTabManagerMethod startAnimationToSubViews:cell
-                                                  rootView:cell];
-                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
-                                                      targetView:cell
-                                                         manager:cell.fwTabComponentManager];
-
-            }else {
-                [FWTabManagerMethod fullData:cell];
-                cell.fwTabComponentManager =
-                [FWTabComponentManager initWithView:cell
-                                        superView:collectionView
-                                      tabAnimated:collectionView.fwTabAnimated];
-                cell.fwTabComponentManager.currentSection = indexPath.section;
-                cell.fwTabComponentManager.fileName = fileName;
-                
-                __weak typeof(cell) weakCell = cell;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakCell && weakCell.fwTabComponentManager) {
-                        weakCell.fwTabComponentManager.tabTargetClass = weakCell.class;
-                        // 加载动画
-                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
-                                                         targetView:weakCell
-                                                             isCell:YES
-                                                            manager:weakCell.fwTabComponentManager];
-                    }
-                });
-            }
+            [FWTabManagerMethod fullData:cell];
+            cell.fwTabComponentManager =
+            [FWTabComponentManager initWithView:cell
+                                    superView:collectionView
+                                  tabAnimated:collectionView.fwTabAnimated];
+            cell.fwTabComponentManager.currentSection = indexPath.section;
+            
+            __weak typeof(cell) weakCell = cell;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (weakCell && weakCell.fwTabComponentManager) {
+                    weakCell.fwTabComponentManager.tabTargetClass = weakCell.class;
+                    // 加载动画
+                    [FWTabManagerMethod runAnimationWithSuperView:collectionView
+                                                     targetView:weakCell
+                                                         isCell:YES
+                                                        manager:weakCell.fwTabComponentManager];
+                }
+            });
         
         }else {
             if (cell.fwTabComponentManager.tabLayer.hidden) {
@@ -6278,52 +5576,31 @@ referenceSizeForFooterInSection:(NSInteger)section {
                                                                      forIndexPath:indexPath];
         }
         
-        NSString *fileName = [NSStringFromClass(resuableClass) stringByAppendingString:[NSString stringWithFormat:@"_%@",collectionView.fwTabAnimated.targetControllerClassName]];
-        
         if (nil == reusableView.fwTabComponentManager) {
             
-            FWTabComponentManager *manager = [[FWTabAnimated sharedAnimated].cacheManager getComponentManagerWithFileName:fileName];
+            [FWTabManagerMethod fullData:reusableView];
+            reusableView.fwTabComponentManager =
+            [FWTabComponentManager initWithView:reusableView
+                                    superView:collectionView
+                                  tabAnimated:collectionView.fwTabAnimated];
+            reusableView.fwTabComponentManager.currentSection = indexPath.section;
+            reusableView.fwTabComponentManager.tabTargetClass = resuableClass;
             
-            if (manager &&
-                !manager.needChangeRowStatus) {
-                manager.fileName = fileName;
-                manager.isLoad = YES;
-                manager.tabTargetClass = resuableClass;
-                manager.currentSection = indexPath.section;
-                [manager reAddToView:reusableView
-                           superView:collectionView];
-                reusableView.fwTabComponentManager = manager;
-                [FWTabManagerMethod startAnimationToSubViews:reusableView
-                                                  rootView:reusableView];
-                [FWTabManagerMethod addExtraAnimationWithSuperView:collectionView
-                                                      targetView:reusableView
-                                                         manager:reusableView.fwTabComponentManager];
-            }else {
-                [FWTabManagerMethod fullData:reusableView];
-                reusableView.fwTabComponentManager =
-                [FWTabComponentManager initWithView:reusableView
-                                        superView:collectionView
-                                      tabAnimated:collectionView.fwTabAnimated];
-                reusableView.fwTabComponentManager.currentSection = indexPath.section;
-                reusableView.fwTabComponentManager.tabTargetClass = resuableClass;
-                reusableView.fwTabComponentManager.fileName = fileName;
-                
-                __weak typeof(reusableView) weakView = reusableView;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (weakView && weakView.fwTabComponentManager) {
-                        
-                        BOOL isCell = NO;
-                        if ([weakView isKindOfClass:[UICollectionReusableView class]]) {
-                            isCell = YES;
-                        }
-                        
-                        [FWTabManagerMethod runAnimationWithSuperView:collectionView
-                                                         targetView:weakView
-                                                             isCell:isCell
-                                                            manager:weakView.fwTabComponentManager];
+            __weak typeof(reusableView) weakView = reusableView;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (weakView && weakView.fwTabComponentManager) {
+                    
+                    BOOL isCell = NO;
+                    if ([weakView isKindOfClass:[UICollectionReusableView class]]) {
+                        isCell = YES;
                     }
-                });
-            }
+                    
+                    [FWTabManagerMethod runAnimationWithSuperView:collectionView
+                                                     targetView:weakView
+                                                         isCell:isCell
+                                                        manager:weakView.fwTabComponentManager];
+                }
+            });
         }else {
             if (reusableView.fwTabComponentManager.tabLayer.hidden) {
                 reusableView.fwTabComponentManager.tabLayer.hidden = NO;
@@ -6377,17 +5654,6 @@ NSString * const FWTabAnimatedDropAnimation = @"FWTabDropAnimation";
         _collectionDeDaSelfModelArray = @[].mutableCopy;
         
         _animationType = FWTabAnimationTypeOnlySkeleton;
-        [FWTabAnimatedDocumentMethod createFile:FWTabCacheManagerFolderName
-                                        isDir:YES];
-#ifdef DEBUG
-        _closeCache = YES;
-#endif
-        
-        _cacheManager = FWTabAnimatedCacheManager.new;
-        __weak typeof(self) weakSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.cacheManager install];
-        });
     }
     return self;
 }
