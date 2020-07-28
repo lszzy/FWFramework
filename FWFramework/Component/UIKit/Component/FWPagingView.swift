@@ -117,7 +117,7 @@ open class FWPagingListContainerView: UIView {
         }
     }
     weak var delegate: FWPagingListContainerViewDelegate?
-    public private(set) var currentIndex: Int = 0
+    private var currentIndex: Int = 0
     private var collectionView: UICollectionView!
     private var containerVC: FWPagingListContainerViewController!
     private var willAppearIndex: Int = -1
@@ -241,7 +241,6 @@ open class FWPagingListContainerView: UIView {
     }
 
     //MARK: - ListContainer
-
     public func contentScrollView() -> UIScrollView {
            return scrollView
     }
@@ -313,7 +312,6 @@ open class FWPagingListContainerView: UIView {
             list.listView().frame = cell?.contentView.bounds ?? CGRect.zero
             cell?.contentView.addSubview(list.listView())
         }
-        listWillAppear(at: index)
     }
 
     private func listWillAppear(at index: Int) {
@@ -405,6 +403,31 @@ open class FWPagingListContainerView: UIView {
         }
         return true
     }
+
+    private func listDidAppearOrDisappear(scrollView: UIScrollView) {
+        let currentIndexPercent = scrollView.contentOffset.x/scrollView.bounds.size.width
+        if willAppearIndex != -1 || willDisappearIndex != -1 {
+            let disappearIndex = willDisappearIndex
+            let appearIndex = willAppearIndex
+            if willAppearIndex > willDisappearIndex {
+                //将要出现的列表在右边
+                if currentIndexPercent >= CGFloat(willAppearIndex) {
+                    willDisappearIndex = -1
+                    willAppearIndex = -1
+                    listDidDisappear(at: disappearIndex)
+                    listDidAppear(at: appearIndex)
+                }
+            }else {
+                //将要出现的列表在左边
+                if currentIndexPercent <= CGFloat(willAppearIndex) {
+                    willDisappearIndex = -1
+                    willAppearIndex = -1
+                    listDidDisappear(at: disappearIndex)
+                    listDidAppear(at: appearIndex)
+                }
+            }
+        }
+    }
 }
 
 @objc
@@ -432,24 +455,26 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.listContainerViewDidScroll?(self)
-
+        guard scrollView.isTracking || scrollView.isDragging else {
+            return
+        }
         let percent = scrollView.contentOffset.x/scrollView.bounds.size.width
         let maxCount = Int(round(scrollView.contentSize.width/scrollView.bounds.size.width))
         var leftIndex = Int(floor(Double(percent)))
         leftIndex = max(0, min(maxCount - 1, leftIndex))
         let rightIndex = leftIndex + 1;
         if percent < 0 || rightIndex >= maxCount {
+            listDidAppearOrDisappear(scrollView: scrollView)
             return
         }
         let remainderRatio = percent - CGFloat(leftIndex)
         if rightIndex == currentIndex {
             //当前选中的在右边，用户正在从右边往左边滑动
-            if remainderRatio < (1 - initListPercent) {
+            if validListDict[leftIndex] == nil && remainderRatio < (1 - initListPercent) {
                 initListIfNeeded(at: leftIndex)
-            }
-            if willAppearIndex == -1 {
-                willAppearIndex = leftIndex;
-                if validListDict[leftIndex] != nil {
+            }else if validListDict[leftIndex] != nil {
+                if willAppearIndex == -1 {
+                    willAppearIndex = leftIndex;
                     listWillAppear(at: willAppearIndex)
                 }
             }
@@ -459,12 +484,11 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
             }
         }else {
             //当前选中的在左边，用户正在从左边往右边滑动
-            if remainderRatio > initListPercent {
+            if validListDict[rightIndex] == nil && remainderRatio > initListPercent {
                 initListIfNeeded(at: rightIndex)
-            }
-            if willAppearIndex == -1 {
-                willAppearIndex = rightIndex
-                if validListDict[rightIndex] != nil {
+            }else if validListDict[rightIndex] != nil {
+                if willAppearIndex == -1 {
+                    willAppearIndex = rightIndex
                     listWillAppear(at: willAppearIndex)
                 }
             }
@@ -473,37 +497,16 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
                 listWillDisappear(at: willDisappearIndex)
             }
         }
-
-        let currentIndexPercent = scrollView.contentOffset.x/scrollView.bounds.size.width
-        if willAppearIndex != -1 || willDisappearIndex != -1 {
-            let disappearIndex = willDisappearIndex
-            let appearIndex = willAppearIndex
-            if willAppearIndex > willDisappearIndex {
-                //将要出现的列表在右边
-                if currentIndexPercent >= CGFloat(willAppearIndex) {
-                    willDisappearIndex = -1
-                    willAppearIndex = -1
-                    listDidDisappear(at: disappearIndex)
-                    listDidAppear(at: appearIndex)
-                }
-            }else {
-                //将要出现的列表在左边
-                if currentIndexPercent <= CGFloat(willAppearIndex) {
-                    willDisappearIndex = -1
-                    willAppearIndex = -1
-                    listDidDisappear(at: disappearIndex)
-                    listDidAppear(at: appearIndex)
-                }
-            }
-        }
+        listDidAppearOrDisappear(scrollView: scrollView)
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        //滑动到一半又取消滑动处理
         if willAppearIndex != -1 || willDisappearIndex != -1 {
-            listWillDisappear(at: willDisappearIndex)
-            listWillAppear(at: willAppearIndex)
-            listDidDisappear(at: willDisappearIndex)
-            listDidAppear(at: willAppearIndex)
+            listWillDisappear(at: willAppearIndex)
+            listWillAppear(at: willDisappearIndex)
+            listDidDisappear(at: willAppearIndex)
+            listDidAppear(at: willDisappearIndex)
             willDisappearIndex = -1
             willAppearIndex = -1
         }
@@ -683,18 +686,7 @@ open class FWPagingView: UIView {
     public var automaticallyDisplayListVerticalScrollIndicator = true
     public var currentScrollingListView: UIScrollView?
     public var currentList: FWPagingViewListViewDelegate?
-    public var currentIndex: Int {
-        get {
-            return listContainerView.currentIndex
-        }
-        set {
-            if listContainerView.currentIndex == newValue { return }
-            
-            let diffIndex = labs(listContainerView.currentIndex - newValue)
-            listContainerView.contentScrollView().setContentOffset(CGPoint(x: listContainerView.contentScrollView().bounds.size.width * CGFloat(newValue), y: 0), animated: diffIndex < 2)
-            listContainerView.didClickSelectedItem(at: newValue)
-        }
-    }
+    private var currentIndex: Int = 0
     private weak var delegate: FWPagingViewDelegate?
     private var tableHeaderContainerView: UIView!
     private let cellIdentifier = "cell"
@@ -874,6 +866,11 @@ open class FWPagingView: UIView {
         currentScrollingListView = scrollView
         preferredProcessListViewDidScroll(scrollView: scrollView)
     }
+    
+    public func scrollToIndex(_ index: Int, animated: Bool = true) {
+        listContainerView.contentScrollView().setContentOffset(CGPoint(x: listContainerView.contentScrollView().bounds.size.width * CGFloat(index), y: 0), animated: animated)
+        listContainerView.didClickSelectedItem(at: index)
+    }
 }
 
 //MARK: - UITableViewDataSource, UITableViewDelegate
@@ -891,9 +888,12 @@ extension FWPagingView: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         cell.selectionStyle = .none
         cell.backgroundColor = UIColor.clear
-        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-        listContainerView.frame = cell.bounds
-        cell.contentView.addSubview(listContainerView)
+        if listContainerView.superview != cell.contentView {
+            cell.contentView.addSubview(listContainerView)
+        }
+        if listContainerView.frame != cell.bounds {
+            listContainerView.frame = cell.bounds
+        }
         return cell
     }
 
