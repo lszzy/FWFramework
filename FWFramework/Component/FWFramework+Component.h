@@ -27,6 +27,7 @@
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"
 #import "FWStatisticalManager.h"
+#import "FWTabAnimated.h"
 #import "FWTagCollectionView.h"
 #import "FWVersionManager.h"
 

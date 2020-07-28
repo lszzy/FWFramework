@@ -48,6 +48,7 @@
 		2FF8D96824C88A70006A83B5 /* TestNestScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8D924C88A6F006A83B5 /* TestNestScrollViewController.m */; };
 		2FF8D96924C88A70006A83B5 /* TestButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8DB24C88A6F006A83B5 /* TestButtonViewController.m */; };
 		2FF8D96A24C88A70006A83B5 /* TestBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8DC24C88A6F006A83B5 /* TestBannerViewController.m */; };
+		2FF8D96B24C88A70006A83B5 /* TestTableLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8DD24C88A6F006A83B5 /* TestTableLayoutViewController.swift */; };
 		2FF8D96C24C88A70006A83B5 /* TestIndicatorControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8E224C88A6F006A83B5 /* TestIndicatorControlViewController.m */; };
 		2FF8D96D24C88A70006A83B5 /* TestImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8E324C88A6F006A83B5 /* TestImageViewController.m */; };
 		2FF8D96E24C88A70006A83B5 /* TestModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8E524C88A6F006A83B5 /* TestModelViewController.m */; };
@@ -170,6 +171,7 @@
 		2FF8D8DA24C88A6F006A83B5 /* TestLabelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestLabelViewController.h; sourceTree = "<group>"; };
 		2FF8D8DB24C88A6F006A83B5 /* TestButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestButtonViewController.m; sourceTree = "<group>"; };
 		2FF8D8DC24C88A6F006A83B5 /* TestBannerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestBannerViewController.m; sourceTree = "<group>"; };
+		2FF8D8DD24C88A6F006A83B5 /* TestTableLayoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTableLayoutViewController.swift; sourceTree = "<group>"; };
 		2FF8D8DE24C88A6F006A83B5 /* TestDrawerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDrawerViewController.h; sourceTree = "<group>"; };
 		2FF8D8DF24C88A6F006A83B5 /* TestTableReloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTableReloadViewController.h; sourceTree = "<group>"; };
 		2FF8D8E024C88A6F006A83B5 /* TestScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScrollViewController.h; sourceTree = "<group>"; };
@@ -505,6 +507,7 @@
 				2FF8D8C824C88A6F006A83B5 /* TestTableBackgroundViewController.m */,
 				2FF8D8EB24C88A6F006A83B5 /* TestTableLayoutViewController.h */,
 				2FF8D8B424C88A6F006A83B5 /* TestTableLayoutViewController.m */,
+				2FF8D8DD24C88A6F006A83B5 /* TestTableLayoutViewController.swift */,
 				2FF8D8DF24C88A6F006A83B5 /* TestTableReloadViewController.h */,
 				2FF8D8AC24C88A6F006A83B5 /* TestTableReloadViewController.m */,
 				2FF8D8FF24C88A6F006A83B5 /* TestTableScrollViewController.h */,
@@ -874,6 +877,7 @@
 				2FF8D88C24C886EE006A83B5 /* main.m in Sources */,
 				2FF8D94A24C88A6F006A83B5 /* TestTableReloadViewController.m in Sources */,
 				2FF8D96A24C88A70006A83B5 /* TestBannerViewController.m in Sources */,
+				2FF8D96B24C88A70006A83B5 /* TestTableLayoutViewController.swift in Sources */,
 				2FF8D96324C88A70006A83B5 /* TestFacesViewController.m in Sources */,
 				2FF8D96724C88A70006A83B5 /* TestChainViewController.m in Sources */,
 				2FF8D95F24C88A70006A83B5 /* TestGradientViewController.m in Sources */,
