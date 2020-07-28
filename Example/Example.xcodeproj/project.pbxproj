@@ -640,10 +640,10 @@
 			isa = PBXGroup;
 			children = (
 				2FF8D93824C88A6F006A83B5 /* AppDelegate.h */,
-				2FF8D93924C88A6F006A83B5 /* Config */,
-				2FF8D93C24C88A6F006A83B5 /* Standard */,
 				2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */,
+				2FF8D93924C88A6F006A83B5 /* Config */,
 				2FF8D94024C88A6F006A83B5 /* Router */,
+				2FF8D93C24C88A6F006A83B5 /* Standard */,
 			);
 			path = App;
 			sourceTree = "<group>";
