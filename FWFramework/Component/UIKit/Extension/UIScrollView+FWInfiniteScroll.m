@@ -138,7 +138,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         }
         
-        CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
+        CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height - self.preloadHeight;
         if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
             self.state = FWInfiniteScrollStateLoading;
         else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging) {
