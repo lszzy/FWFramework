@@ -661,7 +661,7 @@ open class FWPagingMainTableView: UITableView, UIGestureRecognizerDelegate {
 /**
  FWPagingView
  
- [JXPagingView](https://github.com/pujiaxin33/JXPagingView)
+ [JXPagingView 2.0.12](https://github.com/pujiaxin33/JXPagingView)
  */
 @objcMembers
 open class FWPagingView: UIView {
