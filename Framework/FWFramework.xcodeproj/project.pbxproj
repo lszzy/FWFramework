@@ -162,6 +162,7 @@
 		2F03A654216CF882001965A1 /* FWHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03EECE231F65AA009D2A22 /* UILocalNotification+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03EECF231F65AA009D2A22 /* UILocalNotification+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */; };
+		2F07876324D17B1C007BF096 /* FWSkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876224D17B1C007BF096 /* FWSkeletonView.swift */; };
 		2F0A4D9E2174D7BF00C9E264 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0A4D9F2174D7BF00C9E264 /* UISearchBar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */; };
 		2F0CCE4321E4973C0018FA87 /* FWDatabaseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F0CCE4121E4973C0018FA87 /* FWDatabaseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -497,6 +498,7 @@
 		2F03A62F216CF882001965A1 /* FWHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWHTTPSessionManager.h; sourceTree = "<group>"; };
 		2F03EECC231F65AA009D2A22 /* UILocalNotification+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILocalNotification+FWFramework.h"; sourceTree = "<group>"; };
 		2F03EECD231F65AA009D2A22 /* UILocalNotification+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILocalNotification+FWFramework.m"; sourceTree = "<group>"; };
+		2F07876224D17B1C007BF096 /* FWSkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWSkeletonView.swift; sourceTree = "<group>"; };
 		2F0A4D9C2174D7BF00C9E264 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
 		2F0A4D9D2174D7BF00C9E264 /* UISearchBar+FWFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UISearchBar+FWFramework.m"; sourceTree = "<group>"; };
 		2F0CCE4121E4973C0018FA87 /* FWDatabaseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDatabaseManager.h; sourceTree = "<group>"; };
@@ -956,6 +958,7 @@
 				2FB90F0821F48AAB00084D76 /* FWSegmentedControl.m */,
 				2F92113D23E912F800183311 /* FWStatisticalManager.h */,
 				2F92113E23E912F800183311 /* FWStatisticalManager.m */,
+				2F07876224D17B1C007BF096 /* FWSkeletonView.swift */,
 				2FB7CBCB21C242D5002E5412 /* FWTagCollectionView.h */,
 				2FB7CBCC21C242D5002E5412 /* FWTagCollectionView.m */,
 				2F03A556216CF4B9001965A1 /* FWVersionManager.h */,
@@ -1537,6 +1540,7 @@
 				2FE6519723167C280078ECE4 /* FWTableViewController.m in Sources */,
 				2F1E393D2178F0B90051A6BB /* FWIndicatorControl.m in Sources */,
 				2F03A5FD216CF4B9001965A1 /* FWState.m in Sources */,
+				2F07876324D17B1C007BF096 /* FWSkeletonView.swift in Sources */,
 				2F1E625E22BCB86600A1AB49 /* UIControl+FWFramework.m in Sources */,
 				2F03A59C216CF4B9001965A1 /* UIFont+FWFramework.m in Sources */,
 				2FA89DD7217DE020000F92BF /* UILabel+FWFramework.m in Sources */,

@@ -87,6 +87,7 @@
                                              ]],
                                        @[@"FWApplication", @[
                                              @[@"FWIndicatorControl", @"TestIndicatorControlViewController"],
+                                             @[@"FWSkeletonView", @"TestSkeletonViewController"],
                                              @[@"TableBackground", @"TestTableBackgroundViewController"],
                                              @[@"NestScrollView", @"TestNestScrollViewController"],
                                              @[@"FWAlertController", @"TestCustomerAlertController"],
