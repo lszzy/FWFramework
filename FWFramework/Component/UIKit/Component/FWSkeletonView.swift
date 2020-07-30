@@ -222,18 +222,14 @@ import UIKit
     }
     
     public func startAnimating() {
-        guard let animation = skeletonAnimation else { return }
-        
         recursiveSearchSkeleton { (skeletonView) in
-            animation.skeletonAnimationStart(skeletonView.gradientLayer)
+            skeletonView.skeletonAnimation?.skeletonAnimationStart(skeletonView.gradientLayer)
         }
     }
     
     public func stopAnimating() {
-        guard let animation = skeletonAnimation else { return }
-        
         recursiveSearchSkeleton { (skeletonView) in
-            animation.skeletonAnimationStop(skeletonView.gradientLayer)
+            skeletonView.skeletonAnimation?.skeletonAnimationStop(skeletonView.gradientLayer)
         }
     }
     

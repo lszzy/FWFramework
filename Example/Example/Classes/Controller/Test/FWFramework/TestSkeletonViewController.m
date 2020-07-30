@@ -62,6 +62,7 @@
     [layoutView copySubview:self.testView];
     [layoutView copySubview:self.childView];
     [layoutView copySubview:self.imageView block:^(FWSkeletonView *skeletonView) {
+        skeletonView.skeletonAnimation = nil;
         skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.skeletonColor];
     }];
 }
