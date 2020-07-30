@@ -8,9 +8,10 @@
 
 #import "TestSkeletonViewController.h"
 
-@interface TestSkeletonViewController ()
+@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
 
 @property (nonatomic, strong) UIView *testView;
+@property (nonatomic, strong) UIView *childView;
 
 @end
 
@@ -18,15 +19,40 @@
 
 - (void)renderView
 {
-    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 200, 200)];
+    UIView *testView = [UIView new];
     _testView = testView;
     testView.backgroundColor = [UIColor redColor];
+    [testView fwSetCornerRadius:5];
     [self.view addSubview:testView];
+    testView.fwLayoutChain.leftWithInset(20).topWithInset(20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    
+    UIView *rightView = [UIView new];
+    rightView.backgroundColor = [UIColor redColor];
+    [rightView fwSetCornerRadius:5];
+    [self.view addSubview:rightView];
+    rightView.fwLayoutChain.rightWithInset(20).topWithInset(20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    
+    UIView *childView = [UIView new];
+    _childView = childView;
+    childView.backgroundColor = [UIColor blueColor];
+    [rightView addSubview:childView];
+    childView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
 }
 
 - (void)renderData
 {
-    [self.testView.layer fwStartSkeletonAnimation:[FWSkeletonAnimationShimmer new]];
+    [self fwShowSkeletonWithDelegate:self];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self fwHideSkeleton];
+    });
+}
+
+#pragma mark - FWSkeletonViewDelegate
+
+- (void)skeletonViewLayout:(FWSkeletonView *)containerView
+{
+    [containerView copySubview:self.testView];
+    [containerView copySubview:self.childView];
 }
 
 @end
