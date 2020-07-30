@@ -126,7 +126,7 @@ import UIKit
 @objcMembers public class FWSkeletonConfig: NSObject {
     public class var sharedInstance: FWSkeletonConfig {
         let instance = FWSkeletonConfig()
-        instance.skeletonAnimation = FWSkeletonAnimationSolid.sharedInstance
+        instance.skeletonAnimation = FWSkeletonAnimationShimmer.sharedInstance
         if #available(iOS 13.0, *) {
             instance.containerColor = UIColor.systemBackground
             instance.skeletonColor = UIColor(dynamicProvider: { (trainCollection) -> UIColor in
@@ -206,9 +206,19 @@ import UIKit
     
     public var skeletonConfig: FWSkeletonConfig? = nil
     
+    public var image: UIImage? = nil {
+        didSet {
+            layer.contents = image?.cgImage
+        }
+    }
+    
     weak var referenceView: UIView?
     
     public func copySubview(_ view: UIView?) {
+        copySubview(view, block: nil)
+    }
+    
+    public func copySubview(_ view: UIView?, block: ((_ skeletonView: FWSkeletonView) -> Void)?) {
         guard let childView = view else { return }
         guard let superView = referenceView else { return }
         guard childView.superview != nil else { return }
@@ -216,6 +226,7 @@ import UIKit
         let frame = childView.convert(childView.bounds, to: superView)
         let skeletonView = makeSkeletonView(childView, frame: frame)
         addSubview(skeletonView)
+        block?(skeletonView)
     }
     
     private func makeSkeletonView(_ view: UIView, frame: CGRect) -> FWSkeletonView {

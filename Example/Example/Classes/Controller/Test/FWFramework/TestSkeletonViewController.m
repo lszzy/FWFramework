@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
@@ -37,6 +38,13 @@
     childView.backgroundColor = [UIColor blueColor];
     [rightView addSubview:childView];
     childView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
+    
+    UIImageView *imageView = [UIImageView new];
+    _imageView = imageView;
+    imageView.image = [UIImage fwImageWithAppIcon];
+    [imageView fwSetCornerRadius:5];
+    [self.view addSubview:imageView];
+    imageView.fwLayoutChain.centerXToView(testView).topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
 }
 
 - (void)renderData
@@ -53,6 +61,9 @@
 {
     [containerView copySubview:self.testView];
     [containerView copySubview:self.childView];
+    [containerView copySubview:self.imageView block:^(FWSkeletonView *skeletonView) {
+        skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonConfig.sharedInstance.skeletonColor];
+    }];
 }
 
 @end
