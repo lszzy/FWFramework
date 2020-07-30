@@ -16,18 +16,8 @@ import UIKit
     func skeletonAnimationStop(_ gradientLayer: CAGradientLayer)
 }
 
-/// 骨架屏空动画
-@objcMembers public class FWSkeletonAnimationNone: NSObject, FWSkeletonAnimation {
-    public static let sharedInstance = FWSkeletonAnimationNone()
-    
-    public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) { }
-
-    public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) { }
-}
-
 /// 呼吸灯动画
 @objcMembers public class FWSkeletonAnimationSolid: NSObject, FWSkeletonAnimation {
-    public static let sharedInstance = FWSkeletonAnimationSolid()
     public var duration: TimeInterval = 1
     
     public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
@@ -60,7 +50,6 @@ import UIKit
 
 /// 闪光灯动画
 @objcMembers public class FWSkeletonAnimationShimmer: NSObject, FWSkeletonAnimation {
-    public static let sharedInstance = FWSkeletonAnimationShimmer()
     public var duration: TimeInterval = 1
     public var direction: FWSkeletonAnimationShimmerDirection = .leftToRight
     
@@ -120,23 +109,37 @@ import UIKit
     }
 }
 
-// MARK: - FWSkeletonConfig
+// MARK: - FWSkeletonView
 
-/// 骨架屏配置
-@objcMembers public class FWSkeletonConfig: NSObject {
-    public class var sharedInstance: FWSkeletonConfig {
-        let instance = FWSkeletonConfig()
-        instance.skeletonAnimation = FWSkeletonAnimationShimmer.sharedInstance
+/// 骨架屏样式设置
+@objcMembers public class FWSkeletonAppearance: NSObject {
+    /// 单例对象
+    public static let appearance = FWSkeletonAppearance()
+    
+    /// 布局背景色，默认自动适配
+    public var layoutColor: UIColor!
+    /// 骨架颜色，默认自动适配
+    public var skeletonColor: UIColor!
+    
+    /// 动画设置，默认闪光灯
+    public var skeletonAnimation: FWSkeletonAnimation?
+    /// 动画颜色，默认自动适配
+    public var animationColors: [Any]?
+    
+    public override init() {
+        super.init()
+        
+        skeletonAnimation = FWSkeletonAnimationShimmer()
         if #available(iOS 13.0, *) {
-            instance.containerColor = UIColor.systemBackground
-            instance.skeletonColor = UIColor(dynamicProvider: { (trainCollection) -> UIColor in
+            layoutColor = UIColor.systemBackground
+            skeletonColor = UIColor(dynamicProvider: { (trainCollection) -> UIColor in
                 if trainCollection.userInterfaceStyle == .dark {
                     return UIColor.fwColor(withHex: 0x282828)
                 } else {
                     return UIColor.fwColor(withHex: 0xEEEEEE)
                 }
             })
-            let gradientColor = UIColor { (traitCollection) -> UIColor in
+            let animationColor = UIColor { (traitCollection) -> UIColor in
                 if traitCollection.userInterfaceStyle == .dark {
                     return UIColor.fwColor(withHex: 0x282828)
                 } else {
@@ -150,69 +153,50 @@ import UIKit
                     return UIColor.fwColor(withHex: 0xDFDFDF).fwBrightnessColor(0.92)
                 }
             }
-            instance.gradientColors = [gradientColor, brightnessColor, gradientColor]
+            animationColors = [animationColor.cgColor, brightnessColor.cgColor, animationColor.cgColor]
         } else {
-            instance.containerColor = UIColor.white
-            instance.skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
-            let gradientColor = UIColor.fwColor(withHex: 0xDFDFDF)
-            instance.gradientColors = [gradientColor, gradientColor.fwBrightnessColor(0.92), gradientColor]
+            layoutColor = UIColor.white
+            skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
+            let animationColor = UIColor.fwColor(withHex: 0xDFDFDF)
+            animationColors = [animationColor.cgColor, animationColor.fwBrightnessColor(0.92).cgColor, animationColor.cgColor]
         }
-        return instance
     }
-    
-    /// 动画设置
-    public var skeletonAnimation: FWSkeletonAnimation?
-    
-    /// 背景色
-    public var containerColor: UIColor?
-    
-    /// 骨架色
-    public var skeletonColor: UIColor?
-    
-    /// 渐变色
-    public var gradientColors: [UIColor]?
 }
-
-// MARK: - FWSkeletonView
 
 /// 骨架屏视图代理协议
 @objc public protocol FWSkeletonViewDelegate {
-    func skeletonViewLayout(_ container: FWSkeletonView)
+    /// 骨架屏布局方法
+    @objc optional func skeletonViewLayout(_ layoutView: FWSkeletonView)
+    
+    /// 骨架屏生成方法
+    @objc optional func skeletonViewGenerator() -> FWSkeletonView
 }
 
 /// 骨架屏视图
 @objcMembers public class FWSkeletonView: UIView {
+    public var skeletonAnimation: FWSkeletonAnimation?
+    
+    weak var referenceView: UIView?
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
+        skeletonAnimation = FWSkeletonAppearance.appearance.skeletonAnimation
+        gradientLayer.colors = FWSkeletonAppearance.appearance.animationColors
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override class var layerClass: AnyClass {
         return CAGradientLayer.self
     }
     
-    public var gradientLayers: [CAGradientLayer] {
-        var gradientLayers: [CAGradientLayer] = []
-        let gradientColors: [UIColor]? = skeletonConfig?.gradientColors ?? FWSkeletonConfig.sharedInstance.gradientColors
-        var colors: [Any]? = []
-        gradientColors?.forEach({ (color) in
-            colors?.append(color.cgColor)
-        })
-        
-        subviews.forEach { (subview) in
-            if subview is FWSkeletonView {
-                let gradientLayer = subview.layer as! CAGradientLayer
-                gradientLayer.colors = colors
-                gradientLayers.append(gradientLayer)
-            }
-        }
-        return gradientLayers
+    public var gradientLayer: CAGradientLayer {
+        return layer as! CAGradientLayer
     }
-    
-    public var skeletonConfig: FWSkeletonConfig? = nil
-    
-    public var image: UIImage? = nil {
-        didSet {
-            layer.contents = image?.cgImage
-        }
-    }
-    
-    weak var referenceView: UIView?
     
     public func copySubview(_ view: UIView?) {
         copySubview(view, block: nil)
@@ -223,65 +207,81 @@ import UIKit
         guard let superView = referenceView else { return }
         guard childView.superview != nil else { return }
         
-        let frame = childView.convert(childView.bounds, to: superView)
-        let skeletonView = makeSkeletonView(childView, frame: frame)
+        let skeletonView = childView.skeletonViewGenerator()
+        skeletonView.frame = childView.convert(childView.bounds, to: superView)
         addSubview(skeletonView)
         block?(skeletonView)
     }
     
-    private func makeSkeletonView(_ view: UIView, frame: CGRect) -> FWSkeletonView {
-        let skeletonView = FWSkeletonView(frame: frame)
-        skeletonView.backgroundColor = skeletonConfig?.skeletonColor ?? FWSkeletonConfig.sharedInstance.skeletonColor
-        skeletonView.layer.masksToBounds = view.layer.masksToBounds
-        skeletonView.layer.cornerRadius = view.layer.cornerRadius
-        return skeletonView
+    private func recursiveSearchSkeleton(block: (FWSkeletonView) -> Void) {
+        subviews.forEach { (subview) in
+            if subview is FWSkeletonView {
+                block(subview as! FWSkeletonView)
+            }
+        }
     }
     
     public func startAnimating() {
-        guard let skeletonAnimation = (skeletonConfig?.skeletonAnimation ?? FWSkeletonConfig.sharedInstance.skeletonAnimation) else { return }
+        guard let animation = skeletonAnimation else { return }
         
-        gradientLayers.forEach { (gradientLayer) in
-            skeletonAnimation.skeletonAnimationStart(gradientLayer)
+        recursiveSearchSkeleton { (skeletonView) in
+            animation.skeletonAnimationStart(skeletonView.gradientLayer)
         }
     }
     
     public func stopAnimating() {
-        guard let skeletonAnimation = (skeletonConfig?.skeletonAnimation ?? FWSkeletonConfig.sharedInstance.skeletonAnimation) else { return }
+        guard let animation = skeletonAnimation else { return }
         
-        gradientLayers.forEach { (gradientLayer) in
-            skeletonAnimation.skeletonAnimationStop(gradientLayer)
+        recursiveSearchSkeleton { (skeletonView) in
+            animation.skeletonAnimationStop(skeletonView.gradientLayer)
         }
     }
     
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        
+    // image
+    public var image: UIImage? = nil {
+        didSet {
+            layer.contents = image?.cgImage
+        }
+    }
+}
+
+@objc extension UIView: FWSkeletonViewDelegate {
+    public func skeletonViewGenerator() -> FWSkeletonView {
+        let skeletonView = FWSkeletonView()
+        skeletonView.layer.masksToBounds = layer.masksToBounds
+        skeletonView.layer.cornerRadius = layer.cornerRadius
+        return skeletonView
     }
 }
 
 @objc extension UIView {
-    private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((_ container: FWSkeletonView) -> Void)? = nil) {
+    private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((_ layoutView: FWSkeletonView) -> Void)? = nil) {
         fwHideSkeleton()
         
         setNeedsLayout()
         layoutIfNeeded()
         
-        let container = FWSkeletonView()
-        container.referenceView = self
-        container.tag = 2051
-        container.backgroundColor = FWSkeletonConfig.sharedInstance.containerColor
-        addSubview(container)
-        container.fwLayoutChain.edges()
+        let layoutView = FWSkeletonView()
+        layoutView.referenceView = self
+        layoutView.tag = 2051
+        layoutView.backgroundColor = FWSkeletonAppearance.appearance.layoutColor
+        layoutView.gradientLayer.colors = nil
+        addSubview(layoutView)
+        layoutView.fwLayoutChain.edges()
         
-        delegate?.skeletonViewLayout(container)
-        block?(container)
-        container.startAnimating()
+        delegate?.skeletonViewLayout?(layoutView)
+        block?(layoutView)
+        
+        layoutView.setNeedsLayout()
+        layoutView.layoutIfNeeded()
+        layoutView.startAnimating()
     }
     
     public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
         fwShowSkeleton(delegate: delegate, block: nil)
     }
     
-    public func fwShowSkeleton(block: ((_ container: FWSkeletonView) -> Void)? = nil) {
+    public func fwShowSkeleton(block: ((_ layoutView: FWSkeletonView) -> Void)? = nil) {
         fwShowSkeleton(delegate: nil, block: block)
     }
     
@@ -297,7 +297,7 @@ import UIKit
         view.fwShowSkeleton(delegate: delegate)
     }
     
-    public func fwShowSkeleton(block: ((_ container: FWSkeletonView) -> Void)? = nil) {
+    public func fwShowSkeleton(block: ((_ layoutView: FWSkeletonView) -> Void)? = nil) {
         view.fwShowSkeleton(block: block)
     }
     

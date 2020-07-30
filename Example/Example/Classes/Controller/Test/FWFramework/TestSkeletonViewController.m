@@ -57,12 +57,12 @@
 
 #pragma mark - FWSkeletonViewDelegate
 
-- (void)skeletonViewLayout:(FWSkeletonView *)containerView
+- (void)skeletonViewLayout:(FWSkeletonView *)layoutView
 {
-    [containerView copySubview:self.testView];
-    [containerView copySubview:self.childView];
-    [containerView copySubview:self.imageView block:^(FWSkeletonView *skeletonView) {
-        skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonConfig.sharedInstance.skeletonColor];
+    [layoutView copySubview:self.testView];
+    [layoutView copySubview:self.childView];
+    [layoutView copySubview:self.imageView block:^(FWSkeletonView *skeletonView) {
+        skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.skeletonColor];
     }];
 }
 
