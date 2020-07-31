@@ -64,15 +64,15 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addReferenceView:self.testView];
-    FWSkeletonView *childView = [layout addReferenceView:self.childView];
-    FWSkeletonView *imageView = [layout addReferenceView:self.imageView block:^(FWSkeletonView *skeletonView) {
+    [layout addSkeletonView:self.testView];
+    FWSkeletonView *childView = [layout addSkeletonView:self.childView];
+    FWSkeletonView *imageView = [layout addSkeletonView:self.imageView block:^(FWSkeletonView *skeletonView) {
         skeletonView.skeletonAnimation = nil;
         skeletonView.skeletonImage = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.skeletonColor];
     }];
-    FWSkeletonView *customView = [FWSkeletonView new];
-    [layout addSkeletonView:customView];
-    customView.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
+    [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *view) {
+        view.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
+    }];
 }
 
 @end
