@@ -45,6 +45,11 @@
     [imageView fwSetCornerRadius:5];
     [self.view addSubview:imageView];
     imageView.fwLayoutChain.centerXToView(testView).topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
+    
+    UIView *childView2 = [UIView new];
+    childView2.backgroundColor = [UIColor blueColor];
+    [self.view addSubview:childView2];
+    childView2.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
 }
 
 - (void)renderData
@@ -60,11 +65,14 @@
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
     [layout addReferenceView:self.testView];
-    [layout addReferenceView:self.childView];
-    [layout addReferenceView:self.imageView block:^(FWSkeletonView *skeletonView) {
+    FWSkeletonView *childView = [layout addReferenceView:self.childView];
+    FWSkeletonView *imageView = [layout addReferenceView:self.imageView block:^(FWSkeletonView *skeletonView) {
         skeletonView.skeletonAnimation = nil;
         skeletonView.skeletonImage = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.skeletonColor];
     }];
+    FWSkeletonView *customView = [FWSkeletonView new];
+    [layout addSkeletonView:customView];
+    customView.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
 }
 
 @end
