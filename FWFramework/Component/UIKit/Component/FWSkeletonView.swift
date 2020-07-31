@@ -111,7 +111,7 @@ import UIKit
     }
 }
 
-// MARK: - FWSkeletonView
+// MARK: - FWSkeletonAppearance
 
 /// 骨架屏通用样式
 @objcMembers public class FWSkeletonAppearance: NSObject {
@@ -127,6 +127,9 @@ import UIKit
     public var skeletonAnimation: FWSkeletonAnimationProtocol?
     /// 动画颜色，默认自动适配
     public var animationColors: [Any]?
+    
+    /// 自定义骨架屏解析器
+    public var skeletonParser: ((UIView) -> FWSkeletonView?)?
     
     public override init() {
         super.init()
@@ -163,10 +166,29 @@ import UIKit
             animationColors = [animationColor.cgColor, animationColor.fwBrightnessColor(0.92).cgColor, animationColor.cgColor]
         }
     }
+    
+    public func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
+        if let skeletonView = skeletonParser?(view) {
+            return skeletonView
+        }
+        
+        let skeletonView = FWSkeletonView.skeletonParseView(view)
+        return skeletonView!
+    }
+}
+
+// MARK: - FWSkeletonView
+
+/// 骨架屏视图协议
+@objc public protocol FWSkeletonViewProtocol {
+    func skeletonStartAnimating()
+    func skeletonStopAnimating()
+    
+    @objc optional static func skeletonParseView(_ view: UIView) -> FWSkeletonView?
 }
 
 /// 骨架屏视图，无代码侵入，支持设置占位图片
-@objcMembers public class FWSkeletonView: UIView {
+@objcMembers public class FWSkeletonView: UIView, FWSkeletonViewProtocol {
     /// 自定义动画，默认通用样式
     public var skeletonAnimation: FWSkeletonAnimationProtocol?
     
@@ -203,17 +225,26 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func startAnimating() {
+    // MARK: -
+    
+    public func skeletonStartAnimating() {
         animationLayers.forEach { (gradientLayer) in
             gradientLayer.colors = animationColors
             skeletonAnimation?.skeletonAnimationStart(gradientLayer)
         }
     }
     
-    public func stopAnimating() {
+    public func skeletonStopAnimating() {
         animationLayers.forEach { (gradientLayer) in
             skeletonAnimation?.skeletonAnimationStop(gradientLayer)
         }
+    }
+    
+    public static func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        let skeletonView = FWSkeletonView()
+        skeletonView.layer.masksToBounds = view.layer.masksToBounds
+        skeletonView.layer.cornerRadius = view.layer.cornerRadius
+        return skeletonView
     }
 }
 
@@ -225,101 +256,109 @@ import UIKit
 }
 
 /// 骨架屏布局
-@objcMembers public class FWSkeletonLayout: UIView {
+@objcMembers public class FWSkeletonLayout: FWSkeletonView {
+    public let layoutView: UIView
+    
     public weak var layoutDelegate: FWSkeletonLayoutDelegate?
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
+    private var skeletonViews: [FWSkeletonView] = []
+    
+    public init(layoutView: UIView) {
+        self.layoutView = layoutView
+        super.init(frame: layoutView.bounds)
         backgroundColor = FWSkeletonAppearance.appearance.layoutColor
+    }
+    
+    public override init(frame: CGRect) {
+        fatalError("init(frame:) has not been implemented")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var skeletonViews: [FWSkeletonView] = []
-    
-    public func startAnimating() {
-        skeletonViews.forEach { (skeletonView) in
-            skeletonView.startAnimating()
-        }
+    @discardableResult
+    public func addSkeletonViews(_ views: [UIView]) -> [FWSkeletonView] {
+        return addSkeletonViews(views, block: nil)
     }
     
-    public func stopAnimating() {
-        skeletonViews.forEach { (skeletonView) in
-            skeletonView.stopAnimating()
+    @discardableResult
+    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView) -> Void)?) -> [FWSkeletonView] {
+        var resultViews: [FWSkeletonView] = []
+        views.forEach { (view) in
+            resultViews.append(addSkeletonView(view, block: block))
         }
-        skeletonViews.removeAll()
+        return resultViews
     }
     
-    public func addSkeletonView(_ skeletonView: FWSkeletonView) {
+    @discardableResult
+    public func addSkeletonView(_ view: UIView) -> FWSkeletonView {
+        return addSkeletonView(view, block: nil)
+    }
+    
+    @discardableResult
+    public func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
+        if let resultView = view as? FWSkeletonView {
+            skeletonViews.append(resultView)
+            if resultView.superview == nil {
+                addSubview(resultView)
+            }
+            block?(resultView)
+            return resultView
+        }
+        
+        let skeletonView = FWSkeletonAppearance.appearance.parseSkeletonView(view)
+        if view.isDescendant(of: layoutView) {
+            skeletonView.frame = view.convert(view.bounds, to: layoutView)
+        }
         skeletonViews.append(skeletonView)
         if skeletonView.superview == nil {
             addSubview(skeletonView)
         }
-    }
-    
-    // MARK: -
-    
-    weak var referenceSuperview: UIView? {
-        didSet {
-            if let referenceBounds = referenceSuperview?.bounds {
-                frame = referenceBounds
-            }
-        }
-    }
-    
-    public var referenceParser: ((UIView) -> FWSkeletonView?)?
-    
-    @discardableResult
-    public func addReferenceView(_ view: UIView) -> FWSkeletonView? {
-        return addReferenceView(view, block: nil)
-    }
-    
-    @discardableResult
-    public func addReferenceView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView? {
-        guard let superView = referenceSuperview else { return nil }
-        guard view.isDescendant(of: superView) else { return nil }
-        
-        guard let skeletonView = parseReferenceView(view) else { return nil }
-        skeletonView.frame = view.convert(view.bounds, to: superView)
         block?(skeletonView)
-        addSkeletonView(skeletonView)
         return skeletonView
     }
     
-    private func parseReferenceView(_ view: UIView) -> FWSkeletonView? {
-        if let resultView = referenceParser?(view) {
-            return resultView
+    public override func skeletonStartAnimating() {
+        skeletonViews.forEach { (skeletonView) in
+            skeletonView.skeletonStartAnimating()
         }
-        
-        let skeletonView = FWSkeletonView()
-        skeletonView.layer.masksToBounds = view.layer.masksToBounds
-        skeletonView.layer.cornerRadius = view.layer.cornerRadius
-        return skeletonView
+    }
+    
+    public override func skeletonStopAnimating() {
+        skeletonViews.forEach { (skeletonView) in
+            skeletonView.skeletonStopAnimating()
+        }
+        skeletonViews.removeAll()
     }
 }
+
+// MARK: - UIKit+FWSkeletonView
 
 /// 视图显示骨架屏扩展
 @objc extension UIView {
     private func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil, layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
         fwHideSkeleton()
-        
         setNeedsLayout()
         layoutIfNeeded()
         
-        let layout = FWSkeletonLayout()
+        let layout = FWSkeletonLayout(layoutView: self)
         layout.tag = 2051
-        layout.referenceSuperview = self
         layout.layoutDelegate = layoutDelegate
-        layoutDelegate?.skeletonViewLayout(layout)
-        layoutBlock?(layout)
-        
         addSubview(layout)
         layout.fwPinEdgesToSuperview()
+        
+        if layoutDelegate != nil {
+            layoutDelegate?.skeletonViewLayout(layout)
+        } else if layoutBlock != nil {
+            layoutBlock?(layout)
+        } else {
+            layout.addSkeletonViews(subviews.filter({ $0 != layout }))
+        }
+        
         layout.setNeedsLayout()
         layout.layoutIfNeeded()
-        layout.startAnimating()
+        layout.skeletonStartAnimating()
     }
     
     public func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil) {
@@ -335,8 +374,8 @@ import UIKit
     }
     
     public func fwHideSkeleton() {
-        if let layout = viewWithTag(2051) as? FWSkeletonLayout {
-            layout.stopAnimating()
+        if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
+            layout.skeletonStopAnimating()
             layout.removeFromSuperview()
         }
     }
