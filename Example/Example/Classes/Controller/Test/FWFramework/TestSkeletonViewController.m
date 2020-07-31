@@ -8,7 +8,7 @@
 
 #import "TestSkeletonViewController.h"
 
-@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
+@interface TestSkeletonViewController () <FWSkeletonLayoutDelegate>
 
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
@@ -49,21 +49,21 @@
 
 - (void)renderData
 {
-    [self fwShowSkeletonWithDelegate:self];
+    [self fwShowSkeleton];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self fwHideSkeleton];
     });
 }
 
-#pragma mark - FWSkeletonViewDelegate
+#pragma mark - FWSkeletonLayoutDelegate
 
-- (void)skeletonViewLayout:(FWSkeletonView *)layoutView
+- (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layoutView copySubview:self.testView];
-    [layoutView copySubview:self.childView];
-    [layoutView copySubview:self.imageView block:^(FWSkeletonView *skeletonView) {
+    [layout addReferenceView:self.testView];
+    [layout addReferenceView:self.childView];
+    [layout addReferenceView:self.imageView block:^(FWSkeletonView *skeletonView) {
         skeletonView.skeletonAnimation = nil;
-        skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.skeletonColor];
+        skeletonView.skeletonImage = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.skeletonColor];
     }];
 }
 
