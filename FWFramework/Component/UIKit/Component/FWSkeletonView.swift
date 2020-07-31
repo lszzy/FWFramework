@@ -167,22 +167,20 @@ import UIKit
 
 /// 骨架屏视图，无代码侵入，支持设置占位图片
 @objcMembers public class FWSkeletonView: UIView {
+    /// 自定义动画，默认通用样式
     public var skeletonAnimation: FWSkeletonAnimationProtocol?
     
-    public var animationColors: [Any]? {
-        didSet {
-            animationLayers.forEach { (gradientLayer) in
-                gradientLayer.colors = animationColors
-            }
-        }
-    }
+    /// 动画颜色，默认通用样式
+    public var animationColors: [Any]?
     
+    /// 骨架图片，默认空
     public var skeletonImage: UIImage? {
         didSet {
             layer.contents = skeletonImage?.cgImage
         }
     }
     
+    /// 动画层列表，子类可覆写
     public var animationLayers: [CAGradientLayer] {
         let gradientLayer = layer as! CAGradientLayer
         return [gradientLayer]
@@ -197,6 +195,7 @@ import UIKit
         
         backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
         skeletonAnimation = FWSkeletonAppearance.appearance.skeletonAnimation
+        // 构造函数中设置属性不会触发didSet等方法
         animationColors = FWSkeletonAppearance.appearance.animationColors
     }
     
@@ -206,6 +205,7 @@ import UIKit
     
     public func startAnimating() {
         animationLayers.forEach { (gradientLayer) in
+            gradientLayer.colors = animationColors
             skeletonAnimation?.skeletonAnimationStart(gradientLayer)
         }
     }
