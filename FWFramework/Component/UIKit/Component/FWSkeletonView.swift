@@ -271,18 +271,21 @@ import UIKit
     
     public var referenceParser: ((UIView) -> FWSkeletonView?)?
     
-    public func addReferenceView(_ view: UIView) {
-        addReferenceView(view, block: nil)
+    @discardableResult
+    public func addReferenceView(_ view: UIView) -> FWSkeletonView? {
+        return addReferenceView(view, block: nil)
     }
     
-    public func addReferenceView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) {
-        guard let superView = referenceSuperview else { return }
-        guard view.isDescendant(of: superView) else { return }
+    @discardableResult
+    public func addReferenceView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView? {
+        guard let superView = referenceSuperview else { return nil }
+        guard view.isDescendant(of: superView) else { return nil }
         
-        guard let skeletonView = parseReferenceView(view) else { return }
+        guard let skeletonView = parseReferenceView(view) else { return nil }
         skeletonView.frame = view.convert(view.bounds, to: superView)
         block?(skeletonView)
         addSkeletonView(skeletonView)
+        return skeletonView
     }
     
     private func parseReferenceView(_ view: UIView) -> FWSkeletonView? {
