@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)fwIsPresented;
 
+/*!
+ @brief 是否是第一次加载数据，默认YES，加载完成后可标记为NO
+ @discussion 一般第一次加载数据时需要显示loading等，可判断和设置此开关
+ */
+@property (nonatomic, assign) BOOL fwIsFirstLoad;
+
 #pragma mark - Present
 
 /*!
