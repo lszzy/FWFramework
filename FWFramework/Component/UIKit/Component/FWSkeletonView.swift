@@ -126,7 +126,7 @@ import UIKit
     /// 动画设置，默认闪光灯
     public var skeletonAnimation: FWSkeletonAnimationProtocol?
     /// 动画颜色，默认自动适配
-    public var animationColors: [Any]?
+    public var animationColors: [UIColor]?
     
     /// 自定义骨架屏解析器
     public var skeletonParser: ((UIView) -> FWSkeletonView?)?
@@ -137,8 +137,8 @@ import UIKit
         skeletonAnimation = FWSkeletonAnimationShimmer()
         if #available(iOS 13.0, *) {
             layoutColor = UIColor.systemBackground
-            skeletonColor = UIColor(dynamicProvider: { (trainCollection) -> UIColor in
-                if trainCollection.userInterfaceStyle == .dark {
+            skeletonColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
+                if traitCollection.userInterfaceStyle == .dark {
                     return UIColor.fwColor(withHex: 0x282828)
                 } else {
                     return UIColor.fwColor(withHex: 0xEEEEEE)
@@ -158,12 +158,12 @@ import UIKit
                     return UIColor.fwColor(withHex: 0xDFDFDF).fwBrightnessColor(0.92)
                 }
             }
-            animationColors = [animationColor.cgColor, brightnessColor.cgColor, animationColor.cgColor]
+            animationColors = [animationColor, brightnessColor, animationColor]
         } else {
             layoutColor = UIColor.white
             skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
             let animationColor = UIColor.fwColor(withHex: 0xDFDFDF)
-            animationColors = [animationColor.cgColor, animationColor.fwBrightnessColor(0.92).cgColor, animationColor.cgColor]
+            animationColors = [animationColor, animationColor.fwBrightnessColor(0.92), animationColor]
         }
     }
     
@@ -193,7 +193,7 @@ import UIKit
     public var skeletonAnimation: FWSkeletonAnimationProtocol?
     
     /// 动画颜色，默认通用样式
-    public var animationColors: [Any]?
+    public var animationColors: [UIColor]?
     
     /// 骨架图片，默认空
     public var skeletonImage: UIImage? {
@@ -225,11 +225,25 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                let gradientColors = animationColors?.map(){ $0.cgColor }
+                animationLayers.forEach { (gradientLayer) in
+                    gradientLayer.colors = gradientColors
+                }
+            }
+        }
+    }
+    
     // MARK: -
     
     public func skeletonStartAnimating() {
+        let gradientColors = animationColors?.map(){ $0.cgColor }
         animationLayers.forEach { (gradientLayer) in
-            gradientLayer.colors = animationColors
+            gradientLayer.colors = gradientColors
             skeletonAnimation?.skeletonAnimationStart(gradientLayer)
         }
     }
