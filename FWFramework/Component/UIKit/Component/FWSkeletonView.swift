@@ -123,18 +123,28 @@ import UIKit
     /// 骨架颜色，默认自动适配
     public var skeletonColor: UIColor!
     
+    /// 多行标签行高，默认15
+    public var lineHeight: CGFloat = 15
+    /// 多行标签间距，默认10
+    public var lineSpacing: CGFloat = 10
+    /// 多行标签最后一行百分比，默认0.7
+    public var linePercent: CGFloat = 0.7
+    /// 多行标签圆角，默认0
+    public var lineCornerRadius: CGFloat = 0
+    
     /// 动画设置，默认闪光灯
-    public var skeletonAnimation: FWSkeletonAnimationProtocol?
+    public var skeletonAnimation: FWSkeletonAnimationProtocol? = FWSkeletonAnimationShimmer()
     /// 动画颜色，默认自动适配
     public var animationColors: [UIColor]?
     
     /// 自定义骨架屏解析器
     public var skeletonParser: ((UIView) -> FWSkeletonView?)?
     
+    // MARK: -
+    
     public override init() {
         super.init()
         
-        skeletonAnimation = FWSkeletonAnimationShimmer()
         if #available(iOS 13.0, *) {
             layoutColor = UIColor.systemBackground
             skeletonColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
@@ -186,23 +196,22 @@ import UIKit
 /// 骨架屏视图，无代码侵入，支持设置占位图片
 @objcMembers public class FWSkeletonView: UIView {
     /// 自定义动画，默认通用样式
-    public var skeletonAnimation: FWSkeletonAnimationProtocol?
+    public var skeletonAnimation: FWSkeletonAnimationProtocol? = FWSkeletonAppearance.appearance.skeletonAnimation
     
-    /// 动画颜色，默认通用样式
-    public var animationColors: [UIColor]?
+    /// 动画颜色，默认通用样式。注意构造函数中设置属性不会触发didSet等方法
+    public var animationColors: [UIColor]? = FWSkeletonAppearance.appearance.animationColors
     
     /// 骨架图片，默认空
     public var skeletonImage: UIImage? {
-        didSet {
-            layer.contents = skeletonImage?.cgImage
-        }
+        didSet { layer.contents = skeletonImage?.cgImage }
     }
     
     /// 动画层列表，子类可覆写
     public var animationLayers: [CAGradientLayer] {
-        let gradientLayer = layer as! CAGradientLayer
-        return [gradientLayer]
+        return [layer as! CAGradientLayer]
     }
+    
+    // MARK: -
     
     public override class var layerClass: AnyClass {
         return CAGradientLayer.self
@@ -210,11 +219,8 @@ import UIKit
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
-        skeletonAnimation = FWSkeletonAppearance.appearance.skeletonAnimation
-        // 构造函数中设置属性不会触发didSet等方法
-        animationColors = FWSkeletonAppearance.appearance.animationColors
     }
     
     required init?(coder: NSCoder) {
@@ -258,22 +264,68 @@ import UIKit
 
 /// 骨架屏多行标签
 @objcMembers public class FWSkeletonLabel: FWSkeletonView {
-    public var font: UIFont = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+    /// 行数
+    public var numberOfLines: Int = 0 {
+        didSet { setNeedsDisplay() }
+    }
     
-    public var numberOfLines: Int = 0
+    /// 行高
+    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight {
+        didSet { setNeedsDisplay() }
+    }
     
-    public var lineCornerRadius: CGFloat = 0
+    /// 行圆角
+    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius {
+        didSet { setNeedsDisplay() }
+    }
     
-    public var lineSpacing: CGFloat = 0
+    /// 行间距
+    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing {
+        didSet { setNeedsDisplay() }
+    }
     
-    public var linesPercent: [CGFloat] = []
+    /// 行显示比率，单个时指定最后一行，数组时指定所有行
+    public var linePercent: Any = FWSkeletonAppearance.appearance.linePercent {
+        didSet { setNeedsDisplay() }
+    }
     
-    public var contentInsets: UIEdgeInsets = .zero
+    /// 内容边距
+    public var contentInsets: UIEdgeInsets = .zero {
+        didSet { setNeedsDisplay() }
+    }
+    
+    // MARK: -
+    
+    private var gradientLayers: [CAGradientLayer] = []
+    
+    public override var animationLayers: [CAGradientLayer] {
+        return gradientLayers
+    }
+    
+    public override class var layerClass: AnyClass {
+        return CALayer.self
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = UIColor.clear
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func draw(_ rect: CGRect) {
+        gradientLayers.forEach { (gradientLayer) in
+            gradientLayer.removeFromSuperlayer()
+        }
+    }
     
     public override class func parseSkeletonView(_ view: UIView) -> FWSkeletonView? {
         if let label = view as? UILabel {
             let skeletonLabel = FWSkeletonLabel()
-            skeletonLabel.font = label.font
+            skeletonLabel.lineHeight = label.font.lineHeight
             skeletonLabel.numberOfLines = label.numberOfLines
             return skeletonLabel
         }
@@ -281,7 +333,7 @@ import UIKit
         if let textView = view as? UITextView {
             let skeletonLabel = FWSkeletonLabel()
             if let textFont = textView.font {
-                skeletonLabel.font = textFont
+                skeletonLabel.lineHeight = textFont.lineHeight
             }
             skeletonLabel.contentInsets = textView.textContainerInset
             return skeletonLabel
@@ -300,20 +352,25 @@ import UIKit
 
 /// 骨架屏布局
 @objcMembers public class FWSkeletonLayout: FWSkeletonView {
-    public let layoutView: UIView
+    public var layoutView: UIView?
     
     public weak var layoutDelegate: FWSkeletonLayoutDelegate?
     
     private var skeletonViews: [FWSkeletonView] = []
     
+    // MARK: -
+    
     public init(layoutView: UIView) {
-        self.layoutView = layoutView
         super.init(frame: layoutView.bounds)
+        
+        self.layoutView = layoutView
         backgroundColor = FWSkeletonAppearance.appearance.layoutColor
     }
     
     public override init(frame: CGRect) {
-        fatalError("init(frame:) has not been implemented")
+        super.init(frame: frame)
+        
+        backgroundColor = FWSkeletonAppearance.appearance.layoutColor
     }
     
     required init?(coder: NSCoder) {
@@ -351,8 +408,8 @@ import UIKit
         }
         
         let skeletonView = FWSkeletonAppearance.appearance.parseSkeletonView(view)
-        if view.isDescendant(of: layoutView) {
-            skeletonView.frame = view.convert(view.bounds, to: layoutView)
+        if layoutView != nil && view.isDescendant(of: layoutView!) {
+            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
         }
         skeletonViews.append(skeletonView)
         if skeletonView.superview == nil {
