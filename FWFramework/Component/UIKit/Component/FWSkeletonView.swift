@@ -172,23 +172,19 @@ import UIKit
             return skeletonView
         }
         
-        let skeletonView = FWSkeletonView.skeletonParseView(view)
+        if let skeletonView = FWSkeletonLabel.parseSkeletonView(view) {
+            return skeletonView
+        }
+        
+        let skeletonView = FWSkeletonView.parseSkeletonView(view)
         return skeletonView!
     }
 }
 
 // MARK: - FWSkeletonView
 
-/// 骨架屏视图协议
-@objc public protocol FWSkeletonViewProtocol {
-    func skeletonStartAnimating()
-    func skeletonStopAnimating()
-    
-    @objc optional static func skeletonParseView(_ view: UIView) -> FWSkeletonView?
-}
-
 /// 骨架屏视图，无代码侵入，支持设置占位图片
-@objcMembers public class FWSkeletonView: UIView, FWSkeletonViewProtocol {
+@objcMembers public class FWSkeletonView: UIView {
     /// 自定义动画，默认通用样式
     public var skeletonAnimation: FWSkeletonAnimationProtocol?
     
@@ -238,9 +234,7 @@ import UIKit
         }
     }
     
-    // MARK: -
-    
-    public func skeletonStartAnimating() {
+    public func startAnimating() {
         let gradientColors = animationColors?.map(){ $0.cgColor }
         animationLayers.forEach { (gradientLayer) in
             gradientLayer.colors = gradientColors
@@ -248,17 +242,52 @@ import UIKit
         }
     }
     
-    public func skeletonStopAnimating() {
+    public func stopAnimating() {
         animationLayers.forEach { (gradientLayer) in
             skeletonAnimation?.skeletonAnimationStop(gradientLayer)
         }
     }
     
-    public static func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+    public class func parseSkeletonView(_ view: UIView) -> FWSkeletonView? {
         let skeletonView = FWSkeletonView()
         skeletonView.layer.masksToBounds = view.layer.masksToBounds
         skeletonView.layer.cornerRadius = view.layer.cornerRadius
         return skeletonView
+    }
+}
+
+/// 骨架屏多行标签
+@objcMembers public class FWSkeletonLabel: FWSkeletonView {
+    public var font: UIFont = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+    
+    public var numberOfLines: Int = 0
+    
+    public var lineCornerRadius: CGFloat = 0
+    
+    public var lineSpacing: CGFloat = 0
+    
+    public var linesPercent: [CGFloat] = []
+    
+    public var contentInsets: UIEdgeInsets = .zero
+    
+    public override class func parseSkeletonView(_ view: UIView) -> FWSkeletonView? {
+        if let label = view as? UILabel {
+            let skeletonLabel = FWSkeletonLabel()
+            skeletonLabel.font = label.font
+            skeletonLabel.numberOfLines = label.numberOfLines
+            return skeletonLabel
+        }
+        
+        if let textView = view as? UITextView {
+            let skeletonLabel = FWSkeletonLabel()
+            if let textFont = textView.font {
+                skeletonLabel.font = textFont
+            }
+            skeletonLabel.contentInsets = textView.textContainerInset
+            return skeletonLabel
+        }
+        
+        return nil
     }
 }
 
@@ -333,15 +362,15 @@ import UIKit
         return skeletonView
     }
     
-    public override func skeletonStartAnimating() {
+    public override func startAnimating() {
         skeletonViews.forEach { (skeletonView) in
-            skeletonView.skeletonStartAnimating()
+            skeletonView.startAnimating()
         }
     }
     
-    public override func skeletonStopAnimating() {
+    public override func stopAnimating() {
         skeletonViews.forEach { (skeletonView) in
-            skeletonView.skeletonStopAnimating()
+            skeletonView.stopAnimating()
         }
         skeletonViews.removeAll()
     }
@@ -372,7 +401,7 @@ import UIKit
         
         layout.setNeedsLayout()
         layout.layoutIfNeeded()
-        layout.skeletonStartAnimating()
+        layout.startAnimating()
     }
     
     public func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil) {
@@ -389,7 +418,7 @@ import UIKit
     
     public func fwHideSkeleton() {
         if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
-            layout.skeletonStopAnimating()
+            layout.stopAnimating()
             layout.removeFromSuperview()
         }
     }

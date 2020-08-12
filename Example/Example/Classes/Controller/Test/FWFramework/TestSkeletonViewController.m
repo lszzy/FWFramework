@@ -13,6 +13,10 @@
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *label1;
+@property (nonatomic, strong) UILabel *label2;
+@property (nonatomic, strong) UITextView *textView1;
+@property (nonatomic, strong) UITextView *textView2;
 
 @end
 
@@ -50,6 +54,39 @@
     childView2.backgroundColor = [UIColor blueColor];
     [self.view addSubview:childView2];
     childView2.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
+    
+    UILabel *label1 = [UILabel new];
+    _label1 = label1;
+    label1.textColor = [UIColor blueColor];
+    label1.text = @"我是Label1";
+    [self.view addSubview:label1];
+    label1.fwLayoutChain.leftToView(testView).topToBottomOfViewWithOffset(imageView, 20);
+    
+    UILabel *label2 = [UILabel new];
+    _label2 = label2;
+    label2.font = [UIFont systemFontOfSize:12];
+    label2.textColor = [UIColor blueColor];
+    label2.numberOfLines = 0;
+    label2.text = @"我是Label2222222222\n我是Label22222\n我是Label2";
+    [self.view addSubview:label2];
+    label2.fwLayoutChain.leftToView(rightView).topToBottomOfViewWithOffset(imageView, 20);
+    
+    UITextView *textView1 = [UITextView new];
+    _textView1 = textView1;
+    textView1.editable = NO;
+    textView1.textColor = [UIColor blueColor];
+    textView1.text = @"我是TextView1";
+    [self.view addSubview:textView1];
+    textView1.fwLayoutChain.leftToView(testView).topToBottomOfViewWithOffset(label1, 20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    
+    UITextView *textView2 = [UITextView new];
+    _textView2 = textView2;
+    textView2.font = [UIFont systemFontOfSize:12];
+    textView2.editable = NO;
+    textView2.textColor = [UIColor blueColor];
+    textView2.text = @"我是TextView2222\n我是TextView2\n我是TextView";
+    [self.view addSubview:textView2];
+    textView2.fwLayoutChain.leftToView(rightView).topToBottomOfViewWithOffset(label2, 20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
 }
 
 - (void)renderData
@@ -73,6 +110,8 @@
     [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *view) {
         view.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
     }];
+    
+    [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2]];
 }
 
 @end
