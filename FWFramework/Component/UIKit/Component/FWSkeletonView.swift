@@ -118,10 +118,10 @@ import UIKit
     /// 单例对象
     public static let appearance = FWSkeletonAppearance()
     
-    /// 布局背景色，默认自动适配
-    public var layoutColor: UIColor!
+    /// 骨架背景色，默认自动适配
+    public var backgroundColor: UIColor!
     /// 骨架颜色，默认自动适配
-    public var skeletonColor: UIColor!
+    public var color: UIColor!
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15
@@ -132,13 +132,13 @@ import UIKit
     /// 多行标签圆角，默认0
     public var lineCornerRadius: CGFloat = 0
     
-    /// 动画设置，默认闪光灯
-    public var skeletonAnimation: FWSkeletonAnimationProtocol? = FWSkeletonAnimationShimmer()
-    /// 动画颜色，默认自动适配
+    /// 骨架动画，默认闪光灯
+    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimationShimmer()
+    /// 骨架动画颜色，默认自动适配
     public var animationColors: [UIColor]?
     
     /// 自定义骨架屏解析器
-    public var skeletonParser: ((UIView) -> FWSkeletonView?)?
+    public var parser: ((UIView) -> FWSkeletonView?)?
     
     // MARK: -
     
@@ -146,8 +146,8 @@ import UIKit
         super.init()
         
         if #available(iOS 13.0, *) {
-            layoutColor = UIColor.systemBackground
-            skeletonColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
+            backgroundColor = UIColor.systemBackground
+            color = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
                 if traitCollection.userInterfaceStyle == .dark {
                     return UIColor.fwColor(withHex: 0x282828)
                 } else {
@@ -170,15 +170,15 @@ import UIKit
             }
             animationColors = [animationColor, brightnessColor, animationColor]
         } else {
-            layoutColor = UIColor.white
-            skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
+            backgroundColor = UIColor.white
+            color = UIColor.fwColor(withHex: 0xEEEEEE)
             let animationColor = UIColor.fwColor(withHex: 0xDFDFDF)
             animationColors = [animationColor, animationColor.fwBrightnessColor(0.92), animationColor]
         }
     }
     
     public func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
-        if let skeletonView = skeletonParser?(view) {
+        if let skeletonView = parser?(view) {
             return skeletonView
         }
         
@@ -196,19 +196,19 @@ import UIKit
 /// 骨架屏视图，无代码侵入，支持设置占位图片
 @objcMembers public class FWSkeletonView: UIView {
     /// 自定义动画，默认通用样式
-    public var skeletonAnimation: FWSkeletonAnimationProtocol? = FWSkeletonAppearance.appearance.skeletonAnimation
+    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAppearance.appearance.animation
     
     /// 动画颜色，默认通用样式。注意构造函数中设置属性不会触发didSet等方法
     public var animationColors: [UIColor]? = FWSkeletonAppearance.appearance.animationColors
     
-    /// 骨架图片，默认空
-    public var skeletonImage: UIImage? {
-        didSet { layer.contents = skeletonImage?.cgImage }
-    }
-    
     /// 动画层列表，子类可覆写
     public var animationLayers: [CAGradientLayer] {
         return [layer as! CAGradientLayer]
+    }
+    
+    /// 骨架图片，默认空
+    public var image: UIImage? {
+        didSet { layer.contents = image?.cgImage }
     }
     
     // MARK: -
@@ -220,7 +220,7 @@ import UIKit
     public override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
+        backgroundColor = FWSkeletonAppearance.appearance.color
     }
     
     required init?(coder: NSCoder) {
@@ -244,13 +244,13 @@ import UIKit
         let gradientColors = animationColors?.map(){ $0.cgColor }
         animationLayers.forEach { (gradientLayer) in
             gradientLayer.colors = gradientColors
-            skeletonAnimation?.skeletonAnimationStart(gradientLayer)
+            animation?.skeletonAnimationStart(gradientLayer)
         }
     }
     
     public func stopAnimating() {
         animationLayers.forEach { (gradientLayer) in
-            skeletonAnimation?.skeletonAnimationStop(gradientLayer)
+            animation?.skeletonAnimationStop(gradientLayer)
         }
     }
     
@@ -294,12 +294,12 @@ import UIKit
         didSet { setNeedsDisplay() }
     }
     
+    private var lineLayers: [CAGradientLayer] = []
+    
     // MARK: -
     
-    private var gradientLayers: [CAGradientLayer] = []
-    
     public override var animationLayers: [CAGradientLayer] {
-        return gradientLayers
+        return lineLayers
     }
     
     public override class var layerClass: AnyClass {
@@ -317,7 +317,7 @@ import UIKit
     }
     
     public override func draw(_ rect: CGRect) {
-        gradientLayers.forEach { (gradientLayer) in
+        lineLayers.forEach { (gradientLayer) in
             gradientLayer.removeFromSuperlayer()
         }
     }
@@ -364,13 +364,13 @@ import UIKit
         super.init(frame: layoutView.bounds)
         
         self.layoutView = layoutView
-        backgroundColor = FWSkeletonAppearance.appearance.layoutColor
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
     }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = FWSkeletonAppearance.appearance.layoutColor
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
     }
     
     required init?(coder: NSCoder) {
