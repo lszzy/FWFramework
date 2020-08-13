@@ -18,17 +18,18 @@ import UIKit
 
 /// 骨架屏呼吸灯动画
 @objcMembers public class FWSkeletonAnimationSolid: NSObject, FWSkeletonAnimationProtocol {
+    public static let sharedInstance = FWSkeletonAnimationSolid()
     public var duration: TimeInterval = 1
     
     public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
         let animation = CABasicAnimation(keyPath: "opacity")
-        animation.fromValue = 1.1
-        animation.toValue = 0.6
         animation.autoreverses = true
-        animation.duration = duration
         animation.repeatCount = .infinity
         animation.isRemovedOnCompletion = false
         animation.fillMode = .forwards
+        animation.duration = duration
+        animation.fromValue = 1.1
+        animation.toValue = 0.6
         animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
         gradientLayer.add(animation, forKey: "FWSkeletonAnimationSolid")
     }
@@ -50,6 +51,7 @@ import UIKit
 
 /// 骨架屏闪光灯动画
 @objcMembers public class FWSkeletonAnimationShimmer: NSObject, FWSkeletonAnimationProtocol {
+    public static let sharedInstance = FWSkeletonAnimationShimmer()
     public var duration: TimeInterval = 1
     public var direction: FWSkeletonAnimationShimmerDirection = .leftToRight
     
@@ -99,15 +101,37 @@ import UIKit
         endAnimation.toValue = NSValue(cgPoint: endPoint.to)
         
         let animationGroup = CAAnimationGroup()
+        animationGroup.repeatCount = .infinity
         animationGroup.animations = [startAnimation, endAnimation]
         animationGroup.duration = duration
         animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
-        animationGroup.repeatCount = .infinity
         gradientLayer.add(animationGroup, forKey: "FWSkeletonAnimationShimmer")
     }
     
     public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
         gradientLayer.removeAnimation(forKey: "FWSkeletonAnimationShimmer")
+    }
+}
+
+/// 骨架屏伸缩动画
+@objcMembers public class FWSkeletonAnimationScale: NSObject, FWSkeletonAnimationProtocol {
+    public static let sharedInstance = FWSkeletonAnimationScale()
+    public var duration: TimeInterval = 0.7
+    public var toValue: CGFloat = 1.9
+    
+    public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
+        let animation = CABasicAnimation(keyPath: "transform.scale.x")
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.isRemovedOnCompletion = false
+        animation.duration = duration
+        animation.toValue = toValue
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        gradientLayer.add(animation, forKey: "FWSkeletonAnimationScale")
+    }
+
+    public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
+        gradientLayer.removeAnimation(forKey: "FWSkeletonAnimationScale")
     }
 }
 
@@ -133,7 +157,7 @@ import UIKit
     public var lineCornerRadius: CGFloat = 0
     
     /// 骨架动画，默认闪光灯
-    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimationShimmer()
+    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimationShimmer.sharedInstance
     /// 骨架动画颜色，默认自动适配
     public var animationColors: [UIColor]?
     
@@ -383,10 +407,12 @@ import UIKit
     }
     
     @discardableResult
-    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView) -> Void)?) -> [FWSkeletonView] {
+    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView, Int) -> Void)?) -> [FWSkeletonView] {
         var resultViews: [FWSkeletonView] = []
-        views.forEach { (view) in
-            resultViews.append(addSkeletonView(view, block: block))
+        for (index, view) in views.enumerated() {
+            resultViews.append(addSkeletonView(view, block: { (skeletonView) in
+                block?(skeletonView, index)
+            }))
         }
         return resultViews
     }
