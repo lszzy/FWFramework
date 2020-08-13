@@ -290,6 +290,11 @@ import UIKit
         didSet { setNeedsDisplay() }
     }
     
+    /// 行颜色
+    public var lineColor: UIColor = FWSkeletonAppearance.appearance.color {
+        didSet { setNeedsDisplay() }
+    }
+    
     /// 内容边距
     public var contentInsets: UIEdgeInsets = .zero {
         didSet { setNeedsDisplay() }
@@ -317,10 +322,18 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func draw(_ rect: CGRect) {
-        lineLayers.forEach { (gradientLayer) in
-            gradientLayer.removeFromSuperlayer()
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        lineLayers.forEach { (lineLayer) in
+            lineLayer.removeFromSuperlayer()
         }
+        
+        let lineLayer = CAGradientLayer()
+        lineLayer.backgroundColor = lineColor.cgColor
+        lineLayer.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: bounds.size.height)
+        layer.addSublayer(lineLayer)
+        lineLayers.append(lineLayer)
     }
 }
 
