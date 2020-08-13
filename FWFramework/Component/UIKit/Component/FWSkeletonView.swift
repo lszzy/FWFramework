@@ -12,7 +12,8 @@ import UIKit
 
 /// 骨架屏动画协议
 @objc public protocol FWSkeletonAnimationProtocol {
-    func skeletonAnimationProvider() -> CAAnimation
+    func skeletonAnimationStart(_ gradientLayer: CAGradientLayer)
+    func skeletonAnimationStop(_ gradientLayer: CAGradientLayer)
 }
 
 /// 骨架屏自带动画类型
@@ -42,8 +43,11 @@ import UIKit
     public static let scale = FWSkeletonAnimation(type: .scale)
     
     public var duration: TimeInterval = 1
-    
     public var shimmerDirection: FWSkeletonAnimationShimmerDirection = .leftToRight
+    public var scaleFrom: CGFloat = 0.6
+    public var scaleTo: CGFloat = 1
+    
+    private var type: FWSkeletonAnimationType = .shimmer
     private var shimmerStartPoint: (from: CGPoint, to: CGPoint) {
         switch shimmerDirection {
         case .leftToRight:
@@ -77,71 +81,53 @@ import UIKit
         }
     }
     
-    public var scaleFrom: CGFloat = 0.6
-    public var scaleTo: CGFloat = 1
-    
-    private var type: FWSkeletonAnimationType = .shimmer
-    
-    // MARK: -
-    
     public init(type: FWSkeletonAnimationType) {
         super.init()
         self.type = type
     }
     
-    private func shimmerAnimation() -> CAAnimation {
-        let startAnimation = CABasicAnimation(keyPath: "startPoint")
-        startAnimation.fromValue = NSValue(cgPoint: shimmerStartPoint.from)
-        startAnimation.toValue = NSValue(cgPoint: shimmerStartPoint.to)
-        
-        let endAnimation = CABasicAnimation(keyPath: "endPoint")
-        endAnimation.fromValue = NSValue(cgPoint: shimmerEndPoint.from)
-        endAnimation.toValue = NSValue(cgPoint: shimmerEndPoint.to)
-        
-        let animationGroup = CAAnimationGroup()
-        animationGroup.repeatCount = .infinity
-        animationGroup.animations = [startAnimation, endAnimation]
-        animationGroup.duration = duration
-        animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
-        return animationGroup
-    }
-    
-    private func solidAnimation() -> CAAnimation {
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.autoreverses = true
-        animation.repeatCount = .infinity
-        animation.isRemovedOnCompletion = false
-        animation.fillMode = .forwards
-        animation.duration = duration
-        animation.fromValue = 1.0
-        animation.toValue = 0.6
-        animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
-        return animation
-    }
-    
-    private func scaleAnimation() -> CAAnimation {
-        let animation = CABasicAnimation(keyPath: "transform.scale.x")
-        animation.autoreverses = true
-        animation.repeatCount = .infinity
-        animation.isRemovedOnCompletion = false
-        animation.duration = duration
-        animation.fromValue = scaleFrom
-        animation.toValue = scaleTo
-        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        return animation
-    }
-    
     // MARK: -
     
-    public func skeletonAnimationProvider() -> CAAnimation {
+    public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
         switch type {
         case .solid:
-            return solidAnimation()
+            let animation = CABasicAnimation(keyPath: "opacity")
+            animation.autoreverses = true
+            animation.repeatCount = .infinity
+            animation.duration = duration
+            animation.fromValue = 1.0
+            animation.toValue = 0.6
+            animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            gradientLayer.add(animation, forKey: "skeletonAnimation")
         case .scale:
-            return scaleAnimation()
+            let animation = CABasicAnimation(keyPath: "transform.scale.x")
+            animation.autoreverses = true
+            animation.repeatCount = .infinity
+            animation.duration = duration
+            animation.fromValue = scaleFrom
+            animation.toValue = scaleTo
+            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            gradientLayer.add(animation, forKey: "skeletonAnimation")
         default:
-            return shimmerAnimation()
+            let startAnimation = CABasicAnimation(keyPath: "startPoint")
+            startAnimation.fromValue = NSValue(cgPoint: shimmerStartPoint.from)
+            startAnimation.toValue = NSValue(cgPoint: shimmerStartPoint.to)
+            
+            let endAnimation = CABasicAnimation(keyPath: "endPoint")
+            endAnimation.fromValue = NSValue(cgPoint: shimmerEndPoint.from)
+            endAnimation.toValue = NSValue(cgPoint: shimmerEndPoint.to)
+            
+            let animationGroup = CAAnimationGroup()
+            animationGroup.repeatCount = .infinity
+            animationGroup.animations = [startAnimation, endAnimation]
+            animationGroup.duration = duration
+            animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            gradientLayer.add(animationGroup, forKey: "skeletonAnimation")
         }
+    }
+    
+    public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
+        gradientLayer.removeAnimation(forKey: "skeletonAnimation")
     }
 }
 
@@ -209,58 +195,6 @@ import UIKit
     }
 }
 
-// MARK: - FWSkeletonParser
-
-/// 骨架屏解析器协议
-@objc public protocol FWSkeletonParserProtocol {
-    func skeletonParseView(_ view: UIView) -> FWSkeletonView?
-}
-
-/// 骨架屏解析器
-@objcMembers public class FWSkeletonParser: NSObject, FWSkeletonParserProtocol {
-    /// 单例对象
-    public static let sharedInstance = FWSkeletonParser()
-    
-    /// 自定义解析器数组
-    public var parsers: [FWSkeletonParserProtocol] = []
-    
-    /// 解析视图到骨架视图
-    public func parse(_ view: UIView) -> FWSkeletonView {
-        for parser in parsers {
-            if let skeletonView = parser.skeletonParseView(view) {
-                return skeletonView
-            }
-        }
-        
-        return skeletonParseView(view)!
-    }
-    
-    // MARK: -
-    
-    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
-        if let label = view as? UILabel {
-            let skeletonLabel = FWSkeletonLabel()
-            skeletonLabel.lineHeight = label.font.lineHeight
-            skeletonLabel.numberOfLines = label.numberOfLines
-            return skeletonLabel
-        }
-        
-        if let textView = view as? UITextView {
-            let skeletonLabel = FWSkeletonLabel()
-            if let textFont = textView.font {
-                skeletonLabel.lineHeight = textFont.lineHeight
-            }
-            skeletonLabel.contentInsets = textView.textContainerInset
-            return skeletonLabel
-        }
-        
-        let skeletonView = FWSkeletonView()
-        skeletonView.layer.masksToBounds = view.layer.masksToBounds
-        skeletonView.layer.cornerRadius = view.layer.cornerRadius
-        return skeletonView
-    }
-}
-
 // MARK: - FWSkeletonView
 
 /// 骨架屏视图，无代码侵入，支持设置占位图片
@@ -312,20 +246,15 @@ import UIKit
     
     public func startAnimating() {
         let gradientColors = animationColors?.map(){ $0.cgColor }
-        let gradientAnimation = animation?.skeletonAnimationProvider()
         animationLayers.forEach { (gradientLayer) in
             gradientLayer.colors = gradientColors
-            if gradientAnimation != nil {
-                gradientLayer.add(gradientAnimation!, forKey: "skeletonAnimation")
-            }
+            animation?.skeletonAnimationStart(gradientLayer)
         }
     }
     
     public func stopAnimating() {
-        guard animation != nil else { return }
-        
         animationLayers.forEach { (gradientLayer) in
-            gradientLayer.removeAnimation(forKey: "skeletonAnimation")
+            animation?.skeletonAnimationStop(gradientLayer)
         }
     }
 }
@@ -388,6 +317,58 @@ import UIKit
         lineLayers.forEach { (gradientLayer) in
             gradientLayer.removeFromSuperlayer()
         }
+    }
+}
+
+// MARK: - FWSkeletonParser
+
+/// 骨架屏解析器协议
+@objc public protocol FWSkeletonParserProtocol {
+    func skeletonParseView(_ view: UIView) -> FWSkeletonView?
+}
+
+/// 骨架屏解析器
+@objcMembers public class FWSkeletonParser: NSObject, FWSkeletonParserProtocol {
+    /// 单例对象
+    public static let sharedInstance = FWSkeletonParser()
+    
+    /// 自定义解析器数组
+    public var parsers: [FWSkeletonParserProtocol] = []
+    
+    /// 解析视图到骨架视图
+    public func parse(_ view: UIView) -> FWSkeletonView {
+        for parser in parsers {
+            if let skeletonView = parser.skeletonParseView(view) {
+                return skeletonView
+            }
+        }
+        
+        return skeletonParseView(view)!
+    }
+    
+    // MARK: -
+    
+    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        if let label = view as? UILabel {
+            let skeletonLabel = FWSkeletonLabel()
+            skeletonLabel.lineHeight = label.font.lineHeight
+            skeletonLabel.numberOfLines = label.numberOfLines
+            return skeletonLabel
+        }
+        
+        if let textView = view as? UITextView {
+            let skeletonLabel = FWSkeletonLabel()
+            if let textFont = textView.font {
+                skeletonLabel.lineHeight = textFont.lineHeight
+            }
+            skeletonLabel.contentInsets = textView.textContainerInset
+            return skeletonLabel
+        }
+        
+        let skeletonView = FWSkeletonView()
+        skeletonView.layer.masksToBounds = view.layer.masksToBounds
+        skeletonView.layer.cornerRadius = view.layer.cornerRadius
+        return skeletonView
     }
 }
 
