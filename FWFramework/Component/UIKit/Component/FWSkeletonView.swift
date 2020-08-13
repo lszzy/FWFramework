@@ -161,9 +161,6 @@ import UIKit
     /// 骨架动画颜色，默认自动适配
     public var animationColors: [UIColor]?
     
-    /// 自定义骨架屏解析器
-    public var parser: ((UIView) -> FWSkeletonView?)?
-    
     // MARK: -
     
     public override init() {
@@ -200,18 +197,57 @@ import UIKit
             animationColors = [animationColor, animationColor.fwBrightnessColor(0.92), animationColor]
         }
     }
+}
+
+// MARK: - FWSkeletonParser
+
+/// 骨架屏解析器协议
+@objc public protocol FWSkeletonParserProtocol {
+    func skeletonParseView(_ view: UIView) -> FWSkeletonView?
+}
+
+/// 骨架屏解析器
+@objcMembers public class FWSkeletonParser: NSObject, FWSkeletonParserProtocol {
+    /// 单例对象
+    public static let sharedInstance = FWSkeletonParser()
     
-    public func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
-        if let skeletonView = parser?(view) {
-            return skeletonView
+    /// 自定义解析器数组
+    public var parsers: [FWSkeletonParserProtocol] = []
+    
+    /// 解析视图到骨架视图
+    public func parse(_ view: UIView) -> FWSkeletonView {
+        for parser in parsers {
+            if let skeletonView = parser.skeletonParseView(view) {
+                return skeletonView
+            }
         }
         
-        if let skeletonView = FWSkeletonLabel.parseSkeletonView(view) {
-            return skeletonView
+        return skeletonParseView(view)!
+    }
+    
+    // MARK: -
+    
+    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        if let label = view as? UILabel {
+            let skeletonLabel = FWSkeletonLabel()
+            skeletonLabel.lineHeight = label.font.lineHeight
+            skeletonLabel.numberOfLines = label.numberOfLines
+            return skeletonLabel
         }
         
-        let skeletonView = FWSkeletonView.parseSkeletonView(view)
-        return skeletonView!
+        if let textView = view as? UITextView {
+            let skeletonLabel = FWSkeletonLabel()
+            if let textFont = textView.font {
+                skeletonLabel.lineHeight = textFont.lineHeight
+            }
+            skeletonLabel.contentInsets = textView.textContainerInset
+            return skeletonLabel
+        }
+        
+        let skeletonView = FWSkeletonView()
+        skeletonView.layer.masksToBounds = view.layer.masksToBounds
+        skeletonView.layer.cornerRadius = view.layer.cornerRadius
+        return skeletonView
     }
 }
 
@@ -277,13 +313,6 @@ import UIKit
             animation?.skeletonAnimationStop(gradientLayer)
         }
     }
-    
-    public class func parseSkeletonView(_ view: UIView) -> FWSkeletonView? {
-        let skeletonView = FWSkeletonView()
-        skeletonView.layer.masksToBounds = view.layer.masksToBounds
-        skeletonView.layer.cornerRadius = view.layer.cornerRadius
-        return skeletonView
-    }
 }
 
 /// 骨架屏多行标签
@@ -344,26 +373,6 @@ import UIKit
         lineLayers.forEach { (gradientLayer) in
             gradientLayer.removeFromSuperlayer()
         }
-    }
-    
-    public override class func parseSkeletonView(_ view: UIView) -> FWSkeletonView? {
-        if let label = view as? UILabel {
-            let skeletonLabel = FWSkeletonLabel()
-            skeletonLabel.lineHeight = label.font.lineHeight
-            skeletonLabel.numberOfLines = label.numberOfLines
-            return skeletonLabel
-        }
-        
-        if let textView = view as? UITextView {
-            let skeletonLabel = FWSkeletonLabel()
-            if let textFont = textView.font {
-                skeletonLabel.lineHeight = textFont.lineHeight
-            }
-            skeletonLabel.contentInsets = textView.textContainerInset
-            return skeletonLabel
-        }
-        
-        return nil
     }
 }
 
@@ -433,7 +442,7 @@ import UIKit
             return resultView
         }
         
-        let skeletonView = FWSkeletonAppearance.appearance.parseSkeletonView(view)
+        let skeletonView = FWSkeletonParser.sharedInstance.parse(view)
         if layoutView != nil && view.isDescendant(of: layoutView!) {
             skeletonView.frame = view.convert(view.bounds, to: layoutView!)
         }
