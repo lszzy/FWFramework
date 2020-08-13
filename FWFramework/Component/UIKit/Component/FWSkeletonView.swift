@@ -44,7 +44,7 @@ import UIKit
     
     public var fromValue: Any?
     public var toValue: Any?
-    public var duration: TimeInterval = 1
+    public var duration: TimeInterval = 0
     public var shimmerDirection: FWSkeletonAnimationShimmerDirection = .leftToRight
 
     private var type: FWSkeletonAnimationType = .shimmer
@@ -94,7 +94,7 @@ import UIKit
             let animation = CABasicAnimation(keyPath: "opacity")
             animation.autoreverses = true
             animation.repeatCount = .infinity
-            animation.duration = duration
+            animation.duration = duration > 0 ? duration : 1
             animation.fromValue = fromValue != nil ? fromValue : 1.1
             animation.toValue = toValue != nil ? toValue : 0.6
             animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
@@ -103,14 +103,12 @@ import UIKit
             let animation = CABasicAnimation(keyPath: "transform.scale.x")
             animation.autoreverses = true
             animation.repeatCount = .infinity
-            animation.duration = duration
+            animation.duration = duration > 0 ? duration : 0.7
             animation.fromValue = fromValue != nil ? fromValue : 0.6
             animation.toValue = toValue != nil ? toValue : 1
             animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            if gradientLayer.anchorPoint == CGPoint(x: 0.5, y: 0.5) {
-                gradientLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
-                gradientLayer.position.x -= gradientLayer.bounds.size.width / 2.0
-            }
+            gradientLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
+            gradientLayer.position.x -= gradientLayer.bounds.size.width / 2.0
             gradientLayer.add(animation, forKey: "skeletonAnimation")
         default:
             let startAnimation = CABasicAnimation(keyPath: "startPoint")
@@ -124,7 +122,7 @@ import UIKit
             let animationGroup = CAAnimationGroup()
             animationGroup.repeatCount = .infinity
             animationGroup.animations = [startAnimation, endAnimation]
-            animationGroup.duration = duration
+            animationGroup.duration = duration > 0 ? 0 : 1
             animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
             gradientLayer.add(animationGroup, forKey: "skeletonAnimation")
         }
@@ -216,7 +214,10 @@ import UIKit
     
     /// 骨架图片，默认空
     public var image: UIImage? {
-        didSet { layer.contents = image?.cgImage }
+        didSet {
+            layer.contents = image?.cgImage
+            layer.contentsGravity = .resizeAspectFill
+        }
     }
     
     // MARK: -
