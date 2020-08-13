@@ -101,18 +101,28 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addSkeletonView:self.testView];
+    [layout addSkeletonView:self.testView block:^(FWSkeletonView *skeletonView) {
+        skeletonView.animation = nil;
+    }];
     FWSkeletonView *childView = [layout addSkeletonView:self.childView];
     FWSkeletonView *imageView = [layout addSkeletonView:self.imageView block:^(FWSkeletonView *skeletonView) {
         skeletonView.animation = nil;
         skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.color];
     }];
-    [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *view) {
-        view.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
+    [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *skeletonView) {
+        skeletonView.animation = FWSkeletonAnimation.solid;
+        skeletonView.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
     }];
     
-    [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2] block:^(FWSkeletonView *skeletonView, NSInteger index) {
-        skeletonView.animation = FWSkeletonAnimation.scale;
+    NSArray<FWSkeletonView *> *skeletonViews = [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2] block:^(FWSkeletonView *skeletonView, NSInteger index) {
+        if (index == 1)  {
+            skeletonView.animation = FWSkeletonAnimation.solid;
+        } else if (index > 1) {
+            skeletonView.animation = FWSkeletonAnimation.scale;
+        }
+    }];
+    [layout addSkeletonView:[FWSkeletonLabel new] block:^(FWSkeletonView *skeletonView) {
+        skeletonView.fwLayoutChain.centerXToView(imageView).topToBottomOfViewWithOffset(skeletonViews.lastObject, 20).sizeToView(skeletonViews.lastObject);
     }];
 }
 
