@@ -26,14 +26,12 @@ import UIKit
     case scale
 }
 
-/// 骨架屏自带闪光灯动画方向
-@objc public enum FWSkeletonAnimationShimmerDirection: Int {
-    case leftToRight
-    case rightToLeft
-    case topToBottom
-    case bottomToTop
-    case topLeftToBottomRight
-    case bottomRightToTopLeft
+/// 骨架屏自带动画方向
+@objc public enum FWSkeletonAnimationDirection: Int {
+    case right
+    case left
+    case down
+    case up
 }
 
 /// 骨架屏自带动画
@@ -44,46 +42,28 @@ import UIKit
     
     public var fromValue: Any?
     public var toValue: Any?
-    public var duration: TimeInterval = 0
-    public var shimmerDirection: FWSkeletonAnimationShimmerDirection = .leftToRight
-
+    public var duration: TimeInterval = 1
+    public var direction: FWSkeletonAnimationDirection = .right
+    
+    // MARK: -
+    
     private var type: FWSkeletonAnimationType = .shimmer
-    private var shimmerStartPoint: (from: CGPoint, to: CGPoint) {
-        switch shimmerDirection {
-        case .leftToRight:
-            return (from: CGPoint(x:-1, y:0.5), to: CGPoint(x:1, y:0.5))
-        case .rightToLeft:
-            return (from: CGPoint(x:1, y:0.5), to: CGPoint(x:-1, y:0.5))
-        case .topToBottom:
-            return (from: CGPoint(x:0.5, y:-1), to: CGPoint(x:0.5, y:1))
-        case .bottomToTop:
-            return (from: CGPoint(x:0.5, y:1), to: CGPoint(x:0.5, y:-1))
-        case .topLeftToBottomRight:
-            return (from: CGPoint(x:-1, y:-1), to: CGPoint(x:1, y:1))
-        case .bottomRightToTopLeft:
-            return (from: CGPoint(x:1, y:1), to: CGPoint(x:-1, y:-1))
-        }
-    }
-    private var shimmerEndPoint: (from: CGPoint, to: CGPoint) {
-        switch shimmerDirection {
-        case .leftToRight:
-            return (from: CGPoint(x:0, y:0.5), to: CGPoint(x:2, y:0.5))
-        case .rightToLeft:
-            return ( from: CGPoint(x:2, y:0.5), to: CGPoint(x:0, y:0.5))
-        case .topToBottom:
-            return ( from: CGPoint(x:0.5, y:0), to: CGPoint(x:0.5, y:2))
-        case .bottomToTop:
-            return ( from: CGPoint(x:0.5, y:2), to: CGPoint(x:0.5, y:0))
-        case .topLeftToBottomRight:
-            return ( from: CGPoint(x:0, y:0), to: CGPoint(x:2, y:2))
-        case .bottomRightToTopLeft:
-            return ( from: CGPoint(x:2, y:2), to: CGPoint(x:0, y:0))
-        }
-    }
     
     public init(type: FWSkeletonAnimationType) {
         super.init()
         self.type = type
+        
+        switch type {
+        case .solid:
+            fromValue = 1.1
+            toValue = 0.6
+        case .scale:
+            duration = 0.7
+            fromValue = 0.6
+            toValue = 1
+        default:
+            direction = .right
+        }
     }
     
     // MARK: -
@@ -94,35 +74,52 @@ import UIKit
             let animation = CABasicAnimation(keyPath: "opacity")
             animation.autoreverses = true
             animation.repeatCount = .infinity
-            animation.duration = duration > 0 ? duration : 1
-            animation.fromValue = fromValue != nil ? fromValue : 1.1
-            animation.toValue = toValue != nil ? toValue : 0.6
+            animation.duration = duration
+            animation.fromValue = fromValue
+            animation.toValue = toValue
             animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
             gradientLayer.add(animation, forKey: "skeletonAnimation")
         case .scale:
             let animation = CABasicAnimation(keyPath: "transform.scale.x")
             animation.autoreverses = true
             animation.repeatCount = .infinity
-            animation.duration = duration > 0 ? duration : 0.7
-            animation.fromValue = fromValue != nil ? fromValue : 0.6
-            animation.toValue = toValue != nil ? toValue : 1
+            animation.duration = duration
+            animation.fromValue = fromValue
+            animation.toValue = toValue
             animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             gradientLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
             gradientLayer.position.x -= gradientLayer.bounds.size.width / 2.0
             gradientLayer.add(animation, forKey: "skeletonAnimation")
         default:
             let startAnimation = CABasicAnimation(keyPath: "startPoint")
-            startAnimation.fromValue = NSValue(cgPoint: shimmerStartPoint.from)
-            startAnimation.toValue = NSValue(cgPoint: shimmerStartPoint.to)
-            
             let endAnimation = CABasicAnimation(keyPath: "endPoint")
-            endAnimation.fromValue = NSValue(cgPoint: shimmerEndPoint.from)
-            endAnimation.toValue = NSValue(cgPoint: shimmerEndPoint.to)
+            switch direction {
+            case .right:
+                startAnimation.fromValue = NSValue(cgPoint: CGPoint(x:-1, y:0.5))
+                startAnimation.toValue = NSValue(cgPoint: CGPoint(x:1, y:0.5))
+                endAnimation.fromValue = NSValue(cgPoint: CGPoint(x:0, y:0.5))
+                endAnimation.toValue = NSValue(cgPoint: CGPoint(x:2, y:0.5))
+            case .left:
+                startAnimation.fromValue = NSValue(cgPoint: CGPoint(x:1, y:0.5))
+                startAnimation.toValue = NSValue(cgPoint: CGPoint(x:-1, y:0.5))
+                endAnimation.fromValue = NSValue(cgPoint: CGPoint(x:2, y:0.5))
+                endAnimation.toValue = NSValue(cgPoint: CGPoint(x:0, y:0.5))
+            case .down:
+                startAnimation.fromValue = NSValue(cgPoint: CGPoint(x:0.5, y:-1))
+                startAnimation.toValue = NSValue(cgPoint: CGPoint(x:0.5, y:1))
+                endAnimation.fromValue = NSValue(cgPoint: CGPoint(x:0.5, y:0))
+                endAnimation.toValue = NSValue(cgPoint: CGPoint(x:0.5, y:2))
+            case .up:
+                startAnimation.fromValue = NSValue(cgPoint: CGPoint(x:0.5, y:1))
+                startAnimation.toValue = NSValue(cgPoint: CGPoint(x:0.5, y:-1))
+                endAnimation.fromValue = NSValue(cgPoint: CGPoint(x:0.5, y:2))
+                endAnimation.toValue = NSValue(cgPoint: CGPoint(x:0.5, y:0))
+            }
             
             let animationGroup = CAAnimationGroup()
             animationGroup.repeatCount = .infinity
             animationGroup.animations = [startAnimation, endAnimation]
-            animationGroup.duration = duration > 0 ? 0 : 1
+            animationGroup.duration = duration
             animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
             gradientLayer.add(animationGroup, forKey: "skeletonAnimation")
         }
@@ -143,7 +140,7 @@ import UIKit
     /// 骨架背景色，默认自动适配
     public var backgroundColor: UIColor!
     /// 骨架颜色，默认自动适配
-    public var color: UIColor!
+    public var skeletonColor: UIColor!
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15
@@ -166,7 +163,7 @@ import UIKit
         
         if #available(iOS 13.0, *) {
             backgroundColor = UIColor.systemBackground
-            color = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
+            skeletonColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
                 if traitCollection.userInterfaceStyle == .dark {
                     return UIColor.fwColor(withHex: 0x282828)
                 } else {
@@ -190,7 +187,7 @@ import UIKit
             animationColors = [animationColor, brightnessColor, animationColor]
         } else {
             backgroundColor = UIColor.white
-            color = UIColor.fwColor(withHex: 0xEEEEEE)
+            skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
             let animationColor = UIColor.fwColor(withHex: 0xDFDFDF)
             animationColors = [animationColor, animationColor.fwBrightnessColor(0.92), animationColor]
         }
@@ -229,7 +226,7 @@ import UIKit
     public override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = FWSkeletonAppearance.appearance.color
+        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
     }
     
     required init?(coder: NSCoder) {
@@ -292,7 +289,7 @@ import UIKit
     }
     
     /// 行颜色
-    public var lineColor: UIColor = FWSkeletonAppearance.appearance.color {
+    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor {
         didSet { setNeedsDisplay() }
     }
     
