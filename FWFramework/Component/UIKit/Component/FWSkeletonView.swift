@@ -80,15 +80,31 @@ import UIKit
             animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
             gradientLayer.add(animation, forKey: "skeletonAnimation")
         case .scale:
-            let animation = CABasicAnimation(keyPath: "transform.scale.x")
+            let animation = CABasicAnimation()
+            switch direction {
+            case .right:
+                animation.keyPath = "transform.scale.x"
+                gradientLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
+                gradientLayer.position.x -= gradientLayer.bounds.size.width / 2.0
+            case .left:
+                animation.keyPath = "transform.scale.x"
+                gradientLayer.anchorPoint = CGPoint(x: 1, y: 0.5)
+                gradientLayer.position.x += gradientLayer.bounds.size.width / 2.0
+            case .down:
+                animation.keyPath = "transform.scale.y"
+                gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 0)
+                gradientLayer.position.y -= gradientLayer.bounds.size.height / 2.0
+            case .up:
+                animation.keyPath = "transform.scale.y"
+                gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 1)
+                gradientLayer.position.y += gradientLayer.bounds.size.height / 2.0
+            }
             animation.autoreverses = true
             animation.repeatCount = .infinity
             animation.duration = duration
             animation.fromValue = fromValue
             animation.toValue = toValue
             animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            gradientLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
-            gradientLayer.position.x -= gradientLayer.bounds.size.width / 2.0
             gradientLayer.add(animation, forKey: "skeletonAnimation")
         default:
             let startAnimation = CABasicAnimation(keyPath: "startPoint")
