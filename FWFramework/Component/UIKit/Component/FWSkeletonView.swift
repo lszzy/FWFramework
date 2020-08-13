@@ -95,8 +95,8 @@ import UIKit
             animation.autoreverses = true
             animation.repeatCount = .infinity
             animation.duration = duration
-            animation.fromValue = fromValue != nil ? fromValue : 0.6
-            animation.toValue = toValue != nil ? toValue : 1
+            animation.fromValue = fromValue != nil ? fromValue : 1.1
+            animation.toValue = toValue != nil ? toValue : 0.6
             animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
             gradientLayer.add(animation, forKey: "skeletonAnimation")
         case .scale:
