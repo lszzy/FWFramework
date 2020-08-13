@@ -45,7 +45,8 @@
     
     UIImageView *imageView = [UIImageView new];
     _imageView = imageView;
-    imageView.image = [UIImage fwImageWithAppIcon];
+    imageView.image = [UIImage imageNamed:@"test_scale"];
+    [imageView fwSetContentModeAspectFill];
     [imageView fwSetCornerRadius:5];
     [self.view addSubview:imageView];
     imageView.fwLayoutChain.centerXToView(testView).topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
@@ -89,10 +90,30 @@
     textView2.fwLayoutChain.leftToView(rightView).topToBottomOfViewWithOffset(label2, 20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id sender) {
+        FWStrongifySelf();
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"shimmer", @"solid", @"scale", @"none"] actionBlock:^(NSInteger index) {
+            FWSkeletonAnimation *animation = nil;
+            if (index == 0) {
+                animation = FWSkeletonAnimation.shimmer;
+            } else if (index == 1) {
+                animation = FWSkeletonAnimation.solid;
+            } else if (index == 2) {
+                animation = FWSkeletonAnimation.scale;
+            }
+            FWSkeletonAppearance.appearance.animation = animation;
+            [self renderData];
+        }];
+    }];
+}
+
 - (void)renderData
 {
     [self fwShowSkeleton];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self fwHideSkeleton];
     });
 }
@@ -101,26 +122,16 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addSkeletonView:self.testView block:^(FWSkeletonView *skeletonView) {
-        skeletonView.animation = nil;
-    }];
+    [layout addSkeletonView:self.testView];
     FWSkeletonView *childView = [layout addSkeletonView:self.childView];
     FWSkeletonView *imageView = [layout addSkeletonView:self.imageView block:^(FWSkeletonView *skeletonView) {
-        skeletonView.animation = nil;
-        skeletonView.image = [[UIImage imageNamed:@"tabbar_home"] fwImageWithTintColor:FWSkeletonAppearance.appearance.color];
+        skeletonView.image = [UIImage imageNamed:@"test_scale"];
     }];
     [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *skeletonView) {
-        skeletonView.animation = FWSkeletonAnimation.solid;
         skeletonView.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
     }];
     
-    NSArray<FWSkeletonView *> *skeletonViews = [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2] block:^(FWSkeletonView *skeletonView, NSInteger index) {
-        if (index == 1)  {
-            skeletonView.animation = FWSkeletonAnimation.solid;
-        } else if (index > 1) {
-            skeletonView.animation = FWSkeletonAnimation.scale;
-        }
-    }];
+    NSArray<FWSkeletonView *> *skeletonViews = [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2]];
     [layout addSkeletonView:[FWSkeletonLabel new] block:^(FWSkeletonView *skeletonView) {
         skeletonView.fwLayoutChain.centerXToView(imageView).topToBottomOfViewWithOffset(skeletonViews.lastObject, 20).sizeToView(skeletonViews.lastObject);
     }];
