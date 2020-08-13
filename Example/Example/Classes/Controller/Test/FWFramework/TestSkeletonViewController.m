@@ -112,7 +112,7 @@
     }];
     
     [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2] block:^(FWSkeletonView *skeletonView, NSInteger index) {
-        skeletonView.animation = FWSkeletonAnimationScale.sharedInstance;
+        skeletonView.animation = FWSkeletonAnimation.scale;
     }];
 }
 

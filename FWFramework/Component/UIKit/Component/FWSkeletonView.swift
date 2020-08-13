@@ -12,34 +12,20 @@ import UIKit
 
 /// 骨架屏动画协议
 @objc public protocol FWSkeletonAnimationProtocol {
-    func skeletonAnimationStart(_ gradientLayer: CAGradientLayer)
-    func skeletonAnimationStop(_ gradientLayer: CAGradientLayer)
+    func skeletonAnimationProvider() -> CAAnimation
 }
 
-/// 骨架屏呼吸灯动画
-@objcMembers public class FWSkeletonAnimationSolid: NSObject, FWSkeletonAnimationProtocol {
-    public static let sharedInstance = FWSkeletonAnimationSolid()
-    public var duration: TimeInterval = 1
-    
-    public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.autoreverses = true
-        animation.repeatCount = .infinity
-        animation.isRemovedOnCompletion = false
-        animation.fillMode = .forwards
-        animation.duration = duration
-        animation.fromValue = 1.1
-        animation.toValue = 0.6
-        animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
-        gradientLayer.add(animation, forKey: "FWSkeletonAnimationSolid")
-    }
-
-    public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
-        gradientLayer.removeAnimation(forKey: "FWSkeletonAnimationSolid")
-    }
+/// 骨架屏自带动画类型
+@objc public enum FWSkeletonAnimationType: Int {
+    /// 闪光灯动画
+    case shimmer
+    /// 呼吸灯动画
+    case solid
+    /// 伸缩动画
+    case scale
 }
 
-/// 骨架屏闪光灯动画方向
+/// 骨架屏自带闪光灯动画方向
 @objc public enum FWSkeletonAnimationShimmerDirection: Int {
     case leftToRight
     case rightToLeft
@@ -49,14 +35,17 @@ import UIKit
     case bottomRightToTopLeft
 }
 
-/// 骨架屏闪光灯动画
-@objcMembers public class FWSkeletonAnimationShimmer: NSObject, FWSkeletonAnimationProtocol {
-    public static let sharedInstance = FWSkeletonAnimationShimmer()
-    public var duration: TimeInterval = 1
-    public var direction: FWSkeletonAnimationShimmerDirection = .leftToRight
+/// 骨架屏自带动画
+@objcMembers public class FWSkeletonAnimation: NSObject, FWSkeletonAnimationProtocol {
+    public static let shimmer = FWSkeletonAnimation(type: .shimmer)
+    public static let solid = FWSkeletonAnimation(type: .solid)
+    public static let scale = FWSkeletonAnimation(type: .scale)
     
-    var startPoint: (from: CGPoint, to: CGPoint) {
-        switch direction {
+    public var duration: TimeInterval = 1
+    
+    public var shimmerDirection: FWSkeletonAnimationShimmerDirection = .leftToRight
+    private var shimmerStartPoint: (from: CGPoint, to: CGPoint) {
+        switch shimmerDirection {
         case .leftToRight:
             return (from: CGPoint(x:-1, y:0.5), to: CGPoint(x:1, y:0.5))
         case .rightToLeft:
@@ -71,9 +60,8 @@ import UIKit
             return (from: CGPoint(x:1, y:1), to: CGPoint(x:-1, y:-1))
         }
     }
-    
-    var endPoint: (from: CGPoint, to: CGPoint) {
-        switch direction {
+    private var shimmerEndPoint: (from: CGPoint, to: CGPoint) {
+        switch shimmerDirection {
         case .leftToRight:
             return (from: CGPoint(x:0, y:0.5), to: CGPoint(x:2, y:0.5))
         case .rightToLeft:
@@ -89,49 +77,71 @@ import UIKit
         }
     }
     
+    public var scaleFrom: CGFloat = 0.6
+    public var scaleTo: CGFloat = 1
+    
+    private var type: FWSkeletonAnimationType = .shimmer
+    
     // MARK: -
     
-    public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
+    public init(type: FWSkeletonAnimationType) {
+        super.init()
+        self.type = type
+    }
+    
+    private func shimmerAnimation() -> CAAnimation {
         let startAnimation = CABasicAnimation(keyPath: "startPoint")
-        startAnimation.fromValue = NSValue(cgPoint: startPoint.from)
-        startAnimation.toValue = NSValue(cgPoint: startPoint.to)
+        startAnimation.fromValue = NSValue(cgPoint: shimmerStartPoint.from)
+        startAnimation.toValue = NSValue(cgPoint: shimmerStartPoint.to)
         
         let endAnimation = CABasicAnimation(keyPath: "endPoint")
-        endAnimation.fromValue = NSValue(cgPoint: endPoint.from)
-        endAnimation.toValue = NSValue(cgPoint: endPoint.to)
+        endAnimation.fromValue = NSValue(cgPoint: shimmerEndPoint.from)
+        endAnimation.toValue = NSValue(cgPoint: shimmerEndPoint.to)
         
         let animationGroup = CAAnimationGroup()
         animationGroup.repeatCount = .infinity
         animationGroup.animations = [startAnimation, endAnimation]
         animationGroup.duration = duration
         animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
-        gradientLayer.add(animationGroup, forKey: "FWSkeletonAnimationShimmer")
+        return animationGroup
     }
     
-    public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
-        gradientLayer.removeAnimation(forKey: "FWSkeletonAnimationShimmer")
+    private func solidAnimation() -> CAAnimation {
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.isRemovedOnCompletion = false
+        animation.fillMode = .forwards
+        animation.duration = duration
+        animation.fromValue = 1.0
+        animation.toValue = 0.6
+        animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+        return animation
     }
-}
-
-/// 骨架屏伸缩动画
-@objcMembers public class FWSkeletonAnimationScale: NSObject, FWSkeletonAnimationProtocol {
-    public static let sharedInstance = FWSkeletonAnimationScale()
-    public var duration: TimeInterval = 0.7
-    public var toValue: CGFloat = 1.9
     
-    public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
+    private func scaleAnimation() -> CAAnimation {
         let animation = CABasicAnimation(keyPath: "transform.scale.x")
         animation.autoreverses = true
         animation.repeatCount = .infinity
         animation.isRemovedOnCompletion = false
         animation.duration = duration
-        animation.toValue = toValue
+        animation.fromValue = scaleFrom
+        animation.toValue = scaleTo
         animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        gradientLayer.add(animation, forKey: "FWSkeletonAnimationScale")
+        return animation
     }
-
-    public func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
-        gradientLayer.removeAnimation(forKey: "FWSkeletonAnimationScale")
+    
+    // MARK: -
+    
+    public func skeletonAnimationProvider() -> CAAnimation {
+        switch type {
+        case .solid:
+            return solidAnimation()
+        case .scale:
+            return scaleAnimation()
+        default:
+            return shimmerAnimation()
+        }
     }
 }
 
@@ -157,7 +167,7 @@ import UIKit
     public var lineCornerRadius: CGFloat = 0
     
     /// 骨架动画，默认闪光灯
-    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimationShimmer.sharedInstance
+    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimation.shimmer
     /// 骨架动画颜色，默认自动适配
     public var animationColors: [UIColor]?
     
@@ -302,15 +312,20 @@ import UIKit
     
     public func startAnimating() {
         let gradientColors = animationColors?.map(){ $0.cgColor }
+        let gradientAnimation = animation?.skeletonAnimationProvider()
         animationLayers.forEach { (gradientLayer) in
             gradientLayer.colors = gradientColors
-            animation?.skeletonAnimationStart(gradientLayer)
+            if gradientAnimation != nil {
+                gradientLayer.add(gradientAnimation!, forKey: "skeletonAnimation")
+            }
         }
     }
     
     public func stopAnimating() {
+        guard animation != nil else { return }
+        
         animationLayers.forEach { (gradientLayer) in
-            animation?.skeletonAnimationStop(gradientLayer)
+            gradientLayer.removeAnimation(forKey: "skeletonAnimation")
         }
     }
 }
