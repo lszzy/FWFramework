@@ -70,7 +70,10 @@ extern NSString *const FWThemeChangedNotification;
 /// 动态创建主题色，指定名称，兼容iOS11+系统方式和手工指定
 + (nullable UIColor *)fwThemeNamed:(NSString *)name;
 
-/// 手工注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
+/// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
++ (void)fwThemeRegister:(NSString *)name withColor:(nullable UIColor *)color;
+
+/// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwThemeRegister:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
 @end
@@ -83,15 +86,18 @@ extern NSString *const FWThemeChangedNotification;
 @interface UIImage (FWTheme)
 
 /// 动态创建主题图像，分别指定浅色和深色
-+ (UIImage *)fwThemeLight:(UIImage *)light dark:(UIImage *)dark;
++ (nullable UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
 
 /// 动态创建主题图像，指定提供句柄
-+ (UIImage *)fwThemeImage:(UIImage * (^)(FWThemeStyle style))provider;
++ (nullable UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
 /// 动态创建主题图像，指定名称，兼容系统方式和手工指定
 + (nullable UIImage *)fwThemeNamed:(NSString *)name;
 
-/// 手工注册主题图像，未配置主题图像时可使用本方式
+/// 手工单个注册主题图像，未配置主题图像时可使用本方式
++ (void)fwThemeRegister:(NSString *)name withImage:(nullable UIImage *)image;
+
+/// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwThemeRegister:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
 @end
