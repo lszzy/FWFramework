@@ -16,6 +16,8 @@
 
 - (void)renderView
 {
+    self.view.backgroundColor = [UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]];
+    
     UIView *colorView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
     colorView.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
     [self.view addSubview:colorView];
@@ -43,6 +45,40 @@
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 90, 50, 50)];
     imageView.image = [UIImage fwThemeNamed:@"theme_image"];
     [self.view addSubview:imageView];
+    
+    CALayer *layer = [CALayer new];
+    layer.frame = CGRectMake(20, 160, 50, 50);
+    layer.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]].CGColor;
+    [self.view.layer addSublayer:layer];
+    
+    layer = [CALayer new];
+    layer.frame = CGRectMake(90, 160, 50, 50);
+    layer.backgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
+        return style == FWThemeStyleDark ? [UIColor whiteColor] : [UIColor blackColor];
+    }].CGColor;
+    [self.view.layer addSublayer:layer];
+    
+    layer = [CALayer new];
+    layer.frame = CGRectMake(160, 160, 50, 50);
+    layer.backgroundColor = [UIColor fwThemeNamed:@"theme_color"].CGColor;
+    [self.view.layer addSublayer:layer];
+    
+    layer = [CALayer new];
+    layer.frame = CGRectMake(20, 230, 50, 50);
+    layer.contents = (id)[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]].CGImage;
+    [self.view.layer addSublayer:layer];
+    
+    layer = [CALayer new];
+    layer.frame = CGRectMake(90, 230, 50, 50);
+    layer.contents = (id)[UIImage fwThemeImage:^UIImage * _Nonnull(FWThemeStyle style) {
+        return style == FWThemeStyleDark ? [UIImage imageNamed:@"theme_image_dark"] : [UIImage imageNamed:@"theme_image_light"];
+    }].CGImage;
+    [self.view.layer addSublayer:layer];
+    
+    layer = [CALayer new];
+    layer.frame = CGRectMake(160, 230, 50, 50);
+    layer.contents = (id)[UIImage fwThemeNamed:@"theme_image"].CGImage;
+    [self.view.layer addSublayer:layer];
 }
 
 @end

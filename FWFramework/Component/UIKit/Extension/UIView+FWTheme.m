@@ -61,19 +61,11 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
         case FWThemeModeDark: {
             return FWThemeStyleDark;
         }
-        case FWThemeStyleLight:
+        case FWThemeModeLight:
         default: {
             return FWThemeStyleLight;
         }
     }
-}
-
-- (BOOL)isDynamic
-{
-    if (@available(iOS 13, *)) {
-        return self.mode == FWThemeModeSystem;
-    }
-    return NO;
 }
 
 @end
@@ -84,24 +76,26 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeLight:(UIColor *)light dark:(UIColor *)dark
 {
-    if (FWThemeManager.sharedInstance.isDynamic) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
-        }];
-    } else {
-        return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
+    if (@available(iOS 13, *)) {
+        if (FWThemeManager.sharedInstance.mode == FWThemeModeSystem) {
+            return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
+                return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
+            }];
+        }
     }
+    return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
 }
 
 + (UIColor *)fwThemeColor:(UIColor * _Nonnull (^)(FWThemeStyle))provider
 {
-    if (FWThemeManager.sharedInstance.isDynamic) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return provider(FWThemeManager.sharedInstance.style);
-        }];
-    } else {
-        return provider(FWThemeManager.sharedInstance.style);
+    if (@available(iOS 13, *)) {
+        if (FWThemeManager.sharedInstance.mode == FWThemeModeSystem) {
+            return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
+                return provider(FWThemeManager.sharedInstance.style);
+            }];
+        }
     }
+    return provider(FWThemeManager.sharedInstance.style);
 }
 
 + (UIColor *)fwThemeNamed:(NSString *)name
@@ -116,7 +110,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return color;
 }
 
-+ (void)fwThemeRegister:(NSString *)name withColor:(UIColor *)color
++ (void)fwSetThemeColor:(UIColor *)color forName:(NSString *)name
 {
     if (color) {
         [fwStaticNameColors setObject:color forKey:name];
@@ -125,7 +119,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     }
 }
 
-+ (void)fwThemeRegister:(NSDictionary<NSString *,UIColor *> *)nameColors
++ (void)fwSetThemeColors:(NSDictionary<NSString *,UIColor *> *)nameColors
 {
     [fwStaticNameColors addEntriesFromDictionary:nameColors];
 }
@@ -155,7 +149,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return image;
 }
 
-+ (void)fwThemeRegister:(NSString *)name withImage:(UIImage *)image
++ (void)fwSetThemeImage:(UIImage *)image forName:(NSString *)name
 {
     if (image) {
         [fwStaticNameImages setObject:image forKey:name];
@@ -164,7 +158,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     }
 }
 
-+ (void)fwThemeRegister:(NSDictionary<NSString *,UIImage *> *)nameImages
++ (void)fwSetThemeImages:(NSDictionary<NSString *,UIImage *> *)nameImages
 {
     [fwStaticNameImages addEntriesFromDictionary:nameImages];
 }
