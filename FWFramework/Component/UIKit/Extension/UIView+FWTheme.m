@@ -141,7 +141,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
 }
 
-+ (UIImage *)fwThemeImage:(UIImage * _Nonnull (^)(FWThemeStyle))provider
++ (UIImage *)fwThemeImage:(UIImage * (^)(FWThemeStyle))provider
 {
     return provider(FWThemeManager.sharedInstance.style);
 }
