@@ -36,7 +36,7 @@ extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief 主题管理器
- @discussion iOS13跟随系统模式时，如果为UIView|UIScreen|UIViewController子类，会自动触发fwThemeChanged回调；否则需要先启用fwThemeEnabled才会触发fwThemeChanged回调
+ @discussion iOS13跟随系统模式时，如果为UIView|UIViewController子类，会自动触发fwThemeChanged回调；否则需要先启用fwThemeEnabled才会触发fwThemeChanged回调
  */
 @interface FWThemeManager : NSObject
 
@@ -106,13 +106,13 @@ extern NSString *const FWThemeChangedNotification;
  */
 @interface NSObject (FWTheme)
 
-/// 是否启用主题监听，默认NO。iOS13非UIView|UIScreen|UIViewController子类时，需启用后才能跟随系统改变并回调
+/// 是否启用主题监听，默认NO。iOS13非UIView|UIViewController子类时，需启用后才能跟随系统改变并回调
 @property (nonatomic, assign) BOOL fwThemeEnabled;
 
-/// 主题改变回调句柄。iOS13非UIView|UIScreen|UIViewController子类时，启用主题监听后才生效
+/// 主题改变回调句柄。iOS13非UIViewUIViewController子类时，启用主题监听后才生效
 @property (nullable, nonatomic, copy) void (^fwThemeChanged)(FWThemeStyle style);
 
-/// 主题改变回调钩子。iOS13非UIView|UIScreen|UIViewController子类时，启用主题监听后才生效
+/// 主题改变回调钩子。iOS13非UIView|UIViewController子类时，启用主题监听后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
 
 @end

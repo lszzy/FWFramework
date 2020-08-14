@@ -9,6 +9,7 @@
 
 #import "UIView+FWTheme.h"
 #import "FWMessage.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWThemeManager
@@ -26,6 +27,49 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     dispatch_once(&onceToken, ^{
         fwStaticNameColors = [NSMutableDictionary new];
         fwStaticNameImages = [NSMutableDictionary new];
+        
+        if (@available(iOS 13, *)) {
+            FWSwizzleClass(UIScreen, @selector(traitCollectionDidChange:), FWSwizzleReturn(void), FWSwizzleArgs(UITraitCollection *traitCollection), FWSwizzleCode({
+                FWSwizzleOriginal(traitCollection);
+                
+                if (selfObject != UIScreen.mainScreen) return;
+                if (FWThemeManager.sharedInstance.mode != FWThemeModeSystem) return;
+                if ([selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) {
+                    FWThemeStyle oldStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+                    FWThemeStyle newStyle = selfObject.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+                    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+                    [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
+                    [userInfo setObject:@(newStyle) forKey:NSKeyValueChangeNewKey];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:selfObject userInfo:userInfo.copy];
+                }
+            }));
+            
+            FWSwizzleClass(UIView, @selector(traitCollectionDidChange:), FWSwizzleReturn(void), FWSwizzleArgs(UITraitCollection *traitCollection), FWSwizzleCode({
+                FWSwizzleOriginal(traitCollection);
+                
+                if (FWThemeManager.sharedInstance.mode != FWThemeModeSystem) return;
+                if ([selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) {
+                    FWThemeStyle style = FWThemeManager.sharedInstance.style;
+                    if (selfObject.fwThemeChanged) {
+                        selfObject.fwThemeChanged(style);
+                    }
+                    [selfObject fwThemeChanged:style];
+                }
+            }));
+            
+            FWSwizzleClass(UIViewController, @selector(traitCollectionDidChange:), FWSwizzleReturn(void), FWSwizzleArgs(UITraitCollection *traitCollection), FWSwizzleCode({
+                FWSwizzleOriginal(traitCollection);
+                
+                if (FWThemeManager.sharedInstance.mode != FWThemeModeSystem) return;
+                if ([selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) {
+                    FWThemeStyle style = FWThemeManager.sharedInstance.style;
+                    if (selfObject.fwThemeChanged) {
+                        selfObject.fwThemeChanged(style);
+                    }
+                    [selfObject fwThemeChanged:style];
+                }
+            }));
+        }
     });
 }
 
@@ -43,28 +87,36 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     self = [super init];
     if (self) {
-        _mode = FWThemeModeSystem;
+        _mode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"FWThemeMode"] integerValue];
     }
     return self;
 }
 
+- (void)setMode:(FWThemeMode)mode
+{
+    if (mode != _mode) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(mode) forKey:@"FWThemeMode"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        FWThemeStyle oldStyle = self.style;
+        _mode = mode;
+        FWThemeStyle newStyle = self.style;
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
+        [userInfo setObject:@(newStyle) forKey:NSKeyValueChangeNewKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:self userInfo:userInfo.copy];
+    }
+}
+
 - (FWThemeStyle)style
 {
-    switch (self.mode) {
-        case FWThemeModeSystem: {
-            if (@available(iOS 13, *)) {
-                return UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
-            } else {
-                return FWThemeStyleLight;
-            }
-        }
-        case FWThemeModeDark: {
-            return FWThemeStyleDark;
-        }
-        case FWThemeModeLight:
-        default: {
+    if (self.mode == FWThemeModeSystem) {
+        if (@available(iOS 13, *)) {
+            return UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+        } else {
             return FWThemeStyleLight;
         }
+    } else {
+        return self.mode == FWThemeModeDark ? FWThemeStyleDark : FWThemeStyleLight;
     }
 }
 
