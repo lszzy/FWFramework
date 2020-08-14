@@ -49,9 +49,6 @@ extern NSString *const FWThemeChangedNotification;
 /// 当前主题样式
 @property (nonatomic, readonly) FWThemeStyle style;
 
-/// 是否是动态样式，iOS13且跟随系统时使用动态样式
-@property (nonatomic, readonly) BOOL isDynamic;
-
 @end
 
 #pragma mark - UIColor+FWTheme
@@ -71,10 +68,10 @@ extern NSString *const FWThemeChangedNotification;
 + (nullable UIColor *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
-+ (void)fwThemeRegister:(NSString *)name withColor:(nullable UIColor *)color;
++ (void)fwSetThemeColor:(nullable UIColor *)color forName:(NSString *)name;
 
 /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
-+ (void)fwThemeRegister:(NSDictionary<NSString *, UIColor *> *)nameColors;
++ (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
 @end
 
@@ -95,10 +92,10 @@ extern NSString *const FWThemeChangedNotification;
 + (nullable UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式
-+ (void)fwThemeRegister:(NSString *)name withImage:(nullable UIImage *)image;
++ (void)fwSetThemeImage:(nullable UIImage *)image forName:(NSString *)name;
 
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
-+ (void)fwThemeRegister:(NSDictionary<NSString *, UIImage *> *)nameImages;
++ (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
 @end
 
