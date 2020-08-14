@@ -42,6 +42,7 @@ import UIKit
     
     public var fromValue: Any?
     public var toValue: Any?
+    public var colors: [UIColor]?
     public var duration: TimeInterval = 1
     public var direction: FWSkeletonAnimationDirection = .right
     
@@ -49,10 +50,18 @@ import UIKit
     
     private var type: FWSkeletonAnimationType = .shimmer
     
+    public override init() {
+        super.init()
+        setup()
+    }
+    
     public init(type: FWSkeletonAnimationType) {
         super.init()
         self.type = type
-        
+        setup()
+    }
+    
+    private func setup() {
         switch type {
         case .solid:
             fromValue = 1.1
@@ -62,7 +71,27 @@ import UIKit
             fromValue = 0.6
             toValue = 1
         default:
-            direction = .right
+            if #available(iOS 13.0, *) {
+                let color = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
+                    if traitCollection.userInterfaceStyle == .dark {
+                        return UIColor.fwColor(withHex: 0x282828)
+                    } else {
+                        return UIColor.fwColor(withHex: 0xDFDFDF)
+                    }
+                })
+                let brightnessColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
+                    if traitCollection.userInterfaceStyle == .dark {
+                        return UIColor.fwColor(withHex: 0x282828).fwBrightnessColor(0.5)
+                    } else {
+                        return UIColor.fwColor(withHex: 0xDFDFDF).fwBrightnessColor(0.92)
+                    }
+                })
+                colors = [color, brightnessColor, color]
+            } else {
+                let color = UIColor.fwColor(withHex: 0xDFDFDF)
+                let brightnessColor = color.fwBrightnessColor(0.92)
+                colors = [color, brightnessColor, color]
+            }
         }
     }
     
@@ -99,6 +128,7 @@ import UIKit
                 gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 1)
                 gradientLayer.position.y += gradientLayer.bounds.size.height / 2.0
             }
+            
             animation.autoreverses = true
             animation.repeatCount = .infinity
             animation.duration = duration
@@ -137,6 +167,7 @@ import UIKit
             animationGroup.animations = [startAnimation, endAnimation]
             animationGroup.duration = duration
             animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            gradientLayer.colors = colors?.map(){ $0.cgColor }
             gradientLayer.add(animationGroup, forKey: "skeletonAnimation")
         }
     }
@@ -153,6 +184,9 @@ import UIKit
     /// 单例对象
     public static let appearance = FWSkeletonAppearance()
     
+    /// 骨架动画，默认闪光灯
+    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimation.shimmer
+    
     /// 骨架背景色，默认自动适配
     public var backgroundColor: UIColor!
     /// 骨架颜色，默认自动适配
@@ -166,11 +200,6 @@ import UIKit
     public var linePercent: CGFloat = 0.7
     /// 多行标签圆角，默认0
     public var lineCornerRadius: CGFloat = 0
-    
-    /// 骨架动画，默认闪光灯
-    public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimation.shimmer
-    /// 骨架动画颜色，默认自动适配
-    public var animationColors: [UIColor]?
     
     // MARK: -
     
@@ -186,26 +215,9 @@ import UIKit
                     return UIColor.fwColor(withHex: 0xEEEEEE)
                 }
             })
-            let animationColor = UIColor { (traitCollection) -> UIColor in
-                if traitCollection.userInterfaceStyle == .dark {
-                    return UIColor.fwColor(withHex: 0x282828)
-                } else {
-                    return UIColor.fwColor(withHex: 0xDFDFDF)
-                }
-            }
-            let brightnessColor = UIColor { (traitCollection) -> UIColor in
-                if traitCollection.userInterfaceStyle == .dark {
-                    return UIColor.fwColor(withHex: 0x282828).fwBrightnessColor(0.5)
-                } else {
-                    return UIColor.fwColor(withHex: 0xDFDFDF).fwBrightnessColor(0.92)
-                }
-            }
-            animationColors = [animationColor, brightnessColor, animationColor]
         } else {
             backgroundColor = UIColor.white
             skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
-            let animationColor = UIColor.fwColor(withHex: 0xDFDFDF)
-            animationColors = [animationColor, animationColor.fwBrightnessColor(0.92), animationColor]
         }
     }
 }
@@ -216,9 +228,6 @@ import UIKit
 @objcMembers public class FWSkeletonView: UIView {
     /// 自定义动画，默认通用样式
     public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAppearance.appearance.animation
-    
-    /// 动画颜色，默认通用样式。注意构造函数中设置属性不会触发didSet等方法
-    public var animationColors: [UIColor]? = FWSkeletonAppearance.appearance.animationColors
     
     /// 动画层列表，子类可覆写
     public var animationLayers: [CAGradientLayer] {
@@ -254,18 +263,16 @@ import UIKit
         
         if #available(iOS 13.0, *) {
             if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-                let gradientColors = animationColors?.map(){ $0.cgColor }
-                animationLayers.forEach { (gradientLayer) in
-                    gradientLayer.colors = gradientColors
-                }
+//                let gradientColors = animationColors?.map(){ $0.cgColor }
+//                animationLayers.forEach { (gradientLayer) in
+//                    gradientLayer.colors = gradientColors
+//                }
             }
         }
     }
     
     public func startAnimating() {
-        let gradientColors = animationColors?.map(){ $0.cgColor }
         animationLayers.forEach { (gradientLayer) in
-            gradientLayer.colors = gradientColors
             animation?.skeletonAnimationStart(gradientLayer)
         }
     }
