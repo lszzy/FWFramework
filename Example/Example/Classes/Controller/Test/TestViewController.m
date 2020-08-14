@@ -59,6 +59,7 @@
                                              @[@"UIView(FWIndicator)", @"TestIndicatorViewController"],
                                              @[@"UIView(FWBorder)", @"TestBorderViewController"],
                                              @[@"UIView(FWChain)", @"TestChainViewController"],
+                                             @[@"UIView(FWTheme)", @"TestThemeViewController"],
                                              @[@"UIView(FWLayer)", @"TestLayerViewController"],
                                              @[@"UIView(FWStatistical)", @"TestStatisticalViewController"],
                                              @[@"UIImageView(FWFace)", @"TestFacesViewController"],

@@ -116,6 +116,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return color;
 }
 
++ (void)fwThemeRegister:(NSString *)name withColor:(UIColor *)color
+{
+    if (color) {
+        [fwStaticNameColors setObject:color forKey:name];
+    } else {
+        [fwStaticNameColors removeObjectForKey:name];
+    }
+}
+
 + (void)fwThemeRegister:(NSDictionary<NSString *,UIColor *> *)nameColors
 {
     [fwStaticNameColors addEntriesFromDictionary:nameColors];
@@ -144,6 +153,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
         image = fwStaticNameImages[name];
     }
     return image;
+}
+
++ (void)fwThemeRegister:(NSString *)name withImage:(UIImage *)image
+{
+    if (image) {
+        [fwStaticNameImages setObject:image forKey:name];
+    } else {
+        [fwStaticNameImages removeObjectForKey:name];
+    }
 }
 
 + (void)fwThemeRegister:(NSDictionary<NSString *,UIImage *> *)nameImages
