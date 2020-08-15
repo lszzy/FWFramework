@@ -8,14 +8,9 @@
  */
 
 #import "UIView+FWTheme.h"
+#import "UIWindow+FWFramework.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
-
-NSString *const FWThemeChangedNotification = @"FWThemeChangedNotification";
-
-static id<UITraitEnvironment> fwStaticTraitEnvironment = nil;
-static NSMutableDictionary<NSString *, UIColor *> *fwStaticNameColors = nil;
-static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 #pragma mark - FWThemeObserver
 
@@ -36,11 +31,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 @implementation FWThemeObserver
 
-- (instancetype)initWithTraitEnvironment:(id<UITraitEnvironment>)traitEnvironment
+- (instancetype)initWithTraitEnvironment:(NSObject *)traitEnvironment
 {
     self = [super init];
     if (self) {
-        _traitEnvironment = traitEnvironment ?: fwStaticTraitEnvironment;
+        if (traitEnvironment && [traitEnvironment conformsToProtocol:@protocol(UITraitEnvironment)]) {
+            _traitEnvironment = (id<UITraitEnvironment>)traitEnvironment;
+        } else {
+            _traitEnvironment = [UIScreen mainScreen];
+        }
         _listeners = [NSMutableDictionary new];
     }
     return self;
@@ -78,71 +77,97 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 @end
 
-#pragma mark - NSObject+FWTheme
+#pragma mark - FWThemeManager
 
-@implementation NSObject (FWTheme)
+NSString *const FWThemeChangedNotification = @"FWThemeChangedNotification";
 
-- (FWThemeObserver *)fwInnerThemeObserver:(BOOL)lazyload
+static NSMutableDictionary<NSString *, UIColor *> *fwStaticNameColors = nil;
+static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
+
+@implementation FWThemeManager
+
++ (FWThemeManager *)sharedInstance
 {
-    if (![self conformsToProtocol:@protocol(UITraitEnvironment)]) return nil;
-    
-    FWThemeObserver *observer = objc_getAssociatedObject(self, _cmd);
-    if (!observer && lazyload) {
-        observer = [[FWThemeObserver alloc] initWithTraitEnvironment:(id<UITraitEnvironment>)self];
-        objc_setAssociatedObject(self, _cmd, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    static FWThemeManager *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWThemeManager alloc] init];
+    });
+    return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _mode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"FWThemeMode"] integerValue];
     }
-    return observer;
+    return self;
 }
 
-- (BOOL)fwThemeSubscribed
+- (void)setOverrideWindow:(BOOL)overrideWindow
 {
-    if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return YES;
-    
-    return [objc_getAssociatedObject(self, @selector(fwThemeSubscribed)) boolValue];
-}
-
-- (void)setFwThemeSubscribed:(BOOL)fwThemeSubscribed
-{
-    if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return;
-    
-    if (fwThemeSubscribed != self.fwThemeSubscribed) {
-        objc_setAssociatedObject(self, @selector(fwThemeSubscribed), @(fwThemeSubscribed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (overrideWindow != _overrideWindow) {
+        _overrideWindow = overrideWindow;
         
-//        if (fwThemeSubscribed) {
-//            __weak __typeof__(self) self_weak_ = self;
-//            __typeof__(self) self = self_weak_;
-//        } else {
-//
-//        }
+        if (@available(iOS 13, *)) {
+            UIUserInterfaceStyle style = UIUserInterfaceStyleUnspecified;
+            if (overrideWindow && self.mode != FWThemeModeSystem) {
+                style = self.mode == FWThemeModeDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+            }
+            UIWindow.fwMainWindow.overrideUserInterfaceStyle = style;
+        }
     }
 }
 
-- (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle))listener
+- (void)setMode:(FWThemeMode)mode
 {
-    return [[self fwInnerThemeObserver:YES] addListener:listener];
+    if (mode != _mode) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(mode) forKey:@"FWThemeMode"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        FWThemeStyle oldStyle = self.style;
+        _mode = mode;
+        FWThemeStyle style = self.style;
+        
+        if (@available(iOS 13, *)) {
+            if (style != oldStyle) {
+                NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+                [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
+                [userInfo setObject:@(style) forKey:NSKeyValueChangeNewKey];
+                [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:self userInfo:userInfo.copy];
+            }
+            
+            if (self.overrideWindow) {
+                _overrideWindow = NO;
+                [self setOverrideWindow:YES];
+            }
+        }
+    }
 }
 
-- (void)fwRemoveThemeListener:(NSString *)identifier
+- (FWThemeStyle)style
 {
-    [[self fwInnerThemeObserver:YES] removeListener:identifier];
-}
-
-- (void)fwThemeChanged:(FWThemeStyle)style
-{
-    // 子类重写
+    if (self.mode == FWThemeModeSystem) {
+        if (@available(iOS 13, *)) {
+            return UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+        } else {
+            return FWThemeStyleLight;
+        }
+    } else {
+        return self.mode == FWThemeModeDark ? FWThemeStyleDark : FWThemeStyleLight;
+    }
 }
 
 @end
 
-#pragma mark - FWThemeManager
+#pragma mark - NSObject+FWTheme
 
-@implementation FWThemeManager
+@implementation NSObject (FWTheme)
 
 + (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        fwStaticTraitEnvironment = [UIScreen mainScreen];
         fwStaticNameColors = [NSMutableDictionary new];
         fwStaticNameImages = [NSMutableDictionary new];
         
@@ -154,7 +179,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
                     FWThemeObserver *observer = [selfObject fwInnerThemeObserver:NO];
                     if (observer) [observer notifyListeners];
                     
-                    if (selfObject == fwStaticTraitEnvironment) {
+                    if (selfObject == [UIScreen mainScreen]) {
                         FWThemeStyle oldStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
                         FWThemeStyle style = selfObject.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
                         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
@@ -186,56 +211,60 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     });
 }
 
-+ (FWThemeManager *)sharedInstance
+- (FWThemeObserver *)fwInnerThemeObserver:(BOOL)lazyload
 {
-    static FWThemeManager *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWThemeManager alloc] init];
-    });
-    return instance;
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _mode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"FWThemeMode"] integerValue];
+    if (@available(iOS 13, *)) {
+        FWThemeObserver *observer = objc_getAssociatedObject(self, _cmd);
+        if (!observer && lazyload) {
+            observer = [[FWThemeObserver alloc] initWithTraitEnvironment:self];
+            objc_setAssociatedObject(self, _cmd, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        return observer;
     }
-    return self;
+    return nil;
 }
 
-- (void)setMode:(FWThemeMode)mode
+- (BOOL)fwThemeSubscribed
 {
-    if (mode != _mode) {
-        [[NSUserDefaults standardUserDefaults] setObject:@(mode) forKey:@"FWThemeMode"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        FWThemeStyle oldStyle = self.style;
-        _mode = mode;
-        FWThemeStyle style = self.style;
+    if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return YES;
+    
+    return [objc_getAssociatedObject(self, @selector(fwThemeSubscribed)) boolValue];
+}
+
+- (void)setFwThemeSubscribed:(BOOL)fwThemeSubscribed
+{
+    if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return;
+    
+    if (fwThemeSubscribed != self.fwThemeSubscribed) {
+        objc_setAssociatedObject(self, @selector(fwThemeSubscribed), @(fwThemeSubscribed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
-        if (@available(iOS 13, *)) {
-            if (style != oldStyle) {
-                NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-                [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
-                [userInfo setObject:@(style) forKey:NSKeyValueChangeNewKey];
-                [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:self userInfo:userInfo.copy];
-            }
-        }
+//        if (fwThemeSubscribed) {
+//            __weak __typeof__(self) self_weak_ = self;
+//            __typeof__(self) self = self_weak_;
+//        } else {
+//
+//        }
     }
 }
 
-- (FWThemeStyle)style
+- (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle))listener
 {
-    if (self.mode == FWThemeModeSystem) {
-        if (@available(iOS 13, *)) {
-            return UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
-        } else {
-            return FWThemeStyleLight;
-        }
-    } else {
-        return self.mode == FWThemeModeDark ? FWThemeStyleDark : FWThemeStyleLight;
+    if (@available(iOS 13, *)) {
+        return [[self fwInnerThemeObserver:YES] addListener:listener];
     }
+    return nil;
+}
+
+- (void)fwRemoveThemeListener:(NSString *)identifier
+{
+    if (@available(iOS 13, *)) {
+        [[self fwInnerThemeObserver:YES] removeListener:identifier];
+    }
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    // 子类重写
 }
 
 @end
