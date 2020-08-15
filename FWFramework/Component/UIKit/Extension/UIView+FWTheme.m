@@ -9,6 +9,7 @@
 
 #import "UIView+FWTheme.h"
 #import "UIWindow+FWFramework.h"
+#import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
@@ -216,31 +217,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 #pragma mark - NSObject+FWTheme
 
-@interface FWInnerThemeTarget : NSObject
-
-@property (nonatomic, strong) NSString *identifier;
-
-@end
-
-@implementation FWInnerThemeTarget
-
-- (void)dealloc
-{
-    [self removeListener];
-}
-
-- (void)addListener:(void (^)(FWThemeStyle style))listener
-{
-    self.identifier = [UIScreen.mainScreen fwAddThemeListener:listener];
-}
-
-- (void)removeListener
-{
-    [UIScreen.mainScreen fwRemoveThemeListener:self.identifier];
-}
-
-@end
-
 @implementation NSObject (FWTheme)
 
 + (void)load
@@ -267,9 +243,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             void (*originalMSG)(id, SEL, UITraitCollection *) = (void (*)(id, SEL, UITraitCollection *))originalIMP();
             originalMSG(selfObject, originalCMD, traitCollection);
             
-            if (!selfObject.fwThemeEnabled) return;
             if (![selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) return;
-            
             FWThemeStyle style = selfObject.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
             [selfObject fwThemeChanged:style];
             [selfObject fwNotifyThemeListeners:style];
@@ -285,7 +259,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     }];
 }
 
-- (NSMutableDictionary *)fwThemeListeners:(BOOL)lazyload NS_AVAILABLE_IOS(13_0)
+- (NSMutableDictionary *)fwInnerThemeListeners:(BOOL)lazyload NS_AVAILABLE_IOS(13_0)
 {
     NSMutableDictionary *listeners = objc_getAssociatedObject(self, _cmd);
     if (!listeners && lazyload) {
@@ -297,50 +271,60 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 - (void)fwNotifyThemeListeners:(FWThemeStyle)style NS_AVAILABLE_IOS(13_0)
 {
-    NSMutableDictionary *listeners = [self fwThemeListeners:NO];
+    NSMutableDictionary *listeners = [self fwInnerThemeListeners:NO];
     [listeners enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         void (^listener)(FWThemeStyle) = obj;
         listener(style);
     }];
 }
 
-- (FWInnerThemeTarget *)fwInnerThemeTarget
+- (NSString *)fwThemeContextIdentifier
 {
-    FWInnerThemeTarget *target = objc_getAssociatedObject(self, _cmd);
-    if (!target) {
-        target = [FWInnerThemeTarget new];
-        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return target;
+    return objc_getAssociatedObject(self, @selector(fwThemeContextIdentifier));
+}
+
+- (void)setFwThemeContextIdentifier:(NSString *)identifier
+{
+    objc_setAssociatedObject(self, @selector(fwThemeContextIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)fwThemeEnabled
 {
     if (@available(iOS 13, *)) {
         if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return YES;
-        
-        return [objc_getAssociatedObject(self, @selector(fwThemeEnabled)) boolValue];
+        return [self fwThemeContextIdentifier] != nil;
     }
     return NO;
 }
 
-- (void)setFwThemeEnabled:(BOOL)fwThemeEnabled
+- (id<UITraitEnvironment>)fwThemeContext
+{
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwThemeContext));
+    return value.object;
+}
+
+- (void)setFwThemeContext:(id<UITraitEnvironment>)themeContext
 {
     if (@available(iOS 13, *)) {
         if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return;
         
-        if (fwThemeEnabled != self.fwThemeEnabled) {
-            objc_setAssociatedObject(self, @selector(fwThemeEnabled), @(fwThemeEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        id<UITraitEnvironment> oldContext = self.fwThemeContext;
+        if (themeContext != oldContext) {
+            objc_setAssociatedObject(self, @selector(fwThemeContext), [[FWWeakObject alloc] initWithObject:themeContext], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             
-            if (fwThemeEnabled) {
+            if (oldContext != nil) {
+                [(NSObject *)oldContext fwRemoveThemeListener:[self fwThemeContextIdentifier]];
+                [self setFwThemeContextIdentifier:nil];
+            }
+            
+            if (themeContext != nil) {
                 __weak __typeof__(self) self_weak_ = self;
-                [self.fwInnerThemeTarget addListener:^(FWThemeStyle style) {
+                NSString *identifier = [(NSObject *)themeContext fwAddThemeListener:^(FWThemeStyle style) {
                     __typeof__(self) self = self_weak_;
                     [self fwThemeChanged:style];
                     [self fwNotifyThemeListeners:style];
                 }];
-            } else {
-                [self.fwInnerThemeTarget removeListener];
+                [self setFwThemeContextIdentifier:identifier];
             }
         }
     }
@@ -349,9 +333,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle))listener
 {
     if (@available(iOS 13, *)) {
-        self.fwThemeEnabled = YES;
         NSString *identifier = [[NSUUID UUID] UUIDString];
-        NSMutableDictionary *listeners = [self fwThemeListeners:YES];
+        NSMutableDictionary *listeners = [self fwInnerThemeListeners:YES];
         [listeners setObject:[listener copy] forKey:identifier];
         return identifier;
     }
@@ -362,7 +345,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     if (@available(iOS 13, *)) {
         if (!identifier) return;
-        NSMutableDictionary *listeners = [self fwThemeListeners:NO];
+        NSMutableDictionary *listeners = [self fwInnerThemeListeners:NO];
         [listeners removeObjectForKey:identifier];
     }
 }
@@ -391,7 +374,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     [super fwThemeChanged:style];
     
-    if (self.fwThemeImage != nil && self.fwThemeImage.fwIsDynamic) {
+    if (self.fwThemeImage != nil) {
         self.image = self.fwThemeImage.fwStaticImage;
     }
 }
@@ -408,7 +391,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeBackgroundColor:(UIColor *)fwThemeBackgroundColor
 {
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), fwThemeBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.fwThemeEnabled = YES;
     self.backgroundColor = fwThemeBackgroundColor.CGColor;
 }
 
@@ -420,7 +402,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeBorderColor:(UIColor *)fwThemeBorderColor
 {
     objc_setAssociatedObject(self, @selector(fwThemeBorderColor), fwThemeBorderColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.fwThemeEnabled = YES;
     self.borderColor = fwThemeBorderColor.CGColor;
 }
 
@@ -432,7 +413,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeShadowColor:(UIColor *)fwThemeShadowColor
 {
     objc_setAssociatedObject(self, @selector(fwThemeShadowColor), fwThemeShadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.fwThemeEnabled = YES;
     self.shadowColor = fwThemeShadowColor.CGColor;
 }
 
@@ -444,7 +424,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeContents:(UIImage *)fwThemeContents
 {
     objc_setAssociatedObject(self, @selector(fwThemeContents), fwThemeContents, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.fwThemeEnabled = YES;
     self.contents = (id)fwThemeContents.CGImage;
 }
 
@@ -461,7 +440,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     if (self.fwThemeShadowColor != nil) {
         self.shadowColor = self.fwThemeShadowColor.CGColor;
     }
-    if (self.fwThemeContents != nil && self.fwThemeContents.fwIsDynamic) {
+    if (self.fwThemeContents != nil) {
         self.contents = (id)self.fwThemeContents.fwStaticImage.CGImage;
     }
 }
@@ -479,7 +458,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     objc_setAssociatedObject(self, @selector(fwThemeColors), fwThemeColors, OBJC_ASSOCIATION_COPY_NONATOMIC);
     
-    self.fwThemeEnabled = YES;
     NSMutableArray *colors = nil;
     if (fwThemeColors != nil) {
         colors = [NSMutableArray new];
