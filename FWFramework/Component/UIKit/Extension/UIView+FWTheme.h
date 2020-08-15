@@ -105,7 +105,7 @@ extern NSString *const FWThemeChangedNotification;
 #pragma mark - NSObject+FWTheme
 
 /*!
- @brief iOS13主题订阅NSObject分类
+ @brief iOS13主题订阅NSObject分类，可参考UIImageView.fwThemeImage方式进行扩展
  */
 @interface NSObject (FWTheme)
 
@@ -118,8 +118,47 @@ extern NSString *const FWThemeChangedNotification;
 /// iOS13根据订阅唯一标志移除主题通知回调
 - (void)fwRemoveThemeListener:(NSString *)identifier;
 
-/// iOS13主题改变回调钩子。非UIView|UIViewController|UIScreen子类时，启用主题监听后才生效
+/// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen子类时，订阅主题通知后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
+
+@end
+
+/*!
+ @brief iOS13主题订阅UIImageView分类
+*/
+@interface UIImageView (FWTheme)
+
+/// 设置主题图片，自动跟随主题改变
+@property (nullable, nonatomic, strong) UIImage *fwThemeImage;
+
+@end
+
+/*!
+ @brief iOS13主题订阅CALayer分类
+*/
+@interface CALayer (FWTheme)
+
+/// 设置主题背景色，自动跟随主题改变
+@property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
+
+/// 设置主题边框色，自动跟随主题改变
+@property (nullable, nonatomic, strong) UIColor *fwThemeBorderColor;
+
+/// 设置主题阴影色，自动跟随主题改变
+@property (nullable, nonatomic, strong) UIColor *fwThemeShadowColor;
+
+/// 设置主题内容，自动跟随主题改变
+@property (nullable, nonatomic, strong) UIImage *fwThemeContents;
+
+@end
+
+/*!
+ @brief iOS13主题订阅CALayer分类
+*/
+@interface CAGradientLayer (FWTheme)
+
+/// 设置主题渐变色，自动跟随主题改变
+@property (nullable, nonatomic, copy) NSArray<UIColor *> *fwThemeColors;
 
 @end
 

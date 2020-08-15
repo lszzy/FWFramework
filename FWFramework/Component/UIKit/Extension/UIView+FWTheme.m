@@ -359,3 +359,129 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 }
 
 @end
+
+@implementation UIImageView (FWTheme)
+
+- (UIImage *)fwThemeImage
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeImage));
+}
+
+- (void)setFwThemeImage:(UIImage *)fwThemeImage
+{
+    objc_setAssociatedObject(self, @selector(fwThemeImage), fwThemeImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.image = fwThemeImage;
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    [super fwThemeChanged:style];
+    
+    if (self.fwThemeImage != nil) {
+        self.image = self.fwThemeImage;
+    }
+}
+
+@end
+
+@implementation CALayer (FWTheme)
+
+- (UIColor *)fwThemeBackgroundColor
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundColor));
+}
+
+- (void)setFwThemeBackgroundColor:(UIColor *)fwThemeBackgroundColor
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), fwThemeBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.backgroundColor = fwThemeBackgroundColor.CGColor;
+}
+
+- (UIColor *)fwThemeBorderColor
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBorderColor));
+}
+
+- (void)setFwThemeBorderColor:(UIColor *)fwThemeBorderColor
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBorderColor), fwThemeBorderColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.borderColor = fwThemeBorderColor.CGColor;
+}
+
+- (UIColor *)fwThemeShadowColor
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeShadowColor));
+}
+
+- (void)setFwThemeShadowColor:(UIColor *)fwThemeShadowColor
+{
+    objc_setAssociatedObject(self, @selector(fwThemeShadowColor), fwThemeShadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.shadowColor = fwThemeShadowColor.CGColor;
+}
+
+- (UIImage *)fwThemeContents
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeContents));
+}
+
+- (void)setFwThemeContents:(UIImage *)fwThemeContents
+{
+    objc_setAssociatedObject(self, @selector(fwThemeContents), fwThemeContents, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.contents = (id)fwThemeContents.CGImage;
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    [super fwThemeChanged:style];
+    
+    if (self.fwThemeBackgroundColor != nil) {
+        self.backgroundColor = self.fwThemeBackgroundColor.CGColor;
+    }
+    if (self.fwThemeBorderColor != nil) {
+        self.borderColor = self.fwThemeBorderColor.CGColor;
+    }
+    if (self.fwThemeShadowColor != nil) {
+        self.shadowColor = self.fwThemeShadowColor.CGColor;
+    }
+    if (self.fwThemeContents != nil) {
+        self.contents = (id)self.fwThemeContents.CGImage;
+    }
+}
+
+@end
+
+@implementation CAGradientLayer (FWTheme)
+
+- (NSArray<UIColor *> *)fwThemeColors
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeColors));
+}
+
+- (void)setFwThemeColors:(NSArray<UIColor *> *)fwThemeColors
+{
+    objc_setAssociatedObject(self, @selector(fwThemeColors), fwThemeColors, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    
+    NSMutableArray *colors = nil;
+    if (fwThemeColors != nil) {
+        colors = [NSMutableArray new];
+        for (UIColor *color in fwThemeColors) {
+            [colors addObject:(id)color.CGColor];
+        }
+    }
+    self.colors = colors.copy;
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    [super fwThemeChanged:style];
+    
+    if (self.fwThemeColors != nil) {
+        NSMutableArray *colors = [NSMutableArray new];
+        for (UIColor *color in self.fwThemeColors) {
+            [colors addObject:(id)color.CGColor];
+        }
+        self.colors = colors.copy;
+    }
+}
+
+@end
