@@ -154,7 +154,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIImage *)fwThemeLight:(UIImage *)light dark:(UIImage *)dark
 {
-    return [self fwThemeImage:^UIImage * _Nullable(FWThemeStyle style) {
+    return [self fwThemeImage:^UIImage * (FWThemeStyle style) {
         return style == FWThemeStyleDark ? dark : light;
     }];
 }
@@ -162,17 +162,22 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 + (UIImage *)fwThemeImage:(UIImage * (^)(FWThemeStyle))provider
 {
     UIImage *image = provider(FWThemeManager.sharedInstance.style);
-    [image setFwThemeProvider:provider];
+    // 如果已经是动态模拟图像则不处理，兼容手工注册的动态模拟图像
+    if (!image.fwIsDynamic) {
+        [image setFwThemeProvider:provider];
+    }
     return image;
 }
 
 + (UIImage *)fwThemeNamed:(NSString *)name
 {
-    UIImage *image = [UIImage imageNamed:name];
-    if (!image) {
-        image = fwStaticNameImages[name];
-    }
-    return image;
+    return [self fwThemeImage:^UIImage * (FWThemeStyle style) {
+        UIImage *image = [UIImage imageNamed:name];
+        if (!image) {
+            image = fwStaticNameImages[name];
+        }
+        return image;
+    }];
 }
 
 + (void)fwSetThemeImage:(UIImage *)image forName:(NSString *)name

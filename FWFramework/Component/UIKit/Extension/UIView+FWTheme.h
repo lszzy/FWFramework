@@ -92,7 +92,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
 + (nullable UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
-/// 创建主题图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
+/// 创建主题模拟动态图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
 + (nullable UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式
@@ -157,7 +157,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 设置主题阴影色，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, strong) UIColor *fwThemeShadowColor;
 
-/// 设置主题内容，启用主题订阅后可跟随系统改变
+/// 设置主题内容图片，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, strong) UIImage *fwThemeContents;
 
 @end
