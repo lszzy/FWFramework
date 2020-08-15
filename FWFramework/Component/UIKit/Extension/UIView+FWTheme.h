@@ -82,16 +82,17 @@ extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief UIImage主题分类
+ @discussion 注意UIImage只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化
  */
 @interface UIImage (FWTheme)
 
-/// 动态创建主题图像，分别指定浅色和深色
+/// 创建主题图像，分别指定浅色和深色，不支持动态切换，需重新赋值
 + (nullable UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
 
-/// 动态创建主题图像，指定提供句柄
+/// 创建主题图像，指定提供句柄，不支持动态切换，需重新赋值
 + (nullable UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
-/// 动态创建主题图像，指定名称，兼容系统方式和手工指定
+/// 创建主题图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
 + (nullable UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式

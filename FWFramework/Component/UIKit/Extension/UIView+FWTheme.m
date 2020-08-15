@@ -227,7 +227,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             [self fwThemeSwizzleClass:[UIView class]];
             [self fwThemeSwizzleClass:[UIViewController class]];
             // 解决系统内部重写traitCollectionDidChange:时未调用super导致不调用fwThemeChanged:
-            [self fwThemeSwizzleClass:[UIImageView class]];
+            // [self fwThemeSwizzleClass:[UIImageView class]];
         }
     });
 }
