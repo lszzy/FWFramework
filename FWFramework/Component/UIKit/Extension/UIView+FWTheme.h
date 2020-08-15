@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, FWThemeStyle) {
     FWThemeStyleDark,
 };
 
-/// 主题模式枚
+/// 主题模式枚举
 typedef NS_ENUM(NSInteger, FWThemeMode) {
     /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色
     FWThemeModeSystem,
@@ -31,12 +31,12 @@ typedef NS_ENUM(NSInteger, FWThemeMode) {
     FWThemeModeDark,
 };
 
-/// 主题改变通知
+/// iOS13主题改变通知
 extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief 主题管理器
- @discussion iOS13跟随系统模式时，如果为UIView|UIViewController子类，会自动触发fwThemeChanged回调；否则需要先启用fwThemeEnabled才会触发fwThemeChanged回调
+ @discussion iOS13跟随系统模式时，如果为UIView|UIViewController|UIScreen子类，会自动触发fwThemeChanged回调；否则需要先启用fwThemeSubscribed才会触发fwThemeChanged回调
  */
 @interface FWThemeManager : NSObject
 
@@ -45,6 +45,9 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 当前主题模式，默认跟随系统模式
 @property (nonatomic, assign) FWThemeMode mode;
+
+/// iOS13是否覆盖主window主题样式，默认NO，使用overrideUserInterfaceStyle实现
+@property (nonatomic, assign) BOOL overrideWindow;
 
 /// 当前主题样式
 @property (nonatomic, readonly) FWThemeStyle style;
@@ -102,17 +105,20 @@ extern NSString *const FWThemeChangedNotification;
 #pragma mark - NSObject+FWTheme
 
 /*!
- @brief NSObject主题监听分类
+ @brief iOS13主题订阅NSObject分类
  */
 @interface NSObject (FWTheme)
 
-/// 是否启用主题监听，默认NO。iOS13非UIView|UIViewController子类时，需启用后才能跟随系统改变并回调
-@property (nonatomic, assign) BOOL fwThemeEnabled;
+/// 是否订阅iOS13主题通知，如果为UIView|UIViewController|UIScreen时为YES，否则为NO，需订阅后才能响应系统主题
+@property (nonatomic, assign) BOOL fwThemeSubscribed;
 
-/// 主题改变回调句柄。iOS13非UIViewUIViewController子类时，启用主题监听后才生效
-@property (nullable, nonatomic, copy) void (^fwThemeChanged)(FWThemeStyle style);
+/// 添加iOS13主题改变通知回调，自动订阅，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，订阅主题通知后才生效
+- (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
 
-/// 主题改变回调钩子。iOS13非UIView|UIViewController子类时，启用主题监听后才生效
+/// iOS13根据订阅唯一标志移除主题通知回调
+- (void)fwRemoveThemeListener:(NSString *)identifier;
+
+/// iOS13主题改变回调钩子。非UIView|UIViewController|UIScreen子类时，启用主题监听后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
 
 @end
