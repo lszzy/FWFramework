@@ -105,7 +105,7 @@ extern NSString *const FWThemeChangedNotification;
 @property (nonatomic, readonly) BOOL fwIsDynamic;
 
 /// 获取主题模拟动态图像的当前显示静态图像
-@property (nullable, nonatomic, strong) UIImage *fwStaticImage;
+@property (nullable, nonatomic, readonly) UIImage *fwStaticImage;
 
 @end
 

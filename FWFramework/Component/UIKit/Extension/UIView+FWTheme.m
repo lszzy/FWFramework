@@ -254,8 +254,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             [self fwThemeSwizzleClass:[UIScreen class]];
             [self fwThemeSwizzleClass:[UIView class]];
             [self fwThemeSwizzleClass:[UIViewController class]];
-            // 解决系统内部重写traitCollectionDidChange:时未调用super导致不调用fwThemeChanged:
-            // [self fwThemeSwizzleClass:[UIImageView class]];
+            // 解决UIImageView内部重写traitCollectionDidChange:时未调用super导致不回调fwThemeChanged:
+            [self fwThemeSwizzleClass:[UIImageView class]];
         }
     });
 }
@@ -267,18 +267,19 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             void (*originalMSG)(id, SEL, UITraitCollection *) = (void (*)(id, SEL, UITraitCollection *))originalIMP();
             originalMSG(selfObject, originalCMD, traitCollection);
             
-            if ([selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) {
-                FWThemeStyle style = selfObject.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
-                [selfObject fwThemeChanged:style];
-                [selfObject fwNotifyListeners:style];
-                
-                if (selfObject == [UIScreen mainScreen]) {
-                    FWThemeStyle oldStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
-                    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-                    [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
-                    [userInfo setObject:@(style) forKey:NSKeyValueChangeNewKey];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:selfObject userInfo:userInfo.copy];
-                }
+            if (!selfObject.fwThemeEnabled) return;
+            if (![selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) return;
+            
+            FWThemeStyle style = selfObject.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+            [selfObject fwThemeChanged:style];
+            [selfObject fwNotifyThemeListeners:style];
+            
+            if (selfObject == [UIScreen mainScreen]) {
+                FWThemeStyle oldStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+                NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+                [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
+                [userInfo setObject:@(style) forKey:NSKeyValueChangeNewKey];
+                [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:selfObject userInfo:userInfo.copy];
             }
         };
     }];
@@ -294,7 +295,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return listeners;
 }
 
-- (void)fwNotifyListeners:(FWThemeStyle)style NS_AVAILABLE_IOS(13_0)
+- (void)fwNotifyThemeListeners:(FWThemeStyle)style NS_AVAILABLE_IOS(13_0)
 {
     NSMutableDictionary *listeners = [self fwThemeListeners:NO];
     [listeners enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -317,6 +318,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     if (@available(iOS 13, *)) {
         if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return YES;
+        
         return [objc_getAssociatedObject(self, @selector(fwThemeEnabled)) boolValue];
     }
     return NO;
@@ -326,6 +328,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     if (@available(iOS 13, *)) {
         if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return;
+        
         if (fwThemeEnabled != self.fwThemeEnabled) {
             objc_setAssociatedObject(self, @selector(fwThemeEnabled), @(fwThemeEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             
@@ -334,7 +337,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
                 [self.fwInnerThemeTarget addListener:^(FWThemeStyle style) {
                     __typeof__(self) self = self_weak_;
                     [self fwThemeChanged:style];
-                    [self fwNotifyListeners:style];
+                    [self fwNotifyThemeListeners:style];
                 }];
             } else {
                 [self.fwInnerThemeTarget removeListener];
