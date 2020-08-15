@@ -46,7 +46,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 当前主题模式，默认跟随系统模式
 @property (nonatomic, assign) FWThemeMode mode;
 
-/// iOS13切换主题模式时是否覆盖主window样式，默认NO，使用overrideUserInterfaceStyle实现。如果需要自定义处理，请使用通知
+/// iOS13切换主题模式时是否覆盖主window样式，默认NO，使用overrideUserInterfaceStyle实现。如果不满足需求，可自定义处理
 @property (nonatomic, assign) BOOL overrideWindow;
 
 /// 当前主题样式
