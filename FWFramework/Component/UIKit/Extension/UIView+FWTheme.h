@@ -54,27 +54,6 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
-#pragma mark - NSObject+FWTheme
-
-/*!
- @brief iOS13主题订阅NSObject分类
- */
-@interface NSObject (FWTheme)
-
-/// 是否订阅iOS13主题通知，如果为UIView|UIViewController|UIScreen时为YES，否则为NO，需订阅后才能响应系统主题
-@property (nonatomic, assign) BOOL fwThemeSubscribed;
-
-/// 添加iOS13主题改变通知回调，自动订阅，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，订阅主题通知后才生效
-- (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
-
-/// iOS13根据订阅唯一标志移除主题通知回调
-- (void)fwRemoveThemeListener:(NSString *)identifier;
-
-/// iOS13主题改变回调钩子。非UIView|UIViewController|UIScreen子类时，启用主题监听后才生效
-- (void)fwThemeChanged:(FWThemeStyle)style;
-
-@end
-
 #pragma mark - UIColor+FWTheme
 
 /*!
@@ -120,6 +99,27 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
+
+@end
+
+#pragma mark - NSObject+FWTheme
+
+/*!
+ @brief iOS13主题订阅NSObject分类
+ */
+@interface NSObject (FWTheme)
+
+/// 是否订阅iOS13主题通知，如果为UIView|UIViewController|UIScreen时为YES，否则为NO，需订阅后才能响应系统主题
+@property (nonatomic, assign) BOOL fwThemeSubscribed;
+
+/// 添加iOS13主题改变通知回调，自动订阅，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，订阅主题通知后才生效
+- (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
+
+/// iOS13根据订阅唯一标志移除主题通知回调
+- (void)fwRemoveThemeListener:(NSString *)identifier;
+
+/// iOS13主题改变回调钩子。非UIView|UIViewController|UIScreen子类时，启用主题监听后才生效
+- (void)fwThemeChanged:(FWThemeStyle)style;
 
 @end
 
