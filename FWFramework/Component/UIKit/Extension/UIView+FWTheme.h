@@ -113,10 +113,10 @@ extern NSString *const FWThemeChangedNotification;
 @property (nonatomic, assign) BOOL fwThemeSubscribed;
 
 /// 添加iOS13主题改变通知回调，自动订阅，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，订阅主题通知后才生效
-- (NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
+- (nullable NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
 
 /// iOS13根据订阅唯一标志移除主题通知回调
-- (void)fwRemoveThemeListener:(NSString *)identifier;
+- (void)fwRemoveThemeListener:(nullable NSString *)identifier;
 
 /// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen子类时，订阅主题通知后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
