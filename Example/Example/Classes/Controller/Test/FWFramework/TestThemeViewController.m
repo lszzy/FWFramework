@@ -12,7 +12,7 @@
 
 - (void)renderInit
 {
-    FWThemeManager.sharedInstance.overrideWindow = YES;
+    // FWThemeManager.sharedInstance.overrideWindow = YES;
     [self fwObserveNotification:FWThemeChangedNotification block:^(NSNotification * _Nonnull notification) {
         NSLog(@"主题改变通知：%@", @(FWThemeManager.sharedInstance.style));
     }];
