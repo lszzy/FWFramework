@@ -188,6 +188,31 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 #pragma mark - NSObject+FWTheme
 
+@interface FWInnerThemeTarget : NSObject
+
+@property (nonatomic, strong) NSString *identifier;
+
+@end
+
+@implementation FWInnerThemeTarget
+
+- (void)dealloc
+{
+    [self removeListener];
+}
+
+- (void)addListener:(void (^)(FWThemeStyle style))listener
+{
+    self.identifier = [UIScreen.mainScreen fwAddThemeListener:listener];
+}
+
+- (void)removeListener
+{
+    [UIScreen.mainScreen fwRemoveThemeListener:self.identifier];
+}
+
+@end
+
 @implementation NSObject (FWTheme)
 
 + (void)load
@@ -250,6 +275,16 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     }];
 }
 
+- (FWInnerThemeTarget *)fwInnerThemeTarget
+{
+    FWInnerThemeTarget *target = objc_getAssociatedObject(self, _cmd);
+    if (!target) {
+        target = [FWInnerThemeTarget new];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return target;
+}
+
 - (BOOL)fwThemeSubscribed
 {
     if (@available(iOS 13, *)) {
@@ -268,15 +303,13 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             
             if (fwThemeSubscribed) {
                 __weak __typeof__(self) self_weak_ = self;
-                NSString *identifier = [UIScreen.mainScreen fwAddThemeListener:^(FWThemeStyle style) {
+                [self.fwInnerThemeTarget addListener:^(FWThemeStyle style) {
                     __typeof__(self) self = self_weak_;
                     [self fwThemeChanged:style];
                     [self fwNotifyListeners:style];
                 }];
-                objc_setAssociatedObject(self, _cmd, identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             } else {
-                NSString *identifier = objc_getAssociatedObject(self, _cmd);
-                [UIScreen.mainScreen fwRemoveThemeListener:identifier];
+                [self.fwInnerThemeTarget removeListener];
             }
         }
     }
