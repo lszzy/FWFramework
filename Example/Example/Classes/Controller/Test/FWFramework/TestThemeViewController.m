@@ -12,7 +12,7 @@
 
 - (void)renderInit
 {
-    // FWThemeManager.sharedInstance.overrideWindow = YES;
+    FWThemeManager.sharedInstance.overrideWindow = YES;
     [self fwObserveNotification:FWThemeChangedNotification block:^(NSNotification * _Nonnull notification) {
         NSLog(@"主题改变通知：%@", @(FWThemeManager.sharedInstance.style));
     }];
@@ -56,6 +56,7 @@
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
     layer.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]].CGColor;
+    layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
         layer.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]].CGColor;
     }];
@@ -63,6 +64,7 @@
     
     layer = [CALayer new];
     layer.frame = CGRectMake(90, 160, 50, 50);
+    layer.fwThemeContext = self.view;
     layer.fwThemeBackgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
         return style == FWThemeStyleDark ? [UIColor whiteColor] : [UIColor blackColor];
     }];
@@ -70,12 +72,14 @@
     
     CAGradientLayer *gradientLayer = [CAGradientLayer new];
     gradientLayer.frame = CGRectMake(160, 160, 50, 50);
-    gradientLayer.fwThemeColors = @[[UIColor fwThemeNamed:@"theme_color"]];
+    gradientLayer.fwThemeContext = self;
+    gradientLayer.fwThemeColors = @[[UIColor fwThemeNamed:@"theme_color"], [UIColor fwThemeNamed:@"theme_color"]];
     [self.view.layer addSublayer:gradientLayer];
     
     layer = [CALayer new];
     layer.frame = CGRectMake(20, 230, 50, 50);
     layer.contents = (id)[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]].CGImage;
+    layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
         layer.contents = (id)[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]].CGImage;
     }];
@@ -83,14 +87,16 @@
     
     layer = [CALayer new];
     layer.frame = CGRectMake(90, 230, 50, 50);
-    layer.fwThemeContents = (id)[UIImage fwThemeImage:^UIImage * _Nonnull(FWThemeStyle style) {
+    layer.fwThemeContext = self;
+    layer.fwThemeContents = [UIImage fwThemeImage:^UIImage * _Nonnull(FWThemeStyle style) {
         return style == FWThemeStyleDark ? [UIImage imageNamed:@"theme_image_dark"] : [UIImage imageNamed:@"theme_image_light"];
     }];
     [self.view.layer addSublayer:layer];
     
     layer = [CALayer new];
     layer.frame = CGRectMake(160, 230, 50, 50);
-    layer.fwThemeContents = (id)[UIImage fwThemeNamed:@"theme_image"];
+    layer.fwThemeContext = self.view;
+    layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image"];
     [self.view.layer addSublayer:layer];
 }
 

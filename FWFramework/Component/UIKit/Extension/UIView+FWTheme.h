@@ -117,15 +117,18 @@ extern NSString *const FWThemeChangedNotification;
 @interface NSObject (FWTheme)
 
 /// 是否启用iOS13主题订阅，如果为UIView|UIViewController|UIScreen时始终为YES，否则默认为NO，需订阅后才能响应系统主题
-@property (nonatomic, assign) BOOL fwThemeEnabled;
+@property (nonatomic, readonly) BOOL fwThemeEnabled;
 
-/// 添加iOS13主题改变通知回调，自动订阅，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，订阅主题通知后才生效
+/// 订阅主题通知并指定主题上下文(如vc|view)。非UIViewUIViewController|UIScreen子类时，需订阅后才能响应系统主题
+@property (nullable, nonatomic, weak) id<UITraitEnvironment> fwThemeContext;
+
+/// 添加iOS13主题改变通知回调，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，需订阅后才生效
 - (nullable NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
 
 /// iOS13根据订阅唯一标志移除主题通知回调
 - (void)fwRemoveThemeListener:(nullable NSString *)identifier;
 
-/// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen子类时，订阅主题通知后才生效
+/// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen子类时，需订阅后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
 
 @end
@@ -135,7 +138,7 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface UIImageView (FWTheme)
 
-/// 设置主题图片，自动跟随主题改变
+/// 设置主题图片，自动跟随系统改变
 @property (nullable, nonatomic, strong) UIImage *fwThemeImage;
 
 @end
@@ -145,16 +148,16 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface CALayer (FWTheme)
 
-/// 设置主题背景色，自动跟随主题改变
+/// 设置主题背景色，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
 
-/// 设置主题边框色，自动跟随主题改变
+/// 设置主题边框色，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, strong) UIColor *fwThemeBorderColor;
 
-/// 设置主题阴影色，自动跟随主题改变
+/// 设置主题阴影色，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, strong) UIColor *fwThemeShadowColor;
 
-/// 设置主题内容，自动跟随主题改变
+/// 设置主题内容，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, strong) UIImage *fwThemeContents;
 
 @end
@@ -164,7 +167,7 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface CAGradientLayer (FWTheme)
 
-/// 设置主题渐变色，自动跟随主题改变
+/// 设置主题渐变色，启用主题订阅后可跟随系统改变
 @property (nullable, nonatomic, copy) NSArray<UIColor *> *fwThemeColors;
 
 @end
