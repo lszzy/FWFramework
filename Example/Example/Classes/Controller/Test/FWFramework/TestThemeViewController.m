@@ -65,7 +65,7 @@
     [self addView:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 90, 50, 50)];
-    imageView.image = [UIImage fwThemeImage:^UIImage * _Nonnull(FWThemeStyle style) {
+    imageView.image = [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
         return style == FWThemeStyleDark ? [UIImage imageNamed:@"theme_image_dark"] : [UIImage imageNamed:@"theme_image_light"];
     }];
     [self addView:imageView];
@@ -121,8 +121,10 @@
             FWStrongifySelf();
             
             FWThemeManager.sharedInstance.mode = index;
-            [self removeViews];
-            [self renderView];
+            if (@available(iOS 13, *)) { } else {
+                [self removeViews];
+                [self renderView];
+            }
             [self renderModel];
         }];
     }];
