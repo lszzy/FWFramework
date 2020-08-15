@@ -109,7 +109,7 @@ extern NSString *const FWThemeChangedNotification;
  */
 @interface NSObject (FWTheme)
 
-/// 是否订阅iOS13主题通知，如果为UIView|UIViewController|UIScreen时为YES，否则为NO，需订阅后才能响应系统主题
+/// 是否订阅iOS13主题通知，如果为UIView|UIViewController|UIScreen时始终为YES，否则默认为NO，需订阅后才能响应系统主题
 @property (nonatomic, assign) BOOL fwThemeSubscribed;
 
 /// 添加iOS13主题改变通知回调，自动订阅，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，订阅主题通知后才生效
