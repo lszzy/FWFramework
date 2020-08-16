@@ -658,8 +658,8 @@
 		2FF8D93924C88A6F006A83B5 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D93A24C88A6F006A83B5 /* AppConfig.m */,
 				2FF8D93B24C88A6F006A83B5 /* AppConfig.h */,
+				2FF8D93A24C88A6F006A83B5 /* AppConfig.m */,
 			);
 			path = Config;
 			sourceTree = "<group>";

@@ -76,7 +76,6 @@
 
 - (void)setupController
 {
-    FWThemeManager.sharedInstance.overrideWindow = YES;
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     

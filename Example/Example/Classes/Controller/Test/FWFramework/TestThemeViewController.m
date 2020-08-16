@@ -112,6 +112,7 @@
             
             FWThemeManager.sharedInstance.mode = index;
             [self renderModel];
+            [(FWAppDelegate *)UIApplication.sharedApplication.delegate setupController];
         }];
     }];
 }
