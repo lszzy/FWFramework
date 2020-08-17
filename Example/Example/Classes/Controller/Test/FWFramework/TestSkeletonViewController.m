@@ -125,7 +125,7 @@
     [layout addSkeletonView:self.testView];
     FWSkeletonView *childView = [layout addSkeletonView:self.childView];
     FWSkeletonView *imageView = [layout addSkeletonView:self.imageView block:^(FWSkeletonView *skeletonView) {
-        skeletonView.image = [UIImage imageNamed:@"test_scale"];
+        skeletonView.image = [UIImage fwThemeNamed:@"theme_image"];
     }];
     [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *skeletonView) {
         skeletonView.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);

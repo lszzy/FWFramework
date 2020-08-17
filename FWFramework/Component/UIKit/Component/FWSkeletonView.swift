@@ -71,27 +71,15 @@ import UIKit
             fromValue = 0.6
             toValue = 1
         default:
-            if #available(iOS 13.0, *) {
-                let color = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
-                    if traitCollection.userInterfaceStyle == .dark {
-                        return UIColor.fwColor(withHex: 0x282828)
-                    } else {
-                        return UIColor.fwColor(withHex: 0xDFDFDF)
-                    }
-                })
-                let brightnessColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
-                    if traitCollection.userInterfaceStyle == .dark {
-                        return UIColor.fwColor(withHex: 0x282828).fwBrightnessColor(0.5)
-                    } else {
-                        return UIColor.fwColor(withHex: 0xDFDFDF).fwBrightnessColor(0.92)
-                    }
-                })
-                colors = [color, brightnessColor, color]
-            } else {
-                let color = UIColor.fwColor(withHex: 0xDFDFDF)
-                let brightnessColor = color.fwBrightnessColor(0.92)
-                colors = [color, brightnessColor, color]
-            }
+            let lightColor = UIColor.fwColor(withHex: 0xDFDFDF)
+            let lightBrightness: CGFloat = 0.92
+            let darkColor = UIColor.fwColor(withHex: 0x282828)
+            let darkBrightness: CGFloat = 0.5
+            colors = [
+                UIColor.fwThemeLight(lightColor, dark: darkColor),
+                UIColor.fwThemeLight(lightColor.fwBrightnessColor(lightBrightness), dark: darkColor.fwBrightnessColor(darkBrightness)),
+                UIColor.fwThemeLight(lightColor, dark: darkColor)
+            ]
         }
     }
     
@@ -167,7 +155,7 @@ import UIKit
             animationGroup.animations = [startAnimation, endAnimation]
             animationGroup.duration = duration
             animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            gradientLayer.colors = colors?.map(){ $0.cgColor }
+            gradientLayer.fwThemeColors = colors
             gradientLayer.add(animationGroup, forKey: "skeletonAnimation")
         }
     }
@@ -188,9 +176,9 @@ import UIKit
     public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimation.shimmer
     
     /// 骨架背景色，默认自动适配
-    public var backgroundColor: UIColor!
+    public var backgroundColor: UIColor = UIColor.fwThemeLight(UIColor.white, dark: UIColor.black)
     /// 骨架颜色，默认自动适配
-    public var skeletonColor: UIColor!
+    public var skeletonColor: UIColor = UIColor.fwThemeLight(UIColor.fwColor(withHex: 0xEEEEEE), dark: UIColor.fwColor(withHex: 0x282828))
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15
@@ -200,26 +188,6 @@ import UIKit
     public var linePercent: CGFloat = 0.7
     /// 多行标签圆角，默认0
     public var lineCornerRadius: CGFloat = 0
-    
-    // MARK: -
-    
-    public override init() {
-        super.init()
-        
-        if #available(iOS 13.0, *) {
-            backgroundColor = UIColor.systemBackground
-            skeletonColor = UIColor(dynamicProvider: { (traitCollection) -> UIColor in
-                if traitCollection.userInterfaceStyle == .dark {
-                    return UIColor.fwColor(withHex: 0x282828)
-                } else {
-                    return UIColor.fwColor(withHex: 0xEEEEEE)
-                }
-            })
-        } else {
-            backgroundColor = UIColor.white
-            skeletonColor = UIColor.fwColor(withHex: 0xEEEEEE)
-        }
-    }
 }
 
 // MARK: - FWSkeletonView
@@ -237,7 +205,7 @@ import UIKit
     /// 骨架图片，默认空
     public var image: UIImage? {
         didSet {
-            layer.contents = image?.cgImage
+            layer.fwThemeContents = image
             layer.contentsGravity = .resizeAspectFill
         }
     }
@@ -258,21 +226,9 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        if #available(iOS 13.0, *) {
-            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-//                let gradientColors = animationColors?.map(){ $0.cgColor }
-//                animationLayers.forEach { (gradientLayer) in
-//                    gradientLayer.colors = gradientColors
-//                }
-            }
-        }
-    }
-    
     public func startAnimating() {
         animationLayers.forEach { (gradientLayer) in
+            gradientLayer.fwThemeContext = self
             animation?.skeletonAnimationStart(gradientLayer)
         }
     }
