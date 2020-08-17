@@ -8,21 +8,6 @@
 
 #import "TestGradientViewController.h"
 
-@interface TestGradientView : UIView
-
-@end
-
-@implementation TestGradientView
-
-- (void)drawRect:(CGRect)rect
-{
-    NSArray *colors = @[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor greenColor].CGColor, (__bridge id)[UIColor blueColor].CGColor];
-    CGFloat locations[] = {0.0, 0.5, 1.0};
-    [self fwDrawLinearGradient:rect colors:colors locations:locations direction:UISwipeGestureRecognizerDirectionRight];
-}
-
-@end
-
 @interface TestGradientViewController ()
 
 @end
@@ -43,7 +28,9 @@
     view2.image = [UIImage fwGradientImageWithSize:size colors:colors locations:locations direction:UISwipeGestureRecognizerDirectionRight];
     [self.view addSubview:view2];
     
-    TestGradientView *view3 = [[TestGradientView alloc] initWithFrame:CGRectMake(20, 160, size.width, size.height)];
+    FWGradientView *view3 = [[FWGradientView alloc] initWithFrame:CGRectMake(20, 160, size.width, size.height)];
+    NSArray *uiColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor]];
+    [view3 setColors:uiColors locations:@[@0.0, @0.5, @1.0] startPoint:CGPointMake(0, 0) endPoint:CGPointMake(1, 0)];
     [self.view addSubview:view3];
     
     UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(20, 230, size.width, size.height)];
