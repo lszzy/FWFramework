@@ -49,8 +49,11 @@ extern NSString *const FWThemeChangedNotification;
 /// iOS13切换主题模式时是否覆盖主window样式(立即生效)，默认NO(不会立即生效，需刷新界面)。如果不满足需求，可自定义处理
 @property (nonatomic, assign) BOOL overrideWindow;
 
-/// 当前主题样式
+/// 当前全局主题样式
 @property (nonatomic, readonly) FWThemeStyle style;
+
+/// 指定traitCollection的主题样式，传nil时为全局样式
+- (FWThemeStyle)style:(nullable UITraitCollection *)traitCollection;
 
 @end
 
