@@ -154,6 +154,18 @@
     }
 }
 
++ (void)fwOpenUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
+{
+    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
+    } else {
+        if (completion) {
+            completion(NO);
+        }
+    }
+}
+
 + (void)fwOpenSafari:(id)url
 {
     [self fwOpenURL:url];
