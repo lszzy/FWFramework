@@ -125,14 +125,18 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeNamed:(NSString *)name
 {
-    UIColor *color = nil;
-    if (@available(iOS 11.0, *)) {
-        color = [UIColor colorNamed:name];
-    }
-    if (!color) {
-        color = fwStaticNameColors[name];
-    }
-    return color;
+    return [self fwThemeColor:^UIColor *(FWThemeStyle style) {
+        UIColor *color = nil;
+        if (@available(iOS 13, *)) {
+            UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
+            color = [[UIColor colorNamed:name] resolvedColorWithTraitCollection:traitCollection];
+        }
+        if (!color) {
+            if (@available(iOS 11.0, *)) { color = [UIColor colorNamed:name]; }
+            if (!color) { color = fwStaticNameColors[name]; }
+        }
+        return color ?: UIColor.clearColor;
+    }];
 }
 
 + (void)fwSetThemeColor:(UIColor *)color forName:(NSString *)name
@@ -175,9 +179,14 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 + (UIImage *)fwThemeNamed:(NSString *)name
 {
     return [self fwThemeImage:^UIImage * (FWThemeStyle style) {
-        UIImage *image = [UIImage imageNamed:name];
+        UIImage *image = nil;
+        if (@available(iOS 13, *)) {
+            UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
+            image = [[UIImage imageNamed:name] imageWithConfiguration:traitCollection.imageConfiguration];
+        }
         if (!image) {
-            image = fwStaticNameImages[name];
+            image = [UIImage imageNamed:name];
+            if (!image) image = fwStaticNameImages[name];
         }
         return image;
     }];
