@@ -10,6 +10,18 @@
 
 @implementation TestThemeViewController
 
+/*
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            FWThemeManager.sharedInstance.overrideWindow = YES;
+        });
+    });
+}
+*/
+
 - (void)renderInit
 {
     [self fwObserveNotification:FWThemeChangedNotification block:^(NSNotification * _Nonnull notification) {

@@ -70,8 +70,8 @@ extern NSString *const FWThemeChangedNotification;
 /// 动态创建主题色，指定提供句柄
 + (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle style))provider;
 
-/// 动态创建主题色，指定名称，兼容iOS11+系统方式和手工指定
-+ (nullable UIColor *)fwThemeNamed:(NSString *)name;
+/// 动态创建主题色，指定名称，兼容iOS11+系统方式和手工指定。失败时返回clear防止崩溃
++ (UIColor *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwSetThemeColor:(nullable UIColor *)color forName:(NSString *)name;
