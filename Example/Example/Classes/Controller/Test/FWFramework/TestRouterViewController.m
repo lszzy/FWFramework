@@ -117,6 +117,7 @@
                                          @[@"不支持tabbar/home", @"onOpenHome5"],
                                          @[@"关闭close", @"onOpenClose"],
                                          @[@"内部web", @"onOpenHttp"],
+                                         @[@"通用链接douyin", @"onOpenUniversalLinks"],
                                          @[@"外部safari", @"onOpenUrl"],
                                          @[@"内部safari", @"onOpenSafari"],
                                          ]];
@@ -258,6 +259,11 @@
 - (void)onOpenHttp
 {
     [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
+}
+
+- (void)onOpenUniversalLinks
+{
+    [FWRouter openURL:@"https://v.douyin.com/JYmHJ9k/"];
 }
 
 - (void)onOpenUrl
