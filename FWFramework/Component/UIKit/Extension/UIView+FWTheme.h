@@ -13,23 +13,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWThemeManager
 
-/// 主题样式枚举
-typedef NS_ENUM(NSInteger, FWThemeStyle) {
-    /// 浅色
-    FWThemeStyleLight,
-    /// 深色
-    FWThemeStyleDark,
-};
+/// 主题样式枚举，可扩展
+typedef NSInteger FWThemeStyle NS_TYPED_EXTENSIBLE_ENUM;
+/// 浅色样式
+static const FWThemeStyle FWThemeStyleLight = 1;
+/// 深色样式
+static const FWThemeStyle FWThemeStyleDark = 2;
 
-/// 主题模式枚举
-typedef NS_ENUM(NSInteger, FWThemeMode) {
-    /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色
-    FWThemeModeSystem,
-    /// 固定浅色模式
-    FWThemeModeLight,
-    /// 固定深色模式
-    FWThemeModeDark,
-};
+/// 主题模式枚举，可扩展
+typedef NSInteger FWThemeMode NS_TYPED_EXTENSIBLE_ENUM;
+/// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色，默认
+static const FWThemeMode FWThemeModeSystem = 0;
+/// 固定浅色模式
+static const FWThemeMode FWThemeModeLight = FWThemeStyleLight;
+/// 固定深色模式
+static const FWThemeMode FWThemeModeDark = FWThemeStyleDark;
 
 /// iOS13主题改变通知，object为FWThemeManager时表示手工切换，object为UIScreen时为系统切换
 extern NSString *const FWThemeChangedNotification;
