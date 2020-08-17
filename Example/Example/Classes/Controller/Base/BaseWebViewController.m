@@ -49,13 +49,42 @@
     self.webRequest = urlRequest;
 }
 
-- (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
+    // 调用钩子
+    if ([self respondsToSelector:@selector(shouldStartLoad:)] &&
+        ![self shouldStartLoad:navigationAction]) {
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    
+    // 系统Scheme
+    if ([UIApplication fwIsAppSchemeURL:navigationAction.request.URL]) {
+        [UIApplication fwOpenURL:navigationAction.request.URL];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    
+    // AppScheme
     if ([navigationAction.request.URL.scheme isEqualToString:@"app"]) {
         [FWRouter openURL:navigationAction.request.URL.absoluteString];
-        return NO;
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
     }
-    return YES;
+    
+    // 通用链接
+    if ([navigationAction.request.URL.scheme isEqualToString:@"https"]) {
+        [UIApplication fwOpenUniversalLinks:navigationAction.request.URL completionHandler:^(BOOL success) {
+            if (success) {
+                decisionHandler(WKNavigationActionPolicyCancel);
+            } else {
+                decisionHandler(WKNavigationActionPolicyAllow);
+            }
+        }];
+        return;
+    }
+    
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 @end
