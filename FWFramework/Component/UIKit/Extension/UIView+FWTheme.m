@@ -83,9 +83,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 - (FWThemeStyle)style
 {
+    return [self style:nil];
+}
+
+- (FWThemeStyle)style:(UITraitCollection *)traitCollection
+{
     if (self.mode == FWThemeModeSystem) {
         if (@available(iOS 13, *)) {
-            return UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+            if (!traitCollection) traitCollection = UITraitCollection.currentTraitCollection;
+            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
         } else {
             return FWThemeStyleLight;
         }
@@ -102,19 +108,16 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeLight:(UIColor *)light dark:(UIColor *)dark
 {
-    if (@available(iOS 13, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
-        }];
-    }
-    return FWThemeManager.sharedInstance.style == FWThemeStyleDark ? dark : light;
+    return [self fwThemeColor:^UIColor *(FWThemeStyle style) {
+        return style == FWThemeStyleDark ? dark : light;
+    }];
 }
 
-+ (UIColor *)fwThemeColor:(UIColor * _Nonnull (^)(FWThemeStyle))provider
++ (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle))provider
 {
     if (@available(iOS 13, *)) {
         return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return provider(FWThemeManager.sharedInstance.style);
+            return provider([FWThemeManager.sharedInstance style:traitCollection]);
         }];
     }
     return provider(FWThemeManager.sharedInstance.style);
@@ -249,12 +252,14 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             originalMSG(selfObject, originalCMD, traitCollection);
             
             if (![selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) return;
-            FWThemeStyle style = selfObject.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
+            FWThemeStyle style = [FWThemeManager.sharedInstance style:selfObject.traitCollection];
+            FWThemeStyle oldStyle = [FWThemeManager.sharedInstance style:traitCollection];
+            if (style == oldStyle) return;
+            
             [selfObject fwThemeChanged:style];
             [selfObject fwNotifyThemeListeners:style];
             
             if (selfObject == [UIScreen mainScreen]) {
-                FWThemeStyle oldStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? FWThemeStyleDark : FWThemeStyleLight;
                 NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
                 [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
                 [userInfo setObject:@(style) forKey:NSKeyValueChangeNewKey];
