@@ -13,6 +13,8 @@
 
 @interface FWInnerBlockTarget : NSObject
 
+@property (nonatomic, copy) NSString *identifier;
+
 @property (nonatomic, copy) void (^block)(id sender);
 
 @property (nonatomic, assign) UIControlEvents events;
@@ -22,6 +24,15 @@
 @end
 
 @implementation FWInnerBlockTarget
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _identifier = NSUUID.UUID.UUIDString;
+    }
+    return self;
+}
 
 - (void)invoke:(id)sender
 {
@@ -50,13 +61,26 @@
     return gestureRecognizer;
 }
 
-- (void)fwAddBlock:(void (^)(id sender))block
+- (NSString *)fwAddBlock:(void (^)(id sender))block
 {
     FWInnerBlockTarget *target = [[FWInnerBlockTarget alloc] init];
     target.block = block;
     [self addTarget:target action:@selector(invoke:)];
     NSMutableArray *targets = [self fwInnerBlockTargets];
     [targets addObject:target];
+    return target.identifier;
+}
+
+- (void)fwRemoveBlock:(NSString *)identifier
+{
+    if (!identifier) return;
+    NSMutableArray *targets = [self fwInnerBlockTargets];
+    [targets enumerateObjectsUsingBlock:^(id target, NSUInteger idx, BOOL *stop) {
+        if ([identifier isEqualToString:[target identifier]]) {
+            [self removeTarget:target action:@selector(invoke:)];
+            [targets removeObject:target];
+        }
+    }];
 }
 
 - (void)fwRemoveAllBlocks
@@ -90,10 +114,26 @@
     [self addGestureRecognizer:gesture];
 }
 
-- (void)fwAddTapGestureWithBlock:(void (^)(id sender))block
+- (NSString *)fwAddTapGestureWithBlock:(void (^)(id sender))block
 {
-    UITapGestureRecognizer *gesture = [UITapGestureRecognizer fwGestureRecognizerWithBlock:block];
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] init];
+    NSString *identifier = [gesture fwAddBlock:block];
+    objc_setAssociatedObject(gesture, @selector(fwAddTapGestureWithBlock:), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self addGestureRecognizer:gesture];
+    return identifier;
+}
+
+- (void)fwRemoveTapGesture:(NSString *)identifier
+{
+    if (!identifier) return;
+    for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
+        if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
+            NSString *gestureIdentifier = objc_getAssociatedObject(gesture, @selector(fwAddTapGestureWithBlock:));
+            if (gestureIdentifier && [identifier isEqualToString:gestureIdentifier]) {
+                [self removeGestureRecognizer:gesture];
+            }
+        }
+    }
 }
 
 - (void)fwRemoveAllTapGestures
@@ -111,22 +151,42 @@
 
 @implementation UIControl (FWBlock)
 
-- (void)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents
+- (NSString *)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents
 {
-    if (!controlEvents) return;
-    
     FWInnerBlockTarget *target = [[FWInnerBlockTarget alloc] init];
     target.block = block;
     target.events = controlEvents;
     [self addTarget:target action:@selector(invoke:) forControlEvents:controlEvents];
     NSMutableArray *targets = [self fwInnerBlockTargets];
     [targets addObject:target];
+    return target.identifier;
+}
+
+- (void)fwRemoveBlock:(NSString *)identifier forControlEvents:(UIControlEvents)controlEvents
+{
+    if (!identifier) return;
+    NSMutableArray *targets = [self fwInnerBlockTargets];
+    NSMutableArray *removes = [NSMutableArray array];
+    for (FWInnerBlockTarget *target in targets) {
+        if (target.events & controlEvents) {
+            if ([identifier isEqualToString:target.identifier]) {
+                UIControlEvents newEvent = target.events & (~controlEvents);
+                if (newEvent) {
+                    [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
+                    target.events = newEvent;
+                    [self addTarget:target action:@selector(invoke:) forControlEvents:target.events];
+                } else {
+                    [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
+                    [removes addObject:target];
+                }
+            }
+        }
+    }
+    [targets removeObjectsInArray:removes];
 }
 
 - (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents
 {
-    if (!controlEvents) return;
-    
     NSMutableArray *targets = [self fwInnerBlockTargets];
     NSMutableArray *removes = [NSMutableArray array];
     for (FWInnerBlockTarget *target in targets) {
@@ -160,9 +220,14 @@
     [self addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)fwAddTouchBlock:(void (^)(id sender))block
+- (NSString *)fwAddTouchBlock:(void (^)(id sender))block
 {
-    [self fwAddBlock:block forControlEvents:UIControlEventTouchUpInside];
+    return [self fwAddBlock:block forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)fwRemoveTouchBlock:(NSString *)identifier
+{
+    [self fwRemoveBlock:identifier forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end
