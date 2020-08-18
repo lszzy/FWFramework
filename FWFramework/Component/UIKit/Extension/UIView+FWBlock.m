@@ -75,8 +75,8 @@
 {
     if (!identifier) return;
     NSMutableArray *targets = [self fwInnerBlockTargets];
-    [targets enumerateObjectsUsingBlock:^(id target, NSUInteger idx, BOOL *stop) {
-        if ([identifier isEqualToString:[target identifier]]) {
+    [targets enumerateObjectsUsingBlock:^(FWInnerBlockTarget *target, NSUInteger idx, BOOL *stop) {
+        if ([identifier isEqualToString:target.identifier]) {
             [self removeTarget:target action:@selector(invoke:)];
             [targets removeObject:target];
         }

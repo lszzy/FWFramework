@@ -67,8 +67,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param name  消息名称
  @param block 消息句柄
+ @return 监听唯一标志
  */
-- (void)fwObserveMessage:(NSString *)name block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)fwObserveMessage:(NSString *)name block:(void (^)(NSNotification *notification))block;
 
 /*!
  @brief 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -76,8 +77,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   消息名称
  @param object 消息对象，值为nil时表示所有
  @param block  消息句柄
+ @return 监听唯一标志
  */
-- (void)fwObserveMessage:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)fwObserveMessage:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /*!
  @brief 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -85,8 +87,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   消息名称
  @param target 消息目标
  @param action 目标动作，参数为通知对象
+ @return 监听唯一标志
  */
-- (void)fwObserveMessage:(NSString *)name target:(id)target action:(SEL)action;
+- (nullable NSString *)fwObserveMessage:(NSString *)name target:(id)target action:(SEL)action;
 
 /*!
  @brief 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -95,8 +98,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 消息对象，值为nil时表示所有
  @param target 消息目标
  @param action 目标动作，参数为通知对象
+ @return 监听唯一标志
  */
-- (void)fwObserveMessage:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
+- (nullable NSString *)fwObserveMessage:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
 
 /*!
  @brief 手工移除某个点对点消息指定监听
@@ -116,6 +120,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作
  */
 - (void)fwUnobserveMessage:(NSString *)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
+
+/*!
+ @brief 手工移除某个指定对象点对点消息指定监听
+ 
+ @param name       消息名称
+ @param identifier 监听唯一标志
+ */
+- (void)fwUnobserveMessage:(NSString *)name identifier:(nullable NSString *)identifier;
 
 /*!
  @brief 手工移除某个点对点消息所有监听
@@ -209,8 +221,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param name  通知名称
  @param block 通知句柄
+ @return 监听唯一标志
  */
-- (void)fwObserveNotification:(NSString *)name block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)fwObserveNotification:(NSString *)name block:(void (^)(NSNotification *notification))block;
 
 /*!
  @brief 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -218,8 +231,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象，值为nil时表示所有
  @param block  通知句柄
+ @return 监听唯一标志
  */
-- (void)fwObserveNotification:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)fwObserveNotification:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /*!
  @brief 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -227,8 +241,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param target 通知目标
  @param action 目标动作，参数为通知对象
+ @return 监听唯一标志
  */
-- (void)fwObserveNotification:(NSString *)name target:(id)target action:(SEL)action;
+- (nullable NSString *)fwObserveNotification:(NSString *)name target:(id)target action:(SEL)action;
 
 /*!
  @brief 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -237,8 +252,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 通知对象，值为nil时表示所有
  @param target 通知目标
  @param action 目标动作，参数为通知对象
+ @return 监听唯一标志
  */
-- (void)fwObserveNotification:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
+- (nullable NSString *)fwObserveNotification:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
 
 /*!
  @brief 手工移除某个广播通知指定监听
@@ -258,6 +274,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作
  */
 - (void)fwUnobserveNotification:(NSString *)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
+
+/*!
+ @brief 手工移除某个指定对象广播通知指定监听
+ 
+ @param name       通知名称
+ @param identifier 监听唯一标志
+ */
+- (void)fwUnobserveNotification:(NSString *)name identifier:(nullable NSString *)identifier;
 
 /*!
  @brief 手工移除某个广播通知所有监听
@@ -343,8 +367,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param property 属性名称
  @param block    目标句柄，block参数依次为object、优化的change字典(不含NSNull)
+ @return 监听唯一标志
  */
-- (void)fwObserveProperty:(NSString *)property block:(void (^)(id object, NSDictionary *change))block;
+- (nullable NSString *)fwObserveProperty:(NSString *)property block:(void (^)(id object, NSDictionary *change))block;
 
 /*!
  @brief 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
@@ -352,8 +377,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param property 属性名称
  @param target   目标对象
  @param action   目标动作，action参数依次为object、优化的change字典(不含NSNull)
+ @return 监听唯一标志
  */
-- (void)fwObserveProperty:(NSString *)property target:(id)target action:(SEL)action;
+- (nullable NSString *)fwObserveProperty:(NSString *)property target:(id)target action:(SEL)action;
 
 /*!
  @brief 手工移除某个属性指定监听
@@ -363,6 +389,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param action   目标动作，值为nil时移除所有动作(同UIControl)
  */
 - (void)fwUnobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
+
+/*!
+ @brief 手工移除某个属性指定监听
+ 
+ @param property   属性名称
+ @param identifier 监听唯一标志
+ */
+- (void)fwUnobserveProperty:(NSString *)property identifier:(nullable NSString *)identifier;
 
 /*!
  @brief 手工移除某个属性所有监听
