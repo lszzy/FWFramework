@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 @property (class, nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 @property (nonatomic, readwrite) BOOL enabled;
+@property (nonatomic, readwrite, assign) CGFloat preloadHeight;
 
 @property (nonatomic, readonly) FWInfiniteScrollState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;

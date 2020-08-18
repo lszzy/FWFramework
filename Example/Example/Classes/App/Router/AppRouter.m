@@ -56,10 +56,15 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 + (void)registerRouters
 {
     [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^(NSDictionary *parameters) {
-        BaseWebViewController *viewController = [BaseWebViewController new];
-        viewController.title = parameters[FWRouterURLKey];
-        viewController.requestUrl = parameters[FWRouterURLKey];
-        [FWRouter pushViewController:viewController animated:YES];
+        // 尝试打开通用链接，失败了再内部浏览器打开
+        [UIApplication fwOpenUniversalLinks:parameters[FWRouterURLKey] completionHandler:^(BOOL success) {
+            if (success) return;
+            
+            BaseWebViewController *viewController = [BaseWebViewController new];
+            viewController.title = parameters[FWRouterURLKey];
+            viewController.requestUrl = parameters[FWRouterURLKey];
+            [FWRouter pushViewController:viewController animated:YES];
+        }];
     }];
     
     [FWRouter registerURL:AppRouter.ROUTE_TEST withHandler:^(NSDictionary *parameters) {

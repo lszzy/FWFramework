@@ -215,10 +215,8 @@
 
 static NSString * const FWPopupShowAnimationKey = @"showAnimation";
 static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
-@interface FWPopupMenuAnimationManager ()
-<
-CAAnimationDelegate
->
+@interface FWPopupMenuAnimationManager () <CAAnimationDelegate>
+
 @property (nonatomic, copy) void (^showAnimationHandle) (void);
 
 @property (nonatomic, copy) void (^dismissAnimationHandle) (void);
@@ -240,15 +238,14 @@ CAAnimationDelegate
     return manager;
 }
 
-- (void)setStyle:(FWPopupMenuAnimationStyle)style
+- (void)configAnimation
 {
-    _style = style;
     CABasicAnimation * showAnimation;
     CABasicAnimation * dismissAnimation;
-    _showAnimation = _dismissAnimation = nil;
-    switch (style) {
+    switch (_style) {
         case FWPopupMenuAnimationStyleFade:
         {
+            _showAnimation = _dismissAnimation = nil;
             //show
             showAnimation = [self getBasicAnimationWithKeyPath:@"opacity"];
             showAnimation.fillMode = kCAFillModeBackwards;
@@ -266,9 +263,13 @@ CAAnimationDelegate
         case FWPopupMenuAnimationStyleCustom:
             break;
         case FWPopupMenuAnimationStyleNone:
+        {
+            _showAnimation = _dismissAnimation = nil;
+        }
             break;
         default:
         {
+            _showAnimation = _dismissAnimation = nil;
             //show
             showAnimation = [self getBasicAnimationWithKeyPath:@"transform.scale"];
             showAnimation.fillMode = kCAFillModeBackwards;
@@ -284,6 +285,30 @@ CAAnimationDelegate
         }
             break;
     }
+}
+
+- (void)setStyle:(FWPopupMenuAnimationStyle)style
+{
+    _style = style;
+    [self configAnimation];
+}
+
+- (void)setDuration:(CFTimeInterval)duration
+{
+    _duration = duration;
+    [self configAnimation];
+}
+
+- (void)setShowAnimation:(CAAnimation *)showAnimation
+{
+    _showAnimation = showAnimation;
+    [self configAnimation];
+}
+
+- (void)setDismissAnimation:(CAAnimation *)dismissAnimation
+{
+    _dismissAnimation = dismissAnimation;
+    [self configAnimation];
 }
 
 - (CABasicAnimation *)getBasicAnimationWithKeyPath:(NSString *)keyPath
@@ -326,12 +351,14 @@ CAAnimationDelegate
     if ([_animationView.layer animationForKey:FWPopupShowAnimationKey] == anim) {
         [_animationView.layer removeAnimationForKey:FWPopupShowAnimationKey];
         _showAnimation.delegate = nil;
+        _showAnimation = nil;
         if (_showAnimationHandle) {
             _showAnimationHandle();
         }
     }else if ([_animationView.layer animationForKey:FWPopupDismissAnimationKey] == anim) {
         [_animationView.layer removeAnimationForKey:FWPopupDismissAnimationKey];
         _dismissAnimation.delegate = nil;
+        _dismissAnimation = nil;
         if (_dismissAnimationHandle) {
             _dismissAnimationHandle();
         }
@@ -485,7 +512,11 @@ UITableViewDataSource
     }
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = _textColor;
-    cell.textLabel.font = [UIFont systemFontOfSize:_fontSize];
+    if (_font) {
+        cell.textLabel.font = _font;
+    }else {
+        cell.textLabel.font = [UIFont systemFontOfSize:_fontSize];
+    }
     if ([_titles[indexPath.row] isKindOfClass:[NSAttributedString class]]) {
         cell.textLabel.attributedText = _titles[indexPath.row];
     }else if ([_titles[indexPath.row] isKindOfClass:[NSString class]]) {

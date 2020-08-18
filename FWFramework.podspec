@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.6.2'
+  spec.version             = '0.6.3'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -55,7 +55,7 @@ Pod::Spec.new do |spec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
   end
-  
+
   spec.subspec 'Component_SDWebImage' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'SDWebImage'

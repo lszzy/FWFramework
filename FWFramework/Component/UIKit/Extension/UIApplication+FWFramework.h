@@ -68,6 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
 + (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
+// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
++ (void)fwOpenUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+
 // 打开外部浏览器，支持NSString|NSURL
 + (void)fwOpenSafari:(id)url;
 
