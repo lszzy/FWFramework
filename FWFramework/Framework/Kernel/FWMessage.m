@@ -14,6 +14,8 @@
 
 @interface FWInnerNotificationTarget : NSObject
 
+@property (nonatomic, copy) NSString *identifier;
+
 // 值为YES表示广播通知，为NO表示点对点消息
 @property (nonatomic, assign) BOOL broadcast;
 
@@ -31,6 +33,15 @@
 @end
 
 @implementation FWInnerNotificationTarget
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _identifier = NSUUID.UUID.UUIDString;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -62,14 +73,14 @@
 
 #pragma mark - Observer
 
-- (void)fwObserveMessage:(NSString *)name block:(void (^)(NSNotification *))block
+- (NSString *)fwObserveMessage:(NSString *)name block:(void (^)(NSNotification *))block
 {
-    [self fwObserveMessage:name object:nil block:block];
+    return [self fwObserveMessage:name object:nil block:block];
 }
 
-- (void)fwObserveMessage:(NSString *)name object:(id)object block:(void (^)(NSNotification *))block
+- (NSString *)fwObserveMessage:(NSString *)name object:(id)object block:(void (^)(NSNotification *))block
 {
-    if (!name || !block) return;
+    if (!name || !block) return nil;
     
     NSMutableDictionary *dict = [self fwInnerMessageTargets:YES];
     NSMutableArray *arr = dict[name];
@@ -83,16 +94,17 @@
     messageTarget.object = object;
     messageTarget.block = block;
     [arr addObject:messageTarget];
+    return messageTarget.identifier;
 }
 
-- (void)fwObserveMessage:(NSString *)name target:(id)target action:(SEL)action
+- (NSString *)fwObserveMessage:(NSString *)name target:(id)target action:(SEL)action
 {
-    [self fwObserveMessage:name object:nil target:target action:action];
+    return [self fwObserveMessage:name object:nil target:target action:action];
 }
 
-- (void)fwObserveMessage:(NSString *)name object:(id)object target:(id)target action:(SEL)action
+- (NSString *)fwObserveMessage:(NSString *)name object:(id)object target:(id)target action:(SEL)action
 {
-    if (!name || !target || !action) return;
+    if (!name || !target || !action) return nil;
     
     NSMutableDictionary *dict = [self fwInnerMessageTargets:YES];
     NSMutableArray *arr = dict[name];
@@ -107,6 +119,7 @@
     messageTarget.target = target;
     messageTarget.action = action;
     [arr addObject:messageTarget];
+    return messageTarget.identifier;
 }
 
 - (void)fwUnobserveMessage:(NSString *)name target:(id)target action:(SEL)action
@@ -140,6 +153,21 @@
             }
         }];
     }
+}
+
+- (void)fwUnobserveMessage:(NSString *)name identifier:(NSString *)identifier
+{
+    if (!name || !identifier) return;
+    
+    NSMutableDictionary *dict = [self fwInnerMessageTargets:NO];
+    if (!dict) return;
+    
+    NSMutableArray *arr = dict[name];
+    [arr enumerateObjectsUsingBlock:^(FWInnerNotificationTarget *obj, NSUInteger idx, BOOL *stop) {
+        if ([identifier isEqualToString:obj.identifier]) {
+            [arr removeObject:obj];
+        }
+    }];
 }
 
 - (void)fwUnobserveMessage:(NSString *)name
@@ -224,14 +252,14 @@
 
 #pragma mark - Observer
 
-- (void)fwObserveNotification:(NSString *)name block:(void (^)(NSNotification *notification))block
+- (NSString *)fwObserveNotification:(NSString *)name block:(void (^)(NSNotification *notification))block
 {
-    [self fwObserveNotification:name object:nil block:block];
+    return [self fwObserveNotification:name object:nil block:block];
 }
 
-- (void)fwObserveNotification:(NSString *)name object:(id)object block:(void (^)(NSNotification *))block
+- (NSString *)fwObserveNotification:(NSString *)name object:(id)object block:(void (^)(NSNotification *))block
 {
-    if (!name || !block) return;
+    if (!name || !block) return nil;
     
     NSMutableDictionary *dict = [self fwInnerNotificationTargets:YES];
     NSMutableArray *arr = dict[name];
@@ -246,16 +274,17 @@
     notificationTarget.block = block;
     [arr addObject:notificationTarget];
     [[NSNotificationCenter defaultCenter] addObserver:notificationTarget selector:@selector(handleNotification:) name:name object:object];
+    return notificationTarget.identifier;
 }
 
-- (void)fwObserveNotification:(NSString *)name target:(id)target action:(SEL)action
+- (NSString *)fwObserveNotification:(NSString *)name target:(id)target action:(SEL)action
 {
-    [self fwObserveNotification:name object:nil target:target action:action];
+    return [self fwObserveNotification:name object:nil target:target action:action];
 }
 
-- (void)fwObserveNotification:(NSString *)name object:(id)object target:(id)target action:(SEL)action
+- (NSString *)fwObserveNotification:(NSString *)name object:(id)object target:(id)target action:(SEL)action
 {
-    if (!name || !target || !action) return;
+    if (!name || !target || !action) return nil;
     
     NSMutableDictionary *dict = [self fwInnerNotificationTargets:YES];
     NSMutableArray *arr = dict[name];
@@ -271,6 +300,7 @@
     notificationTarget.action = action;
     [arr addObject:notificationTarget];
     [[NSNotificationCenter defaultCenter] addObserver:notificationTarget selector:@selector(handleNotification:) name:name object:object];
+    return notificationTarget.identifier;
 }
 
 - (void)fwUnobserveNotification:(NSString *)name target:(id)target action:(SEL)action
@@ -309,6 +339,22 @@
             }
         }];
     }
+}
+
+- (void)fwUnobserveNotification:(NSString *)name identifier:(NSString *)identifier
+{
+    if (!name || !identifier) return;
+    
+    NSMutableDictionary *dict = [self fwInnerNotificationTargets:NO];
+    if (!dict) return;
+    
+    NSMutableArray *arr = dict[name];
+    [arr enumerateObjectsUsingBlock:^(FWInnerNotificationTarget *obj, NSUInteger idx, BOOL *stop) {
+        if ([identifier isEqualToString:obj.identifier]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:obj];
+            [arr removeObject:obj];
+        }
+    }];
 }
 
 - (void)fwUnobserveNotification:(NSString *)name
@@ -382,6 +428,8 @@
 
 @interface FWInnerKvoTarget : NSObject
 
+@property (nonatomic, copy) NSString *identifier;
+
 // 此处必须unsafe_unretained(类似weak，但如果引用的对象被释放会造成野指针，再次访问会crash)
 @property (nonatomic, unsafe_unretained) id object;
 
@@ -398,6 +446,15 @@
 @end
 
 @implementation FWInnerKvoTarget
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _identifier = NSUUID.UUID.UUIDString;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -462,9 +519,9 @@
 
 @implementation NSObject (FWKvo)
 
-- (void)fwObserveProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary *change))block
+- (NSString *)fwObserveProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary *change))block
 {
-    if (!property || !block) return;
+    if (!property || !block) return nil;
     
     NSMutableDictionary *dict = [self fwInnerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
@@ -479,11 +536,12 @@
     kvoTarget.block = block;
     [arr addObject:kvoTarget];
     [kvoTarget addObserver];
+    return kvoTarget.identifier;
 }
 
-- (void)fwObserveProperty:(NSString *)property target:(id)target action:(SEL)action
+- (NSString *)fwObserveProperty:(NSString *)property target:(id)target action:(SEL)action
 {
-    if (!property || !target || !action) return;
+    if (!property || !target || !action) return nil;
     
     NSMutableDictionary *dict = [self fwInnerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
@@ -499,6 +557,7 @@
     kvoTarget.action = action;
     [arr addObject:kvoTarget];
     [kvoTarget addObserver];
+    return kvoTarget.identifier;
 }
 
 - (void)fwUnobserveProperty:(NSString *)property target:(id)target action:(SEL)action
@@ -524,6 +583,22 @@
             }
         }];
     }
+}
+
+- (void)fwUnobserveProperty:(NSString *)property identifier:(NSString *)identifier
+{
+    if (!property || !identifier) return;
+    
+    NSMutableDictionary *dict = [self fwInnerKvoTargets:NO];
+    if (!dict) return;
+    
+    NSMutableArray *arr = dict[property];
+    [arr enumerateObjectsUsingBlock:^(FWInnerKvoTarget *obj, NSUInteger idx, BOOL *stop) {
+        if ([identifier isEqualToString:obj.identifier]) {
+            [obj removeObserver];
+            [arr removeObject:obj];
+        }
+    }];
 }
 
 - (void)fwUnobserveProperty:(NSString *)property
