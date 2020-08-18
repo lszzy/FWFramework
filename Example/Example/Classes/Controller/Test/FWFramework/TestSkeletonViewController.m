@@ -132,7 +132,7 @@
     }];
     
     NSArray<FWSkeletonView *> *skeletonViews = [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2]];
-    [layout addSkeletonView:[FWSkeletonLabel new] block:^(FWSkeletonView *skeletonView) {
+    [layout addSkeletonView:[UILabel new] block:^(FWSkeletonView *skeletonView) {
         skeletonView.fwLayoutChain.centerXToView(imageView).topToBottomOfViewWithOffset(skeletonViews.lastObject, 20).sizeToView(skeletonViews.lastObject);
     }];
 }
