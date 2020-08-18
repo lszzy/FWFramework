@@ -55,6 +55,17 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     return result;
 }
 
+- (BOOL)fwIsFirstLoad
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwIsFirstLoad));
+    return value ? [value boolValue] : YES;
+}
+
+- (void)setFwIsFirstLoad:(BOOL)fwIsFirstLoad
+{
+    objc_setAssociatedObject(self, @selector(fwIsFirstLoad), @(fwIsFirstLoad), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 #pragma mark - Present
 
 + (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style

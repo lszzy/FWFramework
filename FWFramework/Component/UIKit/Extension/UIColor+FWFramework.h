@@ -68,6 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 判断当前颜色是否为深色。http://stackoverflow.com/questions/19456288/text-color-based-on-background-image
 - (BOOL)fwIsDarkColor;
 
+// 当前颜色修改亮度比率的颜色
+- (UIColor *)fwBrightnessColor:(CGFloat)ratio;
+
 #pragma mark - Value
 
 // 读取颜色的十六进制值RGB，不含透明度

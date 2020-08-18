@@ -20,8 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 从事件句柄初始化
 + (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;
 
-// 添加事件句柄
-- (void)fwAddBlock:(void (^)(id sender))block;
+// 添加事件句柄，返回唯一标志
+- (NSString *)fwAddBlock:(void (^)(id sender))block;
+
+// 根据唯一标志移除事件句柄
+- (void)fwRemoveBlock:(nullable NSString *)identifier;
 
 // 移除所有事件句柄
 - (void)fwRemoveAllBlocks;
@@ -36,7 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwAddTapGestureWithTarget:(id)target action:(SEL)action;
 
 // 添加点击手势句柄，同上
-- (void)fwAddTapGestureWithBlock:(void (^)(id sender))block;
+- (NSString *)fwAddTapGestureWithBlock:(void (^)(id sender))block;
+
+// 根据唯一标志移除点击手势句柄
+- (void)fwRemoveTapGesture:(nullable NSString *)identifier;
 
 // 移除所有点击手势
 - (void)fwRemoveAllTapGestures;
@@ -48,7 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIControl (FWBlock)
 
 // 添加事件句柄
-- (void)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents;
+- (NSString *)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents;
+
+// 根据唯一标志移除事件句柄
+- (void)fwRemoveBlock:(nullable NSString *)identifier forControlEvents:(UIControlEvents)controlEvents;
 
 // 移除所有事件句柄
 - (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents;
@@ -57,7 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwAddTouchTarget:(id)target action:(SEL)action;
 
 // 添加点击句柄
-- (void)fwAddTouchBlock:(void (^)(id sender))block;
+- (NSString *)fwAddTouchBlock:(void (^)(id sender))block;
+
+// 根据唯一标志移除点击句柄
+- (void)fwRemoveTouchBlock:(nullable NSString *)identifier;
 
 @end
 
