@@ -165,32 +165,23 @@
 - (void)fwRemoveBlock:(NSString *)identifier forControlEvents:(UIControlEvents)controlEvents
 {
     if (!identifier) return;
-    NSMutableArray *targets = [self fwInnerBlockTargets];
-    NSMutableArray *removes = [NSMutableArray array];
-    for (FWInnerBlockTarget *target in targets) {
-        if (target.events & controlEvents) {
-            if ([identifier isEqualToString:target.identifier]) {
-                UIControlEvents newEvent = target.events & (~controlEvents);
-                if (newEvent) {
-                    [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
-                    target.events = newEvent;
-                    [self addTarget:target action:@selector(invoke:) forControlEvents:target.events];
-                } else {
-                    [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
-                    [removes addObject:target];
-                }
-            }
-        }
-    }
-    [targets removeObjectsInArray:removes];
+    [self fwRemoveAllBlocksForControlEvents:controlEvents identifier:identifier];
 }
 
 - (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents
+{
+    [self fwRemoveAllBlocksForControlEvents:controlEvents identifier:nil];
+}
+
+- (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents identifier:(NSString *)identifier
 {
     NSMutableArray *targets = [self fwInnerBlockTargets];
     NSMutableArray *removes = [NSMutableArray array];
     for (FWInnerBlockTarget *target in targets) {
         if (target.events & controlEvents) {
+            BOOL shouldRemove = !identifier || [identifier isEqualToString:target.identifier];
+            if (!shouldRemove) continue;
+            
             UIControlEvents newEvent = target.events & (~controlEvents);
             if (newEvent) {
                 [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
