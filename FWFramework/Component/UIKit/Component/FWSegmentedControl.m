@@ -1005,6 +1005,11 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
         [self.selectionIndicatorStripLayer removeFromSuperlayer];
         [self.selectionIndicatorBoxLayer removeFromSuperlayer];
     } else {
+        if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic &&
+            [self sectionCount] != self.segmentWidthsArray.count) {
+            return;
+        }
+        
         [self scrollToSelectedSegmentIndex:animated];
         
         if (animated) {

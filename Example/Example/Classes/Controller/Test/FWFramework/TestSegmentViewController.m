@@ -147,9 +147,7 @@
     [marqueeLabel setNeedsLayout];
     [marqueeLabel layoutIfNeeded];
     
-    self.segmentedControl = [FWSegmentedControl new];
-    self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
-    self.segmentedControl.selectedSegmentIndex = 1;
+    self.segmentedControl = [[FWSegmentedControl alloc] initWithSectionTitles:@[@"Test"]];
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
@@ -161,6 +159,8 @@
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
     [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
     [self.segmentedControl fwSetDimension:NSLayoutAttributeHeight toSize:50];
+    self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
+    self.segmentedControl.selectedSegmentIndex = 1;
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
         FWStrongifySelf();
