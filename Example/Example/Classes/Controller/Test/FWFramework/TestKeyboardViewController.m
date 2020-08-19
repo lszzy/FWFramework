@@ -22,6 +22,8 @@ FWPropertyStrong(UIButton *, submitButton);
 
 FWPropertyStrong(FWPopupMenu *, popupMenu);
 
+FWPropertyAssign(BOOL, canScroll);
+
 @end
 
 @implementation TestKeyboardViewController
@@ -42,8 +44,10 @@ FWPropertyStrong(FWPopupMenu *, popupMenu);
     mobileField.placeholder = @"昵称，最多10个中文";
     mobileField.keyboardType = UIKeyboardTypeDefault;
     mobileField.returnKeyType = UIReturnKeyNext;
-    [self.view addSubview:mobileField];
+    [self.contentView addSubview:mobileField];
     [mobileField fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:kAppMarginLarge];
+    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
+    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
     [mobileField fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
     UITextField *passwordField = [AppStandard textFieldWithStyle:kAppTextFieldStyleDefault];
@@ -57,7 +61,7 @@ FWPropertyStrong(FWPopupMenu *, popupMenu);
     mobileField.fwReturnResponder = passwordField;
     passwordField.secureTextEntry = YES;
     passwordField.delegate = self;
-    [self.view addSubview:passwordField];
+    [self.contentView addSubview:passwordField];
     [passwordField fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:mobileField];
     [passwordField fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
@@ -69,7 +73,7 @@ FWPropertyStrong(FWPopupMenu *, popupMenu);
     textView.fwPlaceholder = @"问题，最多10个中文";
     textView.returnKeyType = UIReturnKeyNext;
     passwordField.fwReturnResponder = textView;
-    [self.view addSubview:textView];
+    [self.contentView addSubview:textView];
     [textView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:passwordField withOffset:kAppPaddingLarge];
     [textView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
@@ -85,7 +89,7 @@ FWPropertyStrong(FWPopupMenu *, popupMenu);
     textView.fwReturnResponder = inputView;
     inputView.fwDelegate = self;
     [inputView fwAddDoneButton:UIBarStyleDefault title:nil];
-    [self.view addSubview:inputView];
+    [self.contentView addSubview:inputView];
     [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:kAppPaddingLarge];
     [inputView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
@@ -93,8 +97,9 @@ FWPropertyStrong(FWPopupMenu *, popupMenu);
     self.submitButton = submitButton;
     [submitButton setTitle:@"提交" forState:UIControlStateNormal];
     [submitButton fwAddTouchTarget:self action:@selector(onSubmit)];
-    [self.view addSubview:submitButton];
+    [self.contentView addSubview:submitButton];
     [submitButton fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:inputView withOffset:kAppPaddingLarge];
+    [submitButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [submitButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }
 
@@ -132,6 +137,14 @@ FWPropertyStrong(FWPopupMenu *, popupMenu);
             }];
         }
     };
+    
+    [self fwSetRightBarItem:@"切换滚动" block:^(id sender) {
+        FWStrongifySelf();
+        [self.view endEditing:YES];
+        self.canScroll = !self.canScroll;
+        CGFloat topInset = self.canScroll ? kAppMarginLarge + 400 : kAppMarginLarge;
+        [self.mobileField fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:topInset];
+    }];
 }
 
 #pragma mark - Action
