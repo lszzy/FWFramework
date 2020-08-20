@@ -30,6 +30,8 @@ FWPropertyAssign(BOOL, canScroll);
 
 - (void)renderView
 {
+    self.scrollView.fwKeyboardDismissOnDrag = YES;
+    
     UITextField *textFieldAppearance = [UITextField appearanceWhenContainedInInstancesOfClasses:@[[TestKeyboardViewController class]]];
     UITextView *textViewAppearance = [UITextView appearanceWhenContainedInInstancesOfClasses:@[[TestKeyboardViewController class]]];
     textFieldAppearance.fwKeyboardManager = YES;
@@ -45,7 +47,6 @@ FWPropertyAssign(BOOL, canScroll);
     mobileField.keyboardType = UIKeyboardTypeDefault;
     mobileField.returnKeyType = UIReturnKeyNext;
     [self.contentView addSubview:mobileField];
-    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:kAppMarginLarge];
     [mobileField fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
     [mobileField fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
     [mobileField fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
@@ -61,6 +62,11 @@ FWPropertyAssign(BOOL, canScroll);
     mobileField.fwReturnResponder = passwordField;
     passwordField.secureTextEntry = YES;
     passwordField.delegate = self;
+    FWWeakifySelf();
+    [passwordField fwAddToolbar:UIBarStyleDefault title:@"Next" block:^(id sender) {
+        FWStrongifySelf();
+        [self.textView becomeFirstResponder];
+    }];
     [self.contentView addSubview:passwordField];
     [passwordField fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:mobileField];
     [passwordField fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
@@ -88,7 +94,7 @@ FWPropertyAssign(BOOL, canScroll);
     inputView.fwKeyboardSpacing = 80;
     textView.fwReturnResponder = inputView;
     inputView.fwDelegate = self;
-    [inputView fwAddDoneButton:UIBarStyleDefault title:nil];
+    [inputView fwAddToolbar:UIBarStyleDefault title:nil block:nil];
     [self.contentView addSubview:inputView];
     [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:kAppPaddingLarge];
     [inputView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
@@ -142,9 +148,15 @@ FWPropertyAssign(BOOL, canScroll);
         FWStrongifySelf();
         [self.view endEditing:YES];
         self.canScroll = !self.canScroll;
-        CGFloat topInset = self.canScroll ? kAppMarginLarge + 400 : kAppMarginLarge;
-        [self.mobileField fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:topInset];
+        [self renderData];
     }];
+}
+
+- (void)renderData
+{
+    CGFloat marginTop = FWScreenHeight - (390 + 15 + FWTopBarHeight + UIScreen.fwSafeAreaInsets.bottom);
+    CGFloat topInset = self.canScroll ? FWScreenHeight : marginTop;
+    [self.mobileField fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:topInset];
 }
 
 #pragma mark - Action
