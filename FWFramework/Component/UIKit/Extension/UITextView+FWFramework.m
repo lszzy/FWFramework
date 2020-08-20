@@ -8,50 +8,9 @@
 
 #import "UITextView+FWFramework.h"
 #import "NSString+FWFramework.h"
-#import "NSObject+FWRuntime.h"
 #import "FWMessage.h"
-#import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
-
-#pragma mark - FWTextViewDelegateProxy
-
-@interface FWTextViewDelegateProxy : FWDelegateProxy <UITextViewDelegate>
-
-@end
-
-@implementation FWTextViewDelegateProxy
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    BOOL shouldChange = YES;
-    // 先执行代理方法
-    if (self.delegate && [self.delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
-        shouldChange = [self.delegate textView:textView shouldChangeTextInRange:range replacementText:text];
-    }
-    
-    // 再执行内部方法
-    if (textView.fwReturnResign || textView.fwReturnResponder || textView.fwReturnBlock) {
-        // 判断是否输入回车
-        if ([text isEqualToString:@"\n"]) {
-            // 切换到下一个输入框
-            if (textView.fwReturnResponder) {
-                [textView.fwReturnResponder becomeFirstResponder];
-            // 关闭键盘
-            } else if (textView.fwReturnResign) {
-                [textView resignFirstResponder];
-            }
-            // 执行回调
-            if (textView.fwReturnBlock) {
-                textView.fwReturnBlock(textView);
-            }
-            shouldChange = NO;
-        }
-    }
-    return shouldChange;
-}
-
-@end
 
 #pragma mark - UITextView+FWFramework
 
@@ -68,54 +27,6 @@
             return FWSwizzleOriginal(action, sender);
         }));
     });
-}
-
-#pragma mark - Delegate
-
-- (id<UITextViewDelegate>)fwDelegate
-{
-    if (!self.fwDelegateProxyEnabled) {
-        return self.delegate;
-    } else {
-        return self.fwDelegateProxy.delegate;
-    }
-}
-
-- (void)setFwDelegate:(id<UITextViewDelegate>)fwDelegate
-{
-    if (!self.fwDelegateProxyEnabled) {
-        self.delegate = fwDelegate;
-    } else {
-        self.fwDelegateProxy.delegate = fwDelegate;
-    }
-}
-
-- (BOOL)fwDelegateProxyEnabled
-{
-    return self.delegate == self.fwDelegateProxy;
-}
-
-- (void)setFwDelegateProxyEnabled:(BOOL)enabled
-{
-    if (enabled != self.fwDelegateProxyEnabled) {
-        if (enabled) {
-            self.fwDelegateProxy.delegate = self.delegate;
-            self.delegate = self.fwDelegateProxy;
-        } else {
-            self.delegate = self.fwDelegateProxy.delegate;
-            self.fwDelegateProxy.delegate = nil;
-        }
-    }
-}
-
-- (__kindof FWDelegateProxy *)fwDelegateProxy
-{
-    FWDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
-    if (!proxy) {
-        proxy = [[FWTextViewDelegateProxy alloc] init];
-        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return proxy;
 }
 
 #pragma mark - Length
@@ -242,43 +153,6 @@
     }
 }
 
-#pragma mark - Return
-
-- (BOOL)fwReturnResign
-{
-    return [objc_getAssociatedObject(self, @selector(fwReturnResign)) boolValue];
-}
-
-- (void)setFwReturnResign:(BOOL)fwReturnResign
-{
-    objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.fwDelegateProxyEnabled = YES;
-}
-
-- (UIResponder *)fwReturnResponder
-{
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
-    return value.object;
-}
-
-- (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
-{
-    // 此处weak引用responder
-    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.fwDelegateProxyEnabled = YES;
-}
-
-- (void (^)(UITextView *textView))fwReturnBlock
-{
-    return objc_getAssociatedObject(self, @selector(fwReturnBlock));
-}
-
-- (void)setFwReturnBlock:(void (^)(UITextView *textView))fwReturnBlock
-{
-    objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.fwDelegateProxyEnabled = YES;
-}
-
 #pragma mark - Menu
 
 - (BOOL)fwMenuDisabled
@@ -320,20 +194,6 @@
 {
     UITextRange *range = [self textRangeFromPosition:self.beginningOfDocument toPosition:self.endOfDocument];
     [self setSelectedTextRange:range];
-}
-
-#pragma mark - Toolbar
-
-- (void)fwAddDoneButton:(UIBarStyle)barStyle title:(NSString *)title
-{
-    UIToolbar *toolbar = [UIToolbar new];
-    toolbar.items = @[
-                      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-                      [[UIBarButtonItem alloc] initWithTitle:(title.length > 0 ? title : NSLocalizedString(@"完成", nil)) style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)],
-                      ];
-    toolbar.barStyle = barStyle;
-    [toolbar sizeToFit];
-    self.inputAccessoryView = toolbar;
 }
 
 #pragma mark - Size
