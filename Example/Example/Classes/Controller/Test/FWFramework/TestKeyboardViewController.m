@@ -36,8 +36,10 @@ FWPropertyAssign(BOOL, canScroll);
     UITextView *textViewAppearance = [UITextView appearanceWhenContainedInInstancesOfClasses:@[[TestKeyboardViewController class]]];
     textFieldAppearance.fwKeyboardManager = YES;
     textFieldAppearance.fwTouchResign = YES;
+    textFieldAppearance.fwKeyboardResign = YES;
     textViewAppearance.fwKeyboardManager = YES;
     textViewAppearance.fwTouchResign = YES;
+    textViewAppearance.fwKeyboardResign = YES;
     
     UITextField *mobileField = [AppStandard textFieldWithStyle:kAppTextFieldStyleDefault];
     self.mobileField = mobileField;
