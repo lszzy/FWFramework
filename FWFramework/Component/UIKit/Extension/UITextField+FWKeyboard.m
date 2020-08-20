@@ -7,12 +7,53 @@
 //
 
 #import "UITextField+FWKeyboard.h"
+#import "UIView+FWFramework.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWInnerKeyboardTarget
+#pragma mark - FWInnerKeyboardController
 
-// 键盘动画偏移值，多个输入框共用一个
-static CGFloat globalOffset = 0.0;
+@interface FWInnerKeyboardController : NSObject
+
+@property (nonatomic, weak) UIViewController *viewController;
+@property (nonatomic, strong) UITapGestureRecognizer *touchGesture;
+@property (nonatomic, assign) BOOL isKeyboardShow;
+@property (nonatomic, assign) CGFloat viewOriginY;
+@property (nonatomic, assign) CGFloat viewOffsetY;
+
+@end
+
+@implementation FWInnerKeyboardController
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _touchGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchGestureAction:)];
+        // 继续响应其它touch事件
+        _touchGesture.cancelsTouchesInView = NO;
+    }
+    return self;
+}
+
+- (void)touchGestureEnable:(BOOL)enable
+{
+    if (enable) {
+        [self.viewController.view addGestureRecognizer:self.touchGesture];
+    } else {
+        [self.viewController.view removeGestureRecognizer:self.touchGesture];
+    }
+}
+
+- (void)touchGestureAction:(UITapGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        [self.viewController.view endEditing:YES];
+    }
+}
+
+@end
+
+#pragma mark - FWInnerKeyboardTarget
 
 @interface FWInnerKeyboardTarget : NSObject
 
@@ -26,9 +67,7 @@ static CGFloat globalOffset = 0.0;
 
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
 
-@property (nonatomic, strong) UITapGestureRecognizer *touchGesture;
-
-@property (nonatomic, weak) UIView *animationView;
+@property (nonatomic, weak) FWInnerKeyboardController *keyboardController;
 
 - (instancetype)initWithTextInput:(UIView<UITextInput> *)textInput;
 
@@ -43,16 +82,14 @@ static CGFloat globalOffset = 0.0;
         _textInput = textInput;
         _keyboardSpacing = 10.0;
         
-        // 监听开始和结束编辑
         if ([textInput isKindOfClass:[UITextField class]]) {
-            [(UITextField *)textInput addTarget:self action:@selector(editingDidBegin) forControlEvents:UIControlEventEditingDidBegin];
-            [(UITextField *)textInput addTarget:self action:@selector(editingDidEnd) forControlEvents:UIControlEventEditingDidEnd];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:textInput];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:textInput];
         } else if ([textInput isKindOfClass:[UITextView class]]) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:textInput];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:textInput];
         }
         
-        // 监听键盘弹出事件
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     }
@@ -64,17 +101,21 @@ static CGFloat globalOffset = 0.0;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-// 获取关联的视图控制器
-- (UIViewController *)viewController
+- (FWInnerKeyboardController *)keyboardController
 {
-    UIResponder *responder = [self.textInput nextResponder];
-    while (responder) {
-        if ([responder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *)responder;
-        }
-        responder = [responder nextResponder];
+    if (_keyboardController) return _keyboardController;
+    
+    UIViewController *viewController = [self.textInput fwViewController];
+    if (!viewController) return nil;
+    
+    FWInnerKeyboardController *keyboardController = objc_getAssociatedObject(viewController, _cmd);
+    if (!keyboardController) {
+        keyboardController = [[FWInnerKeyboardController alloc] init];
+        keyboardController.viewController = viewController;
+        objc_setAssociatedObject(viewController, _cmd, keyboardController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return nil;
+    _keyboardController = keyboardController;
+    return _keyboardController;
 }
 
 #pragma mark - Resign
@@ -82,168 +123,88 @@ static CGFloat globalOffset = 0.0;
 - (void)editingDidBegin
 {
     if (self.touchResign) {
-        [self touchGestureEnable:YES];
+        [self.keyboardController touchGestureEnable:YES];
     }
 }
 
 - (void)editingDidEnd
 {
     if (self.touchResign) {
-        [self touchGestureEnable:NO];
-    }
-}
-
-- (void)touchGestureEnable:(BOOL)enable
-{
-    // 获取关联的视图控制器视图
-    UIView *gestureView = self.viewController.view;
-    if (!gestureView) {
-        return;
-    }
-    
-    // 初始化手势
-    if (!self.touchGesture) {
-        self.touchGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchGestureAction:)];
-        // 继续响应其它touch事件
-        self.touchGesture.cancelsTouchesInView = NO;
-    }
-    
-    // 启用或禁用手势
-    if (enable) {
-        [gestureView addGestureRecognizer:self.touchGesture];
-    } else {
-        [gestureView removeGestureRecognizer:self.touchGesture];
-    }
-}
-
-- (void)touchGestureAction:(UITapGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateEnded) {
-        [self.textInput resignFirstResponder];
+        [self.keyboardController touchGestureEnable:NO];
     }
 }
 
 #pragma mark - Keyboard
 
-- (void)keyboardWillShow:(NSNotification *)note
+- (void)keyboardWillShow:(NSNotification *)notification
 {
-    // 输入框处于激活状态才处理
-    if (!self.textInput.isFirstResponder) {
-        return;
-    }
+    if (!self.textInput.isFirstResponder) return;
     
-    // 视图上移到键盘上方处理
     if (self.keyboardView) {
-        // 获取用户信息
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:note.userInfo];
-        // 获取键盘高度
+        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
         CGFloat keyboardHeight = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-        // 获取键盘动画时间
         CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
         
-        // 保存当前动画视图，供hide动画使用。如果直接使用keyboardView并在hide之前修改了该视图，会导致动画不能还原
-        self.animationView = self.keyboardView;
-        void (^animation)(void) = ^void(void){
-            self.animationView.transform = CGAffineTransformMakeTranslation(0, -keyboardHeight);
-        };
-        if (animationDuration > 0) {
-            [UIView animateWithDuration:animationDuration animations:animation];
-        } else {
-            animation();
-        }
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.keyboardView.transform = CGAffineTransformMakeTranslation(0, -keyboardHeight);
+        } completion:nil];
     }
     
-    // 输入框自动滚动到键盘上方处理
     if (self.keyboardManager) {
-        // 获取用户信息
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:note.userInfo];
+        if (!self.keyboardController) return;
+        UIWindow *targetWindow = self.textInput.window ? self.textInput.window : self.keyboardController.viewController.view.window;
+        if (!targetWindow) return;
+        
+        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
         CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        // 获取动画视图和窗口视图
-        UIView *targetView = self.viewController.view;
-        UIWindow *targetWindow = self.textInput.window ? self.textInput.window : targetView.window;
-        if (!targetView || !targetWindow) {
-            return;
+        CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+        CGRect convertRect = [self.textInput.superview convertRect:self.textInput.frame toView:targetWindow];
+        CGFloat maxY = CGRectGetMaxY(convertRect);
+        if (self.keyboardController.viewOffsetY != 0) {
+            maxY -= self.keyboardController.viewOffsetY;
         }
         
-        // 注意：此处应该是需要转换控件的参考系视图，而不是自身。即textField.superview frame| textField bounds，而不是textField frame
-        // 此处相对于window，因为keyboardRect相对于window而言。要么不转换，要么同时转换
-        CGRect convertRect = [self.textInput.superview convertRect:self.textInput.frame toView:targetWindow];
-        // 多个输入框时不会调用willHide，导致不会还原
-        CGFloat maxY = CGRectGetMaxY(convertRect);
-        if (globalOffset != 0) {
-            maxY -= globalOffset;
+        if (!self.keyboardController.isKeyboardShow) {
+            self.keyboardController.isKeyboardShow = YES;
+            self.keyboardController.viewOriginY = self.keyboardController.viewController.view.fwY;
         }
         
         // 判断是否需要自动滚动动画
         if (CGRectGetMinY(keyboardRect) - self.keyboardSpacing < maxY) {
-            // 计算动画偏移高度
             CGFloat animationOffset = CGRectGetMinY(keyboardRect) - self.keyboardSpacing - maxY;
-            globalOffset = animationOffset;
-            // 获取键盘动画时间
-            CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-            
-            // 保存当前动画视图，供hide动画使用。如果直接使用并在hide之前修改了该视图，会导致动画不能还原
-            self.animationView = targetView;
-            void (^animation)(void) = ^void(void){
-                self.animationView.transform = CGAffineTransformMakeTranslation(0, animationOffset);
-            };
-            if (animationDuration > 0) {
-                [UIView animateWithDuration:animationDuration animations:animation];
-            } else {
-                animation();
-            }
+            self.keyboardController.viewOffsetY = animationOffset;
+            [UIView animateWithDuration:animationDuration animations:^{
+                self.keyboardController.viewController.view.fwY = self.keyboardController.viewOriginY + animationOffset;
+            } completion:nil];
         }
     }
 }
 
-- (void)keyboardWillHide:(NSNotification *)note
+- (void)keyboardWillHide:(NSNotification *)notification
 {
-    // 输入框处于激活状态才处理
-    if (!self.textInput.isFirstResponder) {
-        return;
-    }
+    if (!self.textInput.isFirstResponder) return;
     
-    // 视图上移到键盘上方处理
     if (self.keyboardView) {
-        // 获取用户信息
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:note.userInfo];
-        // 获取键盘动画时间
+        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
         CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
         
-        // 获取动画视图，不能直接使用keyboardView，原因见show方法注释
-        void (^animation)(void) = ^void(void){
-            self.animationView.transform = CGAffineTransformIdentity;
-        };
-        if (animationDuration > 0) {
-            [UIView animateWithDuration:animationDuration animations:animation];
-        } else {
-            animation();
-        }
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.keyboardView.transform = CGAffineTransformIdentity;
+        } completion:nil];
     }
     
-    // 输入框自动滚动到键盘上方处理
     if (self.keyboardManager) {
-        // 获取用户信息
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:note.userInfo];
-        UIView *targetView = self.viewController.view;
-        if (!targetView) {
-            return;
-        }
-        
-        // 重置键盘动画偏移值
-        globalOffset = 0.0;
-        // 获取键盘动画时间
+        if (!self.keyboardController) return;
+        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
         CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
         
-        // 获取动画视图，不能直接使用targetView，原因见show方法注释
-        void (^animation)(void) = ^void(void){
-            self.animationView.transform = CGAffineTransformIdentity;
-        };
-        if (animationDuration > 0) {
-            [UIView animateWithDuration:animationDuration animations:animation];
-        } else {
-            animation();
-        }
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.keyboardController.viewController.view.fwY = self.keyboardController.viewOriginY;
+        } completion:^(BOOL finished) {
+            self.keyboardController.isKeyboardShow = NO;
+            self.keyboardController.viewOriginY = 0;
+            self.keyboardController.viewOffsetY = 0;
+        }];
     }
 }
 
