@@ -25,9 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
 
-// 设置键盘弹出时移动到键盘上方的视图，如底部输入框视图
-@property (nullable, nonatomic, weak) UIView *fwKeyboardView;
-
 @end
 
 // 多行输入框键盘管理分类
@@ -44,9 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
-
-// 设置键盘弹出时移动到键盘上方的视图，如底部输入框视图
-@property (nullable, nonatomic, weak) UIView *fwKeyboardView;
 
 @end
 
