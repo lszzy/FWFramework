@@ -8,7 +8,6 @@
 
 #import "UITextField+FWFramework.h"
 #import "NSString+FWFramework.h"
-#import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
@@ -150,67 +149,6 @@
                 }
             });
         }
-    }
-}
-
-#pragma mark - Return
-
-- (BOOL)fwReturnResign
-{
-    return [objc_getAssociatedObject(self, @selector(fwReturnResign)) boolValue];
-}
-
-- (void)setFwReturnResign:(BOOL)fwReturnResign
-{
-    objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerReturnEvent];
-}
-
-- (UIResponder *)fwReturnResponder
-{
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
-    return value.object;
-}
-
-- (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
-{
-    // 此处weak引用responder
-    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerReturnEvent];
-}
-
-- (void (^)(UITextField *textField))fwReturnBlock
-{
-    return objc_getAssociatedObject(self, @selector(fwReturnBlock));
-}
-
-- (void)setFwReturnBlock:(void (^)(UITextField *textField))fwReturnBlock
-{
-    objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fwInnerReturnEvent];
-}
-
-- (void)fwInnerReturnEvent
-{
-    id object = objc_getAssociatedObject(self, _cmd);
-    if (!object) {
-        [self addTarget:self action:@selector(fwInnerReturnAction) forControlEvents:UIControlEventEditingDidEndOnExit];
-        objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-- (void)fwInnerReturnAction
-{
-    // 切换到下一个输入框
-    if (self.fwReturnResponder) {
-        [self.fwReturnResponder becomeFirstResponder];
-    // 关闭键盘
-    } else if (self.fwReturnResign) {
-        [self resignFirstResponder];
-    }
-    // 执行回调
-    if (self.fwReturnBlock) {
-        self.fwReturnBlock(self);
     }
 }
 
