@@ -66,8 +66,6 @@
 
 @property (nonatomic, assign) BOOL touchResign;
 
-@property (nonatomic, weak) UIView *keyboardView;
-
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
 
 @property (nonatomic, weak) FWInnerKeyboardController *keyboardController;
@@ -160,40 +158,33 @@
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     if (!self.textInput.isFirstResponder) return;
-    if (!self.keyboardView && !self.keyboardManager) return;
+    if (!self.keyboardManager) return;
     if (!self.keyboardController) return;
     
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
 
-    if (self.keyboardView) {
-        if (!self.keyboardController.keyboardShowing) {
-            self.keyboardController.keyboardShowing = YES;
-            self.keyboardController.animationOrigin = self.keyboardView.fwY;
-        }
-        
-        [UIView animateWithDuration:animationDuration animations:^{
-            self.keyboardView.transform = CGAffineTransformMakeTranslation(0, -keyboardRect.size.height);
-        }];
-    } else {
-        if (!self.keyboardController.keyboardShowing) {
-            self.keyboardController.keyboardShowing = YES;
-            self.keyboardController.animationOrigin = self.keyboardController.viewController.view.fwY;
-        }
-        
-        UIView *convertView = self.textInput.window ?: self.keyboardController.viewController.view.window;
-        CGRect convertRect = [self.textInput.superview convertRect:self.textInput.frame toView:convertView];
-        CGFloat animationOffset = CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect);
-        [UIView animateWithDuration:animationDuration animations:^{
-            self.keyboardController.viewController.view.fwY = self.keyboardController.animationOrigin + MIN(animationOffset, 0);
-        }];
+    if (!self.keyboardController.keyboardShowing) {
+        self.keyboardController.keyboardShowing = YES;
+        self.keyboardController.animationOrigin = self.keyboardController.viewController.view.fwY;
     }
+    
+    UIView *convertView = self.textInput.window ?: self.keyboardController.viewController.view.window;
+    CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
+    CGFloat animationOffset = CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect);
+    CGFloat targetY = self.keyboardController.viewController.view.fwY + animationOffset;
+    if (targetY > self.keyboardController.animationOrigin) {
+        targetY = self.keyboardController.animationOrigin;
+    }
+    [UIView animateWithDuration:animationDuration animations:^{
+        self.keyboardController.viewController.view.fwY = targetY;
+    }];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     if (!self.textInput.isFirstResponder) return;
-    if (!self.keyboardView && !self.keyboardManager) return;
+    if (!self.keyboardManager) return;
     if (!self.keyboardController.keyboardShowing) return;
     
     CGFloat animationOrigin = self.keyboardController.animationOrigin;
@@ -201,15 +192,9 @@
     self.keyboardController.keyboardShowing = NO;
     self.keyboardController.animationOrigin = 0;
     
-    if (self.keyboardView) {
-        [UIView animateWithDuration:animationDuration animations:^{
-            self.keyboardView.transform = CGAffineTransformIdentity;
-        } completion:nil];
-    } else {
-        [UIView animateWithDuration:animationDuration animations:^{
-            self.keyboardController.viewController.view.fwY = animationOrigin;
-        }];
-    }
+    [UIView animateWithDuration:animationDuration animations:^{
+        self.keyboardController.viewController.view.fwY = animationOrigin;
+    }];
 }
 
 @end
@@ -256,16 +241,6 @@
 - (void)setFwTouchResign:(BOOL)fwTouchResign
 {
     self.fwInnerKeyboardTarget.touchResign = fwTouchResign;
-}
-
-- (UIView *)fwKeyboardView
-{
-    return self.fwInnerKeyboardTarget.keyboardView;
-}
-
-- (void)setFwKeyboardView:(UIView *)fwKeyboardView
-{
-    self.fwInnerKeyboardTarget.keyboardView = fwKeyboardView;
 }
 
 - (FWInnerKeyboardTarget *)fwInnerKeyboardTarget
@@ -322,16 +297,6 @@
 - (void)setFwTouchResign:(BOOL)fwTouchResign
 {
     self.fwInnerKeyboardTarget.touchResign = fwTouchResign;
-}
-
-- (UIView *)fwKeyboardView
-{
-    return self.fwInnerKeyboardTarget.keyboardView;
-}
-
-- (void)setFwKeyboardView:(UIView *)fwKeyboardView
-{
-    self.fwInnerKeyboardTarget.keyboardView = fwKeyboardView;
 }
 
 - (FWInnerKeyboardTarget *)fwInnerKeyboardTarget
