@@ -8,6 +8,7 @@
 
 #import "UITextField+FWKeyboard.h"
 #import "UIView+FWFramework.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerKeyboardController
@@ -199,6 +200,45 @@
 
 @end
 
+#pragma mark - FWTextViewDelegateProxy
+
+@interface FWTextViewDelegateProxy : FWDelegateProxy <UITextViewDelegate>
+
+@end
+
+@implementation FWTextViewDelegateProxy
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    BOOL shouldChange = YES;
+    // 先执行代理方法
+    if (self.delegate && [self.delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
+        shouldChange = [self.delegate textView:textView shouldChangeTextInRange:range replacementText:text];
+    }
+    
+    // 再执行内部方法
+    if (textView.fwReturnResign || textView.fwReturnResponder || textView.fwReturnBlock) {
+        // 判断是否输入回车
+        if ([text isEqualToString:@"\n"]) {
+            // 切换到下一个输入框
+            if (textView.fwReturnResponder) {
+                [textView.fwReturnResponder becomeFirstResponder];
+            // 关闭键盘
+            } else if (textView.fwReturnResign) {
+                [textView resignFirstResponder];
+            }
+            // 执行回调
+            if (textView.fwReturnBlock) {
+                textView.fwReturnBlock(textView);
+            }
+            shouldChange = NO;
+        }
+    }
+    return shouldChange;
+}
+
+@end
+
 #pragma mark - UITextField+FWKeyboard
 
 @implementation UITextField (FWKeyboard)
@@ -251,6 +291,100 @@
         objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
+}
+
+#pragma mark - Return
+
+- (BOOL)fwReturnResign
+{
+    return [objc_getAssociatedObject(self, @selector(fwReturnResign)) boolValue];
+}
+
+- (void)setFwReturnResign:(BOOL)fwReturnResign
+{
+    objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwInnerReturnEvent];
+}
+
+- (UIResponder *)fwReturnResponder
+{
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
+    return value.object;
+}
+
+- (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
+{
+    // 此处weak引用responder
+    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwInnerReturnEvent];
+}
+
+- (void (^)(UITextField *textField))fwReturnBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwReturnBlock));
+}
+
+- (void)setFwReturnBlock:(void (^)(UITextField *textField))fwReturnBlock
+{
+    objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self fwInnerReturnEvent];
+}
+
+- (void)fwInnerReturnEvent
+{
+    id object = objc_getAssociatedObject(self, _cmd);
+    if (!object) {
+        [self addTarget:self action:@selector(fwInnerReturnAction) forControlEvents:UIControlEventEditingDidEndOnExit];
+        objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+- (void)fwInnerReturnAction
+{
+    // 切换到下一个输入框
+    if (self.fwReturnResponder) {
+        [self.fwReturnResponder becomeFirstResponder];
+    // 关闭键盘
+    } else if (self.fwReturnResign) {
+        [self resignFirstResponder];
+    }
+    // 执行回调
+    if (self.fwReturnBlock) {
+        self.fwReturnBlock(self);
+    }
+}
+
+#pragma mark - Toolbar
+
+- (void)fwAddToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
+{
+    UIBarButtonItem *rightItem = nil;
+    NSString *rightTitle = title.length > 0 ? title : NSLocalizedString(@"完成", nil);
+    if (block != nil) {
+        rightItem = [UIBarButtonItem fwBarItemWithObject:rightTitle block:block];
+        rightItem.style = UIBarButtonItemStyleDone;
+    } else {
+        rightItem = [[UIBarButtonItem alloc] initWithTitle:rightTitle style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)];
+    }
+    [self fwAddToolbar:barStyle leftItem:nil rightItem:rightItem];
+}
+
+- (void)fwAddToolbar:(UIBarStyle)barStyle leftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem
+{
+    NSMutableArray<UIBarButtonItem *> *items = [NSMutableArray array];
+    if (leftItem != nil) {
+        [items addObject:leftItem];
+    }
+    [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    if (rightItem != nil) {
+        [items addObject:rightItem];
+    }
+    
+    UIToolbar *toolbar = [UIToolbar new];
+    toolbar.items = [items copy];
+    toolbar.barStyle = barStyle;
+    [toolbar sizeToFit];
+    self.inputAccessoryView = toolbar;
 }
 
 @end
@@ -307,6 +441,124 @@
         objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
+}
+
+#pragma mark - Delegate
+
+- (id<UITextViewDelegate>)fwDelegate
+{
+    if (!self.fwDelegateProxyEnabled) {
+        return self.delegate;
+    } else {
+        return self.fwDelegateProxy.delegate;
+    }
+}
+
+- (void)setFwDelegate:(id<UITextViewDelegate>)fwDelegate
+{
+    if (!self.fwDelegateProxyEnabled) {
+        self.delegate = fwDelegate;
+    } else {
+        self.fwDelegateProxy.delegate = fwDelegate;
+    }
+}
+
+- (BOOL)fwDelegateProxyEnabled
+{
+    return self.delegate == self.fwDelegateProxy;
+}
+
+- (void)setFwDelegateProxyEnabled:(BOOL)enabled
+{
+    if (enabled != self.fwDelegateProxyEnabled) {
+        if (enabled) {
+            self.fwDelegateProxy.delegate = self.delegate;
+            self.delegate = self.fwDelegateProxy;
+        } else {
+            self.delegate = self.fwDelegateProxy.delegate;
+            self.fwDelegateProxy.delegate = nil;
+        }
+    }
+}
+
+- (__kindof FWDelegateProxy *)fwDelegateProxy
+{
+    FWDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
+    if (!proxy) {
+        proxy = [[FWTextViewDelegateProxy alloc] init];
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return proxy;
+}
+
+#pragma mark - Return
+
+- (BOOL)fwReturnResign
+{
+    return [objc_getAssociatedObject(self, @selector(fwReturnResign)) boolValue];
+}
+
+- (void)setFwReturnResign:(BOOL)fwReturnResign
+{
+    objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwDelegateProxyEnabled = YES;
+}
+
+- (UIResponder *)fwReturnResponder
+{
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
+    return value.object;
+}
+
+- (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
+{
+    // 此处weak引用responder
+    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwDelegateProxyEnabled = YES;
+}
+
+- (void (^)(UITextView *textView))fwReturnBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwReturnBlock));
+}
+
+- (void)setFwReturnBlock:(void (^)(UITextView *textView))fwReturnBlock
+{
+    objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.fwDelegateProxyEnabled = YES;
+}
+
+#pragma mark - Toolbar
+
+- (void)fwAddToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
+{
+    UIBarButtonItem *rightItem = nil;
+    NSString *rightTitle = title.length > 0 ? title : NSLocalizedString(@"完成", nil);
+    if (block != nil) {
+        rightItem = [UIBarButtonItem fwBarItemWithObject:rightTitle block:block];
+        rightItem.style = UIBarButtonItemStyleDone;
+    } else {
+        rightItem = [[UIBarButtonItem alloc] initWithTitle:rightTitle style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)];
+    }
+    [self fwAddToolbar:barStyle leftItem:nil rightItem:rightItem];
+}
+
+- (void)fwAddToolbar:(UIBarStyle)barStyle leftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem
+{
+    NSMutableArray<UIBarButtonItem *> *items = [NSMutableArray array];
+    if (leftItem != nil) {
+        [items addObject:leftItem];
+    }
+    [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    if (rightItem != nil) {
+        [items addObject:rightItem];
+    }
+    
+    UIToolbar *toolbar = [UIToolbar new];
+    toolbar.items = [items copy];
+    toolbar.barStyle = barStyle;
+    [toolbar sizeToFit];
+    self.inputAccessoryView = toolbar;
 }
 
 @end
