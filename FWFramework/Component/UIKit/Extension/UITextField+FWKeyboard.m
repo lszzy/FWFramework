@@ -20,20 +20,17 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @interface FWInnerKeyboardTarget : NSObject
 
 @property (nonatomic, assign) BOOL keyboardManager;
-
 @property (nonatomic, assign) CGFloat keyboardSpacing;
-
 @property (nonatomic, assign) BOOL keyboardResign;
-
-@property (nonatomic, assign) BOOL keyboardActive;
-
 @property (nonatomic, assign) BOOL touchResign;
 
+@property (nonatomic, assign) BOOL returnResign;
+@property (nonatomic, weak) UIResponder *returnResponder;
+@property (nonatomic, copy) void (^returnBlock)(id textInput);
+
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
-
 @property (nonatomic, weak) UIViewController *viewController;
-
-- (instancetype)initWithTextInput:(UIView<UITextInput> *)textInput;
+@property (nonatomic, assign) BOOL keyboardActive;
 
 @end
 
@@ -334,36 +331,34 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (BOOL)fwReturnResign
 {
-    return [objc_getAssociatedObject(self, @selector(fwReturnResign)) boolValue];
+    return self.fwInnerKeyboardTarget.returnResign;
 }
 
 - (void)setFwReturnResign:(BOOL)fwReturnResign
 {
-    objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwInnerKeyboardTarget.returnResign = fwReturnResign;
     [self fwInnerReturnEvent];
 }
 
 - (UIResponder *)fwReturnResponder
 {
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
-    return value.object;
+    return self.fwInnerKeyboardTarget.returnResponder;
 }
 
 - (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
 {
-    // 此处weak引用responder
-    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwInnerKeyboardTarget.returnResponder = fwReturnResponder;
     [self fwInnerReturnEvent];
 }
 
 - (void (^)(UITextField *textField))fwReturnBlock
 {
-    return objc_getAssociatedObject(self, @selector(fwReturnBlock));
+    return self.fwInnerKeyboardTarget.returnBlock;
 }
 
 - (void)setFwReturnBlock:(void (^)(UITextField *textField))fwReturnBlock
 {
-    objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.fwInnerKeyboardTarget.returnBlock = fwReturnBlock;
     [self fwInnerReturnEvent];
 }
 
@@ -511,36 +506,34 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (BOOL)fwReturnResign
 {
-    return [objc_getAssociatedObject(self, @selector(fwReturnResign)) boolValue];
+    return self.fwInnerKeyboardTarget.returnResign;
 }
 
 - (void)setFwReturnResign:(BOOL)fwReturnResign
 {
-    objc_setAssociatedObject(self, @selector(fwReturnResign), @(fwReturnResign), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwInnerKeyboardTarget.returnResign = fwReturnResign;
     self.fwDelegateProxyEnabled = YES;
 }
 
 - (UIResponder *)fwReturnResponder
 {
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwReturnResponder));
-    return value.object;
+    return self.fwInnerKeyboardTarget.returnResponder;
 }
 
 - (void)setFwReturnResponder:(UIResponder *)fwReturnResponder
 {
-    // 此处weak引用responder
-    objc_setAssociatedObject(self, @selector(fwReturnResponder), [[FWWeakObject alloc] initWithObject:fwReturnResponder], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwInnerKeyboardTarget.returnResponder = fwReturnResponder;
     self.fwDelegateProxyEnabled = YES;
 }
 
 - (void (^)(UITextView *textView))fwReturnBlock
 {
-    return objc_getAssociatedObject(self, @selector(fwReturnBlock));
+    return self.fwInnerKeyboardTarget.returnBlock;
 }
 
 - (void)setFwReturnBlock:(void (^)(UITextView *textView))fwReturnBlock
 {
-    objc_setAssociatedObject(self, @selector(fwReturnBlock), fwReturnBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.fwInnerKeyboardTarget.returnBlock = fwReturnBlock;
     self.fwDelegateProxyEnabled = YES;
 }
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.6.3'
+  spec.version             = '0.6.4'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'

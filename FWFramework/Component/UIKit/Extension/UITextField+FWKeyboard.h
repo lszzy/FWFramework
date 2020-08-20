@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - UITextField+FWKeyboard
+
 // 文本输入框键盘管理分类
 @interface UITextField (FWKeyboard)
 
@@ -47,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwAddToolbar:(UIBarStyle)barStyle leftItem:(nullable UIBarButtonItem *)leftItem rightItem:(nullable UIBarButtonItem *)rightItem;
 
 @end
+
+#pragma mark - UITextView+FWKeyboard
 
 // 多行输入框键盘管理分类
 @interface UITextView (FWKeyboard)
