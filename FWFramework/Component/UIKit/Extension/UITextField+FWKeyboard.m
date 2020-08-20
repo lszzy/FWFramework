@@ -16,20 +16,19 @@
 
 @property (nonatomic, weak) UIViewController *viewController;
 @property (nonatomic, strong) UITapGestureRecognizer *touchGesture;
-@property (nonatomic, assign) BOOL isKeyboardShow;
-@property (nonatomic, assign) CGFloat viewOriginY;
-@property (nonatomic, assign) CGFloat viewOffsetY;
+@property (nonatomic, assign) BOOL keyboardShowing;
+@property (nonatomic, assign) CGFloat animationOrigin;
 
 @end
 
 @implementation FWInnerKeyboardController
 
-- (instancetype)init
+- (instancetype)initWithViewController:(UIViewController *)viewController
 {
     self = [super init];
     if (self) {
+        _viewController = viewController;
         _touchGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchGestureAction:)];
-        // 继续响应其它touch事件
         _touchGesture.cancelsTouchesInView = NO;
     }
     return self;
@@ -86,6 +85,17 @@
         _textInput = textInput;
         _keyboardSpacing = 10.0;
         
+        if ([self.textInput isKindOfClass:[UITextField class]]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:self.textInput];
+        } else if ([self.textInput isKindOfClass:[UITextView class]]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:self.textInput];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:self.textInput];
+        }
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     }
@@ -97,48 +107,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - Accessor
-
-- (void)setTouchResign:(BOOL)touchResign
-{
-    if (touchResign != _touchResign) {
-        _touchResign = touchResign;
-        
-        if (touchResign) {
-            if ([self.textInput isKindOfClass:[UITextField class]]) {
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:self.textInput];
-            } else if ([self.textInput isKindOfClass:[UITextView class]]) {
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:self.textInput];
-            }
-        } else {
-            if ([self.textInput isKindOfClass:[UITextField class]]) {
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidEndEditingNotification object:self.textInput];
-            } else if ([self.textInput isKindOfClass:[UITextView class]]) {
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidEndEditingNotification object:self.textInput];
-            }
-        }
-    }
-}
-
-- (void)setKeyboardResign:(BOOL)keyboardResign
-{
-    if (keyboardResign != _keyboardResign) {
-        _keyboardResign = keyboardResign;
-        
-        if (keyboardResign) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationResignActive) name:UIApplicationWillResignActiveNotification object:nil];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        } else {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
-        }
-    }
-}
-
 - (FWInnerKeyboardController *)keyboardController
 {
     if (_keyboardController) return _keyboardController;
@@ -148,8 +116,7 @@
     
     FWInnerKeyboardController *keyboardController = objc_getAssociatedObject(viewController, _cmd);
     if (!keyboardController) {
-        keyboardController = [[FWInnerKeyboardController alloc] init];
-        keyboardController.viewController = viewController;
+        keyboardController = [[FWInnerKeyboardController alloc] initWithViewController:viewController];
         objc_setAssociatedObject(viewController, _cmd, keyboardController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     _keyboardController = keyboardController;
@@ -170,7 +137,7 @@
     [self.keyboardController touchGestureEnable:NO];
 }
 
-- (void)applicationResignActive
+- (void)appResignActive
 {
     if (!self.keyboardResign) return;
     if (!self.textInput.isFirstResponder) return;
@@ -179,7 +146,7 @@
     [self.textInput resignFirstResponder];
 }
 
-- (void)applicationBecomeActive
+- (void)appBecomeActive
 {
     if (!self.keyboardResign) return;
     if (!self.keyboardActive) return;
@@ -193,80 +160,54 @@
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     if (!self.textInput.isFirstResponder) return;
+    if (!self.keyboardView && !self.keyboardManager) return;
+    if (!self.keyboardController) return;
     
+    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+
     if (self.keyboardView) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
-        CGFloat keyboardHeight = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-        CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+        if (!self.keyboardController.keyboardShowing) {
+            self.keyboardController.keyboardShowing = YES;
+            self.keyboardController.animationOrigin = self.keyboardView.fwY;
+        }
         
         [UIView animateWithDuration:animationDuration animations:^{
-            self.keyboardView.transform = CGAffineTransformMakeTranslation(0, -keyboardHeight);
-        } completion:nil];
-    }
-    
-    if (self.keyboardManager) {
-        if (!self.keyboardController) return;
-        UIWindow *targetWindow = self.textInput.window ? self.textInput.window : self.keyboardController.viewController.view.window;
-        if (!targetWindow) return;
-        
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
-        CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-        CGRect convertRect = [self.textInput.superview convertRect:self.textInput.frame toView:targetWindow];
-        CGFloat maxY = CGRectGetMaxY(convertRect);
-        if (self.keyboardController.viewOffsetY != 0) {
-            maxY -= self.keyboardController.viewOffsetY;
+            self.keyboardView.transform = CGAffineTransformMakeTranslation(0, -keyboardRect.size.height);
+        }];
+    } else {
+        if (!self.keyboardController.keyboardShowing) {
+            self.keyboardController.keyboardShowing = YES;
+            self.keyboardController.animationOrigin = self.keyboardController.viewController.view.fwY;
         }
         
-        if (!self.keyboardController.isKeyboardShow) {
-            self.keyboardController.isKeyboardShow = YES;
-            self.keyboardController.viewOriginY = self.keyboardController.viewController.view.fwY;
-        }
-        
-        // 判断是否需要自动滚动动画
-        if (CGRectGetMinY(keyboardRect) - self.keyboardSpacing < maxY) {
-            CGFloat animationOffset = CGRectGetMinY(keyboardRect) - self.keyboardSpacing - maxY;
-            self.keyboardController.viewOffsetY = animationOffset;
-            CGFloat targetY = self.keyboardController.viewOriginY + animationOffset;
-            [UIView animateWithDuration:animationDuration animations:^{
-                self.keyboardController.viewController.view.fwY = targetY;
-            } completion:^(BOOL finished) {
-                if (finished && self.keyboardController.viewController.view.fwY != targetY) {
-                    self.keyboardController.viewController.view.fwY = targetY;
-                }
-            }];
-        }
+        UIView *convertView = self.textInput.window ?: self.keyboardController.viewController.view.window;
+        CGRect convertRect = [self.textInput.superview convertRect:self.textInput.frame toView:convertView];
+        CGFloat animationOffset = CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect);
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.keyboardController.viewController.view.fwY = self.keyboardController.animationOrigin + MIN(animationOffset, 0);
+        }];
     }
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     if (!self.textInput.isFirstResponder) return;
+    if (!self.keyboardView && !self.keyboardManager) return;
+    if (!self.keyboardController.keyboardShowing) return;
+    
+    CGFloat animationOrigin = self.keyboardController.animationOrigin;
+    CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    self.keyboardController.keyboardShowing = NO;
+    self.keyboardController.animationOrigin = 0;
     
     if (self.keyboardView) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
-        CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-        
         [UIView animateWithDuration:animationDuration animations:^{
             self.keyboardView.transform = CGAffineTransformIdentity;
         } completion:nil];
-    }
-    
-    if (self.keyboardManager) {
-        if (!self.keyboardController) return;
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:notification.userInfo];
-        CGFloat animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-        
-        CGFloat targetY = self.keyboardController.viewOriginY;
+    } else {
         [UIView animateWithDuration:animationDuration animations:^{
-            self.keyboardController.viewController.view.fwY = targetY;
-        } completion:^(BOOL finished) {
-            if (finished && self.keyboardController.viewController.view.fwY != targetY) {
-                self.keyboardController.viewController.view.fwY = targetY;
-            }
-            self.keyboardController.isKeyboardShow = NO;
-            self.keyboardController.viewOriginY = 0;
-            self.keyboardController.viewOffsetY = 0;
+            self.keyboardController.viewController.view.fwY = animationOrigin;
         }];
     }
 }
