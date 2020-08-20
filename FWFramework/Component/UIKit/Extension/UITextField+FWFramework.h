@@ -59,6 +59,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 选中所有文字
 - (void)fwSelectAllText;
 
+#pragma mark - Toolbar
+
+// 添加Toolbar，指定右边按钮标题和句柄，默认完成并收起键盘
+- (void)fwAddToolbar:(UIBarStyle)barStyle title:(nullable NSString *)title block:(nullable void (^)(id sender))block;
+
+// 添加Toolbar，可选指定左边和右边按钮
+- (void)fwAddToolbar:(UIBarStyle)barStyle leftItem:(nullable UIBarButtonItem *)leftItem rightItem:(nullable UIBarButtonItem *)rightItem;
+
 @end
 
 NS_ASSUME_NONNULL_END

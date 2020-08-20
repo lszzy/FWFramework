@@ -7,6 +7,7 @@
 //
 
 #import "UITextField+FWFramework.h"
+#import "UIView+FWBlock.h"
 #import "NSString+FWFramework.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
@@ -255,6 +256,39 @@
 {
     UITextRange *range = [self textRangeFromPosition:self.beginningOfDocument toPosition:self.endOfDocument];
     [self setSelectedTextRange:range];
+}
+
+#pragma mark - Toolbar
+
+- (void)fwAddToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
+{
+    UIBarButtonItem *rightItem = nil;
+    NSString *rightTitle = title.length > 0 ? title : NSLocalizedString(@"完成", nil);
+    if (block != nil) {
+        rightItem = [UIBarButtonItem fwBarItemWithObject:rightTitle block:block];
+        rightItem.style = UIBarButtonItemStyleDone;
+    } else {
+        rightItem = [[UIBarButtonItem alloc] initWithTitle:rightTitle style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)];
+    }
+    [self fwAddToolbar:barStyle leftItem:nil rightItem:rightItem];
+}
+
+- (void)fwAddToolbar:(UIBarStyle)barStyle leftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem
+{
+    NSMutableArray<UIBarButtonItem *> *items = [NSMutableArray array];
+    if (leftItem != nil) {
+        [items addObject:leftItem];
+    }
+    [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    if (rightItem != nil) {
+        [items addObject:rightItem];
+    }
+    
+    UIToolbar *toolbar = [UIToolbar new];
+    toolbar.items = [items copy];
+    toolbar.barStyle = barStyle;
+    [toolbar sizeToFit];
+    self.inputAccessoryView = toolbar;
 }
 
 @end

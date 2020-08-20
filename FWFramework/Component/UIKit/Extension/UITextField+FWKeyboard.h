@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat fwKeyboardSpacing UI_APPEARANCE_SELECTOR;
 
+// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
+@property (nonatomic, assign) BOOL fwKeyboardResign UI_APPEARANCE_SELECTOR;
+
 // 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
 
@@ -35,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat fwKeyboardSpacing UI_APPEARANCE_SELECTOR;
+
+// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
+@property (nonatomic, assign) BOOL fwKeyboardResign UI_APPEARANCE_SELECTOR;
 
 // 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
