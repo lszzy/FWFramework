@@ -11,49 +11,11 @@
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWInnerKeyboardController
-
-@interface FWInnerKeyboardController : NSObject
-
-@property (nonatomic, weak) UIViewController *viewController;
-@property (nonatomic, strong) UITapGestureRecognizer *touchGesture;
-@property (nonatomic, assign) BOOL keyboardShowing;
-@property (nonatomic, assign) CGFloat animationOrigin;
-
-@end
-
-@implementation FWInnerKeyboardController
-
-- (instancetype)initWithViewController:(UIViewController *)viewController
-{
-    self = [super init];
-    if (self) {
-        _viewController = viewController;
-        _touchGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchGestureAction:)];
-        _touchGesture.cancelsTouchesInView = NO;
-    }
-    return self;
-}
-
-- (void)touchGestureEnable:(BOOL)enable
-{
-    if (enable) {
-        [self.viewController.view addGestureRecognizer:self.touchGesture];
-    } else {
-        [self.viewController.view removeGestureRecognizer:self.touchGesture];
-    }
-}
-
-- (void)touchGestureAction:(UITapGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateEnded) {
-        [self.viewController.view endEditing:YES];
-    }
-}
-
-@end
-
 #pragma mark - FWInnerKeyboardTarget
+
+static BOOL fwStaticKeyboardShowing = NO;
+static CGFloat fwStaticKeyboardOrigin = 0;
+static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 @interface FWInnerKeyboardTarget : NSObject
 
@@ -69,7 +31,7 @@
 
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
 
-@property (nonatomic, weak) FWInnerKeyboardController *keyboardController;
+@property (nonatomic, weak) UIViewController *viewController;
 
 - (instancetype)initWithTextInput:(UIView<UITextInput> *)textInput;
 
@@ -83,20 +45,6 @@
     if (self) {
         _textInput = textInput;
         _keyboardSpacing = 10.0;
-        
-        if ([self.textInput isKindOfClass:[UITextField class]]) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:self.textInput];
-        } else if ([self.textInput isKindOfClass:[UITextView class]]) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:self.textInput];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:self.textInput];
-        }
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     }
     return self;
 }
@@ -106,20 +54,69 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (FWInnerKeyboardController *)keyboardController
+#pragma mark - Accessor
+
+- (void)setKeyboardManager:(BOOL)keyboardManager
 {
-    if (_keyboardController) return _keyboardController;
-    
-    UIViewController *viewController = [self.textInput fwViewController];
-    if (!viewController) return nil;
-    
-    FWInnerKeyboardController *keyboardController = objc_getAssociatedObject(viewController, _cmd);
-    if (!keyboardController) {
-        keyboardController = [[FWInnerKeyboardController alloc] initWithViewController:viewController];
-        objc_setAssociatedObject(viewController, _cmd, keyboardController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (keyboardManager != _keyboardManager) {
+        _keyboardManager = keyboardManager;
+        
+        if (keyboardManager) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+        } else {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+        }
     }
-    _keyboardController = keyboardController;
-    return _keyboardController;
+}
+
+- (void)setTouchResign:(BOOL)touchResign
+{
+    if (touchResign != _touchResign) {
+        _touchResign = touchResign;
+        
+        if (touchResign) {
+            if ([self.textInput isKindOfClass:[UITextField class]]) {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:self.textInput];
+            } else if ([self.textInput isKindOfClass:[UITextView class]]) {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:self.textInput];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:self.textInput];
+            }
+        } else {
+            if ([self.textInput isKindOfClass:[UITextField class]]) {
+                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
+                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidEndEditingNotification object:self.textInput];
+            } else if ([self.textInput isKindOfClass:[UITextView class]]) {
+                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidBeginEditingNotification object:self.textInput];
+                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidEndEditingNotification object:self.textInput];
+            }
+        }
+    }
+}
+
+- (void)setKeyboardResign:(BOOL)keyboardResign
+{
+    if (keyboardResign != _keyboardResign) {
+        _keyboardResign = keyboardResign;
+        
+        if (keyboardResign) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        } else {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+        }
+    }
+}
+
+- (UIViewController *)viewController
+{
+    if (!_viewController) {
+        _viewController = [self.textInput fwViewController];
+    }
+    return _viewController;
 }
 
 #pragma mark - Resign
@@ -127,13 +124,27 @@
 - (void)editingDidBegin
 {
     if (!self.touchResign) return;
-    [self.keyboardController touchGestureEnable:YES];
+    if (!self.viewController) return;
+    
+    if (!fwStaticKeyboardGesture) {
+        fwStaticKeyboardGesture = [UITapGestureRecognizer fwGestureRecognizerWithBlock:^(UITapGestureRecognizer *sender) {
+            if (sender.state == UIGestureRecognizerStateEnded) {
+                [sender.view endEditing:YES];
+            }
+        }];
+        fwStaticKeyboardGesture.cancelsTouchesInView = NO;
+    }
+    [self.viewController.view addGestureRecognizer:fwStaticKeyboardGesture];
 }
 
 - (void)editingDidEnd
 {
     if (!self.touchResign) return;
-    [self.keyboardController touchGestureEnable:NO];
+    if (!self.viewController) return;
+    
+    if (fwStaticKeyboardGesture) {
+        [self.viewController.view removeGestureRecognizer:fwStaticKeyboardGesture];
+    }
 }
 
 - (void)appResignActive
@@ -159,42 +170,35 @@
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     if (!self.textInput.isFirstResponder) return;
-    if (!self.keyboardManager) return;
-    if (!self.keyboardController) return;
+    if (!self.keyboardManager || !self.viewController) return;
+    
+    if (!fwStaticKeyboardShowing) {
+        fwStaticKeyboardShowing = YES;
+        fwStaticKeyboardOrigin = self.viewController.view.fwY;
+    }
     
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-
-    if (!self.keyboardController.keyboardShowing) {
-        self.keyboardController.keyboardShowing = YES;
-        self.keyboardController.animationOrigin = self.keyboardController.viewController.view.fwY;
-    }
-    
-    UIView *convertView = self.textInput.window ?: self.keyboardController.viewController.view.window;
+    UIView *convertView = self.textInput.window ?: self.viewController.view.window;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
-    CGFloat animationOffset = CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect);
-    CGFloat targetY = self.keyboardController.viewController.view.fwY + animationOffset;
-    if (targetY > self.keyboardController.animationOrigin) {
-        targetY = self.keyboardController.animationOrigin;
-    }
+    CGFloat viewTargetY = MIN(self.viewController.view.fwY + CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
     [UIView animateWithDuration:animationDuration animations:^{
-        self.keyboardController.viewController.view.fwY = targetY;
+        self.viewController.view.fwY = viewTargetY;
     }];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     if (!self.textInput.isFirstResponder) return;
-    if (!self.keyboardManager) return;
-    if (!self.keyboardController.keyboardShowing) return;
+    if (!self.keyboardManager || !self.viewController || !fwStaticKeyboardShowing) return;
     
-    CGFloat animationOrigin = self.keyboardController.animationOrigin;
+    CGFloat viewOriginY = fwStaticKeyboardOrigin;
+    fwStaticKeyboardShowing = NO;
+    fwStaticKeyboardOrigin = 0;
+    
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    self.keyboardController.keyboardShowing = NO;
-    self.keyboardController.animationOrigin = 0;
-    
     [UIView animateWithDuration:animationDuration animations:^{
-        self.keyboardController.viewController.view.fwY = animationOrigin;
+        self.viewController.view.fwY = viewOriginY;
     }];
 }
 
