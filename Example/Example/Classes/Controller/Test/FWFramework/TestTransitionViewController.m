@@ -127,8 +127,8 @@ FWDealloc();
         self.modalPresentationStyle = UIModalPresentationCustom;
         
         // 也可以封装present方法，手工指定UIPresentationController，无需使用block
-        // FWTransformAnimatedTransition *transition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(1.1, 1.1) outTransform:CGAffineTransformIdentity];
-        FWTransformAnimatedTransition *transition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(0.9, 0.9) outTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+        FWTransformAnimatedTransition *transition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(1.1, 1.1) outTransform:CGAffineTransformIdentity];
+        // FWTransformAnimatedTransition *transition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(0.9, 0.9) outTransform:CGAffineTransformMakeScale(0.9, 0.9)];
         FWWeakifySelf();
         transition.presentationBlock = ^UIPresentationController * _Nonnull(UIViewController * _Nonnull presented, UIViewController * _Nonnull presenting) {
             FWStrongifySelf();
