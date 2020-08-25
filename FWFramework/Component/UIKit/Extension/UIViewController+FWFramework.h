@@ -60,12 +60,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Popup
 
 /*!
- @brief 显示弹出视图到控制器，占满父视图。可使用self.view.window添加到窗口
+ @brief 显示弹出视图到控制器，占满父视图，不含动画。可使用self.view.window添加到窗口
  */
 - (void)fwShowPopupView:(UIView *)popupView;
 
 /*!
- @brief 隐藏弹出视图，等同于removeFromSuperview
+ @brief 隐藏弹出视图，等同于removeFromSuperview，不含动画
  */
 - (void)fwHidePopupView:(UIView *)popupView;
 
