@@ -141,20 +141,6 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     objc_setAssociatedObject(self, @selector(fwDismissBlock), fwDismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-#pragma mark - Popup
-
-- (void)fwShowPopupView:(UIView *)popupView
-{
-    UIView *superview = self.tabBarController.view ?: (self.navigationController.view ?: self.view);
-    [superview addSubview:popupView];
-    [popupView fwPinEdgesToSuperview];
-}
-
-- (void)fwHidePopupView:(UIView *)popupView
-{
-    [popupView removeFromSuperview];
-}
-
 #pragma mark - Action
 
 - (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated

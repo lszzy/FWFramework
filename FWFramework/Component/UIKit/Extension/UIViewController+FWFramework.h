@@ -57,18 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nullable, nonatomic, copy) void (^fwDismissBlock)(void);
 
-#pragma mark - Popup
-
-/*!
- @brief 显示弹出视图到控制器，占满父视图，不含动画。可使用self.view.window添加到窗口
- */
-- (void)fwShowPopupView:(UIView *)popupView;
-
-/*!
- @brief 隐藏弹出视图，等同于removeFromSuperview，不含动画
- */
-- (void)fwHidePopupView:(UIView *)popupView;
-
 #pragma mark - Action
 
 // 打开页面。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
