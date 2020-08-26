@@ -26,8 +26,8 @@
     [self.view addSubview:button2];
     button2.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button, 50);
     
-    NSString *currentLanguage = NSBundle.fwLocalizedLanguage ?: NSBundle.fwSystemLanguage;
-    UIButton *button3 = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:currentLanguage];
+    NSString *language = [NSString stringWithFormat:@"自定义:%@ 系统:%@ 示例：%@", NSBundle.fwLocalizedLanguage, NSBundle.fwSystemLanguage, NSLocalizedString(@"确定", nil)];
+    UIButton *button3 = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:language];
     [button3 fwAddTouchTarget:self action:@selector(onLanguage)];
     [self.view addSubview:button3];
     button3.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button2, 50);
