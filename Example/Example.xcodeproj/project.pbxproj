@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */; };
+		2F0DE5A824F64DDD00DCC13E /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DE5A724F64DDD00DCC13E /* CircleImage.swift */; };
+		2F0DE5AA24F6515C00DCC13E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DE5A924F6515C00DCC13E /* MapView.swift */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
 		2FF4834424ED0422000661D0 /* AppClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF4834324ED0422000661D0 /* AppClipApp.swift */; };
 		2FF4834624ED0422000661D0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF4834524ED0422000661D0 /* ContentView.swift */; };
@@ -140,6 +142,8 @@
 		08894D1DF2A8F1A3D7B19295 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		2F07876424D1B6B7007BF096 /* TestSkeletonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSkeletonViewController.h; sourceTree = "<group>"; };
 		2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSkeletonViewController.m; sourceTree = "<group>"; };
+		2F0DE5A724F64DDD00DCC13E /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
+		2F0DE5A924F6515C00DCC13E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
 		2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeViewController.m; sourceTree = "<group>"; };
 		2FF4834124ED0422000661D0 /* AppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -354,6 +358,8 @@
 			children = (
 				2FF4834324ED0422000661D0 /* AppClipApp.swift */,
 				2FF4834524ED0422000661D0 /* ContentView.swift */,
+				2F0DE5A924F6515C00DCC13E /* MapView.swift */,
+				2F0DE5A724F64DDD00DCC13E /* CircleImage.swift */,
 				2FF4834724ED0423000661D0 /* Assets.xcassets */,
 				2FF4834C24ED0423000661D0 /* Info.plist */,
 				2FF4834D24ED0423000661D0 /* AppClip.entitlements */,
@@ -978,7 +984,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FF4834624ED0422000661D0 /* ContentView.swift in Sources */,
+				2F0DE5AA24F6515C00DCC13E /* MapView.swift in Sources */,
 				2FF4834424ED0422000661D0 /* AppClipApp.swift in Sources */,
+				2F0DE5A824F64DDD00DCC13E /* CircleImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
