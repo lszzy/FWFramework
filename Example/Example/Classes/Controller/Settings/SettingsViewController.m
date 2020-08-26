@@ -56,7 +56,7 @@
     [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"英文"] actionBlock:^(NSInteger index) {
         NSString *language = nil;
         if (index == 1) {
-            language = @"zh";
+            language = @"zh-Hans";
         } else if (index == 2) {
             language = @"en";
         }
