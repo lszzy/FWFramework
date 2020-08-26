@@ -25,6 +25,12 @@
     [button2 fwAddTouchTarget:self action:@selector(onLogout2)];
     [self.view addSubview:button2];
     button2.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button, 50);
+    
+    NSString *currentLanguage = NSBundle.fwLocalizedLanguage ?: NSBundle.fwSystemLanguage;
+    UIButton *button3 = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:currentLanguage];
+    [button3 fwAddTouchTarget:self action:@selector(onLanguage)];
+    [self.view addSubview:button3];
+    button3.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button2, 50);
 }
 
 - (void)onLogout
@@ -42,6 +48,20 @@
 {
     [UIWindow.fwMainWindow fwDismissViewControllers:^{
         [UIWindow.fwMainWindow.rootViewController fwShowAlertWithTitle:@"弹出登录界面" message:nil cancel:@"登录" cancelBlock:nil];
+    }];
+}
+
+- (void)onLanguage
+{
+    [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"英文"] actionBlock:^(NSInteger index) {
+        NSString *language = nil;
+        if (index == 1) {
+            language = @"zh";
+        } else if (index == 2) {
+            language = @"en";
+        }
+        [NSBundle fwSetLocalizedLanguage:language];
+        [(FWAppDelegate *)UIApplication.sharedApplication.delegate setupController];
     }];
 }
 
