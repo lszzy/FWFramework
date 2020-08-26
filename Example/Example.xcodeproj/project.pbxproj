@@ -535,8 +535,8 @@
 		2FF8D89C24C88A6F006A83B5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */,
 				2FF8D89E24C88A6F006A83B5 /* SettingsViewController.h */,
+				2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -544,9 +544,9 @@
 		2FF8D89F24C88A6F006A83B5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				2FF8D8A224C88A6F006A83B5 /* ObjcController.h */,
 				2FF8D8A024C88A6F006A83B5 /* ObjcController.m */,
 				2FF8D8A124C88A6F006A83B5 /* SwiftController.swift */,
-				2FF8D8A224C88A6F006A83B5 /* ObjcController.h */,
 			);
 			path = Home;
 			sourceTree = "<group>";

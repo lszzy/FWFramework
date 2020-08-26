@@ -21,17 +21,17 @@ extern NSString *const FWLocalizedLanguageChangedNotification;
 @discussion 如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。
 如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value
 当前使用修改bundle类方式实现，也可以使用动态替换localizedStringForKey方法来实现，但需注意此方式的性能
-FWFramework所需本地化翻译如下(默认zh|en等)：完成|关闭|确定|取消
+FWFramework所需本地化翻译如下：完成|关闭|确定|取消，配置同App本地化一致即可，如zh-Hans|en等
 */
 @interface NSBundle (FWLanguage)
 
-// 读取系统语言
+// 读取系统语言，未自定义时为系统语言(支持设置)，自定义时为自定义语言
 + (nullable NSString *)fwSystemLanguage;
 
 // 读取自定义本地化语言，未自定义时返回空
 + (nullable NSString *)fwLocalizedLanguage;
 
-// 设置自定义本地化语言，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
+// 设置自定义本地化语言(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
 + (void)fwSetLocalizedLanguage:(nullable NSString *)language;
 
 @end
