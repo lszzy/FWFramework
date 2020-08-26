@@ -1,0 +1,28 @@
+//
+//  LandmarkList.swift
+//  AppClip
+//
+//  Created by wuyong on 2020/8/26.
+//  Copyright © 2020 site.wuyong. All rights reserved.
+//
+
+import SwiftUI
+
+struct LandmarkList: View {
+    var body: some View {
+        NavigationView {
+            List(landmarkData) { landmark in
+                NavigationLink(destination: LandmarkDetail()) {
+                    LandmarkRow(landmark: landmark)
+                }
+            }
+        }
+        .navigationBarTitle(Text("Landmarks"))
+    }
+}
+
+struct LandmarkList_Previews: PreviewProvider {
+    static var previews: some View {
+        LandmarkList()
+    }
+}
