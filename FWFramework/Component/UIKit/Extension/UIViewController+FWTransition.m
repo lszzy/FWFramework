@@ -667,6 +667,85 @@
     objc_setAssociatedObject(self, @selector(fwViewTransition), fwViewTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)fwSetPresentTransition:(void (^)(FWPresentationController *))presentationBlock
+{
+    FWSwipeAnimatedTransition *modalTransition = [[FWSwipeAnimatedTransition alloc] init];
+    modalTransition.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
+        FWPresentationController *presentationController = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        if (presentationBlock) presentationBlock(presentationController);
+        return presentationController;
+    };
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.fwModalTransition = modalTransition;
+}
+
+- (void)fwSetAlertTransition:(void (^)(FWPresentationController *))presentationBlock
+{
+    FWTransformAnimatedTransition *modalTransition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(1.1, 1.1) outTransform:CGAffineTransformIdentity];
+    modalTransition.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
+        FWPresentationController *presentationController = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        if (presentationBlock) presentationBlock(presentationController);
+        return presentationController;
+    };
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.fwModalTransition = modalTransition;
+}
+
+@end
+
+#pragma mark - UIView+FWTransition
+
+@implementation UIView (FWTransition)
+
+- (void)fwSetPresentTransition:(FWAnimatedTransitionType)transitionType
+                   contentView:(UIView *)contentView
+                    completion:(void (^)(BOOL))completion
+{
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    if (transitionIn) {
+        self.alpha = 0;
+        contentView.transform = CGAffineTransformMakeTranslation(0, contentView.frame.size.height);
+        [UIView animateWithDuration:0.25 animations:^{
+            contentView.transform = CGAffineTransformIdentity;
+            self.alpha = 1;
+        } completion:^(BOOL finished) {
+            if (completion) completion(finished);
+        }];
+    } else {
+        [UIView animateWithDuration:0.25 animations:^{
+            contentView.transform = CGAffineTransformMakeTranslation(0, contentView.frame.size.height);
+            self.alpha = 0;
+        } completion:^(BOOL finished) {
+            contentView.transform = CGAffineTransformIdentity;
+            [self removeFromSuperview];
+            if (completion) completion(finished);
+        }];
+    }
+}
+
+- (void)fwSetAlertTransition:(FWAnimatedTransitionType)transitionType
+                  completion:(void (^)(BOOL))completion
+{
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    if (transitionIn) {
+        self.alpha = 0;
+        self.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        [UIView animateWithDuration:0.25 animations:^{
+            self.transform = CGAffineTransformIdentity;
+            self.alpha = 1;
+        } completion:^(BOOL finished) {
+            if (completion) completion(finished);
+        }];
+    } else {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+            if (completion) completion(finished);
+        }];
+    }
+}
+
 @end
 
 #pragma mark - UINavigationController+FWTransition

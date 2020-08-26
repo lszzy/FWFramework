@@ -170,6 +170,28 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 视图控制器push|pop转场，代理导航控制器转场，需在fwNavigationTransition设置后生效
 @property (nullable, nonatomic, strong) FWAnimatedTransition *fwViewTransition;
 
+// 自定义控制器present系统转场(蒙层渐变，内容向上动画)，会设置fwModalTransition
+- (void)fwSetPresentTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
+
+// 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
+- (void)fwSetAlertTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
+
+@end
+
+#pragma mark - UIView+FWTransition
+
+// 自定义视图模拟转场分类
+@interface UIView (FWTransition)
+
+// 自定义视图模拟present系统转场(蒙层渐变，内容向上动画)
+- (void)fwSetPresentTransition:(FWAnimatedTransitionType)transitionType
+                   contentView:(nullable UIView *)contentView
+                    completion:(nullable void (^)(BOOL finished))completion;
+
+// 自定义视图模拟alert缩放转场(蒙层渐变，内容缩放动画)
+- (void)fwSetAlertTransition:(FWAnimatedTransitionType)transitionType
+                  completion:(nullable void (^)(BOOL finished))completion;
+
 @end
 
 #pragma mark - UINavigationController+FWTransition
