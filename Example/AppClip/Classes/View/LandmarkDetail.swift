@@ -13,7 +13,7 @@ struct LandmarkDetail: View {
     
     var body: some View {
         VStack {
-            MapView()
+            MapView(coordinate: landmark.locationCoordinate)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height:300)
             
@@ -22,13 +22,13 @@ struct LandmarkDetail: View {
                 .padding(.bottom, -130)
             
             VStack(alignment:.leading) {
-                Text("Hello, world!")
+                Text(landmark.name)
                     .font(.title)
                 HStack {
-                    Text("SwiftUI!")
+                    Text(landmark.park)
                         .font(.subheadline)
                     Spacer()
-                    Text("Location")
+                    Text(landmark.state)
                         .font(.subheadline)
                 }
             }
@@ -36,6 +36,7 @@ struct LandmarkDetail: View {
             
             Spacer()
         }
+        .navigationBarTitle(Text(landmark.name), displayMode: .inline)
     }
 }
 

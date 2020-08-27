@@ -51,6 +51,7 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
 
 + (NSString *)fwSystemLanguage
 {
+    // return NSBundle.mainBundle.preferredLocalizations.firstObject;
     return [NSLocale preferredLanguages].firstObject;
 }
 

@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+/// 如果是UIKit方式，示例代码：window.rootViewController = UIHostingController(rootView: LandmarkList())
 @main
 struct AppClipApp: App {
     var body: some Scene {
