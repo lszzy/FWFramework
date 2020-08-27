@@ -13,7 +13,7 @@ import SwiftUI
 struct AppClipApp: App {
     var body: some Scene {
         WindowGroup {
-            LandmarkList()
+            LandmarkHome()
                 .environmentObject(UserData())
         }
     }
