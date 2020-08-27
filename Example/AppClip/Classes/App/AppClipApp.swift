@@ -14,6 +14,7 @@ struct AppClipApp: App {
     var body: some Scene {
         WindowGroup {
             LandmarkList()
+                .environmentObject(UserData())
         }
     }
 }
