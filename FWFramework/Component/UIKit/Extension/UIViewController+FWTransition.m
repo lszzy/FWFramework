@@ -667,7 +667,7 @@
     objc_setAssociatedObject(self, @selector(fwViewTransition), fwViewTransition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwSetPresentTransition:(void (^)(FWPresentationController *))presentationBlock
+- (FWAnimatedTransition *)fwSetPresentTransition:(void (^)(FWPresentationController *))presentationBlock
 {
     FWSwipeAnimatedTransition *modalTransition = [[FWSwipeAnimatedTransition alloc] init];
     modalTransition.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
@@ -677,9 +677,10 @@
     };
     self.modalPresentationStyle = UIModalPresentationCustom;
     self.fwModalTransition = modalTransition;
+    return modalTransition;
 }
 
-- (void)fwSetAlertTransition:(void (^)(FWPresentationController *))presentationBlock
+- (FWAnimatedTransition *)fwSetAlertTransition:(void (^)(FWPresentationController *))presentationBlock
 {
     FWTransformAnimatedTransition *modalTransition = [FWTransformAnimatedTransition transitionWithInTransform:CGAffineTransformMakeScale(1.1, 1.1) outTransform:CGAffineTransformIdentity];
     modalTransition.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
@@ -689,6 +690,7 @@
     };
     self.modalPresentationStyle = UIModalPresentationCustom;
     self.fwModalTransition = modalTransition;
+    return modalTransition;
 }
 
 @end
