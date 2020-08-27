@@ -171,10 +171,10 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 @property (nullable, nonatomic, strong) FWAnimatedTransition *fwViewTransition;
 
 // 自定义控制器present系统转场(蒙层渐变，内容向上动画)，会设置fwModalTransition
-- (void)fwSetPresentTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
+- (FWAnimatedTransition *)fwSetPresentTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
 
 // 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
-- (void)fwSetAlertTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
+- (FWAnimatedTransition *)fwSetAlertTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
 
 @end
 
