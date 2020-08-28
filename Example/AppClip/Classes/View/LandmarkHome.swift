@@ -19,6 +19,7 @@ struct LandmarkHome: View {
     }
     
     @State var showingProfile = false
+    @EnvironmentObject var userData: UserData
     
     var profileButton: some View {
         Button(action: {
@@ -54,7 +55,8 @@ struct LandmarkHome: View {
             .navigationBarTitle("Featured")
             .navigationBarItems(trailing: profileButton)
             .sheet(isPresented: $showingProfile, content: {
-                Text("User Profile")
+                ProfileHost()
+                    .environmentObject(self.userData)
             })
         }
     }
