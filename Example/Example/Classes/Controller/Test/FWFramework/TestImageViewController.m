@@ -7,6 +7,7 @@
 //
 
 #import "TestImageViewController.h"
+#import "UIImage+MultiFormat.h"
 
 @interface TestImageCell : UITableViewCell
 
@@ -37,6 +38,31 @@
         _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
     }
     return self;
+}
+
+@end
+
+@interface TestImagePlugin : NSObject<FWImagePlugin>
+
+FWSingleton(TestImagePlugin);
+
+@end
+
+@implementation TestImagePlugin
+
+FWDefSingleton(TestImagePlugin);
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[FWPluginManager sharedInstance] registerDefault:@protocol(FWImagePlugin) withObject:[TestImagePlugin class]];
+    });
+}
+
+- (UIImage *)fwImageDecodeWithData:(NSData *)data scale:(CGFloat)scale
+{
+    return [UIImage sd_imageWithData:data scale:scale];
 }
 
 @end
