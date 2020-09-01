@@ -12,7 +12,7 @@
 /**
  Built in coder using ImageIO that supports APNG encoding/decoding
  */
-@interface SDImageAPNGCoder : SDImageIOAnimatedCoder <SDProgressiveImageCoder, SDAnimatedImageCoder>
+@interface SDImageAPNGCoder : SDImageIOAnimatedCoder <SDAnimatedImageCoder>
 
 @property (nonatomic, class, readonly, nonnull) SDImageAPNGCoder *sharedCoder;
 

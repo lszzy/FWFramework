@@ -23,7 +23,7 @@
  Encode(Software): macOS 10.13
  Encode(Hardware): !Simulator && ((iOS 11 && A10FusionChip) || (macOS 10.13 && 6thGenerationIntelCPU))
  */
-@interface SDImageIOCoder : NSObject <SDProgressiveImageCoder>
+@interface SDImageIOCoder : NSObject
 
 @property (nonatomic, class, readonly, nonnull) SDImageIOCoder *sharedCoder;
 

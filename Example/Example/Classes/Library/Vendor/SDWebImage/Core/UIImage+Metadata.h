@@ -10,7 +10,7 @@
 #import "NSData+ImageContentType.h"
 
 /**
- UIImage category for image metadata, including animation, loop count, format, incremental, etc.
+ UIImage category for image metadata, including animation, loop count, format, etc.
  */
 @interface UIImage (Metadata)
 
@@ -48,10 +48,5 @@
  * @note Note that because of the limitations of categories this property can get out of sync if you create another instance with CGImage or other methods.
  */
 @property (nonatomic, assign) SDImageFormat sd_imageFormat;
-
-/**
- A bool value indicating whether the image is during incremental decoding and may not contains full pixels.
- */
-@property (nonatomic, assign) BOOL sd_isIncremental;
 
 @end

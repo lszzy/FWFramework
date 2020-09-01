@@ -153,51 +153,6 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderWebImageContext 
 
 @end
 
-#pragma mark - Progressive Coder
-/**
- This is the image coder protocol to provide custom progressive image decoding.
- These methods are all required to implement.
- @note Pay attention that these methods are not called from main queue.
- */
-@protocol SDProgressiveImageCoder <SDImageCoder>
-
-@required
-/**
- Returns YES if this coder can incremental decode some data. Otherwise, it should be passed to another coder.
- 
- @param data The image data so we can look at it
- @return YES if this coder can decode the data, NO otherwise
- */
-- (BOOL)canIncrementalDecodeFromData:(nullable NSData *)data;
-
-/**
- Because incremental decoding need to keep the decoded context, we will alloc a new instance with the same class for each download operation to avoid conflicts
- This init method should not return nil
-
- @param options A dictionary containing any progressive decoding options (instance-level). Pass @{SDImageCoderDecodeScaleFactor: @(1.0)} to specify scale factor for progressive animated image (each frames should use the same scale).
- @return A new instance to do incremental decoding for the specify image format
- */
-- (nonnull instancetype)initIncrementalWithOptions:(nullable SDImageCoderOptions *)options;
-
-/**
- Update the incremental decoding when new image data available
-
- @param data The image data has been downloaded so far
- @param finished Whether the download has finished
- */
-- (void)updateIncrementalData:(nullable NSData *)data finished:(BOOL)finished;
-
-/**
- Incremental decode the current image data to image.
- @note Due to the performance issue for progressive decoding and the integration for image view. This method may only return the first frame image even if the image data is animated image. If you want progressive animated image decoding, conform to `SDAnimatedImageCoder` protocol as well and use `animatedImageFrameAtIndex:` instead.
-
- @param options A dictionary containing any progressive decoding options. Pass @{SDImageCoderDecodeScaleFactor: @(1.0)} to specify scale factor for progressive image
- @return The decoded image from current data
- */
-- (nullable UIImage *)incrementalDecodedImageWithOptions:(nullable SDImageCoderOptions *)options;
-
-@end
-
 #pragma mark - Animated Image Provider
 /**
  This is the animated image protocol to provide the basic function for animated image rendering. It's adopted by `SDAnimatedImage` and `SDAnimatedImageCoder`

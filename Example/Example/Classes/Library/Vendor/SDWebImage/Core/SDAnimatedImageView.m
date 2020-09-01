@@ -29,7 +29,6 @@
 @property (nonatomic, assign, readwrite) NSUInteger currentFrameIndex;
 @property (nonatomic, assign, readwrite) NSUInteger currentLoopCount;
 @property (nonatomic, assign) BOOL shouldAnimate;
-@property (nonatomic, assign) BOOL isProgressive;
 @property (nonatomic,strong) SDAnimatedImagePlayer *player; // The animation player.
 @property (nonatomic) CALayer *imageViewLayer; // The actual rendering layer.
 
@@ -97,7 +96,6 @@
     // So the properties which rely on this order, should using lazy-evaluation or do extra check in `setImage:`.
     self.autoPlayAnimatedImage = YES;
     self.shouldCustomLoopCount = NO;
-    self.shouldIncrementalLoad = YES;
     self.playbackRate = 1.0;
 #if SD_MAC
     self.wantsLayer = YES;
@@ -115,28 +113,17 @@
         return;
     }
     
-    // Check Progressive rendering
-    [self updateIsProgressiveWithImage:image];
-    
-    if (!self.isProgressive) {
-        // Stop animating
-        self.player = nil;
-        self.currentFrame = nil;
-        self.currentFrameIndex = 0;
-        self.currentLoopCount = 0;
-    }
+    // Stop animating
+    self.player = nil;
+    self.currentFrame = nil;
+    self.currentFrameIndex = 0;
+    self.currentLoopCount = 0;
     
     // We need call super method to keep function. This will impliedly call `setNeedsDisplay`. But we have no way to avoid this when using animated image. So we call `setNeedsDisplay` again at the end.
     super.image = image;
     if ([image.class conformsToProtocol:@protocol(SDAnimatedImage)]) {
         if (!self.player) {
-            id<SDAnimatedImageProvider> provider;
-            // Check progressive loading
-            if (self.isProgressive) {
-                provider = [self progressiveAnimatedCoderForImage:image];
-            } else {
-                provider = (id<SDAnimatedImage>)image;
-            }
+            id<SDAnimatedImageProvider> provider = (id<SDAnimatedImage>)image;
             // Create animated player
             self.player = [SDAnimatedImagePlayer playerWithProvider:provider];
         } else {
@@ -174,13 +161,7 @@
         self.player.animationLoopHandler = ^(NSUInteger loopCount) {
             @strongify(self);
             // Progressive image reach the current last frame index. Keep the state and pause animating. Wait for later restart
-            if (self.isProgressive) {
-                NSUInteger lastFrameIndex = self.player.totalFrameCount - 1;
-                [self.player seekToFrameAtIndex:lastFrameIndex loopCount:0];
-                [self.player pausePlaying];
-            } else {
-                self.currentLoopCount = loopCount;
-            }
+            self.currentLoopCount = loopCount;
         };
         
         // Ensure disabled highlighting; it's not supported (see `-setHighlighted:`).
@@ -236,14 +217,6 @@
         return 1.0; // Defaults to 1.0
     }
     return _playbackRate;
-}
-
-- (BOOL)shouldIncrementalLoad
-{
-    if (!_initFinished) {
-        return YES; // Defaults to YES
-    }
-    return _initFinished;
 }
 
 #pragma mark - UIView Method Overrides
@@ -421,44 +394,6 @@
     BOOL isVisible = self.window && self.superview && ![self isHidden] && self.alpha > 0.0;
 #endif
     self.shouldAnimate = self.player && isVisible;
-}
-
-// Update progressive status only after `setImage:` call.
-- (void)updateIsProgressiveWithImage:(UIImage *)image
-{
-    self.isProgressive = NO;
-    if (!self.shouldIncrementalLoad) {
-        // Early return
-        return;
-    }
-    // We must use `image.class conformsToProtocol:` instead of `image conformsToProtocol:` here
-    // Because UIKit on macOS, using internal hard-coded override method, which returns NO
-    id<SDAnimatedImageCoder> currentAnimatedCoder = [self progressiveAnimatedCoderForImage:image];
-    if (currentAnimatedCoder) {
-        UIImage *previousImage = self.image;
-        if (!previousImage) {
-            // If current animated coder supports progressive, and no previous image to check, start progressive loading
-            self.isProgressive = YES;
-        } else {
-            id<SDAnimatedImageCoder> previousAnimatedCoder = [self progressiveAnimatedCoderForImage:previousImage];
-            if (previousAnimatedCoder == currentAnimatedCoder) {
-                // If current animated coder is the same as previous, start progressive loading
-                self.isProgressive = YES;
-            }
-        }
-    }
-}
-
-// Check if image can represent a `Progressive Animated Image` during loading
-- (id<SDAnimatedImageCoder, SDProgressiveImageCoder>)progressiveAnimatedCoderForImage:(UIImage *)image
-{
-    if ([image.class conformsToProtocol:@protocol(SDAnimatedImage)] && image.sd_isIncremental && [image respondsToSelector:@selector(animatedCoder)]) {
-        id<SDAnimatedImageCoder> animatedCoder = [(id<SDAnimatedImage>)image animatedCoder];
-        if ([animatedCoder conformsToProtocol:@protocol(SDProgressiveImageCoder)]) {
-            return (id<SDAnimatedImageCoder, SDProgressiveImageCoder>)animatedCoder;
-        }
-    }
-    return nil;
 }
 
 

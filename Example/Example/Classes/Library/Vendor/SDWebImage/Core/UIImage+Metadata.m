@@ -137,13 +137,4 @@
     objc_setAssociatedObject(self, @selector(sd_imageFormat), @(sd_imageFormat), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setSd_isIncremental:(BOOL)sd_isIncremental {
-    objc_setAssociatedObject(self, @selector(sd_isIncremental), @(sd_isIncremental), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)sd_isIncremental {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_isIncremental));
-    return value.boolValue;
-}
-
 @end

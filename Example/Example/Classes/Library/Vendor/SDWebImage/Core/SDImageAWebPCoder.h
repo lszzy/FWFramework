@@ -16,7 +16,7 @@
  @note If you need to support lower firmware version for WebP, you can have a try at https://github.com/SDWebImage/SDWebImageWebPCoder
  */
 API_AVAILABLE(ios(14.0), tvos(14.0), macos(11.0), watchos(7.0))
-@interface SDImageAWebPCoder : SDImageIOAnimatedCoder <SDProgressiveImageCoder, SDAnimatedImageCoder>
+@interface SDImageAWebPCoder : SDImageIOAnimatedCoder <SDAnimatedImageCoder>
 
 @property (nonatomic, class, readonly, nonnull) SDImageAWebPCoder *sharedCoder;
 
