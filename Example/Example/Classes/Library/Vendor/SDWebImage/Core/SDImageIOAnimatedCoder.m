@@ -7,11 +7,9 @@
 */
 
 #import "SDImageIOAnimatedCoder.h"
-#import "NSImage+Compatibility.h"
 #import "UIImage+Metadata.h"
 #import "NSData+ImageContentType.h"
 #import "SDImageCoderHelper.h"
-#import "SDAnimatedImageRep.h"
 #import "UIImage+ForceDecode.h"
 
 // Specify DPI for vector format in CGImageSource, like PDF

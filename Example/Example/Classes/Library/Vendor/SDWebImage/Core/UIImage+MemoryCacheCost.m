@@ -8,7 +8,6 @@
 
 #import "UIImage+MemoryCacheCost.h"
 #import "objc/runtime.h"
-#import "NSImage+Compatibility.h"
 
 FOUNDATION_STATIC_INLINE NSUInteger SDMemoryCacheCostForImage(UIImage *image) {
     CGImageRef imageRef = image.CGImage;

@@ -7,7 +7,6 @@
  */
 
 #import "SDImageGraphics.h"
-#import "NSImage+Compatibility.h"
 #import "objc/runtime.h"
 
 #if SD_MAC

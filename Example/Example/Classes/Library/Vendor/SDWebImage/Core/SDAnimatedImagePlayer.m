@@ -7,7 +7,6 @@
 */
 
 #import "SDAnimatedImagePlayer.h"
-#import "NSImage+Compatibility.h"
 #import "SDDisplayLink.h"
 #import "SDDeviceHelper.h"
 #import "SDInternalMacros.h"
