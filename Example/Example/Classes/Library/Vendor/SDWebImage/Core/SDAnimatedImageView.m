@@ -12,7 +12,6 @@
 
 #import "SDAnimatedImagePlayer.h"
 #import "UIImage+Metadata.h"
-#import "NSImage+Compatibility.h"
 #import "SDInternalMacros.h"
 #import "objc/runtime.h"
 
