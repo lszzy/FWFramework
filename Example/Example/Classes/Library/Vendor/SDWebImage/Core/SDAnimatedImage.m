@@ -10,7 +10,6 @@
 #import "SDImageCoder.h"
 #import "SDImageCodersManager.h"
 #import "SDImageFrame.h"
-#import "UIImage+MemoryCacheCost.h"
 #import "UIImage+Metadata.h"
 #import "UIImage+MultiFormat.h"
 #import "SDImageCoderHelper.h"
