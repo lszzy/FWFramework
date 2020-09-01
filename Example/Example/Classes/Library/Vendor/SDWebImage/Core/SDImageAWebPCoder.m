@@ -51,10 +51,6 @@ static NSString * kSDCGImagePropertyWebPUnclampedDelayTime = @"UnclampedDelayTim
     }
 }
 
-- (BOOL)canIncrementalDecodeFromData:(NSData *)data {
-    return [self canDecodeFromData:data];
-}
-
 - (BOOL)canEncodeToFormat:(SDImageFormat)format {
     switch (format) {
         case SDImageFormatWebP:

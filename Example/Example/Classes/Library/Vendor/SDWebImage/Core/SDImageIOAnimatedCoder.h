@@ -15,7 +15,7 @@
  All of the properties need the subclass to implement and works as expected.
  For Image/IO, See Apple's documentation: https://developer.apple.com/documentation/imageio
  */
-@interface SDImageIOAnimatedCoder : NSObject <SDProgressiveImageCoder, SDAnimatedImageCoder>
+@interface SDImageIOAnimatedCoder : NSObject <SDAnimatedImageCoder>
 
 #pragma mark - Subclass Override
 /**
