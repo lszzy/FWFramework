@@ -110,7 +110,7 @@
 - (void)renderCellData:(TestImageCell *)cell indexPath:(NSIndexPath *)indexPath
 {
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
-    cell.nameLabel.text = fileName;
+    cell.nameLabel.text = [fileName lastPathComponent];
     if (self.imageType == 0) {
         UIImage *image = [UIImage imageNamed:fileName];
         cell.systemView.image = image;
