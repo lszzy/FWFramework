@@ -14,10 +14,6 @@ struct LandmarkHome: View {
                    by: { $0.category.rawValue })
     }
     
-    var featured: [Landmark] {
-        landmarkData.filter { $0.isFeatured }
-    }
-    
     @State var showingProfile = false
     @EnvironmentObject var userData: UserData
     
@@ -35,7 +31,7 @@ struct LandmarkHome: View {
     var body: some View {
         NavigationView {
             List {
-                FeaturedLandmarks(landmarks: featured)
+                FeaturedLandmarks(landmarks: features)
                     .scaledToFill()
                     .frame(height: 200)
                     .clipped()
@@ -65,7 +61,15 @@ struct LandmarkHome: View {
 struct FeaturedLandmarks: View {
     var landmarks: [Landmark]
     var body: some View {
-        landmarks[0].image.resizable()
+        PageView(landmarks.map { landmark in
+            NavigationLink(
+                destination: LandmarkDetail(landmark: landmark),
+                label: {
+                    FeatureCard(landmark: landmark)
+                })
+        })
+        .frame(height: 200)
+        .scaledToFill()
     }
 }
 

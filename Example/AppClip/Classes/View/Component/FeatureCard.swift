@@ -13,8 +13,8 @@ struct FeatureCard: View {
     var body: some View {
         landmark.featureImage?
             .resizable()
-            .aspectRatio(3 / 2, contentMode: .fit)
             .overlay(TextOverlay(landmark: landmark))
+            //.aspectRatio(3 / 2, contentMode: .fit)
     }
 }
 
