@@ -9,7 +9,6 @@
 #import "SDAssociatedObject.h"
 #import "UIImage+Metadata.h"
 #import "UIImage+ExtendedCacheData.h"
-#import "UIImage+MemoryCacheCost.h"
 #import "UIImage+ForceDecode.h"
 
 void SDImageCopyAssociatedObject(UIImage * _Nullable source, UIImage * _Nullable target) {
