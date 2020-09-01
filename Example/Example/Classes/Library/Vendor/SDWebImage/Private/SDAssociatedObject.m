@@ -8,7 +8,6 @@
 
 #import "SDAssociatedObject.h"
 #import "UIImage+Metadata.h"
-#import "UIImage+ExtendedCacheData.h"
 #import "UIImage+ForceDecode.h"
 
 void SDImageCopyAssociatedObject(UIImage * _Nullable source, UIImage * _Nullable target) {
@@ -21,6 +20,4 @@ void SDImageCopyAssociatedObject(UIImage * _Nullable source, UIImage * _Nullable
     target.sd_imageFormat = source.sd_imageFormat;
     // Force Decode
     target.sd_isDecoded = source.sd_isDecoded;
-    // Extended Cache Data
-    target.sd_extendedObject = source.sd_extendedObject;
 }
