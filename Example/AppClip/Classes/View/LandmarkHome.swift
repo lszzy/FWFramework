@@ -47,6 +47,15 @@ struct LandmarkHome: View {
                     label: {
                         Text("See All")
                     })
+                
+                NavigationLink(
+                    destination: ControllerPage<UIKitController>(),
+                    label: {
+                        HStack {
+                            WebImage(placeholderImage: UIImage(named: "TestImage")!, imageUrl: "https://picsum.photos/50/50?i=30")
+                            Text("UIKitController")
+                        }
+                    })
             }
             .navigationBarTitle("Featured")
             .navigationBarItems(trailing: profileButton)
