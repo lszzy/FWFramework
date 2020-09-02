@@ -10,7 +10,6 @@
 #import "SDImageFrame.h"
 #import "NSData+ImageContentType.h"
 #import "UIImage+ForceDecode.h"
-#import "SDAssociatedObject.h"
 #import "UIImage+Metadata.h"
 #import "SDInternalMacros.h"
 #import <Accelerate/Accelerate.h>
@@ -339,7 +338,8 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
     UIImage *decodedImage = [[UIImage alloc] initWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
 #endif
     CGImageRelease(imageRef);
-    SDImageCopyAssociatedObject(image, decodedImage);
+    decodedImage.sd_imageLoopCount = image.sd_imageLoopCount;
+    decodedImage.sd_imageFormat = image.sd_imageFormat;
     decodedImage.sd_isDecoded = YES;
     return decodedImage;
 }
@@ -471,7 +471,8 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         if (destImage == nil) {
             return image;
         }
-        SDImageCopyAssociatedObject(image, destImage);
+        destImage.sd_imageLoopCount = image.sd_imageLoopCount;
+        destImage.sd_imageFormat = image.sd_imageFormat;
         destImage.sd_isDecoded = YES;
         return destImage;
     }
