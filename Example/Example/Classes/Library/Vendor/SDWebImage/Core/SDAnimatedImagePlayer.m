@@ -7,8 +7,8 @@
 */
 
 #import "SDAnimatedImagePlayer.h"
-#import "SDDisplayLink.h"
 #import "SDInternalMacros.h"
+#import <FWFramework/FWFramework.h>
 #import <mach/mach.h>
 
 @interface SDAnimatedImagePlayer () {
@@ -26,7 +26,7 @@
 @property (nonatomic, assign) NSUInteger maxBufferCount;
 @property (nonatomic, strong) NSOperationQueue *fetchQueue;
 @property (nonatomic, strong) dispatch_semaphore_t lock;
-@property (nonatomic, strong) SDDisplayLink *displayLink;
+@property (nonatomic, strong) CADisplayLink *displayLink;
 
 @end
 
@@ -63,6 +63,8 @@
 #if SD_UIKIT
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 #endif
+    [_displayLink invalidate];
+    _displayLink = nil;
 }
 
 - (void)didReceiveMemoryWarning:(NSNotification *)notification {
@@ -104,11 +106,11 @@
     return _lock;
 }
 
-- (SDDisplayLink *)displayLink {
+- (CADisplayLink *)displayLink {
     if (!_displayLink) {
-        _displayLink = [SDDisplayLink displayLinkWithTarget:self selector:@selector(displayDidRefresh:)];
+        _displayLink = [CADisplayLink displayLinkWithTarget:[FWWeakProxy proxyWithTarget:self] selector:@selector(displayDidRefresh:)];
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:self.runLoopMode];
-        [_displayLink stop];
+        _displayLink.paused = YES;
     }
     return _displayLink;
 }
@@ -177,7 +179,7 @@
 
 #pragma mark - Animation Control
 - (void)startPlaying {
-    [self.displayLink start];
+    self.displayLink.paused = NO;
     // Setup frame
     if (self.currentFrameIndex == 0 && !self.currentFrame) {
         [self setupCurrentFrame];
@@ -189,17 +191,17 @@
 - (void)stopPlaying {
     [_fetchQueue cancelAllOperations];
     // Using `_displayLink` here because when UIImageView dealloc, it may trigger `[self stopAnimating]`, we already release the display link in SDAnimatedImageView's dealloc method.
-    [_displayLink stop];
+    self.displayLink.paused = YES;
     [self resetCurrentFrameIndex];
 }
 
 - (void)pausePlaying {
     [_fetchQueue cancelAllOperations];
-    [_displayLink stop];
+    self.displayLink.paused = YES;
 }
 
 - (BOOL)isPlaying {
-    return _displayLink.isRunning;
+    return !_displayLink.isPaused;
 }
 
 - (void)seekToFrameAtIndex:(NSUInteger)index loopCount:(NSUInteger)loopCount {
@@ -213,7 +215,7 @@
 }
 
 #pragma mark - Core Render
-- (void)displayDidRefresh:(SDDisplayLink *)displayLink {
+- (void)displayDidRefresh:(CADisplayLink *)displayLink {
     // If for some reason a wild call makes it through when we shouldn't be animating, bail.
     // Early return!
     if (!self.isPlaying) {
@@ -235,7 +237,13 @@
     }
     
     // Calculate refresh duration
-    NSTimeInterval duration = self.displayLink.duration;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    NSTimeInterval duration = self.displayLink.duration * self.displayLink.frameInterval;
+#pragma clang diagnostic pop
+    if (duration == 0) {
+        duration = 1.0 / 60;
+    }
     
     NSUInteger currentFrameIndex = self.currentFrameIndex;
     NSUInteger nextFrameIndex = (currentFrameIndex + 1) % totalFrameCount;
@@ -335,7 +343,7 @@
             }
             UIImage *frame = [animatedProvider animatedImageFrameAtIndex:fetchFrameIndex];
 
-            BOOL isAnimating = self.displayLink.isRunning;
+            BOOL isAnimating = !self.displayLink.isPaused;
             if (isAnimating) {
                 SD_LOCK(self.lock);
                 self.frameBuffer[@(fetchFrameIndex)] = frame;
