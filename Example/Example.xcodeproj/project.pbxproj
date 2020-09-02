@@ -57,7 +57,6 @@
 		2FD142C324FE2B1300BC354E /* UIImage+Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1426C24FE2B1300BC354E /* UIImage+Metadata.m */; };
 		2FD142C824FE2B1300BC354E /* SDImageAssetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1427B24FE2B1300BC354E /* SDImageAssetManager.m */; };
 		2FD142CB24FE2B1300BC354E /* SDInternalMacros.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1428324FE2B1300BC354E /* SDInternalMacros.m */; };
-		2FD142CE24FE2B1300BC354E /* SDDisplayLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1428824FE2B1300BC354E /* SDDisplayLink.m */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
 		2FE2A6B024FCBDB30041BC73 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE2A6AF24FCBDB30041BC73 /* PageControl.swift */; };
 		2FF4834424ED0422000661D0 /* AppClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF4834324ED0422000661D0 /* AppClipApp.swift */; };
@@ -258,10 +257,8 @@
 		2FD1427024FE2B1300BC354E /* SDImageCodersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageCodersManager.h; sourceTree = "<group>"; };
 		2FD1427A24FE2B1300BC354E /* SDInternalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDInternalMacros.h; sourceTree = "<group>"; };
 		2FD1427B24FE2B1300BC354E /* SDImageAssetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageAssetManager.m; sourceTree = "<group>"; };
-		2FD1427D24FE2B1300BC354E /* SDDisplayLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDDisplayLink.h; sourceTree = "<group>"; };
 		2FD1428024FE2B1300BC354E /* SDImageIOAnimatedCoderInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageIOAnimatedCoderInternal.h; sourceTree = "<group>"; };
 		2FD1428324FE2B1300BC354E /* SDInternalMacros.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDInternalMacros.m; sourceTree = "<group>"; };
-		2FD1428824FE2B1300BC354E /* SDDisplayLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDDisplayLink.m; sourceTree = "<group>"; };
 		2FD1428924FE2B1300BC354E /* SDImageAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageAssetManager.h; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
 		2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeViewController.m; sourceTree = "<group>"; };
@@ -616,8 +613,6 @@
 		2FD1427224FE2B1300BC354E /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				2FD1427D24FE2B1300BC354E /* SDDisplayLink.h */,
-				2FD1428824FE2B1300BC354E /* SDDisplayLink.m */,
 				2FD1428924FE2B1300BC354E /* SDImageAssetManager.h */,
 				2FD1427B24FE2B1300BC354E /* SDImageAssetManager.m */,
 				2FD1428024FE2B1300BC354E /* SDImageIOAnimatedCoderInternal.h */,
@@ -1332,7 +1327,6 @@
 				2FF8D95324C88A6F006A83B5 /* TestSegmentViewController.m in Sources */,
 				2FF8D94824C88A6F006A83B5 /* TestPopupMenuViewController.m in Sources */,
 				2FD142B824FE2B1300BC354E /* NSData+ImageContentType.m in Sources */,
-				2FD142CE24FE2B1300BC354E /* SDDisplayLink.m in Sources */,
 				2FF8D98324C88A70006A83B5 /* SimpleViewController.m in Sources */,
 				2FF8D95824C88A6F006A83B5 /* TestTableScrollViewController.m in Sources */,
 				2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */,
