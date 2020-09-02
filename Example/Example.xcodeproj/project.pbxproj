@@ -205,6 +205,7 @@
 		2F6E684524FF9A6800079E53 /* ControllerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerPage.swift; sourceTree = "<group>"; };
 		2F6E684724FF9ACE00079E53 /* UIKitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitController.swift; sourceTree = "<group>"; };
 		2F6E684924FF9C5900079E53 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
+		2F6E684B24FFA5D100079E53 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2F8E45E724F75DBE00BDF302 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		2F8E45E924F7626F00BDF302 /* BadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 		2F8E45EC24F765D100BDF302 /* RotatedBadgeSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RotatedBadgeSymbol.swift; sourceTree = "<group>"; };
@@ -671,6 +672,7 @@
 		2FF8D87824C886EC006A83B5 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				2F6E684B24FFA5D100079E53 /* Example.entitlements */,
 				2FF8D89424C8883F006A83B5 /* Classes */,
 				2FF8D89524C88863006A83B5 /* Resources */,
 				2FF8D89624C8887B006A83B5 /* Supporting Files */,
@@ -1610,6 +1612,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREFIX_HEADER = Example/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1654,6 +1657,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREFIX_HEADER = Example/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
