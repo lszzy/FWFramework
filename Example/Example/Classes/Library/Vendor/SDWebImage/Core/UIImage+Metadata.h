@@ -49,4 +49,9 @@
  */
 @property (nonatomic, assign) SDImageFormat sd_imageFormat;
 
+/**
+ A bool value indicating whether the image has already been decoded. This can help to avoid extra force decode.
+ */
+@property (nonatomic, assign) BOOL sd_isDecoded;
+
 @end

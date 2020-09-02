@@ -68,12 +68,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // 监听应用启动完成通知，自动异步执行框架单元测试并打印结果
-        static id testRunner = nil;
-        testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
-            [[NSNotificationCenter defaultCenter] removeObserver:testRunner];
-            testRunner = nil;
-            
+        dispatch_async(dispatch_get_main_queue(), ^{
             [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
             if ([FWUnitTest sharedInstance].testCases.count > 0) {
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
@@ -83,7 +78,7 @@
                     FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
                 });
             }
-        }];
+        });
     });
 }
 
