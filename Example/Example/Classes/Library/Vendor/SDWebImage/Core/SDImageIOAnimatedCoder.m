@@ -10,7 +10,6 @@
 #import "UIImage+Metadata.h"
 #import "NSData+ImageContentType.h"
 #import "SDImageCoderHelper.h"
-#import "UIImage+ForceDecode.h"
 
 // Specify DPI for vector format in CGImageSource, like PDF
 static NSString * kSDCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizationDPI";

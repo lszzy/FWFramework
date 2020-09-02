@@ -9,7 +9,6 @@
 #import "SDImageCoderHelper.h"
 #import "SDImageFrame.h"
 #import "NSData+ImageContentType.h"
-#import "UIImage+ForceDecode.h"
 #import "UIImage+Metadata.h"
 #import "SDInternalMacros.h"
 #import <Accelerate/Accelerate.h>

@@ -137,4 +137,13 @@
     objc_setAssociatedObject(self, @selector(sd_imageFormat), @(sd_imageFormat), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)sd_isDecoded {
+    NSNumber *value = objc_getAssociatedObject(self, @selector(sd_isDecoded));
+    return value.boolValue;
+}
+
+- (void)setSd_isDecoded:(BOOL)sd_isDecoded {
+    objc_setAssociatedObject(self, @selector(sd_isDecoded), @(sd_isDecoded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end

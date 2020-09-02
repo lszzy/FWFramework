@@ -42,7 +42,6 @@
 		2FD1429324FE2B1300BC354E /* SDImageIOAnimatedCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1421124FE2B1300BC354E /* SDImageIOAnimatedCoder.m */; };
 		2FD1429524FE2B1300BC354E /* SDAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1421824FE2B1300BC354E /* SDAnimatedImage.m */; };
 		2FD1429624FE2B1300BC354E /* SDAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1421924FE2B1300BC354E /* SDAnimatedImageView.m */; };
-		2FD1429724FE2B1300BC354E /* UIImage+ForceDecode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1421A24FE2B1300BC354E /* UIImage+ForceDecode.m */; };
 		2FD1429824FE2B1300BC354E /* SDImageAWebPCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1421C24FE2B1300BC354E /* SDImageAWebPCoder.m */; };
 		2FD1429924FE2B1300BC354E /* SDAnimatedImagePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1421E24FE2B1300BC354E /* SDAnimatedImagePlayer.m */; };
 		2FD142A124FE2B1300BC354E /* SDImageCodersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1422824FE2B1300BC354E /* SDImageCodersManager.m */; };
@@ -228,7 +227,6 @@
 		2FD1421524FE2B1300BC354E /* SDImageGIFCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageGIFCoder.h; sourceTree = "<group>"; };
 		2FD1421824FE2B1300BC354E /* SDAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDAnimatedImage.m; sourceTree = "<group>"; };
 		2FD1421924FE2B1300BC354E /* SDAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDAnimatedImageView.m; sourceTree = "<group>"; };
-		2FD1421A24FE2B1300BC354E /* UIImage+ForceDecode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ForceDecode.m"; sourceTree = "<group>"; };
 		2FD1421C24FE2B1300BC354E /* SDImageAWebPCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageAWebPCoder.m; sourceTree = "<group>"; };
 		2FD1421E24FE2B1300BC354E /* SDAnimatedImagePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDAnimatedImagePlayer.m; sourceTree = "<group>"; };
 		2FD1422824FE2B1300BC354E /* SDImageCodersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageCodersManager.m; sourceTree = "<group>"; };
@@ -248,7 +246,6 @@
 		2FD1424F24FE2B1300BC354E /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		2FD1425C24FE2B1300BC354E /* SDAnimatedImagePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDAnimatedImagePlayer.h; sourceTree = "<group>"; };
 		2FD1425F24FE2B1300BC354E /* SDImageAWebPCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageAWebPCoder.h; sourceTree = "<group>"; };
-		2FD1426024FE2B1300BC354E /* UIImage+ForceDecode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ForceDecode.h"; sourceTree = "<group>"; };
 		2FD1426224FE2B1300BC354E /* SDImageCoderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageCoderHelper.h; sourceTree = "<group>"; };
 		2FD1426824FE2B1300BC354E /* SDImageAPNGCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageAPNGCoder.h; sourceTree = "<group>"; };
 		2FD1426A24FE2B1300BC354E /* SDWebImageCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWebImageCompat.h; sourceTree = "<group>"; };
@@ -600,8 +597,6 @@
 				2FD1423A24FE2B1300BC354E /* SDImageIOCoder.m */,
 				2FD1426A24FE2B1300BC354E /* SDWebImageCompat.h */,
 				2FD1422E24FE2B1300BC354E /* SDWebImageCompat.m */,
-				2FD1426024FE2B1300BC354E /* UIImage+ForceDecode.h */,
-				2FD1421A24FE2B1300BC354E /* UIImage+ForceDecode.m */,
 				2FD1422D24FE2B1300BC354E /* UIImage+Metadata.h */,
 				2FD1426C24FE2B1300BC354E /* UIImage+Metadata.m */,
 				2FD1426D24FE2B1300BC354E /* UIImage+MultiFormat.h */,
@@ -1368,7 +1363,6 @@
 				2FD142A124FE2B1300BC354E /* SDImageCodersManager.m in Sources */,
 				2FF8D95E24C88A70006A83B5 /* TestAnimationViewController.m in Sources */,
 				2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */,
-				2FD1429724FE2B1300BC354E /* UIImage+ForceDecode.m in Sources */,
 				2FF8D97424C88A70006A83B5 /* TestVersionViewController.m in Sources */,
 				2FD1429524FE2B1300BC354E /* SDAnimatedImage.m in Sources */,
 				2FD1428C24FE2B1300BC354E /* SDImageHEICCoder.m in Sources */,
