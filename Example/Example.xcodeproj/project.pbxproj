@@ -56,7 +56,6 @@
 		2FD142B824FE2B1300BC354E /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1424F24FE2B1300BC354E /* NSData+ImageContentType.m */; };
 		2FD142C324FE2B1300BC354E /* UIImage+Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1426C24FE2B1300BC354E /* UIImage+Metadata.m */; };
 		2FD142C824FE2B1300BC354E /* SDImageAssetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1427B24FE2B1300BC354E /* SDImageAssetManager.m */; };
-		2FD142C924FE2B1300BC354E /* SDDeviceHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1428124FE2B1300BC354E /* SDDeviceHelper.m */; };
 		2FD142CB24FE2B1300BC354E /* SDInternalMacros.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1428324FE2B1300BC354E /* SDInternalMacros.m */; };
 		2FD142CE24FE2B1300BC354E /* SDDisplayLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD1428824FE2B1300BC354E /* SDDisplayLink.m */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
@@ -257,12 +256,10 @@
 		2FD1426C24FE2B1300BC354E /* UIImage+Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Metadata.m"; sourceTree = "<group>"; };
 		2FD1426D24FE2B1300BC354E /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MultiFormat.h"; sourceTree = "<group>"; };
 		2FD1427024FE2B1300BC354E /* SDImageCodersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageCodersManager.h; sourceTree = "<group>"; };
-		2FD1427324FE2B1300BC354E /* SDDeviceHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDDeviceHelper.h; sourceTree = "<group>"; };
 		2FD1427A24FE2B1300BC354E /* SDInternalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDInternalMacros.h; sourceTree = "<group>"; };
 		2FD1427B24FE2B1300BC354E /* SDImageAssetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageAssetManager.m; sourceTree = "<group>"; };
 		2FD1427D24FE2B1300BC354E /* SDDisplayLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDDisplayLink.h; sourceTree = "<group>"; };
 		2FD1428024FE2B1300BC354E /* SDImageIOAnimatedCoderInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageIOAnimatedCoderInternal.h; sourceTree = "<group>"; };
-		2FD1428124FE2B1300BC354E /* SDDeviceHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDDeviceHelper.m; sourceTree = "<group>"; };
 		2FD1428324FE2B1300BC354E /* SDInternalMacros.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDInternalMacros.m; sourceTree = "<group>"; };
 		2FD1428824FE2B1300BC354E /* SDDisplayLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDDisplayLink.m; sourceTree = "<group>"; };
 		2FD1428924FE2B1300BC354E /* SDImageAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageAssetManager.h; sourceTree = "<group>"; };
@@ -619,8 +616,6 @@
 		2FD1427224FE2B1300BC354E /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				2FD1427324FE2B1300BC354E /* SDDeviceHelper.h */,
-				2FD1428124FE2B1300BC354E /* SDDeviceHelper.m */,
 				2FD1427D24FE2B1300BC354E /* SDDisplayLink.h */,
 				2FD1428824FE2B1300BC354E /* SDDisplayLink.m */,
 				2FD1428924FE2B1300BC354E /* SDImageAssetManager.h */,
@@ -1378,7 +1373,6 @@
 				2FF8D98924C88A70006A83B5 /* FWDatabaseManager.m in Sources */,
 				2FD142A124FE2B1300BC354E /* SDImageCodersManager.m in Sources */,
 				2FF8D95E24C88A70006A83B5 /* TestAnimationViewController.m in Sources */,
-				2FD142C924FE2B1300BC354E /* SDDeviceHelper.m in Sources */,
 				2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */,
 				2FD1429724FE2B1300BC354E /* UIImage+ForceDecode.m in Sources */,
 				2FF8D97424C88A70006A83B5 /* TestVersionViewController.m in Sources */,
