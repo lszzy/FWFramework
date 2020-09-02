@@ -15,6 +15,10 @@ struct AppClipApp: App {
         WindowGroup {
             LandmarkHome()
                 .environmentObject(UserData())
+                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
+                    guard let url = userActivity.webpageURL else { return }
+                    print("url: \(url)")
+                }
         }
     }
 }
