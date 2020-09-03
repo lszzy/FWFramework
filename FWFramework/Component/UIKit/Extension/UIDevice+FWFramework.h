@@ -111,8 +111,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Token
 
-// 设置设备token，格式化并保存
-+ (void)fwSetDeviceToken:(nullable NSData *)tokenData;
+// 设置设备token原始Data，格式化并保存
++ (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
 
 // 获取设备Token格式化后的字符串
 + (nullable NSString *)fwDeviceToken;

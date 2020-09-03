@@ -60,7 +60,7 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
 }
 
-+ (void)fwSetLocalizedLanguage:(NSString *)language
++ (void)setFwLocalizedLanguage:(NSString *)language
 {
     // 保存并加载当前语言设置
     if (language) {
