@@ -9,11 +9,14 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FWEmptyViewLoadingViewProtocol <NSObject>
 
 @optional
 
-- (void)startAnimating; // 当调用 setLoadingViewHidden:NO 时，系统将自动调用此处的 startAnimating
+// 当调用 setLoadingViewHidden:NO 时，系统将自动调用此处的 startAnimating
+- (void)startAnimating;
 
 @end
 
@@ -56,25 +59,25 @@
  * 设置要显示的图片
  * @param image 要显示的图片，为nil则不显示
  */
-- (void)setImage:(UIImage *)image;
+- (void)setImage:(nullable UIImage *)image;
 
 /**
  * 设置提示语
  * @param text 提示语文本，若为nil则隐藏textLabel
  */
-- (void)setTextLabelText:(NSString *)text;
+- (void)setTextLabelText:(nullable NSString *)text;
 
 /**
  * 设置详细提示语的文本
  * @param text 详细提示语文本，若为nil则隐藏detailTextLabel
  */
-- (void)setDetailTextLabelText:(NSString *)text;
+- (void)setDetailTextLabelText:(nullable NSString *)text;
 
 /**
  * 设置操作按钮的文本
  * @param title 操作按钮的文本，若为nil则隐藏actionButton
  */
-- (void)setActionButtonTitle:(NSString *)title;
+- (void)setActionButtonTitle:(nullable NSString *)title;
 
 /**
  *  如果要继承QMUIEmptyView并添加新的子 view，则必须：
@@ -82,6 +85,10 @@
  *  2. 重写sizeThatContentViewFits
  */
 @property(nonatomic, strong, readonly) UIView *contentView;
-- (CGSize)sizeThatContentViewFits;  // 返回一个恰好容纳所有子 view 的大小
+
+/// 返回一个恰好容纳所有子 view 的大小
+- (CGSize)sizeThatContentViewFits;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -126,9 +126,9 @@
     self.window.rootViewController = tabBarController;
 }
 
-- (void)setupDeviceToken:(NSData *)deviceToken error:(NSError *)error
+- (void)setupDeviceToken:(NSData *)tokenData error:(NSError *)error
 {
-    [UIDevice fwSetDeviceToken:deviceToken];
+    [UIDevice fwSetDeviceTokenData:tokenData];
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url options:(NSDictionary *)options
