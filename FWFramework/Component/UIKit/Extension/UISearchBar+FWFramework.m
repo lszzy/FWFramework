@@ -148,7 +148,7 @@
 - (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem
 {
     UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
-    [titleView fwSetIntrinsicContentSize:UILayoutFittingExpandedSize];
+    titleView.fwIntrinsicContentSize = UILayoutFittingExpandedSize;
     titleView.backgroundColor = [UIColor clearColor];
     [titleView addSubview:self];
     [self fwPinEdgesToSuperview];
