@@ -695,7 +695,7 @@
         }
         
         urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
-        [(NSMutableURLRequest *)urlRequest addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
     }
     
     if ([urlRequest URL] == nil) {

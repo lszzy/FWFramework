@@ -10,7 +10,6 @@
 #import "SDImageCodersManager.h"
 #import "SDImageAWebPCoder.h"
 #import "SDImageHEICCoder.h"
-#import "UIImage+MultiFormat.h"
 
 @interface TestImageCell : UITableViewCell
 
@@ -45,22 +44,18 @@
 
 @end
 
-@interface TestImagePlugin : NSObject<FWImagePlugin>
+@interface TestImageViewController ()
 
-FWSingleton(TestImagePlugin);
+@property (nonatomic, assign) NSInteger imageType;
 
 @end
 
-@implementation TestImagePlugin
-
-FWDefSingleton(TestImagePlugin);
+@implementation TestImageViewController
 
 + (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[FWPluginManager sharedInstance] registerDefault:@protocol(FWImagePlugin) withObject:[TestImagePlugin class]];
-        
         if (@available(iOS 14, *)) {
             [[SDImageCodersManager sharedManager] addCoder:[SDImageAWebPCoder sharedCoder]];
         }
@@ -69,21 +64,6 @@ FWDefSingleton(TestImagePlugin);
         }
     });
 }
-
-- (UIImage *)fwImageDecodeWithData:(NSData *)data scale:(CGFloat)scale
-{
-    return [UIImage sd_imageWithData:data scale:scale];
-}
-
-@end
-
-@interface TestImageViewController ()
-
-@property (nonatomic, assign) NSInteger imageType;
-
-@end
-
-@implementation TestImageViewController
 
 - (NSDictionary<NSString *,Class> *)renderCellClass
 {

@@ -23,8 +23,6 @@
 #import <TargetConditionals.h>
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "FWNetworkManager.h"
-#import "FWPlugin.h"
 
 NSString * const FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
 NSString * const FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
@@ -537,14 +535,7 @@ static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
     
     UIImage *image = nil;
     [imageLock lock];
-    
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecodeWithData:scale:)]) {
-        image = [imagePlugin fwImageDecodeWithData:data scale:scale];
-    } else {
-        image = [UIImage imageWithData:data];
-    }
-    
+    image = [UIImage imageWithData:data];
     [imageLock unlock];
     
     if (image.images || !image) {
