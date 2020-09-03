@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// 用于属性 maximumItemSize，是它的默认值。表示 item 的最大宽高会自动根据当前 floatLayoutView 的内容大小来调整，从而避免 item 内容过多时可能溢出 floatLayoutView。
 extern const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize;
 
@@ -44,3 +46,5 @@ extern const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize;
 @property(nonatomic, assign) UIEdgeInsets itemMargins;
 
 @end
+
+NS_ASSUME_NONNULL_END

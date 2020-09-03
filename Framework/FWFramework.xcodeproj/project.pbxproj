@@ -242,6 +242,8 @@
 		2F938E5D2500E66E009395FB /* FWFloatLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E5B2500E66E009395FB /* FWFloatLayoutView.m */; };
 		2F938E602500E937009395FB /* FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F938E5E2500E937009395FB /* FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F938E612500E937009395FB /* FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E5F2500E937009395FB /* FWEmptyView.m */; };
+		2F938E6725012CEA009395FB /* UIImage+FWAnimated.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F938E6525012CEA009395FB /* UIImage+FWAnimated.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F938E6825012CEA009395FB /* UIImage+FWAnimated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E6625012CEA009395FB /* UIImage+FWAnimated.m */; };
 		2FA0C56E238BACAC008E6CB8 /* UITableView+FWBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA0C56C238BACAC008E6CB8 /* UITableView+FWBackgroundView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA0C56F238BACAC008E6CB8 /* UITableView+FWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA0C56D238BACAC008E6CB8 /* UITableView+FWBackgroundView.m */; };
 		2FA89DD6217DE020000F92BF /* UILabel+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -585,6 +587,8 @@
 		2F938E5B2500E66E009395FB /* FWFloatLayoutView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWFloatLayoutView.m; sourceTree = "<group>"; };
 		2F938E5E2500E937009395FB /* FWEmptyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWEmptyView.h; sourceTree = "<group>"; };
 		2F938E5F2500E937009395FB /* FWEmptyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWEmptyView.m; sourceTree = "<group>"; };
+		2F938E6525012CEA009395FB /* UIImage+FWAnimated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWAnimated.h"; sourceTree = "<group>"; };
+		2F938E6625012CEA009395FB /* UIImage+FWAnimated.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FWAnimated.m"; sourceTree = "<group>"; };
 		2FA0C56C238BACAC008E6CB8 /* UITableView+FWBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWBackgroundView.h"; sourceTree = "<group>"; };
 		2FA0C56D238BACAC008E6CB8 /* UITableView+FWBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWBackgroundView.m"; sourceTree = "<group>"; };
 		2FA89DD4217DE020000F92BF /* UILabel+FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+FWFramework.h"; sourceTree = "<group>"; };
@@ -1131,6 +1135,8 @@
 				2FDBDCBA2237B3540048607A /* UIGestureRecognizer+FWFramework.m */,
 				2F03A524216CF4B9001965A1 /* UIImage+FWFramework.h */,
 				2F03A4FC216CF4B9001965A1 /* UIImage+FWFramework.m */,
+				2F938E6525012CEA009395FB /* UIImage+FWAnimated.h */,
+				2F938E6625012CEA009395FB /* UIImage+FWAnimated.m */,
 				2FB7CBB021C0F35C002E5412 /* UIImagePickerController+FWFramework.h */,
 				2FB7CBB121C0F35C002E5412 /* UIImagePickerController+FWFramework.m */,
 				2F03A4E7216CF4B9001965A1 /* UIImageView+FWFramework.h */,
@@ -1232,6 +1238,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F938E6725012CEA009395FB /* UIImage+FWAnimated.h in Headers */,
 				2F938E602500E937009395FB /* FWEmptyView.h in Headers */,
 				2F938E5C2500E66E009395FB /* FWFloatLayoutView.h in Headers */,
 				2F938E552500DFEB009395FB /* FWGridView.h in Headers */,
@@ -1544,6 +1551,7 @@
 				2F03A5E3216CF4B9001965A1 /* NSObject+FWSafeType.m in Sources */,
 				2F65FF8D24BAB8BE008C7F03 /* FWSwizzle.m in Sources */,
 				2FE4EFF92212B2750077876A /* UIViewController+FWBack.m in Sources */,
+				2F938E6825012CEA009395FB /* UIImage+FWAnimated.m in Sources */,
 				2F8AA7352454720F00C57232 /* FWAlertController.m in Sources */,
 				2F1E393A2178F0B90051A6BB /* FWProgressView.m in Sources */,
 				2FB90F6821F97E6C00084D76 /* FWPhotoBrowser.m in Sources */,
