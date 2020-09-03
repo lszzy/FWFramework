@@ -59,6 +59,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
 - (CGSize)fwFitSizeWithDrawSize:(CGSize)drawSize;
 
+// 计算并设置指定边界宽度下的适合frame高度，需实现sizeThatFits:方法
+- (void)fwSetFitWidth:(CGFloat)drawWidth;
+
 #pragma mark - ViewController
 
 // 获取响应的视图控制器

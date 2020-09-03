@@ -106,6 +106,12 @@
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
+- (void)fwSetFitWidth:(CGFloat)drawWidth
+{
+    CGSize fitSize = [self fwFitSizeWithDrawSize:CGSizeMake(drawWidth, CGFLOAT_MAX)];
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, fitSize.width, fitSize.height);
+}
+
 #pragma mark - ViewController
 
 - (UIViewController *)fwViewController
