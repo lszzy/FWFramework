@@ -190,7 +190,7 @@ static NSString *fwStaticDeviceUUID = nil;
 
 #pragma mark - Token
 
-+ (void)fwSetDeviceToken:(NSData *)tokenData
++ (void)fwSetDeviceTokenData:(NSData *)tokenData
 {
     if (tokenData) {
         NSMutableString *deviceToken = [NSMutableString string];

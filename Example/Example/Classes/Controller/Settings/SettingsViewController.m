@@ -60,7 +60,7 @@
         } else if (index == 2) {
             language = @"en";
         }
-        [NSBundle fwSetLocalizedLanguage:language];
+        NSBundle.fwLocalizedLanguage = language;
         [(FWAppDelegate *)UIApplication.sharedApplication.delegate setupController];
     }];
 }

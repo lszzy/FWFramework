@@ -27,11 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Current
 
-// 设置当前时间戳，如同步服务器时间戳，同步后调整手机时间不影响
-+ (void)fwSetCurrentTime:(NSTimeInterval)currentTime;
-
-// 获取当前时间戳，没有设置过返回本地时间戳，同步后调整手机不影响
-+ (NSTimeInterval)fwCurrentTime;
+// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
+@property (class, nonatomic, assign) NSTimeInterval fwCurrentTime;
 
 #pragma mark - System
 
