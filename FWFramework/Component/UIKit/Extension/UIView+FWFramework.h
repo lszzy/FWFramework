@@ -37,30 +37,30 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Transform
 
 // 获取当前view的transform scale x
-@property(nonatomic, assign, readonly) CGFloat fwScaleX;
+@property (nonatomic, assign, readonly) CGFloat fwScaleX;
 
 // 获取当前view的transform scale y
-@property(nonatomic, assign, readonly) CGFloat fwScaleY;
+@property (nonatomic, assign, readonly) CGFloat fwScaleY;
 
 // 获取当前view的transform translation x
-@property(nonatomic, assign, readonly) CGFloat fwTranslationX;
+@property (nonatomic, assign, readonly) CGFloat fwTranslationX;
 
 // 获取当前view的transform translation y
-@property(nonatomic, assign, readonly) CGFloat fwTranslationY;
+@property (nonatomic, assign, readonly) CGFloat fwTranslationY;
 
 #pragma mark - Size
 
-// 设置自定义估算尺寸，CGSizeZero为清空自定义设置
-- (void)fwSetIntrinsicContentSize:(CGSize)size;
+// 自定义估算尺寸，设置CGSizeZero为清空自定义设置
+@property (nonatomic, assign) CGSize fwIntrinsicContentSize;
+
+// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
+@property (nonatomic, assign) CGRect fwFitFrame;
 
 // 计算当前视图适合大小，需实现sizeThatFits:方法
 - (CGSize)fwFitSize;
 
 // 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
 - (CGSize)fwFitSizeWithDrawSize:(CGSize)drawSize;
-
-// 计算并设置指定边界宽度下的适合frame高度，需实现sizeThatFits:方法
-- (void)fwSetFitWidth:(CGFloat)drawWidth;
 
 #pragma mark - ViewController
 

@@ -34,7 +34,7 @@
         }));
         
         FWSwizzleClass(UIView, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
-            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwSetIntrinsicContentSize:));
+            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwIntrinsicContentSize));
             if (value) {
                 return [value CGSizeValue];
             } else {
@@ -80,13 +80,29 @@
 
 #pragma mark - Size
 
-- (void)fwSetIntrinsicContentSize:(CGSize)size
+- (CGSize)fwIntrinsicContentSize
+{
+    return self.intrinsicContentSize;
+}
+
+- (void)setFwIntrinsicContentSize:(CGSize)size
 {
     if (CGSizeEqualToSize(size, CGSizeZero)) {
-        objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), nil, OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwIntrinsicContentSize), nil, OBJC_ASSOCIATION_ASSIGN);
     } else {
-        objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), [NSValue valueWithCGSize:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(fwIntrinsicContentSize), [NSValue valueWithCGSize:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
+}
+
+- (CGRect)fwFitFrame
+{
+    return self.frame;
+}
+
+- (void)setFwFitFrame:(CGRect)fitFrame
+{
+    fitFrame.size = [self fwFitSizeWithDrawSize:CGSizeMake(fitFrame.size.width, CGFLOAT_MAX)];
+    self.frame = fitFrame;
 }
 
 - (CGSize)fwFitSize
@@ -104,12 +120,6 @@
 {
     CGSize size = [self sizeThatFits:drawSize];
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
-}
-
-- (void)fwSetFitWidth:(CGFloat)drawWidth
-{
-    CGSize fitSize = [self fwFitSizeWithDrawSize:CGSizeMake(drawWidth, CGFLOAT_MAX)];
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, fitSize.width, fitSize.height);
 }
 
 #pragma mark - ViewController
