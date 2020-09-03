@@ -84,7 +84,7 @@
 {
     if (self.imageType == 2) {
         [self.tableData setArray:@[
-            @"http://www.httpwatch.com/httpgallery/authentication/authenticatedimage/default.aspx?0.35786508303135633",     // requires HTTP auth, used to demo the NTLM auth
+            // @"http://www.httpwatch.com/httpgallery/authentication/authenticatedimage/default.aspx?0.35786508303135633",
             @"http://assets.sbnation.com/assets/2512203/dogflops.gif",
             @"https://raw.githubusercontent.com/liyong03/YLGIFImage/master/YLGIFImageDemo/YLGIFImageDemo/joy.gif",
             @"http://apng.onevcat.com/assets/elephant.png",
@@ -109,8 +109,6 @@
             @"test.heic",
             @"test.heif",
             @"animation.heic",
-            @"public_icon",
-            @"public_gif",
         ]];
     }
     [self.tableView reloadData];

@@ -236,6 +236,9 @@ FOUNDATION_EXPORT id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJ
  - `image/x-xbitmap`
  - `image/x-ms-bmp`
  - `image/x-win-bitmap`
+ - `image/heic`
+ - `image/heif`
+ - `image/webp`
  */
 @interface FWImageResponseSerializer : FWHTTPResponseSerializer
 
