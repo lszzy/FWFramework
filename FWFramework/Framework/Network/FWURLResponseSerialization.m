@@ -522,16 +522,32 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #pragma mark -
 
+@interface UIImage ()
+
++ (UIImage *)fwImageWithData:(NSData *)data scale:(CGFloat)scale;
+
+@end
+
 static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
     if (!data || [data length] == 0) {
         return nil;
     }
     
     static NSLock *imageLock = nil;
+    static BOOL imageHook = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageLock = [[NSLock alloc] init];
+        imageHook = [UIImage respondsToSelector:@selector(fwImageWithData:scale:)];
     });
+    
+    if (imageHook) {
+        UIImage *image = nil;
+        [imageLock lock];
+        image = [UIImage fwImageWithData:data scale:scale];
+        [imageLock unlock];
+        return image;
+    }
     
     UIImage *image = nil;
     [imageLock lock];
