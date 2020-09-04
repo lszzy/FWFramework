@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
 FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
 
-/// 从图片文件或应用资源路径加载UIImage，支持动图。不会被系统缓存，适用于不被复用的图片，特别是大图
+/// 从图片文件或应用资源路径加载UIImage，支持动图，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
 FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// 图片格式可扩展枚举
@@ -24,9 +24,9 @@ static const FWImageFormat FWImageFormatJPEG      = 0;
 static const FWImageFormat FWImageFormatPNG       = 1;
 static const FWImageFormat FWImageFormatGIF       = 2;
 static const FWImageFormat FWImageFormatTIFF      = 3;
-static const FWImageFormat FWImageFormatWebP      = 4;
-static const FWImageFormat FWImageFormatHEIC      = 5;
-static const FWImageFormat FWImageFormatHEIF      = 6;
+static const FWImageFormat FWImageFormatWebP      = 4; //iOS14+
+static const FWImageFormat FWImageFormatHEIC      = 5; //iOS13+
+static const FWImageFormat FWImageFormatHEIF      = 6; //iOS13+
 static const FWImageFormat FWImageFormatPDF       = 7;
 static const FWImageFormat FWImageFormatSVG       = 8;
 
@@ -42,7 +42,7 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 /// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name;
 
-/// 从图片文件加载UIImage，支持动图，支持绝对路径和bundle路径。不会被系统缓存，适用于不被复用的图片，特别是大图
+/// 从图片文件加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
 + (nullable UIImage *)fwImageWithFile:(NSString *)path;
 
 /// 从图片数据解码创建UIImage，scale为1，支持动图
@@ -135,6 +135,9 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 
 /// 单例模式
 @property (class, nonatomic, readonly) FWImageCoder *sharedInstance;
+
+/// 是否启用HEIC动图，因系统解码性能原因，默认禁用HEIC动图
+@property (nonatomic, assign) BOOL heicsEnabled;
 
 @end
 

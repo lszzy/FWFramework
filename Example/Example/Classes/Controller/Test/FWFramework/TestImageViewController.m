@@ -7,9 +7,6 @@
 //
 
 #import "TestImageViewController.h"
-#import "SDImageCodersManager.h"
-#import "SDImageAWebPCoder.h"
-#import "SDImageHEICCoder.h"
 
 @interface TestImageCell : UITableViewCell
 
@@ -35,7 +32,7 @@
         [self.contentView addSubview:_systemView];
         _systemView.fwLayoutChain.leftWithInset(10).topToBottomOfViewWithOffset(_nameLabel, 10).bottomWithInset(10).width(100);
         
-        _animatedView = [UIImageView new];
+        _animatedView = [[UIImageView fwImageViewAnimatedClass] new];
         [self.contentView addSubview:_animatedView];
         _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
     }
@@ -51,19 +48,6 @@
 @end
 
 @implementation TestImageViewController
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (@available(iOS 14, *)) {
-            [[SDImageCodersManager sharedManager] addCoder:[SDImageAWebPCoder sharedCoder]];
-        }
-        if (@available(iOS 13, *)) {
-            [[SDImageCodersManager sharedManager] addCoder:[SDImageHEICCoder sharedCoder]];
-        }
-    });
-}
 
 - (NSDictionary<NSString *,Class> *)renderCellClass
 {
@@ -126,7 +110,7 @@
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = [fileName lastPathComponent];
     if (self.imageType == 0) {
-        UIImage *image = [UIImage imageNamed:fileName];
+        UIImage *image = FWImageFile(fileName);
         cell.systemView.image = image;
         cell.animatedView.image = image;
     } else {
