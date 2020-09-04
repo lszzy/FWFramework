@@ -35,6 +35,10 @@ UIImage * FWImageFile(NSString *path) {
     
     NSString *file = path.isAbsolutePath ? path : [[NSBundle mainBundle] pathForResource:path ofType:nil];
     NSData *data = [NSData dataWithContentsOfFile:file];
+    if (!data) {
+        return [UIImage imageNamed:path];
+    }
+    
     return [self fwImageWithData:data scale:[UIScreen mainScreen].scale];
 }
 
@@ -381,8 +385,6 @@ static const FWImageCoderType FWImageCoderTypeGIF   = 2;
 static const FWImageCoderType FWImageCoderTypeAWebP = 4;
 static const FWImageCoderType FWImageCoderTypeHEIC  = 5;
 
-static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizationDPI";
-
 @interface FWImageIOAnimatedCoder : NSObject <FWImageCoderProtocol>
 
 @property (nonatomic, assign, readonly) FWImageCoderType type;
@@ -390,6 +392,46 @@ static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizati
 @end
 
 @implementation FWImageIOAnimatedCoder
+
++ (FWImageIOAnimatedCoder *)sharedAPNGCoder
+{
+    static FWImageIOAnimatedCoder *coder = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeAPNG];
+    });
+    return coder;
+}
+
++ (FWImageIOAnimatedCoder *)sharedGIFCoder
+{
+    static FWImageIOAnimatedCoder *coder = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeGIF];
+    });
+    return coder;
+}
+
++ (FWImageIOAnimatedCoder *)sharedAWebPCoder NS_AVAILABLE_IOS(14_0)
+{
+    static FWImageIOAnimatedCoder *coder = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeAWebP];
+    });
+    return coder;
+}
+
++ (FWImageIOAnimatedCoder *)sharedHEICCoder NS_AVAILABLE_IOS(13_0)
+{
+    static FWImageIOAnimatedCoder *coder = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeHEIC];
+    });
+    return coder;
+}
 
 - (instancetype)initWithType:(FWImageCoderType)type
 {
@@ -473,6 +515,8 @@ static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizati
     
     return animatedImage;
 }
+
+#pragma mark - Protected
 
 - (FWImageFormat)imageFormat
 {
@@ -674,10 +718,8 @@ static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizati
     NSMutableDictionary *decodingOptions = [NSMutableDictionary dictionary];
     if (isVector) {
         CGSize thumbnailSize = UIScreen.mainScreen.bounds.size;
-        CGFloat maxPixelSize = MAX(thumbnailSize.width, thumbnailSize.height);
-        NSUInteger DPIPerPixel = 2;
-        NSUInteger rasterizationDPI = maxPixelSize * DPIPerPixel;
-        decodingOptions[kFWCGImageSourceRasterizationDPI] = @(rasterizationDPI);
+        NSUInteger rasterizationDPI = MAX(thumbnailSize.width, thumbnailSize.height) * 2;
+        decodingOptions[@"kCGImageSourceRasterizationDPI"] = @(rasterizationDPI);
     }
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(source, index, (__bridge CFDictionaryRef)[decodingOptions copy]);
     if (!imageRef) {
@@ -697,6 +739,16 @@ static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizati
 
 @implementation FWImageIOCoder
 
++ (FWImageIOCoder *)sharedCoder
+{
+    static FWImageIOCoder *coder = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        coder = [[FWImageIOCoder alloc] init];
+    });
+    return coder;
+}
+
 - (BOOL)canDecodeFromData:(NSData *)data
 {
     return YES;
@@ -704,20 +756,14 @@ static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizati
 
 - (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale
 {
-    if (!data) {
-        return nil;
-    }
+    if (!data) return nil;
     
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
-    if (!source) {
-        return nil;
-    }
+    if (!source) return nil;
     
     UIImage *image = [FWImageIOAnimatedCoder createFrameAtIndex:0 source:source scale:scale];
     CFRelease(source);
-    if (!image) {
-        return nil;
-    }
+    if (!image) return nil;
     
     image.fwImageFormat = [NSData fwImageFormatForImageData:data];
     return image;
@@ -748,17 +794,28 @@ static NSString * kFWCGImageSourceRasterizationDPI = @"kCGImageSourceRasterizati
     self = [super init];
     if (self) {
         _imageCoders = [NSMutableArray array];
-        [_imageCoders addObject:[[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeAPNG]];
-        [_imageCoders addObject:[[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeGIF]];
-        if (@available(iOS 13.0, *)) {
-            [_imageCoders addObject:[[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeHEIC]];
-        }
+        [_imageCoders addObject:[FWImageIOAnimatedCoder sharedAPNGCoder]];
+        [_imageCoders addObject:[FWImageIOAnimatedCoder sharedGIFCoder]];
         if (@available(iOS 14.0, *)) {
-            [_imageCoders addObject:[[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeAWebP]];
+            [_imageCoders addObject:[FWImageIOAnimatedCoder sharedAWebPCoder]];
         }
-        [_imageCoders addObject:[[FWImageIOCoder alloc] init]];
+        [_imageCoders addObject:[FWImageIOCoder sharedCoder]];
     }
     return self;
+}
+
+- (void)setHeicsEnabled:(BOOL)enabled
+{
+    if (_heicsEnabled == enabled) return;
+    
+    if (@available(iOS 13.0, *)) {
+        _heicsEnabled = enabled;
+        if (enabled) {
+            [self.imageCoders insertObject:[FWImageIOAnimatedCoder sharedHEICCoder] atIndex:0];
+        } else {
+            [self.imageCoders removeObject:[FWImageIOAnimatedCoder sharedHEICCoder]];
+        }
+    }
 }
 
 - (BOOL)canDecodeFromData:(NSData *)data
