@@ -541,11 +541,13 @@ static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
         imageHook = [UIImage respondsToSelector:@selector(fwImageWithData:scale:)];
     });
     
+    // Use hook method if exists
     if (imageHook) {
         UIImage *image = nil;
         [imageLock lock];
         image = [UIImage fwImageWithData:data scale:scale];
         [imageLock unlock];
+        
         return image;
     }
     
@@ -564,6 +566,12 @@ static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale) {
 static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *response, NSData *data, CGFloat scale) {
     if (!data || [data length] == 0) {
         return nil;
+    }
+    
+    // Fix animated png bug
+    UIImage *image = FWImageWithDataAtScale(data, scale);
+    if (image.images || !image) {
+        return image;
     }
 
     CGImageRef imageRef = NULL;
@@ -588,15 +596,10 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 
     CGDataProviderRelease(dataProvider);
 
-    UIImage *image = FWImageWithDataAtScale(data, scale);
     if (!imageRef) {
-        if (image.images || !image) {
-            return image;
-        }
-
         imageRef = CGImageCreateCopy([image CGImage]);
         if (!imageRef) {
-            return nil;
+            return image;
         }
     }
 
