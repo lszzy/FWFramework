@@ -51,6 +51,8 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 /// 从图片数据解码创建UIImage，指定scale，支持动图
 + (nullable UIImage *)fwImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
 
+#pragma mark - Property
+
 /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
 @property (nonatomic, assign) NSUInteger fwImageLoopCount;
 
@@ -86,6 +88,53 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 
 /// UTType转化为图片格式，未知格式返回FWImageFormatUndefined
 + (FWImageFormat)fwImageFormatFromUTType:(nonnull CFStringRef)uttype;
+
+@end
+
+#pragma mark - FWImageFrame
+
+/*!
+ @brief 动图单帧对象
+ */
+@interface FWImageFrame : NSObject
+
+/// 单帧图片
+@property (nonatomic, strong, readonly) UIImage *image;
+
+/// 单帧时长
+@property (nonatomic, assign, readonly) NSTimeInterval duration;
+
+/// 创建单帧对象
+- (instancetype)initWithImage:(UIImage *)image duration:(NSTimeInterval)duration;
+
+/// 根据单帧对象创建动图Image
++ (nullable UIImage *)animatedImageWithFrames:(nullable NSArray<FWImageFrame *> *)frames;
+
+/// 从动图Image创建单帧对象数组
++ (nullable NSArray<FWImageFrame *> *)framesFromAnimatedImage:(nullable UIImage *)animatedImage;
+
+@end
+
+#pragma mark - FWImageCoder
+
+/// 图片解码器协议
+@protocol FWImageCoderProtocol <NSObject>
+
+@required
+
+/// 是否能解析数据
+- (BOOL)canDecodeFromData:(nullable NSData *)data;
+
+/// 解析图片数据到Image，可指定scale
+- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
+
+@end
+
+/// 图片解码器，支持动图
+@interface FWImageCoder : NSObject <FWImageCoderProtocol>
+
+/// 单例模式
+@property (class, nonatomic, readonly) FWImageCoder *sharedInstance;
 
 @end
 
