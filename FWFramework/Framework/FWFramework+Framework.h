@@ -28,7 +28,7 @@
 #import "FWNotificationManager.h"
 
 #import "FWCacheManager.h"
-#import "FWModel.h"
+#import "FWJsonModel.h"
 #import "FWDatabaseManager.h"
 #import "FWNetworkManager.h"
 #import "FWRequestManager.h"

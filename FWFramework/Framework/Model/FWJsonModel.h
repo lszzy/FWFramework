@@ -1,7 +1,7 @@
 /*!
- @header     FWModel.h
+ @header     FWJsonModel.h
  @indexgroup FWFramework
- @brief      FWModel
+ @brief      FWJsonModel
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
  @updated    2018/9/26
@@ -36,13 +36,13 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /**
- *  Model转换协议
+ *  JsonModel转换协议
  *  数组类映射支持两种方式：
  *  1. 实现fwModelClassMapper方法，返回类映射字典。示例：@{@"books" : [Book class]}
- *  2. 声明Model类同名协议，同时定义数组属性时也声明协议。示例：NSArray<Book> *books
- *  Swift数组类映射时，需返回AnyClass类型。示例：["books": Book.classForCoder()]
+ *  2. 声明JsonModel类同名协议，同时定义数组属性时也声明协议。示例：NSArray<Book> *books
+ *  Swift数组类映射时，需返回AnyClass类型。示例：["books": Book.self]
  */
-@protocol FWModel <NSObject>
+@protocol FWJsonModel <NSObject>
 
 @optional
 
@@ -73,11 +73,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /*!
- @brief Model模型解析分类，参考自YYModel
+ @brief JsonModel模型解析分类，参考自YYModel
  
  @see https://github.com/ibireme/YYModel
  */
-@interface NSObject (FWModel)
+@interface NSObject (FWJsonModel)
 
 /*!
  @brief 从json创建对象，线程安全。NSDate会按照UTC时间解析，下同
