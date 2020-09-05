@@ -117,27 +117,17 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 
 #pragma mark - FWImageCoder
 
-/// 图片解码器协议
-@protocol FWImageCoderProtocol <NSObject>
-
-@required
-
-/// 是否能解析数据
-- (BOOL)canDecodeFromData:(nullable NSData *)data;
-
-/// 解析图片数据到Image，可指定scale
-- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
-
-@end
-
 /// 图片解码器，支持动图
-@interface FWImageCoder : NSObject <FWImageCoderProtocol>
+@interface FWImageCoder : NSObject
 
 /// 单例模式
 @property (class, nonatomic, readonly) FWImageCoder *sharedInstance;
 
-/// 是否启用HEIC动图，因系统解码性能原因，默认禁用HEIC动图
+/// 是否启用HEIC动图，因系统解码性能原因，默认为NO，禁用HEIC动图
 @property (nonatomic, assign) BOOL heicsEnabled;
+
+/// 解析图片数据到Image，可指定scale
+- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
 
 @end
 

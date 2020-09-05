@@ -379,404 +379,6 @@ UIImage * FWImageFile(NSString *path) {
 
 #pragma mark - FWImageCoder
 
-typedef NSInteger FWImageCoderType NS_TYPED_EXTENSIBLE_ENUM;
-static const FWImageCoderType FWImageCoderTypeAPNG  = 1;
-static const FWImageCoderType FWImageCoderTypeGIF   = 2;
-static const FWImageCoderType FWImageCoderTypeAWebP = 4;
-static const FWImageCoderType FWImageCoderTypeHEIC  = 5;
-
-@interface FWImageIOAnimatedCoder : NSObject <FWImageCoderProtocol>
-
-@property (nonatomic, assign, readonly) FWImageCoderType type;
-
-@end
-
-@implementation FWImageIOAnimatedCoder
-
-+ (FWImageIOAnimatedCoder *)sharedAPNGCoder
-{
-    static FWImageIOAnimatedCoder *coder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeAPNG];
-    });
-    return coder;
-}
-
-+ (FWImageIOAnimatedCoder *)sharedGIFCoder
-{
-    static FWImageIOAnimatedCoder *coder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeGIF];
-    });
-    return coder;
-}
-
-+ (FWImageIOAnimatedCoder *)sharedAWebPCoder NS_AVAILABLE_IOS(14_0)
-{
-    static FWImageIOAnimatedCoder *coder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeAWebP];
-    });
-    return coder;
-}
-
-+ (FWImageIOAnimatedCoder *)sharedHEICCoder NS_AVAILABLE_IOS(13_0)
-{
-    static FWImageIOAnimatedCoder *coder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        coder = [[FWImageIOAnimatedCoder alloc] initWithType:FWImageCoderTypeHEIC];
-    });
-    return coder;
-}
-
-- (instancetype)initWithType:(FWImageCoderType)type
-{
-    self = [super init];
-    if (self) {
-        _type = type;
-    }
-    return self;
-}
-
-- (BOOL)canDecodeFromData:(NSData *)data
-{
-    BOOL canDecode = NO;
-    FWImageFormat imageFormat = [NSData fwImageFormatForImageData:data];
-    switch (self.type) {
-        case FWImageCoderTypeHEIC:
-            if (@available(iOS 13.0, *)) {
-                canDecode = (imageFormat == FWImageFormatHEIC || imageFormat == FWImageFormatHEIF);
-            }
-            break;
-        case FWImageCoderTypeAWebP:
-            if (@available(iOS 14.0, *)) {
-                canDecode = (imageFormat == FWImageFormatWebP);
-            }
-            break;
-        default:
-            canDecode = (imageFormat == [self imageFormat]);
-            break;
-    }
-    if (!canDecode) {
-        return NO;
-    }
-    
-    static dispatch_once_t onceToken;
-    static NSSet *imageUTTypeSet;
-    dispatch_once(&onceToken, ^{
-        NSArray *imageUTTypes = (__bridge_transfer NSArray *)CGImageSourceCopyTypeIdentifiers();
-        imageUTTypeSet = [NSSet setWithArray:imageUTTypes];
-    });
-    CFStringRef imageUTType = [NSData fwUTTypeFromImageFormat:imageFormat];
-    if ([imageUTTypeSet containsObject:(__bridge NSString *)(imageUTType)]) {
-        return YES;
-    }
-    return NO;
-}
-
-- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale
-{
-    if (!data) return nil;
-    
-    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
-    if (!source) {
-        return nil;
-    }
-    size_t count = CGImageSourceGetCount(source);
-    UIImage *animatedImage;
-    
-    if (count <= 1) {
-        animatedImage = [self.class createFrameAtIndex:0 source:source scale:scale];
-    } else {
-        NSMutableArray *frames = [NSMutableArray array];
-        for (size_t i = 0; i < count; i++) {
-            UIImage *image = [self.class createFrameAtIndex:i source:source scale:scale];
-            if (!image) {
-                continue;
-            }
-            
-            NSTimeInterval duration = [self frameDurationAtIndex:i source:source];
-            
-            FWImageFrame *frame = [[FWImageFrame alloc] initWithImage:image duration:duration];
-            [frames addObject:frame];
-        }
-        
-        NSUInteger loopCount = [self imageLoopCountWithSource:source];
-        
-        animatedImage = [FWImageFrame animatedImageWithFrames:frames];
-        animatedImage.fwImageLoopCount = loopCount;
-    }
-    animatedImage.fwImageFormat = [self imageFormat];
-    CFRelease(source);
-    
-    return animatedImage;
-}
-
-#pragma mark - Protected
-
-- (FWImageFormat)imageFormat
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return FWImageFormatGIF;
-        case FWImageCoderTypeAPNG:
-            return FWImageFormatPNG;
-        case FWImageCoderTypeHEIC:
-            return FWImageFormatHEIC;
-        case FWImageCoderTypeAWebP:
-            return FWImageFormatWebP;
-        default:
-            return FWImageFormatUndefined;
-    }
-}
-
-- (NSString *)imageUTType
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return (__bridge NSString *)kUTTypeGIF;
-        case FWImageCoderTypeAPNG:
-            return (__bridge NSString *)kUTTypePNG;
-        case FWImageCoderTypeHEIC:
-            return (__bridge NSString *)kFWUTTypeHEIC;
-        case FWImageCoderTypeAWebP:
-            return (__bridge NSString *)kFWUTTypeWebP;
-        default:
-            return nil;
-    }
-}
-
-- (NSString *)dictionaryProperty
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return (__bridge NSString *)kCGImagePropertyGIFDictionary;
-        case FWImageCoderTypeAPNG:
-            return (__bridge NSString *)kCGImagePropertyPNGDictionary;
-        case FWImageCoderTypeHEIC:
-            if (@available(iOS 13.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyHEICSDictionary;
-            } else {
-                return @"{HEICS}";
-            }
-        case FWImageCoderTypeAWebP:
-            if (@available(iOS 14.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyWebPDictionary;
-            } else {
-                return @"{WebP}";
-            }
-        default:
-            return nil;
-    }
-}
-
-- (NSString *)unclampedDelayTimeProperty
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return (__bridge NSString *)kCGImagePropertyGIFUnclampedDelayTime;
-        case FWImageCoderTypeAPNG:
-            return (__bridge NSString *)kCGImagePropertyAPNGUnclampedDelayTime;
-        case FWImageCoderTypeHEIC:
-            if (@available(iOS 13.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyHEICSUnclampedDelayTime;
-            } else {
-                return @"UnclampedDelayTime";
-            }
-        case FWImageCoderTypeAWebP:
-            if (@available(iOS 14.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyWebPUnclampedDelayTime;
-            } else {
-                return @"UnclampedDelayTime";
-            }
-        default:
-            return nil;
-    }
-}
-
-- (NSString *)delayTimeProperty
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return (__bridge NSString *)kCGImagePropertyGIFDelayTime;
-        case FWImageCoderTypeAPNG:
-            return (__bridge NSString *)kCGImagePropertyAPNGDelayTime;
-        case FWImageCoderTypeHEIC:
-            if (@available(iOS 13.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyHEICSDelayTime;
-            } else {
-                return @"DelayTime";
-            }
-        case FWImageCoderTypeAWebP:
-            if (@available(iOS 14.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyWebPDelayTime;
-            } else {
-                return @"DelayTime";
-            }
-        default:
-            return nil;
-    }
-}
-
-- (NSString *)loopCountProperty
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return (__bridge NSString *)kCGImagePropertyGIFLoopCount;
-        case FWImageCoderTypeAPNG:
-            return (__bridge NSString *)kCGImagePropertyAPNGLoopCount;
-        case FWImageCoderTypeHEIC:
-            if (@available(iOS 13.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyHEICSLoopCount;
-            } else {
-                return @"LoopCount";
-            }
-        case FWImageCoderTypeAWebP:
-            if (@available(iOS 14.0, *)) {
-                return (__bridge NSString *)kCGImagePropertyWebPLoopCount;
-            } else {
-                return @"LoopCount";
-            }
-        default:
-            return nil;
-    }
-}
-
-- (NSUInteger)defaultLoopCount
-{
-    switch (self.type) {
-        case FWImageCoderTypeGIF:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
-- (NSUInteger)imageLoopCountWithSource:(CGImageSourceRef)source
-{
-    NSUInteger loopCount = self.defaultLoopCount;
-    NSDictionary *imageProperties = (__bridge_transfer NSDictionary *)CGImageSourceCopyProperties(source, NULL);
-    NSDictionary *containerProperties = imageProperties[self.dictionaryProperty];
-    if (containerProperties) {
-        NSNumber *containerLoopCount = containerProperties[self.loopCountProperty];
-        if (containerLoopCount != nil) {
-            loopCount = containerLoopCount.unsignedIntegerValue;
-        }
-    }
-    return loopCount;
-}
-
-- (NSTimeInterval)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source
-{
-    NSDictionary *options = @{
-        (__bridge NSString *)kCGImageSourceShouldCacheImmediately : @(YES),
-        (__bridge NSString *)kCGImageSourceShouldCache : @(YES) // Always cache to reduce CPU usage
-    };
-    NSTimeInterval frameDuration = 0.1;
-    CFDictionaryRef cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(source, index, (__bridge CFDictionaryRef)options);
-    if (!cfFrameProperties) {
-        return frameDuration;
-    }
-    NSDictionary *frameProperties = (__bridge NSDictionary *)cfFrameProperties;
-    NSDictionary *containerProperties = frameProperties[self.dictionaryProperty];
-    
-    NSNumber *delayTimeUnclampedProp = containerProperties[self.unclampedDelayTimeProperty];
-    if (delayTimeUnclampedProp != nil) {
-        frameDuration = [delayTimeUnclampedProp doubleValue];
-    } else {
-        NSNumber *delayTimeProp = containerProperties[self.delayTimeProperty];
-        if (delayTimeProp != nil) {
-            frameDuration = [delayTimeProp doubleValue];
-        }
-    }
-    
-    // Many annoying ads specify a 0 duration to make an image flash as quickly as possible.
-    // We follow Firefox's behavior and use a duration of 100 ms for any frames that specify
-    // a duration of <= 10 ms. See <rdar://problem/7689300> and <http://webkit.org/b/36082>
-    // for more information.
-    
-    if (frameDuration < 0.011) {
-        frameDuration = 0.1;
-    }
-    
-    CFRelease(cfFrameProperties);
-    return frameDuration;
-}
-
-+ (UIImage *)createFrameAtIndex:(NSUInteger)index source:(CGImageSourceRef)source scale:(CGFloat)scale
-{
-    CFStringRef uttype = CGImageSourceGetType(source);
-    BOOL isVector = NO;
-    if ([NSData fwImageFormatFromUTType:uttype] == FWImageFormatPDF) {
-        isVector = YES;
-    }
-
-    NSMutableDictionary *decodingOptions = [NSMutableDictionary dictionary];
-    if (isVector) {
-        CGSize thumbnailSize = UIScreen.mainScreen.bounds.size;
-        NSUInteger rasterizationDPI = MAX(thumbnailSize.width, thumbnailSize.height) * 2;
-        decodingOptions[@"kCGImageSourceRasterizationDPI"] = @(rasterizationDPI);
-    }
-    CGImageRef imageRef = CGImageSourceCreateImageAtIndex(source, index, (__bridge CFDictionaryRef)[decodingOptions copy]);
-    if (!imageRef) {
-        return nil;
-    }
-    
-    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
-    CGImageRelease(imageRef);
-    return image;
-}
-
-@end
-
-@interface FWImageIOCoder : NSObject <FWImageCoderProtocol>
-
-@end
-
-@implementation FWImageIOCoder
-
-+ (FWImageIOCoder *)sharedCoder
-{
-    static FWImageIOCoder *coder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        coder = [[FWImageIOCoder alloc] init];
-    });
-    return coder;
-}
-
-- (BOOL)canDecodeFromData:(NSData *)data
-{
-    return YES;
-}
-
-- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale
-{
-    if (!data) return nil;
-    
-    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
-    if (!source) return nil;
-    
-    UIImage *image = [FWImageIOAnimatedCoder createFrameAtIndex:0 source:source scale:scale];
-    CFRelease(source);
-    if (!image) return nil;
-    
-    image.fwImageFormat = [NSData fwImageFormatForImageData:data];
-    return image;
-}
-
-@end
-
-@interface FWImageCoder ()
-
-@property (nonatomic, strong) NSMutableArray<id<FWImageCoderProtocol>> *imageCoders;
-
-@end
-
 @implementation FWImageCoder
 
 + (FWImageCoder *)sharedInstance
@@ -789,56 +391,249 @@ static const FWImageCoderType FWImageCoderTypeHEIC  = 5;
     return instance;
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _imageCoders = [NSMutableArray array];
-        [_imageCoders addObject:[FWImageIOAnimatedCoder sharedAPNGCoder]];
-        [_imageCoders addObject:[FWImageIOAnimatedCoder sharedGIFCoder]];
-        if (@available(iOS 14.0, *)) {
-            [_imageCoders addObject:[FWImageIOAnimatedCoder sharedAWebPCoder]];
-        }
-        [_imageCoders addObject:[FWImageIOCoder sharedCoder]];
-    }
-    return self;
-}
-
-- (void)setHeicsEnabled:(BOOL)enabled
-{
-    if (_heicsEnabled == enabled) return;
-    
-    if (@available(iOS 13.0, *)) {
-        _heicsEnabled = enabled;
-        if (enabled) {
-            [self.imageCoders insertObject:[FWImageIOAnimatedCoder sharedHEICCoder] atIndex:0];
-        } else {
-            [self.imageCoders removeObject:[FWImageIOAnimatedCoder sharedHEICCoder]];
-        }
-    }
-}
-
-- (BOOL)canDecodeFromData:(NSData *)data
-{
-    for (id<FWImageCoderProtocol> coder in self.imageCoders) {
-        if ([coder canDecodeFromData:data]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
 - (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale
 {
     if (!data) return nil;
     
-    UIImage *image;
-    for (id<FWImageCoderProtocol> coder in self.imageCoders) {
-        if ([coder canDecodeFromData:data]) {
-            image = [coder decodedImageWithData:data scale:scale];
+    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
+    if (!source) return nil;
+    
+    UIImage *animatedImage;
+    size_t count = CGImageSourceGetCount(source);
+    FWImageFormat format = [NSData fwImageFormatForImageData:data];
+    if (![self isAnimated:format] || count <= 1) {
+        animatedImage = [self createFrameAtIndex:0 source:source scale:scale];
+    } else {
+        NSMutableArray *frames = [NSMutableArray array];
+        for (size_t i = 0; i < count; i++) {
+            UIImage *image = [self createFrameAtIndex:i source:source scale:scale];
+            if (!image) continue;
+            
+            NSTimeInterval duration = [self frameDurationAtIndex:i source:source format:format];
+            FWImageFrame *frame = [[FWImageFrame alloc] initWithImage:image duration:duration];
+            [frames addObject:frame];
+        }
+        
+        NSUInteger loopCount = [self imageLoopCountWithSource:source format:format];
+        animatedImage = [FWImageFrame animatedImageWithFrames:frames];
+        animatedImage.fwImageLoopCount = loopCount;
+    }
+    animatedImage.fwImageFormat = format;
+    CFRelease(source);
+    
+    return animatedImage;
+}
+
+- (BOOL)isAnimated:(FWImageFormat)format
+{
+    BOOL isAnimated = NO;
+    switch (format) {
+        case FWImageFormatPNG:
+        case FWImageFormatGIF:
+            isAnimated = YES;
             break;
+        case FWImageFormatHEIC:
+        case FWImageFormatHEIF:
+            if (@available(iOS 13.0, *)) {
+                isAnimated = self.heicsEnabled;
+            }
+            break;
+        case FWImageFormatWebP:
+            if (@available(iOS 14.0, *)) {
+                isAnimated = YES;
+            }
+            break;
+        default:
+            break;
+    }
+    if (!isAnimated) {
+        return NO;
+    }
+    
+    static dispatch_once_t onceToken;
+    static NSSet *imageUTTypeSet;
+    dispatch_once(&onceToken, ^{
+        NSArray *imageUTTypes = (__bridge_transfer NSArray *)CGImageSourceCopyTypeIdentifiers();
+        imageUTTypeSet = [NSSet setWithArray:imageUTTypes];
+    });
+    CFStringRef imageUTType = [NSData fwUTTypeFromImageFormat:format];
+    if ([imageUTTypeSet containsObject:(__bridge NSString *)(imageUTType)]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSString *)dictionaryProperty:(FWImageFormat)format
+{
+    switch (format) {
+        case FWImageFormatGIF:
+            return (__bridge NSString *)kCGImagePropertyGIFDictionary;
+        case FWImageFormatPNG:
+            return (__bridge NSString *)kCGImagePropertyPNGDictionary;
+        case FWImageFormatHEIC:
+        case FWImageFormatHEIF:
+            if (@available(iOS 13.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyHEICSDictionary;
+            } else {
+                return @"{HEICS}";
+            }
+        case FWImageFormatWebP:
+            if (@available(iOS 14.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyWebPDictionary;
+            } else {
+                return @"{WebP}";
+            }
+        default:
+            return nil;
+    }
+}
+
+- (NSString *)unclampedDelayTimeProperty:(FWImageFormat)format
+{
+    switch (format) {
+        case FWImageFormatGIF:
+            return (__bridge NSString *)kCGImagePropertyGIFUnclampedDelayTime;
+        case FWImageFormatPNG:
+            return (__bridge NSString *)kCGImagePropertyAPNGUnclampedDelayTime;
+        case FWImageFormatHEIC:
+        case FWImageFormatHEIF:
+            if (@available(iOS 13.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyHEICSUnclampedDelayTime;
+            } else {
+                return @"UnclampedDelayTime";
+            }
+        case FWImageFormatWebP:
+            if (@available(iOS 14.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyWebPUnclampedDelayTime;
+            } else {
+                return @"UnclampedDelayTime";
+            }
+        default:
+            return nil;
+    }
+}
+
+- (NSString *)delayTimeProperty:(FWImageFormat)format
+{
+    switch (format) {
+        case FWImageFormatGIF:
+            return (__bridge NSString *)kCGImagePropertyGIFDelayTime;
+        case FWImageFormatPNG:
+            return (__bridge NSString *)kCGImagePropertyAPNGDelayTime;
+        case FWImageFormatHEIC:
+        case FWImageFormatHEIF:
+            if (@available(iOS 13.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyHEICSDelayTime;
+            } else {
+                return @"DelayTime";
+            }
+        case FWImageFormatWebP:
+            if (@available(iOS 14.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyWebPDelayTime;
+            } else {
+                return @"DelayTime";
+            }
+        default:
+            return nil;
+    }
+}
+
+- (NSString *)loopCountProperty:(FWImageFormat)format
+{
+    switch (format) {
+        case FWImageFormatGIF:
+            return (__bridge NSString *)kCGImagePropertyGIFLoopCount;
+        case FWImageFormatPNG:
+            return (__bridge NSString *)kCGImagePropertyAPNGLoopCount;
+        case FWImageFormatHEIC:
+        case FWImageFormatHEIF:
+            if (@available(iOS 13.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyHEICSLoopCount;
+            } else {
+                return @"LoopCount";
+            }
+        case FWImageFormatWebP:
+            if (@available(iOS 14.0, *)) {
+                return (__bridge NSString *)kCGImagePropertyWebPLoopCount;
+            } else {
+                return @"LoopCount";
+            }
+        default:
+            return nil;
+    }
+}
+
+- (NSUInteger)defaultLoopCount:(FWImageFormat)format
+{
+    switch (format) {
+        case FWImageFormatGIF:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+- (NSUInteger)imageLoopCountWithSource:(CGImageSourceRef)source format:(FWImageFormat)format
+{
+    NSUInteger loopCount = [self defaultLoopCount:format];
+    NSDictionary *imageProperties = (__bridge_transfer NSDictionary *)CGImageSourceCopyProperties(source, NULL);
+    NSDictionary *containerProperties = imageProperties[[self dictionaryProperty:format]];
+    if (containerProperties) {
+        NSNumber *containerLoopCount = containerProperties[[self loopCountProperty:format]];
+        if (containerLoopCount != nil) {
+            loopCount = containerLoopCount.unsignedIntegerValue;
         }
     }
+    return loopCount;
+}
+
+- (NSTimeInterval)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source format:(FWImageFormat)format
+{
+    NSDictionary *options = @{
+        (__bridge NSString *)kCGImageSourceShouldCacheImmediately : @(YES),
+        (__bridge NSString *)kCGImageSourceShouldCache : @(YES)
+    };
+    NSTimeInterval frameDuration = 0.1;
+    CFDictionaryRef cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(source, index, (__bridge CFDictionaryRef)options);
+    if (!cfFrameProperties) {
+        return frameDuration;
+    }
+    NSDictionary *frameProperties = (__bridge NSDictionary *)cfFrameProperties;
+    NSDictionary *containerProperties = frameProperties[[self dictionaryProperty:format]];
+    
+    NSNumber *delayTimeUnclampedProp = containerProperties[[self unclampedDelayTimeProperty:format]];
+    if (delayTimeUnclampedProp != nil) {
+        frameDuration = [delayTimeUnclampedProp doubleValue];
+    } else {
+        NSNumber *delayTimeProp = containerProperties[[self delayTimeProperty:format]];
+        if (delayTimeProp != nil) {
+            frameDuration = [delayTimeProp doubleValue];
+        }
+    }
+    if (frameDuration < 0.011) {
+        frameDuration = 0.1;
+    }
+    
+    CFRelease(cfFrameProperties);
+    return frameDuration;
+}
+
+- (UIImage *)createFrameAtIndex:(NSUInteger)index source:(CGImageSourceRef)source scale:(CGFloat)scale
+{
+    CFStringRef uttype = CGImageSourceGetType(source);
+    BOOL isVector = ([NSData fwImageFormatFromUTType:uttype] == FWImageFormatPDF);
+
+    NSMutableDictionary *decodingOptions = [NSMutableDictionary dictionary];
+    if (isVector) {
+        CGSize thumbnailSize = UIScreen.mainScreen.bounds.size;
+        NSUInteger rasterizationDPI = MAX(thumbnailSize.width, thumbnailSize.height) * 2;
+        decodingOptions[@"kCGImageSourceRasterizationDPI"] = @(rasterizationDPI);
+    }
+    CGImageRef imageRef = CGImageSourceCreateImageAtIndex(source, index, (__bridge CFDictionaryRef)[decodingOptions copy]);
+    if (!imageRef) return nil;
+    
+    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
+    CGImageRelease(imageRef);
     return image;
 }
 
