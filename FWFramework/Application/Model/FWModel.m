@@ -1,10 +1,10 @@
 /*!
- @header     FWViewModel.m
+ @header     FWModel.m
  @indexgroup FWFramework
- @brief      FWViewModel
+ @brief      FWModel
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/7/22
  */
 
-#import "FWViewModel.h"
+#import "FWModel.h"

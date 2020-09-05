@@ -1,13 +1,13 @@
 /*!
- @header     FWModel.m
+ @header     FWJsonModel.m
  @indexgroup FWFramework
- @brief      FWModel
+ @brief      FWJsonModel
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
  @updated    2018/9/26
  */
 
-#import "FWModel.h"
+#import "FWJsonModel.h"
 #import <objc/message.h>
 
 #define force_inline __inline__ __attribute__((always_inline))
@@ -1430,7 +1430,7 @@ static NSString *FWModelDescription(NSObject *model) {
 }
 
 
-@implementation NSObject (FWModel)
+@implementation NSObject (FWJsonModel)
 
 + (NSDictionary *)fwInnerDictionaryWithJson:(id)json {
     if (!json || json == (id)kCFNull) return nil;
