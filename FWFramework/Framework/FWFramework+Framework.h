@@ -27,6 +27,7 @@
 #import "FWKeychainManager.h"
 #import "FWLocationManager.h"
 #import "FWNotificationManager.h"
+#import "FWVersionManager.h"
 
 #import "FWCacheManager.h"
 #import "FWDatabaseManager.h"

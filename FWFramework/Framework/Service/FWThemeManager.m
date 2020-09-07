@@ -1,13 +1,13 @@
 /*!
- @header     UIView+FWTheme.m
+ @header     FWThemeManager.m
  @indexgroup FWFramework
- @brief      UIView+FWTheme
+ @brief      FWThemeManager
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/8/14
  */
 
-#import "UIView+FWTheme.h"
+#import "FWThemeManager.h"
 #import "UIWindow+FWFramework.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"

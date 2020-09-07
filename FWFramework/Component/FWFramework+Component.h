@@ -29,8 +29,6 @@
 #import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"
-#import "FWStatisticalManager.h"
 #import "FWTagCollectionView.h"
-#import "FWVersionManager.h"
 
 #endif /* FWFramework_Component_h */
