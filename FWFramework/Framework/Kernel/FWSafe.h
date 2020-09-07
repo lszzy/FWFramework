@@ -1,5 +1,5 @@
 /*!
- @header     FWRuntime.h
+ @header     FWSafe.h
  @indexgroup FWFramework
  @brief      NSObject类型安全分类
  @author     wuyong

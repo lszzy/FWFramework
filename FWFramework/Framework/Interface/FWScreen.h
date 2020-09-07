@@ -1,7 +1,7 @@
 /*!
- @header     FWToolkitManager.h
+ @header     FWScreen.h
  @indexgroup FWFramework
- @brief      FWToolkitManager
+ @brief      FWScreen
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7

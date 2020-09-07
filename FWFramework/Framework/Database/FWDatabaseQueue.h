@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FWDatabase.h"
+#import "FWDatabaseAdditions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

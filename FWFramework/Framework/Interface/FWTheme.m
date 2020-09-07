@@ -1,14 +1,14 @@
 /*!
- @header     FWThemeManager.m
+ @header     FWTheme.m
  @indexgroup FWFramework
- @brief      FWThemeManager
+ @brief      FWTheme
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/8/14
  */
 
-#import "FWThemeManager.h"
-#import "FWContextManager.h"
+#import "FWTheme.h"
+#import "FWNavigation.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
