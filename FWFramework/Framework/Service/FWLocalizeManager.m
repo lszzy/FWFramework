@@ -1,13 +1,13 @@
 /*!
- @header     NSBundle+FWLanguage.m
+ @header     FWLocalizeManager.m
  @indexgroup FWFramework
- @brief      NSBundle+FWLanguage
+ @brief      FWLocalizeManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/4/21
  */
 
-#import "NSBundle+FWLanguage.h"
+#import "FWLocalizeManager.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
@@ -89,6 +89,16 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
     // 加载mainBundle对应语言文件，加载失败使用默认
     NSBundle *bundle = language ? [NSBundle bundleWithPath:[NSBundle.mainBundle pathForResource:language ofType:@"lproj"]] : nil;
     objc_setAssociatedObject(NSBundle.mainBundle, @selector(localizedStringForKey:value:table:), bundle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (NSString *)fwLocalizedString:(NSString *)key
+{
+    return [self fwLocalizedString:key table:nil];
+}
+
++ (NSString *)fwLocalizedString:(NSString *)key table:(NSString *)table
+{
+    return [[NSBundle mainBundle] localizedStringForKey:key value:nil table:table];
 }
 
 @end

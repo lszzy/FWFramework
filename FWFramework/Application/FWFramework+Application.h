@@ -18,7 +18,9 @@
 #import "FWWebViewController.h"
 
 #import "FWModel.h"
+#import "FWViewModel.h"
 
 #import "FWView.h"
+#import "FWWebImage.h"
 
 #endif /* FWFramework_Application_h */

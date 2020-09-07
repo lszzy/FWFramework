@@ -8,6 +8,7 @@
  */
 
 #import "NSObject+FWSafeType.h"
+#import "FWProxy.h"
 
 NSString * FWSafeString(id value) {
     return value ? [NSString stringWithFormat:@"%@", value] : @"";
@@ -162,6 +163,56 @@ NSNumber * FWSafeNumber(id value) {
         return self;
     } else {
         return nil;
+    }
+}
+
+#pragma mark - Property
+
+- (id)fwPropertyForName:(NSString *)name
+{
+    return objc_getAssociatedObject(self, NSSelectorFromString(name));
+}
+
+- (void)fwSetProperty:(id)object forName:(NSString *)name
+{
+    // 仅当值发生改变才触发KVO，下同
+    if (object != [self fwPropertyForName:name]) {
+        [self willChangeValueForKey:name];
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:name];
+    }
+}
+
+- (void)fwSetPropertyAssign:(id)object forName:(NSString *)name
+{
+    if (object != [self fwPropertyForName:name]) {
+        [self willChangeValueForKey:name];
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_ASSIGN);
+        [self didChangeValueForKey:name];
+    }
+}
+
+- (void)fwSetPropertyCopy:(id)object forName:(NSString *)name
+{
+    if (object != [self fwPropertyForName:name]) {
+        [self willChangeValueForKey:name];
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        [self didChangeValueForKey:name];
+    }
+}
+
+- (id)fwPropertyWeakForName:(NSString *)name
+{
+    FWWeakObject *weakObject = objc_getAssociatedObject(self, NSSelectorFromString(name));
+    return weakObject.object;
+}
+
+- (void)fwSetPropertyWeak:(id)object forName:(NSString *)name
+{
+    if (object != [self fwPropertyWeakForName:name]) {
+        [self willChangeValueForKey:name];
+        objc_setAssociatedObject(self, NSSelectorFromString(name), [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:name];
     }
 }
 

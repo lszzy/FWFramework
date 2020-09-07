@@ -139,6 +139,56 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  */
 - (nullable id)fwAsClass:(Class)clazz;
 
+#pragma mark - Property
+
+/*!
+ @brief 读取关联属性
+ 
+ @param name 属性名称
+ @return 属性值
+ */
+- (nullable id)fwPropertyForName:(NSString *)name;
+
+/*!
+ @brief 设置强关联属性，支持KVO
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetProperty:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 设置赋值关联属性，支持KVO，注意可能会产生野指针
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyAssign:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 设置拷贝关联属性，支持KVO
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyCopy:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 读取弱引用关联属性，需和fwSetPropertyWeak配套使用(OC不支持weak关联属性)
+ 
+ @param name 属性名称
+ @return 属性值
+ */
+- (nullable id)fwPropertyWeakForName:(NSString *)name;
+
+/*!
+ @brief 设置弱引用关联属性，支持KVO，需和fwPropertyWeakForName配套使用(OC不支持weak关联属性)
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
+
 @end
 
 #pragma mark - NSNumber+FWSafeType
