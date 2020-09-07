@@ -1,7 +1,7 @@
 /*!
- @header     NSBundle+FWLanguage.h
+ @header     FWLocalizeManager.h
  @indexgroup FWFramework
- @brief      NSBundle+FWLanguage
+ @brief      FWLocalizeManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/4/21
@@ -10,6 +10,10 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+// 读取主bundle本地化字符串
+#define FWLocalizedString( key, ... ) \
+    [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:fw_macro_default(nil, ##__VA_ARGS__)]
 
 // 本地化语言改变通知，object为本地化语言名称
 extern NSString *const FWLocalizedLanguageChangedNotification;
@@ -30,6 +34,12 @@ FWFramework所需本地化翻译如下：完成|关闭|确定|取消，配置同
 
 /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
 @property (nullable, class, nonatomic, copy) NSString *fwLocalizedLanguage;
+
+// 读取本地化字符串，strings文件需位于mainBundle
++ (NSString *)fwLocalizedString:(NSString *)key;
+
+// 读取本地化字符串，指定table，strings文件需位于mainBundle
++ (NSString *)fwLocalizedString:(NSString *)key table:(nullable NSString *)table;
 
 @end
 

@@ -574,7 +574,7 @@
 			children = (
 				2FF8D93724C88A6F006A83B5 /* App */,
 				2FF8D92F24C88A6F006A83B5 /* Library */,
-				2FF8D89A24C88A6F006A83B5 /* Service */,
+				2FFDE2112505D06F00C5042F /* Module */,
 				2FF8D89B24C88A6F006A83B5 /* Controller */,
 				2FF8D93524C88A6F006A83B5 /* Model */,
 				2FF8D93624C88A6F006A83B5 /* View */,
@@ -607,13 +607,6 @@
 				2FF8D88B24C886EE006A83B5 /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		2FF8D89A24C88A6F006A83B5 /* Service */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Service;
 			sourceTree = "<group>";
 		};
 		2FF8D89B24C88A6F006A83B5 /* Controller */ = {
@@ -944,6 +937,45 @@
 				2FF8D9D924C88C86006A83B5 /* frame1.png */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		2FFDE2112505D06F00C5042F /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				2FFDE2122505D07A00C5042F /* Test */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		2FFDE2122505D07A00C5042F /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				2FFDE2132505D08200C5042F /* Controller */,
+				2FFDE2142505D09500C5042F /* Model */,
+				2FFDE2152505D09E00C5042F /* View */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		2FFDE2132505D08200C5042F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2FFDE2142505D09500C5042F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2FFDE2152505D09E00C5042F /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		8308B34A12C3D1D0D913BACB /* Pods */ = {

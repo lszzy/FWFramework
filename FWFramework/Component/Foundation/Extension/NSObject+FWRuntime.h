@@ -11,30 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Singleton
-
-/*!
- @brief 定义单例头文件
- 
- @param cls 类名
- */
-#define FWSingleton( cls ) \
-    @property (class, nonatomic, readonly) cls *sharedInstance;
-
-/*!
- @brief 定义单例实现
- 
- @param cls 类名
- */
-#define FWDefSingleton( cls ) \
-    + (cls *)sharedInstance \
-    { \
-        static dispatch_once_t once; \
-        static __strong id __singleton__ = nil; \
-        dispatch_once( &once, ^{ __singleton__ = [[cls alloc] init]; } ); \
-        return __singleton__; \
-    }
-
 #pragma mark - Property
 
 /*!
@@ -379,40 +355,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSObject (FWRuntime)
 
-#pragma mark - Property
-
-/*!
- @brief 读取关联属性
- 
- @param name 属性名称
- @return 属性值
- */
-- (nullable id)fwPropertyForName:(NSString *)name;
-
-/*!
- @brief 设置强关联属性，支持KVO
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetProperty:(nullable id)object forName:(NSString *)name;
-
-/*!
- @brief 设置赋值关联属性，支持KVO，注意可能会产生野指针
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetPropertyAssign:(nullable id)object forName:(NSString *)name;
-
-/*!
- @brief 设置拷贝关联属性，支持KVO
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetPropertyCopy:(nullable id)object forName:(NSString *)name;
-
 #pragma mark - Associate
 
 /*!
@@ -458,24 +400,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param key 键名
  */
 - (void)fwRemoveAssociatedObjectForKey:(const void *)key;
-
-#pragma mark - Weak
-
-/*!
- @brief 读取弱引用关联属性，需和fwSetPropertyWeak配套使用(OC不支持weak关联属性)
- 
- @param name 属性名称
- @return 属性值
- */
-- (nullable id)fwPropertyWeakForName:(NSString *)name;
-
-/*!
- @brief 设置弱引用关联属性，支持KVO，需和fwPropertyWeakForName配套使用(OC不支持weak关联属性)
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
 
 /*!
  @brief 读取弱引用关联对象，需和fwSetAssociatedObjectWeak配套使用(OC不支持weak关联属性)
