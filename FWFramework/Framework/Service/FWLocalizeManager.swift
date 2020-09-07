@@ -1,5 +1,5 @@
 //
-//  NSBundle+FWFramework.swift
+//  FWLocalizeManager.swift
 //  FWFramework
 //
 //  解决Xcode中swift项目不能运行9.3及以下模拟器问题：

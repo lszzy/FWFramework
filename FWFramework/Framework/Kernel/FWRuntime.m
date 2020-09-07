@@ -9,6 +9,7 @@
 
 #import "FWRuntime.h"
 #import "FWProxy.h"
+#import <objc/runtime.h>
 
 NSString * FWSafeString(id value) {
     return value ? [NSString stringWithFormat:@"%@", value] : @"";

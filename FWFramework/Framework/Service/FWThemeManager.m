@@ -8,7 +8,7 @@
  */
 
 #import "FWThemeManager.h"
-#import "UIWindow+FWFramework.h"
+#import "FWContextManager.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
