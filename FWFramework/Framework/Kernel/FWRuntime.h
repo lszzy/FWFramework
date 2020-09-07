@@ -1,5 +1,5 @@
 /*!
- @header     NSObject+FWSafeType.h
+ @header     FWRuntime.h
  @indexgroup FWFramework
  @brief      NSObject类型安全分类
  @author     wuyong
@@ -246,6 +246,21 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  @return 子串
  */
 - (nullable NSString *)fwSubstringWithRange:(NSRange)range;
+
+@end
+
+#pragma mark - NSURL+FWSafeType
+
+/*!
+ @brief NSURL类型安全分类
+ */
+@interface NSURL (FWSafeType)
+
+// 生成URL，中文自动URL编码
++ (nullable instancetype)fwURLWithString:(nullable NSString *)URLString;
+
+// 生成URL，中文自动URL编码
++ (nullable instancetype)fwURLWithString:(nullable NSString *)URLString relativeToURL:(nullable NSURL *)baseURL;
 
 @end
 

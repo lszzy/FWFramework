@@ -7,10 +7,7 @@
  @updated    2018/9/18
  */
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "NSString+FWEncode.h"
-#import "NSString+FWEncrypt.h"
 #import "NSString+FWFormat.h"
 
 NS_ASSUME_NONNULL_BEGIN
