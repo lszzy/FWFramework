@@ -77,7 +77,7 @@
 		2F03A5BD216CF4B9001965A1 /* UIScreen+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A526216CF4B9001965A1 /* UIScreen+FWFramework.m */; };
 		2F03A5BF216CF4B9001965A1 /* NSObject+FWBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A529216CF4B9001965A1 /* NSObject+FWBlock.m */; };
 		2F03A5C0216CF4B9001965A1 /* NSDictionary+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52A216CF4B9001965A1 /* NSDictionary+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5C1216CF4B9001965A1 /* NSString+FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F03A5C1216CF4B9001965A1 /* FWEncodeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52B216CF4B9001965A1 /* FWEncodeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C2216CF4B9001965A1 /* NSObject+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52C216CF4B9001965A1 /* NSObject+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C4216CF4B9001965A1 /* NSFileManager+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C6216CF4B9001965A1 /* NSString+FWFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A530216CF4B9001965A1 /* NSString+FWFormat.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -85,7 +85,6 @@
 		2F03A5C8216CF4B9001965A1 /* NSNumber+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5C9216CF4B9001965A1 /* NSObject+FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */; };
 		2F03A5CB216CF4B9001965A1 /* FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A535216CF4B9001965A1 /* FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */; };
 		2F03A5CD216CF4B9001965A1 /* NSString+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5CE216CF4B9001965A1 /* NSUserDefaults+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A538216CF4B9001965A1 /* NSUserDefaults+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5CF216CF4B9001965A1 /* NSArray+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A539216CF4B9001965A1 /* NSArray+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -93,7 +92,7 @@
 		2F03A5D1216CF4B9001965A1 /* NSTimer+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */; };
 		2F03A5D2216CF4B9001965A1 /* NSDate+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53C216CF4B9001965A1 /* NSDate+FWFramework.m */; };
 		2F03A5D4216CF4B9001965A1 /* NSObject+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */; };
-		2F03A5D5216CF4B9001965A1 /* NSString+FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */; };
+		2F03A5D5216CF4B9001965A1 /* FWEncodeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F216CF4B9001965A1 /* FWEncodeManager.m */; };
 		2F03A5D6216CF4B9001965A1 /* NSDictionary+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A540216CF4B9001965A1 /* NSDictionary+FWFramework.m */; };
 		2F03A5D7216CF4B9001965A1 /* NSObject+FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5DA216CF4B9001965A1 /* NSObject+FWRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -103,7 +102,6 @@
 		2F03A5DE216CF4B9001965A1 /* NSString+FWFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A548216CF4B9001965A1 /* NSString+FWFormat.m */; };
 		2F03A5DF216CF4B9001965A1 /* NSArray+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A549216CF4B9001965A1 /* NSArray+FWFramework.m */; };
 		2F03A5E0216CF4B9001965A1 /* NSUserDefaults+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A54A216CF4B9001965A1 /* NSUserDefaults+FWFramework.m */; };
-		2F03A5E1216CF4B9001965A1 /* NSString+FWEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A54B216CF4B9001965A1 /* NSString+FWEncrypt.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A5E2216CF4B9001965A1 /* NSString+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A54C216CF4B9001965A1 /* NSString+FWFramework.m */; };
 		2F03A5E3216CF4B9001965A1 /* FWRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A54D216CF4B9001965A1 /* FWRuntime.m */; };
 		2F03A5E4216CF4B9001965A1 /* NSDate+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A54E216CF4B9001965A1 /* NSDate+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -342,8 +340,6 @@
 		2FF7EED1248A3BFF00B3CA39 /* FWViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */; };
 		2FF7EED8248BD14B00B3CA39 /* FWBarrageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF7EED9248BD14B00B3CA39 /* FWBarrageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */; };
-		2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */; };
 		2FFDE2182505DABB00C5042F /* FWViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDE2162505DABB00C5042F /* FWViewModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFDE2192505DABB00C5042F /* FWViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFDE2172505DABB00C5042F /* FWViewModel.m */; };
 		2FFDE21C2505DB9E00C5042F /* FWWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFDE21A2505DB9E00C5042F /* FWWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -421,7 +417,7 @@
 		2F03A526216CF4B9001965A1 /* UIScreen+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A529216CF4B9001965A1 /* NSObject+FWBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWBlock.m"; sourceTree = "<group>"; };
 		2F03A52A216CF4B9001965A1 /* NSDictionary+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+FWFramework.h"; sourceTree = "<group>"; };
-		2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWEncode.h"; sourceTree = "<group>"; };
+		2F03A52B216CF4B9001965A1 /* FWEncodeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWEncodeManager.h; sourceTree = "<group>"; };
 		2F03A52C216CF4B9001965A1 /* NSObject+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A52E216CF4B9001965A1 /* NSFileManager+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A530216CF4B9001965A1 /* NSString+FWFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFormat.h"; sourceTree = "<group>"; };
@@ -429,7 +425,6 @@
 		2F03A532216CF4B9001965A1 /* NSNumber+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWRuntime.m"; sourceTree = "<group>"; };
 		2F03A535216CF4B9001965A1 /* FWRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWRuntime.h; sourceTree = "<group>"; };
-		2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncrypt.m"; sourceTree = "<group>"; };
 		2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A538216CF4B9001965A1 /* NSUserDefaults+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+FWFramework.h"; sourceTree = "<group>"; };
 		2F03A539216CF4B9001965A1 /* NSArray+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+FWFramework.h"; sourceTree = "<group>"; };
@@ -437,7 +432,7 @@
 		2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A53C216CF4B9001965A1 /* NSDate+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A53E216CF4B9001965A1 /* NSObject+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+FWFramework.m"; sourceTree = "<group>"; };
-		2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWEncode.m"; sourceTree = "<group>"; };
+		2F03A53F216CF4B9001965A1 /* FWEncodeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWEncodeManager.m; sourceTree = "<group>"; };
 		2F03A540216CF4B9001965A1 /* NSDictionary+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A541216CF4B9001965A1 /* NSObject+FWBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWBlock.h"; sourceTree = "<group>"; };
 		2F03A544216CF4B9001965A1 /* NSObject+FWRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+FWRuntime.h"; sourceTree = "<group>"; };
@@ -447,7 +442,6 @@
 		2F03A548216CF4B9001965A1 /* NSString+FWFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWFormat.m"; sourceTree = "<group>"; };
 		2F03A549216CF4B9001965A1 /* NSArray+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A54A216CF4B9001965A1 /* NSUserDefaults+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+FWFramework.m"; sourceTree = "<group>"; };
-		2F03A54B216CF4B9001965A1 /* NSString+FWEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FWEncrypt.h"; sourceTree = "<group>"; };
 		2F03A54C216CF4B9001965A1 /* NSString+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FWFramework.m"; sourceTree = "<group>"; };
 		2F03A54D216CF4B9001965A1 /* FWRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWRuntime.m; sourceTree = "<group>"; };
 		2F03A54E216CF4B9001965A1 /* NSDate+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+FWFramework.h"; sourceTree = "<group>"; };
@@ -687,8 +681,6 @@
 		2FF7EED0248A3BFF00B3CA39 /* FWViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWViewController.swift; sourceTree = "<group>"; };
 		2FF7EED6248BD14B00B3CA39 /* FWBarrageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBarrageView.h; sourceTree = "<group>"; };
 		2FF7EED7248BD14B00B3CA39 /* FWBarrageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBarrageView.m; sourceTree = "<group>"; };
-		2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWVendor.h"; sourceTree = "<group>"; };
-		2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+FWVendor.m"; sourceTree = "<group>"; };
 		2FFDE2162505DABB00C5042F /* FWViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWViewModel.h; sourceTree = "<group>"; };
 		2FFDE2172505DABB00C5042F /* FWViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWViewModel.m; sourceTree = "<group>"; };
 		2FFDE21A2505DB9E00C5042F /* FWWebImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
@@ -1034,6 +1026,8 @@
 				2FDF9B04244EED90000BB1E3 /* FWLocalizeManager.h */,
 				2FDF9B05244EED91000BB1E3 /* FWLocalizeManager.m */,
 				2FBFB70722C5045400E669B6 /* FWLocalizeManager.swift */,
+				2F03A52B216CF4B9001965A1 /* FWEncodeManager.h */,
+				2F03A53F216CF4B9001965A1 /* FWEncodeManager.m */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1077,10 +1071,6 @@
 				2F03A533216CF4B9001965A1 /* NSObject+FWRuntime.m */,
 				2F8F370224002D79003472B5 /* NSObject+FWThread.h */,
 				2F8F370324002D79003472B5 /* NSObject+FWThread.m */,
-				2F03A52B216CF4B9001965A1 /* NSString+FWEncode.h */,
-				2F03A53F216CF4B9001965A1 /* NSString+FWEncode.m */,
-				2F03A54B216CF4B9001965A1 /* NSString+FWEncrypt.h */,
-				2F03A536216CF4B9001965A1 /* NSString+FWEncrypt.m */,
 				2F03A530216CF4B9001965A1 /* NSString+FWFormat.h */,
 				2F03A548216CF4B9001965A1 /* NSString+FWFormat.m */,
 				2F03A537216CF4B9001965A1 /* NSString+FWFramework.h */,
@@ -1089,8 +1079,6 @@
 				2F03A53B216CF4B9001965A1 /* NSTimer+FWFramework.m */,
 				2F159BDF21B4E3C6002DE322 /* NSURL+FWFramework.h */,
 				2F159BE021B4E3C6002DE322 /* NSURL+FWFramework.m */,
-				2FFDDFB92202F6EE00F4A462 /* NSURL+FWVendor.h */,
-				2FFDDFBA2202F6EE00F4A462 /* NSURL+FWVendor.m */,
 				2F03A538216CF4B9001965A1 /* NSUserDefaults+FWFramework.h */,
 				2F03A54A216CF4B9001965A1 /* NSUserDefaults+FWFramework.m */,
 			);
@@ -1280,7 +1268,6 @@
 				2FDBDCBB2237B3540048607A /* UIGestureRecognizer+FWFramework.h in Headers */,
 				2FC5E007221551D9008A56A7 /* UINavigationController+FWBar.h in Headers */,
 				2FE4EFF82212B2750077876A /* UIViewController+FWBack.h in Headers */,
-				2FFDDFBB2202F6EE00F4A462 /* NSURL+FWVendor.h in Headers */,
 				2FB90F6721F97E6C00084D76 /* FWPhotoBrowser.h in Headers */,
 				2FB90F1A21F55B1400084D76 /* FWQrcodeScanView.h in Headers */,
 				2FB90F0F21F4A00C00084D76 /* FWMarqueeLabel.h in Headers */,
@@ -1351,7 +1338,6 @@
 				2F03A5B1216CF4B9001965A1 /* UIView+FWBorder.h in Headers */,
 				2F03A57A216CF4B9001965A1 /* UIView+FWDrag.h in Headers */,
 				2F03A5A0216CF4B9001965A1 /* UINavigationController+FWFramework.h in Headers */,
-				2F03A5E1216CF4B9001965A1 /* NSString+FWEncrypt.h in Headers */,
 				2F03A5AC216CF4B9001965A1 /* UITableView+FWTemplateLayout.h in Headers */,
 				2F03A5C8216CF4B9001965A1 /* NSNumber+FWFramework.h in Headers */,
 				2F03A5C6216CF4B9001965A1 /* NSString+FWFormat.h in Headers */,
@@ -1363,7 +1349,7 @@
 				2F03A58F216CF4B9001965A1 /* UIViewController+FWFramework.h in Headers */,
 				2F03A5CF216CF4B9001965A1 /* NSArray+FWFramework.h in Headers */,
 				2F03A5F4216CF4B9001965A1 /* FWPromise.h in Headers */,
-				2F03A5C1216CF4B9001965A1 /* NSString+FWEncode.h in Headers */,
+				2F03A5C1216CF4B9001965A1 /* FWEncodeManager.h in Headers */,
 				2F03A5F3216CF4B9001965A1 /* FWProxy.h in Headers */,
 				2F03A59D216CF4B9001965A1 /* UINavigationController+FWWorkflow.h in Headers */,
 				2F03A592216CF4B9001965A1 /* UIScreen+FWFramework.h in Headers */,
@@ -1487,7 +1473,6 @@
 				2F03A638216CF882001965A1 /* FWNetworkPrivate.m in Sources */,
 				2F03EECF231F65AA009D2A22 /* UILocalNotification+FWFramework.m in Sources */,
 				2FAC8526247CCAE300E5ED36 /* FWModel.swift in Sources */,
-				2FFDDFBC2202F6EE00F4A462 /* NSURL+FWVendor.m in Sources */,
 				2F92114823E9158100183311 /* NSDictionary+FWThread.m in Sources */,
 				2F938E562500DFEB009395FB /* FWGridView.m in Sources */,
 				2FCE516921D3BA32009EA65E /* FWCacheAbstract.m in Sources */,
@@ -1504,7 +1489,7 @@
 				2F03A579216CF4B9001965A1 /* UIView+FWAutoLayout.m in Sources */,
 				2FCE516221D3BA32009EA65E /* FWCacheMemory.m in Sources */,
 				2F92114023E912F800183311 /* FWStatisticalManager.m in Sources */,
-				2F03A5D5216CF4B9001965A1 /* NSString+FWEncode.m in Sources */,
+				2F03A5D5216CF4B9001965A1 /* FWEncodeManager.m in Sources */,
 				2F03A651216CF882001965A1 /* FWNetworkReachabilityManager.m in Sources */,
 				2FCE514021D3A43E009EA65E /* FWDatabaseQueue.m in Sources */,
 				2FD1A52721D4BD4100A215C2 /* FWScrollViewController.m in Sources */,
@@ -1585,7 +1570,6 @@
 				2F217938218DEC6900B16AED /* UIPageControl+FWFramework.m in Sources */,
 				2F03A593216CF4B9001965A1 /* UIImage+FWFramework.m in Sources */,
 				2F03A5A8216CF4B9001965A1 /* UIWindow+FWFramework.m in Sources */,
-				2F03A5CC216CF4B9001965A1 /* NSString+FWEncrypt.m in Sources */,
 				2FB90F0A21F48AAB00084D76 /* FWSegmentedControl.m in Sources */,
 				2FF43D1324C144ED00ADD72C /* UIFont+FWFramework.swift in Sources */,
 				2FB90F1021F4A00C00084D76 /* FWMarqueeLabel.m in Sources */,

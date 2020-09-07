@@ -1,7 +1,7 @@
 /*!
- @header     NSString+FWEncode.h
+ @header     FWEncodeManager.h
  @indexgroup FWFramework
- @brief      NSString+FWEncode
+ @brief      FWEncodeManager
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/18
@@ -126,6 +126,22 @@ NS_ASSUME_NONNULL_BEGIN
  * url参数字符串解码为字典
  */
 - (NSDictionary *)fwQueryDecode;
+
+#pragma mark - Md5
+
+/**
+ *  md5编码
+ *
+ *  @return md5字符串
+ */
+- (NSString *)fwMd5String;
+
+/**
+ *  文件md5编码
+ *
+ *  @return md5字符串
+ */
+- (nullable NSString *)fwMd5File;
 
 @end
 

@@ -1,13 +1,14 @@
 /*!
- @header     NSString+FWEncode.m
+ @header     FWEncodeManager.m
  @indexgroup FWFramework
- @brief      NSString+FWEncode
+ @brief      FWEncodeManager
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/18
  */
 
-#import "NSString+FWEncode.h"
+#import "FWEncodeManager.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation NSString (FWEncode)
 
@@ -197,6 +198,53 @@
         }
     }
     return [NSDictionary dictionaryWithDictionary:dict];
+}
+
+#pragma mark - Md5
+
+- (NSString *)fwMd5String
+{
+    const char *cStr = [self UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++){
+        [output appendFormat:@"%02x", digest[i]];
+    }
+    return output;
+}
+
+- (NSString *)fwMd5File
+{
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self];
+    if (!handle) {
+        return nil;
+    }
+    
+    CC_MD5_CTX md5;
+    CC_MD5_Init(&md5);
+    BOOL done = NO;
+    while (!done) {
+        NSData *fileData = [handle readDataOfLength:256];
+        CC_MD5_Update(&md5, [fileData bytes], (CC_LONG)[fileData length]);
+        if ([fileData length] == 0) {
+            done = YES;
+        }
+    }
+    
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5_Final(digest, &md5);
+    NSString *result = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                        digest[0], digest[1],
+                        digest[2], digest[3],
+                        digest[4], digest[5],
+                        digest[6], digest[7],
+                        digest[8], digest[9],
+                        digest[10], digest[11],
+                        digest[12], digest[13],
+                        digest[14], digest[15]];
+    return result;
 }
 
 @end

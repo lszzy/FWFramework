@@ -1,5 +1,5 @@
 /*!
- @header     NSObject+FWSafeType.h
+ @header     FWRuntime.m
  @indexgroup FWFramework
  @brief      NSObject类型安全分类
  @author     wuyong
@@ -7,7 +7,7 @@
  @updated    2018-05-18
  */
 
-#import "NSObject+FWSafeType.h"
+#import "FWRuntime.h"
 #import "FWProxy.h"
 
 NSString * FWSafeString(id value) {
@@ -283,6 +283,36 @@ NSNumber * FWSafeNumber(id value) {
     }
     
     return [self substringWithRange:range];
+}
+
+@end
+
+#pragma mark - NSURL+FWSafeType
+
+@implementation NSURL (FWSafeType)
+
++ (instancetype)fwURLWithString:(NSString *)URLString
+{
+    if (!URLString) return nil;
+    
+    NSURL *url = [self URLWithString:URLString];
+    // 如果生成失败，自动URL编码再试
+    if (!url && URLString.length > 0) {
+        url = [self URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    return url;
+}
+
++ (instancetype)fwURLWithString:(NSString *)URLString relativeToURL:(NSURL *)baseURL
+{
+    if (!URLString) return nil;
+    
+    NSURL *url = [self URLWithString:URLString relativeToURL:baseURL];
+    // 如果生成失败，自动URL编码再试
+    if (!url && URLString.length > 0) {
+        url = [self URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] relativeToURL:baseURL];
+    }
+    return url;
 }
 
 @end
