@@ -1,7 +1,7 @@
 /*!
- @header     UIView+FWTheme.h
+ @header     FWThemeManager.h
  @indexgroup FWFramework
- @brief      UIView+FWTheme
+ @brief      FWThemeManager
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/8/14
