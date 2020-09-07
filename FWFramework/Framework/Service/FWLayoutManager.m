@@ -12,7 +12,53 @@
 
 static BOOL fwStaticAutoLayoutRTL = NO;
 
+@interface NSLayoutConstraint (FWAutoLayout)
+
+@property (nonatomic, assign) CGFloat fwOriginalConstant;
+
+@end
+
+@implementation NSLayoutConstraint (FWAutoLayout)
+
+- (CGFloat)fwOriginalConstant
+{
+    return [objc_getAssociatedObject(self, _cmd) floatValue];
+}
+
+- (void)setFwOriginalConstant:(CGFloat)fwOriginalConstant
+{
+    objc_setAssociatedObject(self, @selector(fwOriginalConstant), @(fwOriginalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
 @implementation UIView (FWAutoLayout)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UIView, @selector(updateConstraints), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (selfObject.fwAutoCollapse && selfObject.fwInnerCollapseConstraints.count > 0) {
+                // Absent意味着视图没有固有size，即{-1, -1}
+                const CGSize absentIntrinsicContentSize = CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric);
+                
+                // 计算固有尺寸
+                const CGSize contentSize = [selfObject intrinsicContentSize];
+                
+                // 如果视图没有固定尺寸，自动设置约束
+                if (CGSizeEqualToSize(contentSize, absentIntrinsicContentSize) ||
+                    CGSizeEqualToSize(contentSize, CGSizeZero)) {
+                    selfObject.fwCollapsed = YES;
+                } else {
+                    selfObject.fwCollapsed = NO;
+                }
+            }
+        }));
+    });
+}
 
 #pragma mark - AutoLayout
 
@@ -57,6 +103,52 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (void)fwSetCompressionVertical:(UILayoutPriority)priority
 {
     [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisVertical];
+}
+
+#pragma mark - Collapse
+
+- (BOOL)fwCollapsed
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwCollapsed:(BOOL)fwCollapsed
+{
+    [self.fwInnerCollapseConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
+        if (fwCollapsed) {
+            constraint.constant = 0;
+        } else {
+            constraint.constant = constraint.fwOriginalConstant;
+        }
+    }];
+    
+    objc_setAssociatedObject(self, @selector(fwCollapsed), @(fwCollapsed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)fwAutoCollapse
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwAutoCollapse:(BOOL)fwAutoCollapse
+{
+    objc_setAssociatedObject(self, @selector(fwAutoCollapse), @(fwAutoCollapse), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fwAddCollapseConstraint:(NSLayoutConstraint *)constraint
+{
+    constraint.fwOriginalConstant = constraint.constant;
+    [self.fwInnerCollapseConstraints addObject:constraint];
+}
+
+- (NSMutableArray *)fwInnerCollapseConstraints
+{
+    NSMutableArray *constraints = objc_getAssociatedObject(self, _cmd);
+    if (!constraints) {
+        constraints = [NSMutableArray array];
+        objc_setAssociatedObject(self, _cmd, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return constraints;
 }
 
 #pragma mark - Axis
@@ -494,6 +586,24 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 {
     return ^id(UILayoutPriority priority) {
         [self.view fwSetCompressionVertical:priority];
+        return self;
+    };
+}
+
+#pragma mark - Collapse
+
+- (id<FWLayoutChainProtocol> (^)(BOOL))collapsed
+{
+    return ^id(BOOL collapsed) {
+        self.view.fwCollapsed = collapsed;
+        return self;
+    };
+}
+
+- (id<FWLayoutChainProtocol> (^)(BOOL))autoCollapse
+{
+    return ^id(BOOL autoCollapse) {
+        self.view.fwAutoCollapse = autoCollapse;
         return self;
     };
 }

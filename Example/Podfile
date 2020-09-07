@@ -3,7 +3,7 @@ target "Example" do
   platform :ios, '9.0'
   use_frameworks!
 
-  pod 'FWFramework', :path => '../', :subspecs => ['Component', 'Component_Contacts', 'Component_Microphone', 'Component_Calendar', 'Component_AppleMusic']
+  pod 'FWFramework', :path => '../', :subspecs => ['Application', 'Component', 'Component_Contacts', 'Component_Microphone', 'Component_Calendar', 'Component_AppleMusic']
   pod 'FWDebug', :configurations => ['Debug']
 end
 

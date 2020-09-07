@@ -42,6 +42,20 @@ public class FWLayoutChain {
         view?.fwSetCompressionVertical(priority)
         return self
     }
+    
+    // MARK: - Collapse
+
+    @discardableResult
+    public func collapsed(_ collapsed: Bool) -> FWLayoutChain {
+        view?.fwCollapsed = collapsed
+        return self
+    }
+
+    @discardableResult
+    public func autoCollapse(_ autoCollapse: Bool) -> FWLayoutChain {
+        view?.fwAutoCollapse = autoCollapse
+        return self
+    }
 
     // MARK: - Axis
 

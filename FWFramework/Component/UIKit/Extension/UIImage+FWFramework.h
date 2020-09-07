@@ -8,7 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "UIImage+FWAnimated.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

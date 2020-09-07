@@ -64,6 +64,25 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)fwSetCompressionVertical:(UILayoutPriority)priority;
 
+#pragma mark - Collapse
+
+/*!
+ @brief 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
+ */
+@property (nonatomic, assign) BOOL fwCollapsed;
+
+/*!
+ @brief 设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
+ */
+@property (nonatomic, assign) BOOL fwAutoCollapse;
+
+/*!
+ @brief 添加视图的收缩常量，必须先添加才能生效
+ 
+ @see https://github.com/forkingdog/UIView-FDCollapsibleConstraints
+ */
+- (void)fwAddCollapseConstraint:(NSLayoutConstraint *)constraint;
+
 #pragma mark - Axis
 
 /*!
@@ -527,6 +546,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^compressionHorizontal)(UILayoutPriority priority);
 @property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^compressionVertical)(UILayoutPriority priority);
+
+#pragma mark - Collapse
+
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^collapsed)(BOOL collapsed);
+@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^autoCollapse)(BOOL autoCollapse);
 
 #pragma mark - Axis
 

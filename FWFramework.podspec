@@ -33,7 +33,6 @@ Pod::Spec.new do |spec|
     subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Component/**/*.h'
     subspec.dependency 'FWFramework/Framework'
-    subspec.dependency 'FWFramework/Application'
   end
 
   spec.subspec 'Component_Contacts' do |subspec|
