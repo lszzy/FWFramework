@@ -8,7 +8,6 @@
  */
 
 #import "FWViewController.h"
-#import "NSObject+FWRuntime.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 

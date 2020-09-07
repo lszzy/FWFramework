@@ -8,6 +8,7 @@
  */
 
 #import "FWRouter.h"
+#import "FWContextManager.h"
 
 #pragma mark - FWRouter
 
