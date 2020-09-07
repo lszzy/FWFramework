@@ -8,7 +8,6 @@
  */
 
 #import "FWRouter.h"
-#import "FWContextManager.h"
 
 #pragma mark - FWRouter
 
@@ -660,22 +659,6 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     }
     
     return convertValue;
-}
-
-@end
-
-#pragma mark - FWRouter+Navigation
-
-@implementation FWRouter (Navigation)
-
-+ (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    [[UIWindow fwMainWindow] fwPushViewController:viewController animated:animated];
-}
-
-+ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
-{
-    [[UIWindow fwMainWindow] fwPresentViewController:viewController animated:animated completion:completion];
 }
 
 @end

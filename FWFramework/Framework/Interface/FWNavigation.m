@@ -1,85 +1,18 @@
 /*!
- @header     FWContextManager.m
+ @header     FWNavigation.m
  @indexgroup FWFramework
- @brief      FWContextManager
+ @brief      FWNavigation
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7
  */
 
-#import "FWContextManager.h"
+#import "FWNavigation.h"
 #import <objc/runtime.h>
 
-#pragma mark - UIWindow+FWContext
+#pragma mark - UINavigationController+FWWorkflow
 
-@implementation UIWindow (FWContext)
-
-+ (UIWindow *)fwMainWindow
-{
-    UIApplication *application = [UIApplication sharedApplication];
-    if ([application.delegate respondsToSelector:@selector(window)]) {
-        return [application.delegate window];
-    } else {
-        return [application keyWindow];
-    }
-}
-
-- (UIViewController *)fwTopViewController
-{
-    UIViewController *viewController = [self fwTopPresentedController];
-    
-    while ([viewController isKindOfClass:[UITabBarController class]] &&
-           [(UITabBarController *)viewController selectedViewController]) {
-        viewController = [(UITabBarController *)viewController selectedViewController];
-    }
-    
-    while ([viewController isKindOfClass:[UINavigationController class]] &&
-           [(UINavigationController *)viewController topViewController]) {
-        viewController = [(UINavigationController*)viewController topViewController];
-    }
-    
-    return viewController;
-}
-
-- (UINavigationController *)fwTopNavigationController
-{
-    return [self fwTopViewController].navigationController;
-}
-
-- (UIViewController *)fwTopPresentedController
-{
-    UIViewController *presentedController = self.rootViewController;
-    
-    while ([presentedController presentedViewController]) {
-        presentedController = [presentedController presentedViewController];
-    }
-    
-    return presentedController;
-}
-
-- (BOOL)fwPushViewController:(UIViewController *)viewController
-                    animated:(BOOL)animated
-{
-    UINavigationController *navigationController = [self fwTopNavigationController];
-    if (navigationController) {
-        [navigationController pushViewController:viewController animated:animated];
-        return YES;
-    }
-    return NO;
-}
-
-- (void)fwPresentViewController:(UIViewController *)viewController
-                       animated:(BOOL)animated
-                     completion:(void (^)(void))completion
-{
-    [[self fwTopPresentedController] presentViewController:viewController animated:animated completion:completion];
-}
-
-@end
-
-#pragma mark - UINavigationController+FWContext
-
-@implementation UIViewController (FWContext)
+@implementation UIViewController (FWWorkflow)
 
 @dynamic fwWorkflowName;
 
@@ -104,7 +37,7 @@
 
 @end
 
-@implementation UINavigationController (FWContext)
+@implementation UINavigationController (FWWorkflow)
 
 - (NSString *)fwTopWorkflowName
 {
@@ -207,6 +140,89 @@
         // 至少保留一个根控制器
         [self popToRootViewControllerAnimated:animated];
     }
+}
+
+@end
+
+#pragma mark - UIWindow+FWNavigation
+
+@implementation UIWindow (FWNavigation)
+
++ (UIWindow *)fwMainWindow
+{
+    UIApplication *application = [UIApplication sharedApplication];
+    if ([application.delegate respondsToSelector:@selector(window)]) {
+        return [application.delegate window];
+    } else {
+        return [application keyWindow];
+    }
+}
+
+- (UIViewController *)fwTopViewController
+{
+    UIViewController *viewController = [self fwTopPresentedController];
+    
+    while ([viewController isKindOfClass:[UITabBarController class]] &&
+           [(UITabBarController *)viewController selectedViewController]) {
+        viewController = [(UITabBarController *)viewController selectedViewController];
+    }
+    
+    while ([viewController isKindOfClass:[UINavigationController class]] &&
+           [(UINavigationController *)viewController topViewController]) {
+        viewController = [(UINavigationController*)viewController topViewController];
+    }
+    
+    return viewController;
+}
+
+- (UINavigationController *)fwTopNavigationController
+{
+    return [self fwTopViewController].navigationController;
+}
+
+- (UIViewController *)fwTopPresentedController
+{
+    UIViewController *presentedController = self.rootViewController;
+    
+    while ([presentedController presentedViewController]) {
+        presentedController = [presentedController presentedViewController];
+    }
+    
+    return presentedController;
+}
+
+- (BOOL)fwPushViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated
+{
+    UINavigationController *navigationController = [self fwTopNavigationController];
+    if (navigationController) {
+        [navigationController pushViewController:viewController animated:animated];
+        return YES;
+    }
+    return NO;
+}
+
+- (void)fwPresentViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(void (^)(void))completion
+{
+    [[self fwTopPresentedController] presentViewController:viewController animated:animated completion:completion];
+}
+
+@end
+
+#pragma mark - FWRouter+FWNavigation
+
+@implementation FWRouter (FWNavigation)
+
++ (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[UIWindow fwMainWindow] fwPushViewController:viewController animated:animated];
+}
+
++ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [[UIWindow fwMainWindow] fwPresentViewController:viewController animated:animated completion:completion];
 }
 
 @end

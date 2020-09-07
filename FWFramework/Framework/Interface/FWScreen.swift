@@ -1,5 +1,5 @@
 //
-//  FWToolkitManager.swift
+//  FWScreen.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/28.

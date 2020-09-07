@@ -1,7 +1,7 @@
 /*!
- @header     FWContextManager.h
+ @header     FWNavigation.h
  @indexgroup FWFramework
- @brief      FWContextManager
+ @brief      FWNavigation
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7
@@ -11,42 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIWindow+FWContext
+#pragma mark - UINavigationController+FWWorkflow
 
 /*!
- @brief 窗口上下文分类
+ @brief 视图控制器工作流分类
  */
-@interface UIWindow (FWContext)
-
-// 获取当前主window
-+ (nullable UIWindow *)fwMainWindow;
-
-// 获取最顶部的视图控制器
-- (nullable UIViewController *)fwTopViewController;
-
-// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
-- (nullable UINavigationController *)fwTopNavigationController;
-
-// 获取最顶部的显示控制器
-- (nullable UIViewController *)fwTopPresentedController;
-
-// 使用最顶部的导航栏控制器打开控制器
-- (BOOL)fwPushViewController:(UIViewController *)viewController
-                    animated:(BOOL)animated;
-
-// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
-- (void)fwPresentViewController:(UIViewController *)viewController
-                       animated:(BOOL)animated
-                     completion:(nullable void (^)(void))completion;
-
-@end
-
-#pragma mark - UINavigationController+FWContext
-
-/*!
- @brief 视图控制器上下文工作流分类
- */
-@interface UIViewController (FWContext)
+@interface UIViewController (FWWorkflow)
 
 /*! @brief 自定义工作流名称，支持二级("."分隔)；默认返回小写类名(去掉ViewController、Controller) */
 @property (nonatomic, copy) NSString *fwWorkflowName;
@@ -54,9 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /*!
- @brief 导航控制器上下文工作流分类
+ @brief 导航控制器工作流分类
  */
-@interface UINavigationController (FWContext)
+@interface UINavigationController (FWWorkflow)
 
 /*!
  @brief 当前最外层工作流名称，即topViewController的工作流名称
@@ -109,6 +79,55 @@ NS_ASSUME_NONNULL_BEGIN
  @param animated  是否执行动画
  */
 - (void)fwPopWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated;
+
+@end
+
+#pragma mark - UIWindow+FWNavigation
+
+/*!
+ @brief 窗口导航分类
+ */
+@interface UIWindow (FWNavigation)
+
+// 获取当前主window
++ (nullable UIWindow *)fwMainWindow;
+
+// 获取最顶部的视图控制器
+- (nullable UIViewController *)fwTopViewController;
+
+// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
+- (nullable UINavigationController *)fwTopNavigationController;
+
+// 获取最顶部的显示控制器
+- (nullable UIViewController *)fwTopPresentedController;
+
+// 使用最顶部的导航栏控制器打开控制器
+- (BOOL)fwPushViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated;
+
+// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
+- (void)fwPresentViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(nullable void (^)(void))completion;
+
+@end
+
+#pragma mark - FWRouter+FWNavigation
+
+/*!
+ @brief URL路由导航
+ */
+@interface FWRouter (FWNavigation)
+
+/*!
+ @brief 使用最顶部的导航栏控制器打开控制器
+ */
++ (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+/*!
+ @brief 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
+ */
++ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 @end
 
