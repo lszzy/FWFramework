@@ -1,14 +1,17 @@
-//
-//  UIScreen+FWFramework.m
-//  FWFramework
-//
-//  Created by wuyong on 17/3/13.
-//  Copyright © 2018年 wuyong.site. All rights reserved.
-//
+/*!
+ @header     FWToolkitManager.m
+ @indexgroup FWFramework
+ @brief      FWToolkitManager
+ @author     wuyong
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/9/7
+ */
 
-#import "UIScreen+FWFramework.h"
+#import "FWToolkitManager.h"
 
-@implementation UIScreen (FWFramework)
+#pragma mark - UIScreen+FWToolkit
+
+@implementation UIScreen (FWToolkit)
 
 + (CGSize)fwScreenSize
 {
@@ -38,6 +41,15 @@
                       );
 }
 
++ (CGFloat)fwPixelOne
+{
+    static CGFloat pixelOne = -1.0;
+    if (pixelOne < 0) {
+        pixelOne = 1 / [[UIScreen mainScreen] scale];
+    }
+    return pixelOne;
+}
+
 + (BOOL)fwIsScreenSize:(CGSize)size
 {
     return CGSizeEqualToSize(size, [UIScreen mainScreen].bounds.size);
@@ -48,44 +60,55 @@
     return CGSizeEqualToSize(resolution, [self fwScreenResolution]);
 }
 
-+ (BOOL)fwIsScreen35
++ (BOOL)fwIsScreenInch:(FWScreenInch)inch
 {
-    return [self fwIsScreenSize:CGSizeMake(320, 480)];
-}
-
-+ (BOOL)fwIsScreen40
-{
-    return [self fwIsScreenSize:CGSizeMake(320, 568)];
-}
-
-+ (BOOL)fwIsScreen47
-{
-    return [self fwIsScreenSize:CGSizeMake(375, 667)];
-}
-
-+ (BOOL)fwIsScreen55
-{
-    return [self fwIsScreenSize:CGSizeMake(414, 736)];
-}
-
-+ (BOOL)fwIsScreen58
-{
-    return [self fwIsScreenSize:CGSizeMake(375, 812)];
-}
-
-+ (BOOL)fwIsScreen61
-{
-    return [self fwIsScreenResolution:CGSizeMake(828, 1792)];
-}
-
-+ (BOOL)fwIsScreen65
-{
-    return [self fwIsScreenResolution:CGSizeMake(1242, 2688)];
+    switch (inch) {
+        case FWScreenInch35:
+            return [self fwIsScreenSize:CGSizeMake(320, 480)];
+        case FWScreenInch40:
+            return [self fwIsScreenSize:CGSizeMake(320, 568)];
+        case FWScreenInch47:
+            return [self fwIsScreenSize:CGSizeMake(375, 667)];
+        case FWScreenInch55:
+            return [self fwIsScreenSize:CGSizeMake(414, 736)];
+        case FWScreenInch58:
+            return [self fwIsScreenSize:CGSizeMake(375, 812)];
+        case FWScreenInch61:
+            return [self fwIsScreenResolution:CGSizeMake(828, 1792)];
+        case FWScreenInch65:
+            return [self fwIsScreenResolution:CGSizeMake(1242, 2688)];
+        default:
+            return NO;
+    }
 }
 
 + (BOOL)fwIsScreenX
 {
     return [self fwIsScreenSize:CGSizeMake(375, 812)] || [self fwIsScreenSize:CGSizeMake(414, 896)];
+}
+
++ (BOOL)fwHasSafeAreaInsets
+{
+    return [self fwSafeAreaInsets].bottom > 0;
+}
+
++ (UIEdgeInsets)fwSafeAreaInsets
+{
+    static UIEdgeInsets safeAreaInsets;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (@available(iOS 11.0, *)) {
+            UIApplication *application = [UIApplication sharedApplication];
+            if ([application.delegate respondsToSelector:@selector(window)]) {
+                safeAreaInsets = [application.delegate window].safeAreaInsets;
+            } else {
+                safeAreaInsets = [application keyWindow].safeAreaInsets;
+            }
+        } else {
+            safeAreaInsets = UIEdgeInsetsZero;
+        }
+    });
+    return safeAreaInsets;
 }
 
 + (CGFloat)fwStatusBarHeight
@@ -118,42 +141,9 @@
     return [self fwTabBarHeight];
 }
 
-+ (BOOL)fwHasSafeAreaInsets
-{
-    return [self fwSafeAreaInsets].bottom > 0;
-}
-
-+ (UIEdgeInsets)fwSafeAreaInsets
-{
-    static UIEdgeInsets safeAreaInsets;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (@available(iOS 11.0, *)) {
-            UIApplication *application = [UIApplication sharedApplication];
-            if ([application.delegate respondsToSelector:@selector(window)]) {
-                safeAreaInsets = [application.delegate window].safeAreaInsets;
-            } else {
-                safeAreaInsets = [application keyWindow].safeAreaInsets;
-            }
-        } else {
-            safeAreaInsets = UIEdgeInsetsZero;
-        }
-    });
-    return safeAreaInsets;
-}
-
-+ (CGFloat)fwPixelOne
-{
-    static CGFloat pixelOne = -1.0;
-    if (pixelOne < 0) {
-        pixelOne = 1 / [[UIScreen mainScreen] scale];
-    }
-    return pixelOne;
-}
-
 @end
 
-@implementation UIViewController (FWScreen)
+@implementation UIViewController (FWToolkit)
 
 - (CGFloat)fwStatusBarHeight
 {

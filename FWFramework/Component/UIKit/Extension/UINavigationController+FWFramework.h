@@ -9,7 +9,6 @@
 
 #import <UIKit/UIKit.h>
 #import "UINavigationController+FWBar.h"
-#import "UINavigationController+FWWorkflow.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -8,8 +8,8 @@
  */
 
 #import "UIApplication+FWFramework.h"
-#import "UIWindow+FWFramework.h"
-#import "NSURL+FWFramework.h"
+#import "FWRuntime.h"
+#import "FWContextManager.h"
 #import <StoreKit/StoreKit.h>
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
