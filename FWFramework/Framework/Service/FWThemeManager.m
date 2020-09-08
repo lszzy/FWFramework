@@ -8,7 +8,7 @@
  */
 
 #import "FWThemeManager.h"
-#import "FWNavigation.h"
+#import "FWRouter.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>

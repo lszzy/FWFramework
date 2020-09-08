@@ -9,8 +9,8 @@
 
 #import "FWWebViewController.h"
 #import "FWMessage.h"
-#import "FWAutoLayout.h"
-#import "FWJsBridge.h"
+#import "FWLayoutManager.h"
+#import "WKWebView+FWJsBridge.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWWebViewController
