@@ -9,7 +9,7 @@
 
 #import "UIApplication+FWFramework.h"
 #import "FWRouter.h"
-#import "FWSafeType.h"
+#import "FWCoder.h"
 #import <StoreKit/StoreKit.h>
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>

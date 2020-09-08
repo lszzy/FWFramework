@@ -12,7 +12,7 @@
 #import "NSObject+FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
-#import "FWToolkitManager.h"
+#import "FWDeviceManager.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)

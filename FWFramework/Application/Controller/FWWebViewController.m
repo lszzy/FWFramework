@@ -10,7 +10,7 @@
 #import "FWWebViewController.h"
 #import "FWMessage.h"
 #import "FWLayoutManager.h"
-#import "FWSafeType.h"
+#import "FWCoder.h"
 #import "WKWebView+FWFramework.h"
 #import "UIView+FWFramework.h"
 #import "UIViewController+FWFramework.h"
