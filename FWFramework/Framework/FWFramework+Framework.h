@@ -25,8 +25,7 @@
 #import "FWDatabaseQueue.h"
 #import "FWCacheManager.h"
 #import "FWCoder.h"
-#import "FWJsonModel.h"
-#import "FWSafeType.h"
+#import "FWJson.h"
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
 #import "FWAsyncSocket.h"
@@ -37,10 +36,10 @@
 #import "FWNotificationManager.h"
 #import "FWLocationManager.h"
 #import "FWLocalizeManager.h"
-#import "FWLayoutManager.h"
+#import "FWDeviceManager.h"
 #import "FWImageManager.h"
+#import "FWLayoutManager.h"
 #import "FWThemeManager.h"
-#import "FWToolkitManager.h"
 #import "FWVersionManager.h"
 
 #endif /* FWFramework_Framework_h */
