@@ -1,5 +1,5 @@
 /*!
- @header     FWSafe.m
+ @header     FWSafeType.m
  @indexgroup FWFramework
  @brief      NSObject类型安全分类
  @author     wuyong
@@ -7,7 +7,7 @@
  @updated    2018-05-18
  */
 
-#import "FWSafe.h"
+#import "FWSafeType.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
