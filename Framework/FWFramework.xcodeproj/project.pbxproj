@@ -98,7 +98,7 @@
 		2FFE1C042507BF95000332A3 /* FWDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B8F2507BF95000332A3 /* FWDeviceManager.swift */; };
 		2FFE1C052507BF95000332A3 /* FWLocalizeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B902507BF95000332A3 /* FWLocalizeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1C062507BF95000332A3 /* FWTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B922507BF95000332A3 /* FWTask.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1C072507BF95000332A3 /* FWCoroutine.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B932507BF95000332A3 /* FWCoroutine.m */; };
+		2FFE1C072507BF95000332A3 /* FWCoroutine.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B932507BF95000332A3 /* FWCoroutine.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2FFE1C082507BF95000332A3 /* FWTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B942507BF95000332A3 /* FWTest.swift */; };
 		2FFE1C092507BF95000332A3 /* FWRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B952507BF95000332A3 /* FWRouter.m */; };
 		2FFE1C0A2507BF95000332A3 /* FWProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B962507BF95000332A3 /* FWProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
