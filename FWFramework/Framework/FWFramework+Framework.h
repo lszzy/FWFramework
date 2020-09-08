@@ -17,8 +17,6 @@
 #import "FWPromise.h"
 #import "FWProxy.h"
 #import "FWRouter.h"
-#import "FWSafe.h"
-#import "FWJson.h"
 #import "FWState.h"
 #import "FWSwizzle.h"
 #import "FWTask.h"
@@ -43,5 +41,8 @@
 #import "FWThemeManager.h"
 #import "FWToolkitManager.h"
 #import "FWVersionManager.h"
+
+#import "FWSafeType.h"
+#import "FWJsonModel.h"
 
 #endif /* FWFramework_Framework_h */
