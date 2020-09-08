@@ -10,5 +10,6 @@ end
 target "AppClip" do
   platform :ios, '14.0'
 
+  pod 'FWFramework', :path => '../'
   pod 'FWDebug', :configurations => ['Debug']
 end

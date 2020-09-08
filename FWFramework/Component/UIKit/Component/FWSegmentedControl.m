@@ -8,7 +8,7 @@
  */
 
 #import "FWSegmentedControl.h"
-#import "FWStatisticalManager.h"
+#import "UIView+FWStatistical.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 

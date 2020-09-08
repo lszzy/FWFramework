@@ -8,7 +8,7 @@
  */
 
 #import "UIView+FWIndicator.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import "NSTimer+FWFramework.h"
 #import <objc/runtime.h>
 

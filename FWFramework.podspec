@@ -16,24 +16,23 @@ Pod::Spec.new do |spec|
   spec.requires_arc        = spec_arc_files
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
-  spec.default_subspecs    = [ 'Framework', 'Component', 'Application' ]
+  spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
 
   spec.subspec 'Framework' do |subspec|
     subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.h'
   end
 
-  spec.subspec 'Component' do |subspec|
-    subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/Component/**/*.h'
-    subspec.dependency 'FWFramework/Framework'
-  end
-
   spec.subspec 'Application' do |subspec|
     subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/**/*.h'
     subspec.dependency 'FWFramework/Framework'
-    subspec.dependency 'FWFramework/Component'
+  end
+
+  spec.subspec 'Component' do |subspec|
+    subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Component/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
   end
 
   spec.subspec 'Component_Contacts' do |subspec|

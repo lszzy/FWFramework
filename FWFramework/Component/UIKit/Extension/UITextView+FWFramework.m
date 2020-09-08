@@ -8,6 +8,7 @@
 
 #import "UITextView+FWFramework.h"
 #import "NSString+FWFramework.h"
+#import "FWCoder.h"
 #import "FWMessage.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>

@@ -8,7 +8,7 @@
  */
 
 #import "FWTagCollectionView.h"
-#import "FWStatisticalManager.h"
+#import "UIView+FWStatistical.h"
 
 @interface FWTagCollectionView () <FWStatisticalDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;

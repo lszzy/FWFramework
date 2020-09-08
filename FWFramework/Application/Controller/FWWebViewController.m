@@ -10,7 +10,11 @@
 #import "FWWebViewController.h"
 #import "FWMessage.h"
 #import "FWLayoutManager.h"
-#import "WKWebView+FWJsBridge.h"
+#import "FWSafeType.h"
+#import "WKWebView+FWFramework.h"
+#import "UIView+FWFramework.h"
+#import "UIViewController+FWFramework.h"
+#import "UIApplication+FWFramework.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWWebViewController

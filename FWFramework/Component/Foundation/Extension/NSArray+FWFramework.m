@@ -9,7 +9,7 @@
 
 #import "NSArray+FWFramework.h"
 #import "NSDictionary+FWFramework.h"
-#import "NSObject+FWSafeType.h"
+#import "FWSafeType.h"
 
 @implementation NSArray (FWFramework)
 
