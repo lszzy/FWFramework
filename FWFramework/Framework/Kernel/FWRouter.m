@@ -662,3 +662,86 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 }
 
 @end
+
+#pragma mark - FWRouter+Navigation
+
+@implementation FWRouter (Navigation)
+
++ (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[UIWindow fwMainWindow] fwPushViewController:viewController animated:animated];
+}
+
++ (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [[UIWindow fwMainWindow] fwPresentViewController:viewController animated:animated completion:completion];
+}
+
+@end
+
+#pragma mark - UIWindow+FWRouter
+
+@implementation UIWindow (FWRouter)
+
++ (UIWindow *)fwMainWindow
+{
+    UIApplication *application = [UIApplication sharedApplication];
+    if ([application.delegate respondsToSelector:@selector(window)]) {
+        return [application.delegate window];
+    } else {
+        return [application keyWindow];
+    }
+}
+
+- (UIViewController *)fwTopViewController
+{
+    UIViewController *viewController = [self fwTopPresentedController];
+    
+    while ([viewController isKindOfClass:[UITabBarController class]] &&
+           [(UITabBarController *)viewController selectedViewController]) {
+        viewController = [(UITabBarController *)viewController selectedViewController];
+    }
+    
+    while ([viewController isKindOfClass:[UINavigationController class]] &&
+           [(UINavigationController *)viewController topViewController]) {
+        viewController = [(UINavigationController*)viewController topViewController];
+    }
+    
+    return viewController;
+}
+
+- (UINavigationController *)fwTopNavigationController
+{
+    return [self fwTopViewController].navigationController;
+}
+
+- (UIViewController *)fwTopPresentedController
+{
+    UIViewController *presentedController = self.rootViewController;
+    
+    while ([presentedController presentedViewController]) {
+        presentedController = [presentedController presentedViewController];
+    }
+    
+    return presentedController;
+}
+
+- (BOOL)fwPushViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated
+{
+    UINavigationController *navigationController = [self fwTopNavigationController];
+    if (navigationController) {
+        [navigationController pushViewController:viewController animated:animated];
+        return YES;
+    }
+    return NO;
+}
+
+- (void)fwPresentViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(void (^)(void))completion
+{
+    [[self fwTopPresentedController] presentViewController:viewController animated:animated completion:completion];
+}
+
+@end

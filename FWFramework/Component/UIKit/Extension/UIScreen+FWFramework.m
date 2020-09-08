@@ -1,17 +1,15 @@
 /*!
- @header     FWScreen.m
+ @header     UIScreen+FWFramework.m
  @indexgroup FWFramework
- @brief      FWScreen
+ @brief      UIScreen+FWFramework
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/9/7
+ @updated    2020/9/8
  */
 
-#import "FWScreen.h"
+#import "UIScreen+FWFramework.h"
 
-#pragma mark - UIScreen+FWToolkit
-
-@implementation UIScreen (FWToolkit)
+@implementation UIScreen (FWFramework)
 
 + (CGSize)fwScreenSize
 {
@@ -143,7 +141,7 @@
 
 @end
 
-@implementation UIViewController (FWToolkit)
+@implementation UIViewController (FWScreen)
 
 - (CGFloat)fwStatusBarHeight
 {

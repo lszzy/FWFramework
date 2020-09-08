@@ -14,9 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIGestureRecognizer (FWBlock)
 
-// 获取手势直接作用的view，不同于view，此处是view的subview
-@property (nullable, nonatomic, weak, readonly) UIView *fwTargetView;
-
 // 从事件句柄初始化
 + (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;
 

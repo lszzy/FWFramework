@@ -25,7 +25,7 @@
 #import "FWNetworkConfig.h"
 #import "FWNetworkPrivate.h"
 #import <pthread/pthread.h>
-#import "FWNetworkManager.h"
+#import "FWHTTPSessionManager.h"
 
 #define Lock() pthread_mutex_lock(&_lock)
 #define Unlock() pthread_mutex_unlock(&_lock)

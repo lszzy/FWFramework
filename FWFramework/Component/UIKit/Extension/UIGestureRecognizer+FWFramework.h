@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIGestureRecognizer (FWFramework)
 
+// 获取手势直接作用的view，不同于view，此处是view的subview
+@property (nullable, nonatomic, weak, readonly) UIView *fwTargetView;
+
 // 是否正在拖动中：Began || Changed
 - (BOOL)fwIsTracking;
 

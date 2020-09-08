@@ -13,13 +13,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 是否是调试模式
-#ifdef DEBUG
-    #define FWIsDebug YES
-#else
-    #define FWIsDebug NO
-#endif
-
 /*!
  @brief UIApplication+FWFramework
  @discussion 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
@@ -47,9 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)fwAppIdentifier;
 
 #pragma mark - Debug
-
-// 是否是调试模式
-+ (BOOL)fwIsDebug;
 
 // 是否是盗版(不是从AppStore安装)
 + (BOOL)fwIsPirated;
@@ -80,23 +70,23 @@ NS_ASSUME_NONNULL_BEGIN
 // 打开内部浏览器，支持NSString|NSURL，点击完成时回调
 + (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
 
-// 打开应用设置
-+ (void)fwOpenAppSettings;
-
-// 打开应用内评价，10.3+生效，一年内最多3次
-+ (void)fwRequestAppReview;
-
 // 打开AppStore下载页
 + (void)fwOpenAppStore:(NSString *)appId;
-
-// 打开AppStore评论页
-+ (void)fwOpenAppReview:(NSString *)appId;
 
 // 判断URL是否是AppStore链接，支持NSString|NSURL
 + (BOOL)fwIsAppStoreURL:(id)url;
 
 // 判断URL是否是安全的AppScheme链接(如AppStore|电话|设置等)，支持NSString|NSURL
 + (BOOL)fwIsAppSchemeURL:(id)url;
+
+// 打开应用设置
++ (void)fwOpenAppSettings;
+
+// 打开应用内评价，10.3+生效，一年内最多3次
++ (void)fwRequestAppReview;
+
+// 打开AppStore评论页
++ (void)fwOpenAppReview:(NSString *)appId;
 
 // 发送邮件
 + (void)fwSendEmail:(NSString *)email;

@@ -1,12 +1,19 @@
 //
-//  UIColor+FWFramework.swift
+//  FWToolkitManager.swift
 //  FWFramework
 //
-//  Created by wuyong on 2019/6/28.
-//  Copyright © 2019 wuyong.site. All rights reserved.
+//  Created by wuyong on 2020/9/8.
+//  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+// MARK: - UIApplication+FWToolkit
+
+/// 是否是调试模式
+public let FWIsDebug: Bool = UIApplication.fwIsDebug()
+
+// MARK: - UIColor+FWToolkit
 
 /// 从16进制创建UIColor
 ///
@@ -28,4 +35,16 @@ public func FWColorHex(_ hex: Int, _ alpha: CGFloat = 1.0) -> UIColor {
 /// - Returns: UIColor
 public func FWColorRgb(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat = 1.0) -> UIColor {
     return UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha)
+}
+
+// MARK: - UIFont+FWToolkit
+
+/// 快速创建系统字体
+///
+/// - Parameters:
+///   - size: 字体字号
+///   - weight: 字重可选，默认Regular
+/// - Returns: UIFont
+public func FWFontSize(_ size: CGFloat, _ weight: UIFont.Weight = .regular) -> UIFont {
+    return UIFont.systemFont(ofSize: size, weight: weight)
 }

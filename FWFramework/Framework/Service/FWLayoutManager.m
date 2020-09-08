@@ -1,13 +1,13 @@
 /*!
- @header     FWAutoLayout.m
+ @header     FWLayoutManager.m
  @indexgroup FWFramework
- @brief      UIView自动布局管理器
+ @brief      UIView自动布局
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/6/22
  */
 
-#import "FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import <objc/runtime.h>
 
 static BOOL fwStaticAutoLayoutRTL = NO;

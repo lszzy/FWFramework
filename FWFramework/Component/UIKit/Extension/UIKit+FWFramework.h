@@ -24,6 +24,7 @@
 #import "UILabel+FWFramework.h"
 #import "UILocalNotification+FWFramework.h"
 #import "UIPageControl+FWFramework.h"
+#import "UIScreen+FWFramework.h"
 #import "UIScrollView+FWFramework.h"
 #import "UISearchBar+FWFramework.h"
 #import "UISwitch+FWFramework.h"

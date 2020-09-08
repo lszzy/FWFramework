@@ -1,17 +1,15 @@
 /*!
- @header     FWScreen.h
+ @header     UIScreen+FWFramework.h
  @indexgroup FWFramework
- @brief      FWScreen
+ @brief      UIScreen+FWFramework
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/9/7
+ @updated    2020/9/8
  */
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-#pragma mark - UIScreen+FWToolkit
 
 /// 屏幕尺寸可扩展枚举
 typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM;
@@ -59,7 +57,7 @@ static const FWScreenInch FWScreenInch65 = 65;
 /*!
  @brief UIScreen+FWToolkit
  */
-@interface UIScreen (FWToolkit)
+@interface UIScreen (FWFramework)
 
 // 屏幕尺寸
 + (CGSize)fwScreenSize;
@@ -104,9 +102,9 @@ static const FWScreenInch FWScreenInch65 = 65;
 @end
 
 /*!
- @brief UIViewController+FWToolkit
+ @brief UIViewController+FWScreen
  */
-@interface UIViewController (FWToolkit)
+@interface UIViewController (FWScreen)
 
 // 当前状态栏高度，隐藏为0
 - (CGFloat)fwStatusBarHeight;
