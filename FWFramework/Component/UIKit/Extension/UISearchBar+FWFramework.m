@@ -12,9 +12,10 @@
 #import "FWSwizzle.h"
 #import "UIView+FWFramework.h"
 #import "UIImage+FWFramework.h"
-#import "UIScreen+FWFramework.h"
 #import "NSString+FWFramework.h"
 #import "FWMessage.h"
+#import "FWLayoutManager.h"
+#import "FWToolkitManager.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)

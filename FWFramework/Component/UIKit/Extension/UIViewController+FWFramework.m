@@ -7,7 +7,7 @@
 //
 
 #import "UIViewController+FWFramework.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 

@@ -8,6 +8,7 @@
  */
 
 #import "NSURL+FWFramework.h"
+#import "NSString+FWFormat.h"
 
 @implementation NSURL (FWFramework)
 

@@ -8,6 +8,7 @@
  */
 
 #import "FWLayoutManager.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 static BOOL fwStaticAutoLayoutRTL = NO;

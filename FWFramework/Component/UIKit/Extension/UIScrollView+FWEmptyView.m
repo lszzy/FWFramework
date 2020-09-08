@@ -8,7 +8,7 @@
  */
 
 #import "UIScrollView+FWEmptyView.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyViewWeakTarget

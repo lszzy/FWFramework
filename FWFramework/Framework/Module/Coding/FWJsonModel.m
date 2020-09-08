@@ -480,7 +480,7 @@ static force_inline id FWValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     // Get black list
     NSSet *blacklist = nil;
     if ([cls respondsToSelector:@selector(fwModelPropertyBlacklist)]) {
-        NSArray *properties = [(id<FWModel>)cls fwModelPropertyBlacklist];
+        NSArray *properties = [(id<FWJsonModel>)cls fwModelPropertyBlacklist];
         if (properties) {
             blacklist = [NSSet setWithArray:properties];
         }
@@ -489,7 +489,7 @@ static force_inline id FWValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     // Get white list
     NSSet *whitelist = nil;
     if ([cls respondsToSelector:@selector(fwModelPropertyWhitelist)]) {
-        NSArray *properties = [(id<FWModel>)cls fwModelPropertyWhitelist];
+        NSArray *properties = [(id<FWJsonModel>)cls fwModelPropertyWhitelist];
         if (properties) {
             whitelist = [NSSet setWithArray:properties];
         }
@@ -498,7 +498,7 @@ static force_inline id FWValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     // Get container property's generic class
     NSDictionary *genericMapper = nil;
     if ([cls respondsToSelector:@selector(fwModelClassMapper)]) {
-        genericMapper = [(id<FWModel>)cls fwModelClassMapper];
+        genericMapper = [(id<FWJsonModel>)cls fwModelClassMapper];
         if (genericMapper) {
             NSMutableDictionary *tmp = [NSMutableDictionary new];
             [genericMapper enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -544,7 +544,7 @@ static force_inline id FWValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     NSMutableArray *multiKeysPropertyMetas = [NSMutableArray new];
     
     if ([cls respondsToSelector:@selector(fwModelPropertyMapper)]) {
-        NSDictionary *customMapper = [(id <FWModel>)cls fwModelPropertyMapper];
+        NSDictionary *customMapper = [(id <FWJsonModel>)cls fwModelPropertyMapper];
         [customMapper enumerateKeysAndObjectsUsingBlock:^(NSString *propertyName, NSString *mappedToKey, BOOL *stop) {
             FWInnerModelPropertyMeta *propertyMeta = allPropertyMetas[propertyName];
             if (!propertyMeta) return;
@@ -1274,7 +1274,7 @@ static id FWModelToJSONObjectRecursive(NSObject *model) {
     }];
     
     if (modelMeta->_hasCustomTransformToDictionary) {
-        BOOL suc = [((id<FWModel>)model) fwModelTransformToDictionary:dic];
+        BOOL suc = [((id<FWJsonModel>)model) fwModelTransformToDictionary:dic];
         if (!suc) return nil;
     }
     return result;
@@ -1544,7 +1544,7 @@ static NSString *FWModelDescription(NSObject *model) {
     if (modelMeta->_keyMappedCount == 0) return NO;
     
     if (modelMeta->_hasCustomWillTransformFromDictionary) {
-        dic = [((id<FWModel>)self) fwModelWillTransformFromDictionary:dic];
+        dic = [((id<FWJsonModel>)self) fwModelWillTransformFromDictionary:dic];
         if (![dic isKindOfClass:[NSDictionary class]]) return NO;
     }
     
@@ -1576,7 +1576,7 @@ static NSString *FWModelDescription(NSObject *model) {
     }
     
     if (modelMeta->_hasCustomTransformFromDictionary) {
-        return [((id<FWModel>)self) fwModelTransformFromDictionary:dic];
+        return [((id<FWJsonModel>)self) fwModelTransformFromDictionary:dic];
     }
     return YES;
 }

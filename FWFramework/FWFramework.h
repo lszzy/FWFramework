@@ -17,14 +17,14 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 // Framework
 #import <FWFramework/FWFramework+Framework.h>
 
-// Component
-#if __has_include(<FWFramework/FWFramework+Component.h>)
-#import <FWFramework/FWFramework+Component.h>
-#endif
-
 // Application
 #if __has_include(<FWFramework/FWFramework+Application.h>)
 #import <FWFramework/FWFramework+Application.h>
+#endif
+
+// Component
+#if __has_include(<FWFramework/FWFramework+Component.h>)
+#import <FWFramework/FWFramework+Component.h>
 #endif
 
 #else
@@ -32,14 +32,14 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 // Framework
 #import "FWFramework+Framework.h"
 
-// Component
-#if __has_include("FWFramework+Component.h")
-#import "FWFramework+Component.h"
-#endif
-
 // Application
 #if __has_include("FWFramework+Application.h")
 #import "FWFramework+Application.h"
+#endif
+
+// Component
+#if __has_include("FWFramework+Component.h")
+#import "FWFramework+Component.h"
 #endif
 
 #endif

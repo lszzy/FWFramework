@@ -7,7 +7,7 @@
 //
 
 #import "UIView+FWBorder.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import <objc/runtime.h>
 
 static void *kUIViewFWBorderLayerTopKey = &kUIViewFWBorderLayerTopKey;
