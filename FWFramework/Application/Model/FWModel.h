@@ -10,6 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FWJsonModel;
+
+/*!
+ @brief FWModel
+ */
+@protocol FWModel <FWJsonModel>
+
+@end
+
 /*!
  @brief FWViewModel
  */

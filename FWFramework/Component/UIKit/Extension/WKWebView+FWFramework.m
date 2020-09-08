@@ -39,16 +39,6 @@
     self.navigationDelegate = fwNavigationDelegate;
 }
 
-- (FWWebViewJsBridge *)fwJsBridge
-{
-    return objc_getAssociatedObject(self, @selector(fwJsBridge));
-}
-
-- (void)setFwJsBridge:(FWWebViewJsBridge *)fwJsBridge
-{
-    objc_setAssociatedObject(self, @selector(fwJsBridge), fwJsBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 @end
 
 @implementation UIProgressView (FWFramework)

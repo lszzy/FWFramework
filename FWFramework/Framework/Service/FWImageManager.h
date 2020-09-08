@@ -1,7 +1,7 @@
 /*!
- @header     FWImage.h
+ @header     FWImageManager.h
  @indexgroup FWFramework
- @brief      FWImage
+ @brief      FWImageManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7
@@ -190,6 +190,8 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 @property (nonatomic, strong) NSUUID *receiptID;
 
 @end
+
+@class FWHTTPSessionManager;
 
 /// 图片下载器
 @interface FWImageDownloader : NSObject

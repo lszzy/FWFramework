@@ -1,12 +1,12 @@
 //
-//  FWScreen.swift
+//  UIScreen+FWFramework.swift
 //  FWFramework
 //
-//  Created by wuyong on 2019/6/28.
-//  Copyright © 2019 wuyong.site. All rights reserved.
+//  Created by wuyong on 2020/9/8.
+//  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// 屏幕尺寸
 public var FWScreenSize: CGSize { return UIScreen.main.bounds.size }

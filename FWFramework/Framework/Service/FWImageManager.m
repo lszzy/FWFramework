@@ -1,7 +1,7 @@
 /*!
- @header     FWImage.m
+ @header     FWImageManager.m
  @indexgroup FWFramework
- @brief      FWImage
+ @brief      FWImageManager
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7

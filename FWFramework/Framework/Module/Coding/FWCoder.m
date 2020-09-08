@@ -1,16 +1,16 @@
 /*!
- @header     FWEncodeManager.m
+ @header     FWCoder.m
  @indexgroup FWFramework
- @brief      FWEncodeManager
+ @brief      FWCoder
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/18
  */
 
-#import "FWEncodeManager.h"
+#import "FWCoder.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation NSString (FWEncode)
+@implementation NSString (FWCoder)
 
 #pragma mark - Json
 
@@ -202,7 +202,7 @@
 
 #pragma mark - Md5
 
-- (NSString *)fwMd5String
+- (NSString *)fwMd5Encode
 {
     const char *cStr = [self UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
@@ -215,7 +215,7 @@
     return output;
 }
 
-- (NSString *)fwMd5File
+- (NSString *)fwMd5EncodeFile
 {
     NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self];
     if (!handle) {

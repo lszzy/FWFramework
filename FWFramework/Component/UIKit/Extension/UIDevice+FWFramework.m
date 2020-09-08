@@ -20,8 +20,6 @@ static NSString *fwStaticDeviceUUID = nil;
 
 @implementation UIDevice (FWFramework)
 
-#pragma mark - Judge
-
 + (BOOL)fwIsIphone
 {
     static BOOL isIphone;

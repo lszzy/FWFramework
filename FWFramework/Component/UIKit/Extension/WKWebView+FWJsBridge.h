@@ -63,3 +63,9 @@ typedef NSDictionary FWJsBridgeMessage;
 @end
 
 NSString * FWWebViewJsBridge_js(void);
+
+@interface WKWebView (FWJsBridge)
+
+@property (strong, nonatomic) FWWebViewJsBridge *fwJsBridge;
+
+@end

@@ -23,11 +23,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FWRequest.h"
-#import "FWBaseRequest.h"
 #import "FWBatchRequest.h"
+#import "FWBatchRequestAgent.h"
 #import "FWChainRequest.h"
+#import "FWChainRequestAgent.h"
 #import "FWNetworkAgent.h"
 #import "FWNetworkConfig.h"
+#import "FWCoroutine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,6 +39,7 @@ FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,
 @class FWHTTPResponseSerializer;
 @class FWJSONResponseSerializer;
 @class FWXMLParserResponseSerializer;
+@class FWPromise;
 
 @interface FWNetworkUtils : NSObject
 
@@ -106,6 +109,32 @@ FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,
 - (FWHTTPResponseSerializer *)httpResponseSerializer;
 - (FWJSONResponseSerializer *)jsonResponseSerializer;
 - (FWXMLParserResponseSerializer *)xmlParserResponseSerialzier;
+
+@end
+
+/*!
+ @brief FWBaseRequest约定分类
+ */
+@interface FWBaseRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为request|error
+- (FWPromise *)promise;
+
+// 创建coroutine对象并开始请求，参数为request|error
+- (FWCoroutineClosure)coroutine;
+
+@end
+
+/*!
+ @brief FWBatchRequest约定分类
+ */
+@interface FWBatchRequest (FWPromise)
+
+// 创建promise对象并开始请求，参数为request|error
+- (FWPromise *)promise;
+
+// 创建coroutine对象并开始请求，参数为request|error
+- (FWCoroutineClosure)coroutine;
 
 @end
 

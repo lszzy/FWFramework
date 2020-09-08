@@ -11,8 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Macro
-
 // 是否是模拟器
 #if TARGET_OS_SIMULATOR
     #define FWIsSimulator YES
@@ -21,39 +19,26 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 // 是否是iPhone设备
-#define FWIsIphone \
-    (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
-
+#define FWIsIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
 // 是否是iPad设备
-#define FWIsIpad \
-    (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
-
-// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
-#define FWIosVersion \
-    [[[UIDevice currentDevice] systemVersion] floatValue]
-
-// 是否是指定iOS主版本
-#define FWIsIos( version ) \
-    (FWIosVersion >= version && FWIosVersion < (version + 1) ? YES : NO)
-
-// 是否是大于等于指定iOS主版本
-#define FWIsIosLater( version ) \
-    (FWIosVersion >= version ? YES : NO)
+#define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
 
 // 界面是否横屏
-#define FWIsInterfaceLandscape \
-    UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])
-
+#define FWIsInterfaceLandscape UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])
 // 设备是否横屏，无论支不支持横屏
-#define FWIsDeviceLandscape \
-    UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])
+#define FWIsDeviceLandscape UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])
+
+// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
+#define FWIosVersion [[[UIDevice currentDevice] systemVersion] floatValue]
+// 是否是指定iOS主版本
+#define FWIsIos( version ) (FWIosVersion >= version && FWIosVersion < (version + 1) ? YES : NO)
+// 是否是大于等于指定iOS主版本
+#define FWIsIosLater( version ) (FWIosVersion >= version ? YES : NO)
 
 /*!
  @brief UIDevice+FWFramework
  */
 @interface UIDevice (FWFramework)
-
-#pragma mark - Judge
 
 // 是否是iPhone
 + (BOOL)fwIsIphone;

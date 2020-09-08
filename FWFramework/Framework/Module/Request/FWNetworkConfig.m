@@ -22,8 +22,7 @@
 //  THE SOFTWARE.
 
 #import "FWNetworkConfig.h"
-#import "FWBaseRequest.h"
-#import "FWNetworkManager.h"
+#import "FWSecurityPolicy.h"
 
 @implementation FWNetworkConfig {
     NSMutableArray<id<FWUrlFilterProtocol>> *_urlFilters;

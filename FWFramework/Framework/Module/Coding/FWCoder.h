@@ -1,7 +1,7 @@
 /*!
- @header     FWEncodeManager.h
+ @header     FWCoder.h
  @indexgroup FWFramework
- @brief      FWEncodeManager
+ @brief      FWCoder
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/18
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  字符串编码扩展
  */
-@interface NSString (FWEncode)
+@interface NSString (FWCoder)
 
 #pragma mark - Json
 
@@ -134,14 +134,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return md5字符串
  */
-- (NSString *)fwMd5String;
+- (NSString *)fwMd5Encode;
 
 /**
  *  文件md5编码
  *
  *  @return md5字符串
  */
-- (nullable NSString *)fwMd5File;
+- (nullable NSString *)fwMd5EncodeFile;
 
 @end
 
