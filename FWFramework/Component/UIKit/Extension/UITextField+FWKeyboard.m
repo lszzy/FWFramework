@@ -209,7 +209,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         rightItem = [UIBarButtonItem fwBarItemWithObject:rightTitle block:block];
         rightItem.style = UIBarButtonItemStyleDone;
     } else {
-        rightItem = [[UIBarButtonItem alloc] initWithTitle:rightTitle style:UIBarButtonItemStyleDone target:self action:@selector(resignFirstResponder)];
+        rightItem = [[UIBarButtonItem alloc] initWithTitle:rightTitle style:UIBarButtonItemStyleDone target:self.textInput action:@selector(resignFirstResponder)];
     }
     [self addToolbar:barStyle leftItem:nil rightItem:rightItem];
 }
