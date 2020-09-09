@@ -55,6 +55,11 @@ UIImage * FWImageFile(NSString *path) {
 {
     if (!data) return nil;
     
+    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:)]) {
+        return [imagePlugin fwImageDecode:data scale:scale];
+    }
+    
     return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale];
 }
 
@@ -1452,6 +1457,11 @@ UIImage * FWImageFile(NSString *path) {
 - (Class)fwImageViewAnimatedClass
 {
     return [SDAnimatedImageView class];
+}
+
+- (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale
+{
+    return [UIImage sd_imageWithData:data scale:scale];
 }
 
 - (void)fwImageView:(UIImageView *)imageView
