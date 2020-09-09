@@ -443,9 +443,11 @@ UIImage * FWImageFile(NSString *path) {
             }
             break;
         case FWImageFormatWebP:
+        #if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 isAnimated = YES;
             }
+        #endif
             break;
         default:
             break;
@@ -482,11 +484,12 @@ UIImage * FWImageFile(NSString *path) {
                 return @"{HEICS}";
             }
         case FWImageFormatWebP:
+        #if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDictionary;
-            } else {
-                return @"{WebP}";
             }
+        #endif
+            return @"{WebP}";
         default:
             return nil;
     }
@@ -507,11 +510,12 @@ UIImage * FWImageFile(NSString *path) {
                 return @"UnclampedDelayTime";
             }
         case FWImageFormatWebP:
+        #if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPUnclampedDelayTime;
-            } else {
-                return @"UnclampedDelayTime";
             }
+        #endif
+            return @"UnclampedDelayTime";
         default:
             return nil;
     }
@@ -532,11 +536,12 @@ UIImage * FWImageFile(NSString *path) {
                 return @"DelayTime";
             }
         case FWImageFormatWebP:
+        #if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDelayTime;
-            } else {
-                return @"DelayTime";
             }
+        #endif
+            return @"DelayTime";
         default:
             return nil;
     }
@@ -557,11 +562,12 @@ UIImage * FWImageFile(NSString *path) {
                 return @"LoopCount";
             }
         case FWImageFormatWebP:
+        #if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPLoopCount;
-            } else {
-                return @"LoopCount";
             }
+        #endif
+            return @"LoopCount";
         default:
             return nil;
     }
