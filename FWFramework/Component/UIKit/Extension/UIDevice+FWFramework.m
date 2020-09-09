@@ -20,37 +20,6 @@ static NSString *fwStaticDeviceUUID = nil;
 
 @implementation UIDevice (FWFramework)
 
-#pragma mark - Judge
-
-+ (BOOL)fwIsIphone
-{
-    static BOOL isIphone;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        isIphone = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
-    });
-    return isIphone;
-}
-
-+ (BOOL)fwIsIpad
-{
-    static BOOL isIpad;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        isIpad = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
-    });
-    return isIpad;
-}
-
-+ (BOOL)fwIsSimulator
-{
-#if TARGET_OS_SIMULATOR
-    return YES;
-#else
-    return NO;
-#endif
-}
-
 + (BOOL)fwIsJailbroken
 {
 #if TARGET_OS_SIMULATOR
@@ -112,28 +81,6 @@ static NSString *fwStaticDeviceUUID = nil;
     return YES;
 }
 
-#pragma mark - Version
-
-+ (float)fwIosVersion
-{
-    static float version;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        version = [UIDevice currentDevice].systemVersion.floatValue;
-    });
-    return version;
-}
-
-+ (BOOL)fwIsIos:(NSInteger)version
-{
-    return [self fwIosVersion] >= version && [self fwIosVersion] < (version + 1);
-}
-
-+ (BOOL)fwIsIosLater:(NSInteger)version
-{
-    return [self fwIosVersion] >= version;
-}
-
 #pragma mark - Model
 
 + (NSString *)fwDeviceModel
@@ -190,7 +137,7 @@ static NSString *fwStaticDeviceUUID = nil;
 
 #pragma mark - Token
 
-+ (void)fwSetDeviceToken:(NSData *)tokenData
++ (void)fwSetDeviceTokenData:(NSData *)tokenData
 {
     if (tokenData) {
         NSMutableString *deviceToken = [NSMutableString string];

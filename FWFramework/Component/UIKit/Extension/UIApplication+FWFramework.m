@@ -8,8 +8,8 @@
  */
 
 #import "UIApplication+FWFramework.h"
-#import "UIWindow+FWFramework.h"
-#import "NSURL+FWFramework.h"
+#import "FWRouter.h"
+#import "FWCoder.h"
 #import <StoreKit/StoreKit.h>
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
@@ -83,15 +83,6 @@
 }
 
 #pragma mark - Debug
-
-+ (BOOL)fwIsDebug
-{
-#ifdef DEBUG
-    return YES;
-#else
-    return NO;
-#endif
-}
 
 + (BOOL)fwIsPirated
 {
@@ -187,33 +178,10 @@
     [UIWindow.fwMainWindow fwPresentViewController:safariController animated:YES completion:nil];
 }
 
-+ (void)fwOpenAppSettings
-{
-    [self fwOpenURL:UIApplicationOpenSettingsURLString];
-}
-
-+ (void)fwRequestAppReview
-{
-    if (@available(iOS 10.3, *)) {
-        if ([SKStoreReviewController respondsToSelector:@selector(requestReview)]) {
-            [SKStoreReviewController requestReview];
-        }
-    }
-}
-
 + (void)fwOpenAppStore:(NSString *)appId
 {
     // SKStoreProductViewController可以内部打开，但需要加载
     [self fwOpenURL:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", appId]];
-}
-
-+ (void)fwOpenAppReview:(NSString *)appId
-{
-    if (@available(iOS 11.0, *)) {
-        [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@?action=write-review", appId]];
-    } else {
-        [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]];
-    }
 }
 
 + (BOOL)fwIsAppStoreURL:(id)url
@@ -243,6 +211,29 @@
         return YES;
     }
     return NO;
+}
+
++ (void)fwOpenAppSettings
+{
+    [self fwOpenURL:UIApplicationOpenSettingsURLString];
+}
+
++ (void)fwRequestAppReview
+{
+    if (@available(iOS 10.3, *)) {
+        if ([SKStoreReviewController respondsToSelector:@selector(requestReview)]) {
+            [SKStoreReviewController requestReview];
+        }
+    }
+}
+
++ (void)fwOpenAppReview:(NSString *)appId
+{
+    if (@available(iOS 11.0, *)) {
+        [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@?action=write-review", appId]];
+    } else {
+        [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]];
+    }
 }
 
 + (void)fwSendEmail:(NSString *)email

@@ -34,23 +34,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIView+FWTemplateLayout
-
-// 视图自动收缩分类。参考：https://github.com/forkingdog/UIView-FDCollapsibleConstraints
-@interface UIView (FWTemplateLayout)
-
-// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
-@property (nonatomic, assign) BOOL fwCollapsed;
-
-// 设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
-@property (nonatomic, assign) BOOL fwAutoCollapse;
-
-// 添加视图的收缩常量，必须先添加才能生效
-- (void)fwAddCollapseConstraint:(NSLayoutConstraint *)constraint;
-
-// 计算动态视图的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法。也可以setNeedsLayout再layoutIfNeeded计算视图frame
-- (CGFloat)fwTemplateHeightWithWidth:(CGFloat)width;
-
-@end
-
 NS_ASSUME_NONNULL_END

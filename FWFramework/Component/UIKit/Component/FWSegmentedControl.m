@@ -8,7 +8,7 @@
  */
 
 #import "FWSegmentedControl.h"
-#import "FWStatisticalManager.h"
+#import "UIView+FWStatistical.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 
@@ -182,6 +182,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     self.selectionIndicatorBoxLayer.opacity = self.selectionIndicatorBoxOpacity;
     self.selectionIndicatorBoxLayer.borderWidth = 1.0f;
     self.selectionIndicatorBoxOpacity = 0.2;
+    self.selectionIndicatorCornerRadius = 0;
     
     self.contentMode = UIViewContentModeRedraw;
 }
@@ -224,6 +225,12 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     _selectionIndicatorBoxOpacity = selectionIndicatorBoxOpacity;
     
     self.selectionIndicatorBoxLayer.opacity = _selectionIndicatorBoxOpacity;
+}
+
+- (void)setSelectionIndicatorCornerRadius:(CGFloat)selectionIndicatorCornerRadius {
+    _selectionIndicatorCornerRadius = selectionIndicatorCornerRadius;
+    
+    self.selectionIndicatorStripLayer.cornerRadius = _selectionIndicatorCornerRadius;
 }
 
 - (void)setSegmentWidthStyle:(FWSegmentedControlSegmentWidthStyle)segmentWidthStyle {

@@ -11,63 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 快速创建系统字体，字重可选，默认Regular
-#define FWFontSize( size, ... ) \
-    [UIFont systemFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
-
-/*!
- @brief 快速创建细字体
- 
- @param size 字号
- @return UIFont
- */
-FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
-
-/*!
- @brief 快速创建普通字体
- 
- @param size 字号
- @return UIFont
- */
-FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size);
-
-/*!
- @brief 快速创建粗体字体
- 
- @param size 字号
- @return UIFont
- */
-FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
-
-/*!
- @brief 快速创建斜体字体
- 
- @param size 字号
- @return UIFont
- */
-FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
-
 /*!
  @brief UIFont+FWFramework
  */
 @interface UIFont (FWFramework)
-
-#pragma mark - Static
-
-// 返回系统字体的细体
-+ (UIFont *)fwLightFontOfSize:(CGFloat)size;
-
-// 返回系统字体的普通体
-+ (UIFont *)fwFontOfSize:(CGFloat)size;
-
-// 返回系统字体的粗体
-+ (UIFont *)fwBoldFontOfSize:(CGFloat)size;
-
-// 返回系统字体的斜体
-+ (UIFont *)fwItalicFontOfSize:(CGFloat)size;
-
-// 创建指定尺寸和weight的系统字体
-+ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
 
 #pragma mark - Font
 

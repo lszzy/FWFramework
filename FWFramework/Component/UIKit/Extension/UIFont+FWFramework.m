@@ -9,50 +9,7 @@
 
 #import "UIFont+FWFramework.h"
 
-UIFont * FWFontLight(CGFloat size) {
-    return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
-}
-
-UIFont * FWFontRegular(CGFloat size) {
-    return [UIFont systemFontOfSize:size];
-}
-
-UIFont * FWFontBold(CGFloat size) {
-    return [UIFont boldSystemFontOfSize:size];
-}
-
-UIFont * FWFontItalic(CGFloat size) {
-    return [UIFont italicSystemFontOfSize:size];
-}
-
 @implementation UIFont (FWFramework)
-
-#pragma mark - Static
-
-+ (UIFont *)fwLightFontOfSize:(CGFloat)size
-{
-    return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
-}
-
-+ (UIFont *)fwFontOfSize:(CGFloat)size
-{
-    return [UIFont systemFontOfSize:size];
-}
-
-+ (UIFont *)fwBoldFontOfSize:(CGFloat)size
-{
-    return [UIFont boldSystemFontOfSize:size];
-}
-
-+ (UIFont *)fwItalicFontOfSize:(CGFloat)size
-{
-    return [UIFont italicSystemFontOfSize:size];
-}
-
-+ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight
-{
-    return [UIFont systemFontOfSize:size weight:weight];
-}
 
 #pragma mark - Font
 

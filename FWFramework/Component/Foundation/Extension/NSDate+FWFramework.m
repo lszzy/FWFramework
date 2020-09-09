@@ -19,18 +19,6 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 #pragma mark - Current
 
-+ (void)fwSetCurrentTime:(NSTimeInterval)currentTime
-{
-    fwStaticCurrentBaseTime = currentTime;
-    // 取运行时间，调整系统时间不会影响
-    fwStaticLocalBaseTime = [self fwSystemUptime];
-    
-    // 保存当前服务器时间到本地
-    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
-    [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 + (NSTimeInterval)fwCurrentTime
 {
     // 没有同步过返回本地时间
@@ -50,6 +38,18 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         NSTimeInterval offsetTime = [self fwSystemUptime] - fwStaticLocalBaseTime;
         return fwStaticCurrentBaseTime + offsetTime;
     }
+}
+
++ (void)setFwCurrentTime:(NSTimeInterval)currentTime
+{
+    fwStaticCurrentBaseTime = currentTime;
+    // 取运行时间，调整系统时间不会影响
+    fwStaticLocalBaseTime = [self fwSystemUptime];
+    
+    // 保存当前服务器时间到本地
+    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
+    [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark - System

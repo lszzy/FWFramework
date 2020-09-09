@@ -8,7 +8,7 @@
 
 #import "UIScrollView+FWFramework.h"
 #import "UIGestureRecognizer+FWFramework.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 

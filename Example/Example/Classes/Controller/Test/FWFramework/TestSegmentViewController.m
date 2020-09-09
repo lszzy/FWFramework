@@ -152,6 +152,7 @@
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
+    self.segmentedControl.selectionIndicatorCornerRadius = 2.5f;
     self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
     self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
     [self.view addSubview:self.segmentedControl];

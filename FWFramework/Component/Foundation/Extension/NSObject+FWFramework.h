@@ -10,7 +10,6 @@
 #import <Foundation/Foundation.h>
 #import "NSObject+FWBlock.h"
 #import "NSObject+FWRuntime.h"
-#import "NSObject+FWSafeType.h"
 #import "NSObject+FWThread.h"
 
 NS_ASSUME_NONNULL_BEGIN

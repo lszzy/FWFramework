@@ -37,7 +37,7 @@
         }));
         FWSwizzleClass(UILabel, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
             // 兼容UIView自定义估算
-            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwSetIntrinsicContentSize:));
+            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwIntrinsicContentSize));
             if (value) {
                 return [value CGSizeValue];
             }

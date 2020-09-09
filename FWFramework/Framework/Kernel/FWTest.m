@@ -68,12 +68,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // 监听应用启动完成通知，自动异步执行框架单元测试并打印结果
-        static id testRunner = nil;
-        testRunner = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
-            [[NSNotificationCenter defaultCenter] removeObserver:testRunner];
-            testRunner = nil;
-            
+        dispatch_async(dispatch_get_main_queue(), ^{
             [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
             if ([FWUnitTest sharedInstance].testCases.count > 0) {
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
@@ -83,7 +78,7 @@
                     FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
                 });
             }
-        }];
+        });
     });
 }
 
@@ -91,28 +86,26 @@
 {
     NSMutableArray *testCases = [[NSMutableArray alloc] init];
     
-    Class superClass = [FWTestCase class];
     unsigned int classesCount = 0;
     Class *classes = objc_copyClassList(&classesCount);
+    Class testClass = [FWTestCase class], objectClass = [NSObject class];
+    Class classType = Nil, superClass = Nil;
     for (unsigned int i = 0; i < classesCount; ++i) {
-        Class classType = classes[i];
-        if (class_isMetaClass(classType)) continue;
-        if (class_getSuperclass(classType) == nil || classType == superClass) continue;
-        // 屏蔽iOS11以下WKObject引起的报错(未继承NSObject无法调用isSubclassOfClass:)
-        if (@available(iOS 11.0, *)) { } else {
-            Class wkClass = objc_getClass("WKObject");
-            if (class_getSuperclass(classType) == wkClass || classType == wkClass) continue;
+        classType = classes[i];
+        superClass = class_getSuperclass(classType);
+        while (superClass && superClass != objectClass) {
+            if (superClass == testClass) {
+                [testCases addObject:classType];
+                break;
+            }
+            superClass = class_getSuperclass(superClass);
         }
-        if (![classType isSubclassOfClass:superClass]) continue;
-        
-        [testCases addObject:classType];
     }
+    free(classes);
     
     [testCases sortUsingComparator:^NSComparisonResult(Class obj1, Class obj2) {
         return [NSStringFromClass(obj1) compare:NSStringFromClass(obj2)];
     }];
-    free(classes);
-    
     return testCases;
 }
 

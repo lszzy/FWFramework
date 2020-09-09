@@ -47,13 +47,6 @@
 
 @implementation UIGestureRecognizer (FWBlock)
 
-- (UIView *)fwTargetView
-{
-    CGPoint location = [self locationInView:self.view];
-    UIView *targetView = [self.view hitTest:location withEvent:nil];
-    return targetView;
-}
-
 + (instancetype)fwGestureRecognizerWithBlock:(void (^)(id))block
 {
     UIGestureRecognizer *gestureRecognizer = [[self alloc] init];

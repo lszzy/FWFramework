@@ -12,32 +12,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
- @brief 通用不带参数block
- */
-typedef void (^FWBlockVoid)(void);
-
-/*!
- @brief 通用id参数block
- 
- @param param id参数
- */
-typedef void (^FWBlockParam)(id _Nullable param);
-
-/*!
- @brief 通用bool参数block
- 
- @param isTrue bool参数
- */
-typedef void (^FWBlockBool)(BOOL isTrue);
-
-/*!
- @brief 通用NSInteger参数block
- 
- @param index NSInteger参数
- */
-typedef void (^FWBlockInt)(NSInteger index);
-
-/*!
  @brief NSObject+FWBlock
  
  @see https://github.com/BlocksKit/BlocksKit

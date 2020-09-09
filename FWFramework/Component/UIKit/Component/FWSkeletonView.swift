@@ -240,6 +240,80 @@ import UIKit
     }
 }
 
+/// 骨架屏多行标签
+@objcMembers public class FWSkeletonLabel: FWSkeletonView {
+    /// 行数
+    public var numberOfLines: Int = 0 {
+        didSet { setNeedsDisplay() }
+    }
+    
+    /// 行高
+    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight {
+        didSet { setNeedsDisplay() }
+    }
+    
+    /// 行圆角
+    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius {
+        didSet { setNeedsDisplay() }
+    }
+    
+    /// 行间距
+    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing {
+        didSet { setNeedsDisplay() }
+    }
+    
+    /// 行显示比率，单个时指定最后一行，数组时指定所有行
+    public var linePercent: Any = FWSkeletonAppearance.appearance.linePercent {
+        didSet { setNeedsDisplay() }
+    }
+    
+    /// 行颜色
+    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor {
+        didSet { setNeedsDisplay() }
+    }
+    
+    /// 内容边距
+    public var contentInsets: UIEdgeInsets = .zero {
+        didSet { setNeedsDisplay() }
+    }
+    
+    private var lineLayers: [CAGradientLayer] = []
+    
+    // MARK: -
+    
+    public override var animationLayers: [CAGradientLayer] {
+        return lineLayers
+    }
+    
+    public override class var layerClass: AnyClass {
+        return CALayer.self
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = UIColor.clear
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        lineLayers.forEach { (lineLayer) in
+            lineLayer.removeFromSuperlayer()
+        }
+        
+        let lineLayer = CAGradientLayer()
+        lineLayer.backgroundColor = lineColor.cgColor
+        lineLayer.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: bounds.size.height)
+        layer.addSublayer(lineLayer)
+        lineLayers.append(lineLayer)
+    }
+}
+
 // MARK: - FWSkeletonParser
 
 /// 骨架屏解析器协议
@@ -269,6 +343,22 @@ import UIKit
     // MARK: -
     
     public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        if let label = view as? UILabel {
+            let skeletonLabel = FWSkeletonLabel()
+            skeletonLabel.lineHeight = label.font.lineHeight
+            skeletonLabel.numberOfLines = label.numberOfLines
+            return skeletonLabel
+        }
+        
+        if let textView = view as? UITextView {
+            let skeletonLabel = FWSkeletonLabel()
+            if let textFont = textView.font {
+                skeletonLabel.lineHeight = textFont.lineHeight
+            }
+            skeletonLabel.contentInsets = textView.textContainerInset
+            return skeletonLabel
+        }
+        
         let skeletonView = FWSkeletonView()
         skeletonView.layer.masksToBounds = view.layer.masksToBounds
         skeletonView.layer.cornerRadius = view.layer.cornerRadius

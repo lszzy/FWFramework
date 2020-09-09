@@ -8,11 +8,11 @@
 
 #import "UIViewController+FWBar.h"
 #import "UIView+FWBlock.h"
-#import "UIScreen+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
+#import "FWDeviceManager.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWBar)

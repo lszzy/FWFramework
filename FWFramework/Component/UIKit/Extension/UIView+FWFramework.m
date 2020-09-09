@@ -34,7 +34,7 @@
         }));
         
         FWSwizzleClass(UIView, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
-            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwSetIntrinsicContentSize:));
+            NSValue *value = objc_getAssociatedObject(selfObject, @selector(fwIntrinsicContentSize));
             if (value) {
                 return [value CGSizeValue];
             } else {
@@ -80,13 +80,29 @@
 
 #pragma mark - Size
 
-- (void)fwSetIntrinsicContentSize:(CGSize)size
+- (CGSize)fwIntrinsicContentSize
+{
+    return self.intrinsicContentSize;
+}
+
+- (void)setFwIntrinsicContentSize:(CGSize)size
 {
     if (CGSizeEqualToSize(size, CGSizeZero)) {
-        objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), nil, OBJC_ASSOCIATION_ASSIGN);
+        objc_setAssociatedObject(self, @selector(fwIntrinsicContentSize), nil, OBJC_ASSOCIATION_ASSIGN);
     } else {
-        objc_setAssociatedObject(self, @selector(fwSetIntrinsicContentSize:), [NSValue valueWithCGSize:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(fwIntrinsicContentSize), [NSValue valueWithCGSize:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
+}
+
+- (CGRect)fwFitFrame
+{
+    return self.frame;
+}
+
+- (void)setFwFitFrame:(CGRect)fitFrame
+{
+    fitFrame.size = [self fwFitSizeWithDrawSize:CGSizeMake(fitFrame.size.width, CGFLOAT_MAX)];
+    self.frame = fitFrame;
 }
 
 - (CGSize)fwFitSize
@@ -104,6 +120,25 @@
 {
     CGSize size = [self sizeThatFits:drawSize];
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+- (CGFloat)fwTemplateHeightWithWidth:(CGFloat)width
+{
+    CGFloat contentViewWidth = width;
+    CGFloat fittingHeight = 0;
+    
+    // 添加固定的width约束，从而使动态视图(如UILabel)纵向扩张。而不是水平增长，flow-layout的方式
+    NSLayoutConstraint *widthFenceConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:contentViewWidth];
+    [self addConstraint:widthFenceConstraint];
+    // 自动布局引擎计算
+    fittingHeight = [self systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    [self removeConstraint:widthFenceConstraint];
+    
+    if (fittingHeight == 0) {
+        // 尝试frame布局，调用sizeThatFits:
+        fittingHeight = [self sizeThatFits:CGSizeMake(contentViewWidth, 0)].height;
+    }
+    return fittingHeight;
 }
 
 #pragma mark - ViewController
