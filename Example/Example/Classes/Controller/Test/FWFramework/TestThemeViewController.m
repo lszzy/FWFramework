@@ -109,6 +109,17 @@
     layer.fwThemeContext = self.view;
     layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image"];
     [self.view.layer addSublayer:layer];
+    
+    UILabel *themeLabel = [UILabel new];
+    themeLabel.frame = CGRectMake(0, 300, FWScreenWidth, 50);
+    themeLabel.textAlignment = NSTextAlignmentCenter;
+    themeLabel.font = FWFontRegular(16);
+    themeLabel.textColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
+    themeLabel.text = FWThemeManager.sharedInstance.style == FWThemeStyleLight ? @"浅色" : @"深色";
+    [self.view fwAddThemeListener:^(FWThemeStyle style) {
+        themeLabel.text = (style == FWThemeStyleLight ? @"浅色" : @"深色");
+    }];
+    [self.view addSubview:themeLabel];
 }
 
 - (void)renderModel
