@@ -41,6 +41,6 @@ struct WebImage: View {
 
 struct WebImage_Previews: PreviewProvider {
     static var previews: some View {
-        WebImage(placeholderImage: UIImage(named: "TestImage")!, imageUrl: "https://picsum.photos/50/50?i=30")
+        WebImage(placeholderImage: UIImage(named: "theme_image")!, imageUrl: "https://picsum.photos/50/50?i=30")
     }
 }

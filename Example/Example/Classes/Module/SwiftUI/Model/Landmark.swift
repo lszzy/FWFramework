@@ -28,7 +28,7 @@ struct Landmark: Hashable, Codable, Identifiable {
         guard isFeatured else { return nil }
         
         return Image(
-            ImageStore.loadImage(name: "LandmarkImage"),
+            ImageStore.loadImage(name: "progressive.jpg"),
             scale: 2,
             label: Text(name))
     }
@@ -43,7 +43,7 @@ struct Landmark: Hashable, Codable, Identifiable {
 
 extension Landmark {
     var image: Image {
-        ImageStore.shared.image(name: id % 2 == 0 ? "LandmarkImage" : "TestImage")
+        ImageStore.shared.image(name: id % 2 == 0 ? "progressive.jpg" : "theme_image")
     }
 }
 
