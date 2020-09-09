@@ -193,10 +193,10 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 是否启用iOS13主题订阅，如果为UIView|UIViewController|UIScreen时始终为YES，否则默认为NO，需订阅后才能响应系统主题
 @property (nonatomic, readonly) BOOL fwThemeEnabled;
 
-/// 订阅主题通知并指定主题上下文(如vc|view)。非UIViewUIViewController|UIScreen子类时，需订阅后才能响应系统主题
+/// 订阅主题通知并指定主题上下文(如vc|view)。非UIView|UIViewController|UIScreen子类时，需订阅后才能响应系统主题
 @property (nullable, nonatomic, weak) id<UITraitEnvironment> fwThemeContext;
 
-/// 添加iOS13主题改变通知回调，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，需订阅后才生效
+/// 添加iOS13主题改变通知回调，返回订阅唯一标志。非UIView|UIViewController|UIScreen子类时，需订阅后才生效
 - (nullable NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
 
 /// iOS13根据订阅唯一标志移除主题通知回调
