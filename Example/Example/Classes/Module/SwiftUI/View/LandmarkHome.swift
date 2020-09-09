@@ -28,6 +28,17 @@ struct LandmarkHome: View {
         })
     }
     
+    var dismissButton: some View {
+        Button(action: {
+            UIWindow.fwMain()?.fwTopViewController()?.fwClose(animated: true)
+        }, label: {
+            Image("public_back")
+                .imageScale(.large)
+                .accessibility(label: Text("Back"))
+                .padding()
+        })
+    }
+    
     var body: some View {
         NavigationView {
             List {
@@ -52,13 +63,13 @@ struct LandmarkHome: View {
                     destination: ControllerPage<UIKitController>(),
                     label: {
                         HStack {
-                            WebImage(placeholderImage: UIImage(named: "TestImage")!, imageUrl: "https://picsum.photos/50/50?i=30")
+                            WebImage(placeholderImage: UIImage(named: "theme_image")!, imageUrl: "https://picsum.photos/50/50?i=30")
                             Text("UIKitController")
                         }
                     })
             }
             .navigationBarTitle("Featured")
-            .navigationBarItems(trailing: profileButton)
+            .navigationBarItems(leading: dismissButton, trailing: profileButton)
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()
                     .environmentObject(self.userData)

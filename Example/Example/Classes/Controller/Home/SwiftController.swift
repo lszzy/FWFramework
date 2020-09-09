@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 // MARK: - SwiftController
 
@@ -23,8 +24,8 @@ import UIKit
 
         // TODO: feature
         let objcButton = UIButton(type: .system)
-        objcButton.setTitle("ObjcController", for: .normal)
-        objcButton.addTarget(self, action: #selector(onObjc), for: .touchUpInside)
+        objcButton.setTitle("SwiftUIController", for: .normal)
+        objcButton.addTarget(self, action: #selector(onSwiftUI), for: .touchUpInside)
         view.addSubview(objcButton)
         objcButton.fwLayoutChain.top(20).size(CGSize(width: 150, height: 30)).centerX()
         view.fwAddTapGesture(withTarget: self, action: #selector(onClose))
@@ -32,9 +33,10 @@ import UIKit
 
     // MARK: - Action
 
-    func onObjc() {
-        let viewController = ObjcController()
-        navigationController?.pushViewController(viewController, animated: true)
+    func onSwiftUI() {
+        let viewController = UIHostingController(rootView: LandmarkHome().environmentObject(UserData()))
+        viewController.modalPresentationStyle = .fullScreen
+        present(viewController, animated: true, completion: nil)
     }
 
     func onClose() {
