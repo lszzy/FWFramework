@@ -276,6 +276,56 @@
 #define FWStrongifySelf( ) \
     FWStrongify( self )
 
+/*!
+ @brief 通用不带参数block
+ */
+typedef void (^FWBlockVoid)(void);
+
+/*!
+ @brief 通用id参数block
+ 
+ @param param id参数
+ */
+typedef void (^FWBlockParam)(id _Nullable param);
+
+/*!
+ @brief 通用bool参数block
+ 
+ @param isTrue bool参数
+ */
+typedef void (^FWBlockBool)(BOOL isTrue);
+
+/*!
+ @brief 通用NSInteger参数block
+ 
+ @param index NSInteger参数
+ */
+typedef void (^FWBlockInt)(NSInteger index);
+
+#pragma mark - Singleton
+
+/*!
+ @brief 定义单例头文件
+ 
+ @param cls 类名
+ */
+#define FWSingleton( cls ) \
+    @property (class, nonatomic, readonly) cls *sharedInstance;
+
+/*!
+ @brief 定义单例实现
+ 
+ @param cls 类名
+ */
+#define FWDefSingleton( cls ) \
+    + (cls *)sharedInstance \
+    { \
+        static dispatch_once_t once; \
+        static __strong id __singleton__ = nil; \
+        dispatch_once( &once, ^{ __singleton__ = [[cls alloc] init]; } ); \
+        return __singleton__; \
+    }
+
 #pragma mark - Foundation
 
 #ifdef DEBUG

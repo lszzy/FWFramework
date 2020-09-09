@@ -14,6 +14,13 @@
 
 @implementation UIGestureRecognizer (FWFramework)
 
+- (UIView *)fwTargetView
+{
+    CGPoint location = [self locationInView:self.view];
+    UIView *targetView = [self.view hitTest:location withEvent:nil];
+    return targetView;
+}
+
 - (BOOL)fwIsTracking
 {
     return self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged;

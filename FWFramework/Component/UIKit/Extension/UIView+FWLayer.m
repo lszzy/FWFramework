@@ -7,7 +7,7 @@
 //
 
 #import "UIView+FWLayer.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import "UIView+FWAnimation.h"
 #import "UIBezierPath+FWFramework.h"
 

@@ -39,37 +39,4 @@
     self.navigationDelegate = fwNavigationDelegate;
 }
 
-- (FWWebViewJsBridge *)fwJsBridge
-{
-    return objc_getAssociatedObject(self, @selector(fwJsBridge));
-}
-
-- (void)setFwJsBridge:(FWWebViewJsBridge *)fwJsBridge
-{
-    objc_setAssociatedObject(self, @selector(fwJsBridge), fwJsBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-@implementation UIProgressView (FWFramework)
-
-- (void)fwSetProgress:(float)progress
-{
-    if (progress == 0) {
-        self.alpha = 0;
-    } else if (self.alpha == 0 && progress > 0) {
-        self.progress = 0;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1.0;
-        }];
-    } else if (self.alpha == 1.0 && progress == 1.0) {
-        [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 0.0;
-        } completion:^(BOOL finished) {
-            self.progress = 0;
-        }];
-    }
-    [self setProgress:progress animated:YES];
-}
-
 @end

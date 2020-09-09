@@ -18,6 +18,9 @@
 #import "FWBarrageView.h"
 #import "FWCollectionViewFlowLayout.h"
 #import "FWCropViewController.h"
+#import "FWEmptyView.h"
+#import "FWFloatLayoutView.h"
+#import "FWGridView.h"
 #import "FWIndicatorControl.h"
 #import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
@@ -26,8 +29,6 @@
 #import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"
-#import "FWStatisticalManager.h"
 #import "FWTagCollectionView.h"
-#import "FWVersionManager.h"
 
 #endif /* FWFramework_Component_h */

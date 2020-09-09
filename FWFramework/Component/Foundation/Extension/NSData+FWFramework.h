@@ -31,6 +31,46 @@ NS_ASSUME_NONNULL_BEGIN
 // 转为UTF8字符串
 - (nullable NSString *)fwUTF8String;
 
+#pragma mark - Encrypt
+
+/**
+ *  利用AES加密数据
+ *
+ *  @param key key
+ *  @param iv  iv description
+ *
+ *  @return data
+ */
+- (nullable NSData *)fwAESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+/**
+ *  @brief  利用AES解密据
+ *
+ *  @param key key
+ *  @param iv  iv
+ *
+ *  @return 解密后数据
+ */
+- (nullable NSData *)fwAESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+
+/**
+ *  利用3DES加密数据
+ *
+ *  @param key key
+ *  @param iv  iv description
+ *
+ *  @return data
+ */
+- (nullable NSData *)fw3DESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+/**
+ *  @brief   利用3DES解密数据
+ *
+ *  @param key key
+ *  @param iv  iv
+ *
+ *  @return 解密后数据
+ */
+- (nullable NSData *)fw3DESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+
 @end
 
 NS_ASSUME_NONNULL_END

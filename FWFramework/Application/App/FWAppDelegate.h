@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setupController;
 
 // 初始化设备token，失败时为error
-- (void)setupDeviceToken:(nullable NSData *)deviceToken error:(nullable NSError *)error;
+- (void)setupDeviceToken:(nullable NSData *)tokenData error:(nullable NSError *)error;
 
 // 统一处理打开URL
 - (BOOL)handleOpenURL:(NSURL *)url options:(nullable NSDictionary *)options;

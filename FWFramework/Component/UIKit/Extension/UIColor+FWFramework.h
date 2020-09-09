@@ -11,43 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 从16进制创建UIColor，格式0xFFFFFF，透明度可选，默认1.0
-#define FWColorHex( hex, ... ) \
-    [UIColor colorWithRed:((float)((hex & 0xFF0000) >> 16))/255.0 green:((float)((hex & 0xFF00) >> 8))/255.0 blue:((float)(hex & 0xFF))/255.0 alpha:fw_macro_default(1.0, ##__VA_ARGS__)]
-
-// 从RGB创建UIColor，透明度可选，默认1.0
-#define FWColorRgb( r, g, b, ... ) \
-    [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:fw_macro_default(1.0f, ##__VA_ARGS__)]
-
 /*!
  @brief UIColor+FWFramework
  */
 @interface UIColor (FWFramework)
-
-#pragma mark - Hex
-
-// 从十六进制值初始化，格式：0x20B2AA，透明度为1.0
-+ (UIColor *)fwColorWithHex:(long)hex;
-
-// 从十六进制值初始化，格式：0x20B2AA，自定义透明度
-+ (UIColor *)fwColorWithHex:(long)hex alpha:(CGFloat)alpha;
-
-#pragma mark - String
-
-// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
-+ (void)fwColorStandardARGB:(BOOL)enabled;
-
-// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0
-+ (nullable UIColor *)fwColorWithHexString:(NSString *)hexString;
-
-// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度
-+ (nullable UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
-
-// 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0
-+ (nullable UIColor *)fwColorWithString:(NSString *)string;
-
-// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度
-+ (nullable UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
 
 #pragma mark - Image
 
@@ -70,17 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 当前颜色修改亮度比率的颜色
 - (UIColor *)fwBrightnessColor:(CGFloat)ratio;
-
-#pragma mark - Value
-
-// 读取颜色的十六进制值RGB，不含透明度
-- (long)fwHexValue;
-
-// 读取颜色的十六进制字符串RGB，不含透明度
-- (NSString *)fwHexString;
-
-// 读取颜色的十六进制字符串RGBA|ARGB，包含透明度
-- (NSString *)fwHexStringWithAlpha;
 
 // 读取颜色的透明度值，范围0~1
 - (CGFloat)fwAlpha;

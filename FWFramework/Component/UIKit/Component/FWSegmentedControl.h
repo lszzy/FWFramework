@@ -246,6 +246,13 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
 @property (nonatomic, readwrite) UIEdgeInsets selectionIndicatorEdgeInsets;
 
 /**
+ Corner radius for the selection indicator.
+ 
+ Defaults is 0
+ */
+@property (nonatomic, assign) CGFloat selectionIndicatorCornerRadius;
+
+/**
  Inset left and right edges of segments.
  
  Default is UIEdgeInsetsMake(0, 5, 0, 5)

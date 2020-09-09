@@ -1,0 +1,9 @@
+//
+//  FWModel.m
+//  FWFramework
+//
+//  Created by wuyong on 2020/9/7.
+//  Copyright © 2020 wuyong.site. All rights reserved.
+//
+
+#import "FWModel.h"

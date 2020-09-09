@@ -7,7 +7,7 @@
 //
 
 #import "UIViewController+FWFramework.h"
-#import "UIView+FWAutoLayout.h"
+#import "FWLayoutManager.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
@@ -55,15 +55,14 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     return result;
 }
 
-- (BOOL)fwIsFirstLoad
+- (BOOL)fwIsLoaded
 {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(fwIsFirstLoad));
-    return value ? [value boolValue] : YES;
+    return [objc_getAssociatedObject(self, @selector(fwIsLoaded)) boolValue];
 }
 
-- (void)setFwIsFirstLoad:(BOOL)fwIsFirstLoad
+- (void)setFwIsLoaded:(BOOL)fwIsLoaded
 {
-    objc_setAssociatedObject(self, @selector(fwIsFirstLoad), @(fwIsFirstLoad), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwIsLoaded), @(fwIsLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - Present
@@ -139,20 +138,6 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     });
     
     objc_setAssociatedObject(self, @selector(fwDismissBlock), fwDismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-#pragma mark - Popup
-
-- (void)fwShowPopupView:(UIView *)popupView
-{
-    UIView *superview = self.tabBarController.view ?: (self.navigationController.view ?: self.view);
-    [superview addSubview:popupView];
-    [popupView fwPinEdgesToSuperview];
-}
-
-- (void)fwHidePopupView:(UIView *)popupView
-{
-    [popupView removeFromSuperview];
 }
 
 #pragma mark - Action

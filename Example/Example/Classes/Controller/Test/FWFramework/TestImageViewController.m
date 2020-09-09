@@ -32,7 +32,7 @@
         [self.contentView addSubview:_systemView];
         _systemView.fwLayoutChain.leftWithInset(10).topToBottomOfViewWithOffset(_nameLabel, 10).bottomWithInset(10).width(100);
         
-        _animatedView = [UIImageView new];
+        _animatedView = [[UIImageView fwImageViewAnimatedClass] new];
         [self.contentView addSubview:_animatedView];
         _animatedView.fwLayoutChain.leftToRightOfViewWithOffset(_systemView, 60).topToView(_systemView).bottomToView(_systemView).widthToView(_systemView);
     }
@@ -43,7 +43,7 @@
 
 @interface TestImageViewController ()
 
-@property (nonatomic, assign) BOOL isWebImage;
+@property (nonatomic, assign) NSInteger imageType;
 
 @end
 
@@ -59,83 +59,43 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@"Toggle" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
-        self.isWebImage = !self.isWebImage;
-        [self.tableView reloadData];
+        self.imageType = (self.imageType + 1) > 2 ? 0 : (self.imageType + 1);
+        [self renderData];
     }];
 }
 
 - (void)renderData
 {
-    [self.tableData addObjectsFromArray:@[
-        @"progressive.jpg",
-        @"animation.png",
-        @"test.gif",
-        @"test.webp",
-        @"test.heic",
-        @"test.heif",
-        @"animation.heic",
-        @"public_icon",
-        @"public_gif",
-    ]];
-    [self.tableView reloadData];
-    
-    /*
-    [self addFrameImage];
-    [self addSpriteSheetImage];
-    [self addProgressiveImage];
-    */
-}
-
-- (void)addFrameImage
-{
-    NSString *basePath = [NSBundle mainBundle].bundlePath;
-    NSMutableArray *paths = [NSMutableArray new];
-    [paths addObject:[basePath stringByAppendingPathComponent:@"frame1.png"]];
-    [paths addObject:[basePath stringByAppendingPathComponent:@"frame2.png"]];
-    [paths addObject:[basePath stringByAppendingPathComponent:@"frame3.png"]];
-    //UIImage *image = [[FWFrameImage alloc] initWithImagePaths:paths oneFrameDuration:0.1 loopCount:0];
-    //[self.tableData fwAddObject:image];
-}
-
-- (void)addSpriteSheetImage
-{
-    NSString *path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"sheet.png"];
-    UIImage *sheet = [[UIImage alloc] initWithData:[NSData dataWithContentsOfFile:path] scale:2];
-    NSMutableArray *contentRects = [NSMutableArray new];
-    NSMutableArray *durations = [NSMutableArray new];
-    CGSize size = CGSizeMake(sheet.size.width / 8, sheet.size.height / 12);
-    for (int j = 0; j < 12; j++) {
-        for (int i = 0; i < 8; i++) {
-            CGRect rect;
-            rect.size = size;
-            rect.origin.x = sheet.size.width / 8 * i;
-            rect.origin.y = sheet.size.height / 12 * j;
-            [contentRects addObject:[NSValue valueWithCGRect:rect]];
-            [durations addObject:@(1 / 60.0)];
-        }
+    if (self.imageType == 2) {
+        [self.tableData setArray:@[
+            // @"http://www.httpwatch.com/httpgallery/authentication/authenticatedimage/default.aspx?0.35786508303135633",
+            @"http://assets.sbnation.com/assets/2512203/dogflops.gif",
+            @"https://raw.githubusercontent.com/liyong03/YLGIFImage/master/YLGIFImageDemo/YLGIFImageDemo/joy.gif",
+            @"http://apng.onevcat.com/assets/elephant.png",
+            @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
+            @"http://www.ioncannon.net/wp-content/uploads/2011/06/test9.webp",
+            @"http://littlesvr.ca/apng/images/SteamEngine.webp",
+            @"http://littlesvr.ca/apng/images/world-cup-2014-42.webp",
+            @"https://isparta.github.io/compare-webp/image/gif_webp/webp/2.webp",
+            @"https://nokiatech.github.io/heif/content/images/ski_jump_1440x960.heic",
+            @"https://nokiatech.github.io/heif/content/image_sequences/starfield_animation.heic",
+            @"https://s2.ax1x.com/2019/11/01/KHYIgJ.gif",
+            @"https://raw.githubusercontent.com/icons8/flat-color-icons/master/pdf/stack_of_photos.pdf",
+            @"https://nr-platform.s3.amazonaws.com/uploads/platform/published_extension/branding_icon/275/AmazonS3.png",
+            @"http://via.placeholder.com/200x200.jpg",
+        ]];
+    } else {
+        [self.tableData setArray:@[
+            @"progressive.jpg",
+            @"animation.png",
+            @"test.gif",
+            @"test.webp",
+            @"test.heic",
+            @"test.heif",
+            @"animation.heic",
+        ]];
     }
-    //FWSpriteSheetImage *image = [[FWSpriteSheetImage alloc] initWithSpriteSheetImage:sheet
-     //                                                contentRects:contentRects
-      //                                             frameDurations:durations
-        //                                                loopCount:0];
-    //[self.tableData fwAddObject:image];
-}
-
-- (void)addProgressiveImage
-{
-    /*
-    NSString *name = @"progressive.jpg";
-    
-    NSData *data = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
-    double progress = 0.5;
-    if (progress > 1) progress = 1;
-     
-    NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
-    FWImageDecoder *decoder = [[FWImageDecoder alloc] initWithScale:[UIScreen mainScreen].scale];
-    [decoder updateData:subData final:NO];
-    FWImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
-    imageView.image = frame.image;
-     */
+    [self.tableView reloadData];
 }
 
 #pragma mark - TableView
@@ -148,17 +108,20 @@
 - (void)renderCellData:(TestImageCell *)cell indexPath:(NSIndexPath *)indexPath
 {
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
-    cell.nameLabel.text = fileName;
-    if (self.isWebImage) {
-        NSString *url = [NSString stringWithFormat:@"http://kvm.wuyong.site/images/images/%@", fileName];
+    cell.nameLabel.text = [fileName lastPathComponent];
+    if (self.imageType == 0) {
+        UIImage *image = FWImageFile(fileName);
+        cell.systemView.image = image;
+        cell.animatedView.image = image;
+    } else {
+        NSString *url = fileName;
+        if (self.imageType == 1) {
+            url = [NSString stringWithFormat:@"http://kvm.wuyong.site/images/images/%@", fileName];
+        }
         cell.systemView.image = nil;
         cell.animatedView.image = nil;
         [cell.systemView fwSetImageWithURL:url];
         [cell.animatedView fwSetImageWithURL:url];
-    } else {
-        UIImage *image = [UIImage imageNamed:fileName];
-        cell.systemView.image = image;
-        cell.animatedView.image = image;
     }
 }
 

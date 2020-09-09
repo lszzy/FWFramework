@@ -1,10 +1,10 @@
 /*!
  @header     UINavigationController+FWWorkflow.h
  @indexgroup FWFramework
- @brief      导航栏控制器工作流分类
+ @brief      导航控制器工作流分类
  @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018-05-15
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/9/7
  */
 
 #import <UIKit/UIKit.h>

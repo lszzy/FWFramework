@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UIViewController+FWAlert.h"
-#import "UIViewController+FWBar.h"
 #import "UIViewController+FWBack.h"
+#import "UIViewController+FWBar.h"
 #import "UIViewController+FWTransition.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -33,10 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)fwIsPresented;
 
 /*!
- @brief 是否是第一次加载数据，默认YES，加载完成后可标记为NO
- @discussion 一般第一次加载数据时需要显示loading等，可判断和设置此开关
+ @brief 是否已经加载完数据，默认NO，加载完成后可标记为YES
+ @discussion 一般第一次加载数据时需要显示loading等，可判断和标记此开关
  */
-@property (nonatomic, assign) BOOL fwIsFirstLoad;
+@property (nonatomic, assign) BOOL fwIsLoaded;
 
 #pragma mark - Present
 
@@ -56,18 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion 仅当控制器自身被dismiss时才会触发，如果有presented控制器，会触发presented控制器的对应block。iOS13默认present手势下拉dismiss时不会触发
  */
 @property (nullable, nonatomic, copy) void (^fwDismissBlock)(void);
-
-#pragma mark - Popup
-
-/*!
- @brief 显示弹出视图到控制器，占满父视图。可使用self.view.window添加到窗口
- */
-- (void)fwShowPopupView:(UIView *)popupView;
-
-/*!
- @brief 隐藏弹出视图，等同于removeFromSuperview
- */
-- (void)fwHidePopupView:(UIView *)popupView;
 
 #pragma mark - Action
 

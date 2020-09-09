@@ -12,9 +12,10 @@
 #import "FWSwizzle.h"
 #import "UIView+FWFramework.h"
 #import "UIImage+FWFramework.h"
-#import "UIScreen+FWFramework.h"
 #import "NSString+FWFramework.h"
 #import "FWMessage.h"
+#import "FWLayoutManager.h"
+#import "FWDeviceManager.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)
@@ -148,7 +149,7 @@
 - (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem
 {
     UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
-    [titleView fwSetIntrinsicContentSize:UILayoutFittingExpandedSize];
+    titleView.fwIntrinsicContentSize = UILayoutFittingExpandedSize;
     titleView.backgroundColor = [UIColor clearColor];
     [titleView addSubview:self];
     [self fwPinEdgesToSuperview];

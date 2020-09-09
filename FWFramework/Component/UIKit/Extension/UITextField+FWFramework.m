@@ -8,6 +8,7 @@
 
 #import "UITextField+FWFramework.h"
 #import "NSString+FWFramework.h"
+#import "FWCoder.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 

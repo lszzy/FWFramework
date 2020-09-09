@@ -11,58 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Macro
-
-// 是否是模拟器
-#if TARGET_OS_SIMULATOR
-    #define FWIsSimulator YES
-#else
-    #define FWIsSimulator NO
-#endif
-
-// 是否是iPhone设备
-#define FWIsIphone \
-    (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
-
-// 是否是iPad设备
-#define FWIsIpad \
-    (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
-
-// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
-#define FWIosVersion \
-    [[[UIDevice currentDevice] systemVersion] floatValue]
-
-// 是否是指定iOS主版本
-#define FWIsIos( version ) \
-    (FWIosVersion >= version && FWIosVersion < (version + 1) ? YES : NO)
-
-// 是否是大于等于指定iOS主版本
-#define FWIsIosLater( version ) \
-    (FWIosVersion >= version ? YES : NO)
-
-// 界面是否横屏
-#define FWIsInterfaceLandscape \
-    UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])
-
-// 设备是否横屏，无论支不支持横屏
-#define FWIsDeviceLandscape \
-    UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])
-
 /*!
  @brief UIDevice+FWFramework
  */
 @interface UIDevice (FWFramework)
-
-#pragma mark - Judge
-
-// 是否是iPhone
-+ (BOOL)fwIsIphone;
-
-// 是否是iPad
-+ (BOOL)fwIsIpad;
-
-// 是否是模拟器
-+ (BOOL)fwIsSimulator;
 
 // 是否越狱
 + (BOOL)fwIsJailbroken;
@@ -77,17 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 设置界面方向，支持旋转方向时生效
 + (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
-
-#pragma mark - Version
-
-// iOS系统版本
-+ (float)fwIosVersion;
-
-// 是否是指定iOS主版本
-+ (BOOL)fwIsIos:(NSInteger)version;
-
-// 是否是大于等于指定iOS主版本
-+ (BOOL)fwIsIosLater:(NSInteger)version;
 
 #pragma mark - Model
 
@@ -111,8 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Token
 
-// 设置设备token，格式化并保存
-+ (void)fwSetDeviceToken:(nullable NSData *)tokenData;
+// 设置设备token原始Data，格式化并保存
++ (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
 
 // 获取设备Token格式化后的字符串
 + (nullable NSString *)fwDeviceToken;

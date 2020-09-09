@@ -16,7 +16,9 @@
 #import "FWScrollViewController.h"
 #import "FWTableViewController.h"
 #import "FWWebViewController.h"
-#import "FWViewModel.h"
+
+#import "FWModel.h"
+
 #import "FWView.h"
 
 #endif /* FWFramework_Application_h */
