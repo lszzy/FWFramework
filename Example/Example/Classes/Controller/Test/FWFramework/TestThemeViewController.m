@@ -116,7 +116,7 @@
     themeLabel.font = FWFontRegular(16);
     themeLabel.textColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
     themeLabel.text = FWThemeManager.sharedInstance.style == FWThemeStyleLight ? @"浅色" : @"深色";
-    [self.view fwAddThemeListener:^(FWThemeStyle style) {
+    [themeLabel fwAddThemeListener:^(FWThemeStyle style) {
         themeLabel.text = (style == FWThemeStyleLight ? @"浅色" : @"深色");
     }];
     [self.view addSubview:themeLabel];
