@@ -102,6 +102,40 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 @end
 
+@interface FWThemeObject ()
+
+@property (nonatomic, copy) id (^provider)(FWThemeStyle);
+
+@end
+
+@implementation FWThemeObject
+
++ (instancetype)objectWithLight:(id)light dark:(id)dark
+{
+    return [self objectWithProvider:^id (FWThemeStyle style) {
+        return style == FWThemeStyleDark ? dark : light;
+    }];
+}
+
++ (instancetype)objectWithProvider:(id (^)(FWThemeStyle))provider
+{
+    FWThemeObject *object = [[FWThemeObject alloc] init];
+    object.provider = provider;
+    return object;
+}
+
+- (id)object
+{
+    return self.provider ? self.provider(FWThemeManager.sharedInstance.style) : nil;
+}
+
+- (id)object:(FWThemeStyle)style
+{
+    return self.provider ? self.provider(style) : nil;
+}
+
+@end
+
 #pragma mark - UIColor+FWTheme
 
 static BOOL fwStaticColorARGB = NO;
@@ -316,8 +350,8 @@ static BOOL fwStaticColorARGB = NO;
 {
     UIImage *image = provider(FWThemeManager.sharedInstance.style);
     // 如果已经是动态模拟图像则不处理，兼容手工注册的动态模拟图像
-    if (!image.fwIsDynamic) {
-        [image setFwThemeProvider:provider];
+    if (!image.fwThemeObject) {
+        image.fwThemeObject = [FWThemeObject<UIImage *> objectWithProvider:provider];
     }
     return image;
 }
@@ -352,28 +386,14 @@ static BOOL fwStaticColorARGB = NO;
     [fwStaticNameImages addEntriesFromDictionary:nameImages];
 }
 
-- (BOOL)fwIsDynamic
+- (FWThemeObject<UIImage *> *)fwThemeObject
 {
-    return [self fwThemeProvider] != nil;
+    return objc_getAssociatedObject(self, @selector(fwThemeObject));
 }
 
-- (UIImage *)fwStaticImage
+- (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
 {
-    UIImage * (^provider)(FWThemeStyle) = [self fwThemeProvider];
-    if (provider != nil) {
-        return provider(FWThemeManager.sharedInstance.style);
-    }
-    return self;
-}
-
-- (UIImage * (^)(FWThemeStyle))fwThemeProvider
-{
-    return objc_getAssociatedObject(self, @selector(fwThemeProvider));
-}
-
-- (void)setFwThemeProvider:(UIImage * (^)(FWThemeStyle))provider
-{
-    objc_setAssociatedObject(self, @selector(fwThemeProvider), provider, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
@@ -564,8 +584,8 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
 {
     [super fwThemeChanged:style];
     
-    if (self.fwThemeImage != nil) {
-        self.image = self.fwThemeImage.fwStaticImage;
+    if (self.fwThemeImage.fwThemeObject != nil) {
+        self.image = self.fwThemeImage.fwThemeObject.object;
     }
 }
 
@@ -630,8 +650,8 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
     if (self.fwThemeShadowColor != nil) {
         self.shadowColor = self.fwThemeShadowColor.CGColor;
     }
-    if (self.fwThemeContents != nil) {
-        self.contents = (id)self.fwThemeContents.fwStaticImage.CGImage;
+    if (self.fwThemeContents.fwThemeObject != nil) {
+        self.contents = (id)self.fwThemeContents.fwThemeObject.object.CGImage;
     }
 }
 

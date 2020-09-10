@@ -55,6 +55,25 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
+/*!
+ @brief 主题动态对象，可获取当前主题静态对象
+ */
+@interface FWThemeObject<__covariant ObjectType> : NSObject
+
+/// 创建主题动态对象，分别指定浅色和深色
++ (instancetype)objectWithLight:(nullable ObjectType)light dark:(nullable ObjectType)dark;
+
+/// 创建主题动态对象，指定提供句柄
++ (instancetype)objectWithProvider:(ObjectType _Nullable (^)(FWThemeStyle style))provider;
+
+/// 获取当前主题静态对象
+@property (nullable, nonatomic, readonly) ObjectType object;
+
+/// 指定主题样式获取对应静态对象
+- (nullable ObjectType)object:(FWThemeStyle)style;
+
+@end
+
 #pragma mark - UIColor+FWTheme
 
 // 从16进制创建UIColor，格式0xFFFFFF，透明度可选，默认1.0
@@ -142,11 +161,8 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
-/// 是否是主题模拟动态图像，不支持动态切换，需重新赋值才会变化
-@property (nonatomic, readonly) BOOL fwIsDynamic;
-
-/// 获取主题模拟动态图像的当前显示静态图像
-@property (nullable, nonatomic, readonly) UIImage *fwStaticImage;
+/// 获取当前主题动态对象，不存在时为nil
+@property (nullable, nonatomic, readonly) FWThemeObject<UIImage *> *fwThemeObject;
 
 @end
 

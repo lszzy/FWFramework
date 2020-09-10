@@ -48,9 +48,10 @@
     [self.view addSubview:colorView];
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
-    imageView.image = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
+    UIImage *themeImage = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
+    imageView.image = themeImage;
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
+        imageView.image = themeImage.fwThemeObject.object;
     }];
     [self.view addSubview:imageView];
     
@@ -66,10 +67,11 @@
     
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
-    layer.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]].CGColor;
+    UIColor *themeColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
+    layer.backgroundColor = themeColor.CGColor;
     layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]].CGColor;
+        layer.backgroundColor = themeColor.CGColor;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -89,10 +91,11 @@
     
     layer = [CALayer new];
     layer.frame = CGRectMake(20, 230, 50, 50);
-    layer.contents = (id)[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]].CGImage;
+    UIImage *layerImage = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
+    layer.contents = (id)layerImage.CGImage;
     layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.contents = (id)[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]].CGImage;
+        layer.contents = (id)layerImage.fwThemeObject.object.CGImage;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -115,9 +118,10 @@
     themeLabel.textAlignment = NSTextAlignmentCenter;
     themeLabel.font = FWFontRegular(16);
     themeLabel.textColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-    themeLabel.text = FWThemeManager.sharedInstance.style == FWThemeStyleLight ? @"浅色" : @"深色";
+    FWThemeObject *themeString = [FWThemeObject objectWithLight:@"浅色" dark:@"深色"];
+    themeLabel.text = themeString.object;
     [self fwAddThemeListener:^(FWThemeStyle style) {
-        themeLabel.text = (style == FWThemeStyleLight ? @"浅色" : @"深色");
+        themeLabel.text = themeString.object;
     }];
     [self.view addSubview:themeLabel];
 }
