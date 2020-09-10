@@ -348,11 +348,8 @@ static BOOL fwStaticColorARGB = NO;
 
 + (UIImage *)fwThemeImage:(UIImage * (^)(FWThemeStyle))provider
 {
-    UIImage *image = provider(FWThemeManager.sharedInstance.style);
-    // 如果已经是动态模拟图像则不处理，兼容手工注册的动态模拟图像
-    if (!image.fwThemeObject) {
-        image.fwThemeObject = [FWThemeObject<UIImage *> objectWithProvider:provider];
-    }
+    UIImage *image = provider(FWThemeManager.sharedInstance.style) ?: [UIImage new];
+    image.fwThemeObject = [FWThemeObject<UIImage *> objectWithProvider:provider];
     return image;
 }
 

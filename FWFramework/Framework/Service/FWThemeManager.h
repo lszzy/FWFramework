@@ -147,13 +147,13 @@ extern NSString *const FWThemeChangedNotification;
 @interface UIImage (FWTheme)
 
 /// 创建主题模拟动态图像，分别指定浅色和深色，不支持动态切换，需重新赋值才会变化
-+ (nullable UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
++ (UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
 
 /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
-+ (nullable UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
++ (UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
 /// 创建主题模拟动态图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
-+ (nullable UIImage *)fwThemeNamed:(NSString *)name;
++ (UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImage:(nullable UIImage *)image forName:(NSString *)name;

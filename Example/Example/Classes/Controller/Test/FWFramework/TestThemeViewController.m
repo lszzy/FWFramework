@@ -113,17 +113,19 @@
     layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image"];
     [self.view.layer addSublayer:layer];
     
-    UILabel *themeLabel = [UILabel new];
-    themeLabel.frame = CGRectMake(0, 300, FWScreenWidth, 50);
-    themeLabel.textAlignment = NSTextAlignmentCenter;
-    themeLabel.font = FWFontRegular(16);
-    themeLabel.textColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
+    UIButton *themeButton = [UIButton new];
+    themeButton.frame = CGRectMake(0, 300, FWScreenWidth, 50);
+    themeButton.titleLabel.font = FWFontRegular(16);
+    [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+    UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [UIImage imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [UIImage imageNamed:@"theme_image_dark"])];
+    [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
     FWThemeObject *themeString = [FWThemeObject objectWithLight:@"浅色" dark:@"深色"];
-    themeLabel.text = themeString.object;
+    [themeButton setTitle:themeString.object forState:UIControlStateNormal];
     [self fwAddThemeListener:^(FWThemeStyle style) {
-        themeLabel.text = themeString.object;
+        [themeButton setTitle:themeString.object forState:UIControlStateNormal];
+        [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
     }];
-    [self.view addSubview:themeLabel];
+    [self.view addSubview:themeButton];
 }
 
 - (void)renderModel
