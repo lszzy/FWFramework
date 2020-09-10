@@ -74,4 +74,9 @@
     return self.pointSize * multiplier;
 }
 
+- (CGFloat)fwBaselineOffset:(UIFont *)font
+{
+    return (self.lineHeight - font.lineHeight) / 2 + (self.descender - font.descender);
+}
+
 @end

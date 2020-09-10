@@ -53,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 根据字体计算指定倍数行高的实际行高值(减去空白高度)，示例：行高为1.5倍实际高度
 - (CGFloat)fwLineHeightWithMultiplier:(CGFloat)multiplier;
 
+/// 计算当前字体与指定字体居中对齐的偏移值
+- (CGFloat)fwBaselineOffset:(UIFont *)font;
+
 @end
 
 NS_ASSUME_NONNULL_END
