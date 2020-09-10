@@ -429,8 +429,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
             [self fwThemeSwizzleClass:[UIScreen class]];
             [self fwThemeSwizzleClass:[UIView class]];
             [self fwThemeSwizzleClass:[UIViewController class]];
-            // 解决UIImageView内部重写traitCollectionDidChange:时未调用super导致不回调fwThemeChanged:
-            [self fwThemeSwizzleClass:[UIImageView class]];
         }
     });
 }
@@ -489,15 +487,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
     objc_setAssociatedObject(self, @selector(fwThemeContextIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)fwThemeEnabled
-{
-    if (@available(iOS 13, *)) {
-        if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return YES;
-        return [self fwThemeContextIdentifier] != nil;
-    }
-    return NO;
-}
-
 - (id<UITraitEnvironment>)fwThemeContext
 {
     FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwThemeContext));
@@ -507,8 +496,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
 - (void)setFwThemeContext:(id<UITraitEnvironment>)themeContext
 {
     if (@available(iOS 13, *)) {
-        if ([self conformsToProtocol:@protocol(UITraitEnvironment)]) return;
-        
         id<UITraitEnvironment> oldContext = self.fwThemeContext;
         if (themeContext != oldContext) {
             objc_setAssociatedObject(self, @selector(fwThemeContext), [[FWWeakObject alloc] initWithObject:themeContext], OBJC_ASSOCIATION_RETAIN_NONATOMIC);

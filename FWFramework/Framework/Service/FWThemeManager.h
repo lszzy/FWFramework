@@ -33,8 +33,8 @@ static const FWThemeMode FWThemeModeDark = FWThemeStyleDark;
 extern NSString *const FWThemeChangedNotification;
 
 /*!
- @brief 主题管理器
- @discussion iOS13跟随系统模式时，如果为UIView|UIViewController|UIScreen子类，会自动触发fwThemeChanged回调；否则需要先启用fwThemeSubscribed才会触发fwThemeChanged回调
+ @brief 主题管理器，iOS13+可跟随系统改变
+ @discussion 框架默认只拦截了UIView|UIViewController|UIScreen类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效(如UIImageView、UILabel等)，需先设置主题上下文fwThemeContext才能生效
  */
 @interface FWThemeManager : NSObject
 
@@ -190,19 +190,16 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
  */
 @interface NSObject (FWTheme)
 
-/// 是否启用iOS13主题订阅，如果为UIView|UIViewController|UIScreen时始终为YES，否则默认为NO，需订阅后才能响应系统主题
-@property (nonatomic, readonly) BOOL fwThemeEnabled;
-
-/// 订阅主题通知并指定主题上下文(如vc|view)。非UIView|UIViewController|UIScreen子类时，需订阅后才能响应系统主题
+/// 订阅主题通知并指定主题上下文(如vc|view)。非UIView|UIViewController|UIScreen类时，需订阅后才能响应系统主题
 @property (nullable, nonatomic, weak) id<UITraitEnvironment> fwThemeContext;
 
-/// 添加iOS13主题改变通知回调，返回订阅唯一标志。非UIView|UIViewController|UIScreen子类时，需订阅后才生效
+/// 添加iOS13主题改变通知回调，返回订阅唯一标志。非UIView|UIViewController|UIScreen类时，需订阅后才生效
 - (nullable NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
 
 /// iOS13根据订阅唯一标志移除主题通知回调
 - (void)fwRemoveThemeListener:(nullable NSString *)identifier;
 
-/// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen子类时，需订阅后才生效
+/// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen类时，需订阅后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
 
 @end
