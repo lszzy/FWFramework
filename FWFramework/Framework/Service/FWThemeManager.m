@@ -429,6 +429,8 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
             [self fwThemeSwizzleClass:[UIScreen class]];
             [self fwThemeSwizzleClass:[UIView class]];
             [self fwThemeSwizzleClass:[UIViewController class]];
+            // UIImageView内部重写traitCollectionDidChange:时未调用super导致不回调fwThemeChanged:
+            [self fwThemeSwizzleClass:[UIImageView class]];
         }
     });
 }
