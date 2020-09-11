@@ -79,18 +79,21 @@
 
 - (UIColor *)fwInverseColor
 {
-    const CGFloat *componentColors = CGColorGetComponents(self.CGColor);
-    UIColor *newColor = [[UIColor alloc] initWithRed:(1.0 - componentColors[0])
-                                               green:(1.0 - componentColors[1])
-                                                blue:(1.0 - componentColors[2])
-                                               alpha:componentColors[3]];
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
+    UIColor *newColor = [[UIColor alloc] initWithRed:(1.0 - r) green:(1.0 - g) blue:(1.0 - b) alpha:a];
     return newColor;
 }
 
 - (BOOL)fwIsDarkColor
 {
     CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
-    [self getRed:&red green:&green blue:&blue alpha:&alpha];
+    if (![self getRed:&red green:&green blue:&blue alpha:&alpha]) {
+        if ([self getWhite:&red alpha:&alpha]) { green = red; blue = red; }
+    }
     
     float referenceValue = 0.411;
     float colorDelta = ((red * 0.299) + (green * 0.587) + (blue * 0.114));
@@ -103,11 +106,6 @@
     CGFloat h, s, b, a;
     [self getHue:&h saturation:&s brightness:&b alpha:&a];
     return [UIColor colorWithHue:h saturation:s brightness:b * ratio alpha:a];
-}
-
-- (CGFloat)fwAlpha
-{
-    return CGColorGetAlpha(self.CGColor);
 }
 
 - (UIColor *)fwColorWithAlpha:(CGFloat)alpha
