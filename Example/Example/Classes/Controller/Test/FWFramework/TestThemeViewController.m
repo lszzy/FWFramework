@@ -68,10 +68,10 @@
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
     UIColor *themeColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-    layer.backgroundColor = themeColor.CGColor;
+    layer.backgroundColor = [themeColor fwThemeColor:FWThemeManager.sharedInstance.style].CGColor;
     layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.backgroundColor = themeColor.CGColor;
+        layer.backgroundColor = [themeColor fwThemeColor:style].CGColor;
     }];
     [self.view.layer addSublayer:layer];
     

@@ -139,6 +139,9 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
+/// 指定主题样式获取对应静态颜色
+- (UIColor *)fwThemeColor:(FWThemeStyle)style;
+
 @end
 
 #pragma mark - UIImage+FWTheme
