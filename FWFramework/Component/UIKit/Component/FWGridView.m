@@ -77,6 +77,10 @@
     return size;
 }
 
+- (CGSize)intrinsicContentSize {
+    return [self sizeThatFits:CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX)];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     NSInteger subviewCount = self.subviews.count;

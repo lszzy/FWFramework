@@ -40,6 +40,10 @@ const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
     return [self layoutSubviewsWithSize:size shouldLayout:NO];
 }
 
+- (CGSize)intrinsicContentSize {
+    return [self sizeThatFits:CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX)];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self layoutSubviewsWithSize:self.bounds.size shouldLayout:YES];

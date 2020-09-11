@@ -25,6 +25,7 @@
     self.floatLayoutView.layer.borderWidth = 0.5;
     self.floatLayoutView.layer.borderColor = [UIColor appColorBorder].CGColor;
     [self.view addSubview:self.floatLayoutView];
+    self.floatLayoutView.fwLayoutChain.leftWithInset(24).rightWithInset(24).topWithInset(36);
     
     NSArray<NSString *> *suggestions = @[@"东野圭吾\n多行文本", @"三体", @"爱", @"红楼梦", @"理智与情感\n多行文本", @"读书热榜", @"免费榜"];
     for (NSInteger i = 0; i < suggestions.count; i++) {
@@ -48,12 +49,18 @@
             [self.floatLayoutView addSubview:button];
         }
     }
+    
+    [self.floatLayoutView setNeedsLayout];
+    [self.floatLayoutView layoutIfNeeded];
+    [self.floatLayoutView invalidateIntrinsicContentSize];
 }
 
+/*
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     UIEdgeInsets padding = UIEdgeInsetsMake(36, 24, 36, 24);
     self.floatLayoutView.fwFitFrame = CGRectMake(padding.left, padding.top, CGRectGetWidth(self.view.bounds) - (padding.left + padding.right), INFINITY);
 }
+*/
 
 @end
