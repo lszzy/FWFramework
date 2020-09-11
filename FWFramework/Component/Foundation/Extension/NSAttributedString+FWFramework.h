@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Html
 
-// html字符串转换为NSAttributedString对象
+// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString;
 
 // NSAttributedString对象转换为html字符串
