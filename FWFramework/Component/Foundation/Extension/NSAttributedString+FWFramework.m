@@ -8,6 +8,7 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
+#import "FWThemeManager.h"
 
 @implementation NSAttributedString (FWFramework)
 
@@ -41,6 +42,28 @@
         NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
         NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
     } documentAttributes:nil error:nil];
+}
+
++ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
+{
+    if (!htmlString || htmlString.length < 1) return nil;
+    
+    if (attributes != nil) {
+        NSString *cssString = @"";
+        UIColor *textColor = attributes[NSForegroundColorAttributeName];
+        if (textColor != nil) {
+            cssString = [cssString stringByAppendingFormat:@"color:%@;", textColor.fwHexStringWithAlpha];
+        }
+        UIFont *font = attributes[NSFontAttributeName];
+        if (font != nil) {
+            cssString = [cssString stringByAppendingFormat:@"font-size:%.0f;", font.pointSize];
+        }
+        if (cssString.length > 0) {
+            htmlString = [NSString stringWithFormat:@"<style type='text/css'>body{%@}</style>%@", cssString, htmlString];
+        }
+    }
+    
+    return [self fwAttributedStringWithHtmlString:htmlString];
 }
 
 - (NSString *)fwHtmlString
