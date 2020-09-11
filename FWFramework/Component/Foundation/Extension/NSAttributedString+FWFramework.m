@@ -38,8 +38,8 @@
     if (!htmlData || htmlData.length < 1) return nil;
     
     return [[self alloc] initWithData:htmlData options:@{
-        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-        NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding),
+        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
     } documentAttributes:nil error:nil];
 }
 
