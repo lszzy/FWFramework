@@ -273,10 +273,13 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 @optional
 
-// imageView动画视图类插件方法，默认使用UIImageView
+/// imageView动画视图类插件方法，默认使用UIImageView
 - (Class)fwImageViewAnimatedClass;
 
-// imageView加载网络图片插件方法，默认使用框架网络库
+/// image本地解码插件方法，默认使用框架解码库
+- (nullable UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale;
+
+/// imageView加载网络图片插件方法，默认使用框架网络库
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder

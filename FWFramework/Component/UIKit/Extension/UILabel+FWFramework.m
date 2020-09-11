@@ -51,6 +51,15 @@
             }
             return size;
         }));
+        FWSwizzleClass(UILabel, @selector(sizeThatFits:), FWSwizzleReturn(CGSize), FWSwizzleArgs(CGSize size), FWSwizzleCode({
+            CGSize fitsSize = FWSwizzleOriginal(size);
+            NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
+            if (contentInsetValue) {
+                UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                fitsSize = CGSizeMake(fitsSize.width + contentInset.left + contentInset.right, fitsSize.height + contentInset.top + contentInset.bottom);
+            }
+            return fitsSize;
+        }));
     });
 }
 
