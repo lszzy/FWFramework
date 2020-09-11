@@ -33,8 +33,8 @@ static const FWThemeMode FWThemeModeDark = FWThemeStyleDark;
 extern NSString *const FWThemeChangedNotification;
 
 /*!
- @brief 主题管理器
- @discussion iOS13跟随系统模式时，如果为UIView|UIViewController|UIScreen子类，会自动触发fwThemeChanged回调；否则需要先启用fwThemeSubscribed才会触发fwThemeChanged回调
+ @brief 主题管理器，iOS13+可跟随系统改变
+ @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效(如UILabel等)，需先设置主题上下文fwThemeContext才能生效
  */
 @interface FWThemeManager : NSObject
 
@@ -52,6 +52,25 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 指定traitCollection的主题样式，传nil时为全局样式
 - (FWThemeStyle)style:(nullable UITraitCollection *)traitCollection;
+
+@end
+
+/*!
+ @brief 主题动态对象，可获取当前主题静态对象
+ */
+@interface FWThemeObject<__covariant ObjectType> : NSObject
+
+/// 创建主题动态对象，分别指定浅色和深色
++ (instancetype)objectWithLight:(nullable ObjectType)light dark:(nullable ObjectType)dark;
+
+/// 创建主题动态对象，指定提供句柄
++ (instancetype)objectWithProvider:(ObjectType _Nullable (^)(FWThemeStyle style))provider;
+
+/// 获取当前主题静态对象
+@property (nullable, nonatomic, readonly) ObjectType object;
+
+/// 指定主题样式获取对应静态对象
+- (nullable ObjectType)object:(FWThemeStyle)style;
 
 @end
 
@@ -128,13 +147,13 @@ extern NSString *const FWThemeChangedNotification;
 @interface UIImage (FWTheme)
 
 /// 创建主题模拟动态图像，分别指定浅色和深色，不支持动态切换，需重新赋值才会变化
-+ (nullable UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
++ (UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
 
 /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
-+ (nullable UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
++ (UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
 /// 创建主题模拟动态图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
-+ (nullable UIImage *)fwThemeNamed:(NSString *)name;
++ (UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImage:(nullable UIImage *)image forName:(NSString *)name;
@@ -142,11 +161,8 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
-/// 是否是主题模拟动态图像，不支持动态切换，需重新赋值才会变化
-@property (nonatomic, readonly) BOOL fwIsDynamic;
-
-/// 获取主题模拟动态图像的当前显示静态图像
-@property (nullable, nonatomic, readonly) UIImage *fwStaticImage;
+/// 获取当前主题动态对象，不存在时为nil
+@property (nullable, nonatomic, readonly) FWThemeObject<UIImage *> *fwThemeObject;
 
 @end
 
@@ -190,19 +206,16 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
  */
 @interface NSObject (FWTheme)
 
-/// 是否启用iOS13主题订阅，如果为UIView|UIViewController|UIScreen时始终为YES，否则默认为NO，需订阅后才能响应系统主题
-@property (nonatomic, readonly) BOOL fwThemeEnabled;
-
-/// 订阅主题通知并指定主题上下文(如vc|view)。非UIViewUIViewController|UIScreen子类时，需订阅后才能响应系统主题
+/// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
 @property (nullable, nonatomic, weak) id<UITraitEnvironment> fwThemeContext;
 
-/// 添加iOS13主题改变通知回调，返回订阅唯一标志。非UIViewUIViewController|UIScreen子类时，需订阅后才生效
+/// 添加iOS13主题改变通知回调，返回订阅唯一标志，需订阅后才生效
 - (nullable NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
 
 /// iOS13根据订阅唯一标志移除主题通知回调
 - (void)fwRemoveThemeListener:(nullable NSString *)identifier;
 
-/// iOS13主题改变回调钩子，如果父类有重写，记得调用super。非UIView|UIViewController|UIScreen子类时，需订阅后才生效
+/// iOS13主题改变回调钩子，如果父类有重写，记得调用super，需订阅后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;
 
 @end
