@@ -8,7 +8,7 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
-#import "FWThemeManager.h"
+#import "UIColor+FWFramework.h"
 
 @implementation NSAttributedString (FWFramework)
 
@@ -52,7 +52,7 @@
         NSString *cssString = @"";
         UIColor *textColor = attributes[NSForegroundColorAttributeName];
         if (textColor != nil) {
-            cssString = [cssString stringByAppendingFormat:@"color:%@;", textColor.fwHexStringWithAlpha];
+            cssString = [cssString stringByAppendingFormat:@"color:%@;", textColor.fwCSSString];
         }
         UIFont *font = attributes[NSFontAttributeName];
         if (font != nil) {

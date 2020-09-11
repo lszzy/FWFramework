@@ -348,6 +348,15 @@ static BOOL fwStaticColorARGB = NO;
     [fwStaticNameColors addEntriesFromDictionary:nameColors];
 }
 
+- (UIColor *)fwThemeColor:(FWThemeStyle)style
+{
+    if (@available(iOS 13, *)) {
+        UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
+        return [self resolvedColorWithTraitCollection:traitCollection];
+    }
+    return self;
+}
+
 @end
 
 #pragma mark - UIImage+FWTheme

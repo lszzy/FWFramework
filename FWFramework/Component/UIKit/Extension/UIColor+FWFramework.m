@@ -113,6 +113,22 @@
     return [self colorWithAlphaComponent:alpha];
 }
 
+- (NSString *)fwCSSString
+{
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
+    if (a >= 1.0) {
+        return [NSString stringWithFormat:@"rgb(%u, %u, %u)",
+                (unsigned)round(r * 255), (unsigned)round(g * 255), (unsigned)round(b * 255)];
+    } else {
+        return [NSString stringWithFormat:@"rgba(%u, %u, %u, %g)",
+                (unsigned)round(r * 255), (unsigned)round(g * 255), (unsigned)round(b * 255), a];
+    }
+}
+
 #pragma mark - Gradient
 
 + (UIColor *)fwGradientColorWithSize:(CGSize)size
