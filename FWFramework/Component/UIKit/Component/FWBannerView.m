@@ -104,7 +104,7 @@
     [self.collectionView setContentOffset:proposedContentOffset animated:shouldAnimate];
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context
 {

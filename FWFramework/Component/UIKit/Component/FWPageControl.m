@@ -340,7 +340,7 @@
     return self;
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)setupView
 {
@@ -393,7 +393,7 @@
     self.layer.borderColor = currentDotColor.CGColor;
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)setupView
 {

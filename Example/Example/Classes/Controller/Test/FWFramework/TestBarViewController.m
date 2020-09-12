@@ -162,7 +162,7 @@ FWPropertyAssign(BOOL, hideToast);
     }
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (BOOL)prefersStatusBarHidden
 {
