@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWAppDelegate : UIResponder <UIApplicationDelegate>
 
 /// 应用主window
-@property (nonatomic, strong) UIWindow *window;
+@property (nullable, nonatomic, strong) UIWindow *window;
 
 #pragma mark - Protected
 
