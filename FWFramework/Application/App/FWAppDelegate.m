@@ -88,10 +88,9 @@
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-        if (userActivity.webpageURL != nil) {
-            return [self handleUserActivity:userActivity];
-        }
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
+        userActivity.webpageURL != nil) {
+        return [self handleUserActivity:userActivity];
     }
     return NO;
 }

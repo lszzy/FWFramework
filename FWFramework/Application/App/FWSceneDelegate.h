@@ -18,7 +18,7 @@ API_AVAILABLE(ios(13.0))
 @interface FWSceneDelegate : UIResponder <UIWindowSceneDelegate>
 
 /// 场景主window
-@property (strong, nonatomic) UIWindow * window;
+@property (nullable, nonatomic, strong) UIWindow * window;
 
 /// 初始化根控制器，子类重写
 - (void)setupController;
