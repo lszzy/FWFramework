@@ -448,11 +448,11 @@ UIImage * FWImageFile(NSString *path) {
             }
             break;
         case FWImageFormatWebP:
-        #if __IPHONE_14_0
+#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 isAnimated = YES;
             }
-        #endif
+#endif
             break;
         default:
             break;
@@ -489,11 +489,11 @@ UIImage * FWImageFile(NSString *path) {
                 return @"{HEICS}";
             }
         case FWImageFormatWebP:
-        #if __IPHONE_14_0
+#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDictionary;
             }
-        #endif
+#endif
             return @"{WebP}";
         default:
             return nil;
@@ -515,11 +515,11 @@ UIImage * FWImageFile(NSString *path) {
                 return @"UnclampedDelayTime";
             }
         case FWImageFormatWebP:
-        #if __IPHONE_14_0
+#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPUnclampedDelayTime;
             }
-        #endif
+#endif
             return @"UnclampedDelayTime";
         default:
             return nil;
@@ -541,11 +541,11 @@ UIImage * FWImageFile(NSString *path) {
                 return @"DelayTime";
             }
         case FWImageFormatWebP:
-        #if __IPHONE_14_0
+#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDelayTime;
             }
-        #endif
+#endif
             return @"DelayTime";
         default:
             return nil;
@@ -567,11 +567,11 @@ UIImage * FWImageFile(NSString *path) {
                 return @"LoopCount";
             }
         case FWImageFormatWebP:
-        #if __IPHONE_14_0
+#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPLoopCount;
             }
-        #endif
+#endif
             return @"LoopCount";
         default:
             return nil;
