@@ -8,6 +8,7 @@
  */
 
 #import "FWDeviceManager.h"
+#import "FWRouter.h"
 
 #pragma mark - UIApplication+FWToolkit
 
@@ -168,12 +169,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (@available(iOS 11.0, *)) {
-            UIApplication *application = [UIApplication sharedApplication];
-            if ([application.delegate respondsToSelector:@selector(window)]) {
-                safeAreaInsets = [application.delegate window].safeAreaInsets;
-            } else {
-                safeAreaInsets = [application keyWindow].safeAreaInsets;
-            }
+            safeAreaInsets = UIWindow.fwMainWindow.safeAreaInsets;
         } else {
             safeAreaInsets = UIEdgeInsetsZero;
         }
