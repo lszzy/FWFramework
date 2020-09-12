@@ -570,7 +570,7 @@
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)presentationTransitionWillBegin
 {

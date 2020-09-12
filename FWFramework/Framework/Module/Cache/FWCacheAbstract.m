@@ -79,7 +79,7 @@
     return [key stringByAppendingString:@".__EXPIRE__"];
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (id)innerObjectForKey:(NSString *)key
 {

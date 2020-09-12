@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWCacheAbstract : NSObject <FWCacheProtocol>
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 // 读取某个缓存，内部方法，子类重写
 - (nullable id)innerObjectForKey:(NSString *)key;

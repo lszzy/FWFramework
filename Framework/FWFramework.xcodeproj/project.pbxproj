@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2F2FCC5F2507E033006504B2 /* FWThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2FCC5E2507E033006504B2 /* FWThemeManager.swift */; };
+		2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F63D40D250CBB6000BA83A6 /* FWSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BAC2507BF95000332A3 /* FWFramework+Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BAD2507BF95000332A3 /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B322507BF95000332A3 /* FWDatabase.m */; };
@@ -335,6 +337,8 @@
 
 /* Begin PBXFileReference section */
 		2F2FCC5E2507E033006504B2 /* FWThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWThemeManager.swift; sourceTree = "<group>"; };
+		2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSceneDelegate.h; sourceTree = "<group>"; };
+		2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSceneDelegate.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 		2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Framework.h"; sourceTree = "<group>"; };
@@ -911,6 +915,8 @@
 			children = (
 				2FFE1C222507BFA5000332A3 /* FWAppDelegate.h */,
 				2FFE1C232507BFA5000332A3 /* FWAppDelegate.m */,
+				2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */,
+				2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1195,6 +1201,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */,
 				2FFE1D722507BFBD000332A3 /* WKWebView+FWFramework.h in Headers */,
 				2FFE1D5B2507BFBD000332A3 /* UIControl+FWFramework.h in Headers */,
 				2FFE1BF32507BF95000332A3 /* FWNotificationManager.h in Headers */,
@@ -1595,6 +1602,7 @@
 				2FFE1BEF2507BF95000332A3 /* FWImageManager.m in Sources */,
 				2FFE1BBE2507BF95000332A3 /* FWCacheManager.m in Sources */,
 				2FFE1D732507BFBD000332A3 /* UIView+FWFrame.m in Sources */,
+				2F63D40D250CBB6000BA83A6 /* FWSceneDelegate.m in Sources */,
 				2FFE1D842507BFBD000332A3 /* FWAlertController.m in Sources */,
 				2FFE1D5E2507BFBD000332A3 /* UIViewController+FWFramework.m in Sources */,
 				2FFE1DB12507BFBD000332A3 /* NSTimer+FWFramework.m in Sources */,

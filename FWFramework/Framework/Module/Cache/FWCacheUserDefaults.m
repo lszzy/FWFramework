@@ -52,7 +52,7 @@
     return [NSString stringWithFormat:@"FWCache.%@", key];
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (id)innerObjectForKey:(NSString *)key
 {

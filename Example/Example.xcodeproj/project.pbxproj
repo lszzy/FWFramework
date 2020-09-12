@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */; };
+		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
+		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
 		2F6DD055250877E300EE2446 /* Landmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DE5AD24F65C0C00DCC13E /* Landmark.swift */; };
 		2F6DD056250877E300EE2446 /* LandmarkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DE5B124F65F1F00DCC13E /* LandmarkData.swift */; };
 		2F6DD057250877E300EE2446 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8E45E724F75DBE00BDF302 /* UserData.swift */; };
@@ -167,6 +169,10 @@
 		2F0DE5AF24F65E8A00DCC13E /* LandmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkRow.swift; sourceTree = "<group>"; };
 		2F0DE5B124F65F1F00DCC13E /* LandmarkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkData.swift; sourceTree = "<group>"; };
 		2F0DE5B524F664E900DCC13E /* LandmarkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkList.swift; sourceTree = "<group>"; };
+		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
+		2F63D408250C73D400BA83A6 /* TabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		2F6E684324FF987D00079E53 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		2F6E684524FF9A6800079E53 /* ControllerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerPage.swift; sourceTree = "<group>"; };
 		2F6E684724FF9ACE00079E53 /* UIKitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitController.swift; sourceTree = "<group>"; };
@@ -755,6 +761,8 @@
 		2FF8D92424C88A6F006A83B5 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				2F63D407250C73D400BA83A6 /* TabBarController.h */,
+				2F63D408250C73D400BA83A6 /* TabBarController.m */,
 				2FF8D92924C88A6F006A83B5 /* BaseCollectionViewController.h */,
 				2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */,
 				2FF8D92824C88A6F006A83B5 /* BaseScrollViewController.h */,
@@ -807,6 +815,8 @@
 			children = (
 				2FF8D93824C88A6F006A83B5 /* AppDelegate.h */,
 				2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */,
+				2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */,
+				2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */,
 				2FF8D93924C88A6F006A83B5 /* Config */,
 				2FF8D94024C88A6F006A83B5 /* Router */,
 				2FF8D93C24C88A6F006A83B5 /* Standard */,
@@ -1108,6 +1118,7 @@
 				2F6DD062250877EF00EE2446 /* GraphCapsule.swift in Sources */,
 				2FF8D96A24C88A70006A83B5 /* TestBannerViewController.m in Sources */,
 				2FF8D96324C88A70006A83B5 /* TestFacesViewController.m in Sources */,
+				2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */,
 				2F938E522500D60D009395FB /* TestGridViewController.m in Sources */,
 				2FF8D96724C88A70006A83B5 /* TestChainViewController.m in Sources */,
 				2F6DD05D250877EF00EE2446 /* CircleView.swift in Sources */,
@@ -1124,6 +1135,7 @@
 				2FF8D94724C88A6F006A83B5 /* TestStateViewController.m in Sources */,
 				2F6DD060250877EF00EE2446 /* RotatedBadgeSymbol.swift in Sources */,
 				2F6DD05F250877EF00EE2446 /* BadgeSymbol.swift in Sources */,
+				2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */,
 				2FF8D98724C88A70006A83B5 /* BaseScrollViewController.m in Sources */,
 				2FF8D97B24C88A70006A83B5 /* TestThreadViewController.m in Sources */,
 				2F6DD06C2508780A00EE2446 /* LandmarkRow.swift in Sources */,

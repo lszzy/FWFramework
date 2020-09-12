@@ -66,7 +66,7 @@
     return [self.path stringByAppendingPathComponent:fileName];
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (id)innerObjectForKey:(NSString *)key
 {

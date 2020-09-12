@@ -311,7 +311,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     });
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)renderView
 {
