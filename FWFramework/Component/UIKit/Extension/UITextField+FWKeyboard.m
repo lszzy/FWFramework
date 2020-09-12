@@ -171,16 +171,26 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     
     if (!fwStaticKeyboardShowing) {
         fwStaticKeyboardShowing = YES;
-        fwStaticKeyboardOrigin = self.viewController.view.fwY;
+        fwStaticKeyboardOrigin = self.viewController.view.frame.origin.y;
     }
     
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     UIView *convertView = self.textInput.window ?: self.viewController.view.window;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
-    CGFloat viewTargetY = MIN(self.viewController.view.fwY + CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
+    CGFloat viewTargetY = MIN(self.viewController.view.frame.origin.y + CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
+    
+    CGRect viewFrame = self.viewController.view.frame;
+    viewFrame.origin.y = viewTargetY;
     [UIView animateWithDuration:animationDuration animations:^{
-        self.viewController.view.fwY = viewTargetY;
+#if __IPHONE_14_0
+        // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+        if (@available(iOS 14.0, *)) {
+            self.viewController.view.layer.frame = viewFrame;
+            return;
+        }
+#endif
+        self.viewController.view.frame = viewFrame;
     }];
 }
 
@@ -194,8 +204,18 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     fwStaticKeyboardOrigin = 0;
     
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    CGRect viewFrame = self.viewController.view.frame;
+    viewFrame.origin.y = viewOriginY;
     [UIView animateWithDuration:animationDuration animations:^{
-        self.viewController.view.fwY = viewOriginY;
+#if __IPHONE_14_0
+        // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+        if (@available(iOS 14.0, *)) {
+            self.viewController.view.layer.frame = viewFrame;
+            return;
+        }
+#endif
+        self.viewController.view.frame = viewFrame;
     }];
 }
 
