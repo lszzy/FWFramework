@@ -10,6 +10,7 @@
 #import "FWPhotoBrowser.h"
 #import "FWImageManager.h"
 #import "FWProgressView.h"
+#import "FWRouter.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
 
@@ -99,12 +100,12 @@
     _fromView = fromView;
     [self setPageText:_currentPage];
     // 添加到 window 上
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = UIWindow.fwMainWindow;
     // 隐藏状态栏
     if (self.statusBarHidden) {
         window.windowLevel = UIWindowLevelStatusBar + 10.f;
     }
-    [[UIApplication sharedApplication].keyWindow addSubview:self];
+    [window addSubview:self];
     // 计算 scrollView 的 contentSize
     self.scrollView.contentSize = CGSizeMake(_picturesCount * _scrollView.frame.size.width, _scrollView.frame.size.height);
     // 滚动到指定位置
@@ -165,7 +166,7 @@
     
     // 显示状态栏
     if (self.statusBarHidden) {
-        [UIApplication sharedApplication].keyWindow.windowLevel = UIWindowLevelNormal;
+        UIWindow.fwMainWindow.windowLevel = UIWindowLevelNormal;
     }
     
     // 执行关闭动画
