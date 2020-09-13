@@ -10,10 +10,14 @@ import UIKit
 import SwiftUI
 import CoreLocation
 
+@available(iOS 13.0, *)
 let landmarkData: [Landmark] = load("landmarkData.json")
+@available(iOS 13.0, *)
 let features = landmarkData.filter { $0.isFeatured }
+@available(iOS 13.0, *)
 let hikeData: [Hike] = load("hikeData.json")
 
+@available(iOS 13.0, *)
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
     
@@ -35,6 +39,7 @@ func load<T: Decodable>(_ filename: String) -> T {
     }
 }
 
+@available(iOS 13.0, *)
 final class ImageStore {
     typealias _ImageDictionary = [String: CGImage]
     fileprivate var images: _ImageDictionary = [:]

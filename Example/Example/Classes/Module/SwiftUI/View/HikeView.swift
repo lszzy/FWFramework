@@ -7,6 +7,7 @@ A view displaying information about a hike, including an elevation graph.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct HikeView: View {
     var hike: Hike
     @State private var showDetail = false
@@ -55,6 +56,7 @@ struct HikeView: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct HikeView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

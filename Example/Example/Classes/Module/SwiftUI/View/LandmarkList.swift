@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct LandmarkList: View {
     // @State var showFavoritesOnly = false
     @EnvironmentObject var userData: UserData
@@ -31,6 +32,7 @@ struct LandmarkList: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct LandmarkList_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

@@ -9,6 +9,7 @@
 import SwiftUI
 import UIKit
 
+@available(iOS 13.0, *)
 struct PageControl: UIViewRepresentable {
     typealias UIViewType = UIPageControl
     

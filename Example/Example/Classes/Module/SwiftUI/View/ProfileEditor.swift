@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct ProfileEditor: View {
     @Binding var profile: Profile
     
@@ -53,6 +54,7 @@ struct ProfileEditor: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct ProfileEditor_Previews: PreviewProvider {
     static var previews: some View {
         ProfileEditor(profile: .constant(.default))

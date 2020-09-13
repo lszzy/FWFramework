@@ -7,6 +7,7 @@ A single line in the graph.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct GraphCapsule: View {
     var index: Int
     var height: CGFloat
@@ -29,6 +30,7 @@ struct GraphCapsule: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct GraphCapsule_Previews: PreviewProvider {
     static var previews: some View {
         GraphCapsule(index: 0, height: 150, range: 10..<50, overallRange: 0..<100)
