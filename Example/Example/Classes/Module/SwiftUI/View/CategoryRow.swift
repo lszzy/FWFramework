@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct CategoryRow: View {
     var categoryName: String
     var items: [Landmark]
@@ -36,6 +37,7 @@ struct CategoryRow: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct CategoryItem: View {
     var landmark: Landmark
     var body: some View {
@@ -53,6 +55,7 @@ struct CategoryItem: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct CategoryRow_Previews: PreviewProvider {
     static var previews: some View {
         CategoryRow(

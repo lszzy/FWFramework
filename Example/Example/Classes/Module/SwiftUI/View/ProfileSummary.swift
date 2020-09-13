@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct ProfileSummary: View {
     var profile: Profile
     
@@ -54,6 +55,7 @@ struct ProfileSummary: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct ProfileSummary_Previews: PreviewProvider {
     static var previews: some View {
         ProfileSummary(profile: Profile.default)

@@ -7,6 +7,7 @@ A view that displays a rotated version of a badge symbol.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct RotatedBadgeSymbol: View {
     let angle: Angle
     
@@ -17,6 +18,7 @@ struct RotatedBadgeSymbol: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct RotatedBadgeSymbol_Previews: PreviewProvider {
     static var previews: some View {
         RotatedBadgeSymbol(angle: .init(degrees: 5))

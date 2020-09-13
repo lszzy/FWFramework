@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct HikeBadge: View {
     var name: String
     var body: some View {
@@ -23,6 +24,7 @@ struct HikeBadge: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct HikeBadge_Previews: PreviewProvider {
     static var previews: some View {
         HikeBadge(name: "Preview Testing")

@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 
+@available(iOS 13.0, *)
 final class UserData: ObservableObject {
     @Published var showFavoritesOnly = false
     @Published var landmarks = landmarkData

@@ -7,6 +7,7 @@ A view that display a symbol in a badge.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct BadgeSymbol: View {
     static let symbolColor = Color(red: 79.0 / 255, green: 79.0 / 255, blue: 191.0 / 255)
 
@@ -42,6 +43,7 @@ struct BadgeSymbol: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct BadgeSymbol_Previews: PreviewProvider {
     static var previews: some View {
         BadgeSymbol()
