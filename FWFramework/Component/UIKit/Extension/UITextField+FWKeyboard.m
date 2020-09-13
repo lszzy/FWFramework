@@ -183,14 +183,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     CGRect viewFrame = self.viewController.view.frame;
     viewFrame.origin.y = viewTargetY;
     [UIView animateWithDuration:animationDuration animations:^{
-#if __IPHONE_14_0
         // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
         if (@available(iOS 14.0, *)) {
             self.viewController.view.layer.frame = viewFrame;
-            return;
+        } else {
+            self.viewController.view.frame = viewFrame;
         }
-#endif
-        self.viewController.view.frame = viewFrame;
     }];
 }
 
@@ -208,14 +206,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     CGRect viewFrame = self.viewController.view.frame;
     viewFrame.origin.y = viewOriginY;
     [UIView animateWithDuration:animationDuration animations:^{
-#if __IPHONE_14_0
         // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
         if (@available(iOS 14.0, *)) {
             self.viewController.view.layer.frame = viewFrame;
-            return;
+        } else {
+            self.viewController.view.frame = viewFrame;
         }
-#endif
-        self.viewController.view.frame = viewFrame;
     }];
 }
 
