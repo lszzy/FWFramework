@@ -448,11 +448,9 @@ UIImage * FWImageFile(NSString *path) {
             }
             break;
         case FWImageFormatWebP:
-#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 isAnimated = YES;
             }
-#endif
             break;
         default:
             break;
