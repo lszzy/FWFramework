@@ -126,7 +126,7 @@
     UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [UIImage imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [UIImage imageNamed:@"theme_image_dark"])];
     [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
     FWThemeObject<NSAttributedString *> *themeString = [FWThemeObject objectWithLight:[NSAttributedString fwAttributedStringWithHtmlString:@"<span style='color:red;'>浅色</span>模式" defaultAttributes:@{
-        NSFontAttributeName: FWFontRegular(16),
+        NSFontAttributeName: FWFontBold(16).fwItalicFont,
         NSForegroundColorAttributeName: [UIColor colorWithWhite:0 alpha:0.5],
     }] dark:[NSAttributedString fwAttributedStringWithHtmlString:@"<span style='color:yellow;'>深色</span>模式" defaultAttributes:@{
         NSFontAttributeName: FWFontRegular(16),
