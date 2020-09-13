@@ -9,6 +9,7 @@
 
 #import "NSAttributedString+FWFramework.h"
 #import "UIColor+FWFramework.h"
+#import "UIFont+FWFramework.h"
 
 @implementation NSAttributedString (FWFramework)
 
@@ -56,7 +57,7 @@
         }
         UIFont *font = attributes[NSFontAttributeName];
         if (font != nil) {
-            cssString = [cssString stringByAppendingFormat:@"font-size:%.0f;", font.pointSize];
+            cssString = [cssString stringByAppendingString:font.fwCSSString];
         }
         if (cssString.length > 0) {
             htmlString = [NSString stringWithFormat:@"<style type='text/css'>body{%@}</style>%@", cssString, htmlString];

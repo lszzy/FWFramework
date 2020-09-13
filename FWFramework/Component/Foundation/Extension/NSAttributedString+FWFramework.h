@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString;
 
-/// html字符串转换为NSAttributedString对象，可设置默认字体颜色和字号(附加CSS方式)
+/// html字符串转换为NSAttributedString对象，可设置默认字体和颜色(附加CSS方式)
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 /// NSAttributedString对象转换为html字符串
