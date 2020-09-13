@@ -130,7 +130,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 动态创建主题色，指定提供句柄
 + (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle style))provider;
 
-/// 动态创建主题色，指定名称，兼容iOS11+系统方式和手工指定。失败时返回clear防止崩溃
+/// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
 + (UIColor *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
@@ -158,7 +158,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
 + (UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
-/// 创建主题模拟动态图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
+/// 创建主题模拟动态图像，指定名称，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
 + (UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式

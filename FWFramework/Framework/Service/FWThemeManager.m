@@ -327,8 +327,10 @@ static BOOL fwStaticColorARGB = NO;
             color = [[UIColor colorNamed:name] resolvedColorWithTraitCollection:traitCollection];
         }
         if (!color) {
-            if (@available(iOS 11.0, *)) { color = [UIColor colorNamed:name]; }
-            if (!color) { color = fwStaticNameColors[name]; }
+            color = fwStaticNameColors[name];
+            if (!color) {
+                if (@available(iOS 11.0, *)) { color = [UIColor colorNamed:name]; }
+            }
         }
         return color ?: UIColor.clearColor;
     }];
@@ -386,8 +388,8 @@ static BOOL fwStaticColorARGB = NO;
             image = [[UIImage imageNamed:name] imageWithConfiguration:traitCollection.imageConfiguration];
         }
         if (!image) {
-            image = [UIImage imageNamed:name];
-            if (!image) image = fwStaticNameImages[name];
+            image = fwStaticNameImages[name];
+            if (!image) image = [UIImage imageNamed:name];
         }
         return image;
     }];

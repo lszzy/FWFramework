@@ -27,6 +27,12 @@
     [self fwObserveNotification:FWThemeChangedNotification block:^(NSNotification * _Nonnull notification) {
         NSLog(@"主题改变通知：%@", @(FWThemeManager.sharedInstance.style));
     }];
+    
+    // iOS13以下named方式不支持动态颜色和图像，可手工注册之
+    if (@available(iOS 13.0, *)) { } else {
+        [UIColor fwSetThemeColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forName:@"theme_color"];
+        [UIImage fwSetThemeImage:[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]] forName:@"theme_image"];
+    }
 }
 
 - (void)renderView
