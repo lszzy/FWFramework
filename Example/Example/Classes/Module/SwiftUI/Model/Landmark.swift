@@ -9,6 +9,7 @@
 import SwiftUI
 import CoreLocation
 
+@available(iOS 13.0, *)
 struct Landmark: Hashable, Codable, Identifiable {
     var id: Int
     var name: String
@@ -41,12 +42,14 @@ struct Landmark: Hashable, Codable, Identifiable {
     }
 }
 
+@available(iOS 13.0, *)
 extension Landmark {
     var image: Image {
         ImageStore.shared.image(name: id % 2 == 0 ? "progressive.jpg" : "theme_image")
     }
 }
 
+@available(iOS 13.0, *)
 struct Coordinates: Hashable, Codable {
     var latitude: Double
     var longitude: Double

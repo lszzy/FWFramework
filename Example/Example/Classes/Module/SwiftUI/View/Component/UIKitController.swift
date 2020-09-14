@@ -9,6 +9,7 @@
 import UIKit
 import SwiftUI
 
+@available(iOS 13.0, *)
 class UIKitController: UIViewController {
     
     override func viewDidLoad() {

@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct CircleView: View {
     var image: Image
     
@@ -21,6 +22,7 @@ struct CircleView: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct CircleImage_Previews: PreviewProvider {
     static var previews: some View {
         CircleView(image: Image("theme_image"))

@@ -27,6 +27,12 @@
     [self fwObserveNotification:FWThemeChangedNotification block:^(NSNotification * _Nonnull notification) {
         NSLog(@"主题改变通知：%@", @(FWThemeManager.sharedInstance.style));
     }];
+    
+    // iOS13以下named方式不支持动态颜色和图像，可手工注册之
+    if (@available(iOS 13.0, *)) { } else {
+        [UIColor fwSetThemeColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forName:@"theme_color"];
+        [UIImage fwSetThemeImage:[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]] forName:@"theme_image"];
+    }
 }
 
 - (void)renderView
@@ -68,10 +74,10 @@
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
     UIColor *themeColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-    layer.backgroundColor = themeColor.CGColor;
+    layer.backgroundColor = [themeColor fwThemeColor:FWThemeManager.sharedInstance.style].CGColor;
     layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.backgroundColor = themeColor.CGColor;
+        layer.backgroundColor = [themeColor fwThemeColor:style].CGColor;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -119,10 +125,16 @@
     [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
     UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [UIImage imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [UIImage imageNamed:@"theme_image_dark"])];
     [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
-    FWThemeObject *themeString = [FWThemeObject objectWithLight:@"浅色" dark:@"深色"];
-    [themeButton setTitle:themeString.object forState:UIControlStateNormal];
+    FWThemeObject<NSAttributedString *> *themeString = [FWThemeObject objectWithLight:[NSAttributedString fwAttributedStringWithHtmlString:@"<span style='color:red;'>浅色</span>模式" defaultAttributes:@{
+        NSFontAttributeName: FWFontBold(16).fwItalicFont,
+        NSForegroundColorAttributeName: [UIColor colorWithWhite:0 alpha:0.5],
+    }] dark:[NSAttributedString fwAttributedStringWithHtmlString:@"<span style='color:yellow;'>深色</span>模式" defaultAttributes:@{
+        NSFontAttributeName: FWFontRegular(16),
+        NSForegroundColorAttributeName: [UIColor whiteColor],
+    }]];
+    [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     [self fwAddThemeListener:^(FWThemeStyle style) {
-        [themeButton setTitle:themeString.object forState:UIControlStateNormal];
+        [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
         [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
     }];
     [self.view addSubview:themeButton];
@@ -141,7 +153,7 @@
             
             FWThemeManager.sharedInstance.mode = index;
             [self renderModel];
-            [(FWAppDelegate *)UIApplication.sharedApplication.delegate setupController];
+            [AppRouter refreshController];
         }];
     }];
 }

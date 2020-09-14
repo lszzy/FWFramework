@@ -293,6 +293,9 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 // 获取当前主window
 + (nullable UIWindow *)fwMainWindow;
 
+// 获取当前主场景
++ (nullable UIWindowScene *)fwMainScene API_AVAILABLE(ios(13.0));
+
 // 获取最顶部的视图控制器
 - (nullable UIViewController *)fwTopViewController;
 

@@ -153,4 +153,15 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     [FWRouter addRewriteRule:@"(?:https://)?www.baidu.com/wildcard2/(.*)" targetRule:@"wildcard://$#1"];
 }
 
++ (void)refreshController
+{
+    if (@available(iOS 13.0, *)) {
+        FWSceneDelegate *sceneDelegete = (FWSceneDelegate *)UIWindow.fwMainScene.delegate;
+        [sceneDelegete setupController];
+    } else {
+        FWAppDelegate *appDelegate = (FWAppDelegate *)UIApplication.sharedApplication.delegate;
+        [appDelegate setupController];
+    }
+}
+
 @end

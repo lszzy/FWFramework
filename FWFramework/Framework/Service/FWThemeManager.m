@@ -258,26 +258,41 @@ static BOOL fwStaticColorARGB = NO;
 - (long)fwHexValue
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;
-    [self getRed:&r green:&g blue:&b alpha:&a];
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
     int8_t red = r * 255;
     uint8_t green = g * 255;
     uint8_t blue = b * 255;
     return (red << 16) + (green << 8) + blue;
 }
 
+- (CGFloat)fwAlphaValue
+{
+    return CGColorGetAlpha(self.CGColor);
+}
+
 - (NSString *)fwHexString
 {
-    const CGFloat *components = CGColorGetComponents(self.CGColor);
-    CGFloat r = components[0], g = components[1], b = components[2];
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
     return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
 }
 
 - (NSString *)fwHexStringWithAlpha
 {
-    const CGFloat *components = CGColorGetComponents(self.CGColor);
-    CGFloat r = components[0], g = components[1], b = components[2];
-    CGFloat a = CGColorGetAlpha(self.CGColor);
-    if (fwStaticColorARGB) {
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
+    if (a >= 1.0) {
+        return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
+    } else if (fwStaticColorARGB) {
         return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
     } else {
         return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255), lround(a * 255)];
@@ -312,8 +327,10 @@ static BOOL fwStaticColorARGB = NO;
             color = [[UIColor colorNamed:name] resolvedColorWithTraitCollection:traitCollection];
         }
         if (!color) {
-            if (@available(iOS 11.0, *)) { color = [UIColor colorNamed:name]; }
-            if (!color) { color = fwStaticNameColors[name]; }
+            color = fwStaticNameColors[name];
+            if (!color) {
+                if (@available(iOS 11.0, *)) { color = [UIColor colorNamed:name]; }
+            }
         }
         return color ?: UIColor.clearColor;
     }];
@@ -331,6 +348,15 @@ static BOOL fwStaticColorARGB = NO;
 + (void)fwSetThemeColors:(NSDictionary<NSString *,UIColor *> *)nameColors
 {
     [fwStaticNameColors addEntriesFromDictionary:nameColors];
+}
+
+- (UIColor *)fwThemeColor:(FWThemeStyle)style
+{
+    if (@available(iOS 13, *)) {
+        UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
+        return [self resolvedColorWithTraitCollection:traitCollection];
+    }
+    return self;
 }
 
 @end
@@ -362,8 +388,8 @@ static BOOL fwStaticColorARGB = NO;
             image = [[UIImage imageNamed:name] imageWithConfiguration:traitCollection.imageConfiguration];
         }
         if (!image) {
-            image = [UIImage imageNamed:name];
-            if (!image) image = fwStaticNameImages[name];
+            image = fwStaticNameImages[name];
+            if (!image) image = [UIImage imageNamed:name];
         }
         return image;
     }];
@@ -554,6 +580,14 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
         if (!identifier) return;
         NSMutableDictionary *listeners = [self fwInnerThemeListeners:NO];
         [listeners removeObjectForKey:identifier];
+    }
+}
+
+- (void)fwRemoveAllThemeListeners
+{
+    if (@available(iOS 13, *)) {
+        NSMutableDictionary *listeners = [self fwInnerThemeListeners:NO];
+        [listeners removeAllObjects];
     }
 }
 

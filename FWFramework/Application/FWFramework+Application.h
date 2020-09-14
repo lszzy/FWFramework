@@ -10,6 +10,7 @@
 #define FWFramework_Application_h
 
 #import "FWAppDelegate.h"
+#import "FWSceneDelegate.h"
 
 #import "FWViewController.h"
 #import "FWCollectionViewController.h"

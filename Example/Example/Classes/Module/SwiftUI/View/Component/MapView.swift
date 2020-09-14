@@ -9,6 +9,7 @@
 import SwiftUI
 import MapKit
 
+@available(iOS 13.0, *)
 struct MapView: UIViewRepresentable {
     typealias UIViewType = MKMapView
     
@@ -25,6 +26,7 @@ struct MapView: UIViewRepresentable {
     }
 }
 
+@available(iOS 13.0, *)
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
         MapView(coordinate: landmarkData[0].locationCoordinate)

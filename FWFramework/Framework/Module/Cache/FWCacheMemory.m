@@ -35,7 +35,7 @@
     return self;
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (id)innerObjectForKey:(NSString *)key
 {

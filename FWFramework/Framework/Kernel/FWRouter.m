@@ -685,12 +685,24 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 
 + (UIWindow *)fwMainWindow
 {
-    UIApplication *application = [UIApplication sharedApplication];
-    if ([application.delegate respondsToSelector:@selector(window)]) {
-        return [application.delegate window];
-    } else {
-        return [application keyWindow];
+    UIWindow *window = UIApplication.sharedApplication.keyWindow;
+    if (window) return window;
+    
+    for (UIWindow *window in UIApplication.sharedApplication.windows) {
+        if (window.isKeyWindow) return window;
     }
+    return nil;
+}
+
++ (UIWindowScene *)fwMainScene
+{
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if (scene.activationState == UISceneActivationStateForegroundActive &&
+            [scene isKindOfClass:[UIWindowScene class]]) {
+            return (UIWindowScene *)scene;
+        }
+    }
+    return nil;
 }
 
 - (UIViewController *)fwTopViewController

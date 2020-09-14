@@ -7,6 +7,7 @@ A view that shows a featured landmark.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct FeatureCard: View {
     var landmark: Landmark
     
@@ -18,6 +19,7 @@ struct FeatureCard: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct TextOverlay: View {
     var landmark: Landmark
     
@@ -44,6 +46,7 @@ struct TextOverlay: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct FeatureCard_Previews: PreviewProvider {
     static var previews: some View {
         FeatureCard(landmark: features[0])

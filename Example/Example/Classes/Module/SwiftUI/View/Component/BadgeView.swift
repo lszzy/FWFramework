@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct BadgeView: View {
     static let rotationCount = 8
     var badgeSymbols: some View {
@@ -31,6 +32,7 @@ struct BadgeView: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct BadgeView_Previews: PreviewProvider {
     static var previews: some View {
         BadgeView()

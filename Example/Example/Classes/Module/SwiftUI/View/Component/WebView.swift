@@ -9,6 +9,7 @@
 import SwiftUI
 import WebKit
 
+@available(iOS 13.0, *)
 struct WebView: UIViewRepresentable {
     typealias UIViewType = WKWebView
     
@@ -22,6 +23,7 @@ struct WebView: UIViewRepresentable {
     }
 }
 
+@available(iOS 13.0, *)
 struct WebView_Previews: PreviewProvider {
     static var previews: some View {
         WebView()

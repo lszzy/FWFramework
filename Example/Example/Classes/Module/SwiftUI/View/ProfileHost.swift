@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct ProfileHost: View {
     @Environment(\.editMode) var mode
     @EnvironmentObject var userData: UserData
@@ -43,6 +44,7 @@ struct ProfileHost: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct ProfileHost_Previews: PreviewProvider {
     static var previews: some View {
         ProfileHost()

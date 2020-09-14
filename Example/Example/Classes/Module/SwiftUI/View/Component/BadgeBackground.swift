@@ -7,6 +7,7 @@ A view that displays the background of a badge.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct HexagonParameters {
     struct Segment {
         let useWidth: (CGFloat, CGFloat, CGFloat)
@@ -56,6 +57,7 @@ struct HexagonParameters {
     ]
 }
 
+@available(iOS 13.0, *)
 struct BadgeBackground: View {
     var body: some View {
         GeometryReader { geometry in
@@ -104,6 +106,7 @@ struct BadgeBackground: View {
     static let gradientEnd = Color(red: 239.0 / 255, green: 172.0 / 255, blue: 120.0 / 255)
 }
 
+@available(iOS 13.0, *)
 struct BadgeBackground_Previews: PreviewProvider {
     static var previews: some View {
         BadgeBackground()

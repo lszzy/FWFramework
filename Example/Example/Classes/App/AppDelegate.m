@@ -7,15 +7,25 @@
 //
 
 #import "AppDelegate.h"
-#import "ObjcController.h"
-#import "TestViewController.h"
-#import "SettingsViewController.h"
+#import "TabBarController.h"
 
-@interface AppDelegate () <UITabBarControllerDelegate>
+@interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
+
+#pragma mark - UISceneSession
+
+- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options API_AVAILABLE(ios(13.0)){
+    return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+}
+
+- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions API_AVAILABLE(ios(13.0)){
+    
+}
+
+#pragma mark - Notification
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
@@ -28,7 +38,7 @@
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
 }
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
@@ -74,7 +84,7 @@
     };
 }
 
-- (void)setupController
+- (void)setupAppearance
 {
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
@@ -99,31 +109,25 @@
     FWAlertStyle.appearance.contentInsets = UIEdgeInsetsMake(32, 16, 24, 16);
     FWAlertStyle.appearance.actionFont = [UIFont appFontSize:16];
     FWAlertStyle.appearance.actionBoldFont = [UIFont appFontSemiBoldSize:16];
-    
-    UIViewController *homeController = [ObjcController new];
-    homeController.hidesBottomBarWhenPushed = NO;
-    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
-    homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
-    homeNav.tabBarItem.title = @"首页";
-    [homeNav.tabBarItem fwShowBadgeView:[[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall] badgeValue:@"1"];
-    
-    UIViewController *testController = [TestViewController new];
-    testController.hidesBottomBarWhenPushed = NO;
-    UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:testController];
-    testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
-    testNav.tabBarItem.title = @"测试";
-    
-    UIViewController *settingsController = [SettingsViewController new];
-    settingsController.hidesBottomBarWhenPushed = NO;
-    settingsController.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
-    settingsController.tabBarItem.title = @"设置";
-    
-    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.delegate = self;
-    tabBarController.definesPresentationContext = YES;
-    tabBarController.viewControllers = @[homeNav, testNav, settingsController];
-    self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = tabBarController;
+}
+
+- (void)setupController
+{
+    // iOS13以前使用旧的方式
+    if (@available(iOS 13.0, *)) { } else {
+        if (!self.window) {
+            self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            [self.window makeKeyAndVisible];
+        }
+        
+        self.window.backgroundColor = [UIColor whiteColor];
+        self.window.rootViewController = [TabBarController new];
+    }
+}
+
+- (void)setupComponent
+{
+    // 预加载启动广告，检查App更新等
 }
 
 - (void)setupDeviceToken:(NSData *)tokenData error:(NSError *)error
@@ -135,17 +139,6 @@
 {
     [FWRouter openURL:url.absoluteString];
     return YES;
-}
-
-#pragma mark - UITabBarControllerDelegate
-
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-    UIImageView *imageView = viewController.tabBarItem.fwImageView;
-    CABasicAnimation *animation = [imageView fwAddAnimationWithKeyPath:@"transform.scale" fromValue:@(0.7) toValue:@(1.3) duration:0.08 completion:nil];
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    animation.repeatCount = 1;
-    animation.autoreverses = YES;
 }
 
 @end
