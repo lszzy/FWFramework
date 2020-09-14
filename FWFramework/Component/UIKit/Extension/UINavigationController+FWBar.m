@@ -37,6 +37,7 @@
 @interface UINavigationBar (FWBarTransition)
 
 @property (nonatomic, assign) BOOL fwIsFakeBar;
+@property (nonatomic, weak) UINavigationController *fwFakeController;
 
 - (void)fwReplaceStyleWithNavigationBar:(UINavigationBar *)navigationBar;
 
@@ -52,6 +53,17 @@
 - (void)setFwIsFakeBar:(BOOL)fwIsFakeBar
 {
     objc_setAssociatedObject(self, @selector(fwIsFakeBar), @(fwIsFakeBar), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UINavigationController *)fwFakeController
+{
+    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fwFakeController));
+    return value.object;
+}
+
+- (void)setFwFakeController:(UINavigationController *)fwFakeController
+{
+    objc_setAssociatedObject(self, @selector(fwFakeController), [[FWWeakObject alloc] initWithObject:fwFakeController], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fwReplaceStyleWithNavigationBar:(UINavigationBar *)navigationBar
@@ -114,6 +126,10 @@
     }
     UINavigationBar *bar = [[UINavigationBar alloc] init];
     bar.fwIsFakeBar = YES;
+    // 修复iOS14假的NavigationBar不生效问题
+    if (@available(iOS 14.0, *)) {
+        bar.fwFakeController = self.navigationController;
+    }
     bar.barStyle = self.navigationController.navigationBar.barStyle;
     if (bar.translucent != self.navigationController.navigationBar.translucent) {
         bar.translucent = self.navigationController.navigationBar.translucent;
@@ -161,6 +177,17 @@
             frame.size.height = selfObject.frame.size.height + fabs(frame.origin.y);
             backgroundView.frame = frame;
         }));
+        
+        // 修复iOS14假的NavigationBar不生效问题
+        if (@available(iOS 14.0, *)) {
+            FWSwizzleClass(UINavigationBar, NSSelectorFromString(@"_accessibility_navigationController"), FWSwizzleReturn(UINavigationController *), FWSwizzleArgs(), FWSwizzleCode({
+                UINavigationController *navigationController = FWSwizzleOriginal();
+                if (selfObject.fwIsFakeBar) {
+                    return selfObject.fwFakeController;
+                }
+                return navigationController;
+            }));
+        }
         
         FWSwizzleMethod(objc_getClass("_UIBarBackground"), @selector(setHidden:), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
             UIResponder *responder = (UIResponder *)selfObject;

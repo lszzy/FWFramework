@@ -320,7 +320,7 @@ FWPropertyWeak(UIButton *, snapshotButton);
 
 - (void)onSnapshot
 {
-    UIImage *image = [[UIApplication sharedApplication].keyWindow fwSnapshotImage];
+    UIImage *image = [UIWindow.fwMainWindow fwSnapshotImage];
     [image fwSaveImageWithBlock:^(NSError *error){
         NSLog(@"%@", error == nil ? @"保存成功" : @"保存失败");
     }];

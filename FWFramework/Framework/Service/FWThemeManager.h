@@ -113,10 +113,13 @@ extern NSString *const FWThemeChangedNotification;
 // 读取颜色的十六进制值RGB，不含透明度
 - (long)fwHexValue;
 
+// 读取颜色的透明度值，范围0~1
+- (CGFloat)fwAlphaValue;
+
 // 读取颜色的十六进制字符串RGB，不含透明度
 - (NSString *)fwHexString;
 
-// 读取颜色的十六进制字符串RGBA|ARGB，包含透明度
+// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
 - (NSString *)fwHexStringWithAlpha;
 
 #pragma mark - Theme
@@ -127,7 +130,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 动态创建主题色，指定提供句柄
 + (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle style))provider;
 
-/// 动态创建主题色，指定名称，兼容iOS11+系统方式和手工指定。失败时返回clear防止崩溃
+/// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
 + (UIColor *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
@@ -135,6 +138,9 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
+
+/// 指定主题样式获取对应静态颜色
+- (UIColor *)fwThemeColor:(FWThemeStyle)style;
 
 @end
 
@@ -152,7 +158,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
 + (UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
 
-/// 创建主题模拟动态图像，指定名称，兼容系统方式和手工指定，支持动态切换，需配置any和dark
+/// 创建主题模拟动态图像，指定名称，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
 + (UIImage *)fwThemeNamed:(NSString *)name;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式
@@ -214,6 +220,9 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 /// iOS13根据订阅唯一标志移除主题通知回调
 - (void)fwRemoveThemeListener:(nullable NSString *)identifier;
+
+/// iOS13移除所有主题通知回调，一般用于cell重用
+- (void)fwRemoveAllThemeListeners;
 
 /// iOS13主题改变回调钩子，如果父类有重写，记得调用super，需订阅后才生效
 - (void)fwThemeChanged:(FWThemeStyle)style;

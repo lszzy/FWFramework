@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct LandmarkRow: View {
     var landmark: Landmark
     
@@ -28,6 +29,7 @@ struct LandmarkRow: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct LandmarkRow_Previews: PreviewProvider {
     static var previews: some View {
         Group {

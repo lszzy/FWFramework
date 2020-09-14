@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct PageView<Page: View>: View {
     var viewControllers: [UIHostingController<Page>]
     @State var currentPage = 0
@@ -25,6 +26,7 @@ struct PageView<Page: View>: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct PageView_Previews: PreviewProvider {
     static var previews: some View {
         PageView(features.map { FeatureCard(landmark: $0) })

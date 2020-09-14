@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct LandmarkHome: View {
     var categories: [String: [Landmark]] {
         Dictionary(grouping: landmarkData,
@@ -78,6 +79,7 @@ struct LandmarkHome: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct FeaturedLandmarks: View {
     var landmarks: [Landmark]
     var body: some View {
@@ -93,6 +95,7 @@ struct FeaturedLandmarks: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct LandmarkHome_Previews: PreviewProvider {
     static var previews: some View {
         LandmarkHome()

@@ -7,6 +7,7 @@ The model for a hike.
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct Hike: Codable, Hashable, Identifiable {
     var name: String
     var id: Int

@@ -8,6 +8,8 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
+#import "UIColor+FWFramework.h"
+#import "UIFont+FWFramework.h"
 
 @implementation NSAttributedString (FWFramework)
 
@@ -38,9 +40,31 @@
     if (!htmlData || htmlData.length < 1) return nil;
     
     return [[self alloc] initWithData:htmlData options:@{
-        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-        NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding),
+        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
     } documentAttributes:nil error:nil];
+}
+
++ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
+{
+    if (!htmlString || htmlString.length < 1) return nil;
+    
+    if (attributes != nil) {
+        NSString *cssString = @"";
+        UIColor *textColor = attributes[NSForegroundColorAttributeName];
+        if (textColor != nil) {
+            cssString = [cssString stringByAppendingFormat:@"color:%@;", textColor.fwCSSString];
+        }
+        UIFont *font = attributes[NSFontAttributeName];
+        if (font != nil) {
+            cssString = [cssString stringByAppendingString:font.fwCSSString];
+        }
+        if (cssString.length > 0) {
+            htmlString = [NSString stringWithFormat:@"<style type='text/css'>html{%@}</style>%@", cssString, htmlString];
+        }
+    }
+    
+    return [self fwAttributedStringWithHtmlString:htmlString];
 }
 
 - (NSString *)fwHtmlString

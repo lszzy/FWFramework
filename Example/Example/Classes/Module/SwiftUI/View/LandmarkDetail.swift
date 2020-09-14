@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct LandmarkDetail: View {
     @EnvironmentObject var userData: UserData
     
@@ -62,6 +63,7 @@ struct LandmarkDetail: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct LandmarkDetail_Previews: PreviewProvider {
     static var previews: some View {
         LandmarkDetail(landmark: landmarkData[0])

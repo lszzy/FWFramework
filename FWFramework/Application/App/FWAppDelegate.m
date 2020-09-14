@@ -19,13 +19,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
     [self setupApplication:application options:launchOptions];
     [self setupService];
+    [self setupAppearance];
     [self setupController];
-    
-    [self.window makeKeyAndVisible];
+    [self setupComponent];
     return YES;
 }
 
@@ -88,30 +86,16 @@
     return [self handleOpenURL:url options:options];
 }
 
-/*
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    return [self handleOpenURL:url options:nil];
-}
-
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    return [self handleOpenURL:url options:nil];
-}
-*/
-
-/*
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-        // 通用链接解析，可检查Applinks前缀
-        return [self handleOpenURL:userActivity.webpageURL options:nil];
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
+        userActivity.webpageURL != nil) {
+        return [self handleUserActivity:userActivity];
     }
     return NO;
 }
-*/
 
-#pragma mark - Protect
+#pragma mark - Protected
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
@@ -126,9 +110,20 @@
     // [[FWNotificationManager sharedInstance] requestAuthorize:nil];
 }
 
+- (void)setupAppearance
+{
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.window makeKeyAndVisible];
+}
+
 - (void)setupController
 {
     // self.window.rootViewController = [TabBarController new];
+}
+
+- (void)setupComponent
+{
+    // 预加载启动广告，检查App更新等
 }
 
 - (void)setupDeviceToken:(NSData *)tokenData error:(NSError *)error
@@ -140,6 +135,11 @@
 {
     // [FWRouter openURL:url.absoluteString];
     return YES;
+}
+
+- (BOOL)handleUserActivity:(NSUserActivity *)userActivity
+{
+    return [self handleOpenURL:userActivity.webpageURL options:nil];
 }
 
 @end

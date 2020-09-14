@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, *)
 struct WebImage: View {
     @State private var uiImage: UIImage? = nil
     var placeholderImage: UIImage = UIImage()
@@ -39,6 +40,7 @@ struct WebImage: View {
     }
 }
 
+@available(iOS 13.0, *)
 struct WebImage_Previews: PreviewProvider {
     static var previews: some View {
         WebImage(placeholderImage: UIImage(named: "theme_image")!, imageUrl: "https://picsum.photos/50/50?i=30")
