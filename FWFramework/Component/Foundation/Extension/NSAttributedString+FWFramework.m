@@ -60,7 +60,7 @@
             cssString = [cssString stringByAppendingString:font.fwCSSString];
         }
         if (cssString.length > 0) {
-            htmlString = [NSString stringWithFormat:@"<style type='text/css'>body{%@}</style>%@", cssString, htmlString];
+            htmlString = [NSString stringWithFormat:@"<style type='text/css'>html{%@}</style>%@", cssString, htmlString];
         }
     }
     

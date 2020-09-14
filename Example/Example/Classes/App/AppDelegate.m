@@ -86,8 +86,6 @@
 
 - (void)setupAppearance
 {
-    [super setupAppearance];
-    
     [UIView fwAutoLayoutRTL:YES];
     [[UINavigationBar appearance] fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     
@@ -115,8 +113,16 @@
 
 - (void)setupController
 {
-    self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = [TabBarController new];
+    // iOS13以前使用旧的方式
+    if (@available(iOS 13.0, *)) { } else {
+        if (!self.window) {
+            self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            [self.window makeKeyAndVisible];
+        }
+        
+        self.window.backgroundColor = [UIColor whiteColor];
+        self.window.rootViewController = [TabBarController new];
+    }
 }
 
 - (void)setupComponent

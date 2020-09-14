@@ -61,7 +61,7 @@
             language = @"en";
         }
         NSBundle.fwLocalizedLanguage = language;
-        [(FWAppDelegate *)UIApplication.sharedApplication.delegate setupController];
+        [AppRouter refreshController];
     }];
 }
 
