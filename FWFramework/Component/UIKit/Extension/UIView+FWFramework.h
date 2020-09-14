@@ -60,9 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
 - (CGSize)fwFitSizeWithDrawSize:(CGSize)drawSize;
 
-// 计算动态视图的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法。也可以setNeedsLayout再layoutIfNeeded计算视图frame
-- (CGFloat)fwTemplateHeightWithWidth:(CGFloat)width;
-
 #pragma mark - ViewController
 
 // 获取响应的视图控制器

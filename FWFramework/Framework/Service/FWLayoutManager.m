@@ -75,6 +75,11 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     self.translatesAutoresizingMaskIntoConstraints = !enabled;
 }
 
++ (void)fwAutoLayoutRTL:(BOOL)enabled
+{
+    fwStaticAutoLayoutRTL = enabled;
+}
+
 - (void)fwAutoLayoutSubviews
 {
     // 保存当前的自动布局配置
@@ -89,9 +94,23 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     self.translatesAutoresizingMaskIntoConstraints = translateConstraint;
 }
 
-+ (void)fwAutoLayoutRTL:(BOOL)enabled
+- (CGFloat)fwLayoutHeightWithWidth:(CGFloat)width
 {
-    fwStaticAutoLayoutRTL = enabled;
+    CGFloat contentViewWidth = width;
+    CGFloat fittingHeight = 0;
+    
+    // 添加固定的width约束，从而使动态视图(如UILabel)纵向扩张。而不是水平增长，flow-layout的方式
+    NSLayoutConstraint *widthFenceConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:contentViewWidth];
+    [self addConstraint:widthFenceConstraint];
+    // 自动布局引擎计算
+    fittingHeight = [self systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    [self removeConstraint:widthFenceConstraint];
+    
+    if (fittingHeight == 0) {
+        // 尝试frame布局，调用sizeThatFits:
+        fittingHeight = [self sizeThatFits:CGSizeMake(contentViewWidth, 0)].height;
+    }
+    return fittingHeight;
 }
 
 #pragma mark - Compression
