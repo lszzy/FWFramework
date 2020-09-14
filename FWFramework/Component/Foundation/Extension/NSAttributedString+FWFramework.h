@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FWThemeObject<__covariant ObjectType>;
+
 /*!
  @brief NSAttributedString+FWFramework
  @discussion 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
@@ -33,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// html字符串转换为NSAttributedString对象，可设置默认字体(style|size|weight)和颜色(附加CSS方式)
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
+
+/// html字符串转换为NSAttributedString主题对象，可设置默认字体和动态颜色，详见FWThemeObject
++ (FWThemeObject<NSAttributedString *> *)fwThemeObjectWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 /// NSAttributedString对象转换为html字符串
 - (nullable NSString *)fwHtmlString;

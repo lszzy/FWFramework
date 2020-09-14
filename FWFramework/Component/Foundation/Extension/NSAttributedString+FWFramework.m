@@ -8,6 +8,7 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
+#import "FWThemeManager.h"
 #import "UIColor+FWFramework.h"
 #import "UIFont+FWFramework.h"
 
@@ -65,6 +66,28 @@
     }
     
     return [self fwAttributedStringWithHtmlString:htmlString];
+}
+
++ (FWThemeObject<NSAttributedString *> *)fwThemeObjectWithHtmlString:(NSString *)htmlString defaultAttributes:(NSDictionary<NSAttributedStringKey,id> *)attributes
+{
+    NSMutableDictionary *lightAttributes = [NSMutableDictionary dictionary];
+    NSMutableDictionary *darkAttributes = [NSMutableDictionary dictionary];
+    if (attributes != nil) {
+        UIColor *textColor = attributes[NSForegroundColorAttributeName];
+        if (textColor != nil) {
+            lightAttributes[NSForegroundColorAttributeName] = [textColor fwThemeColor:FWThemeStyleLight];
+            darkAttributes[NSForegroundColorAttributeName] = [textColor fwThemeColor:FWThemeStyleDark];
+        }
+        UIFont *font = attributes[NSFontAttributeName];
+        if (font != nil) {
+            lightAttributes[NSFontAttributeName] = font;
+            darkAttributes[NSFontAttributeName] = font;
+        }
+    }
+    
+    NSAttributedString *lightObject = [self fwAttributedStringWithHtmlString:htmlString defaultAttributes:lightAttributes];
+    NSAttributedString *darkObject = [self fwAttributedStringWithHtmlString:htmlString defaultAttributes:darkAttributes];
+    return [FWThemeObject objectWithLight:lightObject dark:darkObject];
 }
 
 - (NSString *)fwHtmlString
