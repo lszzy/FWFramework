@@ -34,7 +34,7 @@ extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief 主题管理器，iOS13+可跟随系统改变
- @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效(如UILabel等)，需先设置主题上下文fwThemeContext才能生效
+ @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
  */
 @interface FWThemeManager : NSObject
 
