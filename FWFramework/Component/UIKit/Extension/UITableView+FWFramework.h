@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UITableView+FWBackgroundView.h"
+#import "UITableView+FWDynamicLayout.h"
 #import "UITableView+FWTemplateLayout.h"
 
 NS_ASSUME_NONNULL_BEGIN
