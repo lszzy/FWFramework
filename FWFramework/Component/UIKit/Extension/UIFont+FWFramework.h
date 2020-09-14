@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 当前字体的非斜体字体
 - (UIFont *)fwNonItalicFont;
 
-// 返回字体对应CSS字符串
+// 返回字体对应CSS字符串(style|weight|size)
 - (NSString *)fwCSSString;
 
 #pragma mark - Height

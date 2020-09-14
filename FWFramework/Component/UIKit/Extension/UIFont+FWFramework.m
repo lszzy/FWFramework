@@ -83,8 +83,8 @@
         }
     }
     
-    return [NSString stringWithFormat:@"font-family:'%@';font-weight:%@;font-style:%@;font-size:%.0fpx;",
-            self.fontName, fontWeight, fontStyle, self.pointSize];
+    return [NSString stringWithFormat:@"font-weight:%@;font-style:%@;font-size:%.0fpx;",
+            fontWeight, fontStyle, self.pointSize];
 }
 
 #pragma mark - Height
