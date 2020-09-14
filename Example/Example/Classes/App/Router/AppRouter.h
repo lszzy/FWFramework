@@ -23,4 +23,6 @@ FWStaticString(ROUTE_HOME_TEST);
 FWStaticString(ROUTE_HOME_SETTINGS);
 FWStaticString(ROUTE_CLOSE);
 
++ (void)refreshController;
+
 @end
