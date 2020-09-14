@@ -12,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UITableView+FWTemplateLayout
 
-// 表格自动计算cell高度分类
+/*!
+ @brief 表格自动计算并缓存cell高度分类，布局必须完整，系统方案实现
+ */
 @interface UITableView (FWTemplateLayout)
 
 /*!

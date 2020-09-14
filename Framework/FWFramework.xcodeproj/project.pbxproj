@@ -11,6 +11,8 @@
 		2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F63D40D250CBB6000BA83A6 /* FWSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF0B3BE250FCA8D005B93DD /* UITableView+FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF0B3BF250FCA8D005B93DD /* UITableView+FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */; };
 		2FFE1BAC2507BF95000332A3 /* FWFramework+Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BAD2507BF95000332A3 /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B322507BF95000332A3 /* FWDatabase.m */; };
 		2FFE1BAE2507BF95000332A3 /* FWResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B332507BF95000332A3 /* FWResultSet.m */; };
@@ -341,6 +343,8 @@
 		2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSceneDelegate.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
+		2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWDynamicLayout.h"; sourceTree = "<group>"; };
+		2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWDynamicLayout.m"; sourceTree = "<group>"; };
 		2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Framework.h"; sourceTree = "<group>"; };
 		2FFE1B322507BF95000332A3 /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FFE1B332507BF95000332A3 /* FWResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWResultSet.m; sourceTree = "<group>"; };
@@ -1034,6 +1038,8 @@
 				2FFE1C6D2507BFBC000332A3 /* UITableView+FWBackgroundView.m */,
 				2FFE1CA42507BFBC000332A3 /* UITableView+FWFramework.h */,
 				2FFE1C6B2507BFBC000332A3 /* UITableView+FWFramework.m */,
+				2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */,
+				2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */,
 				2FFE1C9B2507BFBC000332A3 /* UITableView+FWTemplateLayout.h */,
 				2FFE1C742507BFBC000332A3 /* UITableView+FWTemplateLayout.m */,
 				2FFE1C612507BFBC000332A3 /* UITextField+FWFramework.h */,
@@ -1201,6 +1207,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FF0B3BE250FCA8D005B93DD /* UITableView+FWDynamicLayout.h in Headers */,
 				2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */,
 				2FFE1D722507BFBD000332A3 /* WKWebView+FWFramework.h in Headers */,
 				2FFE1D5B2507BFBD000332A3 /* UIControl+FWFramework.h in Headers */,
@@ -1517,6 +1524,7 @@
 				2FFE1DB52507BFBD000332A3 /* NSDictionary+FWFramework.m in Sources */,
 				2FFE1D712507BFBD000332A3 /* UIView+FWStatistical.m in Sources */,
 				2FFE1C472507BFA5000332A3 /* FWView.m in Sources */,
+				2FF0B3BF250FCA8D005B93DD /* UITableView+FWDynamicLayout.m in Sources */,
 				2FFE1BE82507BF95000332A3 /* FWJson.m in Sources */,
 				2FFE1D9D2507BFBD000332A3 /* NSObject+FWBlock.m in Sources */,
 				2FFE1D622507BFBD000332A3 /* UIScrollView+FWFramework.m in Sources */,
