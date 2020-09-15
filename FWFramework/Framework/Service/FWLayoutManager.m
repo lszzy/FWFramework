@@ -572,19 +572,19 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 @end
 
-#pragma mark - FWLayoutChainObjc
+#pragma mark - FWLayoutChain
 
-@interface FWLayoutChainObjc : NSObject <FWLayoutChainProtocol>
+@interface FWLayoutChain ()
 
 @property (nonatomic, weak) __kindof UIView *view;
 
 @end
 
-@implementation FWLayoutChainObjc
+@implementation FWLayoutChain
 
 #pragma mark - Install
 
-- (id<FWLayoutChainProtocol> (^)(void))remake
+- (FWLayoutChain * (^)(void))remake
 {
     return ^id(void) {
         [self.view fwRemoveAllConstraints];
@@ -594,7 +594,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Compression
 
-- (id<FWLayoutChainProtocol> (^)(UILayoutPriority))compressionHorizontal
+- (FWLayoutChain * (^)(UILayoutPriority))compressionHorizontal
 {
     return ^id(UILayoutPriority priority) {
         [self.view fwSetCompressionHorizontal:priority];
@@ -602,7 +602,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UILayoutPriority))compressionVertical
+- (FWLayoutChain * (^)(UILayoutPriority))compressionVertical
 {
     return ^id(UILayoutPriority priority) {
         [self.view fwSetCompressionVertical:priority];
@@ -612,7 +612,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Collapse
 
-- (id<FWLayoutChainProtocol> (^)(BOOL))collapsed
+- (FWLayoutChain * (^)(BOOL))collapsed
 {
     return ^id(BOOL collapsed) {
         self.view.fwCollapsed = collapsed;
@@ -620,7 +620,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(BOOL))autoCollapse
+- (FWLayoutChain * (^)(BOOL))autoCollapse
 {
     return ^id(BOOL autoCollapse) {
         self.view.fwAutoCollapse = autoCollapse;
@@ -630,7 +630,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Axis
 
-- (id<FWLayoutChainProtocol> (^)(void))center
+- (FWLayoutChain * (^)(void))center
 {
     return ^id(void) {
         [self.view fwAlignCenterToSuperview];
@@ -638,7 +638,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))centerX
+- (FWLayoutChain * (^)(void))centerX
 {
     return ^id(void) {
         [self.view fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
@@ -646,7 +646,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))centerY
+- (FWLayoutChain * (^)(void))centerY
 {
     return ^id(void) {
         [self.view fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
@@ -654,7 +654,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGPoint))centerWithOffset
+- (FWLayoutChain * (^)(CGPoint))centerWithOffset
 {
     return ^id(CGPoint offset) {
         [self.view fwAlignCenterToSuperviewWithOffset:offset];
@@ -662,7 +662,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))centerXWithOffset
+- (FWLayoutChain * (^)(CGFloat))centerXWithOffset
 {
     return ^id(CGFloat offset) {
         [self.view fwAlignAxisToSuperview:NSLayoutAttributeCenterX withOffset:offset];
@@ -670,7 +670,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))centerYWithOffset
+- (FWLayoutChain * (^)(CGFloat))centerYWithOffset
 {
     return ^id(CGFloat offset) {
         [self.view fwAlignAxisToSuperview:NSLayoutAttributeCenterY withOffset:offset];
@@ -678,7 +678,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))centerToView
+- (FWLayoutChain * (^)(id))centerToView
 {
     return ^id(id view) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterX toView:view];
@@ -687,7 +687,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))centerXToView
+- (FWLayoutChain * (^)(id))centerXToView
 {
     return ^id(id view) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterX toView:view];
@@ -695,7 +695,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))centerYToView
+- (FWLayoutChain * (^)(id))centerYToView
 {
     return ^id(id view) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterY toView:view];
@@ -703,7 +703,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))centerXToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))centerXToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterX toView:view withOffset:offset];
@@ -711,7 +711,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))centerYToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))centerYToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterY toView:view withOffset:offset];
@@ -719,7 +719,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))centerXToViewWithMultiplier
+- (FWLayoutChain * (^)(id, CGFloat))centerXToViewWithMultiplier
 {
     return ^id(id view, CGFloat multiplier) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterX toView:view withMultiplier:multiplier];
@@ -727,7 +727,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))centerYToViewWithMultiplier
+- (FWLayoutChain * (^)(id, CGFloat))centerYToViewWithMultiplier
 {
     return ^id(id view, CGFloat multiplier) {
         [self.view fwAlignAxis:NSLayoutAttributeCenterY toView:view withMultiplier:multiplier];
@@ -737,7 +737,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Edge
 
-- (id<FWLayoutChainProtocol> (^)(void))edges
+- (FWLayoutChain * (^)(void))edges
 {
     return ^id(void) {
         [self.view fwPinEdgesToSuperview];
@@ -745,7 +745,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UIEdgeInsets))edgesWithInsets
+- (FWLayoutChain * (^)(UIEdgeInsets))edgesWithInsets
 {
     return ^id(UIEdgeInsets insets) {
         [self.view fwPinEdgesToSuperviewWithInsets:insets];
@@ -753,7 +753,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UIEdgeInsets, NSLayoutAttribute))edgesWithInsetsExcludingEdge
+- (FWLayoutChain * (^)(UIEdgeInsets, NSLayoutAttribute))edgesWithInsetsExcludingEdge
 {
     return ^id(UIEdgeInsets insets, NSLayoutAttribute edge) {
         [self.view fwPinEdgesToSuperviewWithInsets:insets excludingEdge:edge];
@@ -761,7 +761,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))edgesHorizontal
+- (FWLayoutChain * (^)(void))edgesHorizontal
 {
     return ^id(void) {
         [self.view fwPinEdgesToSuperviewHorizontal];
@@ -769,7 +769,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))edgesVertical
+- (FWLayoutChain * (^)(void))edgesVertical
 {
     return ^id(void) {
         [self.view fwPinEdgesToSuperviewVertical];
@@ -777,7 +777,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))top
+- (FWLayoutChain * (^)(void))top
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeTop];
@@ -785,7 +785,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))bottom
+- (FWLayoutChain * (^)(void))bottom
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeBottom];
@@ -793,7 +793,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))left
+- (FWLayoutChain * (^)(void))left
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -801,7 +801,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))right
+- (FWLayoutChain * (^)(void))right
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeRight];
@@ -809,7 +809,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))topWithInset
+- (FWLayoutChain * (^)(CGFloat))topWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:inset];
@@ -817,7 +817,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))bottomWithInset
+- (FWLayoutChain * (^)(CGFloat))bottomWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:inset];
@@ -825,7 +825,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))leftWithInset
+- (FWLayoutChain * (^)(CGFloat))leftWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:inset];
@@ -833,7 +833,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))rightWithInset
+- (FWLayoutChain * (^)(CGFloat))rightWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:inset];
@@ -841,7 +841,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))topToView
+- (FWLayoutChain * (^)(id))topToView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:view];
@@ -849,7 +849,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))bottomToView
+- (FWLayoutChain * (^)(id))bottomToView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:view];
@@ -857,7 +857,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))leftToView
+- (FWLayoutChain * (^)(id))leftToView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeLeft ofView:view];
@@ -865,7 +865,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))rightToView
+- (FWLayoutChain * (^)(id))rightToView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:view];
@@ -873,7 +873,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))topToBottomOfView
+- (FWLayoutChain * (^)(id))topToBottomOfView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:view];
@@ -881,7 +881,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))bottomToTopOfView
+- (FWLayoutChain * (^)(id))bottomToTopOfView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:view];
@@ -889,7 +889,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))leftToRightOfView
+- (FWLayoutChain * (^)(id))leftToRightOfView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:view];
@@ -897,7 +897,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))rightToLeftOfView
+- (FWLayoutChain * (^)(id))rightToLeftOfView
 {
     return ^id(id view) {
         [self.view fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:view];
@@ -905,7 +905,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))topToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))topToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:view withOffset:offset];
@@ -913,7 +913,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))bottomToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))bottomToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:view withOffset:offset];
@@ -921,7 +921,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))leftToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))leftToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeLeft ofView:view withOffset:offset];
@@ -929,7 +929,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))rightToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))rightToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:view withOffset:offset];
@@ -937,7 +937,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))topToBottomOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))topToBottomOfViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:view withOffset:offset];
@@ -945,7 +945,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))bottomToTopOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))bottomToTopOfViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:view withOffset:offset];
@@ -953,7 +953,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))leftToRightOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))leftToRightOfViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:view withOffset:offset];
@@ -961,7 +961,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))rightToLeftOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))rightToLeftOfViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:view withOffset:offset];
@@ -971,7 +971,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - SafeArea
 
-- (id<FWLayoutChainProtocol> (^)(void))centerToSafeArea
+- (FWLayoutChain * (^)(void))centerToSafeArea
 {
     return ^id(void) {
         [self.view fwAlignCenterToSuperviewSafeArea];
@@ -979,7 +979,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))centerXToSafeArea
+- (FWLayoutChain * (^)(void))centerXToSafeArea
 {
     return ^id(void) {
         [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX];
@@ -987,7 +987,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))centerYToSafeArea
+- (FWLayoutChain * (^)(void))centerYToSafeArea
 {
     return ^id(void) {
         [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY];
@@ -995,7 +995,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGPoint))centerToSafeAreaWithOffset
+- (FWLayoutChain * (^)(CGPoint))centerToSafeAreaWithOffset
 {
     return ^id(CGPoint offset) {
         [self.view fwAlignCenterToSuperviewSafeAreaWithOffset:offset];
@@ -1003,7 +1003,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))centerXToSafeAreaWithOffset
+- (FWLayoutChain * (^)(CGFloat))centerXToSafeAreaWithOffset
 {
     return ^id(CGFloat offset) {
         [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX withOffset:offset];
@@ -1011,7 +1011,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))centerYToSafeAreaWithOffset
+- (FWLayoutChain * (^)(CGFloat))centerYToSafeAreaWithOffset
 {
     return ^id(CGFloat offset) {
         [self.view fwAlignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY withOffset:offset];
@@ -1019,7 +1019,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))edgesToSafeArea
+- (FWLayoutChain * (^)(void))edgesToSafeArea
 {
     return ^id(void) {
         [self.view fwPinEdgesToSuperviewSafeArea];
@@ -1027,7 +1027,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UIEdgeInsets))edgesToSafeAreaWithInsets
+- (FWLayoutChain * (^)(UIEdgeInsets))edgesToSafeAreaWithInsets
 {
     return ^id(UIEdgeInsets insets) {
         [self.view fwPinEdgesToSuperviewSafeAreaWithInsets:insets];
@@ -1035,7 +1035,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(UIEdgeInsets, NSLayoutAttribute))edgesToSafeAreaWithInsetsExcludingEdge
+- (FWLayoutChain * (^)(UIEdgeInsets, NSLayoutAttribute))edgesToSafeAreaWithInsetsExcludingEdge
 {
     return ^id(UIEdgeInsets insets, NSLayoutAttribute edge) {
         [self.view fwPinEdgesToSuperviewSafeAreaWithInsets:insets excludingEdge:edge];
@@ -1043,7 +1043,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))edgesToSafeAreaHorizontal
+- (FWLayoutChain * (^)(void))edgesToSafeAreaHorizontal
 {
     return ^id(void) {
         [self.view fwPinEdgesToSuperviewSafeAreaHorizontal];
@@ -1051,7 +1051,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))edgesToSafeAreaVertical
+- (FWLayoutChain * (^)(void))edgesToSafeAreaVertical
 {
     return ^id(void) {
         [self.view fwPinEdgesToSuperviewSafeAreaVertical];
@@ -1059,7 +1059,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))topToSafeArea
+- (FWLayoutChain * (^)(void))topToSafeArea
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop];
@@ -1067,7 +1067,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))bottomToSafeArea
+- (FWLayoutChain * (^)(void))bottomToSafeArea
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom];
@@ -1075,7 +1075,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))leftToSafeArea
+- (FWLayoutChain * (^)(void))leftToSafeArea
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft];
@@ -1083,7 +1083,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(void))rightToSafeArea
+- (FWLayoutChain * (^)(void))rightToSafeArea
 {
     return ^id(void) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight];
@@ -1091,7 +1091,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))topToSafeAreaWithInset
+- (FWLayoutChain * (^)(CGFloat))topToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:inset];
@@ -1099,7 +1099,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))bottomToSafeAreaWithInset
+- (FWLayoutChain * (^)(CGFloat))bottomToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:inset];
@@ -1107,7 +1107,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))leftToSafeAreaWithInset
+- (FWLayoutChain * (^)(CGFloat))leftToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:inset];
@@ -1115,7 +1115,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))rightToSafeAreaWithInset
+- (FWLayoutChain * (^)(CGFloat))rightToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
         [self.view fwPinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:inset];
@@ -1125,7 +1125,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Dimension
 
-- (id<FWLayoutChainProtocol> (^)(CGSize))size
+- (FWLayoutChain * (^)(CGSize))size
 {
     return ^id(CGSize size) {
         [self.view fwSetDimensionsToSize:size];
@@ -1133,7 +1133,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))width
+- (FWLayoutChain * (^)(CGFloat))width
 {
     return ^id(CGFloat width) {
         [self.view fwSetDimension:NSLayoutAttributeWidth toSize:width];
@@ -1141,7 +1141,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(CGFloat))height
+- (FWLayoutChain * (^)(CGFloat))height
 {
     return ^id(CGFloat height) {
         [self.view fwSetDimension:NSLayoutAttributeHeight toSize:height];
@@ -1149,7 +1149,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))sizeToView
+- (FWLayoutChain * (^)(id))sizeToView
 {
     return ^id(id view) {
         [self.view fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:view];
@@ -1158,7 +1158,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))widthToView
+- (FWLayoutChain * (^)(id))widthToView
 {
     return ^id(id view) {
         [self.view fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:view];
@@ -1166,7 +1166,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id))heightToView
+- (FWLayoutChain * (^)(id))heightToView
 {
     return ^id(id view) {
         [self.view fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:view];
@@ -1174,7 +1174,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))widthToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))widthToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:view withOffset:offset];
@@ -1182,7 +1182,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))heightToViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))heightToViewWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:view withOffset:offset];
@@ -1190,7 +1190,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))widthToViewWithMultiplier
+- (FWLayoutChain * (^)(id, CGFloat))widthToViewWithMultiplier
 {
     return ^id(id view, CGFloat multiplier) {
         [self.view fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:view withMultiplier:multiplier];
@@ -1198,7 +1198,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(id, CGFloat))heightToViewWithMultiplier
+- (FWLayoutChain * (^)(id, CGFloat))heightToViewWithMultiplier
 {
     return ^id(id view, CGFloat multiplier) {
         [self.view fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:view withMultiplier:multiplier];
@@ -1208,7 +1208,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Attribute
 
-- (id<FWLayoutChainProtocol> (^)(NSLayoutAttribute, NSLayoutAttribute, id))attribute
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id))attribute
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView) {
         [self.view fwConstrainAttribute:attribute toAttribute:toAttribute ofView:ofView];
@@ -1216,7 +1216,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))attributeWithOffset
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))attributeWithOffset
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset) {
         [self.view fwConstrainAttribute:attribute toAttribute:toAttribute ofView:ofView withOffset:offset];
@@ -1224,7 +1224,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithOffsetAndRelation
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithOffsetAndRelation
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation) {
         [self.view fwConstrainAttribute:attribute toAttribute:toAttribute ofView:ofView withOffset:offset relation:relation];
@@ -1232,7 +1232,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))attributeWithMultiplier
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))attributeWithMultiplier
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier) {
         [self.view fwConstrainAttribute:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier];
@@ -1240,7 +1240,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (id<FWLayoutChainProtocol> (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithMultiplierAndRelation
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithMultiplierAndRelation
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation) {
         [self.view fwConstrainAttribute:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation];
@@ -1254,18 +1254,18 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 @implementation UIView (FWLayoutChain)
 
-- (id<FWLayoutChainProtocol>)fwLayoutChain
+- (FWLayoutChain *)fwLayoutChain
 {
-    FWLayoutChainObjc *layoutChain = objc_getAssociatedObject(self, _cmd);
+    FWLayoutChain *layoutChain = objc_getAssociatedObject(self, _cmd);
     if (!layoutChain) {
-        layoutChain = [[FWLayoutChainObjc alloc] init];
+        layoutChain = [[FWLayoutChain alloc] init];
         layoutChain.view = self;
         objc_setAssociatedObject(self, _cmd, layoutChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return layoutChain;
 }
 
-- (void)fwLayoutMaker:(__attribute__((noescape)) void (^)(id<FWLayoutChainProtocol>))block
+- (void)fwLayoutMaker:(__attribute__((noescape)) void (^)(FWLayoutChain *))block
 {
     if (block) {
         block(self.fwLayoutChain);

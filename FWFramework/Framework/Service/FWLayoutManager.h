@@ -532,121 +532,120 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWLayoutChainProtocol
+#pragma mark - FWLayoutChain
 
 /*!
- @brief 视图链式布局协议
+ @brief 视图链式布局类
  @discussion 如果约束条件完全相同，会自动更新约束而不是重新添加。
  另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
  */
-@protocol FWLayoutChainProtocol <NSObject>
-
-@required
+NS_SWIFT_UNAVAILABLE("")
+@interface FWLayoutChain : NSObject
 
 #pragma mark - Install
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^remake)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^remake)(void);
 
 #pragma mark - Compression
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^compressionHorizontal)(UILayoutPriority priority);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^compressionVertical)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^compressionHorizontal)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^compressionVertical)(UILayoutPriority priority);
 
 #pragma mark - Collapse
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^collapsed)(BOOL collapsed);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^autoCollapse)(BOOL autoCollapse);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^collapsed)(BOOL collapsed);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^autoCollapse)(BOOL autoCollapse);
 
 #pragma mark - Axis
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^center)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerX)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerY)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerWithOffset)(CGPoint offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXWithOffset)(CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYWithOffset)(CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToViewWithMultiplier)(id view, CGFloat multiplier);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToViewWithMultiplier)(id view, CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^center)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerX)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerY)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerWithOffset)(CGPoint offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerXWithOffset)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerYWithOffset)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerXToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerYToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerXToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerYToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerXToViewWithMultiplier)(id view, CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerYToViewWithMultiplier)(id view, CGFloat multiplier);
 
 #pragma mark - Edge
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edges)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesWithInsets)(UIEdgeInsets insets);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesHorizontal)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesVertical)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^top)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottom)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^left)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^right)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToBottomOfView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToTopOfView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToRightOfView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToLeftOfView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToBottomOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToTopOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToRightOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToLeftOfViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edges)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesWithInsets)(UIEdgeInsets insets);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesHorizontal)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesVertical)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^top)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottom)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^left)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^right)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToBottomOfView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToTopOfView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToRightOfView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToLeftOfView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToBottomOfViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToTopOfViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToRightOfViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToLeftOfViewWithOffset)(id view, CGFloat offset);
 
 #pragma mark - SafeArea
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerToSafeAreaWithOffset)(CGPoint offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerXToSafeAreaWithOffset)(CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^centerYToSafeAreaWithOffset)(CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithInsets)(UIEdgeInsets insets);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaHorizontal)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^edgesToSafeAreaVertical)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToSafeArea)(void);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^topToSafeAreaWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^bottomToSafeAreaWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^leftToSafeAreaWithInset)(CGFloat inset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^rightToSafeAreaWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerXToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerYToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerToSafeAreaWithOffset)(CGPoint offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerXToSafeAreaWithOffset)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^centerYToSafeAreaWithOffset)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaWithInsets)(UIEdgeInsets insets);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaHorizontal)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaVertical)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToSafeAreaWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToSafeAreaWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToSafeAreaWithInset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToSafeAreaWithInset)(CGFloat inset);
 
 #pragma mark - Dimension
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^size)(CGSize size);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^width)(CGFloat width);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^height)(CGFloat height);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^sizeToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^widthToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^heightToView)(id view);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^widthToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^heightToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^widthToViewWithMultiplier)(id view, CGFloat multiplier);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^heightToViewWithMultiplier)(id view, CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^size)(CGSize size);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^width)(CGFloat width);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^height)(CGFloat height);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^sizeToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^widthToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^heightToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^widthToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^heightToViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^widthToViewWithMultiplier)(id view, CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^heightToViewWithMultiplier)(id view, CGFloat multiplier);
 
 #pragma mark - Attribute
 
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^attribute)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^attributeWithOffset)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^attributeWithOffsetAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^attributeWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier);
-@property (nonatomic, copy, readonly) id<FWLayoutChainProtocol> (^attributeWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attribute)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffset)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffsetAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation);
 
 @end
 
@@ -658,10 +657,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIView (FWLayoutChain)
 
 /// 链式布局对象
-@property (nonatomic, strong, readonly) id<FWLayoutChainProtocol> fwLayoutChain NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, readonly) FWLayoutChain *fwLayoutChain NS_REFINED_FOR_SWIFT;
 
 /// 链式布局句柄
-- (void)fwLayoutMaker:(void (NS_NOESCAPE ^)(id<FWLayoutChainProtocol> make))block NS_REFINED_FOR_SWIFT;
+- (void)fwLayoutMaker:(void (NS_NOESCAPE ^)(FWLayoutChain *make))block NS_REFINED_FOR_SWIFT;
 
 @end
 

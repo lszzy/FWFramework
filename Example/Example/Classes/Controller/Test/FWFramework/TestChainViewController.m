@@ -22,7 +22,7 @@
     label.text = @"text";
     label.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:label];
-    [label fwLayoutMaker:^(id<FWLayoutChainProtocol> make) {
+    [label fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
         make.sizeToView(view).topToView(view).leftToRightOfViewWithOffset(view, 20);
     }];
     
@@ -42,7 +42,7 @@
     attr.backgroundColor = [UIColor grayColor];
     attr.textAlignment = kCTTextAlignmentCenter;
     [self.view addSubview:attr];
-    [attr fwLayoutMaker:^(id<FWLayoutChainProtocol>  _Nonnull make) {
+    [attr fwLayoutMaker:^(FWLayoutChain *  _Nonnull make) {
         make.leftToView(view).topToBottomOfViewWithOffset(view, 20);
     }];
     [attr appendImage:[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)]];
