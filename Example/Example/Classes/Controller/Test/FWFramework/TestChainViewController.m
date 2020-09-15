@@ -22,7 +22,9 @@
     label.text = @"text";
     label.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:label];
-    label.fwLayoutChain.sizeToView(view).topToView(view).leftToRightOfViewWithOffset(view, 20);
+    [label fwLayoutMaker:^(id<FWLayoutChainProtocol> make) {
+        make.sizeToView(view).topToView(view).leftToRightOfViewWithOffset(view, 20);
+    }];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitleColor:[UIColor appColorBlack] forState:UIControlStateNormal];
@@ -40,7 +42,9 @@
     attr.backgroundColor = [UIColor grayColor];
     attr.textAlignment = kCTTextAlignmentCenter;
     [self.view addSubview:attr];
-    attr.fwLayoutChain.leftToView(view).topToBottomOfViewWithOffset(view, 20);
+    [attr fwLayoutMaker:^(id<FWLayoutChainProtocol>  _Nonnull make) {
+        make.leftToView(view).topToBottomOfViewWithOffset(view, 20);
+    }];
     [attr appendImage:[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)]];
 }
 

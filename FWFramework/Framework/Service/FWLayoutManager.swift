@@ -472,4 +472,9 @@ extension UIView {
         }
         return layoutChain as! FWLayoutChain
     }
+    
+    /// 链式布局闭包
+    public func fwLayoutMaker(_ closure: (_ make: FWLayoutChain) -> Void) {
+        closure(fwLayoutChain)
+    }
 }
