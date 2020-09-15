@@ -1265,4 +1265,11 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     return layoutChain;
 }
 
+- (void)fwLayoutMaker:(__attribute__((noescape)) void (^)(id<FWLayoutChainProtocol>))block
+{
+    if (block) {
+        block(self.fwLayoutChain);
+    }
+}
+
 @end

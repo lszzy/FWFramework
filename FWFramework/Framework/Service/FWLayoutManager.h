@@ -657,7 +657,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWLayoutChain)
 
+/// 链式布局对象
 @property (nonatomic, strong, readonly) id<FWLayoutChainProtocol> fwLayoutChain NS_REFINED_FOR_SWIFT;
+
+/// 链式布局句柄
+- (void)fwLayoutMaker:(void (NS_NOESCAPE ^)(id<FWLayoutChainProtocol> make))block NS_REFINED_FOR_SWIFT;
 
 @end
 
