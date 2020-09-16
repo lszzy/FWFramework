@@ -20,7 +20,7 @@ static const FWThemeStyle FWThemeStyleLight = 1;
 /// 深色样式
 static const FWThemeStyle FWThemeStyleDark = 2;
 
-/// 主题模式枚举，可扩展
+/// 主题模式枚举，可扩展(扩展值与样式值相同即可)
 typedef NSInteger FWThemeMode NS_TYPED_EXTENSIBLE_ENUM;
 /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色，默认
 static const FWThemeMode FWThemeModeSystem = 0;

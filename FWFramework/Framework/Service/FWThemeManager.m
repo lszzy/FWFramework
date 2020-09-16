@@ -96,7 +96,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             return FWThemeStyleLight;
         }
     } else {
-        return self.mode == FWThemeModeDark ? FWThemeStyleDark : FWThemeStyleLight;
+        return (FWThemeStyle)self.mode;
     }
 }
 
