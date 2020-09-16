@@ -409,6 +409,22 @@ static BOOL fwStaticColorARGB = NO;
     [fwStaticNameImages addEntriesFromDictionary:nameImages];
 }
 
+- (UIImage *)fwThemeImage
+{
+    if (self.fwThemeObject) {
+        return self.fwThemeObject.object;
+    }
+    return self;
+}
+
+- (UIImage *)fwThemeImage:(FWThemeStyle)style
+{
+    if (self.fwThemeObject) {
+        return [self.fwThemeObject object:style];
+    }
+    return self;
+}
+
 - (FWThemeObject<UIImage *> *)fwThemeObject
 {
     return objc_getAssociatedObject(self, @selector(fwThemeObject));
@@ -616,8 +632,8 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
 {
     [super fwThemeChanged:style];
     
-    if (self.fwThemeImage.fwThemeObject != nil) {
-        self.image = self.fwThemeImage.fwThemeObject.object;
+    if (self.fwThemeImage != nil) {
+        self.image = self.fwThemeImage.fwThemeImage;
     }
 }
 
@@ -682,8 +698,8 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size
     if (self.fwThemeShadowColor != nil) {
         self.shadowColor = self.fwThemeShadowColor.CGColor;
     }
-    if (self.fwThemeContents.fwThemeObject != nil) {
-        self.contents = (id)self.fwThemeContents.fwThemeObject.object.CGImage;
+    if (self.fwThemeContents != nil) {
+        self.contents = (id)self.fwThemeContents.fwThemeImage.CGImage;
     }
 }
 

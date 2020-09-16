@@ -27,7 +27,7 @@
     [self.view addSubview:self.floatLayoutView];
     self.floatLayoutView.fwLayoutChain.leftWithInset(24).rightWithInset(24).topWithInset(36);
     
-    NSArray<NSString *> *suggestions = @[@"东野圭吾\n多行文本", @"三体", @"爱", @"红楼梦", @"理智与情感\n多行文本", @"读书热榜", @"免费榜"];
+    NSArray<NSString *> *suggestions = @[@"东野圭吾\n多行文本", @"三体", @"爱", @"红楼梦", @"", @"理智与情感\n多行文本", @"读书热榜", @"免费榜"];
     for (NSInteger i = 0; i < suggestions.count; i++) {
         if (i < 3) {
             UILabel *label = [[UILabel alloc] init];
@@ -46,6 +46,7 @@
             button.titleLabel.font = FWFontRegular(14);
             button.titleLabel.numberOfLines = 0;
             button.contentEdgeInsets = UIEdgeInsetsMake(6, 20, 6, 20);
+            button.hidden = suggestions[i].length <= 0;
             [self.floatLayoutView addSubview:button];
         }
     }
