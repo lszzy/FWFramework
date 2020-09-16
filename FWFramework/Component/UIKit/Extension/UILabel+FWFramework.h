@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UILabel (FWFramework)
 
-// 自定义内容边距。未设置时为系统默认
+// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
 @property (nonatomic, assign) UIEdgeInsets fwContentInset;
 
 // 纵向分布方式，默认居中

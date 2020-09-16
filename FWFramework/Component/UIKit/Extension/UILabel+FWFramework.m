@@ -42,10 +42,10 @@
                 return [value CGSizeValue];
             }
             
-            // 无自定义估算时动态计算
+            // 无自定义估算时动态计算，结果为zero时fwContentInset不生效
             CGSize size = FWSwizzleOriginal();
             NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
-            if (contentInsetValue) {
+            if (contentInsetValue && !CGSizeEqualToSize(size, CGSizeZero)) {
                 UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
                 size = CGSizeMake(size.width + contentInset.left + contentInset.right, size.height + contentInset.top + contentInset.bottom);
             }
@@ -57,7 +57,10 @@
                 UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
                 size = CGSizeMake(size.width - contentInset.left - contentInset.right, size.height - contentInset.top - contentInset.bottom);
                 CGSize fitsSize = FWSwizzleOriginal(size);
-                fitsSize = CGSizeMake(fitsSize.width + contentInset.left + contentInset.right, fitsSize.height + contentInset.top + contentInset.bottom);
+                // 计算结果为zoro时fwContentInset不生效
+                if (!CGSizeEqualToSize(fitsSize, CGSizeZero)) {
+                    fitsSize = CGSizeMake(fitsSize.width + contentInset.left + contentInset.right, fitsSize.height + contentInset.top + contentInset.bottom);
+                }
                 return fitsSize;
             }
             

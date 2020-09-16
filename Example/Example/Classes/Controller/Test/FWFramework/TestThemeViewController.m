@@ -57,7 +57,7 @@
     UIImage *themeImage = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
     imageView.image = themeImage;
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = themeImage.fwThemeObject.object;
+        imageView.image = themeImage.fwThemeImage;
     }];
     [self.view addSubview:imageView];
     
@@ -101,7 +101,7 @@
     layer.contents = (id)layerImage.CGImage;
     layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.contents = (id)layerImage.fwThemeObject.object.CGImage;
+        layer.contents = (id)layerImage.fwThemeImage.CGImage;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -136,10 +136,10 @@
         NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]],
     }];
     
-    [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
+    [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
     [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     [themeLabel fwAddThemeListener:^(FWThemeStyle style) {
-        [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
+        [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
         [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     }];
     [self.view addSubview:themeButton];

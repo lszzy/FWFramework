@@ -167,8 +167,11 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
-/// 获取当前主题动态对象，不存在时为nil
-@property (nullable, nonatomic, readonly) FWThemeObject<UIImage *> *fwThemeObject;
+/// 获取当前主题样式对应静态图片
+@property (nullable, nonatomic, readonly) UIImage *fwThemeImage;
+
+/// 指定主题样式获取对应静态图片
+- (nullable UIImage *)fwThemeImage:(FWThemeStyle)style;
 
 @end
 
