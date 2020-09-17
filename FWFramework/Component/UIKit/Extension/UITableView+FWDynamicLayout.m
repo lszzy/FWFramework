@@ -11,7 +11,7 @@
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
-#pragma mark - UITableView+FWInnerDynamicLayout
+#pragma mark - FWDynamicLayoutHeightCache
 
 #define FWDynamicLayoutIsVertical (UIScreen.mainScreen.bounds.size.height > UIScreen.mainScreen.bounds.size.width)
 #define FWDynamicLayoutDefaultHeight @(-1.0)
@@ -161,6 +161,8 @@
 }
 
 @end
+
+#pragma mark - UITableView+FWInnerDynamicLayout
 
 @interface UITableView (FWInnerDynamicLayout)
 
@@ -473,7 +475,7 @@
     return view;
 }
 
-- (CGFloat)fwInnerHeightWithCellClass:(Class)clazz
+- (CGFloat)fwDynamicHeightWithCellClass:(Class)clazz
                         configuration:(FWCellConfigurationBlock)configuration {
     UIView *view = [self fwCellViewWithCellClass:clazz];
     // 获取 TableView 宽度
@@ -527,7 +529,7 @@
     if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
         [self fwDynamicLayoutInitialize];
     }
-    return [self fwInnerHeightWithCellClass:clazz configuration:configuration];
+    return [self fwDynamicHeightWithCellClass:clazz configuration:configuration];
 }
 
 - (CGFloat)fwHeightWithCellClass:(Class)clazz
@@ -538,7 +540,7 @@
     }
     NSNumber *number = self.fwDynamicLayoutHeightCache.heightArray[indexPath.section][indexPath.row];
     if (number.doubleValue < 0.0) {
-        CGFloat cellHeight = [self fwInnerHeightWithCellClass:clazz configuration:configuration];
+        CGFloat cellHeight = [self fwDynamicHeightWithCellClass:clazz configuration:configuration];
         self.fwDynamicLayoutHeightCache.heightArray[indexPath.section][indexPath.row] = @(cellHeight);
         return cellHeight;
     }
@@ -554,7 +556,7 @@
     if (key && self.fwDynamicLayoutHeightCache.heightDictionary[key]) {
         return self.fwDynamicLayoutHeightCache.heightDictionary[key].doubleValue;
     }
-    CGFloat cellHeight = [self fwInnerHeightWithCellClass:clazz configuration:configuration];
+    CGFloat cellHeight = [self fwDynamicHeightWithCellClass:clazz configuration:configuration];
     if (key) {
         self.fwDynamicLayoutHeightCache.heightDictionary[key] = @(cellHeight);
     }
@@ -584,7 +586,7 @@
     return view;
 }
 
-- (CGFloat)fwInnerHeightWithHeaderFooterViewClass:(Class)clazz
+- (CGFloat)fwDynamicHeightWithHeaderFooterViewClass:(Class)clazz
                                         sel:(SEL)sel
                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
     UIView *view = [self fwHeaderFooterViewWithHeaderFooterViewClass:clazz sel:sel];
@@ -635,14 +637,14 @@
     return maxY;
 }
 
-- (CGFloat)fwInnerHeightWithHeaderViewClass:(Class)clazz
+- (CGFloat)fwDynamicHeightWithHeaderViewClass:(Class)clazz
                         configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwInnerHeightWithHeaderFooterViewClass:clazz sel:_cmd configuration:configuration];
+    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz sel:_cmd configuration:configuration];
 }
 
-- (CGFloat)fwInnerHeightWithFooterViewClass:(Class)clazz
+- (CGFloat)fwDynamicHeightWithFooterViewClass:(Class)clazz
                         configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwInnerHeightWithHeaderFooterViewClass:clazz sel:_cmd configuration:configuration];
+    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz sel:_cmd configuration:configuration];
 }
 
 - (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
@@ -652,9 +654,9 @@
         [self fwDynamicLayoutInitialize];
     }
     if (type == FWHeaderFooterViewTypeHeader) {
-        return [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
+        return [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
     } else {
-        return [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
+        return [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
     }
 }
 
@@ -670,7 +672,7 @@
         if (number.doubleValue >= 0.0) {
             return number.doubleValue;
         }
-        CGFloat height = [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
+        CGFloat height = [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
         self.fwDynamicLayoutHeightCache.headerHeightArray[section] = @(height);
         return height;
     } else {
@@ -678,7 +680,7 @@
         if (number.doubleValue >= 0.0) {
             return number.doubleValue;
         }
-        CGFloat height = [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
+        CGFloat height = [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
         self.fwDynamicLayoutHeightCache.footerHeightArray[section] = @(height);
         return height;
     }
@@ -695,7 +697,7 @@
         if (key && self.fwDynamicLayoutHeightCache.headerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
         }
-        CGFloat cellHeight = [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
+        CGFloat cellHeight = [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
         if (key) {
             self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(cellHeight);
         }
@@ -704,7 +706,7 @@
         if (key && self.fwDynamicLayoutHeightCache.footerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
         }
-        CGFloat cellHeight = [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
+        CGFloat cellHeight = [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
         if (key) {
             self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(cellHeight);
         }
