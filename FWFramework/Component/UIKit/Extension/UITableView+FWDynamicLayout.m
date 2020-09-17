@@ -8,61 +8,55 @@
  */
 
 #import "UITableView+FWDynamicLayout.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
-// 兼容 Swift
-#define kSwiftClassNibName(clasName) ([clasName rangeOfString:@"."].location != NSNotFound ? [clasName componentsSeparatedByString:@"."].lastObject : clasName)
+#pragma mark - UITableView+FWInnerDynamicLayout
 
-/// 内部使用到的分类。
-@interface UITableView (BMPrivate)
+#define FWDynamicLayoutIsVertical (UIScreen.mainScreen.bounds.size.height > UIScreen.mainScreen.bounds.size.width)
+#define FWDynamicLayoutDefaultHeight @(-1.0)
 
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *heightDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *heightArray;
+@interface UITableView (FWInnerDynamicLayout)
 
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *headerHeightDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *headerHeightArray;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeightDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *fwHeightArray;
 
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *footerHeightDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *footerHeightArray;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeaderHeightDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwHeaderHeightArray;
 
-/// 是否已经初始化过。
-@property (nonatomic, assign, readonly) BOOL isDynamicLayoutInitializationed;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwFooterHeightDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwFooterHeightArray;
 
-- (void)bm_dynamicLayoutInitialization;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeaderVerticalDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeaderHorizontalDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwHeaderVerticalArray;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwHeaderHorizontalArray;
 
-@end
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwVerticalDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHorizontalDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *fwVerticalArray;
+@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *fwHorizontalArray;
 
-#define kIS_VERTICAL (UIScreen.mainScreen.bounds.size.height > UIScreen.mainScreen.bounds.size.width)
-#define kDefaultHeight @(-1.0)
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwFooterVerticalDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwFooterHorizontalDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwFooterVerticalArray;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwFooterHorizontalArray;
 
-@interface UITableView (__BMPrivate__)
+@property (nonatomic, assign, readonly) BOOL fwIsDynamicLayoutInitialized;
 
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *headerVerticalDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *headerHorizontalDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *headerVerticalArray;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *headerHorizontalArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *verticalDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *horizontalDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *verticalArray;
-@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *horizontalArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *footerVerticalDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *footerHorizontalDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *footerVerticalArray;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *footerHorizontalArray;
+- (void)fwDynamicLayoutInitialize;
 
 @end
 
-@implementation UITableView (BMPrivate)
+@implementation UITableView (FWInnerDynamicLayout)
 
 #pragma mark - header property
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)headerHeightDictionary {
-    return kIS_VERTICAL ? self.headerVerticalDictionary : self.headerHorizontalDictionary;
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeaderHeightDictionary {
+    return FWDynamicLayoutIsVertical ? self.fwHeaderVerticalDictionary : self.fwHeaderHorizontalDictionary;
 }
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)headerVerticalDictionary {
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeaderVerticalDictionary {
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((dict == nil), 0)) {
         dict = @{}.mutableCopy;
@@ -71,7 +65,7 @@
     return dict;
 }
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)headerHorizontalDictionary {
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeaderHorizontalDictionary {
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((dict == nil), 0)) {
         dict = @{}.mutableCopy;
@@ -80,11 +74,11 @@
     return dict;
 }
 
-- (NSMutableArray<NSNumber *> *)headerHeightArray {
-    return kIS_VERTICAL ? self.headerVerticalArray : self.headerHorizontalArray;
+- (NSMutableArray<NSNumber *> *)fwHeaderHeightArray {
+    return FWDynamicLayoutIsVertical ? self.fwHeaderVerticalArray : self.fwHeaderHorizontalArray;
 }
 
-- (NSMutableArray<NSNumber *> *)headerVerticalArray {
+- (NSMutableArray<NSNumber *> *)fwHeaderVerticalArray {
     NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((arr == nil), 0)) {
         arr = @[].mutableCopy;
@@ -93,7 +87,7 @@
     return arr;
 }
 
-- (NSMutableArray<NSNumber *> *)headerHorizontalArray {
+- (NSMutableArray<NSNumber *> *)fwHeaderHorizontalArray {
     NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((arr == nil), 0)) {
         arr = @[].mutableCopy;
@@ -104,11 +98,11 @@
 
 #pragma mark - cell property
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)heightDictionary {
-    return kIS_VERTICAL ? self.verticalDictionary : self.horizontalDictionary;
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeightDictionary {
+    return FWDynamicLayoutIsVertical ? self.fwVerticalDictionary : self.fwHorizontalDictionary;
 }
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)verticalDictionary {
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwVerticalDictionary {
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((dict == nil), 0)) {
         dict = @{}.mutableCopy;
@@ -117,7 +111,7 @@
     return dict;
 }
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)horizontalDictionary {
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHorizontalDictionary {
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((dict == nil), 0)) {
         dict = @{}.mutableCopy;
@@ -126,11 +120,11 @@
     return dict;
 }
 
-- (NSMutableArray<NSMutableArray<NSNumber *> *> *)heightArray {
-    return kIS_VERTICAL ? self.verticalArray : self.horizontalArray;
+- (NSMutableArray<NSMutableArray<NSNumber *> *> *)fwHeightArray {
+    return FWDynamicLayoutIsVertical ? self.fwVerticalArray : self.fwHorizontalArray;
 }
 
-- (NSMutableArray<NSMutableArray<NSNumber *> *> *)verticalArray {
+- (NSMutableArray<NSMutableArray<NSNumber *> *> *)fwVerticalArray {
     NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((arr == nil), 0)) {
         arr = @[].mutableCopy;
@@ -139,7 +133,7 @@
     return arr;
 }
 
-- (NSMutableArray<NSMutableArray <NSNumber *> *> *)horizontalArray {
+- (NSMutableArray<NSMutableArray <NSNumber *> *> *)fwHorizontalArray {
     NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((arr == nil), 0)) {
         arr = @[].mutableCopy;
@@ -150,11 +144,11 @@
 
 #pragma mark - footer property
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)footerHeightDictionary {
-    return kIS_VERTICAL ? self.footerVerticalDictionary : self.footerHorizontalDictionary;
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwFooterHeightDictionary {
+    return FWDynamicLayoutIsVertical ? self.fwFooterVerticalDictionary : self.fwFooterHorizontalDictionary;
 }
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)footerVerticalDictionary {
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwFooterVerticalDictionary {
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((dict == nil), 0)) {
         dict = @{}.mutableCopy;
@@ -163,7 +157,7 @@
     return dict;
 }
 
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)footerHorizontalDictionary {
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwFooterHorizontalDictionary {
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((dict == nil), 0)) {
         dict = @{}.mutableCopy;
@@ -172,11 +166,11 @@
     return dict;
 }
 
-- (NSMutableArray<NSNumber *> *)footerHeightArray {
-    return kIS_VERTICAL ? self.footerVerticalArray : self.footerHorizontalArray;
+- (NSMutableArray<NSNumber *> *)fwFooterHeightArray {
+    return FWDynamicLayoutIsVertical ? self.fwFooterVerticalArray : self.fwFooterHorizontalArray;
 }
 
-- (NSMutableArray<NSNumber *> *)footerVerticalArray {
+- (NSMutableArray<NSNumber *> *)fwFooterVerticalArray {
     NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((arr == nil), 0)) {
         arr = @[].mutableCopy;
@@ -185,7 +179,7 @@
     return arr;
 }
 
-- (NSMutableArray<NSNumber *> *)footerHorizontalArray {
+- (NSMutableArray<NSNumber *> *)fwFooterHorizontalArray {
     NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
     if (__builtin_expect((arr == nil), 0)) {
         arr = @[].mutableCopy;
@@ -194,13 +188,13 @@
     return arr;
 }
 
-- (BOOL)isDynamicLayoutInitializationed {
+- (BOOL)fwIsDynamicLayoutInitialized {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)bm_dynamicLayoutInitialization {
-    [self _initCacheArrayWithDataSource:self.dataSource];
-    objc_setAssociatedObject(self, @selector(isDynamicLayoutInitializationed), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)fwDynamicLayoutInitialize {
+    [self fwSetupCacheArrayWithDataSource:self.dataSource];
+    objc_setAssociatedObject(self, @selector(fwIsDynamicLayoutInitialized), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - load
@@ -208,103 +202,92 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SEL selectors[] = {
-
-            @selector(reloadData),
-
-            @selector(insertSections:withRowAnimation:),
-            @selector(deleteSections:withRowAnimation:),
-            @selector(reloadSections:withRowAnimation:),
-            @selector(moveSection:toSection:),
-
-            @selector(insertRowsAtIndexPaths:withRowAnimation:),
-            @selector(deleteRowsAtIndexPaths:withRowAnimation:),
-            @selector(reloadRowsAtIndexPaths:withRowAnimation:),
-            @selector(moveRowAtIndexPath:toIndexPath:)
-        };
-
-        for (NSUInteger index = 0; index < sizeof(selectors) / sizeof(SEL); ++index) {
-            SEL originalSelector = selectors[index];
-            SEL swizzledSelector = NSSelectorFromString([@"tableView_dynamicLayout_" stringByAppendingString:NSStringFromSelector(originalSelector)]);
-            Method originalMethod = class_getInstanceMethod(self, originalSelector);
-            Method swizzledMethod = class_getInstanceMethod(self, swizzledSelector);
-            method_exchangeImplementations(originalMethod, swizzledMethod);
-        }
+        [self fwSwizzleInstanceMethod:@selector(reloadData) with:@selector(fwDynamicLayoutReloadData)];
+        
+        [self fwSwizzleInstanceMethod:@selector(insertSections:withRowAnimation:) with:@selector(fwDynamicLayoutInsertSections:withRowAnimation:)];
+        [self fwSwizzleInstanceMethod:@selector(deleteSections:withRowAnimation:) with:@selector(fwDynamicLayoutDeleteSections:withRowAnimation:)];
+        [self fwSwizzleInstanceMethod:@selector(reloadSections:withRowAnimation:) with:@selector(fwDynamicLayoutReloadSections:withRowAnimation:)];
+        [self fwSwizzleInstanceMethod:@selector(moveSection:toSection:) with:@selector(fwDynamicLayoutMoveSection:toSection:)];
+        
+        [self fwSwizzleInstanceMethod:@selector(insertRowsAtIndexPaths:withRowAnimation:) with:@selector(fwDynamicLayoutInsertRowsAtIndexPaths:withRowAnimation:)];
+        [self fwSwizzleInstanceMethod:@selector(deleteRowsAtIndexPaths:withRowAnimation:) with:@selector(fwDynamicLayoutDeleteRowsAtIndexPaths:withRowAnimation:)];
+        [self fwSwizzleInstanceMethod:@selector(reloadRowsAtIndexPaths:withRowAnimation:) with:@selector(fwDynamicLayoutReloadRowsAtIndexPaths:withRowAnimation:)];
+        [self fwSwizzleInstanceMethod:@selector(moveRowAtIndexPath:toIndexPath:) with:@selector(fwDynamicLayoutMoveRowAtIndexPath:toIndexPath:)];
     });
 }
 
-- (void)tableView_dynamicLayout_reloadData {
+- (void)fwDynamicLayoutReloadData {
     // reloadData 时，清空缓存数据。
-    if (self.isDynamicLayoutInitializationed) {
-        [self _initCacheArrayWithDataSource:self.dataSource];
+    if (self.fwIsDynamicLayoutInitialized) {
+        [self fwSetupCacheArrayWithDataSource:self.dataSource];
     }
-    [self tableView_dynamicLayout_reloadData];
+    [self fwDynamicLayoutReloadData];
 }
 
-- (void)tableView_dynamicLayout_insertSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutInsertSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
+    if (self.fwIsDynamicLayoutInitialized) {
         // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self _initCacheArrayWithDataSource:self.dataSource];
+        [self fwSetupCacheArrayWithDataSource:self.dataSource];
     }
-    [self tableView_dynamicLayout_insertSections:sections withRowAnimation:animation];
+    [self fwDynamicLayoutInsertSections:sections withRowAnimation:animation];
 }
 
-- (void)tableView_dynamicLayout_deleteSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutDeleteSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
+    if (self.fwIsDynamicLayoutInitialized) {
         [sections enumerateIndexesWithOptions:(NSEnumerationReverse) usingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
             // cell
-            [self.verticalArray         removeObjectAtIndex:section];
-            [self.horizontalArray       removeObjectAtIndex:section];
+            [self.fwVerticalArray         removeObjectAtIndex:section];
+            [self.fwHorizontalArray       removeObjectAtIndex:section];
             // header footer
-            [self.headerVerticalArray   removeObjectAtIndex:section];
-            [self.headerHorizontalArray removeObjectAtIndex:section];
-            [self.footerVerticalArray   removeObjectAtIndex:section];
-            [self.footerHorizontalArray removeObjectAtIndex:section];
+            [self.fwHeaderVerticalArray   removeObjectAtIndex:section];
+            [self.fwHeaderHorizontalArray removeObjectAtIndex:section];
+            [self.fwFooterVerticalArray   removeObjectAtIndex:section];
+            [self.fwFooterHorizontalArray removeObjectAtIndex:section];
         }];
     }
-    [self tableView_dynamicLayout_deleteSections:sections withRowAnimation:animation];
+    [self fwDynamicLayoutDeleteSections:sections withRowAnimation:animation];
 }
 
-- (void)tableView_dynamicLayout_reloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutReloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
+    if (self.fwIsDynamicLayoutInitialized) {
         [sections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
             // 组的数据可能改变 需要重新获取组的行数
             NSInteger sectionCount = [self.dataSource tableView:self numberOfRowsInSection:section];
             NSMutableArray *arr = [NSMutableArray arrayWithCapacity:sectionCount];
             while (sectionCount-- > 0) {
-                [arr addObject:kDefaultHeight];
+                [arr addObject:FWDynamicLayoutDefaultHeight];
             }
-            self.verticalArray[section]   = arr.mutableCopy;
-            self.horizontalArray[section] = arr.mutableCopy;
+            self.fwVerticalArray[section]   = arr.mutableCopy;
+            self.fwHorizontalArray[section] = arr.mutableCopy;
 
             // header footer
-            self.headerVerticalArray[section]   = kDefaultHeight;
-            self.headerHorizontalArray[section] = kDefaultHeight;
-            self.footerVerticalArray[section]   = kDefaultHeight;
-            self.footerHorizontalArray[section] = kDefaultHeight;
+            self.fwHeaderVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
+            self.fwHeaderHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
+            self.fwFooterVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
+            self.fwFooterHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
         }];
     }
-    [self tableView_dynamicLayout_reloadSections:sections withRowAnimation:animation];
+    [self fwDynamicLayoutReloadSections:sections withRowAnimation:animation];
 }
 
-- (void)tableView_dynamicLayout_moveSection:(NSInteger)section toSection:(NSInteger)newSection {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutMoveSection:(NSInteger)section toSection:(NSInteger)newSection {
+    if (self.fwIsDynamicLayoutInitialized) {
         // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self _initCacheArrayWithDataSource:self.dataSource];
+        [self fwSetupCacheArrayWithDataSource:self.dataSource];
     }
-    [self tableView_dynamicLayout_moveSection:section toSection:newSection];
+    [self fwDynamicLayoutMoveSection:section toSection:newSection];
 }
 
-- (void)tableView_dynamicLayout_insertRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutInsertRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
+    if (self.fwIsDynamicLayoutInitialized) {
         // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self _initCacheArrayWithDataSource:self.dataSource];
+        [self fwSetupCacheArrayWithDataSource:self.dataSource];
     }
-    [self tableView_dynamicLayout_insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+    [self fwDynamicLayoutInsertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 }
 
-- (void)tableView_dynamicLayout_deleteRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutDeleteRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
+    if (self.fwIsDynamicLayoutInitialized) {
         NSMutableArray *tempIndexPaths = indexPaths.mutableCopy;
         [tempIndexPaths sortUsingComparator:^NSComparisonResult(NSIndexPath *  _Nonnull obj1, NSIndexPath *  _Nonnull obj2) {
             if (obj1.section == obj2.section) {
@@ -313,34 +296,34 @@
             return obj1.section < obj2.section;
         }];
         [tempIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self.verticalArray[obj.section]   removeObjectAtIndex:obj.row];
-            [self.horizontalArray[obj.section] removeObjectAtIndex:obj.row];
+            [self.fwVerticalArray[obj.section]   removeObjectAtIndex:obj.row];
+            [self.fwHorizontalArray[obj.section] removeObjectAtIndex:obj.row];
         }];
     }
-    [self tableView_dynamicLayout_deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+    [self fwDynamicLayoutDeleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 }
 
-- (void)tableView_dynamicLayout_reloadRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutReloadRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
+    if (self.fwIsDynamicLayoutInitialized) {
         [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            self.verticalArray[obj.section][obj.row]   = kDefaultHeight;
-            self.horizontalArray[obj.section][obj.row] = kDefaultHeight;
+            self.fwVerticalArray[obj.section][obj.row]   = FWDynamicLayoutDefaultHeight;
+            self.fwHorizontalArray[obj.section][obj.row] = FWDynamicLayoutDefaultHeight;
         }];
     }
-    [self tableView_dynamicLayout_reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+    [self fwDynamicLayoutReloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 }
 
-- (void)tableView_dynamicLayout_moveRowAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
-    if (self.isDynamicLayoutInitializationed) {
+- (void)fwDynamicLayoutMoveRowAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
+    if (self.fwIsDynamicLayoutInitialized) {
         // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self _initCacheArrayWithDataSource:self.dataSource];
+        [self fwSetupCacheArrayWithDataSource:self.dataSource];
     }
-    [self tableView_dynamicLayout_moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+    [self fwDynamicLayoutMoveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
 }
 
 #pragma mark - Private Method
 
-- (void)_initCacheArrayWithDataSource:(id<UITableViewDataSource>)dataSource {
+- (void)fwSetupCacheArrayWithDataSource:(id<UITableViewDataSource>)dataSource {
     if (!dataSource) {
         return;
     }
@@ -359,71 +342,78 @@
         NSInteger rowCount = [dataSource tableView:self numberOfRowsInSection:tempSections];
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:rowCount];
         while (rowCount-- > 0) {
-            [arr addObject:kDefaultHeight];
+            [arr addObject:FWDynamicLayoutDefaultHeight];
         }
         [verticalArray addObject:arr];
         [horizontalArray addObject:arr.mutableCopy];
         tempSections++;
     }
-    [self.verticalArray removeAllObjects];
-    [self.verticalArray addObjectsFromArray:verticalArray.copy];
+    [self.fwVerticalArray removeAllObjects];
+    [self.fwVerticalArray addObjectsFromArray:verticalArray.copy];
 
-    [self.horizontalArray removeAllObjects];
-    [self.horizontalArray addObjectsFromArray:horizontalArray.copy];
-    [self _initHeaderFooterCacheArrayWithSections:sections];
+    [self.fwHorizontalArray removeAllObjects];
+    [self.fwHorizontalArray addObjectsFromArray:horizontalArray.copy];
+    [self fwSetupHeaderFooterCacheArrayWithSections:sections];
 }
 
-- (void)_initHeaderFooterCacheArrayWithSections:(NSInteger)sections {
+- (void)fwSetupHeaderFooterCacheArrayWithSections:(NSInteger)sections {
     // 2-1、竖屏状态下的 HeaderView 高度缓存
     // 2-2、横屏状态下的 HeaderView 高度缓存
     // 2-3、竖屏状态下的 FooterView 高度缓存
     // 2-4、横屏状态下的 FooterView 高度缓存
-    [self.headerVerticalArray   removeAllObjects];
-    [self.headerHorizontalArray removeAllObjects];
-    [self.footerVerticalArray   removeAllObjects];
-    [self.footerHorizontalArray removeAllObjects];
+    [self.fwHeaderVerticalArray   removeAllObjects];
+    [self.fwHeaderHorizontalArray removeAllObjects];
+    [self.fwFooterVerticalArray   removeAllObjects];
+    [self.fwFooterHorizontalArray removeAllObjects];
     NSInteger temp = 0;
     while (temp++ < sections) {
-        [self.headerVerticalArray   addObject:kDefaultHeight];
-        [self.headerHorizontalArray addObject:kDefaultHeight];
-        [self.footerVerticalArray   addObject:kDefaultHeight];
-        [self.footerHorizontalArray addObject:kDefaultHeight];
+        [self.fwHeaderVerticalArray   addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwHeaderHorizontalArray addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwFooterVerticalArray   addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwFooterHorizontalArray addObject:FWDynamicLayoutDefaultHeight];
     }
 }
 
 @end
 
-@implementation UITableViewCell (BMDynamicLayout)
+#pragma mark - UITableViewCell+FWDynamicLayout
 
-- (BOOL)bm_maxYViewFixed {
+@implementation UITableViewCell (FWDynamicLayout)
+
+- (BOOL)fwMaxYViewFixed {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)setBm_maxYViewFixed:(BOOL)bm_maxYViewFixed {
-    objc_setAssociatedObject(self, @selector(bm_maxYViewFixed), @(bm_maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFwMaxYViewFixed:(BOOL)fwMaxYViewFixed {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewFixed), @(fwMaxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-+ (instancetype)bm_tableViewCellFromNibWithTableView:(UITableView *)tableView {
-    NSString *selfClassName = NSStringFromClass(self.class);
-    NSString *reuseIdentifier = [selfClassName stringByAppendingString:@"BMNibDynamicLayoutReuseIdentifier"];
-
-    if ([objc_getAssociatedObject(tableView, (__bridge const void * _Nonnull)(self)) boolValue]) {
-        // 已注册
-        return [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-    }
-    // 未注册，开始注册
-    UINib *nib = [UINib nibWithNibName:kSwiftClassNibName(selfClassName) bundle:[NSBundle bundleForClass:self.class]];
-    [tableView registerNib:nib forCellReuseIdentifier:reuseIdentifier];
-    objc_setAssociatedObject(tableView, (__bridge const void * _Nonnull)(self), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    return [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+- (CGFloat)fwMaxYViewPadding {
+#if CGFLOAT_IS_DOUBLE
+    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+#else
+    return [objc_getAssociatedObject(self, _cmd) floatValue];
+#endif
 }
 
-+ (instancetype)bm_tableViewCellFromAllocWithTableView:(UITableView *)tableView {
-    return [self bm_tableViewCellFromAllocWithTableView:tableView style:(UITableViewCellStyleDefault)];
+- (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-+ (instancetype)bm_tableViewCellFromAllocWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style {
-    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"BMAllocDynamicLayoutReuseIdentifier"];
+- (UIView *)fwMaxYView {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setFwMaxYView:(UIView *)fwMaxYView {
+    objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (instancetype)fwCellWithTableView:(UITableView *)tableView {
+    return [self fwCellWithTableView:tableView style:UITableViewCellStyleDefault];
+}
+
++ (instancetype)fwCellWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style {
+    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (cell) {
         return cell;
@@ -433,38 +423,44 @@
 
 @end
 
-@implementation UITableViewHeaderFooterView (BMDynamicLayout)
+#pragma mark - UITableViewHeaderFooterView+FWDynamicLayout
 
-- (BOOL)bm_maxYViewFixed {
+@implementation UITableViewHeaderFooterView (FWDynamicLayout)
+
+- (BOOL)fwMaxYViewFixed {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)setBm_maxYViewFixed:(BOOL)bm_maxYViewFixed {
-    objc_setAssociatedObject(self, @selector(bm_maxYViewFixed), @(bm_maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFwMaxYViewFixed:(BOOL)fwMaxYViewFixed {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewFixed), @(fwMaxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-+ (instancetype)bm_tableViewHeaderFooterViewFromNibWithTableView:(UITableView *)tableView {
-    NSString *selfClassName = NSStringFromClass(self.class);
-    NSString *reuseIdentifier = [selfClassName stringByAppendingString:@"BMNibDynamicLayoutReuseIdentifier"];
-    if ([objc_getAssociatedObject(tableView, (__bridge const void * _Nonnull)(object_getClass(self))) boolValue]) {
-        // 已注册
-        return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
-    }
-    // 未注册，开始注册
-    UINib *nib = [UINib nibWithNibName:kSwiftClassNibName(selfClassName) bundle:[NSBundle bundleForClass:self.class]];
-    [tableView registerNib:nib forHeaderFooterViewReuseIdentifier:reuseIdentifier];
-    objc_setAssociatedObject(tableView, (__bridge const void * _Nonnull)(object_getClass(self)), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
+- (CGFloat)fwMaxYViewPadding {
+#if CGFLOAT_IS_DOUBLE
+    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+#else
+    return [objc_getAssociatedObject(self, _cmd) floatValue];
+#endif
 }
 
-+ (instancetype)bm_tableViewHeaderFooterViewFromAllocWithTableView:(UITableView *)tableView {
+- (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)fwMaxYView {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setFwMaxYView:(UIView *)fwMaxYView {
+    objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView {
     NSString *selfClassName = NSStringFromClass(self.class);
-    NSString *reuseIdentifier = [selfClassName stringByAppendingString:@"BMAllocDynamicLayoutReuseIdentifier"];
+    NSString *reuseIdentifier = [selfClassName stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     if ([objc_getAssociatedObject(tableView, (__bridge const void * _Nonnull)(self)) boolValue]) {
-        // 已注册
         return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
     }
-    // 未注册，开始注册
     [tableView registerClass:self forHeaderFooterViewReuseIdentifier:reuseIdentifier];
     objc_setAssociatedObject(tableView, (__bridge const void * _Nonnull)(self), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
@@ -472,63 +468,14 @@
 
 @end
 
-void tableViewDynamicLayoutLayoutIfNeeded(UIView *view);
-inline void tableViewDynamicLayoutLayoutIfNeeded(UIView *view) {
-    // https://juejin.im/post/5a30f24bf265da432e5c0070/
-    // https://objccn.io/issue-3-5/
-    // http://tech.gc.com/demystifying-ios-layout/
-    [view setNeedsLayout];
-    [view layoutIfNeeded];
-}
+#pragma mark - UITableView+FWDynamicLayout
 
-#pragma mark - UITableViewCell BMDynamicLayoutPrivate
+@implementation UITableView (FWDynamicLayout)
 
-@interface UITableViewCell (BMDynamicLayoutPrivate)
+#pragma mark - Cell
 
-@property (nonatomic, strong) UIView *dynamicLayout_maxYView;
-
-@end
-
-@implementation UITableViewCell (BMDynamicLayoutPrivate)
-
-- (UIView *)dynamicLayout_maxYView {
-    return objc_getAssociatedObject(self, @selector(setDynamicLayout_maxYView:));
-}
-
-- (void)setDynamicLayout_maxYView:(UIView *)dynamicLayout_maxYView {
-    objc_setAssociatedObject(self, _cmd, dynamicLayout_maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-#pragma mark - UITableViewHeaderFooterView BMDynamicLayoutPrivate
-
-@interface UITableViewHeaderFooterView (BMDynamicLayoutPrivate)
-
-@property (nonatomic, strong) UIView *dynamicLayout_maxYView;
-
-@end
-
-@implementation UITableViewHeaderFooterView (BMDynamicLayoutPrivate)
-
-- (UIView *)dynamicLayout_maxYView {
-    return objc_getAssociatedObject(self, @selector(setDynamicLayout_maxYView:));
-}
-
-- (void)setDynamicLayout_maxYView:(UIView *)dynamicLayout_maxYView {
-    objc_setAssociatedObject(self, _cmd, dynamicLayout_maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-#pragma mark - UITableView BMDynamicLayout
-
-@implementation UITableView (BMDynamicLayout)
-
-#pragma mark - private cell
-
-- (UIView *)_cellViewWithCellClass:(Class)clas {
-    NSString *cellClassName = NSStringFromClass(clas);
+- (UIView *)fwCellViewWithCellClass:(Class)clazz {
+    NSString *cellClassName = NSStringFromClass(clazz);
 
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (!dict) {
@@ -537,41 +484,24 @@ inline void tableViewDynamicLayoutLayoutIfNeeded(UIView *view) {
     }
     UIView *view = dict[cellClassName];
     if (view) {
-        // 直接返回
         return view;
     }
     
-    NSBundle *bundle = [NSBundle bundleForClass:clas];
-    NSString *path = [bundle pathForResource:kSwiftClassNibName(cellClassName) ofType:@"nib"];
-    UITableViewCell *cell = nil;
-    if (path.length > 0) {
-        NSArray <UITableViewCell *> *arr = [[UINib nibWithNibName:kSwiftClassNibName(cellClassName) bundle:bundle] instantiateWithOwner:nil options:nil];
-        for (UITableViewCell *obj in arr) {
-            if ([obj isMemberOfClass:clas]) {
-                cell = obj;
-                // 清空 reuseIdentifier
-                [cell setValue:nil forKey:@"reuseIdentifier"];
-                break;
-            }
-        }
-    }
-    if (!cell) {
-        // 这里使用默认的 UITableViewCellStyleDefault 类型。
-        // 如果需要自定义高度，通常都是使用的此类型, 暂时不考虑其他。
-        cell = [[clas alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    }
+    // 这里使用默认的 UITableViewCellStyleDefault 类型。如果需要自定义高度，通常都是使用的此类型, 暂时不考虑其他。
+    UITableViewCell *cell = [[clazz alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     view = [UIView new];
     [view addSubview:cell];
     dict[cellClassName] = view;
     return view;
 }
 
-- (CGFloat)_heightWithCellClass:(Class)clas
-                  configuration:(BMConfigurationCellBlock)configuration {
-    UIView *view = [self _cellViewWithCellClass:clas];
+- (CGFloat)fwInnerHeightWithCellClass:(Class)clazz
+                        configuration:(FWCellConfigurationBlock)configuration {
+    UIView *view = [self fwCellViewWithCellClass:clazz];
     // 获取 TableView 宽度
     UIView *temp = self.superview ? self.superview : self;
-    tableViewDynamicLayoutLayoutIfNeeded(temp);
+    [temp setNeedsLayout];
+    [temp layoutIfNeeded];
     CGFloat width = CGRectGetWidth(self.frame);
 
     // 设置 Frame
@@ -583,39 +513,150 @@ inline void tableViewDynamicLayoutLayoutIfNeeded(UIView *view) {
     !configuration ? : configuration(cell);
 
     // 刷新布局
-    tableViewDynamicLayoutLayoutIfNeeded(view);
+    [view setNeedsLayout];
+    [view layoutIfNeeded];
 
     // 获取需要的高度
-    __block CGFloat maxY  = 0.0;
-    if (cell.bm_maxYViewFixed) {
-        if (cell.dynamicLayout_maxYView) {
-            return CGRectGetMaxY(cell.dynamicLayout_maxYView.frame);
+    __block CGFloat maxY = 0.0;
+    if (cell.fwMaxYViewFixed) {
+        if (cell.fwMaxYView) {
+            maxY = CGRectGetMaxY(cell.fwMaxYView.frame);
+        } else {
+            __block UIView *maxXView = nil;
+            [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                CGFloat tempY = CGRectGetMaxY(obj.frame);
+                if (tempY > maxY) {
+                    maxY = tempY;
+                    maxXView = obj;
+                }
+            }];
+            cell.fwMaxYView = maxXView;
         }
-        __block UIView *maxXView = nil;
+    } else {
         [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             CGFloat tempY = CGRectGetMaxY(obj.frame);
             if (tempY > maxY) {
                 maxY = tempY;
-                maxXView = obj;
             }
         }];
-        cell.dynamicLayout_maxYView = maxXView;
-        return maxY;
     }
-    [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGFloat tempY = CGRectGetMaxY(obj.frame);
-        if (tempY > maxY) {
-            maxY = tempY;
-        }
-    }];
+    maxY += cell.fwMaxYViewPadding;
     return maxY;
 }
 
-#pragma mark - private HeaderFooterView
+- (CGFloat)fwHeightWithCellClass:(Class)clazz
+                    configuration:(FWCellConfigurationBlock)configuration {
+    if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
+        [self fwDynamicLayoutInitialize];
+    }
+    return [self fwInnerHeightWithCellClass:clazz configuration:configuration];
+}
 
-- (UIView *)_headerFooterViewWithHeaderFooterViewClass:(Class)clas
+- (CGFloat)fwHeightWithCellClass:(Class)clazz
+                 cacheByIndexPath:(NSIndexPath *)indexPath
+                    configuration:(FWCellConfigurationBlock)configuration {
+    if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
+        [self fwDynamicLayoutInitialize];
+    }
+    NSNumber *number = self.fwHeightArray[indexPath.section][indexPath.row];
+    if (number.doubleValue < 0.0) {
+        CGFloat cellHeight = [self fwInnerHeightWithCellClass:clazz configuration:configuration];
+        self.fwHeightArray[indexPath.section][indexPath.row] = @(cellHeight);
+        return cellHeight;
+    }
+    return number.doubleValue;
+}
+
+- (CGFloat)fwHeightWithCellClass:(Class)clazz
+                       cacheByKey:(id<NSCopying>)key
+                    configuration:(FWCellConfigurationBlock)configuration {
+    if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
+        [self fwDynamicLayoutInitialize];
+    }
+    if (key && self.fwHeightDictionary[key]) {
+        return self.fwHeightDictionary[key].doubleValue;
+    }
+    CGFloat cellHeight = [self fwInnerHeightWithCellClass:clazz configuration:configuration];
+    if (key) {
+        self.fwHeightDictionary[key] = @(cellHeight);
+    }
+    return cellHeight;
+}
+
+#pragma mark - HeaderFooterView
+
+- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
+                                         type:(FWHeaderFooterViewType)type
+                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
+        [self fwDynamicLayoutInitialize];
+    }
+    if (type == FWHeaderFooterViewTypeHeader) {
+        return [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
+    } else {
+        return [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
+    }
+}
+
+- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
+                                         type:(FWHeaderFooterViewType)type
+                               cacheBySection:(NSInteger)section
+                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
+        [self fwDynamicLayoutInitialize];
+    }
+    if (type == FWHeaderFooterViewTypeHeader) {
+        NSNumber *number = self.fwHeaderHeightArray[section];
+        if (number.doubleValue >= 0.0) {
+            return number.doubleValue;
+        }
+        CGFloat height = [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
+        self.fwHeaderHeightArray[section] = @(height);
+        return height;
+    } else {
+        NSNumber *number = self.fwFooterHeightArray[section];
+        if (number.doubleValue >= 0.0) {
+            return number.doubleValue;
+        }
+        CGFloat height = [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
+        self.fwFooterHeightArray[section] = @(height);
+        return height;
+    }
+}
+
+- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
+                                         type:(FWHeaderFooterViewType)type
+                                   cacheByKey:(id<NSCopying>)key
+                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
+        [self fwDynamicLayoutInitialize];
+    }
+    if (type == FWHeaderFooterViewTypeHeader) {
+        if (key && self.fwHeaderHeightDictionary[key]) {
+            return self.fwHeaderHeightDictionary[key].doubleValue;
+        }
+        CGFloat cellHeight = [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
+        if (key) {
+            self.fwHeaderHeightDictionary[key] = @(cellHeight);
+        }
+        return cellHeight;
+    } else {
+        if (key && self.fwFooterHeightDictionary[key]) {
+            return self.fwFooterHeightDictionary[key].doubleValue;
+        }
+        CGFloat cellHeight = [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
+        if (key) {
+            self.fwFooterHeightDictionary[key] = @(cellHeight);
+        }
+        return cellHeight;
+    }
+}
+
+#pragma mark - Private
+
+- (UIView *)fwHeaderFooterViewWithHeaderFooterViewClass:(Class)clazz
                                                    sel:(SEL)sel {
-    NSString *headerFooterViewClassName = NSStringFromClass(clas);
+    NSString *headerFooterViewClassName = NSStringFromClass(clazz);
 
     NSMutableDictionary *dict = objc_getAssociatedObject(self, sel);
     if (!dict) {
@@ -624,40 +665,24 @@ inline void tableViewDynamicLayoutLayoutIfNeeded(UIView *view) {
     }
     UIView *view = dict[headerFooterViewClassName];
     if (view) {
-        // 直接返回
         return view;
     }
 
-    NSBundle *bundle = [NSBundle bundleForClass:clas];
-    NSString *path = [bundle pathForResource:kSwiftClassNibName(headerFooterViewClassName) ofType:@"nib"];
-    UIView *headerView = nil;
-    if (path.length > 0) {
-        NSArray <UITableViewHeaderFooterView *> *arr = [[UINib nibWithNibName:kSwiftClassNibName(headerFooterViewClassName) bundle:bundle] instantiateWithOwner:nil options:nil];
-        for (UITableViewHeaderFooterView *obj in arr) {
-            if ([obj isMemberOfClass:clas]) {
-                headerView = obj;
-                // 清空 reuseIdentifier
-                [headerView setValue:nil forKey:@"reuseIdentifier"];
-                break;
-            }
-        }
-    }
-    if (!headerView) {
-        headerView = [[clas alloc] initWithReuseIdentifier:nil];
-    }
+    UIView *headerView = [[clazz alloc] initWithReuseIdentifier:nil];
     view = [UIView new];
     [view addSubview:headerView];
     dict[headerFooterViewClassName] = view;
     return view;
 }
 
-- (CGFloat)_heightWithHeaderFooterViewClass:(Class)clas
+- (CGFloat)fwInnerHeightWithHeaderFooterViewClass:(Class)clazz
                                         sel:(SEL)sel
-                              configuration:(BMConfigurationHeaderFooterViewBlock)configuration {
-    UIView *view = [self _headerFooterViewWithHeaderFooterViewClass:clas sel:sel];
+                              configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    UIView *view = [self fwHeaderFooterViewWithHeaderFooterViewClass:clazz sel:sel];
     // 获取 TableView 宽度
     UIView *temp = self.superview ? self.superview : self;
-    tableViewDynamicLayoutLayoutIfNeeded(temp);
+    [temp setNeedsLayout];
+    [temp layoutIfNeeded];
     CGFloat width = CGRectGetWidth(self.frame);
 
     // 设置 Frame
@@ -668,161 +693,47 @@ inline void tableViewDynamicLayoutLayoutIfNeeded(UIView *view) {
     // 让外面布局 UITableViewHeaderFooterView
     !configuration ? : configuration(headerFooterView);
     // 刷新布局
-    tableViewDynamicLayoutLayoutIfNeeded(view);
+    [view setNeedsLayout];
+    [view layoutIfNeeded];
 
     UIView *contentView = headerFooterView.contentView.subviews.count ? headerFooterView.contentView : headerFooterView;
 
     // 获取需要的高度
     __block CGFloat maxY  = 0.0;
-    if (headerFooterView.bm_maxYViewFixed) {
-        if (headerFooterView.dynamicLayout_maxYView) {
-            return CGRectGetMaxY(headerFooterView.dynamicLayout_maxYView.frame);
+    if (headerFooterView.fwMaxYViewFixed) {
+        if (headerFooterView.fwMaxYView) {
+            maxY = CGRectGetMaxY(headerFooterView.fwMaxYView.frame);
+        } else {
+            __block UIView *maxXView = nil;
+            [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                CGFloat tempY = CGRectGetMaxY(obj.frame);
+                if (tempY > maxY) {
+                    maxY = tempY;
+                    maxXView = obj;
+                }
+            }];
+            headerFooterView.fwMaxYView = maxXView;
         }
-        __block UIView *maxXView = nil;
+    } else {
         [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             CGFloat tempY = CGRectGetMaxY(obj.frame);
             if (tempY > maxY) {
                 maxY = tempY;
-                maxXView = obj;
             }
         }];
-        headerFooterView.dynamicLayout_maxYView = maxXView;
-        return maxY;
     }
-    [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGFloat tempY = CGRectGetMaxY(obj.frame);
-        if (tempY > maxY) {
-            maxY = tempY;
-        }
-    }];
+    maxY += headerFooterView.fwMaxYViewPadding;
     return maxY;
 }
 
-- (CGFloat)_heightWithHeaderViewClass:(Class)clas
-                        configuration:(BMConfigurationHeaderFooterViewBlock)configuration {
-    return [self _heightWithHeaderFooterViewClass:clas sel:_cmd configuration:configuration];
+- (CGFloat)fwInnerHeightWithHeaderViewClass:(Class)clazz
+                        configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    return [self fwInnerHeightWithHeaderFooterViewClass:clazz sel:_cmd configuration:configuration];
 }
 
-- (CGFloat)_heightWithFooterViewClass:(Class)clas
-                        configuration:(BMConfigurationHeaderFooterViewBlock)configuration {
-    return [self _heightWithHeaderFooterViewClass:clas sel:_cmd configuration:configuration];
-}
-
-#pragma mark - Public cell
-
-- (CGFloat)bm_heightWithCellClass:(Class)clas
-                    configuration:(BMConfigurationCellBlock)configuration {
-    if (__builtin_expect((!self.isDynamicLayoutInitializationed), 0)) {
-        [self bm_dynamicLayoutInitialization];
-    }
-    return [self _heightWithCellClass:clas configuration:configuration];
-}
-
-- (CGFloat)bm_heightWithCellClass:(Class)clas
-                 cacheByIndexPath:(NSIndexPath *)indexPath
-                    configuration:(BMConfigurationCellBlock)configuration {
-    if (__builtin_expect((!self.isDynamicLayoutInitializationed), 0)) {
-        [self bm_dynamicLayoutInitialization];
-    }
-    NSNumber *number = self.heightArray[indexPath.section][indexPath.row];
-    if (number.doubleValue < 0.0) {
-        // 没有缓存
-        // 计算高度
-        CGFloat cellHeight = [self _heightWithCellClass:clas configuration:configuration];
-        // 缓存高度
-        self.heightArray[indexPath.section][indexPath.row] = @(cellHeight);
-        return cellHeight;
-    }
-    return number.doubleValue;
-}
-
-- (CGFloat)bm_heightWithCellClass:(Class)clas
-                       cacheByKey:(id<NSCopying>)key
-                    configuration:(BMConfigurationCellBlock)configuration {
-    if (__builtin_expect((!self.isDynamicLayoutInitializationed), 0)) {
-        [self bm_dynamicLayoutInitialization];
-    }
-    if (key && self.heightDictionary[key]) {
-        return self.heightDictionary[key].doubleValue;
-    }
-    CGFloat cellHeight = [self _heightWithCellClass:clas configuration:configuration];
-    if (key) {
-        self.heightDictionary[key] = @(cellHeight);
-    }
-    return cellHeight;
-}
-
-#pragma mark - Public HeaderFooter
-
-- (CGFloat)bm_heightWithHeaderFooterViewClass:(Class)clas
-                                         type:(BMHeaderFooterViewDynamicLayoutType)type
-                                configuration:(BMConfigurationHeaderFooterViewBlock)configuration {
-    if (__builtin_expect((!self.isDynamicLayoutInitializationed), 0)) {
-        [self bm_dynamicLayoutInitialization];
-    }
-    if (type == BMHeaderFooterViewDynamicLayoutTypeHeader) {
-        return [self _heightWithHeaderViewClass:clas configuration:configuration];
-    }
-    return [self _heightWithFooterViewClass:clas configuration:configuration];
-}
-
-- (CGFloat)bm_heightWithHeaderFooterViewClass:(Class)clas
-                                         type:(BMHeaderFooterViewDynamicLayoutType)type
-                               cacheBySection:(NSInteger)section
-                                configuration:(BMConfigurationHeaderFooterViewBlock)configuration {
-    if (__builtin_expect((!self.isDynamicLayoutInitializationed), 0)) {
-        [self bm_dynamicLayoutInitialization];
-    }
-    if (type == BMHeaderFooterViewDynamicLayoutTypeHeader) {
-        NSNumber *number = self.headerHeightArray[section];
-        if (number.doubleValue >= 0.0) {
-            return number.doubleValue;
-        }
-        // not cache
-        // get cache height
-        CGFloat height = [self _heightWithHeaderViewClass:clas configuration:configuration];
-        // save cache height
-        self.headerHeightArray[section] = @(height);
-        return height;
-    }
-    NSNumber *number = self.footerHeightArray[section];
-    if (number.doubleValue >= 0.0) {
-        return number.doubleValue;
-    }
-    // not cache
-    // get cache height
-    CGFloat height = [self _heightWithFooterViewClass:clas configuration:configuration];
-    // save cache height
-    self.footerHeightArray[section] = @(height);
-    return height;
-}
-
-- (CGFloat)bm_heightWithHeaderFooterViewClass:(Class)clas
-                                         type:(BMHeaderFooterViewDynamicLayoutType)type
-                                   cacheByKey:(id<NSCopying>)key
-                                configuration:(BMConfigurationHeaderFooterViewBlock)configuration {
-    if (__builtin_expect((!self.isDynamicLayoutInitializationed), 0)) {
-        [self bm_dynamicLayoutInitialization];
-    }
-    if (type == BMHeaderFooterViewDynamicLayoutTypeHeader) {
-        if (key && self.headerHeightDictionary[key]) {
-            return self.headerHeightDictionary[key].doubleValue;
-        }
-        CGFloat cellHeight = [self _heightWithHeaderViewClass:clas configuration:configuration];
-        if (key) {
-            self.heightDictionary[key] = @(cellHeight);
-        }
-        return cellHeight;
-
-    }
-    if (key && self.footerHeightDictionary[key]) {
-        return self.footerHeightDictionary[key].doubleValue;
-    }
-    CGFloat cellHeight = [self _heightWithFooterViewClass:clas configuration:configuration];
-    if (key) {
-        self.footerHeightDictionary[key] = @(cellHeight);
-    }
-    return cellHeight;
+- (CGFloat)fwInnerHeightWithFooterViewClass:(Class)clazz
+                        configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    return [self fwInnerHeightWithHeaderFooterViewClass:clazz sel:_cmd configuration:configuration];
 }
 
 @end

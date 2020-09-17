@@ -9,124 +9,119 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UITableViewCell (BMDynamicLayout)
+NS_ASSUME_NONNULL_BEGIN
 
-/// 如果你的 Cell 中用来确定 Cell 所需高度的 View 是唯一的,
-/// 请把此值设置为 YES，可提升一定的性能。
-@property (nonatomic, assign) IBInspectable BOOL bm_maxYViewFixed;
+#pragma mark - UITableViewCell+FWDynamicLayout
 
-/// 免注册 IB 创建 UITableViewCell，内部自动处理缓冲池。
-/// @param tableView tableView
-+ (instancetype)bm_tableViewCellFromNibWithTableView:(UITableView *)tableView;
+/*!
+ @brief UITableViewCell+FWDynamicLayout
+ */
+@interface UITableViewCell (FWDynamicLayout)
 
-/// 免注册 alloc 创建 UITableViewCell，内部自动处理缓冲池, 默认 UITableViewCellStyleDefault 类型
-/// @param tableView tableView
-+ (instancetype)bm_tableViewCellFromAllocWithTableView:(UITableView *)tableView;
+/// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
+@property (nonatomic, assign) BOOL fwMaxYViewFixed;
 
-/// 免注册 alloc 创建 UITableViewCell，内部自动处理缓冲池。
-/// @param tableView tableView
-/// @param style cell style
-+ (instancetype)bm_tableViewCellFromAllocWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style;
+/// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
+@property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
-@end
+/// 免注册创建UITableViewCell，内部自动处理缓冲池，默认Default类型
++ (instancetype)fwCellWithTableView:(UITableView *)tableView;
 
-@interface UITableViewHeaderFooterView (BMDynamicLayout)
-
-/// 如果你的 HeaderFooterView 中用来确定 HeaderFooterView 所需高度的 View 是唯一的,
-/// 请把此值设置为 YES，可提升一定的性能。
-@property (nonatomic, assign) IBInspectable BOOL bm_maxYViewFixed;
-
-/// 免注册 IB 创建 UITableViewHeaderFooterView，内部自动处理缓冲池。
-/// @param tableView tableView
-+ (instancetype)bm_tableViewHeaderFooterViewFromNibWithTableView:(UITableView *)tableView;
-
-/// 免注册 alloc 创建 UITableViewHeaderFooterView，内部自动处理缓冲池。
-/// @param tableView tableView
-+ (instancetype)bm_tableViewHeaderFooterViewFromAllocWithTableView:(UITableView *)tableView;
+/// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型
++ (instancetype)fwCellWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style;
 
 @end
 
-typedef NS_ENUM(NSInteger, BMHeaderFooterViewDynamicLayoutType) {
-    BMHeaderFooterViewDynamicLayoutTypeHeader = 0,
-    BMHeaderFooterViewDynamicLayoutTypeFooter = 1,
+#pragma mark - UITableViewHeaderFooterView+FWDynamicLayout
+
+/*!
+ @brief UITableViewHeaderFooterView+FWDynamicLayout
+ */
+@interface UITableViewHeaderFooterView (FWDynamicLayout)
+
+/// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
+@property (nonatomic, assign) BOOL fwMaxYViewFixed;
+
+/// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
+@property (nonatomic, assign) CGFloat fwMaxYViewPadding;
+
+/// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
++ (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView;
+
+@end
+
+#pragma mark - UITableView+FWDynamicLayout
+
+typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
+    FWHeaderFooterViewTypeHeader = 0,
+    FWHeaderFooterViewTypeFooter = 1,
 };
 
-typedef void(^BMConfigurationCellBlock)(__kindof UITableViewCell *cell);
-typedef void(^BMConfigurationHeaderFooterViewBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
+typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
+typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
 
 /*!
  @brief 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 
  @see https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight
 */
-@interface UITableView (BMDynamicLayout)
+@interface UITableView (FWDynamicLayout)
 
-#pragma mark - cell
+#pragma mark - Cell
 
-/*
- 获取 Cell 需要的高度 ，内部无缓存操作
- @param clas cell class
- @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
- 
- ...
- 
- #import <UITableViewDynamicLayoutCacheHeight/UITableViewDynamicLayoutCacheHeight.h>
+/// 获取 Cell 需要的高度，内部无缓存操作
+/// @param clazz cell类
+/// @param configuration 布局cell句柄，内部不会拥有Block，不需要__weak
+/// @return cell高度
+- (CGFloat)fwHeightWithCellClass:(Class)clazz
+                   configuration:(FWCellConfigurationBlock)configuration;
 
- - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-     return [tableView bm_heightWithCellClass:UITableViewCell.class
-                                configuration:^(__kindof UITableViewCell * _Nonnull cell) {
-         cell.textLabel.text = @"My Text";
-     }];
- }
- 
- */
-- (CGFloat)bm_heightWithCellClass:(Class)clas
-                    configuration:(BMConfigurationCellBlock)configuration;
-
-/// 获取 Cell 需要的高度 ，内部自动处理缓存，缓存标识 indexPath
-/// @param clas cell class
+/// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 indexPath
+/// @param clazz cell class
 /// @param indexPath 使用 indexPath 做缓存标识
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
-- (CGFloat)bm_heightWithCellClass:(Class)clas
-                 cacheByIndexPath:(NSIndexPath *)indexPath
-                    configuration:(BMConfigurationCellBlock)configuration;
+- (CGFloat)fwHeightWithCellClass:(Class)clazz
+                cacheByIndexPath:(NSIndexPath *)indexPath
+                   configuration:(FWCellConfigurationBlock)configuration;
 
-/// 获取 Cell 需要的高度 ，内部自动处理缓存，缓存标识 key
-/// @param clas cell class
+/// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 key
+/// @param clazz cell class
 /// @param key 使用 key 做缓存标识
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
-- (CGFloat)bm_heightWithCellClass:(Class)clas
-                       cacheByKey:(id<NSCopying>)key
-                    configuration:(BMConfigurationCellBlock)configuration;
+- (CGFloat)fwHeightWithCellClass:(Class)clazz
+                      cacheByKey:(nullable id<NSCopying>)key
+                   configuration:(FWCellConfigurationBlock)configuration;
 
-#pragma mark - HeaderFooter
+#pragma mark - HeaderFooterView
 
-/// 获取 HeaderFooter 需要的高度 ，内部无缓存操作
-/// @param clas HeaderFooter class
+/// 获取 HeaderFooter 需要的高度，内部无缓存操作
+/// @param clazz HeaderFooter class
 /// @param type HeaderFooter类型，Header 或者 Footer
 /// @param configuration 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
-- (CGFloat)bm_heightWithHeaderFooterViewClass:(Class)clas
-                                         type:(BMHeaderFooterViewDynamicLayoutType)type
-                                configuration:(BMConfigurationHeaderFooterViewBlock)configuration;
+- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
+                                        type:(FWHeaderFooterViewType)type
+                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration;
 
-/// 获取 HeaderFooter 需要的高度 ， 内部自动处理缓存，缓存标识 section
-/// @param clas HeaderFooter class
+/// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 section
+/// @param clazz HeaderFooter class
 /// @param type HeaderFooter类型，Header 或者 Footer
 /// @param section 使用 section 做缓存标识
 /// @param configuration 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
-- (CGFloat)bm_heightWithHeaderFooterViewClass:(Class)clas
-                                         type:(BMHeaderFooterViewDynamicLayoutType)type
-                               cacheBySection:(NSInteger)section
-                                configuration:(BMConfigurationHeaderFooterViewBlock)configuration;
+- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
+                                        type:(FWHeaderFooterViewType)type
+                              cacheBySection:(NSInteger)section
+                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration;
 
-/// 获取 HeaderFooter 需要的高度 ， 内部自动处理缓存，缓存标识 key
-/// @param clas HeaderFooter class
+/// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 key
+/// @param clazz HeaderFooter class
 /// @param type HeaderFooter类型，Header 或者 Footer
 /// @param key 使用 key 做缓存标识
 /// @param configuration 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
-- (CGFloat)bm_heightWithHeaderFooterViewClass:(Class)clas
-                                         type:(BMHeaderFooterViewDynamicLayoutType)type
-                                   cacheByKey:(id<NSCopying>)key
-                                configuration:(BMConfigurationHeaderFooterViewBlock)configuration;
+- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
+                                        type:(FWHeaderFooterViewType)type
+                                  cacheByKey:(nullable id<NSCopying>)key
+                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration;
 
 @end
+
+NS_ASSUME_NONNULL_END
