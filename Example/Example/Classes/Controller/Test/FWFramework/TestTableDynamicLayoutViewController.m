@@ -98,8 +98,10 @@
     self.myTitleLabel.text = object.title;
     if ([object.imageUrl fwIsFormatUrl]) {
         [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
-    } else {
+    } else if (object.imageUrl.length > 0) {
         self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+    } else {
+        self.myImageView.image = nil;
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
@@ -229,6 +231,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.tableData fwRemoveObjectAtIndex:indexPath.row];
+        [self.tableView fwClearHeightCache];
         [self.tableView reloadData];
     }
 }
@@ -261,7 +264,6 @@
                                  @"public_icon",
                                  @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
                                  @"http://littlesvr.ca/apng/images/SteamEngine.webp",
-                                 @"loading.gif",
                                  @"public_picture",
                                  @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
                                  @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
