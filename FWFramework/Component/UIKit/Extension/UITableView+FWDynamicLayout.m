@@ -53,123 +53,105 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self fwSwizzleInstanceMethod:@selector(reloadData) with:@selector(fwDynamicLayoutReloadData)];
+        FWSwizzleClass(UITableView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            // reloadData 时，清空缓存数据
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                [selfObject fwSetupCacheArrayWithDataSource:selfObject.dataSource];
+            }
+            FWSwizzleOriginal();
+        }));
         
-        [self fwSwizzleInstanceMethod:@selector(insertSections:withRowAnimation:) with:@selector(fwDynamicLayoutInsertSections:withRowAnimation:)];
-        [self fwSwizzleInstanceMethod:@selector(deleteSections:withRowAnimation:) with:@selector(fwDynamicLayoutDeleteSections:withRowAnimation:)];
-        [self fwSwizzleInstanceMethod:@selector(reloadSections:withRowAnimation:) with:@selector(fwDynamicLayoutReloadSections:withRowAnimation:)];
-        [self fwSwizzleInstanceMethod:@selector(moveSection:toSection:) with:@selector(fwDynamicLayoutMoveSection:toSection:)];
+        FWSwizzleClass(UITableView, @selector(insertSections:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSIndexSet *sections, UITableViewRowAnimation animation), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
+                [selfObject fwSetupCacheArrayWithDataSource:selfObject.dataSource];
+            }
+            FWSwizzleOriginal(sections, animation);
+        }));
+        FWSwizzleClass(UITableView, @selector(deleteSections:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSIndexSet *sections, UITableViewRowAnimation animation), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                [sections enumerateIndexesWithOptions:(NSEnumerationReverse) usingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
+                    // cell
+                    [selfObject.fwVerticalArray         removeObjectAtIndex:section];
+                    [selfObject.fwHorizontalArray       removeObjectAtIndex:section];
+                    // header footer
+                    [selfObject.fwHeaderVerticalArray   removeObjectAtIndex:section];
+                    [selfObject.fwHeaderHorizontalArray removeObjectAtIndex:section];
+                    [selfObject.fwFooterVerticalArray   removeObjectAtIndex:section];
+                    [selfObject.fwFooterHorizontalArray removeObjectAtIndex:section];
+                }];
+            }
+            FWSwizzleOriginal(sections, animation);
+        }));
+        FWSwizzleClass(UITableView, @selector(reloadSections:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSIndexSet *sections, UITableViewRowAnimation animation), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                [sections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
+                    // 组的数据可能改变 需要重新获取组的行数
+                    NSInteger sectionCount = [selfObject.dataSource tableView:selfObject numberOfRowsInSection:section];
+                    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:sectionCount];
+                    while (sectionCount-- > 0) {
+                        [arr addObject:FWDynamicLayoutDefaultHeight];
+                    }
+                    selfObject.fwVerticalArray[section]   = arr.mutableCopy;
+                    selfObject.fwHorizontalArray[section] = arr.mutableCopy;
+
+                    // header footer
+                    selfObject.fwHeaderVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwHeaderHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwFooterVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwFooterHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
+                }];
+            }
+            FWSwizzleOriginal(sections, animation);
+        }));
+        FWSwizzleClass(UITableView, @selector(moveSection:toSection:), FWSwizzleReturn(void), FWSwizzleArgs(NSInteger section, NSInteger newSection), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
+                [selfObject fwSetupCacheArrayWithDataSource:selfObject.dataSource];
+            }
+            FWSwizzleOriginal(section, newSection);
+        }));
         
-        [self fwSwizzleInstanceMethod:@selector(insertRowsAtIndexPaths:withRowAnimation:) with:@selector(fwDynamicLayoutInsertRowsAtIndexPaths:withRowAnimation:)];
-        [self fwSwizzleInstanceMethod:@selector(deleteRowsAtIndexPaths:withRowAnimation:) with:@selector(fwDynamicLayoutDeleteRowsAtIndexPaths:withRowAnimation:)];
-        [self fwSwizzleInstanceMethod:@selector(reloadRowsAtIndexPaths:withRowAnimation:) with:@selector(fwDynamicLayoutReloadRowsAtIndexPaths:withRowAnimation:)];
-        [self fwSwizzleInstanceMethod:@selector(moveRowAtIndexPath:toIndexPath:) with:@selector(fwDynamicLayoutMoveRowAtIndexPath:toIndexPath:)];
+        FWSwizzleClass(UITableView, @selector(insertRowsAtIndexPaths:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<NSIndexPath *> *indexPaths, UITableViewRowAnimation animation), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
+                [selfObject fwSetupCacheArrayWithDataSource:selfObject.dataSource];
+            }
+            FWSwizzleOriginal(indexPaths, animation);
+        }));
+        FWSwizzleClass(UITableView, @selector(deleteRowsAtIndexPaths:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<NSIndexPath *> *indexPaths, UITableViewRowAnimation animation), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                NSMutableArray *tempIndexPaths = indexPaths.mutableCopy;
+                [tempIndexPaths sortUsingComparator:^NSComparisonResult(NSIndexPath *  _Nonnull obj1, NSIndexPath *  _Nonnull obj2) {
+                    if (obj1.section == obj2.section) {
+                        return obj1.row < obj2.row;
+                    }
+                    return obj1.section < obj2.section;
+                }];
+                [tempIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [selfObject.fwVerticalArray[obj.section]   removeObjectAtIndex:obj.row];
+                    [selfObject.fwHorizontalArray[obj.section] removeObjectAtIndex:obj.row];
+                }];
+            }
+            FWSwizzleOriginal(indexPaths, animation);
+        }));
+        FWSwizzleClass(UITableView, @selector(reloadRowsAtIndexPaths:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<NSIndexPath *> *indexPaths, UITableViewRowAnimation animation), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    selfObject.fwVerticalArray[obj.section][obj.row]   = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwHorizontalArray[obj.section][obj.row] = FWDynamicLayoutDefaultHeight;
+                }];
+            }
+            FWSwizzleOriginal(indexPaths, animation);
+        }));
+        FWSwizzleClass(UITableView, @selector(moveRowAtIndexPath:toIndexPath:), FWSwizzleReturn(void), FWSwizzleArgs(NSIndexPath *indexPath, NSIndexPath *newIndexPath), FWSwizzleCode({
+            if (selfObject.fwIsDynamicLayoutInitialized) {
+                // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
+                [selfObject fwSetupCacheArrayWithDataSource:selfObject.dataSource];
+            }
+            FWSwizzleOriginal(indexPath, newIndexPath);
+        }));
     });
-}
-
-- (void)fwDynamicLayoutReloadData {
-    // reloadData 时，清空缓存数据。
-    if (self.fwIsDynamicLayoutInitialized) {
-        [self fwSetupCacheArrayWithDataSource:self.dataSource];
-    }
-    [self fwDynamicLayoutReloadData];
-}
-
-- (void)fwDynamicLayoutInsertSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.fwIsDynamicLayoutInitialized) {
-        // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self fwSetupCacheArrayWithDataSource:self.dataSource];
-    }
-    [self fwDynamicLayoutInsertSections:sections withRowAnimation:animation];
-}
-
-- (void)fwDynamicLayoutDeleteSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.fwIsDynamicLayoutInitialized) {
-        [sections enumerateIndexesWithOptions:(NSEnumerationReverse) usingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
-            // cell
-            [self.fwVerticalArray         removeObjectAtIndex:section];
-            [self.fwHorizontalArray       removeObjectAtIndex:section];
-            // header footer
-            [self.fwHeaderVerticalArray   removeObjectAtIndex:section];
-            [self.fwHeaderHorizontalArray removeObjectAtIndex:section];
-            [self.fwFooterVerticalArray   removeObjectAtIndex:section];
-            [self.fwFooterHorizontalArray removeObjectAtIndex:section];
-        }];
-    }
-    [self fwDynamicLayoutDeleteSections:sections withRowAnimation:animation];
-}
-
-- (void)fwDynamicLayoutReloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.fwIsDynamicLayoutInitialized) {
-        [sections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
-            // 组的数据可能改变 需要重新获取组的行数
-            NSInteger sectionCount = [self.dataSource tableView:self numberOfRowsInSection:section];
-            NSMutableArray *arr = [NSMutableArray arrayWithCapacity:sectionCount];
-            while (sectionCount-- > 0) {
-                [arr addObject:FWDynamicLayoutDefaultHeight];
-            }
-            self.fwVerticalArray[section]   = arr.mutableCopy;
-            self.fwHorizontalArray[section] = arr.mutableCopy;
-
-            // header footer
-            self.fwHeaderVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
-            self.fwHeaderHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
-            self.fwFooterVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
-            self.fwFooterHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
-        }];
-    }
-    [self fwDynamicLayoutReloadSections:sections withRowAnimation:animation];
-}
-
-- (void)fwDynamicLayoutMoveSection:(NSInteger)section toSection:(NSInteger)newSection {
-    if (self.fwIsDynamicLayoutInitialized) {
-        // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self fwSetupCacheArrayWithDataSource:self.dataSource];
-    }
-    [self fwDynamicLayoutMoveSection:section toSection:newSection];
-}
-
-- (void)fwDynamicLayoutInsertRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.fwIsDynamicLayoutInitialized) {
-        // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self fwSetupCacheArrayWithDataSource:self.dataSource];
-    }
-    [self fwDynamicLayoutInsertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-}
-
-- (void)fwDynamicLayoutDeleteRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.fwIsDynamicLayoutInitialized) {
-        NSMutableArray *tempIndexPaths = indexPaths.mutableCopy;
-        [tempIndexPaths sortUsingComparator:^NSComparisonResult(NSIndexPath *  _Nonnull obj1, NSIndexPath *  _Nonnull obj2) {
-            if (obj1.section == obj2.section) {
-                return obj1.row < obj2.row;
-            }
-            return obj1.section < obj2.section;
-        }];
-        [tempIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self.fwVerticalArray[obj.section]   removeObjectAtIndex:obj.row];
-            [self.fwHorizontalArray[obj.section] removeObjectAtIndex:obj.row];
-        }];
-    }
-    [self fwDynamicLayoutDeleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-}
-
-- (void)fwDynamicLayoutReloadRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation {
-    if (self.fwIsDynamicLayoutInitialized) {
-        [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            self.fwVerticalArray[obj.section][obj.row]   = FWDynamicLayoutDefaultHeight;
-            self.fwHorizontalArray[obj.section][obj.row] = FWDynamicLayoutDefaultHeight;
-        }];
-    }
-    [self fwDynamicLayoutReloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-}
-
-- (void)fwDynamicLayoutMoveRowAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
-    if (self.fwIsDynamicLayoutInitialized) {
-        // 清空缓存数据，这里可以优化，由于需要考虑太多的情况，暂时没有提供全面的测试方法，暂时直接全部刷新。
-        [self fwSetupCacheArrayWithDataSource:self.dataSource];
-    }
-    [self fwDynamicLayoutMoveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
 }
 
 #pragma mark - Header
