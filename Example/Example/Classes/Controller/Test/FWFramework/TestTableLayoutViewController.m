@@ -210,6 +210,29 @@
     return cell;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"删除";
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.tableData fwRemoveObjectAtIndex:indexPath.row];
+        [self.tableView reloadData];
+    }
+}
+
 - (TestTableLayoutObject *)randomObject
 {
     static NSMutableArray *randomArray;
@@ -264,7 +287,7 @@
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
         for (int i = 0; i < 4; i++) {
