@@ -197,7 +197,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [tableView fwHeightWithCellClass:[TestTableDynamicLayoutCell class] configuration:^(TestTableDynamicLayoutCell * _Nonnull cell) {
+    return [tableView fwHeightWithCellClass:[TestTableDynamicLayoutCell class]
+                           cacheByIndexPath:indexPath
+                              configuration:^(TestTableDynamicLayoutCell * _Nonnull cell) {
         cell.object = [self.tableData objectAtIndex:indexPath.row];
     }];
 }
