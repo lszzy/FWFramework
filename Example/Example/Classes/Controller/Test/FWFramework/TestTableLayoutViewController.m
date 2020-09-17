@@ -267,7 +267,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];
@@ -286,7 +286,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];

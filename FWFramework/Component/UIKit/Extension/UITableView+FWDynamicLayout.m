@@ -166,7 +166,7 @@
 
 @interface UITableView (FWInnerDynamicLayout)
 
-@property (nonatomic, readonly) FWDynamicLayoutHeightCache *fwDynamicLayoutHeightCache;
+@property (nonatomic, strong, readonly) FWDynamicLayoutHeightCache *fwDynamicLayoutHeightCache;
 
 @property (nonatomic, assign, readonly) BOOL fwIsDynamicLayoutInitialized;
 
