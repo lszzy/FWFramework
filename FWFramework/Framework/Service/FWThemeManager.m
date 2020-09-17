@@ -439,10 +439,10 @@ static BOOL fwStaticColorARGB = NO;
 
 #pragma mark - UIFont+FWTheme
 
-UIFont * FWFontLight(CGFloat size) { return [UIFont systemFontOfSize:size weight:UIFontWeightLight]; }
-UIFont * FWFontRegular(CGFloat size) { return [UIFont systemFontOfSize:size]; }
-UIFont * FWFontBold(CGFloat size) { return [UIFont boldSystemFontOfSize:size]; }
-UIFont * FWFontItalic(CGFloat size) { return [UIFont italicSystemFontOfSize:size]; }
+UIFont * FWFontLight(CGFloat size) { return [UIFont fwLightFontOfSize:size]; }
+UIFont * FWFontRegular(CGFloat size) { return [UIFont fwFontOfSize:size]; }
+UIFont * FWFontBold(CGFloat size) { return [UIFont fwBoldFontOfSize:size]; }
+UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @implementation UIFont (FWTheme)
 

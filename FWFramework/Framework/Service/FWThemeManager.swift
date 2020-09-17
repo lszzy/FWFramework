@@ -41,5 +41,5 @@ public func FWColorRgb(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alph
 ///   - weight: 字重可选，默认Regular
 /// - Returns: UIFont
 public func FWFontSize(_ size: CGFloat, _ weight: UIFont.Weight = .regular) -> UIFont {
-    return UIFont.systemFont(ofSize: size, weight: weight)
+    return UIFont.fwFont(ofSize: size, weight: weight)
 }

@@ -178,7 +178,7 @@ extern NSString *const FWThemeChangedNotification;
 #pragma mark - UIFont+FWTheme
 
 // 快速创建系统字体，字重可选，默认Regular
-#define FWFontSize( size, ... ) [UIFont systemFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
+#define FWFontSize( size, ... ) [UIFont fwFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
 /// 快速创建细字体
 FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
