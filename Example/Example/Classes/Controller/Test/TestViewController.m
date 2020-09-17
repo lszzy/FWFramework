@@ -65,6 +65,7 @@
                                              @[@"UIView(FWStatistical)", @"TestStatisticalViewController"],
                                              @[@"UIImageView(FWFace)", @"TestFacesViewController"],
                                              @[@"UITableView(FWTemplateLayout)", @"TestTableLayoutViewController"],
+                                             @[@"UITableView(FWDynamicLayout)", @"TestTableDynamicLayoutViewController"],
                                              @[@"FWScroll", @"TestTableScrollViewController"],
                                              @[@"NSObject(FWModel)", @"TestModelViewController"],
                                              @[@"NSObject(FWThread)", @"TestThreadViewController"],
