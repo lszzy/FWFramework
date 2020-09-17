@@ -16,31 +16,155 @@
 #define FWDynamicLayoutIsVertical (UIScreen.mainScreen.bounds.size.height > UIScreen.mainScreen.bounds.size.width)
 #define FWDynamicLayoutDefaultHeight @(-1.0)
 
+@interface FWDynamicLayoutHeightCache : NSObject
+
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *heightDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *heightArray;
+
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *headerHeightDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *headerHeightArray;
+
+@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *footerHeightDictionary;
+@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *footerHeightArray;
+
+@property (nonatomic, strong) NSMutableDictionary <id<NSCopying>, NSNumber *> *headerVerticalDictionary;
+@property (nonatomic, strong) NSMutableDictionary <id<NSCopying>, NSNumber *> *headerHorizontalDictionary;
+@property (nonatomic, strong) NSMutableArray <NSNumber *> *headerVerticalArray;
+@property (nonatomic, strong) NSMutableArray <NSNumber *> *headerHorizontalArray;
+
+@property (nonatomic, strong) NSMutableDictionary <id<NSCopying>, NSNumber *> *verticalDictionary;
+@property (nonatomic, strong) NSMutableDictionary <id<NSCopying>, NSNumber *> *horizontalDictionary;
+@property (nonatomic, strong) NSMutableArray <NSMutableArray <NSNumber *> *> *verticalArray;
+@property (nonatomic, strong) NSMutableArray <NSMutableArray <NSNumber *> *> *horizontalArray;
+
+@property (nonatomic, strong) NSMutableDictionary <id<NSCopying>, NSNumber *> *footerVerticalDictionary;
+@property (nonatomic, strong) NSMutableDictionary <id<NSCopying>, NSNumber *> *footerHorizontalDictionary;
+@property (nonatomic, strong) NSMutableArray <NSNumber *> *footerVerticalArray;
+@property (nonatomic, strong) NSMutableArray <NSNumber *> *footerHorizontalArray;
+
+@end
+
+@implementation FWDynamicLayoutHeightCache
+
+#pragma mark - Header
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)headerHeightDictionary {
+    return FWDynamicLayoutIsVertical ? self.headerVerticalDictionary : self.headerHorizontalDictionary;
+}
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)headerVerticalDictionary {
+    if (!_headerVerticalDictionary) {
+        _headerVerticalDictionary = @{}.mutableCopy;
+    }
+    return _headerVerticalDictionary;
+}
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)headerHorizontalDictionary {
+    if (!_headerHorizontalDictionary) {
+        _headerHorizontalDictionary = @{}.mutableCopy;
+    }
+    return _headerHorizontalDictionary;
+}
+
+- (NSMutableArray<NSNumber *> *)headerHeightArray {
+    return FWDynamicLayoutIsVertical ? self.headerVerticalArray : self.headerHorizontalArray;
+}
+
+- (NSMutableArray<NSNumber *> *)headerVerticalArray {
+    if (!_headerVerticalArray) {
+        _headerVerticalArray = @[].mutableCopy;
+    }
+    return _headerVerticalArray;
+}
+
+- (NSMutableArray<NSNumber *> *)headerHorizontalArray {
+    if (!_headerHorizontalArray) {
+        _headerHorizontalArray = @[].mutableCopy;
+    }
+    return _headerHorizontalArray;
+}
+
+#pragma mark - Cell
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)heightDictionary {
+    return FWDynamicLayoutIsVertical ? self.verticalDictionary : self.horizontalDictionary;
+}
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)verticalDictionary {
+    if (!_verticalDictionary) {
+        _verticalDictionary = @{}.mutableCopy;
+    }
+    return _verticalDictionary;
+}
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)horizontalDictionary {
+    if (!_horizontalDictionary) {
+        _horizontalDictionary = @{}.mutableCopy;
+    }
+    return _horizontalDictionary;
+}
+
+- (NSMutableArray<NSMutableArray<NSNumber *> *> *)heightArray {
+    return FWDynamicLayoutIsVertical ? self.verticalArray : self.horizontalArray;
+}
+
+- (NSMutableArray<NSMutableArray<NSNumber *> *> *)verticalArray {
+    if (!_verticalArray) {
+        _verticalArray = @[].mutableCopy;
+    }
+    return _verticalArray;
+}
+
+- (NSMutableArray<NSMutableArray <NSNumber *> *> *)horizontalArray {
+    if (!_horizontalArray) {
+        _horizontalArray = @[].mutableCopy;
+    }
+    return _horizontalArray;
+}
+
+#pragma mark - Footer
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)footerHeightDictionary {
+    return FWDynamicLayoutIsVertical ? self.footerVerticalDictionary : self.footerHorizontalDictionary;
+}
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)footerVerticalDictionary {
+    if (!_footerVerticalDictionary) {
+        _footerVerticalDictionary = @{}.mutableCopy;
+    }
+    return _footerVerticalDictionary;
+}
+
+- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)footerHorizontalDictionary {
+    if (!_footerHorizontalDictionary) {
+        _footerHorizontalDictionary = @{}.mutableCopy;
+    }
+    return _footerHorizontalDictionary;
+}
+
+- (NSMutableArray<NSNumber *> *)footerHeightArray {
+    return FWDynamicLayoutIsVertical ? self.footerVerticalArray : self.footerHorizontalArray;
+}
+
+- (NSMutableArray<NSNumber *> *)footerVerticalArray {
+    if (!_footerVerticalArray) {
+        _footerVerticalArray = @[].mutableCopy;
+    }
+    return _footerVerticalArray;
+}
+
+- (NSMutableArray<NSNumber *> *)footerHorizontalArray {
+    if (!_footerHorizontalArray) {
+        _footerHorizontalArray = @[].mutableCopy;
+    }
+    return _footerHorizontalArray;
+}
+
+@end
+
 @interface UITableView (FWInnerDynamicLayout)
 
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeightDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *fwHeightArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeaderHeightDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwHeaderHeightArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwFooterHeightDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwFooterHeightArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeaderVerticalDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHeaderHorizontalDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwHeaderVerticalArray;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwHeaderHorizontalArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwVerticalDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwHorizontalDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *fwVerticalArray;
-@property (nonatomic, strong, readonly) NSMutableArray <NSMutableArray <NSNumber *> *> *fwHorizontalArray;
-
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwFooterVerticalDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary <id<NSCopying>, NSNumber *> *fwFooterHorizontalDictionary;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwFooterVerticalArray;
-@property (nonatomic, strong, readonly) NSMutableArray <NSNumber *> *fwFooterHorizontalArray;
+@property (nonatomic, readonly) FWDynamicLayoutHeightCache *fwDynamicLayoutHeightCache;
 
 @property (nonatomic, assign, readonly) BOOL fwIsDynamicLayoutInitialized;
 
@@ -72,13 +196,13 @@
             if (selfObject.fwIsDynamicLayoutInitialized) {
                 [sections enumerateIndexesWithOptions:(NSEnumerationReverse) usingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
                     // cell
-                    [selfObject.fwVerticalArray         removeObjectAtIndex:section];
-                    [selfObject.fwHorizontalArray       removeObjectAtIndex:section];
+                    [selfObject.fwDynamicLayoutHeightCache.verticalArray         removeObjectAtIndex:section];
+                    [selfObject.fwDynamicLayoutHeightCache.horizontalArray       removeObjectAtIndex:section];
                     // header footer
-                    [selfObject.fwHeaderVerticalArray   removeObjectAtIndex:section];
-                    [selfObject.fwHeaderHorizontalArray removeObjectAtIndex:section];
-                    [selfObject.fwFooterVerticalArray   removeObjectAtIndex:section];
-                    [selfObject.fwFooterHorizontalArray removeObjectAtIndex:section];
+                    [selfObject.fwDynamicLayoutHeightCache.headerVerticalArray   removeObjectAtIndex:section];
+                    [selfObject.fwDynamicLayoutHeightCache.headerHorizontalArray removeObjectAtIndex:section];
+                    [selfObject.fwDynamicLayoutHeightCache.footerVerticalArray   removeObjectAtIndex:section];
+                    [selfObject.fwDynamicLayoutHeightCache.footerHorizontalArray removeObjectAtIndex:section];
                 }];
             }
             FWSwizzleOriginal(sections, animation);
@@ -92,14 +216,14 @@
                     while (sectionCount-- > 0) {
                         [arr addObject:FWDynamicLayoutDefaultHeight];
                     }
-                    selfObject.fwVerticalArray[section]   = arr.mutableCopy;
-                    selfObject.fwHorizontalArray[section] = arr.mutableCopy;
+                    selfObject.fwDynamicLayoutHeightCache.verticalArray[section]   = arr.mutableCopy;
+                    selfObject.fwDynamicLayoutHeightCache.horizontalArray[section] = arr.mutableCopy;
 
                     // header footer
-                    selfObject.fwHeaderVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
-                    selfObject.fwHeaderHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
-                    selfObject.fwFooterVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
-                    selfObject.fwFooterHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwDynamicLayoutHeightCache.headerVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwDynamicLayoutHeightCache.headerHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwDynamicLayoutHeightCache.footerVerticalArray[section]   = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwDynamicLayoutHeightCache.footerHorizontalArray[section] = FWDynamicLayoutDefaultHeight;
                 }];
             }
             FWSwizzleOriginal(sections, animation);
@@ -129,8 +253,8 @@
                     return obj1.section < obj2.section;
                 }];
                 [tempIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [selfObject.fwVerticalArray[obj.section]   removeObjectAtIndex:obj.row];
-                    [selfObject.fwHorizontalArray[obj.section] removeObjectAtIndex:obj.row];
+                    [selfObject.fwDynamicLayoutHeightCache.verticalArray[obj.section]   removeObjectAtIndex:obj.row];
+                    [selfObject.fwDynamicLayoutHeightCache.horizontalArray[obj.section] removeObjectAtIndex:obj.row];
                 }];
             }
             FWSwizzleOriginal(indexPaths, animation);
@@ -138,8 +262,8 @@
         FWSwizzleClass(UITableView, @selector(reloadRowsAtIndexPaths:withRowAnimation:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<NSIndexPath *> *indexPaths, UITableViewRowAnimation animation), FWSwizzleCode({
             if (selfObject.fwIsDynamicLayoutInitialized) {
                 [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    selfObject.fwVerticalArray[obj.section][obj.row]   = FWDynamicLayoutDefaultHeight;
-                    selfObject.fwHorizontalArray[obj.section][obj.row] = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwDynamicLayoutHeightCache.verticalArray[obj.section][obj.row]   = FWDynamicLayoutDefaultHeight;
+                    selfObject.fwDynamicLayoutHeightCache.horizontalArray[obj.section][obj.row] = FWDynamicLayoutDefaultHeight;
                 }];
             }
             FWSwizzleOriginal(indexPaths, animation);
@@ -154,142 +278,13 @@
     });
 }
 
-#pragma mark - Header
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeaderHeightDictionary {
-    return FWDynamicLayoutIsVertical ? self.fwHeaderVerticalDictionary : self.fwHeaderHorizontalDictionary;
-}
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeaderVerticalDictionary {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((dict == nil), 0)) {
-        dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (FWDynamicLayoutHeightCache *)fwDynamicLayoutHeightCache {
+    FWDynamicLayoutHeightCache *cache = objc_getAssociatedObject(self, _cmd);
+    if (__builtin_expect((cache == nil), 0)) {
+        cache = [[FWDynamicLayoutHeightCache alloc] init];
+        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return dict;
-}
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeaderHorizontalDictionary {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((dict == nil), 0)) {
-        dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return dict;
-}
-
-- (NSMutableArray<NSNumber *> *)fwHeaderHeightArray {
-    return FWDynamicLayoutIsVertical ? self.fwHeaderVerticalArray : self.fwHeaderHorizontalArray;
-}
-
-- (NSMutableArray<NSNumber *> *)fwHeaderVerticalArray {
-    NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((arr == nil), 0)) {
-        arr = @[].mutableCopy;
-        objc_setAssociatedObject(self, _cmd, arr, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return arr;
-}
-
-- (NSMutableArray<NSNumber *> *)fwHeaderHorizontalArray {
-    NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((arr == nil), 0)) {
-        arr = @[].mutableCopy;
-        objc_setAssociatedObject(self, _cmd, arr, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return arr;
-}
-
-#pragma mark - Cell
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHeightDictionary {
-    return FWDynamicLayoutIsVertical ? self.fwVerticalDictionary : self.fwHorizontalDictionary;
-}
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwVerticalDictionary {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((dict == nil), 0)) {
-        dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return dict;
-}
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwHorizontalDictionary {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((dict == nil), 0)) {
-        dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return dict;
-}
-
-- (NSMutableArray<NSMutableArray<NSNumber *> *> *)fwHeightArray {
-    return FWDynamicLayoutIsVertical ? self.fwVerticalArray : self.fwHorizontalArray;
-}
-
-- (NSMutableArray<NSMutableArray<NSNumber *> *> *)fwVerticalArray {
-    NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((arr == nil), 0)) {
-        arr = @[].mutableCopy;
-        objc_setAssociatedObject(self, _cmd, arr, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return arr;
-}
-
-- (NSMutableArray<NSMutableArray <NSNumber *> *> *)fwHorizontalArray {
-    NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((arr == nil), 0)) {
-        arr = @[].mutableCopy;
-        objc_setAssociatedObject(self, _cmd, arr, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return arr;
-}
-
-#pragma mark - Footer
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwFooterHeightDictionary {
-    return FWDynamicLayoutIsVertical ? self.fwFooterVerticalDictionary : self.fwFooterHorizontalDictionary;
-}
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwFooterVerticalDictionary {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((dict == nil), 0)) {
-        dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return dict;
-}
-
-- (NSMutableDictionary<id<NSCopying>, NSNumber *> *)fwFooterHorizontalDictionary {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((dict == nil), 0)) {
-        dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return dict;
-}
-
-- (NSMutableArray<NSNumber *> *)fwFooterHeightArray {
-    return FWDynamicLayoutIsVertical ? self.fwFooterVerticalArray : self.fwFooterHorizontalArray;
-}
-
-- (NSMutableArray<NSNumber *> *)fwFooterVerticalArray {
-    NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((arr == nil), 0)) {
-        arr = @[].mutableCopy;
-        objc_setAssociatedObject(self, _cmd, arr, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return arr;
-}
-
-- (NSMutableArray<NSNumber *> *)fwFooterHorizontalArray {
-    NSMutableArray *arr = objc_getAssociatedObject(self, _cmd);
-    if (__builtin_expect((arr == nil), 0)) {
-        arr = @[].mutableCopy;
-        objc_setAssociatedObject(self, _cmd, arr, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return arr;
+    return cache;
 }
 
 - (BOOL)fwIsDynamicLayoutInitialized {
@@ -300,8 +295,6 @@
     [self fwSetupCacheArrayWithDataSource:self.dataSource];
     objc_setAssociatedObject(self, @selector(fwIsDynamicLayoutInitialized), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-
 
 #pragma mark - Private
 
@@ -329,29 +322,26 @@
         [horizontalArray addObject:arr.mutableCopy];
         tempSections++;
     }
-    [self.fwVerticalArray removeAllObjects];
-    [self.fwVerticalArray addObjectsFromArray:verticalArray.copy];
+    [self.fwDynamicLayoutHeightCache.verticalArray removeAllObjects];
+    [self.fwDynamicLayoutHeightCache.verticalArray addObjectsFromArray:verticalArray.copy];
 
-    [self.fwHorizontalArray removeAllObjects];
-    [self.fwHorizontalArray addObjectsFromArray:horizontalArray.copy];
-    [self fwSetupHeaderFooterCacheArrayWithSections:sections];
-}
-
-- (void)fwSetupHeaderFooterCacheArrayWithSections:(NSInteger)sections {
+    [self.fwDynamicLayoutHeightCache.horizontalArray removeAllObjects];
+    [self.fwDynamicLayoutHeightCache.horizontalArray addObjectsFromArray:horizontalArray.copy];
+    
     // 2-1、竖屏状态下的 HeaderView 高度缓存
     // 2-2、横屏状态下的 HeaderView 高度缓存
     // 2-3、竖屏状态下的 FooterView 高度缓存
     // 2-4、横屏状态下的 FooterView 高度缓存
-    [self.fwHeaderVerticalArray   removeAllObjects];
-    [self.fwHeaderHorizontalArray removeAllObjects];
-    [self.fwFooterVerticalArray   removeAllObjects];
-    [self.fwFooterHorizontalArray removeAllObjects];
+    [self.fwDynamicLayoutHeightCache.headerVerticalArray   removeAllObjects];
+    [self.fwDynamicLayoutHeightCache.headerHorizontalArray removeAllObjects];
+    [self.fwDynamicLayoutHeightCache.footerVerticalArray   removeAllObjects];
+    [self.fwDynamicLayoutHeightCache.footerHorizontalArray removeAllObjects];
     NSInteger temp = 0;
     while (temp++ < sections) {
-        [self.fwHeaderVerticalArray   addObject:FWDynamicLayoutDefaultHeight];
-        [self.fwHeaderHorizontalArray addObject:FWDynamicLayoutDefaultHeight];
-        [self.fwFooterVerticalArray   addObject:FWDynamicLayoutDefaultHeight];
-        [self.fwFooterHorizontalArray addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwDynamicLayoutHeightCache.headerVerticalArray   addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwDynamicLayoutHeightCache.headerHorizontalArray addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwDynamicLayoutHeightCache.footerVerticalArray   addObject:FWDynamicLayoutDefaultHeight];
+        [self.fwDynamicLayoutHeightCache.footerHorizontalArray addObject:FWDynamicLayoutDefaultHeight];
     }
 }
 
@@ -453,6 +443,13 @@
 
 @implementation UITableView (FWDynamicLayout)
 
+- (void)fwClearHeightCache
+{
+    if (self.fwIsDynamicLayoutInitialized) {
+        [self fwSetupCacheArrayWithDataSource:self.dataSource];
+    }
+}
+
 #pragma mark - Cell
 
 - (UIView *)fwCellViewWithCellClass:(Class)clazz {
@@ -539,10 +536,10 @@
     if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
         [self fwDynamicLayoutInitialize];
     }
-    NSNumber *number = self.fwHeightArray[indexPath.section][indexPath.row];
+    NSNumber *number = self.fwDynamicLayoutHeightCache.heightArray[indexPath.section][indexPath.row];
     if (number.doubleValue < 0.0) {
         CGFloat cellHeight = [self fwInnerHeightWithCellClass:clazz configuration:configuration];
-        self.fwHeightArray[indexPath.section][indexPath.row] = @(cellHeight);
+        self.fwDynamicLayoutHeightCache.heightArray[indexPath.section][indexPath.row] = @(cellHeight);
         return cellHeight;
     }
     return number.doubleValue;
@@ -554,12 +551,12 @@
     if (__builtin_expect((!self.fwIsDynamicLayoutInitialized), 0)) {
         [self fwDynamicLayoutInitialize];
     }
-    if (key && self.fwHeightDictionary[key]) {
-        return self.fwHeightDictionary[key].doubleValue;
+    if (key && self.fwDynamicLayoutHeightCache.heightDictionary[key]) {
+        return self.fwDynamicLayoutHeightCache.heightDictionary[key].doubleValue;
     }
     CGFloat cellHeight = [self fwInnerHeightWithCellClass:clazz configuration:configuration];
     if (key) {
-        self.fwHeightDictionary[key] = @(cellHeight);
+        self.fwDynamicLayoutHeightCache.heightDictionary[key] = @(cellHeight);
     }
     return cellHeight;
 }
@@ -669,20 +666,20 @@
         [self fwDynamicLayoutInitialize];
     }
     if (type == FWHeaderFooterViewTypeHeader) {
-        NSNumber *number = self.fwHeaderHeightArray[section];
+        NSNumber *number = self.fwDynamicLayoutHeightCache.headerHeightArray[section];
         if (number.doubleValue >= 0.0) {
             return number.doubleValue;
         }
         CGFloat height = [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
-        self.fwHeaderHeightArray[section] = @(height);
+        self.fwDynamicLayoutHeightCache.headerHeightArray[section] = @(height);
         return height;
     } else {
-        NSNumber *number = self.fwFooterHeightArray[section];
+        NSNumber *number = self.fwDynamicLayoutHeightCache.footerHeightArray[section];
         if (number.doubleValue >= 0.0) {
             return number.doubleValue;
         }
         CGFloat height = [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
-        self.fwFooterHeightArray[section] = @(height);
+        self.fwDynamicLayoutHeightCache.footerHeightArray[section] = @(height);
         return height;
     }
 }
@@ -695,21 +692,21 @@
         [self fwDynamicLayoutInitialize];
     }
     if (type == FWHeaderFooterViewTypeHeader) {
-        if (key && self.fwHeaderHeightDictionary[key]) {
-            return self.fwHeaderHeightDictionary[key].doubleValue;
+        if (key && self.fwDynamicLayoutHeightCache.headerHeightDictionary[key]) {
+            return self.fwDynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
         }
         CGFloat cellHeight = [self fwInnerHeightWithHeaderViewClass:clazz configuration:configuration];
         if (key) {
-            self.fwHeaderHeightDictionary[key] = @(cellHeight);
+            self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(cellHeight);
         }
         return cellHeight;
     } else {
-        if (key && self.fwFooterHeightDictionary[key]) {
-            return self.fwFooterHeightDictionary[key].doubleValue;
+        if (key && self.fwDynamicLayoutHeightCache.footerHeightDictionary[key]) {
+            return self.fwDynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
         }
         CGFloat cellHeight = [self fwInnerHeightWithFooterViewClass:clazz configuration:configuration];
         if (key) {
-            self.fwFooterHeightDictionary[key] = @(cellHeight);
+            self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(cellHeight);
         }
         return cellHeight;
     }
