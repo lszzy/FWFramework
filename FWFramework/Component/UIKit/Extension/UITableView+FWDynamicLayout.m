@@ -478,11 +478,14 @@
 - (CGFloat)fwDynamicHeightWithCellClass:(Class)clazz
                         configuration:(FWCellConfigurationBlock)configuration {
     UIView *view = [self fwCellViewWithCellClass:clazz];
-    // 获取 TableView 宽度
-    UIView *temp = self.superview ? self.superview : self;
-    [temp setNeedsLayout];
-    [temp layoutIfNeeded];
     CGFloat width = CGRectGetWidth(self.frame);
+    if (width <= 0) {
+        // 获取 TableView 宽度
+        UIView *layoutView = self.superview ? self.superview : self;
+        [layoutView setNeedsLayout];
+        [layoutView layoutIfNeeded];
+        width = CGRectGetWidth(self.frame);
+    }
 
     // 设置 Frame
     view.frame = CGRectMake(0.0, 0.0, width, 0.0);
@@ -590,11 +593,14 @@
                                         sel:(SEL)sel
                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
     UIView *view = [self fwHeaderFooterViewWithHeaderFooterViewClass:clazz sel:sel];
-    // 获取 TableView 宽度
-    UIView *temp = self.superview ? self.superview : self;
-    [temp setNeedsLayout];
-    [temp layoutIfNeeded];
     CGFloat width = CGRectGetWidth(self.frame);
+    if (width <= 0) {
+        // 获取 TableView 宽度
+        UIView *layoutView = self.superview ? self.superview : self;
+        [layoutView setNeedsLayout];
+        [layoutView layoutIfNeeded];
+        width = CGRectGetWidth(self.frame);
+    }
 
     // 设置 Frame
     view.frame = CGRectMake(0.0, 0.0, width, 0.0);
@@ -603,6 +609,7 @@
 
     // 让外面布局 UITableViewHeaderFooterView
     !configuration ? : configuration(headerFooterView);
+    
     // 刷新布局
     [view setNeedsLayout];
     [view layoutIfNeeded];
