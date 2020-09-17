@@ -67,6 +67,9 @@ typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFo
 */
 @interface UITableView (FWDynamicLayout)
 
+/// 手工清空高度缓存，如果默认清理方案不满足需求，可手工清空之
+- (void)fwClearHeightCache;
+
 #pragma mark - Cell
 
 /// 获取 Cell 需要的高度，内部无缓存操作
