@@ -17,7 +17,7 @@
 #pragma mark - FWAnimatedImage
 
 UIImage * FWImageName(NSString *name) {
-    return [UIImage imageNamed:name];
+    return [UIImage fwImageWithName:name];
 }
 
 UIImage * FWImageFile(NSString *path) {

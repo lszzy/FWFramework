@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 读取主bundle本地化字符串
 #define FWLocalizedString( key, ... ) \
-    [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:fw_macro_default(nil, ##__VA_ARGS__)]
+    [NSBundle fwLocalizedString:key table:fw_macro_default(nil, ##__VA_ARGS__)]
 
 // 本地化语言改变通知，object为本地化语言名称
 extern NSString *const FWLocalizedLanguageChangedNotification;
