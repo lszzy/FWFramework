@@ -10,47 +10,7 @@
 #import "NSDate+FWFramework.h"
 #import <sys/sysctl.h>
 
-// 当前基准时间值
-static NSTimeInterval fwStaticCurrentBaseTime = 0;
-// 本地基准时间值
-static NSTimeInterval fwStaticLocalBaseTime = 0;
-
 @implementation NSDate (FWFramework)
-
-#pragma mark - Current
-
-+ (NSTimeInterval)fwCurrentTime
-{
-    // 没有同步过返回本地时间
-    if (fwStaticCurrentBaseTime == 0) {
-        // 是否本地有服务器时间
-        NSNumber *preCurrentTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWCurrentTime"];
-        NSNumber *preLocalTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalTime"];
-        if (preCurrentTime && preLocalTime) {
-            // 计算当前服务器时间
-            NSTimeInterval offsetTime = [[NSDate date] timeIntervalSince1970] - preLocalTime.doubleValue;
-            return preCurrentTime.doubleValue + offsetTime;
-        } else {
-            return [[NSDate date] timeIntervalSince1970];
-        }
-    // 同步过计算当前服务器时间
-    } else {
-        NSTimeInterval offsetTime = [self fwSystemUptime] - fwStaticLocalBaseTime;
-        return fwStaticCurrentBaseTime + offsetTime;
-    }
-}
-
-+ (void)setFwCurrentTime:(NSTimeInterval)currentTime
-{
-    fwStaticCurrentBaseTime = currentTime;
-    // 取运行时间，调整系统时间不会影响
-    fwStaticLocalBaseTime = [self fwSystemUptime];
-    
-    // 保存当前服务器时间到本地
-    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
-    [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 #pragma mark - System
 
@@ -86,31 +46,6 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     }
     
     return nil;
-}
-
-#pragma mark - Benchmark
-
-+ (NSMutableDictionary *)fwBenchmarkTimes
-{
-    static NSMutableDictionary *benchmarkTimes = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        benchmarkTimes = [[NSMutableDictionary alloc] init];
-    });
-    return benchmarkTimes;
-}
-
-+ (void)fwBenchmarkBegin:(NSString *)name
-{
-    self.fwBenchmarkTimes[name] = [NSDate date];
-}
-
-+ (NSTimeInterval)fwBenchmarkEnd:(NSString *)name
-{
-    NSDate *beginTime = self.fwBenchmarkTimes[name] ?: [NSDate date];
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970] - [beginTime timeIntervalSince1970];
-    NSLog(@"FWBenchmark-%@: %.3fms", name, timeInterval * 1000);
-    return timeInterval;
 }
 
 #pragma mark - Convert

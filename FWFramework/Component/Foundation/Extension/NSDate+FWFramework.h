@@ -11,40 +11,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 标记时间调试开始
-#define FWBenchmarkBegin( x ) \
-    [NSDate fwBenchmarkBegin:@(#x)];
-
-// 标记时间调试结束并打印消耗时间
-#define FWBenchmarkEnd( x ) \
-    [NSDate fwBenchmarkEnd:@(#x)];
-
 /*!
  @brief NSDate+FWFramework
  @discussion NSDate默认GMT时区；NSTimeZone默认系统时区(可设置应用默认时区)；NSDateFormatter默认当前时区(可自定义)，格式化时自动修正NSDate时区(无需手工修正NSDate)；NSLocale默认当前语言环境
  */
 @interface NSDate (FWFramework)
 
-#pragma mark - Current
-
-// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
-@property (class, nonatomic, assign) NSTimeInterval fwCurrentTime;
-
 #pragma mark - System
 
-// 系统运行时间
+/// 系统运行时间
 + (long long)fwSystemUptime;
 
-// 获取系统启动时间
+/// 获取系统启动时间
 + (nullable NSDate *)fwSystemBoottime;
-
-#pragma mark - Benchmark
-
-// 标记时间调试开始
-+ (void)fwBenchmarkBegin:(NSString *)name;
-
-// 标记时间调试结束并打印消耗时间
-+ (NSTimeInterval)fwBenchmarkEnd:(NSString *)name;
 
 #pragma mark - Convert
 

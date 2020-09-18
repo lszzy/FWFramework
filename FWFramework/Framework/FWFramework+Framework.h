@@ -37,6 +37,7 @@
 #import "FWNotificationManager.h"
 #import "FWLocationManager.h"
 #import "FWLocalizeManager.h"
+#import "FWToolkitManager.h"
 #import "FWVersionManager.h"
 
 #import "FWAutoLayout.h"
