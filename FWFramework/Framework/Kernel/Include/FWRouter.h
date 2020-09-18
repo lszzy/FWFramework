@@ -38,16 +38,16 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 
 @optional
 
-// 支持的路由URL
+/// 支持的路由URL
 + (id)fwRouterURL;
 
-// 支持的Object路由URL
+/// 支持的Object路由URL
 + (id)fwRouterObjectURL;
 
-// 路由方法
+/// 路由方法
 + (void)fwRouterHandler:(NSDictionary *)parameters;
 
-// 对象路由方法
+/// 对象路由方法
 + (id)fwRouterObjectHandler:(NSDictionary *)parameters;
 
 @end

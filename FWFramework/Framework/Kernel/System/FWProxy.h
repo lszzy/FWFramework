@@ -46,10 +46,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWWeakObject : NSObject
 
-// 弱引用对象，释放后自动变为nil，不会产生野指针
+/// 弱引用对象，释放后自动变为nil，不会产生野指针
 @property (nonatomic, weak, nullable) id object;
 
-// 构造方法，快速创建弱引用容器对象
+/// 构造方法，快速创建弱引用容器对象
 - (instancetype)initWithObject:(nullable id)object;
 
 @end
