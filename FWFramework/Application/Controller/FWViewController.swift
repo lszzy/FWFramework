@@ -9,6 +9,7 @@
 import Foundation
 
 extension FWCollectionViewController where Self: UIViewController {
+    /// 集合视图，默认不显示滚动条
     @nonobjc public var collectionView: UICollectionView {
         if let result = fwProperty(forName: "collectionView") as? UICollectionView {
             return result
@@ -19,6 +20,7 @@ extension FWCollectionViewController where Self: UIViewController {
         }
     }
     
+    /// 集合数据，默认空数组，延迟加载
     @nonobjc public var collectionData: NSMutableArray {
         if let result = fwProperty(forName: "collectionData") as? NSMutableArray {
             return result
@@ -31,6 +33,7 @@ extension FWCollectionViewController where Self: UIViewController {
 }
 
 extension FWScrollViewController where Self: UIViewController {
+    /// 滚动视图，默认不显示滚动条
     @nonobjc public var scrollView: UIScrollView {
         if let result = fwProperty(forName: "scrollView") as? UIScrollView {
             return result
@@ -41,6 +44,7 @@ extension FWScrollViewController where Self: UIViewController {
         }
     }
     
+    /// 内容容器视图，自动撑开，子视图需要添加到此视图上
     @nonobjc public var contentView: UIView {
         if let result = fwProperty(forName: "contentView") as? UIView {
             return result
@@ -53,6 +57,7 @@ extension FWScrollViewController where Self: UIViewController {
 }
 
 extension FWTableViewController where Self: UIViewController {
+    /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     @nonobjc public var tableView: UITableView {
         if let result = fwProperty(forName: "tableView") as? UITableView {
             return result
@@ -63,6 +68,7 @@ extension FWTableViewController where Self: UIViewController {
         }
     }
     
+    /// 表格数据，默认空数组，延迟加载
     @nonobjc public var tableData: NSMutableArray {
         if let result = fwProperty(forName: "tableData") as? NSMutableArray {
             return result
@@ -75,6 +81,7 @@ extension FWTableViewController where Self: UIViewController {
 }
 
 extension FWWebViewController where Self: UIViewController {
+    /// 网页视图，默认显示滚动条，启用前进后退手势
     @nonobjc public var webView: WKWebView {
         if let result = fwProperty(forName: "webView") as? WKWebView {
             return result
@@ -85,6 +92,7 @@ extension FWWebViewController where Self: UIViewController {
         }
     }
     
+    /// 进度视图，默认trackTintColor为clear
     @nonobjc public var progressView: UIProgressView {
         if let result = fwProperty(forName: "progressView") as? UIProgressView {
             return result
@@ -95,10 +103,12 @@ extension FWWebViewController where Self: UIViewController {
         }
     }
     
+    /// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
     @nonobjc public var webItems: NSArray? {
         return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webItems"), withObject: self) as? NSArray
     }
     
+    /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     @nonobjc public var webRequest: Any? {
         get {
             return FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webRequest"), withObject: self)
