@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置背景色
 - (void)fwSetBackgroundColor:(nullable UIColor *)backgroundColor forState:(UIControlState)state;
 
-// 设置按钮倒计时。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%ds)
+// 设置按钮倒计时。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
 - (void)fwCountDown:(NSInteger)timeout title:(NSString *)title waitTitle:(NSString *)waitTitle;
 
 // 快速设置按钮，不设置传nil即可

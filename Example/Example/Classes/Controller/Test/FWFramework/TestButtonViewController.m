@@ -66,6 +66,45 @@
     view.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     [view fwAddTapGestureWithTarget:self action:@selector(onClick6:)];
     [self.view addSubview:view];
+    
+    UIButton *timerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    timerButton.frame = CGRectMake(30, 460, 80, 30);
+    timerButton.titleLabel.font = [UIFont appFontNormal];
+    [timerButton setTitleColor:[UIColor appColorBlack] forState:UIControlStateNormal];
+    [timerButton setTitle:@"=>" forState:UIControlStateNormal];
+    [self.view addSubview:timerButton];
+    
+    UIButton *timerButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    timerButton1.frame = CGRectMake(120, 460, 80, 30);
+    timerButton1.titleLabel.font = [UIFont appFontNormal];
+    [timerButton1 setTitleColor:[UIColor appColorBlack] forState:UIControlStateNormal];
+    [timerButton1 setTitle:@"=>" forState:UIControlStateNormal];
+    [self.view addSubview:timerButton1];
+    
+    UIButton *timerButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    timerButton2.frame = CGRectMake(220, 460, 80, 30);
+    timerButton2.titleLabel.font = [UIFont appFontNormal];
+    [timerButton2 setTitleColor:[UIColor appColorBlack] forState:UIControlStateNormal];
+    [timerButton2 setTitle:@"发送" forState:UIControlStateNormal];
+    __block NSTimer *timer1, *timer2;
+    [timerButton2 fwAddTouchBlock:^(UIButton *sender) {
+        [timerButton fwCountDown:60 title:@"=>" waitTitle:@"%lds"];
+        [timer1 invalidate];
+        timer1 = [NSTimer fwCommonTimerWithCountDown:60 block:^(NSInteger countDown) {
+            NSString *title = countDown > 0 ? [NSString stringWithFormat:@"%lds", countDown] : @"=>";
+            [timerButton1 setTitle:title forState:UIControlStateNormal];
+        }];
+        [timer2 invalidate];
+        NSTimeInterval startTime = NSDate.fwCurrentTime;
+        timer2 = [NSTimer fwCommonTimerWithTimeInterval:1 block:^(NSTimer * _Nonnull timer) {
+            NSInteger countDown = 60 - (NSInteger)(NSDate.fwCurrentTime - startTime);
+            if (countDown < 1) [timer2 invalidate];
+            NSString *title = countDown > 0 ? [NSString stringWithFormat:@"%lds", countDown] : @"发送";
+            [timerButton2 setTitle:title forState:UIControlStateNormal];
+        } repeats:YES];
+        [timer2 fire];
+    }];
+    [self.view addSubview:timerButton2];
 }
 
 #pragma mark - Action
