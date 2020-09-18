@@ -1,7 +1,7 @@
 /*!
  @header     FWMessage.h
  @indexgroup FWFramework
- @brief      点对点消息、广播通知管理器
+ @brief      点对点消息、广播通知
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018-05-16

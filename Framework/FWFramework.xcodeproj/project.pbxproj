@@ -708,18 +708,87 @@
 			path = ../FWFramework;
 			sourceTree = "<group>";
 		};
+		2FFDC75625144F15003179EA /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1B8D2507BF95000332A3 /* FWAuthorizeManager.h */,
+				2FFE1B7F2507BF95000332A3 /* FWAuthorizeManager.m */,
+				2FFE1B802507BF95000332A3 /* FWKeychainManager.h */,
+				2FFE1B8B2507BF95000332A3 /* FWKeychainManager.m */,
+				2FFE1B7E2507BF95000332A3 /* FWNotificationManager.h */,
+				2FFE1B872507BF95000332A3 /* FWNotificationManager.m */,
+				2FFE1B7B2507BF95000332A3 /* FWLocationManager.h */,
+				2FFE1B852507BF95000332A3 /* FWLocationManager.m */,
+				2FFE1B902507BF95000332A3 /* FWLocalizeManager.h */,
+				2FFE1B832507BF95000332A3 /* FWLocalizeManager.m */,
+				2FFE1B8C2507BF95000332A3 /* FWLocalizeManager.swift */,
+				2FFE1B822507BF95000332A3 /* FWVersionManager.h */,
+				2FFE1B8A2507BF95000332A3 /* FWVersionManager.m */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		2FFDC75B251450EE003179EA /* System */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1BA12507BF95000332A3 /* FWCoroutine.h */,
+				2FFE1B932507BF95000332A3 /* FWCoroutine.m */,
+				2FFE1BA02507BF95000332A3 /* FWCoroutine.swift */,
+				2FFE1BAB2507BF95000332A3 /* FWMacro.h */,
+				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
+				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
+				2FFE1B972507BF95000332A3 /* FWPromise.h */,
+				2FFE1BA52507BF95000332A3 /* FWPromise.m */,
+				2FFE1B962507BF95000332A3 /* FWProxy.h */,
+				2FFE1B9E2507BF95000332A3 /* FWProxy.m */,
+				2FFE1BA32507BF95000332A3 /* FWSwizzle.h */,
+				2FFE1B982507BF95000332A3 /* FWSwizzle.m */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		2FFDC75D251452F8003179EA /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1B9A2507BF95000332A3 /* FWLog.h */,
+				2FFE1BA72507BF95000332A3 /* FWLog.m */,
+				2FFE1BA42507BF95000332A3 /* FWLog.swift */,
+				2FFE1B9C2507BF95000332A3 /* FWPlugin.h */,
+				2FFE1BAA2507BF95000332A3 /* FWPlugin.m */,
+				2FFE1B9F2507BF95000332A3 /* FWRouter.h */,
+				2FFE1B952507BF95000332A3 /* FWRouter.m */,
+				2FFE1B9B2507BF95000332A3 /* FWState.h */,
+				2FFE1BA62507BF95000332A3 /* FWState.m */,
+				2FFE1B922507BF95000332A3 /* FWTask.h */,
+				2FFE1BA22507BF95000332A3 /* FWTask.m */,
+				2FFE1B992507BF95000332A3 /* FWTest.h */,
+				2FFE1BA82507BF95000332A3 /* FWTest.m */,
+				2FFE1B942507BF95000332A3 /* FWTest.swift */,
+			);
+			path = Include;
+			sourceTree = "<group>";
+		};
+		2FFDC76525145DBD003179EA /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				2FFDC75625144F15003179EA /* Foundation */,
+				2FFE1B792507BF95000332A3 /* UIKit */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
 		2FFE1B2E2507BF95000332A3 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
 				2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */,
 				2FFE1B912507BF95000332A3 /* Kernel */,
-				2FFE1B302507BF95000332A3 /* Module */,
-				2FFE1B792507BF95000332A3 /* Service */,
+				2FFE1B302507BF95000332A3 /* Service */,
+				2FFDC76525145DBD003179EA /* Library */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
 		};
-		2FFE1B302507BF95000332A3 /* Module */ = {
+		2FFE1B302507BF95000332A3 /* Service */ = {
 			isa = PBXGroup;
 			children = (
 				2FFE1B312507BF95000332A3 /* Database */,
@@ -729,7 +798,7 @@
 				2FFE1B582507BF95000332A3 /* Request */,
 				2FFE1B742507BF95000332A3 /* Socket */,
 			);
-			path = Module;
+			path = Service;
 			sourceTree = "<group>";
 		};
 		2FFE1B312507BF95000332A3 /* Database */ = {
@@ -838,20 +907,9 @@
 			path = Socket;
 			sourceTree = "<group>";
 		};
-		2FFE1B792507BF95000332A3 /* Service */ = {
+		2FFE1B792507BF95000332A3 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1B8D2507BF95000332A3 /* FWAuthorizeManager.h */,
-				2FFE1B7F2507BF95000332A3 /* FWAuthorizeManager.m */,
-				2FFE1B802507BF95000332A3 /* FWKeychainManager.h */,
-				2FFE1B8B2507BF95000332A3 /* FWKeychainManager.m */,
-				2FFE1B7E2507BF95000332A3 /* FWNotificationManager.h */,
-				2FFE1B872507BF95000332A3 /* FWNotificationManager.m */,
-				2FFE1B7B2507BF95000332A3 /* FWLocationManager.h */,
-				2FFE1B852507BF95000332A3 /* FWLocationManager.m */,
-				2FFE1B902507BF95000332A3 /* FWLocalizeManager.h */,
-				2FFE1B832507BF95000332A3 /* FWLocalizeManager.m */,
-				2FFE1B8C2507BF95000332A3 /* FWLocalizeManager.swift */,
 				2FFE1B7C2507BF95000332A3 /* FWDeviceManager.h */,
 				2FFE1B892507BF95000332A3 /* FWDeviceManager.m */,
 				2FFE1B8F2507BF95000332A3 /* FWDeviceManager.swift */,
@@ -863,41 +921,15 @@
 				2FFE1B882507BF95000332A3 /* FWThemeManager.h */,
 				2FFE1B7D2507BF95000332A3 /* FWThemeManager.m */,
 				2F2FCC5E2507E033006504B2 /* FWThemeManager.swift */,
-				2FFE1B822507BF95000332A3 /* FWVersionManager.h */,
-				2FFE1B8A2507BF95000332A3 /* FWVersionManager.m */,
 			);
-			path = Service;
+			path = UIKit;
 			sourceTree = "<group>";
 		};
 		2FFE1B912507BF95000332A3 /* Kernel */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1BA12507BF95000332A3 /* FWCoroutine.h */,
-				2FFE1B932507BF95000332A3 /* FWCoroutine.m */,
-				2FFE1BA02507BF95000332A3 /* FWCoroutine.swift */,
-				2FFE1B9A2507BF95000332A3 /* FWLog.h */,
-				2FFE1BA72507BF95000332A3 /* FWLog.m */,
-				2FFE1BA42507BF95000332A3 /* FWLog.swift */,
-				2FFE1BAB2507BF95000332A3 /* FWMacro.h */,
-				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
-				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
-				2FFE1B9C2507BF95000332A3 /* FWPlugin.h */,
-				2FFE1BAA2507BF95000332A3 /* FWPlugin.m */,
-				2FFE1B972507BF95000332A3 /* FWPromise.h */,
-				2FFE1BA52507BF95000332A3 /* FWPromise.m */,
-				2FFE1B962507BF95000332A3 /* FWProxy.h */,
-				2FFE1B9E2507BF95000332A3 /* FWProxy.m */,
-				2FFE1B9F2507BF95000332A3 /* FWRouter.h */,
-				2FFE1B952507BF95000332A3 /* FWRouter.m */,
-				2FFE1B9B2507BF95000332A3 /* FWState.h */,
-				2FFE1BA62507BF95000332A3 /* FWState.m */,
-				2FFE1BA32507BF95000332A3 /* FWSwizzle.h */,
-				2FFE1B982507BF95000332A3 /* FWSwizzle.m */,
-				2FFE1B922507BF95000332A3 /* FWTask.h */,
-				2FFE1BA22507BF95000332A3 /* FWTask.m */,
-				2FFE1B992507BF95000332A3 /* FWTest.h */,
-				2FFE1BA82507BF95000332A3 /* FWTest.m */,
-				2FFE1B942507BF95000332A3 /* FWTest.swift */,
+				2FFDC75B251450EE003179EA /* System */,
+				2FFDC75D251452F8003179EA /* Include */,
 			);
 			path = Kernel;
 			sourceTree = "<group>";
