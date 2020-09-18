@@ -1,7 +1,7 @@
 /*!
- @header     FWThemeManager.h
+ @header     FWTheme.h
  @indexgroup FWFramework
- @brief      FWThemeManager
+ @brief      FWTheme
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/8/14
@@ -76,53 +76,10 @@ extern NSString *const FWThemeChangedNotification;
 
 #pragma mark - UIColor+FWTheme
 
-// 从16进制创建UIColor，格式0xFFFFFF，透明度可选，默认1.0
-#define FWColorHex( hex, ... ) \
-    [UIColor colorWithRed:((float)((hex & 0xFF0000) >> 16))/255.0 green:((float)((hex & 0xFF00) >> 8))/255.0 blue:((float)(hex & 0xFF))/255.0 alpha:fw_macro_default(1.0, ##__VA_ARGS__)]
-
-// 从RGB创建UIColor，透明度可选，默认1.0
-#define FWColorRgb( r, g, b, ... ) \
-    [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:fw_macro_default(1.0f, ##__VA_ARGS__)]
-
 /*!
  @brief UIColor主题分类
  */
 @interface UIColor (FWTheme)
-
-// 从十六进制值初始化，格式：0x20B2AA，透明度为1.0
-+ (UIColor *)fwColorWithHex:(long)hex;
-
-// 从十六进制值初始化，格式：0x20B2AA，自定义透明度
-+ (UIColor *)fwColorWithHex:(long)hex alpha:(CGFloat)alpha;
-
-// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
-+ (void)fwColorStandardARGB:(BOOL)enabled;
-
-// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0，失败时返回clear
-+ (UIColor *)fwColorWithHexString:(NSString *)hexString;
-
-// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度，失败时返回clear
-+ (UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
-
-// 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0，失败时返回clear
-+ (UIColor *)fwColorWithString:(NSString *)string;
-
-// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear
-+ (UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
-
-// 读取颜色的十六进制值RGB，不含透明度
-- (long)fwHexValue;
-
-// 读取颜色的透明度值，范围0~1
-- (CGFloat)fwAlphaValue;
-
-// 读取颜色的十六进制字符串RGB，不含透明度
-- (NSString *)fwHexString;
-
-// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-- (NSString *)fwHexStringWithAlpha;
-
-#pragma mark - Theme
 
 /// 动态创建主题色，分别指定浅色和深色
 + (UIColor *)fwThemeLight:(UIColor *)light dark:(UIColor *)dark;
@@ -172,39 +129,6 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 指定主题样式获取对应静态图片
 - (nullable UIImage *)fwThemeImage:(FWThemeStyle)style;
-
-@end
-
-#pragma mark - UIFont+FWTheme
-
-// 快速创建系统字体，字重可选，默认Regular
-#define FWFontSize( size, ... ) [UIFont fwFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
-
-/// 快速创建细字体
-FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
-/// 快速创建普通字体
-FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size);
-/// 快速创建粗体字体
-FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
-/// 快速创建斜体字体
-FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
-
-/*!
- @brief UIFont快速创建分类
- */
-@interface UIFont (FWTheme)
-
-// 返回系统字体的细体
-+ (UIFont *)fwLightFontOfSize:(CGFloat)size;
-// 返回系统字体的普通体
-+ (UIFont *)fwFontOfSize:(CGFloat)size;
-// 返回系统字体的粗体
-+ (UIFont *)fwBoldFontOfSize:(CGFloat)size;
-// 返回系统字体的斜体
-+ (UIFont *)fwItalicFontOfSize:(CGFloat)size;
-
-// 创建指定尺寸和weight的系统字体
-+ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
 
 @end
 

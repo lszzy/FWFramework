@@ -8,7 +8,7 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
-#import "FWThemeManager.h"
+#import "FWTheme.h"
 #import "UIColor+FWFramework.h"
 #import "UIFont+FWFramework.h"
 

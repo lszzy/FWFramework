@@ -39,9 +39,11 @@
 #import "FWLocalizeManager.h"
 #import "FWVersionManager.h"
 
-#import "FWDeviceManager.h"
-#import "FWImageManager.h"
-#import "FWLayoutManager.h"
-#import "FWThemeManager.h"
+#import "FWAutoLayout.h"
+#import "FWDevice.h"
+#import "FWTheme.h"
+#import "FWToolkit.h"
+#import "FWWebImage.h"
+#import "FWWindow.h"
 
 #endif /* FWFramework_Framework_h */

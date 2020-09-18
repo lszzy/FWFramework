@@ -8,7 +8,7 @@
  */
 
 #import "FWTableViewController.h"
-#import "FWLayoutManager.h"
+#import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWTableViewController

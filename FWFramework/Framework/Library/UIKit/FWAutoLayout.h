@@ -1,5 +1,5 @@
 /*!
- @header     FWLayoutManager.h
+ @header     FWAutoLayout.h
  @indexgroup FWFramework
  @brief      UIView自动布局
  @author     wuyong

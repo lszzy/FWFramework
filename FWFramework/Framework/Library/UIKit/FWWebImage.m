@@ -1,13 +1,13 @@
 /*!
- @header     FWImageManager.m
+ @header     FWWebImage.m
  @indexgroup FWFramework
- @brief      FWImageManager
+ @brief      FWWebImage
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7
  */
 
-#import "FWImageManager.h"
+#import "FWWebImage.h"
 #import "FWHTTPSessionManager.h"
 #import "FWPlugin.h"
 #import <MobileCoreServices/MobileCoreServices.h>

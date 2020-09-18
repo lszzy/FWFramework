@@ -8,7 +8,7 @@
  */
 
 #import "UIApplication+FWFramework.h"
-#import "FWRouter.h"
+#import "FWWindow.h"
 #import "FWCoder.h"
 #import <StoreKit/StoreKit.h>
 #import <SafariServices/SafariServices.h>
