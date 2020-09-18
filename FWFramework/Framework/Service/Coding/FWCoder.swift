@@ -11,9 +11,9 @@ import CoreGraphics
 
 /// 安全解包协议
 public protocol FWSafelyUnwrappable {
-    // 提供安全默认值
+    /// 提供安全默认值
     static var fwSafeValue: Self { get }
-    // 判断对象是否为空(nil或默认值)
+    /// 判断对象是否为空(nil或默认值)
     func fwIsEmpty() -> Bool
 }
 

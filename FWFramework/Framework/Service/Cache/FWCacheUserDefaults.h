@@ -10,13 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// NSUserDefaults缓存
+/// NSUserDefaults缓存
 @interface FWCacheUserDefaults : FWCacheAbstract
 
 /*! @brief 单例模式 */
 @property (class, nonatomic, readonly) FWCacheUserDefaults *sharedInstance;
 
-// 分组对象
+/// 分组对象
 - (instancetype)initWithGroup:(nullable NSString *)group;
 
 @end

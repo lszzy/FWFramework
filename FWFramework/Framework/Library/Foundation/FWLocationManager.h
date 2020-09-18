@@ -11,25 +11,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 坐标转"纬度,经度"字符串
+/// 坐标转"纬度,经度"字符串
 FOUNDATION_EXPORT NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate);
 
-// "纬度,经度"字符串转坐标
+/// "纬度,经度"字符串转坐标
 FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string);
 
-// 计算起点经纬度到终点经纬度的角度(0~360)
+/// 计算起点经纬度到终点经纬度的角度(0~360)
 FOUNDATION_EXPORT CLLocationDegrees FWLocationDegreeWithCoordinates(CLLocationCoordinate2D origin, CLLocationCoordinate2D destination);
 
-// 计算起点经纬度朝指定角度移动指定距离(米)的终点经纬度
+/// 计算起点经纬度朝指定角度移动指定距离(米)的终点经纬度
 FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithDistanceAndDegree(CLLocationCoordinate2D origin, CLLocationDistance distance, CLLocationDegrees degree);
 
 #pragma mark - FWLocationManager
 
-// 定位更新通知
+/// 定位更新通知
 extern NSString *const FWLocationUpdatedNotification;
-// 定位失败通知
+/// 定位失败通知
 extern NSString *const FWLocationFailedNotification;
-// 方向改变通知
+/// 方向改变通知
 extern NSString *const FWHeadingUpdatedNotification;
 
 /**
@@ -40,43 +40,43 @@ extern NSString *const FWHeadingUpdatedNotification;
  */
 @interface FWLocationManager : NSObject
 
-// 单例模式
+/// 单例模式
 @property (class, nonatomic, readonly) FWLocationManager *sharedInstance;
 
-// 是否启用Always定位，默认NO，请求WhenInUse定位
+/// 是否启用Always定位，默认NO，请求WhenInUse定位
 @property (nonatomic, assign) BOOL alwaysLocation;
 
-// 是否启用后台定位，默认NO。如果需要后台定位，设为YES即可
+/// 是否启用后台定位，默认NO。如果需要后台定位，设为YES即可
 @property (nonatomic, assign) BOOL backgroundLocation;
 
-// 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
+/// 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
 @property (nonatomic, assign) BOOL headingEnabled;
 
-// 是否发送通知，默认NO。如果需要通知，设为YES即可
+/// 是否发送通知，默认NO。如果需要通知，设为YES即可
 @property (nonatomic, assign) BOOL notificationEnabled;
 
-// 定位完成是否立即stop，默认NO。如果为YES，只会回调一次
+/// 定位完成是否立即stop，默认NO。如果为YES，只会回调一次
 @property (nonatomic, assign) BOOL stopWhenCompleted;
 
-// 位置管理对象
+/// 位置管理对象
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 
-// 当前位置，中途定位失败时不会重置
+/// 当前位置，中途定位失败时不会重置
 @property (nullable, nonatomic, readonly) CLLocation *location;
 
-// 当前方向，headingEnabled启用后生效
+/// 当前方向，headingEnabled启用后生效
 @property (nullable, nonatomic, readonly) CLHeading *heading;
 
-// 当前错误，表示最近一次定位回调状态
+/// 当前错误，表示最近一次定位回调状态
 @property (nullable, nonatomic, readonly) NSError *error;
 
-// 定位改变block方式回调，可通过error判断是否定位成功
+/// 定位改变block方式回调，可通过error判断是否定位成功
 @property (nullable, nonatomic, copy) void (^locationChanged)(FWLocationManager *manager);
 
-// 开始更新位置
+/// 开始更新位置
 - (void)startUpdateLocation;
 
-// 停止更新位置
+/// 停止更新位置
 - (void)stopUpdateLocation;
 
 @end

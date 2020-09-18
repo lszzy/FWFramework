@@ -13,23 +13,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIDevice+FWDevice
 
-// 是否是模拟器
+/// 是否是模拟器
 #if TARGET_OS_SIMULATOR
     #define FWIsSimulator YES
 #else
     #define FWIsSimulator NO
 #endif
 
-// 是否是iPhone设备
+/// 是否是iPhone设备
 #define FWIsIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
-// 是否是iPad设备
+/// 是否是iPad设备
 #define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
 
-// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
+/// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
 #define FWIosVersion [[[UIDevice currentDevice] systemVersion] floatValue]
-// 是否是指定iOS主版本
+/// 是否是指定iOS主版本
 #define FWIsIos( version ) (FWIosVersion >= version && FWIosVersion < (version + 1) ? YES : NO)
-// 是否是大于等于指定iOS主版本
+/// 是否是大于等于指定iOS主版本
 #define FWIsIosLater( version ) (FWIosVersion >= version ? YES : NO)
 
 /*!
@@ -37,19 +37,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIDevice (FWDevice)
 
-// 是否是模拟器
+/// 是否是模拟器
 + (BOOL)fwIsSimulator;
 
-// 是否是iPhone
+/// 是否是iPhone
 + (BOOL)fwIsIphone;
-// 是否是iPad
+/// 是否是iPad
 + (BOOL)fwIsIpad;
 
-// iOS系统版本
+/// iOS系统版本
 + (float)fwIosVersion;
-// 是否是指定iOS主版本
+/// 是否是指定iOS主版本
 + (BOOL)fwIsIos:(NSInteger)version;
-// 是否是大于等于指定iOS主版本
+/// 是否是大于等于指定iOS主版本
 + (BOOL)fwIsIosLater:(NSInteger)version;
 
 @end
@@ -66,37 +66,37 @@ static const FWScreenInch FWScreenInch58 = 58;
 static const FWScreenInch FWScreenInch61 = 61;
 static const FWScreenInch FWScreenInch65 = 65;
 
-// 屏幕尺寸
+/// 屏幕尺寸
 #define FWScreenSize [UIScreen mainScreen].bounds.size
-// 屏幕宽度
+/// 屏幕宽度
 #define FWScreenWidth [UIScreen mainScreen].bounds.size.width
-// 屏幕高度
+/// 屏幕高度
 #define FWScreenHeight [UIScreen mainScreen].bounds.size.height
-// 屏幕像素比例
+/// 屏幕像素比例
 #define FWScreenScale [UIScreen mainScreen].scale
-// 屏幕分辨率
+/// 屏幕分辨率
 #define FWScreenResolution CGSizeMake( [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale )
 
-// 判断屏幕尺寸
+/// 判断屏幕尺寸
 #define FWIsScreenSize( width, height ) CGSizeEqualToSize(CGSizeMake(width, height), [UIScreen mainScreen].bounds.size)
-// 判断屏幕分辨率
+/// 判断屏幕分辨率
 #define FWIsScreenResolution( width, height ) CGSizeEqualToSize(CGSizeMake(width, height), FWScreenResolution)
-// 判断屏幕英寸
+/// 判断屏幕英寸
 #define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
-// 是否是iPhoneX系列全面屏幕
+/// 是否是iPhoneX系列全面屏幕
 #define FWIsScreenX [UIScreen fwIsScreenX]
 
-// 状态栏高度
+/// 状态栏高度
 #define FWStatusBarHeight (FWIsScreenX ? 44.0 : 20.0)
-// 导航栏高度
+/// 导航栏高度
 #define FWNavigationBarHeight (FWIsScreenX ? 44.0 : 44.0)
-// 标签栏高度
+/// 标签栏高度
 #define FWTabBarHeight (FWIsScreenX ? 83.0 : 49.0)
-// 工具栏高度
+/// 工具栏高度
 #define FWToolBarHeight (FWIsScreenX ? 78.0 : 44.0)
-// 顶部栏高度，包含状态栏、导航栏
+/// 顶部栏高度，包含状态栏、导航栏
 #define FWTopBarHeight (FWStatusBarHeight + FWNavigationBarHeight)
-// 底部栏高度，包含标签栏
+/// 底部栏高度，包含标签栏
 #define FWBottomBarHeight FWTabBarHeight
 
 /*!
@@ -104,44 +104,44 @@ static const FWScreenInch FWScreenInch65 = 65;
  */
 @interface UIScreen (FWDevice)
 
-// 屏幕尺寸
+/// 屏幕尺寸
 + (CGSize)fwScreenSize;
-// 屏幕宽度
+/// 屏幕宽度
 + (CGFloat)fwScreenWidth;
-// 屏幕高度
+/// 屏幕高度
 + (CGFloat)fwScreenHeight;
-// 屏幕像素比例
+/// 屏幕像素比例
 + (CGFloat)fwScreenScale;
-// 屏幕分辨率
+/// 屏幕分辨率
 + (CGSize)fwScreenResolution;
-// 获取一像素的大小
+/// 获取一像素的大小
 + (CGFloat)fwPixelOne;
 
-// 是否是指定尺寸屏幕
+/// 是否是指定尺寸屏幕
 + (BOOL)fwIsScreenSize:(CGSize)size;
-// 是否是指定分辨率屏幕
+/// 是否是指定分辨率屏幕
 + (BOOL)fwIsScreenResolution:(CGSize)resolution;
-// 是否是指定英寸屏幕
+/// 是否是指定英寸屏幕
 + (BOOL)fwIsScreenInch:(FWScreenInch)inch;
-// 是否是iPhoneX系列全面屏幕
+/// 是否是iPhoneX系列全面屏幕
 + (BOOL)fwIsScreenX;
 
-// 检查是否含有安全区域，可用来判断iPhoneX
+/// 检查是否含有安全区域，可用来判断iPhoneX
 + (BOOL)fwHasSafeAreaInsets;
-// 获取安全区域距离
+/// 获取安全区域距离
 + (UIEdgeInsets)fwSafeAreaInsets;
 
-// 状态栏高度，与是否隐藏无关
+/// 状态栏高度，与是否隐藏无关
 + (CGFloat)fwStatusBarHeight;
-// 导航栏高度，与是否隐藏无关
+/// 导航栏高度，与是否隐藏无关
 + (CGFloat)fwNavigationBarHeight;
-// 标签栏高度，与是否隐藏无关
+/// 标签栏高度，与是否隐藏无关
 + (CGFloat)fwTabBarHeight;
-// 工具栏高度，与是否隐藏无关
+/// 工具栏高度，与是否隐藏无关
 + (CGFloat)fwToolBarHeight;
-// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
+/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
 + (CGFloat)fwTopBarHeight;
-// 底部栏高度，包含标签栏，与是否隐藏无关
+/// 底部栏高度，包含标签栏，与是否隐藏无关
 + (CGFloat)fwBottomBarHeight;
 
 @end
@@ -151,17 +151,17 @@ static const FWScreenInch FWScreenInch65 = 65;
  */
 @interface UIViewController (FWDevice)
 
-// 当前状态栏高度，隐藏为0
+/// 当前状态栏高度，隐藏为0
 - (CGFloat)fwStatusBarHeight;
-// 当前导航栏高度，隐藏为0
+/// 当前导航栏高度，隐藏为0
 - (CGFloat)fwNavigationBarHeight;
-// 当前标签栏高度，隐藏为0
+/// 当前标签栏高度，隐藏为0
 - (CGFloat)fwTabBarHeight;
-// 当前工具栏高度，隐藏为0
+/// 当前工具栏高度，隐藏为0
 - (CGFloat)fwToolBarHeight;
-// 顶部栏高度，包含状态栏、导航栏，隐藏为0
+/// 顶部栏高度，包含状态栏、导航栏，隐藏为0
 - (CGFloat)fwTopBarHeight;
-// 底部栏高度，包含标签栏，隐藏为0
+/// 底部栏高度，包含标签栏，隐藏为0
 - (CGFloat)fwBottomBarHeight;
 
 @end

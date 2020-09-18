@@ -19,19 +19,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @required
 
-// 读取某个缓存
+/// 读取某个缓存
 - (nullable id)objectForKey:(NSString *)key;
 
-// 设置某个缓存
+/// 设置某个缓存
 - (void)setObject:(nullable id)object forKey:(NSString *)key;
 
-// 设置某个缓存，支持缓存有效期，小于等于0为永久有效
+/// 设置某个缓存，支持缓存有效期，小于等于0为永久有效
 - (void)setObject:(nullable id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire;
 
-// 移除某个缓存
+/// 移除某个缓存
 - (void)removeObjectForKey:(NSString *)key;
 
-// 清空所有缓存
+/// 清空所有缓存
 - (void)removeAllObjects;
 
 @end
@@ -45,16 +45,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Protected
 
-// 读取某个缓存，内部方法，子类重写
+/// 读取某个缓存，内部方法，子类重写
 - (nullable id)innerObjectForKey:(NSString *)key;
 
-// 设置某个缓存，内部方法，子类重写
+/// 设置某个缓存，内部方法，子类重写
 - (void)innerSetObject:(id)object forKey:(NSString *)key;
 
-// 移除某个缓存，内部方法，子类重写
+/// 移除某个缓存，内部方法，子类重写
 - (void)innerRemoveObjectForKey:(NSString *)key;
 
-// 清空所有缓存，内部方法，子类重写
+/// 清空所有缓存，内部方法，子类重写
 - (void)innerRemoveAllObjects;
 
 @end

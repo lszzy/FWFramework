@@ -394,10 +394,10 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  */
 @interface NSURL (FWSafeType)
 
-// 生成URL，中文自动URL编码
+/// 生成URL，中文自动URL编码
 + (nullable instancetype)fwURLWithString:(nullable NSString *)URLString;
 
-// 生成URL，中文自动URL编码
+/// 生成URL，中文自动URL编码
 + (nullable instancetype)fwURLWithString:(nullable NSString *)URLString relativeToURL:(nullable NSURL *)baseURL;
 
 @end
