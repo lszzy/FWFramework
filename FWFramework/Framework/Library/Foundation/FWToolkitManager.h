@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
 @property (class, nonatomic, assign) NSTimeInterval fwCurrentTime;
 
+/// 系统运行时间
++ (long long)fwSystemUptime;
+
 #pragma mark - Benchmark
 
 /// 标记时间调试开始
@@ -85,6 +88,122 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 计算多行字符串指定字体、指定段落样式(如lineBreakMode等)在指定绘制区域内所占尺寸
 - (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle;
+
+@end
+
+#pragma mark - NSTimer+FWToolkit
+
+/*!
+ @brief CADisplayLink分类
+ */
+@interface CADisplayLink (FWToolkit)
+
+/*!
+ @brief 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param target 目标
+ @param selector 方法
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
+
+/*!
+ @brief 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param block 代码块
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+
+/*!
+ @brief 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @discussion 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
+ 
+ @param block 代码块
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+
+@end
+
+/*!
+ @brief NSTimer分类
+ */
+@interface NSTimer (FWToolkit)
+
+/*!
+ @brief 创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param seconds 时间
+ @param target 目标
+ @param selector 方法
+ @param userInfo 参数
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
+
+/*!
+ @brief 创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param seconds 时间
+ @param block 代码块
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+/*!
+ @brief 创建倒计时定时器
+ 
+ @param seconds 倒计时描述
+ @param block 每秒执行block，为0时自动停止
+ @return 定时器，可手工停止
+ */
++ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
+
+/*!
+ @brief 创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @discussion 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]
+ 
+ @param seconds 时间
+ @param block 代码块
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+/*!
+ @brief 创建NSTimer，使用block，默认模式安排到当前的运行循环中
+ 
+ @param seconds 时间
+ @param block 代码块
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+@end
+
+#pragma mark - NSAttributedString+FWToolkit
+
+@interface NSAttributedString (FWToolkit)
+
+#pragma mark - Html
+
+/// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
++ (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString;
+
+/// NSAttributedString对象转换为html字符串
+- (nullable NSString *)fwHtmlString;
+
+#pragma mark - Size
+
+/// 计算所占尺寸，需设置Font等
+- (CGSize)fwSize;
+
+/// 计算在指定绘制区域内所占尺寸，需设置Font等
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize;
 
 @end
 

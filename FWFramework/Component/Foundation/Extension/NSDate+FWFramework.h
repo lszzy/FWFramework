@@ -19,9 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - System
 
-/// 系统运行时间
-+ (long long)fwSystemUptime;
-
 /// 获取系统启动时间
 + (nullable NSDate *)fwSystemBoottime;
 
