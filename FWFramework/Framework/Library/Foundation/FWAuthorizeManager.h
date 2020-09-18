@@ -52,34 +52,34 @@ static const FWAuthorizeType FWAuthorizeTypeAppleMusic = 9;
 /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
 static const FWAuthorizeType FWAuthorizeTypeNotifications = 10;
 
-// 权限状态枚举
+/// 权限状态枚举
 typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
-    // 未确认
+    /// 未确认
     FWAuthorizeStatusNotDetermined = 0,
-    // 受限制
+    /// 受限制
     FWAuthorizeStatusRestricted,
-    // 被拒绝
+    /// 被拒绝
     FWAuthorizeStatusDenied,
-    // 已授权
+    /// 已授权
     FWAuthorizeStatusAuthorized,
 };
 
 #pragma mark - FWAuthorizeProtocol
 
-// 权限授权协议
+/// 权限授权协议
 @protocol FWAuthorizeProtocol <NSObject>
 
 @required
 
-// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
+/// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
 - (FWAuthorizeStatus)authorizeStatus;
 
-// 执行权限授权，主线程回调，必须实现
+/// 执行权限授权，主线程回调，必须实现
 - (void)authorize:(nullable void (^)(FWAuthorizeStatus status))completion;
 
 @optional
 
-// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
+/// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
 - (void)authorizeStatus:(nullable void (^)(FWAuthorizeStatus status))completion;
 
 @end
@@ -92,7 +92,7 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
  */
 @interface FWAuthorizeManager : NSObject <FWAuthorizeProtocol>
 
-// 获取指定类型的权限管理器单例，部分权限未启用时返回nil
+/// 获取指定类型的权限管理器单例，部分权限未启用时返回nil
 + (nullable instancetype)managerWithType:(FWAuthorizeType)type;
 
 @end

@@ -71,7 +71,7 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 
 #pragma mark - NSData+FWAnimated
 
-// 扩展系统UTType
+/// 扩展系统UTType
 #define kFWUTTypeHEIC ((__bridge CFStringRef)@"public.heic")
 #define kFWUTTypeHEIF ((__bridge CFStringRef)@"public.heif")
 #define kFWUTTypeHEICS ((__bridge CFStringRef)@"public.heics")

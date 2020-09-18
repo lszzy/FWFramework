@@ -33,7 +33,7 @@ static const FWCacheType FWCacheTypeSqlite = 5;
  */
 @interface FWCacheManager : NSObject
 
-// 获取指定类型的缓存单例对象
+/// 获取指定类型的缓存单例对象
 + (nullable id<FWCacheProtocol>)managerWithType:(FWCacheType)type;
 
 @end

@@ -12,14 +12,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 定义NSCopying实现宏
+/// 定义NSCopying实现宏
 #define FWDefCopying() \
     - (id)copyWithZone:(NSZone *)zone \
     { \
         return [self fwModelCopy]; \
     }
 
-// 定义NSCoding实现宏
+/// 定义NSCoding实现宏
 #define FWDefCoding( ) \
     - (instancetype)initWithCoder:(NSCoder *)aDecoder \
     { \
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
         [self fwModelEncodeWithCoder:aCoder]; \
     }
 
-// 定义数组类型模型
+/// 定义数组类型模型
 #define FWModelArray( class ) \
     @protocol class <NSObject> \
     @end
@@ -46,28 +46,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 属性映射，示例：@{@"name" : @"book_name", @"bookId" : [@"book_id", @"book.id"]}
+/// 属性映射，示例：@{@"name" : @"book_name", @"bookId" : [@"book_id", @"book.id"]}
 + (nullable NSDictionary<NSString *, id> *)fwModelPropertyMapper;
 
-// 类映射(Swift需使用AnyClass类型)，示例：@{@"books" : [Book class], @"users" : @"User"}
+/// 类映射(Swift需使用AnyClass类型)，示例：@{@"books" : [Book class], @"users" : @"User"}
 + (nullable NSDictionary<NSString *, id> *)fwModelClassMapper;
 
-// 自定义字典解析类(Swift需使用AnyClass类型)
+/// 自定义字典解析类(Swift需使用AnyClass类型)
 + (nullable Class)fwModelClassForDictionary:(NSDictionary *)dictionary;
 
-// 属性黑名单列表
+/// 属性黑名单列表
 + (nullable NSArray<NSString *> *)fwModelPropertyBlacklist;
 
-// 属性白名单列表
+/// 属性白名单列表
 + (nullable NSArray<NSString *> *)fwModelPropertyWhitelist;
 
-// 字典将要转换模型时钩子处理
+/// 字典将要转换模型时钩子处理
 - (NSDictionary *)fwModelWillTransformFromDictionary:(NSDictionary *)dictionary;
 
-// 字典转换模型时钩子处理
+/// 字典转换模型时钩子处理
 - (BOOL)fwModelTransformFromDictionary:(NSDictionary *)dictionary;
 
-// 模型转换字典时钩子处理
+/// 模型转换字典时钩子处理
 - (BOOL)fwModelTransformToDictionary:(NSMutableDictionary *)dictionary;
 
 @end
@@ -155,24 +155,24 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable id)fwModelCopy;
 
-// 对象编码
+/// 对象编码
 - (void)fwModelEncodeWithCoder:(NSCoder *)aCoder;
 
-// 对象解码
+/// 对象解码
 - (id)fwModelInitWithCoder:(NSCoder *)aDecoder;
 
-// 对象的hash编码
+/// 对象的hash编码
 - (NSUInteger)fwModelHash;
 
-// 比较Model
+/// 比较Model
 - (BOOL)fwModelIsEqual:(id)model;
 
-// 对象描述
+/// 对象描述
 - (NSString *)fwModelDescription;
 
 @end
 
-// Type-Encoding枚举
+/// Type-Encoding枚举
 typedef NS_OPTIONS(NSUInteger, FWEncodingType) {
     FWEncodingTypeMask       = 0xFF, ///< mask of type value
     FWEncodingTypeUnknown    = 0, ///< unknown
@@ -219,10 +219,10 @@ typedef NS_OPTIONS(NSUInteger, FWEncodingType) {
     FWEncodingTypePropertyDynamic      = 1 << 23, ///< @dynamic
 };
 
-// 解析Type-Encoding字符串类型
+/// 解析Type-Encoding字符串类型
 FWEncodingType FWEncodingGetType(const char *typeEncoding);
 
-// Ivar信息
+/// Ivar信息
 @interface FWClassIvarInfo : NSObject
 
 @property (nonatomic, assign, readonly) Ivar ivar;              ///< ivar opaque struct
@@ -235,7 +235,7 @@ FWEncodingType FWEncodingGetType(const char *typeEncoding);
 
 @end
 
-// Method 信息
+/// Method 信息
 @interface FWClassMethodInfo : NSObject
 
 @property (nonatomic, assign, readonly) Method method;                  ///< method opaque struct
@@ -250,7 +250,7 @@ FWEncodingType FWEncodingGetType(const char *typeEncoding);
 
 @end
 
-// 属性信息
+/// 属性信息
 @interface FWClassPropertyInfo : NSObject
 
 @property (nonatomic, assign, readonly) objc_property_t property; ///< property's opaque struct
@@ -267,7 +267,7 @@ FWEncodingType FWEncodingGetType(const char *typeEncoding);
 
 @end
 
-// Class信息
+/// Class信息
 @interface FWClassInfo : NSObject
 
 @property (nonatomic, assign, readonly) Class cls; ///< class object

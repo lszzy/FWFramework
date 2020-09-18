@@ -10,13 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 文件缓存
+/// 文件缓存
 @interface FWCacheFile : FWCacheAbstract
 
 /*! @brief 单例模式 */
 @property (class, nonatomic, readonly) FWCacheFile *sharedInstance;
 
-// 指定路径
+/// 指定路径
 - (instancetype)initWithPath:(nullable NSString *)path;
 
 @end
