@@ -54,8 +54,6 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-#pragma mark - System
-
 + (long long)fwSystemUptime
 {
     struct timeval boottime;
@@ -68,26 +66,6 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         uptime = now - boottime.tv_sec;
     }
     return uptime;
-}
-
-+ (NSDate *)fwSystemBoottime
-{
-    const int MIB_SIZE = 2;
-    
-    int mib[MIB_SIZE];
-    size_t size;
-    struct timeval boottime;
-    
-    mib[0] = CTL_KERN;
-    mib[1] = KERN_BOOTTIME;
-    size = sizeof(boottime);
-    
-    if (sysctl(mib, MIB_SIZE, &boottime, &size, NULL, 0) != -1) {
-        NSDate* bootDate = [NSDate dateWithTimeIntervalSince1970:boottime.tv_sec + boottime.tv_usec / 1.e6];
-        return bootDate;
-    }
-    
-    return nil;
 }
 
 #pragma mark - Benchmark
@@ -228,6 +206,140 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     CGSize size = [self boundingRectWithSize:drawSize
                                      options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                   attributes:attr
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+@end
+
+#pragma mark - NSTimer+FWToolkit
+
+@implementation CADisplayLink (FWToolkit)
+
++ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector
+{
+    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:target selector:selector];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    return displayLink;
+}
+
++ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
+{
+    CADisplayLink *displayLink = [self fwDisplayLinkWithBlock:block];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    return displayLink;
+}
+
++ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
+{
+    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(fwInnerDisplayLinkBlock:)];
+    objc_setAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    return displayLink;
+}
+
++ (void)fwInnerDisplayLinkBlock:(CADisplayLink *)displayLink
+{
+    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:));
+    if (block) {
+        block(displayLink);
+    }
+}
+
+@end
+
+@implementation NSTimer (FWToolkit)
+
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(id)userInfo repeats:(BOOL)repeats
+{
+    NSTimer *timer = [NSTimer timerWithTimeInterval:seconds target:target selector:selector userInfo:userInfo repeats:repeats];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    return timer;
+}
+
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+{
+    NSTimer *timer = [NSTimer fwTimerWithTimeInterval:seconds block:block repeats:repeats];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    return timer;
+}
+
++ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
+{
+    __block NSInteger countdown = seconds;
+    NSTimer *timer = [self fwCommonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        if (countdown <= 0) {
+            block(0);
+            [timer invalidate];
+        } else {
+            countdown--;
+            // 时间+1，防止倒计时显示0秒
+            block(countdown + 1);
+        }
+    } repeats:YES];
+    
+    // 立即触发定时器，默认等待1秒后才执行
+    [timer fire];
+    return timer;
+}
+
++ (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+{
+    return [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
+}
+
++ (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+{
+    return [NSTimer timerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
+}
+
++ (void)fwInnerTimerBlock:(NSTimer *)timer
+{
+    if ([timer userInfo]) {
+        void (^block)(NSTimer *timer) = (void (^)(NSTimer *timer))[timer userInfo];
+        block(timer);
+    }
+}
+
+@end
+
+#pragma mark - NSAttributedString+FWToolkit
+
+@implementation NSAttributedString (FWToolkit)
+
+#pragma mark - Html
+
++ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
+{
+    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[self alloc] initWithData:htmlData options:@{
+        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
+    } documentAttributes:nil error:nil];
+}
+
+- (NSString *)fwHtmlString
+{
+    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
+        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+    } error:nil];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark - Size
+
+- (CGSize)fwSize
+{
+    return [self fwSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                      context:nil].size;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
