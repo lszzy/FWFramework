@@ -1,12 +1,17 @@
 //
-//  FWThemeManager.swift
+//  FWToolkit.swift
 //  FWFramework
 //
-//  Created by wuyong on 2020/9/8.
+//  Created by wuyong on 2020/9/18.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
 import UIKit
+
+// MARK: - UIApplication+FWToolkit
+
+/// 是否是调试模式
+public let FWIsDebug: Bool = UIApplication.fwIsDebug()
 
 // MARK: - UIColor+FWToolkit
 

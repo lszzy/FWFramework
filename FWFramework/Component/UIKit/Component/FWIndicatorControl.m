@@ -7,7 +7,7 @@
 //
 
 #import "FWIndicatorControl.h"
-#import "FWLayoutManager.h"
+#import "FWAutoLayout.h"
 #import "FWProxy.h"
 
 @interface FWIndicatorProgressView : UIView

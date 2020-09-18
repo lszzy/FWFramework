@@ -8,8 +8,8 @@
  */
 
 #import "FWPopupMenu.h"
-#import "FWDeviceManager.h"
-#import "FWRouter.h"
+#import "FWDevice.h"
+#import "FWWindow.h"
 
 #pragma mark - FWPopupMenuPath
 

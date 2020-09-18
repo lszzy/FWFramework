@@ -8,7 +8,7 @@
  */
 
 #import "UITableView+FWBackgroundView.h"
-#import "FWLayoutManager.h"
+#import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
 @implementation FWTableViewCellBackgroundView

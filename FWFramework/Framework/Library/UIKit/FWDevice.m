@@ -1,33 +1,18 @@
 /*!
- @header     FWDeviceManager.m
+ @header     FWDevice.m
  @indexgroup FWFramework
- @brief      FWDeviceManager
+ @brief      FWDevice
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
  */
 
-#import "FWDeviceManager.h"
-#import "FWRouter.h"
+#import "FWDevice.h"
+#import "FWWindow.h"
 
-#pragma mark - UIApplication+FWToolkit
+#pragma mark - UIDevice+FWDevice
 
-@implementation UIApplication (FWToolkit)
-
-+ (BOOL)fwIsDebug
-{
-#ifdef DEBUG
-    return YES;
-#else
-    return NO;
-#endif
-}
-
-@end
-
-#pragma mark - UIDevice+FWToolkit
-
-@implementation UIDevice (FWToolkit)
+@implementation UIDevice (FWDevice)
 
 + (BOOL)fwIsSimulator
 {
@@ -80,9 +65,9 @@
 
 @end
 
-#pragma mark - UIScreen+FWToolkit
+#pragma mark - UIScreen+FWDevice
 
-@implementation UIScreen (FWToolkit)
+@implementation UIScreen (FWDevice)
 
 + (CGSize)fwScreenSize
 {
@@ -209,7 +194,7 @@
 
 @end
 
-@implementation UIViewController (FWToolkit)
+@implementation UIViewController (FWDevice)
 
 - (CGFloat)fwStatusBarHeight
 {
