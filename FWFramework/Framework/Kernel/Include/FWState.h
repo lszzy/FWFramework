@@ -14,56 +14,56 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWStateTransition;
 
-// 状态
+/// 状态类
 @interface FWState : NSObject
 
-// 状态名称，只读
+/// 状态名称，只读
 @property (nonatomic, copy, readonly) NSString *name;
 
-// 即将进入block
+/// 即将进入block
 @property (nonatomic, copy, nullable) void (^willEnterBlock)(FWStateTransition * _Nullable transition);
 
-// 已进入block
+/// 已进入block
 @property (nonatomic, copy, nullable) void (^didEnterBlock)(FWStateTransition * _Nullable transition);
 
-// 即将退出block
+/// 即将退出block
 @property (nonatomic, copy, nullable) void (^willExitBlock)(FWStateTransition *transition);
 
-// 已退出block
+/// 已退出block
 @property (nonatomic, copy, nullable) void (^didExitBlock)(FWStateTransition *transition);
 
-// 从名称初始化
+/// 从名称初始化
 + (instancetype)stateWithName:(NSString *)name;
 
 @end
 
 #pragma mark - FWStateEvent
 
-// 事件
+/// 状态事件类
 @interface FWStateEvent : NSObject
 
-// 事件名称，只读
+/// 事件名称，只读
 @property (nonatomic, copy, readonly) NSString *name;
 
-// 来源状态列表，只读
+/// 来源状态列表，只读
 @property (nonatomic, copy, readonly) NSArray<FWState *> *sourceStates;
 
-// 目标状态，只读
+/// 目标状态，只读
 @property (nonatomic, strong, readonly) FWState *targetState;
 
-// 能否触发block
+/// 能否触发block
 @property (nonatomic, copy, nullable) BOOL (^shouldFireBlock)(FWStateTransition *transition);
 
-// 即将触发block
+/// 即将触发block
 @property (nonatomic, copy, nullable) void (^willFireBlock)(FWStateTransition *transition);
 
-// 正在触发block，必须调用completion标记完成结果。YES事件完成、状态改变，NO事件失败、状态不变。不设置默认完成
+/// 正在触发block，必须调用completion标记完成结果。YES事件完成、状态改变，NO事件失败、状态不变。不设置默认完成
 @property (nonatomic, copy, nullable) void (^fireBlock)(FWStateTransition *transition, void (^completion)(BOOL finished));
 
-// 触发完成block，finished为完成状态
+/// 触发完成block，finished为完成状态
 @property (nonatomic, copy, nullable) void (^didFireBlock)(FWStateTransition *transition, BOOL finished);
 
-// 初始化事件
+/// 初始化事件
 + (instancetype)eventWithName:(NSString *)name fromStates:(NSArray<FWState *> *)sourceStates toState:(FWState *)targetState;
 
 @end
@@ -72,32 +72,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWStateMachine;
 
-// 转换器
+/// 状态转换器
 @interface FWStateTransition : NSObject
 
-// 有限状态机，只读
+/// 有限状态机，只读
 @property (nonatomic, strong, readonly) FWStateMachine *machine;
 
-// 事件对象，只读
+/// 事件对象，只读
 @property (nonatomic, strong, readonly) FWStateEvent *event;
 
-// 来源状态，只读
+/// 来源状态，只读
 @property (nonatomic, strong, readonly) FWState *sourceState;
 
-// 目标状态，只读
+/// 目标状态，只读
 @property (nonatomic, strong, readonly) FWState *targetState;
 
-// 附加参数，只读
+/// 附加参数，只读
 @property (nonatomic, strong, readonly, nullable) id object;
 
-// 初始化转换器
+/// 初始化转换器
 + (instancetype)transitionInMachine:(FWStateMachine *)machine forEvent:(FWStateEvent *)event fromState:(FWState *)sourceState withObject:(nullable id)object;
 
 @end
 
 #pragma mark - FWStateMachine
 
-// 状态改变通知
+/// 状态改变通知
 extern NSString *const FWStateChangedNotification;
 
 /*!
@@ -107,16 +107,16 @@ extern NSString *const FWStateChangedNotification;
  */
 @interface FWStateMachine : NSObject
 
-// 状态列表，只读
+/// 状态列表，只读
 @property (nonatomic, readonly) NSSet *states;
 
-// 事件列表，只读
+/// 事件列表，只读
 @property (nonatomic, readonly) NSSet *events;
 
-// 当前状态，只读
+/// 当前状态，只读
 @property (nonatomic, strong, readonly) FWState *state;
 
-// 初始化状态，可写
+/// 初始化状态，可写
 @property (nonatomic, strong, nullable) FWState *initialState;
 
 /**

@@ -330,30 +330,30 @@ typedef void (^FWBlockInt)(NSInteger index);
 
 #ifdef DEBUG
 
-// 调试模式打开日志
+/// 调试模式打开日志
 #define NSLog(format, ...) \
     NSLog((@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 #else
 
-// 正式环境关闭日志
+/// 正式环境关闭日志
 #define NSLog(...)
 
 #endif
 
-// 标记废弃方法或属性
+/// 标记废弃方法或属性
 #define	FWDeprecated( msg ) \
     __attribute__((deprecated(msg)))
 
-// 标记未使用的变量
+/// 标记未使用的变量
 #define	FWUnused( x ) \
     { id __unused_var__ __attribute__((unused)) = (id)(x); }
 
-// 标记未完成的功能
+/// 标记未完成的功能
 #define FWTodo( msg ) \
     _Pragma(fw_macro_cstring(message("✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖ TODO: " msg)))
 
-// 声明dealloc方法，可不传参数，也可传code，或者{code}
+/// 声明dealloc方法，可不传参数，也可传code，或者{code}
 #define FWDealloc( x ) \
     - (void)dealloc \
     { \
@@ -362,14 +362,14 @@ typedef void (^FWBlockInt)(NSInteger index);
         x \
     }
 
-// 标记忽略调用方法警告开始
+/// 标记忽略调用方法警告开始
 #define FWIgnoredBegin( ) \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
     _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"") \
     _Pragma("clang diagnostic ignored \"-Wundeclared-selector\"")
 
-// 标记忽略警告结束
+/// 标记忽略警告结束
 #define FWIgnoredEnd( ) \
     _Pragma("clang diagnostic pop")
 
