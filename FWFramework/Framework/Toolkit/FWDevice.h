@@ -11,6 +11,55 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - UIApplication+FWToolkit
+
+/// 是否是调试模式
+#ifdef DEBUG
+    #define FWIsDebug YES
+#else
+    #define FWIsDebug NO
+#endif
+
+/*!
+ @brief UIApplication+FWToolkit
+ @discussion 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
+ */
+@interface UIApplication (FWToolkit)
+
+/// 是否是调试模式
++ (BOOL)fwIsDebug;
+
+#pragma mark - URL
+
+// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
++ (BOOL)fwCanOpenURL:(id)url;
+
+// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
++ (void)fwOpenURL:(id)url;
+
+// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
++ (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+
+// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
++ (void)fwOpenUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+
+// 打开AppStore下载页
++ (void)fwOpenAppStore:(NSString *)appId;
+
+// 判断URL是否是AppStore链接，支持NSString|NSURL
++ (BOOL)fwIsAppStoreURL:(id)url;
+
+// 判断URL是否是安全的AppScheme链接(如AppStore|电话|设置等)，支持NSString|NSURL
++ (BOOL)fwIsAppSchemeURL:(id)url;
+
+// 打开内部浏览器，支持NSString|NSURL
++ (void)fwOpenSafariController:(id)url;
+
+// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
++ (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
+
+@end
+
 #pragma mark - UIDevice+FWDevice
 
 /// 是否是模拟器

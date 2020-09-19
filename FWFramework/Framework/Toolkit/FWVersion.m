@@ -1,12 +1,12 @@
 //
-//  FWVersionManager.m
+//  FWVersion.m
 //  FWFramework
 //
 //  Created by wuyong on 2017/10/24.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "FWVersionManager.h"
+#import "FWVersion.h"
 #import <UIKit/UIKit.h>
 
 @interface FWVersionManager ()

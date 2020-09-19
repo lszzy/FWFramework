@@ -109,6 +109,17 @@ NS_ASSUME_NONNULL_BEGIN
 // 格式化文件大小为".0K/.1M/.1G"
 + (NSString *)fwSizeString:(NSUInteger)aFileSize;
 
+#pragma mark - Size
+
+// 计算单行字符串指定字体所占尺寸
+- (CGSize)fwSizeWithFont:(UIFont *)font;
+
+// 计算多行字符串指定字体在指定绘制区域内所占尺寸
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize;
+
+// 计算多行字符串指定字体、指定段落样式(如lineBreakMode等)在指定绘制区域内所占尺寸
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize paragraphStyle:(nullable NSParagraphStyle *)paragraphStyle;
+
 @end
 
 NS_ASSUME_NONNULL_END

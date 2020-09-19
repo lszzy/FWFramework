@@ -32,19 +32,16 @@
 #import "FWAsyncSocket.h"
 #import "FWAsyncUdpSocket.h"
 
-#import "FWAuthorizeManager.h"
-#import "FWKeychainManager.h"
-#import "FWNotificationManager.h"
-#import "FWLocationManager.h"
-#import "FWLocalizeManager.h"
-#import "FWToolkitManager.h"
-#import "FWVersionManager.h"
+#import "FWAuthorize.h"
+#import "FWKeychain.h"
+#import "FWNotification.h"
+#import "FWLocation.h"
 
 #import "FWAutoLayout.h"
-#import "FWDevice.h"
-#import "FWTheme.h"
-#import "FWToolkit.h"
 #import "FWWebImage.h"
-#import "FWWindow.h"
+#import "FWDevice.h"
+#import "FWLanguage.h"
+#import "FWTheme.h"
+#import "FWVersion.h"
 
 #endif /* FWFramework_Framework_h */

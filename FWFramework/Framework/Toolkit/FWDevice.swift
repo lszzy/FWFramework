@@ -8,6 +8,11 @@
 
 import UIKit
 
+// MARK: - UIApplication+FWToolkit
+
+/// 是否是调试模式
+public let FWIsDebug: Bool = UIApplication.fwIsDebug()
+
 // MARK: - UIDevice+FWDevice
 
 #if targetEnvironment(simulator)

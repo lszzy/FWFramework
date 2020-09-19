@@ -10,7 +10,7 @@
 #import "FWPhotoBrowser.h"
 #import "FWWebImage.h"
 #import "FWProgressView.h"
-#import "FWWindow.h"
+#import "FWRouter.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
 

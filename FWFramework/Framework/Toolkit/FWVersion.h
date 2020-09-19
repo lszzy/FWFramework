@@ -1,5 +1,5 @@
 //
-//  FWVersionManager.h
+//  FWVersion.h
 //  FWFramework
 //
 //  Created by wuyong on 2017/10/24.

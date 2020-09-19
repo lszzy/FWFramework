@@ -9,7 +9,6 @@
 
 #import "NSAttributedString+FWFramework.h"
 #import "FWTheme.h"
-#import "FWToolkitManager.h"
 #import "UIColor+FWFramework.h"
 #import "UIFont+FWFramework.h"
 
@@ -35,6 +34,17 @@
 }
 
 #pragma mark - Html
+
++ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
+{
+    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[self alloc] initWithData:htmlData options:@{
+        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
+    } documentAttributes:nil error:nil];
+}
 
 + (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
@@ -78,6 +88,31 @@
     NSAttributedString *lightObject = [self fwAttributedStringWithHtmlString:htmlString defaultAttributes:lightAttributes];
     NSAttributedString *darkObject = [self fwAttributedStringWithHtmlString:htmlString defaultAttributes:darkAttributes];
     return [FWThemeObject objectWithLight:lightObject dark:darkObject];
+}
+
+- (NSString *)fwHtmlString
+{
+    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
+        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+    } error:nil];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark - Size
+
+- (CGSize)fwSize
+{
+    return [self fwSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end

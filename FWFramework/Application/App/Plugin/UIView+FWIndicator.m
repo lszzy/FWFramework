@@ -9,7 +9,7 @@
 
 #import "UIView+FWIndicator.h"
 #import "FWAutoLayout.h"
-#import "FWToolkitManager.h"
+#import "NSTimer+FWFramework.h"
 #import <objc/runtime.h>
 
 @implementation UIView (FWIndicator)

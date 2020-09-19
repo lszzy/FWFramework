@@ -265,4 +265,30 @@
     return sizeStr;
 }
 
+#pragma mark - Size
+
+- (CGSize)fwSizeWithFont:(UIFont *)font
+{
+    return [self fwSizeWithFont:font drawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize
+{
+    return [self fwSizeWithFont:font drawSize:drawSize paragraphStyle:nil];
+}
+
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize paragraphStyle:(NSParagraphStyle *)paragraphStyle
+{
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    attr[NSFontAttributeName] = font;
+    if (paragraphStyle != nil) {
+        attr[NSParagraphStyleAttributeName] = paragraphStyle;
+    }
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                  attributes:attr
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
 @end

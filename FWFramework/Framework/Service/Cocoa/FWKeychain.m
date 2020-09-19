@@ -1,12 +1,12 @@
 //
-//  FWKeychainManager.m
+//  FWKeychain.m
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/18.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "FWKeychainManager.h"
+#import "FWKeychain.h"
 #import <Security/Security.h>
 
 @interface FWKeychainManager ()

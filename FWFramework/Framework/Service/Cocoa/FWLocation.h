@@ -1,5 +1,5 @@
 //
-//  FWLocationManager.h
+//  FWLocation.h
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/11.

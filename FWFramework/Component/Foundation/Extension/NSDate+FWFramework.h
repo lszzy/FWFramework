@@ -17,7 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSDate (FWFramework)
 
+/// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
+@property (class, nonatomic, assign) NSTimeInterval fwCurrentTime;
+
 #pragma mark - System
+
+/// 系统运行时间
++ (long long)fwSystemUptime;
 
 /// 获取系统启动时间
 + (nullable NSDate *)fwSystemBoottime;

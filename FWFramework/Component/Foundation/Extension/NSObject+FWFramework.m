@@ -8,8 +8,59 @@
  */
 
 #import "NSObject+FWFramework.h"
+#import <objc/runtime.h>
 
 @implementation NSObject (FWFramework)
+
+@dynamic fwTempObject;
+
+- (id)fwTempObject
+{
+    return objc_getAssociatedObject(self, @selector(fwTempObject));
+}
+
+- (void)setFwTempObject:(id)fwTempObject
+{
+    if (fwTempObject != self.fwTempObject) {
+        [self willChangeValueForKey:@"fwTempObject"];
+        objc_setAssociatedObject(self, @selector(fwTempObject), fwTempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwTempObject"];
+    }
+}
+
+#pragma mark - Lock
+
+- (void)fwLockCreate
+{
+    [self fwLockSemaphore];
+}
+
+- (void)fwLock
+{
+    dispatch_semaphore_wait([self fwLockSemaphore], DISPATCH_TIME_FOREVER);
+}
+
+- (void)fwUnlock
+{
+    dispatch_semaphore_signal([self fwLockSemaphore]);
+}
+
+- (dispatch_semaphore_t)fwLockSemaphore
+{
+    dispatch_semaphore_t semaphore = objc_getAssociatedObject(self, _cmd);
+    if (!semaphore) {
+        @synchronized (self) {
+            semaphore = objc_getAssociatedObject(self, _cmd);
+            if (!semaphore) {
+                semaphore = dispatch_semaphore_create(1);
+                objc_setAssociatedObject(self, _cmd, semaphore, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+        }
+    }
+    return semaphore;
+}
+
+#pragma mark - Archive
 
 - (id)fwArchiveCopy
 {

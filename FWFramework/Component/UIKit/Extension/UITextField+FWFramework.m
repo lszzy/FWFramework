@@ -9,7 +9,6 @@
 #import "UITextField+FWFramework.h"
 #import "FWCoder.h"
 #import "FWSwizzle.h"
-#import "FWToolkitManager.h"
 #import <objc/runtime.h>
 
 #pragma mark - UITextField+FWFramework

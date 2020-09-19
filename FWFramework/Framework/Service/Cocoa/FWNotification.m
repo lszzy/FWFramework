@@ -1,13 +1,13 @@
 /*!
- @header     FWNotificationManager.m
+ @header     FWNotification.m
  @indexgroup FWFramework
- @brief      FWNotificationManager
+ @brief      FWNotification
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/5/17
  */
 
-#import "FWNotificationManager.h"
+#import "FWNotification.h"
 
 @interface FWNotificationManager () <UNUserNotificationCenterDelegate>
 
