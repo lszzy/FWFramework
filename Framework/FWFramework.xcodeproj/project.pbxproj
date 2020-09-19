@@ -139,7 +139,6 @@
 		2FFE1C462507BFA5000332A3 /* FWView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C342507BFA5000332A3 /* FWView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1C472507BFA5000332A3 /* FWView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C352507BFA5000332A3 /* FWView.m */; };
 		2FFE1C482507BFA5000332A3 /* FWFramework+Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1D0D2507BFBD000332A3 /* FWFramework+Component.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C4A2507BFBC000332A3 /* FWFramework+Component.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D0E2507BFBD000332A3 /* UIView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C4D2507BFBC000332A3 /* UIView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D0F2507BFBD000332A3 /* UILocalNotification+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C4E2507BFBC000332A3 /* UILocalNotification+FWFramework.m */; };
 		2FFE1D102507BFBD000332A3 /* UIPageControl+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C4F2507BFBC000332A3 /* UIPageControl+FWFramework.m */; };
@@ -470,7 +469,6 @@
 		2FFE1C342507BFA5000332A3 /* FWView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWView.h; sourceTree = "<group>"; };
 		2FFE1C352507BFA5000332A3 /* FWView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWView.m; sourceTree = "<group>"; };
 		2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Application.h"; sourceTree = "<group>"; };
-		2FFE1C4A2507BFBC000332A3 /* FWFramework+Component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Component.h"; sourceTree = "<group>"; };
 		2FFE1C4D2507BFBC000332A3 /* UIView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1C4E2507BFBC000332A3 /* UILocalNotification+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILocalNotification+FWFramework.m"; sourceTree = "<group>"; };
 		2FFE1C4F2507BFBC000332A3 /* UIPageControl+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIPageControl+FWFramework.m"; sourceTree = "<group>"; };
@@ -700,7 +698,6 @@
 				2FA99DA3228AA9CF0059DFDB /* FWFramework.h */,
 				2FFE1B2E2507BF95000332A3 /* Framework */,
 				2FFE1C202507BFA5000332A3 /* Application */,
-				2FFE1C492507BFBC000332A3 /* Component */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
@@ -861,6 +858,7 @@
 			children = (
 				2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */,
 				2FFE1C212507BFA5000332A3 /* App */,
+				2FFE84322516518500545D6E /* Library */,
 				2FFE1C242507BFA5000332A3 /* Controller */,
 				2FFE1C302507BFA5000332A3 /* Model */,
 				2FFE1C332507BFA5000332A3 /* View */,
@@ -875,7 +873,6 @@
 				2FFE1C232507BFA5000332A3 /* FWAppDelegate.m */,
 				2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */,
 				2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */,
-				2FFE83E82515AF0800545D6E /* Plugin */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -914,16 +911,6 @@
 				2FFE1C352507BFA5000332A3 /* FWView.m */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		2FFE1C492507BFBC000332A3 /* Component */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1C4A2507BFBC000332A3 /* FWFramework+Component.h */,
-				2FFE1CDD2507BFBD000332A3 /* Foundation */,
-				2FFE1C4B2507BFBC000332A3 /* UIKit */,
-			);
-			path = Component;
 			sourceTree = "<group>";
 		};
 		2FFE1C4B2507BFBC000332A3 /* UIKit */ = {
@@ -981,6 +968,10 @@
 				2FFE1C702507BFBC000332A3 /* UIScrollView+FWEmptyView.m */,
 				2FFE1C6F2507BFBC000332A3 /* UIScrollView+FWFramework.h */,
 				2FFE1CA12507BFBC000332A3 /* UIScrollView+FWFramework.m */,
+				2FFE1C722507BFBC000332A3 /* UIScrollView+FWInfiniteScroll.h */,
+				2FFE1C9E2507BFBC000332A3 /* UIScrollView+FWInfiniteScroll.m */,
+				2FFE1CAB2507BFBD000332A3 /* UIScrollView+FWPullRefresh.h */,
+				2FFE1C7F2507BFBC000332A3 /* UIScrollView+FWPullRefresh.m */,
 				2FFE1C9C2507BFBC000332A3 /* UISearchBar+FWFramework.h */,
 				2FFE1C732507BFBC000332A3 /* UISearchBar+FWFramework.m */,
 				2FFE1C972507BFBC000332A3 /* UISwitch+FWFramework.h */,
@@ -1013,14 +1004,22 @@
 				2FFE1C8D2507BFBC000332A3 /* UIView+FWDrag.m */,
 				2FFE1C582507BFBC000332A3 /* UIView+FWDrawerView.h */,
 				2FFE1C852507BFBC000332A3 /* UIView+FWDrawerView.m */,
+				2FFE83E92515AF9600545D6E /* UIView+FWEmpty.h */,
+				2FFE83EA2515AF9600545D6E /* UIView+FWEmpty.m */,
 				2FFE1C782507BFBC000332A3 /* UIView+FWFrame.h */,
 				2FFE1CB22507BFBD000332A3 /* UIView+FWFrame.m */,
 				2FFE1C4D2507BFBC000332A3 /* UIView+FWFramework.h */,
 				2FFE1C8F2507BFBC000332A3 /* UIView+FWFramework.m */,
+				2FFE1C762507BFBC000332A3 /* UIView+FWIndicator.h */,
+				2FFE1CB52507BFBD000332A3 /* UIView+FWIndicator.m */,
 				2FFE1C792507BFBC000332A3 /* UIView+FWLayer.h */,
 				2FFE1CB32507BFBD000332A3 /* UIView+FWLayer.m */,
 				2FFE1C7A2507BFBC000332A3 /* UIView+FWStatistical.h */,
 				2FFE1CB02507BFBD000332A3 /* UIView+FWStatistical.m */,
+				2FFE1CA62507BFBC000332A3 /* UIAlertController+FWFramework.h */,
+				2FFE1C6A2507BFBC000332A3 /* UIAlertController+FWFramework.m */,
+				2FFE1CA02507BFBC000332A3 /* UIViewController+FWAlert.h */,
+				2FFE1C6E2507BFBC000332A3 /* UIViewController+FWAlert.m */,
 				2FFE1C5C2507BFBC000332A3 /* UIViewController+FWBack.h */,
 				2FFE1C822507BFBC000332A3 /* UIViewController+FWBack.m */,
 				2FFE1C912507BFBC000332A3 /* UIViewController+FWBar.h */,
@@ -1033,6 +1032,8 @@
 				2FFE1C932507BFBC000332A3 /* UIWindow+FWFramework.m */,
 				2FFE1CB12507BFBD000332A3 /* WKWebView+FWFramework.h */,
 				2FFE1C7B2507BFBC000332A3 /* WKWebView+FWFramework.m */,
+				2FFE1C862507BFBC000332A3 /* WKWebView+FWJsBridge.h */,
+				2FFE1C542507BFBC000332A3 /* WKWebView+FWJsBridge.m */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1208,25 +1209,13 @@
 			path = Cocoa;
 			sourceTree = "<group>";
 		};
-		2FFE83E82515AF0800545D6E /* Plugin */ = {
+		2FFE84322516518500545D6E /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1C722507BFBC000332A3 /* UIScrollView+FWInfiniteScroll.h */,
-				2FFE1C9E2507BFBC000332A3 /* UIScrollView+FWInfiniteScroll.m */,
-				2FFE1CAB2507BFBD000332A3 /* UIScrollView+FWPullRefresh.h */,
-				2FFE1C7F2507BFBC000332A3 /* UIScrollView+FWPullRefresh.m */,
-				2FFE1C762507BFBC000332A3 /* UIView+FWIndicator.h */,
-				2FFE1CB52507BFBD000332A3 /* UIView+FWIndicator.m */,
-				2FFE1CA62507BFBC000332A3 /* UIAlertController+FWFramework.h */,
-				2FFE1C6A2507BFBC000332A3 /* UIAlertController+FWFramework.m */,
-				2FFE1CA02507BFBC000332A3 /* UIViewController+FWAlert.h */,
-				2FFE1C6E2507BFBC000332A3 /* UIViewController+FWAlert.m */,
-				2FFE83E92515AF9600545D6E /* UIView+FWEmpty.h */,
-				2FFE83EA2515AF9600545D6E /* UIView+FWEmpty.m */,
-				2FFE1C862507BFBC000332A3 /* WKWebView+FWJsBridge.h */,
-				2FFE1C542507BFBC000332A3 /* WKWebView+FWJsBridge.m */,
+				2FFE1CDD2507BFBD000332A3 /* Foundation */,
+				2FFE1C4B2507BFBC000332A3 /* UIKit */,
 			);
-			path = Plugin;
+			path = Library;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1326,7 +1315,6 @@
 				2FFE1D4B2507BFBD000332A3 /* UIBezierPath+FWFramework.h in Headers */,
 				2FFE1D632507BFBD000332A3 /* UITableView+FWBackgroundView.h in Headers */,
 				2FFE1D242507BFBD000332A3 /* UIWindow+FWFramework.h in Headers */,
-				2FFE1D0D2507BFBD000332A3 /* FWFramework+Component.h in Headers */,
 				2FFE1D302507BFBD000332A3 /* UIScrollView+FWFramework.h in Headers */,
 				2FFE1BFD2507BF95000332A3 /* FWTheme.h in Headers */,
 				2FFE1C152507BF95000332A3 /* FWCoroutine.h in Headers */,
