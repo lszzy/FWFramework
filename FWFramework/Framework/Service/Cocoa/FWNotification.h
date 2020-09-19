@@ -1,7 +1,7 @@
 /*!
- @header     FWNotificationManager.h
+ @header     FWNotification.h
  @indexgroup FWFramework
- @brief      FWNotificationManager
+ @brief      FWNotification
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/5/17
@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 @import UserNotifications;
-#import "FWAuthorizeManager.h"
+#import "FWAuthorize.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

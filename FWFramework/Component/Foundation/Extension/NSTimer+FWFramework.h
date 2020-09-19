@@ -12,9 +12,94 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
+ @brief CADisplayLink分类
+ */
+@interface CADisplayLink (FWFramework)
+
+/*!
+ @brief 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param target 目标
+ @param selector 方法
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
+
+/*!
+ @brief 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param block 代码块
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+
+/*!
+ @brief 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @discussion 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
+ 
+ @param block 代码块
+ @return CADisplayLink
+ */
++ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+
+@end
+
+/*!
  @brief NSTimer分类
  */
 @interface NSTimer (FWFramework)
+
+/*!
+ @brief 创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param seconds 时间
+ @param target 目标
+ @param selector 方法
+ @param userInfo 参数
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
+
+/*!
+ @brief 创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+ 
+ @param seconds 时间
+ @param block 代码块
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+/*!
+ @brief 创建倒计时定时器
+ 
+ @param seconds 倒计时描述
+ @param block 每秒执行block，为0时自动停止
+ @return 定时器，可手工停止
+ */
++ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
+
+/*!
+ @brief 创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @discussion 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]
+ 
+ @param seconds 时间
+ @param block 代码块
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+/*!
+ @brief 创建NSTimer，使用block，默认模式安排到当前的运行循环中
+ 
+ @param seconds 时间
+ @param block 代码块
+ @param repeats 是否重复
+ @return 定时器
+ */
++ (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
 /*!
  @brief 暂停NSTimer

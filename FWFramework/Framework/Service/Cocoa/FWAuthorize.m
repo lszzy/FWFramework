@@ -1,12 +1,12 @@
 //
-//  FWAuthorizeManager.m
+//  FWAuthorize.m
 //  FWFramework
 //
 //  Created by wuyong on 17/3/15.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "FWAuthorizeManager.h"
+#import "FWAuthorize.h"
 #import <UIKit/UIKit.h>
 
 #pragma mark - FWAuthorizeContacts

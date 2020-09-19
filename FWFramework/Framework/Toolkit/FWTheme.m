@@ -8,7 +8,7 @@
  */
 
 #import "FWTheme.h"
-#import "FWWindow.h"
+#import "FWRouter.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
@@ -138,7 +138,170 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 #pragma mark - UIColor+FWTheme
 
+static BOOL fwStaticColorARGB = NO;
+
 @implementation UIColor (FWTheme)
+
+#pragma mark - Hex
+
++ (UIColor *)fwColorWithHex:(long)hex
+{
+    return [UIColor fwColorWithHex:hex alpha:1.0f];
+}
+
++ (UIColor *)fwColorWithHex:(long)hex alpha:(CGFloat)alpha
+{
+    float red = ((float)((hex & 0xFF0000) >> 16)) / 255.0;
+    float green = ((float)((hex & 0xFF00) >> 8)) / 255.0;
+    float blue = ((float)(hex & 0xFF)) / 255.0;
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
++ (void)fwColorStandardARGB:(BOOL)enabled
+{
+    fwStaticColorARGB = enabled;
+}
+
++ (UIColor *)fwColorWithHexString:(NSString *)hexString
+{
+    return [UIColor fwColorWithHexString:hexString alpha:1.0f];
+}
+
++ (UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha
+{
+    // 处理参数
+    NSString *string = hexString ? hexString.uppercaseString : @"";
+    if ([string hasPrefix:@"0X"]) {
+        string = [string substringFromIndex:2];
+    }
+    if ([string hasPrefix:@"#"]) {
+        string = [string substringFromIndex:1];
+    }
+    
+    // 检查长度
+    NSUInteger length = string.length;
+    if (length != 3 && length != 4 && length != 6 && length != 8) {
+        return [UIColor clearColor];
+    }
+    
+    // 解析颜色
+    NSString *strR = nil, *strG = nil, *strB = nil, *strA = nil;
+    if (length < 5) {
+        // ARGB
+        if (fwStaticColorARGB && length == 4) {
+            string = [NSString stringWithFormat:@"%@%@", [string substringWithRange:NSMakeRange(1, 3)], [string substringWithRange:NSMakeRange(0, 1)]];
+        }
+        // RGB|RGBA
+        NSString *tmpR = [string substringWithRange:NSMakeRange(0, 1)];
+        NSString *tmpG = [string substringWithRange:NSMakeRange(1, 1)];
+        NSString *tmpB = [string substringWithRange:NSMakeRange(2, 1)];
+        strR = [NSString stringWithFormat:@"%@%@", tmpR, tmpR];
+        strG = [NSString stringWithFormat:@"%@%@", tmpG, tmpG];
+        strB = [NSString stringWithFormat:@"%@%@", tmpB, tmpB];
+        if (length == 4) {
+            NSString *tmpA = [string substringWithRange:NSMakeRange(3, 1)];
+            strA = [NSString stringWithFormat:@"%@%@", tmpA, tmpA];
+        }
+    } else {
+        // AARRGGBB
+        if (fwStaticColorARGB && length == 8) {
+            string = [NSString stringWithFormat:@"%@%@", [string substringWithRange:NSMakeRange(2, 6)], [string substringWithRange:NSMakeRange(0, 2)]];
+        }
+        // RRGGBB|RRGGBBAA
+        strR = [string substringWithRange:NSMakeRange(0, 2)];
+        strG = [string substringWithRange:NSMakeRange(2, 2)];
+        strB = [string substringWithRange:NSMakeRange(4, 2)];
+        if (length == 8) {
+            strA = [string substringWithRange:NSMakeRange(6, 2)];
+        }
+    }
+    
+    // 解析颜色
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:strR] scanHexInt:&r];
+    [[NSScanner scannerWithString:strG] scanHexInt:&g];
+    [[NSScanner scannerWithString:strB] scanHexInt:&b];
+    float fr = (r * 1.0f) / 255.0f;
+    float fg = (g * 1.0f) / 255.0f;
+    float fb = (b * 1.0f) / 255.0f;
+    
+    // 解析透明度，字符串的透明度优先级高于alpha参数
+    if (strA) {
+        unsigned int a;
+        [[NSScanner scannerWithString:strA] scanHexInt:&a];
+        // 计算十六进制对应透明度
+        alpha = (a * 1.0f) / 255.0f;
+    }
+    
+    return [UIColor colorWithRed:fr green:fg blue:fb alpha:alpha];
+}
+
++ (UIColor *)fwColorWithString:(NSString *)string
+{
+    return [UIColor fwColorWithString:string alpha:1.0f];
+}
+
++ (UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha
+{
+    // 颜色值
+    SEL colorSelector = NSSelectorFromString([NSString stringWithFormat:@"%@Color", string]);
+    if ([[UIColor class] respondsToSelector:colorSelector]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        UIColor *color = [[UIColor class] performSelector:colorSelector];
+#pragma clang diagnostic pop
+        return alpha < 1.0f ? [color colorWithAlphaComponent:alpha] : color;
+    }
+    
+    // 十六进制
+    return [UIColor fwColorWithHexString:string alpha:alpha];
+}
+
+- (long)fwHexValue
+{
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
+    int8_t red = r * 255;
+    uint8_t green = g * 255;
+    uint8_t blue = b * 255;
+    return (red << 16) + (green << 8) + blue;
+}
+
+- (CGFloat)fwAlphaValue
+{
+    return CGColorGetAlpha(self.CGColor);
+}
+
+- (NSString *)fwHexString
+{
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
+    return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
+}
+
+- (NSString *)fwHexStringWithAlpha
+{
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
+    
+    if (a >= 1.0) {
+        return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
+    } else if (fwStaticColorARGB) {
+        return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
+    } else {
+        return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255), lround(a * 255)];
+    }
+}
+
+#pragma mark - Theme
 
 + (UIColor *)fwThemeLight:(UIColor *)light dark:(UIColor *)dark
 {
@@ -272,6 +435,42 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
 {
     objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+#pragma mark - UIFont+FWTheme
+
+UIFont * FWFontLight(CGFloat size) { return [UIFont fwLightFontOfSize:size]; }
+UIFont * FWFontRegular(CGFloat size) { return [UIFont fwFontOfSize:size]; }
+UIFont * FWFontBold(CGFloat size) { return [UIFont fwBoldFontOfSize:size]; }
+UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
+
+@implementation UIFont (FWTheme)
+
++ (UIFont *)fwLightFontOfSize:(CGFloat)size
+{
+    return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
+}
+
++ (UIFont *)fwFontOfSize:(CGFloat)size
+{
+    return [UIFont systemFontOfSize:size];
+}
+
++ (UIFont *)fwBoldFontOfSize:(CGFloat)size
+{
+    return [UIFont boldSystemFontOfSize:size];
+}
+
++ (UIFont *)fwItalicFontOfSize:(CGFloat)size
+{
+    return [UIFont italicSystemFontOfSize:size];
+}
+
++ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight
+{
+    return [UIFont systemFontOfSize:size weight:weight];
 }
 
 @end

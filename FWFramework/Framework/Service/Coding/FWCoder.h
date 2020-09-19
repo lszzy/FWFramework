@@ -3,15 +3,15 @@
  @indexgroup FWFramework
  @brief      FWCoder
  @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018/9/18
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/9/19
  */
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWCoder
+#pragma mark - NSString+FWCoder
 
 /**
  *  字符串编码扩展
@@ -362,6 +362,13 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
 @interface NSString (FWSafeType)
 
 /*!
+ @brief 去掉空白字符
+ 
+ @return trim字符串
+ */
+- (NSString *)fwTrimString;
+
+/*!
  @brief 从指定位置截取子串
  
  @param from 起始位置
@@ -384,6 +391,18 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  @return 子串
  */
 - (nullable NSString *)fwSubstringWithRange:(NSRange)range;
+
+@end
+
+#pragma mark - NSNull+FWSafeType
+
+/*!
+ @brief NSNull分类，解决值为NSNull时调用不存在方法崩溃问题，如JSON中包含null
+ @discussion 默认调试环境不处理崩溃，正式环境才处理崩溃，尽量开发阶段避免此问题
+
+ @see https://github.com/nicklockwood/NullSafe
+*/
+@interface NSNull (FWSafeType)
 
 @end
 

@@ -12,7 +12,7 @@
 #import "FWSwizzle.h"
 #import "UIView+FWFramework.h"
 #import "UIImage+FWFramework.h"
-#import "FWToolkitManager.h"
+#import "NSString+FWFramework.h"
 #import "FWMessage.h"
 #import "FWAutoLayout.h"
 #import "FWDevice.h"

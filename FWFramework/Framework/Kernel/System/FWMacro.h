@@ -10,6 +10,8 @@
 #ifndef FWMacro_h
 #define FWMacro_h
 
+#import <Foundation/Foundation.h>
+
 #pragma mark - Meta
 
 /*!
@@ -372,5 +374,30 @@ typedef void (^FWBlockInt)(NSInteger index);
 /// 标记忽略警告结束
 #define FWIgnoredEnd( ) \
     _Pragma("clang diagnostic pop")
+
+/// 标记时间调试开始
+#define FWBenchmarkBegin( x ) \
+    [FWBenchmark benchmarkBegin:@(#x)];
+
+/// 标记时间调试结束并打印消耗时间
+#define FWBenchmarkEnd( x ) \
+    [FWBenchmark benchmarkEnd:@(#x)];
+
+NS_ASSUME_NONNULL_BEGIN
+
+/*!
+ @brief 时间调试器
+ */
+@interface FWBenchmark : NSObject
+
+/// 标记时间调试开始
++ (void)benchmarkBegin:(NSString *)name;
+
+/// 标记时间调试结束并打印消耗时间
++ (NSTimeInterval)benchmarkEnd:(NSString *)name;
+
+@end
+
+NS_ASSUME_NONNULL_END
 
 #endif /* FWMacro_h */

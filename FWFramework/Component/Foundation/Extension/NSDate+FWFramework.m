@@ -10,9 +10,61 @@
 #import "NSDate+FWFramework.h"
 #import <sys/sysctl.h>
 
+// 当前基准时间值
+static NSTimeInterval fwStaticCurrentBaseTime = 0;
+// 本地基准时间值
+static NSTimeInterval fwStaticLocalBaseTime = 0;
+
 @implementation NSDate (FWFramework)
 
++ (NSTimeInterval)fwCurrentTime
+{
+    // 没有同步过返回本地时间
+    if (fwStaticCurrentBaseTime == 0) {
+        // 是否本地有服务器时间
+        NSNumber *preCurrentTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWCurrentTime"];
+        NSNumber *preLocalTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalTime"];
+        if (preCurrentTime && preLocalTime) {
+            // 计算当前服务器时间
+            NSTimeInterval offsetTime = [[NSDate date] timeIntervalSince1970] - preLocalTime.doubleValue;
+            return preCurrentTime.doubleValue + offsetTime;
+        } else {
+            return [[NSDate date] timeIntervalSince1970];
+        }
+    // 同步过计算当前服务器时间
+    } else {
+        NSTimeInterval offsetTime = [self fwSystemUptime] - fwStaticLocalBaseTime;
+        return fwStaticCurrentBaseTime + offsetTime;
+    }
+}
+
++ (void)setFwCurrentTime:(NSTimeInterval)currentTime
+{
+    fwStaticCurrentBaseTime = currentTime;
+    // 取运行时间，调整系统时间不会影响
+    fwStaticLocalBaseTime = [self fwSystemUptime];
+    
+    // 保存当前服务器时间到本地
+    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
+    [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 #pragma mark - System
+
++ (long long)fwSystemUptime
+{
+    struct timeval boottime;
+    int mib[2] = {CTL_KERN, KERN_BOOTTIME};
+    size_t size = sizeof(boottime);
+    time_t now;
+    time_t uptime = -1;
+    (void)time(&now);
+    if (sysctl(mib, 2, &boottime, &size, NULL, 0) != -1 && boottime.tv_sec != 0) {
+        uptime = now - boottime.tv_sec;
+    }
+    return uptime;
+}
 
 + (NSDate *)fwSystemBoottime
 {

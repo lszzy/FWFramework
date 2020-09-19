@@ -1,7 +1,7 @@
 /*!
- @header     FWLocalizeManager.h
+ @header     FWLanguage.h
  @indexgroup FWFramework
- @brief      FWLocalizeManager
+ @brief      FWLanguage
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/4/21

@@ -7,7 +7,7 @@
 //
 
 #import "FWCacheKeychain.h"
-#import "FWKeychainManager.h"
+#import "FWKeychain.h"
 
 @interface FWCacheKeychain ()
 

@@ -3,16 +3,14 @@
  @indexgroup FWFramework
  @brief      FWCoder
  @author     wuyong
- @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
- @updated    2018/9/18
+ @copyright  Copyright © 2020 wuyong.site. All rights reserved.
+ @updated    2020/9/19
  */
 
 #import "FWCoder.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
-
-#pragma mark - FWCoder
 
 @implementation NSString (FWCoder)
 
@@ -487,6 +485,11 @@ NSNumber * FWSafeNumber(id value) {
 
 @implementation NSString (FWSafeType)
 
+- (NSString *)fwTrimString
+{
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
 - (NSString *)fwSubstringFromIndex:(NSInteger)from
 {
     if (from < 0) {
@@ -528,6 +531,32 @@ NSNumber * FWSafeNumber(id value) {
     }
     
     return [self substringWithRange:range];
+}
+
+@end
+
+#pragma mark - NSNull+FWSafeType
+
+@implementation NSNull (FWSafeType)
+
++ (void)load
+{
+#ifndef DEBUG
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(NSNull, @selector(methodSignatureForSelector:), FWSwizzleReturn(NSMethodSignature *), FWSwizzleArgs(SEL selector), FWSwizzleCode({
+            NSMethodSignature *signature = FWSwizzleOriginal(selector);
+            if (!signature) {
+                return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+            }
+            return signature;
+        }));
+        FWSwizzleClass(NSNull, @selector(forwardInvocation:), FWSwizzleReturn(void), FWSwizzleArgs(NSInvocation *invocation), FWSwizzleCode({
+            invocation.target = nil;
+            [invocation invoke];
+        }));
+    });
+#endif
 }
 
 @end

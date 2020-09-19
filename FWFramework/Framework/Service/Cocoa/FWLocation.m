@@ -1,12 +1,12 @@
 //
-//  FWLocationManager.m
+//  FWLocation.m
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/11.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "FWLocationManager.h"
+#import "FWLocation.h"
 #import <tgmath.h>
 
 NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate) {

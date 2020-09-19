@@ -30,11 +30,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Html
 
+/// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
++ (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString;
+
 /// html字符串转换为NSAttributedString对象，可设置默认字体(style|size|weight)和颜色(附加CSS方式)
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 /// html字符串转换为NSAttributedString主题对象，可设置默认字体和动态颜色，详见FWThemeObject
 + (FWThemeObject<NSAttributedString *> *)fwThemeObjectWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
+
+/// NSAttributedString对象转换为html字符串
+- (nullable NSString *)fwHtmlString;
+
+#pragma mark - Size
+
+/// 计算所占尺寸，需设置Font等
+- (CGSize)fwSize;
+
+/// 计算在指定绘制区域内所占尺寸，需设置Font等
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize;
 
 @end
 

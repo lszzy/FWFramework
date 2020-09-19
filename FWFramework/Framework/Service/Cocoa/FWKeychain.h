@@ -1,5 +1,5 @@
 //
-//  FWKeychainManager.h
+//  FWKeychain.h
 //  FWFramework
 //
 //  Created by wuyong on 2017/5/18.

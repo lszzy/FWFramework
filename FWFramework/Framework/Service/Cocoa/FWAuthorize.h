@@ -1,5 +1,5 @@
 //
-//  FWAuthorizeManager.h
+//  FWAuthorize.h
 //  FWFramework
 //
 //  Created by wuyong on 17/3/15.
