@@ -57,7 +57,7 @@
     UIImage *themeImage = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
     imageView.image = themeImage;
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = themeImage.fwThemeObject.object;
+        imageView.image = themeImage.fwThemeImage;
     }];
     [self.view addSubview:imageView];
     
@@ -101,7 +101,7 @@
     layer.contents = (id)layerImage.CGImage;
     layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.contents = (id)layerImage.fwThemeObject.object.CGImage;
+        layer.contents = (id)layerImage.fwThemeImage.CGImage;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -119,23 +119,28 @@
     layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image"];
     [self.view.layer addSublayer:layer];
     
+    UILabel *themeLabel = [UILabel new];
+    themeLabel.frame = CGRectMake(0, 300, FWScreenWidth, 50);
+    themeLabel.textAlignment = NSTextAlignmentCenter;
+    themeLabel.attributedText = [NSAttributedString fwAttributedString:@"我是AttributedString" withFont:FWFontSize(16).fwBoldFont textColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]]];
+    [self.view addSubview:themeLabel];
+    
     UIButton *themeButton = [UIButton new];
-    themeButton.frame = CGRectMake(0, 300, FWScreenWidth, 50);
+    themeButton.frame = CGRectMake(0, 370, FWScreenWidth, 50);
     themeButton.titleLabel.font = FWFontRegular(16);
     [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+    
     UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [UIImage imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [UIImage imageNamed:@"theme_image_dark"])];
-    [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
-    FWThemeObject<NSAttributedString *> *themeString = [FWThemeObject objectWithLight:[NSAttributedString fwAttributedStringWithHtmlString:@"<span style='color:red;'>浅色</span>模式" defaultAttributes:@{
+    FWThemeObject<NSAttributedString *> *themeString = [NSAttributedString fwThemeObjectWithHtmlString:@"我是<span style='color:red;'>红色</span>字符串" defaultAttributes:@{
         NSFontAttributeName: FWFontBold(16).fwItalicFont,
-        NSForegroundColorAttributeName: [UIColor colorWithWhite:0 alpha:0.5],
-    }] dark:[NSAttributedString fwAttributedStringWithHtmlString:@"<span style='color:yellow;'>深色</span>模式" defaultAttributes:@{
-        NSFontAttributeName: FWFontRegular(16),
-        NSForegroundColorAttributeName: [UIColor whiteColor],
-    }]];
+        NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]],
+    }];
+    
+    [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
     [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
-    [self fwAddThemeListener:^(FWThemeStyle style) {
+    [themeLabel fwAddThemeListener:^(FWThemeStyle style) {
+        [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
         [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
-        [themeButton setImage:buttonImage.fwThemeObject.object forState:UIControlStateNormal];
     }];
     [self.view addSubview:themeButton];
 }

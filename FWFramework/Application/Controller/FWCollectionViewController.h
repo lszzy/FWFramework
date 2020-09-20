@@ -18,19 +18,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 集合视图，默认不显示滚动条
+/// 集合视图，默认不显示滚动条
 @property (nonatomic, readonly) UICollectionView *collectionView NS_SWIFT_UNAVAILABLE("");
 
-// 集合数据，默认空数组，延迟加载
+/// 集合数据，默认空数组，延迟加载
 @property (nonatomic, readonly) NSMutableArray *collectionData NS_SWIFT_UNAVAILABLE("");
 
-// 渲染集合视图内容布局，只调用一次
+/// 渲染集合视图内容布局，只调用一次
 - (UICollectionViewLayout *)renderCollectionViewLayout;
 
-// 渲染集合视图，renderView之前调用，默认未实现
+/// 渲染集合视图，renderView之前调用，默认未实现
 - (void)renderCollectionView;
 
-// 渲染集合视图布局，renderView之前调用，默认铺满
+/// 渲染集合视图布局，renderView之前调用，默认铺满
 - (void)renderCollectionLayout;
 
 @end

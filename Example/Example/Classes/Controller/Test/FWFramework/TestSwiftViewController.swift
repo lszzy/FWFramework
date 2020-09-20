@@ -104,7 +104,9 @@ class SwiftTestCollectionCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = UIColor.fwRandom()
         contentView.addSubview(view)
-        view.fwLayoutChain.edges().height(1000).width(FWScreenWidth)
+        view.fwLayoutMaker { (make) in
+            make.edges().height(1000).width(FWScreenWidth)
+        }
     }
 }
 

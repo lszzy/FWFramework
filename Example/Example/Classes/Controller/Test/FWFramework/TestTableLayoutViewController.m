@@ -109,8 +109,10 @@
     self.myTitleLabel.text = object.title;
     if ([object.imageUrl fwIsFormatUrl]) {
         [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
-    } else {
+    } else if (object.imageUrl.length > 0) {
         self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+    } else {
+        self.myImageView.image = nil;
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
@@ -210,6 +212,29 @@
     return cell;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"删除";
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.tableData fwRemoveObjectAtIndex:indexPath.row];
+        [self.tableView reloadData];
+    }
+}
+
 - (TestTableLayoutObject *)randomObject
 {
     static NSMutableArray *randomArray;
@@ -238,7 +263,6 @@
                                  @"public_icon",
                                  @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
                                  @"http://littlesvr.ca/apng/images/SteamEngine.webp",
-                                 @"loading.gif",
                                  @"public_picture",
                                  @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
                                  @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
@@ -264,10 +288,10 @@
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];
@@ -286,7 +310,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];

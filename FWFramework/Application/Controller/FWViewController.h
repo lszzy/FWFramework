@@ -18,16 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 渲染初始化方法，init自动调用，默认未实现
+/// 渲染初始化方法，init自动调用，默认未实现
 - (void)renderInit;
 
-// 渲染视图方法，loadView自动调用，默认未实现
+/// 渲染视图方法，loadView自动调用，默认未实现
 - (void)renderView;
 
-// 渲染模型方法，viewDidLoad自动调用，默认未实现
+/// 渲染模型方法，viewDidLoad自动调用，默认未实现
 - (void)renderModel;
 
-// 渲染数据模型，viewDidLoad自动调用，默认未实现
+/// 渲染数据模型，viewDidLoad自动调用，默认未实现
 - (void)renderData;
 
 @end
@@ -54,13 +54,13 @@ NS_ASSUME_NONNULL_BEGIN
 /*! @brief 单例模式 */
 @property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance;
 
-// 注册协议拦截器，提供拦截和跳转方法
+/// 注册协议拦截器，提供拦截和跳转方法
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
 
-// 调用控制器拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
+/// 调用控制器拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
 - (nullable id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object;
 
-// 调用控制器拦截方法默认实现并返回，可携带参数(如setWebRequest:等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
+/// 调用控制器拦截方法默认实现并返回，可携带参数(如setWebRequest:等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
 - (nullable id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object parameter:(nullable id)parameter;
 
 @end
