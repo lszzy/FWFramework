@@ -44,6 +44,8 @@
 		2F6DD0742508780A00EE2446 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE2A6AF24FCBDB30041BC73 /* PageControl.swift */; };
 		2F6DD075250879CA00EE2446 /* landmarkData.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F0DE5AB24F65BE100DCC13E /* landmarkData.json */; };
 		2F6DD076250879CA00EE2446 /* hikeData.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F8E45FB24F8A2A900BDF302 /* hikeData.json */; };
+		2F7D7869251259DB0078EAAA /* TestThemeExtensionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D7868251259DB0078EAAA /* TestThemeExtensionViewController.m */; };
+		2F7D786D251303A40078EAAA /* TestTableDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D786C251303A40078EAAA /* TestTableDynamicLayoutViewController.m */; };
 		2F938E522500D60D009395FB /* TestGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E512500D60D009395FB /* TestGridViewController.m */; };
 		2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */; };
 		2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */; };
@@ -178,6 +180,10 @@
 		2F6E684724FF9ACE00079E53 /* UIKitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitController.swift; sourceTree = "<group>"; };
 		2F6E684924FF9C5900079E53 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		2F6E684B24FFA5D100079E53 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
+		2F7D7867251259DB0078EAAA /* TestThemeExtensionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeExtensionViewController.h; sourceTree = "<group>"; };
+		2F7D7868251259DB0078EAAA /* TestThemeExtensionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeExtensionViewController.m; sourceTree = "<group>"; };
+		2F7D786B251303A40078EAAA /* TestTableDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableDynamicLayoutViewController.h; sourceTree = "<group>"; };
+		2F7D786C251303A40078EAAA /* TestTableDynamicLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableDynamicLayoutViewController.m; sourceTree = "<group>"; };
 		2F8E45E724F75DBE00BDF302 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		2F8E45E924F7626F00BDF302 /* BadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 		2F8E45EC24F765D100BDF302 /* RotatedBadgeSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RotatedBadgeSymbol.swift; sourceTree = "<group>"; };
@@ -678,12 +684,16 @@
 				2FF8D8C824C88A6F006A83B5 /* TestTableBackgroundViewController.m */,
 				2FF8D8EB24C88A6F006A83B5 /* TestTableLayoutViewController.h */,
 				2FF8D8B424C88A6F006A83B5 /* TestTableLayoutViewController.m */,
+				2F7D786B251303A40078EAAA /* TestTableDynamicLayoutViewController.h */,
+				2F7D786C251303A40078EAAA /* TestTableDynamicLayoutViewController.m */,
 				2FF8D8DF24C88A6F006A83B5 /* TestTableReloadViewController.h */,
 				2FF8D8AC24C88A6F006A83B5 /* TestTableReloadViewController.m */,
 				2FF8D8FF24C88A6F006A83B5 /* TestTableScrollViewController.h */,
 				2FF8D8BF24C88A6F006A83B5 /* TestTableScrollViewController.m */,
 				2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */,
 				2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */,
+				2F7D7867251259DB0078EAAA /* TestThemeExtensionViewController.h */,
+				2F7D7868251259DB0078EAAA /* TestThemeExtensionViewController.m */,
 				2FF8D8D424C88A6F006A83B5 /* TestThreadViewController.h */,
 				2FF8D90C24C88A6F006A83B5 /* TestThreadViewController.m */,
 				2FF8D90124C88A6F006A83B5 /* TestTransitionViewController.h */,
@@ -1101,6 +1111,7 @@
 				2FF8D98624C88A70006A83B5 /* BaseViewController.m in Sources */,
 				2FF8D95324C88A6F006A83B5 /* TestSegmentViewController.m in Sources */,
 				2F6DD06E2508780A00EE2446 /* HikeView.swift in Sources */,
+				2F7D786D251303A40078EAAA /* TestTableDynamicLayoutViewController.m in Sources */,
 				2F6DD0682508780A00EE2446 /* LandmarkHome.swift in Sources */,
 				2FF8D94824C88A6F006A83B5 /* TestPopupMenuViewController.m in Sources */,
 				2FF8D98324C88A70006A83B5 /* SimpleViewController.m in Sources */,
@@ -1155,6 +1166,7 @@
 				2FF8D94D24C88A6F006A83B5 /* TestBadgeViewController.m in Sources */,
 				2F6DD058250877E300EE2446 /* Hike.swift in Sources */,
 				2FF8D98924C88A70006A83B5 /* FWDatabaseManager.m in Sources */,
+				2F7D7869251259DB0078EAAA /* TestThemeExtensionViewController.m in Sources */,
 				2F6DD06F2508780A00EE2446 /* ProfileHost.swift in Sources */,
 				2FF8D95E24C88A70006A83B5 /* TestAnimationViewController.m in Sources */,
 				2F6DD06A2508780A00EE2446 /* LandmarkList.swift in Sources */,

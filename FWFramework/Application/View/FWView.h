@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol FWViewDelegate <NSObject>
 
+/// 通用事件代理方法
 - (void)onTouchView:(__kindof UIView *)view withEvent:(NSNotification *)event;
 
 @end
@@ -25,16 +26,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWEvent)
 
-// 通用事件代理
+/// 通用事件代理
 @property (nonatomic, weak, nullable) id<FWViewDelegate> fwViewDelegate;
 
-// 调用事件代理
+/// 调用事件代理
 - (void)fwTouchEvent:(NSNotification *)event;
 
-// 通用视图数据
+/// 通用视图数据
 @property (nonatomic, strong, nullable) id fwViewData;
 
-// 渲染数据，子类重写
+/// 渲染数据，子类重写
 - (void)fwRenderData;
 
 @end

@@ -10,15 +10,16 @@
 #define FWFramework_Framework_h
 
 #import "FWCoroutine.h"
-#import "FWLog.h"
 #import "FWMacro.h"
 #import "FWMessage.h"
-#import "FWPlugin.h"
 #import "FWPromise.h"
 #import "FWProxy.h"
+#import "FWSwizzle.h"
+
+#import "FWLog.h"
+#import "FWPlugin.h"
 #import "FWRouter.h"
 #import "FWState.h"
-#import "FWSwizzle.h"
 #import "FWTask.h"
 #import "FWTest.h"
 
@@ -31,15 +32,16 @@
 #import "FWAsyncSocket.h"
 #import "FWAsyncUdpSocket.h"
 
-#import "FWAuthorizeManager.h"
-#import "FWKeychainManager.h"
-#import "FWNotificationManager.h"
-#import "FWLocationManager.h"
-#import "FWLocalizeManager.h"
-#import "FWDeviceManager.h"
-#import "FWImageManager.h"
-#import "FWLayoutManager.h"
-#import "FWThemeManager.h"
-#import "FWVersionManager.h"
+#import "FWAuthorize.h"
+#import "FWKeychain.h"
+#import "FWNotification.h"
+#import "FWLocation.h"
+
+#import "FWAutoLayout.h"
+#import "FWWebImage.h"
+#import "FWDevice.h"
+#import "FWLanguage.h"
+#import "FWTheme.h"
+#import "FWVersion.h"
 
 #endif /* FWFramework_Framework_h */
