@@ -9,6 +9,7 @@
 
 #import "FWCoder.h"
 #import "FWProxy.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
 
