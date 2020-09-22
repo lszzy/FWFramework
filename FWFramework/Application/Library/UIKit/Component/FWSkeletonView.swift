@@ -242,40 +242,20 @@ import UIKit
 
 /// 骨架屏多行标签
 @objcMembers public class FWSkeletonLabel: FWSkeletonView {
-    /// 行数
-    public var numberOfLines: Int = 0 {
-        didSet { setNeedsDisplay() }
-    }
-    
-    /// 行高
-    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight {
-        didSet { setNeedsDisplay() }
-    }
-    
-    /// 行圆角
-    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius {
-        didSet { setNeedsDisplay() }
-    }
-    
-    /// 行间距
-    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing {
-        didSet { setNeedsDisplay() }
-    }
-    
-    /// 行显示比率，单个时指定最后一行，数组时指定所有行
-    public var linePercent: Any = FWSkeletonAppearance.appearance.linePercent {
-        didSet { setNeedsDisplay() }
-    }
-    
-    /// 行颜色
-    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor {
-        didSet { setNeedsDisplay() }
-    }
-    
-    /// 内容边距
-    public var contentInsets: UIEdgeInsets = .zero {
-        didSet { setNeedsDisplay() }
-    }
+    /// 行数，默认0
+    public var numberOfLines: Int = 0
+    /// 行高，默认15
+    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
+    /// 行圆角，默认0
+    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
+    /// 行间距，默认10
+    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
+    /// 行显示比率，单个时指定最后一行，数组时指定所有行，默认0.7
+    public var linePercent: Any = FWSkeletonAppearance.appearance.linePercent
+    /// 行颜色，默认骨架颜色
+    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor
+    /// 内容边距，默认zero
+    public var contentInsets: UIEdgeInsets = .zero
     
     private var lineLayers: [CAGradientLayer] = []
     
@@ -306,11 +286,29 @@ import UIKit
             lineLayer.removeFromSuperlayer()
         }
         
-        let lineLayer = CAGradientLayer()
-        lineLayer.backgroundColor = lineColor.cgColor
-        lineLayer.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: bounds.size.height)
-        layer.addSublayer(lineLayer)
-        lineLayers.append(lineLayer)
+        // TODO: 行距倍数
+        var linesHeight = lineHeight + lineSpacing
+        var linesCount = 0
+        if numberOfLines == 1 {
+            linesCount = 1
+        } else {
+            linesCount = Int(round((bounds.height + lineSpacing - contentInsets.top - contentInsets.bottom) / linesHeight))
+            if numberOfLines != 0, numberOfLines <= linesCount {
+                linesCount = numberOfLines
+            }
+        }
+        
+        for i in 0 ..< linesCount {
+            let lineLayer = CAGradientLayer()
+            lineLayer.backgroundColor = lineColor.cgColor
+            var lineWidth = bounds.size.width
+            if linesCount > 1 && i == linesCount - 1 {
+                lineWidth = bounds.size.width * (linePercent as? CGFloat ?? 1)
+            }
+            lineLayer.frame = CGRect(x: 0, y: CGFloat(i) * linesHeight, width: lineWidth, height: lineHeight)
+            layer.addSublayer(lineLayer)
+            lineLayers.append(lineLayer)
+        }
     }
 }
 
@@ -343,9 +341,12 @@ import UIKit
     // MARK: -
     
     public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        // TODO: 自定义协议，然后实现了之后优先解析
+        
         if let label = view as? UILabel {
             let skeletonLabel = FWSkeletonLabel()
-            skeletonLabel.lineHeight = label.font.lineHeight
+            skeletonLabel.lineHeight = label.font.pointSize
+            //skeletonLabel.lineSpacing = label.font.lineHeight - label.font.pointSize
             skeletonLabel.numberOfLines = label.numberOfLines
             return skeletonLabel
         }
@@ -353,7 +354,8 @@ import UIKit
         if let textView = view as? UITextView {
             let skeletonLabel = FWSkeletonLabel()
             if let textFont = textView.font {
-                skeletonLabel.lineHeight = textFont.lineHeight
+                skeletonLabel.lineHeight = textFont.pointSize
+                //skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
             }
             skeletonLabel.contentInsets = textView.textContainerInset
             return skeletonLabel
