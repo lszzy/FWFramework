@@ -161,7 +161,17 @@ import UIKit
     }
 }
 
-// MARK: - FWSkeletonAppearance
+// MARK: - FWSkeletonView
+
+/// 骨架屏视图数据源协议
+@objc public protocol FWSkeletonViewDataSource {
+    func skeletonViewProvider() -> FWSkeletonView?
+}
+
+/// 骨架屏视图代理协议
+@objc public protocol FWSkeletonViewDelegate {
+    func skeletonViewLayout(_ layout: FWSkeletonLayout)
+}
 
 /// 骨架屏通用样式
 @objcMembers public class FWSkeletonAppearance: NSObject {
@@ -188,22 +198,13 @@ import UIKit
     public var lineCornerRadius: CGFloat = 0
 }
 
-// MARK: - FWSkeletonView
-
-/// 骨架屏视图提供协议
-@objc public protocol FWSkeletonViewProvider {
-    func skeletonViewProvider() -> FWSkeletonView?
-}
-
-/// 骨架屏视图，无代码侵入方案，支持设置占位图片
+/// 骨架屏视图，支持设置占位图片
 @objcMembers public class FWSkeletonView: UIView {
     /// 自定义动画，默认通用样式
     public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAppearance.appearance.animation
     
     /// 动画层列表，子类可覆写
-    public var animationLayers: [CAGradientLayer] {
-        return [layer as! CAGradientLayer]
-    }
+    public var animationLayers: [CAGradientLayer] = []
     
     /// 骨架图片，默认空
     public var image: UIImage? {
@@ -220,6 +221,7 @@ import UIKit
     public override init(frame: CGRect) {
         super.init(frame: frame)
 
+        animationLayers.append(layer as! CAGradientLayer)
         backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
     }
     
@@ -241,119 +243,9 @@ import UIKit
     }
 }
 
-/// 骨架屏多行标签视图
-@objcMembers public class FWSkeletonLabel: FWSkeletonView {
-    /// 行数，默认0
-    public var numberOfLines: Int = 0
-    /// 行高，默认15
-    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
-    /// 行圆角，默认0
-    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
-    /// 行间距比率，默认0
-    public var lineSpacingPercent: CGFloat = FWSkeletonAppearance.appearance.lineSpacingPercent
-    /// 行固定间距，默认10
-    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
-    /// 最后一行显示百分比，默认0.7
-    public var lastLinePercent: CGFloat = FWSkeletonAppearance.appearance.lastLinePercent
-    /// 行颜色，默认骨架颜色
-    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor
-    /// 内容边距，默认zero
-    public var contentInsets: UIEdgeInsets = .zero
-    
-    private var lineLayers: [CAGradientLayer] = []
-    
-    public override var animationLayers: [CAGradientLayer] {
-        return lineLayers
-    }
-    
-    public override class var layerClass: AnyClass {
-        return CALayer.self
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = UIColor.clear
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        lineLayers.forEach { (lineLayer) in
-            lineLayer.removeFromSuperlayer()
-        }
-        
-        let layerHeight = lineHeight
-        let layerSpacing = lineSpacingPercent > 0 ? lineHeight * lineSpacingPercent : lineSpacing
-        var layerCount = numberOfLines
-        if numberOfLines != 1 {
-            layerCount = Int(round((bounds.height + layerSpacing - contentInsets.top - contentInsets.bottom) / (layerHeight + layerSpacing)))
-            if numberOfLines != 0, numberOfLines <= layerCount {
-                layerCount = numberOfLines
-            }
-        }
-        
-        for layerIndex in 0 ..< layerCount {
-            let lineLayer = CAGradientLayer()
-            lineLayer.backgroundColor = lineColor.cgColor
-            var layerWidth = bounds.width - contentInsets.left - contentInsets.right
-            if layerCount > 1 && layerIndex == (layerCount - 1) {
-                layerWidth = layerWidth * lastLinePercent
-            }
-            lineLayer.frame = CGRect(
-                x: contentInsets.left,
-                y: contentInsets.top + CGFloat(layerIndex) * (layerHeight + layerSpacing),
-                width: layerWidth,
-                height: layerHeight
-            )
-            layer.addSublayer(lineLayer)
-            lineLayers.append(lineLayer)
-        }
-    }
-}
-
-// MARK: - UIKit+FWSkeletonView
-
-extension UILabel: FWSkeletonViewProvider {
-    public func skeletonViewProvider() -> FWSkeletonView? {
-        let skeletonLabel = FWSkeletonLabel()
-        skeletonLabel.lineHeight = font.pointSize
-        // 系统字体默认行间距太小，暂不解析
-        // skeletonLabel.lineSpacing = font.lineHeight - font.pointSize
-        skeletonLabel.numberOfLines = numberOfLines
-        return skeletonLabel
-    }
-}
-
-extension UITextView: FWSkeletonViewProvider {
-    public func skeletonViewProvider() -> FWSkeletonView? {
-        let skeletonLabel = FWSkeletonLabel()
-        if let textFont = font {
-            skeletonLabel.lineHeight = textFont.pointSize
-            // 系统字体默认行间距太小，暂不解析
-            // skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
-        }
-        skeletonLabel.contentInsets = textContainerInset
-        return skeletonLabel
-    }
-}
-
-// MARK: - FWSkeletonLayout
-
-/// 骨架屏布局代理协议
-@objc public protocol FWSkeletonLayoutDelegate {
-    func skeletonViewLayout(_ layout: FWSkeletonLayout)
-}
-
 /// 骨架屏布局视图
 @objcMembers public class FWSkeletonLayout: FWSkeletonView {
     public var layoutView: UIView?
-    
-    public weak var delegate: FWSkeletonLayoutDelegate?
     
     private var skeletonViews: [FWSkeletonView] = []
     
@@ -419,13 +311,13 @@ extension UITextView: FWSkeletonViewProvider {
     }
     
     private func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
-        if let skeletonProvider = view as? FWSkeletonViewProvider {
-            if let skeletonView = skeletonProvider.skeletonViewProvider() {
+        if let skeletonDataSource = view as? FWSkeletonViewDataSource {
+            if let skeletonView = skeletonDataSource.skeletonViewProvider() {
                 return skeletonView
             }
         }
         
-        if let skeletonDelegate = view as? FWSkeletonLayoutDelegate {
+        if let skeletonDelegate = view as? FWSkeletonViewDelegate {
             let skeletonLayout = FWSkeletonLayout(layoutView: view)
             skeletonDelegate.skeletonViewLayout(skeletonLayout)
             return skeletonLayout
@@ -458,18 +350,213 @@ extension UITextView: FWSkeletonViewProvider {
     }
 }
 
-// MARK: - UIKit+FWSkeletonLayout
+/// 骨架屏多行标签视图
+@objcMembers public class FWSkeletonLabel: FWSkeletonView {
+    /// 行数，默认0
+    public var numberOfLines: Int = 0
+    /// 行高，默认15
+    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
+    /// 行圆角，默认0
+    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
+    /// 行间距比率，默认0
+    public var lineSpacingPercent: CGFloat = FWSkeletonAppearance.appearance.lineSpacingPercent
+    /// 行固定间距，默认10
+    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
+    /// 最后一行显示百分比，默认0.7
+    public var lastLinePercent: CGFloat = FWSkeletonAppearance.appearance.lastLinePercent
+    /// 行颜色，默认骨架颜色
+    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor
+    /// 内容边距，默认zero
+    public var contentInsets: UIEdgeInsets = .zero
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        animationLayers.removeAll()
+        backgroundColor = UIColor.clear
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        animationLayers.removeAll()
+        
+        let layerHeight = lineHeight
+        let layerSpacing = lineSpacingPercent > 0 ? lineHeight * lineSpacingPercent : lineSpacing
+        var layerCount = numberOfLines
+        if numberOfLines != 1 {
+            layerCount = Int(round((bounds.height + layerSpacing - contentInsets.top - contentInsets.bottom) / (layerHeight + layerSpacing)))
+            if numberOfLines != 0, numberOfLines <= layerCount {
+                layerCount = numberOfLines
+            }
+        }
+        
+        for layerIndex in 0 ..< layerCount {
+            let lineLayer = CAGradientLayer()
+            lineLayer.backgroundColor = lineColor.cgColor
+            var layerWidth = bounds.width - contentInsets.left - contentInsets.right
+            if layerCount > 1 && layerIndex == (layerCount - 1) {
+                layerWidth = layerWidth * lastLinePercent
+            }
+            lineLayer.frame = CGRect(
+                x: contentInsets.left,
+                y: contentInsets.top + CGFloat(layerIndex) * (layerHeight + layerSpacing),
+                width: layerWidth,
+                height: layerHeight
+            )
+            layer.addSublayer(lineLayer)
+            animationLayers.append(lineLayer)
+        }
+    }
+}
+
+/// 骨架屏表格视图
+@objcMembers public class FWSkeletonTableView: FWSkeletonView, UITableViewDataSource, UITableViewDelegate {
+    /// 表格头视图
+    public var tableHeaderView: UIView?
+    /// 表格尾视图
+    public var tableFooterView: UIView?
+    
+    /// 表格section数，默认1
+    public var numberOfSections: Int = 1
+    /// 表格row数，必须与section对应，默认0，自动计算
+    public var numberOfRowsArray: [Int] = [0]
+    /// 单个section表格row数，计算属性，仅单个section时使用
+    public var numberOfRows: Int {
+        get { return numberOfRowsArray.first ?? 0 }
+        set { numberOfRowsArray = [newValue] }
+    }
+    
+    /// 表格cell类，必须与section对应，默认UITableViewCell，暂不支持单section多cell
+    public var cellForRowArray: [AnyClass] = [UITableViewCell.self]
+    /// 单个section表格类，计算属性，仅单个section时使用
+    public var cellForRow: AnyClass {
+        get { return cellForRowArray.first ?? UITableViewCell.self }
+        set { cellForRowArray = [newValue] }
+    }
+    /// 表格高度，必须与section对应，默认44
+    public var heightForRowArray: [CGFloat] = [44]
+    /// 单个section表格row数，计算属性，仅单个section时使用
+    public var heightForRow: CGFloat {
+        get { return heightForRowArray.first ?? 44 }
+        set { heightForRowArray = [newValue] }
+    }
+    
+    /// 表格section头视图，必须与section对应，默认nil
+    public var sectionHeaderViewArray: [UIView] = []
+    /// 单个section头视图，计算属性，仅单个section时使用
+    public var sectionHeaderView: UIView? {
+        get { return sectionHeaderViewArray.first }
+        set { sectionHeaderViewArray = (newValue != nil) ? [newValue!] : [] }
+    }
+    /// 表格section头高度，必须与section对应，默认0
+    public var sectionHeaderHeightArray: [CGFloat] = [0]
+    /// 单个section头高度，计算属性，仅单个section时使用
+    public var sectionHeaderHeight: CGFloat {
+        get { return sectionHeaderHeightArray.first ?? 0 }
+        set { sectionHeaderHeightArray = [newValue] }
+    }
+    
+    /// 表格section尾视图，必须与section对应，默认nil
+    public var sectionFooterViewArray: [UIView] = []
+    /// 单个section尾视图，计算属性，仅单个section时使用
+    public var sectionFooterView: UIView? {
+        get { return sectionFooterViewArray.first }
+        set { sectionFooterViewArray = (newValue != nil) ? [newValue!] : [] }
+    }
+    /// 表格section尾高度，必须与section对应，默认0
+    public var sectionFooterHeightArray: [CGFloat] = [0]
+    /// 单个section尾高度，计算属性，仅单个section时使用
+    public var sectionFooterHeight: CGFloat {
+        get { return sectionFooterHeightArray.first ?? 0 }
+        set { sectionFooterHeightArray = [newValue] }
+    }
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.isScrollEnabled = false
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        return tableView
+    }()
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        animationLayers.removeAll()
+        backgroundColor = UIColor.clear
+        
+        addSubview(tableView)
+        tableView.fwPinEdgesToSuperview()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.tableHeaderView = tableHeaderView
+        tableView.tableFooterView = tableFooterView
+        tableView.reloadData()
+    }
+    
+    // MARK: - UITableView
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return numberOfSections
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var rowCount = numberOfRowsArray.count > section ? numberOfRowsArray[section] : 0
+        if rowCount < 1 {
+            let rowHeight = heightForRowArray.count > section ? heightForRowArray[section] : 44
+            rowCount = Int(ceil(UIScreen.main.bounds.size.height / rowHeight))
+        }
+        return rowCount
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "FWSkeletonCell\(indexPath.section)")
+        if cell == nil {
+            cell = UITableViewCell(style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
+            
+            let cellClass: AnyClass = cellForRowArray.count > indexPath.section ? cellForRowArray[indexPath.section] : UITableViewCell.self
+            let contentCell: UITableViewCell = cellClass.fwCell(with: tableView) as! UITableViewCell
+            
+            let skeletonLayout = FWSkeletonLayout(layoutView: contentCell)
+            skeletonLayout.addSkeletonViews(contentCell.contentView.subviews)
+            cell?.contentView.addSubview(skeletonLayout)
+            skeletonLayout.fwPinEdgesToSuperview()
+        }
+        return cell!
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return heightForRowArray.count > indexPath.section ? heightForRowArray[indexPath.section] : 44
+    }
+}
+
+// MARK: - UIKit+FWSkeletonView
 
 /// 视图显示骨架屏扩展
 @objc extension UIView {
-    private func fwShowSkeleton(delegate: FWSkeletonLayoutDelegate? = nil, block: ((FWSkeletonLayout) -> Void)? = nil) {
+    private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((FWSkeletonLayout) -> Void)? = nil) {
         fwHideSkeleton()
         setNeedsLayout()
         layoutIfNeeded()
         
         let layout = FWSkeletonLayout(layoutView: self)
         layout.tag = 2051
-        layout.delegate = delegate
         addSubview(layout)
         layout.fwPinEdgesToSuperview()
         
@@ -481,7 +568,7 @@ extension UITextView: FWSkeletonViewProvider {
         layout.startAnimating()
     }
     
-    public func fwShowSkeleton(delegate: FWSkeletonLayoutDelegate? = nil) {
+    public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
         fwShowSkeleton(delegate: delegate, block: nil)
     }
     
@@ -490,7 +577,7 @@ extension UITextView: FWSkeletonViewProvider {
     }
     
     public func fwShowSkeleton() {
-        fwShowSkeleton(delegate: self as? FWSkeletonLayoutDelegate)
+        fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
     }
     
     public func fwHideSkeleton() {
@@ -503,7 +590,7 @@ extension UITextView: FWSkeletonViewProvider {
 
 /// 控制器显示骨架屏扩展
 @objc extension UIViewController {
-    public func fwShowSkeleton(delegate: FWSkeletonLayoutDelegate? = nil) {
+    public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
         view.fwShowSkeleton(delegate: delegate)
     }
     
@@ -512,10 +599,47 @@ extension UITextView: FWSkeletonViewProvider {
     }
     
     public func fwShowSkeleton() {
-        fwShowSkeleton(delegate: self as? FWSkeletonLayoutDelegate)
+        fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
     }
     
     public func fwHideSkeleton() {
         view.fwHideSkeleton()
+    }
+}
+
+/// UILabel骨架屏视图数据源扩展
+extension UILabel: FWSkeletonViewDataSource {
+    public func skeletonViewProvider() -> FWSkeletonView? {
+        let skeletonLabel = FWSkeletonLabel()
+        skeletonLabel.lineHeight = font.pointSize
+        // 系统字体默认行间距太小，暂不解析
+        // skeletonLabel.lineSpacing = font.lineHeight - font.pointSize
+        skeletonLabel.numberOfLines = numberOfLines
+        return skeletonLabel
+    }
+}
+
+/// UITextView骨架屏视图数据源扩展
+extension UITextView: FWSkeletonViewDataSource {
+    public func skeletonViewProvider() -> FWSkeletonView? {
+        let skeletonLabel = FWSkeletonLabel()
+        if let textFont = font {
+            skeletonLabel.lineHeight = textFont.pointSize
+            // 系统字体默认行间距太小，暂不解析
+            // skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
+        }
+        skeletonLabel.contentInsets = textContainerInset
+        return skeletonLabel
+    }
+}
+
+/// UITableView骨架屏视图数据源扩展
+extension UITableView: FWSkeletonViewDataSource {
+    public func skeletonViewProvider() -> FWSkeletonView? {
+        let tableView = FWSkeletonTableView()
+        if let headerView = tableHeaderView {
+            
+        }
+        return tableView
     }
 }
