@@ -220,13 +220,16 @@ import UIKit
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-
-        animationLayers.append(layer as! CAGradientLayer)
-        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
+        setupView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupView() {
+        animationLayers.append(layer as! CAGradientLayer)
+        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
     }
     
     public func startAnimating() {
@@ -243,6 +246,62 @@ import UIKit
     }
 }
 
+/// 骨架屏多行标签视图
+@objcMembers public class FWSkeletonLabel: FWSkeletonView {
+    /// 行数，默认0
+    public var numberOfLines: Int = 0
+    /// 行高，默认15
+    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
+    /// 行圆角，默认0
+    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
+    /// 行间距比率，默认0
+    public var lineSpacingPercent: CGFloat = FWSkeletonAppearance.appearance.lineSpacingPercent
+    /// 行固定间距，默认10
+    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
+    /// 最后一行显示百分比，默认0.7
+    public var lastLinePercent: CGFloat = FWSkeletonAppearance.appearance.lastLinePercent
+    /// 行颜色，默认骨架颜色
+    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor
+    /// 内容边距，默认zero
+    public var contentInsets: UIEdgeInsets = .zero
+    
+    override func setupView() {
+        backgroundColor = UIColor.clear
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        animationLayers.removeAll()
+        
+        let layerHeight = lineHeight
+        let layerSpacing = lineSpacingPercent > 0 ? lineHeight * lineSpacingPercent : lineSpacing
+        var layerCount = numberOfLines
+        if numberOfLines != 1 {
+            layerCount = Int(round((bounds.height + layerSpacing - contentInsets.top - contentInsets.bottom) / (layerHeight + layerSpacing)))
+            if numberOfLines != 0, numberOfLines <= layerCount {
+                layerCount = numberOfLines
+            }
+        }
+        
+        for layerIndex in 0 ..< layerCount {
+            let lineLayer = CAGradientLayer()
+            lineLayer.backgroundColor = lineColor.cgColor
+            var layerWidth = bounds.width - contentInsets.left - contentInsets.right
+            if layerCount > 1 && layerIndex == (layerCount - 1) {
+                layerWidth = layerWidth * lastLinePercent
+            }
+            lineLayer.frame = CGRect(
+                x: contentInsets.left,
+                y: contentInsets.top + CGFloat(layerIndex) * (layerHeight + layerSpacing),
+                width: layerWidth,
+                height: layerHeight
+            )
+            layer.addSublayer(lineLayer)
+            animationLayers.append(lineLayer)
+        }
+    }
+}
+
 /// 骨架屏布局视图
 @objcMembers public class FWSkeletonLayout: FWSkeletonView {
     public var layoutView: UIView?
@@ -252,18 +311,14 @@ import UIKit
     public init(layoutView: UIView) {
         super.init(frame: layoutView.bounds)
         self.layoutView = layoutView
-        
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func setupView() {
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
     }
     
     @discardableResult
@@ -350,71 +405,8 @@ import UIKit
     }
 }
 
-/// 骨架屏多行标签视图
-@objcMembers public class FWSkeletonLabel: FWSkeletonView {
-    /// 行数，默认0
-    public var numberOfLines: Int = 0
-    /// 行高，默认15
-    public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
-    /// 行圆角，默认0
-    public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
-    /// 行间距比率，默认0
-    public var lineSpacingPercent: CGFloat = FWSkeletonAppearance.appearance.lineSpacingPercent
-    /// 行固定间距，默认10
-    public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
-    /// 最后一行显示百分比，默认0.7
-    public var lastLinePercent: CGFloat = FWSkeletonAppearance.appearance.lastLinePercent
-    /// 行颜色，默认骨架颜色
-    public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor
-    /// 内容边距，默认zero
-    public var contentInsets: UIEdgeInsets = .zero
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        animationLayers.removeAll()
-        backgroundColor = UIColor.clear
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        animationLayers.removeAll()
-        
-        let layerHeight = lineHeight
-        let layerSpacing = lineSpacingPercent > 0 ? lineHeight * lineSpacingPercent : lineSpacing
-        var layerCount = numberOfLines
-        if numberOfLines != 1 {
-            layerCount = Int(round((bounds.height + layerSpacing - contentInsets.top - contentInsets.bottom) / (layerHeight + layerSpacing)))
-            if numberOfLines != 0, numberOfLines <= layerCount {
-                layerCount = numberOfLines
-            }
-        }
-        
-        for layerIndex in 0 ..< layerCount {
-            let lineLayer = CAGradientLayer()
-            lineLayer.backgroundColor = lineColor.cgColor
-            var layerWidth = bounds.width - contentInsets.left - contentInsets.right
-            if layerCount > 1 && layerIndex == (layerCount - 1) {
-                layerWidth = layerWidth * lastLinePercent
-            }
-            lineLayer.frame = CGRect(
-                x: contentInsets.left,
-                y: contentInsets.top + CGFloat(layerIndex) * (layerHeight + layerSpacing),
-                width: layerWidth,
-                height: layerHeight
-            )
-            layer.addSublayer(lineLayer)
-            animationLayers.append(lineLayer)
-        }
-    }
-}
-
 /// 骨架屏表格视图
-@objcMembers public class FWSkeletonTableView: FWSkeletonView, UITableViewDataSource, UITableViewDelegate {
+@objcMembers public class FWSkeletonTableView: FWSkeletonLayout, UITableViewDataSource, UITableViewDelegate {
     /// 表格头视图
     public var tableHeaderView: UIView?
     /// 表格尾视图
@@ -486,18 +478,11 @@ import UIKit
         return tableView
     }()
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        animationLayers.removeAll()
-        backgroundColor = UIColor.clear
+    override func setupView() {
+        backgroundColor = UIColor.red
         
         addSubview(tableView)
         tableView.fwPinEdgesToSuperview()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public override func layoutSubviews() {
@@ -636,10 +621,17 @@ extension UITextView: FWSkeletonViewDataSource {
 /// UITableView骨架屏视图数据源扩展
 extension UITableView: FWSkeletonViewDataSource {
     public func skeletonViewProvider() -> FWSkeletonView? {
-        let tableView = FWSkeletonTableView()
+        let skeletonTableView = FWSkeletonTableView(layoutView: self)
         if let headerView = tableHeaderView {
-            
+            let skeletonHeaderView = UIView(frame: headerView.frame)
+            skeletonTableView.tableHeaderView = skeletonHeaderView
+            skeletonTableView.addSkeletonViews(headerView.subviews)
         }
-        return tableView
+        if let footerView = tableFooterView {
+            let skeletonFooterView = UIView(frame: footerView.frame)
+            skeletonTableView.tableFooterView = skeletonFooterView
+            skeletonTableView.addSkeletonViews(footerView.subviews)
+        }
+        return skeletonTableView
     }
 }

@@ -80,10 +80,12 @@
 @interface TestSkeletonViewController () <FWSkeletonViewDelegate>
 
 @property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UIView *footerView;
 
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
 @property (nonatomic, strong) UIImageView *imageView;
+
 @property (nonatomic, strong) UILabel *label1;
 @property (nonatomic, strong) UILabel *label2;
 @property (nonatomic, strong) UITextView *textView1;
@@ -132,15 +134,18 @@
     childView2.backgroundColor = [UIColor blueColor];
     [headerView addSubview:childView2];
     childView2.fwLayoutChain.centerXToView(childView)
-        .centerYToView(imageView).sizeToView(childView);
+        .centerYToView(imageView).sizeToView(childView)
+        .bottomWithInset(20);
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
+    _footerView = footerView;
     
     UILabel *label1 = [UILabel new];
     _label1 = label1;
     label1.textColor = [UIColor blueColor];
     label1.text = @"我是Label1";
-    [headerView addSubview:label1];
-    label1.fwLayoutChain.leftToView(testView)
-        .topToBottomOfViewWithOffset(imageView, 20);
+    [footerView addSubview:label1];
+    label1.fwLayoutChain.leftWithInset(20).topWithInset(20);
     
     UILabel *label2 = [UILabel new];
     _label2 = label2;
@@ -148,17 +153,17 @@
     label2.textColor = [UIColor blueColor];
     label2.numberOfLines = 0;
     label2.text = @"我是Label2222222222\n我是Label22222\n我是Label2";
-    [headerView addSubview:label2];
-    label2.fwLayoutChain.leftToView(rightView)
-        .topToBottomOfViewWithOffset(imageView, 20);
+    [footerView addSubview:label2];
+    label2.fwLayoutChain.topWithInset(20).rightWithInset(20)
+        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
     
     UITextView *textView1 = [UITextView new];
     _textView1 = textView1;
     textView1.editable = NO;
     textView1.textColor = [UIColor blueColor];
     textView1.text = @"我是TextView1";
-    [headerView addSubview:textView1];
-    textView1.fwLayoutChain.leftToView(testView)
+    [footerView addSubview:textView1];
+    textView1.fwLayoutChain.leftWithInset(20)
         .topToBottomOfViewWithOffset(label1, 20)
         .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
     
@@ -168,14 +173,17 @@
     textView2.editable = NO;
     textView2.textColor = [UIColor blueColor];
     textView2.text = @"我是TextView2222\n我是TextView2\n我是TextView";
-    [headerView addSubview:textView2];
-    textView2.fwLayoutChain.leftToView(rightView)
+    [footerView addSubview:textView2];
+    textView2.fwLayoutChain.rightWithInset(20)
         .topToBottomOfViewWithOffset(label2, 20)
         .size(CGSizeMake(FWScreenWidth / 2 - 40, 50))
         .bottomWithInset(20);
     
-    [headerView fwAutoLayoutSubviews];
     self.tableView.tableHeaderView = headerView;
+    self.tableView.tableFooterView = footerView;
+    
+    [headerView fwAutoLayoutSubviews];
+    [footerView fwAutoLayoutSubviews];
 }
 
 - (void)renderModel
@@ -193,6 +201,10 @@
                 animation = FWSkeletonAnimation.scale;
             }
             FWSkeletonAppearance.appearance.animation = animation;
+            
+            NSInteger lastIndex = [self.tableData.lastObject fwAsInteger];
+            [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
+            [self.tableView reloadData];
             [self renderData];
         }];
     }];
@@ -201,11 +213,8 @@
 - (void)renderData
 {
     [self fwShowSkeleton];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self fwHideSkeleton];
-        
-        [self.tableData setArray:@[@1, @2, @3, @4, @5, @6, @7, @8, @9, @10]];
-        [self.tableView reloadData];
     });
 }
 
