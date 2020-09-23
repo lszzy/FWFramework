@@ -8,6 +8,163 @@
 
 import UIKit
 
+// MARK: - FWSkeletonLayout
+
+/// 骨架屏布局代理协议
+@objc public protocol FWSkeletonLayoutDelegate {
+    func skeletonViewLayout(_ layout: FWSkeletonLayout)
+}
+
+/// 骨架屏布局
+@objcMembers public class FWSkeletonLayout: FWSkeletonView {
+    public var layoutView: UIView?
+    
+    public weak var layoutDelegate: FWSkeletonLayoutDelegate?
+    
+    private var skeletonViews: [FWSkeletonView] = []
+    
+    public init(layoutView: UIView) {
+        super.init(frame: layoutView.bounds)
+        
+        self.layoutView = layoutView
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @discardableResult
+    public func addSkeletonViews(_ views: [UIView]) -> [FWSkeletonView] {
+        return addSkeletonViews(views, block: nil)
+    }
+    
+    @discardableResult
+    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView, Int) -> Void)?) -> [FWSkeletonView] {
+        var resultViews: [FWSkeletonView] = []
+        for (index, view) in views.enumerated() {
+            resultViews.append(addSkeletonView(view, block: { (skeletonView) in
+                block?(skeletonView, index)
+            }))
+        }
+        return resultViews
+    }
+    
+    @discardableResult
+    public func addSkeletonView(_ view: UIView) -> FWSkeletonView {
+        return addSkeletonView(view, block: nil)
+    }
+    
+    @discardableResult
+    public func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
+        if let resultView = view as? FWSkeletonView {
+            skeletonViews.append(resultView)
+            if resultView.superview == nil {
+                addSubview(resultView)
+            }
+            block?(resultView)
+            return resultView
+        }
+        
+        let skeletonView = FWSkeletonParser.sharedInstance.skeletonParseView(view)!
+        if layoutView != nil && view.isDescendant(of: layoutView!) {
+            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
+        }
+        skeletonViews.append(skeletonView)
+        if skeletonView.superview == nil {
+            addSubview(skeletonView)
+        }
+        block?(skeletonView)
+        return skeletonView
+    }
+    
+    public override func startAnimating() {
+        skeletonViews.forEach { (skeletonView) in
+            skeletonView.startAnimating()
+        }
+    }
+    
+    public override func stopAnimating() {
+        skeletonViews.forEach { (skeletonView) in
+            skeletonView.stopAnimating()
+        }
+        skeletonViews.removeAll()
+    }
+}
+
+// MARK: - UIKit+FWSkeletonLayout
+
+/// 视图显示骨架屏扩展
+@objc extension UIView {
+    private func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil, layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
+        fwHideSkeleton()
+        setNeedsLayout()
+        layoutIfNeeded()
+        
+        let layout = FWSkeletonLayout(layoutView: self)
+        layout.tag = 2051
+        layout.layoutDelegate = layoutDelegate
+        addSubview(layout)
+        layout.fwPinEdgesToSuperview()
+        
+        if layoutDelegate != nil {
+            layoutDelegate?.skeletonViewLayout(layout)
+        } else if layoutBlock != nil {
+            layoutBlock?(layout)
+        } else {
+            layout.addSkeletonViews(subviews.filter({ $0 != layout }))
+        }
+        
+        layout.setNeedsLayout()
+        layout.layoutIfNeeded()
+        layout.startAnimating()
+    }
+    
+    public func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil) {
+        fwShowSkeleton(layoutDelegate: layoutDelegate, layoutBlock: nil)
+    }
+    
+    public func fwShowSkeleton(layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
+        fwShowSkeleton(layoutDelegate: nil, layoutBlock: layoutBlock)
+    }
+    
+    public func fwShowSkeleton() {
+        fwShowSkeleton(layoutDelegate: self as? FWSkeletonLayoutDelegate)
+    }
+    
+    public func fwHideSkeleton() {
+        if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
+            layout.stopAnimating()
+            layout.removeFromSuperview()
+        }
+    }
+}
+
+/// 控制器显示骨架屏扩展
+@objc extension UIViewController {
+    public func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil) {
+        view.fwShowSkeleton(layoutDelegate: layoutDelegate)
+    }
+    
+    public func fwShowSkeleton(layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
+        view.fwShowSkeleton(layoutBlock: layoutBlock)
+    }
+    
+    public func fwShowSkeleton() {
+        fwShowSkeleton(layoutDelegate: self as? FWSkeletonLayoutDelegate)
+    }
+    
+    public func fwHideSkeleton() {
+        view.fwHideSkeleton()
+    }
+}
+
 // MARK: - FWSkeletonAnimation
 
 /// 骨架屏动画协议
@@ -46,8 +203,6 @@ import UIKit
     public var duration: TimeInterval = 1
     public var direction: FWSkeletonAnimationDirection = .right
     
-    // MARK: -
-    
     private var type: FWSkeletonAnimationType = .shimmer
     
     public override init() {
@@ -82,8 +237,6 @@ import UIKit
             ]
         }
     }
-    
-    // MARK: -
     
     public func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
         switch type {
@@ -212,8 +365,6 @@ import UIKit
         }
     }
     
-    // MARK: -
-    
     public override class var layerClass: AnyClass {
         return CAGradientLayer.self
     }
@@ -262,8 +413,6 @@ import UIKit
     public var contentInsets: UIEdgeInsets = .zero
     
     private var lineLayers: [CAGradientLayer] = []
-    
-    // MARK: -
     
     public override var animationLayers: [CAGradientLayer] {
         return lineLayers
@@ -335,201 +484,53 @@ import UIKit
     public var parsers: [FWSkeletonParserProtocol] = []
     
     /// 解析视图到骨架视图
-    public func parse(_ view: UIView) -> FWSkeletonView {
+    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
         for parser in parsers {
             if let skeletonView = parser.skeletonParseView(view) {
                 return skeletonView
             }
         }
         
-        return skeletonParseView(view)!
-    }
-    
-    // MARK: -
-    
-    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
-        // TODO: 自定义协议，然后实现了之后优先解析
-        
-        if let label = view as? UILabel {
-            let skeletonLabel = FWSkeletonLabel()
-            skeletonLabel.lineHeight = label.font.pointSize
-            //skeletonLabel.lineSpacing = label.font.lineHeight - label.font.pointSize
-            skeletonLabel.numberOfLines = label.numberOfLines
-            return skeletonLabel
-        }
-        
-        if let textView = view as? UITextView {
-            let skeletonLabel = FWSkeletonLabel()
-            if let textFont = textView.font {
-                skeletonLabel.lineHeight = textFont.pointSize
-                //skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
+        if let parser = view as? FWSkeletonParserProtocol {
+            if let skeletonView = parser.skeletonParseView(view) {
+                return skeletonView
             }
-            skeletonLabel.contentInsets = textView.textContainerInset
-            return skeletonLabel
         }
         
         let skeletonView = FWSkeletonView()
         skeletonView.layer.masksToBounds = view.layer.masksToBounds
         skeletonView.layer.cornerRadius = view.layer.cornerRadius
+        if view.layer.shadowOpacity > 0 {
+            skeletonView.layer.shadowColor = view.layer.shadowColor
+            skeletonView.layer.shadowOffset = view.layer.shadowOffset
+            skeletonView.layer.shadowRadius = view.layer.shadowRadius
+            skeletonView.layer.shadowPath = view.layer.shadowPath
+            skeletonView.layer.shadowOpacity = view.layer.shadowOpacity
+        }
         return skeletonView
     }
 }
 
-// MARK: - FWSkeletonLayout
-
-/// 骨架屏布局代理协议
-@objc public protocol FWSkeletonLayoutDelegate {
-    func skeletonViewLayout(_ layout: FWSkeletonLayout)
-}
-
-/// 骨架屏布局
-@objcMembers public class FWSkeletonLayout: FWSkeletonView {
-    public var layoutView: UIView?
-    
-    public weak var layoutDelegate: FWSkeletonLayoutDelegate?
-    
-    private var skeletonViews: [FWSkeletonView] = []
-    
-    // MARK: -
-    
-    public init(layoutView: UIView) {
-        super.init(frame: layoutView.bounds)
-        
-        self.layoutView = layoutView
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @discardableResult
-    public func addSkeletonViews(_ views: [UIView]) -> [FWSkeletonView] {
-        return addSkeletonViews(views, block: nil)
-    }
-    
-    @discardableResult
-    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView, Int) -> Void)?) -> [FWSkeletonView] {
-        var resultViews: [FWSkeletonView] = []
-        for (index, view) in views.enumerated() {
-            resultViews.append(addSkeletonView(view, block: { (skeletonView) in
-                block?(skeletonView, index)
-            }))
-        }
-        return resultViews
-    }
-    
-    @discardableResult
-    public func addSkeletonView(_ view: UIView) -> FWSkeletonView {
-        return addSkeletonView(view, block: nil)
-    }
-    
-    @discardableResult
-    public func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
-        if let resultView = view as? FWSkeletonView {
-            skeletonViews.append(resultView)
-            if resultView.superview == nil {
-                addSubview(resultView)
-            }
-            block?(resultView)
-            return resultView
-        }
-        
-        let skeletonView = FWSkeletonParser.sharedInstance.parse(view)
-        if layoutView != nil && view.isDescendant(of: layoutView!) {
-            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
-        }
-        skeletonViews.append(skeletonView)
-        if skeletonView.superview == nil {
-            addSubview(skeletonView)
-        }
-        block?(skeletonView)
-        return skeletonView
-    }
-    
-    public override func startAnimating() {
-        skeletonViews.forEach { (skeletonView) in
-            skeletonView.startAnimating()
-        }
-    }
-    
-    public override func stopAnimating() {
-        skeletonViews.forEach { (skeletonView) in
-            skeletonView.stopAnimating()
-        }
-        skeletonViews.removeAll()
+extension UILabel: FWSkeletonParserProtocol {
+    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        let skeletonLabel = FWSkeletonLabel()
+        skeletonLabel.lineHeight = font.pointSize
+        // 系统字体默认行间距太小，暂不解析
+        // skeletonLabel.lineSpacing = font.lineHeight - font.pointSize
+        skeletonLabel.numberOfLines = numberOfLines
+        return skeletonLabel
     }
 }
 
-// MARK: - UIKit+FWSkeletonView
-
-/// 视图显示骨架屏扩展
-@objc extension UIView {
-    private func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil, layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
-        fwHideSkeleton()
-        setNeedsLayout()
-        layoutIfNeeded()
-        
-        let layout = FWSkeletonLayout(layoutView: self)
-        layout.tag = 2051
-        layout.layoutDelegate = layoutDelegate
-        addSubview(layout)
-        layout.fwPinEdgesToSuperview()
-        
-        if layoutDelegate != nil {
-            layoutDelegate?.skeletonViewLayout(layout)
-        } else if layoutBlock != nil {
-            layoutBlock?(layout)
-        } else {
-            layout.addSkeletonViews(subviews.filter({ $0 != layout }))
+extension UITextView: FWSkeletonParserProtocol {
+    public func skeletonParseView(_ view: UIView) -> FWSkeletonView? {
+        let skeletonLabel = FWSkeletonLabel()
+        if let textFont = font {
+            skeletonLabel.lineHeight = textFont.pointSize
+            // 系统字体默认行间距太小，暂不解析
+            // skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
         }
-        
-        layout.setNeedsLayout()
-        layout.layoutIfNeeded()
-        layout.startAnimating()
-    }
-    
-    public func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil) {
-        fwShowSkeleton(layoutDelegate: layoutDelegate, layoutBlock: nil)
-    }
-    
-    public func fwShowSkeleton(layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
-        fwShowSkeleton(layoutDelegate: nil, layoutBlock: layoutBlock)
-    }
-    
-    public func fwShowSkeleton() {
-        fwShowSkeleton(layoutDelegate: self as? FWSkeletonLayoutDelegate)
-    }
-    
-    public func fwHideSkeleton() {
-        if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
-            layout.stopAnimating()
-            layout.removeFromSuperview()
-        }
-    }
-}
-
-/// 控制器显示骨架屏扩展
-@objc extension UIViewController {
-    public func fwShowSkeleton(layoutDelegate: FWSkeletonLayoutDelegate? = nil) {
-        view.fwShowSkeleton(layoutDelegate: layoutDelegate)
-    }
-    
-    public func fwShowSkeleton(layoutBlock: ((FWSkeletonLayout) -> Void)? = nil) {
-        view.fwShowSkeleton(layoutBlock: layoutBlock)
-    }
-    
-    public func fwShowSkeleton() {
-        fwShowSkeleton(layoutDelegate: self as? FWSkeletonLayoutDelegate)
-    }
-    
-    public func fwHideSkeleton() {
-        view.fwHideSkeleton()
+        skeletonLabel.contentInsets = textContainerInset
+        return skeletonLabel
     }
 }
