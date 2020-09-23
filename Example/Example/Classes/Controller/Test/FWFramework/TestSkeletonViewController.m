@@ -8,7 +8,78 @@
 
 #import "TestSkeletonViewController.h"
 
-@interface TestSkeletonViewController () <FWSkeletonLayoutDelegate>
+@interface TestSkeletonCell : UITableViewCell
+
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UILabel *iconLabel;
+@property (nonatomic, strong) id object;
+
+@end
+
+@implementation TestSkeletonCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.fwMaxYViewPadding = 20;
+        
+        UIImageView *iconView = [UIImageView new];
+        _iconView = iconView;
+        iconView.image = [UIImage fwImageWithAppIcon];
+        [self.contentView addSubview:iconView];
+        iconView.fwLayoutChain.topWithInset(20).leftWithInset(20).size(CGSizeMake(50, 50));
+        
+        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:@"我是文本"];
+        _iconLabel = iconLabel;
+        [self.contentView addSubview:iconLabel];
+        iconLabel.fwLayoutChain.centerY().rightWithInset(20).leftToRightOfViewWithOffset(iconView, 20);
+    }
+    return self;
+}
+
+- (void)setObject:(id)object
+{
+    _object = object;
+    self.iconLabel.text = [NSString stringWithFormat:@"我是文本%@", object];
+}
+
+@end
+
+@interface TestSkeletonHeaderView : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UILabel *iconLabel;
+@property (nonatomic, strong) id object;
+
+@end
+
+@implementation TestSkeletonHeaderView
+
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithReuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.fwMaxYViewPadding = 15;
+        
+        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:@"我是头视图"];
+        _iconLabel = iconLabel;
+        [self.contentView addSubview:iconLabel];
+        iconLabel.fwLayoutChain.leftWithInset(15).rightWithInset(15).topWithInset(15);
+    }
+    return self;
+}
+
+- (void)setObject:(id)object
+{
+    _object = object;
+    self.iconLabel.text = [NSString stringWithFormat:@"我是头视图%@", object];
+}
+
+@end
+
+@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
+
+@property (nonatomic, strong) UIView *headerView;
 
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
@@ -22,20 +93,25 @@
 
 @implementation TestSkeletonViewController
 
-- (void)renderView
+- (void)renderTableView
 {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
+    _headerView = headerView;
+    
     UIView *testView = [UIView new];
     _testView = testView;
     testView.backgroundColor = [UIColor redColor];
     [testView fwSetCornerRadius:5];
-    [self.view addSubview:testView];
-    testView.fwLayoutChain.leftWithInset(20).topWithInset(20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    [headerView addSubview:testView];
+    testView.fwLayoutChain.leftWithInset(20).topWithInset(20)
+        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
     
     UIView *rightView = [UIView new];
     rightView.backgroundColor = [UIColor redColor];
     [rightView fwSetCornerRadius:5];
-    [self.view addSubview:rightView];
-    rightView.fwLayoutChain.rightWithInset(20).topWithInset(20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    [headerView addSubview:rightView];
+    rightView.fwLayoutChain.rightWithInset(20).topWithInset(20)
+        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
     
     UIView *childView = [UIView new];
     _childView = childView;
@@ -48,20 +124,23 @@
     imageView.image = [UIImage imageNamed:@"test_scale"];
     [imageView fwSetContentModeAspectFill];
     [imageView fwSetCornerRadius:5];
-    [self.view addSubview:imageView];
-    imageView.fwLayoutChain.centerXToView(testView).topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
+    [headerView addSubview:imageView];
+    imageView.fwLayoutChain.centerXToView(testView)
+        .topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
     
     UIView *childView2 = [UIView new];
     childView2.backgroundColor = [UIColor blueColor];
-    [self.view addSubview:childView2];
-    childView2.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
+    [headerView addSubview:childView2];
+    childView2.fwLayoutChain.centerXToView(childView)
+        .centerYToView(imageView).sizeToView(childView);
     
     UILabel *label1 = [UILabel new];
     _label1 = label1;
     label1.textColor = [UIColor blueColor];
     label1.text = @"我是Label1";
-    [self.view addSubview:label1];
-    label1.fwLayoutChain.leftToView(testView).topToBottomOfViewWithOffset(imageView, 20);
+    [headerView addSubview:label1];
+    label1.fwLayoutChain.leftToView(testView)
+        .topToBottomOfViewWithOffset(imageView, 20);
     
     UILabel *label2 = [UILabel new];
     _label2 = label2;
@@ -69,16 +148,19 @@
     label2.textColor = [UIColor blueColor];
     label2.numberOfLines = 0;
     label2.text = @"我是Label2222222222\n我是Label22222\n我是Label2";
-    [self.view addSubview:label2];
-    label2.fwLayoutChain.leftToView(rightView).topToBottomOfViewWithOffset(imageView, 20);
+    [headerView addSubview:label2];
+    label2.fwLayoutChain.leftToView(rightView)
+        .topToBottomOfViewWithOffset(imageView, 20);
     
     UITextView *textView1 = [UITextView new];
     _textView1 = textView1;
     textView1.editable = NO;
     textView1.textColor = [UIColor blueColor];
     textView1.text = @"我是TextView1";
-    [self.view addSubview:textView1];
-    textView1.fwLayoutChain.leftToView(testView).topToBottomOfViewWithOffset(label1, 20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    [headerView addSubview:textView1];
+    textView1.fwLayoutChain.leftToView(testView)
+        .topToBottomOfViewWithOffset(label1, 20)
+        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
     
     UITextView *textView2 = [UITextView new];
     _textView2 = textView2;
@@ -86,8 +168,14 @@
     textView2.editable = NO;
     textView2.textColor = [UIColor blueColor];
     textView2.text = @"我是TextView2222\n我是TextView2\n我是TextView";
-    [self.view addSubview:textView2];
-    textView2.fwLayoutChain.leftToView(rightView).topToBottomOfViewWithOffset(label2, 20).size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    [headerView addSubview:textView2];
+    textView2.fwLayoutChain.leftToView(rightView)
+        .topToBottomOfViewWithOffset(label2, 20)
+        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50))
+        .bottomWithInset(20);
+    
+    [headerView fwAutoLayoutSubviews];
+    self.tableView.tableHeaderView = headerView;
 }
 
 - (void)renderModel
@@ -115,26 +203,52 @@
     [self fwShowSkeleton];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self fwHideSkeleton];
+        
+        [self.tableData setArray:@[@1, @2, @3, @4, @5, @6, @7, @8, @9, @10]];
+        [self.tableView reloadData];
     });
+}
+
+#pragma mark - UITableView
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [tableView fwHeightWithCellClass:[TestSkeletonCell class] configuration:^(TestSkeletonCell * _Nonnull cell) {
+        cell.object = self.tableData[indexPath.row];
+    }];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    TestSkeletonCell *cell = [TestSkeletonCell fwCellWithTableView:tableView];
+    cell.object = self.tableData[indexPath.row];
+    return cell;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    TestSkeletonHeaderView *headerView = [TestSkeletonHeaderView fwHeaderFooterViewWithTableView:tableView];
+    headerView.object = @1;
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return [tableView fwHeightWithHeaderFooterViewClass:[TestSkeletonHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestSkeletonHeaderView * _Nonnull headerFooterView) {
+        headerFooterView.object = @1;
+    }];
 }
 
 #pragma mark - FWSkeletonLayoutDelegate
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addSkeletonView:self.testView];
-    FWSkeletonView *childView = [layout addSkeletonView:self.childView];
-    FWSkeletonView *imageView = [layout addSkeletonView:self.imageView block:^(FWSkeletonView *skeletonView) {
-        skeletonView.image = [UIImage fwThemeNamed:@"theme_image"];
-    }];
-    [layout addSkeletonView:[UIView new] block:^(FWSkeletonView *skeletonView) {
-        skeletonView.fwLayoutChain.centerXToView(childView).centerYToView(imageView).sizeToView(childView);
-    }];
-    
-    NSArray<FWSkeletonView *> *skeletonViews = [layout addSkeletonViews:@[self.label1, self.label2, self.textView1, self.textView2]];
-    [layout addSkeletonView:[FWSkeletonLabel new] block:^(FWSkeletonView *skeletonView) {
-        skeletonView.fwLayoutChain.centerXToView(imageView).topToBottomOfViewWithOffset(skeletonViews.lastObject, 20).sizeToView(skeletonViews.lastObject);
-    }];
+    [layout addSkeletonView:self.tableView];
 }
 
 @end
