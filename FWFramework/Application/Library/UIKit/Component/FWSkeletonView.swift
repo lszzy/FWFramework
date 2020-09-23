@@ -182,10 +182,12 @@ import UIKit
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15
-    /// 多行标签间距，默认10
+    /// 多行标签行距倍数，默认0不生效，和lineSpacing二选一
+    public var lineSpacingPercent: CGFloat = 0
+    /// 多行标签固定间距，默认10，和lineSpacingPercent二选一
     public var lineSpacing: CGFloat = 10
     /// 多行标签最后一行百分比，默认0.7
-    public var linePercent: CGFloat = 0.7
+    public var lastLinePercent: CGFloat = 0.7
     /// 多行标签圆角，默认0
     public var lineCornerRadius: CGFloat = 0
 }
@@ -248,10 +250,12 @@ import UIKit
     public var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
     /// 行圆角，默认0
     public var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
-    /// 行间距，默认10
+    /// 行间距比率，默认0
+    public var lineSpacingPercent: CGFloat = FWSkeletonAppearance.appearance.lineSpacingPercent
+    /// 行固定间距，默认10
     public var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
-    /// 行显示比率，单个时指定最后一行，数组时指定所有行，默认0.7
-    public var linePercent: Any = FWSkeletonAppearance.appearance.linePercent
+    /// 最后一行显示百分比，默认0.7
+    public var lastLinePercent: CGFloat = FWSkeletonAppearance.appearance.lastLinePercent
     /// 行颜色，默认骨架颜色
     public var lineColor: UIColor = FWSkeletonAppearance.appearance.skeletonColor
     /// 内容边距，默认zero
@@ -286,26 +290,29 @@ import UIKit
             lineLayer.removeFromSuperlayer()
         }
         
-        // TODO: 行距倍数
-        var linesHeight = lineHeight + lineSpacing
-        var linesCount = 0
-        if numberOfLines == 1 {
-            linesCount = 1
-        } else {
-            linesCount = Int(round((bounds.height + lineSpacing - contentInsets.top - contentInsets.bottom) / linesHeight))
-            if numberOfLines != 0, numberOfLines <= linesCount {
-                linesCount = numberOfLines
+        let layerHeight = lineHeight
+        let layerSpacing = lineSpacingPercent > 0 ? lineHeight * lineSpacingPercent : lineSpacing
+        var layerCount = numberOfLines
+        if numberOfLines != 1 {
+            layerCount = Int(round((bounds.height + layerSpacing - contentInsets.top - contentInsets.bottom) / (layerHeight + layerSpacing)))
+            if numberOfLines != 0, numberOfLines <= layerCount {
+                layerCount = numberOfLines
             }
         }
         
-        for i in 0 ..< linesCount {
+        for layerIndex in 0 ..< layerCount {
             let lineLayer = CAGradientLayer()
             lineLayer.backgroundColor = lineColor.cgColor
-            var lineWidth = bounds.size.width
-            if linesCount > 1 && i == linesCount - 1 {
-                lineWidth = bounds.size.width * (linePercent as? CGFloat ?? 1)
+            var layerWidth = bounds.width - contentInsets.left - contentInsets.right
+            if layerCount > 1 && layerIndex == (layerCount - 1) {
+                layerWidth = layerWidth * lastLinePercent
             }
-            lineLayer.frame = CGRect(x: 0, y: CGFloat(i) * linesHeight, width: lineWidth, height: lineHeight)
+            lineLayer.frame = CGRect(
+                x: contentInsets.left,
+                y: contentInsets.top + CGFloat(layerIndex) * (layerHeight + layerSpacing),
+                width: layerWidth,
+                height: layerHeight
+            )
             layer.addSublayer(lineLayer)
             lineLayers.append(lineLayer)
         }
