@@ -48,6 +48,7 @@
 
 @interface TestSkeletonHeaderView : UITableViewHeaderFooterView
 
+@property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, strong) UILabel *iconLabel;
 @property (nonatomic, strong) id object;
 
@@ -59,12 +60,18 @@
 {
     self = [super initWithReuseIdentifier:reuseIdentifier];
     if (self) {
-        self.fwMaxYViewPadding = 15;
+        self.fwMaxYViewPadding = 20;
+        
+        UIImageView *iconView = [UIImageView new];
+        _iconView = iconView;
+        iconView.image = [UIImage fwImageWithAppIcon];
+        [self.contentView addSubview:iconView];
+        iconView.fwLayoutChain.topWithInset(20).leftWithInset(20).size(CGSizeMake(20, 20));
         
         UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:@"我是头视图"];
         _iconLabel = iconLabel;
         [self.contentView addSubview:iconLabel];
-        iconLabel.fwLayoutChain.leftWithInset(15).rightWithInset(15).topWithInset(15);
+        iconLabel.fwLayoutChain.rightWithInset(20).centerYToView(iconView).leftToRightOfViewWithOffset(iconView, 20);
     }
     return self;
 }

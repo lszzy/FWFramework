@@ -205,7 +205,7 @@ import UIKit
     /// 添加单个布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图
     @discardableResult
     public func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
-        let skeletonView = parseSkeletonView(view)
+        let skeletonView = FWSkeletonLayout.parseSkeletonView(view)
         if layoutView != nil && view.isDescendant(of: layoutView!) {
             skeletonView.frame = view.convert(view.bounds, to: layoutView!)
         }
@@ -217,8 +217,8 @@ import UIKit
         return skeletonView
     }
     
-    /// 解析布局子视图为骨架视图，兼容骨架视图
-    public func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
+    /// 解析布局子视图为骨架视图
+    public class func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
         if view is FWSkeletonView {
             return view as! FWSkeletonView
         }
@@ -246,6 +246,22 @@ import UIKit
             skeletonView.layer.shadowOpacity = view.layer.shadowOpacity
         }
         return skeletonView
+    }
+    
+    /// 解析布局子视图为骨架布局
+    public class func parseSkeletonLayout(_ view: UIView) -> FWSkeletonLayout {
+        if view is FWSkeletonLayout {
+            return view as! FWSkeletonLayout
+        }
+        
+        let skeletonLayout = FWSkeletonLayout(layoutView: view)
+        if let skeletonDelegate = view as? FWSkeletonViewDelegate {
+            skeletonDelegate.skeletonViewLayout(skeletonLayout)
+            return skeletonLayout
+        }
+        
+        skeletonLayout.addSkeletonViews(view.subviews)
+        return skeletonLayout
     }
 }
 
@@ -567,9 +583,13 @@ import UIKit
     }
     
     /// 表格section头视图，必须与section对应，默认nil
-    public var sectionHeaderViewArray: [UIView] = []
+    public var sectionHeaderViewArray: [FWSkeletonStack] = [] {
+        didSet {
+            addAnimationViews(sectionHeaderViewArray)
+        }
+    }
     /// 单个section头视图，计算属性，仅单个section时使用
-    public var sectionHeaderView: UIView? {
+    public var sectionHeaderView: FWSkeletonStack? {
         get { return sectionHeaderViewArray.first }
         set { sectionHeaderViewArray = (newValue != nil) ? [newValue!] : [] }
     }
@@ -582,9 +602,9 @@ import UIKit
     }
     
     /// 表格section尾视图，必须与section对应，默认nil
-    public var sectionFooterViewArray: [UIView] = []
+    public var sectionFooterViewArray: [FWSkeletonStack] = []
     /// 单个section尾视图，计算属性，仅单个section时使用
-    public var sectionFooterView: UIView? {
+    public var sectionFooterView: FWSkeletonStack? {
         get { return sectionFooterViewArray.first }
         set { sectionFooterViewArray = (newValue != nil) ? [newValue!] : [] }
     }
@@ -660,6 +680,15 @@ import UIKit
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return heightForRowArray.count > indexPath.section ? heightForRowArray[indexPath.section] : 44
     }
+    
+    // 测试单个section
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return sectionHeaderHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return sectionHeaderView
+    }
 }
 
 // MARK: - UIKit+FWSkeletonView
@@ -696,23 +725,16 @@ extension UITableView: FWSkeletonViewDataSource {
         let tableView = FWSkeletonTableView()
         
         if let headerView = tableHeaderView {
-            let skeletonLayout = FWSkeletonLayout(layoutView: headerView)
-            if let skeletonDelegate = headerView as? FWSkeletonViewDelegate {
-                skeletonDelegate.skeletonViewLayout(skeletonLayout)
-            } else {
-                skeletonLayout.addSkeletonViews(headerView.subviews)
-            }
-            tableView.tableHeaderView = skeletonLayout
+            tableView.tableHeaderView = FWSkeletonLayout.parseSkeletonLayout(headerView)
+        }
+        if let footerView = tableFooterView {
+            tableView.tableFooterView = FWSkeletonLayout.parseSkeletonLayout(footerView)
         }
         
-        if let footerView = tableFooterView {
-            let skeletonLayout = FWSkeletonLayout(layoutView: footerView)
-            if let skeletonDelegate = footerView as? FWSkeletonViewDelegate {
-                skeletonDelegate.skeletonViewLayout(skeletonLayout)
-            } else {
-                skeletonLayout.addSkeletonViews(footerView.subviews)
-            }
-            tableView.tableFooterView = skeletonLayout
+        // 测试单个section
+        if let sectionHeaderView = headerView(forSection: 0) {
+            tableView.sectionHeaderView = FWSkeletonLayout.parseSkeletonLayout(sectionHeaderView)
+            tableView.sectionHeaderHeight = sectionHeaderView.frame.size.height
         }
         
         tableView.numberOfSections = numberOfSections
@@ -721,8 +743,21 @@ extension UITableView: FWSkeletonViewDataSource {
             numberOfRowsArray.append(numberOfRows(inSection: section))
         }
         tableView.numberOfRowsArray = numberOfRowsArray
+        
         return tableView
     }
 }
 
+/// UITableViewCell骨架屏视图代理扩展
+extension UITableViewCell: FWSkeletonViewDelegate {
+    public func skeletonViewLayout(_ layout: FWSkeletonLayout) {
+        layout.addSkeletonViews(contentView.subviews)
+    }
+}
 
+/// UITableViewHeaderFooterView骨架屏视图代理扩展
+extension UITableViewHeaderFooterView: FWSkeletonViewDelegate {
+    public func skeletonViewLayout(_ layout: FWSkeletonLayout) {
+        layout.addSkeletonViews(contentView.subviews)
+    }
+}
