@@ -77,14 +77,63 @@
 
 @end
 
-@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
-
-@property (nonatomic, strong) UIView *headerView;
-@property (nonatomic, strong) UIView *footerView;
+@interface TestSkeletonTableHeaderView : UIView
 
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
 @property (nonatomic, strong) UIImageView *imageView;
+
+@end
+
+@implementation TestSkeletonTableHeaderView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        UIView *testView = [UIView new];
+        _testView = testView;
+        testView.backgroundColor = [UIColor redColor];
+        [testView fwSetCornerRadius:5];
+        [self addSubview:testView];
+        testView.fwLayoutChain.leftWithInset(20).topWithInset(20)
+            .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+        
+        UIView *rightView = [UIView new];
+        rightView.backgroundColor = [UIColor redColor];
+        [rightView fwSetCornerRadius:5];
+        [self addSubview:rightView];
+        rightView.fwLayoutChain.rightWithInset(20).topWithInset(20)
+            .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+        
+        UIView *childView = [UIView new];
+        _childView = childView;
+        childView.backgroundColor = [UIColor blueColor];
+        [rightView addSubview:childView];
+        childView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
+        
+        UIImageView *imageView = [UIImageView new];
+        _imageView = imageView;
+        imageView.image = [UIImage imageNamed:@"test_scale"];
+        [imageView fwSetContentModeAspectFill];
+        [imageView fwSetCornerRadius:5];
+        [self addSubview:imageView];
+        imageView.fwLayoutChain.centerXToView(testView)
+            .topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
+        
+        UIView *childView2 = [UIView new];
+        childView2.backgroundColor = [UIColor blueColor];
+        [self addSubview:childView2];
+        childView2.fwLayoutChain.centerXToView(childView)
+            .centerYToView(imageView).sizeToView(childView)
+            .bottomWithInset(20);
+    }
+    return self;
+}
+
+@end
+
+@interface TestSkeletonTableFooterView : UIView
 
 @property (nonatomic, strong) UILabel *label1;
 @property (nonatomic, strong) UILabel *label2;
@@ -93,97 +142,75 @@
 
 @end
 
+@implementation TestSkeletonTableFooterView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        UILabel *label1 = [UILabel new];
+        _label1 = label1;
+        label1.textColor = [UIColor blueColor];
+        label1.text = @"我是Label1";
+        [self addSubview:label1];
+        label1.fwLayoutChain.leftWithInset(20).topWithInset(20);
+        
+        UILabel *label2 = [UILabel new];
+        _label2 = label2;
+        label2.font = [UIFont systemFontOfSize:12];
+        label2.textColor = [UIColor blueColor];
+        label2.numberOfLines = 0;
+        label2.text = @"我是Label2222222222\n我是Label22222\n我是Label2";
+        [self addSubview:label2];
+        label2.fwLayoutChain.topWithInset(20).rightWithInset(20)
+            .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+        
+        UITextView *textView1 = [UITextView new];
+        _textView1 = textView1;
+        textView1.editable = NO;
+        textView1.textColor = [UIColor blueColor];
+        textView1.text = @"我是TextView1";
+        [self addSubview:textView1];
+        textView1.fwLayoutChain.leftWithInset(20)
+            .topToBottomOfViewWithOffset(label1, 20)
+            .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+        
+        UITextView *textView2 = [UITextView new];
+        _textView2 = textView2;
+        textView2.font = [UIFont systemFontOfSize:12];
+        textView2.editable = NO;
+        textView2.textColor = [UIColor blueColor];
+        textView2.text = @"我是TextView2222\n我是TextView2\n我是TextView";
+        [self addSubview:textView2];
+        textView2.fwLayoutChain.rightWithInset(20)
+            .topToBottomOfViewWithOffset(label2, 20)
+            .size(CGSizeMake(FWScreenWidth / 2 - 40, 50))
+            .bottomWithInset(20);
+    }
+    return self;
+}
+
+@end
+
+@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
+
+@property (nonatomic, strong) TestSkeletonTableHeaderView *headerView;
+@property (nonatomic, strong) TestSkeletonTableFooterView *footerView;
+
+@end
+
 @implementation TestSkeletonViewController
 
 - (void)renderTableView
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
-    _headerView = headerView;
+    self.headerView = [[TestSkeletonTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
+    self.footerView = [[TestSkeletonTableFooterView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
     
-    UIView *testView = [UIView new];
-    _testView = testView;
-    testView.backgroundColor = [UIColor redColor];
-    [testView fwSetCornerRadius:5];
-    [headerView addSubview:testView];
-    testView.fwLayoutChain.leftWithInset(20).topWithInset(20)
-        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
+    self.tableView.tableHeaderView = self.headerView;
+    self.tableView.tableFooterView = self.footerView;
     
-    UIView *rightView = [UIView new];
-    rightView.backgroundColor = [UIColor redColor];
-    [rightView fwSetCornerRadius:5];
-    [headerView addSubview:rightView];
-    rightView.fwLayoutChain.rightWithInset(20).topWithInset(20)
-        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
-    
-    UIView *childView = [UIView new];
-    _childView = childView;
-    childView.backgroundColor = [UIColor blueColor];
-    [rightView addSubview:childView];
-    childView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
-    
-    UIImageView *imageView = [UIImageView new];
-    _imageView = imageView;
-    imageView.image = [UIImage imageNamed:@"test_scale"];
-    [imageView fwSetContentModeAspectFill];
-    [imageView fwSetCornerRadius:5];
-    [headerView addSubview:imageView];
-    imageView.fwLayoutChain.centerXToView(testView)
-        .topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
-    
-    UIView *childView2 = [UIView new];
-    childView2.backgroundColor = [UIColor blueColor];
-    [headerView addSubview:childView2];
-    childView2.fwLayoutChain.centerXToView(childView)
-        .centerYToView(imageView).sizeToView(childView)
-        .bottomWithInset(20);
-    
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
-    _footerView = footerView;
-    
-    UILabel *label1 = [UILabel new];
-    _label1 = label1;
-    label1.textColor = [UIColor blueColor];
-    label1.text = @"我是Label1";
-    [footerView addSubview:label1];
-    label1.fwLayoutChain.leftWithInset(20).topWithInset(20);
-    
-    UILabel *label2 = [UILabel new];
-    _label2 = label2;
-    label2.font = [UIFont systemFontOfSize:12];
-    label2.textColor = [UIColor blueColor];
-    label2.numberOfLines = 0;
-    label2.text = @"我是Label2222222222\n我是Label22222\n我是Label2";
-    [footerView addSubview:label2];
-    label2.fwLayoutChain.topWithInset(20).rightWithInset(20)
-        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
-    
-    UITextView *textView1 = [UITextView new];
-    _textView1 = textView1;
-    textView1.editable = NO;
-    textView1.textColor = [UIColor blueColor];
-    textView1.text = @"我是TextView1";
-    [footerView addSubview:textView1];
-    textView1.fwLayoutChain.leftWithInset(20)
-        .topToBottomOfViewWithOffset(label1, 20)
-        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50));
-    
-    UITextView *textView2 = [UITextView new];
-    _textView2 = textView2;
-    textView2.font = [UIFont systemFontOfSize:12];
-    textView2.editable = NO;
-    textView2.textColor = [UIColor blueColor];
-    textView2.text = @"我是TextView2222\n我是TextView2\n我是TextView";
-    [footerView addSubview:textView2];
-    textView2.fwLayoutChain.rightWithInset(20)
-        .topToBottomOfViewWithOffset(label2, 20)
-        .size(CGSizeMake(FWScreenWidth / 2 - 40, 50))
-        .bottomWithInset(20);
-    
-    self.tableView.tableHeaderView = headerView;
-    self.tableView.tableFooterView = footerView;
-    
-    [headerView fwAutoLayoutSubviews];
-    [footerView fwAutoLayoutSubviews];
+    [self.headerView fwAutoLayoutSubviews];
+    [self.footerView fwAutoLayoutSubviews];
 }
 
 - (void)renderModel
@@ -253,11 +280,12 @@
     }];
 }
 
-#pragma mark - FWSkeletonLayoutDelegate
+#pragma mark - FWSkeletonViewDelegate
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addSkeletonView:self.tableView];
+    [layout addSkeletonViews:self.headerView.subviews];
+    [layout addSkeletonViews:self.footerView.subviews];
 }
 
 @end
