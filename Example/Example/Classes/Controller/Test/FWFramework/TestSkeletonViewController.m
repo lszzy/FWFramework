@@ -284,8 +284,7 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addSkeletonViews:self.headerView.subviews];
-    [layout addSkeletonViews:self.footerView.subviews];
+    [layout addSkeletonView:self.tableView];
 }
 
 @end

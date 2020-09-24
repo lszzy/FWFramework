@@ -161,6 +161,155 @@ import UIKit
     }
 }
 
+// MARK: - FWSkeletonLayout
+
+/// 骨架屏布局视图，可从视图生成骨架屏
+@objcMembers public class FWSkeletonLayout: FWSkeletonStack {
+    /// 相对布局视图
+    public var layoutView: UIView?
+    
+    /// 指定相对布局视图初始化
+    public init(layoutView: UIView) {
+        super.init(frame: layoutView.bounds)
+        self.layoutView = layoutView
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// 批量添加布局子视图(兼容骨架视图)，返回生成的骨架视图数组
+    @discardableResult
+    public func addSkeletonViews(_ views: [UIView]) -> [FWSkeletonView] {
+        return addSkeletonViews(views, block: nil)
+    }
+    
+    /// 批量添加布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图数组
+    @discardableResult
+    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView, Int) -> Void)?) -> [FWSkeletonView] {
+        var resultViews: [FWSkeletonView] = []
+        for (index, view) in views.enumerated() {
+            resultViews.append(addSkeletonView(view, block: { (skeletonView) in
+                block?(skeletonView, index)
+            }))
+        }
+        return resultViews
+    }
+    
+    /// 添加单个布局子视图(兼容骨架视图)，返回生成的骨架视图
+    @discardableResult
+    public func addSkeletonView(_ view: UIView) -> FWSkeletonView {
+        return addSkeletonView(view, block: nil)
+    }
+    
+    /// 添加单个布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图
+    @discardableResult
+    public func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
+        let skeletonView = parseSkeletonView(view)
+        if layoutView != nil && view.isDescendant(of: layoutView!) {
+            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
+        }
+        addAnimationView(skeletonView)
+        if skeletonView.superview == nil {
+            addSubview(skeletonView)
+        }
+        block?(skeletonView)
+        return skeletonView
+    }
+    
+    /// 解析布局子视图为骨架视图，兼容骨架视图
+    public func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
+        if view is FWSkeletonView {
+            return view as! FWSkeletonView
+        }
+        
+        if let skeletonDataSource = view as? FWSkeletonViewDataSource {
+            if let skeletonView = skeletonDataSource.skeletonViewProvider() {
+                return skeletonView
+            }
+        }
+        
+        if let skeletonDelegate = view as? FWSkeletonViewDelegate {
+            let skeletonLayout = FWSkeletonLayout(layoutView: view)
+            skeletonDelegate.skeletonViewLayout(skeletonLayout)
+            return skeletonLayout
+        }
+        
+        let skeletonView = FWSkeletonView()
+        skeletonView.layer.masksToBounds = view.layer.masksToBounds
+        skeletonView.layer.cornerRadius = view.layer.cornerRadius
+        if view.layer.shadowOpacity > 0 {
+            skeletonView.layer.shadowColor = view.layer.shadowColor
+            skeletonView.layer.shadowOffset = view.layer.shadowOffset
+            skeletonView.layer.shadowRadius = view.layer.shadowRadius
+            skeletonView.layer.shadowPath = view.layer.shadowPath
+            skeletonView.layer.shadowOpacity = view.layer.shadowOpacity
+        }
+        return skeletonView
+    }
+}
+
+// MARK: - UIKit+FWSkeletonLayout
+
+/// 视图显示骨架屏扩展
+@objc extension UIView {
+    private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((FWSkeletonLayout) -> Void)? = nil) {
+        fwHideSkeleton()
+        setNeedsLayout()
+        layoutIfNeeded()
+        
+        let layout = FWSkeletonLayout(layoutView: self)
+        layout.tag = 2051
+        addSubview(layout)
+        layout.fwPinEdgesToSuperview()
+        
+        delegate?.skeletonViewLayout(layout)
+        block?(layout)
+        
+        layout.setNeedsLayout()
+        layout.layoutIfNeeded()
+        layout.startAnimating()
+    }
+    
+    public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
+        fwShowSkeleton(delegate: delegate, block: nil)
+    }
+    
+    public func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
+        fwShowSkeleton(delegate: nil, block: block)
+    }
+    
+    public func fwShowSkeleton() {
+        fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
+    }
+    
+    public func fwHideSkeleton() {
+        if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
+            layout.stopAnimating()
+            layout.removeFromSuperview()
+        }
+    }
+}
+
+/// 控制器显示骨架屏扩展
+@objc extension UIViewController {
+    public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
+        view.fwShowSkeleton(delegate: delegate)
+    }
+    
+    public func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
+        view.fwShowSkeleton(block: block)
+    }
+    
+    public func fwShowSkeleton() {
+        fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
+    }
+    
+    public func fwHideSkeleton() {
+        view.fwHideSkeleton()
+    }
+}
+
 // MARK: - FWSkeletonView
 
 /// 骨架屏视图数据源协议
@@ -342,6 +491,177 @@ import UIKit
     }
 }
 
+/// 骨架屏滚动视图，内容过多时可自动滚动，需布局约束完整
+@objcMembers public class FWSkeletonScrollView: FWSkeletonStack {
+    /// 滚动视图，内容请添加到contentView
+    public lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        if #available(iOS 11.0, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
+        return scrollView
+    }()
+    
+    /// 容器视图，内容需添加到本视图
+    public lazy var contentView: UIView = {
+        let contentView = UIView()
+        return contentView
+    }()
+    
+    override func setupView() {
+        contentView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        
+        addSubview(scrollView)
+        scrollView.fwPinEdgesToSuperview()
+        scrollView.addSubview(contentView)
+        contentView.fwPinEdgesToSuperview()
+    }
+}
+
+/// 骨架屏表格视图，可生成表格骨架屏
+@objcMembers public class FWSkeletonTableView: FWSkeletonStack, UITableViewDataSource, UITableViewDelegate {
+    /// 表格头视图
+    public var tableHeaderView: FWSkeletonStack? {
+        didSet {
+            tableView.tableHeaderView = tableHeaderView
+            if tableHeaderView != nil {
+                addAnimationView(tableHeaderView!)
+            }
+        }
+    }
+    /// 表格尾视图
+    public var tableFooterView: FWSkeletonStack? {
+        didSet {
+            tableView.tableFooterView = tableFooterView
+            if tableFooterView != nil {
+                addAnimationView(tableFooterView!)
+            }
+        }
+    }
+    
+    /// 表格section数，默认1
+    public var numberOfSections: Int = 1
+    /// 表格row数，必须与section对应，默认0，自动计算
+    public var numberOfRowsArray: [Int] = [0]
+    /// 单个section表格row数，计算属性，仅单个section时使用
+    public var numberOfRows: Int {
+        get { return numberOfRowsArray.first ?? 0 }
+        set { numberOfRowsArray = [newValue] }
+    }
+    
+    /// 表格cell类，必须与section对应，默认UITableViewCell，暂不支持单section多cell
+    public var cellForRowArray: [AnyClass] = [UITableViewCell.self]
+    /// 单个section表格类，计算属性，仅单个section时使用
+    public var cellForRow: AnyClass {
+        get { return cellForRowArray.first ?? UITableViewCell.self }
+        set { cellForRowArray = [newValue] }
+    }
+    /// 表格高度，必须与section对应，默认44
+    public var heightForRowArray: [CGFloat] = [44]
+    /// 单个section表格row数，计算属性，仅单个section时使用
+    public var heightForRow: CGFloat {
+        get { return heightForRowArray.first ?? 44 }
+        set { heightForRowArray = [newValue] }
+    }
+    
+    /// 表格section头视图，必须与section对应，默认nil
+    public var sectionHeaderViewArray: [UIView] = []
+    /// 单个section头视图，计算属性，仅单个section时使用
+    public var sectionHeaderView: UIView? {
+        get { return sectionHeaderViewArray.first }
+        set { sectionHeaderViewArray = (newValue != nil) ? [newValue!] : [] }
+    }
+    /// 表格section头高度，必须与section对应，默认0
+    public var sectionHeaderHeightArray: [CGFloat] = [0]
+    /// 单个section头高度，计算属性，仅单个section时使用
+    public var sectionHeaderHeight: CGFloat {
+        get { return sectionHeaderHeightArray.first ?? 0 }
+        set { sectionHeaderHeightArray = [newValue] }
+    }
+    
+    /// 表格section尾视图，必须与section对应，默认nil
+    public var sectionFooterViewArray: [UIView] = []
+    /// 单个section尾视图，计算属性，仅单个section时使用
+    public var sectionFooterView: UIView? {
+        get { return sectionFooterViewArray.first }
+        set { sectionFooterViewArray = (newValue != nil) ? [newValue!] : [] }
+    }
+    /// 表格section尾高度，必须与section对应，默认0
+    public var sectionFooterHeightArray: [CGFloat] = [0]
+    /// 单个section尾高度，计算属性，仅单个section时使用
+    public var sectionFooterHeight: CGFloat {
+        get { return sectionFooterHeightArray.first ?? 0 }
+        set { sectionFooterHeightArray = [newValue] }
+    }
+    
+    /// 表格视图，默认不可滚动
+    public lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.isScrollEnabled = false
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        return tableView
+    }()
+    
+    override func setupView() {
+        tableView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        
+        addSubview(tableView)
+        tableView.fwPinEdgesToSuperview()
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.reloadData()
+    }
+    
+    // MARK: - UITableView
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return numberOfSections
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var rowCount = numberOfRowsArray.count > section ? numberOfRowsArray[section] : 0
+        if rowCount < 1 {
+            let rowHeight = heightForRowArray.count > section ? heightForRowArray[section] : 44
+            rowCount = Int(ceil(UIScreen.main.bounds.size.height / rowHeight))
+        }
+        return rowCount
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "FWSkeletonCell\(indexPath.section)")
+        if cell == nil {
+            cell = UITableViewCell(style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
+            
+            let cellClass: AnyClass = cellForRowArray.count > indexPath.section ? cellForRowArray[indexPath.section] : UITableViewCell.self
+            let contentCell: UITableViewCell = cellClass.fwCell(with: tableView) as! UITableViewCell
+            
+            contentCell.setNeedsLayout()
+            contentCell.layoutIfNeeded()
+            
+            let skeletonLayout = FWSkeletonLayout(layoutView: contentCell)
+            skeletonLayout.addSkeletonViews(contentCell.contentView.subviews)
+            cell?.contentView.addSubview(skeletonLayout)
+            skeletonLayout.fwPinEdgesToSuperview()
+        }
+        return cell!
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return heightForRowArray.count > indexPath.section ? heightForRowArray[indexPath.section] : 44
+    }
+}
+
 // MARK: - UIKit+FWSkeletonView
 
 /// UILabel骨架屏视图数据源扩展
@@ -370,151 +690,39 @@ extension UITextView: FWSkeletonViewDataSource {
     }
 }
 
-// MARK: - FWSkeletonLayout
-
-/// 骨架屏布局视图，可从视图生成骨架屏
-@objcMembers public class FWSkeletonLayout: FWSkeletonStack {
-    /// 相对布局视图
-    public var layoutView: UIView?
-    
-    /// 指定相对布局视图初始化
-    public init(layoutView: UIView) {
-        super.init(frame: layoutView.bounds)
-        self.layoutView = layoutView
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    /// 批量添加布局子视图(兼容骨架视图)，返回生成的骨架视图数组
-    @discardableResult
-    public func addSkeletonViews(_ views: [UIView]) -> [FWSkeletonView] {
-        return addSkeletonViews(views, block: nil)
-    }
-    
-    /// 批量添加布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图数组
-    @discardableResult
-    public func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView, Int) -> Void)?) -> [FWSkeletonView] {
-        var resultViews: [FWSkeletonView] = []
-        for (index, view) in views.enumerated() {
-            resultViews.append(addSkeletonView(view, block: { (skeletonView) in
-                block?(skeletonView, index)
-            }))
-        }
-        return resultViews
-    }
-    
-    /// 添加单个布局子视图(兼容骨架视图)，返回生成的骨架视图
-    @discardableResult
-    public func addSkeletonView(_ view: UIView) -> FWSkeletonView {
-        return addSkeletonView(view, block: nil)
-    }
-    
-    /// 添加单个布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图
-    @discardableResult
-    public func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
-        let skeletonView = parseSkeletonView(view)
-        if layoutView != nil && view.isDescendant(of: layoutView!) {
-            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
-        }
-        addAnimationView(skeletonView)
-        if skeletonView.superview == nil {
-            addSubview(skeletonView)
-        }
-        block?(skeletonView)
-        return skeletonView
-    }
-    
-    /// 解析布局子视图为骨架视图，兼容骨架视图
-    public func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
-        if view is FWSkeletonView {
-            return view as! FWSkeletonView
-        }
+/// UITableView骨架屏视图数据源扩展
+extension UITableView: FWSkeletonViewDataSource {
+    public func skeletonViewProvider() -> FWSkeletonView? {
+        let tableView = FWSkeletonTableView()
         
-        if let skeletonDataSource = view as? FWSkeletonViewDataSource {
-            if let skeletonView = skeletonDataSource.skeletonViewProvider() {
-                return skeletonView
+        if let headerView = tableHeaderView {
+            let skeletonLayout = FWSkeletonLayout(layoutView: headerView)
+            if let skeletonDelegate = headerView as? FWSkeletonViewDelegate {
+                skeletonDelegate.skeletonViewLayout(skeletonLayout)
+            } else {
+                skeletonLayout.addSkeletonViews(headerView.subviews)
             }
+            tableView.tableHeaderView = skeletonLayout
         }
         
-        if let skeletonDelegate = view as? FWSkeletonViewDelegate {
-            let skeletonLayout = FWSkeletonLayout(layoutView: view)
-            skeletonDelegate.skeletonViewLayout(skeletonLayout)
-            return skeletonLayout
+        if let footerView = tableFooterView {
+            let skeletonLayout = FWSkeletonLayout(layoutView: footerView)
+            if let skeletonDelegate = footerView as? FWSkeletonViewDelegate {
+                skeletonDelegate.skeletonViewLayout(skeletonLayout)
+            } else {
+                skeletonLayout.addSkeletonViews(footerView.subviews)
+            }
+            tableView.tableFooterView = skeletonLayout
         }
         
-        let skeletonView = FWSkeletonView()
-        skeletonView.layer.masksToBounds = view.layer.masksToBounds
-        skeletonView.layer.cornerRadius = view.layer.cornerRadius
-        if view.layer.shadowOpacity > 0 {
-            skeletonView.layer.shadowColor = view.layer.shadowColor
-            skeletonView.layer.shadowOffset = view.layer.shadowOffset
-            skeletonView.layer.shadowRadius = view.layer.shadowRadius
-            skeletonView.layer.shadowPath = view.layer.shadowPath
-            skeletonView.layer.shadowOpacity = view.layer.shadowOpacity
+        tableView.numberOfSections = numberOfSections
+        var numberOfRowsArray: [Int] = []
+        for section in 0 ..< numberOfSections {
+            numberOfRowsArray.append(numberOfRows(inSection: section))
         }
-        return skeletonView
+        tableView.numberOfRowsArray = numberOfRowsArray
+        return tableView
     }
 }
 
-// MARK: - UIKit+FWSkeletonLayout
 
-/// 视图显示骨架屏扩展
-@objc extension UIView {
-    private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((FWSkeletonLayout) -> Void)? = nil) {
-        fwHideSkeleton()
-        setNeedsLayout()
-        layoutIfNeeded()
-        
-        let layout = FWSkeletonLayout(layoutView: self)
-        layout.tag = 2051
-        addSubview(layout)
-        layout.fwPinEdgesToSuperview()
-        
-        delegate?.skeletonViewLayout(layout)
-        block?(layout)
-        
-        layout.setNeedsLayout()
-        layout.layoutIfNeeded()
-        layout.startAnimating()
-    }
-    
-    public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
-        fwShowSkeleton(delegate: delegate, block: nil)
-    }
-    
-    public func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
-        fwShowSkeleton(delegate: nil, block: block)
-    }
-    
-    public func fwShowSkeleton() {
-        fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
-    }
-    
-    public func fwHideSkeleton() {
-        if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
-            layout.stopAnimating()
-            layout.removeFromSuperview()
-        }
-    }
-}
-
-/// 控制器显示骨架屏扩展
-@objc extension UIViewController {
-    public func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
-        view.fwShowSkeleton(delegate: delegate)
-    }
-    
-    public func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
-        view.fwShowSkeleton(block: block)
-    }
-    
-    public func fwShowSkeleton() {
-        fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
-    }
-    
-    public func fwHideSkeleton() {
-        view.fwHideSkeleton()
-    }
-}
