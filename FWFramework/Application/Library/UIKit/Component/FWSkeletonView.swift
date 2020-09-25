@@ -714,20 +714,6 @@ extension UITextView: FWSkeletonViewDataSource {
     }
 }
 
-/// UITableViewCell骨架屏视图代理扩展
-extension UITableViewCell: FWSkeletonViewDelegate {
-    public func skeletonViewLayout(_ layout: FWSkeletonLayout) {
-        layout.addSkeletonViews(contentView.subviews)
-    }
-}
-
-/// UITableViewHeaderFooterView骨架屏视图代理扩展
-extension UITableViewHeaderFooterView: FWSkeletonViewDelegate {
-    public func skeletonViewLayout(_ layout: FWSkeletonLayout) {
-        layout.addSkeletonViews(contentView.subviews)
-    }
-}
-
 /// UITableView骨架屏视图数据源扩展
 extension UITableView: FWSkeletonViewDataSource {
     public func skeletonViewProvider() -> FWSkeletonView? {
@@ -751,5 +737,19 @@ extension UITableView: FWSkeletonViewDataSource {
         }*/
         
         return tableView
+    }
+}
+
+/// UITableViewCell骨架屏视图代理扩展
+extension UITableViewCell: FWSkeletonViewDelegate {
+    public func skeletonViewLayout(_ layout: FWSkeletonLayout) {
+        layout.addSkeletonViews(contentView.subviews)
+    }
+}
+
+/// UITableViewHeaderFooterView骨架屏视图代理扩展
+extension UITableViewHeaderFooterView: FWSkeletonViewDelegate {
+    public func skeletonViewLayout(_ layout: FWSkeletonLayout) {
+        layout.addSkeletonViews(contentView.subviews)
     }
 }

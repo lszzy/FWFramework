@@ -38,3 +38,39 @@
 }
 
 @end
+
+@implementation UITableView (FWContentView)
+
++ (instancetype)fwTableView
+{
+    return [self fwTableView:UITableViewStylePlain];
+}
+
++ (instancetype)fwTableView:(UITableViewStyle)style
+{
+    UITableView *tableView = [[self alloc] initWithFrame:CGRectZero style:style];
+    tableView.showsVerticalScrollIndicator = NO;
+    tableView.showsHorizontalScrollIndicator = NO;
+    if (@available(iOS 11.0, *)) {
+        tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    return tableView;
+}
+
+@end
+
+@implementation UICollectionView (FWContentView)
+
++ (instancetype)fwCollectionView:(UICollectionViewLayout *)layout
+{
+    UICollectionView *collectionView = [[self alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    collectionView.showsVerticalScrollIndicator = NO;
+    collectionView.showsHorizontalScrollIndicator = NO;
+    if (@available(iOS 11.0, *)) {
+        collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    return collectionView;
+}
+
+@end
