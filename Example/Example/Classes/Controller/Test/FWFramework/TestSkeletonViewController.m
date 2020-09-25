@@ -84,6 +84,44 @@
 
 @end
 
+@interface TestSkeletonFooterView : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UILabel *iconLabel;
+@property (nonatomic, strong) id object;
+
+@end
+
+@implementation TestSkeletonFooterView
+
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithReuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.fwMaxYViewPadding = 20;
+        
+        UIImageView *iconView = [UIImageView new];
+        _iconView = iconView;
+        iconView.image = [UIImage fwImageWithAppIcon];
+        [self.contentView addSubview:iconView];
+        iconView.fwLayoutChain.topWithInset(20).leftWithInset(20).size(CGSizeMake(20, 20));
+        
+        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:@"我是尾视图"];
+        _iconLabel = iconLabel;
+        [self.contentView addSubview:iconLabel];
+        iconLabel.fwLayoutChain.rightWithInset(20).centerYToView(iconView).leftToRightOfViewWithOffset(iconView, 20);
+    }
+    return self;
+}
+
+- (void)setObject:(id)object
+{
+    _object = object;
+    self.iconLabel.text = [NSString stringWithFormat:@"我是尾视图%@", object];
+}
+
+@end
+
 @interface TestSkeletonTableHeaderView : UIView
 
 @property (nonatomic, strong) UIView *testView;
@@ -306,6 +344,20 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return [tableView fwHeightWithHeaderFooterViewClass:[TestSkeletonHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestSkeletonHeaderView * _Nonnull headerFooterView) {
+        headerFooterView.object = @1;
+    }];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    TestSkeletonFooterView *footerView = [TestSkeletonFooterView fwHeaderFooterViewWithTableView:tableView];
+    footerView.object = @1;
+    return footerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return [tableView fwHeightWithHeaderFooterViewClass:[TestSkeletonHeaderView class] type:FWHeaderFooterViewTypeFooter configuration:^(TestSkeletonHeaderView * _Nonnull headerFooterView) {
         headerFooterView.object = @1;
     }];
 }
