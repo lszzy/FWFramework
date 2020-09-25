@@ -472,7 +472,7 @@ import UIKit
     
     /// 表格section头视图，支持UIView或AnyClass
     public var sectionHeaderViewArray: [Any]?
-    /// 表格section头高度
+    /// 表格section头高度，不指定时默认使用FWDynamicLayout自动计算
     public var sectionHeaderHeightArray: [CGFloat]?
     /// 单section头视图，支持UIView或AnyClass
     public var sectionHeaderView: Any? {
@@ -487,7 +487,7 @@ import UIKit
     
     /// 表格section尾视图，支持UIView或AnyClass
     public var sectionFooterViewArray: [Any]?
-    /// 表格section尾高度
+    /// 表格section尾高度，不指定时默认使用FWDynamicLayout自动计算
     public var sectionFooterHeightArray: [CGFloat]?
     /// 单section尾视图，支持UIView或AnyClass
     public var sectionFooterView: Any? {
@@ -504,7 +504,7 @@ import UIKit
     public var numberOfRowsArray: [Int]?
     /// 表格cell创建句柄，section内相同，支持UITableViewCell或AnyClass
     public var cellForRowArray: [Any]?
-    /// 表格cell高度，section内相同
+    /// 表格cell高度，section内相同，不指定时默认使用FWDynamicLayout自动计算
     public var heightForRowArray: [CGFloat]?
     /// 单section表格row数，默认自动计算
     public var numberOfRows: Int {
@@ -562,10 +562,7 @@ import UIKit
             number = numberArray[section]
         }
         if number < 1 {
-            var height: CGFloat = 0
-            if let heightArray = heightForRowArray, heightArray.count > section {
-                height = heightArray[section]
-            }
+            var height: CGFloat = self.tableView(tableView, heightForRowAt: IndexPath(row: 0, section: section))
             if height > 0 {
                 number = Int(ceil(UIScreen.main.bounds.size.height / height))
             }
@@ -587,6 +584,10 @@ import UIKit
             cellLayout = FWSkeletonLayout.parseSkeletonLayout(cellView)
         } else if let cellClass = cellObject as? UITableViewCell.Type {
             let contentCell = cellClass.init(style: .default, reuseIdentifier: nil)
+            var height: CGFloat = self.tableView(tableView, heightForRowAt: IndexPath(row: 0, section: indexPath.section))
+            contentCell.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: height)
+            contentCell.setNeedsLayout()
+            contentCell.layoutIfNeeded()
             cellLayout = FWSkeletonLayout.parseSkeletonLayout(contentCell)
         }
         
@@ -599,8 +600,24 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let heightArray = heightForRowArray, heightArray.count > indexPath.section {
-            return heightArray[indexPath.section]
+            let height = heightArray[indexPath.section]
+            if height > 0 {
+                return height
+            }
         }
+        
+        guard let cellArray = cellForRowArray, cellArray.count > indexPath.section else { return 0 }
+        
+        let cellObject = cellArray[indexPath.section]
+        if let cellView = cellObject as? UIView {
+            return cellView.frame.size.height
+        } else if let cellClass = cellObject as? UITableViewCell.Type {
+            let height = tableView.fwHeight(withCellClass: cellClass) { (cell) in
+                
+            }
+            return height
+        }
+        
         return 0
     }
     
@@ -618,6 +635,9 @@ import UIKit
             headerLayout = FWSkeletonLayout.parseSkeletonLayout(headerView)
         } else if let headerClass = headerObject as? UITableViewHeaderFooterView.Type {
             let contentHeader = headerClass.init(reuseIdentifier: nil)
+            contentHeader.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: 0)
+            contentHeader.setNeedsLayout()
+            contentHeader.layoutIfNeeded()
             headerLayout = FWSkeletonLayout.parseSkeletonLayout(contentHeader)
         }
         
@@ -649,6 +669,9 @@ import UIKit
             footerLayout = FWSkeletonLayout.parseSkeletonLayout(footerView)
         } else if let footerClass = footerObject as? UITableViewHeaderFooterView.Type {
             let contentFooter = footerClass.init(reuseIdentifier: nil)
+            contentFooter.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: 0)
+            contentFooter.setNeedsLayout()
+            contentFooter.layoutIfNeeded()
             footerLayout = FWSkeletonLayout.parseSkeletonLayout(contentFooter)
         }
         
