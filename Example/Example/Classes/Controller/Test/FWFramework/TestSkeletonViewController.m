@@ -367,19 +367,27 @@
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
     if (self.scrollStyle == 0) {
-        [layout addSkeletonView:self.tableView];
+        FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
+        // 没有数据时需要指定cell，有数据时无需指定
+        tableView.cellForRow = [TestSkeletonCell class];
+        // 测试header直接指定类时自动计算高度
+        tableView.sectionHeaderView = [TestSkeletonHeaderView class];
     } else if (self.scrollStyle == 1) {
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
+        // 没有数据时需要指定cell，有数据时无需指定
+        tableView.cellForRow = [TestSkeletonCell class];
         tableView.tableView.scrollEnabled = YES;
     } else {
         UIScrollView *scrollView = [UIScrollView fwScrollView];
         [layout addSubview:scrollView];
         scrollView.fwLayoutChain.edges();
         
-        FWSkeletonView *skeletonView = [FWSkeletonLayout parseSkeletonView:self.tableView];
-        [layout addAnimationView:skeletonView];
-        [scrollView.fwContentView addSubview:skeletonView];
-        skeletonView.fwLayoutChain.edges();
+        FWSkeletonTableView *tableView = (FWSkeletonTableView *)[FWSkeletonLayout parseSkeletonView:self.tableView];
+        // 没有数据时需要指定cell，有数据时无需指定
+        tableView.cellForRow = [TestSkeletonCell class];
+        [layout addAnimationView:tableView];
+        [scrollView.fwContentView addSubview:tableView];
+        tableView.fwLayoutChain.edges();
     }
 }
 
