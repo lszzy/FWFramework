@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F6313A4251DB1CE0040F949 /* FWScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6313A3251DB1CE0040F949 /* FWScrollView.swift */; };
 		2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F63D40D250CBB6000BA83A6 /* FWSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -336,6 +337,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F6313A3251DB1CE0040F949 /* FWScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWScrollView.swift; sourceTree = "<group>"; };
 		2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSceneDelegate.h; sourceTree = "<group>"; };
 		2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSceneDelegate.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -909,6 +911,7 @@
 			children = (
 				2FFE1C342507BFA5000332A3 /* FWView.h */,
 				2FFE1C352507BFA5000332A3 /* FWView.m */,
+				2F6313A3251DB1CE0040F949 /* FWScrollView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1477,6 +1480,7 @@
 				2FFE1C082507BF95000332A3 /* FWTest.swift in Sources */,
 				2FFE83EC2515AF9600545D6E /* UIView+FWEmpty.m in Sources */,
 				2FFE1D172507BFBD000332A3 /* UINavigationController+FWWorkflow.m in Sources */,
+				2F6313A4251DB1CE0040F949 /* FWScrollView.swift in Sources */,
 				2FFE1C162507BF95000332A3 /* FWTask.m in Sources */,
 				2FFE1D312507BFBD000332A3 /* UIScrollView+FWEmptyView.m in Sources */,
 				2FFE1D572507BFBD000332A3 /* UITextField+FWKeyboard.m in Sources */,

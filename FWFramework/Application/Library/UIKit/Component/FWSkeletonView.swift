@@ -539,82 +539,51 @@ import UIKit
 /// 骨架屏表格视图，可生成表格骨架屏
 @objcMembers public class FWSkeletonTableView: FWSkeletonStack, UITableViewDataSource, UITableViewDelegate {
     /// 表格头视图
-    public var tableHeaderView: FWSkeletonStack? {
+    public var tableHeaderView: UIView? {
         didSet {
-            tableView.tableHeaderView = tableHeaderView
-            if tableHeaderView != nil {
-                addAnimationView(tableHeaderView!)
-            }
+            guard let headerView = tableHeaderView else { return }
+            
+            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(headerView)
+            tableView.tableHeaderView = skeletonLayout
+            addAnimationView(skeletonLayout)
         }
     }
     /// 表格尾视图
-    public var tableFooterView: FWSkeletonStack? {
+    public var tableFooterView: UIView? {
         didSet {
-            tableView.tableFooterView = tableFooterView
-            if tableFooterView != nil {
-                addAnimationView(tableFooterView!)
-            }
+            guard let footerView = tableFooterView else { return }
+            
+            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(footerView)
+            tableView.tableFooterView = skeletonLayout
+            addAnimationView(skeletonLayout)
         }
     }
     
     /// 表格section数，默认1
     public var numberOfSections: Int = 1
-    /// 表格row数，必须与section对应，默认0，自动计算
-    public var numberOfRowsArray: [Int] = [0]
-    /// 单个section表格row数，计算属性，仅单个section时使用
-    public var numberOfRows: Int {
-        get { return numberOfRowsArray.first ?? 0 }
-        set { numberOfRowsArray = [newValue] }
-    }
     
-    /// 表格cell类，必须与section对应，默认UITableViewCell，暂不支持单section多cell
-    public var cellForRowArray: [AnyClass] = [UITableViewCell.self]
-    /// 单个section表格类，计算属性，仅单个section时使用
-    public var cellForRow: AnyClass {
-        get { return cellForRowArray.first ?? UITableViewCell.self }
-        set { cellForRowArray = [newValue] }
-    }
-    /// 表格高度，必须与section对应，默认44
-    public var heightForRowArray: [CGFloat] = [44]
-    /// 单个section表格row数，计算属性，仅单个section时使用
-    public var heightForRow: CGFloat {
-        get { return heightForRowArray.first ?? 44 }
-        set { heightForRowArray = [newValue] }
-    }
+    /// 表格section头视图，二选一
+    public var sectionHeaderView: ((Int) -> UIView?)?
+    /// 表格section头视图类，二选一
+    public var sectionHeaderViewClass: ((Int) -> AnyClass)?
+    /// 表格section头高度
+    public var sectionHeaderHeight: ((Int) -> CGFloat)?
     
-    /// 表格section头视图，必须与section对应，默认nil
-    public var sectionHeaderViewArray: [FWSkeletonStack] = [] {
-        didSet {
-            addAnimationViews(sectionHeaderViewArray)
-        }
-    }
-    /// 单个section头视图，计算属性，仅单个section时使用
-    public var sectionHeaderView: FWSkeletonStack? {
-        get { return sectionHeaderViewArray.first }
-        set { sectionHeaderViewArray = (newValue != nil) ? [newValue!] : [] }
-    }
-    /// 表格section头高度，必须与section对应，默认0
-    public var sectionHeaderHeightArray: [CGFloat] = [0]
-    /// 单个section头高度，计算属性，仅单个section时使用
-    public var sectionHeaderHeight: CGFloat {
-        get { return sectionHeaderHeightArray.first ?? 0 }
-        set { sectionHeaderHeightArray = [newValue] }
-    }
+    /// 表格section尾视图，二选一
+    public var sectionFooterView: ((Int) -> UIView?)?
+    /// 表格section尾视图类，二选一
+    public var sectionFooterViewClass: ((Int) -> AnyClass)?
+    /// 表格section尾高度
+    public var sectionFooterHeight: ((Int) -> CGFloat)?
     
-    /// 表格section尾视图，必须与section对应，默认nil
-    public var sectionFooterViewArray: [FWSkeletonStack] = []
-    /// 单个section尾视图，计算属性，仅单个section时使用
-    public var sectionFooterView: FWSkeletonStack? {
-        get { return sectionFooterViewArray.first }
-        set { sectionFooterViewArray = (newValue != nil) ? [newValue!] : [] }
-    }
-    /// 表格section尾高度，必须与section对应，默认0
-    public var sectionFooterHeightArray: [CGFloat] = [0]
-    /// 单个section尾高度，计算属性，仅单个section时使用
-    public var sectionFooterHeight: CGFloat {
-        get { return sectionFooterHeightArray.first ?? 0 }
-        set { sectionFooterHeightArray = [newValue] }
-    }
+    /// 表格row数，默认自动计算
+    public var numberOfRows: ((Int) -> Int)?
+    /// 表格cell创建句柄，优先级高，section内相同，二选一
+    public var cellForRow: ((Int) -> UITableViewCell)?
+    /// 表格cell类，优先级低，section内相同，二选一
+    public var cellForRowClass: ((Int) -> AnyClass)?
+    /// 表格cell高度，section内相同
+    public var heightForRow: ((Int) -> CGFloat)?
     
     /// 表格视图，默认不可滚动
     public lazy var tableView: UITableView = {
@@ -650,44 +619,52 @@ import UIKit
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var rowCount = numberOfRowsArray.count > section ? numberOfRowsArray[section] : 0
-        if rowCount < 1 {
-            let rowHeight = heightForRowArray.count > section ? heightForRowArray[section] : 44
-            rowCount = Int(ceil(UIScreen.main.bounds.size.height / rowHeight))
+        var count = numberOfRows?(section) ?? 0
+        if count < 1 {
+            let height = heightForRow?(section) ?? 44
+            count = Int(ceil(UIScreen.main.bounds.size.height / height))
         }
-        return rowCount
+        return count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "FWSkeletonCell\(indexPath.section)")
-        if cell == nil {
-            cell = UITableViewCell(style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
-            
-            let cellClass: AnyClass = cellForRowArray.count > indexPath.section ? cellForRowArray[indexPath.section] : UITableViewCell.self
-            let contentCell: UITableViewCell = cellClass.fwCell(with: tableView) as! UITableViewCell
-            
-            contentCell.setNeedsLayout()
-            contentCell.layoutIfNeeded()
-            
-            let skeletonLayout = FWSkeletonLayout(layoutView: contentCell)
-            skeletonLayout.addSkeletonViews(contentCell.contentView.subviews)
-            cell?.contentView.addSubview(skeletonLayout)
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "FWSkeletonCell\(indexPath.section)") {
+            return cell
+        }
+        
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
+        if cellForRow != nil {
+            let skeletonStack = cellForRow!(indexPath.section)
+            cell.contentView.addSubview(skeletonStack)
+            skeletonStack.fwPinEdgesToSuperview()
+        } else if cellForRowClass != nil {
+            let cellClass = cellForRowClass!(indexPath.section) as! UITableViewCell.Type
+            let contentCell = cellClass.init(style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
+            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(contentCell)
+            cell.contentView.addSubview(skeletonLayout)
             skeletonLayout.fwPinEdgesToSuperview()
         }
-        return cell!
+        return cell
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return heightForRowArray.count > indexPath.section ? heightForRowArray[indexPath.section] : 44
-    }
-    
-    // 测试单个section
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return sectionHeaderHeight
+        return heightForRow?(indexPath.section) ?? 44
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return sectionHeaderView
+        return sectionHeaderView?(section)
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return sectionHeaderHeight?(section) ?? 0
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return sectionFooterView?(section)
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return sectionFooterHeight?(section) ?? 0
     }
 }
 
@@ -724,13 +701,15 @@ extension UITableView: FWSkeletonViewDataSource {
     public func skeletonViewProvider() -> FWSkeletonView? {
         let tableView = FWSkeletonTableView()
         
-        if let headerView = tableHeaderView {
-            tableView.tableHeaderView = FWSkeletonLayout.parseSkeletonLayout(headerView)
-        }
-        if let footerView = tableFooterView {
-            tableView.tableFooterView = FWSkeletonLayout.parseSkeletonLayout(footerView)
+        tableView.tableHeaderView = tableHeaderView
+        tableView.tableFooterView = tableFooterView
+        
+        tableView.numberOfSections = numberOfSections
+        tableView.numberOfRows = { [weak self] (section) -> Int in
+            return self?.numberOfRows(inSection: section) ?? 0
         }
         
+        /*
         // 测试单个section
         if let sectionHeaderView = headerView(forSection: 0) {
             tableView.sectionHeaderView = FWSkeletonLayout.parseSkeletonLayout(sectionHeaderView)
@@ -742,7 +721,7 @@ extension UITableView: FWSkeletonViewDataSource {
         for section in 0 ..< numberOfSections {
             numberOfRowsArray.append(numberOfRows(inSection: section))
         }
-        tableView.numberOfRowsArray = numberOfRowsArray
+        tableView.numberOfRowsArray = numberOfRowsArray*/
         
         return tableView
     }
