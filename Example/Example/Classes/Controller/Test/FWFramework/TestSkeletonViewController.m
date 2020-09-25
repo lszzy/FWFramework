@@ -203,6 +203,7 @@
 
 @property (nonatomic, strong) TestSkeletonTableHeaderView *headerView;
 @property (nonatomic, strong) TestSkeletonTableFooterView *footerView;
+@property (nonatomic, assign) NSInteger scrollStyle;
 
 @end
 
@@ -225,7 +226,33 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id sender) {
         FWStrongifySelf();
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"shimmer", @"solid", @"scale", @"none"] actionBlock:^(NSInteger index) {
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"shimmer", @"solid", @"scale", @"none", @"tableView滚动", @"scrollView滚动", @"添加数据"] actionBlock:^(NSInteger index) {
+            FWStrongifySelf();
+            
+            // tableView滚动
+            if (index == 4) {
+                self.scrollStyle = self.scrollStyle != 0 ? 0 : 1;
+                [self renderData];
+                return;
+            }
+            
+            // scrollView滚动
+            if (index == 5) {
+                self.scrollStyle = self.scrollStyle != 0 ? 0 : 2;
+                [self renderData];
+                return;
+            }
+            
+            // 添加数据
+            if (index == 6) {
+                NSInteger lastIndex = [self.tableData.lastObject fwAsInteger];
+                [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
+                [self.tableView reloadData];
+                [self renderData];
+                return;
+            }
+            
+            // 切换动画
             FWSkeletonAnimation *animation = nil;
             if (index == 0) {
                 animation = FWSkeletonAnimation.shimmer;
@@ -235,10 +262,6 @@
                 animation = FWSkeletonAnimation.scale;
             }
             FWSkeletonAppearance.appearance.animation = animation;
-            
-            NSInteger lastIndex = [self.tableData.lastObject fwAsInteger];
-            [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
-            [self.tableView reloadData];
             [self renderData];
         }];
     }];
@@ -247,7 +270,7 @@
 - (void)renderData
 {
     [self fwShowSkeleton];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self fwHideSkeleton];
     });
 }
@@ -291,7 +314,21 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout addSkeletonView:self.tableView];
+    if (self.scrollStyle == 0) {
+        [layout addSkeletonView:self.tableView];
+    } else if (self.scrollStyle == 1) {
+        FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
+        tableView.tableView.scrollEnabled = YES;
+    } else {
+        UIScrollView *scrollView = [UIScrollView fwScrollView];
+        [layout addSubview:scrollView];
+        scrollView.fwLayoutChain.edges();
+        
+        FWSkeletonView *skeletonView = [FWSkeletonLayout parseSkeletonView:self.tableView];
+        [layout addAnimationView:skeletonView];
+        [scrollView.fwContentView addSubview:skeletonView];
+        skeletonView.fwLayoutChain.edges();
+    }
 }
 
 @end
