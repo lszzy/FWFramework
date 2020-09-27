@@ -143,6 +143,14 @@
 
 - (UIImage *)onScreenShot
 {
+    static NSTimeInterval lastTime = 0;
+    // 1秒钟截屏次数
+    NSInteger screenCountPerSecond = 8;
+    if (lastTime > 0 && (NSDate.date.timeIntervalSince1970 - lastTime) < (1.0 / screenCountPerSecond)) {
+        return nil;
+    }
+    lastTime = NSDate.date.timeIntervalSince1970;
+    
     UIWindow *window = UIWindow.fwMainWindow;
     UIGraphicsBeginImageContextWithOptions(window.bounds.size, NO, 0);
     
