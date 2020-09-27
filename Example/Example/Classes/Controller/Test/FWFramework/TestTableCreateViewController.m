@@ -252,6 +252,10 @@
     self.tableView.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
         return [TestTableCreateCell class];
     };
+    self.tableView.didSelectRow = ^(NSIndexPath * indexPath) {
+        FWStrongifySelf();
+        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
+    };
     
     self.tableView.viewClassForHeader = ^id _Nullable(NSInteger section) {
         FWStrongifySelf();
