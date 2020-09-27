@@ -99,7 +99,9 @@
         [self.screenView addSubview:screenLabel];
         screenLabel.fwLayoutChain.rightWithInset(5).bottomWithInset(5);
         
-        [[FWDebugManager sharedInstance] show];
+        if ([FWDebugManager sharedInstance].isHidden) {
+            [[FWDebugManager sharedInstance] show];
+        }
         
         FWWeakifySelf();
         self.displayLink = [CADisplayLink fwCommonDisplayLinkWithBlock:^(CADisplayLink * _Nonnull displayLink) {
@@ -136,8 +138,6 @@
         
         [self.screenView removeFromSuperview];
         self.screenView = nil;
-        
-        [FWDebugManager.sharedInstance hide];
     }
 }
 
@@ -146,19 +146,26 @@
     static NSTimeInterval lastTime = 0;
     // 1秒钟截屏次数
     NSInteger screenCountPerSecond = 8;
-    if (lastTime > 0 && (NSDate.date.timeIntervalSince1970 - lastTime) < (1.0 / screenCountPerSecond)) {
-        return nil;
-    }
+    if (lastTime > 0 && (NSDate.date.timeIntervalSince1970 - lastTime) < (1.0 / screenCountPerSecond)) { return nil; }
     lastTime = NSDate.date.timeIntervalSince1970;
     
-    UIWindow *window = UIWindow.fwMainWindow;
-    UIGraphicsBeginImageContextWithOptions(window.bounds.size, NO, 0);
+    // 获取window和bounds需要主线程调用
+    static CALayer *windowLayer = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            windowLayer = UIWindow.fwMainWindow.layer;
+        });
+    });
+    if (!windowLayer) return nil;
     
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(FWScreenWidth, FWScreenHeight), NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
+    
     // 后台线程一直截屏会导致崩溃，需在主线程处理
-    // [window.layer renderInContext:context];
-    [window.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)context waitUntilDone:YES];
-    window.layer.contents = nil;
+    // [windowLayer renderInContext:context];
+    [windowLayer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)context waitUntilDone:YES];
+    windowLayer.contents = nil;
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
