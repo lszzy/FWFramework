@@ -26,7 +26,11 @@
         // iOS7+：更新屏幕后再截图，防止刚添加还未显示时截图失败，效率高
         [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
     } else {
-        // iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
+        /*
+         iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
+         renderInContext:必须在主线程调用，后台线程调用频繁会导致崩溃，解决方法：
+         [view.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(NSObject *)UIGraphicsGetCurrentContext() waitUntilDone:YES];
+         */
         [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     }
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
