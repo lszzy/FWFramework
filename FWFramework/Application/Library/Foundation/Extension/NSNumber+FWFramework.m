@@ -49,6 +49,7 @@
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:numberStyle];
     [formatter setRoundingMode:roundingMode];
+    [formatter setMinimumIntegerDigits:1];
     [formatter setMaximumFractionDigits:digit];
     result = [formatter stringFromNumber:self];
     return result ?: @"";
@@ -75,6 +76,7 @@
     NSNumber *result = nil;
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setRoundingMode:roundingMode];
+    [formatter setMinimumIntegerDigits:1];
     [formatter setMaximumFractionDigits:digit];
     result = [NSNumber numberWithDouble:[[formatter stringFromNumber:self] doubleValue]];
     return result;
