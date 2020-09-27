@@ -12,6 +12,7 @@
 		2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F63D40D250CBB6000BA83A6 /* FWSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FDF6F6025205E180086A99E /* FWTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F5F25205E180086A99E /* FWTableView.swift */; };
 		2FF0B3BE250FCA8D005B93DD /* UITableView+FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* UITableView+FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */; };
 		2FFE1BAC2507BF95000332A3 /* FWFramework+Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -344,6 +345,7 @@
 		2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSceneDelegate.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
+		2FDF6F5F25205E180086A99E /* FWTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTableView.swift; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWDynamicLayout.h"; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWDynamicLayout.m"; sourceTree = "<group>"; };
 		2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Framework.h"; sourceTree = "<group>"; };
@@ -913,6 +915,7 @@
 			children = (
 				2FFE1C342507BFA5000332A3 /* FWView.h */,
 				2FFE1C352507BFA5000332A3 /* FWView.m */,
+				2FDF6F5F25205E180086A99E /* FWTableView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1583,6 +1586,7 @@
 				2FFE1C122507BF95000332A3 /* FWProxy.m in Sources */,
 				2FFE1D702507BFBD000332A3 /* UIApplication+FWFramework.m in Sources */,
 				2FFE1BDD2507BF95000332A3 /* FWBatchRequest.m in Sources */,
+				2FDF6F6025205E180086A99E /* FWTableView.swift in Sources */,
 				2FFE1D352507BFBD000332A3 /* UITableView+FWTemplateLayout.m in Sources */,
 				2FFE1DAA2507BFBD000332A3 /* NSAttributedString+FWFramework.m in Sources */,
 				2FFE1C092507BF95000332A3 /* FWRouter.m in Sources */,

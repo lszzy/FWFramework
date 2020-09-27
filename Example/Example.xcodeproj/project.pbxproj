@@ -50,6 +50,7 @@
 		2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */; };
 		2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
+		2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */; };
 		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
 		2FF8D94324C88A6F006A83B5 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */; };
 		2FF8D94424C88A6F006A83B5 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A024C88A6F006A83B5 /* ObjcController.m */; };
@@ -213,6 +214,8 @@
 		2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyScrollViewController.m; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
 		2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeViewController.m; sourceTree = "<group>"; };
+		2FDF6F6625206B440086A99E /* TestTableCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableCreateViewController.h; sourceTree = "<group>"; };
+		2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableCreateViewController.m; sourceTree = "<group>"; };
 		2FE2A6AF24FCBDB30041BC73 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		2FF4834524ED0422000661D0 /* LandmarkDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetail.swift; sourceTree = "<group>"; };
 		2FF8D87624C886EC006A83B5 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -690,6 +693,8 @@
 				2FF8D8AC24C88A6F006A83B5 /* TestTableReloadViewController.m */,
 				2FF8D8FF24C88A6F006A83B5 /* TestTableScrollViewController.h */,
 				2FF8D8BF24C88A6F006A83B5 /* TestTableScrollViewController.m */,
+				2FDF6F6625206B440086A99E /* TestTableCreateViewController.h */,
+				2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */,
 				2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */,
 				2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */,
 				2F7D7867251259DB0078EAAA /* TestThemeExtensionViewController.h */,
@@ -1180,6 +1185,7 @@
 				2F6DD0702508780A00EE2446 /* ProfileEditor.swift in Sources */,
 				2FF8D98C24C88A70006A83B5 /* AppStandard.m in Sources */,
 				2FF8D98A24C88A70006A83B5 /* FWDbModel.m in Sources */,
+				2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */,
 				2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */,
 				2FF8D97A24C88A70006A83B5 /* TestCustomerAlertController.m in Sources */,
 				2F6DD0742508780A00EE2446 /* PageControl.swift in Sources */,

@@ -102,6 +102,7 @@
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
                                              @[@"FWSegmentedControl", @"TestSegmentViewController"],
+                                             @[@"FWTableView", @"TestTableCreateViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWBarrageView", @"TestBarrageViewController"],
                                              @[@"FWEmptyView", @"TestEmptyViewController"],

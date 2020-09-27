@@ -27,21 +27,21 @@
 
 @implementation UICollectionViewCell (FWFramework)
 
-- (id)fwModel
+- (id)fwViewModel
 {
-    return objc_getAssociatedObject(self, @selector(fwModel));
+    return objc_getAssociatedObject(self, @selector(fwViewModel));
 }
 
-- (void)setFwModel:(id)fwModel
+- (void)setFwViewModel:(id)fwViewModel
 {
-    if (fwModel != self.fwModel) {
-        [self willChangeValueForKey:@"fwModel"];
-        objc_setAssociatedObject(self, @selector(fwModel), fwModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwModel"];
+    if (fwViewModel != self.fwViewModel) {
+        [self willChangeValueForKey:@"fwViewModel"];
+        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwViewModel"];
     }
 }
 
-+ (CGSize)fwSizeWithModel:(id)model
++ (CGSize)fwSizeWithViewModel:(id)viewModel collectionView:(UICollectionView *)collectionView
 {
     return CGSizeZero;
 }
@@ -79,21 +79,21 @@
 
 @implementation UICollectionReusableView (FWFramework)
 
-- (id)fwModel
+- (id)fwViewModel
 {
-    return objc_getAssociatedObject(self, @selector(fwModel));
+    return objc_getAssociatedObject(self, @selector(fwViewModel));
 }
 
-- (void)setFwModel:(id)fwModel
+- (void)setFwViewModel:(id)fwViewModel
 {
-    if (fwModel != self.fwModel) {
-        [self willChangeValueForKey:@"fwModel"];
-        objc_setAssociatedObject(self, @selector(fwModel), fwModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwModel"];
+    if (fwViewModel != self.fwViewModel) {
+        [self willChangeValueForKey:@"fwViewModel"];
+        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwViewModel"];
     }
 }
 
-+ (CGSize)fwSizeWithModel:(id)model
++ (CGSize)fwSizeWithViewModel:(id)viewModel collectionView:(UICollectionView *)collectionView
 {
     return CGSizeZero;
 }
