@@ -77,14 +77,6 @@
 
 - (void)onScreenButton:(UIButton *)sender
 {
-    static NSTimeInterval screenTime = 0;
-    static NSInteger screenCount = 0;
-    static dispatch_queue_t screenQueue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        screenQueue = dispatch_queue_create("ScreenQueue", NULL);
-    });
-    
     if ([@"开始截屏" isEqualToString:[sender titleForState:UIControlStateNormal]]) {
         [sender setTitle:@"停止截屏" forState:UIControlStateNormal];
         
@@ -103,11 +95,14 @@
             [[FWDebugManager sharedInstance] show];
         }
         
+        static NSTimeInterval screenTime = 0;
+        static NSInteger screenCount = 0;
+        
         FWWeakifySelf();
         self.displayLink = [CADisplayLink fwCommonDisplayLinkWithBlock:^(CADisplayLink * _Nonnull displayLink) {
             FWStrongifySelf();
             
-            dispatch_async(screenQueue, ^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 UIImage *image = [self onScreenShot];
                 if (image != nil) {
                     NSInteger timeCount = 0;
@@ -133,9 +128,6 @@
         [self.displayLink invalidate];
         self.displayLink = nil;
         
-        screenTime = 0;
-        screenCount = 0;
-        
         [self.screenView removeFromSuperview];
         self.screenView = nil;
     }
@@ -149,26 +141,36 @@
     if (lastTime > 0 && (NSDate.date.timeIntervalSince1970 - lastTime) < (1.0 / screenCountPerSecond)) { return nil; }
     lastTime = NSDate.date.timeIntervalSince1970;
     
-    // 获取window和bounds需要主线程调用
-    static CALayer *windowLayer = nil;
+    static UIImage *lastImage = nil;
+    static NSObject *lock = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            windowLayer = UIWindow.fwMainWindow.layer;
-        });
+        lock = [NSObject new];
     });
-    if (!windowLayer) return nil;
     
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(FWScreenWidth, FWScreenHeight), NO, 0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 获取window和bounds需要主线程调用
+        UIWindow *window = UIWindow.fwMainWindow;
+        
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(FWScreenWidth, FWScreenHeight), NO, 0);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        // 后台线程一直截屏会导致崩溃，需在主线程处理
+        [window.layer renderInContext:context];
+        // [window.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)context waitUntilDone:YES];
+        window.layer.contents = nil;
+        
+        [lock fwLock];
+        lastImage = UIGraphicsGetImageFromCurrentImageContext();
+        [lock fwUnlock];
+        
+        UIGraphicsEndImageContext();
+    });
     
-    // 后台线程一直截屏会导致崩溃，需在主线程处理
-    // [windowLayer renderInContext:context];
-    [windowLayer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)context waitUntilDone:YES];
-    windowLayer.contents = nil;
+    [lock fwLock];
+    UIImage *image = lastImage;
+    [lock fwUnlock];
     
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
     return image;
 }
 
