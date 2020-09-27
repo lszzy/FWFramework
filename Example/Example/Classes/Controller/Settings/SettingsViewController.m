@@ -7,11 +7,13 @@
 //
 
 #import "SettingsViewController.h"
+#import <FWDebug/FWDebug.h>
 
 @interface SettingsViewController ()
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, strong) UIImageView *screenView;
+@property (nonatomic, strong) UILabel *screenLabel;
 
 @end
 
@@ -75,6 +77,8 @@
 
 - (void)onScreenButton:(UIButton *)sender
 {
+    static NSTimeInterval screenTime = 0;
+    static NSInteger screenCount = 0;
     static dispatch_queue_t screenQueue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -90,6 +94,13 @@
         [[UIWindow fwMainWindow] addSubview:self.screenView];
         self.screenView.fwLayoutChain.rightWithInset(10).bottomWithInset(FWBottomBarHeight + 10).size(CGSizeMake(100, 100.0 / FWScreenWidth * FWScreenHeight));
         
+        UILabel *screenLabel = [UILabel fwLabelWithFont:[UIFont appFontTiny] textColor:[UIColor redColor] text:@"0"];
+        self.screenLabel = screenLabel;
+        [self.screenView addSubview:screenLabel];
+        screenLabel.fwLayoutChain.rightWithInset(5).bottomWithInset(5);
+        
+        [[FWDebugManager sharedInstance] show];
+        
         FWWeakifySelf();
         self.displayLink = [CADisplayLink fwCommonDisplayLinkWithBlock:^(CADisplayLink * _Nonnull displayLink) {
             FWStrongifySelf();
@@ -97,8 +108,19 @@
             dispatch_async(screenQueue, ^{
                 UIImage *image = [self onScreenShot];
                 if (image != nil) {
+                    NSInteger timeCount = 0;
+                    if (NSDate.date.timeIntervalSince1970 - screenTime >= 1.0) {
+                        timeCount = screenCount;
+                        screenTime = NSDate.date.timeIntervalSince1970;
+                        screenCount = 0;
+                    }
+                    
+                    screenCount++;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.screenView.image = image;
+                        if (timeCount > 0) {
+                            self.screenLabel.text = [NSString stringWithFormat:@"%@", @(timeCount)];
+                        }
                     });
                 }
             });
@@ -109,8 +131,13 @@
         [self.displayLink invalidate];
         self.displayLink = nil;
         
+        screenTime = 0;
+        screenCount = 0;
+        
         [self.screenView removeFromSuperview];
         self.screenView = nil;
+        
+        [FWDebugManager.sharedInstance hide];
     }
 }
 
@@ -120,6 +147,8 @@
     UIGraphicsBeginImageContextWithOptions(window.bounds.size, NO, 0);
     
     CGContextRef context = UIGraphicsGetCurrentContext();
+    // 后台线程一直截屏会导致崩溃，需在主线程处理
+    // [window.layer renderInContext:context];
     [window.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)context waitUntilDone:YES];
     window.layer.contents = nil;
     
