@@ -11,7 +11,22 @@
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
-@implementation UIView (FWEvent)
+@implementation UIView (FWView)
+
+- (id)fwViewModel
+{
+    return objc_getAssociatedObject(self, @selector(fwViewModel));
+}
+
+- (void)setFwViewModel:(id)fwViewModel
+{
+    // 仅当值发生改变才触发KVO，下同
+    if (fwViewModel != [self fwViewModel]) {
+        [self willChangeValueForKey:@"fwViewModel"];
+        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwViewModel"];
+    }
+}
 
 - (id<FWViewDelegate>)fwViewDelegate
 {
@@ -34,26 +49,6 @@
     if (self.fwViewDelegate && [self.fwViewDelegate respondsToSelector:@selector(onTouchView:withEvent:)]) {
         [self.fwViewDelegate onTouchView:self withEvent:event];
     }
-}
-
-- (id)fwViewData
-{
-    return objc_getAssociatedObject(self, @selector(fwViewData));
-}
-
-- (void)setFwViewData:(id)fwViewData
-{
-    // 仅当值发生改变才触发KVO，下同
-    if (fwViewData != [self fwViewData]) {
-        [self willChangeValueForKey:@"fwViewData"];
-        objc_setAssociatedObject(self, @selector(fwViewData), fwViewData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwViewData"];
-    }
-}
-
-- (void)fwRenderData
-{
-    // 子类重写
 }
 
 @end
