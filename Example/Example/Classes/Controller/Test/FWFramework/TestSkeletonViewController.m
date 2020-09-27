@@ -300,6 +300,7 @@
                 animation = FWSkeletonAnimation.scale;
             }
             FWSkeletonAppearance.appearance.animation = animation;
+            FWSkeletonAppearance.appearance.labelAnimation = animation;
             [self renderData];
         }];
     }];
