@@ -63,6 +63,8 @@ import UIKit
     public var cellForRow: FWCellConfigurationBlock?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
     public var heightForRow: ((IndexPath) -> CGFloat)?
+    /// 表格选中事件，默认nil
+    public var didSelectRow: ((IndexPath) -> Void)?
     
     private var style: UITableView.Style = .plain
     
@@ -210,5 +212,9 @@ import UIKit
             return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .footer, cacheBySection: section, configuration: viewBlock)
         }
         return 0
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectRow?(indexPath)
     }
 }
