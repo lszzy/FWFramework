@@ -541,11 +541,6 @@ import UIKit
         return tableView
     }()
     
-    /// 高度section缓存，内部使用
-    private var heightCache: [Int: CGFloat] = [:]
-    private var headerHeightCache: [Int: CGFloat] = [:]
-    private var footerHeightCache: [Int: CGFloat] = [:]
-    
     // MARK: - Private
     
     override func setupView() {
@@ -565,60 +560,54 @@ import UIKit
     }
     
     private func heightForRow(_ section: Int) -> CGFloat {
-        if let height = heightCache[section] { return height }
-        
-        var height: CGFloat = 0
         if let heightArray = heightForRowArray, heightArray.count > section, heightArray[section] > 0 {
-            height = heightArray[section]
-        } else if let sectionArray = cellForRowArray, sectionArray.count > section {
-            let object = sectionArray[section]
-            if let view = object as? UIView {
-                height = view.frame.size.height
-            } else if let clazz = object as? UITableViewCell.Type {
-                height = tableView.fwHeight(withCellClass: clazz) { _ in }
-            }
+            return heightArray[section]
         }
         
-        if height > 0 { heightCache[section] = height }
-        return height
+        if let sectionArray = cellForRowArray, sectionArray.count > section {
+            let object = sectionArray[section]
+            if let view = object as? UIView {
+                return view.frame.size.height
+            }
+            if let clazz = object as? UITableViewCell.Type {
+                return tableView.fwHeight(withCellClass: clazz, cacheByKey: NSNumber(value: section)) { _ in }
+            }
+        }
+        return 0
     }
     
     private func heightForHeader(_ section: Int) -> CGFloat {
-        if let height = headerHeightCache[section] { return height }
-        
-        var height: CGFloat = 0
         if let heightArray = sectionHeaderHeightArray, heightArray.count > section, heightArray[section] > 0 {
-            height = heightArray[section]
-        } else if let sectionArray = sectionHeaderViewArray, sectionArray.count > section {
-            let object = sectionArray[section]
-            if let view = object as? UIView {
-                height = view.frame.size.height
-            } else if let clazz = object as? UITableViewHeaderFooterView.Type {
-                height = tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .header) { _ in }
-            }
+            return heightArray[section]
         }
         
-        if height > 0 { headerHeightCache[section] = height }
-        return height
+        if let sectionArray = sectionHeaderViewArray, sectionArray.count > section {
+            let object = sectionArray[section]
+            if let view = object as? UIView {
+                return view.frame.size.height
+            }
+            if let clazz = object as? UITableViewHeaderFooterView.Type {
+                return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .header, cacheBySection: section) { _ in }
+            }
+        }
+        return 0
     }
     
     private func heightForFooter(_ section: Int) -> CGFloat {
-        if let height = footerHeightCache[section] { return height }
-        
-        var height: CGFloat = 0
         if let heightArray = sectionFooterHeightArray, heightArray.count > section, heightArray[section] > 0 {
-            height = heightArray[section]
-        } else if let sectionArray = sectionFooterViewArray, sectionArray.count > section {
-            let object = sectionArray[section]
-            if let view = object as? UIView {
-                height = view.frame.size.height
-            } else if let clazz = object as? UITableViewHeaderFooterView.Type {
-                height = tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .footer) { _ in }
-            }
+            return heightArray[section]
         }
         
-        if height > 0 { footerHeightCache[section] = height }
-        return height
+        if let sectionArray = sectionFooterViewArray, sectionArray.count > section {
+            let object = sectionArray[section]
+            if let view = object as? UIView {
+                return view.frame.size.height
+            }
+            if let clazz = object as? UITableViewHeaderFooterView.Type {
+                return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .footer, cacheBySection: section) { _ in }
+            }
+        }
+        return 0
     }
     
     // MARK: - UITableView
@@ -628,17 +617,12 @@ import UIKit
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var number: Int = 0
-        if let numberArray = numberOfRowsArray, numberArray.count > section {
-            number = numberArray[section]
+        if let numberArray = numberOfRowsArray, numberArray.count > section, numberArray[section] > 0 {
+            return numberArray[section]
         }
-        if number < 1 {
-            let height = heightForRow(section)
-            if height > 0 {
-                number = Int(ceil(UIScreen.main.bounds.size.height / height))
-            }
-        }
-        return number
+        
+        let height = heightForRow(section)
+        return height > 0 ? Int(ceil(UIScreen.main.bounds.size.height / height)) : 0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
