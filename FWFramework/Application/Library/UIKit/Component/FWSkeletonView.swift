@@ -180,6 +180,8 @@ import UIKit
     
     /// 骨架动画，默认闪光灯
     public var animation: FWSkeletonAnimationProtocol? = FWSkeletonAnimation.shimmer
+    /// 标签骨架动画，默认闪光灯
+    public var labelAnimation: FWSkeletonAnimationProtocol? = FWSkeletonAnimation.shimmer
     
     /// 骨架背景色，默认自动适配
     public var backgroundColor: UIColor = UIColor.fwThemeLight(UIColor.white, dark: UIColor.black)
@@ -269,6 +271,7 @@ import UIKit
     
     override func setupView() {
         backgroundColor = UIColor.clear
+        animation = FWSkeletonAppearance.appearance.labelAnimation
     }
     
     public override func layoutSubviews() {
