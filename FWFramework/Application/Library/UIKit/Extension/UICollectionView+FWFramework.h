@@ -21,11 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UICollectionViewCell (FWFramework)
 
-// 绑定数据模型
-@property (nullable, nonatomic, strong) id fwModel;
+/// 通用绑定视图模型方法
+@property (nullable, nonatomic, strong) id fwViewModel;
 
-// 根据数据模型计算cell尺寸，子类重写
-+ (CGSize)fwSizeWithModel:(nullable id)model;
+/// 根据视图模型自动计算cell大小，子类可重写
++ (CGSize)fwSizeWithViewModel:(nullable id)viewModel collectionView:(UICollectionView *)collectionView;
 
 // 获取当前所属collectionView
 - (nullable UICollectionView *)fwCollectionView;
@@ -45,11 +45,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UICollectionReusableView (FWFramework)
 
-// 绑定数据模型
-@property (nullable, nonatomic, strong) id fwModel;
+/// 通用绑定视图模型方法
+@property (nullable, nonatomic, strong) id fwViewModel;
 
-// 根据数据模型计算view尺寸，子类重写
-+ (CGSize)fwSizeWithModel:(nullable id)model;
+/// 根据视图模型自动计算view大小，子类可重写
++ (CGSize)fwSizeWithViewModel:(nullable id)viewModel collectionView:(UICollectionView *)collectionView;
 
 @end
 

@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UITableViewCell+FWDynamicLayout
 
+typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
+
 /*!
  @brief UITableViewCell+FWDynamicLayout
  */
@@ -24,15 +26,28 @@ NS_ASSUME_NONNULL_BEGIN
 /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
 @property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
+/// 通用绑定视图模型方法，未指定configuration时默认调用
+@property (nullable, nonatomic, strong) id fwViewModel;
+
 /// 免注册创建UITableViewCell，内部自动处理缓冲池，默认Default类型
 + (instancetype)fwCellWithTableView:(UITableView *)tableView;
 
 /// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型
 + (instancetype)fwCellWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style;
 
+/// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
++ (CGFloat)fwHeightWithViewModel:(nullable id)viewModel tableView:(UITableView *)tableView;
+
 @end
 
 #pragma mark - UITableViewHeaderFooterView+FWDynamicLayout
+
+typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
+    FWHeaderFooterViewTypeHeader = 0,
+    FWHeaderFooterViewTypeFooter = 1,
+};
+
+typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
 
 /*!
  @brief UITableViewHeaderFooterView+FWDynamicLayout
@@ -45,20 +60,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
 @property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
+/// 通用绑定视图模型方法，未指定configuration时默认调用
+@property (nullable, nonatomic, strong) id fwViewModel;
+
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
 + (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView;
+
+/// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
++ (CGFloat)fwHeightWithViewModel:(nullable id)viewModel type:(FWHeaderFooterViewType)type tableView:(UITableView *)tableView;
 
 @end
 
 #pragma mark - UITableView+FWDynamicLayout
-
-typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
-    FWHeaderFooterViewTypeHeader = 0,
-    FWHeaderFooterViewTypeFooter = 1,
-};
-
-typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
-typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
 
 /*!
  @brief 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现

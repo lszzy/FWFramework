@@ -83,6 +83,40 @@
         make.leftToRightOfViewWithOffset(emptyLabel2, 20);
         make.centerYToView(emptyLabel2);
     }];
+    
+    UILabel *numberLabel = [UILabel new];
+    numberLabel.textAlignment = NSTextAlignmentCenter;
+    numberLabel.numberOfLines = 0;
+    numberLabel.textColor = UIColor.appColorBlack;
+    numberLabel.text = [self numberString];
+    [self.view addSubview:numberLabel];
+    [numberLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
+        make.leftWithInset(20).rightWithInset(20)
+            .topToBottomOfViewWithOffset(attr, 50);
+    }];
+}
+
+- (NSString *)numberString
+{
+    NSNumber *number = [NSNumber numberWithDouble:12345.6789];
+    NSMutableString *string = [NSMutableString string];
+    [string appendFormat:@"number: %@\n\n", number];
+    [string appendFormat:@"digit: %@\n", [number fwDigitString:2]];
+    [string appendFormat:@"decimal: %@\n", [number fwDecimalString:2]];
+    [string appendFormat:@"percent: %@\n", [number fwPercentString:2]];
+    [string appendFormat:@"round: %@\n", [number fwRoundNumber:2]];
+    [string appendFormat:@"ceil: %@\n", [number fwCeilNumber:2]];
+    [string appendFormat:@"floor: %@\n\n", [number fwFloorNumber:2]];
+    
+    number = [NSNumber numberWithDouble:0.6049];
+    [string appendFormat:@"number: %@\n\n", number];
+    [string appendFormat:@"digit: %@\n", [number fwDigitString:2]];
+    [string appendFormat:@"decimal: %@\n", [number fwDecimalString:2]];
+    [string appendFormat:@"percent: %@\n", [number fwPercentString:2]];
+    [string appendFormat:@"round: %@\n", [number fwRoundNumber:2]];
+    [string appendFormat:@"ceil: %@\n", [number fwCeilNumber:2]];
+    [string appendFormat:@"floor: %@\n", [number fwFloorNumber:2]];
+    return string;
 }
 
 @end

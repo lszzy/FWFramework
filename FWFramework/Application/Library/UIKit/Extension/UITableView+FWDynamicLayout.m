@@ -131,6 +131,18 @@
     objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (id)fwViewModel {
+    return objc_getAssociatedObject(self, @selector(fwViewModel));
+}
+
+- (void)setFwViewModel:(id)fwViewModel {
+    if (fwViewModel != self.fwViewModel) {
+        [self willChangeValueForKey:@"fwViewModel"];
+        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwViewModel"];
+    }
+}
+
 + (instancetype)fwCellWithTableView:(UITableView *)tableView {
     return [self fwCellWithTableView:tableView style:UITableViewCellStyleDefault];
 }
@@ -140,6 +152,12 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (cell) return cell;
     return [[self alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
+}
+
++ (CGFloat)fwHeightWithViewModel:(id)viewModel tableView:(UITableView *)tableView {
+    return [tableView fwHeightWithCellClass:self configuration:^(__kindof UITableViewCell * _Nonnull cell) {
+        cell.fwViewModel = viewModel;
+    }];
 }
 
 @end
@@ -172,6 +190,18 @@
     objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (id)fwViewModel {
+    return objc_getAssociatedObject(self, @selector(fwViewModel));
+}
+
+- (void)setFwViewModel:(id)fwViewModel {
+    if (fwViewModel != self.fwViewModel) {
+        [self willChangeValueForKey:@"fwViewModel"];
+        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwViewModel"];
+    }
+}
+
 + (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView {
     NSString *selfClassName = NSStringFromClass(self.class);
     NSString *reuseIdentifier = [selfClassName stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
@@ -181,6 +211,12 @@
     [tableView registerClass:self forHeaderFooterViewReuseIdentifier:reuseIdentifier];
     objc_setAssociatedObject(tableView, (__bridge const void * _Nonnull)(self), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
+}
+
++ (CGFloat)fwHeightWithViewModel:(id)viewModel type:(FWHeaderFooterViewType)type tableView:(UITableView *)tableView {
+    return [tableView fwHeightWithHeaderFooterViewClass:self type:type configuration:^(__kindof UITableViewHeaderFooterView * _Nonnull headerFooterView) {
+        headerFooterView.fwViewModel = viewModel;
+    }];
 }
 
 @end

@@ -35,12 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
 @property (nonatomic, assign) UIEdgeInsets fwSeparatorInset;
 
-// 绑定数据模型
-@property (nullable, nonatomic, strong) id fwModel;
-
-// 根据数据模型计算cell高度，子类重写
-+ (CGFloat)fwHeightWithModel:(nullable id)model;
-
 // 获取当前所属tableView
 - (nullable UITableView *)fwTableView;
 
