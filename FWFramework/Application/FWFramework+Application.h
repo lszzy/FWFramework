@@ -16,6 +16,7 @@
 #import "UIKit+FWFramework.h"
 
 #import "FWAlertController.h"
+#import "FWAsyncLayer.h"
 #import "FWAttributedLabel.h"
 #import "FWBannerView.h"
 #import "FWBarrageView.h"
