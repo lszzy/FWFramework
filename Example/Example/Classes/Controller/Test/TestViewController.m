@@ -117,6 +117,7 @@
                                              @[@"FWNotificationManager", @"TestNotificationViewController"],
                                              @[@"FWCache", @"TestCacheViewController"],
                                              @[@"FWVersionManager", @"TestVersionViewController"],
+                                             @[@"DrawView", @"TestDrawViewController"],
                                              @[@"TableReloadData", @"TestTableReloadViewController"],
                                              ]],
                                        ]];
