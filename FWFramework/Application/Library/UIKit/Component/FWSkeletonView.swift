@@ -234,6 +234,18 @@ import UIKit
         backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
     }
     
+    func parseView(_ view: UIView) {
+        layer.masksToBounds = view.layer.masksToBounds
+        layer.cornerRadius = view.layer.cornerRadius
+        if view.layer.shadowOpacity > 0 {
+            layer.shadowColor = view.layer.shadowColor
+            layer.shadowOffset = view.layer.shadowOffset
+            layer.shadowRadius = view.layer.shadowRadius
+            layer.shadowPath = view.layer.shadowPath
+            layer.shadowOpacity = view.layer.shadowOpacity
+        }
+    }
+    
     /// 开始动画
     open func startAnimating() {
         animationLayers.forEach { (gradientLayer) in
@@ -351,7 +363,9 @@ import UIKit
 /// 骨架屏布局视图，可从视图生成骨架屏，嵌套到UIScrollView即可实现滚动
 @objcMembers open class FWSkeletonLayout: FWSkeletonStack {
     /// 相对布局视图
-    open var layoutView: UIView?
+    open var layoutView: UIView? {
+        didSet { if let view = layoutView { parseView(view) } }
+    }
     
     /// 指定相对布局视图初始化
     public init(layoutView: UIView) {
@@ -359,17 +373,22 @@ import UIKit
         self.layoutView = layoutView
     }
     
+    override func setupView() {
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        if let view = layoutView { parseView(view) }
+    }
+    
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// 批量添加布局子视图(兼容骨架视图)，返回生成的骨架视图数组
+    /// 批量添加子视图(兼容骨架视图)，返回生成的骨架视图数组
     @discardableResult
     open func addSkeletonViews(_ views: [UIView]) -> [FWSkeletonView] {
         return addSkeletonViews(views, block: nil)
     }
     
-    /// 批量添加布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图数组
+    /// 批量添加子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图数组
     @discardableResult
     open func addSkeletonViews(_ views: [UIView], block: ((FWSkeletonView, Int) -> Void)?) -> [FWSkeletonView] {
         var resultViews: [FWSkeletonView] = []
@@ -381,16 +400,33 @@ import UIKit
         return resultViews
     }
     
-    /// 添加单个布局子视图(兼容骨架视图)，返回生成的骨架视图
+    /// 添加单个子视图(兼容骨架视图)，返回生成的骨架视图
     @discardableResult
     open func addSkeletonView(_ view: UIView) -> FWSkeletonView {
         return addSkeletonView(view, block: nil)
     }
     
-    /// 添加单个布局子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图
+    /// 添加单个子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图
     @discardableResult
     open func addSkeletonView(_ view: UIView, block: ((FWSkeletonView) -> Void)?) -> FWSkeletonView {
         let skeletonView = FWSkeletonLayout.parseSkeletonView(view)
+        return addSkeletonView(view, skeletonView: skeletonView, block: block)
+    }
+    
+    /// 添加单个布局视图(兼容骨架视图)，返回生成的骨架布局
+    @discardableResult
+    open func addSkeletonLayout(_ view: UIView) -> FWSkeletonLayout {
+        return addSkeletonLayout(view, block: nil)
+    }
+    
+    /// 添加单个布局视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架布局
+    @discardableResult
+    open func addSkeletonLayout(_ view: UIView, block: ((FWSkeletonLayout) -> Void)?) -> FWSkeletonLayout {
+        let skeletonView = FWSkeletonLayout.parseSkeletonLayout(view)
+        return addSkeletonView(view, skeletonView: skeletonView, block: block)
+    }
+    
+    private func addSkeletonView<T: FWSkeletonView>(_ view: UIView, skeletonView: T, block: ((T) -> Void)?) -> T {
         if layoutView != nil && view.isDescendant(of: layoutView!) {
             skeletonView.frame = view.convert(view.bounds, to: layoutView!)
         }
@@ -402,7 +438,7 @@ import UIKit
         return skeletonView
     }
     
-    /// 解析布局子视图为骨架视图
+    /// 解析视图为骨架视图
     open class func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
         if view is FWSkeletonView {
             return view as! FWSkeletonView
@@ -421,19 +457,11 @@ import UIKit
         }
         
         let skeletonView = FWSkeletonView()
-        skeletonView.layer.masksToBounds = view.layer.masksToBounds
-        skeletonView.layer.cornerRadius = view.layer.cornerRadius
-        if view.layer.shadowOpacity > 0 {
-            skeletonView.layer.shadowColor = view.layer.shadowColor
-            skeletonView.layer.shadowOffset = view.layer.shadowOffset
-            skeletonView.layer.shadowRadius = view.layer.shadowRadius
-            skeletonView.layer.shadowPath = view.layer.shadowPath
-            skeletonView.layer.shadowOpacity = view.layer.shadowOpacity
-        }
+        skeletonView.parseView(view)
         return skeletonView
     }
     
-    /// 解析布局子视图为骨架布局
+    /// 解析布局视图为骨架布局
     open class func parseSkeletonLayout(_ view: UIView) -> FWSkeletonLayout {
         if view is FWSkeletonLayout {
             return view as! FWSkeletonLayout
