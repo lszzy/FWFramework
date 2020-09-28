@@ -9,9 +9,9 @@
 import UIKit
 
 /// 便捷表格视图
-@objcMembers public class FWTableView: UIView, UITableViewDataSource, UITableViewDelegate {
+@objcMembers open class FWTableView: UIView, UITableViewDataSource, UITableViewDelegate {
     /// 表格视图
-    public lazy var tableView: UITableView = {
+    open lazy var tableView: UITableView = {
         let tableView = UITableView(frame: bounds, style: style)
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
@@ -25,46 +25,46 @@ import UIKit
     }()
     
     /// 表格数据，可选方式，必须按[section][row]二维数组格式
-    public var tableData: [[Any]] = []
+    open var tableData: [[Any]] = []
     
     /// 表格头视图
-    public var tableHeaderView: UIView? {
+    open var tableHeaderView: UIView? {
         get { return tableView.tableHeaderView }
         set { tableView.tableHeaderView = newValue }
     }
     /// 表格尾视图
-    public var tableFooterView: UIView? {
+    open var tableFooterView: UIView? {
         get { return tableView.tableFooterView }
         set { tableView.tableFooterView = newValue }
     }
     
     /// 表格section数，默认自动计算tableData
-    public var numberOfSections: (() -> Int)?
+    open var numberOfSections: (() -> Int)?
     
     /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView.Type
-    public var viewClassForHeader: ((Int) -> Any?)?
+    open var viewClassForHeader: ((Int) -> Any?)?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    public var viewForHeader: FWHeaderFooterViewConfigurationBlock?
+    open var viewForHeader: FWHeaderFooterViewConfigurationBlock?
     /// 表格section头高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    public var heightForHeader: ((Int) -> CGFloat)?
+    open var heightForHeader: ((Int) -> CGFloat)?
     
     /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView.Type
-    public var viewClassForFooter: ((Int) -> Any?)?
+    open var viewClassForFooter: ((Int) -> Any?)?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    public var viewForFooter: FWHeaderFooterViewConfigurationBlock?
+    open var viewForFooter: FWHeaderFooterViewConfigurationBlock?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    public var heightForFooter: ((Int) -> CGFloat)?
+    open var heightForFooter: ((Int) -> CGFloat)?
     
     /// 表格row数句柄，默认自动计算tableData
-    public var numberOfRows: ((Int) -> Int)?
+    open var numberOfRows: ((Int) -> Int)?
     /// 表格cell类句柄，style固定为default，默认UITableViewCell
-    public var cellClassForRow: ((IndexPath) -> UITableViewCell.Type)?
+    open var cellClassForRow: ((IndexPath) -> UITableViewCell.Type)?
     /// 表格cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为tableData对应数据
-    public var cellForRow: FWCellConfigurationBlock?
+    open var cellForRow: FWCellConfigurationBlock?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
-    public var heightForRow: ((IndexPath) -> CGFloat)?
+    open var heightForRow: ((IndexPath) -> CGFloat)?
     /// 表格选中事件，默认nil
-    public var didSelectRow: ((IndexPath) -> Void)?
+    open var didSelectRow: ((IndexPath) -> Void)?
     
     private var style: UITableView.Style = .plain
     
@@ -79,7 +79,7 @@ import UIKit
         setupView()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -88,18 +88,18 @@ import UIKit
         tableView.fwPinEdgesToSuperview()
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         tableView.reloadData()
     }
     
-    public func reloadData() {
+    open func reloadData() {
         tableView.reloadData()
     }
     
     // MARK: - UITableView
     
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         if let numberBlock = numberOfSections {
             return numberBlock()
         }
@@ -107,7 +107,7 @@ import UIKit
         return tableData.count
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let numberBlock = numberOfRows {
             return numberBlock(section)
         }
@@ -115,7 +115,7 @@ import UIKit
         return tableData.count > section ? tableData[section].count : 0
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let clazz = cellClassForRow?(indexPath) ?? UITableViewCell.self
         let cell = clazz.fwCell(with: tableView)
         if let cellBlock = cellForRow {
@@ -132,7 +132,7 @@ import UIKit
         return cell
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let heightBlock = heightForRow {
             return heightBlock(indexPath)
         }
@@ -152,7 +152,7 @@ import UIKit
         }
     }
     
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = viewClassForHeader?(section) else { return nil }
         
         if let view = header as? UIView {
@@ -167,7 +167,7 @@ import UIKit
         return nil
     }
     
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if let heightBlock = heightForHeader {
             return heightBlock(section)
         }
@@ -183,7 +183,7 @@ import UIKit
         return 0
     }
     
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard let footer = viewClassForFooter?(section) else { return nil }
         
         if let view = footer as? UIView {
@@ -198,7 +198,7 @@ import UIKit
         return nil
     }
     
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if let heightBlock = heightForFooter {
             return heightBlock(section)
         }
@@ -214,7 +214,7 @@ import UIKit
         return 0
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         didSelectRow?(indexPath)
     }
 }
