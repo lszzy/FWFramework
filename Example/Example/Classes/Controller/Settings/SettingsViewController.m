@@ -135,43 +135,22 @@
 
 - (UIImage *)onScreenShot
 {
-    static NSTimeInterval lastTime = 0;
     // 1秒钟截屏次数
+    static NSTimeInterval lastTime = 0;
     NSTimeInterval screenCountPerSecond = 8;
     if (lastTime > 0 && (NSDate.date.timeIntervalSince1970 - lastTime) < (1.0 / screenCountPerSecond)) { return nil; }
     lastTime = NSDate.date.timeIntervalSince1970;
     
     static UIImage *lastImage = nil;
-    static NSObject *lock = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        lock = [NSObject new];
-    });
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         // 获取window和bounds需要主线程调用
         UIWindow *window = UIWindow.fwMainWindow;
-        
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(FWScreenWidth, FWScreenHeight), NO, 0);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        // 后台线程一直截屏会导致崩溃，需在主线程处理
-        [window.layer renderInContext:context];
-        // [window.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(__bridge id)context waitUntilDone:YES];
-        window.layer.contents = nil;
-        
-        [lock fwLock];
+        [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
         lastImage = UIGraphicsGetImageFromCurrentImageContext();
-        [lock fwUnlock];
-        
         UIGraphicsEndImageContext();
     });
-    
-    [lock fwLock];
-    UIImage *image = lastImage;
-    [lock fwUnlock];
-    
-    return image;
+    return lastImage;
 }
 
 @end
