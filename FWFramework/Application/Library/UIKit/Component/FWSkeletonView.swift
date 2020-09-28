@@ -371,11 +371,7 @@ import UIKit
     public init(layoutView: UIView) {
         super.init(frame: layoutView.bounds)
         self.layoutView = layoutView
-    }
-    
-    override func setupView() {
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
-        if let view = layoutView { parseView(view) }
+        parseView(layoutView)
     }
     
     required public init?(coder: NSCoder) {
