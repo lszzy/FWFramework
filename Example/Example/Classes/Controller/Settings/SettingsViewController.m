@@ -7,8 +7,13 @@
 //
 
 #import "SettingsViewController.h"
+#import <FWDebug/FWDebug.h>
 
 @interface SettingsViewController ()
+
+@property (nonatomic, strong) CADisplayLink *displayLink;
+@property (nonatomic, strong) UIImageView *screenView;
+@property (nonatomic, strong) UILabel *screenLabel;
 
 @end
 
@@ -31,6 +36,11 @@
     [button3 fwAddTouchTarget:self action:@selector(onLanguage)];
     [self.view addSubview:button3];
     button3.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button2, 50);
+    
+    UIButton *button4 = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:@"开始截屏"];
+    [button4 fwAddTouchTarget:self action:@selector(onScreenButton:)];
+    [self.view addSubview:button4];
+    button4.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button3, 50);
 }
 
 - (void)onLogout
@@ -63,6 +73,84 @@
         NSBundle.fwLocalizedLanguage = language;
         [AppRouter refreshController];
     }];
+}
+
+- (void)onScreenButton:(UIButton *)sender
+{
+    if ([@"开始截屏" isEqualToString:[sender titleForState:UIControlStateNormal]]) {
+        [sender setTitle:@"停止截屏" forState:UIControlStateNormal];
+        
+        self.screenView = [UIImageView new];
+        self.screenView.backgroundColor = [UIColor whiteColor];
+        [self.screenView fwSetBorderColor:[UIColor appColorBorder] width:0.5 cornerRadius:5];
+        [[UIWindow fwMainWindow] addSubview:self.screenView];
+        self.screenView.fwLayoutChain.rightWithInset(10).bottomWithInset(FWBottomBarHeight + 10).size(CGSizeMake(100, 100.0 / FWScreenWidth * FWScreenHeight));
+        
+        UILabel *screenLabel = [UILabel fwLabelWithFont:[UIFont appFontTiny] textColor:[UIColor redColor] text:@"0"];
+        self.screenLabel = screenLabel;
+        [self.screenView addSubview:screenLabel];
+        screenLabel.fwLayoutChain.rightWithInset(5).bottomWithInset(5);
+        
+        if ([FWDebugManager sharedInstance].isHidden) {
+            [[FWDebugManager sharedInstance] show];
+        }
+        
+        static NSTimeInterval screenTime = 0;
+        static NSInteger screenCount = 0;
+        
+        FWWeakifySelf();
+        self.displayLink = [CADisplayLink fwCommonDisplayLinkWithBlock:^(CADisplayLink * _Nonnull displayLink) {
+            FWStrongifySelf();
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                UIImage *image = [self onScreenShot];
+                if (image != nil) {
+                    NSInteger timeCount = 0;
+                    if (NSDate.date.timeIntervalSince1970 - screenTime >= 1.0) {
+                        timeCount = screenCount;
+                        screenTime = NSDate.date.timeIntervalSince1970;
+                        screenCount = 0;
+                    }
+                    
+                    screenCount++;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.screenView.image = image;
+                        if (timeCount > 0) {
+                            self.screenLabel.text = [NSString stringWithFormat:@"%@", @(timeCount)];
+                        }
+                    });
+                }
+            });
+        }];
+    } else {
+        [sender setTitle:@"开始截屏" forState:UIControlStateNormal];
+        
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+        
+        [self.screenView removeFromSuperview];
+        self.screenView = nil;
+    }
+}
+
+- (UIImage *)onScreenShot
+{
+    // 1秒钟截屏次数
+    static NSTimeInterval lastTime = 0;
+    NSTimeInterval screenCountPerSecond = 8;
+    if (lastTime > 0 && (NSDate.date.timeIntervalSince1970 - lastTime) < (1.0 / screenCountPerSecond)) { return nil; }
+    lastTime = NSDate.date.timeIntervalSince1970;
+    
+    static UIImage *lastImage = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 获取window和bounds需要主线程调用
+        UIWindow *window = UIWindow.fwMainWindow;
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(FWScreenWidth, FWScreenHeight), NO, 0);
+        [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
+        lastImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    });
+    return lastImage;
 }
 
 @end

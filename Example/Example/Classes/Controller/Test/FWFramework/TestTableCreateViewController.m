@@ -1,22 +1,21 @@
 //
-//  TestSkeletonViewController.m
+//  TestTableCreateViewController.m
 //  Example
 //
-//  Created by wuyong on 2020/7/29.
+//  Created by wuyong on 2020/9/27.
 //  Copyright © 2020 site.wuyong. All rights reserved.
 //
 
-#import "TestSkeletonViewController.h"
+#import "TestTableCreateViewController.h"
 
-@interface TestSkeletonCell : UITableViewCell
+@interface TestTableCreateCell : UITableViewCell
 
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, strong) UILabel *iconLabel;
-@property (nonatomic, strong) id object;
 
 @end
 
-@implementation TestSkeletonCell
+@implementation TestTableCreateCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -38,15 +37,15 @@
     return self;
 }
 
-- (void)setObject:(id)object
+- (void)setFwViewModel:(id)fwViewModel
 {
-    _object = object;
-    self.iconLabel.text = [NSString stringWithFormat:@"我是文本%@", object];
+    [super setFwViewModel:fwViewModel];
+    self.iconLabel.text = [NSString stringWithFormat:@"我是文本%@", fwViewModel];
 }
 
 @end
 
-@interface TestSkeletonHeaderView : UITableViewHeaderFooterView
+@interface TestTableCreateHeaderView : UITableViewHeaderFooterView
 
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, strong) UILabel *iconLabel;
@@ -54,7 +53,7 @@
 
 @end
 
-@implementation TestSkeletonHeaderView
+@implementation TestTableCreateHeaderView
 
 - (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -84,7 +83,7 @@
 
 @end
 
-@interface TestSkeletonFooterView : UITableViewHeaderFooterView
+@interface TestTableCreateFooterView : UITableViewHeaderFooterView
 
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, strong) UILabel *iconLabel;
@@ -92,7 +91,7 @@
 
 @end
 
-@implementation TestSkeletonFooterView
+@implementation TestTableCreateFooterView
 
 - (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -122,7 +121,7 @@
 
 @end
 
-@interface TestSkeletonTableHeaderView : UIView
+@interface TestTableCreateTableHeaderView : UIView
 
 @property (nonatomic, strong) UIView *testView;
 @property (nonatomic, strong) UIView *childView;
@@ -130,7 +129,7 @@
 
 @end
 
-@implementation TestSkeletonTableHeaderView
+@implementation TestTableCreateTableHeaderView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -178,7 +177,7 @@
 
 @end
 
-@interface TestSkeletonTableFooterView : UIView
+@interface TestTableCreateTableFooterView : UIView
 
 @property (nonatomic, strong) UILabel *label1;
 @property (nonatomic, strong) UILabel *label2;
@@ -187,7 +186,7 @@
 
 @end
 
-@implementation TestSkeletonTableFooterView
+@implementation TestTableCreateTableFooterView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -237,159 +236,67 @@
 
 @end
 
-@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
+@interface TestTableCreateViewController ()
 
-@property (nonatomic, strong) TestSkeletonTableHeaderView *headerView;
-@property (nonatomic, strong) TestSkeletonTableFooterView *footerView;
-@property (nonatomic, assign) NSInteger scrollStyle;
+@property (nonatomic, strong) FWTableView *tableView;
 
 @end
 
-@implementation TestSkeletonViewController
+@implementation TestTableCreateViewController
 
-- (void)renderTableView
+- (void)renderView
 {
-    self.headerView = [[TestSkeletonTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
-    self.footerView = [[TestSkeletonTableFooterView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
+    self.tableView = [[FWTableView alloc] init];
+    self.tableView.tableData = @[@[@1, @2]];
+    FWWeakifySelf();
+    self.tableView.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
+        return [TestTableCreateCell class];
+    };
+    self.tableView.didSelectRow = ^(NSIndexPath * indexPath) {
+        FWStrongifySelf();
+        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
+    };
     
-    self.tableView.tableHeaderView = self.headerView;
-    self.tableView.tableFooterView = self.footerView;
+    self.tableView.viewClassForHeader = ^id _Nullable(NSInteger section) {
+        FWStrongifySelf();
+        TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView.tableView];
+        viewForHeader.object = @1;
+        
+        CGFloat height = [self.tableView.tableView fwHeightWithHeaderFooterViewClass:[TestTableCreateHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableCreateHeaderView * _Nonnull headerFooterView) {
+            headerFooterView.object = @1;
+        }];
+        viewForHeader.frame = CGRectMake(0, 0, self.tableView.tableView.fwWidth, height);
+        return viewForHeader;
+    };
+    self.tableView.viewClassForFooter = ^id _Nullable(NSInteger section) {
+        return [TestTableCreateFooterView class];
+    };
+    self.tableView.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView) {
+        headerFooterView.object = @1;
+    };
     
-    [self.headerView fwAutoLayoutSubviews];
-    [self.footerView fwAutoLayoutSubviews];
+    UIView *headerView = [[TestTableCreateTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
+    UIView *footerView = [[TestTableCreateTableFooterView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
+    self.tableView.tableHeaderView = headerView;
+    self.tableView.tableFooterView = footerView;
+    [headerView fwAutoLayoutSubviews];
+    [footerView fwAutoLayoutSubviews];
+    
+    [self.view addSubview:self.tableView];
+    [self.tableView fwPinEdgesToSuperview];
 }
 
 - (void)renderModel
 {
     FWWeakifySelf();
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id sender) {
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemAdd) block:^(id sender) {
         FWStrongifySelf();
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"shimmer", @"solid", @"scale", @"none", @"tableView滚动", @"scrollView滚动", @"添加数据"] actionBlock:^(NSInteger index) {
-            FWStrongifySelf();
-            
-            // tableView滚动
-            if (index == 4) {
-                self.scrollStyle = self.scrollStyle != 0 ? 0 : 1;
-                [self renderData];
-                return;
-            }
-            
-            // scrollView滚动
-            if (index == 5) {
-                self.scrollStyle = self.scrollStyle != 0 ? 0 : 2;
-                [self renderData];
-                return;
-            }
-            
-            // 添加数据
-            if (index == 6) {
-                NSInteger lastIndex = [self.tableData.lastObject fwAsInteger];
-                [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
-                [self.tableView reloadData];
-                [self renderData];
-                return;
-            }
-            
-            // 切换动画
-            FWSkeletonAnimation *animation = nil;
-            if (index == 0) {
-                animation = FWSkeletonAnimation.shimmer;
-            } else if (index == 1) {
-                animation = FWSkeletonAnimation.solid;
-            } else if (index == 2) {
-                animation = FWSkeletonAnimation.scale;
-            }
-            FWSkeletonAppearance.appearance.animation = animation;
-            FWSkeletonAppearance.appearance.labelAnimation = animation;
-            [self renderData];
-        }];
+        NSMutableArray *sectionData = self.tableView.tableData[0].mutableCopy;
+        NSInteger lastIndex = [sectionData.lastObject fwAsInteger];
+        [sectionData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
+        self.tableView.tableData = @[sectionData];
+        [self.tableView reloadData];
     }];
-}
-
-- (void)renderData
-{
-    [self fwShowSkeleton];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self fwHideSkeleton];
-    });
-}
-
-#pragma mark - UITableView
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.tableData.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return [tableView fwHeightWithCellClass:[TestSkeletonCell class] configuration:^(TestSkeletonCell * _Nonnull cell) {
-        cell.object = self.tableData[indexPath.row];
-    }];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    TestSkeletonCell *cell = [TestSkeletonCell fwCellWithTableView:tableView];
-    cell.object = self.tableData[indexPath.row];
-    return cell;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    TestSkeletonHeaderView *headerView = [TestSkeletonHeaderView fwHeaderFooterViewWithTableView:tableView];
-    headerView.object = @1;
-    return headerView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return [tableView fwHeightWithHeaderFooterViewClass:[TestSkeletonHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestSkeletonHeaderView * _Nonnull headerFooterView) {
-        headerFooterView.object = @1;
-    }];
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    TestSkeletonFooterView *footerView = [TestSkeletonFooterView fwHeaderFooterViewWithTableView:tableView];
-    footerView.object = @1;
-    return footerView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return [tableView fwHeightWithHeaderFooterViewClass:[TestSkeletonHeaderView class] type:FWHeaderFooterViewTypeFooter configuration:^(TestSkeletonHeaderView * _Nonnull headerFooterView) {
-        headerFooterView.object = @1;
-    }];
-}
-
-#pragma mark - FWSkeletonViewDelegate
-
-- (void)skeletonViewLayout:(FWSkeletonLayout *)layout
-{
-    if (self.scrollStyle == 0) {
-        FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
-        // 没有数据时需要指定cell，有数据时无需指定
-        tableView.cellForRow = [TestSkeletonCell class];
-        // 测试header直接指定类时自动计算高度
-        tableView.viewForHeader = [TestSkeletonHeaderView class];
-    } else if (self.scrollStyle == 1) {
-        FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
-        // 没有数据时需要指定cell，有数据时无需指定
-        tableView.cellForRow = [TestSkeletonCell class];
-        tableView.tableView.scrollEnabled = YES;
-    } else {
-        UIScrollView *scrollView = [UIScrollView fwScrollView];
-        [layout addSubview:scrollView];
-        scrollView.fwLayoutChain.edges();
-        
-        FWSkeletonTableView *tableView = (FWSkeletonTableView *)[FWSkeletonLayout parseSkeletonView:self.tableView];
-        // 没有数据时需要指定cell，有数据时无需指定
-        tableView.cellForRow = [TestSkeletonCell class];
-        [layout addAnimationView:tableView];
-        [scrollView.fwContentView addSubview:tableView];
-        tableView.fwLayoutChain.edges();
-    }
 }
 
 @end

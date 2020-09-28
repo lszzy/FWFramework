@@ -22,21 +22,18 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /*!
- @brief UIView+FWEvent
+ @brief UIView+FWView
  */
-@interface UIView (FWEvent)
+@interface UIView (FWView)
 
-/// 通用事件代理
+/// 通用视图模型，可监听
+@property (nonatomic, strong, nullable) id fwViewModel;
+
+/// 通用事件代理，弱引用
 @property (nonatomic, weak, nullable) id<FWViewDelegate> fwViewDelegate;
 
-/// 调用事件代理
+/// 触发通用事件
 - (void)fwTouchEvent:(NSNotification *)event;
-
-/// 通用视图数据
-@property (nonatomic, strong, nullable) id fwViewData;
-
-/// 渲染数据，子类重写
-- (void)fwRenderData;
 
 @end
 

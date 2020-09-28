@@ -7,7 +7,6 @@
 //
 
 #import "UITableView+FWFramework.h"
-#import <objc/runtime.h>
 
 @implementation UITableView (FWFramework)
 
@@ -69,25 +68,6 @@
     if ([self respondsToSelector:@selector(setLayoutMargins:)]) {
         [self setLayoutMargins:fwSeparatorInset];
     }
-}
-
-- (id)fwModel
-{
-    return objc_getAssociatedObject(self, @selector(fwModel));
-}
-
-- (void)setFwModel:(id)fwModel
-{
-    if (fwModel != self.fwModel) {
-        [self willChangeValueForKey:@"fwModel"];
-        objc_setAssociatedObject(self, @selector(fwModel), fwModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwModel"];
-    }
-}
-
-+ (CGFloat)fwHeightWithModel:(id)model
-{
-    return 44.f;
 }
 
 - (UITableView *)fwTableView
