@@ -257,6 +257,9 @@
     
     [self.headerView fwAutoLayoutSubviews];
     [self.footerView fwAutoLayoutSubviews];
+    
+    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -308,9 +311,35 @@
 
 - (void)renderData
 {
-    [self fwShowSkeleton];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self fwHideSkeleton];
+    [self.tableView fwTriggerPullRefresh];
+}
+
+- (void)onRefreshing
+{
+    NSLog(@"开始刷新");
+    [self.tableView fwShowSkeleton];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"刷新完成");
+        [self.tableView fwHideSkeleton];
+        
+        [self.tableData removeAllObjects];
+        [self.tableView reloadData];
+        
+        [self.tableView.fwPullRefreshView stopAnimating];
+    });
+}
+
+- (void)onLoading
+{
+    NSLog(@"开始加载");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"加载完成");
+        
+        NSInteger lastIndex = [self.tableData.lastObject fwAsInteger];
+        [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
+        [self.tableView reloadData];
+        
+        [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }
 
