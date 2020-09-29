@@ -317,10 +317,10 @@
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
-    [self.tableView fwShowSkeleton];
+    [self fwShowSkeleton];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
-        [self.tableView fwHideSkeleton];
+        [self fwHideSkeleton];
         
         [self.tableData removeAllObjects];
         [self.tableView reloadData];
