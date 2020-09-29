@@ -802,6 +802,12 @@ import UIKit
 /// 视图显示骨架屏扩展
 @objc extension UIView {
     private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((FWSkeletonLayout) -> Void)? = nil) {
+        // UITableView调用addSubview不会显示，此处使用父视图
+        if self is UITableView {
+            superview?.fwShowSkeleton(delegate: delegate, block: block)
+            return
+        }
+        
         fwHideSkeleton()
         setNeedsLayout()
         layoutIfNeeded()
@@ -836,6 +842,12 @@ import UIKit
     
     /// 隐藏骨架屏
     open func fwHideSkeleton() {
+        // UITableView调用addSubview不会显示，此处使用父视图
+        if self is UITableView {
+            superview?.fwHideSkeleton()
+            return
+        }
+        
         if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
             layout.stopAnimating()
             layout.removeFromSuperview()
