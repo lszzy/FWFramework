@@ -165,11 +165,13 @@ import UIKit
 
 /// 骨架屏视图数据源协议
 @objc public protocol FWSkeletonViewDataSource {
+    /// 骨架屏视图创建方法
     func skeletonViewProvider() -> FWSkeletonView?
 }
 
 /// 骨架屏视图代理协议
 @objc public protocol FWSkeletonViewDelegate {
+    /// 骨架屏视图布局方法
     func skeletonViewLayout(_ layout: FWSkeletonLayout)
 }
 
@@ -364,7 +366,12 @@ import UIKit
 @objcMembers open class FWSkeletonLayout: FWSkeletonStack {
     /// 相对布局视图
     open var layoutView: UIView? {
-        didSet { if let view = layoutView { parseView(view) } }
+        didSet {
+            if let view = layoutView {
+                frame = view.bounds
+                parseView(view)
+            }
+        }
     }
     
     /// 指定相对布局视图初始化
@@ -372,6 +379,10 @@ import UIKit
         super.init(frame: layoutView.bounds)
         self.layoutView = layoutView
         parseView(layoutView)
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
     }
     
     required public init?(coder: NSCoder) {
@@ -774,18 +785,22 @@ import UIKit
         layout.startAnimating()
     }
     
+    /// 显示骨架屏，指定布局代理。如果为UITableView|UICollectionView时，layout相对于父视图
     open func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
         fwShowSkeleton(delegate: delegate, block: nil)
     }
     
+    /// 显示骨架屏，指定布局句柄。如果为UITableView|UICollectionView时，layout相对于父视图
     open func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
         fwShowSkeleton(delegate: nil, block: block)
     }
     
+    /// 显示骨架屏，默认布局代理为self。如果为UITableView|UICollectionView时，layout相对于父视图
     open func fwShowSkeleton() {
         fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
     }
     
+    /// 隐藏骨架屏。如果为UITableView|UICollectionView时，layout相对于父视图
     open func fwHideSkeleton() {
         if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
             layout.stopAnimating()
@@ -796,18 +811,22 @@ import UIKit
 
 /// 控制器显示骨架屏扩展
 @objc extension UIViewController {
+    /// 显示view骨架屏，指定布局代理
     open func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
         view.fwShowSkeleton(delegate: delegate)
     }
     
+    /// 显示view骨架屏，指定布局句柄
     open func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
         view.fwShowSkeleton(block: block)
     }
     
+    /// 显示view骨架屏，默认布局代理为self
     open func fwShowSkeleton() {
         fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
     }
     
+    /// 隐藏view骨架屏
     open func fwHideSkeleton() {
         view.fwHideSkeleton()
     }
