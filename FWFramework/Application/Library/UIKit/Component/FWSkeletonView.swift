@@ -161,19 +161,7 @@ import UIKit
     }
 }
 
-// MARK: - FWSkeletonView
-
-/// 骨架屏视图数据源协议
-@objc public protocol FWSkeletonViewDataSource {
-    /// 骨架屏视图创建方法
-    func skeletonViewProvider() -> FWSkeletonView?
-}
-
-/// 骨架屏视图代理协议
-@objc public protocol FWSkeletonViewDelegate {
-    /// 骨架屏视图布局方法
-    func skeletonViewLayout(_ layout: FWSkeletonLayout)
-}
+// MARK: - FWSkeletonAppearance
 
 /// 骨架屏通用样式
 @objcMembers public class FWSkeletonAppearance: NSObject {
@@ -200,6 +188,20 @@ import UIKit
     public var lastLinePercent: CGFloat = 0.7
     /// 多行标签圆角，默认0
     public var lineCornerRadius: CGFloat = 0
+}
+
+// MARK: - FWSkeletonView
+
+/// 骨架屏视图数据源协议
+@objc public protocol FWSkeletonViewDataSource {
+    /// 骨架屏视图创建方法
+    func skeletonViewProvider() -> FWSkeletonView?
+}
+
+/// 骨架屏视图代理协议
+@objc public protocol FWSkeletonViewDelegate {
+    /// 骨架屏视图布局方法
+    func skeletonViewLayout(_ layout: FWSkeletonLayout)
 }
 
 /// 骨架屏视图，支持设置占位图片
@@ -264,6 +266,8 @@ import UIKit
     }
 }
 
+// MARK: - FWSkeletonLabel
+
 /// 骨架屏多行标签视图，可显示多行骨架
 @objcMembers open class FWSkeletonLabel: FWSkeletonView {
     /// 行数，默认0
@@ -324,13 +328,46 @@ import UIKit
     }
 }
 
-/// 骨架屏容器视图，可添加多个骨架动画视图
-@objcMembers open class FWSkeletonStack: FWSkeletonView {
-    private var animationViews: [FWSkeletonView] = []
+// MARK: - FWSkeletonLayout
+
+/// 骨架屏布局视图，可从视图生成骨架屏，嵌套到UIScrollView即可实现滚动
+@objcMembers open class FWSkeletonLayout: FWSkeletonView {
+    /// 相对布局视图
+    open weak var layoutView: UIView? {
+        didSet {
+            if let view = layoutView {
+                frame = view.bounds
+                parseView(view)
+            }
+        }
+    }
+    
+    /// 指定相对布局视图初始化
+    public init(layoutView: UIView?) {
+        super.init(frame: .zero)
+        self.layoutView = layoutView
+        
+        if let view = layoutView {
+            frame = view.bounds
+            parseView(view)
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setupView() {
         backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
     }
+    
+    // MARK: - Animation
+    
+    private var animationViews: [FWSkeletonView] = []
     
     /// 添加动画视图，不会调用addSubview
     open func addAnimationViews(_ animationViews: [FWSkeletonView]) {
@@ -360,34 +397,8 @@ import UIKit
         }
         animationViews.removeAll()
     }
-}
-
-/// 骨架屏布局视图，可从视图生成骨架屏，嵌套到UIScrollView即可实现滚动
-@objcMembers open class FWSkeletonLayout: FWSkeletonStack {
-    /// 相对布局视图
-    open var layoutView: UIView? {
-        didSet {
-            if let view = layoutView {
-                frame = view.bounds
-                parseView(view)
-            }
-        }
-    }
     
-    /// 指定相对布局视图初始化
-    public init(layoutView: UIView) {
-        super.init(frame: layoutView.bounds)
-        self.layoutView = layoutView
-        parseView(layoutView)
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    // MARK: - Skeleton
     
     /// 批量添加子视图(兼容骨架视图)，返回生成的骨架视图数组
     @discardableResult
@@ -445,6 +456,8 @@ import UIKit
         return skeletonView
     }
     
+    // MARK: - Parser
+    
     /// 解析视图为骨架视图
     open class func parseSkeletonView(_ view: UIView) -> FWSkeletonView {
         if view is FWSkeletonView {
@@ -485,11 +498,13 @@ import UIKit
     }
 }
 
+// MARK: - FWSkeletonTableView
+
 /// 骨架屏表格视图，可生成表格骨架屏
-@objcMembers open class FWSkeletonTableView: FWSkeletonStack, UITableViewDataSource, UITableViewDelegate {
+@objcMembers open class FWSkeletonTableView: FWSkeletonLayout, UITableViewDataSource, UITableViewDelegate {
     /// 表格视图，默认不可滚动
     open lazy var tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: bounds, style: style)
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.isScrollEnabled = false
@@ -577,6 +592,25 @@ import UIKit
     }
     
     // MARK: - Private
+    
+    private var style: UITableView.Style = .plain
+    
+    public init(style: UITableView.Style) {
+        self.style = style
+        super.init(frame: .zero)
+    }
+    
+    public override init(layoutView: UIView?) {
+        super.init(layoutView: layoutView)
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setupView() {
         backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
@@ -763,7 +797,7 @@ import UIKit
     }
 }
 
-// MARK: - UIKit+FWSkeletonView
+// MARK: - UIKit+FWSkeletonLayout
 
 /// 视图显示骨架屏扩展
 @objc extension UIView {
@@ -832,6 +866,8 @@ import UIKit
     }
 }
 
+// MARK: - UIKit+FWSkeletonView
+
 /// UILabel骨架屏视图数据源扩展
 extension UILabel: FWSkeletonViewDataSource {
     open func skeletonViewProvider() -> FWSkeletonView? {
@@ -861,7 +897,8 @@ extension UITextView: FWSkeletonViewDataSource {
 /// UITableView骨架屏视图数据源扩展
 extension UITableView: FWSkeletonViewDataSource {
     open func skeletonViewProvider() -> FWSkeletonView? {
-        let tableView = FWSkeletonTableView()
+        let tableView = FWSkeletonTableView(style: style)
+        tableView.layoutView = self
         tableView.tableHeaderView = tableHeaderView
         tableView.tableFooterView = tableFooterView
         tableView.numberOfSections = numberOfSections
