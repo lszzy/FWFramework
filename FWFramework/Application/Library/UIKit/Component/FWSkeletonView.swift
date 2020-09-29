@@ -785,22 +785,22 @@ import UIKit
         layout.startAnimating()
     }
     
-    /// 显示骨架屏，指定布局代理。如果为UITableView|UICollectionView时，layout相对于父视图
+    /// 显示骨架屏，指定布局代理
     open func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
         fwShowSkeleton(delegate: delegate, block: nil)
     }
     
-    /// 显示骨架屏，指定布局句柄。如果为UITableView|UICollectionView时，layout相对于父视图
+    /// 显示骨架屏，指定布局句柄
     open func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
         fwShowSkeleton(delegate: nil, block: block)
     }
     
-    /// 显示骨架屏，默认布局代理为self。如果为UITableView|UICollectionView时，layout相对于父视图
+    /// 显示骨架屏，默认布局代理为self
     open func fwShowSkeleton() {
         fwShowSkeleton(delegate: self as? FWSkeletonViewDelegate)
     }
     
-    /// 隐藏骨架屏。如果为UITableView|UICollectionView时，layout相对于父视图
+    /// 隐藏骨架屏
     open func fwHideSkeleton() {
         if let layout = subviews.first(where: { $0.tag == 2051 }) as? FWSkeletonLayout {
             layout.stopAnimating()
