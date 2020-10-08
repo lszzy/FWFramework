@@ -37,7 +37,6 @@ import UIKit
 /// 骨架屏自带动画
 @objcMembers open class FWSkeletonAnimation: NSObject,
                                              NSCopying, NSMutableCopying,
-                                             CAAnimationDelegate,
                                              FWSkeletonAnimationProtocol {
     public static let shimmer = FWSkeletonAnimation(type: .shimmer)
     public static let solid = FWSkeletonAnimation(type: .solid)
@@ -52,7 +51,6 @@ import UIKit
     open var direction: FWSkeletonAnimationDirection = .right
     
     private var type: FWSkeletonAnimationType = .shimmer
-    private var gradientLayer: CAGradientLayer?
     
     // MARK: - Lifecycle
     
@@ -118,9 +116,7 @@ import UIKit
     // MARK: - FWSkeletonAnimationProtocol
     
     open func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
-        self.gradientLayer = gradientLayer
-        let animation: CAAnimation
-        
+        var animation: CAAnimation
         switch type {
         case .solid:
             let basicAnimation = CABasicAnimation(keyPath: "opacity")
@@ -158,6 +154,7 @@ import UIKit
         default:
             let startAnimation = CABasicAnimation(keyPath: "startPoint")
             let endAnimation = CABasicAnimation(keyPath: "endPoint")
+            gradientLayer.fwThemeColors = colors
             switch direction {
             case .right:
                 startAnimation.fromValue = NSValue(cgPoint: CGPoint(x:-1, y:0.5))
@@ -184,7 +181,6 @@ import UIKit
             let animationGroup = CAAnimationGroup()
             animationGroup.animations = [startAnimation, endAnimation]
             animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            animationGroup.delegate = self
             animation = animationGroup
         }
         
@@ -198,14 +194,6 @@ import UIKit
     
     open func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
         gradientLayer.removeAnimation(forKey: "skeletonAnimation")
-    }
-    
-    // MARK: - CAAnimationDelegate
-    
-    public func animationDidStart(_ anim: CAAnimation) {
-        if type == .shimmer {
-            gradientLayer?.fwThemeColors = colors
-        }
     }
 }
 
