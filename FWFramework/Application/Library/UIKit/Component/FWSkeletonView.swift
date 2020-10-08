@@ -35,7 +35,10 @@ import UIKit
 }
 
 /// 骨架屏自带动画
-@objcMembers open class FWSkeletonAnimation: NSObject, FWSkeletonAnimationProtocol {
+@objcMembers open class FWSkeletonAnimation: NSObject,
+                                             NSCopying, NSMutableCopying,
+                                             CAAnimationDelegate,
+                                             FWSkeletonAnimationProtocol {
     public static let shimmer = FWSkeletonAnimation(type: .shimmer)
     public static let solid = FWSkeletonAnimation(type: .solid)
     public static let scale = FWSkeletonAnimation(type: .scale)
@@ -44,9 +47,14 @@ import UIKit
     open var toValue: Any?
     open var colors: [UIColor]?
     open var duration: TimeInterval = 1
+    open var delay: TimeInterval = 0
+    open var repeatCount: Float = .infinity
     open var direction: FWSkeletonAnimationDirection = .right
     
     private var type: FWSkeletonAnimationType = .shimmer
+    private var gradientLayer: CAGradientLayer?
+    
+    // MARK: - Lifecycle
     
     public override init() {
         super.init()
@@ -69,7 +77,7 @@ import UIKit
             fromValue = 0.6
             toValue = 1
         default:
-            let lightColor = UIColor.fwColor(withHex: 0xDFDFDF)
+            let lightColor = UIColor.fwColor(withHex: 0xEEEEEE)
             let lightBrightness: CGFloat = 0.92
             let darkColor = UIColor.fwColor(withHex: 0x282828)
             let darkBrightness: CGFloat = 0.5
@@ -81,45 +89,72 @@ import UIKit
         }
     }
     
+    // MARK: - NSCopying
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let animation = FWSkeletonAnimation(type: type)
+        animation.fromValue = fromValue
+        animation.toValue = toValue
+        animation.colors = colors
+        animation.duration = duration
+        animation.delay = delay
+        animation.repeatCount = repeatCount
+        animation.direction = direction
+        return animation
+    }
+    
+    public func mutableCopy(with zone: NSZone? = nil) -> Any {
+        let animation = FWSkeletonAnimation(type: type)
+        animation.fromValue = fromValue
+        animation.toValue = toValue
+        animation.colors = colors
+        animation.duration = duration
+        animation.delay = delay
+        animation.repeatCount = repeatCount
+        animation.direction = direction
+        return animation
+    }
+    
+    // MARK: - FWSkeletonAnimationProtocol
+    
     open func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
+        self.gradientLayer = gradientLayer
+        let animation: CAAnimation
+        
         switch type {
         case .solid:
-            let animation = CABasicAnimation(keyPath: "opacity")
-            animation.autoreverses = true
-            animation.repeatCount = .infinity
-            animation.duration = duration
-            animation.fromValue = fromValue
-            animation.toValue = toValue
-            animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            gradientLayer.add(animation, forKey: "skeletonAnimation")
+            let basicAnimation = CABasicAnimation(keyPath: "opacity")
+            basicAnimation.fromValue = fromValue
+            basicAnimation.toValue = toValue
+            basicAnimation.autoreverses = true
+            basicAnimation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            animation = basicAnimation
         case .scale:
-            let animation = CABasicAnimation()
+            let basicAnimation = CABasicAnimation()
             switch direction {
             case .right:
-                animation.keyPath = "transform.scale.x"
+                basicAnimation.keyPath = "transform.scale.x"
                 gradientLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
                 gradientLayer.position.x -= gradientLayer.bounds.size.width / 2.0
             case .left:
-                animation.keyPath = "transform.scale.x"
+                basicAnimation.keyPath = "transform.scale.x"
                 gradientLayer.anchorPoint = CGPoint(x: 1, y: 0.5)
                 gradientLayer.position.x += gradientLayer.bounds.size.width / 2.0
             case .down:
-                animation.keyPath = "transform.scale.y"
+                basicAnimation.keyPath = "transform.scale.y"
                 gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 0)
                 gradientLayer.position.y -= gradientLayer.bounds.size.height / 2.0
             case .up:
-                animation.keyPath = "transform.scale.y"
+                basicAnimation.keyPath = "transform.scale.y"
                 gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 1)
                 gradientLayer.position.y += gradientLayer.bounds.size.height / 2.0
             }
             
-            animation.autoreverses = true
-            animation.repeatCount = .infinity
-            animation.duration = duration
-            animation.fromValue = fromValue
-            animation.toValue = toValue
-            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            gradientLayer.add(animation, forKey: "skeletonAnimation")
+            basicAnimation.fromValue = fromValue
+            basicAnimation.toValue = toValue
+            basicAnimation.autoreverses = true
+            basicAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            animation = basicAnimation
         default:
             let startAnimation = CABasicAnimation(keyPath: "startPoint")
             let endAnimation = CABasicAnimation(keyPath: "endPoint")
@@ -147,17 +182,30 @@ import UIKit
             }
             
             let animationGroup = CAAnimationGroup()
-            animationGroup.repeatCount = .infinity
             animationGroup.animations = [startAnimation, endAnimation]
-            animationGroup.duration = duration
             animationGroup.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            gradientLayer.fwThemeColors = colors
-            gradientLayer.add(animationGroup, forKey: "skeletonAnimation")
+            animationGroup.delegate = self
+            animation = animationGroup
         }
+        
+        animation.repeatCount = repeatCount
+        animation.beginTime = delay > 0 ? CACurrentMediaTime() + delay : 0
+        animation.duration = duration
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = false
+        gradientLayer.add(animation, forKey: "skeletonAnimation")
     }
     
     open func skeletonAnimationStop(_ gradientLayer: CAGradientLayer) {
         gradientLayer.removeAnimation(forKey: "skeletonAnimation")
+    }
+    
+    // MARK: - CAAnimationDelegate
+    
+    public func animationDidStart(_ anim: CAAnimation) {
+        if type == .shimmer {
+            gradientLayer?.fwThemeColors = colors
+        }
     }
 }
 
