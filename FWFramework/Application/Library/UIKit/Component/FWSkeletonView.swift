@@ -342,6 +342,25 @@ import UIKit
         }
     }
     
+    /// 相对滚动视图，跟随下拉刷新等。仅显示骨架屏的主layout设置才生效
+    open weak var scrollView: UIScrollView? {
+        didSet {
+            guard let view = scrollView, let constraint = scrollConstraint else { return }
+            
+            if view.contentOffset.y <= 0 {
+                constraint.constant = -view.contentOffset.y
+            }
+            view.fwObserveProperty("contentOffset") { (_, _) in
+                if view.contentOffset.y <= 0 {
+                    constraint.constant = -view.contentOffset.y
+                }
+            }
+        }
+    }
+    
+    /// 内部滚动布局常量，仅显示骨架屏的主layout使用
+    fileprivate var scrollConstraint: NSLayoutConstraint?
+    
     /// 指定相对布局视图初始化
     public init(layoutView: UIView?) {
         super.init(frame: .zero)
@@ -815,7 +834,7 @@ import UIKit
         let layout = FWSkeletonLayout(layoutView: self)
         layout.tag = 2051
         addSubview(layout)
-        layout.fwPinEdgesToSuperview()
+        layout.scrollConstraint = layout.fwPinEdgesToSuperview().first
         
         delegate?.skeletonViewLayout(layout)
         block?(layout)

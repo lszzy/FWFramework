@@ -254,7 +254,6 @@
     
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.tableFooterView = self.footerView;
-    
     [self.headerView fwAutoLayoutSubviews];
     [self.footerView fwAutoLayoutSubviews];
     
@@ -316,11 +315,17 @@
 
 - (void)onRefreshing
 {
+    self.headerView.hidden = YES;
+    self.footerView.hidden = YES;
+    
     NSLog(@"开始刷新");
     [self fwShowSkeleton];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         [self fwHideSkeleton];
+        
+        self.headerView.hidden = NO;
+        self.footerView.hidden = NO;
         
         [self.tableData removeAllObjects];
         [self.tableView reloadData];
@@ -396,6 +401,8 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
+    layout.scrollView = self.tableView;
+    
     if (self.scrollStyle == 0) {
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
         // 没有数据时需要指定cell，有数据时无需指定
