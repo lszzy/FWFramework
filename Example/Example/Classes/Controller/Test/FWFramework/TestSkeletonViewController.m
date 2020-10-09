@@ -400,7 +400,7 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    layout.scrollView = self.tableView;
+    [layout setScrollView:self.tableView scrollBlock:nil];
     
     if (self.scrollStyle == 0) {
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
