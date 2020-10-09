@@ -284,6 +284,9 @@
     
     [self.view addSubview:self.tableView];
     [self.tableView fwPinEdgesToSuperview];
+    
+    [self.tableView.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    [self.tableView.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -297,6 +300,40 @@
         self.tableView.tableData = @[sectionData];
         [self.tableView reloadData];
     }];
+}
+
+- (void)renderData
+{
+    [self.tableView.tableView fwTriggerPullRefresh];
+}
+
+- (void)onRefreshing
+{
+    NSLog(@"开始刷新");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"刷新完成");
+        
+        self.tableView.tableData = @[@[@1, @2]];
+        [self.tableView reloadData];
+        
+        [self.tableView.tableView.fwPullRefreshView stopAnimating];
+    });
+}
+
+- (void)onLoading
+{
+    NSLog(@"开始加载");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"加载完成");
+        
+        NSMutableArray *sectionData = self.tableView.tableData[0].mutableCopy;
+        NSInteger lastIndex = [sectionData.lastObject fwAsInteger];
+        [sectionData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
+        self.tableView.tableData = @[sectionData];
+        [self.tableView reloadData];
+        
+        [self.tableView.tableView.fwInfiniteScrollView stopAnimating];
+    });
 }
 
 @end

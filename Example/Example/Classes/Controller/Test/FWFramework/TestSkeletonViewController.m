@@ -254,9 +254,11 @@
     
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.tableFooterView = self.footerView;
-    
     [self.headerView fwAutoLayoutSubviews];
     [self.footerView fwAutoLayoutSubviews];
+    
+    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -300,7 +302,6 @@
                 animation = FWSkeletonAnimation.scale;
             }
             FWSkeletonAppearance.appearance.animation = animation;
-            FWSkeletonAppearance.appearance.labelAnimation = animation;
             [self renderData];
         }];
     }];
@@ -308,9 +309,41 @@
 
 - (void)renderData
 {
+    [self.tableView fwTriggerPullRefresh];
+}
+
+- (void)onRefreshing
+{
+    self.headerView.hidden = YES;
+    self.footerView.hidden = YES;
+    
+    NSLog(@"开始刷新");
     [self fwShowSkeleton];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"刷新完成");
         [self fwHideSkeleton];
+        
+        self.headerView.hidden = NO;
+        self.footerView.hidden = NO;
+        
+        [self.tableData removeAllObjects];
+        [self.tableView reloadData];
+        
+        [self.tableView.fwPullRefreshView stopAnimating];
+    });
+}
+
+- (void)onLoading
+{
+    NSLog(@"开始加载");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"加载完成");
+        
+        NSInteger lastIndex = [self.tableData.lastObject fwAsInteger];
+        [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
+        [self.tableView reloadData];
+        
+        [self.tableView.fwInfiniteScrollView stopAnimating];
     });
 }
 
@@ -367,6 +400,8 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
+    layout.scrollView = self.tableView;
+    
     if (self.scrollStyle == 0) {
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
         // 没有数据时需要指定cell，有数据时无需指定
