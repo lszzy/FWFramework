@@ -376,25 +376,6 @@ import UIKit
         }
     }
     
-    /// 相对滚动视图，跟随下拉刷新等。仅显示骨架屏的主layout设置才生效
-    open weak var scrollView: UIScrollView? {
-        didSet {
-            guard let view = scrollView, let constraint = scrollConstraint else { return }
-            
-            if view.contentOffset.y <= 0 {
-                constraint.constant = -view.contentOffset.y
-            }
-            view.fwObserveProperty("contentOffset") { (_, _) in
-                if view.contentOffset.y <= 0 {
-                    constraint.constant = -view.contentOffset.y
-                }
-            }
-        }
-    }
-    
-    /// 内部滚动布局常量，仅显示骨架屏的主layout使用
-    fileprivate var scrollConstraint: NSLayoutConstraint?
-    
     /// 指定相对布局视图初始化
     public init(layoutView: UIView?) {
         super.init(frame: .zero)
@@ -416,6 +397,26 @@ import UIKit
     
     override func setupView() {
         backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+    }
+    
+    /// 设置相对滚动视图，实现跟随下拉刷新等效果。block参数为contentOffset.y(不大于0)，默认设置顶部布局跟随滚动
+    open func setScrollView(_ scrollView: UIScrollView, scrollBlock: ((CGFloat) -> ())? = nil) {
+        var block = scrollBlock
+        if block == nil && superview != nil {
+            let constraint = fwPinEdge(toSuperview: .top)
+            block = { (offsetY) in
+                constraint.constant = -offsetY
+            }
+        }
+        
+        if scrollView.contentOffset.y <= 0 && superview != nil {
+            block?(scrollView.contentOffset.y)
+        }
+        scrollView.fwObserveProperty("contentOffset") { [weak self] (_, _) in
+            if scrollView.contentOffset.y <= 0 && self?.superview != nil {
+                block?(scrollView.contentOffset.y)
+            }
+        }
     }
     
     // MARK: - Animation
@@ -868,7 +869,7 @@ import UIKit
         let layout = FWSkeletonLayout(layoutView: self)
         layout.tag = 2051
         addSubview(layout)
-        layout.scrollConstraint = layout.fwPinEdgesToSuperview().first
+        layout.fwPinEdgesToSuperview()
         
         delegate?.skeletonViewLayout(layout)
         block?(layout)
