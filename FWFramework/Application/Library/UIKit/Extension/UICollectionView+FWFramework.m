@@ -22,6 +22,21 @@
     }];
 }
 
+- (void)fwReloadDataWithoutAnimation
+{
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [self reloadData];
+    [CATransaction commit];
+}
+
+- (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths
+{
+    [self performBatchUpdates:^{
+        [self reloadItemsAtIndexPaths:indexPaths];
+    } completion:nil];
+}
+
 @end
 
 @implementation UICollectionViewCell (FWFramework)

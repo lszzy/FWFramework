@@ -8,9 +8,6 @@
 #import "FWCollectionViewFlowLayout.h"
 #import "tgmath.h"
 
-NSString *const FWCollectionElementKindSectionHeader = @"FWCollectionElementKindSectionHeader";
-NSString *const FWCollectionElementKindSectionFooter = @"FWCollectionElementKindSectionFooter";
-
 @interface FWCollectionViewFlowLayout ()
 /// The delegate will point to collection view's delegate automatically.
 @property (nonatomic, weak) id <FWCollectionViewDelegateFlowLayout> delegate;
@@ -283,7 +280,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     top += headerInset.top;
 
     if (headerHeight > 0) {
-      attributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:FWCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+      attributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
       attributes.frame = CGRectMake(headerInset.left,
                                     top,
                                     self.collectionView.bounds.size.width - (headerInset.left + headerInset.right),
@@ -354,7 +351,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     top += footerInset.top;
 
     if (footerHeight > 0) {
-      attributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:FWCollectionElementKindSectionFooter withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+      attributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
       attributes.frame = CGRectMake(footerInset.left,
                                     top,
                                     self.collectionView.bounds.size.width - (footerInset.left + footerInset.right),
@@ -416,9 +413,9 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
   UICollectionViewLayoutAttributes *attribute = nil;
-  if ([kind isEqualToString:FWCollectionElementKindSectionHeader]) {
+  if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
     attribute = self.headersAttribute[@(indexPath.section)];
-  } else if ([kind isEqualToString:FWCollectionElementKindSectionFooter]) {
+  } else if ([kind isEqualToString:UICollectionElementKindSectionFooter]) {
     attribute = self.footersAttribute[@(indexPath.section)];
   }
   return attribute;
@@ -449,9 +446,9 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     if (CGRectIntersectsRect(rect, attr.frame)) {
       switch (attr.representedElementCategory) {
         case UICollectionElementCategorySupplementaryView:
-          if ([attr.representedElementKind isEqualToString:FWCollectionElementKindSectionHeader]) {
+          if ([attr.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
             supplHeaderAttrDict[attr.indexPath] = attr;
-          } else if ([attr.representedElementKind isEqualToString:FWCollectionElementKindSectionFooter]) {
+          } else if ([attr.representedElementKind isEqualToString:UICollectionElementKindSectionFooter]) {
             supplFooterAttrDict[attr.indexPath] = attr;
           }
           break;
