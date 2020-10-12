@@ -147,14 +147,16 @@
     return [self fwCellWithTableView:tableView style:UITableViewCellStyleDefault];
 }
 
-+ (instancetype)fwCellWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style {
++ (instancetype)fwCellWithTableView:(UITableView *)tableView
+                              style:(UITableViewCellStyle)style {
     NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (cell) return cell;
     return [[self alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
 }
 
-+ (CGFloat)fwHeightWithViewModel:(id)viewModel tableView:(UITableView *)tableView {
++ (CGFloat)fwHeightWithViewModel:(id)viewModel
+                       tableView:(UITableView *)tableView {
     return [tableView fwHeightWithCellClass:self configuration:^(__kindof UITableViewCell * _Nonnull cell) {
         cell.fwViewModel = viewModel;
     }];
@@ -203,8 +205,7 @@
 }
 
 + (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView {
-    NSString *selfClassName = NSStringFromClass(self.class);
-    NSString *reuseIdentifier = [selfClassName stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     if ([objc_getAssociatedObject(tableView, (__bridge const void * _Nonnull)(self)) boolValue]) {
         return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
     }
@@ -213,7 +214,9 @@
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
 }
 
-+ (CGFloat)fwHeightWithViewModel:(id)viewModel type:(FWHeaderFooterViewType)type tableView:(UITableView *)tableView {
++ (CGFloat)fwHeightWithViewModel:(id)viewModel
+                            type:(FWHeaderFooterViewType)type
+                       tableView:(UITableView *)tableView {
     return [tableView fwHeightWithHeaderFooterViewClass:self type:type configuration:^(__kindof UITableViewHeaderFooterView * _Nonnull headerFooterView) {
         headerFooterView.fwViewModel = viewModel;
     }];
@@ -289,15 +292,15 @@
         if (cell.fwMaxYView) {
             maxY = CGRectGetMaxY(cell.fwMaxYView.frame);
         } else {
-            __block UIView *maxXView = nil;
+            __block UIView *maxYView = nil;
             [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 CGFloat tempY = CGRectGetMaxY(obj.frame);
                 if (tempY > maxY) {
                     maxY = tempY;
-                    maxXView = obj;
+                    maxYView = obj;
                 }
             }];
-            cell.fwMaxYView = maxXView;
+            cell.fwMaxYView = maxYView;
         }
     } else {
         [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -380,23 +383,22 @@
     [view setNeedsLayout];
     [view layoutIfNeeded];
 
-    UIView *contentView = headerFooterView.contentView.subviews.count ? headerFooterView.contentView : headerFooterView;
-
     // 获取需要的高度
     __block CGFloat maxY  = 0.0;
+    UIView *contentView = headerFooterView.contentView.subviews.count ? headerFooterView.contentView : headerFooterView;
     if (headerFooterView.fwMaxYViewFixed) {
         if (headerFooterView.fwMaxYView) {
             maxY = CGRectGetMaxY(headerFooterView.fwMaxYView.frame);
         } else {
-            __block UIView *maxXView = nil;
+            __block UIView *maxYView = nil;
             [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 CGFloat tempY = CGRectGetMaxY(obj.frame);
                 if (tempY > maxY) {
                     maxY = tempY;
-                    maxXView = obj;
+                    maxYView = obj;
                 }
             }];
-            headerFooterView.fwMaxYView = maxXView;
+            headerFooterView.fwMaxYView = maxYView;
         }
     } else {
         [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
