@@ -223,11 +223,12 @@
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath {
     NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    if ([objc_getAssociatedObject(collectionView, (__bridge const void * _Nonnull)(self)) boolValue]) {
+    SEL reuseSelector = NSSelectorFromString([NSString stringWithFormat:@"%@%@", reuseIdentifier, kind]);
+    if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     }
     [collectionView registerClass:self forSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier];
-    objc_setAssociatedObject(collectionView, (__bridge const void * _Nonnull)(self), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(collectionView, reuseSelector, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 }
 
