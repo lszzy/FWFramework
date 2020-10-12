@@ -272,20 +272,21 @@
 
 #pragma mark - Cell
 
-- (UIView *)fwDynamicViewWithCellClass:(Class)clazz {
-    NSString *className = NSStringFromClass(clazz);
+- (UIView *)fwDynamicViewWithCellClass:(Class)clazz
+                            identifier:(NSString *)identifier {
+    NSString *classIdentifier = [NSStringFromClass(clazz) stringByAppendingString:identifier];
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (!dict) {
         dict = @{}.mutableCopy;
         objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    UIView *view = dict[className];
+    UIView *view = dict[classIdentifier];
     if (view) return view;
     
     UICollectionViewCell *cell = [[clazz alloc] init];
     view = [UIView new];
     [view addSubview:cell];
-    dict[className] = view;
+    dict[classIdentifier] = view;
     return view;
 }
 
@@ -293,20 +294,25 @@
                                width:(CGFloat)fixedWidth
                               height:(CGFloat)fixedHeight
                        configuration:(FWCollectionCellConfigurationBlock)configuration {
-    UIView *view = [self fwDynamicViewWithCellClass:clazz];
-    CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0) {
-        // 获取 CollectionView 宽度
-        UIView *layoutView = self.superview ? self.superview : self;
-        [layoutView setNeedsLayout];
-        [layoutView layoutIfNeeded];
+    NSString *identifier = [NSString stringWithFormat:@"%@-%@", @(fixedWidth), @(fixedHeight)];
+    UIView *view = [self fwDynamicViewWithCellClass:clazz identifier:identifier];
+    CGFloat width = fixedWidth;
+    CGFloat height = fixedHeight;
+    if (width <= 0 && height <= 0) {
         width = CGRectGetWidth(self.frame);
+        if (width <= 0) {
+            // 获取 CollectionView 宽度
+            UIView *layoutView = self.superview ? self.superview : self;
+            [layoutView setNeedsLayout];
+            [layoutView layoutIfNeeded];
+            width = CGRectGetWidth(self.frame);
+        }
     }
 
     // 设置 Frame
-    view.frame = CGRectMake(0.0, 0.0, width, 0.0);
+    view.frame = CGRectMake(0.0, 0.0, width, height);
     UICollectionViewCell *cell = view.subviews.firstObject;
-    cell.frame = CGRectMake(0.0, 0.0, width, 0.0);
+    cell.frame = CGRectMake(0.0, 0.0, width, height);
     
     // 让外面布局 Cell
     !configuration ? : configuration(cell);
@@ -317,13 +323,16 @@
 
     // 获取需要的高度
     __block CGFloat maxY = 0.0;
+    CGFloat (^maxYBlock)(UIView *view) = ^CGFloat(UIView *view) {
+        return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame);
+    };
     if (cell.fwMaxYViewFixed) {
         if (cell.fwMaxYView) {
-            maxY = CGRectGetMaxY(cell.fwMaxYView.frame);
+            maxY = maxYBlock(cell.fwMaxYView);
         } else {
             __block UIView *maxYView = nil;
             [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                CGFloat tempY = CGRectGetMaxY(obj.frame);
+                CGFloat tempY = maxYBlock(obj);
                 if (tempY > maxY) {
                     maxY = tempY;
                     maxYView = obj;
@@ -333,14 +342,14 @@
         }
     } else {
         [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            CGFloat tempY = CGRectGetMaxY(obj.frame);
+            CGFloat tempY = maxYBlock(obj);
             if (tempY > maxY) {
                 maxY = tempY;
             }
         }];
     }
     maxY += cell.fwMaxYViewPadding;
-    return CGSizeMake(width, maxY);
+    return fixedHeight > 0 ? CGSizeMake(maxY, height) : CGSizeMake(width, maxY);
 }
 
 - (CGSize)fwSizeWithCellClass:(Class)clazz
@@ -402,12 +411,16 @@
                        height:(CGFloat)height
                    cacheByKey:(id<NSCopying>)key
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    if (key && self.fwDynamicLayoutSizeCache.sizeDictionary[key]) {
-        return self.fwDynamicLayoutSizeCache.sizeDictionary[key].CGSizeValue;
+    id<NSCopying> cacheKey = key;
+    if (cacheKey && (width > 0 || height > 0)) {
+        cacheKey = [NSString stringWithFormat:@"%@-%@-%@", cacheKey, @(width), @(height)];
+    }
+    if (cacheKey && self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey]) {
+        return self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey].CGSizeValue;
     }
     CGSize cellSize = [self fwDynamicSizeWithCellClass:clazz width:width height:height configuration:configuration];
-    if (key) {
-        self.fwDynamicLayoutSizeCache.sizeDictionary[key] = [NSValue valueWithCGSize:cellSize];
+    if (cacheKey) {
+        self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey] = [NSValue valueWithCGSize:cellSize];
     }
     return cellSize;
 }
