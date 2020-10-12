@@ -447,20 +447,20 @@
         if (key && self.fwDynamicLayoutHeightCache.headerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
         }
-        CGFloat cellHeight = [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
+        CGFloat viewHeight = [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
         if (key) {
-            self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(cellHeight);
+            self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(viewHeight);
         }
-        return cellHeight;
+        return viewHeight;
     } else {
         if (key && self.fwDynamicLayoutHeightCache.footerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
         }
-        CGFloat cellHeight = [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
+        CGFloat viewHeight = [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
         if (key) {
-            self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(cellHeight);
+            self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(viewHeight);
         }
-        return cellHeight;
+        return viewHeight;
     }
 }
 

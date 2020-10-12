@@ -66,7 +66,7 @@
         }];
         
         // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
-        self.fwMaxViewPadding = CGSizeMake(0, 15);
+        self.fwMaxYViewPadding = 15;
         UIImageView *imageView = [UIImageView fwAutoLayoutView];
         self.myImageView = imageView;
         [imageView fwSetContentModeAspectFill];
@@ -116,7 +116,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor appColorWhite];
-        self.fwMaxViewPadding = CGSizeMake(0, 15);
+        self.fwMaxYViewPadding = 15;
         
         UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
         titleLabel.numberOfLines = 0;
@@ -138,6 +138,9 @@
 
 @interface TestCollectionDynamicLayoutViewController () <FWCollectionViewController, UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic, assign) NSInteger mode;
+@property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;
+
 @end
 
 @implementation TestCollectionDynamicLayoutViewController
@@ -145,6 +148,7 @@
 - (UICollectionViewLayout *)renderCollectionViewLayout
 {
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
+    self.flowLayout = layout;
     layout.minimumLineSpacing = kAppBorderHeightLarge;
     layout.minimumInteritemSpacing = 0;
     return layout;
@@ -159,43 +163,34 @@
         
         [self onRefreshing];
     }];
-    self.collectionView.fwPullRefreshView.stateBlock = ^(FWPullRefreshView * _Nonnull view, FWPullRefreshState state) {
-        FWStrongifySelf();
-        
-        self.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
-    };
-    self.collectionView.fwPullRefreshView.progressBlock = ^(FWPullRefreshView * _Nonnull view, CGFloat progress) {
-        FWStrongifySelf();
-        
-        self.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
-    };
-    
-    FWInfiniteScrollView.height = 64;
     [self.collectionView fwAddInfiniteScrollWithBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
     }];
-    self.collectionView.fwInfiniteScrollView.preloadHeight = 200;
-    self.collectionView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
-        FWStrongifySelf();
-        
-        self.title = [NSString stringWithFormat:@"load state-%@", @(state)];
-    };
-    self.collectionView.fwInfiniteScrollView.progressBlock = ^(FWInfiniteScrollView * _Nonnull view, CGFloat progress) {
-        FWStrongifySelf();
-        
-        self.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
-    };
 }
 
 - (void)renderModel
 {
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(renderData)];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"不固定宽高", @"固定宽度", @"固定高度"] actionBlock:^(NSInteger index) {
+            FWStrongifySelf();
+            
+            self.mode = index;
+            [self renderData];
+        }];
+    }];
 }
 
 - (void)renderData
 {
+    if (self.mode == 2) {
+        self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    } else {
+        self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    }
     [self.collectionView fwTriggerPullRefresh];
 }
 
@@ -214,15 +209,6 @@
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return [collectionView fwSizeWithCellClass:[TestCollectionDynamicLayoutCell class]
-                              cacheByIndexPath:indexPath
-                                 configuration:^(TestCollectionDynamicLayoutCell *cell) {
-        cell.object = [self.collectionData objectAtIndex:indexPath.row];
-    }];
-}
-
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
@@ -237,18 +223,85 @@
     return nil;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.mode == 0) {
+        return [collectionView fwSizeWithCellClass:[TestCollectionDynamicLayoutCell class]
+                                  cacheByIndexPath:indexPath
+                                     configuration:^(TestCollectionDynamicLayoutCell *cell) {
+            cell.object = [self.collectionData objectAtIndex:indexPath.row];
+        }];
+    } else if (self.mode == 1) {
+        return [collectionView fwSizeWithCellClass:[TestCollectionDynamicLayoutCell class]
+                                             width:FWScreenWidth / 2 - 10
+                                  cacheByIndexPath:indexPath
+                                     configuration:^(TestCollectionDynamicLayoutCell *cell) {
+            cell.object = [self.collectionData objectAtIndex:indexPath.row];
+        }];
+    } else {
+        return [collectionView fwSizeWithCellClass:[TestCollectionDynamicLayoutCell class]
+                                            height:FWScreenHeight - FWTopBarHeight
+                                  cacheByIndexPath:indexPath
+                                     configuration:^(TestCollectionDynamicLayoutCell *cell) {
+            cell.object = [self.collectionData objectAtIndex:indexPath.row];
+        }];
+    }
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class] kind:UICollectionElementKindSectionHeader cacheBySection:section configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
-        reusableView.fwViewModel = @"我是集合Header\n我是集合Header";
-    }];
+    if (self.mode == 0) {
+        return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
+                                                      kind:UICollectionElementKindSectionHeader
+                                            cacheBySection:section
+                                             configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
+            reusableView.fwViewModel = @"我是集合Header\n我是集合Header";
+        }];
+    } else if (self.mode == 1) {
+        return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
+                                                     width:FWScreenWidth / 2 - 10
+                                                      kind:UICollectionElementKindSectionHeader
+                                            cacheBySection:section
+                                             configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
+            reusableView.fwViewModel = @"我是集合Header\n我是集合Header";
+        }];
+    } else {
+        return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
+                                                    height:FWScreenHeight - FWTopBarHeight
+                                                      kind:UICollectionElementKindSectionHeader
+                                            cacheBySection:section
+                                             configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
+            reusableView.fwViewModel = @"我是集合Header\n我是集合Header";
+        }];
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
-    return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class] kind:UICollectionElementKindSectionFooter cacheBySection:section configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
-        reusableView.fwViewModel = @"我是集合Footer\n我是集合Footer\n我是集合Footer";
-    }];
+    if (self.mode == 0) {
+        return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
+                                                      kind:UICollectionElementKindSectionFooter
+                                            cacheBySection:section
+                                             configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
+            reusableView.fwViewModel = @"我是集合Footer\n我是集合Footer\n我是集合Footer";
+        }];
+    } else if (self.mode == 1) {
+        return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
+                                                     width:FWScreenWidth / 2 - 10
+                                                      kind:UICollectionElementKindSectionFooter
+                                            cacheBySection:section
+                                             configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
+            reusableView.fwViewModel = @"我是集合Footer\n我是集合Footer\n我是集合Footer";
+        }];
+    } else {
+        return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
+                                                    height:FWScreenHeight - FWTopBarHeight
+                                                      kind:UICollectionElementKindSectionFooter
+                                            cacheBySection:section
+                                             configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
+            reusableView.fwViewModel = @"我是集合Footer\n我是集合Footer\n我是集合Footer";
+        }];
+    }
 }
 
 - (TestCollectionDynamicLayoutObject *)randomObject
@@ -310,6 +363,7 @@
         for (int i = 0; i < 4; i++) {
             [self.collectionData addObject:[self randomObject]];
         }
+        [self.collectionView fwClearSizeCache];
         [self.collectionView fwReloadDataWithoutAnimation];
         
         self.collectionView.fwShowPullRefresh = self.collectionData.count < 20 ? YES : NO;

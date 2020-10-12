@@ -21,10 +21,10 @@ typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell 
 @interface UICollectionViewCell (FWDynamicLayout)
 
 /// 如果用来确定Cell所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
-@property (nonatomic, assign) BOOL fwMaxViewFixed;
+@property (nonatomic, assign) BOOL fwMaxYViewFixed;
 
-/// 最大尺寸视图的底部内边距，可避免新创建View来撑开Cell，默认0
-@property (nonatomic, assign) CGSize fwMaxViewPadding;
+/// 最大Y视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开Cell，默认0
+@property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
 /// 通用绑定视图模型方法，未指定configuration时默认调用
 @property (nullable, nonatomic, strong) id fwViewModel;
@@ -59,10 +59,10 @@ typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableVie
 @interface UICollectionReusableView (FWDynamicLayout)
 
 /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
-@property (nonatomic, assign) BOOL fwMaxViewFixed;
+@property (nonatomic, assign) BOOL fwMaxYViewFixed;
 
-/// 最大尺寸视图的底部内边距，可避免新创建View来撑开ReusableView，默认0
-@property (nonatomic, assign) CGSize fwMaxViewPadding;
+/// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
+@property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
 /// 通用绑定视图模型方法，未指定configuration时默认调用
 @property (nullable, nonatomic, strong) id fwViewModel;
