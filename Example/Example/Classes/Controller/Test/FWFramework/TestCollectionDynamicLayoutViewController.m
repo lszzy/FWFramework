@@ -40,7 +40,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentView.backgroundColor = [UIColor appColorWhite];
+        self.contentView.backgroundColor = [UIColor fwRandomColor];
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
@@ -115,7 +115,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor appColorWhite];
+        self.backgroundColor = [UIColor fwRandomColor];
         self.fwMaxYViewPadding = 15;
         
         UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
@@ -149,7 +149,7 @@
 {
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
     self.flowLayout = layout;
-    layout.minimumLineSpacing = kAppBorderHeightLarge;
+    layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     return layout;
 }
@@ -233,7 +233,7 @@
         }];
     } else if (self.mode == 1) {
         return [collectionView fwSizeWithCellClass:[TestCollectionDynamicLayoutCell class]
-                                             width:FWScreenWidth / 2 - 10
+                                             width:FWScreenWidth - 30
                                   cacheByIndexPath:indexPath
                                      configuration:^(TestCollectionDynamicLayoutCell *cell) {
             cell.object = [self.collectionData objectAtIndex:indexPath.row];
@@ -259,7 +259,7 @@
         }];
     } else if (self.mode == 1) {
         return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
-                                                     width:FWScreenWidth / 2 - 10
+                                                     width:FWScreenWidth - 30
                                                       kind:UICollectionElementKindSectionHeader
                                             cacheBySection:section
                                              configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
@@ -287,7 +287,7 @@
         }];
     } else if (self.mode == 1) {
         return [collectionView fwSizeWithReusableViewClass:[TestCollectionDynamicLayoutHeaderView class]
-                                                     width:FWScreenWidth / 2 - 10
+                                                     width:FWScreenWidth - 30
                                                       kind:UICollectionElementKindSectionFooter
                                             cacheBySection:section
                                              configuration:^(TestCollectionDynamicLayoutHeaderView * _Nonnull reusableView) {
@@ -363,7 +363,6 @@
         for (int i = 0; i < 4; i++) {
             [self.collectionData addObject:[self randomObject]];
         }
-        [self.collectionView fwClearSizeCache];
         [self.collectionView fwReloadDataWithoutAnimation];
         
         self.collectionView.fwShowPullRefresh = self.collectionData.count < 20 ? YES : NO;

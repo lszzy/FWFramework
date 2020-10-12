@@ -44,7 +44,7 @@
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.backgroundColor = [UIColor appColorWhite];
+        self.contentView.backgroundColor = [UIColor fwRandomColor];
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
@@ -128,7 +128,7 @@
 {
     self = [super initWithReuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = [UIColor appColorWhite];
+        self.contentView.backgroundColor = [UIColor fwRandomColor];
         self.fwMaxYViewPadding = 15;
         
         UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
