@@ -341,27 +341,28 @@
 #pragma mark - HeaderFooterView
 
 - (UIView *)fwDynamicViewWithHeaderFooterViewClass:(Class)clazz
-                                          selector:(SEL)selector {
-    NSString *className = NSStringFromClass(clazz);
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, selector);
+                                        identifier:(NSString *)identifier {
+    NSString *classIdentifier = [NSStringFromClass(clazz) stringByAppendingString:identifier];
+    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (!dict) {
         dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, selector, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    UIView *view = dict[className];
+    UIView *view = dict[classIdentifier];
     if (view) return view;
 
     UIView *headerView = [[clazz alloc] initWithReuseIdentifier:nil];
     view = [UIView new];
     [view addSubview:headerView];
-    dict[className] = view;
+    dict[classIdentifier] = view;
     return view;
 }
 
 - (CGFloat)fwDynamicHeightWithHeaderFooterViewClass:(Class)clazz
-                                           selector:(SEL)selector
+                                               type:(FWHeaderFooterViewType)type
                                       configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    UIView *view = [self fwDynamicViewWithHeaderFooterViewClass:clazz selector:selector];
+    NSString *identifier = [NSString stringWithFormat:@"%@", @(type)];
+    UIView *view = [self fwDynamicViewWithHeaderFooterViewClass:clazz identifier:identifier];
     CGFloat width = CGRectGetWidth(self.frame);
     if (width <= 0) {
         // 获取 TableView 宽度
@@ -412,24 +413,10 @@
     return maxY;
 }
 
-- (CGFloat)fwDynamicHeightWithHeaderViewClass:(Class)clazz
-                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz selector:_cmd configuration:configuration];
-}
-
-- (CGFloat)fwDynamicHeightWithFooterViewClass:(Class)clazz
-                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz selector:_cmd configuration:configuration];
-}
-
 - (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
                                         type:(FWHeaderFooterViewType)type
                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    if (type == FWHeaderFooterViewTypeHeader) {
-        return [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
-    } else {
-        return [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
-    }
+    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration];
 }
 
 - (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
@@ -447,7 +434,7 @@
         if (key && self.fwDynamicLayoutHeightCache.headerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
         }
-        CGFloat viewHeight = [self fwDynamicHeightWithHeaderViewClass:clazz configuration:configuration];
+        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration];
         if (key) {
             self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(viewHeight);
         }
@@ -456,7 +443,7 @@
         if (key && self.fwDynamicLayoutHeightCache.footerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
         }
-        CGFloat viewHeight = [self fwDynamicHeightWithFooterViewClass:clazz configuration:configuration];
+        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration];
         if (key) {
             self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(viewHeight);
         }
