@@ -53,6 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGFloat)fwLayoutHeightWithWidth:(CGFloat)width;
 
+/*!
+ @brief 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
+ */
+- (CGFloat)fwLayoutWidthWithHeight:(CGFloat)height;
+
 #pragma mark - Compression
 
 /*!
