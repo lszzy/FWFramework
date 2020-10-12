@@ -116,6 +116,39 @@
 
 @end
 
+@interface TestTableDynamicLayoutHeaderView : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@end
+
+@implementation TestTableDynamicLayoutHeaderView
+
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithReuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.contentView.backgroundColor = [UIColor appColorWhite];
+        self.fwMaxYViewPadding = 15;
+        
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
+        titleLabel.numberOfLines = 0;
+        _titleLabel = titleLabel;
+        [self.contentView addSubview:titleLabel];
+        titleLabel.fwLayoutChain.leftWithInset(15).topWithInset(15).rightWithInset(15);
+    }
+    return self;
+}
+
+- (void)setFwViewModel:(id)fwViewModel
+{
+    [super setFwViewModel:fwViewModel];
+    
+    self.titleLabel.text = FWSafeString(fwViewModel);
+}
+
+@end
+
 @interface TestTableDynamicLayoutViewController () <FWTableViewController, FWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) FWPhotoBrowser *photoBrowser;
@@ -124,11 +157,17 @@
 
 @implementation TestTableDynamicLayoutViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderView
 {
     // [self.tableView fwSetTemplateLayout:NO];
     
     FWWeakifySelf();
+    [self.tableView fwResetGroupedStyle];
     self.tableView.backgroundColor = [UIColor appColorBg];
     [self.tableView fwAddPullRefreshWithBlock:^{
         FWStrongifySelf();
@@ -234,6 +273,36 @@
         [self.tableView fwClearHeightCache];
         [self.tableView reloadData];
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    TestTableDynamicLayoutHeaderView *headerView = [TestTableDynamicLayoutHeaderView fwHeaderFooterViewWithTableView:tableView];
+    headerView.fwViewModel = @"我是表格Header\n我是表格Header";
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    CGFloat height = [tableView fwHeightWithHeaderFooterViewClass:[TestTableDynamicLayoutHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableDynamicLayoutHeaderView *headerView) {
+        headerView.fwViewModel = @"我是表格Header\n我是表格Header";
+    }];
+    return height;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    TestTableDynamicLayoutHeaderView *footerView = [TestTableDynamicLayoutHeaderView fwHeaderFooterViewWithTableView:tableView];
+    footerView.fwViewModel = @"我是表格Footer\n我是表格Footer\n我是表格Footer";
+    return footerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    CGFloat height = [tableView fwHeightWithHeaderFooterViewClass:[TestTableDynamicLayoutHeaderView class] type:FWHeaderFooterViewTypeFooter configuration:^(TestTableDynamicLayoutHeaderView *footerView) {
+        footerView.fwViewModel = @"我是表格Footer\n我是表格Footer\n我是表格Footer";
+    }];
+    return height;
 }
 
 - (TestTableDynamicLayoutObject *)randomObject
