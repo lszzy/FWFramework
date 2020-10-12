@@ -15,8 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 // UICollectionView分类
 @interface UICollectionView (FWFramework)
 
-// reloadData完成回调
+/// reloadData完成回调
 - (void)fwReloadDataWithCompletion:(nullable void (^)(void))completion;
+
+/// reloadData禁用动画
+- (void)fwReloadDataWithoutAnimation;
+
+/// reloadItems禁用动画
+- (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
 
 @end
 

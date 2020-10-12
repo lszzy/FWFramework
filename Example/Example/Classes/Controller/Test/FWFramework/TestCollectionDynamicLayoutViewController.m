@@ -310,7 +310,7 @@
         for (int i = 0; i < 4; i++) {
             [self.collectionData addObject:[self randomObject]];
         }
-        [self.collectionView reloadData];
+        [self.collectionView fwReloadDataWithoutAnimation];
         
         self.collectionView.fwShowPullRefresh = self.collectionData.count < 20 ? YES : NO;
         [self.collectionView.fwPullRefreshView stopAnimating];
@@ -329,7 +329,7 @@
         for (int i = 0; i < 4; i++) {
             [self.collectionData addObject:[self randomObject]];
         }
-        [self.collectionView reloadData];
+        [self.collectionView fwReloadDataWithoutAnimation];
         
         self.collectionView.fwShowInfiniteScroll = self.collectionData.count < 20 ? YES : NO;
         [self.collectionView.fwInfiniteScrollView stopAnimating];
