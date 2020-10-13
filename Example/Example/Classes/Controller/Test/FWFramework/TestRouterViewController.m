@@ -291,7 +291,15 @@
     FWWeakifySelf();
     [viewController fwSetBackBarBlock:^BOOL{
         FWStrongifySelf();
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        static NSInteger count = 0;
+        NSInteger index = count++ % 3;
+        if (index == 0) {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        } else if (index == 1) {
+            [self.navigationController popToViewController:self.navigationController.viewControllers.firstObject animated:YES];
+        } else {
+            [self.navigationController setViewControllers:@[self.navigationController.viewControllers.firstObject] animated:YES];
+        }
         return NO;
     }];
     [self.navigationController pushViewController:viewController animated:YES];
