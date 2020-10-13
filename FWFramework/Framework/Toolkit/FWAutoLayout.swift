@@ -455,6 +455,10 @@ public class FWLayoutChain {
     
     // MARK: - Constraint
     
+    public var constraint: NSLayoutConstraint? {
+        return self.view?.fwLastConstraint
+    }
+    
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
         return self.view?.fwConstraint(toSuperview: attribute, relation: relation)
     }
