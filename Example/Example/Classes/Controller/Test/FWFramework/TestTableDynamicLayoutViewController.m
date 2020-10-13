@@ -8,6 +8,8 @@
 
 #import "TestTableDynamicLayoutViewController.h"
 
+static BOOL isExpanded = NO;
+
 @interface TestTableDynamicLayoutObject : NSObject
 
 @property (nonatomic, copy) NSString *title;
@@ -105,6 +107,9 @@
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
+    
+    self.myImageView.fwLayoutChain.bottomWithInset(15);
+    self.myImageView.fwLastConstraint.active = isExpanded;
 }
 
 - (void)onImageClick:(UIGestureRecognizer *)gesture
@@ -145,6 +150,9 @@
     [super setFwViewModel:fwViewModel];
     
     self.titleLabel.text = FWSafeString(fwViewModel);
+    
+    self.titleLabel.fwLayoutChain.bottomWithInset(15);
+    self.titleLabel.fwLastConstraint.active = isExpanded;
 }
 
 @end
@@ -206,7 +214,20 @@
 
 - (void)renderModel
 {
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(renderData)];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"刷新", @"布局撑开", @"布局不撑开"] actionBlock:^(NSInteger index) {
+            FWStrongifySelf();
+            
+            if (index == 1) {
+                isExpanded = YES;
+            } else if (index == 2) {
+                isExpanded = NO;
+            }
+            [self renderData];
+        }];
+    }];
 }
 
 - (void)renderData
@@ -270,8 +291,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.tableData fwRemoveObjectAtIndex:indexPath.row];
-        [self.tableView fwClearHeightCache];
-        [self.tableView reloadData];
+        [self.tableView fwReloadDataWithoutCache];
     }
 }
 
@@ -361,10 +381,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
+        [self.tableData removeAllObjects];
         for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }
-        [self.tableView reloadData];
+        [self.tableView fwReloadDataWithoutCache];
         
         self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];

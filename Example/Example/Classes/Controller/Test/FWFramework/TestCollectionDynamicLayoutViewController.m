@@ -8,6 +8,8 @@
 
 #import "TestCollectionDynamicLayoutViewController.h"
 
+static BOOL isExpanded = NO;
+
 @interface TestCollectionDynamicLayoutObject : NSObject
 
 @property (nonatomic, copy) NSString *title;
@@ -99,6 +101,9 @@
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
+    
+    self.myImageView.fwLayoutChain.bottomWithInset(15);
+    self.myImageView.fwLastConstraint.active = isExpanded;
 }
 
 @end
@@ -132,6 +137,9 @@
     [super setFwViewModel:fwViewModel];
     
     self.titleLabel.text = FWSafeString(fwViewModel);
+    
+    self.titleLabel.fwLayoutChain.bottomWithInset(15);
+    self.titleLabel.fwLastConstraint.active = isExpanded;
 }
 
 @end
@@ -175,10 +183,14 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
         FWStrongifySelf();
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"不固定宽高", @"固定宽度", @"固定高度"] actionBlock:^(NSInteger index) {
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"不固定宽高", @"固定宽度", @"固定高度", @"布局撑开", @"布局不撑开"] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
-            self.mode = index;
+            if (index < 3) {
+                self.mode = index;
+            } else {
+                isExpanded = index == 3 ? YES : NO;
+            }
             [self renderData];
         }];
     }];
@@ -360,9 +372,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
+        [self.collectionData removeAllObjects];
         for (int i = 0; i < 4; i++) {
             [self.collectionData addObject:[self randomObject]];
         }
+        [self.collectionView fwClearSizeCache];
         [self.collectionView fwReloadDataWithoutAnimation];
         
         self.collectionView.fwShowPullRefresh = self.collectionData.count < 20 ? YES : NO;

@@ -41,6 +41,13 @@
     }];
 }
 
+- (void)fwReloadDataWithoutCache
+{
+    [self fwClearHeightCache];
+    [self fwClearTemplateHeightCache];
+    [self reloadData];
+}
+
 - (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths
 {
     [UIView performWithoutAnimation:^{

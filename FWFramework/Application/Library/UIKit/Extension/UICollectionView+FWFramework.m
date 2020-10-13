@@ -30,6 +30,12 @@
     [CATransaction commit];
 }
 
+- (void)fwReloadDataWithoutCache
+{
+    [self fwClearSizeCache];
+    [self reloadData];
+}
+
 - (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths
 {
     [self performBatchUpdates:^{
