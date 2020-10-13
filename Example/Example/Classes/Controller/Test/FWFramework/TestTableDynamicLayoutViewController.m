@@ -110,6 +110,7 @@ static BOOL isExpanded = NO;
     
     self.myImageView.fwLayoutChain.bottomWithInset(15);
     self.myImageView.fwLastConstraint.active = isExpanded;
+    self.fwMaxYViewExpanded = isExpanded;
 }
 
 - (void)onImageClick:(UIGestureRecognizer *)gesture
@@ -153,6 +154,7 @@ static BOOL isExpanded = NO;
     
     self.titleLabel.fwLayoutChain.bottomWithInset(15);
     self.titleLabel.fwLastConstraint.active = isExpanded;
+    self.fwMaxYViewExpanded = isExpanded;
 }
 
 @end

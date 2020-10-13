@@ -26,6 +26,9 @@ typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell 
 /// 最大Y视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开Cell，默认0
 @property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
+/// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+@property (nonatomic, assign) BOOL fwMaxYViewExpanded;
+
 /// 通用绑定视图模型方法，未指定configuration时默认调用
 @property (nullable, nonatomic, strong) id fwViewModel;
 
@@ -63,6 +66,9 @@ typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableVie
 
 /// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
 @property (nonatomic, assign) CGFloat fwMaxYViewPadding;
+
+/// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+@property (nonatomic, assign) BOOL fwMaxYViewExpanded;
 
 /// 通用绑定视图模型方法，未指定configuration时默认调用
 @property (nullable, nonatomic, strong) id fwViewModel;

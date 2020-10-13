@@ -104,6 +104,7 @@ static BOOL isExpanded = NO;
     
     self.myImageView.fwLayoutChain.bottomWithInset(15);
     self.myImageView.fwLastConstraint.active = isExpanded;
+    self.fwMaxYViewExpanded = isExpanded;
 }
 
 @end
@@ -140,6 +141,7 @@ static BOOL isExpanded = NO;
     
     self.titleLabel.fwLayoutChain.bottomWithInset(15);
     self.titleLabel.fwLastConstraint.active = isExpanded;
+    self.fwMaxYViewExpanded = isExpanded;
 }
 
 @end
@@ -181,6 +183,7 @@ static BOOL isExpanded = NO;
 - (void)renderModel
 {
     FWWeakifySelf();
+    isExpanded = NO;
     [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"不固定宽高", @"固定宽度", @"固定高度", @"布局撑开", @"布局不撑开"] actionBlock:^(NSInteger index) {
