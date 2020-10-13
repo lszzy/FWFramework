@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// reloadData禁用动画
 - (void)fwReloadDataWithoutAnimation;
 
+/// reloadData清空尺寸缓存
+- (void)fwReloadDataWithoutCache;
+
 /// reloadItems禁用动画
 - (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
 
@@ -28,10 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UICollectionViewCell (FWFramework)
 
-// 获取当前所属collectionView
+/// 获取当前所属collectionView
 - (nullable UICollectionView *)fwCollectionView;
 
-// 获取当前显示indexPath
+/// 获取当前显示indexPath
 - (nullable NSIndexPath *)fwIndexPath;
 
 @end
@@ -39,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 // iOS9+可通过UICollectionViewFlowLayout调用sectionHeadersPinToVisibleBounds实现Header悬停效果
 @interface UICollectionViewFlowLayout (FWFramework)
 
-// 设置Header和Footer是否悬停，支持iOS9+
+/// 设置Header和Footer是否悬停，支持iOS9+
 - (void)fwHoverWithHeader:(BOOL)header footer:(BOOL)footer;
 
 @end
