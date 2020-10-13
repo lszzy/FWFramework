@@ -273,7 +273,9 @@
 
 + (BOOL)fwIsScreenX
 {
-    return [self fwIsScreenSize:CGSizeMake(375, 812)] || [self fwIsScreenSize:CGSizeMake(414, 896)];
+    // return [self fwIsScreenSize:CGSizeMake(375, 812)]
+    //     || [self fwIsScreenSize:CGSizeMake(414, 896)];
+    return [self fwSafeAreaInsets].bottom > 0;
 }
 
 + (BOOL)fwHasSafeAreaInsets
