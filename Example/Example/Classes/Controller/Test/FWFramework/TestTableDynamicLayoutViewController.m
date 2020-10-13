@@ -81,6 +81,7 @@ static BOOL isExpanded = NO;
         [self.contentView addSubview:imageView];
         [imageView fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
             NSLayoutConstraint *widthCons = [imageView fwSetDimension:NSLayoutAttributeWidth toSize:100];
             NSLayoutConstraint *heightCons = [imageView fwSetDimension:NSLayoutAttributeHeight toSize:100];
             NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:kAppPaddingNormal];
@@ -108,8 +109,7 @@ static BOOL isExpanded = NO;
     // 手工收缩
     self.myTextLabel.text = object.text;
     
-    self.myImageView.fwLayoutChain.bottomWithInset(15);
-    self.myImageView.fwLastConstraint.active = isExpanded;
+    [self.myImageView fwConstraintToSuperview:NSLayoutAttributeBottom].active = isExpanded;
     self.fwMaxYViewExpanded = isExpanded;
 }
 
@@ -141,7 +141,7 @@ static BOOL isExpanded = NO;
         titleLabel.numberOfLines = 0;
         _titleLabel = titleLabel;
         [self.contentView addSubview:titleLabel];
-        titleLabel.fwLayoutChain.leftWithInset(15).topWithInset(15).rightWithInset(15);
+        titleLabel.fwLayoutChain.leftWithInset(15).topWithInset(15).rightWithInset(15).bottomWithInset(15);
     }
     return self;
 }
@@ -152,8 +152,7 @@ static BOOL isExpanded = NO;
     
     self.titleLabel.text = FWSafeString(fwViewModel);
     
-    self.titleLabel.fwLayoutChain.bottomWithInset(15);
-    self.titleLabel.fwLastConstraint.active = isExpanded;
+    [self.titleLabel fwConstraintToSuperview:NSLayoutAttributeBottom].active = isExpanded;
     self.fwMaxYViewExpanded = isExpanded;
 }
 
