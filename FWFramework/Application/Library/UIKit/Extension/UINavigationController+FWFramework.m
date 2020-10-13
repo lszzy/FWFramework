@@ -8,144 +8,80 @@
  */
 
 #import "UINavigationController+FWFramework.h"
-#import "UIViewController+FWBack.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
-
-@interface FWFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
-
-@property (nonatomic, weak) UINavigationController *navigationController;
-
-@end
-
-@implementation FWFullscreenPopGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
-{
-    // Ignore when no view controller is pushed into the navigation stack.
-    if (self.navigationController.viewControllers.count <= 1) {
-        return NO;
-    }
-    
-    // Ignore when the active view controller doesn't allow interactive pop.
-    UIViewController *topViewController = self.navigationController.viewControllers.lastObject;
-    if (topViewController.fwFullscreenPopGestureDisabled) {
-        return NO;
-    }
-    
-    // Compatible with UIViewController+FWBack protocol
-    if ([topViewController respondsToSelector:@selector(fwPopBackBarItem)] &&
-        ![topViewController fwPopBackBarItem]) {
-        return NO;
-    }
-    
-    // Ignore when the beginning location is beyond max allowed initial distance to left edge.
-    CGPoint beginningLocation = [gestureRecognizer locationInView:gestureRecognizer.view];
-    CGFloat maxAllowedInitialDistance = topViewController.fwFullscreenPopGestureDistance;
-    if (maxAllowedInitialDistance > 0 && beginningLocation.x > maxAllowedInitialDistance) {
-        return NO;
-    }
-    
-    // Ignore pan gesture when the navigation controller is currently in transition.
-    if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) {
-        return NO;
-    }
-    
-    // Prevent calling the handler when the gesture begins in an opposite direction.
-    CGPoint translation = [gestureRecognizer translationInView:gestureRecognizer.view];
-    BOOL isLeftToRight = [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight;
-    CGFloat multiplier = isLeftToRight ? 1 : - 1;
-    if ((translation.x * multiplier) <= 0) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-@end
 
 @implementation UINavigationController (FWFramework)
 
-+ (BOOL)fwIsFullscreenPopGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
++ (void)load
 {
-    if ([gestureRecognizer.delegate isKindOfClass:[FWFullscreenPopGestureRecognizerDelegate class]]) {
-        return YES;
-    }
-    return NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug
+        if (@available(iOS 14.0, *)) {
+            FWSwizzleClass(UINavigationController, @selector(popToViewController:animated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(UIViewController *viewController, BOOL animated), FWSwizzleCode({
+                if (animated && selfObject.tabBarController && !viewController.hidesBottomBarWhenPushed) {
+                    BOOL systemShouldHideTabBar = NO;
+                    NSArray<UIViewController *> *viewControllers = [selfObject.viewControllers subarrayWithRange:NSMakeRange(0, [selfObject.viewControllers indexOfObject:viewController] + 1)];
+                    for (UIViewController *vc in viewControllers) {
+                        if (vc.hidesBottomBarWhenPushed) {
+                            systemShouldHideTabBar = YES;
+                        }
+                    }
+                    if (!systemShouldHideTabBar) {
+                        selfObject.fwShouldBottomBarBeHidden = YES;
+                    }
+                }
+                
+                NSArray<UIViewController *> *result = FWSwizzleOriginal(viewController, animated);
+                selfObject.fwShouldBottomBarBeHidden = NO;
+                return result;
+            }));
+            FWSwizzleClass(UINavigationController, @selector(popToRootViewControllerAnimated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+                if (animated && selfObject.tabBarController && !selfObject.viewControllers.firstObject.hidesBottomBarWhenPushed && selfObject.viewControllers.count > 2) {
+                    selfObject.fwShouldBottomBarBeHidden = YES;
+                }
+                
+                NSArray<UIViewController *> *result = FWSwizzleOriginal(animated);
+                selfObject.fwShouldBottomBarBeHidden = NO;
+                return result;
+            }));
+            FWSwizzleClass(UINavigationController, @selector(setViewControllers:animated:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<UIViewController *> *viewControllers, BOOL animated), FWSwizzleCode({
+                UIViewController *viewController = viewControllers.lastObject;
+                if (animated && selfObject.tabBarController && !viewController.hidesBottomBarWhenPushed) {
+                    BOOL systemShouldHideTabBar = NO;
+                    for (UIViewController *vc in viewControllers) {
+                        if (vc.hidesBottomBarWhenPushed) {
+                            systemShouldHideTabBar = YES;
+                        }
+                    }
+                    if (!systemShouldHideTabBar) {
+                        selfObject.fwShouldBottomBarBeHidden = YES;
+                    }
+                }
+                
+                FWSwizzleOriginal(viewControllers, animated);
+                selfObject.fwShouldBottomBarBeHidden = NO;
+            }));
+            FWSwizzleClass(UINavigationController, NSSelectorFromString(@"_shouldBottomBarBeHidden"), FWSwizzleReturn(BOOL), FWSwizzleArgs(), FWSwizzleCode({
+                BOOL result = FWSwizzleOriginal();
+                if (selfObject.fwShouldBottomBarBeHidden) {
+                    result = NO;
+                }
+                return result;
+            }));
+        }
+    });
 }
 
-- (BOOL)fwFullscreenPopGestureEnabled
+- (BOOL)fwShouldBottomBarBeHidden
 {
-    return self.fwFullscreenPopGestureRecognizer.enabled;
+    return [objc_getAssociatedObject(self, @selector(fwShouldBottomBarBeHidden)) boolValue];
 }
 
-- (void)setFwFullscreenPopGestureEnabled:(BOOL)enabled
+- (void)setFwShouldBottomBarBeHidden:(BOOL)hidden
 {
-    if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.fwFullscreenPopGestureRecognizer]) {
-        // Add our own gesture recognizer to where the onboard screen edge pan gesture recognizer is attached to.
-        [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.fwFullscreenPopGestureRecognizer];
-        
-        // Forward the gesture events to the private handler of the onboard gesture recognizer.
-        NSArray *internalTargets = [self.interactivePopGestureRecognizer valueForKey:@"targets"];
-        id internalTarget = [internalTargets.firstObject valueForKey:@"target"];
-        SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
-        self.fwFullscreenPopGestureRecognizer.delegate = self.fwPopGestureRecognizerDelegate;
-        [self.fwFullscreenPopGestureRecognizer addTarget:internalTarget action:internalAction];
-    }
-    
-    // Enable/Disable our own gesture recognizer.
-    self.fwFullscreenPopGestureRecognizer.enabled = enabled;
-    // Disable/Enable the onboard gesture recognizer.
-    self.interactivePopGestureRecognizer.enabled = !enabled;
-}
-
-- (FWFullscreenPopGestureRecognizerDelegate *)fwPopGestureRecognizerDelegate
-{
-    FWFullscreenPopGestureRecognizerDelegate *delegate = objc_getAssociatedObject(self, _cmd);
-    if (!delegate) {
-        delegate = [[FWFullscreenPopGestureRecognizerDelegate alloc] init];
-        delegate.navigationController = self;
-        objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return delegate;
-}
-
-- (UIPanGestureRecognizer *)fwFullscreenPopGestureRecognizer
-{
-    UIPanGestureRecognizer *panGestureRecognizer = objc_getAssociatedObject(self, _cmd);
-    if (!panGestureRecognizer) {
-        panGestureRecognizer = [[UIPanGestureRecognizer alloc] init];
-        panGestureRecognizer.maximumNumberOfTouches = 1;
-        objc_setAssociatedObject(self, _cmd, panGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return panGestureRecognizer;
-}
-
-@end
-
-@implementation UIViewController (FWFullscreenPopGesture)
-
-- (BOOL)fwFullscreenPopGestureDisabled
-{
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFwFullscreenPopGestureDisabled:(BOOL)disabled
-{
-    objc_setAssociatedObject(self, @selector(fwFullscreenPopGestureDisabled), @(disabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fwFullscreenPopGestureDistance
-{
-#if CGFLOAT_IS_DOUBLE
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-#else
-    return [objc_getAssociatedObject(self, _cmd) floatValue];
-#endif
-}
-
-- (void)setFwFullscreenPopGestureDistance:(CGFloat)distance
-{
-    objc_setAssociatedObject(self, @selector(fwFullscreenPopGestureDistance), @(MAX(0, distance)), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwShouldBottomBarBeHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
