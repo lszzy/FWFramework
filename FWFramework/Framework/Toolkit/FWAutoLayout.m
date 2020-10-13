@@ -1362,7 +1362,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Constraint
 
-- (NSLayoutConstraint *)lastConstraint
+- (NSLayoutConstraint *)constraint
 {
     return self.view.fwLastConstraint;
 }
@@ -1395,28 +1395,28 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
-- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id))constraint
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id))constraintToView
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView) {
         return [self.view fwConstraint:attribute toAttribute:toAttribute ofView:ofView];
     };
 }
 
-- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, NSLayoutRelation))constraintWithRelation
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, NSLayoutRelation))constraintToViewWithRelation
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, NSLayoutRelation relation) {
         return [self.view fwConstraint:attribute toAttribute:toAttribute ofView:ofView relation:relation];
     };
 }
 
-- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))constraintWithMultiplier
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))constraintToViewWithMultiplier
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier) {
         return [self.view fwConstraint:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier];
     };
 }
 
-- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))constraintWithMultiplierAndRelation
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))constraintToViewWithMultiplierAndRelation
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation) {
         return [self.view fwConstraint:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation];
