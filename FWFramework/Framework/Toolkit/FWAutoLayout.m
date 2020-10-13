@@ -482,6 +482,16 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Constraint
 
+- (NSLayoutConstraint *)fwLastConstraint
+{
+    return objc_getAssociatedObject(self, @selector(fwLastConstraint));
+}
+
+- (void)setFwLastConstraint:(NSLayoutConstraint *)fwLastConstraint
+{
+    objc_setAssociatedObject(self, @selector(fwLastConstraint), fwLastConstraint, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (NSLayoutConstraint *)fwConstraintToSuperview:(NSLayoutAttribute)attribute
 {
     return [self fwConstraintToSuperview:attribute relation:NSLayoutRelationEqual];
@@ -603,6 +613,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
         constraint = [NSLayoutConstraint constraintWithItem:self attribute:attribute relatedBy:relation toItem:otherView attribute:toAttribute multiplier:multiplier constant:offset];
         [self.fwInnerLayoutConstraints setObject:constraint forKey:layoutKey];
     }
+    self.fwLastConstraint = constraint;
     constraint.active = YES;
     return constraint;
 }
@@ -657,6 +668,9 @@ static BOOL fwStaticAutoLayoutRTL = NO;
             *stop = YES;
         }
     }];
+    if (self.fwLastConstraint && [self.fwLastConstraint isEqual:constraint]) {
+        self.fwLastConstraint = nil;
+    }
 }
 
 - (void)fwRemoveAllConstraints
@@ -665,6 +679,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     [NSLayoutConstraint deactivateConstraints:self.fwAllConstraints];
     // 清空约束对象
     [self.fwInnerLayoutConstraints removeAllObjects];
+    self.fwLastConstraint = nil;
 }
 
 @end
@@ -1346,6 +1361,11 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 }
 
 #pragma mark - Constraint
+
+- (NSLayoutConstraint *)lastConstraint
+{
+    return self.view.fwLastConstraint;
+}
 
 - (NSLayoutConstraint * (^)(NSLayoutAttribute))constraintToSuperview
 {

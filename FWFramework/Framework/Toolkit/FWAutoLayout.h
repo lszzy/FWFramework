@@ -501,6 +501,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Constraint
 
 /*!
+ @brief 最近一条添加或更新的布局约束
+ */
+@property (nullable, nonatomic, readonly) NSLayoutConstraint *fwLastConstraint;
+
+/*!
  @brief 获取添加的与父视图属性的约束
  
  @param attribute 指定属性
@@ -734,6 +739,7 @@ NS_SWIFT_UNAVAILABLE("")
 
 #pragma mark - Constraint
 
+@property (nonatomic, nullable, readonly) NSLayoutConstraint *lastConstraint;
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperview)(NSLayoutAttribute attribute);
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperviewWithRelation)(NSLayoutAttribute attribute, NSLayoutRelation relation);
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSafeArea)(NSLayoutAttribute attribute);
