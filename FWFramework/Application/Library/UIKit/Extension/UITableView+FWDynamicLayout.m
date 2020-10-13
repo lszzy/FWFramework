@@ -8,6 +8,7 @@
  */
 
 #import "UITableView+FWDynamicLayout.h"
+#import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWDynamicLayoutHeightCache
@@ -123,6 +124,14 @@
     objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)fwMaxYViewExpanded {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (UIView *)fwMaxYView {
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -182,6 +191,14 @@
 
 - (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
     objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)fwMaxYViewExpanded {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIView *)fwMaxYView {
@@ -281,6 +298,11 @@
     
     // 让外面布局 Cell
     !configuration ? : configuration(cell);
+    
+    // 自动撑开方式
+    if (cell.fwMaxYViewExpanded) {
+        return [cell fwLayoutHeightWithWidth:width];
+    }
 
     // 刷新布局
     [view setNeedsLayout];
@@ -379,6 +401,11 @@
 
     // 让外面布局 UITableViewHeaderFooterView
     !configuration ? : configuration(headerFooterView);
+    
+    // 自动撑开方式
+    if (headerFooterView.fwMaxYViewExpanded) {
+        return [headerFooterView fwLayoutHeightWithWidth:width];
+    }
     
     // 刷新布局
     [view setNeedsLayout];

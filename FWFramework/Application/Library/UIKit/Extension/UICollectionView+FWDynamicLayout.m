@@ -8,6 +8,7 @@
  */
 
 #import "UICollectionView+FWDynamicLayout.h"
+#import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWDynamicLayoutSizeCache
@@ -123,6 +124,14 @@
     objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)fwMaxYViewExpanded {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (UIView *)fwMaxYView {
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -197,6 +206,14 @@
 
 - (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
     objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)fwMaxYViewExpanded {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
+    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIView *)fwMaxYView {
@@ -315,7 +332,18 @@
     cell.frame = CGRectMake(0.0, 0.0, width, height);
     
     // 让外面布局 Cell
+    [cell prepareForReuse];
     !configuration ? : configuration(cell);
+    
+    // 自动撑开方式
+    if (cell.fwMaxYViewExpanded) {
+        if (fixedHeight > 0) {
+            width = [cell fwLayoutWidthWithHeight:height];
+        } else {
+            height = [cell fwLayoutHeightWithWidth:width];
+        }
+        return CGSizeMake(width, height);
+    }
 
     // 刷新布局
     [view setNeedsLayout];
@@ -472,7 +500,18 @@
     reusableView.frame = CGRectMake(0.0, 0.0, width, height);
 
     // 让外面布局 UICollectionReusableView
+    [reusableView prepareForReuse];
     !configuration ? : configuration(reusableView);
+    
+    // 自动撑开方式
+    if (reusableView.fwMaxYViewExpanded) {
+        if (fixedHeight > 0) {
+            width = [reusableView fwLayoutWidthWithHeight:height];
+        } else {
+            height = [reusableView fwLayoutHeightWithWidth:width];
+        }
+        return CGSizeMake(width, height);
+    }
     
     // 刷新布局
     [view setNeedsLayout];
