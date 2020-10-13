@@ -19,6 +19,8 @@
 		2FDF6F6025205E180086A99E /* FWTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F5F25205E180086A99E /* FWTableView.swift */; };
 		2FF0B3BE250FCA8D005B93DD /* UITableView+FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* UITableView+FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */; };
+		2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FF573292535FBFC009C8B2D /* UINavigationController+FWPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF573272535FBFC009C8B2D /* UINavigationController+FWPopGesture.m */; };
 		2FFE1BAC2507BF95000332A3 /* FWFramework+Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BAD2507BF95000332A3 /* FWDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B322507BF95000332A3 /* FWDatabase.m */; };
 		2FFE1BAE2507BF95000332A3 /* FWResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B332507BF95000332A3 /* FWResultSet.m */; };
@@ -356,6 +358,8 @@
 		2FDF6F5F25205E180086A99E /* FWTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTableView.swift; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWDynamicLayout.h"; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWDynamicLayout.m"; sourceTree = "<group>"; };
+		2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWPopGesture.h"; sourceTree = "<group>"; };
+		2FF573272535FBFC009C8B2D /* UINavigationController+FWPopGesture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWPopGesture.m"; sourceTree = "<group>"; };
 		2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Framework.h"; sourceTree = "<group>"; };
 		2FFE1B322507BF95000332A3 /* FWDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabase.m; sourceTree = "<group>"; };
 		2FFE1B332507BF95000332A3 /* FWResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWResultSet.m; sourceTree = "<group>"; };
@@ -977,6 +981,8 @@
 				2FFE1C8B2507BFBC000332A3 /* UINavigationController+FWBar.m */,
 				2FFE1C8C2507BFBC000332A3 /* UINavigationController+FWFramework.h */,
 				2FFE1C512507BFBC000332A3 /* UINavigationController+FWFramework.m */,
+				2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */,
+				2FF573272535FBFC009C8B2D /* UINavigationController+FWPopGesture.m */,
 				2FFE1C882507BFBC000332A3 /* UINavigationController+FWWorkflow.h */,
 				2FFE1C562507BFBC000332A3 /* UINavigationController+FWWorkflow.m */,
 				2FFE1C8E2507BFBC000332A3 /* UIPageControl+FWFramework.h */,
@@ -1246,6 +1252,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */,
 				2F1F1E172533F4DE0006DCB5 /* UICollectionView+FWDynamicLayout.h in Headers */,
 				2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */,
 				2F6313A8251DC83F0040F949 /* UIScrollView+FWContentView.h in Headers */,
@@ -1523,6 +1530,7 @@
 				2FFE1C0C2507BF95000332A3 /* FWSwizzle.m in Sources */,
 				2FFE1BC12507BF95000332A3 /* FWCacheMemory.m in Sources */,
 				2FFE1D832507BFBD000332A3 /* FWQrcodeScanView.m in Sources */,
+				2FF573292535FBFC009C8B2D /* UINavigationController+FWPopGesture.m in Sources */,
 				2FFE1D6E2507BFBD000332A3 /* UIView+FWBadge.m in Sources */,
 				2F6313A9251DC83F0040F949 /* UIScrollView+FWContentView.m in Sources */,
 				2FFE1BBD2507BF95000332A3 /* FWCacheAbstract.m in Sources */,
