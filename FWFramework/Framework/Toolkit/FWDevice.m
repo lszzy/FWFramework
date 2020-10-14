@@ -258,14 +258,19 @@
             return [self fwIsScreenSize:CGSizeMake(320, 568)];
         case FWScreenInch47:
             return [self fwIsScreenSize:CGSizeMake(375, 667)];
+        case FWScreenInch54:
+            return [self fwIsScreenSize:CGSizeMake(360, 780)];
         case FWScreenInch55:
             return [self fwIsScreenSize:CGSizeMake(414, 736)];
         case FWScreenInch58:
             return [self fwIsScreenSize:CGSizeMake(375, 812)];
         case FWScreenInch61:
-            return [self fwIsScreenResolution:CGSizeMake(828, 1792)];
+            return [self fwIsScreenResolution:CGSizeMake(828, 1792)]
+                || [self fwIsScreenSize:CGSizeMake(390, 844)];
         case FWScreenInch65:
             return [self fwIsScreenResolution:CGSizeMake(1242, 2688)];
+        case FWScreenInch67:
+            return [self fwIsScreenSize:CGSizeMake(428, 926)];
         default:
             return NO;
     }
@@ -273,7 +278,7 @@
 
 + (BOOL)fwIsScreenX
 {
-    return [self fwIsScreenSize:CGSizeMake(375, 812)] || [self fwIsScreenSize:CGSizeMake(414, 896)];
+    return [self fwSafeAreaInsets].bottom > 0;
 }
 
 + (BOOL)fwHasSafeAreaInsets

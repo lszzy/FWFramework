@@ -291,6 +291,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
+        [self.tableData removeAllObjects];
         for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }

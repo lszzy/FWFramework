@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */; };
+		2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */; };
 		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
 		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
 		2F697B4E2521ACE800910C93 /* TestDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F697B4D2521ACE800910C93 /* TestDrawViewController.m */; };
@@ -173,6 +174,8 @@
 		2F0DE5AF24F65E8A00DCC13E /* LandmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkRow.swift; sourceTree = "<group>"; };
 		2F0DE5B124F65F1F00DCC13E /* LandmarkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkData.swift; sourceTree = "<group>"; };
 		2F0DE5B524F664E900DCC13E /* LandmarkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkList.swift; sourceTree = "<group>"; };
+		2F1F1E1E2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionDynamicLayoutViewController.h; sourceTree = "<group>"; };
+		2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionDynamicLayoutViewController.m; sourceTree = "<group>"; };
 		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
@@ -694,6 +697,8 @@
 				2FF8D8B424C88A6F006A83B5 /* TestTableLayoutViewController.m */,
 				2F7D786B251303A40078EAAA /* TestTableDynamicLayoutViewController.h */,
 				2F7D786C251303A40078EAAA /* TestTableDynamicLayoutViewController.m */,
+				2F1F1E1E2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.h */,
+				2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */,
 				2FF8D8DF24C88A6F006A83B5 /* TestTableReloadViewController.h */,
 				2FF8D8AC24C88A6F006A83B5 /* TestTableReloadViewController.m */,
 				2FF8D8FF24C88A6F006A83B5 /* TestTableScrollViewController.h */,
@@ -1143,6 +1148,7 @@
 				2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */,
 				2F938E522500D60D009395FB /* TestGridViewController.m in Sources */,
 				2FF8D96724C88A70006A83B5 /* TestChainViewController.m in Sources */,
+				2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */,
 				2F6DD05D250877EF00EE2446 /* CircleView.swift in Sources */,
 				2FF8D95F24C88A70006A83B5 /* TestGradientViewController.m in Sources */,
 				2FF8D98024C88A70006A83B5 /* ComplexViewController.m in Sources */,

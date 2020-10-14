@@ -26,6 +26,9 @@ typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
 /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
 @property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
+/// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+@property (nonatomic, assign) BOOL fwMaxYViewExpanded;
+
 /// 通用绑定视图模型方法，未指定configuration时默认调用
 @property (nullable, nonatomic, strong) id fwViewModel;
 
@@ -33,10 +36,12 @@ typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
 + (instancetype)fwCellWithTableView:(UITableView *)tableView;
 
 /// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型
-+ (instancetype)fwCellWithTableView:(UITableView *)tableView style:(UITableViewCellStyle)style;
++ (instancetype)fwCellWithTableView:(UITableView *)tableView
+                              style:(UITableViewCellStyle)style;
 
 /// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
-+ (CGFloat)fwHeightWithViewModel:(nullable id)viewModel tableView:(UITableView *)tableView;
++ (CGFloat)fwHeightWithViewModel:(nullable id)viewModel
+                       tableView:(UITableView *)tableView;
 
 @end
 
@@ -60,6 +65,9 @@ typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFo
 /// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
 @property (nonatomic, assign) CGFloat fwMaxYViewPadding;
 
+/// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+@property (nonatomic, assign) BOOL fwMaxYViewExpanded;
+
 /// 通用绑定视图模型方法，未指定configuration时默认调用
 @property (nullable, nonatomic, strong) id fwViewModel;
 
@@ -67,7 +75,9 @@ typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFo
 + (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView;
 
 /// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
-+ (CGFloat)fwHeightWithViewModel:(nullable id)viewModel type:(FWHeaderFooterViewType)type tableView:(UITableView *)tableView;
++ (CGFloat)fwHeightWithViewModel:(nullable id)viewModel
+                            type:(FWHeaderFooterViewType)type
+                       tableView:(UITableView *)tableView;
 
 @end
 
@@ -80,7 +90,7 @@ typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFo
 */
 @interface UITableView (FWDynamicLayout)
 
-/// 手工清空高度缓存，如果默认清理方案不满足需求，可手工清空之
+/// 手工清空高度缓存，用于高度发生变化的情况
 - (void)fwClearHeightCache;
 
 #pragma mark - Cell

@@ -16,15 +16,6 @@ typedef NS_ENUM (NSUInteger, FWCollectionViewFlowLayoutItemRenderDirection) {
   FWCollectionViewFlowLayoutItemRenderDirectionRightToLeft
 };
 
-/**
- *  Constants that specify the types of supplementary views that can be presented using a waterfall layout.
- */
-
-/// A supplementary view that identifies the header for a given section.
-extern NSString *const FWCollectionElementKindSectionHeader;
-/// A supplementary view that identifies the footer for a given section.
-extern NSString *const FWCollectionElementKindSectionFooter;
-
 #pragma mark - FWCollectionViewDelegateFlowLayout
 
 @class FWCollectionViewFlowLayout;

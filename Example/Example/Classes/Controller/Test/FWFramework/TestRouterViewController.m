@@ -68,6 +68,11 @@
 
 @implementation TestRouterViewController
 
+- (void)renderTableLayout
+{
+    [self.tableView fwPinEdgesToSuperviewSafeArea];
+}
+
 - (void)renderModel
 {
     NSString *url = @"http://test.com?id=我是中文";
@@ -120,6 +125,7 @@
                                          @[@"通用链接douyin", @"onOpenUniversalLinks"],
                                          @[@"外部safari", @"onOpenUrl"],
                                          @[@"内部safari", @"onOpenSafari"],
+                                         @[@"iOS14bug", @"onOpen14"],
                                          ]];
 }
 
@@ -276,6 +282,27 @@
     [UIApplication fwOpenSafariController:@"http://kvm.wuyong.site/test.php" completionHandler:^{
         FWLogDebug(@"SafariController completionHandler");
     }];
+}
+
+- (void)onOpen14
+{
+    BaseViewController *viewController = [BaseViewController new];
+    viewController.title = @"iOS14 bug";
+    FWWeakifySelf();
+    [viewController fwSetBackBarBlock:^BOOL{
+        FWStrongifySelf();
+        static NSInteger count = 0;
+        NSInteger index = count++ % 3;
+        if (index == 0) {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        } else if (index == 1) {
+            [self.navigationController popToViewController:self.navigationController.viewControllers.firstObject animated:YES];
+        } else {
+            [self.navigationController setViewControllers:@[self.navigationController.viewControllers.firstObject] animated:YES];
+        }
+        return NO;
+    }];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end
