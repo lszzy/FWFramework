@@ -169,8 +169,63 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Property
 
-/*! @brief 临时对象 */
+/*!
+ @brief 临时对象
+ @discussion 备注：key的几种形式的声明和使用，下同
+    1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey
+    2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey
+    3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd
+    4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
+ */
 @property (nullable, nonatomic, strong) id fwTempObject;
+
+/*!
+ @brief 读取关联属性
+ 
+ @param name 属性名称
+ @return 属性值
+ */
+- (nullable id)fwPropertyForName:(NSString *)name;
+
+/*!
+ @brief 设置强关联属性，支持KVO
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetProperty:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 设置赋值关联属性，支持KVO，注意可能会产生野指针
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyAssign:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 设置拷贝关联属性，支持KVO
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyCopy:(nullable id)object forName:(NSString *)name;
+
+/*!
+ @brief 读取弱引用关联属性，需和fwSetPropertyWeak配套使用(OC不支持weak关联属性)
+ 
+ @param name 属性名称
+ @return 属性值
+ */
+- (nullable id)fwPropertyWeakForName:(NSString *)name;
+
+/*!
+ @brief 设置弱引用关联属性，支持KVO，需和fwPropertyWeakForName配套使用(OC不支持weak关联属性)
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
 
 @end
 

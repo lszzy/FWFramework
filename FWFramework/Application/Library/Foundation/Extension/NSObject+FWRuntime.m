@@ -8,50 +8,10 @@
  */
 
 #import "NSObject+FWRuntime.h"
-#import "FWProxy.h"
-#import <objc/runtime.h>
 #import <objc/message.h>
 #import <UIKit/UIKit.h>
 
 @implementation NSObject (FWRuntime)
-
-#pragma mark - Associate
-
-- (id)fwAssociatedObjectForKey:(const void *)key
-{
-    return objc_getAssociatedObject(self, key);
-}
-
-- (void)fwSetAssociatedObject:(id)object forKey:(const void *)key
-{
-    objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwSetAssociatedObjectAssign:(id)object forKey:(const void *)key
-{
-    objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (void)fwSetAssociatedObjectCopy:(id)object forKey:(const void *)key
-{
-    objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (void)fwRemoveAssociatedObjectForKey:(const void *)key
-{
-    objc_setAssociatedObject(self, key, nil, OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (id)fwAssociatedObjectWeakForKey:(const void *)key
-{
-    FWWeakObject *weakObject = objc_getAssociatedObject(self, key);
-    return weakObject.object;
-}
-
-- (void)fwSetAssociatedObjectWeak:(id)object forKey:(const void *)key
-{
-    objc_setAssociatedObject(self, key, [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
 
 #pragma mark - Selector
 

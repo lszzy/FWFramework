@@ -355,68 +355,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSObject (FWRuntime)
 
-#pragma mark - Associate
-
-/*!
- @brief 读取关联对象
- @discussion 备注：key的几种形式的声明和使用，下同
-    1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey
-    2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey
-    3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd
-    4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
- 
- @param key 键名
- @return 返回关联对象
- */
-- (nullable id)fwAssociatedObjectForKey:(const void *)key;
-
-/*!
- @brief 设置强关联对象，不含KVO
- 
- @param object 关联对象
- @param key 键名
- */
-- (void)fwSetAssociatedObject:(nullable id)object forKey:(const void *)key;
-
-/*!
- @brief 设置赋值关联对象，不含KVO，注意可能会产生野指针
- 
- @param object 关联对象
- @param key 键名
- */
-- (void)fwSetAssociatedObjectAssign:(nullable id)object forKey:(const void *)key;
-
-/*!
- @brief 设置拷贝关联对象，不含KVO
- 
- @param object 关联对象
- @param key 键名
- */
-- (void)fwSetAssociatedObjectCopy:(nullable id)object forKey:(const void *)key;
-
-/*!
- @brief 移除关联对象
- 
- @param key 键名
- */
-- (void)fwRemoveAssociatedObjectForKey:(const void *)key;
-
-/*!
- @brief 读取弱引用关联对象，需和fwSetAssociatedObjectWeak配套使用(OC不支持weak关联属性)
- 
- @param key 键名
- @return 返回关联对象
- */
-- (nullable id)fwAssociatedObjectWeakForKey:(const void *)key;
-
-/*!
- @brief 设置弱引用关联对象，不含KVO，需和fwAssociatedObjectWeakForKey配套使用(OC不支持weak关联属性)
- 
- @param object 关联对象
- @param key 键名
- */
-- (void)fwSetAssociatedObjectWeak:(nullable id)object forKey:(const void *)key;
-
 #pragma mark - Selector
 
 /*!
