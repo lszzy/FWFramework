@@ -12,22 +12,6 @@
 
 @implementation NSObject (FWFramework)
 
-@dynamic fwTempObject;
-
-- (id)fwTempObject
-{
-    return objc_getAssociatedObject(self, @selector(fwTempObject));
-}
-
-- (void)setFwTempObject:(id)fwTempObject
-{
-    if (fwTempObject != self.fwTempObject) {
-        [self willChangeValueForKey:@"fwTempObject"];
-        objc_setAssociatedObject(self, @selector(fwTempObject), fwTempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwTempObject"];
-    }
-}
-
 #pragma mark - Lock
 
 - (void)fwLockCreate

@@ -107,9 +107,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSObject (FWFramework)
 
-/*! @brief 临时对象 */
-@property (nullable, nonatomic, strong) id fwTempObject;
-
 #pragma mark - Lock
 
 /// 创建信号量锁(支持任意对象)，初始值1，可选调用
