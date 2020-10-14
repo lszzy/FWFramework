@@ -8,6 +8,8 @@
 
 #import "TestTableDynamicLayoutViewController.h"
 
+static BOOL isExpanded = NO;
+
 @interface TestTableDynamicLayoutObject : NSObject
 
 @property (nonatomic, copy) NSString *title;
@@ -44,7 +46,7 @@
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.backgroundColor = [UIColor appColorWhite];
+        self.contentView.backgroundColor = [UIColor fwRandomColor];
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
@@ -79,6 +81,7 @@
         [self.contentView addSubview:imageView];
         [imageView fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
             [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
             NSLayoutConstraint *widthCons = [imageView fwSetDimension:NSLayoutAttributeWidth toSize:100];
             NSLayoutConstraint *heightCons = [imageView fwSetDimension:NSLayoutAttributeHeight toSize:100];
             NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:kAppPaddingNormal];
@@ -105,6 +108,9 @@
     }
     // 手工收缩
     self.myTextLabel.text = object.text;
+    
+    [self.myImageView fwConstraintToSuperview:NSLayoutAttributeBottom].active = isExpanded;
+    self.fwMaxYViewExpanded = isExpanded;
 }
 
 - (void)onImageClick:(UIGestureRecognizer *)gesture
@@ -112,6 +118,42 @@
     if (self.imageClicked) {
         self.imageClicked(self.object);
     }
+}
+
+@end
+
+@interface TestTableDynamicLayoutHeaderView : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@end
+
+@implementation TestTableDynamicLayoutHeaderView
+
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithReuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.contentView.backgroundColor = [UIColor fwRandomColor];
+        self.fwMaxYViewPadding = 15;
+        
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
+        titleLabel.numberOfLines = 0;
+        _titleLabel = titleLabel;
+        [self.contentView addSubview:titleLabel];
+        titleLabel.fwLayoutChain.leftWithInset(15).topWithInset(15).rightWithInset(15).bottomWithInset(15);
+    }
+    return self;
+}
+
+- (void)setFwViewModel:(id)fwViewModel
+{
+    [super setFwViewModel:fwViewModel];
+    
+    self.titleLabel.text = FWSafeString(fwViewModel);
+    
+    [self.titleLabel fwConstraintToSuperview:NSLayoutAttributeBottom].active = isExpanded;
+    self.fwMaxYViewExpanded = isExpanded;
 }
 
 @end
@@ -124,11 +166,17 @@
 
 @implementation TestTableDynamicLayoutViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderView
 {
     // [self.tableView fwSetTemplateLayout:NO];
     
     FWWeakifySelf();
+    [self.tableView fwResetGroupedStyle];
     self.tableView.backgroundColor = [UIColor appColorBg];
     [self.tableView fwAddPullRefreshWithBlock:^{
         FWStrongifySelf();
@@ -167,7 +215,20 @@
 
 - (void)renderModel
 {
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(renderData)];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"刷新", @"布局撑开", @"布局不撑开"] actionBlock:^(NSInteger index) {
+            FWStrongifySelf();
+            
+            if (index == 1) {
+                isExpanded = YES;
+            } else if (index == 2) {
+                isExpanded = NO;
+            }
+            [self renderData];
+        }];
+    }];
 }
 
 - (void)renderData
@@ -231,9 +292,38 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.tableData fwRemoveObjectAtIndex:indexPath.row];
-        [self.tableView fwClearHeightCache];
-        [self.tableView reloadData];
+        [self.tableView fwReloadDataWithoutCache];
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    TestTableDynamicLayoutHeaderView *headerView = [TestTableDynamicLayoutHeaderView fwHeaderFooterViewWithTableView:tableView];
+    headerView.fwViewModel = @"我是表格Header\n我是表格Header";
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    CGFloat height = [tableView fwHeightWithHeaderFooterViewClass:[TestTableDynamicLayoutHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableDynamicLayoutHeaderView *headerView) {
+        headerView.fwViewModel = @"我是表格Header\n我是表格Header";
+    }];
+    return height;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    TestTableDynamicLayoutHeaderView *footerView = [TestTableDynamicLayoutHeaderView fwHeaderFooterViewWithTableView:tableView];
+    footerView.fwViewModel = @"我是表格Footer\n我是表格Footer\n我是表格Footer";
+    return footerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    CGFloat height = [tableView fwHeightWithHeaderFooterViewClass:[TestTableDynamicLayoutHeaderView class] type:FWHeaderFooterViewTypeFooter configuration:^(TestTableDynamicLayoutHeaderView *footerView) {
+        footerView.fwViewModel = @"我是表格Footer\n我是表格Footer\n我是表格Footer";
+    }];
+    return height;
 }
 
 - (TestTableDynamicLayoutObject *)randomObject
@@ -292,10 +382,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
+        [self.tableData removeAllObjects];
         for (int i = 0; i < 4; i++) {
             [self.tableData addObject:[self randomObject]];
         }
-        [self.tableView reloadData];
+        [self.tableView fwReloadDataWithoutCache];
         
         self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
         [self.tableView.fwPullRefreshView stopAnimating];

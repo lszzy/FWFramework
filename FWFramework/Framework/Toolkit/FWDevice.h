@@ -110,10 +110,12 @@ typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM;
 static const FWScreenInch FWScreenInch35 = 35;
 static const FWScreenInch FWScreenInch40 = 40;
 static const FWScreenInch FWScreenInch47 = 47;
+static const FWScreenInch FWScreenInch54 = 54;
 static const FWScreenInch FWScreenInch55 = 55;
 static const FWScreenInch FWScreenInch58 = 58;
 static const FWScreenInch FWScreenInch61 = 61;
 static const FWScreenInch FWScreenInch65 = 65;
+static const FWScreenInch FWScreenInch67 = 67;
 
 /// 屏幕尺寸
 #define FWScreenSize [UIScreen mainScreen].bounds.size

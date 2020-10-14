@@ -403,9 +403,10 @@ import UIKit
     open func setScrollView(_ scrollView: UIScrollView, scrollBlock: ((CGFloat) -> ())? = nil) {
         var block = scrollBlock
         if block == nil && superview != nil {
-            let constraint = fwPinEdge(toSuperview: .top)
+            let constraint = fwConstraint(toSuperview: .top)
+            let constant = constraint?.constant ?? 0
             block = { (offsetY) in
-                constraint.constant = -offsetY
+                constraint?.constant = constant - offsetY
             }
         }
         

@@ -53,6 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGFloat)fwLayoutHeightWithWidth:(CGFloat)width;
 
+/*!
+ @brief 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
+ */
+- (CGFloat)fwLayoutWidthWithHeight:(CGFloat)height;
+
 #pragma mark - Compression
 
 /*!
@@ -493,6 +498,91 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
+#pragma mark - Constraint
+
+/*!
+ @brief 最近一条添加或更新的布局约束
+ */
+@property (nullable, nonatomic, readonly) NSLayoutConstraint *fwLastConstraint;
+
+/*!
+ @brief 获取添加的与父视图属性的约束
+ 
+ @param attribute 指定属性
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraintToSuperview:(NSLayoutAttribute)attribute;
+
+/*!
+ @brief 获取添加的与父视图属性的约束，指定关系
+ 
+ @param attribute 指定属性
+ @param relation 约束关系
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraintToSuperview:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+
+/*!
+ @brief 获取添加的与父视图安全区域属性的约束
+ 
+ @param attribute 指定属性
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraintToSuperviewSafeArea:(NSLayoutAttribute)attribute;
+
+/*!
+ @brief 获取添加的与父视图安全区域属性的约束，指定关系
+ 
+ @param attribute 指定属性
+ @param relation 约束关系
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+
+/*!
+ @brief 获取添加的与指定视图属性的约束
+ 
+ @param attribute 指定属性
+ @param toAttribute 目标视图属性
+ @param otherView 目标视图
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
+
+/*!
+ @brief 获取添加的与指定视图属性的约束，指定关系
+ 
+ @param attribute 指定属性
+ @param toAttribute 目标视图属性
+ @param otherView 目标视图
+ @param relation 约束关系
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView relation:(NSLayoutRelation)relation;
+
+/*!
+ @brief 获取添加的与指定视图属性指定比例的约束
+ 
+ @param attribute 指定属性
+ @param toAttribute 目标视图属性
+ @param otherView 目标视图
+ @param multiplier 指定比例
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
+
+/*!
+ @brief 获取添加的与指定视图属性指定比例的约束，指定关系
+ 
+ @param attribute 指定属性
+ @param toAttribute 目标视图属性
+ @param otherView 目标视图
+ @param multiplier 指定比例
+ @param relation 约束关系
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+
 #pragma mark - Key
 
 /*!
@@ -641,11 +731,23 @@ NS_SWIFT_UNAVAILABLE("")
 
 #pragma mark - Attribute
 
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attribute)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffset)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffsetAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attribute)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffset)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffsetAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat offset, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier, NSLayoutRelation relation);
+
+#pragma mark - Constraint
+
+@property (nonatomic, nullable, readonly) NSLayoutConstraint *constraint;
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperview)(NSLayoutAttribute attribute);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperviewWithRelation)(NSLayoutAttribute attribute, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSafeArea)(NSLayoutAttribute attribute);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSafeAreaWithRelation)(NSLayoutAttribute attribute, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToView)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier, NSLayoutRelation relation);
 
 @end
 

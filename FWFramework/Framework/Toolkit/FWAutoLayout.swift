@@ -436,21 +436,43 @@ public class FWLayoutChain {
     // MARK: - Attribute
 
     @discardableResult
-    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain {
+    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withOffset offset: CGFloat = 0) -> FWLayoutChain {
         self.view?.fwConstrainAttribute(attribute, to: toAttribute, ofView: view, withOffset: offset)
         return self
     }
     
     @discardableResult
-    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
+    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain {
         self.view?.fwConstrainAttribute(attribute, to: toAttribute, ofView: view, withOffset: offset, relation: relation)
         return self
     }
 
     @discardableResult
-    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
         self.view?.fwConstrainAttribute(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation)
         return self
+    }
+    
+    // MARK: - Constraint
+    
+    public var constraint: NSLayoutConstraint? {
+        return self.view?.fwLastConstraint
+    }
+    
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.fwConstraint(toSuperview: attribute, relation: relation)
+    }
+    
+    public func constraintToSafeArea(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.fwConstraint(toSuperviewSafeArea: attribute, relation: relation)
+    }
+
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.fwConstraint(attribute, to: toAttribute, ofView: view, relation: relation)
+    }
+    
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.fwConstraint(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation)
     }
 }
 
