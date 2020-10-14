@@ -170,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Property
 
 /*!
- @brief 临时对象
+ @brief 临时对象，强引用，支持KVO
  @discussion 备注：key的几种形式的声明和使用，下同
     1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey
     2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey
@@ -212,20 +212,107 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwSetPropertyCopy:(nullable id)object forName:(NSString *)name;
 
 /*!
- @brief 读取弱引用关联属性，需和fwSetPropertyWeak配套使用(OC不支持weak关联属性)
- 
- @param name 属性名称
- @return 属性值
- */
-- (nullable id)fwPropertyWeakForName:(NSString *)name;
-
-/*!
- @brief 设置弱引用关联属性，支持KVO，需和fwPropertyWeakForName配套使用(OC不支持weak关联属性)
+ @brief 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
  
  @param object 属性值
  @param name   属性名称
  */
 - (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
+
+#pragma mark - Bind
+
+/*!
+ @brief 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
+ 
+ @param object 对象，会被 strong 强引用
+ @param key 键名
+ */
+- (void)fwBindObject:(nullable id)object forKey:(NSString *)key;
+
+/*!
+ @brief 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
+ 
+ @param object 对象，不会被 strong 强引用
+ @param key 键名
+ */
+- (void)fwBindObjectWeak:(nullable id)object forKey:(NSString *)key;
+
+/*!
+ @brief 取出之前使用 bind 方法绑定的对象
+ 
+ @param key 键名
+ */
+- (nullable id)fwBoundObjectForKey:(NSString *)key;
+
+/*!
+ @brief 给对象绑定上一个 double 值以供后续取出使用
+ 
+ @param doubleValue double值
+ @param key 键名
+ */
+- (void)fwBindDouble:(double)doubleValue forKey:(NSString *)key;
+
+/*!
+ @brief 取出之前用 bindDouble:forKey: 绑定的值
+ 
+ @param key 键名
+ */
+- (double)fwBoundDoubleForKey:(NSString *)key;
+
+/*!
+ @brief 给对象绑定上一个 BOOL 值以供后续取出使用
+ 
+ @param boolValue 布尔值
+ @param key 键名
+ */
+- (void)fwBindBool:(BOOL)boolValue forKey:(NSString *)key;
+
+/*!
+ @brief 取出之前用 bindBool:forKey: 绑定的值
+ 
+ @param key 键名
+ */
+- (BOOL)fwBoundBoolForKey:(NSString *)key;
+
+/*!
+ @brief 给对象绑定上一个 NSInteger 值以供后续取出使用
+ 
+ @param integerValue 整数值
+ 
+ @param key 键名
+ */
+- (void)fwBindInt:(NSInteger)integerValue forKey:(NSString *)key;
+
+/*!
+ @brief 取出之前用 bindInt:forKey: 绑定的值
+ 
+ @param key 键名
+ */
+- (NSInteger)fwBoundIntForKey:(NSString *)key;
+
+/*!
+ @brief 移除之前使用 bind 方法绑定的对象
+ 
+ @param key 键名
+ */
+- (void)fwRemoveBindingForKey:(NSString *)key;
+
+/*!
+ @brief 移除之前使用 bind 方法绑定的所有对象
+ */
+- (void)fwRemoveAllBindings;
+
+/*!
+ @brief 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
+ */
+- (NSArray<NSString *> *)fwAllBindingKeys;
+
+/*!
+ @brief 返回是否设置了某个 key
+ 
+ @param key 键名
+ */
+- (BOOL)fwHasBindingKey:(NSString *)key;
 
 @end
 
