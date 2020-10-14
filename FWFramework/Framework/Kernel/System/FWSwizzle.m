@@ -160,166 +160,22 @@
     return [objc_getAssociatedObject(self, NSSelectorFromString(swizzleIdentifier)) boolValue];
 }
 
-@end
+#pragma mark - Property
 
-#ifdef DEBUG
+@dynamic fwTempObject;
 
-#pragma mark - Test
-
-#import "FWTest.h"
-#import <objc/message.h>
-
-@interface FWTestCase_FWRuntime : FWTestCase
-
-@end
-
-@interface FWTestCase_FWRuntime_Person : NSObject
-
-@property (nonatomic, assign) NSInteger count;
-
-@end
-
-@implementation FWTestCase_FWRuntime_Person
-
-- (void)sayHello:(BOOL)value
+- (id)fwTempObject
 {
-    self.count += 1;
+    return objc_getAssociatedObject(self, @selector(fwTempObject));
 }
 
-- (void)sayHello2:(BOOL)value
+- (void)setFwTempObject:(id)fwTempObject
 {
-    self.count += 1;
-}
-
-- (void)sayHello3:(BOOL)value
-{
-    self.count += 1;
-}
-
-- (void)sayHello4:(BOOL)value
-{
-    self.count += 1;
+    if (fwTempObject != self.fwTempObject) {
+        [self willChangeValueForKey:@"fwTempObject"];
+        objc_setAssociatedObject(self, @selector(fwTempObject), fwTempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self didChangeValueForKey:@"fwTempObject"];
+    }
 }
 
 @end
-
-@interface FWTestCase_FWRuntime_Student : FWTestCase_FWRuntime_Person
-
-@end
-
-@implementation FWTestCase_FWRuntime_Student
-
-@end
-
-@implementation FWTestCase_FWRuntime_Student (swizzle)
-
-- (void)s_sayHello:(BOOL)value
-{
-    [self s_sayHello:value];
-    self.count += 2;
-}
-
-@end
-
-@implementation FWTestCase_FWRuntime_Person (swizzle)
-
-- (void)p_sayHello:(BOOL)value
-{
-    [self p_sayHello:value];
-    self.count += 3;
-}
-
-@end
-
-@implementation FWTestCase_FWRuntime
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [FWTestCase_FWRuntime_Student fwSwizzleInstanceMethod:@selector(sayHello:) with:@selector(s_sayHello:)];
-        [FWTestCase_FWRuntime_Person fwSwizzleInstanceMethod:@selector(sayHello:) with:@selector(p_sayHello:)];
-        
-        SEL swizzleSelector1 = [NSObject fwSwizzleSelectorForSelector:@selector(sayHello4:)];
-        [FWTestCase_FWRuntime_Student fwSwizzleInstanceMethod:@selector(sayHello4:) with:swizzleSelector1 block:^(__unsafe_unretained FWTestCase_FWRuntime_Student *selfObject, BOOL value){
-            ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector1, value);
-            selfObject.count += 2;
-        }];
-        SEL swizzleSelector2 = [NSObject fwSwizzleSelectorForSelector:@selector(sayHello4:)];
-        [FWTestCase_FWRuntime_Person fwSwizzleInstanceMethod:@selector(sayHello4:) with:swizzleSelector2 block:^(__unsafe_unretained FWTestCase_FWRuntime_Person *selfObject, BOOL value){
-            ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector2, value);
-            selfObject.count += 3;
-        }];
-        
-        Class studentClass = [FWTestCase_FWRuntime_Student class];
-        FWSwizzleClass(FWTestCase_FWRuntime_Student, @selector(sayHello3:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL value), FWSwizzleCode({
-            FWSwizzleOriginal(value);
-            
-            // 防止父类子类重复调用
-            BOOL isSelf = (studentClass == [selfObject class]);
-            if (isSelf) {
-                selfObject.count += 2;
-            }
-        }));
-        
-        [NSObject fwSwizzleClass:[FWTestCase_FWRuntime_Person class] selector:@selector(sayHello3:) identifier:@"Test" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-            return ^(__unsafe_unretained FWTestCase_FWRuntime_Person *selfObject, BOOL value) {
-                void (*originalMSG)(id, SEL, BOOL) = (void (*)(id, SEL, BOOL))originalIMP();
-                originalMSG(selfObject, originalCMD, value);
-                selfObject.count += 3;
-            };
-        }];
-    });
-}
-
-- (void)testMethod
-{
-    FWTestCase_FWRuntime_Student *student = [FWTestCase_FWRuntime_Student new];
-    [student sayHello:YES];
-    FWAssertTrue(student.count == 3);
-    
-    student = [FWTestCase_FWRuntime_Student new];
-    [student sayHello4:YES];
-    FWAssertTrue(student.count == 3);
-}
-
-- (void)testBlock
-{
-    FWTestCase_FWRuntime_Student *student = [FWTestCase_FWRuntime_Student new];
-    [student sayHello3:YES];
-    FWAssertTrue(student.count == 6);
-}
-
-- (void)testObject
-{
-    FWTestCase_FWRuntime_Student *student = [FWTestCase_FWRuntime_Student new];
-    [student sayHello2:YES];
-    FWAssertTrue(student.count == 1);
-    
-    student = [FWTestCase_FWRuntime_Student new];
-    FWSwizzleMethod(student, @selector(sayHello2:), @"s_sayHello2:", FWSwizzleType(FWTestCase_FWRuntime_Student *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL value), FWSwizzleCode({
-        ((void (*)(id, SEL, BOOL))originalIMP())(selfObject, originalCMD, value);
-        
-        // 防止影响其它对象
-        if (![selfObject fwIsSwizzleMethod:@selector(sayHello2:) identifier:@"s_sayHello2:"]) return;
-        selfObject.count += 2;
-    }));
-    [student fwSwizzleMethod:@selector(sayHello2:) identifier:@"p_sayHello2:" withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return FWSwizzleBlock(FWSwizzleType(FWTestCase_FWRuntime_Person *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL value), FWSwizzleCode({
-            originalMSG(selfObject, originalCMD, value);
-            
-            if (![selfObject fwIsSwizzleMethod:@selector(sayHello2:) identifier:@"p_sayHello2:"]) return;
-            selfObject.count += 3;
-        }));
-    }];
-    [student sayHello2:YES];
-    FWAssertTrue(student.count == 6);
-    
-    student = [FWTestCase_FWRuntime_Student new];
-    [student sayHello2:YES];
-    FWAssertTrue(student.count == 1);
-}
-
-@end
-
-#endif

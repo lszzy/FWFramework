@@ -167,6 +167,11 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (BOOL)fwIsSwizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier;
 
+#pragma mark - Property
+
+/*! @brief 临时对象 */
+@property (nullable, nonatomic, strong) id fwTempObject;
+
 @end
 
 NS_ASSUME_NONNULL_END
