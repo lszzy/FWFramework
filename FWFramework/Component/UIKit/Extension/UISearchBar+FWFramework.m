@@ -15,7 +15,7 @@
 #import "NSString+FWFramework.h"
 #import "FWMessage.h"
 #import "FWAutoLayout.h"
-#import "FWDevice.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)

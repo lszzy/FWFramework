@@ -39,7 +39,7 @@
 
 #import "FWAutoLayout.h"
 #import "FWWebImage.h"
-#import "FWDevice.h"
+#import "FWToolkit.h"
 #import "FWLanguage.h"
 #import "FWTheme.h"
 #import "FWVersion.h"
