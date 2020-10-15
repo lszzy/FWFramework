@@ -1,7 +1,7 @@
 /*!
- @header     FWDevice.h
+ @header     FWToolkit.h
  @indexgroup FWFramework
- @brief      FWDevice
+ @brief      FWToolkit
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIDevice+FWDevice
+#pragma mark - UIDevice+FWToolkit
 
 /// 是否是模拟器
 #if TARGET_OS_SIMULATOR
@@ -82,9 +82,9 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWIsIosLater( version ) (FWIosVersion >= version ? YES : NO)
 
 /*!
- @brief UIDevice+FWDevice
+ @brief UIDevice+FWToolkit
  */
-@interface UIDevice (FWDevice)
+@interface UIDevice (FWToolkit)
 
 /// 是否是模拟器
 + (BOOL)fwIsSimulator;
@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIScreen+FWDevice
+#pragma mark - UIScreen+FWToolkit
 
 /// 屏幕尺寸可扩展枚举
 typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM;
@@ -151,9 +151,9 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWBottomBarHeight FWTabBarHeight
 
 /*!
- @brief UIScreen+FWDevice
+ @brief UIScreen+FWToolkit
  */
-@interface UIScreen (FWDevice)
+@interface UIScreen (FWToolkit)
 
 /// 屏幕尺寸
 + (CGSize)fwScreenSize;
@@ -198,9 +198,9 @@ static const FWScreenInch FWScreenInch67 = 67;
 @end
 
 /*!
- @brief UIViewController+FWDevice
+ @brief UIViewController+FWToolkit
  */
-@interface UIViewController (FWDevice)
+@interface UIViewController (FWToolkit)
 
 /// 当前状态栏高度，隐藏为0
 - (CGFloat)fwStatusBarHeight;

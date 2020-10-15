@@ -1,13 +1,13 @@
 /*!
- @header     FWDevice.m
+ @header     FWToolkit.m
  @indexgroup FWFramework
- @brief      FWDevice
+ @brief      FWToolkit
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
  */
 
-#import "FWDevice.h"
+#import "FWToolkit.h"
 #import "FWCoder.h"
 #import "FWRouter.h"
 #import <SafariServices/SafariServices.h>
@@ -143,9 +143,9 @@
 
 @end
 
-#pragma mark - UIDevice+FWDevice
+#pragma mark - UIDevice+FWToolkit
 
-@implementation UIDevice (FWDevice)
+@implementation UIDevice (FWToolkit)
 
 + (BOOL)fwIsSimulator
 {
@@ -198,9 +198,9 @@
 
 @end
 
-#pragma mark - UIScreen+FWDevice
+#pragma mark - UIScreen+FWToolkit
 
-@implementation UIScreen (FWDevice)
+@implementation UIScreen (FWToolkit)
 
 + (CGSize)fwScreenSize
 {
@@ -332,7 +332,7 @@
 
 @end
 
-@implementation UIViewController (FWDevice)
+@implementation UIViewController (FWToolkit)
 
 - (CGFloat)fwStatusBarHeight
 {
