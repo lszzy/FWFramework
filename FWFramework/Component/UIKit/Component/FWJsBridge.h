@@ -1,7 +1,7 @@
 /*!
- @header     WKWebView+FWJsBridge.h
+ @header     FWJsBridge.h
  @indexgroup FWFramework
- @brief      WKWebView+FWJsBridge
+ @brief      FWJsBridge
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/3/17
