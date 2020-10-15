@@ -31,7 +31,6 @@
 #import "UITextField+FWFramework.h"
 #import "UITextView+FWFramework.h"
 #import "UIView+FWFramework.h"
-#import "UIAlertController+FWFramework.h"
 #import "UIViewController+FWFramework.h"
 #import "UINavigationController+FWFramework.h"
 #import "UIWindow+FWFramework.h"
