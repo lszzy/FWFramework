@@ -16,8 +16,8 @@ let package = Package(
     targets: [
         .target(
             name: "FWFramework",
-            path: "FWFramework",
             dependencies: [],
+            path: "FWFramework",
             publicHeadersPath: "",
             cSettings: [
                 .headerSearchPath("."),
