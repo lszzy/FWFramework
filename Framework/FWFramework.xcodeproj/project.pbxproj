@@ -16,6 +16,7 @@
 		2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6976FD25218C0200910C93 /* FWAsyncLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69770025218C0200910C93 /* FWAsyncLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6976FE25218C0200910C93 /* FWAsyncLayer.m */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FC14BF725383D3D00A97A99 /* FWFramework+Component.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDF6F6025205E180086A99E /* FWTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F5F25205E180086A99E /* FWTableView.swift */; };
 		2FF0B3BE250FCA8D005B93DD /* UITableView+FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* UITableView+FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */; };
@@ -355,6 +356,7 @@
 		2F6976FE25218C0200910C93 /* FWAsyncLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncLayer.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
+		2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Component.h"; sourceTree = "<group>"; };
 		2FDF6F5F25205E180086A99E /* FWTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTableView.swift; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWDynamicLayout.h"; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWDynamicLayout.m"; sourceTree = "<group>"; };
@@ -715,29 +717,85 @@
 			children = (
 				2FA99DA3228AA9CF0059DFDB /* FWFramework.h */,
 				2FFE1B2E2507BF95000332A3 /* Framework */,
+				2FC14BF3253839B300A97A99 /* Component */,
 				2FFE1C202507BFA5000332A3 /* Application */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
 			sourceTree = "<group>";
 		};
-		2FFDC76525145DBD003179EA /* Toolkit */ = {
+		2FC14BF3253839B300A97A99 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */,
+				2FC14BF425383C7B00A97A99 /* Service */,
+				2FC14BF525383CF200A97A99 /* Toolkit */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		2FC14BF425383C7B00A97A99 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1B312507BF95000332A3 /* Database */,
+				2FFE1B3C2507BF95000332A3 /* Cache */,
+				2FFE1B4B2507BF95000332A3 /* Network */,
+				2FFE1B582507BF95000332A3 /* Request */,
+				2FFE1B742507BF95000332A3 /* Socket */,
+				2FFE8381251513AA00545D6E /* Coding */,
+				2FFE83832515146600545D6E /* Cocoa */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2FC14BF525383CF200A97A99 /* Toolkit */ = {
+			isa = PBXGroup;
+			children = (
+				2FC14BFE25383E3100A97A99 /* Language */,
+				2FC14BFD25383E0000A97A99 /* Theme */,
+				2FC14BFB25383DCC00A97A99 /* AutoLayout */,
+			);
+			path = Toolkit;
+			sourceTree = "<group>";
+		};
+		2FC14BFB25383DCC00A97A99 /* AutoLayout */ = {
 			isa = PBXGroup;
 			children = (
 				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
 				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
 				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
+			);
+			path = AutoLayout;
+			sourceTree = "<group>";
+		};
+		2FC14BFD25383E0000A97A99 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1B882507BF95000332A3 /* FWTheme.h */,
+				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
+				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		2FC14BFE25383E3100A97A99 /* Language */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
+				2FFE1B832507BF95000332A3 /* FWLanguage.m */,
+				2FFE1B8C2507BF95000332A3 /* FWLanguage.swift */,
+			);
+			path = Language;
+			sourceTree = "<group>";
+		};
+		2FFDC76525145DBD003179EA /* Toolkit */ = {
+			isa = PBXGroup;
+			children = (
 				2FFE1B862507BF95000332A3 /* FWWebImage.h */,
 				2FFE1B7A2507BF95000332A3 /* FWWebImage.m */,
 				2FFE840A2515C4BE00545D6E /* FWDevice.h */,
 				2FFE84082515C4BE00545D6E /* FWDevice.m */,
 				2FFE84092515C4BE00545D6E /* FWDevice.swift */,
-				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
-				2FFE1B832507BF95000332A3 /* FWLanguage.m */,
-				2FFE1B8C2507BF95000332A3 /* FWLanguage.swift */,
-				2FFE1B882507BF95000332A3 /* FWTheme.h */,
-				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
-				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
 				2FFE1B822507BF95000332A3 /* FWVersion.h */,
 				2FFE1B8A2507BF95000332A3 /* FWVersion.m */,
 			);
@@ -749,24 +807,9 @@
 			children = (
 				2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */,
 				2FFE1B912507BF95000332A3 /* Kernel */,
-				2FFE1B302507BF95000332A3 /* Service */,
 				2FFDC76525145DBD003179EA /* Toolkit */,
 			);
 			path = Framework;
-			sourceTree = "<group>";
-		};
-		2FFE1B302507BF95000332A3 /* Service */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B312507BF95000332A3 /* Database */,
-				2FFE1B3C2507BF95000332A3 /* Cache */,
-				2FFE8381251513AA00545D6E /* Coding */,
-				2FFE1B4B2507BF95000332A3 /* Network */,
-				2FFE1B582507BF95000332A3 /* Request */,
-				2FFE1B742507BF95000332A3 /* Socket */,
-				2FFE83832515146600545D6E /* Cocoa */,
-			);
-			path = Service;
 			sourceTree = "<group>";
 		};
 		2FFE1B312507BF95000332A3 /* Database */ = {
@@ -1252,6 +1295,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FC14BF725383D3D00A97A99 /* FWFramework+Component.h in Headers */,
 				2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */,
 				2F1F1E172533F4DE0006DCB5 /* UICollectionView+FWDynamicLayout.h in Headers */,
 				2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */,
