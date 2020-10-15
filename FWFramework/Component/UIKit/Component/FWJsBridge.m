@@ -1,13 +1,13 @@
 /*!
- @header     WKWebView+FWJsBridge.m
+ @header     FWJsBridge.m
  @indexgroup FWFramework
- @brief      WKWebView+FWJsBridge
+ @brief      FWJsBridge
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/3/17
  */
 
-#import "WKWebView+FWJsBridge.h"
+#import "FWJsBridge.h"
 #import <objc/runtime.h>
 
 @implementation FWWebViewJsBridgeBase {

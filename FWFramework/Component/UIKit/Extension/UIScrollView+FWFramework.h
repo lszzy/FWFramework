@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "UIScrollView+FWContentView.h"
 #import "UIScrollView+FWEmptyView.h"
-#import "UIScrollView+FWInfiniteScroll.h"
-#import "UIScrollView+FWPullRefresh.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
