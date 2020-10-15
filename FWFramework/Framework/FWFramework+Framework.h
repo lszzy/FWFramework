@@ -9,10 +9,12 @@
 #ifndef FWFramework_Framework_h
 #define FWFramework_Framework_h
 
+#import "FWCoroutine.h"
 #import "FWLog.h"
 #import "FWMacro.h"
 #import "FWMessage.h"
 #import "FWPlugin.h"
+#import "FWPromise.h"
 #import "FWProxy.h"
 #import "FWRouter.h"
 #import "FWSwizzle.h"
