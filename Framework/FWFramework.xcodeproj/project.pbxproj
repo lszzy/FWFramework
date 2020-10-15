@@ -749,36 +749,13 @@
 		2FC14BF425383C7B00A97A99 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1B312507BF95000332A3 /* Database */,
 				2FFE1B3C2507BF95000332A3 /* Cache */,
+				2FFE1B312507BF95000332A3 /* Database */,
 				2FFE1B4B2507BF95000332A3 /* Network */,
 				2FFE1B582507BF95000332A3 /* Request */,
 				2FFE1B742507BF95000332A3 /* Socket */,
 			);
 			path = Service;
-			sourceTree = "<group>";
-		};
-		2FC14C0E2538971200A97A99 /* Toolkit */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
-				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
-				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
-				2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */,
-				2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */,
-				2F1F1E152533F4DE0006DCB5 /* UICollectionView+FWDynamicLayout.h */,
-				2F1F1E142533F4DE0006DCB5 /* UICollectionView+FWDynamicLayout.m */,
-				2FFE840A2515C4BE00545D6E /* FWDevice.h */,
-				2FFE84082515C4BE00545D6E /* FWDevice.m */,
-				2FFE84092515C4BE00545D6E /* FWDevice.swift */,
-				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
-				2FFE1B832507BF95000332A3 /* FWLanguage.m */,
-				2FFE1B8C2507BF95000332A3 /* FWLanguage.swift */,
-				2FFE1B882507BF95000332A3 /* FWTheme.h */,
-				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
-				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
-			);
-			path = Toolkit;
 			sourceTree = "<group>";
 		};
 		2FC14C102538974400A97A99 /* Plugin */ = {
@@ -811,7 +788,7 @@
 			children = (
 				2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */,
 				2FFE1B912507BF95000332A3 /* Kernel */,
-				2FC14C0E2538971200A97A99 /* Toolkit */,
+				2FC14BF425383C7B00A97A99 /* Service */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -940,7 +917,6 @@
 			children = (
 				2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */,
 				2FFE1C212507BFA5000332A3 /* App */,
-				2FC14BF425383C7B00A97A99 /* Service */,
 				2FFE1C242507BFA5000332A3 /* Controller */,
 				2FFE1C302507BFA5000332A3 /* Model */,
 				2FFE1C332507BFA5000332A3 /* View */,
@@ -998,6 +974,19 @@
 			children = (
 				2FFE1C342507BFA5000332A3 /* FWView.h */,
 				2FFE1C352507BFA5000332A3 /* FWView.m */,
+				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
+				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
+				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
+				2FF0B3BC250FCA8D005B93DD /* UITableView+FWDynamicLayout.h */,
+				2FF0B3BD250FCA8D005B93DD /* UITableView+FWDynamicLayout.m */,
+				2F1F1E152533F4DE0006DCB5 /* UICollectionView+FWDynamicLayout.h */,
+				2F1F1E142533F4DE0006DCB5 /* UICollectionView+FWDynamicLayout.m */,
+				2FFE840A2515C4BE00545D6E /* FWDevice.h */,
+				2FFE84082515C4BE00545D6E /* FWDevice.m */,
+				2FFE84092515C4BE00545D6E /* FWDevice.swift */,
+				2FFE1B882507BF95000332A3 /* FWTheme.h */,
+				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
+				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1223,6 +1212,9 @@
 		2FFE83832515146600545D6E /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
+				2FFE1B832507BF95000332A3 /* FWLanguage.m */,
+				2FFE1B8C2507BF95000332A3 /* FWLanguage.swift */,
 				2FFE1B822507BF95000332A3 /* FWVersion.h */,
 				2FFE1B8A2507BF95000332A3 /* FWVersion.m */,
 				2FFE1B8D2507BF95000332A3 /* FWAuthorize.h */,
