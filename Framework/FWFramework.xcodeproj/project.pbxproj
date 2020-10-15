@@ -788,26 +788,11 @@
 			path = Language;
 			sourceTree = "<group>";
 		};
-		2FFDC76525145DBD003179EA /* Toolkit */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B862507BF95000332A3 /* FWWebImage.h */,
-				2FFE1B7A2507BF95000332A3 /* FWWebImage.m */,
-				2FFE840A2515C4BE00545D6E /* FWDevice.h */,
-				2FFE84082515C4BE00545D6E /* FWDevice.m */,
-				2FFE84092515C4BE00545D6E /* FWDevice.swift */,
-				2FFE1B822507BF95000332A3 /* FWVersion.h */,
-				2FFE1B8A2507BF95000332A3 /* FWVersion.m */,
-			);
-			path = Toolkit;
-			sourceTree = "<group>";
-		};
 		2FFE1B2E2507BF95000332A3 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
 				2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */,
 				2FFE1B912507BF95000332A3 /* Kernel */,
-				2FFDC76525145DBD003179EA /* Toolkit */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -908,8 +893,25 @@
 		2FFE1B912507BF95000332A3 /* Kernel */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE837325150F7A00545D6E /* System */,
-				2FFE837425150F8F00545D6E /* Module */,
+				2FFE1B9A2507BF95000332A3 /* FWLog.h */,
+				2FFE1BA72507BF95000332A3 /* FWLog.m */,
+				2FFE1BA42507BF95000332A3 /* FWLog.swift */,
+				2FFE1BAB2507BF95000332A3 /* FWMacro.h */,
+				2FFE841925163E3100545D6E /* FWMacro.m */,
+				2FFE83D12515AAD100545D6E /* FWMacro.swift */,
+				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
+				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
+				2FFE1B9C2507BF95000332A3 /* FWPlugin.h */,
+				2FFE1BAA2507BF95000332A3 /* FWPlugin.m */,
+				2FFE1B962507BF95000332A3 /* FWProxy.h */,
+				2FFE1B9E2507BF95000332A3 /* FWProxy.m */,
+				2FFE1B9F2507BF95000332A3 /* FWRouter.h */,
+				2FFE1B952507BF95000332A3 /* FWRouter.m */,
+				2FFE1BA32507BF95000332A3 /* FWSwizzle.h */,
+				2FFE1B982507BF95000332A3 /* FWSwizzle.m */,
+				2FFE1B992507BF95000332A3 /* FWTest.h */,
+				2FFE1BA82507BF95000332A3 /* FWTest.m */,
+				2FFE1B942507BF95000332A3 /* FWTest.swift */,
 			);
 			path = Kernel;
 			sourceTree = "<group>";
@@ -1209,48 +1211,6 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		2FFE837325150F7A00545D6E /* System */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1BA12507BF95000332A3 /* FWCoroutine.h */,
-				2FFE1B932507BF95000332A3 /* FWCoroutine.m */,
-				2FFE1BA02507BF95000332A3 /* FWCoroutine.swift */,
-				2FFE1BAB2507BF95000332A3 /* FWMacro.h */,
-				2FFE841925163E3100545D6E /* FWMacro.m */,
-				2FFE83D12515AAD100545D6E /* FWMacro.swift */,
-				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
-				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
-				2FFE1B972507BF95000332A3 /* FWPromise.h */,
-				2FFE1BA52507BF95000332A3 /* FWPromise.m */,
-				2FFE1B962507BF95000332A3 /* FWProxy.h */,
-				2FFE1B9E2507BF95000332A3 /* FWProxy.m */,
-				2FFE1BA32507BF95000332A3 /* FWSwizzle.h */,
-				2FFE1B982507BF95000332A3 /* FWSwizzle.m */,
-			);
-			path = System;
-			sourceTree = "<group>";
-		};
-		2FFE837425150F8F00545D6E /* Module */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B9A2507BF95000332A3 /* FWLog.h */,
-				2FFE1BA72507BF95000332A3 /* FWLog.m */,
-				2FFE1BA42507BF95000332A3 /* FWLog.swift */,
-				2FFE1B9C2507BF95000332A3 /* FWPlugin.h */,
-				2FFE1BAA2507BF95000332A3 /* FWPlugin.m */,
-				2FFE1B9F2507BF95000332A3 /* FWRouter.h */,
-				2FFE1B952507BF95000332A3 /* FWRouter.m */,
-				2FFE1B9B2507BF95000332A3 /* FWState.h */,
-				2FFE1BA62507BF95000332A3 /* FWState.m */,
-				2FFE1B922507BF95000332A3 /* FWTask.h */,
-				2FFE1BA22507BF95000332A3 /* FWTask.m */,
-				2FFE1B992507BF95000332A3 /* FWTest.h */,
-				2FFE1BA82507BF95000332A3 /* FWTest.m */,
-				2FFE1B942507BF95000332A3 /* FWTest.swift */,
-			);
-			path = Module;
-			sourceTree = "<group>";
-		};
 		2FFE8381251513AA00545D6E /* Coding */ = {
 			isa = PBXGroup;
 			children = (
@@ -1267,6 +1227,13 @@
 		2FFE83832515146600545D6E /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				2FFE1B862507BF95000332A3 /* FWWebImage.h */,
+				2FFE1B7A2507BF95000332A3 /* FWWebImage.m */,
+				2FFE840A2515C4BE00545D6E /* FWDevice.h */,
+				2FFE84082515C4BE00545D6E /* FWDevice.m */,
+				2FFE84092515C4BE00545D6E /* FWDevice.swift */,
+				2FFE1B822507BF95000332A3 /* FWVersion.h */,
+				2FFE1B8A2507BF95000332A3 /* FWVersion.m */,
 				2FFE1B8D2507BF95000332A3 /* FWAuthorize.h */,
 				2FFE1B7F2507BF95000332A3 /* FWAuthorize.m */,
 				2FFE1B802507BF95000332A3 /* FWKeychain.h */,
@@ -1275,6 +1242,15 @@
 				2FFE1B872507BF95000332A3 /* FWNotification.m */,
 				2FFE1B7B2507BF95000332A3 /* FWLocation.h */,
 				2FFE1B852507BF95000332A3 /* FWLocation.m */,
+				2FFE1B922507BF95000332A3 /* FWTask.h */,
+				2FFE1BA22507BF95000332A3 /* FWTask.m */,
+				2FFE1B9B2507BF95000332A3 /* FWState.h */,
+				2FFE1BA62507BF95000332A3 /* FWState.m */,
+				2FFE1B972507BF95000332A3 /* FWPromise.h */,
+				2FFE1BA52507BF95000332A3 /* FWPromise.m */,
+				2FFE1BA12507BF95000332A3 /* FWCoroutine.h */,
+				2FFE1B932507BF95000332A3 /* FWCoroutine.m */,
+				2FFE1BA02507BF95000332A3 /* FWCoroutine.swift */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
