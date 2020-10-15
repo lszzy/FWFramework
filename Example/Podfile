@@ -1,9 +1,16 @@
 
-target "Example" do
-  platform :ios, '9.0'
+#target "Example" do
+#  platform :ios, '9.0'
+#  use_frameworks!
+#
+#  pod 'FWFramework', :path => '../'
+#  pod 'FWDebug', :configurations => ['Debug']
+#end
+
+target "AppClip" do
+  platform :ios, '14.0'
   use_frameworks!
 
-  pod 'FWFramework', :path => '../'
+  pod 'FWFramework', :path => '../', :subspecs => ['Framework']
   pod 'FWDebug', :configurations => ['Debug']
 end
-
