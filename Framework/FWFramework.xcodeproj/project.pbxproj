@@ -754,6 +754,23 @@
 			path = Cocoa;
 			sourceTree = "<group>";
 		};
+		2F6A72352538B72B008F7D0F /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1CDE2507BFBD000332A3 /* Extension */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		2F6A72392538B805008F7D0F /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1C4C2507BFBC000332A3 /* Extension */,
+				2FFE1CB62507BFBD000332A3 /* Component */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
 		2F7E41F420FC2DCF00CE3E2F = {
 			isa = PBXGroup;
 			children = (
@@ -786,8 +803,8 @@
 			isa = PBXGroup;
 			children = (
 				2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */,
-				2FFE1CDD2507BFBD000332A3 /* Foundation */,
-				2FFE1C4B2507BFBC000332A3 /* UIKit */,
+				2F6A72352538B72B008F7D0F /* Foundation */,
+				2F6A72392538B805008F7D0F /* UIKit */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -826,8 +843,12 @@
 				2FFE1C6A2507BFBC000332A3 /* UIAlertController+FWFramework.m */,
 				2FFE1CA02507BFBC000332A3 /* UIViewController+FWAlert.h */,
 				2FFE1C6E2507BFBC000332A3 /* UIViewController+FWAlert.m */,
+				2FFE1CDC2507BFBD000332A3 /* FWAlertController.h */,
+				2FFE1CC42507BFBD000332A3 /* FWAlertController.m */,
 				2FFE1C762507BFBC000332A3 /* UIView+FWIndicator.h */,
 				2FFE1CB52507BFBD000332A3 /* UIView+FWIndicator.m */,
+				2FFE1C862507BFBC000332A3 /* FWJsBridge.h */,
+				2FFE1C542507BFBC000332A3 /* FWJsBridge.m */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -1031,15 +1052,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		2FFE1C4B2507BFBC000332A3 /* UIKit */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1C4C2507BFBC000332A3 /* Extension */,
-				2FFE1CB62507BFBD000332A3 /* Component */,
-			);
-			path = UIKit;
-			sourceTree = "<group>";
-		};
 		2FFE1C4C2507BFBC000332A3 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -1147,8 +1159,6 @@
 		2FFE1CB62507BFBD000332A3 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1CDC2507BFBD000332A3 /* FWAlertController.h */,
-				2FFE1CC42507BFBD000332A3 /* FWAlertController.m */,
 				2F6976FD25218C0200910C93 /* FWAsyncLayer.h */,
 				2F6976FE25218C0200910C93 /* FWAsyncLayer.m */,
 				2FFE1CCB2507BFBD000332A3 /* FWAttributedLabel.h */,
@@ -1167,8 +1177,6 @@
 				2FFE1CB92507BFBD000332A3 /* FWGridView.m */,
 				2FFE1CC82507BFBD000332A3 /* FWIndicatorControl.h */,
 				2FFE1CD82507BFBD000332A3 /* FWIndicatorControl.m */,
-				2FFE1C862507BFBC000332A3 /* FWJsBridge.h */,
-				2FFE1C542507BFBC000332A3 /* FWJsBridge.m */,
 				2FFE1CC92507BFBD000332A3 /* FWMarqueeLabel.h */,
 				2FFE1CBA2507BFBD000332A3 /* FWMarqueeLabel.m */,
 				2FFE1CC22507BFBD000332A3 /* FWPageControl.h */,
@@ -1190,14 +1198,6 @@
 				2FFE1CBE2507BFBD000332A3 /* FWTagCollectionView.m */,
 			);
 			path = Component;
-			sourceTree = "<group>";
-		};
-		2FFE1CDD2507BFBD000332A3 /* Foundation */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1CDE2507BFBD000332A3 /* Extension */,
-			);
-			path = Foundation;
 			sourceTree = "<group>";
 		};
 		2FFE1CDE2507BFBD000332A3 /* Extension */ = {
