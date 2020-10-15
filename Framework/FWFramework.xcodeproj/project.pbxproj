@@ -717,8 +717,8 @@
 			children = (
 				2FA99DA3228AA9CF0059DFDB /* FWFramework.h */,
 				2FFE1B2E2507BF95000332A3 /* Framework */,
-				2FC14BF3253839B300A97A99 /* Component */,
 				2FFE1C202507BFA5000332A3 /* Application */,
+				2FC14BF3253839B300A97A99 /* Component */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
@@ -728,6 +728,7 @@
 			isa = PBXGroup;
 			children = (
 				2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */,
+				2FFE84322516518500545D6E /* Library */,
 				2FC14BF425383C7B00A97A99 /* Service */,
 				2FC14BF525383CF200A97A99 /* Toolkit */,
 			);
@@ -751,31 +752,10 @@
 		2FC14BF525383CF200A97A99 /* Toolkit */ = {
 			isa = PBXGroup;
 			children = (
+				2FDF6F5F25205E180086A99E /* FWTableView.swift */,
 				2FC14BFE25383E3100A97A99 /* Language */,
-				2FC14BFD25383E0000A97A99 /* Theme */,
-				2FC14BFB25383DCC00A97A99 /* AutoLayout */,
 			);
 			path = Toolkit;
-			sourceTree = "<group>";
-		};
-		2FC14BFB25383DCC00A97A99 /* AutoLayout */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
-				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
-				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
-			);
-			path = AutoLayout;
-			sourceTree = "<group>";
-		};
-		2FC14BFD25383E0000A97A99 /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B882507BF95000332A3 /* FWTheme.h */,
-				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
-				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
-			);
-			path = Theme;
 			sourceTree = "<group>";
 		};
 		2FC14BFE25383E3100A97A99 /* Language */ = {
@@ -921,7 +901,6 @@
 			children = (
 				2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */,
 				2FFE1C212507BFA5000332A3 /* App */,
-				2FFE84322516518500545D6E /* Library */,
 				2FFE1C242507BFA5000332A3 /* Controller */,
 				2FFE1C302507BFA5000332A3 /* Model */,
 				2FFE1C332507BFA5000332A3 /* View */,
@@ -963,6 +942,12 @@
 			children = (
 				2FFE1C312507BFA5000332A3 /* FWModel.h */,
 				2FFE1C322507BFA5000332A3 /* FWModel.m */,
+				2FFE83A22515A50400545D6E /* FWCoder.h */,
+				2FFE83A32515A50400545D6E /* FWCoder.m */,
+				2FFE1B722507BF95000332A3 /* FWCoder.swift */,
+				2FFE1B6E2507BF95000332A3 /* FWJson.h */,
+				2FFE1B712507BF95000332A3 /* FWJson.m */,
+				2FFE1B6C2507BF95000332A3 /* FWJson.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -972,7 +957,12 @@
 			children = (
 				2FFE1C342507BFA5000332A3 /* FWView.h */,
 				2FFE1C352507BFA5000332A3 /* FWView.m */,
-				2FDF6F5F25205E180086A99E /* FWTableView.swift */,
+				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
+				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
+				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
+				2FFE1B882507BF95000332A3 /* FWTheme.h */,
+				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
+				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1214,12 +1204,6 @@
 		2FFE8381251513AA00545D6E /* Coding */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE83A22515A50400545D6E /* FWCoder.h */,
-				2FFE83A32515A50400545D6E /* FWCoder.m */,
-				2FFE1B722507BF95000332A3 /* FWCoder.swift */,
-				2FFE1B6E2507BF95000332A3 /* FWJson.h */,
-				2FFE1B712507BF95000332A3 /* FWJson.m */,
-				2FFE1B6C2507BF95000332A3 /* FWJson.swift */,
 			);
 			path = Coding;
 			sourceTree = "<group>";
