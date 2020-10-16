@@ -85,7 +85,7 @@
 		2FFE1BE32507BF95000332A3 /* FWJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B6C2507BF95000332A3 /* FWJson.swift */; };
 		2FFE1BE52507BF95000332A3 /* FWJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B6E2507BF95000332A3 /* FWJson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BE82507BF95000332A3 /* FWJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B712507BF95000332A3 /* FWJson.m */; };
-		2FFE1BE92507BF95000332A3 /* FWCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B722507BF95000332A3 /* FWCoder.swift */; };
+		2FFE1BE92507BF95000332A3 /* FWEncode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B722507BF95000332A3 /* FWEncode.swift */; };
 		2FFE1BEB2507BF95000332A3 /* FWAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B752507BF95000332A3 /* FWAsyncUdpSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BEC2507BF95000332A3 /* FWAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B762507BF95000332A3 /* FWAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BED2507BF95000332A3 /* FWAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B772507BF95000332A3 /* FWAsyncUdpSocket.m */; };
@@ -325,8 +325,8 @@
 		2FFE1DC82507BFBD000332A3 /* NSTimer+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1D0A2507BFBD000332A3 /* NSTimer+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1DC92507BFBD000332A3 /* NSData+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1D0B2507BFBD000332A3 /* NSData+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1DCA2507BFBD000332A3 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1D0C2507BFBD000332A3 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE83A42515A50400545D6E /* FWCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE83A22515A50400545D6E /* FWCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE83A52515A50400545D6E /* FWCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83A32515A50400545D6E /* FWCoder.m */; };
+		2FFE83A42515A50400545D6E /* FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE83A22515A50400545D6E /* FWEncode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FFE83A52515A50400545D6E /* FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83A32515A50400545D6E /* FWEncode.m */; };
 		2FFE83BE2515A8A800545D6E /* FWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83B82515A8A700545D6E /* FWTheme.swift */; };
 		2FFE83DD2515AAD100545D6E /* FWMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83D12515AAD100545D6E /* FWMacro.swift */; };
 		2FFE840E2515C4BF00545D6E /* FWToolkit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84082515C4BE00545D6E /* FWToolkit.m */; };
@@ -415,7 +415,7 @@
 		2FFE1B6C2507BF95000332A3 /* FWJson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWJson.swift; sourceTree = "<group>"; };
 		2FFE1B6E2507BF95000332A3 /* FWJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWJson.h; sourceTree = "<group>"; };
 		2FFE1B712507BF95000332A3 /* FWJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWJson.m; sourceTree = "<group>"; };
-		2FFE1B722507BF95000332A3 /* FWCoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWCoder.swift; sourceTree = "<group>"; };
+		2FFE1B722507BF95000332A3 /* FWEncode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWEncode.swift; sourceTree = "<group>"; };
 		2FFE1B752507BF95000332A3 /* FWAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncUdpSocket.h; sourceTree = "<group>"; };
 		2FFE1B762507BF95000332A3 /* FWAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncSocket.h; sourceTree = "<group>"; };
 		2FFE1B772507BF95000332A3 /* FWAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncUdpSocket.m; sourceTree = "<group>"; };
@@ -655,8 +655,8 @@
 		2FFE1D0A2507BFBD000332A3 /* NSTimer+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1D0B2507BFBD000332A3 /* NSData+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1D0C2507BFBD000332A3 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
-		2FFE83A22515A50400545D6E /* FWCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWCoder.h; sourceTree = "<group>"; };
-		2FFE83A32515A50400545D6E /* FWCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWCoder.m; sourceTree = "<group>"; };
+		2FFE83A22515A50400545D6E /* FWEncode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWEncode.h; sourceTree = "<group>"; };
+		2FFE83A32515A50400545D6E /* FWEncode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWEncode.m; sourceTree = "<group>"; };
 		2FFE83B82515A8A700545D6E /* FWTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWTheme.swift; sourceTree = "<group>"; };
 		2FFE83D12515AAD100545D6E /* FWMacro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWMacro.swift; sourceTree = "<group>"; };
 		2FFE84082515C4BE00545D6E /* FWToolkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWToolkit.m; sourceTree = "<group>"; };
@@ -684,6 +684,9 @@
 				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
 				2F2574A92539A6D400880FEF /* FWBlock.h */,
 				2F2574AA2539A6D400880FEF /* FWBlock.m */,
+				2FFE83A22515A50400545D6E /* FWEncode.h */,
+				2FFE83A32515A50400545D6E /* FWEncode.m */,
+				2FFE1B722507BF95000332A3 /* FWEncode.swift */,
 				2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */,
 				2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */,
 				2FFE1B882507BF95000332A3 /* FWTheme.h */,
@@ -696,19 +699,6 @@
 			path = Toolkit;
 			sourceTree = "<group>";
 		};
-		2F6A722C2538AE6D008F7D0F /* Coding */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE83A22515A50400545D6E /* FWCoder.h */,
-				2FFE83A32515A50400545D6E /* FWCoder.m */,
-				2FFE1B722507BF95000332A3 /* FWCoder.swift */,
-				2FFE1B6E2507BF95000332A3 /* FWJson.h */,
-				2FFE1B712507BF95000332A3 /* FWJson.m */,
-				2FFE1B6C2507BF95000332A3 /* FWJson.swift */,
-			);
-			path = Coding;
-			sourceTree = "<group>";
-		};
 		2F6A722D2538AF17008F7D0F /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
@@ -716,6 +706,9 @@
 				2FFE1B7F2507BF95000332A3 /* FWAuthorize.m */,
 				2FFE1B802507BF95000332A3 /* FWKeychain.h */,
 				2FFE1B8B2507BF95000332A3 /* FWKeychain.m */,
+				2FFE1B6E2507BF95000332A3 /* FWJson.h */,
+				2FFE1B712507BF95000332A3 /* FWJson.m */,
+				2FFE1B6C2507BF95000332A3 /* FWJson.swift */,
 				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
 				2FFE1B832507BF95000332A3 /* FWLanguage.m */,
 				2FFE1B8C2507BF95000332A3 /* FWLanguage.swift */,
@@ -788,7 +781,6 @@
 			isa = PBXGroup;
 			children = (
 				2FFE1B3C2507BF95000332A3 /* Cache */,
-				2F6A722C2538AE6D008F7D0F /* Coding */,
 				2FFE1B312507BF95000332A3 /* Database */,
 				2FFE1B4B2507BF95000332A3 /* Network */,
 				2FFE1B582507BF95000332A3 /* Request */,
@@ -850,14 +842,14 @@
 		2FFE1B3C2507BF95000332A3 /* Cache */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1B3D2507BF95000332A3 /* FWCacheManager.h */,
-				2FFE1B442507BF95000332A3 /* FWCacheManager.m */,
 				2FFE1B492507BF95000332A3 /* FWCacheAbstract.h */,
 				2FFE1B432507BF95000332A3 /* FWCacheAbstract.m */,
 				2FFE1B422507BF95000332A3 /* FWCacheFile.h */,
 				2FFE1B4A2507BF95000332A3 /* FWCacheFile.m */,
 				2FFE1B482507BF95000332A3 /* FWCacheKeychain.h */,
 				2FFE1B412507BF95000332A3 /* FWCacheKeychain.m */,
+				2FFE1B3D2507BF95000332A3 /* FWCacheManager.h */,
+				2FFE1B442507BF95000332A3 /* FWCacheManager.m */,
 				2FFE1B3E2507BF95000332A3 /* FWCacheMemory.h */,
 				2FFE1B472507BF95000332A3 /* FWCacheMemory.m */,
 				2FFE1B3F2507BF95000332A3 /* FWCacheSqlite.h */,
@@ -1221,7 +1213,7 @@
 				2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */,
 				2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */,
 				2F6313A8251DC83F0040F949 /* UIScrollView+FWContentView.h in Headers */,
-				2FFE83A42515A50400545D6E /* FWCoder.h in Headers */,
+				2FFE83A42515A50400545D6E /* FWEncode.h in Headers */,
 				2FFE84102515C4BF00545D6E /* FWToolkit.h in Headers */,
 				2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */,
 				2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */,
@@ -1551,7 +1543,7 @@
 				2FFE1D952507BFBD000332A3 /* FWSegmentedControl.m in Sources */,
 				2FFE1C3B2507BFA5000332A3 /* FWCollectionViewController.m in Sources */,
 				2FFE1D152507BFBD000332A3 /* FWJsBridge.m in Sources */,
-				2FFE83A52515A50400545D6E /* FWCoder.m in Sources */,
+				2FFE83A52515A50400545D6E /* FWEncode.m in Sources */,
 				2FFE1D642507BFBD000332A3 /* UIImagePickerController+FWFramework.m in Sources */,
 				2FFE1BC02507BF95000332A3 /* FWCacheSqlite.m in Sources */,
 				2FFE1D992507BFBD000332A3 /* FWCropViewController.m in Sources */,
@@ -1573,7 +1565,7 @@
 				2FFE1C092507BF95000332A3 /* FWRouter.m in Sources */,
 				2FFE1D7E2507BFBD000332A3 /* FWTagCollectionView.m in Sources */,
 				2F2574952539928800880FEF /* FWPromise.swift in Sources */,
-				2FFE1BE92507BF95000332A3 /* FWCoder.swift in Sources */,
+				2FFE1BE92507BF95000332A3 /* FWEncode.swift in Sources */,
 				2FFE1BCC2507BF95000332A3 /* FWHTTPSessionManager.m in Sources */,
 				2FFE1D762507BFBD000332A3 /* FWToastPlugin.m in Sources */,
 				2FFE1DA82507BFBD000332A3 /* NSObject+FWRuntime.m in Sources */,

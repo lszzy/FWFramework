@@ -1,7 +1,7 @@
 /*!
- @header     FWCoder.h
+ @header     FWEncode.h
  @indexgroup FWFramework
- @brief      FWCoder
+ @brief      FWEncode
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/19
@@ -11,12 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - NSString+FWCoder
+#pragma mark - NSString+FWEncode
 
 /**
  *  字符串编码扩展
  */
-@interface NSString (FWCoder)
+@interface NSString (FWEncode)
 
 #pragma mark - Json
 
