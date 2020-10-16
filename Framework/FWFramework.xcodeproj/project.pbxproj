@@ -329,9 +329,9 @@
 		2FFE83A52515A50400545D6E /* FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83A32515A50400545D6E /* FWEncode.m */; };
 		2FFE83BE2515A8A800545D6E /* FWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83B82515A8A700545D6E /* FWTheme.swift */; };
 		2FFE83DD2515AAD100545D6E /* FWMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83D12515AAD100545D6E /* FWMacro.swift */; };
-		2FFE840E2515C4BF00545D6E /* FWToolkit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84082515C4BE00545D6E /* FWToolkit.m */; };
-		2FFE840F2515C4BF00545D6E /* FWToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84092515C4BE00545D6E /* FWToolkit.swift */; };
-		2FFE84102515C4BF00545D6E /* FWToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE840A2515C4BE00545D6E /* FWToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FFE840E2515C4BF00545D6E /* FWAdaptive.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84082515C4BE00545D6E /* FWAdaptive.m */; };
+		2FFE840F2515C4BF00545D6E /* FWAdaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84092515C4BE00545D6E /* FWAdaptive.swift */; };
+		2FFE84102515C4BF00545D6E /* FWAdaptive.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE840A2515C4BE00545D6E /* FWAdaptive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE841A25163E3100545D6E /* FWMacro.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE841925163E3100545D6E /* FWMacro.m */; };
 /* End PBXBuildFile section */
 
@@ -659,9 +659,9 @@
 		2FFE83A32515A50400545D6E /* FWEncode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWEncode.m; sourceTree = "<group>"; };
 		2FFE83B82515A8A700545D6E /* FWTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWTheme.swift; sourceTree = "<group>"; };
 		2FFE83D12515AAD100545D6E /* FWMacro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWMacro.swift; sourceTree = "<group>"; };
-		2FFE84082515C4BE00545D6E /* FWToolkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWToolkit.m; sourceTree = "<group>"; };
-		2FFE84092515C4BE00545D6E /* FWToolkit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWToolkit.swift; sourceTree = "<group>"; };
-		2FFE840A2515C4BE00545D6E /* FWToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWToolkit.h; sourceTree = "<group>"; };
+		2FFE84082515C4BE00545D6E /* FWAdaptive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAdaptive.m; sourceTree = "<group>"; };
+		2FFE84092515C4BE00545D6E /* FWAdaptive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWAdaptive.swift; sourceTree = "<group>"; };
+		2FFE840A2515C4BE00545D6E /* FWAdaptive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAdaptive.h; sourceTree = "<group>"; };
 		2FFE841925163E3100545D6E /* FWMacro.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWMacro.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -712,6 +712,9 @@
 		2F6A722A2538A8C6008F7D0F /* Toolkit */ = {
 			isa = PBXGroup;
 			children = (
+				2FFE840A2515C4BE00545D6E /* FWAdaptive.h */,
+				2FFE84082515C4BE00545D6E /* FWAdaptive.m */,
+				2FFE84092515C4BE00545D6E /* FWAdaptive.swift */,
 				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
 				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
 				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
@@ -722,9 +725,6 @@
 				2FFE1B882507BF95000332A3 /* FWTheme.h */,
 				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
 				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
-				2FFE840A2515C4BE00545D6E /* FWToolkit.h */,
-				2FFE84082515C4BE00545D6E /* FWToolkit.m */,
-				2FFE84092515C4BE00545D6E /* FWToolkit.swift */,
 			);
 			path = Toolkit;
 			sourceTree = "<group>";
@@ -1225,7 +1225,7 @@
 				2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */,
 				2F6313A8251DC83F0040F949 /* UIScrollView+FWContentView.h in Headers */,
 				2FFE83A42515A50400545D6E /* FWEncode.h in Headers */,
-				2FFE84102515C4BF00545D6E /* FWToolkit.h in Headers */,
+				2FFE84102515C4BF00545D6E /* FWAdaptive.h in Headers */,
 				2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */,
 				2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */,
 				2FFE1D722507BFBD000332A3 /* WKWebView+FWFramework.h in Headers */,
@@ -1546,7 +1546,7 @@
 				2FFE1DC32507BFBD000332A3 /* NSUserDefaults+FWFramework.m in Sources */,
 				2FFE1C382507BFA5000332A3 /* FWAppDelegate.m in Sources */,
 				2FFE1D6B2507BFBD000332A3 /* UICollectionView+FWFramework.m in Sources */,
-				2FFE840E2515C4BF00545D6E /* FWToolkit.m in Sources */,
+				2FFE840E2515C4BF00545D6E /* FWAdaptive.m in Sources */,
 				2FFE1D562507BFBD000332A3 /* UIDevice+FWFramework.m in Sources */,
 				2FFE1D952507BFBD000332A3 /* FWSegmentedControl.m in Sources */,
 				2FFE1C3B2507BFA5000332A3 /* FWCollectionViewController.m in Sources */,
@@ -1604,7 +1604,7 @@
 				2FFE1D6D2507BFBD000332A3 /* UITextView+FWFramework.m in Sources */,
 				2FFE1BCD2507BF95000332A3 /* FWNetworkReachabilityManager.m in Sources */,
 				2FFE1BFC2507BF95000332A3 /* FWNotification.m in Sources */,
-				2FFE840F2515C4BF00545D6E /* FWToolkit.swift in Sources */,
+				2FFE840F2515C4BF00545D6E /* FWAdaptive.swift in Sources */,
 				2FFE1BDF2507BF95000332A3 /* FWBaseRequest.m in Sources */,
 				2FFE1D792507BFBD000332A3 /* FWGridView.m in Sources */,
 				2FFE1BAE2507BF95000332A3 /* FWResultSet.m in Sources */,

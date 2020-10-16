@@ -28,10 +28,10 @@
 #import "FWNotification.h"
 #import "FWVersion.h"
 
+#import "FWAdaptive.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
 #import "FWTheme.h"
-#import "FWToolkit.h"
 
 #endif /* FWFramework_Framework_h */

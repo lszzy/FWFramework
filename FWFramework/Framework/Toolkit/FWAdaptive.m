@@ -1,19 +1,19 @@
 /*!
- @header     FWToolkit.m
+ @header     FWAdaptive.m
  @indexgroup FWFramework
- @brief      FWToolkit
+ @brief      FWAdaptive
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
  */
 
-#import "FWToolkit.h"
+#import "FWAdaptive.h"
 #import "FWCoder.h"
 #import "FWRouter.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
 
-#pragma mark - UIApplication+FWToolkit
+#pragma mark - UIApplication+FWAdaptive
 
 @interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate>
 
@@ -41,7 +41,7 @@
 
 @end
 
-@implementation UIApplication (FWToolkit)
+@implementation UIApplication (FWAdaptive)
 
 + (BOOL)fwIsDebug
 {
@@ -143,9 +143,9 @@
 
 @end
 
-#pragma mark - UIDevice+FWToolkit
+#pragma mark - UIDevice+FWAdaptive
 
-@implementation UIDevice (FWToolkit)
+@implementation UIDevice (FWAdaptive)
 
 + (BOOL)fwIsSimulator
 {
@@ -198,11 +198,11 @@
 
 @end
 
-#pragma mark - UIScreen+FWToolkit
+#pragma mark - UIScreen+FWAdaptive
 
 static CGSize fwStaticScaleFactorSize = CGSizeMake(375, 812);
 
-@implementation UIScreen (FWToolkit)
+@implementation UIScreen (FWAdaptive)
 
 + (CGSize)fwScreenSize
 {
@@ -357,7 +357,7 @@ static CGSize fwStaticScaleFactorSize = CGSizeMake(375, 812);
 
 @end
 
-@implementation UIViewController (FWToolkit)
+@implementation UIViewController (FWAdaptive)
 
 - (CGFloat)fwStatusBarHeight
 {

@@ -1,7 +1,7 @@
 /*!
- @header     FWToolkit.h
+ @header     FWAdaptive.h
  @indexgroup FWFramework
- @brief      FWToolkit
+ @brief      FWAdaptive
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIApplication+FWToolkit
+#pragma mark - UIApplication+FWAdaptive
 
 /// 是否是调试模式
 #ifdef DEBUG
@@ -21,10 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 /*!
- @brief UIApplication+FWToolkit
+ @brief UIApplication+FWAdaptive
  @discussion 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
  */
-@interface UIApplication (FWToolkit)
+@interface UIApplication (FWAdaptive)
 
 /// 是否是调试模式
 + (BOOL)fwIsDebug;
@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIDevice+FWToolkit
+#pragma mark - UIDevice+FWAdaptive
 
 /// 是否是模拟器
 #if TARGET_OS_SIMULATOR
@@ -82,9 +82,9 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWIsIosLater( version ) (FWIosVersion >= version ? YES : NO)
 
 /*!
- @brief UIDevice+FWToolkit
+ @brief UIDevice+FWAdaptive
  */
-@interface UIDevice (FWToolkit)
+@interface UIDevice (FWAdaptive)
 
 /// 是否是模拟器
 + (BOOL)fwIsSimulator;
@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIScreen+FWToolkit
+#pragma mark - UIScreen+FWAdaptive
 
 /// 屏幕尺寸可扩展枚举
 typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM;
@@ -156,9 +156,9 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWScaleFactorHeight [UIScreen fwScaleFactorHeight]
 
 /*!
- @brief UIScreen+FWToolkit
+ @brief UIScreen+FWAdaptive
  */
-@interface UIScreen (FWToolkit)
+@interface UIScreen (FWAdaptive)
 
 /// 屏幕尺寸
 + (CGSize)fwScreenSize;
@@ -210,9 +210,9 @@ static const FWScreenInch FWScreenInch67 = 67;
 @end
 
 /*!
- @brief UIViewController+FWToolkit
+ @brief UIViewController+FWAdaptive
  */
-@interface UIViewController (FWToolkit)
+@interface UIViewController (FWAdaptive)
 
 /// 当前状态栏高度，隐藏为0
 - (CGFloat)fwStatusBarHeight;

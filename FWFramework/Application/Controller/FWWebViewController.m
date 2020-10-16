@@ -10,7 +10,7 @@
 #import "FWWebViewController.h"
 #import "FWCoder.h"
 #import "FWMessage.h"
-#import "FWToolkit.h"
+#import "FWAdaptive.h"
 #import "FWAutoLayout.h"
 #import "WKWebView+FWJsBridge.h"
 #import "UIView+FWFramework.h"
