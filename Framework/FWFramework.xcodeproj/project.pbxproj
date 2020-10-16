@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25748D2539858900880FEF /* FWRequestEventAccessory.m */; };
+		2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25748E2539858900880FEF /* FWRequestEventAccessory.h */; };
 		2F6313A8251DC83F0040F949 /* UIScrollView+FWContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6313A6251DC83F0040F949 /* UIScrollView+FWContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6313A9251DC83F0040F949 /* UIScrollView+FWContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6313A7251DC83F0040F949 /* UIScrollView+FWContentView.m */; };
 		2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -346,6 +348,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F25748D2539858900880FEF /* FWRequestEventAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWRequestEventAccessory.m; sourceTree = "<group>"; };
+		2F25748E2539858900880FEF /* FWRequestEventAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWRequestEventAccessory.h; sourceTree = "<group>"; };
 		2F6313A6251DC83F0040F949 /* UIScrollView+FWContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWContentView.h"; sourceTree = "<group>"; };
 		2F6313A7251DC83F0040F949 /* UIScrollView+FWContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWContentView.m"; sourceTree = "<group>"; };
 		2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSceneDelegate.h; sourceTree = "<group>"; };
@@ -942,6 +946,8 @@
 				2FFE1B5C2507BF95000332A3 /* FWNetworkPrivate.m */,
 				2FFE1B5E2507BF95000332A3 /* FWRequest.h */,
 				2FFE1B662507BF95000332A3 /* FWRequest.m */,
+				2F25748E2539858900880FEF /* FWRequestEventAccessory.h */,
+				2F25748D2539858900880FEF /* FWRequestEventAccessory.m */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -1362,6 +1368,7 @@
 				2FFE1BD62507BF95000332A3 /* FWRequest.h in Headers */,
 				2FFE1D422507BFBD000332A3 /* UIButton+FWFramework.h in Headers */,
 				2FFE1D4D2507BFBD000332A3 /* UINavigationController+FWFramework.h in Headers */,
+				2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */,
 				2FFE1C052507BF95000332A3 /* FWLanguage.h in Headers */,
 				2FFE1D492507BFBD000332A3 /* UINavigationController+FWWorkflow.h in Headers */,
 				2FFE1D142507BFBD000332A3 /* UINavigationController+FWBar.h in Headers */,
@@ -1639,6 +1646,7 @@
 				2FFE1BF82507BF95000332A3 /* FWLanguage.m in Sources */,
 				2FFE1C182507BF95000332A3 /* FWLog.swift in Sources */,
 				2FFE1D202507BFBD000332A3 /* UIGestureRecognizer+FWFramework.m in Sources */,
+				2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */,
 				2FFE1BF42507BF95000332A3 /* FWAuthorize.m in Sources */,
 				2FFE1D382507BFBD000332A3 /* UIImage+FWFramework.m in Sources */,
 				2FFE1D362507BFBD000332A3 /* UIControl+FWFramework.m in Sources */,
