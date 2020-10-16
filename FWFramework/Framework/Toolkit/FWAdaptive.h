@@ -49,8 +49,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 判断URL是否是AppStore链接，支持NSString|NSURL
 + (BOOL)fwIsAppStoreURL:(id)url;
 
-// 判断URL是否是安全的AppScheme链接(如AppStore|电话|设置等)，支持NSString|NSURL
-+ (BOOL)fwIsAppSchemeURL:(id)url;
+// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
++ (BOOL)fwIsSystemURL:(id)url;
+
+// 判断URL是否HTTP链接，支持NSString|NSURL
++ (BOOL)fwIsHttpURL:(id)url;
 
 // 打开内部浏览器，支持NSString|NSURL
 + (void)fwOpenSafariController:(id)url;
