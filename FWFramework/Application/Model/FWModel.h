@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief FWViewModel
  */
-@protocol FWViewModel <NSObject>
+@protocol FWViewModel <FWJsonModel>
 
 @end
 
