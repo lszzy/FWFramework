@@ -195,6 +195,10 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 底部栏高度，包含标签栏，与是否隐藏无关
 + (CGFloat)fwBottomBarHeight;
 
+// 可指定适配设计图尺寸，默认375，812
+#define kAppScaleFactorWidth ([UIScreen mainScreen].bounds.size.width / 375.f)
+#define kAppScaleFactorHeight ([UIScreen mainScreen].bounds.size.height / 812.f)
+
 @end
 
 /*!
