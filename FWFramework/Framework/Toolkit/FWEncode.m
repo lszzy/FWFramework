@@ -1,17 +1,17 @@
 /*!
- @header     FWCoder.m
+ @header     FWEncode.m
  @indexgroup FWFramework
- @brief      FWCoder
+ @brief      FWEncode
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/19
  */
 
-#import "FWCoder.h"
+#import "FWEncode.h"
 #import "FWSwizzle.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation NSString (FWCoder)
+@implementation NSString (FWEncode)
 
 #pragma mark - Json
 

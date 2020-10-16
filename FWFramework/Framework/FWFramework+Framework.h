@@ -19,8 +19,6 @@
 #import "FWSwizzle.h"
 #import "FWTask.h"
 #import "FWTest.h"
-#import "FWPromise.h"
-#import "FWCoroutine.h"
 
 #import "FWCacheManager.h"
 #import "FWCoder.h"
