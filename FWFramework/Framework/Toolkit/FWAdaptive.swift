@@ -1,5 +1,5 @@
 //
-//  FWToolkit.swift
+//  FWAdaptive.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/9/8.
@@ -8,12 +8,12 @@
 
 import UIKit
 
-// MARK: - UIApplication+FWToolkit
+// MARK: - UIApplication+FWAdaptive
 
 /// 是否是调试模式
 public let FWIsDebug: Bool = UIApplication.fwIsDebug()
 
-// MARK: - UIDevice+FWToolkit
+// MARK: - UIDevice+FWAdaptive
 
 #if targetEnvironment(simulator)
 /// 是否是模拟器
@@ -49,7 +49,7 @@ public func FWIsIosLater(_ version: Int) -> Bool {
     return UIDevice.fwIsIosLater(version)
 }
 
-// MARK: - UIScreen+FWToolkit
+// MARK: - UIScreen+FWAdaptive
 
 /// 屏幕尺寸
 public var FWScreenSize: CGSize { return UIScreen.main.bounds.size }

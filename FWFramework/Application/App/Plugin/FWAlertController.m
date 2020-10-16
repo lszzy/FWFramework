@@ -7,7 +7,7 @@
 //
 
 #import "FWAlertController.h"
-#import "FWToolkit.h"
+#import "FWAdaptive.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 
