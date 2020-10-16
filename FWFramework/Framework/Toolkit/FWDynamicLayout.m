@@ -297,6 +297,7 @@
     cell.frame = CGRectMake(0.0, 0.0, width, 0.0);
     
     // 让外面布局 Cell
+    [cell prepareForReuse];
     !configuration ? : configuration(cell);
     
     // 自动撑开方式
@@ -400,6 +401,7 @@
     headerFooterView.frame = CGRectMake(0.0, 0.0, width, 0.0);
 
     // 让外面布局 UITableViewHeaderFooterView
+    [headerFooterView prepareForReuse];
     !configuration ? : configuration(headerFooterView);
     
     // 自动撑开方式
