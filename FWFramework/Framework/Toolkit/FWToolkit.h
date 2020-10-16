@@ -150,6 +150,11 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 底部栏高度，包含标签栏
 #define FWBottomBarHeight FWTabBarHeight
 
+/// 当前屏幕宽度缩放比例
+#define FWScaleFactorWidth [UIScreen fwScaleFactorWidth]
+/// 当前屏幕高度缩放比例
+#define FWScaleFactorHeight [UIScreen fwScaleFactorHeight]
+
 /*!
  @brief UIScreen+FWToolkit
  */
@@ -195,9 +200,12 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 底部栏高度，包含标签栏，与是否隐藏无关
 + (CGFloat)fwBottomBarHeight;
 
-// 可指定适配设计图尺寸，默认375，812
-#define kAppScaleFactorWidth ([UIScreen mainScreen].bounds.size.width / 375.f)
-#define kAppScaleFactorHeight ([UIScreen mainScreen].bounds.size.height / 812.f)
+/// 指定缩放比例原始设计图尺寸，默认{375,812}
++ (void)fwSetScaleFactorSize:(CGSize)size;
+/// 获取当前屏幕宽度缩放比例
++ (CGFloat)fwScaleFactorWidth;
+/// 获取当前屏幕高度缩放比例
++ (CGFloat)fwScaleFactorHeight;
 
 @end
 
