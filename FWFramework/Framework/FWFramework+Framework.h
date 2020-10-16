@@ -21,6 +21,7 @@
 #import "FWTest.h"
 
 #import "FWAuthorize.h"
+#import "FWEncode.h"
 #import "FWKeychain.h"
 #import "FWLanguage.h"
 #import "FWLocation.h"
@@ -29,7 +30,6 @@
 
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
-#import "FWEncode.h"
 #import "FWDynamicLayout.h"
 #import "FWTheme.h"
 #import "FWToolkit.h"

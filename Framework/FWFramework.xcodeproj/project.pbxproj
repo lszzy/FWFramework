@@ -676,13 +676,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2F2574C32539FD8200880FEF /* UIKit */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = UIKit;
-			sourceTree = "<group>";
-		};
 		2F2574C52539FF7500880FEF /* Json */ = {
 			isa = PBXGroup;
 			children = (
@@ -693,36 +686,14 @@
 			path = Json;
 			sourceTree = "<group>";
 		};
-		2F6A722A2538A8C6008F7D0F /* Toolkit */ = {
-			isa = PBXGroup;
-			children = (
-				2F6A722D2538AF17008F7D0F /* Foundation */,
-				2F2574C32539FD8200880FEF /* UIKit */,
-				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
-				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
-				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
-				2F2574A92539A6D400880FEF /* FWBlock.h */,
-				2F2574AA2539A6D400880FEF /* FWBlock.m */,
-				2FFE83A22515A50400545D6E /* FWEncode.h */,
-				2FFE83A32515A50400545D6E /* FWEncode.m */,
-				2FFE1B722507BF95000332A3 /* FWEncode.swift */,
-				2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */,
-				2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */,
-				2FFE1B882507BF95000332A3 /* FWTheme.h */,
-				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
-				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
-				2FFE840A2515C4BE00545D6E /* FWToolkit.h */,
-				2FFE84082515C4BE00545D6E /* FWToolkit.m */,
-				2FFE84092515C4BE00545D6E /* FWToolkit.swift */,
-			);
-			path = Toolkit;
-			sourceTree = "<group>";
-		};
-		2F6A722D2538AF17008F7D0F /* Foundation */ = {
+		2F2574C6253A012D00880FEF /* Module */ = {
 			isa = PBXGroup;
 			children = (
 				2FFE1B8D2507BF95000332A3 /* FWAuthorize.h */,
 				2FFE1B7F2507BF95000332A3 /* FWAuthorize.m */,
+				2FFE83A22515A50400545D6E /* FWEncode.h */,
+				2FFE83A32515A50400545D6E /* FWEncode.m */,
+				2FFE1B722507BF95000332A3 /* FWEncode.swift */,
 				2FFE1B802507BF95000332A3 /* FWKeychain.h */,
 				2FFE1B8B2507BF95000332A3 /* FWKeychain.m */,
 				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
@@ -735,7 +706,27 @@
 				2FFE1B822507BF95000332A3 /* FWVersion.h */,
 				2FFE1B8A2507BF95000332A3 /* FWVersion.m */,
 			);
-			path = Foundation;
+			path = Module;
+			sourceTree = "<group>";
+		};
+		2F6A722A2538A8C6008F7D0F /* Toolkit */ = {
+			isa = PBXGroup;
+			children = (
+				2FFE1B842507BF95000332A3 /* FWAutoLayout.h */,
+				2FFE1B8E2507BF95000332A3 /* FWAutoLayout.m */,
+				2FFE1B812507BF95000332A3 /* FWAutoLayout.swift */,
+				2F2574A92539A6D400880FEF /* FWBlock.h */,
+				2F2574AA2539A6D400880FEF /* FWBlock.m */,
+				2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */,
+				2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */,
+				2FFE1B882507BF95000332A3 /* FWTheme.h */,
+				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
+				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
+				2FFE840A2515C4BE00545D6E /* FWToolkit.h */,
+				2FFE84082515C4BE00545D6E /* FWToolkit.m */,
+				2FFE84092515C4BE00545D6E /* FWToolkit.swift */,
+			);
+			path = Toolkit;
 			sourceTree = "<group>";
 		};
 		2F6A72352538B72B008F7D0F /* Foundation */ = {
@@ -832,6 +823,7 @@
 			children = (
 				2FFE1B2F2507BF95000332A3 /* FWFramework+Framework.h */,
 				2FFE1B912507BF95000332A3 /* Kernel */,
+				2F2574C6253A012D00880FEF /* Module */,
 				2F6A722A2538A8C6008F7D0F /* Toolkit */,
 			);
 			path = Framework;
