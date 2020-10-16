@@ -1,7 +1,7 @@
 /*!
- @header     UIView+FWIndicator.h
+ @header     FWToastPlugin.h
  @indexgroup FWFramework
- @brief      UIView+FWIndicator
+ @brief      FWToastPlugin
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/22
@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief UIView+FWIndicator
- @discussion FWToastPlugin、FWLoadingPlugin
  */
 @interface UIView (FWIndicator)
 

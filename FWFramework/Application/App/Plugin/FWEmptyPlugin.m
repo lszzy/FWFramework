@@ -1,13 +1,13 @@
 /*!
- @header     FWEmptyView.m
+ @header     FWEmptyPlugin.m
  @indexgroup FWFramework
- @brief      FWEmptyView
+ @brief      FWEmptyPlugin
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/3
  */
 
-#import "FWEmptyView.h"
+#import "FWEmptyPlugin.h"
 #import "UIView+FWFramework.h"
 
 @interface FWEmptyView ()

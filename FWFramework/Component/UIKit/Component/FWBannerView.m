@@ -11,7 +11,7 @@
 #import "FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
 #import "FWPageControl.h"
-#import "FWWebImage.h"
+#import "FWImagePlugin.h"
 #import "UIView+FWStatistical.h"
 
 #pragma mark - FWBannerViewFlowLayout
