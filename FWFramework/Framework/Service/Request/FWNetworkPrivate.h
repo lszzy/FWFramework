@@ -29,6 +29,7 @@
 #import "FWChainRequestAgent.h"
 #import "FWNetworkAgent.h"
 #import "FWNetworkConfig.h"
+#import "FWRequestEventAccessory.h"
 #import "FWCoroutine.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -41,6 +41,7 @@ NS_ENUM(NSInteger) {
 ///  Based on FWBaseRequest, FWRequest adds local caching feature. Note download
 ///  request will not be cached whatsoever, because download request may involve complicated
 ///  cache control policy controlled by `Cache-Control`, `Last-Modified`, etc.
+///  https://github.com/yuantiku/YTKNetwork
 @interface FWRequest : FWBaseRequest
 
 ///  Whether to use cache as response or not.

@@ -224,7 +224,7 @@ typedef void(^FWRequestCompletionBlock)(__kindof FWBaseRequest *request);
 ///  You can use this block to track the upload progress.
 @property (nonatomic, copy, nullable) FWURLSessionTaskProgressBlock uploadProgressBlock;
 
-///  The priority of the request. Effective only on iOS 8+. Default is `FWRequestPriorityDefault`.
+///  The priority of the request. Default is `FWRequestPriorityDefault`.
 @property (nonatomic) FWRequestPriority requestPriority;
 
 ///  Set completion callbacks
