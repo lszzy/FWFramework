@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25748D2539858900880FEF /* FWRequestEventAccessory.m */; };
-		2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25748E2539858900880FEF /* FWRequestEventAccessory.h */; };
+		2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25748E2539858900880FEF /* FWRequestEventAccessory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2574952539928800880FEF /* FWPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2574942539928800880FEF /* FWPromise.swift */; };
-		2F25749925399A5300880FEF /* FWRefreshPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25749725399A5300880FEF /* FWRefreshPlugin.h */; };
+		2F25749925399A5300880FEF /* FWRefreshPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25749725399A5300880FEF /* FWRefreshPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F25749A25399A5300880FEF /* FWRefreshPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25749825399A5300880FEF /* FWRefreshPlugin.m */; };
-		2F2574AB2539A6D400880FEF /* FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2574A92539A6D400880FEF /* FWBlock.h */; };
+		2F2574AB2539A6D400880FEF /* FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2574A92539A6D400880FEF /* FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2574AC2539A6D400880FEF /* FWBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2574AA2539A6D400880FEF /* FWBlock.m */; };
 		2F6313A8251DC83F0040F949 /* UIScrollView+FWContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6313A6251DC83F0040F949 /* UIScrollView+FWContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F6313A9251DC83F0040F949 /* UIScrollView+FWContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6313A7251DC83F0040F949 /* UIScrollView+FWContentView.m */; };
@@ -793,20 +793,20 @@
 		2FC14C102538974400A97A99 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
-				2F25749725399A5300880FEF /* FWRefreshPlugin.h */,
-				2F25749825399A5300880FEF /* FWRefreshPlugin.m */,
-				2FFE1B862507BF95000332A3 /* FWImagePlugin.h */,
-				2FFE1B7A2507BF95000332A3 /* FWImagePlugin.m */,
-				2FFE1CCD2507BFBD000332A3 /* FWEmptyPlugin.h */,
-				2FFE1CBD2507BFBD000332A3 /* FWEmptyPlugin.m */,
 				2FFE1CA02507BFBC000332A3 /* FWAlertPlugin.h */,
 				2FFE1C6E2507BFBC000332A3 /* FWAlertPlugin.m */,
 				2FFE1CDC2507BFBD000332A3 /* FWAlertController.h */,
 				2FFE1CC42507BFBD000332A3 /* FWAlertController.m */,
-				2FFE1C762507BFBC000332A3 /* FWToastPlugin.h */,
-				2FFE1CB52507BFBD000332A3 /* FWToastPlugin.m */,
+				2FFE1CCD2507BFBD000332A3 /* FWEmptyPlugin.h */,
+				2FFE1CBD2507BFBD000332A3 /* FWEmptyPlugin.m */,
+				2FFE1B862507BF95000332A3 /* FWImagePlugin.h */,
+				2FFE1B7A2507BF95000332A3 /* FWImagePlugin.m */,
 				2FFE1C862507BFBC000332A3 /* FWJsBridge.h */,
 				2FFE1C542507BFBC000332A3 /* FWJsBridge.m */,
+				2F25749725399A5300880FEF /* FWRefreshPlugin.h */,
+				2F25749825399A5300880FEF /* FWRefreshPlugin.m */,
+				2FFE1C762507BFBC000332A3 /* FWToastPlugin.h */,
+				2FFE1CB52507BFBD000332A3 /* FWToastPlugin.m */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -975,15 +975,15 @@
 		2FFE1C242507BFA5000332A3 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2FFE1C252507BFA5000332A3 /* FWViewController.h */,
+				2FFE1C2B2507BFA5000332A3 /* FWViewController.m */,
+				2FFE1C292507BFA5000332A3 /* FWViewController.swift */,
 				2FFE1C2C2507BFA5000332A3 /* FWCollectionViewController.h */,
 				2FFE1C272507BFA5000332A3 /* FWCollectionViewController.m */,
 				2FFE1C2A2507BFA5000332A3 /* FWScrollViewController.h */,
 				2FFE1C2F2507BFA5000332A3 /* FWScrollViewController.m */,
 				2FFE1C2E2507BFA5000332A3 /* FWTableViewController.h */,
 				2FFE1C282507BFA5000332A3 /* FWTableViewController.m */,
-				2FFE1C252507BFA5000332A3 /* FWViewController.h */,
-				2FFE1C2B2507BFA5000332A3 /* FWViewController.m */,
-				2FFE1C292507BFA5000332A3 /* FWViewController.swift */,
 				2FFE1C2D2507BFA5000332A3 /* FWWebViewController.h */,
 				2FFE1C262507BFA5000332A3 /* FWWebViewController.m */,
 			);
@@ -1209,6 +1209,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F25749925399A5300880FEF /* FWRefreshPlugin.h in Headers */,
+				2F2574AB2539A6D400880FEF /* FWBlock.h in Headers */,
+				2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */,
 				2FC14BF725383D3D00A97A99 /* FWFramework+Component.h in Headers */,
 				2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */,
 				2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */,
@@ -1244,12 +1247,10 @@
 				2FFE1D5C2507BFBD000332A3 /* UITableView+FWTemplateLayout.h in Headers */,
 				2FFE1D7F2507BFBD000332A3 /* FWSegmentedControl.h in Headers */,
 				2FFE1C1D2507BF95000332A3 /* FWMessage.h in Headers */,
-				2F25749925399A5300880FEF /* FWRefreshPlugin.h in Headers */,
 				2FFE1D692507BFBD000332A3 /* UIView+FWAnimation.h in Headers */,
 				2FFE1D852507BFBD000332A3 /* FWProgressView.h in Headers */,
 				2FFE1BF02507BF95000332A3 /* FWLocation.h in Headers */,
 				2FFE1D5D2507BFBD000332A3 /* UISearchBar+FWFramework.h in Headers */,
-				2F2574AB2539A6D400880FEF /* FWBlock.h in Headers */,
 				2FFE1BD22507BF95000332A3 /* FWBatchRequest.h in Headers */,
 				2FFE1D292507BFBD000332A3 /* UIViewController+FWTransition.h in Headers */,
 				2FFE1BD32507BF95000332A3 /* FWNetworkConfig.h in Headers */,
@@ -1313,7 +1314,6 @@
 				2FFE1BD62507BF95000332A3 /* FWRequest.h in Headers */,
 				2FFE1D422507BFBD000332A3 /* UIButton+FWFramework.h in Headers */,
 				2FFE1D4D2507BFBD000332A3 /* UINavigationController+FWFramework.h in Headers */,
-				2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */,
 				2FFE1C052507BF95000332A3 /* FWLanguage.h in Headers */,
 				2FFE1D492507BFBD000332A3 /* UINavigationController+FWWorkflow.h in Headers */,
 				2FFE1D142507BFBD000332A3 /* UINavigationController+FWBar.h in Headers */,
