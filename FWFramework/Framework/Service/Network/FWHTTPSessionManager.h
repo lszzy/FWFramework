@@ -62,6 +62,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ FWHTTPSessionManager
+ 
+ @see https://github.com/AFNetworking/AFNetworking
+ */
 @interface FWHTTPSessionManager : FWURLSessionManager <NSSecureCoding, NSCopying>
 
 /**
