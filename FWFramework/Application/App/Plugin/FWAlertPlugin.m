@@ -408,9 +408,9 @@
 
 @end
 
-#pragma mark - UIAlertAction+FWFramework
+#pragma mark - UIAlertAction+FWAlert
 
-@implementation UIAlertAction (FWFramework)
+@implementation UIAlertAction (FWAlert)
 
 + (instancetype)fwActionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
 {
@@ -464,9 +464,9 @@
 
 @end
 
-#pragma mark - UIAlertController+FWFramework
+#pragma mark - UIAlertController+FWAlert
 
-@implementation UIAlertController (FWFramework)
+@implementation UIAlertController (FWAlert)
 
 + (void)load
 {

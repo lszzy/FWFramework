@@ -266,13 +266,13 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 
 @end
 
-#pragma mark - UIAlertAction+FWFramework
+#pragma mark - UIAlertAction+FWAlert
 
 /*!
  @brief 系统弹出框动作分类，自定义属性
  @discussion 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
 */
-@interface UIAlertAction (FWFramework)
+@interface UIAlertAction (FWAlert)
 
 // 快速创建弹出动作，title仅支持NSString
 + (instancetype)fwActionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler;
@@ -282,13 +282,13 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 
 @end
 
-#pragma mark - UIAlertController+FWFramework
+#pragma mark - UIAlertController+FWAlert
 
 /*!
  @brief 系统弹出框控制器分类，自定义样式
  @discussion 系统弹出框title和message仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
 */
-@interface UIAlertController (FWFramework)
+@interface UIAlertController (FWAlert)
 
 // 快速创建弹出控制器，title和message仅支持NSString
 + (instancetype)fwAlertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle;
