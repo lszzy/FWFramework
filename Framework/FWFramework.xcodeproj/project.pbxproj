@@ -718,15 +718,6 @@
 			path = Toolkit;
 			sourceTree = "<group>";
 		};
-		2F6A722B2538A928008F7D0F /* Keychain */ = {
-			isa = PBXGroup;
-			children = (
-				2FFE1B802507BF95000332A3 /* FWKeychain.h */,
-				2FFE1B8B2507BF95000332A3 /* FWKeychain.m */,
-			);
-			path = Keychain;
-			sourceTree = "<group>";
-		};
 		2F6A722C2538AE6D008F7D0F /* Coding */ = {
 			isa = PBXGroup;
 			children = (
@@ -745,6 +736,8 @@
 			children = (
 				2FFE1B8D2507BF95000332A3 /* FWAuthorize.h */,
 				2FFE1B7F2507BF95000332A3 /* FWAuthorize.m */,
+				2FFE1B802507BF95000332A3 /* FWKeychain.h */,
+				2FFE1B8B2507BF95000332A3 /* FWKeychain.m */,
 				2FFE1B902507BF95000332A3 /* FWLanguage.h */,
 				2FFE1B832507BF95000332A3 /* FWLanguage.m */,
 				2FFE1B8C2507BF95000332A3 /* FWLanguage.swift */,
@@ -819,7 +812,6 @@
 				2FFE1B3C2507BF95000332A3 /* Cache */,
 				2F6A722C2538AE6D008F7D0F /* Coding */,
 				2FFE1B312507BF95000332A3 /* Database */,
-				2F6A722B2538A928008F7D0F /* Keychain */,
 				2FFE1B4B2507BF95000332A3 /* Network */,
 				2FFE1B582507BF95000332A3 /* Request */,
 				2FFE1B742507BF95000332A3 /* Socket */,
