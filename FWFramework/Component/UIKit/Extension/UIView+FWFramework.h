@@ -10,7 +10,6 @@
 #import <UIKit/UIKit.h>
 #import "UIView+FWAnimation.h"
 #import "UIView+FWBadge.h"
-#import "UIView+FWBlock.h"
 #import "UIView+FWBorder.h"
 #import "UIView+FWDrag.h"
 #import "UIView+FWDrawerView.h"
