@@ -278,7 +278,7 @@
 
 - (BOOL)fwIsFormatUrl
 {
-    return [self hasPrefix:@"http://"] || [self hasPrefix:@"https://"];
+    return [self.lowercaseString hasPrefix:@"http://"] || [self.lowercaseString hasPrefix:@"https://"];
 }
 
 - (BOOL)fwIsFormatEmail

@@ -100,11 +100,11 @@
 {
     // itms-apps等
     NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
-    if ([nsurl.scheme hasPrefix:@"itms"]) {
+    if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
         return YES;
     // https://itunes.apple.com/等
-    } else if ([nsurl.host isEqualToString:@"itunes.apple.com"] ||
-               [nsurl.host isEqualToString:@"apps.apple.com"]) {
+    } else if ([nsurl.host.lowercaseString isEqualToString:@"itunes.apple.com"] ||
+               [nsurl.host.lowercaseString isEqualToString:@"apps.apple.com"]) {
         return YES;
     }
     return NO;
@@ -113,7 +113,7 @@
 + (BOOL)fwIsSystemURL:(id)url
 {
     NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
-    if (nsurl.scheme && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme]) {
+    if (nsurl.scheme.lowercaseString && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme.lowercaseString]) {
         return YES;
     }
     if ([self fwIsAppStoreURL:nsurl]) {
@@ -128,7 +128,7 @@
 + (BOOL)fwIsHttpURL:(id)url
 {
     NSString *urlString = [url isKindOfClass:[NSURL class]] ? [(NSURL *)url absoluteString] : url;
-    return [urlString hasPrefix:@"http://"] || [urlString hasPrefix:@"https://"];
+    return [urlString.lowercaseString hasPrefix:@"http://"] || [urlString.lowercaseString hasPrefix:@"https://"];
 }
 
 + (void)fwOpenSafariController:(id)url
