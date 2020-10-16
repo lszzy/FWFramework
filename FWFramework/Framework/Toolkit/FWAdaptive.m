@@ -110,7 +110,7 @@
     return NO;
 }
 
-+ (BOOL)fwIsAppSchemeURL:(id)url
++ (BOOL)fwIsSystemURL:(id)url
 {
     NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
     if (nsurl.scheme && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme]) {
@@ -123,6 +123,12 @@
         return YES;
     }
     return NO;
+}
+
++ (BOOL)fwIsHttpURL:(id)url
+{
+    NSString *urlString = [url isKindOfClass:[NSURL class]] ? [(NSURL *)url absoluteString] : url;
+    return [urlString hasPrefix:@"http://"] || [urlString hasPrefix:@"https://"];
 }
 
 + (void)fwOpenSafariController:(id)url
