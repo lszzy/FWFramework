@@ -1,13 +1,13 @@
 /*!
- @header     FWJsonModel.m
+ @header     FWJson.m
  @indexgroup FWFramework
- @brief      FWJsonModel
+ @brief      FWJson
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
  @updated    2018/9/26
  */
 
-#import "FWJsonModel.h"
+#import "FWJson.h"
 #import <objc/message.h>
 
 #define force_inline __inline__ __attribute__((always_inline))
