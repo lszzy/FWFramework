@@ -1,7 +1,7 @@
 /*!
- @header     FWEmptyView.h
+ @header     FWEmptyPlugin.h
  @indexgroup FWFramework
- @brief      FWEmptyView
+ @brief      FWEmptyPlugin
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/3

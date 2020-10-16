@@ -8,7 +8,7 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "FWWebImage.h"
+#import "FWImagePlugin.h"
 #import "FWProgressView.h"
 #import "FWRouter.h"
 
