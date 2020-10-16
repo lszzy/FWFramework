@@ -1,13 +1,13 @@
 /*!
- @header     FWBlock.m
+ @header     FWViewBlock.m
  @indexgroup FWFramework
- @brief      FWBlock
+ @brief      FWViewBlock
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/10/16
  */
 
-#import "FWBlock.h"
+#import "FWViewBlock.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerBlockTarget
