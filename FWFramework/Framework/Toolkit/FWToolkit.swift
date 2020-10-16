@@ -106,3 +106,8 @@ public var FWTabBarHeight: CGFloat { return FWIsScreenX ? 83.0 : 49.0 }
 public var FWTopBarHeight: CGFloat { return FWStatusBarHeight + FWNavigationBarHeight; }
 /// 底部栏高度，包含标签栏
 public var FWBottomBarHeight: CGFloat { return FWTabBarHeight }
+
+/// 当前屏幕宽度缩放比例
+public var FWScaleFactorWidth: CGFloat { return UIScreen.fwScaleFactorWidth() }
+/// 当前屏幕高度缩放比例
+public var FWScaleFactorHeight: CGFloat { return UIScreen.fwScaleFactorHeight() }

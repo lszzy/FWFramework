@@ -200,6 +200,8 @@
 
 #pragma mark - UIScreen+FWToolkit
 
+static CGSize fwStaticScaleFactorSize = CGSizeMake(375, 812);
+
 @implementation UIScreen (FWToolkit)
 
 + (CGSize)fwScreenSize
@@ -328,6 +330,29 @@
 + (CGFloat)fwBottomBarHeight
 {
     return [self fwTabBarHeight];
+}
+
++ (void)fwSetScaleFactorSize:(CGSize)size
+{
+    fwStaticScaleFactorSize = size;
+}
+
++ (CGFloat)fwScaleFactorWidth
+{
+    if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
+        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorSize.width;
+    } else {
+        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorSize.height;
+    }
+}
+
++ (CGFloat)fwScaleFactorHeight
+{
+    if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
+        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorSize.height;
+    } else {
+        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorSize.width;
+    }
 }
 
 @end
