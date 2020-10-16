@@ -481,7 +481,7 @@
     _urlString = urlString;
     [self.imageView fwCancelImageDownloadTask];
     self.imageLoaded = NO;
-    if ([urlString hasPrefix:@"http"]) {
+    if ([urlString.lowercaseString hasPrefix:@"http"]) {
         self.progressView.progress = 0.01;
         // 如果没有在执行动画，那么就显示出来
         if (self.showAnimation == false) {
