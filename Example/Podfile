@@ -6,11 +6,3 @@ target "Example" do
   pod 'FWFramework', :path => '../'
   pod 'FWDebug', :configurations => ['Debug']
 end
-
-target "AppClip" do
-  platform :ios, '14.0'
-  use_frameworks!
-
-  pod 'FWFramework', :path => '../', :subspecs => ['Framework', 'Application']
-  pod 'FWDebug', :configurations => ['Debug']
-end
