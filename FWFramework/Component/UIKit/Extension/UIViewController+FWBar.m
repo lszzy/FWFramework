@@ -9,7 +9,6 @@
 #import "UIViewController+FWBar.h"
 #import "FWBlock.h"
 #import "UIImage+FWFramework.h"
-#import "NSObject+FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
 #import "FWAdaptive.h"

@@ -7,7 +7,6 @@
 //
 
 #import "FWAlertPlugin.h"
-#import "NSObject+FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
 #import "FWPlugin.h"
@@ -482,10 +481,10 @@
                 Class targetClass = objc_getClass("_UIInterfaceActionGroupHeaderScrollView");
                 if (!targetClass) return;
                 
-                [selfObject.view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
+                [UIAlertController fwAlertSubview:selfObject.view block:^BOOL(UIView *view) {
                     if (![view isKindOfClass:targetClass]) return NO;
                     
-                    [view fwSubviewOfBlock:^BOOL(UIView * _Nonnull view) {
+                    [UIAlertController fwAlertSubview:view block:^BOOL(UIView *view) {
                         if ([view isKindOfClass:[UIVisualEffectView class]]) {
                             // 取消effect效果，否则样式不生效，全是灰色
                             ((UIVisualEffectView *)view).effect = nil;
@@ -498,6 +497,22 @@
             }
         }));
     });
+}
+
++ (UIView *)fwAlertSubview:(UIView *)view block:(BOOL (^)(UIView *view))block
+{
+    if (block(view)) {
+        return view;
+    }
+    
+    for (UIView *subview in view.subviews) {
+        UIView *resultView = [UIAlertController fwAlertSubview:subview block:block];
+        if (resultView) {
+            return resultView;
+        }
+    }
+    
+    return nil;
 }
 
 + (instancetype)fwAlertControllerWithTitle:(id)title message:(id)message preferredStyle:(UIAlertControllerStyle)preferredStyle

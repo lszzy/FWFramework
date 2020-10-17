@@ -8,7 +8,6 @@
  */
 
 #import "UIView+FWStatistical.h"
-#import "NSObject+FWRuntime.h"
 #import "UIView+FWFramework.h"
 #import "UITableView+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
