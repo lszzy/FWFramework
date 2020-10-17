@@ -144,7 +144,7 @@
 {
     FWWeakifySelf();
     self.tableView.backgroundColor = [UIColor appColorBg];
-    [self.tableView fwAddPullRefreshWithBlock:^{
+    [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         
         [self onRefreshing];
@@ -161,7 +161,7 @@
     };
     
     FWInfiniteScrollView.height = 64;
-    [self.tableView fwAddInfiniteScrollWithBlock:^{
+    [self.tableView fwSetLoadingBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
@@ -186,7 +186,7 @@
 
 - (void)renderData
 {
-    [self.tableView fwTriggerPullRefresh];
+    [self.tableView fwBeginRefreshing];
 }
 
 #pragma mark - TableView
@@ -297,9 +297,9 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
-        [self.tableView.fwPullRefreshView stopAnimating];
-        if (!self.tableView.fwShowPullRefresh) {
+        self.tableView.fwShowRefreshing = self.tableData.count < 20 ? YES : NO;
+        [self.tableView fwEndRefreshing];
+        if (!self.tableView.fwShowRefreshing) {
             self.navigationItem.rightBarButtonItem = nil;
         }
     });
@@ -316,8 +316,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.tableData.count < 20 ? YES : NO;
-        [self.tableView.fwInfiniteScrollView stopAnimating];
+        self.tableView.fwShowLoading = self.tableData.count < 20 ? YES : NO;
+        [self.tableView fwEndLoading];
     });
 }
 

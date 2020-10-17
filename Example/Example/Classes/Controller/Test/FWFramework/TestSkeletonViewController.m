@@ -257,8 +257,8 @@
     [self.headerView fwAutoLayoutSubviews];
     [self.footerView fwAutoLayoutSubviews];
     
-    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
-    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -309,7 +309,7 @@
 
 - (void)renderData
 {
-    [self.tableView fwTriggerPullRefresh];
+    [self.tableView fwBeginRefreshing];
 }
 
 - (void)onRefreshing
@@ -329,7 +329,7 @@
         [self.tableData removeAllObjects];
         [self.tableView reloadData];
         
-        [self.tableView.fwPullRefreshView stopAnimating];
+        [self.tableView fwEndRefreshing];
     });
 }
 
@@ -343,7 +343,7 @@
         [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
         [self.tableView reloadData];
         
-        [self.tableView.fwInfiniteScrollView stopAnimating];
+        [self.tableView fwEndLoading];
     });
 }
 

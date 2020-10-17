@@ -167,12 +167,12 @@ static BOOL isExpanded = NO;
 {
     FWWeakifySelf();
     self.collectionView.backgroundColor = [UIColor appColorBg];
-    [self.collectionView fwAddPullRefreshWithBlock:^{
+    [self.collectionView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         
         [self onRefreshing];
     }];
-    [self.collectionView fwAddInfiniteScrollWithBlock:^{
+    [self.collectionView fwSetLoadingBlock:^{
         FWStrongifySelf();
         
         [self onLoading];
@@ -205,7 +205,7 @@ static BOOL isExpanded = NO;
     } else {
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     }
-    [self.collectionView fwTriggerPullRefresh];
+    [self.collectionView fwBeginRefreshing];
 }
 
 #pragma mark - CollectionView
@@ -381,9 +381,9 @@ static BOOL isExpanded = NO;
         [self.collectionView fwClearSizeCache];
         [self.collectionView fwReloadDataWithoutAnimation];
         
-        self.collectionView.fwShowPullRefresh = self.collectionData.count < 20 ? YES : NO;
-        [self.collectionView.fwPullRefreshView stopAnimating];
-        if (!self.collectionView.fwShowPullRefresh) {
+        self.collectionView.fwShowRefreshing = self.collectionData.count < 20 ? YES : NO;
+        [self.collectionView fwEndRefreshing];
+        if (!self.collectionView.fwShowRefreshing) {
             self.navigationItem.rightBarButtonItem = nil;
         }
     });
@@ -400,8 +400,8 @@ static BOOL isExpanded = NO;
         }
         [self.collectionView fwReloadDataWithoutAnimation];
         
-        self.collectionView.fwShowInfiniteScroll = self.collectionData.count < 20 ? YES : NO;
-        [self.collectionView.fwInfiniteScrollView stopAnimating];
+        self.collectionView.fwShowLoading = self.collectionData.count < 20 ? YES : NO;
+        [self.collectionView fwEndLoading];
     });
 }
 
