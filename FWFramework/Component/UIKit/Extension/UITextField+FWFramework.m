@@ -7,7 +7,7 @@
 //
 
 #import "UITextField+FWFramework.h"
-#import "FWCoder.h"
+#import "FWEncode.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 

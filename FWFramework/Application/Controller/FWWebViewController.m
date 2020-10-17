@@ -8,7 +8,7 @@
  */
 
 #import "FWWebViewController.h"
-#import "FWCoder.h"
+#import "FWEncode.h"
 #import "FWMessage.h"
 #import "FWAdaptive.h"
 #import "FWAutoLayout.h"

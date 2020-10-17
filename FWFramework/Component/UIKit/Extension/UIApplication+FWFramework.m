@@ -8,7 +8,7 @@
  */
 
 #import "UIApplication+FWFramework.h"
-#import "FWCoder.h"
+#import "FWEncode.h"
 #import "FWAdaptive.h"
 #import <StoreKit/StoreKit.h>
 
