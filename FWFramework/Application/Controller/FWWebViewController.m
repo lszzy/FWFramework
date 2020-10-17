@@ -12,10 +12,9 @@
 #import "FWMessage.h"
 #import "FWAdaptive.h"
 #import "FWAutoLayout.h"
-#import "WKWebView+FWJsBridge.h"
-#import "UIView+FWFramework.h"
-#import "UIViewController+FWFramework.h"
-#import "UIViewController+FWAlert.h"
+#import "FWJsBridge.h"
+#import "FWBlock.h"
+#import "FWAlertPlugin.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWWebViewController
@@ -34,6 +33,7 @@
         @"webRequest" : @"fwInnerWebRequest",
         @"setWebRequest:" : @"fwInnerSetWebRequest:",
         @"renderWebLayout" : @"fwInnerRenderWebLayout",
+        @"onWebClose": @"fwInnerOnWebClose",
         @"webView:didFinishNavigation:" : @"fwInnerWebView:didFinishNavigation:",
         @"webView:decidePolicyForNavigationAction:decisionHandler:" : @"fwInnerWebView:decidePolicyForNavigationAction:decisionHandler:",
         @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
@@ -102,13 +102,13 @@
                         if (weakController.webView.canGoBack) {
                             [weakController.webView goBack];
                         } else {
-                            [weakController fwCloseViewControllerAnimated:YES];
+                            [weakController onWebClose];
                         }
                     }];
                     [leftItems addObject:leftItem];
                 } else {
                     UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
-                        [weakController fwCloseViewControllerAnimated:YES];
+                        [weakController onWebClose];
                     }];
                     [leftItems addObject:leftItem];
                 }
@@ -193,6 +193,18 @@
 - (NSArray *)fwInnerWebItems
 {
     return nil;
+}
+
+- (void)fwInnerOnWebClose
+{
+    if (self.navigationController) {
+        UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
+        if (!viewController && self.presentingViewController) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+    } else if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (id)fwInnerWebRequest
