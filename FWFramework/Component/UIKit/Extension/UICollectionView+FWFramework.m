@@ -8,6 +8,7 @@
  */
 
 #import "UICollectionView+FWFramework.h"
+#import "FWDynamicLayout.h"
 
 @implementation UICollectionView (FWFramework)
 

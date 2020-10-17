@@ -8,7 +8,6 @@
  */
 
 #import "FWEmptyPlugin.h"
-#import "UIView+FWFramework.h"
 
 @interface FWEmptyView ()
 

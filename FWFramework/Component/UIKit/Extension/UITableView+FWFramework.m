@@ -7,6 +7,7 @@
 //
 
 #import "UITableView+FWFramework.h"
+#import "FWDynamicLayout.h"
 
 @implementation UITableView (FWFramework)
 
