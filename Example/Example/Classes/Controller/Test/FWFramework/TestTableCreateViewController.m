@@ -285,8 +285,8 @@
     [self.view addSubview:self.tableView];
     [self.tableView fwPinEdgesToSuperview];
     
-    [self.tableView.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
-    [self.tableView.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    [self.tableView.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.tableView.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -304,7 +304,7 @@
 
 - (void)renderData
 {
-    [self.tableView.tableView fwTriggerPullRefresh];
+    [self.tableView.tableView fwBeginRefreshing];
 }
 
 - (void)onRefreshing
@@ -316,7 +316,7 @@
         self.tableView.tableData = @[@[@1, @2]];
         [self.tableView reloadData];
         
-        [self.tableView.tableView.fwPullRefreshView stopAnimating];
+        [self.tableView.tableView fwEndRefreshing];
     });
 }
 
@@ -332,7 +332,7 @@
         self.tableView.tableData = @[sectionData];
         [self.tableView reloadData];
         
-        [self.tableView.tableView.fwInfiniteScrollView stopAnimating];
+        [self.tableView.tableView fwEndLoading];
     });
 }
 
