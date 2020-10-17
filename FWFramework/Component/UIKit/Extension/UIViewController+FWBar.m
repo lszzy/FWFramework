@@ -7,7 +7,7 @@
 //
 
 #import "UIViewController+FWBar.h"
-#import "UIView+FWBlock.h"
+#import "FWBlock.h"
 #import "UIImage+FWFramework.h"
 #import "NSObject+FWRuntime.h"
 #import "FWSwizzle.h"

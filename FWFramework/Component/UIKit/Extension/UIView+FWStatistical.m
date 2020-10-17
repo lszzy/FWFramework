@@ -13,6 +13,7 @@
 #import "UITableView+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
 #import "FWSwizzle.h"
+#import "FWBlock.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWStatistical

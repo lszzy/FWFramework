@@ -8,7 +8,7 @@
  */
 
 #import "FWAdaptive.h"
-#import "FWCoder.h"
+#import "FWEncode.h"
 #import "FWRouter.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
@@ -206,7 +206,8 @@
 
 #pragma mark - UIScreen+FWAdaptive
 
-static CGSize fwStaticScaleFactorSize = CGSizeMake(375, 812);
+static CGFloat fwStaticScaleFactorWidth = 375;
+static CGFloat fwStaticScaleFactorHeight = 812;
 
 @implementation UIScreen (FWAdaptive)
 
@@ -340,24 +341,25 @@ static CGSize fwStaticScaleFactorSize = CGSizeMake(375, 812);
 
 + (void)fwSetScaleFactorSize:(CGSize)size
 {
-    fwStaticScaleFactorSize = size;
+    fwStaticScaleFactorWidth = size.width;
+    fwStaticScaleFactorHeight = size.height;
 }
 
 + (CGFloat)fwScaleFactorWidth
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
-        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorSize.width;
+        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorWidth;
     } else {
-        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorSize.height;
+        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorHeight;
     }
 }
 
 + (CGFloat)fwScaleFactorHeight
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
-        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorSize.height;
+        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorHeight;
     } else {
-        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorSize.width;
+        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorWidth;
     }
 }
 
