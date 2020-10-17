@@ -355,25 +355,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSObject (FWRuntime)
 
-#pragma mark - Selector
-
-/*!
- @brief 安全调用方法，如果不能响应，则忽略之
- 
- @param aSelector 要执行的方法
- @return id 方法执行后返回的值。如果无返回值，则为nil
- */
-- (nullable id)fwPerformSelector:(SEL)aSelector;
-
-/*!
- @brief 安全调用方法，如果不能响应，则忽略之
- 
- @param aSelector 要执行的方法
- @param object 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
- @return id 方法执行后返回的值。如果无返回值，则为nil
- */
-- (nullable id)fwPerformSelector:(SEL)aSelector withObject:(nullable id)object;
-
 /*!
  @brief 对super发送消息
  
@@ -390,25 +371,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return id 方法执行后返回的值
  */
 - (nullable id)fwPerformSuperSelector:(SEL)aSelector withObject:(nullable id)object;
-
-/*!
- @brief 安全调用内部属性方法，如果属性不存在，则忽略之
- @discussion 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
- 
- @param name 内部属性名称
- @return 属性值
- */
-- (nullable id)fwPerformPropertySelector:(NSString *)name;
-
-/*!
- @brief 安全调用内部属性设置方法，如果属性不存在，则忽略之
- @discussion 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
- 
- @param name 内部属性名称
- @param object 传递的方法参数
- @return 方法执行后返回的值
- */
-- (nullable id)fwPerformPropertySelector:(NSString *)name withObject:(nullable id)object;
 
 @end
 

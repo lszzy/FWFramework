@@ -7,7 +7,7 @@
 //
 
 #import "UITextView+FWPlaceholder.h"
-#import "NSObject+FWRuntime.h"
+#import "FWSwizzle.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 
