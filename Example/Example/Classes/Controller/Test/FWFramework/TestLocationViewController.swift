@@ -6,7 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-import Foundation
+import FWFramework
 
 @objcMembers class TestLocationViewController: BaseViewController {
     lazy var startButton: UIButton = {
