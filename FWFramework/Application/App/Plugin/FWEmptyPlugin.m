@@ -9,6 +9,30 @@
 
 #import "FWEmptyPlugin.h"
 
+@interface FWEmptyViewButton : UIButton
+
+@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
+
+@end
+
+@implementation FWEmptyViewButton
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.fwTouchInsets, UIEdgeInsetsZero)) {
+        UIEdgeInsets touchInsets = self.fwTouchInsets;
+        CGRect bounds = self.bounds;
+        bounds = CGRectMake(bounds.origin.x - touchInsets.left,
+                            bounds.origin.y - touchInsets.top,
+                            bounds.size.width + touchInsets.left + touchInsets.right,
+                            bounds.size.height + touchInsets.top + touchInsets.bottom);
+        return CGRectContainsPoint(bounds, point);
+    }
+    
+    return [super pointInside:point withEvent:event];
+}
+
+@end
+
 @interface FWEmptyView ()
 
 @property(nonatomic, strong) UIScrollView *scrollView;  // 保证内容超出屏幕时也不至于直接被clip（比如横屏时）
@@ -64,8 +88,9 @@
     self.detailTextLabel.numberOfLines = 0;
     [self.contentView addSubview:self.detailTextLabel];
     
-    _actionButton = [[UIButton alloc] init];
-    self.actionButton.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
+    FWEmptyViewButton *actionButton = [[FWEmptyViewButton alloc] init];
+    actionButton.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
+    _actionButton = actionButton;
     [self.contentView addSubview:self.actionButton];
 }
 
@@ -80,7 +105,9 @@
     
     // 如果 contentView 要比 scrollView 高，则置顶展示
     if (CGRectGetHeight(self.contentView.bounds) > CGRectGetHeight(self.scrollView.bounds)) {
-        self.contentView.fwY = 0;
+        CGRect frame = self.contentView.frame;
+        frame.origin.y = 0;
+        self.contentView.frame = frame;
     }
     
     self.scrollView.contentSize = CGSizeMake(fmax(CGRectGetWidth(self.scrollView.bounds) - (self.scrollView.contentInset.left + self.scrollView.contentInset.right), contentViewSize.width), fmax(CGRectGetHeight(self.scrollView.bounds) - (self.scrollView.contentInset.top + self.scrollView.contentInset.bottom), CGRectGetMaxY(self.contentView.frame)));
@@ -89,12 +116,16 @@
     
     if (!self.imageView.hidden) {
         [self.imageView sizeToFit];
-        self.imageView.fwOrigin = CGPointMake(((CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.imageView.frame)) / 2.0) + self.imageViewInsets.left - self.imageViewInsets.right, originY + self.imageViewInsets.top);
+        CGRect frame = self.imageView.frame;
+        frame.origin = CGPointMake(((CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.imageView.frame)) / 2.0) + self.imageViewInsets.left - self.imageViewInsets.right, originY + self.imageViewInsets.top);
+        self.imageView.frame = frame;
         originY = CGRectGetMaxY(self.imageView.frame) + self.imageViewInsets.bottom;
     }
     
     if (!self.loadingView.hidden) {
-        self.loadingView.fwOrigin = CGPointMake(((CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.loadingView.frame)) / 2.0) + self.loadingViewInsets.left - self.loadingViewInsets.right, originY + self.loadingViewInsets.top);
+        CGRect frame = self.loadingView.frame;
+        frame.origin = CGPointMake(((CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.loadingView.frame)) / 2.0) + self.loadingViewInsets.left - self.loadingViewInsets.right, originY + self.loadingViewInsets.top);
+        self.loadingView.frame = frame;
         originY = CGRectGetMaxY(self.loadingView.frame) + self.loadingViewInsets.bottom;
     }
     
@@ -114,7 +145,9 @@
     
     if (!self.actionButton.hidden) {
         [self.actionButton sizeToFit];
-        self.actionButton.fwOrigin = CGPointMake(((CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.actionButton.frame)) / 2.0) + self.actionButtonInsets.left - self.actionButtonInsets.right, originY + self.actionButtonInsets.top);
+        CGRect frame = self.actionButton.frame;
+        frame.origin = CGPointMake(((CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.actionButton.frame)) / 2.0) + self.actionButtonInsets.left - self.actionButtonInsets.right, originY + self.actionButtonInsets.top);
+        self.actionButton.frame = frame;
         originY = CGRectGetMaxY(self.actionButton.frame) + self.actionButtonInsets.bottom;
     }
 }
