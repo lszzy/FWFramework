@@ -9,7 +9,7 @@
 import Foundation
 import Dispatch
 
-private class Locker {
+private class FWPromiseLocker {
     let lockQueueSpecificKey: DispatchSpecificKey<Void>
     let lockQueue: DispatchQueue
     init() {
@@ -24,15 +24,15 @@ private class Locker {
 }
 
 /// https://github.com/freshOS/Then
-public class Promise<T> {
+public class FWPromise<T> {
     
     // MARK: - Protected properties
     
     internal var numberOfRetries: UInt = 0
 
-    private var threadUnsafeState: PromiseState<T>
+    private var threadUnsafeState: FWPromiseState<T>
     
-    private var threadUnsafeBlocks: PromiseBlocks<T> = PromiseBlocks<T>()
+    private var threadUnsafeBlocks: FWPromiseBlocks<T> = FWPromiseBlocks<T>()
 
     private var initialPromiseStart:(() -> Void)?
     private var initialPromiseStarted = false
@@ -45,7 +45,7 @@ public class Promise<T> {
     
     // MARK: - Lock
   
-    private let locker = Locker()
+    private let locker = FWPromiseLocker()
     private var lockQueue: DispatchQueue {
         return locker.lockQueue
     }
@@ -72,7 +72,7 @@ public class Promise<T> {
     }
     
     public init(error: Error) {
-        threadUnsafeState = PromiseState.rejected(error: error)
+        threadUnsafeState = FWPromiseState.rejected(error: error)
     }
 
     public convenience init(callback: @escaping (
@@ -133,7 +133,7 @@ public class Promise<T> {
     // MARK: - Internal interfaces
     
     internal func synchronize<U>(
-        _ action: (_ currentState: PromiseState<T>, _ blocks: inout PromiseBlocks<T>) -> U) -> U {
+        _ action: (_ currentState: FWPromiseState<T>, _ blocks: inout FWPromiseBlocks<T>) -> U) -> U {
         return _synchronize {
             return action(threadUnsafeState, &threadUnsafeBlocks)
         }
@@ -145,7 +145,7 @@ public class Promise<T> {
         }
     }
     
-    internal func passAlongFirstPromiseStartFunctionAndStateTo<X>(_ promise: Promise<X>) {
+    internal func passAlongFirstPromiseStartFunctionAndStateTo<X>(_ promise: FWPromise<X>) {
         let (startBlock, isStarted) = _synchronize {
             return (self.initialPromiseStart ?? self.start, self.initialPromiseStarted)
         }
@@ -163,7 +163,7 @@ public class Promise<T> {
         actions.forEach { $0?() }
     }
     
-    internal func updateState(_ newState: PromiseState<T>) {
+    internal func updateState(_ newState: FWPromiseState<T>) {
         _synchronize({ return _updateState(newState) })?()
     }
     
@@ -173,8 +173,8 @@ public class Promise<T> {
         }
     }
     
-    internal func newLinkedPromise() -> Promise<T> {
-        let p = Promise<T>()
+    internal func newLinkedPromise() -> FWPromise<T> {
+        let p = FWPromise<T>()
         passAlongFirstPromiseStartFunctionAndStateTo(p)
         return p
     }
@@ -217,7 +217,7 @@ public class Promise<T> {
 //            promiseProgressCallBack = nil //Remove callba
     }
     
-    private func _updateState(_ newState: PromiseState<T>) -> (() -> Void)? {
+    private func _updateState(_ newState: FWPromiseState<T>) -> (() -> Void)? {
         if threadUnsafeState.isPendingOrDormant {
             threadUnsafeState = newState
         }
@@ -245,7 +245,7 @@ public class Promise<T> {
 }
 
 // MARK: - Helpers
-extension Promise {
+extension FWPromise {
     
     var isStarted: Bool {
         return synchronize { state, _ in
@@ -260,13 +260,13 @@ extension Promise {
 }
 
 // MARK: - Extension
-public typealias EmptyPromise = Promise<Void>
-public typealias Async<T> = Promise<T>
-public typealias AsyncTask = Async<Void>
+public typealias FWEmptyPromise = FWPromise<Void>
+public typealias FWAsync<T> = FWPromise<T>
+public typealias FWAsyncTask = FWAsync<Void>
 
-public extension Promise {
+public extension FWPromise {
     
-    func bridgeError(to myError: Error) -> Promise<T> {
+    func bridgeError(to myError: Error) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -277,7 +277,7 @@ public extension Promise {
         return p
     }
     
-    func bridgeError(_ errorType: Error, to myError: Error) -> Promise<T> {
+    func bridgeError(_ errorType: Error, to myError: Error) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -292,7 +292,7 @@ public extension Promise {
         return p
     }
     
-    func bridgeError(_ block:@escaping (Error) throws -> Void) -> Promise<T> {
+    func bridgeError(_ block:@escaping (Error) throws -> Void) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -308,9 +308,9 @@ public extension Promise {
     }
 }
 
-public extension Promise {
+public extension FWPromise {
     
-    func chain(_ block:@escaping (T) -> Void) -> Promise<T> {
+    func chain(_ block:@escaping (T) -> Void) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(success: { t in
             block(t)
@@ -320,13 +320,13 @@ public extension Promise {
     }
 }
 
-extension Promise {
+extension FWPromise {
     
-    public func delay(_ time: TimeInterval) -> Promise<T> {
+    public func delay(_ time: TimeInterval) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: { t in
-                Promises.callBackOnCallingQueueIn(time: time) {
+                FWPromises.callBackOnCallingQueueIn(time: time) {
                     p.fulfill(t)
                 }
             },
@@ -336,15 +336,15 @@ extension Promise {
     }
 }
 
-extension Promises {
-    public static func delay(_ time: TimeInterval) -> Promise<Void> {
-        return Promise { (resolve: @escaping (() -> Void), _: @escaping ((Error) -> Void)) in
+extension FWPromises {
+    public static func delay(_ time: TimeInterval) -> FWPromise<Void> {
+        return FWPromise { (resolve: @escaping (() -> Void), _: @escaping ((Error) -> Void)) in
             callBackOnCallingQueueIn(time: time, block: resolve)
         }
     }
 }
 
-extension Promises {
+extension FWPromises {
 
     static func callBackOnCallingQueueIn(time: TimeInterval, block: @escaping () -> Void) {
         if let callingQueue = OperationQueue.current?.underlyingQueue {
@@ -361,15 +361,15 @@ extension Promises {
     }
 }
 
-public extension Promise {
+public extension FWPromise {
     
-    @discardableResult func onError(_ block: @escaping (Error) -> Void) -> Promise<Void> {
+    @discardableResult func onError(_ block: @escaping (Error) -> Void) -> FWPromise<Void> {
         tryStartInitialPromiseAndStartIfneeded()
         return registerOnError(block)
     }
     
-    @discardableResult func registerOnError(_ block: @escaping (Error) -> Void) -> Promise<Void> {
-        let p = Promise<Void>()
+    @discardableResult func registerOnError(_ block: @escaping (Error) -> Void) -> FWPromise<Void> {
+        let p = FWPromise<Void>()
         passAlongFirstPromiseStartFunctionAndStateTo(p)
         syncStateWithCallBacks(
             success: { _ in
@@ -386,7 +386,7 @@ public extension Promise {
     }
 }
 
-public extension Promise {
+public extension FWPromise {
     
     func finally(_ block: @escaping () -> Void) {
         tryStartInitialPromiseAndStartIfneeded()
@@ -405,37 +405,37 @@ public extension Promise {
     }
 }
 
-extension Promise {
-    public func first<E>() -> Promise<E> where T == [E] {
-        return self.then { unwrap($0.first) }
+extension FWPromise {
+    public func first<E>() -> FWPromise<E> where T == [E] {
+        return self.then { fw_unwrap($0.first) }
     }
 }
 
-extension Promise {
-    public func last<E>() -> Promise<E> where T == [E] {
-        return self.then { unwrap($0.last) }
+extension FWPromise {
+    public func last<E>() -> FWPromise<E> where T == [E] {
+        return self.then { fw_unwrap($0.last) }
     }
 }
 
-public extension Promise {
-    class func reject(_ error: Error = PromiseError.default) -> Promise<T> {
-        return Promise { _, reject in reject(error) }
+public extension FWPromise {
+    class func reject(_ error: Error = FWPromiseError.default) -> FWPromise<T> {
+        return FWPromise { _, reject in reject(error) }
     }
 }
 
-public extension Promise {
-    class func resolve(_ value: T) -> Promise<T> {
-        return Promise { resolve, _ in resolve(value) }
+public extension FWPromise {
+    class func resolve(_ value: T) -> FWPromise<T> {
+        return FWPromise { resolve, _ in resolve(value) }
     }
 }
 
-extension Promise where T == Void {
-    public class func resolve() -> Promise<Void> {
-        return Promise { resolve, _ in resolve() }
+extension FWPromise where T == Void {
+    public class func resolve() -> FWPromise<Void> {
+        return FWPromise { resolve, _ in resolve() }
     }
 }
 
-public extension Promise {
+public extension FWPromise {
     
     var value: T? {
         return synchronize { state, _ in
@@ -450,9 +450,9 @@ public extension Promise {
     }
 }
 
-extension Promise {
-    public func convertErrorToNil() -> Promise<T?> {
-        return Promise<T?> { resolve, _ in
+extension FWPromise {
+    public func convertErrorToNil() -> FWPromise<T?> {
+        return FWPromise<T?> { resolve, _ in
             self.then { t in
                 resolve(t)
             }.onError { _ in
@@ -462,9 +462,9 @@ extension Promise {
     }
 }
 
-extension Promise {
+extension FWPromise {
 
-    public func noMatterWhat(_ block: @escaping () -> Void) -> Promise<T> {
+    public func noMatterWhat(_ block: @escaping () -> Void) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: { t in
@@ -480,9 +480,9 @@ extension Promise {
     }
 }
 
-public extension Promise {
+public extension FWPromise {
     
-    @discardableResult func progress(_ block: @escaping (Float) -> Void) -> Promise<T> {
+    @discardableResult func progress(_ block: @escaping (Float) -> Void) -> FWPromise<T> {
         tryStartInitialPromiseAndStartIfneeded()
         let p = newLinkedPromise()
         syncStateWithCallBacks(
@@ -498,16 +498,16 @@ public extension Promise {
     }
     
     internal func setProgress(_ value: Float) {
-        updateState(PromiseState<T>.pending(progress: value))
+        updateState(FWPromiseState<T>.pending(progress: value))
     }
 }
 
-extension Promises {
+extension FWPromises {
     
     /// `Promise.race(p1, p2, p3, p4...)`Takes the state of the fastest returning promise.
     /// If the first fails, it fails. If the first resolves, it resolves.
-    public static func race<T>(_ promises: Promise<T>...) -> Promise<T> {
-        return Promise { resolve, reject in
+    public static func race<T>(_ promises: FWPromise<T>...) -> FWPromise<T> {
+        return FWPromise { resolve, reject in
             for p in promises {
                 p.then { t in
                     resolve(t)
@@ -519,9 +519,9 @@ extension Promises {
     }
 }
 
-extension Promise {
+extension FWPromise {
     
-    public func recover(with value: T) -> Promise<T> {
+    public func recover(with value: T) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -531,12 +531,12 @@ extension Promise {
         return p
     }
 
-    public func recover<E: Error>(_ errorType: E, with value: T) -> Promise<T> {
+    public func recover<E: Error>(_ errorType: E, with value: T) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
             failure: { e in
-                if errorMatchesExpectedError(e, expectedError: errorType) {
+                if fwErrorMatchesExpectedError(e, expectedError: errorType) {
                     p.fulfill(value)
                 } else {
                     p.reject(e)
@@ -546,12 +546,12 @@ extension Promise {
         return p
     }
     
-    public func recover<E: Error>(_ errorType: E, with value: T) -> Promise<T> where E: Equatable {
+    public func recover<E: Error>(_ errorType: E, with value: T) -> FWPromise<T> where E: Equatable {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
             failure: { e in
-                if errorMatchesExpectedError(e, expectedError: errorType) {
+                if fwErrorMatchesExpectedError(e, expectedError: errorType) {
                     p.fulfill(value)
                 } else {
                     p.reject(e)
@@ -562,7 +562,7 @@ extension Promise {
         return p
     }
     
-    public func recover(with promise: Promise<T>) -> Promise<T> {
+    public func recover(with promise: FWPromise<T>) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -577,7 +577,7 @@ extension Promise {
         return p
     }
     
-    public func recover(_ block:@escaping (Error) throws -> T) -> Promise<T> {
+    public func recover(_ block:@escaping (Error) throws -> T) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -592,7 +592,7 @@ extension Promise {
         return p
     }
 
-    public func recover(_ block:@escaping (Error) throws -> Promise<T>) -> Promise<T> {
+    public func recover(_ block:@escaping (Error) throws -> FWPromise<T>) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: p.fulfill,
@@ -616,11 +616,11 @@ extension Promise {
 // Credits to Quick/Nimble for how to compare Errors
 // https://github.com/Quick/Nimble/blob/db706fc1d7130f6ac96c56aaf0e635fa3217fe57/Sources/
 // Nimble/Utils/Errors.swift#L37-L53
-private func errorMatchesExpectedError<T: Error>(_ error: Error, expectedError: T) -> Bool {
+private func fwErrorMatchesExpectedError<T: Error>(_ error: Error, expectedError: T) -> Bool {
     return error._domain == expectedError._domain && error._code   == expectedError._code
 }
 
-private func errorMatchesExpectedError<T: Error>(_ error: Error,
+private func fwErrorMatchesExpectedError<T: Error>(_ error: Error,
                                                  expectedError: T) -> Bool where T: Equatable {
     if let error = error as? T {
         return error == expectedError
@@ -628,10 +628,10 @@ private func errorMatchesExpectedError<T: Error>(_ error: Error,
     return false
 }
 
-extension Promise {
-    public func retry(_ nbOfTimes: UInt) -> Promise<T> {
+extension FWPromise {
+    public func retry(_ nbOfTimes: UInt) -> FWPromise<T> {
         guard nbOfTimes > 0 else {
-            return Promise.reject(PromiseError.retryInvalidInput)
+            return FWPromise.reject(FWPromiseError.retryInvalidInput)
         }
         let p = newLinkedPromise()
         self.numberOfRetries = nbOfTimes
@@ -654,16 +654,16 @@ extension Promise {
     }
 }
 
-public extension Promise {
+public extension FWPromise {
     
-    @discardableResult func then<X>(_ block: @escaping (T) -> X) -> Promise<X> {
+    @discardableResult func then<X>(_ block: @escaping (T) -> X) -> FWPromise<X> {
         let p = registerThen(block)
         tryStartInitialPromiseAndStartIfneeded()
         return p
     }
     
-    @discardableResult func registerThen<X>(_ block: @escaping (T) -> X) -> Promise<X> {
-        let p = Promise<X>()
+    @discardableResult func registerThen<X>(_ block: @escaping (T) -> X) -> FWPromise<X> {
+        let p = FWPromise<X>()
         
         synchronize { state, blocks in
             switch state {
@@ -688,14 +688,14 @@ public extension Promise {
         return p
     }
     
-    @discardableResult func then<X>(_ block: @escaping (T) -> Promise<X>) -> Promise<X> {
+    @discardableResult func then<X>(_ block: @escaping (T) -> FWPromise<X>) -> FWPromise<X> {
         tryStartInitialPromiseAndStartIfneeded()
         return registerThen(block)
     }
     
-    @discardableResult  func registerThen<X>(_ block: @escaping (T) -> Promise<X>)
-        -> Promise<X> {
-            let p = Promise<X>()
+    @discardableResult  func registerThen<X>(_ block: @escaping (T) -> FWPromise<X>)
+        -> FWPromise<X> {
+            let p = FWPromise<X>()
             
             synchronize { state, blocks in
                 switch state {
@@ -718,48 +718,48 @@ public extension Promise {
             return p
     }
     
-    @discardableResult func then<X>(_ promise: Promise<X>) -> Promise<X> {
+    @discardableResult func then<X>(_ promise: FWPromise<X>) -> FWPromise<X> {
         return then { _ in promise }
     }
     
-    @discardableResult func registerThen<X>(_ promise: Promise<X>) -> Promise<X> {
+    @discardableResult func registerThen<X>(_ promise: FWPromise<X>) -> FWPromise<X> {
         return registerThen { _ in promise }
     }
     
-    fileprivate func registerNextPromise<X>(_ block: (T) -> Promise<X>,
+    fileprivate func registerNextPromise<X>(_ block: (T) -> FWPromise<X>,
                                             result: T,
                                             resolve: @escaping (X) -> Void,
                                             reject: @escaping ((Error) -> Void)) {
-        let nextPromise: Promise<X> = block(result)
+        let nextPromise: FWPromise<X> = block(result)
         nextPromise.then { x in
             resolve(x)
         }.onError(reject)
     }
 }
 
-extension Promise {
+extension FWPromise {
     
-    public func timeout(_ time: TimeInterval) -> Promise<T> {
-        let timer: Promise<T> = Promises.delay(time).then {
-            return Promise<T>.reject(PromiseError.timeout)
+    public func timeout(_ time: TimeInterval) -> FWPromise<T> {
+        let timer: FWPromise<T> = FWPromises.delay(time).then {
+            return FWPromise<T>.reject(FWPromiseError.timeout)
         }
-        return Promises.race(timer, self)
+        return FWPromises.race(timer, self)
     }
 }
 
-public func unwrap<T>(_ param: T?) -> Promise<T> {
+public func fw_unwrap<T>(_ param: T?) -> FWPromise<T> {
     if let param = param {
-        return Promise.resolve(param)
+        return FWPromise.resolve(param)
     } else {
-        return Promise.reject(PromiseError.unwrappingFailed)
+        return FWPromise.reject(FWPromiseError.unwrappingFailed)
     }
 }
 
-extension Promise {
+extension FWPromise {
     
     @discardableResult
-    public func validate(withError: Error = PromiseError.validationFailed,
-                         _ assertionBlock:@escaping ((T) -> Bool)) -> Promise<T> {
+    public func validate(withError: Error = FWPromiseError.validationFailed,
+                         _ assertionBlock:@escaping ((T) -> Bool)) -> FWPromise<T> {
         let p = newLinkedPromise()
         syncStateWithCallBacks(
             success: { t in
@@ -775,11 +775,11 @@ extension Promise {
     }
 }
 
-extension Promises {
+extension FWPromises {
     
-    public static func zip<T, U>(_ p1: Promise<T>, _ p2: Promise<U>) -> Promise<(T, U)> {
+    public static func zip<T, U>(_ p1: FWPromise<T>, _ p2: FWPromise<U>) -> FWPromise<(T, U)> {
         
-        let p = Promise<(T, U)>()
+        let p = FWPromise<(T, U)>()
         var t: T!
         var u: U!
         var error: Error?
@@ -842,64 +842,64 @@ extension Promises {
     }
     
     // zip 3
-    public static func zip<T, U, V>(_ p1: Promise<T>, _ p2: Promise<U>, _ p3: Promise<V>) -> Promise<(T, U, V)> {
+    public static func zip<T, U, V>(_ p1: FWPromise<T>, _ p2: FWPromise<U>, _ p3: FWPromise<V>) -> FWPromise<(T, U, V)> {
         return zip(zip(p1, p2), p3).then { ($0.0, $0.1, $1) }
     }
     
     // zip 4
-    public static func zip<A, B, C, D>(_ p1: Promise<A>,
-                                       _ p2: Promise<B>,
-                                       _ p3: Promise<C>,
-                                       _ p4: Promise<D>) -> Promise<(A, B, C, D)> {
+    public static func zip<A, B, C, D>(_ p1: FWPromise<A>,
+                                       _ p2: FWPromise<B>,
+                                       _ p3: FWPromise<C>,
+                                       _ p4: FWPromise<D>) -> FWPromise<(A, B, C, D)> {
         return zip(zip(p1, p2, p3), p4).then { ($0.0, $0.1, $0.2, $1) }
     }
     
     // zip 5
-    public static func zip<A, B, C, D, E>(_ p1: Promise<A>,
-                                          _ p2: Promise<B>,
-                                          _ p3: Promise<C>,
-                                          _ p4: Promise<D>,
-                                          _ p5: Promise<E>) -> Promise<(A, B, C, D, E)> {
+    public static func zip<A, B, C, D, E>(_ p1: FWPromise<A>,
+                                          _ p2: FWPromise<B>,
+                                          _ p3: FWPromise<C>,
+                                          _ p4: FWPromise<D>,
+                                          _ p5: FWPromise<E>) -> FWPromise<(A, B, C, D, E)> {
         return zip(zip(p1, p2, p3, p4), p5).then { ($0.0, $0.1, $0.2, $0.3, $1) }
     }
     
     // zip 6 swiftlint:disable function_parameter_count
-    public static func zip<A, B, C, D, E, F>(_ p1: Promise<A>,
-                                             _ p2: Promise<B>,
-                                             _ p3: Promise<C>,
-                                             _ p4: Promise<D>,
-                                             _ p5: Promise<E>,
-                                             _ p6: Promise<F>) -> Promise<(A, B, C, D, E, F)> {
+    public static func zip<A, B, C, D, E, F>(_ p1: FWPromise<A>,
+                                             _ p2: FWPromise<B>,
+                                             _ p3: FWPromise<C>,
+                                             _ p4: FWPromise<D>,
+                                             _ p5: FWPromise<E>,
+                                             _ p6: FWPromise<F>) -> FWPromise<(A, B, C, D, E, F)> {
         return zip(zip(p1, p2, p3, p4, p5), p6 ).then { ($0.0, $0.1, $0.2, $0.3, $0.4, $1) }
     }
     
     // zip 7
-    public static func zip<A, B, C, D, E, F, G>(_ p1: Promise<A>,
-                                                _ p2: Promise<B>,
-                                                _ p3: Promise<C>,
-                                                _ p4: Promise<D>,
-                                                _ p5: Promise<E>,
-                                                _ p6: Promise<F>,
-                                                _ p7: Promise<G>) -> Promise<(A, B, C, D, E, F, G)> {
+    public static func zip<A, B, C, D, E, F, G>(_ p1: FWPromise<A>,
+                                                _ p2: FWPromise<B>,
+                                                _ p3: FWPromise<C>,
+                                                _ p4: FWPromise<D>,
+                                                _ p5: FWPromise<E>,
+                                                _ p6: FWPromise<F>,
+                                                _ p7: FWPromise<G>) -> FWPromise<(A, B, C, D, E, F, G)> {
         return zip(zip(p1, p2, p3, p4, p5, p6), p7).then { ($0.0, $0.1, $0.2, $0.3, $0.4, $0.5, $1) }
     }
     
     // zip 8
-    public static func zip<A, B, C, D, E, F, G, H>(_ p1: Promise<A>,
-                                                   _ p2: Promise<B>,
-                                                   _ p3: Promise<C>,
-                                                   _ p4: Promise<D>,
-                                                   _ p5: Promise<E>,
-                                                   _ p6: Promise<F>,
-                                                   _ p7: Promise<G>,
-                                                   _ p8: Promise<H>) -> Promise<(A, B, C, D, E, F, G, H)> {
+    public static func zip<A, B, C, D, E, F, G, H>(_ p1: FWPromise<A>,
+                                                   _ p2: FWPromise<B>,
+                                                   _ p3: FWPromise<C>,
+                                                   _ p4: FWPromise<D>,
+                                                   _ p5: FWPromise<E>,
+                                                   _ p6: FWPromise<F>,
+                                                   _ p7: FWPromise<G>,
+                                                   _ p8: FWPromise<H>) -> FWPromise<(A, B, C, D, E, F, G, H)> {
         return zip(zip(p1, p2, p3, p4, p5, p6, p7), p8).then { ($0.0, $0.1, $0.2, $0.3, $0.4, $0.5, $0.6, $1) }
     }
     // swiftlint:enable function_parameter_count
 }
 
 // MARK: - PromiseBlocks
-struct PromiseBlocks<T> {
+struct FWPromiseBlocks<T> {
     
     typealias SuccessBlock = (T) -> Void
     typealias FailBlock = (Error) -> Void
@@ -912,7 +912,7 @@ struct PromiseBlocks<T> {
     var finally = [FinallyBlock]()
 }
 
-extension PromiseBlocks {
+extension FWPromiseBlocks {
     
     func updateProgress(_ progress: Float) -> () -> Void {
         let progressBlocks = self.progress
@@ -941,7 +941,7 @@ extension PromiseBlocks {
 }
 
 // MARK: - PromiseError
-public enum PromiseError: Error {
+public enum FWPromiseError: Error {
     case `default`
     case validationFailed
     case retryInvalidInput
@@ -949,9 +949,9 @@ public enum PromiseError: Error {
     case timeout
 }
 
-extension PromiseError: Equatable { }
+extension FWPromiseError: Equatable { }
 
-public func == (lhs: PromiseError, rhs: PromiseError) -> Bool {
+public func == (lhs: FWPromiseError, rhs: FWPromiseError) -> Bool {
     switch (lhs, rhs) {
     case (.default, .default):
             return true
@@ -967,14 +967,14 @@ public func == (lhs: PromiseError, rhs: PromiseError) -> Bool {
 }
 
 // MARK: - PromiseState
-public enum PromiseState<T> {
+public enum FWPromiseState<T> {
     case dormant
     case pending(progress: Float)
     case fulfilled(value: T)
     case rejected(error: Error)
 }
 
-extension PromiseState {
+extension FWPromiseState {
     
     var value: T? {
         if case let .fulfilled(value) = self {
@@ -1017,7 +1017,7 @@ extension PromiseState {
 }
 
 // MARK: - VoidPromise
-extension Promise where T == Void {
+extension FWPromise where T == Void {
     
     public convenience init(callback: @escaping (
         _ resolve: @escaping (() -> Void),
@@ -1042,61 +1042,61 @@ extension Promise where T == Void {
 }
 
 // MARK: - WhenAll
-public class Promises {}
+public class FWPromises {}
 
-extension Promises {
+extension FWPromises {
     
-    public static func whenAll<T>(_ promises: [Promise<T>], callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func whenAll<T>(_ promises: [FWPromise<T>], callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return reduceWhenAll(promises, callbackQueue: callbackQueue) { (result, element) in
             result.append(element)
         }
     }
     
-    public static func whenAll<T>(_ promises: Promise<T>..., callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func whenAll<T>(_ promises: FWPromise<T>..., callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return whenAll(promises, callbackQueue: callbackQueue)
     }
     
-    public static func lazyWhenAll<T>(_ promises: [Promise<T>], callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func lazyWhenAll<T>(_ promises: [FWPromise<T>], callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return lazyReduceWhenAll(promises, callbackQueue: callbackQueue) { (result, element) in
             result.append(element)
         }
     }
     
-    public static func lazyWhenAll<T>(_ promises: Promise<T>..., callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func lazyWhenAll<T>(_ promises: FWPromise<T>..., callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return lazyWhenAll(promises, callbackQueue: callbackQueue)
     }
     
     // Array version
     
-    public static func whenAll<T>(_ promises: [Promise<[T]>], callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func whenAll<T>(_ promises: [FWPromise<[T]>], callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return reduceWhenAll(promises, callbackQueue: callbackQueue) { (result, element) in
             result.append(contentsOf: element)
         }
     }
     
-    public static func whenAll<T>(_ promises: Promise<[T]>..., callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func whenAll<T>(_ promises: FWPromise<[T]>..., callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return whenAll(promises, callbackQueue: callbackQueue)
     }
     
-    public static func lazyWhenAll<T>(_ promises: [Promise<[T]>], callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+    public static func lazyWhenAll<T>(_ promises: [FWPromise<[T]>], callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return lazyReduceWhenAll(promises, callbackQueue: callbackQueue) { (result, element) in
             result.append(contentsOf: element)
         }
     }
     
     public static func lazyWhenAll<T>(
-        _ promises: Promise<[T]>...,
-        callbackQueue: DispatchQueue? = nil) -> Promise<[T]> {
+        _ promises: FWPromise<[T]>...,
+        callbackQueue: DispatchQueue? = nil) -> FWPromise<[T]> {
         return lazyWhenAll(promises, callbackQueue: callbackQueue)
     }
     
     // Private implementations
     
     private static func lazyReduceWhenAll<Result, Source>(
-        _ promises: [Promise<Source>],
+        _ promises: [FWPromise<Source>],
         callbackQueue: DispatchQueue?,
-        updatePartialResult: @escaping (_ result: inout [Result], _ element: Source) -> Void) -> Promise<[Result]> {
-        return Promise { fulfill, reject in
+        updatePartialResult: @escaping (_ result: inout [Result], _ element: Source) -> Void) -> FWPromise<[Result]> {
+        return FWPromise { fulfill, reject in
             reducePromises(
                 promises,
                 callbackQueue: callbackQueue,
@@ -1107,11 +1107,11 @@ extension Promises {
     }
     
     private static func reduceWhenAll<Result, Source>(
-        _ promises: [Promise<Source>],
+        _ promises: [FWPromise<Source>],
         callbackQueue: DispatchQueue?,
-        updatePartialResult: @escaping (_ result: inout [Result], _ element: Source) -> Void) -> Promise<[Result]> {
+        updatePartialResult: @escaping (_ result: inout [Result], _ element: Source) -> Void) -> FWPromise<[Result]> {
         
-        let p = Promise<[Result]>()
+        let p = FWPromise<[Result]>()
         reducePromises(
             promises,
             callbackQueue: callbackQueue,
@@ -1122,7 +1122,7 @@ extension Promises {
     }
     
     private static func reducePromises<Result, Source>(
-        _ promises: [Promise<Source>],
+        _ promises: [FWPromise<Source>],
         callbackQueue: DispatchQueue?,
         fulfill: @escaping ([Result]) -> Void,
         reject: @escaping (Error) -> Void,
@@ -1170,8 +1170,8 @@ extension Promises {
 
 // MARK: - Async
 @discardableResult
-public func async<T>(block:@escaping () throws -> T) -> Async<T> {
-    let p = Promise<T> { resolve, reject in
+public func fw_async<T>(block:@escaping () throws -> T) -> FWAsync<T> {
+    let p = FWPromise<T> { resolve, reject in
         DispatchQueue(label: "then.async.queue", attributes: .concurrent).async {
             do {
                 let t = try block()
@@ -1186,7 +1186,7 @@ public func async<T>(block:@escaping () throws -> T) -> Async<T> {
 }
 
 // MARK: - Await
-@discardableResult public func await<T>(_ promise: Promise<T>) throws -> T {
+@discardableResult public func fw_await<T>(_ promise: FWPromise<T>) throws -> T {
     var result: T!
     var error: Error?
     let group = DispatchGroup()
@@ -1207,29 +1207,29 @@ public func async<T>(block:@escaping () throws -> T) -> Async<T> {
 
 prefix operator ..
 
-public prefix func .. <T>(promise: Promise<T>) throws -> T {
-    return try await(promise)
+public prefix func .. <T>(promise: FWPromise<T>) throws -> T {
+    return try fw_await(promise)
 }
 
-public prefix func .. <T>(promise: Promise<T>?) throws -> T {
-    guard let promise = promise else { throw PromiseError.unwrappingFailed }
-    return try await(promise)
+public prefix func .. <T>(promise: FWPromise<T>?) throws -> T {
+    guard let promise = promise else { throw FWPromiseError.unwrappingFailed }
+    return try fw_await(promise)
 }
 
 prefix operator ..?
 
-public prefix func ..? <T>(promise: Promise<T>) -> T? {
+public prefix func ..? <T>(promise: FWPromise<T>) -> T? {
     do {
-        return try await(promise)
+        return try fw_await(promise)
     } catch {
         return nil
     }
 }
 
-public prefix func ..? <T>(promise: Promise<T>?) -> T? {
+public prefix func ..? <T>(promise: FWPromise<T>?) -> T? {
     guard let promise = promise else { return nil }
     do {
-        return try await(promise)
+        return try fw_await(promise)
     } catch {
         return nil
     }
