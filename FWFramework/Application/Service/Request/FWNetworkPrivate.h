@@ -30,7 +30,6 @@
 #import "FWNetworkAgent.h"
 #import "FWNetworkConfig.h"
 #import "FWRequestEventAccessory.h"
-#import "FWCoroutine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,7 +39,6 @@ FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,
 @class FWHTTPResponseSerializer;
 @class FWJSONResponseSerializer;
 @class FWXMLParserResponseSerializer;
-@class FWPromise;
 
 @interface FWNetworkUtils : NSObject
 
@@ -113,31 +111,4 @@ FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,
 
 @end
 
-/*!
- @brief FWBaseRequest约定分类
- */
-@interface FWBaseRequest (FWPromise)
-
-// 创建promise对象并开始请求，参数为request|error
-- (FWPromise *)promise;
-
-// 创建coroutine对象并开始请求，参数为request|error
-- (FWCoroutineClosure)coroutine;
-
-@end
-
-/*!
- @brief FWBatchRequest约定分类
- */
-@interface FWBatchRequest (FWPromise)
-
-// 创建promise对象并开始请求，参数为request|error
-- (FWPromise *)promise;
-
-// 创建coroutine对象并开始请求，参数为request|error
-- (FWCoroutineClosure)coroutine;
-
-@end
-
 NS_ASSUME_NONNULL_END
-
