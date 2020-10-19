@@ -1,0 +1,278 @@
+//
+//  TestCollectionCreateViewController.m
+//  Example
+//
+//  Created by wuyong on 2020/10/19.
+//  Copyright © 2020 site.wuyong. All rights reserved.
+//
+
+#import "TestCollectionCreateViewController.h"
+
+@interface TestCollectionCreateObject : NSObject
+
+@property (nonatomic, copy) NSString *title;
+
+@property (nonatomic, copy) NSString *text;
+
+@property (nonatomic, copy) NSString *imageUrl;
+
+@end
+
+@implementation TestCollectionCreateObject
+
+@end
+
+@interface TestCollectionCreateCell : UICollectionViewCell
+
+@property (nonatomic, strong) TestCollectionCreateObject *object;
+
+@property (nonatomic, strong) UILabel *myTitleLabel;
+
+@property (nonatomic, strong) UILabel *myTextLabel;
+
+@property (nonatomic, strong) UIImageView *myImageView;
+
+@end
+
+@implementation TestCollectionCreateCell
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.contentView.backgroundColor = [UIColor fwRandomColor];
+        
+        UILabel *titleLabel = [UILabel fwAutoLayoutView];
+        titleLabel.numberOfLines = 0;
+        titleLabel.font = [UIFont appFontNormal];
+        titleLabel.textColor = [UIColor appColorBlackOpacityHuge];
+        self.myTitleLabel = titleLabel;
+        [self.contentView addSubview:titleLabel];
+        [titleLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
+            make.leftWithInset(15).rightWithInset(15).topWithInset(15);
+        }];
+        
+        UILabel *textLabel = [UILabel fwAutoLayoutView];
+        textLabel.numberOfLines = 0;
+        textLabel.font = [UIFont appFontSmall];
+        textLabel.textColor = [UIColor appColorBlackOpacityLarge];
+        self.myTextLabel = textLabel;
+        [self.contentView addSubview:textLabel];
+        [textLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
+            make.leftToView(titleLabel).rightToView(titleLabel);
+            NSLayoutConstraint *constraint = [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:titleLabel withOffset:kAppPaddingNormal];
+            [textLabel fwAddCollapseConstraint:constraint];
+            textLabel.fwAutoCollapse = YES;
+        }];
+        
+        // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
+        self.fwMaxYViewPadding = 15;
+        UIImageView *imageView = [UIImageView fwAutoLayoutView];
+        self.myImageView = imageView;
+        [imageView fwSetContentModeAspectFill];
+        [self.contentView addSubview:imageView];
+        [imageView fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
+            NSLayoutConstraint *widthCons = [imageView fwSetDimension:NSLayoutAttributeWidth toSize:100];
+            NSLayoutConstraint *heightCons = [imageView fwSetDimension:NSLayoutAttributeHeight toSize:100];
+            NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:kAppPaddingNormal];
+            [imageView fwAddCollapseConstraint:widthCons];
+            [imageView fwAddCollapseConstraint:heightCons];
+            [imageView fwAddCollapseConstraint:constraint];
+            imageView.fwAutoCollapse = YES;
+        }];
+    }
+    return self;
+}
+
+- (void)setObject:(TestCollectionCreateObject *)object
+{
+    _object = object;
+    // 自动收缩
+    self.myTitleLabel.text = object.title;
+    if ([object.imageUrl fwIsFormatUrl]) {
+        [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
+    } else if (object.imageUrl.length > 0) {
+        self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+    } else {
+        self.myImageView.image = nil;
+    }
+    // 手工收缩
+    self.myTextLabel.text = object.text;
+}
+
+@end
+
+@interface TestCollectionCreateHeaderView : UICollectionReusableView
+
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@end
+
+@implementation TestCollectionCreateHeaderView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor fwRandomColor];
+        self.fwMaxYViewPadding = 15;
+        
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
+        titleLabel.numberOfLines = 0;
+        _titleLabel = titleLabel;
+        [self addSubview:titleLabel];
+        titleLabel.fwLayoutChain.leftWithInset(15).topWithInset(15).rightWithInset(15);
+    }
+    return self;
+}
+
+- (void)setFwViewModel:(id)fwViewModel
+{
+    [super setFwViewModel:fwViewModel];
+    
+    self.titleLabel.text = FWSafeString(fwViewModel);
+}
+
+@end
+
+@interface TestCollectionCreateViewController ()
+
+@property (nonatomic, strong) FWCollectionView *collectionView;
+
+@end
+
+@implementation TestCollectionCreateViewController
+
+- (void)renderView
+{
+    self.collectionView = [[FWCollectionView alloc] init];
+    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    flowLayout.minimumLineSpacing = 0;
+    flowLayout.minimumInteritemSpacing = 0;
+    self.collectionView.collectionData = @[@[[self randomObject], [self randomObject]]];
+    FWWeakifySelf();
+    self.collectionView.cellClassForItem = ^Class _Nonnull(NSIndexPath * indexPath) {
+        return [TestCollectionCreateCell class];
+    };
+    self.collectionView.didSelectItem = ^(NSIndexPath * indexPath) {
+        FWStrongifySelf();
+        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.item)] cancel:@"关闭" cancelBlock:nil];
+    };
+    
+    self.collectionView.viewClassForHeader = ^Class(NSIndexPath * indexPath) {
+        return [TestCollectionCreateHeaderView class];
+    };
+    self.collectionView.viewClassForFooter = ^Class(NSIndexPath * indexPath) {
+        return [TestCollectionCreateHeaderView class];
+    };
+    self.collectionView.viewForHeader = ^(TestCollectionCreateHeaderView * _Nonnull headerView) {
+        headerView.fwViewModel = @"我是Header\n我是Header";
+    };
+    self.collectionView.viewForFooter = ^(TestCollectionCreateHeaderView * _Nonnull headerView) {
+        headerView.fwViewModel = @"我是Footer\n我是Footer\n我是Footer";
+    };
+    
+    [self.view addSubview:self.collectionView];
+    [self.collectionView fwPinEdgesToSuperview];
+    
+    [self.collectionView.collectionView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.collectionView.collectionView fwSetLoadingTarget:self action:@selector(onLoading)];
+}
+
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemAdd) block:^(id sender) {
+        FWStrongifySelf();
+        NSMutableArray *sectionData = self.collectionView.collectionData[0].mutableCopy;
+        [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];
+        self.collectionView.collectionData = @[sectionData];
+        [self.collectionView reloadData];
+    }];
+}
+
+- (void)renderData
+{
+    [self.collectionView.collectionView fwBeginRefreshing];
+}
+
+- (void)onRefreshing
+{
+    NSLog(@"开始刷新");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"刷新完成");
+        
+        self.collectionView.collectionData = @[@[[self randomObject], [self randomObject]]];
+        [self.collectionView reloadData];
+        
+        [self.collectionView.collectionView fwEndRefreshing];
+    });
+}
+
+- (void)onLoading
+{
+    NSLog(@"开始加载");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"加载完成");
+        
+        NSMutableArray *sectionData = self.collectionView.collectionData[0].mutableCopy;
+        [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];
+        self.collectionView.collectionData = @[sectionData];
+        [self.collectionView reloadData];
+        
+        [self.collectionView.collectionView fwEndLoading];
+    });
+}
+
+- (TestCollectionCreateObject *)randomObject
+{
+    static NSMutableArray *randomArray;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        randomArray = [NSMutableArray array];
+        
+        [randomArray addObject:@[
+                                 @"",
+                                 @"这是标题",
+                                 @"这是复杂的标题这是复杂的标题这是复杂的标题",
+                                 @"这是复杂的标题这是复杂的标题\n这是复杂的标题这是复杂的标题",
+                                 @"这是复杂的标题\n这是复杂的标题\n这是复杂的标题\n这是复杂的标题",
+                                 ]];
+        
+        [randomArray addObject:@[
+                                 @"",
+                                 @"这是内容",
+                                 @"这是复杂的内容这是复杂的内容这是复杂的内容这是复杂的内容这是复杂的内容这是复杂的内容这是复杂的内容这是复杂的内容这是复杂的内容",
+                                 @"这是复杂的内容这是复杂的内容\n这是复杂的内容这是复杂的内容",
+                                 @"这是复杂的内容这是复杂的内容\n这是复杂的内容这是复杂的内容\n这是复杂的内容这是复杂的内容\n这是复杂的内容这是复杂的内容",
+                                 ]];
+        
+        [randomArray addObject:@[
+                                 @"",
+                                 @"public_icon",
+                                 @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
+                                 @"http://littlesvr.ca/apng/images/SteamEngine.webp",
+                                 @"public_picture",
+                                 @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
+                                 @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
+                                 @"http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
+                                 @"https://pic3.zhimg.com/b471eb23a_im.jpg",
+                                 @"http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
+                                 @"http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
+                                 @"http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
+                                 @"http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+                                 ]];
+    });
+    
+    TestCollectionCreateObject *object = [TestCollectionCreateObject new];
+    object.title = [[randomArray objectAtIndex:0] fwRandomObject];
+    object.text = [[randomArray objectAtIndex:1] fwRandomObject];
+    NSString *imageName =[[randomArray objectAtIndex:2] fwRandomObject];
+    if (imageName.length > 0) {
+        object.imageUrl = imageName;
+    }
+    return object;
+}
+
+@end

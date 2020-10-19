@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F1D1ABF253D729900AC110B /* FWCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D1ABE253D729900AC110B /* FWCollectionView.swift */; };
 		2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25748D2539858900880FEF /* FWRequestEventAccessory.m */; };
 		2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25748E2539858900880FEF /* FWRequestEventAccessory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2574952539928800880FEF /* FWPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2574942539928800880FEF /* FWPromise.swift */; };
@@ -336,6 +337,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F1D1ABE253D729900AC110B /* FWCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWCollectionView.swift; sourceTree = "<group>"; };
 		2F25748D2539858900880FEF /* FWRequestEventAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWRequestEventAccessory.m; sourceTree = "<group>"; };
 		2F25748E2539858900880FEF /* FWRequestEventAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWRequestEventAccessory.h; sourceTree = "<group>"; };
 		2F2574942539928800880FEF /* FWPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWPromise.swift; sourceTree = "<group>"; };
@@ -1155,6 +1157,7 @@
 				2FFE1CBF2507BFBD000332A3 /* FWSegmentedControl.h */,
 				2FFE1CD52507BFBD000332A3 /* FWSegmentedControl.m */,
 				2FFE1CD72507BFBD000332A3 /* FWSkeletonView.swift */,
+				2F1D1ABE253D729900AC110B /* FWCollectionView.swift */,
 				2FDF6F5F25205E180086A99E /* FWTableView.swift */,
 				2FFE1CD62507BFBD000332A3 /* FWTagCollectionView.h */,
 				2FFE1CBE2507BFBD000332A3 /* FWTagCollectionView.m */,
@@ -1533,6 +1536,7 @@
 				2FFE1BE82507BF95000332A3 /* FWJson.m in Sources */,
 				2FFE1D9D2507BFBD000332A3 /* NSObject+FWBlock.m in Sources */,
 				2FFE1D622507BFBD000332A3 /* UIScrollView+FWFramework.m in Sources */,
+				2F1D1ABF253D729900AC110B /* FWCollectionView.swift in Sources */,
 				2FFE1D2F2507BFBD000332A3 /* FWAlertPlugin.m in Sources */,
 				2FFE1BD92507BF95000332A3 /* FWChainRequestAgent.m in Sources */,
 				2FFE1DB42507BFBD000332A3 /* NSObject+FWFramework.m in Sources */,

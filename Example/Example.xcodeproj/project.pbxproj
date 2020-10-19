@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C18E5A84B7D2A5EDB24DF6E /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027459ABC308013A8B85ABC9 /* Pods_Example.framework */; };
 		2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */; };
+		2F1D1ACB253D822A00AC110B /* TestCollectionCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */; };
 		2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */; };
 		2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B42538004700AEBB60 /* AppDelegate.swift */; };
 		2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B62538004700AEBB60 /* SceneDelegate.swift */; };
@@ -188,6 +189,8 @@
 		2F07876424D1B6B7007BF096 /* TestSkeletonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSkeletonViewController.h; sourceTree = "<group>"; };
 		2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSkeletonViewController.m; sourceTree = "<group>"; };
 		2F0DE5AB24F65BE100DCC13E /* landmarkData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = landmarkData.json; sourceTree = "<group>"; };
+		2F1D1AC9253D822A00AC110B /* TestCollectionCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionCreateViewController.h; sourceTree = "<group>"; };
+		2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionCreateViewController.m; sourceTree = "<group>"; };
 		2F1F1E1E2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionDynamicLayoutViewController.h; sourceTree = "<group>"; };
 		2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionDynamicLayoutViewController.m; sourceTree = "<group>"; };
 		2F48F6B22538004700AEBB60 /* AppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -823,6 +826,8 @@
 				2FF8D8BF24C88A6F006A83B5 /* TestTableScrollViewController.m */,
 				2FDF6F6625206B440086A99E /* TestTableCreateViewController.h */,
 				2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */,
+				2F1D1AC9253D822A00AC110B /* TestCollectionCreateViewController.h */,
+				2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */,
 				2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */,
 				2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */,
 				2F7D7867251259DB0078EAAA /* TestThemeExtensionViewController.h */,
@@ -1372,6 +1377,7 @@
 				2FF8D95924C88A6F006A83B5 /* TestLocationViewController.swift in Sources */,
 				2FF8D97324C88A70006A83B5 /* TestEmptyViewController.m in Sources */,
 				2FF8D94324C88A6F006A83B5 /* SettingsViewController.m in Sources */,
+				2F1D1ACB253D822A00AC110B /* TestCollectionCreateViewController.m in Sources */,
 				2FF8D97924C88A70006A83B5 /* TestLabelViewController.m in Sources */,
 				2FF8D96424C88A70006A83B5 /* TestNavigationViewController.m in Sources */,
 				2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */,
