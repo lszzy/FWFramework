@@ -14,7 +14,7 @@ private class FWPromiseLocker {
     let lockQueue: DispatchQueue
     init() {
         lockQueueSpecificKey = DispatchSpecificKey<Void>()
-        lockQueue = DispatchQueue(label: "com.freshOS.then.lockQueue", qos: .userInitiated)
+        lockQueue = DispatchQueue(label: "site.wuyong.FWPromise.lockQueue", qos: .userInitiated)
         lockQueue.setSpecific(key: lockQueueSpecificKey, value: ())
     }
   
@@ -790,8 +790,8 @@ extension FWPromises {
         // .barrier blocks concurrency so that we can write values
         // without then beeing read at the same time.
         // It pauses reads until write are done
-        let concurentQueue = DispatchQueue(label: "then.zip.concurrent", attributes: .concurrent)
-        let localQueue = DispatchQueue(label: "then.zip.local", attributes: .concurrent)
+        let concurentQueue = DispatchQueue(label: "FWPromise.zip.concurrent", attributes: .concurrent)
+        let localQueue = DispatchQueue(label: "FWPromise.zip.local", attributes: .concurrent)
         
         group.enter()
         concurentQueue.async {
@@ -1152,7 +1152,7 @@ extension FWPromises {
     
     private class ArrayContainer<T> {
         private var _array: [T] = []
-        private let lockQueue = DispatchQueue(label: "com.freshOS.then.whenAll.lockQueue", qos: .userInitiated)
+        private let lockQueue = DispatchQueue(label: "site.wuyong.FWPromise.whenAll.lockQueue", qos: .userInitiated)
         
         func updateArray(_ updates: @escaping (_ result: inout [T]) -> Void) {
             lockQueue.async {
@@ -1172,7 +1172,7 @@ extension FWPromises {
 @discardableResult
 public func fw_async<T>(block:@escaping () throws -> T) -> FWAsync<T> {
     let p = FWPromise<T> { resolve, reject in
-        DispatchQueue(label: "then.async.queue", attributes: .concurrent).async {
+        DispatchQueue(label: "FWPromise.async.queue", attributes: .concurrent).async {
             do {
                 let t = try block()
                 resolve(t)
