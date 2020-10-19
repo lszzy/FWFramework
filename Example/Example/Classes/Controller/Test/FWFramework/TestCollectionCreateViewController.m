@@ -136,7 +136,7 @@
 
 @end
 
-@interface TestCollectionCreateViewController ()
+@interface TestCollectionCreateViewController () <FWSkeletonViewDelegate>
 
 @property (nonatomic, strong) FWCollectionView *collectionView;
 
@@ -207,8 +207,10 @@
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [self fwShowSkeleton];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
+        [self fwHideSkeleton];
         
         self.collectionView.collectionData = @[@[[self randomObject], [self randomObject]]];
         [self.collectionView.collectionView fwClearSizeCache];
@@ -281,6 +283,17 @@
         object.imageUrl = imageName;
     }
     return object;
+}
+
+- (void)skeletonViewLayout:(FWSkeletonLayout *)layout
+{
+    [layout setScrollView:self.collectionView.collectionView scrollBlock:nil];
+    
+    FWSkeletonCollectionView *collectionView = (FWSkeletonCollectionView *)[layout addSkeletonView:self.collectionView.collectionView];
+    // 没有数据时需要指定cell，有数据时无需指定
+    collectionView.cellForItem = [TestCollectionCreateCell class];
+    // 测试header直接指定类时自动计算高度
+    collectionView.viewForHeader = [TestCollectionCreateHeaderView class];
 }
 
 @end

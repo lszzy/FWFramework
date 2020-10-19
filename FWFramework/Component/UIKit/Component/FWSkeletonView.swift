@@ -852,13 +852,322 @@ import UIKit
     }
 }
 
+// MARK: - FWSkeletonCollectionView
+
+/// 骨架屏集合视图，可生成集合骨架屏
+@objcMembers open class FWSkeletonCollectionView: FWSkeletonLayout, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    /// 集合视图，默认不可滚动
+    open lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: bounds, collectionViewLayout: collectionViewLayout)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isScrollEnabled = false
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        }
+        return collectionView
+    }()
+    
+    /// 集合布局，默认UICollectionViewFlowLayout
+    open var collectionViewLayout: UICollectionViewLayout
+    
+    /// 集合section数，默认1
+    open var numberOfSections: Int = 1
+    
+    /// 集合section头视图数组，支持UIView或UICollectionReusableView.Type(fwViewModel值为nil)
+    open var viewForHeaderArray: [Any]?
+    /// 集合section头尺寸数组，不指定时默认使用FWDynamicLayout自动计算(fwViewModel值为nil)
+    open var sizeForHeaderArray: [CGSize]?
+    /// 单section头视图，支持UIView或UICollectionReusableView.Type
+    open var viewForHeader: Any? {
+        get { return viewForHeaderArray?.first }
+        set { viewForHeaderArray = newValue != nil ? [newValue!] : nil }
+    }
+    /// 单section头尺寸
+    open var sizeForHeader: CGSize {
+        get { return sizeForHeaderArray?.first ?? .zero }
+        set { sizeForHeaderArray = [newValue] }
+    }
+    
+    /// 集合section尾视图数组，支持UIView或UICollectionReusableView.Type(fwViewModel值为nil)
+    open var viewForFooterArray: [Any]?
+    /// 集合section尾尺寸数组，不指定时默认使用FWDynamicLayout自动计算(fwViewModel值为nil)
+    open var sizeForFooterArray: [CGSize]?
+    /// 单section尾视图，支持UIView或UICollectionReusableView.Type
+    open var viewForFooter: Any? {
+        get { return viewForFooterArray?.first }
+        set { viewForFooterArray = newValue != nil ? [newValue!] : nil }
+    }
+    /// 单section尾尺寸
+    open var sizeForFooter: CGSize {
+        get { return sizeForFooterArray?.first ?? .zero }
+        set { sizeForFooterArray = [newValue] }
+    }
+    
+    /// 集合item数组，默认自动计算
+    open var numberOfItemsArray: [Int]?
+    /// 集合cell数组，section内相同，支持UICollectionViewCell或UICollectionViewCell.Type(fwViewModel值为nil)
+    open var cellForItemArray: [Any]?
+    /// 集合cell尺寸数组，section内相同，不指定时默认使用FWDynamicLayout自动计算(fwViewModel值为nil)
+    open var sizeForItemArray: [CGSize]?
+    /// 单section集合item数，默认自动计算
+    open var numberOfItems: Int {
+        get { return numberOfItemsArray?.first ?? 0 }
+        set { numberOfItemsArray = [newValue] }
+    }
+    /// 单section集合cell，section内相同，支持UICollectionViewCell或UICollectionViewCell.Type
+    open var cellForItem: Any? {
+        get { return cellForItemArray?.first }
+        set { cellForItemArray = newValue != nil ? [newValue!] : nil }
+    }
+    /// 单section集合cell尺寸，section内相同
+    open var sizeForItem: CGSize {
+        get { return sizeForItemArray?.first ?? .zero }
+        set { sizeForItemArray = [newValue] }
+    }
+    
+    public init(collectionViewLayout: UICollectionViewLayout) {
+        self.collectionViewLayout = collectionViewLayout
+        super.init(frame: .zero)
+    }
+    
+    public override init(layoutView: UIView?) {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        
+        self.collectionViewLayout = flowLayout
+        super.init(layoutView: layoutView)
+    }
+    
+    public override init(frame: CGRect) {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        
+        self.collectionViewLayout = flowLayout
+        super.init(frame: frame)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func setupView() {
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        collectionView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        
+        addSubview(collectionView)
+        collectionView.fwPinEdgesToSuperview()
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.reloadData()
+    }
+    
+    private func sizeForItem(_ section: Int) -> CGSize {
+        if let sizeArray = sizeForItemArray, sizeArray.count > section,
+           sizeArray[section].width > 0, sizeArray[section].height > 0 {
+            return sizeArray[section]
+        }
+        
+        if let sectionArray = cellForItemArray, sectionArray.count > section {
+            let object = sectionArray[section]
+            if let view = object as? UIView {
+                return view.frame.size
+            }
+            if let clazz = object as? UICollectionViewCell.Type {
+                return collectionView.fwSize(withCellClass: clazz, cacheByKey: NSNumber(value: section)) { (cell) in
+                    cell.fwViewModel = nil
+                }
+            }
+        }
+        return .zero
+    }
+    
+    private func sizeForHeader(_ section: Int) -> CGSize {
+        if let sizeArray = sizeForHeaderArray, sizeArray.count > section,
+           sizeArray[section].width > 0, sizeArray[section].height > 0 {
+            return sizeArray[section]
+        }
+        
+        if let sectionArray = viewForHeaderArray, sectionArray.count > section {
+            let object = sectionArray[section]
+            if let view = object as? UIView {
+                return view.frame.size
+            }
+            if let clazz = object as? UICollectionReusableView.Type {
+                return collectionView.fwSize(withReusableViewClass: clazz, kind: UICollectionView.elementKindSectionHeader, cacheBySection: section) { (header) in
+                    header.fwViewModel = nil
+                }
+            }
+        }
+        return .zero
+    }
+    
+    private func sizeForFooter(_ section: Int) -> CGSize {
+        if let sizeArray = sizeForFooterArray, sizeArray.count > section,
+           sizeArray[section].width > 0, sizeArray[section].height > 0 {
+            return sizeArray[section]
+        }
+        
+        if let sectionArray = viewForFooterArray, sectionArray.count > section {
+            let object = sectionArray[section]
+            if let view = object as? UIView {
+                return view.frame.size
+            }
+            if let clazz = object as? UICollectionReusableView.Type {
+                return collectionView.fwSize(withReusableViewClass: clazz, kind: UICollectionView.elementKindSectionFooter, cacheBySection: section) { (footer) in
+                    footer.fwViewModel = nil
+                }
+            }
+        }
+        return .zero
+    }
+    
+    // MARK: - UICollectionView
+    
+    open func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return numberOfSections
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let numberArray = numberOfItemsArray, numberArray.count > section, numberArray[section] > 0 {
+            return numberArray[section]
+        }
+        
+        let size = sizeForItem(section)
+        if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout,
+           flowLayout.scrollDirection == .horizontal {
+            return size.width > 0 ? Int(ceil(UIScreen.main.bounds.size.width / size.width)) : 0
+        } else {
+            return size.height > 0 ? Int(ceil(UIScreen.main.bounds.size.height / size.height)) : 0
+        }
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let reuseIdentifier = "FWSkeletonCell\(indexPath.section)"
+        if collectionView.fwBoundBool(forKey: reuseIdentifier) {
+            return collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        }
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.fwBindBool(true, forKey: reuseIdentifier)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        guard let sectionArray = cellForItemArray, sectionArray.count > indexPath.section else { return cell }
+        
+        var layout: FWSkeletonLayout?
+        let object = sectionArray[indexPath.section]
+        if let view = object as? UIView {
+            layout = FWSkeletonLayout.parseSkeletonLayout(view)
+        } else if let clazz = object as? UICollectionViewCell.Type {
+            let contentView = clazz.init(frame: .zero)
+            contentView.fwViewModel = nil
+            let contentSize = sizeForItem(indexPath.section)
+            contentView.frame = CGRect(origin: .zero, size: contentSize)
+            contentView.setNeedsLayout()
+            contentView.layoutIfNeeded()
+            layout = FWSkeletonLayout.parseSkeletonLayout(contentView)
+        }
+        
+        if let skeletonLayout = layout {
+            cell.contentView.addSubview(skeletonLayout)
+            skeletonLayout.fwPinEdgesToSuperview()
+            addAnimationView(skeletonLayout)
+        }
+        return cell
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return sizeForItem(indexPath.section)
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            guard let sectionArray = viewForHeaderArray, sectionArray.count > indexPath.section else { return UICollectionReusableView() }
+            
+            let reuseIdentifier = "FWSkeletonHeader\(indexPath.section)"
+            if collectionView.fwBoundBool(forKey: reuseIdentifier) {
+                return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
+            }
+            collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: reuseIdentifier)
+            collectionView.fwBindBool(true, forKey: reuseIdentifier)
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
+            
+            var layout: FWSkeletonLayout?
+            let object = sectionArray[indexPath.section]
+            if let view = object as? UIView {
+                layout = FWSkeletonLayout.parseSkeletonLayout(view)
+            } else if let clazz = object as? UICollectionReusableView.Type {
+                let contentView = clazz.init(frame: .zero)
+                contentView.fwViewModel = nil
+                let contentSize = sizeForHeader(indexPath.section)
+                contentView.frame = CGRect(origin: .zero, size: contentSize)
+                contentView.setNeedsLayout()
+                contentView.layoutIfNeeded()
+                layout = FWSkeletonLayout.parseSkeletonLayout(contentView)
+            }
+            
+            if let skeletonLayout = layout {
+                header.addSubview(skeletonLayout)
+                skeletonLayout.fwPinEdgesToSuperview()
+                addAnimationView(skeletonLayout)
+            }
+            return header
+        } else if kind == UICollectionView.elementKindSectionFooter {
+            guard let sectionArray = viewForFooterArray, sectionArray.count > indexPath.section else { return UICollectionReusableView() }
+            
+            let reuseIdentifier = "FWSkeletonFooter\(indexPath.section)"
+            if collectionView.fwBoundBool(forKey: reuseIdentifier) {
+                return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
+            }
+            collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: reuseIdentifier)
+            collectionView.fwBindBool(true, forKey: reuseIdentifier)
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
+            
+            var layout: FWSkeletonLayout?
+            let object = sectionArray[indexPath.section]
+            if let view = object as? UIView {
+                layout = FWSkeletonLayout.parseSkeletonLayout(view)
+            } else if let clazz = object as? UICollectionReusableView.Type {
+                let contentView = clazz.init(frame: .zero)
+                contentView.fwViewModel = nil
+                let contentSize = sizeForFooter(indexPath.section)
+                contentView.frame = CGRect(origin: .zero, size: contentSize)
+                contentView.setNeedsLayout()
+                contentView.layoutIfNeeded()
+                layout = FWSkeletonLayout.parseSkeletonLayout(contentView)
+            }
+            
+            if let skeletonLayout = layout {
+                footer.addSubview(skeletonLayout)
+                skeletonLayout.fwPinEdgesToSuperview()
+                addAnimationView(skeletonLayout)
+            }
+            return footer
+        }
+        return UICollectionReusableView()
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return sizeForHeader(section)
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return sizeForFooter(section)
+    }
+}
+
 // MARK: - UIKit+FWSkeletonLayout
 
 /// 视图显示骨架屏扩展
 @objc extension UIView {
     private func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil, block: ((FWSkeletonLayout) -> Void)? = nil) {
-        // UITableView调用addSubview不会显示，此处使用父视图
-        if self is UITableView {
+        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
+        if self is UITableView || self is UICollectionView {
             superview?.fwShowSkeleton(delegate: delegate, block: block)
             return
         }
@@ -897,8 +1206,8 @@ import UIKit
     
     /// 隐藏骨架屏
     open func fwHideSkeleton() {
-        // UITableView调用addSubview不会显示，此处使用父视图
-        if self is UITableView {
+        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
+        if self is UITableView || self is UICollectionView {
             superview?.fwHideSkeleton()
             return
         }
@@ -1015,6 +1324,58 @@ extension UITableView: FWSkeletonViewDataSource {
     }
 }
 
+/// UICollectionView骨架屏视图数据源扩展
+extension UICollectionView: FWSkeletonViewDataSource {
+    open func skeletonViewProvider() -> FWSkeletonView? {
+        let collectionView = FWSkeletonCollectionView(collectionViewLayout: collectionViewLayout)
+        collectionView.layoutView = self
+        collectionView.numberOfSections = numberOfSections
+        
+        var viewForHeaderArray: [Any] = []
+        var sizeForHeaderArray: [CGSize] = []
+        var viewForFooterArray: [Any] = []
+        var sizeForFooterArray: [CGSize] = []
+        var numberOfItemsArray: [Int] = []
+        var cellForItemArray: [Any] = []
+        var sizeForItemArray: [CGSize] = []
+        
+        for section in 0 ..< numberOfSections {
+            let viewForHeader: UIView? = supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: section))
+            if viewForHeader != nil || numberOfSections > 1 {
+                viewForHeaderArray.append(viewForHeader ?? UIView(frame: .zero))
+                let sizeForHeader: CGSize? = viewForHeader?.frame.size
+                sizeForHeaderArray.append(sizeForHeader ?? .zero)
+            }
+            
+            let viewForFooter: UIView? = supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: section))
+            if viewForFooter != nil || numberOfSections > 1 {
+                viewForFooterArray.append(viewForFooter ?? UIView(frame: .zero))
+                let sizeForFooter: CGSize? = viewForFooter?.frame.size
+                sizeForFooterArray.append(sizeForFooter ?? .zero)
+            }
+            
+            let number = numberOfItems(inSection: section)
+            numberOfItemsArray.append(number)
+            
+            let indexPath: IndexPath? = (number > 0) ? IndexPath(row: 0, section: section) : nil
+            let cell: UICollectionViewCell? = (indexPath != nil) ? cellForItem(at: indexPath!) : nil
+            cellForItemArray.append((cell != nil) ? cell! : UICollectionViewCell(frame: .zero))
+            
+            let size: CGSize = (cell != nil) ? cell!.frame.size : .zero
+            sizeForItemArray.append(size)
+        }
+        
+        collectionView.viewForHeaderArray = viewForHeaderArray
+        collectionView.sizeForHeaderArray = sizeForHeaderArray
+        collectionView.viewForFooterArray = viewForFooterArray
+        collectionView.sizeForFooterArray = sizeForFooterArray
+        collectionView.numberOfItemsArray = numberOfItemsArray
+        collectionView.cellForItemArray = cellForItemArray
+        collectionView.sizeForItemArray = sizeForItemArray
+        return collectionView
+    }
+}
+
 /// UITableViewCell骨架屏视图代理扩展
 extension UITableViewCell: FWSkeletonViewDelegate {
     open func skeletonViewLayout(_ layout: FWSkeletonLayout) {
@@ -1025,6 +1386,20 @@ extension UITableViewCell: FWSkeletonViewDelegate {
 /// UITableViewHeaderFooterView骨架屏视图代理扩展
 extension UITableViewHeaderFooterView: FWSkeletonViewDelegate {
     open func skeletonViewLayout(_ layout: FWSkeletonLayout) {
+        layout.addSkeletonViews(contentView.subviews)
+    }
+}
+
+/// UICollectionReusableView骨架屏视图代理扩展
+extension UICollectionReusableView: FWSkeletonViewDelegate {
+    open func skeletonViewLayout(_ layout: FWSkeletonLayout) {
+        layout.addSkeletonViews(subviews)
+    }
+}
+
+/// UICollectionViewCell骨架屏视图代理扩展
+extension UICollectionViewCell {
+    open override func skeletonViewLayout(_ layout: FWSkeletonLayout) {
         layout.addSkeletonViews(contentView.subviews)
     }
 }
