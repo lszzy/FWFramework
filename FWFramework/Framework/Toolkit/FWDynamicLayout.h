@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - UITableViewCell+FWDynamicLayout
 
 typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
+typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath *indexPath);
 
 /*!
  @brief UITableViewCell+FWDynamicLayout
@@ -53,6 +54,7 @@ typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
 };
 
 typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
+typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section);
 
 /*!
  @brief UITableViewHeaderFooterView+FWDynamicLayout
@@ -153,6 +155,7 @@ typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFo
 #pragma mark - UICollectionViewCell+FWDynamicLayout
 
 typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell *cell);
+typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cell, NSIndexPath *indexPath);
 
 /*!
  @brief UICollectionViewCell+FWDynamicLayout
@@ -194,6 +197,7 @@ typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell 
 #pragma mark - UICollectionReusableView+FWDynamicLayout
 
 typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableView *reusableView);
+typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath);
 
 /*!
  @brief UICollectionReusableView+FWDynamicLayout
