@@ -83,6 +83,8 @@
 - (UICollectionViewLayout *)fwInnerRenderCollectionViewLayout
 {
     UICollectionViewFlowLayout *viewLayout = [[UICollectionViewFlowLayout alloc] init];
+    viewLayout.minimumLineSpacing = 0;
+    viewLayout.minimumInteritemSpacing = 0;
     return viewLayout;
 }
 

@@ -58,7 +58,11 @@ import UIKit
     open var didSelectItem: ((IndexPath) -> Void)?
     
     public override init(frame: CGRect) {
-        self.collectionViewLayout = UICollectionViewFlowLayout()
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        
+        self.collectionViewLayout = flowLayout
         super.init(frame: frame)
         setupView()
     }
