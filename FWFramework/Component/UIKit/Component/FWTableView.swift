@@ -44,14 +44,14 @@ import UIKit
     /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView.Type
     open var viewClassForHeader: ((Int) -> Any?)?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var viewForHeader: FWHeaderFooterViewConfigurationBlock?
+    open var viewForHeader: FWHeaderFooterViewSectionBlock?
     /// 表格section头高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var heightForHeader: ((Int) -> CGFloat)?
     
     /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView.Type
     open var viewClassForFooter: ((Int) -> Any?)?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var viewForFooter: FWHeaderFooterViewConfigurationBlock?
+    open var viewForFooter: FWHeaderFooterViewSectionBlock?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var heightForFooter: ((Int) -> CGFloat)?
     
@@ -60,7 +60,7 @@ import UIKit
     /// 表格cell类句柄，style固定为default，默认UITableViewCell
     open var cellClassForRow: ((IndexPath) -> UITableViewCell.Type)?
     /// 表格cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为tableData对应数据
-    open var cellForRow: FWCellConfigurationBlock?
+    open var cellForRow: FWCellIndexPathBlock?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
     open var heightForRow: ((IndexPath) -> CGFloat)?
     /// 表格选中事件，默认nil
@@ -86,11 +86,6 @@ import UIKit
     private func setupView() {
         addSubview(tableView)
         tableView.fwPinEdgesToSuperview()
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        tableView.reloadData()
     }
     
     open func reloadData() {
@@ -119,7 +114,7 @@ import UIKit
         let clazz = cellClassForRow?(indexPath) ?? UITableViewCell.self
         let cell = clazz.fwCell(with: tableView)
         if let cellBlock = cellForRow {
-            cellBlock(cell)
+            cellBlock(cell, indexPath)
             return cell
         }
         
@@ -139,7 +134,9 @@ import UIKit
         
         let clazz = cellClassForRow?(indexPath) ?? UITableViewCell.self
         if let cellBlock = cellForRow {
-            return tableView.fwHeight(withCellClass: clazz, cacheBy: indexPath, configuration: cellBlock)
+            return tableView.fwHeight(withCellClass: clazz, cacheBy: indexPath) { (cell) in
+                cellBlock(cell, indexPath)
+            }
         }
         
         var viewModel: Any?
@@ -160,8 +157,8 @@ import UIKit
         }
         if let clazz = header as? UITableViewHeaderFooterView.Type {
             let view = clazz.fwHeaderFooterView(with: tableView)
-            let viewBlock = viewForHeader ?? { (header) in header.fwViewModel = nil }
-            viewBlock(view)
+            let viewBlock = viewForHeader ?? { (header, section) in header.fwViewModel = nil }
+            viewBlock(view, section)
             return view
         }
         return nil
@@ -177,8 +174,10 @@ import UIKit
             return view.frame.size.height
         }
         if let clazz = header as? UITableViewHeaderFooterView.Type {
-            let viewBlock = viewForHeader ?? { (header) in header.fwViewModel = nil }
-            return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .header, cacheBySection: section, configuration: viewBlock)
+            let viewBlock = viewForHeader ?? { (header, section) in header.fwViewModel = nil }
+            return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .header, cacheBySection: section) { (headerView) in
+                viewBlock(headerView, section)
+            }
         }
         return 0
     }
@@ -191,8 +190,8 @@ import UIKit
         }
         if let clazz = footer as? UITableViewHeaderFooterView.Type {
             let view = clazz.fwHeaderFooterView(with: tableView)
-            let viewBlock = viewForFooter ?? { (footer) in footer.fwViewModel = nil }
-            viewBlock(view)
+            let viewBlock = viewForFooter ?? { (footer, section) in footer.fwViewModel = nil }
+            viewBlock(view, section)
             return view
         }
         return nil
@@ -208,8 +207,10 @@ import UIKit
             return view.frame.size.height
         }
         if let clazz = footer as? UITableViewHeaderFooterView.Type {
-            let viewBlock = viewForFooter ?? { (footer) in footer.fwViewModel = nil }
-            return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .footer, cacheBySection: section, configuration: viewBlock)
+            let viewBlock = viewForFooter ?? { (footer, section) in footer.fwViewModel = nil }
+            return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .footer, cacheBySection: section) { (footerView) in
+                viewBlock(footerView, section)
+            }
         }
         return 0
     }

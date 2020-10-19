@@ -247,7 +247,6 @@
 - (void)renderView
 {
     self.tableView = [[FWTableView alloc] init];
-    self.tableView.tableData = @[@[@1, @2]];
     FWWeakifySelf();
     self.tableView.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
         return [TestTableCreateCell class];
@@ -271,7 +270,7 @@
     self.tableView.viewClassForFooter = ^id _Nullable(NSInteger section) {
         return [TestTableCreateFooterView class];
     };
-    self.tableView.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView) {
+    self.tableView.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
         headerFooterView.object = @1;
     };
     

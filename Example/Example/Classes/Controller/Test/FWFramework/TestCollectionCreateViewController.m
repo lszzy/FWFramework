@@ -147,13 +147,18 @@
 - (void)renderView
 {
     self.collectionView = [[FWCollectionView alloc] init];
+    self.collectionView.collectionView.backgroundColor = [UIColor appColorBg];
+    self.collectionView.collectionView.alwaysBounceVertical = YES;
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     flowLayout.minimumLineSpacing = 0;
     flowLayout.minimumInteritemSpacing = 0;
-    self.collectionView.collectionData = @[@[[self randomObject], [self randomObject]]];
     FWWeakifySelf();
     self.collectionView.cellClassForItem = ^Class _Nonnull(NSIndexPath * indexPath) {
         return [TestCollectionCreateCell class];
+    };
+    self.collectionView.cellForItem = ^(TestCollectionCreateCell * _Nonnull cell, NSIndexPath * _Nonnull indexPath) {
+        FWStrongifySelf();
+        cell.object = self.collectionView.collectionData[indexPath.section][indexPath.row];
     };
     self.collectionView.didSelectItem = ^(NSIndexPath * indexPath) {
         FWStrongifySelf();
@@ -166,15 +171,17 @@
     self.collectionView.viewClassForFooter = ^Class(NSIndexPath * indexPath) {
         return [TestCollectionCreateHeaderView class];
     };
-    self.collectionView.viewForHeader = ^(TestCollectionCreateHeaderView * _Nonnull headerView) {
+    self.collectionView.viewForHeader = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
         headerView.fwViewModel = @"我是Header\n我是Header";
     };
-    self.collectionView.viewForFooter = ^(TestCollectionCreateHeaderView * _Nonnull headerView) {
+    self.collectionView.viewForFooter = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
         headerView.fwViewModel = @"我是Footer\n我是Footer\n我是Footer";
     };
     
     [self.view addSubview:self.collectionView];
     [self.collectionView fwPinEdgesToSuperview];
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
     
     [self.collectionView.collectionView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
     [self.collectionView.collectionView fwSetLoadingTarget:self action:@selector(onLoading)];
@@ -188,7 +195,7 @@
         NSMutableArray *sectionData = self.collectionView.collectionData[0].mutableCopy;
         [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];
         self.collectionView.collectionData = @[sectionData];
-        [self.collectionView reloadData];
+        [self.collectionView.collectionView fwReloadDataWithoutAnimation];
     }];
 }
 
@@ -204,7 +211,8 @@
         NSLog(@"刷新完成");
         
         self.collectionView.collectionData = @[@[[self randomObject], [self randomObject]]];
-        [self.collectionView reloadData];
+        [self.collectionView.collectionView fwClearSizeCache];
+        [self.collectionView.collectionView fwReloadDataWithoutAnimation];
         
         [self.collectionView.collectionView fwEndRefreshing];
     });
@@ -219,7 +227,7 @@
         NSMutableArray *sectionData = self.collectionView.collectionData[0].mutableCopy;
         [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];
         self.collectionView.collectionData = @[sectionData];
-        [self.collectionView reloadData];
+        [self.collectionView.collectionView fwReloadDataWithoutAnimation];
         
         [self.collectionView.collectionView fwEndLoading];
     });
