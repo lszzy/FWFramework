@@ -40,6 +40,11 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 + (instancetype)fwCellWithTableView:(UITableView *)tableView
                               style:(UITableViewCellStyle)style;
 
+/// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型，指定reuseIdentifier
++ (instancetype)fwCellWithTableView:(UITableView *)tableView
+                              style:(UITableViewCellStyle)style
+                    reuseIdentifier:(NSString *)reuseIdentifier;
+
 /// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
 + (CGFloat)fwHeightWithViewModel:(nullable id)viewModel
                        tableView:(UITableView *)tableView;
@@ -75,6 +80,10 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
 + (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView;
+
+/// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
++ (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView
+                                reuseIdentifier:(NSString *)reuseIdentifier;
 
 /// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
 + (CGFloat)fwHeightWithViewModel:(nullable id)viewModel
@@ -178,6 +187,11 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 + (instancetype)fwCellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath;
 
+/// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
++ (instancetype)fwCellWithCollectionView:(UICollectionView *)collectionView
+                               indexPath:(NSIndexPath *)indexPath
+                         reuseIdentifier:(NSString *)reuseIdentifier;
+
 /// 根据视图模型自动计算view大小，子类可重写
 + (CGSize)fwSizeWithViewModel:(nullable id)viewModel
                collectionView:(UICollectionView *)collectionView;
@@ -220,6 +234,12 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 + (instancetype)fwReusableViewWithCollectionView:(UICollectionView *)collectionView
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath;
+
+/// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
++ (instancetype)fwReusableViewWithCollectionView:(UICollectionView *)collectionView
+                                            kind:(NSString *)kind
+                                       indexPath:(NSIndexPath *)indexPath
+                                 reuseIdentifier:(NSString *)reuseIdentifier;
 
 /// 根据视图模型自动计算view大小，子类可重写
 + (CGSize)fwSizeWithViewModel:(nullable id)viewModel
