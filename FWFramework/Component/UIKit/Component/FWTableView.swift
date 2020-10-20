@@ -53,7 +53,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupView() {
+    func setupView() {
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
         if #available(iOS 11.0, *) {
