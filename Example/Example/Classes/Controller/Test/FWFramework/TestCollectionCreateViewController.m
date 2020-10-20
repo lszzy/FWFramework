@@ -101,6 +101,15 @@
     self.myTextLabel.text = object.text;
 }
 
+- (void)setFwViewModel:(id)fwViewModel
+{
+    [super setFwViewModel:fwViewModel];
+    
+    self.myTitleLabel.text = @"我是标题";
+    self.myImageView.image = FWImageName(@"public_icon");
+    self.myTextLabel.text = @"我是文本";
+}
+
 @end
 
 @interface TestCollectionCreateHeaderView : UICollectionReusableView
@@ -131,7 +140,7 @@
 {
     [super setFwViewModel:fwViewModel];
     
-    self.titleLabel.text = FWSafeString(fwViewModel);
+    self.titleLabel.text = FWSafeString(fwViewModel ? fwViewModel : @"我是Header");
 }
 
 @end
