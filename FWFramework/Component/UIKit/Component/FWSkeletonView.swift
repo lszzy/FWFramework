@@ -876,6 +876,13 @@ import UIKit
     
     /// 集合section数，默认1
     open var numberOfSections: Int = 1
+    /// 集合section边距，默认zero
+    open var insetForSectionArray: [UIEdgeInsets]?
+    /// 单section边距
+    open var insetForSection: UIEdgeInsets {
+        get { return insetForSectionArray?.first ?? .zero }
+        set { insetForSectionArray = [newValue] }
+    }
     
     /// 集合section头视图数组，支持UIView或UICollectionReusableView.Type(fwViewModel值为nil)
     open var viewForHeaderArray: [Any]?
@@ -984,7 +991,12 @@ import UIKit
                 return view.frame.size
             }
             if let clazz = object as? UICollectionViewCell.Type {
-                return collectionView.fwSize(withCellClass: clazz, cacheByKey: NSNumber(value: section)) { (cell) in
+                let sectionInset = sectionEdgeInset(section)
+                var width: CGFloat = 0
+                if sectionInset != .zero && collectionView.frame.size.width > 0 {
+                    width = collectionView.frame.size.width - sectionInset.left - sectionInset.right
+                }
+                return collectionView.fwSize(withCellClass: clazz, width: width, cacheByKey: NSNumber(value: section)) { (cell) in
                     cell.fwViewModel = nil
                 }
             }
@@ -1028,6 +1040,17 @@ import UIKit
                     footer.fwViewModel = nil
                 }
             }
+        }
+        return .zero
+    }
+    
+    private func sectionEdgeInset(_ section: Int) -> UIEdgeInsets {
+        if let insetArray = insetForSectionArray, insetArray.count > section {
+            return insetArray[section]
+        }
+        
+        if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+            return flowLayout.sectionInset
         }
         return .zero
     }
@@ -1082,6 +1105,10 @@ import UIKit
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return sizeForItem(indexPath.section)
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionEdgeInset(section)
     }
     
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

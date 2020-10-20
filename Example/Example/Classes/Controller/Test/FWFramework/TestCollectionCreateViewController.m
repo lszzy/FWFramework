@@ -162,6 +162,7 @@
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     flowLayout.minimumLineSpacing = 0;
     flowLayout.minimumInteritemSpacing = 0;
+    flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
     FWWeakifySelf();
     self.collectionView.cellClassForItem = ^Class _Nonnull(NSIndexPath * indexPath) {
         return [TestCollectionCreateCell class];
