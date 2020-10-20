@@ -157,8 +157,8 @@
 {
     self.collectionView = [[FWCollectionView alloc] init];
     self.collectionView.collectionData = @[@[]];
-    self.collectionView.collectionView.backgroundColor = [UIColor appColorBg];
-    self.collectionView.collectionView.alwaysBounceVertical = YES;
+    self.collectionView.backgroundColor = [UIColor appColorBg];
+    self.collectionView.alwaysBounceVertical = YES;
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     flowLayout.minimumLineSpacing = 0;
     flowLayout.minimumInteritemSpacing = 0;
@@ -194,8 +194,8 @@
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
     
-    [self.collectionView.collectionView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
-    [self.collectionView.collectionView fwSetLoadingTarget:self action:@selector(onLoading)];
+    [self.collectionView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.collectionView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -206,13 +206,13 @@
         NSMutableArray *sectionData = self.collectionView.collectionData[0].mutableCopy;
         [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];
         self.collectionView.collectionData = @[sectionData];
-        [self.collectionView.collectionView fwReloadDataWithoutAnimation];
+        [self.collectionView fwReloadDataWithoutAnimation];
     }];
 }
 
 - (void)renderData
 {
-    [self.collectionView.collectionView fwBeginRefreshing];
+    [self.collectionView fwBeginRefreshing];
 }
 
 - (void)onRefreshing
@@ -224,10 +224,10 @@
         [self fwHideSkeleton];
         
         self.collectionView.collectionData = @[@[[self randomObject], [self randomObject]]];
-        [self.collectionView.collectionView fwClearSizeCache];
-        [self.collectionView.collectionView fwReloadDataWithoutAnimation];
+        [self.collectionView fwClearSizeCache];
+        [self.collectionView fwReloadDataWithoutAnimation];
         
-        [self.collectionView.collectionView fwEndRefreshing];
+        [self.collectionView fwEndRefreshing];
     });
 }
 
@@ -240,9 +240,9 @@
         NSMutableArray *sectionData = self.collectionView.collectionData[0].mutableCopy;
         [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];
         self.collectionView.collectionData = @[sectionData];
-        [self.collectionView.collectionView fwReloadDataWithoutAnimation];
+        [self.collectionView fwReloadDataWithoutAnimation];
         
-        [self.collectionView.collectionView fwEndLoading];
+        [self.collectionView fwEndLoading];
     });
 }
 
@@ -298,9 +298,9 @@
 
 - (void)skeletonViewLayout:(FWSkeletonLayout *)layout
 {
-    [layout setScrollView:self.collectionView.collectionView scrollBlock:nil];
+    [layout setScrollView:self.collectionView scrollBlock:nil];
     
-    FWSkeletonCollectionView *collectionView = (FWSkeletonCollectionView *)[layout addSkeletonView:self.collectionView.collectionView];
+    FWSkeletonCollectionView *collectionView = (FWSkeletonCollectionView *)[layout addSkeletonView:self.collectionView];
     // 没有数据时需要指定cell，有数据时无需指定
     collectionView.cellForItem = [TestCollectionCreateCell class];
     collectionView.sizeForItemArray = nil;

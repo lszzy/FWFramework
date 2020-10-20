@@ -258,13 +258,13 @@
     
     self.tableView.viewClassForHeader = ^id _Nullable(NSInteger section) {
         FWStrongifySelf();
-        TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView.tableView];
+        TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView];
         viewForHeader.object = @1;
         
-        CGFloat height = [self.tableView.tableView fwHeightWithHeaderFooterViewClass:[TestTableCreateHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableCreateHeaderView * _Nonnull headerFooterView) {
+        CGFloat height = [self.tableView fwHeightWithHeaderFooterViewClass:[TestTableCreateHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableCreateHeaderView * _Nonnull headerFooterView) {
             headerFooterView.object = @1;
         }];
-        viewForHeader.frame = CGRectMake(0, 0, self.tableView.tableView.fwWidth, height);
+        viewForHeader.frame = CGRectMake(0, 0, self.tableView.fwWidth, height);
         return viewForHeader;
     };
     self.tableView.viewClassForFooter = ^id _Nullable(NSInteger section) {
@@ -284,8 +284,8 @@
     [self.view addSubview:self.tableView];
     [self.tableView fwPinEdgesToSuperview];
     
-    [self.tableView.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
-    [self.tableView.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
+    [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -303,7 +303,7 @@
 
 - (void)renderData
 {
-    [self.tableView.tableView fwBeginRefreshing];
+    [self.tableView fwBeginRefreshing];
 }
 
 - (void)onRefreshing
@@ -315,7 +315,7 @@
         self.tableView.tableData = @[@[@1, @2]];
         [self.tableView reloadData];
         
-        [self.tableView.tableView fwEndRefreshing];
+        [self.tableView fwEndRefreshing];
     });
 }
 
@@ -331,7 +331,7 @@
         self.tableView.tableData = @[sectionData];
         [self.tableView reloadData];
         
-        [self.tableView.tableView fwEndLoading];
+        [self.tableView fwEndLoading];
     });
 }
 
