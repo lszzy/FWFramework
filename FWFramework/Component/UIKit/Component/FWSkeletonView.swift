@@ -756,10 +756,10 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "FWSkeletonCell\(indexPath.section)") { return cell }
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
+        let cell = UITableViewCell.fwCell(with: tableView, style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
         cell.selectionStyle = .none
         guard let sectionArray = cellForRowArray, sectionArray.count > indexPath.section else { return cell }
+        guard cell.fwBoundBool(forKey: "FWSkeletonCell") == false else { return cell }
         
         var layout: FWSkeletonLayout?
         let object = sectionArray[indexPath.section]
@@ -780,6 +780,7 @@ import UIKit
             skeletonLayout.fwPinEdgesToSuperview()
             addAnimationView(skeletonLayout)
         }
+        cell.fwBindBool(true, forKey: "FWSkeletonCell")
         return cell
     }
     
@@ -790,8 +791,8 @@ import UIKit
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let sectionArray = viewForHeaderArray, sectionArray.count > section else { return nil }
         
-        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FWSkeletonHeader\(section)") { return header }
-        let header = UITableViewHeaderFooterView(reuseIdentifier: "FWSkeletonHeader\(section)")
+        let header = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView, reuseIdentifier: "FWSkeletonHeader\(section)")
+        guard header.fwBoundBool(forKey: "FWSkeletonHeader") == false else { return header }
         
         var layout: FWSkeletonLayout?
         let object = sectionArray[section]
@@ -812,6 +813,7 @@ import UIKit
             skeletonLayout.fwPinEdgesToSuperview()
             addAnimationView(skeletonLayout)
         }
+        header.fwBindBool(true, forKey: "FWSkeletonHeader")
         return header
     }
     
@@ -822,8 +824,8 @@ import UIKit
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard let sectionArray = viewForFooterArray, sectionArray.count > section else { return nil }
         
-        if let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FWSkeletonFooter\(section)") { return footer }
-        let footer = UITableViewHeaderFooterView(reuseIdentifier: "FWSkeletonFooter\(section)")
+        let footer = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView, reuseIdentifier: "FWSkeletonFooter")
+        guard footer.fwBoundBool(forKey: "FWSkeletonFooter") else { return footer }
         
         var layout: FWSkeletonLayout?
         let object = sectionArray[section]
@@ -844,6 +846,7 @@ import UIKit
             skeletonLayout.fwPinEdgesToSuperview()
             addAnimationView(skeletonLayout)
         }
+        footer.fwBindBool(true, forKey: "FWSkeletonFooter")
         return footer
     }
     
@@ -1050,14 +1053,9 @@ import UIKit
     }
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let reuseIdentifier = "FWSkeletonCell\(indexPath.section)"
-        if collectionView.fwBoundBool(forKey: reuseIdentifier) {
-            return collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        }
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView.fwBindBool(true, forKey: reuseIdentifier)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = UICollectionViewCell.fwCell(with: collectionView, indexPath: indexPath, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
         guard let sectionArray = cellForItemArray, sectionArray.count > indexPath.section else { return cell }
+        guard cell.fwBoundBool(forKey: "FWSkeletonCell") == false else { return cell }
         
         var layout: FWSkeletonLayout?
         let object = sectionArray[indexPath.section]
@@ -1078,6 +1076,7 @@ import UIKit
             skeletonLayout.fwPinEdgesToSuperview()
             addAnimationView(skeletonLayout)
         }
+        cell.fwBindBool(true, forKey: "FWSkeletonCell")
         return cell
     }
     
@@ -1089,13 +1088,8 @@ import UIKit
         if kind == UICollectionView.elementKindSectionHeader {
             guard let sectionArray = viewForHeaderArray, sectionArray.count > indexPath.section else { return UICollectionReusableView() }
             
-            let reuseIdentifier = "FWSkeletonHeader\(indexPath.section)"
-            if collectionView.fwBoundBool(forKey: reuseIdentifier) {
-                return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
-            }
-            collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: reuseIdentifier)
-            collectionView.fwBindBool(true, forKey: reuseIdentifier)
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
+            let header = UICollectionReusableView.fwReusableView(with: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonHeader\(indexPath.section)")
+            guard header.fwBoundBool(forKey: "FWSkeletonHeader") == false else { return header }
             
             var layout: FWSkeletonLayout?
             let object = sectionArray[indexPath.section]
@@ -1116,17 +1110,13 @@ import UIKit
                 skeletonLayout.fwPinEdgesToSuperview()
                 addAnimationView(skeletonLayout)
             }
+            header.fwBindBool(true, forKey: "FWSkeletonHeader")
             return header
         } else if kind == UICollectionView.elementKindSectionFooter {
             guard let sectionArray = viewForFooterArray, sectionArray.count > indexPath.section else { return UICollectionReusableView() }
             
-            let reuseIdentifier = "FWSkeletonFooter\(indexPath.section)"
-            if collectionView.fwBoundBool(forKey: reuseIdentifier) {
-                return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
-            }
-            collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: reuseIdentifier)
-            collectionView.fwBindBool(true, forKey: reuseIdentifier)
-            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath)
+            let footer = UICollectionReusableView.fwReusableView(with: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonFooter\(indexPath.section)")
+            guard footer.fwBoundBool(forKey: "FWSkeletonFooter") == false else { return footer }
             
             var layout: FWSkeletonLayout?
             let object = sectionArray[indexPath.section]
@@ -1147,6 +1137,7 @@ import UIKit
                 skeletonLayout.fwPinEdgesToSuperview()
                 addAnimationView(skeletonLayout)
             }
+            footer.fwBindBool(true, forKey: "FWSkeletonFooter")
             return footer
         }
         return UICollectionReusableView()
