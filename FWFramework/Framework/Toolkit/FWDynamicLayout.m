@@ -159,6 +159,12 @@
 + (instancetype)fwCellWithTableView:(UITableView *)tableView
                               style:(UITableViewCellStyle)style {
     NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    return [self fwCellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
+}
+
++ (instancetype)fwCellWithTableView:(UITableView *)tableView
+                              style:(UITableViewCellStyle)style
+                    reuseIdentifier:(NSString *)reuseIdentifier {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (cell) return cell;
     return [[self alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -223,11 +229,17 @@
 
 + (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView {
     NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    if ([objc_getAssociatedObject(tableView, (__bridge const void * _Nonnull)(self)) boolValue]) {
+    return [self fwHeaderFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
+}
+
++ (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView
+                                reuseIdentifier:(NSString *)reuseIdentifier {
+    SEL reuseSelector = NSSelectorFromString(reuseIdentifier);
+    if ([objc_getAssociatedObject(tableView, reuseSelector) boolValue]) {
         return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
     }
     [tableView registerClass:self forHeaderFooterViewReuseIdentifier:reuseIdentifier];
-    objc_setAssociatedObject(tableView, (__bridge const void * _Nonnull)(self), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(tableView, reuseSelector, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
 }
 
@@ -626,11 +638,18 @@
 + (instancetype)fwCellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath {
     NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    if ([objc_getAssociatedObject(collectionView, (__bridge const void * _Nonnull)(self)) boolValue]) {
+    return [self fwCellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
+}
+
++ (instancetype)fwCellWithCollectionView:(UICollectionView *)collectionView
+                               indexPath:(NSIndexPath *)indexPath
+                         reuseIdentifier:(NSString *)reuseIdentifier {
+    SEL reuseSelector = NSSelectorFromString(reuseIdentifier);
+    if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     }
     [collectionView registerClass:self forCellWithReuseIdentifier:reuseIdentifier];
-    objc_setAssociatedObject(collectionView, (__bridge const void * _Nonnull)(self), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(collectionView, reuseSelector, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 }
 
@@ -711,6 +730,13 @@
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath {
     NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    return [self fwReusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
+}
+
++ (instancetype)fwReusableViewWithCollectionView:(UICollectionView *)collectionView
+                                            kind:(NSString *)kind
+                                       indexPath:(NSIndexPath *)indexPath
+                                 reuseIdentifier:(NSString *)reuseIdentifier {
     SEL reuseSelector = NSSelectorFromString([NSString stringWithFormat:@"%@%@", reuseIdentifier, kind]);
     if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];

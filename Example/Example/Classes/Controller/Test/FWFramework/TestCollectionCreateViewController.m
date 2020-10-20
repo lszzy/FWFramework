@@ -147,6 +147,7 @@
 - (void)renderView
 {
     self.collectionView = [[FWCollectionView alloc] init];
+    self.collectionView.collectionData = @[@[]];
     self.collectionView.collectionView.backgroundColor = [UIColor appColorBg];
     self.collectionView.collectionView.alwaysBounceVertical = YES;
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;

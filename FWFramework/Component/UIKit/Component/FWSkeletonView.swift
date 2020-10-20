@@ -1327,7 +1327,21 @@ extension UITableView: FWSkeletonViewDataSource {
 /// UICollectionView骨架屏视图数据源扩展
 extension UICollectionView: FWSkeletonViewDataSource {
     open func skeletonViewProvider() -> FWSkeletonView? {
-        let collectionView = FWSkeletonCollectionView(collectionViewLayout: collectionViewLayout)
+        let collectionView: FWSkeletonCollectionView
+        if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+            let skeletonLayout = UICollectionViewFlowLayout()
+            skeletonLayout.itemSize = flowLayout.itemSize
+            skeletonLayout.estimatedItemSize = flowLayout.estimatedItemSize
+            skeletonLayout.minimumLineSpacing = flowLayout.minimumLineSpacing
+            skeletonLayout.minimumInteritemSpacing = flowLayout.minimumInteritemSpacing
+            skeletonLayout.scrollDirection = flowLayout.scrollDirection
+            skeletonLayout.headerReferenceSize = flowLayout.headerReferenceSize
+            skeletonLayout.footerReferenceSize = flowLayout.footerReferenceSize
+            skeletonLayout.sectionInset = flowLayout.sectionInset
+            collectionView = FWSkeletonCollectionView(collectionViewLayout: skeletonLayout)
+        } else {
+            collectionView = FWSkeletonCollectionView()
+        }
         collectionView.layoutView = self
         collectionView.numberOfSections = numberOfSections
         
