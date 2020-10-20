@@ -9,38 +9,20 @@
 import UIKit
 
 /// 便捷集合视图
-@objcMembers open class FWCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    /// 集合视图
-    open lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: bounds, collectionViewLayout: collectionViewLayout)
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        if #available(iOS 11.0, *) {
-            collectionView.contentInsetAdjustmentBehavior = .never
-        }
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        return collectionView
-    }()
-    
-    /// 集合布局，默认UICollectionViewFlowLayout
-    open var collectionViewLayout: UICollectionViewLayout
-    
+@objcMembers open class FWCollectionView: UICollectionView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     /// 集合数据，可选方式，必须按[section][item]二维数组格式
     open var collectionData: [[Any]] = []
     
     /// 集合section数，默认自动计算collectionData
-    open var numberOfSections: (() -> Int)?
+    open var countForSection: (() -> Int)?
     /// 集合section边距句柄，默认nil
     open var insetForSection: ((Int) -> UIEdgeInsets)?
-    
     /// 集合section头视图句柄，支持UICollectionReusableView.Type
     open var viewClassForHeader: ((IndexPath) -> UICollectionReusableView.Type)?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForHeader: FWReusableViewIndexPathBlock?
     /// 集合section头尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var sizeForHeader: ((Int) -> CGSize)?
-    
     /// 集合section尾视图句柄，支持UICollectionReusableView.Type
     open var viewClassForFooter: ((IndexPath) -> UICollectionReusableView.Type)?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
@@ -49,7 +31,7 @@ import UIKit
     open var sizeForFooter: ((Int) -> CGSize)?
     
     /// 集合item数句柄，默认自动计算collectionData
-    open var numberOfItems: ((Int) -> Int)?
+    open var countForItem: ((Int) -> Int)?
     /// 集合cell类句柄，默认UICollectionViewCell
     open var cellClassForItem: ((IndexPath) -> UICollectionViewCell.Type)?
     /// 集合cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为collectionData对应数据
@@ -59,19 +41,17 @@ import UIKit
     /// 集合选中事件，默认nil
     open var didSelectItem: ((IndexPath) -> Void)?
     
-    public override init(frame: CGRect) {
+    public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(frame: frame, collectionViewLayout: layout)
+        setupView()
+    }
+    
+    public init(frame: CGRect) {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
         
-        self.collectionViewLayout = flowLayout
-        super.init(frame: frame)
-        setupView()
-    }
-    
-    public init(collectionViewLayout: UICollectionViewLayout) {
-        self.collectionViewLayout = collectionViewLayout
-        super.init(frame: .zero)
+        super.init(frame: frame, collectionViewLayout: flowLayout)
         setupView()
     }
     
@@ -80,12 +60,13 @@ import UIKit
     }
     
     private func setupView() {
-        addSubview(collectionView)
-        collectionView.fwPinEdgesToSuperview()
-    }
-    
-    open func reloadData() {
-        collectionView.reloadData()
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
+        if #available(iOS 11.0, *) {
+            contentInsetAdjustmentBehavior = .never
+        }
+        dataSource = self
+        delegate = self
     }
     
     private func sectionEdgeInset(_ section: Int) -> UIEdgeInsets {
@@ -102,16 +83,16 @@ import UIKit
     // MARK: - UICollectionView
     
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if let numberBlock = numberOfSections {
-            return numberBlock()
+        if let countBlock = countForSection {
+            return countBlock()
         }
         
         return collectionData.count
     }
     
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let numberBlock = numberOfItems {
-            return numberBlock(section)
+        if let countBlock = countForItem {
+            return countBlock(section)
         }
         
         return collectionData.count > section ? collectionData[section].count : 0
