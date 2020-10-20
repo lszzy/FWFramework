@@ -59,7 +59,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupView() {
+    func setupView() {
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
         if #available(iOS 11.0, *) {
@@ -69,7 +69,7 @@ import UIKit
         delegate = self
     }
     
-    private func sectionEdgeInset(_ section: Int) -> UIEdgeInsets {
+    func sectionInset(_ section: Int) -> UIEdgeInsets {
         if let insetBlock = insetForSection {
             return insetBlock(section)
         }
@@ -122,10 +122,10 @@ import UIKit
         
         let clazz = cellClassForItem?(indexPath) ?? UICollectionView.self
         if let cellBlock = cellForItem {
-            let sectionInset = sectionEdgeInset(indexPath.section)
+            let inset = sectionInset(indexPath.section)
             var width: CGFloat = 0
-            if sectionInset != .zero && collectionView.frame.size.width > 0 {
-                width = collectionView.frame.size.width - sectionInset.left - sectionInset.right
+            if inset != .zero && collectionView.frame.size.width > 0 {
+                width = collectionView.frame.size.width - inset.left - inset.right
             }
             return collectionView.fwSize(withCellClass: clazz, width: width, cacheBy: indexPath) { (cell) in
                 cellBlock(cell, indexPath)
@@ -137,10 +137,10 @@ import UIKit
            sectionData.count > indexPath.item {
             viewModel = sectionData[indexPath.item]
         }
-        let sectionInset = sectionEdgeInset(indexPath.section)
+        let inset = sectionInset(indexPath.section)
         var width: CGFloat = 0
-        if sectionInset != .zero && collectionView.frame.size.width > 0 {
-            width = collectionView.frame.size.width - sectionInset.left - sectionInset.right
+        if inset != .zero && collectionView.frame.size.width > 0 {
+            width = collectionView.frame.size.width - inset.left - inset.right
         }
         return collectionView.fwSize(withCellClass: clazz, width: width, cacheBy: indexPath) { (cell) in
             cell.fwViewModel = viewModel
@@ -148,7 +148,7 @@ import UIKit
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionEdgeInset(section)
+        return sectionInset(section)
     }
     
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
