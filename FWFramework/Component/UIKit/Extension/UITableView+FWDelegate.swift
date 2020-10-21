@@ -15,27 +15,46 @@ import UIKit
     
     /// 表格section数，默认自动计算tableData
     open var countForSection: (() -> Int)?
-    /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView.Type
+    /// 表格section数，默认0自动计算，优先级低
+    open var sectionCount: Int = 0
+    /// 表格row数句柄，默认自动计算tableData
+    open var countForRow: ((Int) -> Int)?
+    /// 表格row数，默认0自动计算，优先级低
+    open var rowCount: Int = 0
+    
+    /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView
     open var viewClassForHeader: ((Int) -> Any?)?
+    /// 表格section头视图，默认nil，支持UIView或UITableViewHeaderFooterView，优先级低
+    open var headerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForHeader: FWHeaderFooterViewSectionBlock?
     /// 表格section头高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var heightForHeader: ((Int) -> CGFloat)?
-    /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView.Type
+    /// 表格section头高度，默认0自动计算，优先级低
+    open var headerHeight: CGFloat = 0
+    
+    /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView
     open var viewClassForFooter: ((Int) -> Any?)?
+    /// 表格section尾视图，默认nil，支持UIView或UITableViewHeaderFooterView，优先级低
+    open var footerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForFooter: FWHeaderFooterViewSectionBlock?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var heightForFooter: ((Int) -> CGFloat)?
+    /// 表格section尾高度，默认0自动计算，优先级低
+    open var footerHeight: CGFloat = 0
     
-    /// 表格row数句柄，默认自动计算tableData
-    open var countForRow: ((Int) -> Int)?
-    /// 表格cell类句柄，style固定为default，默认UITableViewCell
+    /// 表格cell类句柄，style固定为default，默认nil
     open var cellClassForRow: ((IndexPath) -> UITableViewCell.Type)?
+    /// 表格cell类，默认UITableViewCell，优先级低
+    open var cellClass: UITableViewCell.Type = UITableViewCell.self
     /// 表格cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为tableData对应数据
     open var cellForRow: FWCellIndexPathBlock?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
     open var heightForRow: ((IndexPath) -> CGFloat)?
+    /// 表格cell高度，默认0自动计算，优先级低
+    open var rowHeight: CGFloat = 0
+    
     /// 表格选中事件，默认nil
     open var didSelectRow: ((IndexPath) -> Void)?
     
@@ -45,6 +64,9 @@ import UIKit
         if let countBlock = countForSection {
             return countBlock()
         }
+        if sectionCount > 0 {
+            return sectionCount
+        }
         
         return tableData.count
     }
@@ -53,12 +75,15 @@ import UIKit
         if let countBlock = countForRow {
             return countBlock(section)
         }
+        if rowCount > 0 {
+            return rowCount
+        }
         
         return tableData.count > section ? tableData[section].count : 0
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let clazz = cellClassForRow?(indexPath) ?? UITableViewCell.self
+        let clazz = cellClassForRow?(indexPath) ?? cellClass
         let cell = clazz.fwCell(with: tableView)
         if let cellBlock = cellForRow {
             cellBlock(cell, indexPath)
@@ -78,8 +103,11 @@ import UIKit
         if let heightBlock = heightForRow {
             return heightBlock(indexPath)
         }
+        if rowHeight > 0 {
+            return rowHeight
+        }
         
-        let clazz = cellClassForRow?(indexPath) ?? UITableViewCell.self
+        let clazz = cellClassForRow?(indexPath) ?? cellClass
         if let cellBlock = cellForRow {
             return tableView.fwHeight(withCellClass: clazz, cacheBy: indexPath) { (cell) in
                 cellBlock(cell, indexPath)
@@ -97,7 +125,8 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = viewClassForHeader?(section) else { return nil }
+        let viewClass = viewClassForHeader?(section) ?? headerViewClass
+        guard let header = viewClass else { return nil }
         
         if let view = header as? UIView {
             return view
@@ -115,8 +144,13 @@ import UIKit
         if let heightBlock = heightForHeader {
             return heightBlock(section)
         }
+        if headerHeight > 0 {
+            return headerHeight
+        }
         
-        guard let header = viewClassForHeader?(section) else { return 0 }
+        let viewClass = viewClassForHeader?(section) ?? headerViewClass
+        guard let header = viewClass else { return 0 }
+        
         if let view = header as? UIView {
             return view.frame.size.height
         }
@@ -130,7 +164,8 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let footer = viewClassForFooter?(section) else { return nil }
+        let viewClass = viewClassForFooter?(section) ?? footerViewClass
+        guard let footer = viewClass else { return nil }
         
         if let view = footer as? UIView {
             return view
@@ -148,8 +183,13 @@ import UIKit
         if let heightBlock = heightForFooter {
             return heightBlock(section)
         }
+        if footerHeight > 0 {
+            return footerHeight
+        }
         
-        guard let footer = viewClassForFooter?(section) else { return 0 }
+        let viewClass = viewClassForFooter?(section) ?? footerViewClass
+        guard let footer = viewClass else { return 0 }
+        
         if let view = footer as? UIView {
             return view.frame.size.height
         }
