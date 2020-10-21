@@ -214,9 +214,7 @@ import UIKit
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15
-    /// 多行标签行距倍数，默认0不生效，和lineSpacing二选一
-    public var lineSpacingPercent: CGFloat = 0
-    /// 多行标签固定间距，默认10，和lineSpacingPercent二选一
+    /// 多行标签固定间距，默认10
     public var lineSpacing: CGFloat = 10
     /// 多行标签最后一行百分比，默认0.7
     public var lastLinePercent: CGFloat = 0.7
@@ -310,8 +308,6 @@ import UIKit
     open var lineHeight: CGFloat = FWSkeletonAppearance.appearance.lineHeight
     /// 行圆角，默认0
     open var lineCornerRadius: CGFloat = FWSkeletonAppearance.appearance.lineCornerRadius
-    /// 行间距比率，默认0
-    open var lineSpacingPercent: CGFloat = FWSkeletonAppearance.appearance.lineSpacingPercent
     /// 行固定间距，默认10
     open var lineSpacing: CGFloat = FWSkeletonAppearance.appearance.lineSpacing
     /// 最后一行显示百分比，默认0.7
@@ -331,7 +327,7 @@ import UIKit
         animationLayers.removeAll()
         
         let layerHeight = lineHeight
-        let layerSpacing = lineSpacingPercent > 0 ? lineHeight * lineSpacingPercent : lineSpacing
+        let layerSpacing = lineSpacing
         var layerCount = numberOfLines
         if numberOfLines != 1 {
             layerCount = Int(round((bounds.height + layerSpacing - contentInsets.top - contentInsets.bottom) / (layerHeight + layerSpacing)))
@@ -1267,8 +1263,9 @@ extension UILabel: FWSkeletonViewDataSource {
     open func skeletonViewProvider() -> FWSkeletonView? {
         let skeletonLabel = FWSkeletonLabel()
         skeletonLabel.lineHeight = font.pointSize
-        // 系统字体默认行间距太小，暂不解析
-        // skeletonLabel.lineSpacing = font.lineHeight - font.pointSize
+        if (font.lineHeight - font.pointSize) >= FWSkeletonAppearance.appearance.lineSpacing {
+            skeletonLabel.lineSpacing = font.lineHeight - font.pointSize
+        }
         skeletonLabel.numberOfLines = numberOfLines
         return skeletonLabel
     }
@@ -1280,8 +1277,9 @@ extension UITextView: FWSkeletonViewDataSource {
         let skeletonLabel = FWSkeletonLabel()
         if let textFont = font {
             skeletonLabel.lineHeight = textFont.pointSize
-            // 系统字体默认行间距太小，暂不解析
-            // skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
+            if (textFont.lineHeight - textFont.pointSize) >= FWSkeletonAppearance.appearance.lineSpacing {
+                skeletonLabel.lineSpacing = textFont.lineHeight - textFont.pointSize
+            }
         }
         skeletonLabel.contentInsets = textContainerInset
         return skeletonLabel
