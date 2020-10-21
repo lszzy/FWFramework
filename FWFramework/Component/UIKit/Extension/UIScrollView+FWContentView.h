@@ -24,27 +24,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/*!
- @brief 快速创建通用配置表格视图
- */
-@interface UITableView (FWContentView)
-
-/// 快速创建通用配置表格视图，默认Plain样式
-+ (instancetype)fwTableView;
-
-/// 快速创建通用配置表格视图，指定样式
-+ (instancetype)fwTableView:(UITableViewStyle)style;
-
-@end
-
-/*!
- @brief 快速创建通用配置集合视图
- */
-@interface UICollectionView (FWContentView)
-
-/// 快速创建通用配置集合视图
-+ (instancetype)fwCollectionView:(UICollectionViewLayout *)layout;
-
-@end
-
 NS_ASSUME_NONNULL_END

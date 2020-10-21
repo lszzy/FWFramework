@@ -238,7 +238,7 @@
 
 @interface TestTableCreateViewController ()
 
-@property (nonatomic, strong) FWTableView *tableView;
+@property (nonatomic, strong) UITableView *tableView;
 
 @end
 
@@ -246,17 +246,17 @@
 
 - (void)renderView
 {
-    self.tableView = [[FWTableView alloc] init];
+    self.tableView = [UITableView fwTableView];
     FWWeakifySelf();
-    self.tableView.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
+    self.tableView.fwDelegate.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
         return [TestTableCreateCell class];
     };
-    self.tableView.didSelectRow = ^(NSIndexPath * indexPath) {
+    self.tableView.fwDelegate.didSelectRow = ^(NSIndexPath * indexPath) {
         FWStrongifySelf();
         [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
     };
     
-    self.tableView.viewClassForHeader = ^id _Nullable(NSInteger section) {
+    self.tableView.fwDelegate.viewClassForHeader = ^id _Nullable(NSInteger section) {
         FWStrongifySelf();
         TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView];
         viewForHeader.object = @1;
@@ -267,10 +267,10 @@
         viewForHeader.frame = CGRectMake(0, 0, self.tableView.fwWidth, height);
         return viewForHeader;
     };
-    self.tableView.viewClassForFooter = ^id _Nullable(NSInteger section) {
+    self.tableView.fwDelegate.viewClassForFooter = ^id _Nullable(NSInteger section) {
         return [TestTableCreateFooterView class];
     };
-    self.tableView.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
+    self.tableView.fwDelegate.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
         headerFooterView.object = @1;
     };
     
@@ -293,10 +293,10 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@(UIBarButtonSystemItemAdd) block:^(id sender) {
         FWStrongifySelf();
-        NSMutableArray *sectionData = self.tableView.tableData[0].mutableCopy;
+        NSMutableArray *sectionData = self.tableView.fwDelegate.tableData[0].mutableCopy;
         NSInteger lastIndex = [sectionData.lastObject fwAsInteger];
         [sectionData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
-        self.tableView.tableData = @[sectionData];
+        self.tableView.fwDelegate.tableData = @[sectionData];
         [self.tableView reloadData];
     }];
 }
@@ -312,7 +312,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        self.tableView.tableData = @[@[@1, @2]];
+        self.tableView.fwDelegate.tableData = @[@[@1, @2]];
         [self.tableView reloadData];
         
         [self.tableView fwEndRefreshing];
@@ -325,10 +325,10 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        NSMutableArray *sectionData = self.tableView.tableData[0].mutableCopy;
+        NSMutableArray *sectionData = self.tableView.fwDelegate.tableData[0].mutableCopy;
         NSInteger lastIndex = [sectionData.lastObject fwAsInteger];
         [sectionData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
-        self.tableView.tableData = @[sectionData];
+        self.tableView.fwDelegate.tableData = @[sectionData];
         [self.tableView reloadData];
         
         [self.tableView fwEndLoading];

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F1D1ABF253D729900AC110B /* FWCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D1ABE253D729900AC110B /* FWCollectionView.swift */; };
 		2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25748D2539858900880FEF /* FWRequestEventAccessory.m */; };
 		2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25748E2539858900880FEF /* FWRequestEventAccessory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2574952539928800880FEF /* FWPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2574942539928800880FEF /* FWPromise.swift */; };
@@ -22,8 +21,9 @@
 		2F6976FF25218C0200910C93 /* FWAsyncLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6976FD25218C0200910C93 /* FWAsyncLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F69770025218C0200910C93 /* FWAsyncLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6976FE25218C0200910C93 /* FWAsyncLayer.m */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */; };
+		2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */; };
 		2FC14BF725383D3D00A97A99 /* FWFramework+Component.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FDF6F6025205E180086A99E /* FWTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F5F25205E180086A99E /* FWTableView.swift */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */; };
 		2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -337,7 +337,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2F1D1ABE253D729900AC110B /* FWCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWCollectionView.swift; sourceTree = "<group>"; };
 		2F25748D2539858900880FEF /* FWRequestEventAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWRequestEventAccessory.m; sourceTree = "<group>"; };
 		2F25748E2539858900880FEF /* FWRequestEventAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWRequestEventAccessory.h; sourceTree = "<group>"; };
 		2F2574942539928800880FEF /* FWPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWPromise.swift; sourceTree = "<group>"; };
@@ -353,8 +352,9 @@
 		2F6976FE25218C0200910C93 /* FWAsyncLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncLayer.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
+		2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+FWDelegate.swift"; sourceTree = "<group>"; };
+		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Component.h"; sourceTree = "<group>"; };
-		2FDF6F5F25205E180086A99E /* FWTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWTableView.swift; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDynamicLayout.h; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDynamicLayout.m; sourceTree = "<group>"; };
 		2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWPopGesture.h"; sourceTree = "<group>"; };
@@ -1032,6 +1032,7 @@
 				2FFE1C5B2507BFBC000332A3 /* UIButton+FWFramework.m */,
 				2FFE1C662507BFBC000332A3 /* UICollectionView+FWFramework.h */,
 				2FFE1CAA2507BFBD000332A3 /* UICollectionView+FWFramework.m */,
+				2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */,
 				2FFE1CAE2507BFBD000332A3 /* UIColor+FWFramework.h */,
 				2FFE1C7C2507BFBC000332A3 /* UIColor+FWFramework.m */,
 				2FFE1C9A2507BFBC000332A3 /* UIControl+FWFramework.h */,
@@ -1078,6 +1079,7 @@
 				2FFE1C6B2507BFBC000332A3 /* UITableView+FWFramework.m */,
 				2FFE1C9B2507BFBC000332A3 /* UITableView+FWTemplateLayout.h */,
 				2FFE1C742507BFBC000332A3 /* UITableView+FWTemplateLayout.m */,
+				2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */,
 				2FFE1C612507BFBC000332A3 /* UITextField+FWFramework.h */,
 				2FFE1C942507BFBC000332A3 /* UITextField+FWFramework.m */,
 				2FFE1C602507BFBC000332A3 /* UITextField+FWKeyboard.h */,
@@ -1157,8 +1159,6 @@
 				2FFE1CBF2507BFBD000332A3 /* FWSegmentedControl.h */,
 				2FFE1CD52507BFBD000332A3 /* FWSegmentedControl.m */,
 				2FFE1CD72507BFBD000332A3 /* FWSkeletonView.swift */,
-				2F1D1ABE253D729900AC110B /* FWCollectionView.swift */,
-				2FDF6F5F25205E180086A99E /* FWTableView.swift */,
 				2FFE1CD62507BFBD000332A3 /* FWTagCollectionView.h */,
 				2FFE1CBE2507BFBD000332A3 /* FWTagCollectionView.m */,
 			);
@@ -1509,6 +1509,7 @@
 				2FFE1BBB2507BF95000332A3 /* FWCacheKeychain.m in Sources */,
 				2FFE1D2A2507BFBD000332A3 /* UIView+FWBorder.m in Sources */,
 				2FFE1BDC2507BF95000332A3 /* FWNetworkAgent.m in Sources */,
+				2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */,
 				2FFE1D122507BFBD000332A3 /* UINavigationController+FWFramework.m in Sources */,
 				2FFE1DB22507BFBD000332A3 /* NSDate+FWFramework.m in Sources */,
 				2FFE1D7B2507BFBD000332A3 /* FWFloatLayoutView.m in Sources */,
@@ -1536,7 +1537,6 @@
 				2FFE1BE82507BF95000332A3 /* FWJson.m in Sources */,
 				2FFE1D9D2507BFBD000332A3 /* NSObject+FWBlock.m in Sources */,
 				2FFE1D622507BFBD000332A3 /* UIScrollView+FWFramework.m in Sources */,
-				2F1D1ABF253D729900AC110B /* FWCollectionView.swift in Sources */,
 				2FFE1D2F2507BFBD000332A3 /* FWAlertPlugin.m in Sources */,
 				2FFE1BD92507BF95000332A3 /* FWChainRequestAgent.m in Sources */,
 				2FFE1DB42507BFBD000332A3 /* NSObject+FWFramework.m in Sources */,
@@ -1571,7 +1571,6 @@
 				2FFE1C122507BF95000332A3 /* FWProxy.m in Sources */,
 				2FFE1D702507BFBD000332A3 /* UIApplication+FWFramework.m in Sources */,
 				2FFE1BDD2507BF95000332A3 /* FWBatchRequest.m in Sources */,
-				2FDF6F6025205E180086A99E /* FWTableView.swift in Sources */,
 				2FFE1D352507BFBD000332A3 /* UITableView+FWTemplateLayout.m in Sources */,
 				2FFE1DAA2507BFBD000332A3 /* NSAttributedString+FWFramework.m in Sources */,
 				2FFE1C092507BF95000332A3 /* FWRouter.m in Sources */,
@@ -1598,6 +1597,7 @@
 				2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */,
 				2FFE1BF42507BF95000332A3 /* FWAuthorize.m in Sources */,
 				2FFE1D382507BFBD000332A3 /* UIImage+FWFramework.m in Sources */,
+				2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */,
 				2FFE1D362507BFBD000332A3 /* UIControl+FWFramework.m in Sources */,
 				2FFE1BF22507BF95000332A3 /* FWTheme.m in Sources */,
 				2FFE841A25163E3100545D6E /* FWMacro.m in Sources */,
