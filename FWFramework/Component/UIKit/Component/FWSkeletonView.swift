@@ -434,6 +434,13 @@ import UIKit
         }
     }
     
+    /// 移除动画视图，不会调用removeFromSuperview
+    open func removeAnimationView(_ animationView: FWSkeletonView) {
+        animationViews.removeAll { (skeletonView) -> Bool in
+            return skeletonView == animationView
+        }
+    }
+    
     /// 批量开始动画
     open override func startAnimating() {
         animationViews.forEach { (animationView) in
@@ -572,9 +579,9 @@ import UIKit
     /// 表格头视图
     open var tableHeaderView: UIView? {
         didSet {
-            guard let headerView = tableHeaderView else { return }
+            guard let layoutHeader = tableHeaderView else { return }
             
-            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(headerView)
+            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(layoutHeader)
             tableView.tableHeaderView = skeletonLayout
             addAnimationView(skeletonLayout)
         }
@@ -582,9 +589,9 @@ import UIKit
     /// 表格尾视图
     open var tableFooterView: UIView? {
         didSet {
-            guard let footerView = tableFooterView else { return }
+            guard let layoutFooter = tableFooterView else { return }
             
-            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(footerView)
+            let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(layoutFooter)
             tableView.tableFooterView = skeletonLayout
             addAnimationView(skeletonLayout)
         }
@@ -641,17 +648,27 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let skeletonCell = UITableViewCell.fwCell(with: tableView, style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
-        skeletonCell.selectionStyle = .none
-        guard skeletonCell.fwBoundBool(forKey: "FWSkeletonCell") == false else { return skeletonCell }
+        let layoutCell = tableDelegate.tableView(tableView, cellForRowAt: indexPath)
+        let cell = UITableViewCell.fwCell(with: tableView)
+        cell.selectionStyle = .none
+        if let skeletonLayout = cell.contentView.viewWithTag(2052) as? FWSkeletonLayout {
+            skeletonLayout.removeFromSuperview()
+            removeAnimationView(skeletonLayout)
+        }
         
-        let cell = tableDelegate.tableView(tableView, cellForRowAt: indexPath)
-        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(cell)
-        skeletonCell.contentView.addSubview(skeletonLayout)
+        if layoutCell.superview == nil {
+            let height = tableDelegate.tableView(tableView, heightForRowAt: indexPath)
+            layoutCell.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
+            layoutCell.setNeedsLayout()
+            layoutCell.layoutIfNeeded()
+        }
+        
+        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(layoutCell)
+        skeletonLayout.tag = 2052
+        cell.contentView.addSubview(skeletonLayout)
         skeletonLayout.fwPinEdgesToSuperview()
         addAnimationView(skeletonLayout)
-        skeletonCell.fwBindBool(true, forKey: "FWSkeletonCell")
-        return skeletonCell
+        return cell
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -659,15 +676,25 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let view = tableDelegate.tableView(tableView, viewForHeaderInSection: section) else { return nil }
-        let header = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView, reuseIdentifier: "FWSkeletonHeader\(section)")
-        guard header.fwBoundBool(forKey: "FWSkeletonHeader") == false else { return header }
+        guard let layoutHeader = tableDelegate.tableView(tableView, viewForHeaderInSection: section) else { return nil }
+        let header = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView)
+        if let skeletonLayout = header.contentView.viewWithTag(2052) as? FWSkeletonLayout {
+            skeletonLayout.removeFromSuperview()
+            removeAnimationView(skeletonLayout)
+        }
         
-        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(view)
+        if layoutHeader.superview == nil {
+            let height = tableDelegate.tableView(tableView, heightForHeaderInSection: section)
+            layoutHeader.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
+            layoutHeader.setNeedsLayout()
+            layoutHeader.layoutIfNeeded()
+        }
+        
+        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(layoutHeader)
+        skeletonLayout.tag = 2052
         header.contentView.addSubview(skeletonLayout)
         skeletonLayout.fwPinEdgesToSuperview()
         addAnimationView(skeletonLayout)
-        header.fwBindBool(true, forKey: "FWSkeletonHeader")
         return header
     }
     
@@ -676,15 +703,25 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let view = tableDelegate.tableView(tableView, viewForFooterInSection: section) else { return nil }
-        let footer = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView, reuseIdentifier: "FWSkeletonFooter")
-        guard footer.fwBoundBool(forKey: "FWSkeletonFooter") else { return footer }
+        guard let layoutFooter = tableDelegate.tableView(tableView, viewForFooterInSection: section) else { return nil }
+        let footer = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView)
+        if let skeletonLayout = footer.contentView.viewWithTag(2052) as? FWSkeletonLayout {
+            skeletonLayout.removeFromSuperview()
+            removeAnimationView(skeletonLayout)
+        }
         
-        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(view)
+        if layoutFooter.superview == nil {
+            let height = tableDelegate.tableView(tableView, heightForFooterInSection: section)
+            layoutFooter.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
+            layoutFooter.setNeedsLayout()
+            layoutFooter.layoutIfNeeded()
+        }
+        
+        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(layoutFooter)
+        skeletonLayout.tag = 2052
         footer.contentView.addSubview(skeletonLayout)
         skeletonLayout.fwPinEdgesToSuperview()
         addAnimationView(skeletonLayout)
-        footer.fwBindBool(true, forKey: "FWSkeletonFooter")
         return footer
     }
     
