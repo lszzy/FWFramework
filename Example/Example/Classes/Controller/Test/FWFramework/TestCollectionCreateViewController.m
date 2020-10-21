@@ -164,9 +164,7 @@
     flowLayout.minimumInteritemSpacing = 0;
     flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
     FWWeakifySelf();
-    self.collectionView.fwDelegate.cellClassForItem = ^Class _Nonnull(NSIndexPath * indexPath) {
-        return [TestCollectionCreateCell class];
-    };
+    self.collectionView.fwDelegate.cellClass = [TestCollectionCreateCell class];
     self.collectionView.fwDelegate.cellForItem = ^(TestCollectionCreateCell * _Nonnull cell, NSIndexPath * _Nonnull indexPath) {
         FWStrongifySelf();
         cell.object = self.collectionView.fwDelegate.collectionData[indexPath.section][indexPath.row];
@@ -176,12 +174,8 @@
         [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.item)] cancel:@"关闭" cancelBlock:nil];
     };
     
-    self.collectionView.fwDelegate.viewClassForHeader = ^Class(NSIndexPath * indexPath) {
-        return [TestCollectionCreateHeaderView class];
-    };
-    self.collectionView.fwDelegate.viewClassForFooter = ^Class(NSIndexPath * indexPath) {
-        return [TestCollectionCreateHeaderView class];
-    };
+    self.collectionView.fwDelegate.headerViewClass = [TestCollectionCreateHeaderView class];
+    self.collectionView.fwDelegate.footerViewClass = [TestCollectionCreateHeaderView class];
     self.collectionView.fwDelegate.viewForHeader = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
         headerView.fwViewModel = @"我是Header\n我是Header";
     };

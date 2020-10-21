@@ -248,9 +248,7 @@
 {
     self.tableView = [UITableView fwTableView];
     FWWeakifySelf();
-    self.tableView.fwDelegate.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
-        return [TestTableCreateCell class];
-    };
+    self.tableView.fwDelegate.cellClass = [TestTableCreateCell class];
     self.tableView.fwDelegate.didSelectRow = ^(NSIndexPath * indexPath) {
         FWStrongifySelf();
         [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
@@ -267,9 +265,7 @@
         viewForHeader.frame = CGRectMake(0, 0, self.tableView.fwWidth, height);
         return viewForHeader;
     };
-    self.tableView.fwDelegate.viewClassForFooter = ^id _Nullable(NSInteger section) {
-        return [TestTableCreateFooterView class];
-    };
+    self.tableView.fwDelegate.footerViewClass = [TestTableCreateFooterView class];
     self.tableView.fwDelegate.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
         headerFooterView.object = @1;
     };
