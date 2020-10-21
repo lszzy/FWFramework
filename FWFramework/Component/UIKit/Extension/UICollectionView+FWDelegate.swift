@@ -15,35 +15,60 @@ import UIKit
     
     /// 集合section数，默认自动计算collectionData
     open var countForSection: (() -> Int)?
+    /// 集合section数，默认0自动计算，优先级低
+    open var sectionCount: Int = 0
+    /// 集合item数句柄，默认自动计算collectionData
+    open var countForItem: ((Int) -> Int)?
+    /// 集合item数，默认0自动计算，优先级低
+    open var itemCount: Int = 0
+    
     /// 集合section边距句柄，默认nil
     open var insetForSection: ((Int) -> UIEdgeInsets)?
-    /// 集合section头视图句柄，支持UICollectionReusableView.Type
-    open var viewClassForHeader: ((IndexPath) -> UICollectionReusableView.Type)?
+    /// 集合section边距，默认zero，优先级低
+    open var sectionInset: UIEdgeInsets = .zero
+    
+    /// 集合section头视图句柄，支持UICollectionReusableView
+    open var viewClassForHeader: ((IndexPath) -> UICollectionReusableView.Type?)?
+    /// 集合section头视图，默认nil，优先级低
+    open var headerViewClass: UICollectionReusableView.Type?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForHeader: FWReusableViewIndexPathBlock?
     /// 集合section头尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var sizeForHeader: ((Int) -> CGSize)?
-    /// 集合section尾视图句柄，支持UICollectionReusableView.Type
-    open var viewClassForFooter: ((IndexPath) -> UICollectionReusableView.Type)?
+    /// 集合section头尺寸，默认zero自动计算，优先级低
+    open var headerSize: CGSize = .zero
+    
+    /// 集合section尾视图句柄，支持UICollectionReusableView
+    open var viewClassForFooter: ((IndexPath) -> UICollectionReusableView.Type?)?
+    /// 集合section尾视图，默认nil，优先级低
+    open var footerViewClass: UICollectionReusableView.Type?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForFooter: FWReusableViewIndexPathBlock?
     /// 集合section尾尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var sizeForFooter: ((Int) -> CGSize)?
+    /// 集合section尾尺寸，默认zero自动计算，优先级低
+    open var footerSize: CGSize = .zero
     
-    /// 集合item数句柄，默认自动计算collectionData
-    open var countForItem: ((Int) -> Int)?
     /// 集合cell类句柄，默认UICollectionViewCell
     open var cellClassForItem: ((IndexPath) -> UICollectionViewCell.Type)?
+    /// 集合cell类，默认UICollectionViewCell，优先级低
+    open var cellClass: UICollectionViewCell.Type = UICollectionViewCell.self
     /// 集合cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为collectionData对应数据
     open var cellForItem: FWCollectionCellIndexPathBlock?
-    /// 集合cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
+    /// 集合cell尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
     open var sizeForItem: ((IndexPath) -> CGSize)?
+    /// 集合cell尺寸，默认zero自动计算，优先级低
+    open var itemSize: CGSize = .zero
+    
     /// 集合选中事件，默认nil
     open var didSelectItem: ((IndexPath) -> Void)?
     
     func sectionInset(_ section: Int, _ collectionView: UICollectionView) -> UIEdgeInsets {
         if let insetBlock = insetForSection {
             return insetBlock(section)
+        }
+        if sectionInset != .zero {
+            return sectionInset
         }
         
         if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
@@ -58,6 +83,9 @@ import UIKit
         if let countBlock = countForSection {
             return countBlock()
         }
+        if sectionCount > 0 {
+            return sectionCount
+        }
         
         return collectionData.count
     }
@@ -66,12 +94,15 @@ import UIKit
         if let countBlock = countForItem {
             return countBlock(section)
         }
+        if itemCount > 0 {
+            return itemCount
+        }
         
         return collectionData.count > section ? collectionData[section].count : 0
     }
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let clazz = cellClassForItem?(indexPath) ?? UICollectionViewCell.self
+        let clazz = cellClassForItem?(indexPath) ?? cellClass
         let cell = clazz.fwCell(with: collectionView, indexPath: indexPath)
         if let cellBlock = cellForItem {
             cellBlock(cell, indexPath)
@@ -91,8 +122,11 @@ import UIKit
         if let sizeBlock = sizeForItem {
             return sizeBlock(indexPath)
         }
+        if itemSize != .zero {
+            return itemSize
+        }
         
-        let clazz = cellClassForItem?(indexPath) ?? UICollectionView.self
+        let clazz = cellClassForItem?(indexPath) ?? cellClass
         if let cellBlock = cellForItem {
             let inset = sectionInset(indexPath.section, collectionView)
             var width: CGFloat = 0
@@ -125,14 +159,16 @@ import UIKit
     
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
-            guard let clazz = viewClassForHeader?(indexPath) else { return UICollectionReusableView() }
+            let viewClass = viewClassForHeader?(indexPath) ?? headerViewClass
+            guard let clazz = viewClass else { return UICollectionReusableView() }
             
             let view = clazz.fwReusableView(with: collectionView, kind: kind, indexPath: indexPath)
             let viewBlock = viewForHeader ?? { (header, indexPath) in header.fwViewModel = nil }
             viewBlock(view, indexPath)
             return view
         } else if kind == UICollectionView.elementKindSectionFooter {
-            guard let clazz = viewClassForFooter?(indexPath) else { return UICollectionReusableView() }
+            let viewClass = viewClassForFooter?(indexPath) ?? footerViewClass
+            guard let clazz = viewClass else { return UICollectionReusableView() }
             
             let view = clazz.fwReusableView(with: collectionView, kind: kind, indexPath: indexPath)
             let viewBlock = viewForFooter ?? { (footer, indexPath) in footer.fwViewModel = nil }
@@ -146,9 +182,14 @@ import UIKit
         if let sizeBlock = sizeForHeader {
             return sizeBlock(section)
         }
+        if headerSize != .zero {
+            return headerSize
+        }
         
         let indexPath = IndexPath(item: 0, section: section)
-        guard let clazz = viewClassForHeader?(indexPath) else { return .zero }
+        let viewClass = viewClassForHeader?(indexPath) ?? headerViewClass
+        guard let clazz = viewClass else { return .zero }
+        
         let viewBlock = viewForHeader ?? { (header, indexPath) in header.fwViewModel = nil }
         return collectionView.fwSize(withReusableViewClass: clazz, kind: UICollectionView.elementKindSectionHeader, cacheBySection: section) { (reusableView) in
             viewBlock(reusableView, indexPath)
@@ -159,9 +200,14 @@ import UIKit
         if let sizeBlock = sizeForFooter {
             return sizeBlock(section)
         }
+        if footerSize != .zero {
+            return footerSize
+        }
         
         let indexPath = IndexPath(item: 0, section: section)
-        guard let clazz = viewClassForFooter?(indexPath) else { return .zero }
+        let viewClass = viewClassForFooter?(indexPath) ?? footerViewClass
+        guard let clazz = viewClass else { return .zero }
+        
         let viewBlock = viewForFooter ?? { (footer, indexPath) in footer.fwViewModel = nil }
         return collectionView.fwSize(withReusableViewClass: clazz, kind: UICollectionView.elementKindSectionFooter, cacheBySection: section) { (reusableView) in
             viewBlock(reusableView, indexPath)
