@@ -556,15 +556,17 @@ import UIKit
 @objcMembers open class FWSkeletonTableView: FWSkeletonLayout, UITableViewDataSource, UITableViewDelegate {
     /// 表格视图，默认不可滚动
     open lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: bounds, style: style)
-        tableView.showsVerticalScrollIndicator = false
-        tableView.showsHorizontalScrollIndicator = false
+        let tableView = UITableView.fwTableView(style)
+        tableView.frame = bounds
         tableView.isScrollEnabled = false
-        if #available(iOS 11.0, *) {
-            tableView.contentInsetAdjustmentBehavior = .never
-        }
         tableView.separatorStyle = .none
         return tableView
+    }()
+    
+    /// 表格视图代理，快速生成表格
+    open lazy var tableDelegate: FWTableViewDelegate = {
+        let tableDelegate = FWTableViewDelegate()
+        return tableDelegate
     }()
     
     /// 表格头视图
@@ -587,63 +589,6 @@ import UIKit
             addAnimationView(skeletonLayout)
         }
     }
-    
-    /// 表格section数，默认1
-    open var numberOfSections: Int = 1
-    
-    /// 表格section头视图数组，支持UIView或UITableViewHeaderFooterView.Type(fwViewModel值为nil)
-    open var viewForHeaderArray: [Any]?
-    /// 表格section头高度数组，不指定时默认使用FWDynamicLayout自动计算(fwViewModel值为nil)
-    open var heightForHeaderArray: [CGFloat]?
-    /// 单section头视图，支持UIView或UITableViewHeaderFooterView.Type
-    open var viewForHeader: Any? {
-        get { return viewForHeaderArray?.first }
-        set { viewForHeaderArray = newValue != nil ? [newValue!] : nil }
-    }
-    /// 单section头高度
-    open var heightForHeader: CGFloat {
-        get { return heightForHeaderArray?.first ?? 0 }
-        set { heightForHeaderArray = [newValue] }
-    }
-    
-    /// 表格section尾视图数组，支持UIView或UITableViewHeaderFooterView.Type(fwViewModel值为nil)
-    open var viewForFooterArray: [Any]?
-    /// 表格section尾高度数组，不指定时默认使用FWDynamicLayout自动计算(fwViewModel值为nil)
-    open var heightForFooterArray: [CGFloat]?
-    /// 单section尾视图，支持UIView或UITableViewHeaderFooterView.Type
-    open var viewForFooter: Any? {
-        get { return viewForFooterArray?.first }
-        set { viewForFooterArray = newValue != nil ? [newValue!] : nil }
-    }
-    /// 单section尾高度
-    open var heightForFooter: CGFloat {
-        get { return heightForFooterArray?.first ?? 0 }
-        set { heightForFooterArray = [newValue] }
-    }
-    
-    /// 表格row数组，默认自动计算
-    open var numberOfRowsArray: [Int]?
-    /// 表格cell数组，section内相同，支持UITableViewCell或UITableViewCell.Type(fwViewModel值为nil)
-    open var cellForRowArray: [Any]?
-    /// 表格cell高度数组，section内相同，不指定时默认使用FWDynamicLayout自动计算(fwViewModel值为nil)
-    open var heightForRowArray: [CGFloat]?
-    /// 单section表格row数，默认自动计算
-    open var numberOfRows: Int {
-        get { return numberOfRowsArray?.first ?? 0 }
-        set { numberOfRowsArray = [newValue] }
-    }
-    /// 单section表格cell，section内相同，支持UITableViewCell或UITableViewCell.Type
-    open var cellForRow: Any? {
-        get { return cellForRowArray?.first }
-        set { cellForRowArray = newValue != nil ? [newValue!] : nil }
-    }
-    /// 单section表格cell高度，section内相同
-    open var heightForRow: CGFloat {
-        get { return heightForRowArray?.first ?? 0 }
-        set { heightForRowArray = [newValue] }
-    }
-    
-    // MARK: - Private
     
     private var style: UITableView.Style = .plain
     
@@ -680,175 +625,71 @@ import UIKit
         tableView.reloadData()
     }
     
-    private func heightForRow(_ section: Int) -> CGFloat {
-        if let heightArray = heightForRowArray, heightArray.count > section, heightArray[section] > 0 {
-            return heightArray[section]
-        }
-        
-        if let sectionArray = cellForRowArray, sectionArray.count > section {
-            let object = sectionArray[section]
-            if let view = object as? UIView {
-                return view.frame.size.height
-            }
-            if let clazz = object as? UITableViewCell.Type {
-                return tableView.fwHeight(withCellClass: clazz, cacheByKey: NSNumber(value: section)) { (cell) in
-                    cell.fwViewModel = nil
-                }
-            }
-        }
-        return 0
-    }
-    
-    private func heightForHeader(_ section: Int) -> CGFloat {
-        if let heightArray = heightForHeaderArray, heightArray.count > section, heightArray[section] > 0 {
-            return heightArray[section]
-        }
-        
-        if let sectionArray = viewForHeaderArray, sectionArray.count > section {
-            let object = sectionArray[section]
-            if let view = object as? UIView {
-                return view.frame.size.height
-            }
-            if let clazz = object as? UITableViewHeaderFooterView.Type {
-                return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .header, cacheBySection: section) { (header) in
-                    header.fwViewModel = nil
-                }
-            }
-        }
-        return 0
-    }
-    
-    private func heightForFooter(_ section: Int) -> CGFloat {
-        if let heightArray = heightForFooterArray, heightArray.count > section, heightArray[section] > 0 {
-            return heightArray[section]
-        }
-        
-        if let sectionArray = viewForFooterArray, sectionArray.count > section {
-            let object = sectionArray[section]
-            if let view = object as? UIView {
-                return view.frame.size.height
-            }
-            if let clazz = object as? UITableViewHeaderFooterView.Type {
-                return tableView.fwHeight(withHeaderFooterViewClass: clazz, type: .footer, cacheBySection: section) { (footer) in
-                    footer.fwViewModel = nil
-                }
-            }
-        }
-        return 0
-    }
-    
     // MARK: - UITableView
     
     open func numberOfSections(in tableView: UITableView) -> Int {
-        return numberOfSections
+        let count = tableDelegate.numberOfSections(in: tableView)
+        return count > 0 ? count : 1
     }
     
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let numberArray = numberOfRowsArray, numberArray.count > section, numberArray[section] > 0 {
-            return numberArray[section]
-        }
+        let count = tableDelegate.tableView(tableView, numberOfRowsInSection: section)
+        if count > 0 { return count }
         
-        let height = heightForRow(section)
+        let height = tableDelegate.tableView(tableView, heightForRowAt: IndexPath(row: 0, section: section))
         return height > 0 ? Int(ceil(UIScreen.main.bounds.size.height / height)) : 0
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fwCell(with: tableView, style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
-        cell.selectionStyle = .none
-        guard let sectionArray = cellForRowArray, sectionArray.count > indexPath.section else { return cell }
-        guard cell.fwBoundBool(forKey: "FWSkeletonCell") == false else { return cell }
+        let skeletonCell = UITableViewCell.fwCell(with: tableView, style: .default, reuseIdentifier: "FWSkeletonCell\(indexPath.section)")
+        skeletonCell.selectionStyle = .none
+        guard skeletonCell.fwBoundBool(forKey: "FWSkeletonCell") == false else { return skeletonCell }
         
-        var layout: FWSkeletonLayout?
-        let object = sectionArray[indexPath.section]
-        if let view = object as? UIView {
-            layout = FWSkeletonLayout.parseSkeletonLayout(view)
-        } else if let clazz = object as? UITableViewCell.Type {
-            let contentView = clazz.init(style: .default, reuseIdentifier: nil)
-            contentView.fwViewModel = nil
-            let contentHeight = heightForRow(indexPath.section)
-            contentView.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: contentHeight)
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
-            layout = FWSkeletonLayout.parseSkeletonLayout(contentView)
-        }
-        
-        if let skeletonLayout = layout {
-            cell.contentView.addSubview(skeletonLayout)
-            skeletonLayout.fwPinEdgesToSuperview()
-            addAnimationView(skeletonLayout)
-        }
-        cell.fwBindBool(true, forKey: "FWSkeletonCell")
-        return cell
+        let cell = tableDelegate.tableView(tableView, cellForRowAt: indexPath)
+        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(cell)
+        skeletonCell.contentView.addSubview(skeletonLayout)
+        skeletonLayout.fwPinEdgesToSuperview()
+        addAnimationView(skeletonLayout)
+        skeletonCell.fwBindBool(true, forKey: "FWSkeletonCell")
+        return skeletonCell
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return heightForRow(indexPath.section)
+        return tableDelegate.tableView(tableView, heightForRowAt: indexPath)
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let sectionArray = viewForHeaderArray, sectionArray.count > section else { return nil }
-        
+        guard let view = tableDelegate.tableView(tableView, viewForHeaderInSection: section) else { return nil }
         let header = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView, reuseIdentifier: "FWSkeletonHeader\(section)")
         guard header.fwBoundBool(forKey: "FWSkeletonHeader") == false else { return header }
         
-        var layout: FWSkeletonLayout?
-        let object = sectionArray[section]
-        if let view = object as? UIView {
-            layout = FWSkeletonLayout.parseSkeletonLayout(view)
-        } else if let clazz = object as? UITableViewHeaderFooterView.Type {
-            let contentView = clazz.init(reuseIdentifier: nil)
-            contentView.fwViewModel = nil
-            let contentHeight = heightForHeader(section)
-            contentView.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: contentHeight)
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
-            layout = FWSkeletonLayout.parseSkeletonLayout(contentView)
-        }
-        
-        if let skeletonLayout = layout {
-            header.contentView.addSubview(skeletonLayout)
-            skeletonLayout.fwPinEdgesToSuperview()
-            addAnimationView(skeletonLayout)
-        }
+        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(view)
+        header.contentView.addSubview(skeletonLayout)
+        skeletonLayout.fwPinEdgesToSuperview()
+        addAnimationView(skeletonLayout)
         header.fwBindBool(true, forKey: "FWSkeletonHeader")
         return header
     }
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return heightForHeader(section)
+        return tableDelegate.tableView(tableView, heightForHeaderInSection: section)
     }
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let sectionArray = viewForFooterArray, sectionArray.count > section else { return nil }
-        
+        guard let view = tableDelegate.tableView(tableView, viewForFooterInSection: section) else { return nil }
         let footer = UITableViewHeaderFooterView.fwHeaderFooterView(with: tableView, reuseIdentifier: "FWSkeletonFooter")
         guard footer.fwBoundBool(forKey: "FWSkeletonFooter") else { return footer }
         
-        var layout: FWSkeletonLayout?
-        let object = sectionArray[section]
-        if let view = object as? UIView {
-            layout = FWSkeletonLayout.parseSkeletonLayout(view)
-        } else if let clazz = object as? UITableViewHeaderFooterView.Type {
-            let contentView = clazz.init(reuseIdentifier: nil)
-            contentView.fwViewModel = nil
-            let contentHeight = heightForFooter(section)
-            contentView.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: contentHeight)
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
-            layout = FWSkeletonLayout.parseSkeletonLayout(contentView)
-        }
-        
-        if let skeletonLayout = layout {
-            footer.contentView.addSubview(skeletonLayout)
-            skeletonLayout.fwPinEdgesToSuperview()
-            addAnimationView(skeletonLayout)
-        }
+        let skeletonLayout = FWSkeletonLayout.parseSkeletonLayout(view)
+        footer.contentView.addSubview(skeletonLayout)
+        skeletonLayout.fwPinEdgesToSuperview()
+        addAnimationView(skeletonLayout)
         footer.fwBindBool(true, forKey: "FWSkeletonFooter")
         return footer
     }
     
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return heightForFooter(section)
+        return tableDelegate.tableView(tableView, heightForFooterInSection: section)
     }
 }
 
@@ -1294,49 +1135,24 @@ extension UITableView: FWSkeletonViewDataSource {
         tableView.layoutView = self
         tableView.tableHeaderView = tableHeaderView
         tableView.tableFooterView = tableFooterView
-        tableView.numberOfSections = numberOfSections
+        tableView.tableDelegate.sectionCount = numberOfSections
+        guard numberOfSections > 0 else { return tableView }
         
-        var viewForHeaderArray: [Any] = []
-        var heightForHeaderArray: [CGFloat] = []
-        var viewForFooterArray: [Any] = []
-        var heightForFooterArray: [CGFloat] = []
-        var numberOfRowsArray: [Int] = []
-        var cellForRowArray: [Any] = []
-        var heightForRowArray: [CGFloat] = []
-        
-        for section in 0 ..< numberOfSections {
-            let viewForHeader: UIView? = headerView(forSection: section)
-            if viewForHeader != nil || numberOfSections > 1 {
-                viewForHeaderArray.append(viewForHeader ?? UIView(frame: .zero))
-                let heightForHeader: CGFloat? = viewForHeader?.frame.size.height
-                heightForHeaderArray.append(heightForHeader ?? 0)
-            }
-            
-            let viewForFooter: UIView? = footerView(forSection: section)
-            if viewForFooter != nil || numberOfSections > 1 {
-                viewForFooterArray.append(viewForFooter ?? UIView(frame: .zero))
-                let heightForFooter: CGFloat? = viewForFooter?.frame.size.height
-                heightForFooterArray.append(heightForFooter ?? 0)
-            }
-            
-            let number = numberOfRows(inSection: section)
-            numberOfRowsArray.append(number)
-            
-            let indexPath: IndexPath? = (number > 0) ? IndexPath(row: 0, section: section) : nil
-            let cell: UITableViewCell? = (indexPath != nil) ? cellForRow(at: indexPath!) : nil
-            cellForRowArray.append((cell != nil) ? cell! : UITableViewCell(style: .default, reuseIdentifier: nil))
-            
-            let height: CGFloat = (cell != nil) ? cell!.frame.size.height : 0
-            heightForRowArray.append(height)
+        tableView.tableDelegate.viewClassForHeader = { [weak self] (section) in
+            return self?.headerView(forSection: section)
         }
-        
-        tableView.viewForHeaderArray = viewForHeaderArray
-        tableView.heightForHeaderArray = heightForHeaderArray
-        tableView.viewForFooterArray = viewForFooterArray
-        tableView.heightForFooterArray = heightForFooterArray
-        tableView.numberOfRowsArray = numberOfRowsArray
-        tableView.cellForRowArray = cellForRowArray
-        tableView.heightForRowArray = heightForRowArray
+        tableView.tableDelegate.viewClassForFooter = { [weak self] (section) in
+            return self?.footerView(forSection: section)
+        }
+        tableView.tableDelegate.countForRow = { [weak self] (section) in
+            return self?.numberOfRows(inSection: section) ?? 0
+        }
+        tableView.tableDelegate.cellClassForRow = { [weak self] (indexPath) in
+            if let cell = self?.cellForRow(at: indexPath) { return cell }
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+            cell.frame = .zero
+            return cell
+        }
         return tableView
     }
 }
