@@ -50,9 +50,9 @@ import UIKit
     open var footerSize: CGSize = .zero
     
     /// 集合cell类句柄，支持UICollectionViewCell，默认nil
-    open var cellClassForItem: ((IndexPath) -> Any)?
+    open var cellClassForItem: ((IndexPath) -> Any?)?
     /// 集合cell类，支持UICollectionViewCell，默认nil，优先级低
-    open var cellClass: Any = UICollectionViewCell.self
+    open var cellClass: Any?
     /// 集合cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为collectionData对应数据
     open var cellForItem: FWCollectionCellIndexPathBlock?
     /// 集合cell尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
@@ -106,8 +106,10 @@ import UIKit
         if let cell = itemCell as? UICollectionViewCell {
             return cell
         }
+        guard let clazz = itemCell as? UICollectionViewCell.Type else {
+            return UICollectionViewCell(frame: .zero)
+        }
         
-        let clazz = itemCell as? UICollectionViewCell.Type ?? UICollectionViewCell.self
         let cell = clazz.fwCell(with: collectionView, indexPath: indexPath)
         if let cellBlock = cellForItem {
             cellBlock(cell, indexPath)
@@ -135,8 +137,10 @@ import UIKit
         if let cell = itemCell as? UICollectionViewCell {
             return cell.frame.size
         }
+        guard let clazz = itemCell as? UICollectionViewCell.Type else {
+            return .zero
+        }
         
-        let clazz = itemCell as? UICollectionViewCell.Type ?? UICollectionViewCell.self
         if let cellBlock = cellForItem {
             let inset = sectionInset(indexPath.section, collectionView)
             var width: CGFloat = 0

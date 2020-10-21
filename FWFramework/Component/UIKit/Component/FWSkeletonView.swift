@@ -1148,10 +1148,7 @@ extension UITableView: FWSkeletonViewDataSource {
             return self?.numberOfRows(inSection: section) ?? 0
         }
         tableView.tableDelegate.cellClassForRow = { [weak self] (indexPath) in
-            if let cell = self?.cellForRow(at: indexPath) { return cell }
-            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-            cell.frame = .zero
-            return cell
+            return self?.cellForRow(at: indexPath)
         }
         return tableView
     }
