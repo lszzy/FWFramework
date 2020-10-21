@@ -270,7 +270,8 @@ import UIKit
         backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
     }
     
-    func parseView(_ view: UIView) {
+    /// 解析视图样式
+    open func parseView(_ view: UIView) {
         layer.masksToBounds = view.layer.masksToBounds
         layer.cornerRadius = view.layer.cornerRadius
         if view.layer.shadowOpacity > 0 {
@@ -319,7 +320,6 @@ import UIKit
     
     override func setupView() {
         backgroundColor = UIColor.clear
-        animation = FWSkeletonAppearance.appearance.animation
     }
     
     open override func layoutSubviews() {
@@ -482,6 +482,19 @@ import UIKit
         return addSkeletonView(view, skeletonView: skeletonView, block: block)
     }
     
+    /// 添加骨架视图，内部方法
+    private func addSkeletonView<T: FWSkeletonView>(_ view: UIView, skeletonView: T, block: ((T) -> Void)?) -> T {
+        if layoutView != nil && view.isDescendant(of: layoutView!) {
+            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
+        }
+        if skeletonView.superview == nil {
+            addSubview(skeletonView)
+        }
+        addAnimationView(skeletonView)
+        block?(skeletonView)
+        return skeletonView
+    }
+    
     /// 添加单个布局视图(兼容骨架视图)，返回生成的骨架布局
     @discardableResult
     open func addSkeletonLayout(_ view: UIView) -> FWSkeletonLayout {
@@ -493,18 +506,6 @@ import UIKit
     open func addSkeletonLayout(_ view: UIView, block: ((FWSkeletonLayout) -> Void)?) -> FWSkeletonLayout {
         let skeletonView = FWSkeletonLayout.parseSkeletonLayout(view)
         return addSkeletonView(view, skeletonView: skeletonView, block: block)
-    }
-    
-    private func addSkeletonView<T: FWSkeletonView>(_ view: UIView, skeletonView: T, block: ((T) -> Void)?) -> T {
-        if layoutView != nil && view.isDescendant(of: layoutView!) {
-            skeletonView.frame = view.convert(view.bounds, to: layoutView!)
-        }
-        if skeletonView.superview == nil {
-            addSubview(skeletonView)
-        }
-        addAnimationView(skeletonView)
-        block?(skeletonView)
-        return skeletonView
     }
     
     // MARK: - Parser
