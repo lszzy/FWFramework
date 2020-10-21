@@ -44,10 +44,10 @@ import UIKit
     /// 表格section尾高度，默认0自动计算，优先级低
     open var footerHeight: CGFloat = 0
     
-    /// 表格cell类句柄，style固定为default，默认nil
-    open var cellClassForRow: ((IndexPath) -> UITableViewCell.Type)?
-    /// 表格cell类，默认UITableViewCell，优先级低
-    open var cellClass: UITableViewCell.Type = UITableViewCell.self
+    /// 表格cell类句柄，style为default，支持cell或cellClass，默认nil
+    open var cellClassForRow: ((IndexPath) -> Any)?
+    /// 表格cell类，支持cell或cellClass，默认UITableViewCell，优先级低
+    open var cellClass: Any = UITableViewCell.self
     /// 表格cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为tableData对应数据
     open var cellForRow: FWCellIndexPathBlock?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
@@ -83,7 +83,12 @@ import UIKit
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let clazz = cellClassForRow?(indexPath) ?? cellClass
+        let rowCell = cellClassForRow?(indexPath) ?? cellClass
+        if let cell = rowCell as? UITableViewCell {
+            return cell
+        }
+        
+        let clazz = rowCell as? UITableViewCell.Type ?? UITableViewCell.self
         let cell = clazz.fwCell(with: tableView)
         if let cellBlock = cellForRow {
             cellBlock(cell, indexPath)
@@ -107,7 +112,12 @@ import UIKit
             return rowHeight
         }
         
-        let clazz = cellClassForRow?(indexPath) ?? cellClass
+        let rowCell = cellClassForRow?(indexPath) ?? cellClass
+        if let cell = rowCell as? UITableViewCell {
+            return cell.frame.size.height
+        }
+        
+        let clazz = rowCell as? UITableViewCell.Type ?? UITableViewCell.self
         if let cellBlock = cellForRow {
             return tableView.fwHeight(withCellClass: clazz, cacheBy: indexPath) { (cell) in
                 cellBlock(cell, indexPath)
