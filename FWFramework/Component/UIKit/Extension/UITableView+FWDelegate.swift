@@ -1,15 +1,15 @@
 //
-//  FWTableView.swift
+//  UITableView+FWDelegate.swift
 //  FWFramework
 //
-//  Created by wuyong on 2020/9/27.
+//  Created by wuyong on 2020/10/21.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
 import UIKit
 
-/// 便捷表格视图
-@objcMembers open class FWTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
+/// 便捷表格视图代理
+@objcMembers open class FWTableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
     /// 表格数据，可选方式，必须按[section][row]二维数组格式
     open var tableData: [[Any]] = []
     
@@ -38,31 +38,6 @@ import UIKit
     open var heightForRow: ((IndexPath) -> CGFloat)?
     /// 表格选中事件，默认nil
     open var didSelectRow: ((IndexPath) -> Void)?
-    
-    public override init(frame: CGRect, style: UITableView.Style) {
-        super.init(frame: frame, style: style)
-        setupView()
-    }
-    
-    public init(frame: CGRect) {
-        super.init(frame: frame, style: .plain)
-        setupView()
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupView() {
-        showsVerticalScrollIndicator = false
-        showsHorizontalScrollIndicator = false
-        if #available(iOS 11.0, *) {
-            contentInsetAdjustmentBehavior = .never
-        }
-        tableFooterView = UIView(frame: .zero)
-        dataSource = self
-        delegate = self
-    }
     
     // MARK: - UITableView
     
@@ -189,5 +164,34 @@ import UIKit
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         didSelectRow?(indexPath)
+    }
+}
+
+@objc public extension UITableView {
+    class func fwTableView() -> UITableView {
+        return fwTableView(.plain)
+    }
+    
+    class func fwTableView(_ style: UITableView.Style) -> UITableView {
+        let tableView = UITableView(frame: .zero, style: style)
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        tableView.tableFooterView = UIView(frame: .zero)
+        return tableView
+    }
+    
+    func fwDelegate() -> FWTableViewDelegate {
+        if let result = fwProperty(forName: "fwDelegate") as? FWTableViewDelegate {
+            return result
+        } else {
+            let result = FWTableViewDelegate()
+            fwSetProperty(result, forName: "fwDelegate")
+            dataSource = result
+            delegate = result
+            return result
+        }
     }
 }

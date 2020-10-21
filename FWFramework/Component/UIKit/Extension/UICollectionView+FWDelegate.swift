@@ -1,15 +1,15 @@
 //
-//  FWCollectionView.swift
+//  UICollectionView+FWDelegate.swift
 //  FWFramework
 //
-//  Created by wuyong on 2020/9/27.
+//  Created by wuyong on 2020/10/21.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
 import UIKit
 
-/// 便捷集合视图
-@objcMembers open class FWCollectionView: UICollectionView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+/// 便捷集合视图代理
+@objcMembers open class FWCollectionViewDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     /// 集合数据，可选方式，必须按[section][item]二维数组格式
     open var collectionData: [[Any]] = []
     
@@ -41,40 +41,12 @@ import UIKit
     /// 集合选中事件，默认nil
     open var didSelectItem: ((IndexPath) -> Void)?
     
-    public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
-        super.init(frame: frame, collectionViewLayout: layout)
-        setupView()
-    }
-    
-    public init(frame: CGRect) {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.minimumLineSpacing = 0
-        flowLayout.minimumInteritemSpacing = 0
-        
-        super.init(frame: frame, collectionViewLayout: flowLayout)
-        setupView()
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupView() {
-        showsVerticalScrollIndicator = false
-        showsHorizontalScrollIndicator = false
-        if #available(iOS 11.0, *) {
-            contentInsetAdjustmentBehavior = .never
-        }
-        dataSource = self
-        delegate = self
-    }
-    
-    func sectionInset(_ section: Int) -> UIEdgeInsets {
+    func sectionInset(_ section: Int, _ collectionView: UICollectionView) -> UIEdgeInsets {
         if let insetBlock = insetForSection {
             return insetBlock(section)
         }
         
-        if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+        if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             return flowLayout.sectionInset
         }
         return .zero
@@ -122,7 +94,7 @@ import UIKit
         
         let clazz = cellClassForItem?(indexPath) ?? UICollectionView.self
         if let cellBlock = cellForItem {
-            let inset = sectionInset(indexPath.section)
+            let inset = sectionInset(indexPath.section, collectionView)
             var width: CGFloat = 0
             if inset != .zero && collectionView.frame.size.width > 0 {
                 width = collectionView.frame.size.width - inset.left - inset.right
@@ -137,7 +109,7 @@ import UIKit
            sectionData.count > indexPath.item {
             viewModel = sectionData[indexPath.item]
         }
-        let inset = sectionInset(indexPath.section)
+        let inset = sectionInset(indexPath.section, collectionView)
         var width: CGFloat = 0
         if inset != .zero && collectionView.frame.size.width > 0 {
             width = collectionView.frame.size.width - inset.left - inset.right
@@ -148,7 +120,7 @@ import UIKit
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInset(section)
+        return sectionInset(section, collectionView)
     }
     
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -198,5 +170,37 @@ import UIKit
     
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         didSelectItem?(indexPath)
+    }
+}
+
+@objc public extension UICollectionView {
+    class func fwCollectionView() -> UICollectionView {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        
+        return fwCollectionView(flowLayout)
+    }
+    
+    class func fwCollectionView(_ collectionViewLayout: UICollectionViewLayout) -> UICollectionView {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        }
+        return collectionView
+    }
+    
+    func fwDelegate() -> FWCollectionViewDelegate {
+        if let result = fwProperty(forName: "fwDelegate") as? FWCollectionViewDelegate {
+            return result
+        } else {
+            let result = FWCollectionViewDelegate()
+            fwSetProperty(result, forName: "fwDelegate")
+            dataSource = result
+            delegate = result
+            return result
+        }
     }
 }
