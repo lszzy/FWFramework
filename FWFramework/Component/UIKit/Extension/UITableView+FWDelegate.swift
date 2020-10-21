@@ -22,9 +22,9 @@ import UIKit
     /// 表格row数，默认0自动计算，优先级低
     open var rowCount: Int = 0
     
-    /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView
+    /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView，默认nil
     open var viewClassForHeader: ((Int) -> Any?)?
-    /// 表格section头视图，默认nil，支持UIView或UITableViewHeaderFooterView，优先级低
+    /// 表格section头视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
     open var headerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForHeader: FWHeaderFooterViewSectionBlock?
@@ -33,9 +33,9 @@ import UIKit
     /// 表格section头高度，默认0自动计算，优先级低
     open var headerHeight: CGFloat = 0
     
-    /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView
+    /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView，默认nil
     open var viewClassForFooter: ((Int) -> Any?)?
-    /// 表格section尾视图，默认nil，支持UIView或UITableViewHeaderFooterView，优先级低
+    /// 表格section尾视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
     open var footerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
     open var viewForFooter: FWHeaderFooterViewSectionBlock?
@@ -45,9 +45,9 @@ import UIKit
     open var footerHeight: CGFloat = 0
     
     /// 表格cell类句柄，style为default，支持cell或cellClass，默认nil
-    open var cellClassForRow: ((IndexPath) -> Any)?
-    /// 表格cell类，支持cell或cellClass，默认UITableViewCell，优先级低
-    open var cellClass: Any = UITableViewCell.self
+    open var cellClassForRow: ((IndexPath) -> Any?)?
+    /// 表格cell类，支持cell或cellClass，默认nil，优先级低
+    open var cellClass: Any?
     /// 表格cell配置句柄，参数为对应cellClass对象，默认设置fwViewModel为tableData对应数据
     open var cellForRow: FWCellIndexPathBlock?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
@@ -87,8 +87,10 @@ import UIKit
         if let cell = rowCell as? UITableViewCell {
             return cell
         }
+        guard let clazz = rowCell as? UITableViewCell.Type else {
+            return UITableViewCell(style: .default, reuseIdentifier: nil)
+        }
         
-        let clazz = rowCell as? UITableViewCell.Type ?? UITableViewCell.self
         let cell = clazz.fwCell(with: tableView)
         if let cellBlock = cellForRow {
             cellBlock(cell, indexPath)
@@ -116,8 +118,10 @@ import UIKit
         if let cell = rowCell as? UITableViewCell {
             return cell.frame.size.height
         }
+        guard let clazz = rowCell as? UITableViewCell.Type else {
+            return 0
+        }
         
-        let clazz = rowCell as? UITableViewCell.Type ?? UITableViewCell.self
         if let cellBlock = cellForRow {
             return tableView.fwHeight(withCellClass: clazz, cacheBy: indexPath) { (cell) in
                 cellBlock(cell, indexPath)
