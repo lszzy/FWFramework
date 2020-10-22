@@ -8,62 +8,16 @@
  */
 
 #import "FWImagePlugin.h"
-#import "FWHTTPSessionManager.h"
 #import "FWPlugin.h"
+#import "FWToolkit.h"
+#import "FWHTTPSessionManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
 #import <objc/runtime.h>
 
-#pragma mark - FWAnimatedImage
-
-UIImage * FWImageName(NSString *name) {
-    return [UIImage fwImageWithName:name];
-}
-
-UIImage * FWImageFile(NSString *path) {
-    return [UIImage fwImageWithFile:path];
-}
-
 #pragma mark - UIImage+FWAnimated
 
 @implementation UIImage (FWAnimated)
-
-+ (UIImage *)fwImageWithName:(NSString *)name
-{
-    return [UIImage imageNamed:name];
-}
-
-+ (UIImage *)fwImageWithFile:(NSString *)path
-{
-    if (path.length < 1) return nil;
-    
-    NSString *file = path.isAbsolutePath ? path : [[NSBundle mainBundle] pathForResource:path ofType:nil];
-    NSData *data = [NSData dataWithContentsOfFile:file];
-    if (!data) {
-        return [UIImage imageNamed:path];
-    }
-    
-    return [self fwImageWithData:data scale:[UIScreen mainScreen].scale];
-}
-
-+ (UIImage *)fwImageWithData:(NSData *)data
-{
-    return [self fwImageWithData:data scale:1];
-}
-
-+ (UIImage *)fwImageWithData:(NSData *)data scale:(CGFloat)scale
-{
-    if (!data) return nil;
-    
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:)]) {
-        return [imagePlugin fwImageDecode:data scale:scale];
-    }
-    
-    return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale];
-}
-
-#pragma mark - Property
 
 - (NSUInteger)fwImageLoopCount
 {
@@ -1241,9 +1195,9 @@ UIImage * FWImageFile(NSString *path) {
 
 @end
 
-#pragma mark - UIImageView+FWNetwork
+#pragma mark - UIImageView+FWImageDownloader
 
-@implementation UIImageView (FWNetwork)
+@implementation UIImageView (FWImageDownloader)
 
 + (FWImageDownloader *)fwSharedImageDownloader
 {
@@ -1253,21 +1207,6 @@ UIImage * FWImageFile(NSString *path) {
 + (void)setFwSharedImageDownloader:(FWImageDownloader *)imageDownloader
 {
     objc_setAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-+ (Class)fwImageViewAnimatedClass
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
-        return [imagePlugin fwImageViewAnimatedClass];
-    }
-    
-    return objc_getAssociatedObject([UIImageView class], @selector(fwImageViewAnimatedClass)) ?: [UIImageView class];
-}
-
-+ (void)setFwImageViewAnimatedClass:(Class)animatedClass
-{
-    objc_setAssociatedObject([UIImageView class], @selector(fwImageViewAnimatedClass), animatedClass, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (FWImageDownloadReceipt *)fwActiveImageDownloadReceipt
@@ -1280,47 +1219,11 @@ UIImage * FWImageFile(NSString *path) {
     objc_setAssociatedObject(self, @selector(fwActiveImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwSetImageWithURL:(id)url
+- (void)fwSetImageWithURLRequest:(id)url
+                placeholderImage:(UIImage *)placeholderImage
+                      completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+                        progress:(void (^)(double))progress
 {
-    [self fwSetImageWithURL:url placeholderImage:nil];
-}
-
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(UIImage *)placeholderImage
-{
-    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:nil];
-}
-
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-               completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-{
-    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:completion progress:nil];
-}
-
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(UIImage *)placeholderImage
-               completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-                 progress:(void (^)(double))progress
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:completion:progress:)]) {
-        NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]]) {
-            imageURL = [NSURL URLWithString:url];
-            if (!imageURL && [url length] > 0) {
-                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        } else if ([url isKindOfClass:[NSURL class]]) {
-            imageURL = url;
-        } else if ([url isKindOfClass:[NSURLRequest class]]) {
-            imageURL = [url URL];
-        }
-        
-        [imagePlugin fwImageView:self setImageURL:imageURL placeholder:placeholderImage completion:completion progress:progress];
-        return;
-    }
-    
     NSURLRequest *urlRequest = nil;
     if ([url isKindOfClass:[NSURLRequest class]]) {
         urlRequest = url;
@@ -1428,40 +1331,36 @@ UIImage * FWImageFile(NSString *path) {
 
 @end
 
-#pragma mark - FWSDWebImagePlugin
+#pragma mark - FWAppImagePlugin
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
-
-@import SDWebImage;
-
-@implementation FWSDWebImagePlugin
+@implementation FWAppImagePlugin
 
 + (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[FWPluginManager sharedInstance] registerDefault:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
+        [[FWPluginManager sharedInstance] registerDefault:@protocol(FWImagePlugin) withObject:[FWAppImagePlugin class]];
     });
 }
 
-+ (FWSDWebImagePlugin *)sharedInstance
++ (FWAppImagePlugin *)sharedInstance
 {
-    static FWSDWebImagePlugin *instance = nil;
+    static FWAppImagePlugin *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWSDWebImagePlugin alloc] init];
+        instance = [[FWAppImagePlugin alloc] init];
     });
     return instance;
 }
 
 - (Class)fwImageViewAnimatedClass
 {
-    return [SDAnimatedImageView class];
+    return [UIImageView class];
 }
 
 - (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale
 {
-    return [UIImage sd_imageWithData:data scale:scale];
+    return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale];
 }
 
 - (void)fwImageView:(UIImageView *)imageView
@@ -1470,26 +1369,15 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-    [imageView sd_setImageWithURL:imageURL
-                 placeholderImage:placeholder
-                          options:0
-                          context:nil
-                         progress:progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-                            if (expectedSize > 0) {
-                                if ([NSThread isMainThread]) {
-                                    progress(receivedSize / (double)expectedSize);
-                                } else {
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        progress(receivedSize / (double)expectedSize);
-                                    });
-                                }
-                            }
-                        } : nil
-                        completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                            completion(image, error);
-                        } : nil];
+    [imageView fwSetImageWithURLRequest:imageURL
+                       placeholderImage:placeholder
+                             completion:completion
+                               progress:progress];
+}
+
+- (void)fwCancelImageRequest:(UIImageView *)imageView
+{
+    [imageView fwCancelImageDownloadTask];
 }
 
 @end
-
-#endif
