@@ -8,7 +8,6 @@
  */
 
 #import "FWBannerView.h"
-#import "FWAutoLayout.h"
 #import "UIPageControl+FWFramework.h"
 #import "FWPageControl.h"
 #import "FWImagePlugin.h"
@@ -337,7 +336,11 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     mainView.delegate = self;
     mainView.scrollsToTop = NO;
     [self addSubview:mainView];
-    [mainView fwPinEdgesToSuperview];
+    mainView.translatesAutoresizingMaskIntoConstraints = NO;
+    [mainView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor].active = YES;
+    [mainView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor].active = YES;
+    [mainView.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+    [mainView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
 }
 
 #pragma mark - properties
