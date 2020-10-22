@@ -134,5 +134,104 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
-NS_ASSUME_NONNULL_END
+#pragma mark - UIImage+FWToolkit
 
+/// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
+FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
+
+/// 从图片文件或应用资源路径加载UIImage，支持动图，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
+FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
+
+/*!
+ @brief UIImage+FWToolkit
+ */
+@interface UIImage (FWToolkit)
+
+/// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
++ (nullable UIImage *)fwImageWithName:(NSString *)name;
+
+/// 从图片文件加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (nullable UIImage *)fwImageWithFile:(NSString *)path;
+
+/// 从图片数据解码创建UIImage，scale为1，支持动图
++ (nullable UIImage *)fwImageWithData:(nullable NSData *)data;
+
+/// 从图片数据解码创建UIImage，指定scale，支持动图
++ (nullable UIImage *)fwImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
+
+@end
+
+#pragma mark - UIImageView+FWToolkit
+
+/*!
+ @brief UIImageView+FWToolkit
+ */
+@interface UIImageView (FWToolkit)
+
+/// 动画ImageView视图类，优先加载插件，默认UIImageView
+@property (class, nonatomic, unsafe_unretained) Class fwImageViewAnimatedClass;
+
+/// 加载网络图片，优先加载插件，默认使用框架网络库
+- (void)fwSetImageWithURL:(id)url;
+
+/// 加载网络图片，支持占位，优先加载插件，默认使用框架网络库
+- (void)fwSetImageWithURL:(id)url
+         placeholderImage:(nullable UIImage *)placeholderImage;
+
+/// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
+- (void)fwSetImageWithURL:(id)url
+         placeholderImage:(nullable UIImage *)placeholderImage
+               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
+
+/// 加载网络图片，支持占位、回调和进度，优先加载插件，默认使用框架网络库
+- (void)fwSetImageWithURL:(id)url
+         placeholderImage:(nullable UIImage *)placeholderImage
+               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                 progress:(nullable void (^)(double progress))progress;
+
+/// 取消加载网络图片请求
+- (void)fwCancelImageRequest;
+
+@end
+
+#pragma mark - FWImagePlugin
+
+/// 图片插件协议，应用可自定义图片插件
+@protocol FWImagePlugin <NSObject>
+
+@required
+
+/// imageView加载网络图片插件方法
+- (void)fwImageView:(UIImageView *)imageView
+        setImageURL:(NSURL *)imageURL
+        placeholder:(nullable UIImage *)placeholder
+         completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+           progress:(nullable void (^)(double progress))progress;
+
+/// imageView取消加载网络图片请求插件方法
+- (void)fwCancelImageRequest:(UIImageView *)imageView;
+
+@optional
+
+/// imageView动画视图类插件方法，默认使用UIImageView
+- (Class)fwImageViewAnimatedClass;
+
+/// image本地解码插件方法，默认使用系统方法
+- (nullable UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale;
+
+@end
+
+#pragma mark - FWSDWebImagePlugin
+
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+
+/// SDWebImage图片插件
+@interface FWSDWebImagePlugin : NSObject <FWImagePlugin>
+
+@property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
+
+@end
+
+#endif
+
+NS_ASSUME_NONNULL_END
