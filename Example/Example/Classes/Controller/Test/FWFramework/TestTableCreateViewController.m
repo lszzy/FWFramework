@@ -259,7 +259,7 @@
         [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了删除%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
     };
     
-    self.tableView.fwDelegate.viewClassForHeader = ^id _Nullable(NSInteger section) {
+    self.tableView.fwDelegate.viewForHeader = ^id _Nullable(NSInteger section) {
         FWStrongifySelf();
         TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView];
         viewForHeader.object = @1;
@@ -271,7 +271,7 @@
         return viewForHeader;
     };
     self.tableView.fwDelegate.footerViewClass = [TestTableCreateFooterView class];
-    self.tableView.fwDelegate.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
+    self.tableView.fwDelegate.footerConfiguration = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
         headerFooterView.object = @1;
     };
     
