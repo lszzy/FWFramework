@@ -57,6 +57,12 @@ import UIKit
     
     /// 表格选中事件，默认nil
     open var didSelectRow: ((IndexPath) -> Void)?
+    /// 表格删除标题句柄，不为空才能删除，默认nil不能删除
+    open var titleForDelete: ((IndexPath) -> String?)?
+    /// 表格删除标题，不为空才能删除，默认nil不能删除，优先级低
+    open var deleteTitle: String?
+    /// 表格删除事件，默认nil
+    open var didDeleteRow: ((IndexPath) -> Void)?
     
     // MARK: - UITableView
     
@@ -218,6 +224,26 @@ import UIKit
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         didSelectRow?(indexPath)
+    }
+    
+    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let title = titleForDelete?(indexPath) ?? deleteTitle
+        return title != nil ? true : false
+    }
+    
+    open func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return titleForDelete?(indexPath) ?? deleteTitle
+    }
+    
+    open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        let title = titleForDelete?(indexPath) ?? deleteTitle
+        return title != nil ? .delete : .none
+    }
+    
+    open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            didDeleteRow?(indexPath)
+        }
     }
 }
 
