@@ -253,6 +253,11 @@
         FWStrongifySelf();
         [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
     };
+    self.tableView.fwDelegate.deleteTitle = @"删除";
+    self.tableView.fwDelegate.didDeleteRow = ^(NSIndexPath * indexPath) {
+        FWStrongifySelf();
+        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了删除%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
+    };
     
     self.tableView.fwDelegate.viewClassForHeader = ^id _Nullable(NSInteger section) {
         FWStrongifySelf();
