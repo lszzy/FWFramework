@@ -9,7 +9,6 @@
 
 #import "FWImagePlugin.h"
 #import "FWPlugin.h"
-#import "FWToolkit.h"
 #import "FWHTTPSessionManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>

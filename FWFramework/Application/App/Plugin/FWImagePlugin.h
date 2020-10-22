@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWToolkit.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -221,8 +222,6 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 @end
 
 #pragma mark - FWAppImagePlugin
-
-@protocol FWImagePlugin;
 
 /// 应用默认图片插件
 @interface FWAppImagePlugin : NSObject <FWImagePlugin>
