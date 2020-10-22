@@ -165,7 +165,7 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
     FWWeakifySelf();
     self.collectionView.fwDelegate.cellClass = [TestCollectionCreateCell class];
-    self.collectionView.fwDelegate.cellForItem = ^(TestCollectionCreateCell * _Nonnull cell, NSIndexPath * _Nonnull indexPath) {
+    self.collectionView.fwDelegate.cellConfiguration = ^(TestCollectionCreateCell * _Nonnull cell, NSIndexPath * _Nonnull indexPath) {
         FWStrongifySelf();
         cell.object = self.collectionView.fwDelegate.collectionData[indexPath.section][indexPath.row];
     };
@@ -176,10 +176,10 @@
     
     self.collectionView.fwDelegate.headerViewClass = [TestCollectionCreateHeaderView class];
     self.collectionView.fwDelegate.footerViewClass = [TestCollectionCreateHeaderView class];
-    self.collectionView.fwDelegate.viewForHeader = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
+    self.collectionView.fwDelegate.headerConfiguration = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
         headerView.fwViewModel = @"我是Header\n我是Header";
     };
-    self.collectionView.fwDelegate.viewForFooter = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
+    self.collectionView.fwDelegate.footerConfiguration = ^(TestCollectionCreateHeaderView * _Nonnull headerView, NSIndexPath *indexPath) {
         headerView.fwViewModel = @"我是Footer\n我是Footer\n我是Footer";
     };
     
