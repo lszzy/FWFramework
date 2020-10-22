@@ -296,12 +296,9 @@
     
     FWSkeletonCollectionView *collectionView = (FWSkeletonCollectionView *)[layout addSkeletonView:self.collectionView];
     // 没有数据时需要指定cell，有数据时无需指定
-    collectionView.cellForItem = [TestCollectionCreateCell class];
-    collectionView.sizeForItemArray = nil;
+    collectionView.collectionDelegate.cellClass = [TestCollectionCreateCell class];
     // 测试header直接指定类时自动计算高度
-    collectionView.viewForHeader = [TestCollectionCreateHeaderView class];
-    collectionView.sizeForHeaderArray = nil;
-    collectionView.sizeForFooterArray = nil;
+    collectionView.collectionDelegate.headerViewClass = [TestCollectionCreateHeaderView class];
 }
 
 @end

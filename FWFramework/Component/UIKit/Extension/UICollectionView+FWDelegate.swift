@@ -181,7 +181,9 @@ import UIKit
             let viewBlock = headerConfiguration ?? { (header, indexPath) in header.fwViewModel = nil }
             viewBlock(view, indexPath)
             return view
-        } else if kind == UICollectionView.elementKindSectionFooter {
+        }
+        
+        if kind == UICollectionView.elementKindSectionFooter {
             let viewClass = viewForFooter?(indexPath) ?? footerViewClass
             if let view = viewClass as? UICollectionReusableView { return view }
             guard let clazz = viewClass as? UICollectionReusableView.Type else { return UICollectionReusableView() }
@@ -191,6 +193,7 @@ import UIKit
             viewBlock(view, indexPath)
             return view
         }
+        
         return UICollectionReusableView()
     }
     
