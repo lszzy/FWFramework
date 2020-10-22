@@ -8,38 +8,11 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWToolkit.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWImagePlugin
-
-/// 图片插件协议，应用可自定义图片插件
-@protocol FWImagePlugin <NSObject>
-
-@optional
-
-/// imageView动画视图类插件方法，默认使用UIImageView
-- (Class)fwImageViewAnimatedClass;
-
-/// image本地解码插件方法，默认使用框架解码库
-- (nullable UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale;
-
-/// imageView加载网络图片插件方法，默认使用框架网络库
-- (void)fwImageView:(UIImageView *)imageView
-        setImageURL:(NSURL *)imageURL
-        placeholder:(nullable UIImage *)placeholder
-         completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
-           progress:(nullable void (^)(double progress))progress;
-
-@end
-
-#pragma mark - FWAnimatedImage
-
-/// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
-FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
-
-/// 从图片文件或应用资源路径加载UIImage，支持动图，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
-FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
+#pragma mark - UIImage+FWAnimated
 
 /// 图片格式可扩展枚举
 typedef NSInteger FWImageFormat NS_TYPED_EXTENSIBLE_ENUM;
@@ -54,28 +27,12 @@ static const FWImageFormat FWImageFormatHEIF      = 6; //iOS13+
 static const FWImageFormat FWImageFormatPDF       = 7;
 static const FWImageFormat FWImageFormatSVG       = 8;
 
-#pragma mark - UIImage+FWAnimated
-
 /*!
  @brief UIImage+FWAnimated
  
  @see https://github.com/SDWebImage/SDWebImage
  */
 @interface UIImage (FWAnimated)
-
-/// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
-+ (nullable UIImage *)fwImageWithName:(NSString *)name;
-
-/// 从图片文件加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithFile:(NSString *)path;
-
-/// 从图片数据解码创建UIImage，scale为1，支持动图
-+ (nullable UIImage *)fwImageWithData:(nullable NSData *)data;
-
-/// 从图片数据解码创建UIImage，指定scale，支持动图
-+ (nullable UIImage *)fwImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
-
-#pragma mark - Property
 
 /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
 @property (nonatomic, assign) NSUInteger fwImageLoopCount;
@@ -254,51 +211,23 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 @end
 
-#pragma mark - UIImageView+FWNetwork
+#pragma mark - UIImageView+FWImageDownloader
 
-/// 异步加载网络图片分类
-@interface UIImageView (FWNetwork)
+/// 下载网络图片分类
+@interface UIImageView (FWImageDownloader)
 
 /// 默认框架公用图片下载器
 @property (class, nonatomic, strong) FWImageDownloader *fwSharedImageDownloader;
 
-/// 动画ImageView视图类，优先加载插件，默认UIImageView
-@property (class, nonatomic, unsafe_unretained) Class fwImageViewAnimatedClass;
-
-/// 加载网络图片，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url;
-
-/// 加载网络图片，支持占位，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(nullable UIImage *)placeholderImage;
-
-/// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
-
-/// 加载网络图片，支持占位、回调和进度，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
-                 progress:(nullable void (^)(double progress))progress;
-
-/// 取消默认框架图片下载任务
-- (void)fwCancelImageDownloadTask;
-
 @end
 
-#pragma mark - FWSDWebImagePlugin
+#pragma mark - FWAppImagePlugin
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+/// 应用默认图片插件
+@interface FWAppImagePlugin : NSObject <FWImagePlugin>
 
-/// SDWebImage图片插件
-@interface FWSDWebImagePlugin : NSObject <FWImagePlugin>
-
-@property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
+@property (class, nonatomic, readonly) FWAppImagePlugin *sharedInstance;
 
 @end
-
-#endif
 
 NS_ASSUME_NONNULL_END

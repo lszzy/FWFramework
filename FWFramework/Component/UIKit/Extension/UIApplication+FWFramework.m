@@ -9,7 +9,7 @@
 
 #import "UIApplication+FWFramework.h"
 #import "FWEncode.h"
-#import "FWAdaptive.h"
+#import "FWToolkit.h"
 #import <StoreKit/StoreKit.h>
 
 #pragma mark - UIApplication+FWFramework
