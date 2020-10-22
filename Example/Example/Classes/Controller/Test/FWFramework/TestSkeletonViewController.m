@@ -257,8 +257,8 @@
     [self.headerView fwAutoLayoutSubviews];
     [self.footerView fwAutoLayoutSubviews];
     
-    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
-    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -309,7 +309,7 @@
 
 - (void)renderData
 {
-    [self.tableView fwTriggerPullRefresh];
+    [self.tableView fwBeginRefreshing];
 }
 
 - (void)onRefreshing
@@ -329,7 +329,7 @@
         [self.tableData removeAllObjects];
         [self.tableView reloadData];
         
-        [self.tableView.fwPullRefreshView stopAnimating];
+        [self.tableView fwEndRefreshing];
     });
 }
 
@@ -343,7 +343,7 @@
         [self.tableData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
         [self.tableView reloadData];
         
-        [self.tableView.fwInfiniteScrollView stopAnimating];
+        [self.tableView fwEndLoading];
     });
 }
 
@@ -405,13 +405,13 @@
     if (self.scrollStyle == 0) {
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
         // 没有数据时需要指定cell，有数据时无需指定
-        tableView.cellForRow = [TestSkeletonCell class];
+        tableView.tableDelegate.cellClass = [TestSkeletonCell class];
         // 测试header直接指定类时自动计算高度
-        tableView.viewForHeader = [TestSkeletonHeaderView class];
+        tableView.tableDelegate.headerViewClass = [TestSkeletonHeaderView class];
     } else if (self.scrollStyle == 1) {
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[layout addSkeletonView:self.tableView];
         // 没有数据时需要指定cell，有数据时无需指定
-        tableView.cellForRow = [TestSkeletonCell class];
+        tableView.tableDelegate.cellClass = [TestSkeletonCell class];
         tableView.tableView.scrollEnabled = YES;
     } else {
         UIScrollView *scrollView = [UIScrollView fwScrollView];
@@ -420,7 +420,7 @@
         
         FWSkeletonTableView *tableView = (FWSkeletonTableView *)[FWSkeletonLayout parseSkeletonView:self.tableView];
         // 没有数据时需要指定cell，有数据时无需指定
-        tableView.cellForRow = [TestSkeletonCell class];
+        tableView.tableDelegate.cellClass = [TestSkeletonCell class];
         [layout addAnimationView:tableView];
         [scrollView.fwContentView addSubview:tableView];
         tableView.fwLayoutChain.edges();

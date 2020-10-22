@@ -238,7 +238,7 @@
 
 @interface TestTableCreateViewController ()
 
-@property (nonatomic, strong) FWTableView *tableView;
+@property (nonatomic, strong) UITableView *tableView;
 
 @end
 
@@ -246,32 +246,32 @@
 
 - (void)renderView
 {
-    self.tableView = [[FWTableView alloc] init];
-    self.tableView.tableData = @[@[@1, @2]];
+    self.tableView = [UITableView fwTableView];
     FWWeakifySelf();
-    self.tableView.cellClassForRow = ^Class _Nonnull(NSIndexPath * indexPath) {
-        return [TestTableCreateCell class];
-    };
-    self.tableView.didSelectRow = ^(NSIndexPath * indexPath) {
+    self.tableView.fwDelegate.cellClass = [TestTableCreateCell class];
+    self.tableView.fwDelegate.didSelectRow = ^(NSIndexPath * indexPath) {
         FWStrongifySelf();
         [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
     };
-    
-    self.tableView.viewClassForHeader = ^id _Nullable(NSInteger section) {
+    self.tableView.fwDelegate.deleteTitle = @"删除";
+    self.tableView.fwDelegate.didDeleteRow = ^(NSIndexPath * indexPath) {
         FWStrongifySelf();
-        TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView.tableView];
+        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了删除%@", @(indexPath.row)] cancel:@"关闭" cancelBlock:nil];
+    };
+    
+    self.tableView.fwDelegate.viewForHeader = ^id _Nullable(NSInteger section) {
+        FWStrongifySelf();
+        TestTableCreateHeaderView *viewForHeader = [TestTableCreateHeaderView fwHeaderFooterViewWithTableView:self.tableView];
         viewForHeader.object = @1;
         
-        CGFloat height = [self.tableView.tableView fwHeightWithHeaderFooterViewClass:[TestTableCreateHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableCreateHeaderView * _Nonnull headerFooterView) {
+        CGFloat height = [self.tableView fwHeightWithHeaderFooterViewClass:[TestTableCreateHeaderView class] type:FWHeaderFooterViewTypeHeader configuration:^(TestTableCreateHeaderView * _Nonnull headerFooterView) {
             headerFooterView.object = @1;
         }];
-        viewForHeader.frame = CGRectMake(0, 0, self.tableView.tableView.fwWidth, height);
+        viewForHeader.frame = CGRectMake(0, 0, self.tableView.fwWidth, height);
         return viewForHeader;
     };
-    self.tableView.viewClassForFooter = ^id _Nullable(NSInteger section) {
-        return [TestTableCreateFooterView class];
-    };
-    self.tableView.viewForFooter = ^(TestTableCreateFooterView * _Nonnull headerFooterView) {
+    self.tableView.fwDelegate.footerViewClass = [TestTableCreateFooterView class];
+    self.tableView.fwDelegate.footerConfiguration = ^(TestTableCreateFooterView * _Nonnull headerFooterView, NSInteger section) {
         headerFooterView.object = @1;
     };
     
@@ -285,8 +285,8 @@
     [self.view addSubview:self.tableView];
     [self.tableView fwPinEdgesToSuperview];
     
-    [self.tableView.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
-    [self.tableView.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderModel
@@ -294,17 +294,17 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@(UIBarButtonSystemItemAdd) block:^(id sender) {
         FWStrongifySelf();
-        NSMutableArray *sectionData = self.tableView.tableData[0].mutableCopy;
+        NSMutableArray *sectionData = self.tableView.fwDelegate.tableData[0].mutableCopy;
         NSInteger lastIndex = [sectionData.lastObject fwAsInteger];
         [sectionData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
-        self.tableView.tableData = @[sectionData];
+        self.tableView.fwDelegate.tableData = @[sectionData];
         [self.tableView reloadData];
     }];
 }
 
 - (void)renderData
 {
-    [self.tableView.tableView fwTriggerPullRefresh];
+    [self.tableView fwBeginRefreshing];
 }
 
 - (void)onRefreshing
@@ -313,10 +313,10 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
-        self.tableView.tableData = @[@[@1, @2]];
+        self.tableView.fwDelegate.tableData = @[@[@1, @2]];
         [self.tableView reloadData];
         
-        [self.tableView.tableView.fwPullRefreshView stopAnimating];
+        [self.tableView fwEndRefreshing];
     });
 }
 
@@ -326,13 +326,13 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        NSMutableArray *sectionData = self.tableView.tableData[0].mutableCopy;
+        NSMutableArray *sectionData = self.tableView.fwDelegate.tableData[0].mutableCopy;
         NSInteger lastIndex = [sectionData.lastObject fwAsInteger];
         [sectionData addObjectsFromArray:@[@(lastIndex + 1), @(lastIndex + 2)]];
-        self.tableView.tableData = @[sectionData];
+        self.tableView.fwDelegate.tableData = @[sectionData];
         [self.tableView reloadData];
         
-        [self.tableView.tableView.fwInfiniteScrollView stopAnimating];
+        [self.tableView fwEndLoading];
     });
 }
 

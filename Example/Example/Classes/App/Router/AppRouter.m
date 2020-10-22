@@ -35,7 +35,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 {
     [FWRouter setFilterHandler:^BOOL(NSDictionary *parameters) {
         NSURL *url = [NSURL fwURLWithString:parameters[FWRouterURLKey]];
-        if ([UIApplication fwIsAppSchemeURL:url]) {
+        if ([UIApplication fwIsSystemURL:url]) {
             [UIApplication fwOpenURL:url];
             return NO;
         }
