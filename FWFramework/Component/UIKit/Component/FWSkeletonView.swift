@@ -1175,16 +1175,16 @@ extension UITableView: FWSkeletonViewDataSource {
         tableView.tableDelegate.sectionCount = numberOfSections
         guard numberOfSections > 0 else { return tableView }
         
-        tableView.tableDelegate.viewClassForHeader = { [weak self] (section) in
+        tableView.tableDelegate.viewForHeader = { [weak self] (section) in
             return self?.headerView(forSection: section)
         }
-        tableView.tableDelegate.viewClassForFooter = { [weak self] (section) in
+        tableView.tableDelegate.viewForFooter = { [weak self] (section) in
             return self?.footerView(forSection: section)
         }
         tableView.tableDelegate.countForRow = { [weak self] (section) in
             return self?.numberOfRows(inSection: section) ?? 0
         }
-        tableView.tableDelegate.cellClassForRow = { [weak self] (indexPath) in
+        tableView.tableDelegate.cellForRow = { [weak self] (indexPath) in
             return self?.cellForRow(at: indexPath)
         }
         return tableView
