@@ -11,6 +11,6 @@ target "AppClip" do
   platform :ios, '14.0'
   use_frameworks!
 
-  pod 'FWFramework', :path => '../', :subspecs => ['Framework', 'Application']
+  pod 'FWFramework', :path => '../', :subspecs => ['Framework', 'Component']
   pod 'FWDebug', :configurations => ['Debug']
 end
