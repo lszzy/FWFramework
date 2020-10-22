@@ -107,8 +107,8 @@
 - (void)renderView
 {
     FWInfiniteScrollView.height = 64;
-    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
-    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     pullView.image = [UIImage imageNamed:@"loading.gif"];
@@ -121,7 +121,7 @@
 
 - (void)renderData
 {
-    [self.tableView fwTriggerInfiniteScroll];
+    [self.tableView fwBeginLoading];
 }
 
 #pragma mark - TableView
@@ -194,8 +194,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowPullRefresh = self.tableData.count < 20 ? YES : NO;
-        [self.tableView.fwPullRefreshView stopAnimating];
+        self.tableView.fwShowRefreshing = self.tableData.count < 20 ? YES : NO;
+        [self.tableView fwEndRefreshing];
     });
 }
 
@@ -210,8 +210,8 @@
         }
         [self.tableView reloadData];
         
-        self.tableView.fwShowInfiniteScroll = self.tableData.count < 20 ? YES : NO;
-        [self.tableView.fwInfiniteScrollView stopAnimating];
+        self.tableView.fwShowLoading = self.tableData.count < 20 ? YES : NO;
+        [self.tableView fwEndLoading];
     });
 }
 

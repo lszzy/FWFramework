@@ -90,14 +90,14 @@
 - (void)renderView
 {
     self.tableView.fwPullRefreshHeight = FWPullRefreshView.height + UIScreen.fwSafeAreaInsets.top;
-    [self.tableView fwAddPullRefreshWithTarget:self action:@selector(onRefreshing)];
+    [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
     self.tableView.fwInfiniteScrollHeight = FWInfiniteScrollView.height + UIScreen.fwSafeAreaInsets.bottom;
-    [self.tableView fwAddInfiniteScrollWithTarget:self action:@selector(onLoading)];
+    [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
 }
 
 - (void)renderData
 {
-    [self.tableView fwTriggerPullRefresh];
+    [self.tableView fwBeginRefreshing];
 }
 
 #pragma mark - TableView
@@ -141,7 +141,7 @@
         for (int i = 0; i < 10; i++) {
             [self.tableData addObject:[NSString stringWithFormat:@"我是数据 %@", @(self.tableData.count + self.count + 1)]];
         }
-        [self.tableView.fwPullRefreshView stopAnimating];
+        [self.tableView fwEndRefreshing];
         [self.tableView reloadData];
         self.count++;
     });
@@ -156,7 +156,7 @@
         for (int i = 0; i < 10; i++) {
             [self.tableData addObject:[NSString stringWithFormat:@"我是数据 %@", @(self.tableData.count + 1)]];
         }
-        [self.tableView.fwInfiniteScrollView stopAnimating];
+        [self.tableView fwEndLoading];
         [self.tableView reloadData];
     });
 }

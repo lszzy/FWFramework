@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.7.2'
+  spec.version             = '0.7.3'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -9,14 +9,10 @@ Pod::Spec.new do |spec|
 
   spec.platform            = :ios, '9.0'
   spec.swift_version       = '5.0'
-  spec_mrr_files           = [ 'FWFramework/Framework/Kernel/System/FWCoroutine.m' ]
-  spec_arc_files           = Pathname.glob("FWFramework/**/*.{h,m,swift}")
-  spec_arc_files           = spec_arc_files.map {|file| file.to_path}
-  spec_arc_files           = spec_arc_files.reject {|file| spec_mrr_files.include?(file)}
-  spec.requires_arc        = spec_arc_files
+  spec.requires_arc        = true
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
   spec.library             = [ 'sqlite3' ]
-  spec.default_subspecs    = [ 'Framework', 'Application' ]
+  spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
 
   spec.subspec 'Framework' do |subspec|
     subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}'
@@ -26,6 +22,12 @@ Pod::Spec.new do |spec|
   spec.subspec 'Application' do |subspec|
     subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'Component' do |subspec|
+    subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Component/**/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 

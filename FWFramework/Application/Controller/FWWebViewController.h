@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 已经加载完成，可用来获取title、设置按钮等，默认未实现
 - (void)didFinishLoad:(WKNavigation *)navigation;
 
+/// 点击关闭按钮(不含手势返回)，可用来拦截关闭时二次确认等，默认直接关闭
+- (void)onWebClose;
+
 @end
 
 /*!

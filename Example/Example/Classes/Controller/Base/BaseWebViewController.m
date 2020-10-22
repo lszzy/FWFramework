@@ -59,7 +59,7 @@
     }
     
     // 系统Scheme
-    if ([UIApplication fwIsAppSchemeURL:navigationAction.request.URL]) {
+    if ([UIApplication fwIsSystemURL:navigationAction.request.URL]) {
         [UIApplication fwOpenURL:navigationAction.request.URL];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;

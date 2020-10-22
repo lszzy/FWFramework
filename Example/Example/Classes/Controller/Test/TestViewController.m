@@ -104,6 +104,7 @@
                                              @[@"FWState", @"TestStateViewController"],
                                              @[@"FWSegmentedControl", @"TestSegmentViewController"],
                                              @[@"FWTableView", @"TestTableCreateViewController"],
+                                             @[@"FWCollectionView", @"TestCollectionCreateViewController"],
                                              @[@"FWBannerView", @"TestBannerViewController"],
                                              @[@"FWBarrageView", @"TestBarrageViewController"],
                                              @[@"FWEmptyView", @"TestEmptyViewController"],
