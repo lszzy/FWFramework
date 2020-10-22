@@ -33,5 +33,6 @@
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
 #import "FWTheme.h"
+#import "FWToolkit.h"
 
 #endif /* FWFramework_Framework_h */

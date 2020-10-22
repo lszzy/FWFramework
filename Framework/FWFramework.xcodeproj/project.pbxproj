@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F2350FF25417FEB00EED502 /* FWToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2350FD25417FEB00EED502 /* FWToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F23510025417FEB00EED502 /* FWToolkit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2350FE25417FEB00EED502 /* FWToolkit.m */; };
+		2F23510325417FF500EED502 /* FWToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F23510225417FF500EED502 /* FWToolkit.swift */; };
 		2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25748D2539858900880FEF /* FWRequestEventAccessory.m */; };
 		2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F25748E2539858900880FEF /* FWRequestEventAccessory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2574952539928800880FEF /* FWPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2574942539928800880FEF /* FWPromise.swift */; };
@@ -328,7 +331,6 @@
 		2FFE1DCA2507BFBD000332A3 /* NSURL+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1D0C2507BFBD000332A3 /* NSURL+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE83A42515A50400545D6E /* FWEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE83A22515A50400545D6E /* FWEncode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE83A52515A50400545D6E /* FWEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83A32515A50400545D6E /* FWEncode.m */; };
-		2FFE83BE2515A8A800545D6E /* FWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83B82515A8A700545D6E /* FWTheme.swift */; };
 		2FFE83DD2515AAD100545D6E /* FWMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE83D12515AAD100545D6E /* FWMacro.swift */; };
 		2FFE840E2515C4BF00545D6E /* FWAdaptive.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84082515C4BE00545D6E /* FWAdaptive.m */; };
 		2FFE840F2515C4BF00545D6E /* FWAdaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE84092515C4BE00545D6E /* FWAdaptive.swift */; };
@@ -337,6 +339,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F2350FD25417FEB00EED502 /* FWToolkit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWToolkit.h; sourceTree = "<group>"; };
+		2F2350FE25417FEB00EED502 /* FWToolkit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWToolkit.m; sourceTree = "<group>"; };
+		2F23510225417FF500EED502 /* FWToolkit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWToolkit.swift; sourceTree = "<group>"; };
 		2F25748D2539858900880FEF /* FWRequestEventAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWRequestEventAccessory.m; sourceTree = "<group>"; };
 		2F25748E2539858900880FEF /* FWRequestEventAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWRequestEventAccessory.h; sourceTree = "<group>"; };
 		2F2574942539928800880FEF /* FWPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWPromise.swift; sourceTree = "<group>"; };
@@ -659,7 +664,6 @@
 		2FFE1D0C2507BFBD000332A3 /* NSURL+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE83A22515A50400545D6E /* FWEncode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWEncode.h; sourceTree = "<group>"; };
 		2FFE83A32515A50400545D6E /* FWEncode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWEncode.m; sourceTree = "<group>"; };
-		2FFE83B82515A8A700545D6E /* FWTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWTheme.swift; sourceTree = "<group>"; };
 		2FFE83D12515AAD100545D6E /* FWMacro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWMacro.swift; sourceTree = "<group>"; };
 		2FFE84082515C4BE00545D6E /* FWAdaptive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAdaptive.m; sourceTree = "<group>"; };
 		2FFE84092515C4BE00545D6E /* FWAdaptive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWAdaptive.swift; sourceTree = "<group>"; };
@@ -726,7 +730,9 @@
 				2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */,
 				2FFE1B882507BF95000332A3 /* FWTheme.h */,
 				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
-				2FFE83B82515A8A700545D6E /* FWTheme.swift */,
+				2F2350FD25417FEB00EED502 /* FWToolkit.h */,
+				2F2350FE25417FEB00EED502 /* FWToolkit.m */,
+				2F23510225417FF500EED502 /* FWToolkit.swift */,
 			);
 			path = Toolkit;
 			sourceTree = "<group>";
@@ -1220,6 +1226,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F2350FF25417FEB00EED502 /* FWToolkit.h in Headers */,
 				2F25749925399A5300880FEF /* FWRefreshPlugin.h in Headers */,
 				2F2574AB2539A6D400880FEF /* FWBlock.h in Headers */,
 				2F2574902539858900880FEF /* FWRequestEventAccessory.h in Headers */,
@@ -1516,9 +1523,11 @@
 				2FFE1BCB2507BF95000332A3 /* FWURLSessionManager.m in Sources */,
 				2FFE1C112507BF95000332A3 /* FWMessage.m in Sources */,
 				2FFE1D342507BFBD000332A3 /* UISearchBar+FWFramework.m in Sources */,
+				2F23510025417FEB00EED502 /* FWToolkit.m in Sources */,
 				2FFE1D802507BFBD000332A3 /* FWPopupMenu.m in Sources */,
 				2FFE1D782507BFBD000332A3 /* FWAttributedLabel.m in Sources */,
 				2FFE1D4C2507BFBD000332A3 /* UINavigationController+FWBar.m in Sources */,
+				2F23510325417FF500EED502 /* FWToolkit.swift in Sources */,
 				2FFE1DBC2507BFBD000332A3 /* NSNumber+FWFramework.swift in Sources */,
 				2FFE1BAF2507BF95000332A3 /* FWDatabasePool.m in Sources */,
 				2FFE1C3A2507BFA5000332A3 /* FWWebViewController.m in Sources */,
@@ -1545,7 +1554,6 @@
 				2FFE1D812507BFBD000332A3 /* FWBarrageView.m in Sources */,
 				2FFE1D4E2507BFBD000332A3 /* UIView+FWDrag.m in Sources */,
 				2FFE1BD42507BF95000332A3 /* FWNetworkPrivate.m in Sources */,
-				2FFE83BE2515A8A800545D6E /* FWTheme.swift in Sources */,
 				2FFE1D282507BFBD000332A3 /* UIView+FWAnimation.m in Sources */,
 				2FFE1DC32507BFBD000332A3 /* NSUserDefaults+FWFramework.m in Sources */,
 				2FFE1C382507BFA5000332A3 /* FWAppDelegate.m in Sources */,

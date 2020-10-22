@@ -8,9 +8,9 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "FWImagePlugin.h"
 #import "FWProgressView.h"
 #import "FWRouter.h"
+#import "FWToolkit.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
 
@@ -161,7 +161,7 @@
     FWPhotoView *photoView = [[_photoViews filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"index == %d", _currentPage]] firstObject];
     // 取消所有的下载
     for (FWPhotoView *photoView in _photoViews) {
-        [photoView.imageView fwCancelImageDownloadTask];
+        [photoView.imageView fwCancelImageRequest];
     }
     
     // 显示状态栏
@@ -479,7 +479,7 @@
 
 - (void)setUrlString:(NSString *)urlString {
     _urlString = urlString;
-    [self.imageView fwCancelImageDownloadTask];
+    [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
     if ([urlString.lowercaseString hasPrefix:@"http"]) {
         self.progressView.progress = 0.01;
