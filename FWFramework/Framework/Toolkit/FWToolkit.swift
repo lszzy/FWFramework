@@ -1,14 +1,14 @@
 //
-//  FWTheme.swift
+//  FWToolkit.swift
 //  FWFramework
 //
-//  Created by wuyong on 2020/9/18.
+//  Created by wuyong on 2020/10/22.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
 import UIKit
 
-// MARK: - UIColor+FWTheme
+// MARK: - UIColor+FWToolkit
 
 /// 从16进制创建UIColor
 ///
@@ -32,7 +32,7 @@ public func FWColorRgb(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alph
     return UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha)
 }
 
-// MARK: - UIFont+FWTheme
+// MARK: - UIFont+FWToolkit
 
 /// 快速创建系统字体
 ///
