@@ -685,13 +685,24 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 
 + (UIWindow *)fwMainWindow
 {
-    UIWindow *window = UIApplication.sharedApplication.keyWindow;
-    if (window) return window;
-    
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        if (window.isKeyWindow) return window;
+    UIWindow *mainWindow = UIApplication.sharedApplication.keyWindow;
+    if (!mainWindow) {
+        for (UIWindow *window in UIApplication.sharedApplication.windows) {
+            if (window.isKeyWindow) { mainWindow = window; break; }
+        }
     }
-    return nil;
+    
+#ifdef DEBUG
+    // DEBUG模式时兼容FLEX、FWDebug等组件
+    if ([mainWindow isKindOfClass:NSClassFromString(@"FLEXWindow")] &&
+        [mainWindow respondsToSelector:NSSelectorFromString(@"previousKeyWindow")]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        mainWindow = [mainWindow performSelector:NSSelectorFromString(@"previousKeyWindow")];
+#pragma clang diagnostic pop
+    }
+#endif
+    return mainWindow;
 }
 
 + (UIWindowScene *)fwMainScene
