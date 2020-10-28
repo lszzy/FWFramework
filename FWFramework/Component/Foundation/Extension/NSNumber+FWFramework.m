@@ -22,32 +22,23 @@
 
 - (NSString *)fwRoundString:(NSInteger)digit
 {
-    return [self fwFormatString:digit
-                    numberStyle:NSNumberFormatterNoStyle
-                   roundingMode:NSNumberFormatterRoundHalfUp];
+    return [self fwFormatString:digit roundingMode:NSNumberFormatterRoundHalfUp];
 }
 
 - (NSString *)fwCeilString:(NSInteger)digit
 {
-    return [self fwFormatString:digit
-                    numberStyle:NSNumberFormatterNoStyle
-                   roundingMode:NSNumberFormatterRoundCeiling];
+    return [self fwFormatString:digit roundingMode:NSNumberFormatterRoundCeiling];
 }
 
 - (NSString *)fwFloorString:(NSInteger)digit
 {
-    return [self fwFormatString:digit
-                    numberStyle:NSNumberFormatterNoStyle
-                   roundingMode:NSNumberFormatterRoundFloor];
+    return [self fwFormatString:digit roundingMode:NSNumberFormatterRoundFloor];
 }
 
-- (NSString *)fwFormatString:(NSInteger)digit
-                 numberStyle:(NSNumberFormatterStyle)numberStyle
-                roundingMode:(NSNumberFormatterRoundingMode)roundingMode
+- (NSString *)fwFormatString:(NSInteger)digit roundingMode:(NSNumberFormatterRoundingMode)roundingMode
 {
-    NSString *result = nil;
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.numberStyle = numberStyle;
+    formatter.numberStyle = NSNumberFormatterNoStyle;
     formatter.roundingMode = roundingMode;
     formatter.minimumIntegerDigits = 1;
     formatter.maximumFractionDigits = digit;
@@ -56,7 +47,7 @@
     formatter.usesGroupingSeparator = NO;
     formatter.currencyDecimalSeparator = @".";
     formatter.currencyGroupingSeparator = @"";
-    result = [formatter stringFromNumber:self];
+    NSString *result = [formatter stringFromNumber:self];
     return result ?: @"";
 }
 
@@ -78,13 +69,8 @@
 - (NSNumber*)fwFormatNumber:(NSUInteger)digit
                roundingMode:(NSNumberFormatterRoundingMode)roundingMode
 {
-    NSNumber *result = nil;
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.roundingMode = roundingMode;
-    formatter.minimumIntegerDigits = 1;
-    formatter.maximumFractionDigits = digit;
-    result = [NSNumber numberWithDouble:[[formatter stringFromNumber:self] doubleValue]];
-    return result;
+    NSString *string = [self fwFormatString:digit roundingMode:roundingMode];
+    return [NSNumber numberWithDouble:[string doubleValue]];
 }
 
 @end
