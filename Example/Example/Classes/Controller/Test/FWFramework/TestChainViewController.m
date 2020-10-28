@@ -101,18 +101,18 @@
     NSNumber *number = [NSNumber numberWithDouble:12345.6789];
     NSMutableString *string = [NSMutableString string];
     [string appendFormat:@"number: %@\n\n", number];
-    [string appendFormat:@"digit: %@\n", [number fwDigitString:2]];
-    [string appendFormat:@"decimal: %@\n", [number fwDecimalString:2]];
-    [string appendFormat:@"percent: %@\n", [number fwPercentString:2]];
+    [string appendFormat:@"round: %@\n", [number fwRoundString:2]];
+    [string appendFormat:@"ceil: %@\n", [number fwCeilString:2]];
+    [string appendFormat:@"floor: %@\n", [number fwFloorString:2]];
     [string appendFormat:@"round: %@\n", [number fwRoundNumber:2]];
     [string appendFormat:@"ceil: %@\n", [number fwCeilNumber:2]];
     [string appendFormat:@"floor: %@\n\n", [number fwFloorNumber:2]];
     
     number = [NSNumber numberWithDouble:0.6049];
     [string appendFormat:@"number: %@\n\n", number];
-    [string appendFormat:@"digit: %@\n", [number fwDigitString:2]];
-    [string appendFormat:@"decimal: %@\n", [number fwDecimalString:2]];
-    [string appendFormat:@"percent: %@\n", [number fwPercentString:2]];
+    [string appendFormat:@"round: %@\n", [number fwRoundString:2]];
+    [string appendFormat:@"ceil: %@\n", [number fwCeilString:2]];
+    [string appendFormat:@"floor: %@\n", [number fwFloorString:2]];
     [string appendFormat:@"round: %@\n", [number fwRoundNumber:2]];
     [string appendFormat:@"ceil: %@\n", [number fwCeilNumber:2]];
     [string appendFormat:@"floor: %@\n", [number fwFloorNumber:2]];
