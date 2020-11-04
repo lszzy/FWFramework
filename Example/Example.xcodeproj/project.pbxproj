@@ -1474,6 +1474,22 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"sqlite3\"",
+					"-l\"xml2\"",
+					"-l\"z\"",
+					"-framework",
+					"\"FWDebug\"",
+					"-framework",
+					"\"FWFramework\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG APPCLIP";
@@ -1499,6 +1515,17 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"sqlite3\"",
+					"-framework",
+					"\"FWFramework\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
