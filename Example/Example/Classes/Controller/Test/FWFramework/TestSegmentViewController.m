@@ -147,20 +147,23 @@
     [marqueeLabel setNeedsLayout];
     [marqueeLabel layoutIfNeeded];
     
-    self.segmentedControl = [[FWSegmentedControl alloc] initWithSectionTitles:@[@"Test"]];
-    self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
-    self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
+    NSArray *sectionTitles = @[@"菜单一", @"菜单二", @"长的菜单三", @"菜单四", @"菜单五", @"菜单六"];
+    NSArray *sectionContents = @[@"我是内容一", @"我是内容二", @"我是长的内容三", @"我是内容四", @"我是内容五", @"我是内容六"];
+    self.segmentedControl = [[FWSegmentedControl alloc] initWithSectionTitles:@[]];
+    self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleTextWidthStripe;
+    self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    self.segmentedControl.contentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
     self.segmentedControl.selectionIndicatorCornerRadius = 2.5f;
     self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
-    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:16]};
     [self.view addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
     [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
     [self.segmentedControl fwSetDimension:NSLayoutAttributeHeight toSize:50];
-    self.segmentedControl.sectionTitles = @[@"Worldwide Text", @"Local Long Text", @"Headlines Long Text"];
+    self.segmentedControl.sectionTitles = sectionTitles;
     self.segmentedControl.selectedSegmentIndex = 1;
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
@@ -171,7 +174,7 @@
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.contentSize = CGSizeMake(FWScreenWidth * 3, 100);
+    self.scrollView.contentSize = CGSizeMake(FWScreenWidth * sectionTitles.count, 100);
     self.scrollView.delegate = self;
     [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth, 0, FWScreenWidth, 100) animated:NO];
     [self.view addSubview:self.scrollView];
@@ -180,17 +183,12 @@
     [self.scrollView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.segmentedControl];
     [self.scrollView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     
-    UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 100)];
-    label1.text = @"Worldwide Text";
-    [self.scrollView addSubview:label1];
-    
-    UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(FWScreenWidth, 0, FWScreenWidth, 100)];
-    label2.text = @"Local Long Text";
-    [self.scrollView addSubview:label2];
-    
-    UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(FWScreenWidth * 2, 0, FWScreenWidth, 100)];
-    label3.text = @"Headlines Long Text";
-    [self.scrollView addSubview:label3];
+    for (NSInteger i = 0; i < sectionContents.count; i++) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(FWScreenWidth * i, 0, FWScreenWidth, 100)];
+        label.text = sectionContents[i];
+        label.numberOfLines = 0;
+        [self.scrollView addSubview:label];
+    }
 }
 
 - (FWTextTagConfig *)textTagConfig
