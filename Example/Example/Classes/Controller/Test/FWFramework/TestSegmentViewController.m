@@ -152,7 +152,6 @@
     self.segmentedControl = [[FWSegmentedControl alloc] initWithSectionTitles:@[]];
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleTextWidthStripe;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
-    self.segmentedControl.contentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
     self.segmentedControl.selectionIndicatorCornerRadius = 2.5f;

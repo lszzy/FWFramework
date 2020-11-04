@@ -259,13 +259,6 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
  */
 @property (nonatomic, readwrite) UIEdgeInsets segmentEdgeInset;
 
-/**
- Inset left and right edges of content.
- 
- Default is UIEdgeInsetsZero
- */
-@property (nonatomic, readwrite) UIEdgeInsets contentEdgeInset;
-
 @property (nonatomic, readwrite) UIEdgeInsets enlargeEdgeInset;
 
 /**
