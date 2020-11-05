@@ -44,6 +44,7 @@
                                          @[@"提醒", @(FWAuthorizeTypeReminders)],
                                          @[@"音乐", @(FWAuthorizeTypeAppleMusic)],
                                          @[@"通知", @(FWAuthorizeTypeNotifications)],
+                                         @[@"广告追踪", @(FWAuthorizeTypeTracking)],
                                          ]];
 }
 

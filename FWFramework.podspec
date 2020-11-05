@@ -51,6 +51,11 @@ Pod::Spec.new do |spec|
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
   end
 
+  spec.subspec 'Component_Tracking' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
+  end
+
   spec.subspec 'Component_SDWebImage' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'SDWebImage'
