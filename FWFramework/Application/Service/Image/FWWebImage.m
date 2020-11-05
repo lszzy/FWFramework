@@ -644,8 +644,10 @@
             }
         }
         
-        urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
-        [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
+        if (nsurl != nil) {
+            urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
+            [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
+        }
     }
     
     if ([urlRequest URL] == nil) {
