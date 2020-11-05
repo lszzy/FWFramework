@@ -46,7 +46,6 @@ struct LandmarkHome: View {
                     destination: LandmarkList(),
                     label: {
                         Text("See All")
-                            .foregroundColor(.hex(0xFF3333))
                     })
                 
                 NavigationLink(
