@@ -25,6 +25,7 @@
 		2F69770025218C0200910C93 /* FWAsyncLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6976FE25218C0200910C93 /* FWAsyncLayer.m */; };
 		2F8A9898255403A500AC554B /* FWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8A9896255403A500AC554B /* FWWebImage.m */; };
 		2F8A9899255403A500AC554B /* FWWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8A9897255403A500AC554B /* FWWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F8A98FB2554569800AC554B /* FWWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8A98FA2554569800AC554B /* FWWebImage.swift */; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */; };
 		2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */; };
@@ -360,10 +361,6 @@
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F8A9896255403A500AC554B /* FWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
 		2F8A9897255403A500AC554B /* FWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
-		2F8A98B2255408B800AC554B /* FWWebImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
-		2F8A98B3255408B800AC554B /* FWAnimatedImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
-		2F8A98B4255408B800AC554B /* FWWebImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
-		2F8A98B5255408B800AC554B /* FWAnimatedImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
 		2F8A98B7255408B800AC554B /* FWHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWHTTPSessionManager.h; sourceTree = "<group>"; };
 		2F8A98B8255408B800AC554B /* FWURLSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWURLSessionManager.h; sourceTree = "<group>"; };
 		2F8A98B9255408B800AC554B /* FWURLRequestSerialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWURLRequestSerialization.h; sourceTree = "<group>"; };
@@ -398,6 +395,12 @@
 		2F8A98D8255408B800AC554B /* FWChainRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWChainRequest.h; sourceTree = "<group>"; };
 		2F8A98D9255408B800AC554B /* FWBatchRequestAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBatchRequestAgent.h; sourceTree = "<group>"; };
 		2F8A98DB25540A3200AC554B /* FWFramework+AppClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+AppClip.h"; sourceTree = "<group>"; };
+		2F8A98FA2554569800AC554B /* FWWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWWebImage.swift; sourceTree = "<group>"; };
+		2F8A98FF255456C300AC554B /* FWWebImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
+		2F8A9900255456C300AC554B /* FWWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWWebImage.swift; sourceTree = "<group>"; };
+		2F8A9901255456C300AC554B /* FWAnimatedImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
+		2F8A9902255456C300AC554B /* FWWebImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
+		2F8A9903255456C300AC554B /* FWAnimatedImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 		2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
@@ -828,6 +831,7 @@
 			children = (
 				2F8A9897255403A500AC554B /* FWWebImage.h */,
 				2F8A9896255403A500AC554B /* FWWebImage.m */,
+				2F8A98FA2554569800AC554B /* FWWebImage.swift */,
 				2FFE1B862507BF95000332A3 /* FWAnimatedImage.h */,
 				2FFE1B7A2507BF95000332A3 /* FWAnimatedImage.m */,
 			);
@@ -838,24 +842,12 @@
 			isa = PBXGroup;
 			children = (
 				2F8A98DB25540A3200AC554B /* FWFramework+AppClip.h */,
-				2F8A98B1255408B800AC554B /* Image */,
+				2F8A98FE255456C300AC554B /* Image */,
 				2F8A98C3255408B800AC554B /* Json */,
 				2F8A98B6255408B800AC554B /* Network */,
 				2F8A98C5255408B800AC554B /* Request */,
 			);
 			path = AppClip;
-			sourceTree = "<group>";
-		};
-		2F8A98B1255408B800AC554B /* Image */ = {
-			isa = PBXGroup;
-			children = (
-				2F8A98B4255408B800AC554B /* FWWebImage.h */,
-				2F8A98B2255408B800AC554B /* FWWebImage.m */,
-				2F8A98B3255408B800AC554B /* FWAnimatedImage.h */,
-				2F8A98B5255408B800AC554B /* FWAnimatedImage.m */,
-			);
-			name = Image;
-			path = ../Application/Service/Image;
 			sourceTree = "<group>";
 		};
 		2F8A98B6255408B800AC554B /* Network */ = {
@@ -913,6 +905,19 @@
 			);
 			name = Request;
 			path = ../Application/Service/Request;
+			sourceTree = "<group>";
+		};
+		2F8A98FE255456C300AC554B /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				2F8A9902255456C300AC554B /* FWWebImage.h */,
+				2F8A98FF255456C300AC554B /* FWWebImage.m */,
+				2F8A9900255456C300AC554B /* FWWebImage.swift */,
+				2F8A9901255456C300AC554B /* FWAnimatedImage.h */,
+				2F8A9903255456C300AC554B /* FWAnimatedImage.m */,
+			);
+			name = Image;
+			path = ../Application/Service/Image;
 			sourceTree = "<group>";
 		};
 		2FC14BF3253839B300A97A99 /* Component */ = {
@@ -1670,6 +1675,7 @@
 				2FFE1C432507BFA5000332A3 /* FWScrollViewController.m in Sources */,
 				2FFE1D4A2507BFBD000332A3 /* UIImageView+FWFramework.m in Sources */,
 				2F69770025218C0200910C93 /* FWAsyncLayer.m in Sources */,
+				2F8A98FB2554569800AC554B /* FWWebImage.swift in Sources */,
 				2FFE1C1E2507BF95000332A3 /* FWPlugin.m in Sources */,
 				2FFE1D262507BFBD000332A3 /* UITextView+FWPlaceholder.m in Sources */,
 				2FFE1D3D2507BFBD000332A3 /* UIColor+FWFramework.m in Sources */,

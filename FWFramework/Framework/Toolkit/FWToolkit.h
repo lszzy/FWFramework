@@ -172,19 +172,19 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 @property (class, nonatomic, unsafe_unretained) Class fwImageViewAnimatedClass;
 
 /// 加载网络图片，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url;
+- (void)fwSetImageWithURL:(nullable id)url;
 
 /// 加载网络图片，支持占位，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url
+- (void)fwSetImageWithURL:(nullable id)url
          placeholderImage:(nullable UIImage *)placeholderImage;
 
 /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url
+- (void)fwSetImageWithURL:(nullable id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 
 /// 加载网络图片，支持占位、回调和进度，优先加载插件，默认使用框架网络库
-- (void)fwSetImageWithURL:(id)url
+- (void)fwSetImageWithURL:(nullable id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                  progress:(nullable void (^)(double progress))progress;
@@ -203,7 +203,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// imageView加载网络图片插件方法
 - (void)fwImageView:(UIImageView *)imageView
-        setImageURL:(NSURL *)imageURL
+        setImageURL:(nullable NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;

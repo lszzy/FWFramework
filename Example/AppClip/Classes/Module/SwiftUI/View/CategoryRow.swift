@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import FWFramework
 
 struct CategoryRow: View {
     var categoryName: String
@@ -40,9 +41,12 @@ struct CategoryItem: View {
     var landmark: Landmark
     var body: some View {
         VStack(alignment: .leading) {
-            landmark.image
-                .renderingMode(.original)
-                .resizable()
+            FWWebImage()
+                .url("https://picsum.photos/50/50?i=\(arc4random_uniform(30) + 1)")
+                .placeholder(FWImageFile("test.webp"))
+            //landmark.image
+                //.renderingMode(.original)
+                //.resizable()
                 .frame(width: 155, height: 155)
                 .cornerRadius(5)
             Text(landmark.name)
