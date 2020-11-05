@@ -22,6 +22,7 @@ public func FWBenchmarkBegin(_ name: String = "") {
 ///
 /// - Parameter name: 调试标签，默认空字符串
 /// - Returns: 消耗时间
+@discardableResult
 public func FWBenchmarkEnd(_ name: String = "") -> TimeInterval {
     let beginTime = FWBenchmarkTimes[name] ?? Date()
     let timeInterval = Date().timeIntervalSince1970 - beginTime.timeIntervalSince1970

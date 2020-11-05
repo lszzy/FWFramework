@@ -574,6 +574,70 @@
 
 @end
 
+#pragma mark - FWAuthorizeTracking
+
+#if FWCOMPONENT_TRACKING_ENABLED
+
+#import <AdSupport/ASIdentifierManager.h>
+#if __IPHONE_14_0
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#endif
+
+// iOS14+使用AppTrackingTransparency，其它使用AdSupport
+@interface FWAuthorizeTracking : NSObject <FWAuthorizeProtocol>
+
+@end
+
+@implementation FWAuthorizeTracking
+
+- (FWAuthorizeStatus)authorizeStatus
+{
+#if __IPHONE_14_0
+    if (@available(iOS 14.0, *)) {
+        ATTrackingManagerAuthorizationStatus status = ATTrackingManager.trackingAuthorizationStatus;
+        switch (status) {
+            case ATTrackingManagerAuthorizationStatusRestricted:
+                return FWAuthorizeStatusRestricted;
+            case ATTrackingManagerAuthorizationStatusDenied:
+                return FWAuthorizeStatusDenied;
+            case ATTrackingManagerAuthorizationStatusAuthorized:
+                return FWAuthorizeStatusAuthorized;
+            case ATTrackingManagerAuthorizationStatusNotDetermined:
+            default:
+                return FWAuthorizeStatusNotDetermined;
+        }
+    }
+#endif
+    
+    return [ASIdentifierManager sharedManager].isAdvertisingTrackingEnabled ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
+}
+
+- (void)authorize:(void (^)(FWAuthorizeStatus status))completion
+{
+#if __IPHONE_14_0
+    if (@available(iOS 14.0, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(self.authorizeStatus);
+                });
+            }
+        }];
+        return;
+    }
+#endif
+    
+    if (completion) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(self.authorizeStatus);
+        });
+    }
+}
+
+@end
+
+#endif
+
 #pragma mark - FWAuthorizeManager
 
 @interface FWAuthorizeManager ()
@@ -652,6 +716,11 @@
         case FWAuthorizeTypeNotifications:
             object = [[FWAuthorizeNotifications alloc] init];
             break;
+#if FWCOMPONENT_TRACKING_ENABLED
+        case FWAuthorizeTypeTracking:
+            object = [[FWAuthorizeTracking alloc] init];
+            break;
+#endif
         default:
             break;
     }
