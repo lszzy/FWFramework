@@ -87,8 +87,8 @@
 		2FFE1BE12507BF95000332A3 /* FWChainRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B692507BF95000332A3 /* FWChainRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BE22507BF95000332A3 /* FWBatchRequestAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B6A2507BF95000332A3 /* FWBatchRequestAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BE32507BF95000332A3 /* FWJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B6C2507BF95000332A3 /* FWJson.swift */; };
-		2FFE1BE52507BF95000332A3 /* FWJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B6E2507BF95000332A3 /* FWJson.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1BE82507BF95000332A3 /* FWJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B712507BF95000332A3 /* FWJson.m */; };
+		2FFE1BE52507BF95000332A3 /* FWModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B6E2507BF95000332A3 /* FWModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FFE1BE82507BF95000332A3 /* FWModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B712507BF95000332A3 /* FWModel.m */; };
 		2FFE1BE92507BF95000332A3 /* FWEncode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1B722507BF95000332A3 /* FWEncode.swift */; };
 		2FFE1BEB2507BF95000332A3 /* FWAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B752507BF95000332A3 /* FWAsyncUdpSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BEC2507BF95000332A3 /* FWAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B762507BF95000332A3 /* FWAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -148,8 +148,8 @@
 		2FFE1C412507BFA5000332A3 /* FWWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C2D2507BFA5000332A3 /* FWWebViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1C422507BFA5000332A3 /* FWTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C2E2507BFA5000332A3 /* FWTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1C432507BFA5000332A3 /* FWScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C2F2507BFA5000332A3 /* FWScrollViewController.m */; };
-		2FFE1C442507BFA5000332A3 /* FWModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C312507BFA5000332A3 /* FWModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1C452507BFA5000332A3 /* FWModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C322507BFA5000332A3 /* FWModel.m */; };
+		2FFE1C442507BFA5000332A3 /* FWViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C312507BFA5000332A3 /* FWViewModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FFE1C452507BFA5000332A3 /* FWViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C322507BFA5000332A3 /* FWViewModel.m */; };
 		2FFE1C462507BFA5000332A3 /* FWView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C342507BFA5000332A3 /* FWView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1C472507BFA5000332A3 /* FWView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C352507BFA5000332A3 /* FWView.m */; };
 		2FFE1C482507BFA5000332A3 /* FWFramework+Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -420,8 +420,8 @@
 		2FFE1B692507BF95000332A3 /* FWChainRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWChainRequest.h; sourceTree = "<group>"; };
 		2FFE1B6A2507BF95000332A3 /* FWBatchRequestAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWBatchRequestAgent.h; sourceTree = "<group>"; };
 		2FFE1B6C2507BF95000332A3 /* FWJson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWJson.swift; sourceTree = "<group>"; };
-		2FFE1B6E2507BF95000332A3 /* FWJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWJson.h; sourceTree = "<group>"; };
-		2FFE1B712507BF95000332A3 /* FWJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWJson.m; sourceTree = "<group>"; };
+		2FFE1B6E2507BF95000332A3 /* FWModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWModel.h; sourceTree = "<group>"; };
+		2FFE1B712507BF95000332A3 /* FWModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWModel.m; sourceTree = "<group>"; };
 		2FFE1B722507BF95000332A3 /* FWEncode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWEncode.swift; sourceTree = "<group>"; };
 		2FFE1B752507BF95000332A3 /* FWAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncUdpSocket.h; sourceTree = "<group>"; };
 		2FFE1B762507BF95000332A3 /* FWAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncSocket.h; sourceTree = "<group>"; };
@@ -481,8 +481,8 @@
 		2FFE1C2D2507BFA5000332A3 /* FWWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWWebViewController.h; sourceTree = "<group>"; };
 		2FFE1C2E2507BFA5000332A3 /* FWTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWTableViewController.h; sourceTree = "<group>"; };
 		2FFE1C2F2507BFA5000332A3 /* FWScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWScrollViewController.m; sourceTree = "<group>"; };
-		2FFE1C312507BFA5000332A3 /* FWModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWModel.h; sourceTree = "<group>"; };
-		2FFE1C322507BFA5000332A3 /* FWModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWModel.m; sourceTree = "<group>"; };
+		2FFE1C312507BFA5000332A3 /* FWViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWViewModel.h; sourceTree = "<group>"; };
+		2FFE1C322507BFA5000332A3 /* FWViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWViewModel.m; sourceTree = "<group>"; };
 		2FFE1C342507BFA5000332A3 /* FWView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWView.h; sourceTree = "<group>"; };
 		2FFE1C352507BFA5000332A3 /* FWView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWView.m; sourceTree = "<group>"; };
 		2FFE1C362507BFA5000332A3 /* FWFramework+Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FWFramework+Application.h"; sourceTree = "<group>"; };
@@ -685,8 +685,6 @@
 		2F2574C52539FF7500880FEF /* Json */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1B6E2507BF95000332A3 /* FWJson.h */,
-				2FFE1B712507BF95000332A3 /* FWJson.m */,
 				2FFE1B6C2507BF95000332A3 /* FWJson.swift */,
 			);
 			path = Json;
@@ -1009,8 +1007,10 @@
 		2FFE1C302507BFA5000332A3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				2FFE1C312507BFA5000332A3 /* FWModel.h */,
-				2FFE1C322507BFA5000332A3 /* FWModel.m */,
+				2FFE1B6E2507BF95000332A3 /* FWModel.h */,
+				2FFE1B712507BF95000332A3 /* FWModel.m */,
+				2FFE1C312507BFA5000332A3 /* FWViewModel.h */,
+				2FFE1C322507BFA5000332A3 /* FWViewModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1363,7 +1363,7 @@
 				2FFE1C482507BFA5000332A3 /* FWFramework+Application.h in Headers */,
 				2FFE1D882507BFBD000332A3 /* FWIndicatorControl.h in Headers */,
 				2FFE1BC72507BF95000332A3 /* FWURLRequestSerialization.h in Headers */,
-				2FFE1C442507BFA5000332A3 /* FWModel.h in Headers */,
+				2FFE1C442507BFA5000332A3 /* FWViewModel.h in Headers */,
 				2FFE1DB92507BFBD000332A3 /* NSObject+FWRuntime.h in Headers */,
 				2FFE1D3F2507BFBD000332A3 /* UIApplication+FWFramework.h in Headers */,
 				2FFE1C412507BFA5000332A3 /* FWWebViewController.h in Headers */,
@@ -1382,7 +1382,7 @@
 				2FFE1BD52507BF95000332A3 /* FWBaseRequest.h in Headers */,
 				2FFE1BB32507BF95000332A3 /* FWDatabaseAdditions.h in Headers */,
 				2FFE1C402507BFA5000332A3 /* FWCollectionViewController.h in Headers */,
-				2FFE1BE52507BF95000332A3 /* FWJson.h in Headers */,
+				2FFE1BE52507BF95000332A3 /* FWModel.h in Headers */,
 				2FFE1D4F2507BFBD000332A3 /* UIPageControl+FWFramework.h in Headers */,
 				2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */,
 			);
@@ -1543,7 +1543,7 @@
 				2FFE1D712507BFBD000332A3 /* UIView+FWStatistical.m in Sources */,
 				2FFE1C472507BFA5000332A3 /* FWView.m in Sources */,
 				2FF0B3BF250FCA8D005B93DD /* FWDynamicLayout.m in Sources */,
-				2FFE1BE82507BF95000332A3 /* FWJson.m in Sources */,
+				2FFE1BE82507BF95000332A3 /* FWModel.m in Sources */,
 				2FFE1D9D2507BFBD000332A3 /* NSObject+FWBlock.m in Sources */,
 				2FFE1D622507BFBD000332A3 /* UIScrollView+FWFramework.m in Sources */,
 				2FFE1D2F2507BFBD000332A3 /* FWAlertPlugin.m in Sources */,
@@ -1596,7 +1596,7 @@
 				2FFE1D742507BFBD000332A3 /* UIView+FWLayer.m in Sources */,
 				2FFE1D102507BFBD000332A3 /* UIPageControl+FWFramework.m in Sources */,
 				2FFE1D772507BFBD000332A3 /* FWPhotoBrowser.m in Sources */,
-				2FFE1C452507BFA5000332A3 /* FWModel.m in Sources */,
+				2FFE1C452507BFA5000332A3 /* FWViewModel.m in Sources */,
 				2FFE1D682507BFBD000332A3 /* UIViewController+FWTransition.m in Sources */,
 				2FFE1D3C2507BFBD000332A3 /* WKWebView+FWFramework.m in Sources */,
 				2FFE1BF82507BF95000332A3 /* FWLanguage.m in Sources */,

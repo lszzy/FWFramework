@@ -22,13 +22,13 @@
 
 #import "FWCacheManager.h"
 #import "FWDatabaseQueue.h"
-#import "FWJson.h"
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
 #import "FWAsyncSocket.h"
 #import "FWAsyncUdpSocket.h"
 
 #import "FWModel.h"
+#import "FWViewModel.h"
 
 #import "FWViewController.h"
 #import "FWCollectionViewController.h"
