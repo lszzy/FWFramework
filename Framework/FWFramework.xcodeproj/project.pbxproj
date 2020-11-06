@@ -395,7 +395,6 @@
 		2F8A98D9255408B800AC554B /* FWBatchRequestAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBatchRequestAgent.h; sourceTree = "<group>"; };
 		2F8A98DB25540A3200AC554B /* FWFramework+AppClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+AppClip.h"; sourceTree = "<group>"; };
 		2F8A98FF255456C300AC554B /* FWWebImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
-		2F8A9900255456C300AC554B /* FWWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWWebImage.swift; sourceTree = "<group>"; };
 		2F8A9901255456C300AC554B /* FWAnimatedImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
 		2F8A9902255456C300AC554B /* FWWebImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
 		2F8A9903255456C300AC554B /* FWAnimatedImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
@@ -909,7 +908,6 @@
 			children = (
 				2F8A9902255456C300AC554B /* FWWebImage.h */,
 				2F8A98FF255456C300AC554B /* FWWebImage.m */,
-				2F8A9900255456C300AC554B /* FWWebImage.swift */,
 				2F8A9901255456C300AC554B /* FWAnimatedImage.h */,
 				2F8A9903255456C300AC554B /* FWAnimatedImage.m */,
 			);
