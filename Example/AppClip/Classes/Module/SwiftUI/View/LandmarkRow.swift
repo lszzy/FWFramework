@@ -13,8 +13,11 @@ struct LandmarkRow: View {
     
     var body: some View {
         HStack {
-            landmark.image
-                .resizable()
+            FWWebImage()
+                .url("https://picsum.photos/50/50?i=\(arc4random_uniform(30) + 1)")
+                .placeholder(FWImageFile("test.webp"))
+            //landmark.image
+                //.resizable()
                 .frame(width: 50, height: 50)
             Text(landmark.name)
             Spacer()
@@ -25,6 +28,7 @@ struct LandmarkRow: View {
                     .foregroundColor(.yellow)
             }
         }
+        .frame(height: 200, alignment: .center)
     }
 }
 
