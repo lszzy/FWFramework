@@ -49,7 +49,7 @@ struct LandmarkHome: View {
                     })
                 
                 NavigationLink(
-                    destination: ControllerPage<UIKitController>(),
+                    destination: FWViewControllerWrapper<UIKitController>(),
                     label: {
                         HStack {
                             WebImage(placeholderImage: UIImage(named: "AccentImage")!, imageUrl: "https://picsum.photos/50/50?i=30")
