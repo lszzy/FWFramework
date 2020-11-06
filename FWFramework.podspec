@@ -52,7 +52,6 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'Component_Json' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Json/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/Application/Service/Json/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 
