@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import FWFramework
 
 struct CategoryRow: View {
     var categoryName: String

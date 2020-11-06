@@ -115,3 +115,51 @@ public extension Image {
         return Image(name)
     }
 }
+
+// MARK: - FWViewWrapper
+
+/// SwiftUI通用UIView包装器
+@available(iOS 13.0, *)
+public struct FWViewWrapper<Wrapper: UIView>: UIViewRepresentable {
+    public typealias UIViewType = Wrapper
+    
+    var maker: () -> Wrapper
+    var updater: (Wrapper) -> Void
+    
+    public init(_ maker: @escaping @autoclosure () -> Wrapper, updater: @escaping (Wrapper) -> Void) {
+        self.maker = maker
+        self.updater = updater
+    }
+    
+    public func makeUIView(context: Context) -> Wrapper {
+        return maker()
+    }
+    
+    public func updateUIView(_ uiView: Wrapper, context: Context) {
+        updater(uiView)
+    }
+}
+
+// MARK: - FWViewControllerWrapper
+
+/// SwiftUI通用UIViewController包装器
+@available(iOS 13.0, *)
+public struct FWViewControllerWrapper<Wrapper: UIViewController>: UIViewControllerRepresentable {
+    public typealias UIViewControllerType = Wrapper
+    
+    var maker: () -> Wrapper
+    var updater: (Wrapper) -> Void
+    
+    public init(_ maker: @escaping @autoclosure () -> Wrapper, updater: @escaping (Wrapper) -> Void) {
+        self.maker = maker
+        self.updater = updater
+    }
+    
+    public func makeUIViewController(context: Context) -> Wrapper {
+        return maker()
+    }
+    
+    public func updateUIViewController(_ uiViewController: Wrapper, context: Context) {
+        updater(uiViewController)
+    }
+}
