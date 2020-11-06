@@ -462,18 +462,10 @@ UIImage * FWImageFile(NSString *path) {
 #pragma mark - FWSDWebImagePlugin
 
 #if FWCOMPONENT_SDWEBIMAGE_ENABLED
-
 @import SDWebImage;
+#endif
 
 @implementation FWSDWebImagePlugin
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
-    });
-}
 
 + (FWSDWebImagePlugin *)sharedInstance
 {
@@ -483,6 +475,16 @@ UIImage * FWImageFile(NSString *path) {
         instance = [[FWSDWebImagePlugin alloc] init];
     });
     return instance;
+}
+
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
+    });
 }
 
 - (Class)fwImageViewAnimatedClass
@@ -495,12 +497,15 @@ UIImage * FWImageFile(NSString *path) {
     return [UIImage sd_imageWithData:data scale:scale];
 }
 
+#endif
+
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:0
@@ -519,13 +524,14 @@ UIImage * FWImageFile(NSString *path) {
                         completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                             completion(image, error);
                         } : nil];
+#endif
 }
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_cancelCurrentImageLoad];
+#endif
 }
 
 @end
-
-#endif
