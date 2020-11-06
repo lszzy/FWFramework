@@ -1,16 +1,12 @@
+platform :ios, '9.0'
+use_frameworks!
 
 target "Example" do
-  platform :ios, '9.0'
-  use_frameworks!
-
   pod 'FWFramework', :path => '../'
   pod 'FWDebug', :configurations => ['Debug']
 end
 
 target "AppClip" do
-  platform :ios, '14.0'
-  use_frameworks!
-
-  pod 'FWFramework', :path => '../', :subspecs => ['AppClip']
+  pod 'FWFramework', :path => '../', :subspecs => ['Component_Image', 'Component_Json', 'Component_Request']
   pod 'FWDebug', :configurations => ['Debug']
 end
