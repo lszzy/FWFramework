@@ -29,8 +29,8 @@ FWFramework所需本地化翻译如下：完成|关闭|确定|取消，配置同
 */
 @interface NSBundle (FWLanguage)
 
-/// 读取系统语言，未自定义时为系统语言(支持设置)，自定义时为自定义语言
-@property (nullable, class, nonatomic, readonly) NSString *fwSystemLanguage;
+/// 读取或设置系统语言，未自定义时返回preferredLanguages(支持应用设置)。自定义后会影响preferredLanguages，可用来处理GoogleMaps不支持语言切换等问题
+@property (nullable, class, nonatomic, copy) NSString *fwSystemLanguage;
 
 /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
 @property (nullable, class, nonatomic, copy) NSString *fwLocalizedLanguage;
