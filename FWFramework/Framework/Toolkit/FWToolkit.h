@@ -223,15 +223,11 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 #pragma mark - FWSDWebImagePlugin
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
-
-/// SDWebImage图片插件
+/// SDWebImage图片插件，启用Component_SDWebImage组件后生效
 @interface FWSDWebImagePlugin : NSObject <FWImagePlugin>
 
 @property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
 
 @end
-
-#endif
 
 NS_ASSUME_NONNULL_END

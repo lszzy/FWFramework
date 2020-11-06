@@ -100,12 +100,14 @@
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 }
 
-#if FWCOMPONENT_TRACKING_ENABLED
 + (NSString *)fwDeviceIDFA
 {
+#if FWCOMPONENT_TRACKING_ENABLED
     return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
-}
+#else
+    return nil;
 #endif
+}
 
 @end
 
