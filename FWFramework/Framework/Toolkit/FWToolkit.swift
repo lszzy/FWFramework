@@ -120,23 +120,37 @@ public extension Image {
 
 /// SwiftUI通用UIView包装器
 @available(iOS 13.0, *)
-public struct FWViewWrapper<Wrapper: UIView>: UIViewRepresentable {
-    public typealias UIViewType = Wrapper
+public struct FWViewWrapper<T: UIView>: UIViewRepresentable {
+    var maker: (() -> T)?
+    var updater: ((T) -> Void)?
     
-    var maker: () -> Wrapper
-    var updater: (Wrapper) -> Void
-    
-    public init(_ maker: @escaping @autoclosure () -> Wrapper, updater: @escaping (Wrapper) -> Void) {
+    public init(_ maker: (() -> T)? = nil, updater: ((T) -> Void)? = nil) {
         self.maker = maker
         self.updater = updater
     }
     
-    public func makeUIView(context: Context) -> Wrapper {
-        return maker()
+    public func maker(_ maker: @escaping () -> T) -> FWViewWrapper<T> {
+        var result = self
+        result.maker = maker
+        return result
     }
     
-    public func updateUIView(_ uiView: Wrapper, context: Context) {
-        updater(uiView)
+    public func updater(_ updater: @escaping (T) -> Void) -> FWViewWrapper<T> {
+        var result = self
+        result.updater = updater
+        return result
+    }
+    
+    // MARK: - UIViewRepresentable
+    
+    public typealias UIViewType = T
+    
+    public func makeUIView(context: Context) -> T {
+        return maker?() ?? T()
+    }
+    
+    public func updateUIView(_ uiView: T, context: Context) {
+        updater?(uiView)
     }
 }
 
@@ -144,22 +158,37 @@ public struct FWViewWrapper<Wrapper: UIView>: UIViewRepresentable {
 
 /// SwiftUI通用UIViewController包装器
 @available(iOS 13.0, *)
-public struct FWViewControllerWrapper<Wrapper: UIViewController>: UIViewControllerRepresentable {
-    public typealias UIViewControllerType = Wrapper
+public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepresentable {
     
-    var maker: () -> Wrapper
-    var updater: (Wrapper) -> Void
+    var maker: (() -> T)?
+    var updater: ((T) -> Void)?
     
-    public init(_ maker: @escaping @autoclosure () -> Wrapper, updater: @escaping (Wrapper) -> Void) {
+    public init(_ maker: (() -> T)? = nil, updater: ((T) -> Void)? = nil) {
         self.maker = maker
         self.updater = updater
     }
     
-    public func makeUIViewController(context: Context) -> Wrapper {
-        return maker()
+    public func maker(_ maker: @escaping () -> T) -> FWViewControllerWrapper<T> {
+        var result = self
+        result.maker = maker
+        return result
     }
     
-    public func updateUIViewController(_ uiViewController: Wrapper, context: Context) {
-        updater(uiViewController)
+    public func updater(_ updater: @escaping (T) -> Void) -> FWViewControllerWrapper<T> {
+        var result = self
+        result.updater = updater
+        return result
+    }
+    
+    // MARK: - UIViewControllerRepresentable
+    
+    public typealias UIViewControllerType = T
+    
+    public func makeUIViewController(context: Context) -> T {
+        return maker?() ?? T()
+    }
+    
+    public func updateUIViewController(_ uiViewController: T, context: Context) {
+        updater?(uiViewController)
     }
 }

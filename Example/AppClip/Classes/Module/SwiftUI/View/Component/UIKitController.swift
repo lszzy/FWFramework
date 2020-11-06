@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import WebKit
 
 class UIKitController: UIViewController {
     
@@ -28,7 +29,14 @@ class UIKitController: UIViewController {
     }()
     
     @objc func openContentView() {
-        let hostVC = UIHostingController(rootView: WebView())
+        let rootView = FWViewWrapper<WKWebView>()
+            .updater { (uiView) in
+                let url = URL(string: "https://www.baidu.com")!
+                let req = URLRequest(url: url)
+                uiView.load(req)
+                print(url.absoluteString)
+            }
+        let hostVC = UIHostingController(rootView: rootView)
         present(hostVC, animated: true, completion: nil)
     }
     
