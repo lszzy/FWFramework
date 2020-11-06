@@ -51,6 +51,8 @@ static const FWAuthorizeType FWAuthorizeTypeReminders = 8;
 static const FWAuthorizeType FWAuthorizeTypeAppleMusic = 9;
 /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
 static const FWAuthorizeType FWAuthorizeTypeNotifications = 10;
+/// 广告跟踪，需配置FWCOMPONENT_TRACKING_ENABLED=1，Info.plst需配置NSUserTrackingUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeTracking = 11;
 
 /// 权限状态枚举
 typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {

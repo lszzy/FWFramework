@@ -34,10 +34,8 @@
 		2F48F7082538036100AEBB60 /* HikeBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6E82538036100AEBB60 /* HikeBadge.swift */; };
 		2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6E92538036100AEBB60 /* RotatedBadgeSymbol.swift */; };
 		2F48F70A2538036100AEBB60 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EA2538036100AEBB60 /* MapView.swift */; };
-		2F48F70B2538036100AEBB60 /* ControllerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EB2538036100AEBB60 /* ControllerPage.swift */; };
 		2F48F70C2538036100AEBB60 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EC2538036100AEBB60 /* WebImage.swift */; };
 		2F48F70D2538036100AEBB60 /* UIKitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6ED2538036100AEBB60 /* UIKitController.swift */; };
-		2F48F70E2538036100AEBB60 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EE2538036100AEBB60 /* WebView.swift */; };
 		2F48F70F2538036100AEBB60 /* BadgeSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EF2538036100AEBB60 /* BadgeSymbol.swift */; };
 		2F48F7102538036100AEBB60 /* BadgeBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6F02538036100AEBB60 /* BadgeBackground.swift */; };
 		2F48F7112538036100AEBB60 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6F12538036100AEBB60 /* CircleView.swift */; };
@@ -57,6 +55,7 @@
 		2F697B4E2521ACE800910C93 /* TestDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F697B4D2521ACE800910C93 /* TestDrawViewController.m */; };
 		2F7D7869251259DB0078EAAA /* TestThemeExtensionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D7868251259DB0078EAAA /* TestThemeExtensionViewController.m */; };
 		2F7D786D251303A40078EAAA /* TestTableDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D786C251303A40078EAAA /* TestTableDynamicLayoutViewController.m */; };
+		2F8A990E2554575B00AC554B /* test.webp in Resources */ = {isa = PBXBuildFile; fileRef = 2F8A990D2554575B00AC554B /* test.webp */; };
 		2F938E522500D60D009395FB /* TestGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E512500D60D009395FB /* TestGridViewController.m */; };
 		2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */; };
 		2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */; };
@@ -218,10 +217,8 @@
 		2F48F6E82538036100AEBB60 /* HikeBadge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeBadge.swift; sourceTree = "<group>"; };
 		2F48F6E92538036100AEBB60 /* RotatedBadgeSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RotatedBadgeSymbol.swift; sourceTree = "<group>"; };
 		2F48F6EA2538036100AEBB60 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		2F48F6EB2538036100AEBB60 /* ControllerPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerPage.swift; sourceTree = "<group>"; };
 		2F48F6EC2538036100AEBB60 /* WebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		2F48F6ED2538036100AEBB60 /* UIKitController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitController.swift; sourceTree = "<group>"; };
-		2F48F6EE2538036100AEBB60 /* WebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		2F48F6EF2538036100AEBB60 /* BadgeSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeSymbol.swift; sourceTree = "<group>"; };
 		2F48F6F02538036100AEBB60 /* BadgeBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeBackground.swift; sourceTree = "<group>"; };
 		2F48F6F12538036100AEBB60 /* CircleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
@@ -245,6 +242,7 @@
 		2F7D7868251259DB0078EAAA /* TestThemeExtensionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeExtensionViewController.m; sourceTree = "<group>"; };
 		2F7D786B251303A40078EAAA /* TestTableDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableDynamicLayoutViewController.h; sourceTree = "<group>"; };
 		2F7D786C251303A40078EAAA /* TestTableDynamicLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableDynamicLayoutViewController.m; sourceTree = "<group>"; };
+		2F8A990D2554575B00AC554B /* test.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.webp; sourceTree = "<group>"; };
 		2F8E45FB24F8A2A900BDF302 /* hikeData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hikeData.json; sourceTree = "<group>"; };
 		2F938E502500D60D009395FB /* TestGridViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestGridViewController.h; sourceTree = "<group>"; };
 		2F938E512500D60D009395FB /* TestGridViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestGridViewController.m; sourceTree = "<group>"; };
@@ -581,10 +579,8 @@
 				2F48F6E82538036100AEBB60 /* HikeBadge.swift */,
 				2F48F6E92538036100AEBB60 /* RotatedBadgeSymbol.swift */,
 				2F48F6EA2538036100AEBB60 /* MapView.swift */,
-				2F48F6EB2538036100AEBB60 /* ControllerPage.swift */,
 				2F48F6EC2538036100AEBB60 /* WebImage.swift */,
 				2F48F6ED2538036100AEBB60 /* UIKitController.swift */,
-				2F48F6EE2538036100AEBB60 /* WebView.swift */,
 				2F48F6EF2538036100AEBB60 /* BadgeSymbol.swift */,
 				2F48F6F02538036100AEBB60 /* BadgeBackground.swift */,
 				2F48F6F12538036100AEBB60 /* CircleView.swift */,
@@ -596,6 +592,7 @@
 			isa = PBXGroup;
 			children = (
 				2F48F7272538075E00AEBB60 /* progressive.jpg */,
+				2F8A990D2554575B00AC554B /* test.webp */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1162,6 +1159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F8A990E2554575B00AC554B /* test.webp in Resources */,
 				2F48F6C12538004900AEBB60 /* LaunchScreen.storyboard in Resources */,
 				2F48F720253804CD00AEBB60 /* landmarkData.json in Resources */,
 				2F48F6BE2538004900AEBB60 /* Preview Assets.xcassets in Resources */,
@@ -1285,13 +1283,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F48F7012538036100AEBB60 /* PageControl.swift in Sources */,
-				2F48F70E2538036100AEBB60 /* WebView.swift in Sources */,
 				2F48F7022538036100AEBB60 /* LandmarkList.swift in Sources */,
 				2F48F7152538036100AEBB60 /* ProfileHost.swift in Sources */,
 				2F48F7032538036100AEBB60 /* ProfileEditor.swift in Sources */,
 				2F48F7042538036100AEBB60 /* GraphCapsule.swift in Sources */,
 				2F48F70F2538036100AEBB60 /* BadgeSymbol.swift in Sources */,
-				2F48F70B2538036100AEBB60 /* ControllerPage.swift in Sources */,
 				2F48F7062538036100AEBB60 /* FeatureCard.swift in Sources */,
 				2F48F7112538036100AEBB60 /* CircleView.swift in Sources */,
 				2F48F6FE2538036100AEBB60 /* Landmark.swift in Sources */,
@@ -1474,6 +1470,22 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"sqlite3\"",
+					"-l\"xml2\"",
+					"-l\"z\"",
+					"-framework",
+					"\"FWDebug\"",
+					"-framework",
+					"\"FWFramework\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG APPCLIP";
@@ -1499,6 +1511,17 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"sqlite3\"",
+					"-framework",
+					"\"FWFramework\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";

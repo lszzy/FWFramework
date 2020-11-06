@@ -15,20 +15,20 @@
 #import "FWAlertPlugin.h"
 #import "FWAlertController.h"
 #import "FWEmptyPlugin.h"
-#import "FWImagePlugin.h"
 #import "FWJsBridge.h"
 #import "FWRefreshPlugin.h"
 #import "FWToastPlugin.h"
 
 #import "FWCacheManager.h"
 #import "FWDatabaseQueue.h"
-#import "FWJson.h"
+#import "FWWebImage.h"
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
 #import "FWAsyncSocket.h"
 #import "FWAsyncUdpSocket.h"
 
 #import "FWModel.h"
+#import "FWViewModel.h"
 
 #import "FWViewController.h"
 #import "FWCollectionViewController.h"
