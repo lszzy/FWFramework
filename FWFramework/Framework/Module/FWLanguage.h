@@ -21,7 +21,7 @@ extern NSString *const FWLocalizedLanguageChangedNotification;
 #pragma mark - NSBundle+FWLanguage
 
 /*!
-@brief NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SDK和系统组件语言，详见Bundle分类
+@brief NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SDK和系统组件语言，详见FWFilter分类
 @discussion 如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。
 如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value
 当前使用修改bundle类方式实现，也可以使用动态替换localizedStringForKey方法来实现，但需注意此方式的性能
@@ -43,12 +43,12 @@ FWFramework所需本地化翻译如下：完成|关闭|确定|取消，配置同
 
 @end
 
-#pragma mark - NSBundle+FWBundle
+#pragma mark - NSBundle+FWFilter
 
 /*!
  @brief NSBundle自定义语言分类，处理三方SDK和系统组件语言
  */
-@interface NSBundle (FWBundle)
+@interface NSBundle (FWFilter)
 
 /// 设置全局bundle过滤器，返回YES代表当前bundle需要加载本地化语言。用于处理三方SDK和系统组件等
 + (void)fwSetBundleFilter:(BOOL (^)(NSBundle *bundle))filter;
