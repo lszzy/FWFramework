@@ -29,14 +29,12 @@ class UIKitController: UIViewController {
     }()
     
     @objc func openContentView() {
-        let rootView = FWViewWrapper<WKWebView>()
-            .updater { (uiView) in
-                let url = URL(string: "https://www.baidu.com")!
-                let req = URLRequest(url: url)
-                uiView.load(req)
-                print(url.absoluteString)
-            }
-        let hostVC = UIHostingController(rootView: rootView)
+        let hostVC = UIHostingController(rootView: FWViewWrapper<WKWebView>({ () -> WKWebView in
+            let webView = WKWebView()
+            let req = URLRequest(url: URL(string: "https://www.baidu.com")!)
+            webView.load(req)
+            return webView
+        }))
         present(hostVC, animated: true, completion: nil)
     }
     

@@ -121,10 +121,19 @@ public extension Image {
 /// SwiftUI通用UIView包装器
 @available(iOS 13.0, *)
 public struct FWViewWrapper<T: UIView>: UIViewRepresentable {
+    
     var maker: (() -> T)?
     var updater: ((T) -> Void)?
     
-    public init(_ maker: (() -> T)? = nil, updater: ((T) -> Void)? = nil) {
+    public init(_ maker: (() -> T)? = nil) {
+        self.maker = maker
+    }
+    
+    public init(updater: @escaping (T) -> Void) {
+        self.updater = updater
+    }
+    
+    public init(_ maker: @escaping () -> T, updater: @escaping (T) -> Void) {
         self.maker = maker
         self.updater = updater
     }
@@ -163,7 +172,15 @@ public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepr
     var maker: (() -> T)?
     var updater: ((T) -> Void)?
     
-    public init(_ maker: (() -> T)? = nil, updater: ((T) -> Void)? = nil) {
+    public init(_ maker: (() -> T)? = nil) {
+        self.maker = maker
+    }
+    
+    public init(updater: @escaping (T) -> Void) {
+        self.updater = updater
+    }
+    
+    public init(_ maker: @escaping () -> T, updater: @escaping (T) -> Void) {
         self.maker = maker
         self.updater = updater
     }
