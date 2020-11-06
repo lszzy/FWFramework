@@ -420,8 +420,8 @@ UIImage * FWImageFile(NSString *path) {
 }
 
 - (void)fwSetImageWithURL:(id)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-               completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+         placeholderImage:(UIImage *)placeholderImage
+               completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
 {
     [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:completion progress:nil];
 }

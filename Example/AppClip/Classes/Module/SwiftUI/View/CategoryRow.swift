@@ -40,6 +40,9 @@ struct CategoryItem: View {
     var landmark: Landmark
     var body: some View {
         VStack(alignment: .leading) {
+            //FWWebImage()
+                //.url("https://picsum.photos/50/50?i=\(arc4random_uniform(30) + 1)")
+                //.placeholder(FWImageFile("test.webp"))
             landmark.image
                 .renderingMode(.original)
                 .resizable()

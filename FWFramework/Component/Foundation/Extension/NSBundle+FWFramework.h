@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 指定名称读取并创建bundle对象，bundle文件需位于mainBundle
 + (nullable instancetype)fwBundleWithName:(NSString *)name;
 
+#pragma mark - Vendor
+
+// 自定义GooglePlaces查询地址结果语言，为nil时不指定
++ (void)fwSetGooglePlacesLanguage:(nullable NSString *)language;
+
 @end
 
 NS_ASSUME_NONNULL_END

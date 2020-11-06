@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.7.4'
+  spec.version             = '0.7.5'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -15,8 +15,8 @@ Pod::Spec.new do |spec|
   spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
 
   spec.subspec 'Framework' do |subspec|
-    subspec.source_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.h'
+    subspec.source_files = [ 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}' ]
+    subspec.public_header_files = [ 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.h' ]
   end
 
   spec.subspec 'Application' do |subspec|
@@ -28,6 +28,12 @@ Pod::Spec.new do |spec|
   spec.subspec 'Component' do |subspec|
     subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Component/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'AppClip' do |subspec|
+    subspec.source_files = [ 'FWFramework/AppClip/**/*.{h,m,swift}', 'FWFramework/Application/Service/{Image,Json,Network,Request}/*.{h,m,swift}' ]
+    subspec.public_header_files = [ 'FWFramework/AppClip/**/*.h', 'FWFramework/Application/Service/{Image,Json,Network,Request}/*.h' ]
     subspec.dependency 'FWFramework/Framework'
   end
 
@@ -49,6 +55,11 @@ Pod::Spec.new do |spec|
   spec.subspec 'Component_AppleMusic' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
+  end
+
+  spec.subspec 'Component_Tracking' do |subspec|
+    subspec.dependency 'FWFramework/Framework'
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
   end
 
   spec.subspec 'Component_SDWebImage' do |subspec|

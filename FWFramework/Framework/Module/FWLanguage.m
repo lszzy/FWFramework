@@ -33,6 +33,27 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
 
 @end
 
+#pragma mark - NSLocale+FWLanguage
+
+static NSString *fwStaticPreferredLanguage = nil;
+
+@interface NSLocale (FWLanguage)
+
+@end
+
+@implementation NSLocale (FWLanguage)
+
++ (NSArray<NSString *> *)fwInnerPreferredLanguages
+{
+    NSArray<NSString *> *languages = [self fwInnerPreferredLanguages];
+    if (fwStaticPreferredLanguage && fwStaticPreferredLanguage.length > 0) {
+        return [NSArray arrayWithObjects:fwStaticPreferredLanguage, nil];
+    }
+    return languages;
+}
+
+@end
+
 #pragma mark - NSBundle+FWLanguage
 
 @implementation NSBundle (FWLanguage)
@@ -51,8 +72,18 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
 
 + (NSString *)fwSystemLanguage
 {
-    // return NSBundle.mainBundle.preferredLocalizations.firstObject;
     return [NSLocale preferredLanguages].firstObject;
+}
+
++ (void)setFwSystemLanguage:(NSString *)language
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // 动态替换preferredLanguages，支持自定义语言
+        [NSLocale fwSwizzleClassMethod:@selector(preferredLanguages) with:@selector(fwInnerPreferredLanguages)];
+    });
+    
+    fwStaticPreferredLanguage = language;
 }
 
 + (NSString *)fwLocalizedLanguage
@@ -103,9 +134,9 @@ NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageCh
 
 @end
 
-#pragma mark - NSBundle+FWBundle
+#pragma mark - NSBundle+FWFilter
 
-@implementation NSBundle (FWBundle)
+@implementation NSBundle (FWFilter)
 
 + (void)fwSetBundleFilter:(BOOL (^)(NSBundle *))filter
 {

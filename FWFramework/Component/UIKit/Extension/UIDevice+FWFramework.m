@@ -11,7 +11,6 @@
 #import "FWKeychain.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-#import <sys/sysctl.h>
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <net/if.h>
@@ -81,29 +80,7 @@ static NSString *fwStaticDeviceUUID = nil;
     return YES;
 }
 
-#pragma mark - Model
-
-+ (NSString *)fwDeviceModel
-{
-    static NSString *model;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        size_t size;
-        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-        char *machine = malloc(size);
-        sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        model = [NSString stringWithUTF8String:machine];
-        free(machine);
-    });
-    return model;
-}
-
 #pragma mark - UUID
-
-+ (NSString *)fwDeviceIDFV
-{
-    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-}
 
 + (NSString *)fwDeviceUUID
 {
