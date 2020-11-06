@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.7.5'
+  spec.version             = '0.7.6'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -11,7 +11,6 @@ Pod::Spec.new do |spec|
   spec.swift_version       = '5.0'
   spec.requires_arc        = true
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
-  spec.library             = [ 'sqlite3' ]
   spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
 
   spec.subspec 'Framework' do |subspec|
@@ -20,6 +19,7 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'Application' do |subspec|
+    subspec.library = [ 'sqlite3' ]
     subspec.source_files = 'FWFramework/Application/**/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/**/*.h'
     subspec.dependency 'FWFramework/Framework'
@@ -31,9 +31,46 @@ Pod::Spec.new do |spec|
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'AppClip' do |subspec|
-    subspec.source_files = [ 'FWFramework/AppClip/**/*.{h,m,swift}', 'FWFramework/Application/Service/{Image,Json,Network,Request}/*.{h,m,swift}' ]
-    subspec.public_header_files = [ 'FWFramework/AppClip/**/*.h', 'FWFramework/Application/Service/{Image,Json,Network,Request}/*.h' ]
+  spec.subspec 'Component_Cache' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Cache/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Cache/*.h'
+    subspec.dependency 'FWFramework/Component_Database'
+  end
+
+  spec.subspec 'Component_Database' do |subspec|
+    subspec.library = [ 'sqlite3' ]
+    subspec.source_files = 'FWFramework/Application/Service/Database/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Database/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'Component_Image' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Image/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Image/*.h'
+    subspec.dependency 'FWFramework/Component_Network'
+  end
+
+  spec.subspec 'Component_Json' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Json/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Json/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'Component_Network' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Network/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Network/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'Component_Request' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Request/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Request/*.h'
+    subspec.dependency 'FWFramework/Component_Network'
+  end
+
+  spec.subspec 'Component_Socket' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Socket/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Socket/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 

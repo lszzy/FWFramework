@@ -360,44 +360,6 @@
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F8A9896255403A500AC554B /* FWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
 		2F8A9897255403A500AC554B /* FWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
-		2F8A98B7255408B800AC554B /* FWHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWHTTPSessionManager.h; sourceTree = "<group>"; };
-		2F8A98B8255408B800AC554B /* FWURLSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWURLSessionManager.h; sourceTree = "<group>"; };
-		2F8A98B9255408B800AC554B /* FWURLRequestSerialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWURLRequestSerialization.h; sourceTree = "<group>"; };
-		2F8A98BA255408B800AC554B /* FWSecurityPolicy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSecurityPolicy.h; sourceTree = "<group>"; };
-		2F8A98BB255408B800AC554B /* FWNetworkReachabilityManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWNetworkReachabilityManager.h; sourceTree = "<group>"; };
-		2F8A98BC255408B800AC554B /* FWURLResponseSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWURLResponseSerialization.m; sourceTree = "<group>"; };
-		2F8A98BD255408B800AC554B /* FWURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWURLSessionManager.m; sourceTree = "<group>"; };
-		2F8A98BE255408B800AC554B /* FWHTTPSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWHTTPSessionManager.m; sourceTree = "<group>"; };
-		2F8A98BF255408B800AC554B /* FWNetworkReachabilityManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWNetworkReachabilityManager.m; sourceTree = "<group>"; };
-		2F8A98C0255408B800AC554B /* FWURLResponseSerialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWURLResponseSerialization.h; sourceTree = "<group>"; };
-		2F8A98C1255408B800AC554B /* FWSecurityPolicy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSecurityPolicy.m; sourceTree = "<group>"; };
-		2F8A98C2255408B800AC554B /* FWURLRequestSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWURLRequestSerialization.m; sourceTree = "<group>"; };
-		2F8A98C4255408B800AC554B /* FWJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWJson.swift; sourceTree = "<group>"; };
-		2F8A98C6255408B800AC554B /* FWNetworkAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWNetworkAgent.h; sourceTree = "<group>"; };
-		2F8A98C7255408B800AC554B /* FWBatchRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBatchRequest.h; sourceTree = "<group>"; };
-		2F8A98C8255408B800AC554B /* FWNetworkConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWNetworkConfig.h; sourceTree = "<group>"; };
-		2F8A98C9255408B800AC554B /* FWNetworkPrivate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWNetworkPrivate.m; sourceTree = "<group>"; };
-		2F8A98CA255408B800AC554B /* FWRequestEventAccessory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWRequestEventAccessory.m; sourceTree = "<group>"; };
-		2F8A98CB255408B800AC554B /* FWBaseRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBaseRequest.h; sourceTree = "<group>"; };
-		2F8A98CC255408B800AC554B /* FWRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWRequest.h; sourceTree = "<group>"; };
-		2F8A98CD255408B800AC554B /* FWBatchRequestAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBatchRequestAgent.m; sourceTree = "<group>"; };
-		2F8A98CE255408B800AC554B /* FWChainRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWChainRequest.m; sourceTree = "<group>"; };
-		2F8A98CF255408B800AC554B /* FWChainRequestAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWChainRequestAgent.m; sourceTree = "<group>"; };
-		2F8A98D0255408B800AC554B /* FWRequestEventAccessory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWRequestEventAccessory.h; sourceTree = "<group>"; };
-		2F8A98D1255408B800AC554B /* FWNetworkPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWNetworkPrivate.h; sourceTree = "<group>"; };
-		2F8A98D2255408B800AC554B /* FWNetworkConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWNetworkConfig.m; sourceTree = "<group>"; };
-		2F8A98D3255408B800AC554B /* FWNetworkAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWNetworkAgent.m; sourceTree = "<group>"; };
-		2F8A98D4255408B800AC554B /* FWBatchRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBatchRequest.m; sourceTree = "<group>"; };
-		2F8A98D5255408B800AC554B /* FWRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWRequest.m; sourceTree = "<group>"; };
-		2F8A98D6255408B800AC554B /* FWBaseRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBaseRequest.m; sourceTree = "<group>"; };
-		2F8A98D7255408B800AC554B /* FWChainRequestAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWChainRequestAgent.h; sourceTree = "<group>"; };
-		2F8A98D8255408B800AC554B /* FWChainRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWChainRequest.h; sourceTree = "<group>"; };
-		2F8A98D9255408B800AC554B /* FWBatchRequestAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBatchRequestAgent.h; sourceTree = "<group>"; };
-		2F8A98DB25540A3200AC554B /* FWFramework+AppClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FWFramework+AppClip.h"; sourceTree = "<group>"; };
-		2F8A98FF255456C300AC554B /* FWWebImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
-		2F8A9901255456C300AC554B /* FWAnimatedImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAnimatedImage.h; sourceTree = "<group>"; };
-		2F8A9902255456C300AC554B /* FWWebImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
-		2F8A9903255456C300AC554B /* FWAnimatedImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAnimatedImage.m; sourceTree = "<group>"; };
 		2FA99DA3228AA9CF0059DFDB /* FWFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWFramework.h; sourceTree = "<group>"; };
 		2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
@@ -817,7 +779,6 @@
 				2FFE1B2E2507BF95000332A3 /* Framework */,
 				2FFE1C202507BFA5000332A3 /* Application */,
 				2FC14BF3253839B300A97A99 /* Component */,
-				2F8A98AD2554081E00AC554B /* AppClip */,
 			);
 			name = FWFramework;
 			path = ../FWFramework;
@@ -834,85 +795,11 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
-		2F8A98AD2554081E00AC554B /* AppClip */ = {
+		2FBCBE8A25559316002D84C9 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				2F8A98DB25540A3200AC554B /* FWFramework+AppClip.h */,
-				2F8A98FE255456C300AC554B /* Image */,
-				2F8A98C3255408B800AC554B /* Json */,
-				2F8A98B6255408B800AC554B /* Network */,
-				2F8A98C5255408B800AC554B /* Request */,
 			);
-			path = AppClip;
-			sourceTree = "<group>";
-		};
-		2F8A98B6255408B800AC554B /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				2F8A98B7255408B800AC554B /* FWHTTPSessionManager.h */,
-				2F8A98BE255408B800AC554B /* FWHTTPSessionManager.m */,
-				2F8A98BB255408B800AC554B /* FWNetworkReachabilityManager.h */,
-				2F8A98BF255408B800AC554B /* FWNetworkReachabilityManager.m */,
-				2F8A98BA255408B800AC554B /* FWSecurityPolicy.h */,
-				2F8A98C1255408B800AC554B /* FWSecurityPolicy.m */,
-				2F8A98B9255408B800AC554B /* FWURLRequestSerialization.h */,
-				2F8A98C2255408B800AC554B /* FWURLRequestSerialization.m */,
-				2F8A98C0255408B800AC554B /* FWURLResponseSerialization.h */,
-				2F8A98BC255408B800AC554B /* FWURLResponseSerialization.m */,
-				2F8A98B8255408B800AC554B /* FWURLSessionManager.h */,
-				2F8A98BD255408B800AC554B /* FWURLSessionManager.m */,
-			);
-			name = Network;
-			path = ../Application/Service/Network;
-			sourceTree = "<group>";
-		};
-		2F8A98C3255408B800AC554B /* Json */ = {
-			isa = PBXGroup;
-			children = (
-				2F8A98C4255408B800AC554B /* FWJson.swift */,
-			);
-			name = Json;
-			path = ../Application/Service/Json;
-			sourceTree = "<group>";
-		};
-		2F8A98C5255408B800AC554B /* Request */ = {
-			isa = PBXGroup;
-			children = (
-				2F8A98CB255408B800AC554B /* FWBaseRequest.h */,
-				2F8A98D6255408B800AC554B /* FWBaseRequest.m */,
-				2F8A98C7255408B800AC554B /* FWBatchRequest.h */,
-				2F8A98D4255408B800AC554B /* FWBatchRequest.m */,
-				2F8A98D9255408B800AC554B /* FWBatchRequestAgent.h */,
-				2F8A98CD255408B800AC554B /* FWBatchRequestAgent.m */,
-				2F8A98D8255408B800AC554B /* FWChainRequest.h */,
-				2F8A98CE255408B800AC554B /* FWChainRequest.m */,
-				2F8A98D7255408B800AC554B /* FWChainRequestAgent.h */,
-				2F8A98CF255408B800AC554B /* FWChainRequestAgent.m */,
-				2F8A98C6255408B800AC554B /* FWNetworkAgent.h */,
-				2F8A98D3255408B800AC554B /* FWNetworkAgent.m */,
-				2F8A98C8255408B800AC554B /* FWNetworkConfig.h */,
-				2F8A98D2255408B800AC554B /* FWNetworkConfig.m */,
-				2F8A98D1255408B800AC554B /* FWNetworkPrivate.h */,
-				2F8A98C9255408B800AC554B /* FWNetworkPrivate.m */,
-				2F8A98CC255408B800AC554B /* FWRequest.h */,
-				2F8A98D5255408B800AC554B /* FWRequest.m */,
-				2F8A98D0255408B800AC554B /* FWRequestEventAccessory.h */,
-				2F8A98CA255408B800AC554B /* FWRequestEventAccessory.m */,
-			);
-			name = Request;
-			path = ../Application/Service/Request;
-			sourceTree = "<group>";
-		};
-		2F8A98FE255456C300AC554B /* Image */ = {
-			isa = PBXGroup;
-			children = (
-				2F8A9902255456C300AC554B /* FWWebImage.h */,
-				2F8A98FF255456C300AC554B /* FWWebImage.m */,
-				2F8A9901255456C300AC554B /* FWAnimatedImage.h */,
-				2F8A9903255456C300AC554B /* FWAnimatedImage.m */,
-			);
-			name = Image;
-			path = ../Application/Service/Image;
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		2FC14BF3253839B300A97A99 /* Component */ = {
@@ -921,6 +808,7 @@
 				2FC14BF625383D3D00A97A99 /* FWFramework+Component.h */,
 				2F6A72352538B72B008F7D0F /* Foundation */,
 				2F6A72392538B805008F7D0F /* UIKit */,
+				2FBCBE8A25559316002D84C9 /* SwiftUI */,
 			);
 			path = Component;
 			sourceTree = "<group>";
