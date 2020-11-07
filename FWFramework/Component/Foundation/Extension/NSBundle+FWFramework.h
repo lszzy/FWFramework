@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Vendor
 
+// 自定义GoogleMaps反解析地址结果语言，为nil时不指定
++ (void)fwSetGoogleMapsLanguage:(nullable NSString *)language;
+
 // 自定义GooglePlaces查询地址结果语言，为nil时不指定
 + (void)fwSetGooglePlacesLanguage:(nullable NSString *)language;
 
