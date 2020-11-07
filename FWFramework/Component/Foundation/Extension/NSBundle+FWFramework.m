@@ -21,6 +21,25 @@
 
 #pragma mark - Vendor
 
++ (void)fwSetGoogleMapsLanguage:(NSString *)language
+{
+    static NSString *customLanguage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleMethod(objc_getClass("GMSDASHClientDescription"), NSSelectorFromString(@"firstLanguage"), nil, FWSwizzleType(id), FWSwizzleReturn(id), FWSwizzleArgs(), FWSwizzleCode({
+            id result = FWSwizzleOriginal();
+            
+            if (customLanguage) {
+                return customLanguage;
+            }
+            
+            return result;
+        }));
+    });
+    
+    customLanguage = language;
+}
+
 + (void)fwSetGooglePlacesLanguage:(NSString *)language
 {
     static NSString *customLanguage = nil;
