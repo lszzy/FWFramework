@@ -63,11 +63,11 @@ public struct FWWebImage: UIViewRepresentable {
         return imageView
     }
     
-    public func updateUIView(_ uiView: UIImageView, context: Context) {
-        
+    public func updateUIView(_ imageView: UIImageView, context: Context) {
+        imageView.contentMode = contentMode
     }
     
-    public static func dismantleUIView(_ uiView: UIImageView, coordinator: ()) {
-        
+    public static func dismantleUIView(_ imageView: UIImageView, coordinator: ()) {
+        imageView.fwCancelImageRequest()
     }
 }
