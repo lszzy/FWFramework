@@ -9,6 +9,22 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import "FWAttributedLabel.h"
+#import "FWBannerView.h"
+#import "FWBarrageView.h"
+#import "FWCollectionViewFlowLayout.h"
+#import "FWCropViewController.h"
+#import "FWFloatLayoutView.h"
+#import "FWGridView.h"
+#import "FWIndicatorControl.h"
+#import "FWMarqueeLabel.h"
+#import "FWPageControl.h"
+#import "FWPhotoBrowser.h"
+#import "FWPopupMenu.h"
+#import "FWProgressView.h"
+#import "FWQrcodeScanView.h"
+#import "FWSegmentedControl.h"
+#import "FWTagCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

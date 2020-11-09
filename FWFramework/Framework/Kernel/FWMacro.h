@@ -11,6 +11,15 @@
 #define FWMacro_h
 
 #import <Foundation/Foundation.h>
+#import "FWLog.h"
+#import "FWMessage.h"
+#import "FWPlugin.h"
+#import "FWProxy.h"
+#import "FWRouter.h"
+#import "FWState.h"
+#import "FWSwizzle.h"
+#import "FWTask.h"
+#import "FWTest.h"
 
 #pragma mark - Meta
 
