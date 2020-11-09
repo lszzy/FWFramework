@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'FWFramework'
-  spec.version             = '0.7.6'
+  spec.version             = '0.7.7'
   spec.summary             = 'ios develop framework'
   spec.homepage            = 'http://wuyong.site'
   spec.license             = 'MIT'
@@ -11,11 +11,18 @@ Pod::Spec.new do |spec|
   spec.swift_version       = '5.0'
   spec.requires_arc        = true
   spec.frameworks          = [ 'Foundation', 'UIKit' ]
-  spec.default_subspecs    = [ 'Framework', 'Application', 'Component' ]
+  spec.default_subspecs    = [ 'FWFramework' ]
+
+  spec.subspec 'FWFramework' do |subspec|
+    subspec.source_files = 'FWFramework/FWFramework.h'
+    subspec.public_header_files = 'FWFramework/FWFramework.h'
+    subspec.dependency 'FWFramework/Application'
+    subspec.dependency 'FWFramework/Component'
+  end
 
   spec.subspec 'Framework' do |subspec|
-    subspec.source_files = [ 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.{h,m,swift}' ]
-    subspec.public_header_files = [ 'FWFramework/FWFramework.h', 'FWFramework/Framework/**/*.h' ]
+    subspec.source_files = 'FWFramework/Framework/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Framework/**/*.h'
   end
 
   spec.subspec 'Application' do |subspec|
@@ -26,8 +33,8 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'Component' do |subspec|
-    subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/Component/**/*.h'
+    subspec.source_files = [ 'FWFramework/Component/FWFramework+Component.h', 'FWFramework/Component/{Foundation,UIKit}/**/*.{h,m,swift}' ]
+    subspec.public_header_files = [ 'FWFramework/Component/FWFramework+Component.h', 'FWFramework/Component/{Foundation,UIKit}/**/*.h' ]
     subspec.dependency 'FWFramework/Framework'
   end
 
@@ -70,6 +77,11 @@ Pod::Spec.new do |spec|
   spec.subspec 'Component_Socket' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Socket/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/Service/Socket/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'Component_SwiftUI' do |subspec|
+    subspec.source_files = 'FWFramework/Component/SwiftUI/*.{h,m,swift}'
     subspec.dependency 'FWFramework/Framework'
   end
 
