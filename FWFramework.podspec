@@ -16,6 +16,7 @@ Pod::Spec.new do |spec|
   spec.subspec 'FWFramework' do |subspec|
     subspec.source_files = 'FWFramework/FWFramework.h'
     subspec.public_header_files = 'FWFramework/FWFramework.h'
+    subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'FWFramework/Application'
     subspec.dependency 'FWFramework/Component'
   end
@@ -33,86 +34,104 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'Component' do |subspec|
-    subspec.source_files = [ 'FWFramework/Component/FWFramework+Component.h', 'FWFramework/Component/{Foundation,UIKit}/**/*.{h,m,swift}' ]
-    subspec.public_header_files = [ 'FWFramework/Component/FWFramework+Component.h', 'FWFramework/Component/{Foundation,UIKit}/**/*.h' ]
+    subspec.source_files = 'FWFramework/Component/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Component/**/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_Cache' do |subspec|
-    subspec.source_files = 'FWFramework/Application/Service/Cache/*.{h,m,swift}'
-    subspec.public_header_files = 'FWFramework/Application/Service/Cache/*.h'
-    subspec.dependency 'FWFramework/Component_Database'
+  spec.subspec 'Service' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_Database' do |subspec|
+  spec.subspec 'Cache' do |subspec|
+    subspec.source_files = 'FWFramework/Application/Service/Cache/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Application/Service/Cache/*.h'
+    subspec.dependency 'FWFramework/Database'
+  end
+
+  spec.subspec 'Database' do |subspec|
     subspec.library = [ 'sqlite3' ]
     subspec.source_files = 'FWFramework/Application/Service/Database/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/Service/Database/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_Image' do |subspec|
+  spec.subspec 'Image' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Image/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/Service/Image/*.h'
-    subspec.dependency 'FWFramework/Component_Network'
+    subspec.dependency 'FWFramework/Network'
   end
 
-  spec.subspec 'Component_Json' do |subspec|
+  spec.subspec 'Json' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Json/*.{h,m,swift}'
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_Network' do |subspec|
+  spec.subspec 'Network' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Network/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/Service/Network/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_Request' do |subspec|
+  spec.subspec 'Request' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Request/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/Service/Request/*.h'
-    subspec.dependency 'FWFramework/Component_Network'
+    subspec.dependency 'FWFramework/Network'
   end
 
-  spec.subspec 'Component_Socket' do |subspec|
+  spec.subspec 'Socket' do |subspec|
     subspec.source_files = 'FWFramework/Application/Service/Socket/*.{h,m,swift}'
     subspec.public_header_files = 'FWFramework/Application/Service/Socket/*.h'
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_SwiftUI' do |subspec|
+  spec.subspec 'Foundation' do |subspec|
+    subspec.source_files = 'FWFramework/Component/Foundation/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Component/Foundation/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'UIKit' do |subspec|
+    subspec.source_files = 'FWFramework/Component/UIKit/**/*.{h,m,swift}'
+    subspec.public_header_files = 'FWFramework/Component/UIKit/**/*.h'
+    subspec.dependency 'FWFramework/Framework'
+  end
+
+  spec.subspec 'SwiftUI' do |subspec|
     subspec.source_files = 'FWFramework/Component/SwiftUI/*.{h,m,swift}'
     subspec.dependency 'FWFramework/Framework'
   end
 
-  spec.subspec 'Component_Contacts' do |subspec|
+  spec.subspec 'Contacts' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONTACTS_ENABLED=1' }
   end
 
-  spec.subspec 'Component_Microphone' do |subspec|
+  spec.subspec 'Microphone' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_MICROPHONE_ENABLED=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWMICROPHONE_ENABLED=1' }
   end
 
-  spec.subspec 'Component_Calendar' do |subspec|
+  spec.subspec 'Calendar' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CALENDAR_ENABLED=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCALENDAR_ENABLED=1' }
   end
 
-  spec.subspec 'Component_AppleMusic' do |subspec|
+  spec.subspec 'AppleMusic' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWAPPLEMUSIC_ENABLED=1' }
   end
 
-  spec.subspec 'Component_Tracking' do |subspec|
+  spec.subspec 'Tracking' do |subspec|
     subspec.dependency 'FWFramework/Framework'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWTRACKING_ENABLED=1' }
   end
 
-  spec.subspec 'Component_SDWebImage' do |subspec|
+  spec.subspec 'SDWebImage' do |subspec|
     subspec.dependency 'FWFramework/Framework'
     subspec.dependency 'SDWebImage'
-    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
+    subspec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWSDWEBIMAGE_ENABLED=1' }
   end
 end

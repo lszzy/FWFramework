@@ -10,7 +10,7 @@
 #import "FWAdaptive.h"
 #import "FWRouter.h"
 #import <sys/sysctl.h>
-#if FWCOMPONENT_TRACKING_ENABLED
+#if FWTRACKING_ENABLED
 #import <AdSupport/ASIdentifierManager.h>
 #endif
 
@@ -102,7 +102,7 @@
 
 + (NSString *)fwDeviceIDFA
 {
-#if FWCOMPONENT_TRACKING_ENABLED
+#if FWTRACKING_ENABLED
     return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
 #else
     return nil;
