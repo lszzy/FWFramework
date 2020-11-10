@@ -41,9 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 返回颜色对应透明度的新颜色
 - (UIColor *)fwColorWithAlpha:(CGFloat)alpha;
 
-// 返回颜色对应CSS字符串(rgb|rgba格式)
-- (NSString *)fwCSSString;
-
 #pragma mark - Gradient
 
 /*!

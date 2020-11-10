@@ -9,8 +9,6 @@
 
 #import "NSAttributedString+FWFramework.h"
 #import "FWTheme.h"
-#import "UIColor+FWFramework.h"
-#import "UIFont+FWFramework.h"
 
 @implementation NSAttributedString (FWFramework)
 
@@ -46,6 +44,16 @@
     } documentAttributes:nil error:nil];
 }
 
+- (NSString *)fwHtmlString
+{
+    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
+        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+    } error:nil];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+}
+
 + (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
     if (!htmlString || htmlString.length < 1) return nil;
@@ -54,11 +62,11 @@
         NSString *cssString = @"";
         UIColor *textColor = attributes[NSForegroundColorAttributeName];
         if (textColor != nil) {
-            cssString = [cssString stringByAppendingFormat:@"color:%@;", textColor.fwCSSString];
+            cssString = [cssString stringByAppendingFormat:@"color:%@;", [self fwCSSStringWithColor:textColor]];
         }
         UIFont *font = attributes[NSFontAttributeName];
         if (font != nil) {
-            cssString = [cssString stringByAppendingString:font.fwCSSString];
+            cssString = [cssString stringByAppendingString:[self fwCSSStringWithFont:font]];
         }
         if (cssString.length > 0) {
             htmlString = [NSString stringWithFormat:@"<style type='text/css'>html{%@}</style>%@", cssString, htmlString];
@@ -90,14 +98,60 @@
     return [FWThemeObject objectWithLight:lightObject dark:darkObject];
 }
 
-- (NSString *)fwHtmlString
++ (NSString *)fwCSSStringWithColor:(UIColor *)color
 {
-    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
-        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-    } error:nil];
-    if (!htmlData || htmlData.length < 1) return nil;
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![color getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([color getWhite:&r alpha:&a]) { g = r; b = r; }
+    }
     
-    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+    if (a >= 1.0) {
+        return [NSString stringWithFormat:@"rgb(%u, %u, %u)",
+                (unsigned)round(r * 255), (unsigned)round(g * 255), (unsigned)round(b * 255)];
+    } else {
+        return [NSString stringWithFormat:@"rgba(%u, %u, %u, %g)",
+                (unsigned)round(r * 255), (unsigned)round(g * 255), (unsigned)round(b * 255), a];
+    }
+}
+
++ (NSString *)fwCSSStringWithFont:(UIFont *)font
+{
+    static NSDictionary *fontWeights = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        fontWeights = @{
+            @"ultralight": @"100",
+            @"thin": @"200",
+            @"light": @"300",
+            @"medium": @"500",
+            @"semibold": @"600",
+            @"demibold": @"600",
+            @"extrabold": @"800",
+            @"ultrabold": @"800",
+            @"bold": @"700",
+            @"heavy": @"900",
+            @"black": @"900",
+        };
+    });
+    
+    NSString *fontName = [font.fontName lowercaseString];
+    NSString *fontStyle = @"normal";
+    if ([fontName rangeOfString:@"italic"].location != NSNotFound) {
+        fontStyle = @"italic";
+    } else if ([fontName rangeOfString:@"oblique"].location != NSNotFound) {
+        fontStyle = @"oblique";
+    }
+    
+    NSString *fontWeight = @"400";
+    for (NSString *fontKey in fontWeights) {
+        if ([fontName rangeOfString:fontKey].location != NSNotFound) {
+            fontWeight = fontWeights[fontKey];
+            break;
+        }
+    }
+    
+    return [NSString stringWithFormat:@"font-weight:%@;font-style:%@;font-size:%.0fpx;",
+            fontWeight, fontStyle, font.pointSize];
 }
 
 #pragma mark - Size
