@@ -8,7 +8,6 @@
  */
 
 #import "FWToolkit.h"
-#import "FWEncode.h"
 #import "FWRouter.h"
 #import "FWPlugin.h"
 #import <SafariServices/SafariServices.h>
@@ -46,7 +45,7 @@
 
 + (BOOL)fwCanOpenURL:(id)url
 {
-    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    NSURL *nsurl = [self fwNSURLWithURL:url];
     return [[UIApplication sharedApplication] canOpenURL:nsurl];
 }
 
@@ -57,7 +56,7 @@
 
 + (void)fwOpenURL:(id)url completionHandler:(void (^)(BOOL success))completion
 {
-    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    NSURL *nsurl = [self fwNSURLWithURL:url];
     if (@available(iOS 10.0, *)) {
         [[UIApplication sharedApplication] openURL:nsurl options:@{} completionHandler:completion];
     } else {
@@ -70,7 +69,7 @@
 
 + (void)fwOpenUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
 {
-    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    NSURL *nsurl = [self fwNSURLWithURL:url];
     if (@available(iOS 10.0, *)) {
         [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
     } else {
@@ -89,7 +88,7 @@
 + (BOOL)fwIsAppStoreURL:(id)url
 {
     // itms-apps等
-    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    NSURL *nsurl = [self fwNSURLWithURL:url];
     if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
         return YES;
     // https://itunes.apple.com/等
@@ -102,7 +101,7 @@
 
 + (BOOL)fwIsSystemURL:(id)url
 {
-    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    NSURL *nsurl = [self fwNSURLWithURL:url];
     if (nsurl.scheme.lowercaseString && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme.lowercaseString]) {
         return YES;
     }
@@ -128,13 +127,24 @@
 
 + (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion
 {
-    NSURL *nsurl = [url isKindOfClass:[NSString class]] ? [NSURL fwURLWithString:url] : url;
+    NSURL *nsurl = [self fwNSURLWithURL:url];
     SFSafariViewController *safariController = [[SFSafariViewController alloc] initWithURL:nsurl];
     if (completion) {
         objc_setAssociatedObject(safariController, @selector(safariViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
         safariController.delegate = [FWSafariViewControllerDelegate sharedInstance];
     }
     [UIWindow.fwMainWindow fwPresentViewController:safariController animated:YES completion:nil];
+}
+
++ (NSURL *)fwNSURLWithURL:(id)url
+{
+    if (![url isKindOfClass:[NSString class]]) return url;
+    
+    NSURL *nsurl = [NSURL URLWithString:url];
+    if (!nsurl && [url length] > 0) {
+        nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    return nsurl;
 }
 
 @end
@@ -461,7 +471,7 @@ UIImage * FWImageFile(NSString *path) {
 
 #pragma mark - FWSDWebImagePlugin
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+#if FWSDWEBIMAGE_ENABLED
 @import SDWebImage;
 #endif
 
@@ -477,7 +487,7 @@ UIImage * FWImageFile(NSString *path) {
     return instance;
 }
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+#if FWSDWEBIMAGE_ENABLED
 
 + (void)load
 {
@@ -505,7 +515,7 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+#if FWSDWEBIMAGE_ENABLED
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:0
@@ -529,7 +539,7 @@ UIImage * FWImageFile(NSString *path) {
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+#if FWSDWEBIMAGE_ENABLED
     [imageView sd_cancelCurrentImageLoad];
 #endif
 }

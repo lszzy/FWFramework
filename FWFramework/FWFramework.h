@@ -10,36 +10,97 @@
 
 #if __has_include(<FWFramework/FWFramework.h>)
 
-// Version
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-// Framework
-#import <FWFramework/FWFramework+Framework.h>
+#import <FWFramework/FWMacro.h>
+#import <FWFramework/FWNotification.h>
+#import <FWFramework/FWToolkit.h>
 
-// Application
-#if __has_include(<FWFramework/FWFramework+Application.h>)
-#import <FWFramework/FWFramework+Application.h>
+#if __has_include(<FWFramework/FWAppDelegate.h>)
+#import <FWFramework/FWAppDelegate.h>
 #endif
 
-// Component
-#if __has_include(<FWFramework/FWFramework+Component.h>)
-#import <FWFramework/FWFramework+Component.h>
+#if __has_include(<FWFramework/FWCacheManager.h>)
+#import <FWFramework/FWCacheManager.h>
+#endif
+
+#if __has_include(<FWFramework/FWDatabaseQueue.h>)
+#import <FWFramework/FWDatabaseQueue.h>
+#endif
+
+#if __has_include(<FWFramework/FWWebImage.h>)
+#import <FWFramework/FWWebImage.h>
+#endif
+
+#if __has_include(<FWFramework/FWHTTPSessionManager.h>)
+#import <FWFramework/FWHTTPSessionManager.h>
+#endif
+
+#if __has_include(<FWFramework/FWNetworkPrivate.h>)
+#import <FWFramework/FWNetworkPrivate.h>
+#endif
+
+#if __has_include(<FWFramework/FWAsyncSocket.h>)
+#import <FWFramework/FWAsyncSocket.h>
+#endif
+
+#if __has_include(<FWFramework/Foundation+FWFramework.h>)
+#import <FWFramework/Foundation+FWFramework.h>
+#endif
+
+#if __has_include(<FWFramework/UIKit+FWFramework.h>)
+#import <FWFramework/UIKit+FWFramework.h>
+#endif
+
+#if __has_include(<FWFramework/FWAsyncLayer.h>)
+#import <FWFramework/FWAsyncLayer.h>
 #endif
 
 #else
 
-// Framework
-#import "FWFramework+Framework.h"
+#import "FWMacro.h"
+#import "FWNotification.h"
+#import "FWToolkit.h"
 
-// Application
-#if __has_include("FWFramework+Application.h")
-#import "FWFramework+Application.h"
+#if __has_include("FWAppDelegate.h")
+#import "FWAppDelegate.h"
 #endif
 
-// Component
-#if __has_include("FWFramework+Component.h")
-#import "FWFramework+Component.h"
+#if __has_include("FWCacheManager.h")
+#import "FWCacheManager.h"
+#endif
+
+#if __has_include("FWDatabaseQueue.h")
+#import "FWDatabaseQueue.h"
+#endif
+
+#if __has_include("FWWebImage.h")
+#import "FWWebImage.h"
+#endif
+
+#if __has_include("FWHTTPSessionManager.h")
+#import "FWHTTPSessionManager.h"
+#endif
+
+#if __has_include("FWNetworkPrivate.h")
+#import "FWNetworkPrivate.h"
+#endif
+
+#if __has_include("FWAsyncSocket.h")
+#import "FWAsyncSocket.h"
+#endif
+
+#if __has_include("Foundation+FWFramework.h")
+#import "Foundation+FWFramework.h"
+#endif
+
+#if __has_include("UIKit+FWFramework.h")
+#import "UIKit+FWFramework.h"
+#endif
+
+#if __has_include("FWAsyncLayer.h")
+#import "FWAsyncLayer.h"
 #endif
 
 #endif
