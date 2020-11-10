@@ -6,6 +6,8 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
+#if canImport(SwiftUI)
+
 import SwiftUI
 
 // MARK: - FWViewWrapper
@@ -101,3 +103,5 @@ public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepr
         updater?(uiViewController)
     }
 }
+
+#endif
