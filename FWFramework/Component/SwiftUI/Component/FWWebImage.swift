@@ -6,6 +6,8 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
+#if canImport(SwiftUI)
+
 import SwiftUI
 
 /// SwiftUI加载网络图片
@@ -71,3 +73,5 @@ public struct FWWebImage: UIViewRepresentable {
         imageView.fwCancelImageRequest()
     }
 }
+
+#endif
