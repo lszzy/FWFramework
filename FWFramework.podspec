@@ -36,7 +36,20 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/Framework'
 
     ss.subspec 'App' do |sss|
-      sss.source_files = 'FWFramework/Application/{App,Controller,Model,View}/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Application/App/**/*.{h,m,swift}'
+    end
+    
+    ss.subspec 'Controller' do |sss|
+      sss.source_files = 'FWFramework/Application/Controller/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Application/App'
+    end
+    
+    ss.subspec 'Model' do |sss|
+      sss.source_files = 'FWFramework/Application/Model/*.{h,m,swift}'
+    end
+    
+    ss.subspec 'View' do |sss|
+      sss.source_files = 'FWFramework/Application/View/*.{h,m,swift}'
     end
 
     ss.subspec 'Cache' do |sss|
