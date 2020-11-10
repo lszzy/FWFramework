@@ -9,6 +9,9 @@
 
 #import <WebKit/WebKit.h>
 #import "FWViewController.h"
+#import "FWCollectionViewController.h"
+#import "FWScrollViewController.h"
+#import "FWTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
