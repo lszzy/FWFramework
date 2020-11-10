@@ -994,6 +994,9 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             if ([linkData isKindOfClass:[NSString class]])
             {
                 url = [NSURL URLWithString:linkData];
+                if (!url && [linkData length] > 0) {
+                    url = [NSURL URLWithString:[linkData stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+                }
             }
             else if([linkData isKindOfClass:[NSURL class]])
             {

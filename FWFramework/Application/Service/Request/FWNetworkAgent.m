@@ -103,6 +103,9 @@
 
     NSString *detailUrl = [request requestUrl];
     NSURL *temp = [NSURL URLWithString:detailUrl];
+    if (!temp && [detailUrl length] > 0) {
+        temp = [NSURL URLWithString:[detailUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
     // If detailUrl is valid URL
     if (temp && temp.host && temp.scheme) {
         return detailUrl;
@@ -131,12 +134,19 @@
     }
     // URL slash compatibility
     NSURL *url = [NSURL URLWithString:baseUrl];
+    if (!url && [baseUrl length] > 0) {
+        url = [NSURL URLWithString:[baseUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
 
     if (baseUrl.length > 0 && ![baseUrl hasSuffix:@"/"]) {
         url = [url URLByAppendingPathComponent:@""];
     }
 
-    return [NSURL URLWithString:detailUrl relativeToURL:url].absoluteString;
+    NSURL *resultUrl = [NSURL URLWithString:detailUrl relativeToURL:url];
+    if (!resultUrl && [detailUrl length] > 0) {
+        resultUrl = [NSURL URLWithString:[detailUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] relativeToURL:url];
+    }
+    return resultUrl.absoluteString;
 }
 
 - (FWHTTPRequestSerializer *)requestSerializerForRequest:(FWBaseRequest *)request {
