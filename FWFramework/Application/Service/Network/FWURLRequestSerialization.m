@@ -348,6 +348,9 @@ forHTTPHeaderField:(NSString *)field
     NSParameterAssert(URLString);
 
     NSURL *url = [NSURL URLWithString:URLString];
+    if (!url && [URLString length] > 0) {
+        url = [NSURL URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
 
     NSParameterAssert(url);
 
