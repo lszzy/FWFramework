@@ -22,10 +22,12 @@ Pod::Spec.new do |s|
 
     ss.subspec 'Module' do |sss|
       sss.source_files = 'FWFramework/Framework/Module/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Framework/Kernel'
     end
 
     ss.subspec 'Toolkit' do |sss|
       sss.source_files = 'FWFramework/Framework/Toolkit/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Framework/Kernel'
     end
   end
 
