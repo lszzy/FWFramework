@@ -11,11 +11,16 @@ Pod::Spec.new do |s|
   s.swift_version       = '5.0'
   s.requires_arc        = true
   s.frameworks          = 'Foundation', 'UIKit'
-  s.default_subspecs    = 'Application', 'Component'
+  s.default_subspecs    = 'FWFramework'
+
+  s.subspec 'FWFramework' do |ss|
+    ss.source_files = 'FWFramework/FWFramework.h'
+    ss.dependency 'FWFramework/Framework'
+    ss.dependency 'FWFramework/Application'
+    ss.dependency 'FWFramework/Component'
+  end
 
   s.subspec 'Framework' do |ss|
-    ss.source_files = 'FWFramework/FWFramework.h'
-
     ss.subspec 'Kernel' do |sss|
       sss.source_files = 'FWFramework/Framework/Kernel/*.{h,m,swift}'
     end
