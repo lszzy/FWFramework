@@ -33,14 +33,20 @@ NS_ASSUME_NONNULL_BEGIN
 /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString;
 
+/// NSAttributedString对象转换为html字符串
+- (nullable NSString *)fwHtmlString;
+
 /// html字符串转换为NSAttributedString对象，可设置默认字体(style|size|weight)和颜色(附加CSS方式)
 + (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 /// html字符串转换为NSAttributedString主题对象，可设置默认字体和动态颜色，详见FWThemeObject
 + (FWThemeObject<NSAttributedString *> *)fwThemeObjectWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
-/// NSAttributedString对象转换为html字符串
-- (nullable NSString *)fwHtmlString;
+// 获取颜色对应CSS字符串(rgb|rgba格式)
++ (NSString *)fwCSSStringWithColor:(UIColor *)color;
+
+// 获取字体对应CSS字符串(style|weight|size)
++ (NSString *)fwCSSStringWithFont:(UIFont *)font;
 
 #pragma mark - Size
 
