@@ -6,24 +6,62 @@
 //  Copyright © 2019 wuyong.site. All rights reserved.
 //
 
-#import <UIKit/UIkit.h>
+#import <Foundation/Foundation.h>
 
-#ifndef FWFramework_h
-#define FWFramework_h
+#if __has_include(<FWFramework/FWFramework.h>)
 
-static NSString * const FWFrameworkVersion = @"0.7.7";
+FOUNDATION_EXPORT double FWFrameworkVersionNumber;
+FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-#if __has_include("FWMacro.h")
+#import <FWFramework/FWMacro.h>
+#import <FWFramework/FWNotification.h>
+#import <FWFramework/FWToolkit.h>
+
+#if __has_include(<FWFramework/FWAppDelegate.h>)
+#import <FWFramework/FWAppDelegate.h>
+#endif
+
+#if __has_include(<FWFramework/FWCacheManager.h>)
+#import <FWFramework/FWCacheManager.h>
+#endif
+
+#if __has_include(<FWFramework/FWDatabaseQueue.h>)
+#import <FWFramework/FWDatabaseQueue.h>
+#endif
+
+#if __has_include(<FWFramework/FWWebImage.h>)
+#import <FWFramework/FWWebImage.h>
+#endif
+
+#if __has_include(<FWFramework/FWHTTPSessionManager.h>)
+#import <FWFramework/FWHTTPSessionManager.h>
+#endif
+
+#if __has_include(<FWFramework/FWNetworkPrivate.h>)
+#import <FWFramework/FWNetworkPrivate.h>
+#endif
+
+#if __has_include(<FWFramework/FWAsyncSocket.h>)
+#import <FWFramework/FWAsyncSocket.h>
+#endif
+
+#if __has_include(<FWFramework/Foundation+FWFramework.h>)
+#import <FWFramework/Foundation+FWFramework.h>
+#endif
+
+#if __has_include(<FWFramework/UIKit+FWFramework.h>)
+#import <FWFramework/UIKit+FWFramework.h>
+#endif
+
+#if __has_include(<FWFramework/FWAsyncLayer.h>)
+#import <FWFramework/FWAsyncLayer.h>
+#endif
+
+#else
+
 #import "FWMacro.h"
-#endif
-
-#if __has_include("FWNotification.h")
 #import "FWNotification.h"
-#endif
-
-#if __has_include("FWToolkit.h")
 #import "FWToolkit.h"
-#endif
 
 #if __has_include("FWAppDelegate.h")
 #import "FWAppDelegate.h"
@@ -65,4 +103,4 @@ static NSString * const FWFrameworkVersion = @"0.7.7";
 #import "FWAsyncLayer.h"
 #endif
 
-#endif /* FWFramework_h */
+#endif
