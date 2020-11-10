@@ -11,7 +11,6 @@
 #import "FWSwizzle.h"
 #import "UIView+FWFramework.h"
 #import "UIImage+FWFramework.h"
-#import "NSString+FWFramework.h"
 #import "FWMessage.h"
 #import "FWAutoLayout.h"
 #import "FWAdaptive.h"
@@ -45,7 +44,8 @@
                         [selfObject setPositionAdjustment:UIOffsetMake(0, 0) forSearchBarIcon:UISearchBarIconSearch];
                     } else {
                         UITextField *textField = [selfObject fwTextField];
-                        CGFloat placeholdWidth = [selfObject.placeholder fwSizeWithFont:textField.font].width;
+                        CGSize placeholdSize = [selfObject.placeholder boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:textField.font, NSFontAttributeName, nil] context:nil].size;
+                        CGFloat placeholdWidth = ceilf(placeholdSize.width);
                         CGFloat leftWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
                         CGFloat position = (textField.frame.size.width - placeholdWidth) / 2 - leftWidth;
                         [selfObject setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];

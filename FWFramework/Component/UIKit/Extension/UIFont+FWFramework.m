@@ -47,46 +47,6 @@
     return [UIFont fontWithDescriptor:[self.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits] size:self.pointSize];
 }
 
-- (NSString *)fwCSSString
-{
-    static NSDictionary *fontWeights = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        fontWeights = @{
-            @"ultralight": @"100",
-            @"thin": @"200",
-            @"light": @"300",
-            @"medium": @"500",
-            @"semibold": @"600",
-            @"demibold": @"600",
-            @"extrabold": @"800",
-            @"ultrabold": @"800",
-            @"bold": @"700",
-            @"heavy": @"900",
-            @"black": @"900",
-        };
-    });
-    
-    NSString *fontName = [self.fontName lowercaseString];
-    NSString *fontStyle = @"normal";
-    if ([fontName rangeOfString:@"italic"].location != NSNotFound) {
-        fontStyle = @"italic";
-    } else if ([fontName rangeOfString:@"oblique"].location != NSNotFound) {
-        fontStyle = @"oblique";
-    }
-    
-    NSString *fontWeight = @"400";
-    for (NSString *fontKey in fontWeights) {
-        if ([fontName rangeOfString:fontKey].location != NSNotFound) {
-            fontWeight = fontWeights[fontKey];
-            break;
-        }
-    }
-    
-    return [NSString stringWithFormat:@"font-weight:%@;font-style:%@;font-size:%.0fpx;",
-            fontWeight, fontStyle, self.pointSize];
-}
-
 #pragma mark - Height
 
 - (CGFloat)fwLineHeight

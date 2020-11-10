@@ -6,7 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI)
+#if canImport(SwiftUI) && (arch(arm64) || arch(x86_64))
 
 import SwiftUI
 
