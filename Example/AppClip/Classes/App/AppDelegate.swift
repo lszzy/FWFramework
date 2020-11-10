@@ -7,7 +7,6 @@
 //
 
 import UIKit
-@_exported import FWFramework
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

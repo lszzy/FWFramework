@@ -11,7 +11,6 @@ Pod::Spec.new do |s|
   s.swift_version       = '5.0'
   s.requires_arc        = true
   s.frameworks          = 'Foundation', 'UIKit'
-  s.source_files        = 'FWFramework/FWFramework.h'
   s.default_subspecs    = 'Application', 'Component'
 
   s.subspec 'Framework' do |ss|

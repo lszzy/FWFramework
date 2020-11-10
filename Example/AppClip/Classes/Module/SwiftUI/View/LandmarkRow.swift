@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import FWFramework
 
 struct LandmarkRow: View {
     var landmark: Landmark
