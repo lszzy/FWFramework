@@ -18,7 +18,7 @@
 + (NSString *)fwJsonEncode:(id)object
 {
     NSError *err = nil;
-    id data = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&err];
+    id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
     if (err) {
         return nil;
     }
