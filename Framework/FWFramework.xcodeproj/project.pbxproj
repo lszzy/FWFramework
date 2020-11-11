@@ -30,7 +30,7 @@
 		2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */; };
 		2FED59AD25593039005ECEBE /* FWToolkit+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FED59AC25593039005ECEBE /* FWToolkit+FWFramework.swift */; };
 		2FED59B0255930B4005ECEBE /* FWViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FED59AF255930B4005ECEBE /* FWViewWrapper.swift */; };
-		2FED59B525593213005ECEBE /* FWWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FED59B425593213005ECEBE /* FWWebImage.swift */; };
+		2FED59B525593213005ECEBE /* FWImageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FED59B425593213005ECEBE /* FWImageWrapper.swift */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */; };
 		2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -365,7 +365,7 @@
 		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FED59AC25593039005ECEBE /* FWToolkit+FWFramework.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FWToolkit+FWFramework.swift"; sourceTree = "<group>"; };
 		2FED59AF255930B4005ECEBE /* FWViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWViewWrapper.swift; sourceTree = "<group>"; };
-		2FED59B425593213005ECEBE /* FWWebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWWebImage.swift; sourceTree = "<group>"; };
+		2FED59B425593213005ECEBE /* FWImageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWImageWrapper.swift; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDynamicLayout.h; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDynamicLayout.m; sourceTree = "<group>"; };
 		2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWPopGesture.h"; sourceTree = "<group>"; };
@@ -859,7 +859,7 @@
 			isa = PBXGroup;
 			children = (
 				2FED59AF255930B4005ECEBE /* FWViewWrapper.swift */,
-				2FED59B425593213005ECEBE /* FWWebImage.swift */,
+				2FED59B425593213005ECEBE /* FWImageWrapper.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1623,7 +1623,7 @@
 				2FFE1D7E2507BFBD000332A3 /* FWTagCollectionView.m in Sources */,
 				2F2574952539928800880FEF /* FWPromise.swift in Sources */,
 				2FFE1BE92507BF95000332A3 /* FWEncode.swift in Sources */,
-				2FED59B525593213005ECEBE /* FWWebImage.swift in Sources */,
+				2FED59B525593213005ECEBE /* FWImageWrapper.swift in Sources */,
 				2FFE1BCC2507BF95000332A3 /* FWHTTPSessionManager.m in Sources */,
 				2FFE1D762507BFBD000332A3 /* FWToastPlugin.m in Sources */,
 				2FFE1DA82507BFBD000332A3 /* NSObject+FWRuntime.m in Sources */,
