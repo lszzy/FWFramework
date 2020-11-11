@@ -6,9 +6,9 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI) && (arch(arm64) || arch(x86_64))
-
+#if canImport(SwiftUI)
 import SwiftUI
+#endif
 
 @available(iOS 13.0, *)
 public extension Color {
@@ -74,5 +74,3 @@ public extension Image {
         return Image(name)
     }
 }
-
-#endif

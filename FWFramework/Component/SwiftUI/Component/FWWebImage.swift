@@ -6,9 +6,9 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI) && (arch(arm64) || arch(x86_64))
-
+#if canImport(SwiftUI)
 import SwiftUI
+#endif
 
 /// SwiftUI加载网络图片
 @available(iOS 13.0, *)
@@ -73,5 +73,3 @@ public struct FWWebImage: UIViewRepresentable {
         imageView.fwCancelImageRequest()
     }
 }
-
-#endif
