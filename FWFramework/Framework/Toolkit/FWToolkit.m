@@ -471,7 +471,7 @@ UIImage * FWImageFile(NSString *path) {
 
 #pragma mark - FWSDWebImagePlugin
 
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
 @import SDWebImage;
 #endif
 
@@ -487,7 +487,7 @@ UIImage * FWImageFile(NSString *path) {
     return instance;
 }
 
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
 
 + (void)load
 {
@@ -515,7 +515,7 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:0
@@ -539,7 +539,7 @@ UIImage * FWImageFile(NSString *path) {
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_cancelCurrentImageLoad];
 #endif
 }
