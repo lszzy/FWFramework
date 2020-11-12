@@ -659,7 +659,7 @@
         return;
     }
     
-    if ([self isActiveTaskURLEqualToURLRequest:urlRequest]) {
+    if ([self.fwActiveImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString]) {
         return;
     }
     
@@ -676,7 +676,7 @@
         } else {
             self.image = cachedImage;
         }
-        [self clearActiveDownloadInformation];
+        self.fwActiveImageDownloadReceipt = nil;
     } else {
         if (placeholderImage) {
             self.image = placeholderImage;
@@ -696,7 +696,7 @@
                            } else if (responseObject) {
                                strongSelf.image = responseObject;
                            }
-                           [strongSelf clearActiveDownloadInformation];
+                           strongSelf.fwActiveImageDownloadReceipt = nil;
                        }
                    }
                    failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
@@ -705,7 +705,7 @@
                             if (completion) {
                                 completion(nil, error);
                             }
-                            [strongSelf clearActiveDownloadInformation];
+                            strongSelf.fwActiveImageDownloadReceipt = nil;
                         }
                    }
                    progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
@@ -723,18 +723,8 @@
 {
     if (self.fwActiveImageDownloadReceipt != nil) {
         [[self.class fwSharedImageDownloader] cancelTaskForImageDownloadReceipt:self.fwActiveImageDownloadReceipt];
-        [self clearActiveDownloadInformation];
+        self.fwActiveImageDownloadReceipt = nil;
      }
-}
-
-- (void)clearActiveDownloadInformation
-{
-    self.fwActiveImageDownloadReceipt = nil;
-}
-
-- (BOOL)isActiveTaskURLEqualToURLRequest:(NSURLRequest *)urlRequest
-{
-    return [self.fwActiveImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString];
 }
 
 @end
