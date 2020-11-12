@@ -82,6 +82,8 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 @property (nonatomic, assign) FWImageDownloadPrioritization downloadPrioritization;
 
+@property (class, nonatomic, strong) FWImageDownloader *sharedDownloader;
+
 + (instancetype)defaultInstance;
 
 + (NSURLCache *)defaultURLCache;
@@ -110,15 +112,13 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 - (void)cancelTaskForImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt;
 
-@end
+- (void)downloadImageForObject:(id)object
+                      imageURL:(nullable id)imageURL
+                   placeholder:(nullable void (^)(void))placeholder
+                    completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                      progress:(nullable void (^)(double progress))progress;
 
-#pragma mark - UIImageView+FWImageDownloader
-
-/// 下载网络图片分类
-@interface UIImageView (FWImageDownloader)
-
-/// 默认框架公用图片下载器
-@property (class, nonatomic, strong) FWImageDownloader *fwSharedImageDownloader;
+- (void)cancelImageDownloadTask:(id)object;
 
 @end
 
