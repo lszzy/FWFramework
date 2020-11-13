@@ -8,7 +8,6 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
-#endif
 
 /// SwiftUI动图、网络图片包装器
 @available(iOS 13.0, *)
@@ -69,3 +68,5 @@ public struct FWImageWrapper: UIViewRepresentable {
         imageView.fwCancelImageRequest()
     }
 }
+
+#endif

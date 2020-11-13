@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F02F622255ECE9200B21B47 /* FWWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F02F621255ECE9200B21B47 /* FWWebImage.swift */; };
 		2F2350FF25417FEB00EED502 /* FWToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2350FD25417FEB00EED502 /* FWToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F23510025417FEB00EED502 /* FWToolkit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2350FE25417FEB00EED502 /* FWToolkit.m */; };
 		2F23510325417FF500EED502 /* FWToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F23510225417FF500EED502 /* FWToolkit.swift */; };
@@ -341,6 +342,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F02F621255ECE9200B21B47 /* FWWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWWebImage.swift; sourceTree = "<group>"; };
 		2F2350FD25417FEB00EED502 /* FWToolkit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWToolkit.h; sourceTree = "<group>"; };
 		2F2350FE25417FEB00EED502 /* FWToolkit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWToolkit.m; sourceTree = "<group>"; };
 		2F23510225417FF500EED502 /* FWToolkit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWToolkit.swift; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 			children = (
 				2FED59AF255930B4005ECEBE /* FWViewWrapper.swift */,
 				2FED59B425593213005ECEBE /* FWImageWrapper.swift */,
+				2F02F621255ECE9200B21B47 /* FWWebImage.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1681,6 +1684,7 @@
 				2FFE1DB62507BFBD000332A3 /* NSFileManager+FWFramework.swift in Sources */,
 				2FFE1DC42507BFBD000332A3 /* NSString+FWFramework.m in Sources */,
 				2FFE1C032507BF95000332A3 /* FWAutoLayout.m in Sources */,
+				2F02F622255ECE9200B21B47 /* FWWebImage.swift in Sources */,
 				2FFE1C3C2507BFA5000332A3 /* FWTableViewController.m in Sources */,
 				2FFE1D452507BFBD000332A3 /* UIFont+FWFramework.m in Sources */,
 				2FFE1BFA2507BF95000332A3 /* FWLocation.m in Sources */,
