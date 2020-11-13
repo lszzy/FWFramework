@@ -8,7 +8,6 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
-#endif
 
 // MARK: - FWViewWrapper
 
@@ -113,3 +112,5 @@ public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepr
         updater?(uiViewController)
     }
 }
+
+#endif

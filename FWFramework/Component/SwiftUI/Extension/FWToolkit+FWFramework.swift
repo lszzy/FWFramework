@@ -8,7 +8,6 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
-#endif
 
 @available(iOS 13.0, *)
 public extension Color {
@@ -74,3 +73,5 @@ public extension Image {
         return Image(name)
     }
 }
+
+#endif
