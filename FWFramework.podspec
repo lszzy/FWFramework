@@ -103,7 +103,7 @@ Pod::Spec.new do |s|
     end
 
     ss.subspec 'SwiftUI' do |sss|
-      sss.ios.deployment_target = '13.0'
+      sss.platform = :ios, '13.0'
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
     end
