@@ -585,15 +585,15 @@ UIImage * FWImageFile(NSString *path) {
             options:SDWebImageRetryFailed
             progress:(progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                 if (expectedSize > 0) {
-                        if ([NSThread isMainThread]) {
+                    if ([NSThread isMainThread]) {
+                        progress(receivedSize / (double)expectedSize);
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
                             progress(receivedSize / (double)expectedSize);
-                        } else {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                progress(receivedSize / (double)expectedSize);
-                            });
-                        }
+                        });
                     }
-                } : nil)
+                }
+            } : nil)
             completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
                 if (completion) {
                     completion(image, error);

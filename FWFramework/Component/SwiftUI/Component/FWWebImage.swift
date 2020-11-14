@@ -49,7 +49,7 @@ public struct FWWebImage: View {
         }
         .onAppear { [weak binder] in
             guard let binder = binder else { return }
-            if !binder.loadingOrSucceed {
+            if !binder.loadingSucceed {
                 binder.start()
             }
         }
@@ -107,7 +107,8 @@ extension FWWebImage {
         
         let url: Any?
         var isLoaded: Binding<Bool>
-        var loadingOrSucceed: Bool = false
+        var loadingSucceed: Bool = false
+        var receipt: Any?
         var completionBlock: ((UIImage?, Error?) -> Void)?
         var progressBlock: ((Double) -> Void)?
         
@@ -118,10 +119,10 @@ extension FWWebImage {
         }
         
         func start() {
-            guard !loadingOrSucceed else { return }
+            guard !loadingSucceed else { return }
             
-            loadingOrSucceed = true
-            FWImageDownloader.shared.downloadImage(for: self, imageURL: url, placeholder: nil) { [weak self] (image, error) in
+            loadingSucceed = true
+            receipt = UIImage.fwDownloadImage(url, completion: { [weak self] (image, error) in
                 guard let self = self else { return }
                 
                 if image != nil {
@@ -129,16 +130,16 @@ extension FWWebImage {
                     self.isLoaded.wrappedValue = true
                     self.completionBlock?(image, error)
                 } else {
-                    self.loadingOrSucceed = false
+                    self.loadingSucceed = false
                     self.completionBlock?(image, error)
                 }
-            } progress: { [weak self] (value) in
-                self?.progressBlock?(value)
-            }
+            }, progress: { [weak self] (progress) in
+                self?.progressBlock?(progress)
+            })
         }
         
         public func cancel() {
-            FWImageDownloader.shared.cancelImageDownloadTask(self)
+            UIImage.fwCancelDownload(receipt)
         }
         
         func onCompletion(perform action: ((UIImage?, Error?) -> Void)?) {
