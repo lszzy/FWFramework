@@ -415,8 +415,9 @@ UIImage * FWImageFile(NSString *path) {
             imageURL = [url URL];
         }
         
-        [imagePlugin fwDownloadImage:imageURL completion:completion progress:progress];
+        return [imagePlugin fwDownloadImage:imageURL completion:completion progress:progress];
     }
+    return nil;
 }
 
 + (void)fwCancelImageDownload:(id)receipt
