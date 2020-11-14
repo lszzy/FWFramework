@@ -99,16 +99,16 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
                 maximumActiveDownloads:(NSInteger)maximumActiveDownloads
                             imageCache:(nullable id <FWImageRequestCache>)imageCache;
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
-                                                        success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
-                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
-                                                        progress:(nullable void (^)(NSProgress *downloadProgress))progress;
+- (nullable FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
+                                                 success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
+                                                 failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                                                progress:(nullable void (^)(NSProgress *downloadProgress))progress;
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
-                                                 withReceiptID:(NSUUID *)receiptID
-                                                        success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
-                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
-                                                       progress:(nullable void (^)(NSProgress *downloadProgress))progress;
+- (nullable FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
+                                           withReceiptID:(NSUUID *)receiptID
+                                                 success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
+                                                 failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                                                progress:(nullable void (^)(NSProgress *downloadProgress))progress;
 
 - (void)cancelTaskForImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt;
 
