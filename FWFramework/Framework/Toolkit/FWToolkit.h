@@ -164,6 +164,14 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// 从图片数据解码创建UIImage，指定scale，支持动图
 + (nullable UIImage *)fwImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
 
+/// 下载网络图片并返回下载凭据
++ (nullable id)fwDownloadImage:(nullable id)url
+                    completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                      progress:(nullable void (^)(double progress))progress;
+
+/// 指定下载凭据取消网络图片下载
++ (void)fwCancelImageDownload:(nullable id)receipt;
+
 @end
 
 #pragma mark - UIImageView+FWToolkit
@@ -215,6 +223,14 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// imageView取消加载网络图片请求插件方法
 - (void)fwCancelImageRequest:(UIImageView *)imageView;
+
+/// image下载网络图片插件方法，返回下载凭据
+- (nullable id)fwDownloadImage:(nullable NSURL *)imageURL
+                    completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                      progress:(nullable void (^)(double progress))progress;
+
+/// image取消下载网络图片插件方法，指定下载凭据
+- (void)fwCancelImageDownload:(nullable id)receipt;
 
 @optional
 

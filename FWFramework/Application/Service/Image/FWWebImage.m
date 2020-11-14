@@ -368,18 +368,19 @@
     return sharedInstance;
 }
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
-                                                        success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
-                                                        failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
-                                                       progress:(nullable void (^)(NSProgress * _Nonnull))progress {
-    return [self downloadImageForURLRequest:request withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
+- (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+                                                 success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
+                                                 failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
+                                                progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+    return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
 }
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
-                                                  withReceiptID:(nonnull NSUUID *)receiptID
-                                                        success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
-                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
-                                                       progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+- (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+                                           withReceiptID:(nonnull NSUUID *)receiptID
+                                                 success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
+                                                 failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                                                progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+    NSURLRequest *request = [self urlRequestWithURL:url];
     __block NSURLSessionDataTask *task = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = request.URL.absoluteString;
@@ -537,6 +538,29 @@
     });
 }
 
+- (NSURLRequest *)urlRequestWithURL:(id)url {
+    NSURLRequest *urlRequest = nil;
+    if ([url isKindOfClass:[NSURLRequest class]]) {
+        urlRequest = url;
+    } else {
+        NSURL *nsurl = nil;
+        if ([url isKindOfClass:[NSURL class]]) {
+            nsurl = url;
+        } else if ([url isKindOfClass:[NSString class]]) {
+            nsurl = [NSURL URLWithString:url];
+            if (!nsurl && [url length] > 0) {
+                nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            }
+        }
+        
+        if (nsurl != nil) {
+            urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
+            [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
+        }
+    }
+    return urlRequest;
+}
+
 - (FWImageDownloaderMergedTask *)safelyRemoveMergedTaskWithURLIdentifier:(NSString *)URLIdentifier {
     __block FWImageDownloaderMergedTask *mergedTask = nil;
     dispatch_sync(self.synchronizationQueue, ^{
@@ -628,26 +652,7 @@
                       progress:(void (^)(double))progress
 {
     if (!object) return;
-    NSURLRequest *urlRequest = nil;
-    if ([url isKindOfClass:[NSURLRequest class]]) {
-        urlRequest = url;
-    } else {
-        NSURL *nsurl = nil;
-        if ([url isKindOfClass:[NSURL class]]) {
-            nsurl = url;
-        } else if ([url isKindOfClass:[NSString class]]) {
-            nsurl = [NSURL URLWithString:url];
-            if (!nsurl && [url length] > 0) {
-                nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        }
-        
-        if (nsurl != nil) {
-            urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
-            [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
-        }
-    }
-    
+    NSURLRequest *urlRequest = [self urlRequestWithURL:url];
     if ([urlRequest URL] == nil) {
         if (placeholder) {
             placeholder();
@@ -678,7 +683,7 @@
         NSUUID *downloadID = [NSUUID UUID];
         FWImageDownloadReceipt *receipt;
         receipt = [self
-                   downloadImageForURLRequest:urlRequest
+                   downloadImageForURL:urlRequest
                    withReceiptID:downloadID
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
@@ -773,6 +778,30 @@
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
     [[FWImageDownloader sharedDownloader] cancelImageDownloadTask:imageView];
+}
+
+- (id)fwDownloadImage:(NSURL *)imageURL
+           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+             progress:(void (^)(double))progress
+{
+    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+        if (completion) {
+            completion(responseObject, nil);
+        }
+    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+        if (completion) {
+            completion(nil, error);
+        }
+    } progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
+        progress(downloadProgress.fractionCompleted);
+    } : nil)];
+}
+
+- (void)fwCancelImageDownload:(id)receipt
+{
+    if (receipt && [receipt isKindOfClass:[FWImageDownloadReceipt class]]) {
+        [[FWImageDownloader sharedDownloader] cancelTaskForImageDownloadReceipt:receipt];
+    }
 }
 
 @end
