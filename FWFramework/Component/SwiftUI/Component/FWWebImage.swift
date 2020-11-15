@@ -12,12 +12,12 @@ import Combine
 
 /// SwiftUI加载网络图片
 @available(iOS 13.0, *)
-public struct FWWebImage: View {
+public struct FWWebImage: SwiftUI.View {
     @ObservedObject public private(set) var binder: ImageBinder
     
     var placeholder: AnyView?
     var cancelOnDisappear: Bool = false
-    var configurations: [(Image) -> Image]
+    var configurations: [(SwiftUI.Image) -> SwiftUI.Image]
     
     public init(_ url: Any?, isLoaded: Binding<Bool> = .constant(false)) {
         binder = ImageBinder(url: url, isLoaded: isLoaded)
@@ -25,10 +25,10 @@ public struct FWWebImage: View {
         binder.start()
     }
     
-    public var body: some View {
+    public var body: some SwiftUI.View {
         Group {
             if binder.image != nil {
-                configurations.reduce(Image(uiImage: binder.image!)) { current, config in
+                configurations.reduce(SwiftUI.Image(uiImage: binder.image!)) { current, config in
                     config(current)
                 }
             } else {
@@ -36,7 +36,7 @@ public struct FWWebImage: View {
                     if placeholder != nil {
                         placeholder
                     } else {
-                        Image(.init())
+                        SwiftUI.Image(.init())
                     }
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -55,7 +55,7 @@ public struct FWWebImage: View {
         }
     }
     
-    public func placeholder<Content: View>(@ViewBuilder _ builder: () -> Content) -> FWWebImage {
+    public func placeholder<Content: SwiftUI.View>(@ViewBuilder _ builder: () -> Content) -> FWWebImage {
         var result = self
         result.placeholder = AnyView(builder())
         return result
@@ -67,21 +67,21 @@ public struct FWWebImage: View {
         return result
     }
     
-    public func configure(_ block: @escaping (Image) -> Image) -> FWWebImage {
+    public func configure(_ block: @escaping (SwiftUI.Image) -> SwiftUI.Image) -> FWWebImage {
         var result = self
         result.configurations.append(block)
         return result
     }
     
-    public func resizable(capInsets: EdgeInsets = EdgeInsets(), resizingMode: Image.ResizingMode = .stretch) -> FWWebImage {
+    public func resizable(capInsets: EdgeInsets = EdgeInsets(), resizingMode: SwiftUI.Image.ResizingMode = .stretch) -> FWWebImage {
         configure { $0.resizable(capInsets: capInsets, resizingMode: resizingMode) }
     }
     
-    public func renderingMode(_ renderingMode: Image.TemplateRenderingMode?) -> FWWebImage {
+    public func renderingMode(_ renderingMode: SwiftUI.Image.TemplateRenderingMode?) -> FWWebImage {
         configure { $0.renderingMode(renderingMode) }
     }
     
-    public func interpolation(_ interpolation: Image.Interpolation) -> FWWebImage {
+    public func interpolation(_ interpolation: SwiftUI.Image.Interpolation) -> FWWebImage {
         configure { $0.interpolation(interpolation) }
     }
     

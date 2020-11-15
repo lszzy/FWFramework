@@ -13,7 +13,7 @@ import SwiftUI
 
 /// SwiftUI通用UIView包装器
 @available(iOS 13.0, *)
-public struct FWViewWrapper<T: UIView>: UIViewRepresentable {
+public struct FWViewWrapper<T: UIView>: SwiftUI.UIViewRepresentable {
     
     var maker: (() -> T)?
     var updater: ((T) -> Void)?
@@ -52,11 +52,11 @@ public struct FWViewWrapper<T: UIView>: UIViewRepresentable {
     
     public typealias UIViewType = T
     
-    public func makeUIView(context: Context) -> T {
+    public func makeUIView(context: SwiftUI.UIViewRepresentableContext<Self>) -> T {
         return maker?() ?? T()
     }
     
-    public func updateUIView(_ uiView: T, context: Context) {
+    public func updateUIView(_ uiView: T, context: SwiftUI.UIViewRepresentableContext<Self>) {
         updater?(uiView)
     }
 }
@@ -65,7 +65,7 @@ public struct FWViewWrapper<T: UIView>: UIViewRepresentable {
 
 /// SwiftUI通用UIViewController包装器
 @available(iOS 13.0, *)
-public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepresentable {
+public struct FWViewControllerWrapper<T: UIViewController>: SwiftUI.UIViewControllerRepresentable {
     
     var maker: (() -> T)?
     var updater: ((T) -> Void)?
@@ -104,11 +104,11 @@ public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepr
     
     public typealias UIViewControllerType = T
     
-    public func makeUIViewController(context: Context) -> T {
+    public func makeUIViewController(context: SwiftUI.UIViewControllerRepresentableContext<Self>) -> T {
         return maker?() ?? T()
     }
     
-    public func updateUIViewController(_ uiViewController: T, context: Context) {
+    public func updateUIViewController(_ uiViewController: T, context: SwiftUI.UIViewControllerRepresentableContext<Self>) {
         updater?(uiViewController)
     }
 }
