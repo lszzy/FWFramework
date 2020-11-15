@@ -23,35 +23,35 @@ NS_ASSUME_NONNULL_BEGIN
         if target.name == 'FWFramework'
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
-                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FWCONTACTS_ENABLED=1'
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FWCOMPONENT_CONTACTS_ENABLED=1'
             end
         end
     end
  end
- 三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWCONTACTS_ENABLED=1
+ 三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWCOMPONENT_CONTACTS_ENABLED=1
  */
 typedef NSInteger FWAuthorizeType NS_TYPED_EXTENSIBLE_ENUM;
 /// 定位，Info.plst需配置NSLocationWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeLocationWhenInUse = 1;
 /// 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeLocationAlways = 2;
-/// 麦克风，需配置FWMICROPHONE_ENABLED=1，Info.plst需配置NSMicrophoneUsageDescription
+/// 麦克风，需配置FWCOMPONENT_MICROPHONE_ENABLED=1，Info.plst需配置NSMicrophoneUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeMicrophone = 3;
 /// 相册，Info.plst需配置NSPhotoLibraryUsageDescription
 static const FWAuthorizeType FWAuthorizeTypePhotoLibrary = 4;
 /// 照相机，Info.plst需配置NSCameraUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeCamera = 5;
-/// 联系人，需配置FWCONTACTS_ENABLED=1，Info.plst需配置NSContactsUsageDescription
+/// 联系人，需配置FWCOMPONENT_CONTACTS_ENABLED=1，Info.plst需配置NSContactsUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeContacts = 6;
-/// 日历，需配置FWCALENDAR_ENABLED=1，Info.plst需配置NSCalendarsUsageDescription
+/// 日历，需配置FWCOMPONENT_CALENDAR_ENABLED=1，Info.plst需配置NSCalendarsUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeCalendars = 7;
-/// 提醒，需配置FWCALENDAR_ENABLED=1，Info.plst需配置NSRemindersUsageDescription
+/// 提醒，需配置FWCOMPONENT_CALENDAR_ENABLED=1，Info.plst需配置NSRemindersUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeReminders = 8;
-/// 音乐，需配置FWAPPLEMUSIC_ENABLED=1，Info.plst需配置NSAppleMusicUsageDescription
+/// 音乐，需配置FWCOMPONENT_APPLEMUSIC_ENABLED=1，Info.plst需配置NSAppleMusicUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeAppleMusic = 9;
 /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
 static const FWAuthorizeType FWAuthorizeTypeNotifications = 10;
-/// 广告跟踪，需配置FWTRACKING_ENABLED=1，Info.plst需配置NSUserTrackingUsageDescription
+/// 广告跟踪，需配置FWCOMPONENT_TRACKING_ENABLED=1，Info.plst需配置NSUserTrackingUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeTracking = 11;
 
 /// 权限状态枚举
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
 
 /**
  @brief 权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用
- @discussion 部分权限需配置编译时FWCONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等
+ @discussion 部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等
  */
 @interface FWAuthorizeManager : NSObject <FWAuthorizeProtocol>
 

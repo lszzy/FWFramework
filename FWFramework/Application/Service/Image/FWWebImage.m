@@ -349,6 +349,16 @@
     return self;
 }
 
++ (FWImageDownloader *)sharedDownloader
+{
+    return objc_getAssociatedObject([FWImageDownloader class], @selector(sharedDownloader)) ?: [FWImageDownloader defaultInstance];
+}
+
++ (void)setSharedDownloader:(FWImageDownloader *)sharedDownloader
+{
+    objc_setAssociatedObject([FWImageDownloader class], @selector(sharedDownloader), sharedDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 + (instancetype)defaultInstance {
     static FWImageDownloader *sharedInstance = nil;
     static dispatch_once_t onceToken;
@@ -358,18 +368,19 @@
     return sharedInstance;
 }
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
-                                                        success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
-                                                        failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
-                                                       progress:(nullable void (^)(NSProgress * _Nonnull))progress {
-    return [self downloadImageForURLRequest:request withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
+- (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+                                                 success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
+                                                 failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
+                                                progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+    return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
 }
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
-                                                  withReceiptID:(nonnull NSUUID *)receiptID
-                                                        success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
-                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
-                                                       progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+- (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+                                           withReceiptID:(nonnull NSUUID *)receiptID
+                                                 success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
+                                                 failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
+                                                progress:(nullable void (^)(NSProgress * _Nonnull))progress {
+    NSURLRequest *request = [self urlRequestWithURL:url];
     __block NSURLSessionDataTask *task = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = request.URL.absoluteString;
@@ -527,6 +538,29 @@
     });
 }
 
+- (NSURLRequest *)urlRequestWithURL:(id)url {
+    NSURLRequest *urlRequest = nil;
+    if ([url isKindOfClass:[NSURLRequest class]]) {
+        urlRequest = url;
+    } else {
+        NSURL *nsurl = nil;
+        if ([url isKindOfClass:[NSURL class]]) {
+            nsurl = url;
+        } else if ([url isKindOfClass:[NSString class]]) {
+            nsurl = [NSURL URLWithString:url];
+            if (!nsurl && [url length] > 0) {
+                nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            }
+        }
+        
+        if (nsurl != nil) {
+            urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
+            [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
+        }
+    }
+    return urlRequest;
+}
+
 - (FWImageDownloaderMergedTask *)safelyRemoveMergedTaskWithURLIdentifier:(NSString *)URLIdentifier {
     __block FWImageDownloaderMergedTask *mergedTask = nil;
     dispatch_sync(self.synchronizationQueue, ^{
@@ -599,59 +633,30 @@
     return mergedTask;
 }
 
-@end
-
-#pragma mark - UIImageView+FWImageDownloader
-
-@implementation UIImageView (FWImageDownloader)
-
-+ (FWImageDownloader *)fwSharedImageDownloader
+- (FWImageDownloadReceipt *)activeImageDownloadReceipt:(id)object
 {
-    return objc_getAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader)) ?: [FWImageDownloader defaultInstance];
+    if (!object) return nil;
+    return (FWImageDownloadReceipt *)objc_getAssociatedObject(object, @selector(activeImageDownloadReceipt:));
 }
 
-+ (void)setFwSharedImageDownloader:(FWImageDownloader *)imageDownloader
+- (void)setActiveImageDownloadReceipt:(FWImageDownloadReceipt *)receipt forObject:(id)object
 {
-    objc_setAssociatedObject([UIImageView class], @selector(fwSharedImageDownloader), imageDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!object) return;
+    objc_setAssociatedObject(object, @selector(activeImageDownloadReceipt:), receipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (FWImageDownloadReceipt *)fwActiveImageDownloadReceipt
+- (void)downloadImageForObject:(id)object
+                      imageURL:(id)url
+                   placeholder:(void (^)(void))placeholder
+                    completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+                      progress:(void (^)(double))progress
 {
-    return (FWImageDownloadReceipt *)objc_getAssociatedObject(self, @selector(fwActiveImageDownloadReceipt));
-}
-
-- (void)setFwActiveImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt
-{
-    objc_setAssociatedObject(self, @selector(fwActiveImageDownloadReceipt), imageDownloadReceipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwSetImageWithURLRequest:(id)url
-                placeholderImage:(UIImage *)placeholderImage
-                      completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-                        progress:(void (^)(double))progress
-{
-    NSURLRequest *urlRequest = nil;
-    if ([url isKindOfClass:[NSURLRequest class]]) {
-        urlRequest = url;
-    } else {
-        NSURL *nsurl = nil;
-        if ([url isKindOfClass:[NSURL class]]) {
-            nsurl = url;
-        } else if ([url isKindOfClass:[NSString class]]) {
-            nsurl = [NSURL URLWithString:url];
-            if (!nsurl && [url length] > 0) {
-                nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        }
-        
-        if (nsurl != nil) {
-            urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
-            [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
-        }
-    }
-    
+    if (!object) return;
+    NSURLRequest *urlRequest = [self urlRequestWithURL:url];
     if ([urlRequest URL] == nil) {
-        self.image = placeholderImage;
+        if (placeholder) {
+            placeholder();
+        }
         if (completion) {
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
             completion(nil, error);
@@ -659,82 +664,64 @@
         return;
     }
     
-    if ([self isActiveTaskURLEqualToURLRequest:urlRequest]) {
-        return;
-    }
-    
-    [self fwCancelImageDownloadTask];
-
-    FWImageDownloader *downloader = [[self class] fwSharedImageDownloader];
-    id <FWImageRequestCache> imageCache = downloader.imageCache;
+    if ([[self activeImageDownloadReceipt:object].task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString]) return;
+    [self cancelImageDownloadTask:object];
 
     //Use the image from the image cache if it exists
+    id<FWImageRequestCache> imageCache = self.imageCache;
     UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
     if (cachedImage) {
         if (completion) {
             completion(cachedImage, nil);
-        } else {
-            self.image = cachedImage;
         }
-        [self clearActiveDownloadInformation];
+        [self setActiveImageDownloadReceipt:nil forObject:object];
     } else {
-        if (placeholderImage) {
-            self.image = placeholderImage;
+        if (placeholder) {
+            placeholder();
         }
-
         __weak __typeof(self)weakSelf = self;
         NSUUID *downloadID = [NSUUID UUID];
         FWImageDownloadReceipt *receipt;
-        receipt = [downloader
-                   downloadImageForURLRequest:urlRequest
+        receipt = [self
+                   downloadImageForURL:urlRequest
                    withReceiptID:downloadID
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                       if ([strongSelf.fwActiveImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                       if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                            if (completion) {
                                completion(responseObject, nil);
-                           } else if (responseObject) {
-                               strongSelf.image = responseObject;
                            }
-                           [strongSelf clearActiveDownloadInformation];
+                           [strongSelf setActiveImageDownloadReceipt:nil forObject:object];
                        }
                    }
                    failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                        if ([strongSelf.fwActiveImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                             if (completion) {
                                 completion(nil, error);
                             }
-                            [strongSelf clearActiveDownloadInformation];
+                            [strongSelf setActiveImageDownloadReceipt:nil forObject:object];
                         }
                    }
                    progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
-                       if ([strongSelf.fwActiveImageDownloadReceipt.receiptID isEqual:downloadID]) {
+                       if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                            progress(downloadProgress.fractionCompleted);
                        }
                    } : nil)];
 
-        self.fwActiveImageDownloadReceipt = receipt;
+        [self setActiveImageDownloadReceipt:receipt forObject:object];
     }
 }
 
-- (void)fwCancelImageDownloadTask
+- (void)cancelImageDownloadTask:(id)object
 {
-    if (self.fwActiveImageDownloadReceipt != nil) {
-        [[self.class fwSharedImageDownloader] cancelTaskForImageDownloadReceipt:self.fwActiveImageDownloadReceipt];
-        [self clearActiveDownloadInformation];
-     }
-}
-
-- (void)clearActiveDownloadInformation
-{
-    self.fwActiveImageDownloadReceipt = nil;
-}
-
-- (BOOL)isActiveTaskURLEqualToURLRequest:(NSURLRequest *)urlRequest
-{
-    return [self.fwActiveImageDownloadReceipt.task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString];
+    if (!object) return;
+    FWImageDownloadReceipt *receipt = [self activeImageDownloadReceipt:object];
+    if (receipt != nil) {
+        [self cancelTaskForImageDownloadReceipt:receipt];
+        [self setActiveImageDownloadReceipt:nil forObject:object];
+    }
 }
 
 @end
@@ -777,15 +764,44 @@
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-    [imageView fwSetImageWithURLRequest:imageURL
-                       placeholderImage:placeholder
-                             completion:completion
-                               progress:progress];
+    [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL placeholder:^{
+        if (placeholder) imageView.image = placeholder;
+    } completion:^(UIImage *image, NSError *error) {
+        if (completion) {
+            completion(image, error);
+        } else {
+            if (image) imageView.image = image;
+        }
+    } progress:progress];
 }
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
-    [imageView fwCancelImageDownloadTask];
+    [[FWImageDownloader sharedDownloader] cancelImageDownloadTask:imageView];
+}
+
+- (id)fwDownloadImage:(NSURL *)imageURL
+           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+             progress:(void (^)(double))progress
+{
+    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+        if (completion) {
+            completion(responseObject, nil);
+        }
+    } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+        if (completion) {
+            completion(nil, error);
+        }
+    } progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
+        progress(downloadProgress.fractionCompleted);
+    } : nil)];
+}
+
+- (void)fwCancelImageDownload:(id)receipt
+{
+    if (receipt && [receipt isKindOfClass:[FWImageDownloadReceipt class]]) {
+        [[FWImageDownloader sharedDownloader] cancelTaskForImageDownloadReceipt:receipt];
+    }
 }
 
 @end

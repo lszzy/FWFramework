@@ -6,8 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI) && (arch(arm64) || arch(x86_64))
-
+#if canImport(SwiftUI)
 import SwiftUI
 
 @available(iOS 13.0, *)
