@@ -1,17 +1,17 @@
 Pod::Spec.new do |s|
-  s.name             = 'FWFramework'
-  s.version          = '0.7.7'
-  s.summary          = 'ios develop framework'
-  s.homepage         = 'http://wuyong.site'
-  s.license          = 'MIT'
-  s.author           = { 'Wu Yong' => 'admin@wuyong.site' }
-  s.source           = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
-
-  s.platform         = :ios, '9.0'
-  s.swift_version    = '5'
-  s.requires_arc     = true
-  s.frameworks       = 'Foundation', 'UIKit'
-  s.default_subspecs = 'FWFramework'
+  s.name                  = 'FWFramework'
+  s.version               = '0.7.7'
+  s.summary               = 'ios develop framework'
+  s.homepage              = 'http://wuyong.site'
+  s.license               = 'MIT'
+  s.author                = { 'Wu Yong' => 'admin@wuyong.site' }
+  s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
+  
+  s.ios.deployment_target = '9.0'
+  s.swift_version         = '5.0'
+  s.requires_arc          = true
+  s.frameworks            = 'Foundation', 'UIKit'
+  s.default_subspecs      = 'FWFramework'
   
   s.subspec 'FWFramework' do |ss|
     ss.dependency 'FWFramework/Framework'
@@ -103,6 +103,7 @@ Pod::Spec.new do |s|
     end
 
     ss.subspec 'SwiftUI' do |sss|
+      sss.ios.deployment_target = '9.0'
       sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
     end
     
