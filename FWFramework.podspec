@@ -104,7 +104,7 @@ Pod::Spec.new do |s|
 
     ss.subspec 'SwiftUI' do |sss|
       sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
-      sss.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-weak_framework SwiftUI' }
+      sss.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-DFWCOMPONENT_SWIFTUI_ENABLED' }
     end
     
     ss.subspec 'Contacts' do |sss|

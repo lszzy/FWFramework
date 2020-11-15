@@ -11,7 +11,7 @@ import SwiftUI
 
 /// SwiftUI动图、网络图片包装器
 @available(iOS 13.0, *)
-public struct FWImageWrapper: SwiftUI.UIViewRepresentable {
+public struct FWImageWrapper: UIViewRepresentable {
     
     var url: Any?
     var placeholder: UIImage?
@@ -52,7 +52,7 @@ public struct FWImageWrapper: SwiftUI.UIViewRepresentable {
     
     public typealias UIViewType = UIImageView
     
-    public func makeUIView(context: SwiftUI.UIViewRepresentableContext<Self>) -> UIImageView {
+    public func makeUIView(context: Context) -> UIImageView {
         let imageClass = UIImageView.fwImageViewAnimatedClass as! UIImageView.Type
         let imageView = imageClass.init()
         imageView.contentMode = contentMode
@@ -60,7 +60,7 @@ public struct FWImageWrapper: SwiftUI.UIViewRepresentable {
         return imageView
     }
     
-    public func updateUIView(_ imageView: UIImageView, context: SwiftUI.UIViewRepresentableContext<Self>) {
+    public func updateUIView(_ imageView: UIImageView, context: Context) {
         imageView.contentMode = contentMode
     }
     

@@ -10,7 +10,7 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-public extension SwiftUI.Color {
+public extension Color {
     
     /// 从16进制创建Color
     /// - Parameters:
@@ -50,7 +50,7 @@ public extension SwiftUI.Color {
 }
 
 @available(iOS 13.0, *)
-public extension SwiftUI.Font {
+public extension Font {
     
     /// 快速创建系统字体
     /// - Parameters:
@@ -63,7 +63,7 @@ public extension SwiftUI.Font {
 }
 
 @available(iOS 13.0, *)
-public extension SwiftUI.Image {
+public extension Image {
     
     /// 从主Bundle指定名称初始化图片
     /// - Parameters:
