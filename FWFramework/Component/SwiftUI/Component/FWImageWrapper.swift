@@ -6,7 +6,8 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if FWCOMPONENT_SWIFTUI_ENABLED && canImport(SwiftUI)
+#if DEBUG || arch(arm64)
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// SwiftUI动图、网络图片包装器
@@ -69,4 +70,5 @@ public struct FWImageWrapper: UIViewRepresentable {
     }
 }
 
+#endif
 #endif
