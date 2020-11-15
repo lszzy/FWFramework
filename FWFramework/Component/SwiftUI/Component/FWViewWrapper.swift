@@ -6,7 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI)
+#if FWCOMPONENT_SWIFTUI_ENABLED && canImport(SwiftUI)
 import SwiftUI
 
 // MARK: - FWViewWrapper
@@ -52,11 +52,11 @@ public struct FWViewWrapper<T: UIView>: UIViewRepresentable {
     
     public typealias UIViewType = T
     
-    public func makeUIView(context: UIViewRepresentableContext<Self>) -> T {
+    public func makeUIView(context: Context) -> T {
         return maker?() ?? T()
     }
     
-    public func updateUIView(_ uiView: T, context: UIViewRepresentableContext<Self>) {
+    public func updateUIView(_ uiView: T, context: Context) {
         updater?(uiView)
     }
 }

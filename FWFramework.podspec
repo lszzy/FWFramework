@@ -90,12 +90,6 @@ Pod::Spec.new do |s|
       sss.source_files = 'FWFramework/Application/Service/Socket/*.{h,m,swift}'
     end
   end
-  
-  s.subspec 'SwiftUI' do |ss|
-    ss.ios.deployment_target = '13.0'
-    ss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
-    ss.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-DFWCOMPONENT_SWIFTUI_ENABLED' }
-  end
 
   s.subspec 'Component' do |ss|
     ss.dependency 'FWFramework/Framework'
@@ -106,6 +100,11 @@ Pod::Spec.new do |s|
 
     ss.subspec 'UIKit' do |sss|
       sss.source_files = 'FWFramework/Component/UIKit/**/*.{h,m,swift}'
+    end
+    
+    ss.subspec 'SwiftUI' do |sss|
+      sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
+      sss.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-DFWCOMPONENT_SWIFTUI_ENABLED' }
     end
     
     ss.subspec 'Contacts' do |sss|
