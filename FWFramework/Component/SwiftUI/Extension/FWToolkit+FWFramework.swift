@@ -6,7 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI)
+#if FWCOMPONENT_SWIFTUI_ENABLED && canImport(SwiftUI)
 import SwiftUI
 
 @available(iOS 13.0, *)

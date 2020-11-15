@@ -6,7 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if canImport(SwiftUI) && canImport(Combine)
+#if FWCOMPONENT_SWIFTUI_ENABLED && canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 import Combine
 
