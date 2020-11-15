@@ -397,6 +397,37 @@ UIImage * FWImageFile(NSString *path) {
     return [UIImage imageWithData:data scale:scale];
 }
 
++ (id)fwDownloadImage:(id)url
+           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+             progress:(void (^)(double))progress
+{
+    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwDownloadImage:completion:progress:)]) {
+        NSURL *imageURL = nil;
+        if ([url isKindOfClass:[NSString class]]) {
+            imageURL = [NSURL URLWithString:url];
+            if (!imageURL && [url length] > 0) {
+                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            }
+        } else if ([url isKindOfClass:[NSURL class]]) {
+            imageURL = url;
+        } else if ([url isKindOfClass:[NSURLRequest class]]) {
+            imageURL = [url URL];
+        }
+        
+        return [imagePlugin fwDownloadImage:imageURL completion:completion progress:progress];
+    }
+    return nil;
+}
+
++ (void)fwCancelImageDownload:(id)receipt
+{
+    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwCancelImageDownload:)]) {
+        [imagePlugin fwCancelImageDownload:receipt];
+    }
+}
+
 @end
 
 #pragma mark - UIImageView+FWToolkit
@@ -471,7 +502,7 @@ UIImage * FWImageFile(NSString *path) {
 
 #pragma mark - FWSDWebImagePlugin
 
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
 @import SDWebImage;
 #endif
 
@@ -487,7 +518,7 @@ UIImage * FWImageFile(NSString *path) {
     return instance;
 }
 
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
 
 + (void)load
 {
@@ -515,10 +546,10 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
-                          options:0
+                          options:SDWebImageRetryFailed
                           context:nil
                          progress:progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                             if (expectedSize > 0) {
@@ -539,8 +570,46 @@ UIImage * FWImageFile(NSString *path) {
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
-#if FWSDWEBIMAGE_ENABLED
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_cancelCurrentImageLoad];
+#endif
+}
+
+- (id)fwDownloadImage:(NSURL *)imageURL
+           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+             progress:(void (^)(double))progress
+{
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+    return [[SDWebImageManager sharedManager]
+            loadImageWithURL:imageURL
+            options:SDWebImageRetryFailed
+            progress:(progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+                if (expectedSize > 0) {
+                    if ([NSThread isMainThread]) {
+                        progress(receivedSize / (double)expectedSize);
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            progress(receivedSize / (double)expectedSize);
+                        });
+                    }
+                }
+            } : nil)
+            completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+                if (completion) {
+                    completion(image, error);
+                }
+            }];
+#else
+    return nil;
+#endif
+}
+
+- (void)fwCancelImageDownload:(id)receipt
+{
+#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+    if (receipt && [receipt isKindOfClass:[SDWebImageCombinedOperation class]]) {
+        [(SDWebImageCombinedOperation *)receipt cancel];
+    }
 #endif
 }
 

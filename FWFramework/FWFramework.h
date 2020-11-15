@@ -21,6 +21,18 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWAppDelegate.h>
 #endif
 
+#if __has_include(<FWFramework/FWWebViewController.h>)
+#import <FWFramework/FWWebViewController.h>
+#endif
+
+#if __has_include(<FWFramework/FWViewModel.h>)
+#import <FWFramework/FWViewModel.h>
+#endif
+
+#if __has_include(<FWFramework/FWView.h>)
+#import <FWFramework/FWView.h>
+#endif
+
 #if __has_include(<FWFramework/FWCacheManager.h>)
 #import <FWFramework/FWCacheManager.h>
 #endif
@@ -65,6 +77,18 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
 #if __has_include("FWAppDelegate.h")
 #import "FWAppDelegate.h"
+#endif
+
+#if __has_include("FWWebViewController.h")
+#import "FWWebViewController.h"
+#endif
+
+#if __has_include("FWViewModel.h")
+#import "FWViewModel.h"
+#endif
+
+#if __has_include("FWView.h")
+#import "FWView.h"
 #endif
 
 #if __has_include("FWCacheManager.h")

@@ -34,7 +34,6 @@
 		2F48F7082538036100AEBB60 /* HikeBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6E82538036100AEBB60 /* HikeBadge.swift */; };
 		2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6E92538036100AEBB60 /* RotatedBadgeSymbol.swift */; };
 		2F48F70A2538036100AEBB60 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EA2538036100AEBB60 /* MapView.swift */; };
-		2F48F70C2538036100AEBB60 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EC2538036100AEBB60 /* WebImage.swift */; };
 		2F48F70D2538036100AEBB60 /* UIKitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6ED2538036100AEBB60 /* UIKitController.swift */; };
 		2F48F70F2538036100AEBB60 /* BadgeSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6EF2538036100AEBB60 /* BadgeSymbol.swift */; };
 		2F48F7102538036100AEBB60 /* BadgeBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6F02538036100AEBB60 /* BadgeBackground.swift */; };
@@ -217,7 +216,6 @@
 		2F48F6E82538036100AEBB60 /* HikeBadge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeBadge.swift; sourceTree = "<group>"; };
 		2F48F6E92538036100AEBB60 /* RotatedBadgeSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RotatedBadgeSymbol.swift; sourceTree = "<group>"; };
 		2F48F6EA2538036100AEBB60 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		2F48F6EC2538036100AEBB60 /* WebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		2F48F6ED2538036100AEBB60 /* UIKitController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitController.swift; sourceTree = "<group>"; };
 		2F48F6EF2538036100AEBB60 /* BadgeSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeSymbol.swift; sourceTree = "<group>"; };
 		2F48F6F02538036100AEBB60 /* BadgeBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeBackground.swift; sourceTree = "<group>"; };
@@ -579,7 +577,6 @@
 				2F48F6E82538036100AEBB60 /* HikeBadge.swift */,
 				2F48F6E92538036100AEBB60 /* RotatedBadgeSymbol.swift */,
 				2F48F6EA2538036100AEBB60 /* MapView.swift */,
-				2F48F6EC2538036100AEBB60 /* WebImage.swift */,
 				2F48F6ED2538036100AEBB60 /* UIKitController.swift */,
 				2F48F6EF2538036100AEBB60 /* BadgeSymbol.swift */,
 				2F48F6F02538036100AEBB60 /* BadgeBackground.swift */,
@@ -1302,7 +1299,6 @@
 				2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */,
 				2F48F7142538036100AEBB60 /* CategoryRow.swift in Sources */,
 				2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */,
-				2F48F70C2538036100AEBB60 /* WebImage.swift in Sources */,
 				2F48F6FA2538036100AEBB60 /* Profile.swift in Sources */,
 				2F48F7102538036100AEBB60 /* BadgeBackground.swift in Sources */,
 				2F48F7162538036100AEBB60 /* LandmarkRow.swift in Sources */,

@@ -53,7 +53,10 @@ struct LandmarkHome: View {
                     destination: FWViewControllerWrapper<UIKitController>(),
                     label: {
                         HStack {
-                            WebImage(placeholderImage: UIImage(named: "AccentImage")!, imageUrl: "https://picsum.photos/50/50?i=30")
+                            FWWebImage("https://picsum.photos/50/50?i=30")
+                                .placeholder({ Image("AccentImage") })
+                                .resizable()
+                                .frame(width: 80, height: 80, alignment: .center)
                             Text("UIKitController")
                         }
                     })

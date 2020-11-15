@@ -6,11 +6,9 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "FWModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-@protocol FWModel;
 
 /*!
  @brief FWViewModel
