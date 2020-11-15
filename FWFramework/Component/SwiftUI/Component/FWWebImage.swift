@@ -6,7 +6,8 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if FWCOMPONENT_SWIFTUI_ENABLED && canImport(SwiftUI) && canImport(Combine)
+#if DEBUG || arch(arm64)
+#if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 import Combine
 
@@ -152,4 +153,5 @@ extension FWWebImage {
     }
 }
 
+#endif
 #endif

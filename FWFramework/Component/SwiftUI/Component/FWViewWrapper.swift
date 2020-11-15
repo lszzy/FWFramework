@@ -6,7 +6,8 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#if FWCOMPONENT_SWIFTUI_ENABLED && canImport(SwiftUI)
+#if DEBUG || arch(arm64)
+#if canImport(SwiftUI)
 import SwiftUI
 
 // MARK: - FWViewWrapper
@@ -113,4 +114,5 @@ public struct FWViewControllerWrapper<T: UIViewController>: UIViewControllerRepr
     }
 }
 
+#endif
 #endif
