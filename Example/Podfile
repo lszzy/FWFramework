@@ -8,6 +8,7 @@ target "Example" do
 end
 
 target "AppClip" do
-  pod 'FWFramework', :path => '../', :subspecs => ['Application/Image', 'Application/Json', 'Application/Request', 'Component/SwiftUI']
+  platform :ios, '14.0'
+  pod 'FWFramework', :path => '../', :subspecs => ['Application/Image', 'Application/Json', 'Application/Request', 'SwiftUI']
   pod 'FWDebug', :configurations => ['Debug']
 end
