@@ -37,7 +37,7 @@ public struct FWWebImage: View {
                     if placeholder != nil {
                         placeholder
                     } else {
-                        Image(.init())
+                        Image(uiImage: .init())
                     }
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
