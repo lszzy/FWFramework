@@ -281,16 +281,9 @@
 + (NSURLCache *)defaultURLCache {
     NSUInteger memoryCapacity = 20 * 1024 * 1024; // 20MB
     NSUInteger diskCapacity = 150 * 1024 * 1024; // 150MB
-    NSURL *cacheURL = [[[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory
-                                                              inDomain:NSUserDomainMask
-                                                     appropriateForURL:nil
-                                                                create:YES
-                                                                 error:nil]
-                       URLByAppendingPathComponent:@"site.wuyong.imagedownloader"];
-
     return [[NSURLCache alloc] initWithMemoryCapacity:memoryCapacity
                                          diskCapacity:diskCapacity
-                                             diskPath:[cacheURL path]];
+                                             diskPath:@"FWImageCache"];
 }
 
 + (NSURLSessionConfiguration *)defaultURLSessionConfiguration {
