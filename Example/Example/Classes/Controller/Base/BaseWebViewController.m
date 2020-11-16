@@ -36,8 +36,15 @@
     [super viewDidLoad];
     if (!self.requestUrl) return;
     
-    // 分享按钮
+    // 侧滑返回和webView手势兼容
+    self.fwForcePopGesture = YES;
     FWWeakifySelf();
+    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+        FWStrongifySelf();
+        self.fwForcePopGesture = !webView.canGoBack;
+    }];
+    
+    // 分享按钮
     [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) block:^(id sender) {
         FWStrongifySelf();
         [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
