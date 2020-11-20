@@ -32,6 +32,7 @@
         @"webItems" : @"fwInnerWebItems",
         @"webRequest" : @"fwInnerWebRequest",
         @"setWebRequest:" : @"fwInnerSetWebRequest:",
+        @"renderWebConfiguration" : @"fwInnerRenderWebConfiguration",
         @"renderWebLayout" : @"fwInnerRenderWebLayout",
         @"onWebClose": @"fwInnerOnWebClose",
         @"webView:didFinishNavigation:" : @"fwInnerWebView:didFinishNavigation:",
@@ -64,9 +65,6 @@
     [webView fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {
         [weakProgressView fwSetProgress:webView.estimatedProgress];
     }];
-    if (@available(iOS 9.0, *)) {
-        webView.customUserAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
-    }
     
     if ([viewController respondsToSelector:@selector(renderWebView)]) {
         [viewController renderWebView];
@@ -168,7 +166,7 @@
 {
     WKWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
-        webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[WKWebViewConfiguration new]];
+        webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[(id<FWWebViewController>)self renderWebConfiguration]];
         webView.allowsBackForwardNavigationGestures = YES;
         if (@available(iOS 11.0, *)) {
             webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -176,6 +174,13 @@
         objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return webView;
+}
+
+- (WKWebViewConfiguration *)fwInnerRenderWebConfiguration
+{
+    WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
+    webConfiguration.applicationNameForUserAgent = [NSString stringWithFormat:@"%@/%@ Mobile/15E148 Safari/605.1.15", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey]];
+    return webConfiguration;
 }
 
 - (UIProgressView *)fwInnerProgressView
