@@ -9,7 +9,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FWSceneDelegate.h"
-#import "FWAlertPlugin.h"
 #import "FWAlertController.h"
 #import "FWEmptyPlugin.h"
 #import "FWJsBridge.h"

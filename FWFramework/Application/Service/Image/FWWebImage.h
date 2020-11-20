@@ -9,7 +9,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FWAnimatedImage.h"
-#import "FWToolkit.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -125,7 +124,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 #pragma mark - FWAppImagePlugin
 
 /// 应用默认图片插件
-@interface FWAppImagePlugin : NSObject <FWImagePlugin>
+@interface FWAppImagePlugin : NSObject
 
 @property (class, nonatomic, readonly) FWAppImagePlugin *sharedInstance;
 
