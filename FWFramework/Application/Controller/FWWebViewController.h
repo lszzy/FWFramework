@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief 网页视图控制器协议，可覆写
  @discussion 默认实现并允许JS调用alert|confirm|prompt方法，如不需要可覆盖之。
- 默认自定义User-Agent为请求通用格式，如不需要可覆盖之。
+ 默认自定义User-Agent为应用通用格式，如不需要可覆盖之。
  */
 @protocol FWWebViewController <FWViewController, WKNavigationDelegate, WKUIDelegate>
 
@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
 @property (nullable, nonatomic, strong) id webRequest NS_SWIFT_UNAVAILABLE("");
+
+/// 渲染网页配置，renderWebView之前调用，默认自定义User-Agent
+- (WKWebViewConfiguration *)renderWebConfiguration;
 
 /// 渲染网页视图，renderView之前调用，默认未实现
 - (void)renderWebView;
