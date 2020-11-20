@@ -6,13 +6,13 @@ Pod::Spec.new do |s|
   s.license               = 'MIT'
   s.author                = { 'Wu Yong' => 'admin@wuyong.site' }
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
-  
+
   s.ios.deployment_target = '9.0'
   s.swift_version         = '5.0'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = 'FWFramework'
-  
+
   s.subspec 'FWFramework' do |ss|
     ss.dependency 'FWFramework/Framework'
     ss.dependency 'FWFramework/Application'
@@ -49,18 +49,18 @@ Pod::Spec.new do |s|
       sss.source_files = 'FWFramework/Application/App/**/*.{h,m,swift}'
       sss.public_header_files = 'FWFramework/Application/App/**/*.h'
     end
-    
+
     ss.subspec 'Controller' do |sss|
       sss.source_files = 'FWFramework/Application/Controller/*.{h,m,swift}'
       sss.public_header_files = 'FWFramework/Application/Controller/*.h'
       sss.dependency 'FWFramework/Application/App'
     end
-    
+
     ss.subspec 'Model' do |sss|
       sss.source_files = 'FWFramework/Application/Model/*.{h,m,swift}'
       sss.public_header_files = 'FWFramework/Application/Model/*.h'
     end
-    
+
     ss.subspec 'View' do |sss|
       sss.source_files = 'FWFramework/Application/View/*.{h,m,swift}'
       sss.public_header_files = 'FWFramework/Application/View/*.h'
@@ -117,11 +117,11 @@ Pod::Spec.new do |s|
       sss.source_files = 'FWFramework/Component/UIKit/**/*.{h,m,swift}'
       sss.public_header_files = 'FWFramework/Component/UIKit/**/*.h'
     end
-    
+
     ss.subspec 'SwiftUI' do |sss|
       sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
     end
-    
+
     ss.subspec 'Contacts' do |sss|
       sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
     end
@@ -141,7 +141,7 @@ Pod::Spec.new do |s|
     ss.subspec 'Tracking' do |sss|
       sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
     end
-    
+
     ss.subspec 'SDWebImage' do |sss|
       sss.dependency 'SDWebImage'
       sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
