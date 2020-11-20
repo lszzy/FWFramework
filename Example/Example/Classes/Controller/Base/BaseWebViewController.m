@@ -19,6 +19,11 @@
     WKWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
         webView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        FWWeakifySelf();
+        [webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+            FWStrongifySelf();
+            self.webView.customUserAgent = [NSString stringWithFormat:@"%@ %@", [WKWebView fwRequestUserAgent], result ?: [WKWebView fwBrowserUserAgent]];
+        }];
         objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return webView;

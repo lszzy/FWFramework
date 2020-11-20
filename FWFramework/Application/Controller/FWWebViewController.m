@@ -179,7 +179,7 @@
 - (WKWebViewConfiguration *)fwInnerRenderWebConfiguration
 {
     WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
-    webConfiguration.applicationNameForUserAgent = [NSString stringWithFormat:@"%@/%@ Mobile/15E148 Safari/605.1.15", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey]];
+    webConfiguration.applicationNameForUserAgent = [WKWebView fwBrowserExtensionUserAgent];
     return webConfiguration;
 }
 

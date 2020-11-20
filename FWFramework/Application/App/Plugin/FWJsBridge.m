@@ -543,6 +543,49 @@ NSString * FWWebViewJsBridge_js() {
     objc_setAssociatedObject(self, @selector(fwJsBridge), fwJsBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
++ (void)fwWebViewUserAgent:(void (^)(NSString * _Nullable))completion
+{
+    static NSString *staticUserAgent = nil;
+    static WKWebView *staticWebView = nil;
+    if (staticUserAgent != nil) {
+        completion(staticUserAgent);
+        return;
+    }
+    
+    staticWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
+    [staticWebView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        if (result && [result isKindOfClass:[NSString class]]) {
+            staticUserAgent = (NSString *)result;
+            staticWebView = nil;
+        }
+        completion(staticUserAgent);
+    }];
+}
+
++ (NSString *)fwBrowserUserAgent
+{
+    NSString *userAgent = [NSString stringWithFormat:@"%@ %@", [self fwBrowserPlatformUserAgent], [self fwBrowserExtensionUserAgent]];
+    return userAgent;
+}
+
++ (NSString *)fwBrowserPlatformUserAgent
+{
+    NSString *userAgent = [NSString stringWithFormat:@"Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", [[UIDevice currentDevice] model], [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@"." withString:@"_"]];
+    return userAgent;
+}
+
++ (NSString *)fwBrowserExtensionUserAgent
+{
+    NSString *userAgent = [NSString stringWithFormat:@"%@/%@ Mobile/15E148 Safari/605.1.15", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey]];
+    return userAgent;
+}
+
++ (NSString *)fwRequestUserAgent
+{
+    NSString *userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
+    return userAgent;
+}
+
 @end
 
 @implementation UIProgressView (FWJsBridge)
