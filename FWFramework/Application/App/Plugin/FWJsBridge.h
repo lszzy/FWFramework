@@ -16,27 +16,27 @@ typedef void (^FWJsBridgeHandler)(id data, FWJsBridgeResponseCallback responseCa
 typedef NSDictionary FWJsBridgeMessage;
 
 @protocol FWWebViewJsBridgeDelegate <NSObject>
-- (NSString *)_evaluateJavascript:(NSString*)javascriptCommand;
+- (NSString *)_evaluateJavascript:(NSString *)javascriptCommand;
 @end
 
 @interface FWWebViewJsBridgeBase : NSObject
 
 @property (weak, nonatomic, nullable) id<FWWebViewJsBridgeDelegate> delegate;
-@property (strong, nonatomic) NSMutableArray* startupMessageQueue;
-@property (strong, nonatomic) NSMutableDictionary* responseCallbacks;
-@property (strong, nonatomic) NSMutableDictionary* messageHandlers;
+@property (strong, nonatomic, nullable) NSMutableArray *startupMessageQueue;
+@property (strong, nonatomic, nullable) NSMutableDictionary *responseCallbacks;
+@property (strong, nonatomic, nullable) NSMutableDictionary *messageHandlers;
 @property (strong, nonatomic) FWJsBridgeHandler messageHandler;
 
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
 - (void)reset;
-- (void)sendData:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback handlerName:(NSString*)handlerName;
+- (void)sendData:(nullable id)data responseCallback:(nullable FWJsBridgeResponseCallback)responseCallback handlerName:(nullable NSString *)handlerName;
 - (void)flushMessageQueue:(NSString *)messageQueueString;
 - (void)injectJavascriptFile;
-- (BOOL)isWebViewJavascriptBridgeURL:(NSURL*)url;
-- (BOOL)isQueueMessageURL:(NSURL*)url;
-- (BOOL)isBridgeLoadedURL:(NSURL*)url;
-- (void)logUnkownMessage:(NSURL*)url;
+- (BOOL)isWebViewJavascriptBridgeURL:(NSURL *)url;
+- (BOOL)isQueueMessageURL:(NSURL *)url;
+- (BOOL)isBridgeLoadedURL:(NSURL *)url;
+- (void)logUnkownMessage:(NSURL *)url;
 - (NSString *)webViewJavascriptCheckCommand;
 - (NSString *)webViewJavascriptFetchQueyCommand;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
@@ -50,14 +50,14 @@ typedef NSDictionary FWJsBridgeMessage;
 */
 @interface FWWebViewJsBridge : NSObject<WKNavigationDelegate, FWWebViewJsBridgeDelegate>
 
-+ (instancetype)bridgeForWebView:(WKWebView*)webView;
++ (instancetype)bridgeForWebView:(WKWebView *)webView;
 + (void)enableLogging;
 
-- (void)registerHandler:(NSString*)handlerName handler:(FWJsBridgeHandler)handler;
-- (void)removeHandler:(NSString*)handlerName;
-- (void)callHandler:(NSString*)handlerName;
-- (void)callHandler:(NSString*)handlerName data:(id)data;
-- (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback;
+- (void)registerHandler:(NSString *)handlerName handler:(FWJsBridgeHandler)handler;
+- (void)removeHandler:(NSString *)handlerName;
+- (void)callHandler:(NSString *)handlerName;
+- (void)callHandler:(NSString *)handlerName data:(nullable id)data;
+- (void)callHandler:(NSString *)handlerName data:(nullable id)data responseCallback:(nullable FWJsBridgeResponseCallback)responseCallback;
 - (void)reset;
 - (void)setWebViewDelegate:(nullable id)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
