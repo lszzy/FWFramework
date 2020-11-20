@@ -9,6 +9,7 @@
 
 #import "FWWebImage.h"
 #import "FWPlugin.h"
+#import "FWToolkit.h"
 #import "FWHTTPSessionManager.h"
 #import <objc/runtime.h>
 
@@ -720,6 +721,10 @@
 @end
 
 #pragma mark - FWAppImagePlugin
+
+@interface FWAppImagePlugin () <FWImagePlugin>
+
+@end
 
 @implementation FWAppImagePlugin
 
