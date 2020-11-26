@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)fwIsRefreshing:(UIScrollView *)scrollView;
 
-- (void)fwSetIsRefreshing:(BOOL)isRefreshing scrollView:(UIScrollView *)scrollView;
-
 - (BOOL)fwShowRefreshing:(UIScrollView *)scrollView;
 
 - (void)fwSetShowRefreshing:(BOOL)showRefreshing scrollView:(UIScrollView *)scrollView;
@@ -37,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Loading
 
 - (BOOL)fwIsLoading:(UIScrollView *)scrollView;
-
-- (void)fwSetIsLoading:(BOOL)isLoading scrollView:(UIScrollView *)scrollView;
 
 - (BOOL)fwShowLoading:(UIScrollView *)scrollView;
 
