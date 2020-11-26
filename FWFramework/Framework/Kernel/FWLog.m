@@ -93,10 +93,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     
     // 插件存在，调用插件
     id<FWLogPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWLogPlugin)];
-    if (plugin) {
-        if ([plugin respondsToSelector:@selector(fwLog:withMessage:)]) {
-            [plugin fwLog:type withMessage:message];
-        }
+    if (plugin && [plugin respondsToSelector:@selector(fwLog:withMessage:)]) {
+        [plugin fwLog:type withMessage:message];
         return;
     }
     
