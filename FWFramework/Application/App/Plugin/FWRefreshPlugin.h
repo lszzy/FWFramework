@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 刷新插件协议，应用可自定义刷新插件实现
 @protocol FWRefreshPlugin <NSObject>
 
+@optional
+
 #pragma mark - Refreshing
 
 - (BOOL)fwIsRefreshing:(UIScrollView *)scrollView;

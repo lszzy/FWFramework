@@ -212,7 +212,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// 图片插件协议，应用可自定义图片插件
 @protocol FWImagePlugin <NSObject>
 
-@required
+@optional
 
 /// imageView加载网络图片插件方法
 - (void)fwImageView:(UIImageView *)imageView
@@ -231,8 +231,6 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// image取消下载网络图片插件方法，指定下载凭据
 - (void)fwCancelImageDownload:(nullable id)receipt;
-
-@optional
 
 /// imageView动画视图类插件方法，默认使用UIImageView
 - (Class)fwImageViewAnimatedClass;
