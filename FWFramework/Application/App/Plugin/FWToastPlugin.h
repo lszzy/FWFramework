@@ -28,19 +28,19 @@ static const FWToastStyle FWToastStyleFailure = 2;
 @optional
 
 /// 显示加载吐司，需手工隐藏
-- (void)fwShowLoading:(nullable NSString *)text inView:(UIView *)view;
+- (void)fwShowLoadingWithText:(nullable NSString *)text inView:(UIView *)view;
 
 /// 隐藏加载吐司
 - (void)fwHideLoading:(UIView *)view;
 
 /// 显示进度条吐司，需手工隐藏
-- (void)fwShowProgress:(CGFloat)progress text:(nullable NSString *)text inView:(UIView *)view;
+- (void)fwShowProgressWithText:(nullable NSString *)text progress:(CGFloat)progress inView:(UIView *)view;
 
 /// 隐藏进度条吐司
 - (void)fwHideProgress:(UIView *)view;
 
 /// 显示指定样式消息吐司，自动隐藏，关闭时回调
-- (void)fwShowMessage:(FWToastStyle)style text:(nullable NSString *)text completion:(nullable void (^)(void))completion inView:(UIView *)view;
+- (void)fwShowMessageWithText:(nullable NSString *)text style:(FWToastStyle)style completion:(nullable void (^)(void))completion inView:(UIView *)view;
 
 /// 隐藏消息吐司，仅用于提前隐藏
 - (void)fwHideMessage:(UIView *)view;
@@ -55,25 +55,25 @@ static const FWToastStyle FWToastStyleFailure = 2;
 @interface UIView (FWToastPlugin)
 
 /// 显示加载吐司，需手工隐藏
-- (void)fwShowLoading:(nullable NSString *)text;
+- (void)fwShowLoadingWithText:(nullable NSString *)text;
 
 /// 隐藏加载吐司
 - (void)fwHideLoading;
 
 /// 显示进度条吐司，需手工隐藏
-- (void)fwShowProgress:(CGFloat)progress text:(nullable NSString *)text;
+- (void)fwShowProgressWithText:(nullable NSString *)text progress:(CGFloat)progress;
 
 /// 隐藏进度条吐司
 - (void)fwHideProgress;
 
 /// 显示默认样式消息吐司，自动隐藏
-- (void)fwShowMessage:(nullable NSString *)text;
+- (void)fwShowMessageWithText:(nullable NSString *)text;
 
 /// 显示指定样式消息吐司，自动隐藏
-- (void)fwShowMessage:(FWToastStyle)style text:(nullable NSString *)text;
+- (void)fwShowMessageWithText:(nullable NSString *)text style:(FWToastStyle)style;
 
 /// 显示指定样式消息吐司，自动隐藏，关闭时回调
-- (void)fwShowMessage:(FWToastStyle)style text:(nullable NSString *)text completion:(nullable void (^)(void))completion;
+- (void)fwShowMessageWithText:(nullable NSString *)text style:(FWToastStyle)style completion:(nullable void (^)(void))completion;
 
 /// 隐藏消息吐司，仅用于提前隐藏
 - (void)fwHideMessage;

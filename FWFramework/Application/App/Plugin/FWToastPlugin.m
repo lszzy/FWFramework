@@ -17,16 +17,22 @@
 
 @implementation UIView (FWToastPlugin)
 
-- (void)fwShowLoading:(NSString *)text
+- (void)fwShowLoadingWithText:(NSString *)text
 {
     id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowLoading:inView:)]) {
-        [plugin fwShowLoading:text inView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithText:inView:)]) {
+        [plugin fwShowLoadingWithText:text inView:self];
         return;
     }
     
+    UIActivityIndicatorViewStyle style;
+    if (@available(iOS 13.0, *)) {
+        style = UIActivityIndicatorViewStyleMedium;
+    } else {
+        style = UIActivityIndicatorViewStyleWhite;
+    }
     NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
-    [self fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:attributedText];
+    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
 }
 
 - (void)fwHideLoading
@@ -40,13 +46,22 @@
     [self fwHideIndicatorLoading];
 }
 
-- (void)fwShowProgress:(CGFloat)progress text:(NSString *)text
+- (void)fwShowProgressWithText:(NSString *)text progress:(CGFloat)progress
 {
     id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowProgress:text:inView:)]) {
-        [plugin fwShowProgress:progress text:text inView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithText:progress:inView:)]) {
+        [plugin fwShowProgressWithText:text progress:progress inView:self];
         return;
     }
+    
+    UIActivityIndicatorViewStyle style;
+    if (@available(iOS 13.0, *)) {
+        style = UIActivityIndicatorViewStyleMedium;
+    } else {
+        style = UIActivityIndicatorViewStyleWhite;
+    }
+    NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
+    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
 }
 
 - (void)fwHideProgress
@@ -60,21 +75,21 @@
     [self fwHideIndicatorLoading];
 }
 
-- (void)fwShowMessage:(NSString *)text
+- (void)fwShowMessageWithText:(NSString *)text
 {
-    [self fwShowMessage:FWToastStyleDefault text:text];
+    [self fwShowMessageWithText:text style:FWToastStyleDefault];
 }
 
-- (void)fwShowMessage:(FWToastStyle)style text:(NSString *)text
+- (void)fwShowMessageWithText:(NSString *)text style:(FWToastStyle)style
 {
-    [self fwShowMessage:style text:text completion:nil];
+    [self fwShowMessageWithText:text style:style completion:nil];
 }
 
-- (void)fwShowMessage:(FWToastStyle)style text:(NSString *)text completion:(void (^)(void))completion
+- (void)fwShowMessageWithText:(NSString *)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
     id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowMessage:text:completion:inView:)]) {
-        [plugin fwShowMessage:style text:text completion:completion inView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithText:style:completion:inView:)]) {
+        [plugin fwShowMessageWithText:text style:style completion:completion inView:self];
         return;
     }
     
