@@ -22,8 +22,7 @@
 {
     _selectedIndex = selectedIndex;
     
-    [self.view fwShowIndicatorMessageWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"切换到tab: %@", @(selectedIndex)]]];
-    [self.view fwHideIndicatorMessageAfterDelay:2.0 completion:nil];
+    [self.view fwShowMessageWithText:[NSString stringWithFormat:@"切换到tab: %@", @(selectedIndex)]];
 }
 
 #pragma mark - Lifecycle
