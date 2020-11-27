@@ -10,31 +10,116 @@
 #import "FWToastPlugin.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
+#import "FWPlugin.h"
 #import <objc/runtime.h>
+
+#pragma mark - UIView+FWToastPlugin
+
+@implementation UIView (FWToastPlugin)
+
+- (void)fwShowLoading:(NSString *)text
+{
+    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowLoading:inView:)]) {
+        [plugin fwShowLoading:text inView:self];
+        return;
+    }
+    
+    NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
+    [self fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:attributedText];
+}
+
+- (void)fwHideLoading
+{
+    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwHideLoading:)]) {
+        [plugin fwHideLoading:self];
+        return;
+    }
+    
+    [self fwHideIndicatorLoading];
+}
+
+- (void)fwShowProgress:(CGFloat)progress text:(NSString *)text
+{
+    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowProgress:text:inView:)]) {
+        [plugin fwShowProgress:progress text:text inView:self];
+        return;
+    }
+}
+
+- (void)fwHideProgress
+{
+    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwHideProgress:)]) {
+        [plugin fwHideProgress:self];
+        return;
+    }
+    
+    [self fwHideIndicatorLoading];
+}
+
+- (void)fwShowMessage:(NSString *)text
+{
+    [self fwShowMessage:FWToastStyleDefault text:text];
+}
+
+- (void)fwShowMessage:(FWToastStyle)style text:(NSString *)text
+{
+    [self fwShowMessage:style text:text completion:nil];
+}
+
+- (void)fwShowMessage:(FWToastStyle)style text:(NSString *)text completion:(void (^)(void))completion
+{
+    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowMessage:text:completion:inView:)]) {
+        [plugin fwShowMessage:style text:text completion:completion inView:self];
+        return;
+    }
+    
+    NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
+    UIView *indicatorView = [self fwShowIndicatorMessageWithAttributedText:attributedText];
+    indicatorView.userInteractionEnabled = completion ? YES : NO;
+    [self fwHideIndicatorMessageAfterDelay:2.0 completion:completion];
+}
+
+- (void)fwHideMessage
+{
+    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwHideMessage:)]) {
+        [plugin fwHideMessage:self];
+        return;
+    }
+    
+    [self fwHideIndicatorMessage];
+}
+
+@end
+
+#pragma mark - UIView+FWIndicator
 
 @implementation UIView (FWIndicator)
 
-#pragma mark - Indicator
-
-- (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                 attributedTitle:(NSAttributedString *)attributedTitle
+- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
+                            attributedTitle:(NSAttributedString *)attributedTitle
 {
-    return [self fwShowIndicatorWithStyle:style
-                          attributedTitle:attributedTitle
-                          backgroundColor:nil
-                       dimBackgroundColor:nil
-                      horizontalAlignment:NO
-                            contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
-                             cornerRadius:5.f];
+    return [self fwShowIndicatorLoadingWithStyle:style
+                                 attributedTitle:attributedTitle
+                                 backgroundColor:nil
+                              dimBackgroundColor:nil
+                             horizontalAlignment:NO
+                                   contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
+                                    cornerRadius:5.f];
 }
 
-- (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                     attributedTitle:(NSAttributedString *)attributedTitle
-                     backgroundColor:(UIColor *)backgroundColor
-                  dimBackgroundColor:(UIColor *)dimBackgroundColor
-                 horizontalAlignment:(BOOL)horizontalAlignment
-                       contentInsets:(UIEdgeInsets)contentInsets
-                        cornerRadius:(CGFloat)cornerRadius
+- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
+                            attributedTitle:(NSAttributedString *)attributedTitle
+                            backgroundColor:(UIColor *)backgroundColor
+                         dimBackgroundColor:(UIColor *)dimBackgroundColor
+                        horizontalAlignment:(BOOL)horizontalAlignment
+                              contentInsets:(UIEdgeInsets)contentInsets
+                               cornerRadius:(CGFloat)cornerRadius
 {
     // 判断之前的指示器是否存在
     UIButton *indicatorView = [self viewWithTag:2011];
@@ -53,7 +138,7 @@
         }
         
         // 移除旧的视图
-        [self fwHideIndicator];
+        [self fwHideIndicatorLoading];
     }
     
     // 背景容器，不可点击
@@ -120,7 +205,7 @@
     return indicatorView;
 }
 
-- (BOOL)fwHideIndicator
+- (BOOL)fwHideIndicatorLoading
 {
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
@@ -130,27 +215,25 @@
     return NO;
 }
 
-#pragma mark - Toast
-
-- (UIView *)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
+- (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
 {
-    return [self fwShowToastWithAttributedText:attributedText
-                               backgroundColor:nil
-                            dimBackgroundColor:nil
-                                  paddingWidth:10.f
-                                 contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
-                                  cornerRadius:5.f];
+    return [self fwShowIndicatorMessageWithAttributedText:attributedText
+                                          backgroundColor:nil
+                                       dimBackgroundColor:nil
+                                             paddingWidth:10.f
+                                            contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
+                                             cornerRadius:5.f];
 }
 
-- (UIView *)fwShowToastWithAttributedText:(NSAttributedString *)attributedText
-                          backgroundColor:(UIColor *)backgroundColor
-                       dimBackgroundColor:(UIColor *)dimBackgroundColor
-                             paddingWidth:(CGFloat)paddingWidth
-                            contentInsets:(UIEdgeInsets)contentInsets
-                             cornerRadius:(CGFloat)cornerRadius
+- (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
+                                     backgroundColor:(UIColor *)backgroundColor
+                                  dimBackgroundColor:(UIColor *)dimBackgroundColor
+                                        paddingWidth:(CGFloat)paddingWidth
+                                       contentInsets:(UIEdgeInsets)contentInsets
+                                        cornerRadius:(CGFloat)cornerRadius
 {
     // 移除之前的视图
-    [self fwHideToast];
+    [self fwHideIndicatorMessage];
     
     // 背景容器，默认不可点击
     UIButton *toastView = [UIButton fwAutoLayoutView];
@@ -185,16 +268,16 @@
     return toastView;
 }
 
-- (BOOL)fwHideToast
+- (BOOL)fwHideIndicatorMessage
 {
     UIButton *toastView = [self viewWithTag:2031];
     if (toastView) {
         [toastView removeFromSuperview];
         
-        NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideToastAfterDelay:completion:));
+        NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:));
         if (toastTimer) {
             [toastTimer invalidate];
-            objc_setAssociatedObject(self, @selector(fwHideToastAfterDelay:completion:), nil, OBJC_ASSOCIATION_ASSIGN);
+            objc_setAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:), nil, OBJC_ASSOCIATION_ASSIGN);
         }
         
         return YES;
@@ -202,19 +285,19 @@
     return NO;
 }
 
-- (BOOL)fwHideToastAfterDelay:(NSTimeInterval)delay
-                   completion:(void (^)(void))completion
+- (BOOL)fwHideIndicatorMessageAfterDelay:(NSTimeInterval)delay
+                              completion:(void (^)(void))completion
 {
     UIButton *toastView = [self viewWithTag:2031];
     if (toastView) {
         // 创建Common模式Timer，避免ScrollView滚动时不触发
         NSTimer *toastTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
-            BOOL hideToast = [self fwHideToast];
-            if (hideToast && completion) {
+            BOOL hideResult = [self fwHideIndicatorMessage];
+            if (hideResult && completion) {
                 completion();
             }
         } repeats:NO];
-        objc_setAssociatedObject(self, @selector(fwHideToastAfterDelay:completion:), toastTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:), toastTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         return YES;
     }

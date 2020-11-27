@@ -65,51 +65,51 @@
 
 - (void)onIndicator
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:nil backgroundColor:nil dimBackgroundColor:nil horizontalAlignment:NO contentInsets:UIEdgeInsetsMake(10, 10, 5, 10) cornerRadius:5];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:nil backgroundColor:nil dimBackgroundColor:nil horizontalAlignment:NO contentInsets:UIEdgeInsetsMake(10, 10, 5, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicator];
+        [self.view fwHideIndicatorLoading];
     });
 }
 
 - (void)onIndicator2
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."]];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."]];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicator];
+        [self.view fwHideIndicatorLoading];
     });
 }
 
 - (void)onIndicator3
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:nil backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor whiteColor] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 5) cornerRadius:5];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:nil backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor whiteColor] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 5) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicator];
+        [self.view fwHideIndicatorLoading];
     });
 }
 
 - (void)onIndicator4
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."] backgroundColor:nil dimBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.5f] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."] backgroundColor:nil dimBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.5f] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicator];
+        [self.view fwHideIndicatorLoading];
     });
 }
 
 - (void)onLoading
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"加载中\n请耐心等待"]];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"加载中\n请耐心等待"]];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicator];
+        [self.view fwHideIndicatorLoading];
     });
 }
 
 - (void)onProgress
 {
-    [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"上传中"]];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"上传中"]];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self mockProgress];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view fwHideIndicator];
+            [self.view fwHideIndicatorLoading];
         });
     });
 }
@@ -121,7 +121,7 @@
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]]];
+            [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]]];
         });
         usleep(finish ? 2000000 : 50000);
     }
@@ -129,20 +129,20 @@
 
 - (void)onLoadingWindow
 {
-    [self.view.window fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"加载中"]];
+    [self.view.window fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"加载中"]];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view.window fwHideIndicator];
+        [self.view.window fwHideIndicatorLoading];
     });
 }
 
 - (void)onProgressWindow
 {
-    [self.view.window fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"上传中"]];
+    [self.view.window fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"上传中"]];
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self mockProgressWindow];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view.window fwHideIndicator];
+            [self.view.window fwHideIndicatorLoading];
         });
     });
 }
@@ -154,7 +154,7 @@
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view.window fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]]];
+            [self.view.window fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]]];
         });
         usleep(finish ? 2000000 : 50000);
     }
@@ -165,17 +165,17 @@
     self.view.tag = 100;
     static int count = 0;
     NSString *text = [NSString stringWithFormat:@"吐司消息%@", @(++count)];
-    UIView *toastView = [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:text ? text : @""]];
+    UIView *toastView = [self.view fwShowIndicatorMessageWithAttributedText:[[NSAttributedString alloc] initWithString:text ? text : @""]];
     toastView.userInteractionEnabled = NO;
-    [self.view fwHideToastAfterDelay:2.0 completion:nil];
+    [self.view fwHideIndicatorMessageAfterDelay:2.0 completion:nil];
 }
 
 - (void)onToast2
 {
     NSString *text = @"我是很长很长很长很长很长很长很长很长很长很长很长的吐司消息";
-    [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:text ? text : @""]];
+    [self.view fwShowIndicatorMessageWithAttributedText:[[NSAttributedString alloc] initWithString:text ? text : @""]];
     FWWeakifySelf();
-    [self.view fwHideToastAfterDelay:2.0 completion:^{
+    [self.view fwHideIndicatorMessageAfterDelay:2.0 completion:^{
         FWStrongifySelf();
         
         [self onToast];
