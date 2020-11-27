@@ -91,7 +91,7 @@
         // 初始化内容视图
         _contentView = [UIView fwAutoLayoutView];
         _contentView.userInteractionEnabled = NO;
-        _contentView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+        _contentView.backgroundColor = [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
         _contentView.layer.cornerRadius = 5.f;
         _contentView.layer.masksToBounds = YES;
         [self addSubview:_contentView];
