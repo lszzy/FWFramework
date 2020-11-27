@@ -116,6 +116,40 @@
 
 @implementation UIView (FWIndicator)
 
++ (UIColor *)fwDefaultIndicatorColor
+{
+    UIColor *color = objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorColor));
+    if (color) return color;
+    
+    if (@available(iOS 13.0, *)) {
+        return [UIColor systemBackgroundColor];
+    } else {
+        return [UIColor whiteColor];
+    }
+}
+
++ (void)setFwDefaultIndicatorColor:(UIColor *)color
+{
+    objc_setAssociatedObject([UIView class], @selector(fwDefaultIndicatorColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (UIColor *)fwDefaultIndicatorBackgroundColor
+{
+    UIColor *color = objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorBackgroundColor));
+    if (color) return color;
+    
+    if (@available(iOS 13.0, *)) {
+        return [UIColor labelColor];
+    } else {
+        return [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+    }
+}
+
++ (void)setFwDefaultIndicatorBackgroundColor:(UIColor *)color
+{
+    objc_setAssociatedObject([UIView class], @selector(fwDefaultIndicatorBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
                             attributedTitle:(NSAttributedString *)attributedTitle
 {
@@ -324,24 +358,6 @@
         return YES;
     }
     return NO;
-}
-
-+ (UIColor *)fwDefaultIndicatorColor
-{
-    if (@available(iOS 13.0, *)) {
-        return [UIColor systemBackgroundColor];
-    } else {
-        return [UIColor whiteColor];
-    }
-}
-
-+ (UIColor *)fwDefaultIndicatorBackgroundColor
-{
-    if (@available(iOS 13.0, *)) {
-        return [UIColor labelColor];
-    } else {
-        return [[UIColor blackColor] colorWithAlphaComponent:0.8f];
-    }
 }
 
 @end
