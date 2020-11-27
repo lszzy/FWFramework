@@ -26,13 +26,7 @@
         return;
     }
     
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-        style = UIActivityIndicatorViewStyleMedium;
-    } else {
-        style = UIActivityIndicatorViewStyleWhite;
-    }
-    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
+    [self fwShowIndicatorLoadingWithStyle:-1 attributedTitle:attributedText];
 }
 
 - (void)fwHideLoading
@@ -55,13 +49,7 @@
         return;
     }
     
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-        style = UIActivityIndicatorViewStyleMedium;
-    } else {
-        style = UIActivityIndicatorViewStyleWhite;
-    }
-    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
+    [self fwShowIndicatorLoadingWithStyle:-1 attributedTitle:attributedText];
 }
 
 - (void)fwHideProgress
@@ -172,6 +160,15 @@
                               contentInsets:(UIEdgeInsets)contentInsets
                                cornerRadius:(CGFloat)cornerRadius
 {
+    // 设置默认指示器样式
+    if (style < 0) {
+        if (@available(iOS 13.0, *)) {
+            style = UIActivityIndicatorViewStyleMedium;
+        } else {
+            style = UIActivityIndicatorViewStyleWhite;
+        }
+    }
+    
     // 判断之前的指示器是否存在
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
@@ -231,6 +228,7 @@
     titleLabel.numberOfLines = 0;
     titleLabel.attributedText = attributedTitle;
     titleLabel.tag = 2015;
+    titleLabel.fwAutoCollapse = YES;
     [centerView addSubview:titleLabel];
     
     // 左右布局
@@ -243,7 +241,8 @@
         [titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:contentInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:contentInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
-        [titleLabel fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:activityView withOffset:5.f];
+        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:activityView withOffset:5.f];
+        [titleLabel fwAddCollapseConstraint:collapseConstraint];
     // 上下布局
     } else {
         [activityView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:contentInsets.top];
@@ -254,7 +253,8 @@
         [titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:contentInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
-        [titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:5.f];
+        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:5.f];
+        [titleLabel fwAddCollapseConstraint:collapseConstraint];
     }
     return indicatorView;
 }
