@@ -11,6 +11,8 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWPlugin.h"
+#import "FWTheme.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIView+FWToastPlugin
@@ -106,14 +108,8 @@
 
 + (UIColor *)fwDefaultIndicatorColor
 {
-    UIColor *color = objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorColor));
-    if (color) return color;
-    
-    if (@available(iOS 13.0, *)) {
-        return [UIColor systemBackgroundColor];
-    } else {
-        return [UIColor whiteColor];
-    }
+    return objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorColor))
+        ?: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
 }
 
 + (void)setFwDefaultIndicatorColor:(UIColor *)color
@@ -123,14 +119,8 @@
 
 + (UIColor *)fwDefaultIndicatorBackgroundColor
 {
-    UIColor *color = objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorBackgroundColor));
-    if (color) return color;
-    
-    if (@available(iOS 13.0, *)) {
-        return [UIColor labelColor];
-    } else {
-        return [[UIColor blackColor] colorWithAlphaComponent:0.8f];
-    }
+    return objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorBackgroundColor))
+        ?: [UIColor fwThemeLight:[UIColor fwColorWithHex:0x606060] dark:[UIColor fwColorWithHex:0x545454]];
 }
 
 + (void)setFwDefaultIndicatorBackgroundColor:(UIColor *)color
@@ -165,7 +155,7 @@
         if (@available(iOS 13.0, *)) {
             style = UIActivityIndicatorViewStyleMedium;
         } else {
-            style = UIActivityIndicatorViewStyleWhite;
+            style = UIActivityIndicatorViewStyleGray;
         }
     }
     
