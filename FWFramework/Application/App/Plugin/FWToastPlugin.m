@@ -17,11 +17,12 @@
 
 @implementation UIView (FWToastPlugin)
 
-- (void)fwShowLoadingWithText:(NSString *)text
+- (void)fwShowLoadingWithText:(id)text
 {
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithText:inView:)]) {
-        [plugin fwShowLoadingWithText:text inView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
+        [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
         return;
     }
     
@@ -31,7 +32,6 @@
     } else {
         style = UIActivityIndicatorViewStyleWhite;
     }
-    NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
     [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
 }
 
@@ -46,11 +46,12 @@
     [self fwHideIndicatorLoading];
 }
 
-- (void)fwShowProgressWithText:(NSString *)text progress:(CGFloat)progress
+- (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithText:progress:inView:)]) {
-        [plugin fwShowProgressWithText:text progress:progress inView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
+        [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
         return;
     }
     
@@ -60,7 +61,6 @@
     } else {
         style = UIActivityIndicatorViewStyleWhite;
     }
-    NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
     [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
 }
 
@@ -75,25 +75,25 @@
     [self fwHideIndicatorLoading];
 }
 
-- (void)fwShowMessageWithText:(NSString *)text
+- (void)fwShowMessageWithText:(id)text
 {
     [self fwShowMessageWithText:text style:FWToastStyleDefault];
 }
 
-- (void)fwShowMessageWithText:(NSString *)text style:(FWToastStyle)style
+- (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style
 {
     [self fwShowMessageWithText:text style:style completion:nil];
 }
 
-- (void)fwShowMessageWithText:(NSString *)text style:(FWToastStyle)style completion:(void (^)(void))completion
+- (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithText:style:completion:inView:)]) {
-        [plugin fwShowMessageWithText:text style:style completion:completion inView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
+        [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
         return;
     }
     
-    NSAttributedString *attributedText = text ? [[NSAttributedString alloc] initWithString:text] : nil;
     UIView *indicatorView = [self fwShowIndicatorMessageWithAttributedText:attributedText];
     indicatorView.userInteractionEnabled = completion ? YES : NO;
     [self fwHideIndicatorMessageAfterDelay:2.0 completion:completion];
@@ -145,26 +145,14 @@
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
             indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
-            if (@available(iOS 13.0, *)) {
-                centerView.backgroundColor = backgroundColor ?: [[UIColor labelColor] colorWithAlphaComponent:0.8f];
-            } else {
-                centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
-            }
+            centerView.backgroundColor = backgroundColor ?: [UIView fwDefaultIndicatorBackgroundColor];
             centerView.layer.cornerRadius = cornerRadius;
             UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
             activityView.activityIndicatorViewStyle = style;
-            if (@available(iOS 13.0, *)) {
-                activityView.color = indicatorColor ?: [UIColor systemBackgroundColor];
-            } else {
-                activityView.color = indicatorColor ?: [UIColor whiteColor];
-            }
+            activityView.color = indicatorColor ?: [UIView fwDefaultIndicatorColor];
             UILabel *titleLabel = [indicatorView viewWithTag:2015];
             titleLabel.attributedText = attributedTitle;
-            if (@available(iOS 13.0, *)) {
-                titleLabel.textColor = indicatorColor ?: [UIColor systemBackgroundColor];
-            } else {
-                titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
-            }
+            titleLabel.textColor = indicatorColor ?: [UIView fwDefaultIndicatorColor];
             return indicatorView;
         }
         
@@ -183,11 +171,7 @@
     // 居中容器
     UIView *centerView = [UIView fwAutoLayoutView];
     centerView.userInteractionEnabled = NO;
-    if (@available(iOS 13.0, *)) {
-        centerView.backgroundColor = backgroundColor ?: [[UIColor labelColor] colorWithAlphaComponent:0.8f];
-    } else {
-        centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
-    }
+    centerView.backgroundColor = backgroundColor ?: [UIView fwDefaultIndicatorBackgroundColor];
     centerView.layer.masksToBounds = YES;
     centerView.layer.cornerRadius = cornerRadius;
     centerView.tag = (horizontalAlignment ? 2013 : 2012);
@@ -198,11 +182,7 @@
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
     activityView.userInteractionEnabled = NO;
     activityView.backgroundColor = [UIColor clearColor];
-    if (@available(iOS 13.0, *)) {
-        activityView.color = indicatorColor ?: [UIColor systemBackgroundColor];
-    } else {
-        activityView.color = indicatorColor ?: [UIColor whiteColor];
-    }
+    activityView.color = indicatorColor ?: [UIView fwDefaultIndicatorColor];
     activityView.tag = 2014;
     [centerView addSubview:activityView];
     [activityView startAnimating];
@@ -212,11 +192,7 @@
     titleLabel.userInteractionEnabled = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:16];
-    if (@available(iOS 13.0, *)) {
-        titleLabel.textColor = indicatorColor ?: [UIColor systemBackgroundColor];
-    } else {
-        titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
-    }
+    titleLabel.textColor = indicatorColor ?: [UIView fwDefaultIndicatorColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.numberOfLines = 0;
     titleLabel.attributedText = attributedTitle;
@@ -292,11 +268,7 @@
     // 居中容器
     UIView *centerView = [UIView fwAutoLayoutView];
     centerView.userInteractionEnabled = NO;
-    if (@available(iOS 13.0, *)) {
-        centerView.backgroundColor = backgroundColor ?: [[UIColor labelColor] colorWithAlphaComponent:0.8f];
-    } else {
-        centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
-    }
+    centerView.backgroundColor = backgroundColor ?: [UIView fwDefaultIndicatorBackgroundColor];
     centerView.layer.masksToBounds = YES;
     centerView.layer.cornerRadius = cornerRadius;
     [toastView addSubview:centerView];
@@ -309,11 +281,7 @@
     textLabel.userInteractionEnabled = NO;
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.font = [UIFont systemFontOfSize:16];
-    if (@available(iOS 13.0, *)) {
-        textLabel.textColor = indicatorColor ?: [UIColor systemBackgroundColor];
-    } else {
-        textLabel.textColor = indicatorColor ?: [UIColor whiteColor];
-    }
+    textLabel.textColor = indicatorColor ?: [UIView fwDefaultIndicatorColor];
     textLabel.textAlignment = NSTextAlignmentCenter;
     textLabel.numberOfLines = 0;
     textLabel.attributedText = attributedText;
@@ -356,6 +324,24 @@
         return YES;
     }
     return NO;
+}
+
++ (UIColor *)fwDefaultIndicatorColor
+{
+    if (@available(iOS 13.0, *)) {
+        return [UIColor systemBackgroundColor];
+    } else {
+        return [UIColor whiteColor];
+    }
+}
+
++ (UIColor *)fwDefaultIndicatorBackgroundColor
+{
+    if (@available(iOS 13.0, *)) {
+        return [UIColor labelColor];
+    } else {
+        return [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+    }
 }
 
 @end
