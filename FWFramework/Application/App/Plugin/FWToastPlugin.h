@@ -87,12 +87,6 @@ static const FWToastStyle FWToastStyleFailure = 2;
  */
 @interface UIView (FWIndicator)
 
-/// 指示器默认颜色配置，自动适配深色模式
-@property (class, nonatomic, strong) UIColor *fwDefaultIndicatorColor;
-
-/// 指示器默认背景颜色配置，自动适配深色模式
-@property (class, nonatomic, strong) UIColor *fwDefaultIndicatorBackgroundColor;
-
 /**
  *  显示加载指示器，不可点击（简单版）
  *

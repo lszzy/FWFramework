@@ -11,8 +11,6 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWPlugin.h"
-#import "FWTheme.h"
-#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIView+FWToastPlugin
@@ -108,24 +106,24 @@
 
 + (UIColor *)fwDefaultIndicatorColor
 {
-    return objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorColor))
-        ?: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-}
-
-+ (void)setFwDefaultIndicatorColor:(UIColor *)color
-{
-    objc_setAssociatedObject([UIView class], @selector(fwDefaultIndicatorColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
+            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor whiteColor] : [UIColor blackColor];
+        }];
+    } else {
+        return [UIColor blackColor];
+    }
 }
 
 + (UIColor *)fwDefaultIndicatorBackgroundColor
 {
-    return objc_getAssociatedObject([UIView class], @selector(fwDefaultIndicatorBackgroundColor))
-        ?: [UIColor fwThemeLight:[UIColor fwColorWithHex:0x606060] dark:[UIColor fwColorWithHex:0x545454]];
-}
-
-+ (void)setFwDefaultIndicatorBackgroundColor:(UIColor *)color
-{
-    objc_setAssociatedObject([UIView class], @selector(fwDefaultIndicatorBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
+            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor colorWithWhite:0.2 alpha:1.0] : [UIColor colorWithWhite:0.8 alpha:1.0];
+        }];
+    } else {
+        return [UIColor colorWithWhite:0.8 alpha:1.0];
+    }
 }
 
 - (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
