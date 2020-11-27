@@ -102,6 +102,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
  *
  *  @param style               样式
  *  @param attributedTitle     属性文本，默认白色、16号字体
+ *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
  *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
  *  @param horizontalAlignment 是否水平对齐，默认垂直对齐
@@ -111,6 +112,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
  */
 - (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
                             attributedTitle:(nullable NSAttributedString *)attributedTitle
+                             indicatorColor:(nullable UIColor *)indicatorColor
                             backgroundColor:(nullable UIColor *)backgroundColor
                          dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
                         horizontalAlignment:(BOOL)horizontalAlignment
@@ -136,6 +138,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
  *  显示消息指示器，默认不可点击（详细版）
  *
  *  @param attributedText      属性文本，默认白色、16号字体
+ *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
  *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
  *  @param paddingWidth        吐司左右最小内间距，默认10
@@ -144,6 +147,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
  *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
  */
 - (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText
+                                      indicatorColor:(nullable UIColor *)indicatorColor
                                      backgroundColor:(nullable UIColor *)backgroundColor
                                   dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
                                         paddingWidth:(CGFloat)paddingWidth
