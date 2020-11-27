@@ -11,25 +11,94 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWToastPlugin
+
+/// 消息吐司样式枚举，可扩展
+typedef NSInteger FWToastStyle NS_TYPED_EXTENSIBLE_ENUM;
+/// 默认消息样式
+static const FWToastStyle FWToastStyleDefault = 0;
+/// 成功消息样式
+static const FWToastStyle FWToastStyleSuccess = 1;
+/// 失败消息样式
+static const FWToastStyle FWToastStyleFailure = 2;
+
+/// 吐司插件协议，应用可自定义吐司插件实现
+@protocol FWToastPlugin <NSObject>
+
+@optional
+
+/// 显示加载吐司，需手工隐藏
+- (void)fwShowLoading:(nullable NSString *)text inView:(UIView *)view;
+
+/// 隐藏加载吐司
+- (void)fwHideLoading:(UIView *)view;
+
+/// 显示进度条吐司，需手工隐藏
+- (void)fwShowProgress:(CGFloat)progress text:(nullable NSString *)text inView:(UIView *)view;
+
+/// 隐藏进度条吐司
+- (void)fwHideProgress:(UIView *)view;
+
+/// 显示指定样式消息吐司，自动隐藏，关闭时回调
+- (void)fwShowMessage:(FWToastStyle)style text:(nullable NSString *)text completion:(nullable void (^)(void))completion inView:(UIView *)view;
+
+/// 隐藏消息吐司，仅用于提前隐藏
+- (void)fwHideMessage:(UIView *)view;
+
+@end
+
+#pragma mark - UIView+FWToastPlugin
+
+/*!
+ @brief UIView+FWToastPlugin
+ */
+@interface UIView (FWToastPlugin)
+
+/// 显示加载吐司，需手工隐藏
+- (void)fwShowLoading:(nullable NSString *)text;
+
+/// 隐藏加载吐司
+- (void)fwHideLoading;
+
+/// 显示进度条吐司，需手工隐藏
+- (void)fwShowProgress:(CGFloat)progress text:(nullable NSString *)text;
+
+/// 隐藏进度条吐司
+- (void)fwHideProgress;
+
+/// 显示默认样式消息吐司，自动隐藏
+- (void)fwShowMessage:(nullable NSString *)text;
+
+/// 显示指定样式消息吐司，自动隐藏
+- (void)fwShowMessage:(FWToastStyle)style text:(nullable NSString *)text;
+
+/// 显示指定样式消息吐司，自动隐藏，关闭时回调
+- (void)fwShowMessage:(FWToastStyle)style text:(nullable NSString *)text completion:(nullable void (^)(void))completion;
+
+/// 隐藏消息吐司，仅用于提前隐藏
+- (void)fwHideMessage;
+
+@end
+
+#pragma mark - UIView+FWIndicator
+
 /*!
  @brief UIView+FWIndicator
  */
 @interface UIView (FWIndicator)
 
-#pragma mark - Indicator
-
 /**
- *  显示加载吐司，不可点击（简单版）
+ *  显示加载指示器，不可点击（简单版）
  *
  *  @param style           样式
  *  @param attributedTitle 属性文本，默认白色、16号字体
- *  @return 加载吐司视图
+ *  @return 加载指示器视图
  */
-- (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                     attributedTitle:(nullable NSAttributedString *)attributedTitle;
+- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
+                            attributedTitle:(nullable NSAttributedString *)attributedTitle;
 
 /**
- *  显示加载吐司，不可点击（详细版）
+ *  显示加载指示器，不可点击（详细版）
  *
  *  @param style               样式
  *  @param attributedTitle     属性文本，默认白色、16号字体
@@ -38,35 +107,33 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param horizontalAlignment 是否水平对齐，默认垂直对齐
  *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
  *  @param cornerRadius        圆角半径，默认5.0
- *  @return 加载吐司视图
+ *  @return 加载指示器视图
  */
-- (UIView *)fwShowIndicatorWithStyle:(UIActivityIndicatorViewStyle)style
-                     attributedTitle:(nullable NSAttributedString *)attributedTitle
-                     backgroundColor:(nullable UIColor *)backgroundColor
-                  dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
-                 horizontalAlignment:(BOOL)horizontalAlignment
-                       contentInsets:(UIEdgeInsets)contentInsets
-                        cornerRadius:(CGFloat)cornerRadius;
+- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
+                            attributedTitle:(nullable NSAttributedString *)attributedTitle
+                            backgroundColor:(nullable UIColor *)backgroundColor
+                         dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
+                        horizontalAlignment:(BOOL)horizontalAlignment
+                              contentInsets:(UIEdgeInsets)contentInsets
+                               cornerRadius:(CGFloat)cornerRadius;
 
 /**
- *  隐藏加载吐司，与show必须成对出现
+ *  隐藏加载指示器，与show必须成对出现
  *
- *  @return 如果加载吐司不存在，返回NO
+ *  @return 如果加载指示器不存在，返回NO
  */
-- (BOOL)fwHideIndicator;
-
-#pragma mark - Toast
+- (BOOL)fwHideIndicatorLoading;
 
 /**
- *  显示吐司，默认不可点击（简单版）
+ *  显示消息指示器，默认不可点击（简单版）
  *
  *  @param attributedText 属性文本，默认白色、16号字体
- *  @return 吐司视图，如需点击其它视图可设置userInteractionEnabled为NO
+ *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
  */
-- (UIView *)fwShowToastWithAttributedText:(nullable NSAttributedString *)attributedText;
+- (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText;
 
 /**
- *  显示吐司，默认不可点击（详细版）
+ *  显示消息指示器，默认不可点击（详细版）
  *
  *  @param attributedText      属性文本，默认白色、16号字体
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
@@ -74,31 +141,31 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param paddingWidth        吐司左右最小内间距，默认10
  *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
  *  @param cornerRadius        圆角半径，默认5.0
- *  @return 吐司视图，如需点击其它视图可设置userInteractionEnabled为NO
+ *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
  */
-- (UIView *)fwShowToastWithAttributedText:(nullable NSAttributedString *)attributedText
-                          backgroundColor:(nullable UIColor *)backgroundColor
-                       dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
-                             paddingWidth:(CGFloat)paddingWidth
-                            contentInsets:(UIEdgeInsets)contentInsets
-                             cornerRadius:(CGFloat)cornerRadius;
+- (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText
+                                     backgroundColor:(nullable UIColor *)backgroundColor
+                                  dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
+                                        paddingWidth:(CGFloat)paddingWidth
+                                       contentInsets:(UIEdgeInsets)contentInsets
+                                        cornerRadius:(CGFloat)cornerRadius;
 
 /**
- *  手工隐藏吐司
+ *  手工隐藏消息指示器
  *
- *  @return 如果吐司不存在，返回NO
+ *  @return 如果消息指示器不存在，返回NO
  */
-- (BOOL)fwHideToast;
+- (BOOL)fwHideIndicatorMessage;
 
 /**
- *  延迟n秒后自动隐藏吐司
+ *  延迟n秒后自动隐藏消息指示器
  *
  *  @param delay 延迟时间
  *  @param completion 完成回调
- *  @return 如果吐司不存在，返回NO
+ *  @return 如果消息指示器不存在，返回NO
  */
-- (BOOL)fwHideToastAfterDelay:(NSTimeInterval)delay
-                   completion:(nullable void (^)(void))completion;
+- (BOOL)fwHideIndicatorMessageAfterDelay:(NSTimeInterval)delay
+                              completion:(nullable void (^)(void))completion;
 
 @end
 
