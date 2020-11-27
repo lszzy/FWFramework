@@ -90,7 +90,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
 /**
  *  显示加载指示器，不可点击（简单版）
  *
- *  @param style           样式，小于0时自动适配
+ *  @param style           样式
  *  @param attributedTitle 属性文本，默认白色、16号字体
  *  @return 加载指示器视图
  */
@@ -100,7 +100,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
 /**
  *  显示加载指示器，不可点击（详细版）
  *
- *  @param style               样式，小于0时自动适配
+ *  @param style               样式
  *  @param attributedTitle     属性文本，默认白色、16号字体
  *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
  *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8

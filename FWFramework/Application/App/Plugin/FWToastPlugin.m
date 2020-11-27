@@ -26,7 +26,13 @@
         return;
     }
     
-    [self fwShowIndicatorLoadingWithStyle:-1 attributedTitle:attributedText];
+    UIActivityIndicatorViewStyle style;
+    if (@available(iOS 13.0, *)) {
+        style = UIActivityIndicatorViewStyleMedium;
+    } else {
+        style = UIActivityIndicatorViewStyleWhite;
+    }
+    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
 }
 
 - (void)fwHideLoading
@@ -49,7 +55,13 @@
         return;
     }
     
-    [self fwShowIndicatorLoadingWithStyle:-1 attributedTitle:attributedText];
+    UIActivityIndicatorViewStyle style;
+    if (@available(iOS 13.0, *)) {
+        style = UIActivityIndicatorViewStyleMedium;
+    } else {
+        style = UIActivityIndicatorViewStyleWhite;
+    }
+    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
 }
 
 - (void)fwHideProgress
@@ -104,28 +116,6 @@
 
 @implementation UIView (FWIndicator)
 
-+ (UIColor *)fwDefaultIndicatorColor
-{
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor whiteColor] : [UIColor blackColor];
-        }];
-    } else {
-        return [UIColor blackColor];
-    }
-}
-
-+ (UIColor *)fwDefaultIndicatorBackgroundColor
-{
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor colorWithWhite:0.2 alpha:1.0] : [UIColor colorWithWhite:0.8 alpha:1.0];
-        }];
-    } else {
-        return [UIColor colorWithWhite:0.8 alpha:1.0];
-    }
-}
-
 - (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
                             attributedTitle:(NSAttributedString *)attributedTitle
 {
@@ -148,15 +138,6 @@
                               contentInsets:(UIEdgeInsets)contentInsets
                                cornerRadius:(CGFloat)cornerRadius
 {
-    // 设置默认指示器样式
-    if (style < 0) {
-        if (@available(iOS 13.0, *)) {
-            style = UIActivityIndicatorViewStyleMedium;
-        } else {
-            style = UIActivityIndicatorViewStyleGray;
-        }
-    }
-    
     // 判断之前的指示器是否存在
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
@@ -164,14 +145,14 @@
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
             indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
-            centerView.backgroundColor = backgroundColor ?: [UIView fwDefaultIndicatorBackgroundColor];
+            centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
             centerView.layer.cornerRadius = cornerRadius;
             UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
             activityView.activityIndicatorViewStyle = style;
-            activityView.color = indicatorColor ?: [UIView fwDefaultIndicatorColor];
+            activityView.color = indicatorColor ?: [UIColor whiteColor];
             UILabel *titleLabel = [indicatorView viewWithTag:2015];
             titleLabel.attributedText = attributedTitle;
-            titleLabel.textColor = indicatorColor ?: [UIView fwDefaultIndicatorColor];
+            titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
             return indicatorView;
         }
         
@@ -190,7 +171,7 @@
     // 居中容器
     UIView *centerView = [UIView fwAutoLayoutView];
     centerView.userInteractionEnabled = NO;
-    centerView.backgroundColor = backgroundColor ?: [UIView fwDefaultIndicatorBackgroundColor];
+    centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
     centerView.layer.masksToBounds = YES;
     centerView.layer.cornerRadius = cornerRadius;
     centerView.tag = (horizontalAlignment ? 2013 : 2012);
@@ -201,7 +182,7 @@
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
     activityView.userInteractionEnabled = NO;
     activityView.backgroundColor = [UIColor clearColor];
-    activityView.color = indicatorColor ?: [UIView fwDefaultIndicatorColor];
+    activityView.color = indicatorColor ?: [UIColor whiteColor];
     activityView.tag = 2014;
     [centerView addSubview:activityView];
     [activityView startAnimating];
@@ -211,7 +192,7 @@
     titleLabel.userInteractionEnabled = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:16];
-    titleLabel.textColor = indicatorColor ?: [UIView fwDefaultIndicatorColor];
+    titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.numberOfLines = 0;
     titleLabel.attributedText = attributedTitle;
@@ -290,7 +271,7 @@
     // 居中容器
     UIView *centerView = [UIView fwAutoLayoutView];
     centerView.userInteractionEnabled = NO;
-    centerView.backgroundColor = backgroundColor ?: [UIView fwDefaultIndicatorBackgroundColor];
+    centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
     centerView.layer.masksToBounds = YES;
     centerView.layer.cornerRadius = cornerRadius;
     [toastView addSubview:centerView];
@@ -303,7 +284,7 @@
     textLabel.userInteractionEnabled = NO;
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.font = [UIFont systemFontOfSize:16];
-    textLabel.textColor = indicatorColor ?: [UIView fwDefaultIndicatorColor];
+    textLabel.textColor = indicatorColor ?: [UIColor whiteColor];
     textLabel.textAlignment = NSTextAlignmentCenter;
     textLabel.numberOfLines = 0;
     textLabel.attributedText = attributedText;
