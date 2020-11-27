@@ -143,7 +143,11 @@
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
             indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
-            centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+            if (@available(iOS 13.0, *)) {
+                centerView.backgroundColor = backgroundColor ?: [[UIColor labelColor] colorWithAlphaComponent:0.8f];
+            } else {
+                centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+            }
             centerView.layer.cornerRadius = cornerRadius;
             UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
             activityView.activityIndicatorViewStyle = style;
@@ -167,7 +171,11 @@
     // 居中容器
     UIView *centerView = [UIView fwAutoLayoutView];
     centerView.userInteractionEnabled = NO;
-    centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+    if (@available(iOS 13.0, *)) {
+        centerView.backgroundColor = backgroundColor ?: [[UIColor labelColor] colorWithAlphaComponent:0.8f];
+    } else {
+        centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+    }
     centerView.layer.masksToBounds = YES;
     centerView.layer.cornerRadius = cornerRadius;
     centerView.tag = (horizontalAlignment ? 2013 : 2012);
@@ -187,7 +195,11 @@
     titleLabel.userInteractionEnabled = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:16];
-    titleLabel.textColor = [UIColor whiteColor];
+    if (@available(iOS 13.0, *)) {
+        titleLabel.textColor = [UIColor systemBackgroundColor];
+    } else {
+        titleLabel.textColor = [UIColor whiteColor];
+    }
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.numberOfLines = 0;
     titleLabel.attributedText = attributedTitle;
@@ -261,7 +273,11 @@
     // 居中容器
     UIView *centerView = [UIView fwAutoLayoutView];
     centerView.userInteractionEnabled = NO;
-    centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+    if (@available(iOS 13.0, *)) {
+        centerView.backgroundColor = backgroundColor ?: [[UIColor labelColor] colorWithAlphaComponent:0.8f];
+    } else {
+        centerView.backgroundColor = backgroundColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+    }
     centerView.layer.masksToBounds = YES;
     centerView.layer.cornerRadius = cornerRadius;
     [toastView addSubview:centerView];
@@ -274,7 +290,11 @@
     textLabel.userInteractionEnabled = NO;
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.font = [UIFont systemFontOfSize:16];
-    textLabel.textColor = [UIColor whiteColor];
+    if (@available(iOS 13.0, *)) {
+        textLabel.textColor = [UIColor systemBackgroundColor];
+    } else {
+        textLabel.textColor = [UIColor whiteColor];
+    }
     textLabel.textAlignment = NSTextAlignmentCenter;
     textLabel.numberOfLines = 0;
     textLabel.attributedText = attributedText;
