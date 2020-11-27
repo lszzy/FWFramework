@@ -81,9 +81,9 @@
 
 - (void)onIndicator3
 {
-    [self.view fwShowLoadingWithText:nil];
+    [self.view fwShowIndicatorLoadingWithStyle:-1 attributedTitle:nil indicatorColor:nil backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] horizontalAlignment:NO contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideLoading];
+        [self.view fwHideIndicatorLoading];
     });
 }
 
