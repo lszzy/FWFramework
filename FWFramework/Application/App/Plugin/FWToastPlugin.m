@@ -121,6 +121,7 @@
 {
     return [self fwShowIndicatorLoadingWithStyle:style
                                  attributedTitle:attributedTitle
+                                  indicatorColor:nil
                                  backgroundColor:nil
                               dimBackgroundColor:nil
                              horizontalAlignment:NO
@@ -130,6 +131,7 @@
 
 - (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
                             attributedTitle:(NSAttributedString *)attributedTitle
+                             indicatorColor:(UIColor *)indicatorColor
                             backgroundColor:(UIColor *)backgroundColor
                          dimBackgroundColor:(UIColor *)dimBackgroundColor
                         horizontalAlignment:(BOOL)horizontalAlignment
@@ -151,8 +153,18 @@
             centerView.layer.cornerRadius = cornerRadius;
             UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
             activityView.activityIndicatorViewStyle = style;
+            if (@available(iOS 13.0, *)) {
+                activityView.color = indicatorColor ?: [UIColor systemBackgroundColor];
+            } else {
+                activityView.color = indicatorColor ?: [UIColor whiteColor];
+            }
             UILabel *titleLabel = [indicatorView viewWithTag:2015];
             titleLabel.attributedText = attributedTitle;
+            if (@available(iOS 13.0, *)) {
+                titleLabel.textColor = indicatorColor ?: [UIColor systemBackgroundColor];
+            } else {
+                titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
+            }
             return indicatorView;
         }
         
@@ -186,6 +198,11 @@
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
     activityView.userInteractionEnabled = NO;
     activityView.backgroundColor = [UIColor clearColor];
+    if (@available(iOS 13.0, *)) {
+        activityView.color = indicatorColor ?: [UIColor systemBackgroundColor];
+    } else {
+        activityView.color = indicatorColor ?: [UIColor whiteColor];
+    }
     activityView.tag = 2014;
     [centerView addSubview:activityView];
     [activityView startAnimating];
@@ -196,9 +213,9 @@
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:16];
     if (@available(iOS 13.0, *)) {
-        titleLabel.textColor = [UIColor systemBackgroundColor];
+        titleLabel.textColor = indicatorColor ?: [UIColor systemBackgroundColor];
     } else {
-        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
     }
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.numberOfLines = 0;
@@ -245,6 +262,7 @@
 - (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
 {
     return [self fwShowIndicatorMessageWithAttributedText:attributedText
+                                           indicatorColor:nil
                                           backgroundColor:nil
                                        dimBackgroundColor:nil
                                              paddingWidth:10.f
@@ -253,6 +271,7 @@
 }
 
 - (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
+                                      indicatorColor:(UIColor *)indicatorColor
                                      backgroundColor:(UIColor *)backgroundColor
                                   dimBackgroundColor:(UIColor *)dimBackgroundColor
                                         paddingWidth:(CGFloat)paddingWidth
@@ -291,9 +310,9 @@
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.font = [UIFont systemFontOfSize:16];
     if (@available(iOS 13.0, *)) {
-        textLabel.textColor = [UIColor systemBackgroundColor];
+        textLabel.textColor = indicatorColor ?: [UIColor systemBackgroundColor];
     } else {
-        textLabel.textColor = [UIColor whiteColor];
+        textLabel.textColor = indicatorColor ?: [UIColor whiteColor];
     }
     textLabel.textAlignment = NSTextAlignmentCenter;
     textLabel.numberOfLines = 0;
