@@ -11,6 +11,53 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWEmptyPlugin
+
+/// 空界面插件协议，应用可自定义空界面插件实现
+@protocol FWEmptyPlugin <NSObject>
+
+@optional
+
+/// 显示空界面，指定文本、图片和动作按钮
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block inView:(UIView *)view;
+
+/// 隐藏空界面
+- (void)fwHideEmptyView:(UIView *)view;
+
+/// 是否存在显示中的空界面
+- (BOOL)fwExistsEmptyView:(UIView *)view;
+
+@end
+
+#pragma mark - UIView+FWEmptyPlugin
+
+/*!
+ @brief UIView+FWEmptyPlugin
+ */
+@interface UIView (FWEmptyPlugin)
+
+/// 显示空界面，指定文本
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text;
+
+/// 显示空界面，指定文本和详细文本
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail;
+
+/// 显示空界面，指定文本、详细文本和图片
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image;
+
+/// 显示空界面，指定文本、详细文本、图片和动作按钮
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block;
+
+/// 隐藏空界面
+- (void)fwHideEmptyView;
+
+/// 是否存在显示中的空界面
+- (BOOL)fwExistsEmptyView;
+
+@end
+
+#pragma mark - FWEmptyView
+
 @protocol FWEmptyViewLoadingViewProtocol <NSObject>
 
 @optional
