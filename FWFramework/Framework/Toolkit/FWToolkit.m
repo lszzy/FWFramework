@@ -538,15 +538,12 @@ UIImage * FWImageFile(NSString *path) {
     return [UIImage sd_imageWithData:data scale:scale];
 }
 
-#endif
-
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:SDWebImageRetryFailed
@@ -565,21 +562,17 @@ UIImage * FWImageFile(NSString *path) {
                         completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                             completion(image, error);
                         } : nil];
-#endif
 }
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
 {
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     [imageView sd_cancelCurrentImageLoad];
-#endif
 }
 
 - (id)fwDownloadImage:(NSURL *)imageURL
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     return [[SDWebImageManager sharedManager]
             loadImageWithURL:imageURL
             options:SDWebImageRetryFailed
@@ -599,18 +592,15 @@ UIImage * FWImageFile(NSString *path) {
                     completion(image, error);
                 }
             }];
-#else
-    return nil;
-#endif
 }
 
 - (void)fwCancelImageDownload:(id)receipt
 {
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
     if (receipt && [receipt isKindOfClass:[SDWebImageCombinedOperation class]]) {
         [(SDWebImageCombinedOperation *)receipt cancel];
     }
-#endif
 }
+
+#endif
 
 @end

@@ -89,8 +89,7 @@ FWPropertyAssign(BOOL, hideToast);
     [super viewWillAppear:animated];
     
     if (!self.hideToast) {
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"viewWillAppear:%@", @(animated)]]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"viewWillAppear:%@", @(animated)]];
     }
 }
 
@@ -99,8 +98,7 @@ FWPropertyAssign(BOOL, hideToast);
     [super viewWillDisappear:animated];
     
     if (!self.hideToast) {
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"viewWillDisappear:%@", @(animated)]]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"viewWillDisappear:%@", @(animated)]];
     }
 }
 
@@ -230,12 +228,10 @@ FWPropertyAssign(BOOL, hideToast);
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
     viewController.fwPresentationDidDismiss = ^{
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwPresentationDidDismiss"]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwPresentationDidDismiss"];
     };
     viewController.fwDismissBlock = ^{
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwDismissBlock"]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
     };
     viewController.hideToast = YES;
     [self presentViewController:viewController animated:YES completion:nil];
@@ -253,12 +249,10 @@ FWPropertyAssign(BOOL, hideToast);
 {
     TestBarViewController *viewController = [[TestBarViewController alloc] init];
     viewController.fwPresentationDidDismiss = ^{
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwPresentationDidDismiss"]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwPresentationDidDismiss"];
     };
     viewController.fwDismissBlock = ^{
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwDismissBlock"]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
     };
     viewController.hideToast = YES;
     viewController.modalPresentationStyle = UIModalPresentationPageSheet;
@@ -271,12 +265,10 @@ FWPropertyAssign(BOOL, hideToast);
     viewController.hideToast = YES;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     navController.fwPresentationDidDismiss = ^{
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwPresentationDidDismiss"]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwPresentationDidDismiss"];
     };
     navController.fwDismissBlock = ^{
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"fwDismissBlock"]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
     };
     [self presentViewController:navController animated:YES completion:nil];
 }

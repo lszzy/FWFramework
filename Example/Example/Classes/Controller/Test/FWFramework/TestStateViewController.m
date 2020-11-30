@@ -80,15 +80,14 @@
     viewEvent.fireBlock = ^(FWStateTransition *transition, void (^completion)(BOOL finished)){
         FWStrongifySelf();
         
-        [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在请求"]];
+        [self.view fwShowLoadingWithText:@"正在请求"];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.view fwHideIndicator];
+            [self.view fwHideLoading];
             
             if (![[@[@1, @2, @3, @4] fwRandomObject] isEqual:@3]) {
                 completion(YES);
             } else {
-                [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"请求失败"]];
-                [self.view fwHideToastAfterDelay:2.0 completion:nil];
+                [self.view fwShowMessageWithText:@"请求失败"];
                 completion(NO);
             }
         });
@@ -98,8 +97,7 @@
         FWStrongifySelf();
         
         if (self.isLock) {
-            [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"已锁定，不能删除"]];
-            [self.view fwHideToastAfterDelay:2.0 completion:nil];
+            [self.view fwShowMessageWithText:@"已锁定，不能删除"];
             return NO;
         }
         return YES;
@@ -107,15 +105,14 @@
     deleteEvent.fireBlock = ^(FWStateTransition *transition, void (^completion)(BOOL finished)){
         FWStrongifySelf();
         
-        [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在请求"]];
+        [self.view fwShowLoadingWithText:@"正在请求"];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.view fwHideIndicator];
+            [self.view fwHideLoading];
             
             if (![[@[@1, @2, @3, @4] fwRandomObject] isEqual:@3]) {
                 completion(YES);
             } else {
-                [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"请求失败"]];
-                [self.view fwHideToastAfterDelay:2.0 completion:nil];
+                [self.view fwShowMessageWithText:@"请求失败"];
                 completion(NO);
             }
         });
@@ -125,8 +122,7 @@
         FWStrongifySelf();
         
         if (self.isLock) {
-            [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"已锁定，不能恢复"]];
-            [self.view fwHideToastAfterDelay:2.0 completion:nil];
+            [self.view fwShowMessageWithText:@"已锁定，不能恢复"];
             return NO;
         }
         return YES;
@@ -134,15 +130,14 @@
     unreadEvent.fireBlock = ^(FWStateTransition *transition, void (^completion)(BOOL finished)){
         FWStrongifySelf();
         
-        [self.view fwShowIndicatorWithStyle:UIActivityIndicatorViewStyleWhite attributedTitle:[[NSAttributedString alloc] initWithString:@"正在请求"]];
+        [self.view fwShowLoadingWithText:@"正在请求"];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.view fwHideIndicator];
+            [self.view fwHideLoading];
             
             if (![[@[@1, @2, @3, @4] fwRandomObject] isEqual:@3]) {
                 completion(YES);
             } else {
-                [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:@"请求失败"]];
-                [self.view fwHideToastAfterDelay:2.0 completion:nil];
+                [self.view fwShowMessageWithText:@"请求失败"];
                 completion(NO);
             }
         });

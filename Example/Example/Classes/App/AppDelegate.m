@@ -65,8 +65,7 @@
                 title = ((UNNotificationResponse *)notification).notification.request.content.title;
             }
         }
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"收到远程通知：%@\n%@", FWSafeString(title), userInfo]]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"收到远程通知：%@\n%@", FWSafeString(title), userInfo]];
     };
     [FWNotificationManager sharedInstance].localNotificationHandler = ^(NSDictionary * userInfo, id notification) {
         NSString *title = nil;
@@ -79,8 +78,7 @@
                 title = ((UILocalNotification *)notification).alertTitle ?: ((UILocalNotification *)notification).alertBody;
             }
         }
-        [[UIWindow fwMainWindow] fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"收到本地通知：%@\n%@", FWSafeString(title), userInfo]]];
-        [[UIWindow fwMainWindow] fwHideToastAfterDelay:2.0 completion:nil];
+        [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"收到本地通知：%@\n%@", FWSafeString(title), userInfo]];
     };
 }
 

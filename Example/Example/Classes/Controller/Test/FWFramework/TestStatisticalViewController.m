@@ -272,8 +272,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
 - (void)showToast:(NSString *)toast
 {
-    [self.view fwShowToastWithAttributedText:[[NSAttributedString alloc] initWithString:toast]];
-    [self.view fwHideToastAfterDelay:2.0 completion:nil];
+    [self.view fwShowMessageWithText:toast];
 }
 
 - (void)clickHandler:(NSInteger)index
