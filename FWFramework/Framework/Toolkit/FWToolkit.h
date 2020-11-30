@@ -12,6 +12,7 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
+#import "FWHelper.h"
 #import "FWTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -24,34 +25,34 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIApplication (FWToolkit)
 
-// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
+/// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
 + (BOOL)fwCanOpenURL:(id)url;
 
-// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
+/// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
 + (void)fwOpenURL:(id)url;
 
-// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
+/// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
 + (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
-// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
+/// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
 + (void)fwOpenUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
-// 打开AppStore下载页
+/// 打开AppStore下载页
 + (void)fwOpenAppStore:(NSString *)appId;
 
-// 判断URL是否是AppStore链接，支持NSString|NSURL
+/// 判断URL是否是AppStore链接，支持NSString|NSURL
 + (BOOL)fwIsAppStoreURL:(id)url;
 
-// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
+/// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
 + (BOOL)fwIsSystemURL:(id)url;
 
-// 判断URL是否HTTP链接，支持NSString|NSURL
+/// 判断URL是否HTTP链接，支持NSString|NSURL
 + (BOOL)fwIsHttpURL:(id)url;
 
-// 打开内部浏览器，支持NSString|NSURL
+/// 打开内部浏览器，支持NSString|NSURL
 + (void)fwOpenSafariController:(id)url;
 
-// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
+/// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
 + (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
 
 @end
