@@ -37,14 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (class, nonatomic, copy) NSString *fwDeviceUUID;
 
-#pragma mark - Token
-
-// 设置设备token原始Data，格式化并保存
-+ (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
-
-// 获取设备Token格式化后的字符串
-+ (nullable NSString *)fwDeviceToken;
-
 #pragma mark - Network
 
 // 本地IP地址

@@ -102,6 +102,28 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @implementation UIDevice (FWHelper)
 
++ (void)fwSetDeviceTokenData:(NSData *)tokenData
+{
+    if (tokenData) {
+        NSMutableString *deviceToken = [NSMutableString string];
+        const char *bytes = tokenData.bytes;
+        NSInteger count = tokenData.length;
+        for (int i = 0; i < count; i++) {
+            [deviceToken appendFormat:@"%02x", bytes[i] & 0x000000FF];
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:[deviceToken copy] forKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
++ (NSString *)fwDeviceToken
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
+}
+
 + (NSString *)fwDeviceModel
 {
     static NSString *model;
