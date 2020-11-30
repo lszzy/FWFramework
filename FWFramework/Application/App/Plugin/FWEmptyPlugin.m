@@ -8,6 +8,78 @@
  */
 
 #import "FWEmptyPlugin.h"
+#import "FWAutoLayout.h"
+#import "FWBlock.h"
+#import "FWPlugin.h"
+
+#pragma mark - UIView+FWEmptyPlugin
+
+@implementation UIView (FWEmptyPlugin)
+
+- (void)fwShowEmptyViewWithText:(NSString *)text
+{
+    [self fwShowEmptyViewWithText:text detail:nil];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail
+{
+    [self fwShowEmptyViewWithText:text detail:detail image:nil];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
+{
+    [self fwShowEmptyViewWithText:text detail:detail image:image action:nil block:nil];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
+{
+    id<FWEmptyPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWEmptyPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
+        [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
+        return;
+    }
+    
+    FWEmptyView *emptyView = [self viewWithTag:2021];
+    if (emptyView) { [emptyView removeFromSuperview]; }
+    
+    emptyView = [[FWEmptyView alloc] initWithFrame:self.bounds];
+    emptyView.tag = 2021;
+    [self addSubview:emptyView];
+    [emptyView fwPinEdgesToSuperview];
+    [emptyView setLoadingViewHidden:YES];
+    [emptyView setImage:image];
+    [emptyView setTextLabelText:text];
+    [emptyView setDetailTextLabelText:detail];
+    [emptyView setActionButtonTitle:action];
+    if (block) [emptyView.actionButton fwAddTouchBlock:block];
+}
+
+- (void)fwHideEmptyView
+{
+    id<FWEmptyPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWEmptyPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwHideEmptyView:)]) {
+        [plugin fwHideEmptyView:self];
+        return;
+    }
+    
+    UIView *emptyView = [self viewWithTag:2021];
+    if (emptyView) { [emptyView removeFromSuperview]; }
+}
+
+- (BOOL)fwExistsEmptyView
+{
+    id<FWEmptyPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWEmptyPlugin)];
+    if (plugin && [plugin respondsToSelector:@selector(fwExistsEmptyView:)]) {
+        return [plugin fwExistsEmptyView:self];
+    }
+    
+    UIView *emptyView = [self viewWithTag:2021];
+    return emptyView != nil ? YES : NO;
+}
+
+@end
+
+#pragma mark - FWEmptyView
 
 @interface FWEmptyViewButton : UIButton
 
