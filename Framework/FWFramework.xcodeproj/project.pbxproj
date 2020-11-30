@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F1626882574DC8E0037427D /* FWHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1626862574DC8E0037427D /* FWHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F1626892574DC8E0037427D /* FWHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1626872574DC8E0037427D /* FWHelper.m */; };
 		2F2350FF25417FEB00EED502 /* FWToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2350FD25417FEB00EED502 /* FWToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F23510025417FEB00EED502 /* FWToolkit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2350FE25417FEB00EED502 /* FWToolkit.m */; };
 		2F23510325417FF500EED502 /* FWToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F23510225417FF500EED502 /* FWToolkit.swift */; };
@@ -338,6 +340,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F1626862574DC8E0037427D /* FWHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWHelper.h; sourceTree = "<group>"; };
+		2F1626872574DC8E0037427D /* FWHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWHelper.m; sourceTree = "<group>"; };
 		2F2350FD25417FEB00EED502 /* FWToolkit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWToolkit.h; sourceTree = "<group>"; };
 		2F2350FE25417FEB00EED502 /* FWToolkit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWToolkit.m; sourceTree = "<group>"; };
 		2F23510225417FF500EED502 /* FWToolkit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWToolkit.swift; sourceTree = "<group>"; };
@@ -724,6 +728,8 @@
 				2F2574AA2539A6D400880FEF /* FWBlock.m */,
 				2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */,
 				2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */,
+				2F1626862574DC8E0037427D /* FWHelper.h */,
+				2F1626872574DC8E0037427D /* FWHelper.m */,
 				2FFE1B882507BF95000332A3 /* FWTheme.h */,
 				2FFE1B7D2507BF95000332A3 /* FWTheme.m */,
 				2F2350FD25417FEB00EED502 /* FWToolkit.h */,
@@ -1231,6 +1237,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1626882574DC8E0037427D /* FWHelper.h in Headers */,
 				2F8A9899255403A500AC554B /* FWWebImage.h in Headers */,
 				2F2350FF25417FEB00EED502 /* FWToolkit.h in Headers */,
 				2F25749925399A5300880FEF /* FWRefreshPlugin.h in Headers */,
@@ -1615,6 +1622,7 @@
 				2FFE841A25163E3100545D6E /* FWMacro.m in Sources */,
 				2FFE1D2C2507BFBD000332A3 /* UITableView+FWFramework.m in Sources */,
 				2FFE1BD02507BF95000332A3 /* FWURLRequestSerialization.m in Sources */,
+				2F1626892574DC8E0037427D /* FWHelper.m in Sources */,
 				2FFE1BD72507BF95000332A3 /* FWBatchRequestAgent.m in Sources */,
 				2FFE1D982507BFBD000332A3 /* FWIndicatorControl.m in Sources */,
 				2FFE1D6D2507BFBD000332A3 /* UITextView+FWFramework.m in Sources */,

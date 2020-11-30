@@ -9,10 +9,6 @@
 
 #import "FWAdaptive.h"
 #import "FWRouter.h"
-#import <sys/sysctl.h>
-#if FWCOMPONENT_TRACKING_ENABLED
-#import <AdSupport/ASIdentifierManager.h>
-#endif
 
 @implementation UIApplication (FWAdaptive)
 
@@ -78,35 +74,6 @@
 + (BOOL)fwIsIosLater:(NSInteger)version
 {
     return [self fwIosVersion] >= version;
-}
-
-+ (NSString *)fwDeviceModel
-{
-    static NSString *model;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        size_t size;
-        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-        char *machine = malloc(size);
-        sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        model = [NSString stringWithUTF8String:machine];
-        free(machine);
-    });
-    return model;
-}
-
-+ (NSString *)fwDeviceIDFV
-{
-    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-}
-
-+ (NSString *)fwDeviceIDFA
-{
-#if FWCOMPONENT_TRACKING_ENABLED
-    return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
-#else
-    return nil;
-#endif
 }
 
 @end

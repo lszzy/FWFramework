@@ -8,6 +8,7 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
+#import "FWHelper.h"
 #import "FWTheme.h"
 
 @implementation NSAttributedString (FWFramework)
@@ -32,27 +33,6 @@
 }
 
 #pragma mark - Html
-
-+ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
-{
-    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
-    if (!htmlData || htmlData.length < 1) return nil;
-    
-    return [[self alloc] initWithData:htmlData options:@{
-        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
-        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
-    } documentAttributes:nil error:nil];
-}
-
-- (NSString *)fwHtmlString
-{
-    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
-        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-    } error:nil];
-    if (!htmlData || htmlData.length < 1) return nil;
-    
-    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
-}
 
 + (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
