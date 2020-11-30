@@ -71,13 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否是大于等于指定iOS主版本
 + (BOOL)fwIsIosLater:(NSInteger)version;
 
-/// 获取设备模型，格式："iPhone6,1"
-+ (nullable NSString *)fwDeviceModel;
-/// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-+ (nullable NSString *)fwDeviceIDFV;
-/// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Component_Tracking组件后生效
-+ (nullable NSString *)fwDeviceIDFA;
-
 @end
 
 #pragma mark - UIScreen+FWAdaptive
