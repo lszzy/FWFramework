@@ -8,58 +8,36 @@
 
 import SwiftUI
 import Combine
+import FWFramework
 
-// MARK: - propertyWrapper
-
-@propertyWrapper
-public struct UserDefault<T> {
-    let key: String
-    let defaultValue: T
-    
-    init(_ key: String, defaultValue: T) {
-        self.key = key
-        self.defaultValue = defaultValue
-    }
-    
-    public var wrappedValue: T {
-        get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: key)
-        }
-    }
-}
+// MARK: - AppUserDefaults
 
 public struct AppUserDefaults {
-    @UserDefault("user_region", defaultValue: Locale.current.regionCode ?? "US")
-    public static var region: String
-        
-    @UserDefault("original_title", defaultValue: false)
-    public static var alwaysOriginalTitle: Bool
+    @FWUserDefault("userName", defaultValue: "test")
+    public static var userName: String
 }
 
 // MARK: - ViewModel
 
-protocol LandmarkViewAction {
-    func refreshData(_ callback: @escaping () -> Void)
-    func loadData(_ callback: @escaping () -> Void)
-}
-
-class LandmarkViewModel: ObservableObject, LandmarkViewAction {
-    @Published var items: [String] = []
-    
-    func refreshData(_ callback: @escaping () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.items = ["1", "2", "3"]
-            callback()
-        }
+final class LandmarkViewModel: ObservableObject {
+    enum State {
+        case idle
+        case loaded([String])
+        case error(Error?)
     }
     
-    func loadData(_ callback: @escaping () -> Void) {
+    @Published private(set) var state = State.idle
+    
+    func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.items.append("1")
-            callback()
+            switch self.state {
+            case .idle:
+                self.state = .loaded(["1", "2", "3"])
+            case .error(_):
+                self.state = .loaded(["1", "2", "3", "4"])
+            default:
+                self.state = .error(nil)
+            }
         }
     }
 }
