@@ -13,7 +13,7 @@ import FWFramework
 // MARK: - AppUserDefaults
 
 public struct AppUserDefaults {
-    @FWUserDefault("userName", defaultValue: "test")
+    @FWUserDefaultAnnotation("userName", defaultValue: "test")
     public static var userName: String
 }
 

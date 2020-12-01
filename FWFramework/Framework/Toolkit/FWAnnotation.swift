@@ -1,5 +1,5 @@
 //
-//  FWHelper.swift
+//  FWAnnotation.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/12/1.
@@ -8,11 +8,11 @@
 
 import Foundation
 
-/// UserDefault属性包装器
-/// 使用示例：@FWUserDefault("userName", defaultValue: "test")
+/// UserDefault属性注解
+/// 使用示例：@FWUserDefaultAnnotation("userName", defaultValue: "test")
 /// public static var userName: String
 @propertyWrapper
-public struct FWUserDefault<T> {
+public struct FWUserDefaultAnnotation<T> {
     let key: String
     let defaultValue: T
     
