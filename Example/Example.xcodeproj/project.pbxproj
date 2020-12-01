@@ -10,11 +10,6 @@
 		1C18E5A84B7D2A5EDB24DF6E /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027459ABC308013A8B85ABC9 /* Pods_Example.framework */; };
 		2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */; };
 		2F1624DC25737B590037427D /* jsonDecode.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F1624DB25737B590037427D /* jsonDecode.json */; };
-		2F16271A25763AA10037427D /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1626FD25763AA10037427D /* ViewExtensions.swift */; };
-		2F16271B25763AA10037427D /* UIKitIntrospectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1626FE25763AA10037427D /* UIKitIntrospectionViewController.swift */; };
-		2F16271C25763AA10037427D /* AppKitIntrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1626FF25763AA10037427D /* AppKitIntrospectionView.swift */; };
-		2F16271D25763AA10037427D /* UIKitIntrospectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16270125763AA10037427D /* UIKitIntrospectionView.swift */; };
-		2F16271E25763AA10037427D /* Introspect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16270225763AA10037427D /* Introspect.swift */; };
 		2F16271F25763AA10037427D /* HeaderKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16270425763AA10037427D /* HeaderKey.swift */; };
 		2F16272025763AA10037427D /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16270525763AA10037427D /* Utilities.swift */; };
 		2F16272125763AA10037427D /* FooterKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16270625763AA10037427D /* FooterKey.swift */; };
@@ -25,7 +20,6 @@
 		2F16272625763AA20037427D /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16270B25763AA10037427D /* Modifier.swift */; };
 		2F16273525763B220037427D /* LandmarkModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273425763B220037427D /* LandmarkModelView.swift */; };
 		2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273A25763BA40037427D /* LandmarkViewModel.swift */; };
-		2F16273F2576431F0037427D /* LandmarkIntrospectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273E2576431F0037427D /* LandmarkIntrospectView.swift */; };
 		2F1D1ACB253D822A00AC110B /* TestCollectionCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */; };
 		2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */; };
 		2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B42538004700AEBB60 /* AppDelegate.swift */; };
@@ -205,12 +199,6 @@
 		2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSkeletonViewController.m; sourceTree = "<group>"; };
 		2F0DE5AB24F65BE100DCC13E /* landmarkData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = landmarkData.json; sourceTree = "<group>"; };
 		2F1624DB25737B590037427D /* jsonDecode.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonDecode.json; sourceTree = "<group>"; };
-		2F1626FD25763AA10037427D /* ViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
-		2F1626FE25763AA10037427D /* UIKitIntrospectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitIntrospectionViewController.swift; sourceTree = "<group>"; };
-		2F1626FF25763AA10037427D /* AppKitIntrospectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitIntrospectionView.swift; sourceTree = "<group>"; };
-		2F16270025763AA10037427D /* Introspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Introspect.h; sourceTree = "<group>"; };
-		2F16270125763AA10037427D /* UIKitIntrospectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitIntrospectionView.swift; sourceTree = "<group>"; };
-		2F16270225763AA10037427D /* Introspect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Introspect.swift; sourceTree = "<group>"; };
 		2F16270425763AA10037427D /* HeaderKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderKey.swift; sourceTree = "<group>"; };
 		2F16270525763AA10037427D /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2F16270625763AA10037427D /* FooterKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterKey.swift; sourceTree = "<group>"; };
@@ -221,7 +209,6 @@
 		2F16270B25763AA10037427D /* Modifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
 		2F16273425763B220037427D /* LandmarkModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModelView.swift; sourceTree = "<group>"; };
 		2F16273A25763BA40037427D /* LandmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkViewModel.swift; sourceTree = "<group>"; };
-		2F16273E2576431F0037427D /* LandmarkIntrospectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkIntrospectView.swift; sourceTree = "<group>"; };
 		2F1D1AC9253D822A00AC110B /* TestCollectionCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionCreateViewController.h; sourceTree = "<group>"; };
 		2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionCreateViewController.m; sourceTree = "<group>"; };
 		2F1F1E1E2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionDynamicLayoutViewController.h; sourceTree = "<group>"; };
@@ -486,19 +473,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2F1626FC25763AA10037427D /* Introspect */ = {
-			isa = PBXGroup;
-			children = (
-				2F1626FD25763AA10037427D /* ViewExtensions.swift */,
-				2F1626FE25763AA10037427D /* UIKitIntrospectionViewController.swift */,
-				2F1626FF25763AA10037427D /* AppKitIntrospectionView.swift */,
-				2F16270025763AA10037427D /* Introspect.h */,
-				2F16270125763AA10037427D /* UIKitIntrospectionView.swift */,
-				2F16270225763AA10037427D /* Introspect.swift */,
-			);
-			path = Introspect;
-			sourceTree = "<group>";
-		};
 		2F16270325763AA10037427D /* Refresh */ = {
 			isa = PBXGroup;
 			children = (
@@ -592,7 +566,6 @@
 		2F48F6D1253801F200AEBB60 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2F1626FC25763AA10037427D /* Introspect */,
 				2F16270325763AA10037427D /* Refresh */,
 			);
 			path = Library;
@@ -632,7 +605,6 @@
 				2F48F6F22538036100AEBB60 /* LandmarkHome.swift */,
 				2F48F6F32538036100AEBB60 /* LandmarkDetail.swift */,
 				2F16273425763B220037427D /* LandmarkModelView.swift */,
-				2F16273E2576431F0037427D /* LandmarkIntrospectView.swift */,
 				2F48F6F42538036100AEBB60 /* CategoryRow.swift */,
 				2F48F6F52538036100AEBB60 /* ProfileHost.swift */,
 				2F48F6F62538036100AEBB60 /* LandmarkRow.swift */,
@@ -1357,7 +1329,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F16273F2576431F0037427D /* LandmarkIntrospectView.swift in Sources */,
 				2F48F7012538036100AEBB60 /* PageControl.swift in Sources */,
 				2F48F7022538036100AEBB60 /* LandmarkList.swift in Sources */,
 				2F48F7152538036100AEBB60 /* ProfileHost.swift in Sources */,
@@ -1380,28 +1351,23 @@
 				2F48F7172538036100AEBB60 /* PageViewController.swift in Sources */,
 				2F16273525763B220037427D /* LandmarkModelView.swift in Sources */,
 				2F48F6FD2538036100AEBB60 /* LandmarkData.swift in Sources */,
-				2F16271B25763AA10037427D /* UIKitIntrospectionViewController.swift in Sources */,
-				2F16271E25763AA10037427D /* Introspect.swift in Sources */,
 				2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */,
 				2F48F7142538036100AEBB60 /* CategoryRow.swift in Sources */,
 				2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */,
 				2F48F6FA2538036100AEBB60 /* Profile.swift in Sources */,
 				2F48F7102538036100AEBB60 /* BadgeBackground.swift in Sources */,
-				2F16271C25763AA10037427D /* AppKitIntrospectionView.swift in Sources */,
 				2F16272125763AA10037427D /* FooterKey.swift in Sources */,
 				2F48F7162538036100AEBB60 /* LandmarkRow.swift in Sources */,
 				2F48F7132538036100AEBB60 /* LandmarkDetail.swift in Sources */,
 				2F48F6FB2538036100AEBB60 /* UserData.swift in Sources */,
 				2F48F70A2538036100AEBB60 /* MapView.swift in Sources */,
 				2F16271F25763AA10037427D /* HeaderKey.swift in Sources */,
-				2F16271A25763AA10037427D /* ViewExtensions.swift in Sources */,
 				2F48F7122538036100AEBB60 /* LandmarkHome.swift in Sources */,
 				2F16272025763AA10037427D /* Utilities.swift in Sources */,
 				2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */,
 				2F48F70D2538036100AEBB60 /* UIKitController.swift in Sources */,
 				2F48F7052538036100AEBB60 /* HikeGraph.swift in Sources */,
 				2F16272625763AA20037427D /* Modifier.swift in Sources */,
-				2F16271D25763AA10037427D /* UIKitIntrospectionView.swift in Sources */,
 				2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */,
 				2F48F6FF2538036100AEBB60 /* HikeDetail.swift in Sources */,
 			);

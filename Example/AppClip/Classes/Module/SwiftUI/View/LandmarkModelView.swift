@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct LandmarkModelView: View {
-    @State private var items: [String] = []
+    @ObservedObject var viewModel: LandmarkViewModel = LandmarkViewModel()
     
     @State private var headerRefreshing: Bool = false
     @State private var footerRefreshing: Bool = false
@@ -17,7 +17,7 @@ struct LandmarkModelView: View {
     
     var body: some View {
         ScrollView {
-            if items.count > 0 {
+            if viewModel.items.count > 0 {
                 RefreshHeader(refreshing: $headerRefreshing, action: {
                     self.reload()
                 }) { progress in
@@ -29,12 +29,12 @@ struct LandmarkModelView: View {
                 }
             }
             
-            ForEach(items, id: \.self) { item in
+            ForEach(viewModel.items, id: \.self) { item in
                 Text(item)
                     .frame(height: 500)
             }
              
-            if items.count > 0 {
+            if viewModel.items.count > 0 {
                 RefreshFooter(refreshing: $footerRefreshing, action: {
                     self.loadMore()
                 }) {
@@ -53,7 +53,7 @@ struct LandmarkModelView: View {
         }
         .enableRefresh()
         .overlay(Group {
-            if items.count == 0 {
+            if viewModel.items.count == 0 {
                 ProgressView()
             } else {
                 EmptyView()
@@ -65,18 +65,16 @@ struct LandmarkModelView: View {
     }
     
     func reload() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.items = ["1", "2", "3"]
+        viewModel.refreshData {
             self.headerRefreshing = false
             self.noMore = false
         }
     }
     
     func loadMore() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.items.append("1")
+        viewModel.loadData {
             self.footerRefreshing = false
-            self.noMore = self.items.count > 50
+            self.noMore = self.viewModel.items.count > 10
         }
     }
 }

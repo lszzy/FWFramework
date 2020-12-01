@@ -41,31 +41,25 @@ public struct AppUserDefaults {
 
 // MARK: - ViewModel
 
-protocol UnidirectionalDataFlowType {
-    associatedtype InputType
-    
-    func apply(_ input: InputType)
+protocol LandmarkViewAction {
+    func refreshData(_ callback: @escaping () -> Void)
+    func loadData(_ callback: @escaping () -> Void)
 }
 
-class LandmarkViewModel: ObservableObject, UnidirectionalDataFlowType {
-    typealias InputType = Input
+class LandmarkViewModel: ObservableObject, LandmarkViewAction {
+    @Published var items: [String] = []
     
-    @Published var data: String? = nil
-    
-    enum Input {
-        case onAppear
-    }
-    
-    func apply(_ input: Input) {
-        switch input {
-        case .onAppear:
-            request()
+    func refreshData(_ callback: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.items = ["1", "2", "3"]
+            callback()
         }
     }
     
-    private func request() {
+    func loadData(_ callback: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.data = "Data From Response"
+            self.items.append("1")
+            callback()
         }
     }
 }
