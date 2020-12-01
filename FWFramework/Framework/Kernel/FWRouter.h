@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWRouter
+
 /*! @brief 路由URL */
 extern NSString * const FWRouterURLKey;
 
@@ -29,51 +31,12 @@ typedef id _Nullable (^FWRouterObjectHandler)(NSDictionary *parameters);
 /*! @brief 路由过滤器处理句柄 */
 typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 
-#pragma mark - FWRouter
-
-/*!
- @brief URL路由协议
- */
-@protocol FWRouterProtocol <NSObject>
-
-@optional
-
-/// 支持的路由URL
-+ (id)fwRouterURL;
-
-/// 支持的Object路由URL
-+ (id)fwRouterObjectURL;
-
-/// 路由方法
-+ (void)fwRouterHandler:(NSDictionary *)parameters;
-
-/// 对象路由方法
-+ (id)fwRouterObjectHandler:(NSDictionary *)parameters;
-
-@end
-
 /*!
  @brief URL路由器
  
  @see https://github.com/meili/MGJRouter
  */
 @interface FWRouter : NSObject
-
-#pragma mark - Class
-
-/**
-*  注册路由类，需要实现FWRouterProtocol协议
-*
-*  @param cls         路由类，需实现FWRouterProtocol协议
-*/
-+ (void)registerClass:(Class)cls;
-
-/**
- *  取消注册某个路由类
- *
- *  @param cls         路由类，需实现FWRouterProtocol协议
- */
-+ (void)unregisterClass:(Class)cls;
 
 #pragma mark - URL
 
