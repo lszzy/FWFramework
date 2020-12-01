@@ -68,36 +68,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return self;
 }
 
-#pragma mark - Class
-
-+ (void)registerClass:(Class)cls
-{
-    if (![cls conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    
-    if ([cls respondsToSelector:@selector(fwRouterURL)]) {
-        [self registerURL:[cls fwRouterURL] withHandler:^(NSDictionary *parameters) {
-            [cls fwRouterHandler:parameters];
-        }];
-    }
-    if ([cls respondsToSelector:@selector(fwRouterObjectURL)]) {
-        [self registerURL:[cls fwRouterObjectURL] withObjectHandler:^id(NSDictionary *parameters) {
-            return [cls fwRouterObjectHandler:parameters];
-        }];
-    }
-}
-
-+ (void)unregisterClass:(Class)cls
-{
-    if (![cls conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    
-    if ([cls respondsToSelector:@selector(fwRouterURL)]) {
-        [self unregisterURL:[cls fwRouterURL]];
-    }
-    if ([cls respondsToSelector:@selector(fwRouterObjectURL)]) {
-        [self unregisterURL:[cls fwRouterObjectURL]];
-    }
-}
-
 #pragma mark - URL
 
 + (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler

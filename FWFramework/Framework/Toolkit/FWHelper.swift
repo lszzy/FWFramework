@@ -12,7 +12,7 @@ import Foundation
 /// 使用示例：@FWUserDefault("userName", defaultValue: "test")
 /// public static var userName: String
 @propertyWrapper
-public struct FWUserDefault<T: Any> {
+public struct FWUserDefault<T> {
     let key: String
     let defaultValue: T
     

@@ -100,6 +100,13 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         [FWRouter pushViewController:viewController animated:YES];
     }];
     
+    [FWRouter registerURL:AppRouter.ROUTE_CONTROLLER withHandler:^(NSDictionary * _Nonnull parameters) {
+        TestRouterResultViewController *viewController = [TestRouterResultViewController new];
+        viewController.parameters = parameters;
+        viewController.title = [NSString stringWithFormat:@"app://controller/%@", parameters[@"id"]];
+        [FWRouter pushViewController:viewController animated:YES];
+    }];
+    
     [FWRouter registerURL:AppRouter.ROUTE_OBJECT withObjectHandler:^id(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
