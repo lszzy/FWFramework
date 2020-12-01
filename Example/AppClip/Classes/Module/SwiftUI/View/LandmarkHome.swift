@@ -64,6 +64,10 @@ struct LandmarkHome: View {
                 NavigationLink(destination: LandmarkModelView()) {
                     Text("ViewModel")
                 }
+                
+                NavigationLink(destination: LandmarkIntrospectView()) {
+                    Text("LandmarkIntrospectView")
+                }
             }
             .navigationBarTitle("Featured")
             .navigationBarItems(trailing: profileButton)
