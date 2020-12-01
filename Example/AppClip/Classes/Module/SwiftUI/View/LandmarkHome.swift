@@ -60,6 +60,10 @@ struct LandmarkHome: View {
                             Text("UIKitController")
                         }
                     })
+                
+                NavigationLink(destination: LandmarkModelView()) {
+                    Text("ViewModel")
+                }
             }
             .navigationBarTitle("Featured")
             .navigationBarItems(trailing: profileButton)
