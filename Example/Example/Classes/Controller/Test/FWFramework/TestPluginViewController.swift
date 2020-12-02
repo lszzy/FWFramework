@@ -8,6 +8,36 @@
 
 import UIKit
 
+/// 路由属性包装器注解
+/// 使用示例：
+/// 加载插件：@FWPluginAnnotation(TestPluginProtocol.self)
+/// 自动注册并加载插件：@FWPluginAnnotation(TestPluginProtocol.self, object: TestPluginImpl.self)
+/// static var testPlugin: TestPluginProtocol
+@propertyWrapper
+public struct FWRouterAnnotation {
+    let url: String
+    var handler: FWRouterHandler?
+    var objectHandler: FWRouterObjectHandler?
+    
+    public init(_ url: String) {
+        self.url = url
+    }
+    
+    public init(_ url: String, handler: FWRouterHandler) {
+        self.url = url
+    }
+    
+    public init(_ url: String, objectHandler: FWRouterObjectHandler) {
+        self.url = url
+    }
+    
+    public var wrappedValue: String {
+        get {
+            return url
+        }
+    }
+}
+
 @objc protocol TestPluginProtocol {
     func pluginMethod()
 }
@@ -19,18 +49,26 @@ import UIKit
 }
 
 class TestPluginManager {
-    @FWPluginAnnotation(TestPluginProtocol.self, object: TestPluginImpl.self)
+    @FWPluginAnnotation(TestPluginProtocol.self)
     static var testPlugin: TestPluginProtocol
 }
 
 @objcMembers class TestPluginViewController: BaseViewController {
-    override func renderView() {
+    var pluginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Plugin", for: .normal)
-        button.fwAddTouch { (sender) in
+        return button
+    }()
+    
+    override func renderView() {
+        view.addSubview(pluginButton)
+        pluginButton.fwLayoutChain.center().size(CGSize(width: 100, height: 50))
+    }
+    
+    override func renderData() {
+        TestPluginManager.testPlugin = TestPluginImpl()
+        pluginButton.fwAddTouch { (sender) in
             TestPluginManager.testPlugin.pluginMethod()
         }
-        view.addSubview(button)
-        button.fwLayoutChain.center().size(CGSize(width: 100, height: 50))
     }
 }
