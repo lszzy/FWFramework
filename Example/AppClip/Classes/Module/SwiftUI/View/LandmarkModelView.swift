@@ -12,17 +12,33 @@ struct LandmarkModelView: View {
     @ObservedObject var viewModel: LandmarkViewModel = LandmarkViewModel()
     
     var body: some View {
-        NavigationView {
-            VStack {
-                switch viewModel.state {
-                default:
-                    ProgressView()
-                        .padding()
+        VStack {
+            switch viewModel.state {
+            case .idle:
+                EmptyView()
+            case .loading:
+                ProgressView()
+                    .padding()
+            case let .loaded(items):
+                ForEach(items, id: \.self) { item in
+                    Text(item)
+                        .frame(height: 50)
+                }
+                
+                Button("Refresh") {
+                    self.viewModel.send(.refresh)
+                }
+            case let .error(error):
+                Text(error.localizedDescription)
+                
+                Button("Refresh") {
+                    self.viewModel.send(.refresh)
                 }
             }
         }
+        .navigationBarTitle("ViewModel", displayMode: .inline)
         .onAppear {
-            self.viewModel.onRefreshing()
+            self.viewModel.send(.refresh)
         }
     }
 }

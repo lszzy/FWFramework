@@ -22,21 +22,44 @@ public struct AppUserDefaults {
 final class LandmarkViewModel: ObservableObject {
     enum State {
         case idle
+        case loading
         case loaded([String])
-        case error(Error?)
+        case error(Error)
+    }
+    
+    enum Event {
+        case refresh
     }
     
     @Published private(set) var state = State.idle
     
-    func onRefreshing() {
+    private var cancelBag = Set<AnyCancellable>()
+    private let stateSubject = PassthroughSubject<State, Never>()
+    
+    init() {
+        let stateStream = stateSubject
+            .assign(to: \.state, on: self)
+        
+        cancelBag.insert(stateStream)
+    }
+    
+    func send(_ event: Event) {
+        switch event {
+        case .refresh:
+            onRefreshing()
+        }
+    }
+    
+    private var testCount: Int = 0
+    
+    private func onRefreshing() {
+        self.testCount += 1
+        self.stateSubject.send(.loading)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            switch self.state {
-            case .idle:
-                self.state = .loaded(["1", "2", "3"])
-            case .error(_):
-                self.state = .loaded(["1", "2", "3", "4"])
-            default:
-                self.state = .error(nil)
+            if self.testCount % 2 == 1 {
+                self.stateSubject.send(.loaded(["1", "2", "3"]))
+            } else {
+                self.stateSubject.send(.error(NSError(domain: "Test", code: 0, userInfo: nil)))
             }
         }
     }
