@@ -37,10 +37,9 @@ final class LandmarkViewModel: ObservableObject {
     private let stateSubject = PassthroughSubject<State, Never>()
     
     init() {
-        let stateStream = stateSubject
+        stateSubject
             .assign(to: \.state, on: self)
-        
-        cancelBag.insert(stateStream)
+            .store(in: &cancelBag)
     }
     
     func send(_ event: Event) {
@@ -50,16 +49,19 @@ final class LandmarkViewModel: ObservableObject {
         }
     }
     
-    private var testCount: Int = 0
-    
     private func onRefreshing() {
-        self.testCount += 1
-        self.stateSubject.send(.loading)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            if self.testCount % 2 == 1 {
-                self.stateSubject.send(.loaded(["1", "2", "3"]))
-            } else {
+        switch self.state {
+        case .loaded(_), .loading:
+            return
+        case .idle:
+            self.stateSubject.send(.loading)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.stateSubject.send(.error(NSError(domain: "Test", code: 0, userInfo: nil)))
+            }
+        case .error(_):
+            self.stateSubject.send(.loading)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.stateSubject.send(.loaded(["1", "2", "3"]))
             }
         }
     }

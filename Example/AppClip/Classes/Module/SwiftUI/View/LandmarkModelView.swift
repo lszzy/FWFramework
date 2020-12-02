@@ -21,12 +21,10 @@ struct LandmarkModelView: View {
                     .padding()
             case let .loaded(items):
                 ForEach(items, id: \.self) { item in
-                    Text(item)
-                        .frame(height: 50)
-                }
-                
-                Button("Refresh") {
-                    self.viewModel.send(.refresh)
+                    NavigationLink(destination: LandmarkDetailModelView(viewModel: LandmarkDetailViewModel(movieID: Int(item)!))) {
+                        Text("Detail - \(item)")
+                            .frame(height: 50)
+                    }
                 }
             case let .error(error):
                 Text(error.localizedDescription)
