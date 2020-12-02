@@ -79,7 +79,9 @@ public extension Image {
 public extension View {
     
     /// 转换为AnyView
-    func fwEraseToAnyView() -> AnyView { AnyView(self) }
+    func fwEraseToAnyView() -> AnyView {
+        AnyView(self)
+    }
 }
 
 #endif
