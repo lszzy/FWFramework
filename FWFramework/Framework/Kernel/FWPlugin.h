@@ -79,8 +79,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
 
-- (BOOL)
-
 /*!
  @brief 取消插件注册，仅当插件未使用时生效
 

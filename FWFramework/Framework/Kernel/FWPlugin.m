@@ -101,18 +101,8 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
         return NO;
     }
     
-    // 插件必须实现插件协议，否则抛出异常
-    NSString *protocolName = NSStringFromProtocol(protocol);
-    if (type == FWPluginTypeObject) {
-        if (![value conformsToProtocol:protocol]) {
-            @throw [NSException exceptionWithName:@"FWFramework"
-                                           reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", value, protocolName]
-                                         userInfo:nil];
-            return NO;
-        }
-    }
-    
     // 插件已锁定时不能注册
+    NSString *protocolName = NSStringFromProtocol(protocol);
     FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
     if (plugin && plugin.locked) {
         return NO;
@@ -121,6 +111,16 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     // 插件已存在时不能注册默认插件
     if (isDefault && plugin) {
         return NO;
+    }
+    
+    // 插件必须实现插件协议，否则抛出异常
+    if (type == FWPluginTypeObject) {
+        if (![value conformsToProtocol:protocol]) {
+            @throw [NSException exceptionWithName:@"FWFramework"
+                                           reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", value, protocolName]
+                                         userInfo:nil];
+            return NO;
+        }
     }
     
     FWPlugin *newPlugin = [[FWPlugin alloc] init];
