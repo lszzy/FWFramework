@@ -82,7 +82,7 @@
 + (void)fwOpenAppStore:(NSString *)appId
 {
     // SKStoreProductViewController可以内部打开，但需要加载
-    [self fwOpenURL:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", appId]];
+    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
 }
 
 + (BOOL)fwIsAppStoreURL:(id)url
@@ -91,7 +91,7 @@
     NSURL *nsurl = [self fwNSURLWithURL:url];
     if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
         return YES;
-    // https://itunes.apple.com/等
+    // https://apps.apple.com/等
     } else if ([nsurl.host.lowercaseString isEqualToString:@"itunes.apple.com"] ||
                [nsurl.host.lowercaseString isEqualToString:@"apps.apple.com"]) {
         return YES;

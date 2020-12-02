@@ -65,7 +65,7 @@
                 // 强制更新
                 NSString *title = [NSString stringWithFormat:@"%@的新版本可用。请立即更新到%@版本。", @"EASI", [FWVersionManager sharedInstance].latestVersion];
                 [self fwShowAlertWithTitle:title message:[FWVersionManager sharedInstance].releaseNotes cancel:@"更新" actions:nil actionBlock:nil cancelBlock:^{
-                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", [FWVersionManager sharedInstance].appId]];
+                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", [FWVersionManager sharedInstance].appId]];
                     [UIApplication fwOpenURL:url completionHandler:^(BOOL success) {
                         if (success) {
                             exit(EXIT_SUCCESS);
