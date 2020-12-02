@@ -47,19 +47,16 @@ public struct FWPluginAnnotation<T> {
     
     public init(_ plugin: Protocol, object: Any) {
         self.plugin = plugin
-
         FWPluginManager.sharedInstance.registerPlugin(plugin, with: object)
     }
     
     public init(_ plugin: Protocol, block: @escaping () -> T) {
         self.plugin = plugin
-        
         FWPluginManager.sharedInstance.registerPlugin(plugin, withBlock: block)
     }
     
     public init(_ plugin: Protocol, factory: @escaping () -> T) {
         self.plugin = plugin
-        
         FWPluginManager.sharedInstance.registerPlugin(plugin, withFactory: factory)
     }
     
@@ -70,5 +67,37 @@ public struct FWPluginAnnotation<T> {
         set {
             FWPluginManager.sharedInstance.registerPlugin(plugin, with: newValue)
         }
+    }
+}
+
+/// 路由属性包装器注解
+/// 使用示例：
+/// @FWRouterAnnotation("app://plugin/:id")
+/// static var pluginUrl: String
+@propertyWrapper
+public struct FWRouterAnnotation<T> {
+    var url: Any
+    
+    public init(_ url: String) {
+        self.url = url
+    }
+    
+    public init(_ url: String, parameters: Any?) {
+        self.url = FWRouter.generateURL(url, parameters: parameters)
+    }
+    
+    public init(_ url: String, handler: @escaping FWRouterHandler) {
+        self.url = url
+        FWRouter.registerURL(url, withHandler: handler)
+    }
+    
+    public init(_ url: String, objectHandler: @escaping FWRouterObjectHandler) {
+        self.url = url
+        FWRouter.registerURL(url, withObjectHandler: objectHandler)
+    }
+    
+    public var wrappedValue: T {
+        get { return url as! T }
+        set { url = newValue }
     }
 }
