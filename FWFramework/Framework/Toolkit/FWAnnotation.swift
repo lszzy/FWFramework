@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// UserDefault属性注解
+/// UserDefault属性包装器注解
 /// 使用示例：@FWUserDefaultAnnotation("userName", defaultValue: "test")
 /// public static var userName: String
 @propertyWrapper
