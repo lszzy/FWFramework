@@ -72,7 +72,7 @@
 
 - (void)openAppStore
 {
-    NSString *storeString = [NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", self.appId];
+    NSString *storeString = [NSString stringWithFormat:@"https://apps.apple.com/app/id%@", self.appId];
     NSURL *storeUrl = [NSURL URLWithString:storeString];
 
     dispatch_async(dispatch_get_main_queue(), ^{
