@@ -65,8 +65,9 @@ struct LandmarkHome: View {
                     Text("ViewModel")
                 }
             }
-            .navigationBarTitle("Featured")
+            .navigationBarTitle("Featured", displayMode: .inline)
             .navigationBarItems(trailing: profileButton)
+            .navigationBarColor(backgroundColor: UIColor(.fwColorHex(0xFFDA00)), titleColor: .fwColor(withHex: 0x1C1C1E))
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()
                     .environmentObject(self.userData)
