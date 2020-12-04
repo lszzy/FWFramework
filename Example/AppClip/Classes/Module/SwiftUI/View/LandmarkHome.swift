@@ -18,6 +18,9 @@ struct LandmarkHome: View {
     @State var showingProfile = false
     @EnvironmentObject var userData: UserData
     
+    @State private var showingViewModel = false
+    @State private var showingPage: String? = nil
+    
     var profileButton: some View {
         Button(action: {
             self.showingProfile.toggle()
@@ -61,13 +64,16 @@ struct LandmarkHome: View {
                         }
                     })
                 
-                NavigationLink(destination: LandmarkModelView()) {
+                NavigationLink(destination: LandmarkModelView(), isActive: $showingViewModel) {
                     Text("ViewModel")
+                }
+                
+                NavigationLink(destination: LandmarkModelView(title: "ViewModel2"), tag: "ViewModel", selection: $showingPage) {
+                    Text("ViewModel2")
                 }
             }
             .navigationBarTitle("Featured", displayMode: .inline)
             .navigationBarItems(trailing: profileButton)
-            .navigationBarColor(backgroundColor: UIColor(.fwColorHex(0xFFDA00)), titleColor: .fwColor(withHex: 0x1C1C1E))
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()
                     .environmentObject(self.userData)

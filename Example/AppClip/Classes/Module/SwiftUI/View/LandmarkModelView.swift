@@ -11,6 +11,10 @@ import SwiftUI
 struct LandmarkModelView: View {
     @ObservedObject var viewModel: LandmarkViewModel = LandmarkViewModel()
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    var title: String = "ViewModel"
+    
     var body: some View {
         VStack {
             switch viewModel.state {
@@ -34,7 +38,14 @@ struct LandmarkModelView: View {
                 }
             }
         }
-        .navigationBarTitle("ViewModel", displayMode: .inline)
+        .navigationBarTitle(title, displayMode: .inline)
+        .navigationBarItems(leading: Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }, label: {
+            Image(systemName: "chevron.left")
+                .imageScale(.large)
+        }))
+        .navigationBarBackButtonHidden(true)
         .onAppear {
             self.viewModel.send(.refresh)
         }
