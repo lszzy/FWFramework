@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSInteger FWNavigationBarStyle NS_TYPED_EXTENSIBLE_ENUM;
 static const FWNavigationBarStyle FWNavigationBarStyleDefault = 0;
 static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
-static const FWNavigationBarStyle FWNavigationBarStyleHidden  = 2;
 
 /*!
  @brief UIViewController+FWStyle

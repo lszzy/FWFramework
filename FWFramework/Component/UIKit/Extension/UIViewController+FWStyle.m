@@ -26,19 +26,15 @@
             if (!styleNumber) return;
             
             FWNavigationBarStyle style = [styleNumber integerValue];
-            BOOL navigationBarHidden = (style == FWNavigationBarStyleHidden) ? YES : NO;
-            if (navigationBarHidden != selfObject.navigationController.navigationBarHidden) {
-                [selfObject.navigationController setNavigationBarHidden:navigationBarHidden animated:YES];
-            }
-            
-            [selfObject.navigationController.navigationBar setShadowImage:[UIImage new]];
             if (style == FWNavigationBarStyleClear) {
                 [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+                [selfObject.navigationController.navigationBar setShadowImage:[UIImage new]];
             }
             
             FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance appearanceForStyle:style];
             if (appearance.backgroundColor) {
                 [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:appearance.backgroundColor] forBarMetrics:UIBarMetricsDefault];
+                [selfObject.navigationController.navigationBar setShadowImage:[UIImage new]];
             }
             if (appearance.foregroundColor) {
                 [selfObject.navigationController.navigationBar setTintColor:appearance.foregroundColor];
