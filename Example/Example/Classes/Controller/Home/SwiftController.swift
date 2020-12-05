@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - SwiftController
 
-@objcMembers class SwiftController: UIViewController {
+@objcMembers class SwiftController: BaseViewController {
     // MARK: - Lifecycle
 
     override func viewDidLoad() {

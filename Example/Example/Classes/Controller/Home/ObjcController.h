@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ObjcController : UIViewController
+@interface ObjcController : BaseViewController
 
 @property (nonatomic, assign) NSInteger selectedIndex;
 
