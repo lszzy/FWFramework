@@ -21,7 +21,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
  */
 @interface UIViewController (FWStyle)
 
-/// 当前导航栏样式，设置后才生效
+/// 当前导航栏样式，设置后才会在viewWillAppear:自动应用生效
 @property (nonatomic, assign) FWNavigationBarStyle fwNavigationBarStyle;
 
 @end
@@ -37,7 +37,6 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
                         foregroundColor:(nullable UIColor *)foregroundColor
                         appearanceBlock:(nullable void (^)(UINavigationBar *navigationBar))appearanceBlock;
 
-/// 框架样式配置，默认方案
 + (nullable FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style;
 + (void)setAppearance:(nullable FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style;
 
