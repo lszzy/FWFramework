@@ -36,19 +36,19 @@
                 [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
             }
             
-            FWNavigationBarConfig *config = [FWNavigationBarConfig configForStyle:style];
-            if (config.backgroundColor) {
-                [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:config.backgroundColor] forBarMetrics:UIBarMetricsDefault];
+            FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance appearanceForStyle:style];
+            if (appearance.backgroundColor) {
+                [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:appearance.backgroundColor] forBarMetrics:UIBarMetricsDefault];
             }
-            if (config.foregroundColor) {
-                [selfObject.navigationController.navigationBar setTintColor:config.foregroundColor];
-                [selfObject.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: config.foregroundColor}];
+            if (appearance.foregroundColor) {
+                [selfObject.navigationController.navigationBar setTintColor:appearance.foregroundColor];
+                [selfObject.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
                 if (@available(iOS 11.0, *)) {
-                    [selfObject.navigationController.navigationBar setLargeTitleTextAttributes:@{NSForegroundColorAttributeName: config.foregroundColor}];
+                    [selfObject.navigationController.navigationBar setLargeTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
                 }
             }
-            if (config.configBlock) {
-                config.configBlock(selfObject.navigationController.navigationBar);
+            if (appearance.appearanceBlock) {
+                appearance.appearanceBlock(selfObject.navigationController.navigationBar);
             }
         }));
     });
@@ -66,42 +66,19 @@
 
 @end
 
-@implementation FWNavigationBarConfig
+@implementation FWNavigationBarAppearance
 
 - (instancetype)initWithBackgroundColor:(UIColor *)backgroundColor
                         foregroundColor:(UIColor *)foregroundColor
-                            configBlock:(void (^)(UINavigationBar *))configBlock
+                        appearanceBlock:(void (^)(UINavigationBar *))appearanceBlock
 {
     self = [super init];
     if (self) {
         _backgroundColor = backgroundColor;
         _foregroundColor = foregroundColor;
-        _configBlock = configBlock;
+        _appearanceBlock = appearanceBlock;
     }
     return self;
-}
-
-+ (NSMutableDictionary *)styleConfigs
-{
-    static NSMutableDictionary *configs = nil;
-    if (!configs) {
-        configs = [[NSMutableDictionary alloc] init];
-    }
-    return configs;
-}
-
-+ (FWNavigationBarConfig *)configForStyle:(FWNavigationBarStyle)style
-{
-    return [[self styleConfigs] objectForKey:@(style)];
-}
-
-+ (void)setConfig:(FWNavigationBarConfig *)config forStyle:(FWNavigationBarStyle)style
-{
-    if (config) {
-        [[self styleConfigs] setObject:config forKey:@(style)];
-    } else {
-        [[self styleConfigs] removeObjectForKey:@(style)];
-    }
 }
 
 + (NSMutableDictionary *)styleAppearances
@@ -113,12 +90,12 @@
     return appearances;
 }
 
-+ (UINavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style
++ (FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style
 {
     return [[self styleAppearances] objectForKey:@(style)];
 }
 
-+ (void)setAppearance:(UINavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style
++ (void)setAppearance:(FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style
 {
     if (appearance) {
         [[self styleAppearances] setObject:appearance forKey:@(style)];
