@@ -28,18 +28,18 @@ static const FWNavigationBarStyle FWNavigationBarStyleHidden  = 2;
 @end
 
 /// 导航栏样式配置
-@interface FWNavigationBarAppearance : NSObject
+@interface FWNavigationBarConfig : NSObject
 
 @property (nullable, nonatomic, strong, readonly) UIColor *backgroundColor;
 @property (nullable, nonatomic, strong, readonly) UIColor *foregroundColor;
-@property (nullable, nonatomic, copy, readonly) void (^appearanceBlock)(UINavigationBar *navigationBar);
+@property (nullable, nonatomic, copy, readonly) void (^configBlock)(UINavigationBar *navigationBar);
 
 - (instancetype)initWithBackgroundColor:(nullable UIColor *)backgroundColor
                         foregroundColor:(nullable UIColor *)foregroundColor
-                        appearanceBlock:(nullable void (^)(UINavigationBar *navigationBar))appearanceBlock;
+                            configBlock:(nullable void (^)(UINavigationBar *navigationBar))configBlock;
 
-+ (nullable FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style;
-+ (void)setAppearance:(nullable FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style;
++ (nullable FWNavigationBarConfig *)configForStyle:(FWNavigationBarStyle)style;
++ (void)setConfig:(nullable FWNavigationBarConfig *)config forStyle:(FWNavigationBarStyle)style;
 
 @end
 
