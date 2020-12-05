@@ -38,8 +38,13 @@ static const FWNavigationBarStyle FWNavigationBarStyleHidden  = 2;
                         foregroundColor:(nullable UIColor *)foregroundColor
                             configBlock:(nullable void (^)(UINavigationBar *navigationBar))configBlock;
 
+/// 框架样式配置，默认方案
 + (nullable FWNavigationBarConfig *)configForStyle:(FWNavigationBarStyle)style;
 + (void)setConfig:(nullable FWNavigationBarConfig *)config forStyle:(FWNavigationBarStyle)style;
+
+/// 系统样式配置，iOS13+，可选方案
++ (nullable UINavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style API_AVAILABLE(ios(13.0));
++ (void)setAppearance:(nullable UINavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style API_AVAILABLE(ios(13.0));
 
 @end
 

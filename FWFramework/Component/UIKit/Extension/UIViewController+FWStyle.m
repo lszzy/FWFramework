@@ -104,4 +104,27 @@
     }
 }
 
++ (NSMutableDictionary *)styleAppearances
+{
+    static NSMutableDictionary *appearances = nil;
+    if (!appearances) {
+        appearances = [[NSMutableDictionary alloc] init];
+    }
+    return appearances;
+}
+
++ (UINavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style
+{
+    return [[self styleAppearances] objectForKey:@(style)];
+}
+
++ (void)setAppearance:(UINavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style
+{
+    if (appearance) {
+        [[self styleAppearances] setObject:appearance forKey:@(style)];
+    } else {
+        [[self styleAppearances] removeObjectForKey:@(style)];
+    }
+}
+
 @end
