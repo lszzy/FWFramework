@@ -85,8 +85,8 @@
 - (void)setupAppearance
 {
     // 导航栏样式
-    FWNavigationBarConfig *config = [[FWNavigationBarConfig alloc] initWithBackgroundColor:[UIColor fwColorWithHex:0xFFDA00] foregroundColor:[UIColor fwColorWithHex:0x111111] configBlock:nil];
-    [FWNavigationBarConfig setConfig:config forStyle:FWNavigationBarStyleDefault];
+    FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] initWithBackgroundColor:[UIColor fwColorWithHex:0xFFDA00] foregroundColor:[UIColor fwColorWithHex:0x111111] appearanceBlock:nil];
+    [FWNavigationBarAppearance setAppearance:appearance forStyle:FWNavigationBarStyleDefault];
     
     // 优先查找非cancel按钮，找不到则默认cancel
     FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
