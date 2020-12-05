@@ -31,6 +31,8 @@
 		2FB4F3242576874800FF1ED3 /* FWAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4F3232576874800FF1ED3 /* FWAnnotation.swift */; };
 		2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */; };
 		2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */; };
+		2FE56501257BDD0A00BF89E5 /* UIViewController+FWStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE564FF257BDD0A00BF89E5 /* UIViewController+FWStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FE56502257BDD0A00BF89E5 /* UIViewController+FWStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE56500257BDD0A00BF89E5 /* UIViewController+FWStyle.m */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */; };
 		2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -366,6 +368,8 @@
 		2FB4F3232576874800FF1ED3 /* FWAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWAnnotation.swift; sourceTree = "<group>"; };
 		2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
+		2FE564FF257BDD0A00BF89E5 /* UIViewController+FWStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWStyle.h"; sourceTree = "<group>"; };
+		2FE56500257BDD0A00BF89E5 /* UIViewController+FWStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWStyle.m"; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDynamicLayout.h; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDynamicLayout.m; sourceTree = "<group>"; };
 		2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWPopGesture.h"; sourceTree = "<group>"; };
@@ -1132,6 +1136,8 @@
 				2FFE1C642507BFBC000332A3 /* UIViewController+FWBar.m */,
 				2FFE1C712507BFBC000332A3 /* UIViewController+FWFramework.h */,
 				2FFE1C9D2507BFBC000332A3 /* UIViewController+FWFramework.m */,
+				2FE564FF257BDD0A00BF89E5 /* UIViewController+FWStyle.h */,
+				2FE56500257BDD0A00BF89E5 /* UIViewController+FWStyle.m */,
 				2FFE1C682507BFBC000332A3 /* UIViewController+FWTransition.h */,
 				2FFE1CA72507BFBD000332A3 /* UIViewController+FWTransition.m */,
 				2FFE1C632507BFBC000332A3 /* UIWindow+FWFramework.h */,
@@ -1240,6 +1246,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FE56501257BDD0A00BF89E5 /* UIViewController+FWStyle.h in Headers */,
 				2F1626882574DC8E0037427D /* FWHelper.h in Headers */,
 				2F8A9899255403A500AC554B /* FWWebImage.h in Headers */,
 				2F2350FF25417FEB00EED502 /* FWToolkit.h in Headers */,
@@ -1640,6 +1647,7 @@
 				2FFE1BAD2507BF95000332A3 /* FWDatabase.m in Sources */,
 				2FFE1DC02507BFBD000332A3 /* NSDictionary+FWThread.m in Sources */,
 				2FFE1D1E2507BFBD000332A3 /* UIBezierPath+FWShape.m in Sources */,
+				2FE56502257BDD0A00BF89E5 /* UIViewController+FWStyle.m in Sources */,
 				2FFE1C3D2507BFA5000332A3 /* FWViewController.swift in Sources */,
 				2FFE1DBA2507BFBD000332A3 /* NSNumber+FWFramework.m in Sources */,
 				2FFE1D9B2507BFBD000332A3 /* FWProgressView.m in Sources */,

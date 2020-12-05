@@ -20,6 +20,7 @@
     FWViewControllerIntercepter *intercepter = [FWViewControllerIntercepter new];
     intercepter.initIntercepter = @selector(viewControllerInit:);
     intercepter.loadViewIntercepter = @selector(viewControllerLoadView:);
+    intercepter.viewDidLoadIntercepter = @selector(viewControllerViewDidLoad:);
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWViewController) withIntercepter:intercepter];
 }
 
@@ -30,6 +31,9 @@
     viewController.extendedLayoutIncludesOpaqueBars = YES;
     viewController.automaticallyAdjustsScrollViewInsets = NO;
     viewController.hidesBottomBarWhenPushed = YES;
+    
+    // 默认导航栏样式
+    viewController.fwNavigationBarStyle = FWNavigationBarStyleDefault;
 }
 
 - (void)viewControllerLoadView:(UIViewController *)viewController
@@ -38,36 +42,18 @@
     viewController.view.backgroundColor = [UIColor whiteColor];
 }
 
+- (void)viewControllerViewDidLoad:(UIViewController *)viewController
+{
+    // 通用返回按钮
+    [viewController fwSetBackBarImage:[UIImage imageNamed:@"public_back"]];
+}
+
 @end
 
 #pragma mark - BaseViewController
 
 @implementation BaseViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // 通用导航栏样式
-    [self fwSetBackBarImage:[UIImage imageNamed:@"public_back"]];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    // 通用导航栏样式
-    [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor fwColorWithHex:0xFFDA00]];
-    [self.navigationController.navigationBar fwSetLineHidden:YES];
-}
-
-- (void)dealloc
-{
-    // 自动移除监听
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    // 打印被释放日志，防止内存泄露
-    NSLog(@"%@ did dealloc", NSStringFromClass(self.class));
-}
+FWDealloc();
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIViewController+FWBack.h"
 #import "UIViewController+FWBar.h"
+#import "UIViewController+FWStyle.h"
 #import "UIViewController+FWTransition.h"
 
 NS_ASSUME_NONNULL_BEGIN
