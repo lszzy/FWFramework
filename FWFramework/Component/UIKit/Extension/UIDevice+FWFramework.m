@@ -8,14 +8,11 @@
  */
 
 #import "UIDevice+FWFramework.h"
-#import "FWKeychain.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <net/if.h>
-
-static NSString *fwStaticDeviceUUID = nil;
 
 @implementation UIDevice (FWFramework)
 
@@ -78,38 +75,6 @@ static NSString *fwStaticDeviceUUID = nil;
     
     [[UIDevice currentDevice] setValue:@(orientation) forKey:@"orientation"];
     return YES;
-}
-
-#pragma mark - UUID
-
-+ (NSString *)fwDeviceUUID
-{
-    if (!fwStaticDeviceUUID) {
-        @synchronized ([self class]) {
-            NSString *deviceUUID = [[FWKeychainManager sharedInstance] passwordForService:@"FWDeviceUUID" account:NSBundle.mainBundle.bundleIdentifier];
-            if (deviceUUID.length > 0) {
-                fwStaticDeviceUUID = deviceUUID;
-            } else {
-                deviceUUID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-                if (deviceUUID.length < 1) {
-                    CFUUIDRef uuid = CFUUIDCreate(NULL);
-                    CFStringRef string = CFUUIDCreateString(NULL, uuid);
-                    CFRelease(uuid);
-                    deviceUUID = (__bridge_transfer NSString *)string;
-                }
-                [self setFwDeviceUUID:deviceUUID];
-            }
-        }
-    }
-    
-    return fwStaticDeviceUUID;
-}
-
-+ (void)setFwDeviceUUID:(NSString *)fwDeviceUUID
-{
-    fwStaticDeviceUUID = fwDeviceUUID;
-    
-    [[FWKeychainManager sharedInstance] setPassword:fwDeviceUUID forService:@"FWDeviceUUID" account:NSBundle.mainBundle.bundleIdentifier];
 }
 
 #pragma mark - Network

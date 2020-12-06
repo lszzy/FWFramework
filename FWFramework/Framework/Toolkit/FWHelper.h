@@ -45,10 +45,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIDevice (FWHelper)
 
-// 设置设备token原始Data，格式化并保存
+/// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+@property (class, nonatomic, copy) NSString *fwDeviceUUID;
+
+/// 设置设备token原始Data，格式化并保存
 + (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
 
-// 获取设备Token格式化后的字符串
+/// 获取设备Token格式化后的字符串
 + (nullable NSString *)fwDeviceToken;
 
 /// 获取设备模型，格式："iPhone6,1"
