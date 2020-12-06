@@ -16,6 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIDevice (FWFramework)
 
+#pragma mark - UUID
+
+/// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+@property (class, nonatomic, copy) NSString *fwDeviceUUID;
+
+#pragma mark - Jailbroken
+
 // 是否越狱
 + (BOOL)fwIsJailbroken;
 
