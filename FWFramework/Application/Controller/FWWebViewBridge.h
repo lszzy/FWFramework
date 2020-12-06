@@ -1,7 +1,7 @@
 /*!
- @header     FWJsBridge.h
+ @header     FWWebViewBridge.h
  @indexgroup FWFramework
- @brief      FWJsBridge
+ @brief      FWWebViewBridge
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/3/17
@@ -66,7 +66,7 @@ typedef NSDictionary FWJsBridgeMessage;
 
 NSString * FWWebViewJsBridge_js(void);
 
-@interface WKWebView (FWJsBridge)
+@interface WKWebView (FWWebViewBridge)
 
 @property (strong, nonatomic, nullable) FWWebViewJsBridge *fwJsBridge;
 
@@ -87,7 +87,7 @@ NSString * FWWebViewJsBridge_js(void);
 
 @end
 
-@interface UIProgressView (FWJsBridge)
+@interface UIProgressView (FWWebViewBridge)
 
 /// 更新进度，0和1自动切换隐藏状态。可设置trackTintColor为clear，隐藏背景色
 - (void)fwSetProgress:(float)progress;

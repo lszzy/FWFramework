@@ -12,7 +12,6 @@
 #import "FWMessage.h"
 #import "FWToolkit.h"
 #import "FWAutoLayout.h"
-#import "FWJsBridge.h"
 #import "FWBlock.h"
 #import "FWAlertPlugin.h"
 #import <objc/runtime.h>
