@@ -13,7 +13,7 @@
 #import "FWMessage.h"
 #import "FWAutoLayout.h"
 #import "FWAdaptive.h"
-#import "FWToolkit.h"
+#import "FWImage.h"
 #import <objc/runtime.h>
 
 @implementation UISearchBar (FWFramework)
