@@ -68,36 +68,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return self;
 }
 
-#pragma mark - Class
-
-+ (void)registerClass:(Class)cls
-{
-    if (![cls conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    
-    if ([cls respondsToSelector:@selector(fwRouterURL)]) {
-        [self registerURL:[cls fwRouterURL] withHandler:^(NSDictionary *parameters) {
-            [cls fwRouterHandler:parameters];
-        }];
-    }
-    if ([cls respondsToSelector:@selector(fwRouterObjectURL)]) {
-        [self registerURL:[cls fwRouterObjectURL] withObjectHandler:^id(NSDictionary *parameters) {
-            return [cls fwRouterObjectHandler:parameters];
-        }];
-    }
-}
-
-+ (void)unregisterClass:(Class)cls
-{
-    if (![cls conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    
-    if ([cls respondsToSelector:@selector(fwRouterURL)]) {
-        [self unregisterURL:[cls fwRouterURL]];
-    }
-    if ([cls respondsToSelector:@selector(fwRouterObjectURL)]) {
-        [self unregisterURL:[cls fwRouterObjectURL]];
-    }
-}
-
 #pragma mark - URL
 
 + (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler
@@ -677,6 +647,16 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     [[UIWindow fwMainWindow] fwPresentViewController:viewController animated:animated completion:completion];
 }
 
++ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[UIWindow fwMainWindow] fwOpenViewController:viewController animated:animated];
+}
+
++ (void)closeViewControllerAnimated:(BOOL)animated
+{
+    [[UIWindow fwMainWindow] fwCloseViewControllerAnimated:animated];
+}
+
 @end
 
 #pragma mark - UIWindow+FWNavigation
@@ -749,8 +729,7 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     return presentedController;
 }
 
-- (BOOL)fwPushViewController:(UIViewController *)viewController
-                    animated:(BOOL)animated
+- (BOOL)fwPushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     UINavigationController *navigationController = [self fwTopNavigationController];
     if (navigationController) {
@@ -760,11 +739,46 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     return NO;
 }
 
-- (void)fwPresentViewController:(UIViewController *)viewController
-                       animated:(BOOL)animated
-                     completion:(void (^)(void))completion
+- (void)fwPresentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     [[self fwTopPresentedController] presentViewController:viewController animated:animated completion:completion];
+}
+
+- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[self fwTopViewController] fwOpenViewController:viewController animated:animated];
+}
+
+- (void)fwCloseViewControllerAnimated:(BOOL)animated
+{
+    [[self fwTopViewController] fwCloseViewControllerAnimated:animated];
+}
+
+@end
+
+#pragma mark - UIViewController+FWNavigation
+
+@implementation UIViewController (FWNavigation)
+
+- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
+        [self presentViewController:viewController animated:animated completion:nil];
+    } else {
+        [self.navigationController pushViewController:viewController animated:animated];
+    }
+}
+
+- (void)fwCloseViewControllerAnimated:(BOOL)animated
+{
+    if (self.navigationController) {
+        UIViewController *viewController = [self.navigationController popViewControllerAnimated:animated];
+        if (!viewController && self.presentingViewController) {
+            [self dismissViewControllerAnimated:animated completion:nil];
+        }
+    } else if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:animated completion:nil];
+    }
 }
 
 @end

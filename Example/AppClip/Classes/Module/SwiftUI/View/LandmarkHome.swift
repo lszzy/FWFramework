@@ -18,6 +18,9 @@ struct LandmarkHome: View {
     @State var showingProfile = false
     @EnvironmentObject var userData: UserData
     
+    @State private var showingViewModel = false
+    @State private var showingPage: String? = nil
+    
     var profileButton: some View {
         Button(action: {
             self.showingProfile.toggle()
@@ -60,8 +63,16 @@ struct LandmarkHome: View {
                             Text("UIKitController")
                         }
                     })
+                
+                NavigationLink(destination: LandmarkModelView(), isActive: $showingViewModel) {
+                    Text("ViewModel")
+                }
+                
+                NavigationLink(destination: LandmarkModelView(title: "ViewModel2"), tag: "ViewModel", selection: $showingPage) {
+                    Text("ViewModel2")
+                }
             }
-            .navigationBarTitle("Featured")
+            .navigationBarTitle("Featured", displayMode: .inline)
             .navigationBarItems(trailing: profileButton)
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()

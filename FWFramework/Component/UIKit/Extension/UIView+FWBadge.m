@@ -7,8 +7,8 @@
 //
 
 #import "UIView+FWBadge.h"
+#import "UINavigationBar+FWFramework.h"
 #import "FWAutoLayout.h"
-#import "UIViewController+FWBar.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 

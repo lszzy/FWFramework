@@ -11,7 +11,6 @@
 #import "FWSceneDelegate.h"
 #import "FWAlertController.h"
 #import "FWEmptyPlugin.h"
-#import "FWJsBridge.h"
 #import "FWRefreshPlugin.h"
 #import "FWToastPlugin.h"
 

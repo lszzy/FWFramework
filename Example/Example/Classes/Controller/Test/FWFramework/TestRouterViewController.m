@@ -8,31 +8,7 @@
 
 #import "TestRouterViewController.h"
 
-@interface TestRouterResultViewController () <FWRouterProtocol>
-
-@end
-
 @implementation TestRouterResultViewController
-
-+ (void)load
-{
-    [FWRouter registerClass:[self class]];
-}
-
-#pragma mark - Router
-
-+ (id)fwRouterURL
-{
-    return AppRouter.ROUTE_CONTROLLER;
-}
-
-+ (void)fwRouterHandler:(NSDictionary *)parameters
-{
-    TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-    viewController.parameters = parameters;
-    viewController.title = [NSString stringWithFormat:@"app://controller/%@", parameters[@"id"]];
-    [FWRouter pushViewController:viewController animated:YES];
-}
 
 #pragma mark - Lifecycle
 

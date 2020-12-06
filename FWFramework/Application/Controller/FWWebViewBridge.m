@@ -1,13 +1,13 @@
 /*!
- @header     FWJsBridge.m
+ @header     FWWebViewBridge.m
  @indexgroup FWFramework
- @brief      FWJsBridge
+ @brief      FWWebViewBridge
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/3/17
  */
 
-#import "FWJsBridge.h"
+#import "FWWebViewBridge.h"
 #import <objc/runtime.h>
 
 @implementation FWWebViewJsBridgeBase {
@@ -531,7 +531,7 @@ NSString * FWWebViewJsBridge_js() {
     return preprocessorJSCode;
 };
 
-@implementation WKWebView (FWJsBridge)
+@implementation WKWebView (FWWebViewBridge)
 
 - (FWWebViewJsBridge *)fwJsBridge
 {
@@ -588,7 +588,7 @@ NSString * FWWebViewJsBridge_js() {
 
 @end
 
-@implementation UIProgressView (FWJsBridge)
+@implementation UIProgressView (FWWebViewBridge)
 
 - (void)fwSetProgress:(float)progress
 {

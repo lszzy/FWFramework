@@ -9,9 +9,98 @@
 
 #import "FWToolkit.h"
 #import "FWRouter.h"
-#import "FWPlugin.h"
+#import "FWKeychain.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
+#import <sys/sysctl.h>
+#if FWCOMPONENT_TRACKING_ENABLED
+#import <AdSupport/ASIdentifierManager.h>
+#endif
+
+#pragma mark - NSAttributedString+FWToolkit
+
+@implementation NSAttributedString (FWToolkit)
+
++ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
+{
+    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[self alloc] initWithData:htmlData options:@{
+        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
+    } documentAttributes:nil error:nil];
+}
+
+- (NSString *)fwHtmlString
+{
+    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
+        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+    } error:nil];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+}
+
+@end
+
+#pragma mark - NSDate+FWToolkit
+
+// 当前基准时间值
+static NSTimeInterval fwStaticCurrentBaseTime = 0;
+// 本地基准时间值
+static NSTimeInterval fwStaticLocalBaseTime = 0;
+
+@implementation NSDate (FWToolkit)
+
++ (NSTimeInterval)fwCurrentTime
+{
+    // 没有同步过返回本地时间
+    if (fwStaticCurrentBaseTime == 0) {
+        // 是否本地有服务器时间
+        NSNumber *preCurrentTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWCurrentTime"];
+        NSNumber *preLocalTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalTime"];
+        if (preCurrentTime && preLocalTime) {
+            // 计算当前服务器时间
+            NSTimeInterval offsetTime = [[NSDate date] timeIntervalSince1970] - preLocalTime.doubleValue;
+            return preCurrentTime.doubleValue + offsetTime;
+        } else {
+            return [[NSDate date] timeIntervalSince1970];
+        }
+    // 同步过计算当前服务器时间
+    } else {
+        NSTimeInterval offsetTime = [self fwCurrentSystemUptime] - fwStaticLocalBaseTime;
+        return fwStaticCurrentBaseTime + offsetTime;
+    }
+}
+
++ (void)setFwCurrentTime:(NSTimeInterval)currentTime
+{
+    fwStaticCurrentBaseTime = currentTime;
+    // 取运行时间，调整系统时间不会影响
+    fwStaticLocalBaseTime = [self fwCurrentSystemUptime];
+    
+    // 保存当前服务器时间到本地
+    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
+    [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (long long)fwCurrentSystemUptime
+{
+    struct timeval boottime;
+    int mib[2] = {CTL_KERN, KERN_BOOTTIME};
+    size_t size = sizeof(boottime);
+    time_t now;
+    time_t uptime = -1;
+    (void)time(&now);
+    if (sysctl(mib, 2, &boottime, &size, NULL, 0) != -1 && boottime.tv_sec != 0) {
+        uptime = now - boottime.tv_sec;
+    }
+    return uptime;
+}
+
+@end
 
 #pragma mark - UIApplication+FWToolkit
 
@@ -82,7 +171,7 @@
 + (void)fwOpenAppStore:(NSString *)appId
 {
     // SKStoreProductViewController可以内部打开，但需要加载
-    [self fwOpenURL:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", appId]];
+    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
 }
 
 + (BOOL)fwIsAppStoreURL:(id)url
@@ -91,7 +180,7 @@
     NSURL *nsurl = [self fwNSURLWithURL:url];
     if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
         return YES;
-    // https://itunes.apple.com/等
+    // https://apps.apple.com/等
     } else if ([nsurl.host.lowercaseString isEqualToString:@"itunes.apple.com"] ||
                [nsurl.host.lowercaseString isEqualToString:@"apps.apple.com"]) {
         return YES;
@@ -350,257 +439,106 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @end
 
-#pragma mark - UIImage+FWToolkit
+#pragma mark - UIDevice+FWToolkit
 
-UIImage * FWImageName(NSString *name) {
-    return [UIImage fwImageWithName:name];
-}
+static NSString *fwStaticDeviceUUID = nil;
 
-UIImage * FWImageFile(NSString *path) {
-    return [UIImage fwImageWithFile:path];
-}
+@implementation UIDevice (FWToolkit)
 
-@implementation UIImage (FWToolkit)
-
-+ (UIImage *)fwImageWithName:(NSString *)name
++ (NSString *)fwDeviceUUID
 {
-    return [UIImage imageNamed:name];
-}
-
-+ (UIImage *)fwImageWithFile:(NSString *)path
-{
-    if (path.length < 1) return nil;
-    
-    NSString *file = path.isAbsolutePath ? path : [[NSBundle mainBundle] pathForResource:path ofType:nil];
-    NSData *data = [NSData dataWithContentsOfFile:file];
-    if (!data) {
-        return [UIImage imageNamed:path];
-    }
-    
-    return [self fwImageWithData:data scale:[UIScreen mainScreen].scale];
-}
-
-+ (UIImage *)fwImageWithData:(NSData *)data
-{
-    return [self fwImageWithData:data scale:1];
-}
-
-+ (UIImage *)fwImageWithData:(NSData *)data scale:(CGFloat)scale
-{
-    if (!data) return nil;
-    
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:)]) {
-        return [imagePlugin fwImageDecode:data scale:scale];
-    }
-    
-    return [UIImage imageWithData:data scale:scale];
-}
-
-+ (id)fwDownloadImage:(id)url
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-             progress:(void (^)(double))progress
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwDownloadImage:completion:progress:)]) {
-        NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]]) {
-            imageURL = [NSURL URLWithString:url];
-            if (!imageURL && [url length] > 0) {
-                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    if (!fwStaticDeviceUUID) {
+        @synchronized ([self class]) {
+            NSString *deviceUUID = [[FWKeychainManager sharedInstance] passwordForService:@"FWDeviceUUID" account:NSBundle.mainBundle.bundleIdentifier];
+            if (deviceUUID.length > 0) {
+                fwStaticDeviceUUID = deviceUUID;
+            } else {
+                deviceUUID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+                if (deviceUUID.length < 1) {
+                    deviceUUID = [[NSUUID UUID] UUIDString];
+                }
+                [self setFwDeviceUUID:deviceUUID];
             }
-        } else if ([url isKindOfClass:[NSURL class]]) {
-            imageURL = url;
-        } else if ([url isKindOfClass:[NSURLRequest class]]) {
-            imageURL = [url URL];
         }
-        
-        return [imagePlugin fwDownloadImage:imageURL completion:completion progress:progress];
+    }
+    
+    return fwStaticDeviceUUID;
+}
+
++ (void)setFwDeviceUUID:(NSString *)fwDeviceUUID
+{
+    fwStaticDeviceUUID = fwDeviceUUID;
+    
+    [[FWKeychainManager sharedInstance] setPassword:fwDeviceUUID forService:@"FWDeviceUUID" account:NSBundle.mainBundle.bundleIdentifier];
+}
+
++ (void)fwSetDeviceTokenData:(NSData *)tokenData
+{
+    if (tokenData) {
+        NSMutableString *deviceToken = [NSMutableString string];
+        const char *bytes = tokenData.bytes;
+        NSInteger count = tokenData.length;
+        for (int i = 0; i < count; i++) {
+            [deviceToken appendFormat:@"%02x", bytes[i] & 0x000000FF];
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:[deviceToken copy] forKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
++ (NSString *)fwDeviceToken
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
+}
+
++ (NSString *)fwDeviceModel
+{
+    static NSString *model;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        size_t size;
+        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+        char *machine = malloc(size);
+        sysctlbyname("hw.machine", machine, &size, NULL, 0);
+        model = [NSString stringWithUTF8String:machine];
+        free(machine);
+    });
+    return model;
+}
+
++ (NSString *)fwDeviceIDFV
+{
+    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+}
+
++ (NSString *)fwDeviceIDFA
+{
+#if FWCOMPONENT_TRACKING_ENABLED
+    return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
+#else
+    return nil;
+#endif
+}
+
+@end
+
+#pragma mark - UIView+FWToolkit
+
+@implementation UIView (FWToolkit)
+
+- (UIViewController *)fwViewController
+{
+    UIResponder *responder = [self nextResponder];
+    while (responder) {
+        if ([responder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)responder;
+        }
+        responder = [responder nextResponder];
     }
     return nil;
 }
-
-+ (void)fwCancelImageDownload:(id)receipt
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwCancelImageDownload:)]) {
-        [imagePlugin fwCancelImageDownload:receipt];
-    }
-}
-
-@end
-
-#pragma mark - UIImageView+FWToolkit
-
-@implementation UIImageView (FWToolkit)
-
-+ (Class)fwImageViewAnimatedClass
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
-        return [imagePlugin fwImageViewAnimatedClass];
-    }
-    
-    return objc_getAssociatedObject([UIImageView class], @selector(fwImageViewAnimatedClass)) ?: [UIImageView class];
-}
-
-+ (void)setFwImageViewAnimatedClass:(Class)animatedClass
-{
-    objc_setAssociatedObject([UIImageView class], @selector(fwImageViewAnimatedClass), animatedClass, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwSetImageWithURL:(id)url
-{
-    [self fwSetImageWithURL:url placeholderImage:nil];
-}
-
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(UIImage *)placeholderImage
-{
-    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:nil];
-}
-
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(UIImage *)placeholderImage
-               completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-{
-    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:completion progress:nil];
-}
-
-- (void)fwSetImageWithURL:(id)url
-         placeholderImage:(UIImage *)placeholderImage
-               completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-                 progress:(void (^)(double))progress
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:completion:progress:)]) {
-        NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]]) {
-            imageURL = [NSURL URLWithString:url];
-            if (!imageURL && [url length] > 0) {
-                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        } else if ([url isKindOfClass:[NSURL class]]) {
-            imageURL = url;
-        } else if ([url isKindOfClass:[NSURLRequest class]]) {
-            imageURL = [url URL];
-        }
-        
-        [imagePlugin fwImageView:self setImageURL:imageURL placeholder:placeholderImage completion:completion progress:progress];
-    }
-}
-
-- (void)fwCancelImageRequest
-{
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwCancelImageRequest:)]) {
-        [imagePlugin fwCancelImageRequest:self];
-    }
-}
-
-@end
-
-#pragma mark - FWSDWebImagePlugin
-
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
-@import SDWebImage;
-#endif
-
-@implementation FWSDWebImagePlugin
-
-+ (FWSDWebImagePlugin *)sharedInstance
-{
-    static FWSDWebImagePlugin *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWSDWebImagePlugin alloc] init];
-    });
-    return instance;
-}
-
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
-    });
-}
-
-- (Class)fwImageViewAnimatedClass
-{
-    return [SDAnimatedImageView class];
-}
-
-- (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale
-{
-    return [UIImage sd_imageWithData:data scale:scale];
-}
-
-- (void)fwImageView:(UIImageView *)imageView
-        setImageURL:(NSURL *)imageURL
-        placeholder:(UIImage *)placeholder
-         completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-           progress:(void (^)(double))progress
-{
-    [imageView sd_setImageWithURL:imageURL
-                 placeholderImage:placeholder
-                          options:SDWebImageRetryFailed
-                          context:nil
-                         progress:progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-                            if (expectedSize > 0) {
-                                if ([NSThread isMainThread]) {
-                                    progress(receivedSize / (double)expectedSize);
-                                } else {
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        progress(receivedSize / (double)expectedSize);
-                                    });
-                                }
-                            }
-                        } : nil
-                        completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                            completion(image, error);
-                        } : nil];
-}
-
-- (void)fwCancelImageRequest:(UIImageView *)imageView
-{
-    [imageView sd_cancelCurrentImageLoad];
-}
-
-- (id)fwDownloadImage:(NSURL *)imageURL
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
-             progress:(void (^)(double))progress
-{
-    return [[SDWebImageManager sharedManager]
-            loadImageWithURL:imageURL
-            options:SDWebImageRetryFailed
-            progress:(progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-                if (expectedSize > 0) {
-                    if ([NSThread isMainThread]) {
-                        progress(receivedSize / (double)expectedSize);
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            progress(receivedSize / (double)expectedSize);
-                        });
-                    }
-                }
-            } : nil)
-            completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-                if (completion) {
-                    completion(image, error);
-                }
-            }];
-}
-
-- (void)fwCancelImageDownload:(id)receipt
-{
-    if (receipt && [receipt isKindOfClass:[SDWebImageCombinedOperation class]]) {
-        [(SDWebImageCombinedOperation *)receipt cancel];
-    }
-}
-
-#endif
 
 @end

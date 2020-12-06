@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "UIViewController+FWBack.h"
-#import "UIViewController+FWBar.h"
 #import "UIViewController+FWTransition.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- @brief UIViewController+FWFramework
- @discussion 注意modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置。
- iOS13由于modalPresentationStyle默认值为Automatic(PageSheet)，不会触发父控制器的viewWillDisappear|viewWillAppear等生命周期方法
+/**
+ UIViewController+FWFramework
+ 
+ 一、modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置。
+ 二、iOS13由于modalPresentationStyle默认值为Automatic(PageSheet)，不会触发父控制器的viewWillDisappear|viewWillAppear等生命周期方法。
+ 三、modalPresentationCapturesStatusBarAppearance：弹出非UIModalPresentationFullScreen控制器时，该控制器是否控制状态栏样式。默认NO，不控制。
+ 四、如果ScrollView占不满导航栏，iOS7-10需设置viewController.automaticallyAdjustsScrollViewInsets为NO，iOS11则需要设置contentInsetAdjustmentBehavior为UIScrollViewContentInsetAdjustmentNever
  */
 @interface UIViewController (FWFramework)
 
@@ -55,14 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion 仅当控制器自身被dismiss时才会触发，如果有presented控制器，会触发presented控制器的对应block。iOS13默认present手势下拉dismiss时不会触发
  */
 @property (nullable, nonatomic, copy) void (^fwDismissBlock)(void);
-
-#pragma mark - Action
-
-// 打开页面。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
-- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
-
-// 关闭页面。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
-- (void)fwCloseViewControllerAnimated:(BOOL)animated;
 
 #pragma mark - Child
 

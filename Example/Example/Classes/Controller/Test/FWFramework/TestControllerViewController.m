@@ -25,6 +25,7 @@
     _isTop = isTop;
     
     if (isTop) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleClear;
         [self fwSetBarExtendEdge:UIRectEdgeTop];
     }
 }
@@ -32,8 +33,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.navigationController.navigationBar fwSetBackgroundClear];
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"切换" block:^(id sender) {
@@ -48,7 +47,7 @@
 - (void)renderInit
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self fwSetBackBarTitle:@""];
+    self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
 }
 
 - (void)renderView

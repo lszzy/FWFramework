@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWRouter
+
 /*! @brief 路由URL */
 extern NSString * const FWRouterURLKey;
 
@@ -29,51 +31,12 @@ typedef id _Nullable (^FWRouterObjectHandler)(NSDictionary *parameters);
 /*! @brief 路由过滤器处理句柄 */
 typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 
-#pragma mark - FWRouter
-
-/*!
- @brief URL路由协议
- */
-@protocol FWRouterProtocol <NSObject>
-
-@optional
-
-/// 支持的路由URL
-+ (id)fwRouterURL;
-
-/// 支持的Object路由URL
-+ (id)fwRouterObjectURL;
-
-/// 路由方法
-+ (void)fwRouterHandler:(NSDictionary *)parameters;
-
-/// 对象路由方法
-+ (id)fwRouterObjectHandler:(NSDictionary *)parameters;
-
-@end
-
 /*!
  @brief URL路由器
  
  @see https://github.com/meili/MGJRouter
  */
 @interface FWRouter : NSObject
-
-#pragma mark - Class
-
-/**
-*  注册路由类，需要实现FWRouterProtocol协议
-*
-*  @param cls         路由类，需实现FWRouterProtocol协议
-*/
-+ (void)registerClass:(Class)cls;
-
-/**
- *  取消注册某个路由类
- *
- *  @param cls         路由类，需实现FWRouterProtocol协议
- */
-+ (void)unregisterClass:(Class)cls;
 
 #pragma mark - URL
 
@@ -271,15 +234,17 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  */
 @interface FWRouter (Navigation)
 
-/*!
- @brief 使用最顶部的导航栏控制器打开控制器
- */
+/// 使用最顶部的导航栏控制器打开控制器
 + (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
-/*!
- @brief 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
- */
+/// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
+
+/// 使用最顶部的视图控制器打开控制器，自动判断push|present
++ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+/// 关闭最顶部的视图控制器，自动判断pop|dismiss
++ (void)closeViewControllerAnimated:(BOOL)animated;
 
 @end
 
@@ -306,13 +271,31 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
 - (nullable UIViewController *)fwTopPresentedController;
 
 /// 使用最顶部的导航栏控制器打开控制器
-- (BOOL)fwPushViewController:(UIViewController *)viewController
-                    animated:(BOOL)animated;
+- (BOOL)fwPushViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
 /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
-- (void)fwPresentViewController:(UIViewController *)viewController
-                       animated:(BOOL)animated
-                     completion:(nullable void (^)(void))completion;
+- (void)fwPresentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
+
+/// 使用最顶部的视图控制器打开控制器，自动判断push|present
+- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+/// 关闭最顶部的视图控制器，自动判断pop|dismiss
+- (void)fwCloseViewControllerAnimated:(BOOL)animated;
+
+@end
+
+#pragma mark - UIViewController+FWNavigation
+
+/*!
+ @brief 控制器导航分类
+ */
+@interface UIViewController (FWNavigation)
+
+/// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
+- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+/// 关闭控制器。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
+- (void)fwCloseViewControllerAnimated:(BOOL)animated;
 
 @end
 
