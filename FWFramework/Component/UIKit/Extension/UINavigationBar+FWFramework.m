@@ -26,10 +26,11 @@
 
 - (void)fwSetTextColor:(UIColor *)color
 {
-    // 按钮颜色
     self.tintColor = color;
-    // 标题颜色
     self.titleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
+    if (@available(iOS 11.0, *)) {
+        self.largeTitleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
+    }
 }
 
 - (void)fwSetBackgroundColor:(UIColor *)color
@@ -59,7 +60,6 @@
 {
     UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
     if (!overlayView) {
-        // 设置背景透明
         [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
         
@@ -132,13 +132,9 @@
                   offset:(CGSize)offset
                   radius:(CGFloat)radius
 {
-    // 去掉横线
     self.barStyle = UIBarStyleBlack;
-    // 设置不透明
     self.translucent = NO;
-    // 设置阴影色
     self.layer.shadowColor = color.CGColor;
-    // 默认阴影配置，可覆盖
     self.layer.shadowOffset = offset;
     self.layer.shadowRadius = radius;
     self.layer.shadowOpacity = 1.0;

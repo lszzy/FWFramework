@@ -53,31 +53,31 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 #pragma mark - Item
 
-// 快捷设置导航栏标题文字或视图
+/// 快捷设置导航栏标题文字或视图
 - (void)fwSetBarTitle:(nullable id)title;
 
-// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+/// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
 
-// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+/// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
 
-// 快捷设置导航栏右侧按钮
+/// 快捷设置导航栏右侧按钮
 - (void)fwSetRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
 
-// 快捷设置导航栏右侧按钮，block事件
+/// 快捷设置导航栏右侧按钮，block事件
 - (void)fwSetRightBarItem:(nullable id)object block:(void (^)(id sender))block;
 
 #pragma mark - Back
 
-// 设置导航栏返回按钮文字(显示系统返回箭头)，下个页面生效
+/// 设置导航栏返回按钮仅显示箭头模式，下个页面生效
+- (void)fwSetBackBarArrow;
+
+/// 设置导航栏返回按钮文字加箭头模式，下个页面生效
 - (void)fwSetBackBarTitle:(nullable NSString *)title;
 
-// 设置导航栏返回按钮图片(只显示此图片，不显示返回箭头)，下个页面生效
+/// 设置导航栏返回按钮仅显示图片模式，下个页面生效
 - (void)fwSetBackBarImage:(nullable UIImage *)image;
-
-// 设置导航栏返回按钮透明(只显示返回箭头)，下个页面生效
-- (void)fwSetBackBarClear;
 
 @end
 
