@@ -173,6 +173,36 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// 指定下载凭据取消网络图片下载
 + (void)fwCancelImageDownload:(nullable id)receipt;
 
+/// 从视图创建UIImage，生成截图，主线程调用
++ (nullable UIImage *)fwImageWithView:(UIView *)view;
+
+/// 从颜色创建UIImage，默认尺寸1x1
++ (nullable UIImage *)fwImageWithColor:(UIColor *)color;
+
+/// 从颜色创建UIImage，指定尺寸
++ (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size;
+
+/// 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标
+- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor;
+
+/// 从当前UIImage混合颜色创建UIImage，自定义模式
+- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
+
+/// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
+- (nullable UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
+
+/// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
+- (nullable NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
+
+/// 长边压缩图片尺寸，获取等比例的图片
+- (nullable UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth;
+
+/// 通过指定图片最长边，获取等比例的图片size
+- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
+
+/// 判断图片是否有透明通道
+- (BOOL)fwHasAlpha;
+
 @end
 
 #pragma mark - UIImageView+FWToolkit

@@ -8,8 +8,8 @@
  */
 
 #import "UIView+FWFramework.h"
-#import "UIImage+FWFramework.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 @implementation UIView (FWFramework)
