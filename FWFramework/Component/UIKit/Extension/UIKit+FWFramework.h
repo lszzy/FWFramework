@@ -23,6 +23,7 @@
 #import "UIImagePickerController+FWFramework.h"
 #import "UILabel+FWFramework.h"
 #import "UILocalNotification+FWFramework.h"
+#import "UINavigationBar+FWFramework.h"
 #import "UIPageControl+FWFramework.h"
 #import "UIScrollView+FWFramework.h"
 #import "UISearchBar+FWFramework.h"

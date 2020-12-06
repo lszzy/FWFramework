@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "UIViewController+FWBack.h"
-#import "UIViewController+FWBar.h"
 #import "UIViewController+FWTransition.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- @brief UIViewController+FWFramework
- @discussion 注意modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置。
- iOS13由于modalPresentationStyle默认值为Automatic(PageSheet)，不会触发父控制器的viewWillDisappear|viewWillAppear等生命周期方法
+/**
+ UIViewController+FWFramework
+ 
+ 一、modalPresentationStyle需要在present之前(init之后)设置才会生效，UINavigationController也可设置。
+ 二、iOS13由于modalPresentationStyle默认值为Automatic(PageSheet)，不会触发父控制器的viewWillDisappear|viewWillAppear等生命周期方法。
+ 三、modalPresentationCapturesStatusBarAppearance：弹出非UIModalPresentationFullScreen控制器时，该控制器是否控制状态栏样式。默认NO，不控制。
+ 四、如果ScrollView占不满导航栏，iOS7-10需设置viewController.automaticallyAdjustsScrollViewInsets为NO，iOS11则需要设置contentInsetAdjustmentBehavior为UIScrollViewContentInsetAdjustmentNever
  */
 @interface UIViewController (FWFramework)
 
