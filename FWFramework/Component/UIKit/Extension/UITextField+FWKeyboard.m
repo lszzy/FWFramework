@@ -7,9 +7,9 @@
 //
 
 #import "UITextField+FWKeyboard.h"
-#import "UIView+FWFramework.h"
 #import "FWProxy.h"
 #import "FWBlock.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerKeyboardTarget

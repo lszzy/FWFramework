@@ -102,6 +102,7 @@
                                              @[@"FWImage", @"TestImageViewController"],
                                              @[@"FWRouter", @"TestRouterViewController"],
                                              @[@"FWState", @"TestStateViewController"],
+                                             @[@"FWAnnotation", [TestAnnotationViewController new]],
                                              @[@"FWSegmentedControl", @"TestSegmentViewController"],
                                              @[@"FWTableView", @"TestTableCreateViewController"],
                                              @[@"FWCollectionView", @"TestCollectionCreateViewController"],

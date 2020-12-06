@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 插件块，返回的对象必须实现protocol
  @return 是否注册成功
  */
-- (BOOL)registerDefault:(Protocol *)protocol withBlock:(id (^)(void))block;
+- (BOOL)registerDefault:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerDefault(_:withBlock:));
 
 /*!
  @brief 注册默认工厂插件，仅当插件未注册时生效
@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 插件块，返回的对象必须实现protocol
  @return 是否注册成功
  */
-- (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block;
+- (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerPlugin(_:withBlock:));
 
 /*!
  @brief 注册工厂插件，仅当插件未使用时生效

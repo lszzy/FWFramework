@@ -8,8 +8,8 @@
  */
 
 #import "UIView+FWFramework.h"
-#import "UIImage+FWFramework.h"
 #import "FWSwizzle.h"
+#import "FWImage.h"
 #import <objc/runtime.h>
 
 @implementation UIView (FWFramework)
@@ -120,20 +120,6 @@
 {
     CGSize size = [self sizeThatFits:drawSize];
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
-}
-
-#pragma mark - ViewController
-
-- (UIViewController *)fwViewController
-{
-    UIResponder *responder = [self nextResponder];
-    while (responder) {
-        if ([responder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *)responder;
-        }
-        responder = [responder nextResponder];
-    }
-    return nil;
 }
 
 #pragma mark - Subview

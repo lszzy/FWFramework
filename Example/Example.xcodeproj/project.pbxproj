@@ -10,8 +10,12 @@
 		1C18E5A84B7D2A5EDB24DF6E /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027459ABC308013A8B85ABC9 /* Pods_Example.framework */; };
 		2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */; };
 		2F1624DC25737B590037427D /* jsonDecode.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F1624DB25737B590037427D /* jsonDecode.json */; };
+		2F16273525763B220037427D /* LandmarkModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273425763B220037427D /* LandmarkModelView.swift */; };
+		2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273A25763BA40037427D /* LandmarkViewModel.swift */; };
 		2F1D1ACB253D822A00AC110B /* TestCollectionCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */; };
 		2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */; };
+		2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */; };
+		2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */; };
 		2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B42538004700AEBB60 /* AppDelegate.swift */; };
 		2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B62538004700AEBB60 /* SceneDelegate.swift */; };
 		2F48F6BB2538004900AEBB60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F48F6BA2538004900AEBB60 /* Assets.xcassets */; };
@@ -59,6 +63,7 @@
 		2F938E522500D60D009395FB /* TestGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E512500D60D009395FB /* TestGridViewController.m */; };
 		2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */; };
 		2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */; };
+		2FAB482725777E520072FF9F /* TestAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
 		2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */; };
 		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
@@ -189,10 +194,14 @@
 		2F07876524D1B6B7007BF096 /* TestSkeletonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSkeletonViewController.m; sourceTree = "<group>"; };
 		2F0DE5AB24F65BE100DCC13E /* landmarkData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = landmarkData.json; sourceTree = "<group>"; };
 		2F1624DB25737B590037427D /* jsonDecode.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonDecode.json; sourceTree = "<group>"; };
+		2F16273425763B220037427D /* LandmarkModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModelView.swift; sourceTree = "<group>"; };
+		2F16273A25763BA40037427D /* LandmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkViewModel.swift; sourceTree = "<group>"; };
 		2F1D1AC9253D822A00AC110B /* TestCollectionCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionCreateViewController.h; sourceTree = "<group>"; };
 		2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionCreateViewController.m; sourceTree = "<group>"; };
 		2F1F1E1E2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionDynamicLayoutViewController.h; sourceTree = "<group>"; };
 		2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionDynamicLayoutViewController.m; sourceTree = "<group>"; };
+		2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetailViewModel.swift; sourceTree = "<group>"; };
+		2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetailModelView.swift; sourceTree = "<group>"; };
 		2F48F6B22538004700AEBB60 /* AppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F48F6B42538004700AEBB60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F48F6B62538004700AEBB60 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -250,6 +259,7 @@
 		2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestFloatLayoutViewController.m; sourceTree = "<group>"; };
 		2F938E622500EBFE009395FB /* TestEmptyScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyScrollViewController.h; sourceTree = "<group>"; };
 		2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyScrollViewController.m; sourceTree = "<group>"; };
+		2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnnotationViewController.swift; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
 		2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeViewController.m; sourceTree = "<group>"; };
 		2FDF6F6625206B440086A99E /* TestTableCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableCreateViewController.h; sourceTree = "<group>"; };
@@ -453,6 +463,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F16273325763AC40037427D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2F16273A25763BA40037427D /* LandmarkViewModel.swift */,
+				2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		2F48F6B32538004700AEBB60 /* AppClip */ = {
 			isa = PBXGroup;
 			children = (
@@ -530,6 +549,7 @@
 		2F48F6D62538036100AEBB60 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				2F16273325763AC40037427D /* ViewModel */,
 				2F48F6D72538036100AEBB60 /* Model */,
 				2F48F6DD2538036100AEBB60 /* View */,
 			);
@@ -559,6 +579,8 @@
 				2F48F6E22538036100AEBB60 /* ProfileEditor.swift */,
 				2F48F6F22538036100AEBB60 /* LandmarkHome.swift */,
 				2F48F6F32538036100AEBB60 /* LandmarkDetail.swift */,
+				2F16273425763B220037427D /* LandmarkModelView.swift */,
+				2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */,
 				2F48F6F42538036100AEBB60 /* CategoryRow.swift */,
 				2F48F6F52538036100AEBB60 /* ProfileHost.swift */,
 				2F48F6F62538036100AEBB60 /* LandmarkRow.swift */,
@@ -792,6 +814,7 @@
 				2FF8D8B624C88A6F006A83B5 /* TestNotificationViewController.m */,
 				2FF8D8E124C88A6F006A83B5 /* TestPopupMenuViewController.h */,
 				2FF8D8AA24C88A6F006A83B5 /* TestPopupMenuViewController.m */,
+				2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */,
 				2FF8D90324C88A6F006A83B5 /* TestQrcodeViewController.h */,
 				2FF8D8BB24C88A6F006A83B5 /* TestQrcodeViewController.m */,
 				2FF8D8AE24C88A6F006A83B5 /* TestRouterViewController.h */,
@@ -1292,13 +1315,16 @@
 				2F48F7062538036100AEBB60 /* FeatureCard.swift in Sources */,
 				2F48F7112538036100AEBB60 /* CircleView.swift in Sources */,
 				2F48F6FE2538036100AEBB60 /* Landmark.swift in Sources */,
+				2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */,
 				2F48F6FC2538036100AEBB60 /* Hike.swift in Sources */,
 				2F48F7002538036100AEBB60 /* ProfileSummary.swift in Sources */,
 				2F48F7182538036100AEBB60 /* HikeView.swift in Sources */,
 				2F48F7072538036100AEBB60 /* BadgeView.swift in Sources */,
+				2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */,
 				2F48F7192538036100AEBB60 /* PageView.swift in Sources */,
 				2F48F7082538036100AEBB60 /* HikeBadge.swift in Sources */,
 				2F48F7172538036100AEBB60 /* PageViewController.swift in Sources */,
+				2F16273525763B220037427D /* LandmarkModelView.swift in Sources */,
 				2F48F6FD2538036100AEBB60 /* LandmarkData.swift in Sources */,
 				2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */,
 				2F48F7142538036100AEBB60 /* CategoryRow.swift in Sources */,
@@ -1310,6 +1336,7 @@
 				2F48F6FB2538036100AEBB60 /* UserData.swift in Sources */,
 				2F48F70A2538036100AEBB60 /* MapView.swift in Sources */,
 				2F48F7122538036100AEBB60 /* LandmarkHome.swift in Sources */,
+				2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */,
 				2F48F70D2538036100AEBB60 /* UIKitController.swift in Sources */,
 				2F48F7052538036100AEBB60 /* HikeGraph.swift in Sources */,
 				2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */,
@@ -1408,6 +1435,7 @@
 				2FF8D95024C88A6F006A83B5 /* TestAuthorizeViewController.m in Sources */,
 				2FF8D97E24C88A70006A83B5 /* TestBorderViewController.m in Sources */,
 				2FF8D96224C88A70006A83B5 /* TestWindowViewController.m in Sources */,
+				2FAB482725777E520072FF9F /* TestAnnotationViewController.swift in Sources */,
 				2FF8D94F24C88A6F006A83B5 /* TestTableLayoutViewController.m in Sources */,
 				2FF8D96824C88A70006A83B5 /* TestNestScrollViewController.m in Sources */,
 			);

@@ -8,7 +8,7 @@
  */
 
 #import "UINavigationController+FWBar.h"
-#import "UIViewController+FWBar.h"
+#import "UINavigationBar+FWFramework.h"
 #import "FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
@@ -62,6 +62,9 @@
     
     self.tintColor = navigationBar.tintColor;
     self.titleTextAttributes = navigationBar.titleTextAttributes;
+    if (@available(iOS 11.0, *)) {
+        self.largeTitleTextAttributes = navigationBar.largeTitleTextAttributes;
+    }
 }
 
 @end

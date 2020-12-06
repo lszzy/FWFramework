@@ -30,13 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置界面方向，支持旋转方向时生效
 + (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
 
-#pragma mark - UUID
-
-/*!
-@brief 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
-*/
-@property (class, nonatomic, copy) NSString *fwDeviceUUID;
-
 #pragma mark - Network
 
 // 本地IP地址

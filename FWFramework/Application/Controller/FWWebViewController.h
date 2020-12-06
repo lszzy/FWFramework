@@ -8,14 +8,13 @@
  */
 
 #import <WebKit/WebKit.h>
+#import "FWWebViewBridge.h"
 #import "FWViewController.h"
 #import "FWCollectionViewController.h"
 #import "FWScrollViewController.h"
 #import "FWTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-@class FWWebViewJsBridge;
 
 /*!
  @brief 网页视图控制器协议，可覆写
