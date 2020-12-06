@@ -9,7 +9,6 @@
 
 #import "FWToolkit.h"
 #import "FWRouter.h"
-#import "FWKeychain.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
@@ -441,36 +440,7 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 #pragma mark - UIDevice+FWToolkit
 
-static NSString *fwStaticDeviceUUID = nil;
-
 @implementation UIDevice (FWToolkit)
-
-+ (NSString *)fwDeviceUUID
-{
-    if (!fwStaticDeviceUUID) {
-        @synchronized ([self class]) {
-            NSString *deviceUUID = [[FWKeychainManager sharedInstance] passwordForService:@"FWDeviceUUID" account:NSBundle.mainBundle.bundleIdentifier];
-            if (deviceUUID.length > 0) {
-                fwStaticDeviceUUID = deviceUUID;
-            } else {
-                deviceUUID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-                if (deviceUUID.length < 1) {
-                    deviceUUID = [[NSUUID UUID] UUIDString];
-                }
-                [self setFwDeviceUUID:deviceUUID];
-            }
-        }
-    }
-    
-    return fwStaticDeviceUUID;
-}
-
-+ (void)setFwDeviceUUID:(NSString *)fwDeviceUUID
-{
-    fwStaticDeviceUUID = fwDeviceUUID;
-    
-    [[FWKeychainManager sharedInstance] setPassword:fwDeviceUUID forService:@"FWDeviceUUID" account:NSBundle.mainBundle.bundleIdentifier];
-}
 
 + (void)fwSetDeviceTokenData:(NSData *)tokenData
 {
