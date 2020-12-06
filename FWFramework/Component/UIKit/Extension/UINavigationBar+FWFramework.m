@@ -1,194 +1,21 @@
 //
-//  UIViewController+FWBar.m
+//  UINavigationBar+FWFramework.m
 //  FWFramework
 //
 //  Created by wuyong on 17/3/13.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "UIViewController+FWBar.h"
-#import "FWBlock.h"
-#import "FWSwizzle.h"
+#import "UINavigationBar+FWFramework.h"
 #import "FWImage.h"
 #import "FWMessage.h"
 #import "FWAdaptive.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
-@implementation UIViewController (FWBar)
+#pragma mark - UINavigationBar+FWFramework
 
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIViewController, @selector(prefersStatusBarHidden), FWSwizzleReturn(BOOL), FWSwizzleArgs(), FWSwizzleCode({
-            NSNumber *hiddenValue = objc_getAssociatedObject(selfObject, @selector(fwStatusBarHidden));
-            if (hiddenValue) {
-                return [hiddenValue boolValue];
-            } else {
-                return FWSwizzleOriginal();
-            }
-        }));
-        FWSwizzleClass(UIViewController, @selector(preferredStatusBarStyle), FWSwizzleReturn(UIStatusBarStyle), FWSwizzleArgs(), FWSwizzleCode({
-            NSNumber *styleValue = objc_getAssociatedObject(selfObject, @selector(fwStatusBarStyle));
-            if (styleValue) {
-                return [styleValue integerValue];
-            } else {
-                return FWSwizzleOriginal();
-            }
-        }));
-    });
-}
-
-#pragma mark - Bar
-
-- (BOOL)fwStatusBarHidden
-{
-    return [objc_getAssociatedObject(self, @selector(fwStatusBarHidden)) boolValue];
-}
-
-- (void)setFwStatusBarHidden:(BOOL)fwStatusBarHidden
-{
-    if (fwStatusBarHidden != self.fwStatusBarHidden) {
-        [self willChangeValueForKey:@"fwStatusBarHidden"];
-        objc_setAssociatedObject(self, @selector(fwStatusBarHidden), @(fwStatusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwStatusBarHidden"];
-        
-        // 视图控制器生效
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-}
-
-- (UIStatusBarStyle)fwStatusBarStyle
-{
-    return [objc_getAssociatedObject(self, @selector(fwStatusBarStyle)) integerValue];
-}
-
-- (void)setFwStatusBarStyle:(UIStatusBarStyle)fwStatusBarStyle
-{
-    if (fwStatusBarStyle != self.fwStatusBarStyle) {
-        [self willChangeValueForKey:@"fwStatusBarStyle"];
-        objc_setAssociatedObject(self, @selector(fwStatusBarStyle), @(fwStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwStatusBarStyle"];
-        
-        // 视图控制器生效
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-}
-
-- (BOOL)fwNavigationBarHidden
-{
-    return self.navigationController.navigationBarHidden;
-}
-
-- (void)setFwNavigationBarHidden:(BOOL)fwNavigationBarHidden
-{
-    self.navigationController.navigationBarHidden = fwNavigationBarHidden;
-}
-
-- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    [self.navigationController setNavigationBarHidden:hidden animated:animated];
-}
-
-- (BOOL)fwTabBarHidden
-{
-    return self.tabBarController.tabBar.hidden;
-}
-
-- (void)setFwTabBarHidden:(BOOL)fwTabBarHidden
-{
-    self.tabBarController.tabBar.hidden = fwTabBarHidden;
-}
-
-- (BOOL)fwToolBarHidden
-{
-    return self.navigationController.toolbarHidden;
-}
-
-- (void)setFwToolBarHidden:(BOOL)fwToolBarHidden
-{
-    self.navigationController.toolbarHidden = fwToolBarHidden;
-}
-
-- (void)fwSetToolBarHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    [self.navigationController setToolbarHidden:hidden animated:animated];
-}
-
-- (void)fwSetBarExtendEdge:(UIRectEdge)edge
-{
-    self.edgesForExtendedLayout = edge;
-    // 开启不透明bar(translucent为NO)情况下延伸包括bar，占满全屏
-    self.extendedLayoutIncludesOpaqueBars = YES;
-}
-
-#pragma mark - Item
-
-- (void)fwSetBarTitle:(id)title
-{
-    if ([title isKindOfClass:[UIView class]]) {
-        self.navigationItem.titleView = title;
-    } else {
-        self.navigationItem.title = title;
-    }
-}
-
-- (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action
-{
-    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
-    self.navigationItem.leftBarButtonItem = item;
-}
-
-- (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block
-{
-    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:block];
-    self.navigationItem.leftBarButtonItem = item;
-}
-
-- (void)fwSetRightBarItem:(id)object target:(id)target action:(SEL)action
-{
-    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
-    self.navigationItem.rightBarButtonItem = item;
-}
-
-- (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block
-{
-    UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:block];
-    self.navigationItem.rightBarButtonItem = item;
-}
-
-#pragma mark - Back
-
-- (void)fwSetBackBarTitle:(NSString *)title
-{
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = item;
-    
-    // 清除自定义图片
-    [self.navigationController.navigationBar fwSetIndicatorImage:nil];
-}
-
-- (void)fwSetBackBarImage:(UIImage *)image
-{
-    // 设置返回按钮为空白图片
-    [self fwSetBackBarClear];
-    
-    // 设置箭头图片为指定图片
-    [self.navigationController.navigationBar fwSetIndicatorImage:image];
-}
-
-- (void)fwSetBackBarClear
-{
-    // 设置按钮图片为空白图片
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = item;
-}
-
-@end
-
-#pragma mark - UINavigationBar+FWBar
-
-@implementation UINavigationBar (FWBar)
+@implementation UINavigationBar (FWFramework)
 
 + (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes
 {
@@ -257,44 +84,6 @@
     }
 }
 
-- (void)fwSetIndicatorImage:(UIImage *)image
-{
-    // 默认左侧偏移8个像素，模拟左侧按钮
-    [self fwSetIndicatorImage:image insets:UIEdgeInsetsMake(0, -8, 0, 0)];
-}
-
-- (void)fwSetIndicatorImage:(UIImage *)image insets:(UIEdgeInsets)insets
-{
-    // 自定义图片
-    if (image) {
-        // 图片是否需要偏移
-        if (!UIEdgeInsetsEqualToEdgeInsets(insets, UIEdgeInsetsZero)) {
-            image = [self fwInnerIndicatorImage:image insets:insets];
-        }
-        
-        self.backIndicatorImage = image;
-        self.backIndicatorTransitionMaskImage = image;
-    // 系统图片
-    } else {
-        self.backIndicatorImage = nil;
-        self.backIndicatorTransitionMaskImage = nil;
-    }
-}
-
-- (UIImage *)fwInnerIndicatorImage:(UIImage *)image insets:(UIEdgeInsets)insets
-{
-    CGSize size = image.size;
-    size.width -= insets.left + insets.right;
-    size.height -= insets.top + insets.bottom;
-    if (size.width <= 0 || size.height <= 0) return nil;
-    CGRect rect = CGRectMake(-insets.left, -insets.top, image.size.width, image.size.height);
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    [image drawInRect:rect];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
 - (UIView *)fwBackgroundView
 {
     return [self fwPerformPropertySelector:@"_backgroundView"];
@@ -310,9 +99,9 @@
 
 @end
 
-#pragma mark - UITabBar+FWBar
+#pragma mark - UITabBar+FWFramework
 
-@implementation UITabBar (FWBar)
+@implementation UITabBar (FWFramework)
 
 - (void)fwSetTextColor:(UIColor *)color
 {
@@ -381,9 +170,9 @@
 
 @end
 
-#pragma mark - UIBarItem+FWBar
+#pragma mark - UIBarItem+FWFramework
 
-@implementation UIBarItem (FWBar)
+@implementation UIBarItem (FWFramework)
 
 - (UIView *)fwView
 {
@@ -429,9 +218,9 @@
 
 @end
 
-#pragma mark - UITabBarItem+FWBar
+#pragma mark - UITabBarItem+FWFramework
 
-@implementation UITabBarItem (FWBar)
+@implementation UITabBarItem (FWFramework)
 
 - (UIImageView *)fwImageView
 {
