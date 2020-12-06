@@ -122,20 +122,6 @@
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
-#pragma mark - ViewController
-
-- (UIViewController *)fwViewController
-{
-    UIResponder *responder = [self nextResponder];
-    while (responder) {
-        if ([responder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *)responder;
-        }
-        responder = [responder nextResponder];
-    }
-    return nil;
-}
-
 #pragma mark - Subview
 
 - (void)fwRemoveAllSubviews

@@ -8,11 +8,11 @@
  */
 
 #import "UIView+FWStatistical.h"
-#import "UIView+FWFramework.h"
 #import "UITableView+FWFramework.h"
 #import "UICollectionView+FWFramework.h"
 #import "FWSwizzle.h"
 #import "FWBlock.h"
+#import "FWHelper.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWStatistical
