@@ -62,4 +62,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UIView+FWHelper
+
+/*!
+ @brief UIView+FWHelper
+ */
+@interface UIView (FWHelper)
+
+/// 获取响应的视图控制器
+- (nullable UIViewController *)fwViewController;
+
+@end
+
 NS_ASSUME_NONNULL_END

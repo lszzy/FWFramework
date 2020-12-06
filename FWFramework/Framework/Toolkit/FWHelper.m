@@ -154,3 +154,21 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 }
 
 @end
+
+#pragma mark - UIView+FWHelper
+
+@implementation UIView (FWHelper)
+
+- (UIViewController *)fwViewController
+{
+    UIResponder *responder = [self nextResponder];
+    while (responder) {
+        if ([responder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)responder;
+        }
+        responder = [responder nextResponder];
+    }
+    return nil;
+}
+
+@end
