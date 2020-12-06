@@ -62,6 +62,9 @@
     
     self.tintColor = navigationBar.tintColor;
     self.titleTextAttributes = navigationBar.titleTextAttributes;
+    if (@available(iOS 11.0, *)) {
+        self.largeTitleTextAttributes = navigationBar.largeTitleTextAttributes;
+    }
 }
 
 @end

@@ -192,6 +192,13 @@
 
 #pragma mark - Back
 
+- (void)fwSetBackBarArrow
+{
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationController.navigationBar.backIndicatorImage = nil;
+    self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
+}
+
 - (void)fwSetBackBarTitle:(NSString *)title
 {
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -201,8 +208,8 @@
 
 - (void)fwSetBackBarImage:(UIImage *)image
 {
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
     if (!image) {
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
         self.navigationController.navigationBar.backIndicatorImage = nil;
         self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
         return;
@@ -219,13 +226,9 @@
     UIImage *indicatorImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationController.navigationBar.backIndicatorImage = indicatorImage;
     self.navigationController.navigationBar.backIndicatorTransitionMaskImage = indicatorImage;
-}
-
-- (void)fwSetBackBarClear
-{
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 @end
