@@ -1,13 +1,13 @@
 /*!
- @header     UIViewController+FWStyle.m
+ @header     FWViewControllerStyle.m
  @indexgroup FWFramework
- @brief      UIViewController+FWStyle
+ @brief      FWViewControllerStyle
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/12/5
  */
 
-#import "UIViewController+FWStyle.h"
+#import "FWViewControllerStyle.h"
 #import "UIImage+FWFramework.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
