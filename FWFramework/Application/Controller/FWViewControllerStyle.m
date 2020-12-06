@@ -8,8 +8,8 @@
  */
 
 #import "FWViewControllerStyle.h"
-#import "UIImage+FWFramework.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (FWStyle)

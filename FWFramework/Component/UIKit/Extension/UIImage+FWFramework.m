@@ -8,6 +8,7 @@
  */
 
 #import "UIImage+FWFramework.h"
+#import "FWToolkit.h"
 #import "UIBezierPath+FWFramework.h"
 #import <CoreText/CoreText.h>
 #import <Accelerate/Accelerate.h>
@@ -16,27 +17,6 @@
 @implementation UIImage (FWFramework)
 
 #pragma mark - View
-
-+ (UIImage *)fwImageWithView:(UIView *)view
-{
-    if (!view) return nil;
-    
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
-    if (view.window) {
-        // iOS7+：更新屏幕后再截图，防止刚添加还未显示时截图失败，效率高
-        [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    } else {
-        /*
-         iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
-         renderInContext:必须在主线程调用，后台线程调用频繁会导致崩溃，解决方法：
-         [view.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(NSObject *)UIGraphicsGetCurrentContext() waitUntilDone:YES];
-         */
-        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    }
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
 
 + (UIImage *)fwImageWithView:(UIView *)view limitWidth:(CGFloat)limitWidth
 {
@@ -83,25 +63,6 @@
 }
 
 #pragma mark - Color
-
-+ (UIImage *)fwImageWithColor:(UIColor *)color
-{
-    return [UIImage fwImageWithColor:color size:CGSizeMake(1.0f, 1.0f)];
-}
-
-+ (UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size
-{
-    if (!color || size.width <= 0 || size.height <= 0) return nil;
-    
-    CGRect rect = CGRectMake(0.0f, 0.0f, size.width, size.height);
-    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
 
 - (UIImage *)fwGrayImage
 {
@@ -391,28 +352,6 @@
 
 #pragma mark - Blend
 
-- (UIImage *)fwImageWithTintColor:(UIColor *)tintColor
-{
-    return [self fwImageWithTintColor:tintColor blendMode:kCGBlendModeDestinationIn];
-}
-
-- (UIImage *)fwImageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode
-{
-    // opaque设为NO保持透明度，scale为0取当前设备值
-    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
-    [tintColor setFill];
-    CGRect bounds = CGRectMake(0, 0, self.size.width, self.size.height);
-    UIRectFill(bounds);
-    
-    // 绘制图片
-    [self drawInRect:bounds blendMode:blendMode alpha:1.0f];
-    
-    UIImage *tintedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return tintedImage;
-}
-
 - (UIImage *)fwImageWithRenderOriginal
 {
     return [self imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -589,65 +528,6 @@
 - (UIImage *)fwImageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode
 {
     return [self resizableImageWithCapInsets:insets resizingMode:resizingMode];
-}
-
-#pragma mark - Compress
-
-- (UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength
-{
-    NSData *data = [self fwCompressDataWithMaxLength:maxLength compressRatio:0];
-    return [[UIImage alloc] initWithData:data];
-}
-
-- (NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
-{
-    CGFloat compress = 1.f;
-    CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.1f;
-    NSData *data = self.fwHasAlpha
-        ? UIImagePNGRepresentation(self)
-        : UIImageJPEGRepresentation(self, compress);
-    while (data.length > maxLength && compress > stepCompress) {
-        compress -= stepCompress;
-        data = UIImageJPEGRepresentation(self, compress);
-    }
-    return data;
-}
-
-- (UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth
-{
-    CGSize newSize = [self fwScaleSizeWithMaxWidth:maxWidth];
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
-    [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
-- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth
-{
-    if (maxWidth <= 0) {
-        return self.size;
-    }
-    
-    CGFloat width = self.size.width;
-    CGFloat height = self.size.height;
-    if (width > maxWidth || height > maxWidth) {
-        CGFloat newWidth = 0.0f;
-        CGFloat newHeight = 0.0f;
-        if (width > height) {
-            newWidth = maxWidth;
-            newHeight = newWidth * height / width;
-        } else if (height > width) {
-            newHeight = maxWidth;
-            newWidth = newHeight * width / height;
-        } else {
-            newWidth = maxWidth;
-            newHeight = maxWidth;
-        }
-        return CGSizeMake(newWidth, newHeight);
-    } else {
-        return CGSizeMake(width, height);
-    }
 }
 
 #pragma mark - Effect
@@ -990,16 +870,6 @@
 }
 
 #pragma mark - Alpha
-
-- (BOOL)fwHasAlpha
-{
-    if (self.CGImage == NULL) return NO;
-    CGImageAlphaInfo alpha = CGImageGetAlphaInfo(self.CGImage) & kCGBitmapAlphaInfoMask;
-    return (alpha == kCGImageAlphaFirst ||
-            alpha == kCGImageAlphaLast ||
-            alpha == kCGImageAlphaPremultipliedFirst ||
-            alpha == kCGImageAlphaPremultipliedLast);
-}
 
 - (UIImage *)fwAlphaImage
 {

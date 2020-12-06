@@ -19,19 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - View
 
-// 从View创建UIImage
-+ (nullable UIImage *)fwImageWithView:(UIView *)view;
-
 // 截取View所有视图，包括旋转缩放效果
 + (nullable UIImage *)fwImageWithView:(UIView *)view limitWidth:(CGFloat)limitWidth;
 
 #pragma mark - Color
-
-// 从颜色创建UIImage，默认尺寸1x1
-+ (nullable UIImage *)fwImageWithColor:(UIColor *)color;
-
-// 从颜色创建UIImage
-+ (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size;
 
 // 获取灰度图
 - (nullable UIImage *)fwGrayImage;
@@ -108,12 +99,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Blend
 
-// 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标
-- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor;
-
-// 从当前UIImage混合颜色创建UIImage，自定义模式
-- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
-
 // 设置图片渲染模式为原始，始终显示原色，不显示tintColor。默认自动根据上下文
 - (UIImage *)fwImageWithRenderOriginal;
 
@@ -142,20 +127,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 拉伸图片(指定模式)，指定端盖区域（不拉伸区域）。Tile为平铺模式，Stretch为拉伸模式
 - (UIImage *)fwImageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode;
-
-#pragma mark - Compress
-
-// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
-- (nullable UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
-
-// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
-- (nullable NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
-
-// 长边压缩图片尺寸，获取等比例的图片
-- (nullable UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth;
-
-// 通过指定图片最长边，获取等比例的图片size
-- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
 
 #pragma mark - Effect
 
@@ -195,9 +166,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable UIImage *)fwImageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize;
 
 #pragma mark - Alpha
-
-// 判断图片是否有透明通道
-- (BOOL)fwHasAlpha;
 
 // 如果没有透明通道，增加透明通道
 - (UIImage *)fwAlphaImage;
