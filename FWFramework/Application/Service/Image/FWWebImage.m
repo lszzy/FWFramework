@@ -9,7 +9,7 @@
 
 #import "FWWebImage.h"
 #import "FWPlugin.h"
-#import "FWToolkit.h"
+#import "FWImage.h"
 #import "FWHTTPSessionManager.h"
 #import <objc/runtime.h>
 

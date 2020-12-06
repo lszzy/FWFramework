@@ -10,7 +10,7 @@
 #import "FWBannerView.h"
 #import "UIPageControl+FWFramework.h"
 #import "FWPageControl.h"
-#import "FWToolkit.h"
+#import "FWImage.h"
 #import "UIView+FWStatistical.h"
 
 #pragma mark - FWBannerViewFlowLayout

@@ -8,7 +8,7 @@
  */
 
 #import "NSAttributedString+FWFramework.h"
-#import "FWHelper.h"
+#import "FWToolkit.h"
 #import "FWTheme.h"
 
 @implementation NSAttributedString (FWFramework)
