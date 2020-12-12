@@ -38,6 +38,7 @@ struct LandmarkHome: View {
                 FeaturedLandmarks(landmarks: features)
                     .scaledToFill()
                     .frame(height: 200)
+                    .fwCornerRadius(10, corners: [.topLeft, .topRight])
                     .clipped()
                     .listRowInsets(EdgeInsets())
                 

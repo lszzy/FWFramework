@@ -64,6 +64,7 @@
 		2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */; };
 		2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */; };
 		2FAB482725777E520072FF9F /* TestAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */; };
+		2FB15BA325848FB100B92D80 /* View+FWRoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
 		2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */; };
 		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
@@ -260,6 +261,7 @@
 		2F938E622500EBFE009395FB /* TestEmptyScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyScrollViewController.h; sourceTree = "<group>"; };
 		2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyScrollViewController.m; sourceTree = "<group>"; };
 		2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnnotationViewController.swift; sourceTree = "<group>"; };
+		2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FWRoundedCorner.swift"; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
 		2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeViewController.m; sourceTree = "<group>"; };
 		2FDF6F6625206B440086A99E /* TestTableCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableCreateViewController.h; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 		2F48F6D1253801F200AEBB60 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				2FB15BA125848F7000B92D80 /* Extension */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -616,6 +619,14 @@
 				2F8A990D2554575B00AC554B /* test.webp */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		2FB15BA125848F7000B92D80 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		2FF8D86D24C886EC006A83B5 = {
@@ -1308,6 +1319,7 @@
 			files = (
 				2F48F7012538036100AEBB60 /* PageControl.swift in Sources */,
 				2F48F7022538036100AEBB60 /* LandmarkList.swift in Sources */,
+				2FB15BA325848FB100B92D80 /* View+FWRoundedCorner.swift in Sources */,
 				2F48F7152538036100AEBB60 /* ProfileHost.swift in Sources */,
 				2F48F7032538036100AEBB60 /* ProfileEditor.swift in Sources */,
 				2F48F7042538036100AEBB60 /* GraphCapsule.swift in Sources */,
