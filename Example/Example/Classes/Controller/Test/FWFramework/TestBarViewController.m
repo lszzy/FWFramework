@@ -111,6 +111,7 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"状态栏切换", @"onStatusBar"],
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
+                                         @[@"导航栏样式", @"onNavigationStyle"],
                                          @[@"标签栏切换", @"onTabBar"],
                                          @[@"工具栏切换", @"onToolBar"],
                                          @[@"导航栏转场", @"onTransitionBar"],
@@ -187,6 +188,16 @@ FWPropertyAssign(BOOL, hideToast);
 - (void)onNavigationBar
 {
     self.fwNavigationBarHidden = !self.fwNavigationBarHidden;
+    [self refreshBarFrame];
+}
+
+- (void)onNavigationStyle
+{
+    if (self.fwNavigationBarStyle == FWNavigationBarStyleDefault) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleRandom;
+    } else {
+        self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
+    }
     [self refreshBarFrame];
 }
 
