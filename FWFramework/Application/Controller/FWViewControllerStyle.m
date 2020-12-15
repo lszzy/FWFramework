@@ -43,29 +43,16 @@
             FWSwizzleOriginal(animated);
             
             if (!selfObject.navigationController) return;
-            NSNumber *styleNumber = objc_getAssociatedObject(selfObject, @selector(fwNavigationBarStyle));
-            if (!styleNumber) return;
-            
-            FWNavigationBarStyle style = [styleNumber integerValue];
-            if (style == FWNavigationBarStyleClear) {
-                [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-                [selfObject.navigationController.navigationBar setShadowImage:[UIImage new]];
-            }
-            
-            FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance appearanceForStyle:style];
-            if (appearance.backgroundColor) {
-                [selfObject.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:appearance.backgroundColor] forBarMetrics:UIBarMetricsDefault];
-                [selfObject.navigationController.navigationBar setShadowImage:[UIImage new]];
-            }
-            if (appearance.foregroundColor) {
-                [selfObject.navigationController.navigationBar setTintColor:appearance.foregroundColor];
-                [selfObject.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
-                if (@available(iOS 11.0, *)) {
-                    [selfObject.navigationController.navigationBar setLargeTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
+            NSNumber *hiddenValue = objc_getAssociatedObject(selfObject, @selector(fwNavigationBarHidden));
+            if (hiddenValue) {
+                if (selfObject.navigationController.navigationBarHidden != hiddenValue.boolValue) {
+                    [selfObject.navigationController setNavigationBarHidden:hiddenValue.boolValue animated:animated];
                 }
             }
-            if (appearance.appearanceBlock) {
-                appearance.appearanceBlock(selfObject.navigationController.navigationBar);
+            
+            NSNumber *styleValue = objc_getAssociatedObject(selfObject, @selector(fwNavigationBarStyle));
+            if (styleValue) {
+                [selfObject fwUpdateNavigationBarStyle];
             }
         }));
     });
@@ -78,13 +65,9 @@
 
 - (void)setFwStatusBarHidden:(BOOL)fwStatusBarHidden
 {
-    if (fwStatusBarHidden != self.fwStatusBarHidden) {
-        [self willChangeValueForKey:@"fwStatusBarHidden"];
-        objc_setAssociatedObject(self, @selector(fwStatusBarHidden), @(fwStatusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwStatusBarHidden"];
-        
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
+    objc_setAssociatedObject(self, @selector(fwStatusBarHidden), @(fwStatusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (UIStatusBarStyle)fwStatusBarStyle
@@ -94,28 +77,34 @@
 
 - (void)setFwStatusBarStyle:(UIStatusBarStyle)fwStatusBarStyle
 {
-    if (fwStatusBarStyle != self.fwStatusBarStyle) {
-        [self willChangeValueForKey:@"fwStatusBarStyle"];
-        objc_setAssociatedObject(self, @selector(fwStatusBarStyle), @(fwStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwStatusBarStyle"];
-        
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
+    objc_setAssociatedObject(self, @selector(fwStatusBarStyle), @(fwStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (BOOL)fwNavigationBarHidden
 {
-    return self.navigationController.navigationBarHidden;
+    return [objc_getAssociatedObject(self, @selector(fwNavigationBarHidden)) boolValue];
 }
 
 - (void)setFwNavigationBarHidden:(BOOL)fwNavigationBarHidden
 {
-    self.navigationController.navigationBarHidden = fwNavigationBarHidden;
+    objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(fwNavigationBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (self.isViewLoaded && self.view.window) {
+        if (self.navigationController.navigationBarHidden != fwNavigationBarHidden) {
+            self.navigationController.navigationBarHidden = fwNavigationBarHidden;
+        }
+    }
 }
 
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (self.navigationController.navigationBarHidden != hidden) {
+        [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    }
 }
 
 - (FWNavigationBarStyle)fwNavigationBarStyle
@@ -126,6 +115,39 @@
 - (void)setFwNavigationBarStyle:(FWNavigationBarStyle)fwNavigationBarStyle
 {
     objc_setAssociatedObject(self, @selector(fwNavigationBarStyle), @(fwNavigationBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (self.isViewLoaded && self.view.window) {
+        [self fwUpdateNavigationBarStyle];
+    }
+}
+
+- (void)fwUpdateNavigationBarStyle
+{
+    if (!self.navigationController) return;
+    NSNumber *styleValue = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
+    if (!styleValue) return;
+    
+    FWNavigationBarStyle style = [styleValue integerValue];
+    if (style == FWNavigationBarStyleClear) {
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    }
+    
+    FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance appearanceForStyle:style];
+    if (appearance.backgroundColor) {
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:appearance.backgroundColor] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    }
+    if (appearance.foregroundColor) {
+        [self.navigationController.navigationBar setTintColor:appearance.foregroundColor];
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
+        if (@available(iOS 11.0, *)) {
+            [self.navigationController.navigationBar setLargeTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
+        }
+    }
+    if (appearance.appearanceBlock) {
+        appearance.appearanceBlock(self.navigationController.navigationBar);
+    }
 }
 
 - (BOOL)fwTabBarHidden

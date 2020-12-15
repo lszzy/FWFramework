@@ -26,6 +26,8 @@
     [super viewDidLoad];
     self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     self.fwForcePopGesture = YES;
+    self.fwNavigationBarStyle = self.index < 2 ? FWNavigationBarStyleDefault : FWNavigationBarStyleRandom;
+    self.fwNavigationBarHidden = self.index < 4 ? NO : [[@[@0, @1] fwRandomObject] boolValue];
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
@@ -40,23 +42,6 @@
         viewController.index = self.index + 1;
         [self.navigationController pushViewController:viewController animated:YES];
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if (self.index < 3) {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor greenColor]];
-        [self.navigationController.navigationBar fwSetLineHidden:YES];
-    } else {
-        if (!self.fwTempObject) {
-            self.fwTempObject = @[[UIColor fwRandomColor], [@[@0, @1] fwRandomObject], (self.index < 6 ? @0 : [@[@0, @1] fwRandomObject])];
-        }
-        [self.navigationController.navigationBar fwSetBackgroundColor:self.fwTempObject[0]];
-        [self.navigationController.navigationBar fwSetLineHidden:[self.fwTempObject[1] boolValue]];
-        [self fwSetNavigationBarHidden:[self.fwTempObject[2] boolValue] animated:animated];
-    }
 }
 
 @end

@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+static const FWNavigationBarStyle FWNavigationBarStyleRandom = 2;
+
 /*!
  @brief BaseViewController
  */
