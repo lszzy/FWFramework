@@ -39,7 +39,6 @@
     viewController.hidesBottomBarWhenPushed = YES;
     
     // 默认导航栏样式
-    viewController.fwNavigationBarHidden = NO;
     viewController.fwNavigationBarStyle = FWNavigationBarStyleDefault;
 }
 

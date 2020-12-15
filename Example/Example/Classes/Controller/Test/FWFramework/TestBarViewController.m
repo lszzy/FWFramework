@@ -18,7 +18,7 @@
 
 - (id)fwNavigationBarTransitionIdentifier
 {
-    return @(self.index < 3 ? 1 : self.index);
+    return @(self.fwNavigationBarStyle);
 }
 
 - (void)viewDidLoad
@@ -26,8 +26,13 @@
     [super viewDidLoad];
     self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     self.fwForcePopGesture = YES;
-    self.fwNavigationBarStyle = self.index < 2 ? FWNavigationBarStyleDefault : FWNavigationBarStyleRandom;
-    self.fwNavigationBarHidden = self.index < 4 ? NO : [[@[@0, @1] fwRandomObject] boolValue];
+    if (self.index < 2) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
+    } else if (self.index < 4) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleRandom;
+    } else {
+        self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleRandom), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
+    }
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
