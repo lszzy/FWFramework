@@ -43,16 +43,9 @@
             FWSwizzleOriginal(animated);
             
             if (!selfObject.navigationController) return;
-            NSNumber *hiddenValue = objc_getAssociatedObject(selfObject, @selector(fwNavigationBarHidden));
-            if (hiddenValue) {
-                if (selfObject.navigationController.navigationBarHidden != hiddenValue.boolValue) {
-                    [selfObject.navigationController setNavigationBarHidden:hiddenValue.boolValue animated:animated];
-                }
-            }
-            
             NSNumber *styleValue = objc_getAssociatedObject(selfObject, @selector(fwNavigationBarStyle));
             if (styleValue) {
-                [selfObject fwUpdateNavigationBarStyle];
+                [selfObject fwUpdateNavigationBarStyle:animated];
             }
         }));
     });
@@ -84,27 +77,17 @@
 
 - (BOOL)fwNavigationBarHidden
 {
-    return [objc_getAssociatedObject(self, @selector(fwNavigationBarHidden)) boolValue];
+    return self.navigationController.navigationBarHidden;
 }
 
 - (void)setFwNavigationBarHidden:(BOOL)fwNavigationBarHidden
 {
-    objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(fwNavigationBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (self.isViewLoaded && self.view.window) {
-        if (self.navigationController.navigationBarHidden != fwNavigationBarHidden) {
-            self.navigationController.navigationBarHidden = fwNavigationBarHidden;
-        }
-    }
+    self.navigationController.navigationBarHidden = fwNavigationBarHidden;
 }
 
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (self.navigationController.navigationBarHidden != hidden) {
-        [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    }
+    [self.navigationController setNavigationBarHidden:hidden animated:animated];
 }
 
 - (FWNavigationBarStyle)fwNavigationBarStyle
@@ -117,17 +100,22 @@
     objc_setAssociatedObject(self, @selector(fwNavigationBarStyle), @(fwNavigationBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded && self.view.window) {
-        [self fwUpdateNavigationBarStyle];
+        [self fwUpdateNavigationBarStyle:NO];
     }
 }
 
-- (void)fwUpdateNavigationBarStyle
+- (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
     if (!self.navigationController) return;
     NSNumber *styleValue = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
     if (!styleValue) return;
     
     FWNavigationBarStyle style = [styleValue integerValue];
+    BOOL hidden = (style == FWNavigationBarStyleHidden);
+    if (self.navigationController.navigationBarHidden != hidden) {
+        [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    }
+    
     if (style == FWNavigationBarStyleClear) {
         [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         [self.navigationController.navigationBar setShadowImage:[UIImage new]];

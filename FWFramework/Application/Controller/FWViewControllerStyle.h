@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 导航栏样式可扩展枚举
 typedef NSInteger FWNavigationBarStyle NS_TYPED_EXTENSIBLE_ENUM;
 static const FWNavigationBarStyle FWNavigationBarStyleDefault = 0;
+static const FWNavigationBarStyle FWNavigationBarStyleHidden  = -1;
 static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 /*!
@@ -30,10 +31,10 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 /// 状态栏样式，默认UIStatusBarStyleDefault，设置后才会生效
 @property (nonatomic, assign) UIStatusBarStyle fwStatusBarStyle;
 
-/// 导航栏是否隐藏，默认为NO，设置后才会在viewWillAppear:自动应用生效
+/// 导航栏是否隐藏，切换无动画，立即生效
 @property (nonatomic, assign) BOOL fwNavigationBarHidden;
 
-/// 动态设置导航栏是否隐藏，切换动画不突兀，立即生效
+/// 动态设置导航栏是否隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 /// 当前导航栏样式，默认Default，设置后才会在viewWillAppear:自动应用生效
