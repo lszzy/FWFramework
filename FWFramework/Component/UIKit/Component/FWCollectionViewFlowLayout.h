@@ -10,25 +10,25 @@
 /**
  *  Enumerated structure to define direction in which items can be rendered.
  */
-typedef NS_ENUM (NSUInteger, FWCollectionViewFlowLayoutItemRenderDirection) {
-  FWCollectionViewFlowLayoutItemRenderDirectionShortestFirst,
-  FWCollectionViewFlowLayoutItemRenderDirectionLeftToRight,
-  FWCollectionViewFlowLayoutItemRenderDirectionRightToLeft
+typedef NS_ENUM (NSUInteger, FWCollectionViewWaterfallLayoutItemRenderDirection) {
+  FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst,
+  FWCollectionViewWaterfallLayoutItemRenderDirectionLeftToRight,
+  FWCollectionViewWaterfallLayoutItemRenderDirectionRightToLeft
 };
 
-#pragma mark - FWCollectionViewDelegateFlowLayout
+#pragma mark - FWCollectionViewDelegateWaterfallLayout
 
-@class FWCollectionViewFlowLayout;
+@class FWCollectionViewWaterfallLayout;
 
 /**
- *  The FWCollectionViewDelegateFlowLayout protocol defines methods that let you coordinate with a
- *  FWCollectionViewFlowLayout object to implement a waterfall-based layout.
+ *  The FWCollectionViewDelegateWaterfallLayout protocol defines methods that let you coordinate with a
+ *  FWCollectionViewWaterfallLayout object to implement a waterfall-based layout.
  *  The methods of this protocol define the size of items.
  *
  *  The waterfall layout object expects the collection view’s delegate object to adopt this protocol.
  *  Therefore, implement this protocol on object assigned to your collection view’s delegate property.
  */
-@protocol FWCollectionViewDelegateFlowLayout <UICollectionViewDelegate>
+@protocol FWCollectionViewDelegateWaterfallLayout <UICollectionViewDelegate>
 @required
 /**
  *  Asks the delegate for the size of the specified item’s cell.
@@ -198,24 +198,24 @@ typedef NS_ENUM (NSUInteger, FWCollectionViewFlowLayoutItemRenderDirection) {
 
 @end
 
-#pragma mark - FWCollectionViewFlowLayout
+#pragma mark - FWCollectionViewWaterfallLayout
 
 /**
- *  The FWCollectionViewFlowLayout class is a concrete layout object that organizes items into waterfall-based grids
+ *  The FWCollectionViewWaterfallLayout class is a concrete layout object that organizes items into waterfall-based grids
  *  with optional header and footer views for each section.
  *
  *  A waterfall layout works with the collection view’s delegate object to determine the size of items, headers, and footers
- *  in each section. That delegate object must conform to the `FWCollectionViewDelegateFlowLayout` protocol.
+ *  in each section. That delegate object must conform to the `FWCollectionViewDelegateWaterfallLayout` protocol.
  *
  *  Each section in a waterfall layout can have its own custom header and footer. To configure the header or footer for a view,
  *  you must configure the height of the header or footer to be non zero. You can do this by implementing the appropriate delegate
  *  methods or by assigning appropriate values to the `headerHeight` and `footerHeight` properties.
  *  If the header or footer height is 0, the corresponding view is not added to the collection view.
  *
- *  @note FWCollectionViewFlowLayout doesn't support decoration view, and it supports vertical scrolling direction only.
+ *  @note FWCollectionViewWaterfallLayout doesn't support decoration view, and it supports vertical scrolling direction only.
  *  @see https://github.com/chiahsien/CHTCollectionViewWaterfallLayout
  */
-@interface FWCollectionViewFlowLayout : UICollectionViewLayout
+@interface FWCollectionViewWaterfallLayout : UICollectionViewLayout
 
 /**
  *  @brief How many columns for this layout.
@@ -292,11 +292,11 @@ typedef NS_ENUM (NSUInteger, FWCollectionViewFlowLayoutItemRenderDirection) {
 /**
  *  @brief The direction in which items will be rendered in subsequent rows.
  *  @discussion
- *    The direction in which each item is rendered. This could be left to right (FWCollectionViewFlowLayoutItemRenderDirectionLeftToRight), right to left (FWCollectionViewFlowLayoutItemRenderDirectionRightToLeft), or shortest column fills first (FWCollectionViewFlowLayoutItemRenderDirectionShortestFirst).
+ *    The direction in which each item is rendered. This could be left to right (FWCollectionViewWaterfallLayoutItemRenderDirectionLeftToRight), right to left (FWCollectionViewWaterfallLayoutItemRenderDirectionRightToLeft), or shortest column fills first (FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst).
  *
- *    Default: FWCollectionViewFlowLayoutItemRenderDirectionShortestFirst
+ *    Default: FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst
  */
-@property (nonatomic, assign) FWCollectionViewFlowLayoutItemRenderDirection itemRenderDirection;
+@property (nonatomic, assign) FWCollectionViewWaterfallLayoutItemRenderDirection itemRenderDirection;
 
 /**
  *  @brief The minimum height of the collection view's content.
