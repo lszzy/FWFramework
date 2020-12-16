@@ -70,11 +70,13 @@ class SwiftTestCollectionCell: UICollectionViewCell {
 
 @objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, UICollectionViewDelegateFlowLayout {
     func renderCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
+        let layout = FWCollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = .zero
         layout.scrollDirection = .horizontal
+        layout.columnCount = 4
+        layout.rowCount = 3
         return layout
     }
     
@@ -87,6 +89,16 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     
     func renderCollectionLayout() {
         collectionView.fwLayoutChain.edges(excludingEdge: .bottom).height(200)
+    }
+    
+    func renderModel() {
+        fwSetRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] (sender) in
+            guard let self = self else { return }
+            
+            let flowLayout = self.collectionView.collectionViewLayout as! FWCollectionViewFlowLayout
+            flowLayout.itemRenderVertical = !flowLayout.itemRenderVertical
+            self.collectionView.reloadData()
+        }
     }
     
     func renderData() {
@@ -104,9 +116,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SwiftTestCollectionCell
-        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        let horizontalIndex = flowLayout.fwHorizontalIndex(with: indexPath, columnCount: 4, rowCount: 3)
-        cell.bgView.backgroundColor = collectionData.fwObject(at: horizontalIndex.item) as? UIColor
+        cell.bgView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
         return cell
     }
     
@@ -117,11 +127,8 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        let horizontalMatrix = flowLayout.fwHorizontalMatrix(with: indexPath, columnCount: 4, rowCount: 3)
-        let horizontalIndex = flowLayout.fwHorizontalIndex(with: indexPath, columnCount: 4, rowCount: 3)
-        if horizontalIndex.item < collectionData.count {
-            view.fwShowMessage(withText: "点击了第\(horizontalIndex.item)个\n位于第\(horizontalMatrix.section)行第\(horizontalMatrix.item)列")
+        if indexPath.item < collectionData.count {
+            view.fwShowMessage(withText: "点击了第\(indexPath.item)个")
         }
     }
 }

@@ -8,6 +8,78 @@
 #import "FWCollectionViewFlowLayout.h"
 #import "tgmath.h"
 
+#pragma mark - FWCollectionViewFlowLayout
+
+@interface FWCollectionViewFlowLayout ()
+
+@property (nonatomic, strong) NSMutableArray *allAttributes;
+
+@end
+
+@implementation FWCollectionViewFlowLayout
+
+- (void)prepareLayout
+{
+    [super prepareLayout];
+    
+    if (!self.itemRenderVertical || self.columnCount < 1 || self.rowCount < 1) {
+        return;
+    }
+    
+    self.allAttributes = [NSMutableArray array];
+    NSUInteger count = [self.collectionView numberOfItemsInSection:0];
+    for (NSUInteger i = 0; i < count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
+        UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:indexPath];
+        [self.allAttributes addObject:attributes];
+    }
+}
+
+- (CGSize)collectionViewContentSize
+{
+    return [super collectionViewContentSize];
+}
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.itemRenderVertical || self.columnCount < 1 || self.rowCount < 1) {
+        return [super layoutAttributesForItemAtIndexPath:indexPath];
+    }
+    
+    NSUInteger page = indexPath.item / (self.columnCount * self.rowCount);
+    NSUInteger x = indexPath.item % self.columnCount + page * self.columnCount;
+    NSUInteger y = indexPath.item / self.columnCount - page * self.rowCount;
+    NSInteger item = x * self.rowCount + y;
+    NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:item inSection:indexPath.section];
+    
+    UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForItemAtIndexPath:newIndexPath];
+    attributes.indexPath = indexPath;
+    return attributes;
+}
+
+- (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
+{
+    if (!self.itemRenderVertical || self.columnCount < 1 || self.rowCount < 1) {
+        return [super layoutAttributesForElementsInRect:rect];
+    }
+    
+    NSArray *attributes = [super layoutAttributesForElementsInRect:rect];
+    NSMutableArray *result = [NSMutableArray array];
+    for (UICollectionViewLayoutAttributes *attribute in attributes) {
+        for (UICollectionViewLayoutAttributes *attribute2 in self.allAttributes) {
+            if (attribute.indexPath.item == attribute2.indexPath.item) {
+                [result addObject:attribute2];
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+@end
+
+#pragma mark - FWCollectionViewWaterfallLayout
+
 @interface FWCollectionViewWaterfallLayout ()
 /// The delegate will point to collection view's delegate automatically.
 @property (nonatomic, weak) id <FWCollectionViewDelegateWaterfallLayout> delegate;

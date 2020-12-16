@@ -7,6 +7,30 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma mark - FWCollectionViewFlowLayout
+
+/**
+ * 系统FlowLayout水平滚动时默认横向渲染，可通过本类开启纵向渲染，仅支持单section
+ * 示例效果如下：
+ * [0  3  6  9 ]    [(0,0)  (1,0)  (2,0)  (3,0)]    [0  1  2   3 ]
+ * [1  4  7  10] => [(0,1)  (1,1)  (2,1)  (3,1)] => [4  5  6   7 ]
+ * [2  5  8  11]    [(0,2)  (1,2)  (2,2)  (3,2)]    [8  9  10  11]
+ */
+@interface FWCollectionViewFlowLayout : UICollectionViewFlowLayout
+
+/// 是否启用元素纵向渲染，默认关闭，仅支持单section
+@property (nonatomic, assign) BOOL itemRenderVertical;
+
+/// 纵向渲染列数，仅itemRenderVertical且大于0时生效
+@property (nonatomic, assign) NSUInteger columnCount;
+
+/// 纵向渲染行数，仅itemRenderVertical且大于0时生效
+@property (nonatomic, assign) NSUInteger rowCount;
+
+@end
+
+#pragma mark - FWCollectionViewDelegateWaterfallLayout
+
 /**
  *  Enumerated structure to define direction in which items can be rendered.
  */
@@ -15,8 +39,6 @@ typedef NS_ENUM (NSUInteger, FWCollectionViewWaterfallLayoutItemRenderDirection)
   FWCollectionViewWaterfallLayoutItemRenderDirectionLeftToRight,
   FWCollectionViewWaterfallLayoutItemRenderDirectionRightToLeft
 };
-
-#pragma mark - FWCollectionViewDelegateWaterfallLayout
 
 @class FWCollectionViewWaterfallLayout;
 
