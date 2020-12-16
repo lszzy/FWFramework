@@ -69,15 +69,19 @@ class SwiftTestCollectionCell: UICollectionViewCell {
 }
 
 @objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, UICollectionViewDelegateFlowLayout {
+    lazy var flowLayout: FWCollectionViewFlowLayout = {
+        let flowLayout = FWCollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.sectionInset = .zero
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.columnCount = 4
+        flowLayout.rowCount = 3
+        return flowLayout
+    }()
+    
     func renderCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = FWCollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        layout.sectionInset = .zero
-        layout.scrollDirection = .horizontal
-        layout.columnCount = 4
-        layout.rowCount = 3
-        return layout
+        return flowLayout
     }
     
     func renderCollectionView() {
@@ -95,8 +99,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
         fwSetRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] (sender) in
             guard let self = self else { return }
             
-            let flowLayout = self.collectionView.collectionViewLayout as! FWCollectionViewFlowLayout
-            flowLayout.itemRenderVertical = !flowLayout.itemRenderVertical
+            self.flowLayout.itemRenderVertical = !self.flowLayout.itemRenderVertical
             self.collectionView.reloadData()
         }
     }
@@ -109,9 +112,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let pageTotal = 4 * 3
-        let pageCount = ceil(Double(collectionData.count) / Double(pageTotal))
-        return Int(pageCount) * pageTotal
+        return flowLayout.itemRenderCount(collectionData.count)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -121,9 +122,8 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        let horizontalMatrix = flowLayout.fwHorizontalMatrix(with: indexPath, columnCount: 4, rowCount: 3)
-        return CGSize(width: FWScreenWidth / 4, height: horizontalMatrix.section % 3 == 0 ? 80 : 60)
+        let verticalMatrix = flowLayout.verticalMatrixPath(indexPath)
+        return CGSize(width: FWScreenWidth / 4, height: verticalMatrix.section % 3 == 0 ? 80 : 60)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
