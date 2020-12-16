@@ -213,6 +213,7 @@ typedef NS_ENUM (NSUInteger, FWCollectionViewFlowLayoutItemRenderDirection) {
  *  If the header or footer height is 0, the corresponding view is not added to the collection view.
  *
  *  @note FWCollectionViewFlowLayout doesn't support decoration view, and it supports vertical scrolling direction only.
+ *  @see https://github.com/chiahsien/CHTCollectionViewWaterfallLayout
  */
 @interface FWCollectionViewFlowLayout : UICollectionViewLayout
 

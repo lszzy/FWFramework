@@ -68,34 +68,48 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
 }
 
-@objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController {
+@objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, FWCollectionViewDelegateFlowLayout {
     func renderCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: (FWScreenWidth - 10) / 2.0, height: 100)
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
+        let layout = FWCollectionViewFlowLayout()
+        layout.minimumColumnSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = .zero
+        layout.columnCount = 4
+        layout.itemRenderDirection = .leftToRight
         return layout
     }
     
     func renderCollectionView() {
         view.backgroundColor = UIColor.appColorBg()
         collectionView.backgroundColor = UIColor.appColorTable()
+        collectionView.isPagingEnabled = true
         collectionView.register(SwiftTestCollectionCell.self, forCellWithReuseIdentifier: "cell")
     }
     
+    func renderCollectionLayout() {
+        collectionView.fwLayoutChain.edges(excludingEdge: .bottom).height(200)
+    }
+    
     func renderData() {
-        collectionData.addObjects(from: [0, 1, 2])
+        for _ in 0 ..< 18 {
+            collectionData.add(UIColor.fwRandom())
+        }
         collectionView.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        collectionData.count
+        24
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SwiftTestCollectionCell
-        cell.bgView.backgroundColor = UIColor.fwRandom()
+        cell.bgView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let currentRow = (indexPath.item / 4) % 3
+        return CGSize(width: FWScreenWidth / 4, height: currentRow == 0 ? 80 : 60)
     }
 }
 
