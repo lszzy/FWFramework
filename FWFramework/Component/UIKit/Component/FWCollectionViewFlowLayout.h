@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWCollectionViewFlowLayout
 
 /**
@@ -26,6 +28,15 @@
 
 /// 纵向渲染行数，仅itemRenderVertical且大于0时生效
 @property (nonatomic, assign) NSUInteger rowCount;
+
+/// 计算实际元素个数对应的渲染总数，超出部分需渲染空数据
+- (NSInteger)itemRenderCount:(NSInteger)itemCount;
+
+/// 计算指定indexPath转换为纵向矩阵indexPath，section为行坐标y，item为列坐标x
+- (NSIndexPath *)verticalMatrixPath:(NSIndexPath *)indexPath;
+
+/// 计算指定indexPath转换为纵向索引indexPath，section为0，item为索引位置
+- (NSIndexPath *)verticalIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -337,3 +348,5 @@ typedef NS_ENUM (NSUInteger, FWCollectionViewWaterfallLayoutItemRenderDirection)
 - (CGFloat)itemWidthInSectionAtIndex:(NSInteger)section;
 
 @end
+
+NS_ASSUME_NONNULL_END

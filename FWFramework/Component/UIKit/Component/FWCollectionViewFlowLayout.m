@@ -76,6 +76,40 @@
     return result;
 }
 
+- (NSInteger)itemRenderCount:(NSInteger)itemCount
+{
+    if (self.columnCount < 1 || self.rowCount < 1) {
+        return itemCount;
+    }
+    
+    NSInteger pageCount = self.columnCount * self.rowCount;
+    NSInteger page = ceil(itemCount / (double)pageCount);
+    return page * pageCount;
+}
+
+- (NSIndexPath *)verticalMatrixPath:(NSIndexPath *)indexPath
+{
+    if (self.columnCount < 1 || self.rowCount < 1) {
+        return indexPath;
+    }
+    
+    NSInteger page = indexPath.item / (self.columnCount * self.rowCount);
+    NSInteger x = (indexPath.item % (self.columnCount * self.rowCount)) / self.rowCount;
+    NSInteger y = indexPath.item % self.rowCount + page * self.rowCount;
+    return [NSIndexPath indexPathForItem:x inSection:y];
+}
+
+- (NSIndexPath *)verticalIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.columnCount < 1 || self.rowCount < 1) {
+        return indexPath;
+    }
+    
+    NSIndexPath *verticalMatrix = [self verticalMatrixPath:indexPath];
+    NSInteger item = verticalMatrix.section * self.columnCount + verticalMatrix.item;
+    return [NSIndexPath indexPathForItem:item inSection:0];
+}
+
 @end
 
 #pragma mark - FWCollectionViewWaterfallLayout
