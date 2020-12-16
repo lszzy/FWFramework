@@ -97,7 +97,9 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        24
+        let pageTotal = 4 * 3
+        let pageCount = ceil(Double(collectionData.count) / Double(pageTotal))
+        return Int(pageCount) * pageTotal
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
