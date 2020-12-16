@@ -68,14 +68,13 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
 }
 
-@objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, FWCollectionViewDelegateFlowLayout {
+@objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, UICollectionViewDelegateFlowLayout {
     func renderCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = FWCollectionViewFlowLayout()
-        layout.minimumColumnSpacing = 0
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = .zero
-        layout.columnCount = 4
-        layout.itemRenderDirection = .leftToRight
+        layout.scrollDirection = .horizontal
         return layout
     }
     
@@ -103,13 +102,25 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SwiftTestCollectionCell
-        cell.bgView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
+        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let horizontalIndex = flowLayout.fwHorizontalIndex(with: indexPath, columnCount: 4, rowCount: 3)
+        cell.bgView.backgroundColor = collectionData.fwObject(at: horizontalIndex.item) as? UIColor
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let currentRow = (indexPath.item / 4) % 3
-        return CGSize(width: FWScreenWidth / 4, height: currentRow == 0 ? 80 : 60)
+        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let horizontalMatrix = flowLayout.fwHorizontalMatrix(with: indexPath, columnCount: 4, rowCount: 3)
+        return CGSize(width: FWScreenWidth / 4, height: horizontalMatrix.section % 3 == 0 ? 80 : 60)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let horizontalMatrix = flowLayout.fwHorizontalMatrix(with: indexPath, columnCount: 4, rowCount: 3)
+        let horizontalIndex = flowLayout.fwHorizontalIndex(with: indexPath, columnCount: 4, rowCount: 3)
+        if horizontalIndex.item < collectionData.count {
+            view.fwShowMessage(withText: "点击了第\(horizontalIndex.item)个\n位于第\(horizontalMatrix.section)行第\(horizontalMatrix.item)列")
+        }
     }
 }
 

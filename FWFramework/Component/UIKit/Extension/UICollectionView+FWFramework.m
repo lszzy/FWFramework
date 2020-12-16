@@ -77,4 +77,27 @@
     }
 }
 
+- (NSIndexPath *)fwHorizontalMatrixWithIndexPath:(NSIndexPath *)indexPath columnCount:(NSInteger)columnCount rowCount:(NSInteger)rowCount
+{
+    if (columnCount < 1 || rowCount < 1) {
+        return indexPath;
+    }
+    
+    NSInteger page = indexPath.item / (columnCount * rowCount);
+    NSInteger x = (indexPath.item % (columnCount * rowCount)) / rowCount;
+    NSInteger y = indexPath.item % rowCount + page * rowCount;
+    return [NSIndexPath indexPathForItem:x inSection:y];
+}
+
+- (NSIndexPath *)fwHorizontalIndexWithIndexPath:(NSIndexPath *)indexPath columnCount:(NSInteger)columnCount rowCount:(NSInteger)rowCount
+{
+    if (columnCount < 1 || rowCount < 1) {
+        return indexPath;
+    }
+    
+    NSIndexPath *horizontalMatrix = [self fwHorizontalMatrixWithIndexPath:indexPath columnCount:columnCount rowCount:rowCount];
+    NSInteger item = horizontalMatrix.section * columnCount + horizontalMatrix.item;
+    return [NSIndexPath indexPathForItem:item inSection:0];
+}
+
 @end
