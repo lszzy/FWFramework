@@ -29,13 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向渲染行数，仅itemRenderVertical且大于0时生效
 @property (nonatomic, assign) NSUInteger rowCount;
 
-/// 计算实际元素个数对应的渲染总数，超出部分需渲染空数据
+/// 计算实际元素个数对应的渲染总数，超出部分需渲染空数据，一般numberOfItems中需要调用
 - (NSInteger)itemRenderCount:(NSInteger)itemCount;
 
-/// 计算指定indexPath转换为纵向矩阵indexPath，section为行坐标y，item为列坐标x
+/// 计算指定indexPath转换为纵向矩阵indexPath，section为行坐标y，item为列坐标x，一般sizeForItem中需要转换
 - (NSIndexPath *)verticalMatrixPath:(NSIndexPath *)indexPath;
 
-/// 计算指定indexPath转换为纵向索引indexPath，section为0，item为索引位置
+/// 计算指定indexPath转换为纵向索引indexPath，section为0，item为索引位置，一般无需调用
 - (NSIndexPath *)verticalIndexPath:(NSIndexPath *)indexPath;
 
 @end
