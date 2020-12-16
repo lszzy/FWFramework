@@ -8,9 +8,9 @@
 #import "FWCollectionViewFlowLayout.h"
 #import "tgmath.h"
 
-@interface FWCollectionViewFlowLayout ()
+@interface FWCollectionViewWaterfallLayout ()
 /// The delegate will point to collection view's delegate automatically.
-@property (nonatomic, weak) id <FWCollectionViewDelegateFlowLayout> delegate;
+@property (nonatomic, weak) id <FWCollectionViewDelegateWaterfallLayout> delegate;
 /// Array to store height for each column
 @property (nonatomic, strong) NSMutableArray *columnHeights;
 /// Array of arrays. Each array stores item attributes for each section
@@ -25,7 +25,7 @@
 @property (nonatomic, strong) NSMutableArray *unionRects;
 @end
 
-@implementation FWCollectionViewFlowLayout
+@implementation FWCollectionViewWaterfallLayout
 
 /// How many items to be union into a single rectangle
 static const NSInteger unionSize = 20;
@@ -92,7 +92,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   }
 }
 
-- (void)setItemRenderDirection:(FWCollectionViewFlowLayoutItemRenderDirection)itemRenderDirection {
+- (void)setItemRenderDirection:(FWCollectionViewWaterfallLayoutItemRenderDirection)itemRenderDirection {
   if (_itemRenderDirection != itemRenderDirection) {
     _itemRenderDirection = itemRenderDirection;
     [self invalidateLayout];
@@ -168,8 +168,8 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   return _sectionItemAttributes;
 }
 
-- (id <FWCollectionViewDelegateFlowLayout> )delegate {
-  return (id <FWCollectionViewDelegateFlowLayout> )self.collectionView.delegate;
+- (id <FWCollectionViewDelegateWaterfallLayout> )delegate {
+  return (id <FWCollectionViewDelegateWaterfallLayout> )self.collectionView.delegate;
 }
 
 #pragma mark - Init
@@ -182,7 +182,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   _sectionInset = UIEdgeInsetsZero;
   _headerInset  = UIEdgeInsetsZero;
   _footerInset  = UIEdgeInsetsZero;
-  _itemRenderDirection = FWCollectionViewFlowLayoutItemRenderDirectionShortestFirst;
+  _itemRenderDirection = FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst;
 }
 
 - (id)init {
@@ -215,8 +215,8 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     return;
   }
 
-  NSAssert([self.delegate conformsToProtocol:@protocol(FWCollectionViewDelegateFlowLayout)], @"UICollectionView's delegate should conform to FWCollectionViewDelegateFlowLayout protocol");
-  NSAssert(self.columnCount > 0 || [self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)], @"FWCollectionViewFlowLayout's columnCount should be greater than 0, or delegate must implement columnCountForSection:");
+  NSAssert([self.delegate conformsToProtocol:@protocol(FWCollectionViewDelegateWaterfallLayout)], @"UICollectionView's delegate should conform to FWCollectionViewDelegateWaterfallLayout protocol");
+  NSAssert(self.columnCount > 0 || [self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)], @"FWCollectionViewWaterfallLayout's columnCount should be greater than 0, or delegate must implement columnCountForSection:");
 
   // Initialize variables
   NSInteger idx = 0;
@@ -527,15 +527,15 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   NSUInteger index = 0;
   NSInteger columnCount = [self columnCountForSection:section];
   switch (self.itemRenderDirection) {
-    case FWCollectionViewFlowLayoutItemRenderDirectionShortestFirst:
+    case FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst:
       index = [self shortestColumnIndexInSection:section];
       break;
 
-    case FWCollectionViewFlowLayoutItemRenderDirectionLeftToRight:
+    case FWCollectionViewWaterfallLayoutItemRenderDirectionLeftToRight:
       index = (item % columnCount);
       break;
 
-    case FWCollectionViewFlowLayoutItemRenderDirectionRightToLeft:
+    case FWCollectionViewWaterfallLayoutItemRenderDirectionRightToLeft:
       index = (columnCount - 1) - (item % columnCount);
       break;
 
