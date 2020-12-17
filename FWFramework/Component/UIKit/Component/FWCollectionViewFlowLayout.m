@@ -23,10 +23,7 @@
 - (void)prepareLayout
 {
     [super prepareLayout];
-    
-    if (!self.itemRenderVertical || self.columnCount < 1 || self.rowCount < 1) {
-        return;
-    }
+    if (!self.itemRenderVertical || self.columnCount < 1 || self.rowCount < 1) return;
     
     self.allAttributes = [NSMutableArray array];
     NSUInteger sectionCount = [self.collectionView numberOfSections];
@@ -49,22 +46,24 @@
     NSUInteger x = indexPath.item % self.columnCount + page * self.columnCount;
     NSUInteger y = indexPath.item / self.columnCount - page * self.rowCount;
     NSInteger item = x * self.rowCount + y;
-    NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:item inSection:indexPath.section];
-    
-    UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForItemAtIndexPath:newIndexPath];
+    UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:item inSection:indexPath.section]];
     attributes.indexPath = indexPath;
     return attributes;
 }
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
 {
+    NSArray *attributes = [super layoutAttributesForElementsInRect:rect];
     if (!self.itemRenderVertical || self.columnCount < 1 || self.rowCount < 1) {
-        return [super layoutAttributesForElementsInRect:rect];
+        return attributes;
     }
     
-    NSArray *attributes = [super layoutAttributesForElementsInRect:rect];
     NSMutableArray *newAttributes = [NSMutableArray array];
     for (UICollectionViewLayoutAttributes *attribute in attributes) {
+        if (attribute.representedElementCategory != UICollectionElementCategoryCell) {
+            [newAttributes addObject:attribute];
+            continue;
+        }
         for (UICollectionViewLayoutAttributes *newAttribute in self.allAttributes) {
             if (attribute.indexPath.section == newAttribute.indexPath.section &&
                 attribute.indexPath.item == newAttribute.indexPath.item) {
