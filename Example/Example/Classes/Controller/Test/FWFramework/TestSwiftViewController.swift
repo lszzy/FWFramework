@@ -50,24 +50,6 @@ import FWFramework
     }
 }
 
-class SwiftTestCollectionCell: UICollectionViewCell {
-    lazy var bgView: UIView = {
-        let view = UIView()
-        return view
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        contentView.addSubview(bgView)
-        bgView.fwLayoutChain.edges()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 @objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, UICollectionViewDelegateFlowLayout {
     lazy var flowLayout: FWCollectionViewFlowLayout = {
         let flowLayout = FWCollectionViewFlowLayout()
@@ -75,7 +57,6 @@ class SwiftTestCollectionCell: UICollectionViewCell {
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.sectionInset = .zero
         flowLayout.scrollDirection = .horizontal
-        flowLayout.itemRenderVertical = true
         flowLayout.columnCount = 4
         flowLayout.rowCount = 3
         return flowLayout
@@ -89,7 +70,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
         view.backgroundColor = UIColor.appColorBg()
         collectionView.backgroundColor = UIColor.appColorTable()
         collectionView.isPagingEnabled = true
-        collectionView.register(SwiftTestCollectionCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     }
     
     func renderCollectionLayout() {
@@ -121,8 +102,8 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SwiftTestCollectionCell
-        cell.bgView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.contentView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
         return cell
     }
     
@@ -132,7 +113,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item < collectionData.count {
-            view.fwShowMessage(withText: "点击了第\(indexPath.item)个")
+            view.fwShowMessage(withText: "点击section: \(indexPath.section) item: \(indexPath.item)")
         }
     }
 }
