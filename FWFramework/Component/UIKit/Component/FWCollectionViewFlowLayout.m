@@ -29,17 +29,14 @@
     }
     
     self.allAttributes = [NSMutableArray array];
-    NSUInteger count = [self.collectionView numberOfItemsInSection:0];
-    for (NSUInteger i = 0; i < count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
-        UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:indexPath];
-        [self.allAttributes addObject:attributes];
+    NSUInteger sectionCount = [self.collectionView numberOfSections];
+    for (NSUInteger section = 0; section < sectionCount; section++) {
+        NSUInteger itemCount = [self.collectionView numberOfItemsInSection:section];
+        for (NSUInteger item = 0; item < itemCount; item++) {
+            UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:item inSection:section]];
+            [self.allAttributes addObject:attributes];
+        }
     }
-}
-
-- (CGSize)collectionViewContentSize
-{
-    return [super collectionViewContentSize];
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -66,16 +63,17 @@
     }
     
     NSArray *attributes = [super layoutAttributesForElementsInRect:rect];
-    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *newAttributes = [NSMutableArray array];
     for (UICollectionViewLayoutAttributes *attribute in attributes) {
-        for (UICollectionViewLayoutAttributes *attribute2 in self.allAttributes) {
-            if (attribute.indexPath.item == attribute2.indexPath.item) {
-                [result addObject:attribute2];
+        for (UICollectionViewLayoutAttributes *newAttribute in self.allAttributes) {
+            if (attribute.indexPath.section == newAttribute.indexPath.section &&
+                attribute.indexPath.item == newAttribute.indexPath.item) {
+                [newAttributes addObject:newAttribute];
                 break;
             }
         }
     }
-    return result;
+    return newAttributes;
 }
 
 #pragma mark - Public Methods
