@@ -75,6 +75,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.sectionInset = .zero
         flowLayout.scrollDirection = .horizontal
+        flowLayout.itemRenderVertical = true
         flowLayout.columnCount = 4
         flowLayout.rowCount = 3
         return flowLayout
@@ -126,13 +127,7 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var isFirstRow: Bool = false
-        if flowLayout.itemRenderVertical {
-            isFirstRow = (indexPath.item / 4) % 3 == 0
-        } else {
-            isFirstRow = indexPath.item % 3 == 0
-        }
-        return CGSize(width: FWScreenWidth / 4, height: isFirstRow ? 80 : 60)
+        return CGSize(width: FWScreenWidth / 4, height: indexPath.item % 3 == 0 ? 80 : 60)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
