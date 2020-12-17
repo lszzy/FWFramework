@@ -12,30 +12,27 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWCollectionViewFlowLayout
 
 /**
- * 系统FlowLayout水平滚动时默认横向渲染，可通过本类开启纵向渲染，仅支持单section
+ * 系统FlowLayout水平滚动时默认横向渲染，可通过本类开启纵向渲染
  * 示例效果如下：
- * [0  3  6  9 ]    [(0,0)  (1,0)  (2,0)  (3,0)]    [0  1  2   3 ]
- * [1  4  7  10] => [(0,1)  (1,1)  (2,1)  (3,1)] => [4  5  6   7 ]
- * [2  5  8  11]    [(0,2)  (1,2)  (2,2)  (3,2)]    [8  9  10  11]
+ * [0  3  6  9 ]    [0  1  2   3 ]
+ * [1  4  7  10] => [4  5  6   7 ]
+ * [2  5  8  11]    [8  9  10  11]
  */
 @interface FWCollectionViewFlowLayout : UICollectionViewFlowLayout
 
-/// 是否启用元素纵向渲染，默认关闭，仅支持单section
+/// 是否启用元素纵向渲染，默认关闭，开启时需设置渲染总数itemRenderCount
 @property (nonatomic, assign) BOOL itemRenderVertical;
 
-/// 纵向渲染列数，仅itemRenderVertical且大于0时生效
+/// 纵向渲染列数，开启itemRenderVertical且大于0时生效
 @property (nonatomic, assign) NSUInteger columnCount;
 
-/// 纵向渲染行数，仅itemRenderVertical且大于0时生效
+/// 纵向渲染行数，开启itemRenderVertical且大于0时生效
 @property (nonatomic, assign) NSUInteger rowCount;
 
-/// 计算实际元素个数对应的渲染总数，超出部分需渲染空数据，一般numberOfItems中需要调用
+/// 计算实际元素个数对应的渲染总数，超出部分需渲染空数据，一般numberOfItems中调用
 - (NSInteger)itemRenderCount:(NSInteger)itemCount;
 
-/// 计算指定indexPath转换为纵向矩阵indexPath，section为行坐标y，item为列坐标x，一般sizeForItem中需要转换
-- (NSIndexPath *)verticalMatrixPath:(NSIndexPath *)indexPath;
-
-/// 计算指定indexPath转换为纵向索引indexPath，section为0，item为索引位置，一般无需调用
+/// 计算指定indexPath转换为纵向索引indexPath，一般无需调用
 - (NSIndexPath *)verticalIndexPath:(NSIndexPath *)indexPath;
 
 @end
