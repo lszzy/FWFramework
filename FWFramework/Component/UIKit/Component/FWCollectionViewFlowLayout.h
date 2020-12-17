@@ -29,10 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向渲染行数，开启itemRenderVertical且大于0时生效
 @property (nonatomic, assign) NSUInteger rowCount;
 
-/// 计算实际元素个数对应的渲染总数，超出部分需渲染空数据，一般numberOfItems中调用
+/// 计算实际渲染总数，超出部分需渲染空数据，一般numberOfItems中调用
 - (NSInteger)itemRenderCount:(NSInteger)itemCount;
 
-/// 计算指定indexPath转换为纵向索引indexPath，一般无需调用
+/// 转换指定indexPath为纵向索引indexPath，一般无需调用
 - (NSIndexPath *)verticalIndexPath:(NSIndexPath *)indexPath;
 
 @end
