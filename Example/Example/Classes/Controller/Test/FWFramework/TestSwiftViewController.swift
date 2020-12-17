@@ -115,6 +115,10 @@ class SwiftTestCollectionCell: UICollectionViewCell {
         return flowLayout.itemRenderCount(collectionData.count)
     }
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SwiftTestCollectionCell
         cell.bgView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
