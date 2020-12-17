@@ -122,8 +122,13 @@ class SwiftTestCollectionCell: UICollectionViewCell {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let verticalMatrix = flowLayout.verticalMatrixPath(indexPath)
-        return CGSize(width: FWScreenWidth / 4, height: verticalMatrix.section % 3 == 0 ? 80 : 60)
+        var isFirstRow: Bool = false
+        if flowLayout.itemRenderVertical {
+            isFirstRow = (indexPath.item / 4) % 3 == 0
+        } else {
+            isFirstRow = indexPath.item % 3 == 0
+        }
+        return CGSize(width: FWScreenWidth / 4, height: isFirstRow ? 80 : 60)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
