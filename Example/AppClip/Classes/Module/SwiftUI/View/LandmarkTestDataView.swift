@@ -18,14 +18,20 @@ struct LandmarkTestDataView: View {
             Button("Codable") {
                 let codableString = """
 {
-    "id": 1,
+    "id": true,
     "name": "name1",
     "info": { "id": 2, "title": "title2" },
-    "infos": [{ "id": 3, "title": "title3" }, { "id": 4, "title": "title4" }]
+    "infos": [{ "id": "3", "title": "title3" }, { "id": 4.4, "title": "title4" }]
 }
 """
-                guard let codableObject = try? codableString.fwUTF8Data?.fwDecoded() as LandmarkTestData? else { return }
-                guard let jsonString = try? codableObject.fwEncoded().fwUTF8String else { return }
+                guard let codableObject = try? codableString.fwUTF8Data?.fwDecoded() as LandmarkTestData? else {
+                    text = "decode error"
+                    return
+                }
+                guard let jsonString = try? codableObject.fwEncoded().fwUTF8String else {
+                    text = "encode error"
+                    return
+                }
                 text = jsonString
             }
         }
