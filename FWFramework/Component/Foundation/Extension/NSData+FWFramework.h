@@ -28,9 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 读取对象归档
 + (nullable id)fwUnarchiveObjectWithFile:(NSString *)path;
 
-// 转为UTF8字符串
-- (nullable NSString *)fwUTF8String;
-
 #pragma mark - Encrypt
 
 /**

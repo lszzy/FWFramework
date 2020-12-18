@@ -146,6 +146,7 @@ extension Array {
 }
 extension Data {
     public var fwNSData: NSData { return self as NSData }
+    public var fwUTF8String: String? { return String(data: self, encoding: .utf8) }
 }
 extension Date {
     public var fwNSDate: NSDate { return self as NSDate }
@@ -155,6 +156,7 @@ extension Dictionary {
 }
 extension String {
     public var fwNSString: NSString { return self as NSString }
+    public var fwUTF8Data: Data? { return self.data(using: .utf8) }
 }
 extension URL {
     public var fwNSURL: NSURL { return self as NSURL }

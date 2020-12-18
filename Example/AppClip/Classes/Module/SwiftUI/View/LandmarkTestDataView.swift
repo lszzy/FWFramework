@@ -24,10 +24,8 @@ struct LandmarkTestDataView: View {
     "infos": [{ "id": 3, "title": "title3" }, { "id": 4, "title": "title4" }]
 }
 """
-                guard let codableData = codableString.data(using: .utf8) else { return }
-                guard let codableObject = try? JSONDecoder().decode(LandmarkTestData.self, from: codableData) else { return }
-                guard let jsonData = try? JSONEncoder().encode(codableObject) else { return }
-                guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+                guard let codableObject = try? codableString.fwUTF8Data?.fwDecoded() as LandmarkTestData? else { return }
+                guard let jsonString = try? codableObject.fwEncoded().fwUTF8String else { return }
                 text = jsonString
             }
         }

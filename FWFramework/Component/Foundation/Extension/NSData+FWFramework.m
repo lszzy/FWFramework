@@ -32,11 +32,6 @@
     return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 }
 
-- (NSString *)fwUTF8String
-{
-    return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
-}
-
 #pragma mark - Encrypt
 
 - (NSData *)fwAESEncryptWithKey:(NSString *)key andIV:(NSData *)iv
