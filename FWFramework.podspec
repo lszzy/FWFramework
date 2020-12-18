@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '0.8.0'
+  s.version               = '0.8.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -71,10 +71,6 @@ Pod::Spec.new do |s|
     ss.subspec 'Image' do |sss|
       sss.source_files = 'FWFramework/Application/Service/Image/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
-    end
-
-    ss.subspec 'Json' do |sss|
-      sss.source_files = 'FWFramework/Application/Service/Json/*.{h,m,swift}'
     end
 
     ss.subspec 'Network' do |sss|

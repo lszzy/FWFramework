@@ -9,6 +9,8 @@
 import Foundation
 import CoreGraphics
 
+// MARK: - FWSafelyUnwrappable
+
 /// 安全解包协议
 public protocol FWSafelyUnwrappable {
     /// 提供安全默认值
@@ -135,6 +137,8 @@ extension Dictionary: FWSafelyUnwrappable {
     public static var fwSafeValue: Dictionary<Key, Value> { return [:] }
     public func fwIsEmpty() -> Bool { return self.isEmpty }
 }
+
+// MARK: - FWSafelyBridge
 
 /// 常用类快捷OC桥接属性
 extension Array {
