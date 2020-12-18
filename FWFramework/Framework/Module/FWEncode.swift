@@ -28,7 +28,7 @@ public extension Encodable {
 }
 
 public extension Encoder {
-    func fwEncodeSingleValue<T: Encodable>(_ value: T) throws {
+    func fwEncodeSingle<T: Encodable>(_ value: T) throws {
         var container = singleValueContainer()
         try container.encode(value)
     }
@@ -72,7 +72,7 @@ public extension Data {
 }
 
 public extension Decoder {
-    func fwDecodeSingleValue<T: Decodable>(as type: T.Type = T.self) throws -> T {
+    func fwDecodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
         let container = try singleValueContainer()
         return try container.decode(type)
     }
@@ -86,11 +86,11 @@ public extension Decoder {
         return try container.decode(type, forKey: key)
     }
 
-    func fwDecodeIfPresent<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try fwDecodeIfPresent(FWAnyCodingKey(key), as: type)
+    func fwDecodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+        return try fwDecodeIf(FWAnyCodingKey(key), as: type)
     }
 
-    func fwDecodeIfPresent<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+    func fwDecodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
         let container = try self.container(keyedBy: K.self)
         return try container.decodeIfPresent(type, forKey: key)
     }
@@ -116,24 +116,24 @@ public extension Decoder {
     
     // MARK: - FWJSON
     
-    func fwDecodeSingleJson() throws -> FWJSON {
-        return try fwDecodeSingleValue(as: FWJSON.self)
+    func fwJsonSingle() throws -> FWJSON {
+        return try fwDecodeSingle(as: FWJSON.self)
     }
     
-    func fwDecodeJson(_ key: String) throws -> FWJSON {
+    func fwJson(_ key: String) throws -> FWJSON {
         return try fwDecode(key, as: FWJSON.self)
     }
     
-    func fwDecodeJson<K: CodingKey>(_ key: K) throws -> FWJSON {
+    func fwJson<K: CodingKey>(_ key: K) throws -> FWJSON {
         return try fwDecode(key, as: FWJSON.self)
     }
 
-    func fwDecodeJsonIfPresent(_ key: String) throws -> FWJSON? {
-        return try fwDecodeIfPresent(key, as: FWJSON.self)
+    func fwJsonIf(_ key: String) throws -> FWJSON? {
+        return try fwDecodeIf(key, as: FWJSON.self)
     }
 
-    func fwDecodeJsonIfPresent<K: CodingKey>(_ key: K) throws -> FWJSON? {
-        return try fwDecodeIfPresent(key, as: FWJSON.self)
+    func fwJsonIf<K: CodingKey>(_ key: K) throws -> FWJSON? {
+        return try fwDecodeIf(key, as: FWJSON.self)
     }
 }
 
