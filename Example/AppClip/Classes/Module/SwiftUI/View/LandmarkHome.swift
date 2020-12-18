@@ -72,6 +72,12 @@ struct LandmarkHome: View {
                 NavigationLink(destination: LandmarkModelView(title: "ViewModel2"), tag: "ViewModel", selection: $showingPage) {
                     Text("ViewModel2")
                 }
+                
+                NavigationLink(
+                    destination: LandmarkTestDataView(),
+                    label: {
+                        Text("Codable Test")
+                    })
             }
             .navigationBarTitle("Featured", displayMode: .inline)
             .navigationBarItems(trailing: profileButton)
