@@ -482,3 +482,138 @@ extension FWAnyDecodable: CustomDebugStringConvertible {
         }
     }
 }
+
+// MARK: - FWAnyEncoder
+
+/// @see https://github.com/JohnSundell/Codextended
+public protocol FWAnyEncoder {
+    func encode<T: Encodable>(_ value: T) throws -> Data
+}
+
+extension JSONEncoder: FWAnyEncoder {}
+
+#if canImport(ObjectiveC) || swift(>=5.1)
+extension PropertyListEncoder: FWAnyEncoder {}
+#endif
+
+public extension Encodable {
+    func fwEncoded(using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data {
+        return try encoder.encode(self)
+    }
+}
+
+public extension Encoder {
+    func fwEncodeSingleValue<T: Encodable>(_ value: T) throws {
+        var container = singleValueContainer()
+        try container.encode(value)
+    }
+
+    func fwEncode<T: Encodable>(_ value: T, for key: String) throws {
+        try fwEncode(value, for: FWAnyCodingKey(key))
+    }
+
+    func fwEncode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
+        var container = self.container(keyedBy: K.self)
+        try container.encode(value, forKey: key)
+    }
+
+    func fwEncode<F: FWAnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
+        try fwEncode(date, for: FWAnyCodingKey(key), using: formatter)
+    }
+
+    func fwEncode<K: CodingKey, F: FWAnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
+        let string = formatter.string(from: date)
+        try fwEncode(string, for: key)
+    }
+}
+
+// MARK: - FWAnyDecoder
+
+public protocol FWAnyDecoder {
+    func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
+}
+
+extension JSONDecoder: FWAnyDecoder {}
+
+#if canImport(ObjectiveC) || swift(>=5.1)
+extension PropertyListDecoder: FWAnyDecoder {}
+#endif
+
+public extension Data {
+    func fwDecoded<T: Decodable>(as type: T.Type = T.self,
+                               using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
+        return try decoder.decode(T.self, from: self)
+    }
+}
+
+public extension Decoder {
+    func fwDecodeSingleValue<T: Decodable>(as type: T.Type = T.self) throws -> T {
+        let container = try singleValueContainer()
+        return try container.decode(type)
+    }
+
+    func fwDecode<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
+        return try fwDecode(FWAnyCodingKey(key), as: type)
+    }
+
+    func fwDecode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
+        let container = try self.container(keyedBy: K.self)
+        return try container.decode(type, forKey: key)
+    }
+
+    func fwDecodeIfPresent<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+        return try fwDecodeIfPresent(FWAnyCodingKey(key), as: type)
+    }
+
+    func fwDecodeIfPresent<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+        let container = try self.container(keyedBy: K.self)
+        return try container.decodeIfPresent(type, forKey: key)
+    }
+
+    func fwDecode<F: FWAnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
+        return try fwDecode(FWAnyCodingKey(key), using: formatter)
+    }
+
+    func fwDecode<K: CodingKey, F: FWAnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
+        let container = try self.container(keyedBy: K.self)
+        let rawString = try container.decode(String.self, forKey: key)
+
+        guard let date = formatter.date(from: rawString) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: container,
+                debugDescription: "Unable to format date string"
+            )
+        }
+
+        return date
+    }
+}
+
+public protocol FWAnyDateFormatter {
+    func date(from string: String) -> Date?
+    func string(from date: Date) -> String
+}
+
+extension DateFormatter: FWAnyDateFormatter {}
+
+@available(iOS 10.0, macOS 10.12, tvOS 10.0, *)
+extension ISO8601DateFormatter: FWAnyDateFormatter {}
+
+private struct FWAnyCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int?
+
+    init(_ string: String) {
+        stringValue = string
+    }
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+
+    init?(intValue: Int) {
+        self.intValue = intValue
+        self.stringValue = String(intValue)
+    }
+}
