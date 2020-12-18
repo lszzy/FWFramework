@@ -25,8 +25,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWWebViewController.h>
 #endif
 
-#if __has_include(<FWFramework/FWViewModel.h>)
-#import <FWFramework/FWViewModel.h>
+#if __has_include(<FWFramework/FWModel.h>)
+#import <FWFramework/FWModel.h>
 #endif
 
 #if __has_include(<FWFramework/FWView.h>)
@@ -83,8 +83,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWWebViewController.h"
 #endif
 
-#if __has_include("FWViewModel.h")
-#import "FWViewModel.h"
+#if __has_include("FWModel.h")
+#import "FWModel.h"
 #endif
 
 #if __has_include("FWView.h")
