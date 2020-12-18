@@ -64,6 +64,8 @@
 		2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E582500E1C0009395FB /* TestFloatLayoutViewController.m */; };
 		2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */; };
 		2FAB482725777E520072FF9F /* TestAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */; };
+		2FB1463B258CAB8A00D867D4 /* LandmarkTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB1463A258CAB8A00D867D4 /* LandmarkTestData.swift */; };
+		2FB1463F258CAC5D00D867D4 /* LandmarkTestDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */; };
 		2FB15BA325848FB100B92D80 /* View+FWRoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */; };
 		2FB15BA7258498F200B92D80 /* View+FWNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB15BA6258498F200B92D80 /* View+FWNavigationBar.swift */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
@@ -262,6 +264,8 @@
 		2F938E622500EBFE009395FB /* TestEmptyScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyScrollViewController.h; sourceTree = "<group>"; };
 		2F938E632500EBFE009395FB /* TestEmptyScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyScrollViewController.m; sourceTree = "<group>"; };
 		2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnnotationViewController.swift; sourceTree = "<group>"; };
+		2FB1463A258CAB8A00D867D4 /* LandmarkTestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestData.swift; sourceTree = "<group>"; };
+		2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestDataView.swift; sourceTree = "<group>"; };
 		2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FWRoundedCorner.swift"; sourceTree = "<group>"; };
 		2FB15BA6258498F200B92D80 /* View+FWNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FWNavigationBar.swift"; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
@@ -569,6 +573,7 @@
 				2F48F6DA2538036100AEBB60 /* Hike.swift */,
 				2F48F6DB2538036100AEBB60 /* LandmarkData.swift */,
 				2F48F6DC2538036100AEBB60 /* Landmark.swift */,
+				2FB1463A258CAB8A00D867D4 /* LandmarkTestData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -586,6 +591,7 @@
 				2F48F6F32538036100AEBB60 /* LandmarkDetail.swift */,
 				2F16273425763B220037427D /* LandmarkModelView.swift */,
 				2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */,
+				2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */,
 				2F48F6F42538036100AEBB60 /* CategoryRow.swift */,
 				2F48F6F52538036100AEBB60 /* ProfileHost.swift */,
 				2F48F6F62538036100AEBB60 /* LandmarkRow.swift */,
@@ -1321,6 +1327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F48F7012538036100AEBB60 /* PageControl.swift in Sources */,
+				2FB1463F258CAC5D00D867D4 /* LandmarkTestDataView.swift in Sources */,
 				2F48F7022538036100AEBB60 /* LandmarkList.swift in Sources */,
 				2FB15BA325848FB100B92D80 /* View+FWRoundedCorner.swift in Sources */,
 				2F48F7152538036100AEBB60 /* ProfileHost.swift in Sources */,
@@ -1331,6 +1338,7 @@
 				2F48F7112538036100AEBB60 /* CircleView.swift in Sources */,
 				2F48F6FE2538036100AEBB60 /* Landmark.swift in Sources */,
 				2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */,
+				2FB1463B258CAB8A00D867D4 /* LandmarkTestData.swift in Sources */,
 				2F48F6FC2538036100AEBB60 /* Hike.swift in Sources */,
 				2F48F7002538036100AEBB60 /* ProfileSummary.swift in Sources */,
 				2F48F7182538036100AEBB60 /* HikeView.swift in Sources */,
