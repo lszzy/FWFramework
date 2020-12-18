@@ -11,27 +11,24 @@ import FWFramework
 struct LandmarkTestData: Codable {
     var id: Int = 0
     var name: String = ""
-    var info: LandmarkTestInfo = LandmarkTestInfo()
+    var info: LandmarkTestInfo?
     var infos: [LandmarkTestInfo] = []
-    
-    init() {}
     
     init(from decoder: Decoder) throws {
         id = try decoder.fwDecodeJson("id").intValue
         name = try decoder.fwDecodeJson("name").stringValue
-        info = try decoder.fwDecode("info")
+        info = try decoder.fwDecodeIfPresent("info")
         infos = try decoder.fwDecode("infos")
     }
 }
 
 struct LandmarkTestInfo: Codable {
     var id: Int = 0
-    var title: String = ""
-    
-    init() {}
+    var title: String?
     
     init(from decoder: Decoder) throws {
         id = try decoder.fwDecodeJson("id").intValue
-        title = try decoder.fwDecodeJson("name").stringValue
+        title = try decoder.fwDecodeJsonIfPresent("title")?.string
+            ?? decoder.fwDecodeJsonIfPresent("name")?.string
     }
 }
