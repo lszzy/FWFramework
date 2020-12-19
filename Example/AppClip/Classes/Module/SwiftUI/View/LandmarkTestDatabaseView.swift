@@ -12,6 +12,10 @@ import FWFramework
 struct LandmarkTestDatabaseView: View {
     @State var itemList: [LandmarkTestTable] = []
     
+    init() {
+        FWDatabase.setVersion(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0")
+    }
+    
     var body: some View {
         List {
             ForEach(itemList, id: \.id) { item in

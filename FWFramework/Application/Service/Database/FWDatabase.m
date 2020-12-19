@@ -65,6 +65,7 @@ static sqlite3 * _fw_database;
 @property (nonatomic, copy, readonly) NSString * name;
 @property (nonatomic, assign, readonly) SEL setter;
 @property (nonatomic, assign, readonly) SEL getter;
+
 @end
 
 @implementation FWDatabasePropertyInfo
@@ -89,8 +90,11 @@ static sqlite3 * _fw_database;
 @end
 
 @interface FWDatabase ()
+
 @property (nonatomic, strong) dispatch_semaphore_t dsema;
 @property (nonatomic, assign) BOOL check_update;
+@property (nonatomic, copy) NSString *version;
+
 @end
 
 @implementation FWDatabase
@@ -98,8 +102,9 @@ static sqlite3 * _fw_database;
 - (FWDatabase *)init {
     self = [super init];
     if (self) {
-        self.dsema = dispatch_semaphore_create(1);
-        self.check_update = YES;
+        _dsema = dispatch_semaphore_create(1);
+        _check_update = YES;
+        _version = @"1.0";
     }
     return self;
 }
@@ -111,6 +116,16 @@ static sqlite3 * _fw_database;
         instance = [FWDatabase new];
     });
     return instance;
+}
+
++ (NSString *)version {
+    return [self shareInstance].version;
+}
+
++ (void)setVersion:(NSString *)version {
+    if (version && version.length > 0) {
+        [self shareInstance].version = version;
+    }
 }
 
 + (NSString *)databaseCacheDirectory:(Class)model_class {
@@ -593,7 +608,7 @@ static sqlite3 * _fw_database;
     if (sqlite_path && sqlite_path.length > 0) {
         BOOL is_directory = NO;
         NSString * version = [self exceSelector:@selector(fwDatabaseVersion) modelClass:model_class];
-        if (!version || version.length == 0) {version = @"1.0";}
+        if (!version || version.length == 0) { version = [self shareInstance].version; }
         NSString * whc_sqlite_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),version];
         NSFileManager * file_manager = [NSFileManager defaultManager];
         if ([file_manager fileExistsAtPath:sqlite_path isDirectory:&is_directory] &&
@@ -607,7 +622,7 @@ static sqlite3 * _fw_database;
 + (BOOL)openTable:(Class)model_class {
     NSString * cache_directory = [self autoHandleOldSqlite:model_class];
     NSString * version = [self exceSelector:@selector(fwDatabaseVersion) modelClass:model_class];
-    if (!version || version.length == 0) {version = @"1.0";}
+    if (!version || version.length == 0) { version = [self shareInstance].version; }
     if ([self shareInstance].check_update) {
         NSString * local_model_name = [self localNameWithModel:model_class];
         if (local_model_name != nil &&

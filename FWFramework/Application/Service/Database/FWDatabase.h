@@ -75,11 +75,16 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /*!
- @brief FWDatabase
+ @brief 本地数据库管理类
  
  @see https://github.com/netyouli/WHC_ModelSqliteKit
  */
 @interface FWDatabase : NSObject
+
+/**
+ * 全局数据库模型版本号，默认1.0。如果模型实现了fwDatabaseVersion且不为空，则会忽略全局版本号
+ */
+@property (class, nonatomic, copy) NSString *version;
 
 /**
  * 说明: 存储模型数组到本地(事务方式)
