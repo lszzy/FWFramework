@@ -585,7 +585,11 @@ static sqlite3 * _whc_database;
             return table_name;
         }
     }
-    return NSStringFromClass(model_class);
+    NSString *tableName = NSStringFromClass(model_class);
+    if ([tableName containsString:@"."]) {
+        tableName = [tableName componentsSeparatedByString:@"."].lastObject;
+    }
+    return tableName;
 }
 
 + (void)createFloder:(NSString *)path {

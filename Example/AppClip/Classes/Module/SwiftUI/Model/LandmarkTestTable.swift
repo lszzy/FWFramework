@@ -18,7 +18,21 @@ class LandmarkTestTable: NSObject {
 }
 
 @objcMembers
-class LandmarkTestTableInfo: NSObject {
+class LandmarkTestTableInfo: NSObject, NSCoding {
     var id: Int = 0
     var title: String?
+    
+    override init() {
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        id = coder.decodeInteger(forKey: "id")
+        title = coder.decodeObject(forKey: "title") as? String
+    }
+    
+    func encode(with coder: NSCoder) {
+        coder.encode(id, forKey: "id")
+        coder.encode(title, forKey: "title")
+    }
 }
