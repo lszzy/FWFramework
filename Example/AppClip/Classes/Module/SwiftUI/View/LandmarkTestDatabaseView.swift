@@ -35,7 +35,7 @@ struct LandmarkTestDatabaseView: View {
         })
         .navigationBarItems(trailing: HStack {
             Button(action: {
-                let lastItem = FWDatabase.query(LandmarkTestTable.self, order: "by pkid desc", limit: "1").first as? LandmarkTestTable
+                let lastItem = FWDatabase.query(LandmarkTestTable.self, order: "pkid desc", limit: "1").first as? LandmarkTestTable
                 
                 let item = LandmarkTestTable()
                 item.id = lastItem != nil ? lastItem!.id + 1 : 1;

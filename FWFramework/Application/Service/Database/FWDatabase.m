@@ -1029,7 +1029,7 @@ static sqlite3 * _fw_database;
             case FWDatabaseQueryTypeOrder: {
                 order = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                 if (order.length > 0) {
-                    select_sql = [select_sql stringByAppendingFormat:@" ORDER %@",order];
+                    select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
                 }
             }
                 break;
@@ -1049,7 +1049,7 @@ static sqlite3 * _fw_database;
                 if (conditions.count > 1) {
                     order = [conditions.lastObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                     if (order.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" ORDER %@",order];
+                        select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
                     }
                 }
             }
@@ -1073,7 +1073,7 @@ static sqlite3 * _fw_database;
                 if (conditions.count > 0) {
                     order = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                     if (order.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" ORDER %@",order];
+                        select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
                     }
                 }
                 if (conditions.count > 1) {
@@ -1094,7 +1094,7 @@ static sqlite3 * _fw_database;
                 if (conditions.count > 1) {
                     order = [conditions[1] stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                     if (order.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" ORDER %@",order];
+                        select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
                     }
                 }
                 if (conditions.count > 2) {

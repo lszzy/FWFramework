@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return 查询模型对象数组
  */
 
-/// example: [FWDatabase query:[Person class] order:@"by age desc/asc"];
+/// example: [FWDatabase query:[Person class] order:@"age desc/asc"];
 /// 对person数据表查询并且根据age自动降序或者升序排序
 + (NSArray *)query:(Class)model_class order:(nullable NSString *)order;
 
@@ -149,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return 查询模型对象数组
  */
 
-/// example: [FWDatabase query:[Person class] where:@"age < 30" order:@"by age desc/asc"];
+/// example: [FWDatabase query:[Person class] where:@"age < 30" order:@"age desc/asc"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order;
 
@@ -175,9 +175,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @return 查询模型对象数组
  */
 
-/// example: [FWDatabase query:[Person class] order:@"by age desc/asc" limit:@"8"];
+/// example: [FWDatabase query:[Person class] order:@"age desc/asc" limit:@"8"];
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8
-/// example: [FWDatabase query:[Person class] order:@"by age desc/asc" limit:@"8 offset 8"];
+/// example: [FWDatabase query:[Person class] order:@"age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 + (NSArray *)query:(Class)model_class order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
@@ -190,9 +190,9 @@ NS_ASSUME_NONNULL_BEGIN
  * @return 查询模型对象数组
  */
 
-/// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8"];
+/// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"age desc/asc" limit:@"8"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8
-/// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8 offset 8"];
+/// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
