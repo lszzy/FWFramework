@@ -8,72 +8,69 @@
 
 #import <Foundation/Foundation.h>
 
-/// 数据库协议信息
-@protocol WHC_SqliteInfo <NSObject>
+/// 数据库模型协议信息
+@protocol FWDatabaseModel <NSObject>
 @optional
 
 /**
  自定义数据存储路径
  @return 自定义数据库路径(目录即可)
  */
-+ (NSString *)whc_SqlitePath;
++ (NSString *)fwDatabasePath;
 
 /// 自定义模型类数据库版本号
 /** 注意：
  ***该返回值在改变数据模型属性类型/增加/删除属性时需要更改否则无法自动更新原来模型数据表字段以及类型***
  */
-+ (NSString *)whc_SqliteVersion;
++ (NSString *)fwDatabaseVersion;
 
 /// 自定义数据库加密密码
 /** 注意：
  ***该加密功能需要引用SQLCipher三方库才支持***
  /// 引入方式有:
  *** 手动引入 ***
- *** pod 'WHC_ModelSqliteKit/SQLCipher' ***
+ *** pod 'Component/SQLCipher' ***
  */
-+ (NSString *)whc_SqlitePasswordKey;
-
-/// 自定义数据表主键名称
-/**
- *** 返回自定义主键名称默认主键:_id ***
- */
-+ (NSString *)whc_SqliteMainkey;
-
++ (NSString *)fwDatabasePasswordKey;
 
 /**
- 忽略属性集合
-
- @return 返回忽略属性集合
- */
-+ (NSArray *)whc_IgnorePropertys;
-
-
-/**
- 引入使用其他方式创建的数据库存储路径比如:FMDB
- 来使用WHC_Sqlite进行操作其他方式创建的数据库
+ 引入第三方创建的数据库存储路径比如:FMDB
+ 来使用FWDatabase进行操作其他方式创建的数据库
 
  @return 存储路径
  */
-+ (NSString *)whc_OtherSqlitePath;
-
++ (NSString *)fwDatabaseVendorPath;
 
 /**
- 指定自定义表名
+ 指定自定义表名，默认类名
 
  在指定引入其他方式创建的数据库时，这个时候如果表名不是模型类名需要实现该方法指定表名称
  
  @return 表名
  */
-+ (NSString *)whc_TableName;
++ (NSString *)fwTableName;
+
+/// 自定义数据表主键名称，默认pkid
+/**
+ *** 返回自定义主键名称
+ */
++ (NSString *)fwTablePrimaryKey;
+
+/**
+ 指定数据库表忽略属性集合
+
+ @return 返回数据库表忽略属性集合
+ */
++ (NSArray *)fwTableIgnorePropertys;
 
 @end
 
 /*!
- @brief FWDBModel
+ @brief FWDatabase
  
  @see https://github.com/netyouli/WHC_ModelSqliteKit
  */
-@interface WHC_ModelSqlite : NSObject
+@interface FWDatabase : NSObject
 
 /**
  * 说明: 存储模型数组到本地(事务方式)
@@ -121,7 +118,7 @@
  * @return 查询模型对象数组
  */
 
-/// example: [FWDBModel query:[Person class] order:@"by age desc/asc"];
+/// example: [FWDatabase query:[Person class] order:@"by age desc/asc"];
 /// 对person数据表查询并且根据age自动降序或者升序排序
 
 + (NSArray *)query:(Class)model_class order:(NSString *)order;
@@ -133,9 +130,9 @@
  * @return 查询模型对象数组
  */
 
-/// example: [FWDBModel query:[Person class] limit:@"8"];
+/// example: [FWDatabase query:[Person class] limit:@"8"];
 /// 对person数据表查询并且并且限制查询数量为8
-/// example: [FWDBModel query:[Person class] limit:@"8 offset 8"];
+/// example: [FWDatabase query:[Person class] limit:@"8 offset 8"];
 /// 对person数据表查询并且对查询列表偏移8并且限制查询数量为8
 
 + (NSArray *)query:(Class)model_class limit:(NSString *)limit;
@@ -148,7 +145,7 @@
  * @return 查询模型对象数组
  */
 
-/// example: [FWDBModel query:[Person class] where:@"age < 30" order:@"by age desc/asc"];
+/// example: [FWDatabase query:[Person class] where:@"age < 30" order:@"by age desc/asc"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where order:(NSString *)order;
@@ -161,9 +158,9 @@
  * @return 查询模型对象数组
  */
 
-/// example: [FWDBModel query:[Person class] where:@"age <= 30" limit:@"8"];
+/// example: [FWDatabase query:[Person class] where:@"age <= 30" limit:@"8"];
 /// 对person数据表查询age小于30岁并且限制查询数量为8
-/// example: [FWDBModel query:[Person class] where:@"age <= 30" limit:@"8 offset 8"];
+/// example: [FWDatabase query:[Person class] where:@"age <= 30" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且对查询列表偏移8并且限制查询数量为8
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where limit:(NSString *)limit;
@@ -176,9 +173,9 @@
  * @return 查询模型对象数组
  */
 
-/// example: [FWDBModel query:[Person class] order:@"by age desc/asc" limit:@"8"];
+/// example: [FWDatabase query:[Person class] order:@"by age desc/asc" limit:@"8"];
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8
-/// example: [FWDBModel query:[Person class] order:@"by age desc/asc" limit:@"8 offset 8"];
+/// example: [FWDatabase query:[Person class] order:@"by age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 
 + (NSArray *)query:(Class)model_class order:(NSString *)order limit:(NSString *)limit;
@@ -192,9 +189,9 @@
  * @return 查询模型对象数组
  */
 
-/// example: [FWDBModel query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8"];
+/// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8
-/// example: [FWDBModel query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8 offset 8"];
+/// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where order:(NSString *)order limit:(NSString *)limit;
@@ -207,7 +204,7 @@
  @param sql sql语句
  @return 查询模型对象数组
  
- /// example: [FWDBModel query:Model.self sql:@"select cc.* from ( select tt.*, (select count(*)+1 from Chapter where chapter_id = tt.chapter_id and updateTime < tt.updateTime ) as group_id from Chapter tt) cc where cc.group_id <= 7 order by updateTime desc"];
+ /// example: [FWDatabase query:Model.self sql:@"select cc.* from ( select tt.*, (select count(*)+1 from Chapter where chapter_id = tt.chapter_id and updateTime < tt.updateTime ) as group_id from Chapter tt) cc where cc.group_id <= 7 order by updateTime desc"];
  */
 + (NSArray *)query:(Class)model_class sql:(NSString *)sql;
 
@@ -217,8 +214,8 @@
  * @param model_class 要查询模型类
  * @param func sqlite函数例如：（MAX(age),MIN(age),COUNT(*)....）
  * @return 返回查询结果(如果结果条数 > 1返回Array , = 1返回单个值 , = 0返回nil)
- * /// example: [FWDBModel query:[Person class] sqliteFunc:@"max(age)"];  /// 获取Person表的最大age值
- * /// example: [FWDBModel query:[Person class] sqliteFunc:@"count(*)"];  /// 获取Person表的总记录条数
+ * /// example: [FWDatabase query:[Person class] sqliteFunc:@"max(age)"];  /// 获取Person表的最大age值
+ * /// example: [FWDatabase query:[Person class] sqliteFunc:@"count(*)"];  /// 获取Person表的总记录条数
  */
 + (id)query:(Class)model_class func:(NSString *)func;
 
@@ -229,8 +226,8 @@
  * @param func sqlite函数例如：（MAX(age),MIN(age),COUNT(*)....）
  * @param condition 其他查询条件例如：(where age > 20 order by age desc ....)
  * @return 返回查询结果(如果结果条数 > 1返回Array , = 1返回单个值 , = 0返回nil)
- * /// example: [FWDBModel query:[Person class] sqliteFunc:@"max(age)" condition:@"where name = '北京'"];  /// 获取Person表name=北京集合中的的最大age值
- * /// example: [FWDBModel query:[Person class] sqliteFunc:@"count(*)" condition:@"where name = '北京'"];  /// 获取Person表name=北京集合中的总记录条数
+ * /// example: [FWDatabase query:[Person class] sqliteFunc:@"max(age)" condition:@"where name = '北京'"];  /// 获取Person表name=北京集合中的的最大age值
+ * /// example: [FWDatabase query:[Person class] sqliteFunc:@"count(*)" condition:@"where name = '北京'"];  /// 获取Person表name=北京集合中的总记录条数
  */
 + (id)query:(Class)model_class func:(NSString *)func condition:(NSString *)condition;
 
@@ -251,7 +248,7 @@
  @param where 更新条件
  @return 是否成功
  /// 更新Person表在age字段大于25岁是的name值为whc，age为100岁
- /// example: [FWDBModel update:Person.self value:@"name = 'whc', age = 100" where:@"age > 25"];
+ /// example: [FWDatabase update:Person.self value:@"name = 'whc', age = 100" where:@"age > 25"];
  */
 + (BOOL)update:(Class)model_class value:(NSString *)value where:(NSString *)where;
 

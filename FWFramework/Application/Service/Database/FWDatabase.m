@@ -8,6 +8,7 @@
 // Github <https://github.com/netyouli/WHC_ModelSqliteKit>
 
 #import "FWDatabase.h"
+#import "FWLog.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -87,14 +88,14 @@ static sqlite3 * _whc_database;
 
 @end
 
-@interface WHC_ModelSqlite ()
+@interface FWDatabase ()
 @property (nonatomic, strong) dispatch_semaphore_t dsema;
 @property (nonatomic, assign) BOOL check_update;
 @end
 
-@implementation WHC_ModelSqlite
+@implementation FWDatabase
 
-- (WHC_ModelSqlite *)init {
+- (FWDatabase *)init {
     self = [super init];
     if (self) {
         self.dsema = dispatch_semaphore_create(1);
@@ -103,24 +104,24 @@ static sqlite3 * _whc_database;
     return self;
 }
 
-+ (WHC_ModelSqlite *)shareInstance {
-    static WHC_ModelSqlite * instance = nil;
++ (FWDatabase *)shareInstance {
+    static FWDatabase * instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [WHC_ModelSqlite new];
+        instance = [FWDatabase new];
     });
     return instance;
 }
 
 + (NSString *)databaseCacheDirectory:(Class)model_class {
     if (model_class) {
-        NSString * custom_path = [self exceSelector:@selector(whc_SqlitePath) modelClass:model_class];
+        NSString * custom_path = [self exceSelector:@selector(fwDatabasePath) modelClass:model_class];
         if (custom_path != nil && custom_path.length > 0) {
             return custom_path;
         }
     }
     NSString *cacheDirectory = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
-    return [NSString stringWithFormat:@"%@/FWDBModel/", cacheDirectory];
+    return [NSString stringWithFormat:@"%@/FWDatabase/", cacheDirectory];
 }
 
 + (WHC_FieldType)parserFieldTypeWithAttr:(NSString *)attr {
@@ -207,7 +208,7 @@ static sqlite3 * _whc_database;
         NSDictionary * super_fields = [self parserSubModelObjectFieldsWithModelClass:super_class propertyName:main_property_name complete:complete];
         if (need_dictionary_save) [fields setValuesForKeysWithDictionary:super_fields];
     }
-    SEL selector = @selector(whc_IgnorePropertys);
+    SEL selector = @selector(fwTableIgnorePropertys);
     NSArray * ignore_propertys;
     if ([model_class respondsToSelector:selector]) {
         IMP sqlite_info_func = [model_class methodForSelector:selector];
@@ -221,7 +222,7 @@ static sqlite3 * _whc_database;
         const char * property_name = property_getName(property);
         const char * property_attributes = property_getAttributes(property);
         NSString * property_name_string = [NSString stringWithUTF8String:property_name];
-        if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) || [property_name_string isEqualToString:@"whcId"] ||
+        if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) || [property_name_string isEqualToString:@"pkId"] ||
             [property_name_string isEqualToString:[self getMainKeyWithClass:model_class]]) {
             continue;
         }
@@ -504,9 +505,9 @@ static sqlite3 * _whc_database;
 }
 
 + (NSString *)getMainKeyWithClass:(Class)model_class {
-    NSString * main_key = [self exceSelector:@selector(whc_SqliteMainkey) modelClass:model_class];
+    NSString * main_key = [self exceSelector:@selector(fwTablePrimaryKey) modelClass:model_class];
     if (!main_key || main_key.length == 0) {
-        main_key = @"_id";
+        main_key = @"pkid";
     }
     return main_key;
 }
@@ -553,12 +554,12 @@ static sqlite3 * _whc_database;
 
 + (void)decryptionSqlite:(Class)model_class {
 #ifdef SQLITE_HAS_CODEC
-    NSString * psw_key = [self exceSelector:@selector(whc_SqlitePasswordKey) modelClass:model_class];
+    NSString * psw_key = [self exceSelector:@selector(fwDatabasePasswordKey) modelClass:model_class];
     if (psw_key && psw_key.length > 0) {
         NSString * old_psw = [self pswWithModel:model_class];
         BOOL is_update_psw = (old_psw && ![old_psw isEqualToString:psw_key]);
         if (![self setKey:is_update_psw ? old_psw : psw_key]) {
-            [self log:@"给数据库加密失败, 请引入SQLCipher库并配置SQLITE_HAS_CODEC或者pod 'WHC_ModelSqliteKit/SQLCipher'"];
+            [self log:@"给数据库加密失败, 请引入SQLCipher库并配置SQLITE_HAS_CODEC或者pod 'Component/SQLCipher'"];
         }else {
             if (is_update_psw) [self rekey:psw_key];
             [self saveModel:model_class psw:psw_key];
@@ -568,7 +569,7 @@ static sqlite3 * _whc_database;
 }
 
 + (NSString *)getTableName:(Class)model_class {
-    SEL selector = @selector(whc_TableName);
+    SEL selector = @selector(fwTableName);
     if ([model_class respondsToSelector:selector]) {
         NSString * table_name = [self exceSelector:selector modelClass:model_class];
         if (table_name && table_name.length > 0) {
@@ -587,7 +588,7 @@ static sqlite3 * _whc_database;
 }
 
 + (NSString *)getSqlitePath:(Class)model_class {
-    SEL selector = @selector(whc_OtherSqlitePath);
+    SEL selector = @selector(fwDatabaseVendorPath);
     if ([model_class respondsToSelector:selector]) {
         NSString * sqlite_path = [self exceSelector:selector modelClass:model_class];
         if (sqlite_path && sqlite_path.length > 0) {
@@ -603,7 +604,7 @@ static sqlite3 * _whc_database;
     NSString * sqlite_path = [self getSqlitePath:model_class];
     if (sqlite_path && sqlite_path.length > 0) {
         BOOL is_directory = NO;
-        NSString * version = [self exceSelector:@selector(whc_SqliteVersion) modelClass:model_class];
+        NSString * version = [self exceSelector:@selector(fwDatabaseVersion) modelClass:model_class];
         if (!version || version.length == 0) {version = @"1.0";}
         NSString * whc_sqlite_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),version];
         NSFileManager * file_manager = [NSFileManager defaultManager];
@@ -617,7 +618,7 @@ static sqlite3 * _whc_database;
 
 + (BOOL)openTable:(Class)model_class {
     NSString * cache_directory = [self autoHandleOldSqlite:model_class];
-    SEL VERSION = @selector(whc_SqliteVersion);
+    SEL VERSION = @selector(fwDatabaseVersion);
     NSString * version = @"1.0";
     if ([model_class respondsToSelector:VERSION]) {
         version = [self exceSelector:VERSION modelClass:model_class];
@@ -1103,7 +1104,7 @@ static sqlite3 * _whc_database;
         while (sqlite3_step(pp_stmt) == SQLITE_ROW) {
             id model_object = [self autoNewSubmodelWithClass:model_class];
             if (!model_object) {break;}
-            SEL whc_id_sel = NSSelectorFromString(@"setWhcId:");
+            SEL whc_id_sel = NSSelectorFromString(@"setPkId:");
             SEL custom_id_sel = nil;
             NSString * custom_id_key = [self getMainKeyWithClass:model_class];
             if (custom_id_key && custom_id_key.length > 0) {
@@ -1723,7 +1724,7 @@ static sqlite3 * _whc_database;
 }
 
 + (void)log:(NSString *)msg {
-    NSLog(@"WHC_ModelSqlite:[%@]",msg);
+    FWLogDebug(@"FWDatabase: [%@]", msg);
 }
 
 @end
