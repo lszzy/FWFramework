@@ -90,8 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 说明: 存储模型到本地
  * @param model_object 模型对象
+ * @return 插入数据id
  */
-+ (BOOL)insert:(nullable id)model_object;
++ (NSInteger)insert:(nullable id)model_object;
 
 /**
  * 说明: 获取模型类表总条数
