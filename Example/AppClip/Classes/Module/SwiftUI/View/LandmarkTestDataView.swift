@@ -9,32 +9,54 @@
 import SwiftUI
 
 struct LandmarkTestDataView: View {
-    @State var text: String = ""
+    @State var itemList: [LandmarkTestData] = []
+    @State private var index: Int = 0
     
     var body: some View {
-        VStack {
-            Text(text)
+        List {
+            ForEach(itemList) { item in
+                let text = try? item.fwEncoded().fwUTF8String
+                Text("\(item.id)\n\(text ?? "")")
+            }
+            .onDelete(perform: { index in
+                itemList.remove(at: index.first!)
+            })
+            .onMove(perform: { from, to in
+                if from.first! != to {
+                    itemList.move(fromOffsets: from, toOffset: to)
+                }
+            })
+        }
+        .onAppear(perform: {
+            if itemList.count < 1 {
+                loadData()
+            }
+        })
+        .navigationBarItems(trailing: HStack {
+            Button(action: {
+                loadData()
+            }, label: {
+                Image(systemName: "plus")
+                    .imageScale(.large)
+                    .padding()
+            })
             
-            Button("Codable") {
-                let codableString = """
+            EditButton()
+        })
+    }
+    
+    func loadData() {
+        index = index + 1
+        let codableString = """
 {
-    "id": true,
-    "name": "name1",
-    "info": { "id": 2, "title": "title2" },
-    "infos": [{ "id": "3", "name": "title3" }, { "id": 4.4, "title": "title4" }]
+"id": \(index),
+"name": "name1",
+"info": { "id": true, "title": "title2" },
+"infos": [{ "id": "3", "name": "title3" }, { "id": 4.4, "title": "title4" }]
 }
 """
-                guard let codableObject = try? codableString.fwUTF8Data?.fwDecoded() as LandmarkTestData? else {
-                    text = "decode error"
-                    return
-                }
-                guard let jsonString = try? codableObject.fwEncoded().fwUTF8String else {
-                    text = "encode error"
-                    return
-                }
-                text = jsonString
-            }
-        }
+        guard let codableObject = try? codableString.fwUTF8Data?.fwDecoded() as LandmarkTestData? else { return }
+        itemList.append(codableObject)
     }
 }
 
