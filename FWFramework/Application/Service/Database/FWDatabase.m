@@ -1563,7 +1563,7 @@ static sqlite3 * _whc_database;
 
 + (BOOL)update:(id)model_object where:(NSString *)where {
     BOOL result = YES;
-    if ([self localNameWithModel:[model_object class]]) {
+    if (model_object && [self localNameWithModel:[model_object class]]) {
         dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
         @autoreleasepool {
             result = [self updateModel:model_object where:where];
