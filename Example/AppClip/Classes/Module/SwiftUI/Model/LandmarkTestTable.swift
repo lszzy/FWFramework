@@ -6,10 +6,10 @@
 //  Copyright © 2020 site.wuyong. All rights reserved.
 //
 
-import Foundation
+import FWFramework
 
 @objcMembers
-class LandmarkTestTable: NSObject {
+class LandmarkTestTable: NSObject, FWDatabaseModel {
     var pkid: Int = 0
     var id: Int = 0
     var name: String = ""
