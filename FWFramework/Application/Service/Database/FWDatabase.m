@@ -208,12 +208,19 @@ static sqlite3 * _whc_database;
         NSDictionary * super_fields = [self parserSubModelObjectFieldsWithModelClass:super_class propertyName:main_property_name complete:complete];
         if (need_dictionary_save) [fields setValuesForKeysWithDictionary:super_fields];
     }
-    SEL selector = @selector(fwTableIgnorePropertys);
+    SEL selector = @selector(fwTablePropertyBlacklist);
     NSArray * ignore_propertys;
     if ([model_class respondsToSelector:selector]) {
         IMP sqlite_info_func = [model_class methodForSelector:selector];
         NSArray * (*func)(id, SEL) = (void *)sqlite_info_func;
         ignore_propertys = func(model_class, selector);
+    }
+    SEL all_selector = @selector(fwTablePropertyWhitelist);
+    NSArray * all_propertys;
+    if ([model_class respondsToSelector:all_selector]) {
+        IMP sqlite_info_func = [model_class methodForSelector:all_selector];
+        NSArray * (*func)(id, SEL) = (void *)sqlite_info_func;
+        all_propertys = func(model_class, all_selector);
     }
     unsigned int property_count = 0;
     objc_property_t * propertys = class_copyPropertyList(model_class, &property_count);
@@ -222,7 +229,9 @@ static sqlite3 * _whc_database;
         const char * property_name = property_getName(property);
         const char * property_attributes = property_getAttributes(property);
         NSString * property_name_string = [NSString stringWithUTF8String:property_name];
-        if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) || [property_name_string isEqualToString:@"pkId"] ||
+        if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) ||
+            (all_propertys.count > 0 && ![all_propertys containsObject:property_name_string]) ||
+            [property_name_string isEqualToString:@"pkId"] ||
             [property_name_string isEqualToString:[self getMainKeyWithClass:model_class]]) {
             continue;
         }

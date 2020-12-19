@@ -59,11 +59,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)fwTablePrimaryKey;
 
 /**
- 指定数据库表忽略属性集合
+ 指定数据库表属性黑名单集合
 
- @return 返回数据库表忽略属性集合
+ @return 返回数据库表属性黑名单集合
  */
-+ (nullable NSArray<NSString *> *)fwTableIgnorePropertys;
++ (nullable NSArray<NSString *> *)fwTablePropertyBlacklist;
+
+/**
+ 指定数据库表属性白名单集合
+
+ @return 返回数据库表属性白名单集合
+ */
++ (nullable NSArray<NSString *> *)fwTablePropertyWhitelist;
 
 @end
 
