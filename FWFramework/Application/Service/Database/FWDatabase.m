@@ -457,7 +457,7 @@ static sqlite3 * _whc_database;
                 }
             }
             [self close];
-            NSString * new_database_cache_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,table_name,newVersion];
+            NSString * new_database_cache_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),newVersion];
             NSFileManager * file_manager = [NSFileManager defaultManager];
             [file_manager moveItemAtPath:database_cache_path toPath:new_database_cache_path error:nil];
         }
