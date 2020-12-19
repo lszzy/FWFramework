@@ -631,22 +631,18 @@ static sqlite3 * _whc_database;
 
 + (BOOL)openTable:(Class)model_class {
     NSString * cache_directory = [self autoHandleOldSqlite:model_class];
-    SEL VERSION = @selector(fwDatabaseVersion);
-    NSString * version = @"1.0";
-    if ([model_class respondsToSelector:VERSION]) {
-        version = [self exceSelector:VERSION modelClass:model_class];
-        if (!version || version.length == 0) {version = @"1.0";}
-        if ([self shareInstance].check_update) {
-            NSString * local_model_name = [self localNameWithModel:model_class];
-            if (local_model_name != nil &&
-                [local_model_name rangeOfString:version].location == NSNotFound) {
-                [self updateTableFieldWithModel:model_class
-                                     newVersion:version
-                                 localModelName:local_model_name];
-            }
+    NSString * version = [self exceSelector:@selector(fwDatabaseVersion) modelClass:model_class];
+    if (!version || version.length == 0) {version = @"1.0";}
+    if ([self shareInstance].check_update) {
+        NSString * local_model_name = [self localNameWithModel:model_class];
+        if (local_model_name != nil &&
+            [local_model_name rangeOfString:version].location == NSNotFound) {
+            [self updateTableFieldWithModel:model_class
+                                 newVersion:version
+                             localModelName:local_model_name];
         }
-        [self shareInstance].check_update = YES;
     }
+    [self shareInstance].check_update = YES;
     NSString * database_cache_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),version];
     if (sqlite3_open([database_cache_path UTF8String], &_whc_database) == SQLITE_OK) {
         [self decryptionSqlite:model_class];
