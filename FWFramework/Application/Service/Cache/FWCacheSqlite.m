@@ -7,11 +7,11 @@
 //
 
 #import "FWCacheSqlite.h"
-#import "FWDatabaseQueue.h"
+#import <sqlite3.h>
 
 @interface FWCacheSqlite ()
 
-@property (nonatomic, strong) FWDatabaseQueue *queue;
+@property (nonatomic) sqlite3 *database;
 
 @end
 
@@ -52,56 +52,89 @@
         }
         
         // 初始化数据库和创建缓存表
-        _queue = [FWDatabaseQueue databaseQueueWithPath:dbPath];
-        [_queue inDatabase:^(FWDatabase * _Nonnull db) {
-            [db executeUpdate:@"CREATE TABLE IF NOT EXISTS FWCache (key TEXT PRIMARY KEY, object BLOB);"];
-        }];
+        if (sqlite3_open([dbPath UTF8String], &_database) == SQLITE_OK) {
+            NSString *sql = @"CREATE TABLE IF NOT EXISTS FWCache (key TEXT PRIMARY KEY, object BLOB);";
+            sqlite3_exec(_database, [sql UTF8String], nil, nil, NULL);
+        }
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [_queue close];
+    if (_database) {
+        sqlite3_close(_database);
+        _database = nil;
+    }
 }
 
 #pragma mark - Protected
 
 - (id)innerObjectForKey:(NSString *)key
 {
-    __block id object = nil;
-    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
-        FWResultSet *rs = [db executeQuery:@"SELECT object FROM FWCache WHERE key = ?", key];
-        if ([rs next]) {
-            object = [NSKeyedUnarchiver unarchiveObjectWithData:[rs dataForColumn:@"object"]];
+    if (!_database) return nil;
+    
+    id object = nil;
+    NSString *sql = @"SELECT object FROM FWCache WHERE key = ?";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(_database, [sql UTF8String], -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, [key UTF8String], -1, SQLITE_STATIC);
+        
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            const char *dataBuffer = sqlite3_column_blob(stmt, 0);
+            int dataSize = sqlite3_column_bytes(stmt, 0);
+            if (dataBuffer != NULL) {
+                NSData *data = [NSData dataWithBytes:(const void *)dataBuffer length:(NSUInteger)dataSize];
+                object = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            }
         }
-        [rs close];
-    }];
+    }
+    sqlite3_finalize(stmt);
     return object;
 }
 
 - (void)innerSetObject:(id)object forKey:(NSString *)key
 {
-    NSData *objectData = [NSKeyedArchiver archivedDataWithRootObject:object];
-    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
-        [db executeUpdate:@"REPLACE INTO FWCache (key, object) VALUES (?, ?)", key, objectData];
-    }];
+    if (!_database) return;
+    
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object];
+    NSString *sql = @"REPLACE INTO FWCache (key, object) VALUES (?, ?)";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(_database, [sql UTF8String], -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, [key UTF8String], -1, SQLITE_STATIC);
+        
+        const void *bytes = [data bytes];
+        if (!bytes) bytes = "";
+        sqlite3_bind_blob(stmt, 2, bytes, (int)[data length], SQLITE_STATIC);
+        
+        sqlite3_step(stmt);
+    }
+    sqlite3_finalize(stmt);
 }
 
 - (void)innerRemoveObjectForKey:(NSString *)key
 {
-    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
-        [db executeUpdate:@"DELETE FROM FWCache WHERE key = ?", key];
-    }];
+    if (!_database) return;
+    
+    NSString *sql = @"DELETE FROM FWCache WHERE key = ?";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(_database, [sql UTF8String], -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, [key UTF8String], -1, SQLITE_STATIC);
+        
+        sqlite3_step(stmt);
+    }
+    sqlite3_finalize(stmt);
 }
 
 - (void)innerRemoveAllObjects
 {
-    [_queue inDatabase:^(FWDatabase * _Nonnull db) {
-        [db executeUpdate:@"DELETE FROM FWCache"];
-        // 释放数据库空间
-        [db executeUpdate:@"VACUUM"];
-    }];
+    if (!_database) return;
+    
+    NSString *sql = @"DELETE FROM FWCache";
+    sqlite3_exec(_database, [sql UTF8String], nil, nil, NULL);
+    
+    sql = @"VACUUM";
+    sqlite3_exec(_database, [sql UTF8String], nil, nil, NULL);
 }
 
 @end

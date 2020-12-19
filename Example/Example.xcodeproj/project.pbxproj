@@ -140,8 +140,6 @@
 		2FF8D98624C88A70006A83B5 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92724C88A6F006A83B5 /* BaseViewController.m */; };
 		2FF8D98724C88A70006A83B5 /* BaseScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92C24C88A6F006A83B5 /* BaseScrollViewController.m */; };
 		2FF8D98824C88A70006A83B5 /* BaseCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */; };
-		2FF8D98924C88A70006A83B5 /* FWDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93324C88A6F006A83B5 /* FWDatabaseManager.m */; };
-		2FF8D98A24C88A70006A83B5 /* FWDbModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93424C88A6F006A83B5 /* FWDbModel.m */; };
 		2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93A24C88A6F006A83B5 /* AppConfig.m */; };
 		2FF8D98C24C88A70006A83B5 /* AppStandard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93D24C88A6F006A83B5 /* AppStandard.m */; };
 		2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */; };
@@ -410,10 +408,6 @@
 		2FF8D92C24C88A6F006A83B5 /* BaseScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseScrollViewController.m; sourceTree = "<group>"; };
 		2FF8D92D24C88A6F006A83B5 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCollectionViewController.m; sourceTree = "<group>"; };
-		2FF8D93124C88A6F006A83B5 /* FWDbModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDbModel.h; sourceTree = "<group>"; };
-		2FF8D93224C88A6F006A83B5 /* FWDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDatabaseManager.h; sourceTree = "<group>"; };
-		2FF8D93324C88A6F006A83B5 /* FWDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDatabaseManager.m; sourceTree = "<group>"; };
-		2FF8D93424C88A6F006A83B5 /* FWDbModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWDbModel.m; sourceTree = "<group>"; };
 		2FF8D93824C88A6F006A83B5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2FF8D93A24C88A6F006A83B5 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
 		2FF8D93B24C88A6F006A83B5 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
@@ -968,20 +962,8 @@
 		2FF8D92F24C88A6F006A83B5 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D93024C88A6F006A83B5 /* Vendor */,
 			);
 			path = Library;
-			sourceTree = "<group>";
-		};
-		2FF8D93024C88A6F006A83B5 /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				2FF8D93224C88A6F006A83B5 /* FWDatabaseManager.h */,
-				2FF8D93324C88A6F006A83B5 /* FWDatabaseManager.m */,
-				2FF8D93124C88A6F006A83B5 /* FWDbModel.h */,
-				2FF8D93424C88A6F006A83B5 /* FWDbModel.m */,
-			);
-			path = Vendor;
 			sourceTree = "<group>";
 		};
 		2FF8D93524C88A6F006A83B5 /* Model */ = {
@@ -1442,7 +1424,6 @@
 				2FF8D97624C88A70006A83B5 /* TestKeyboardViewController.m in Sources */,
 				2FF8D98124C88A70006A83B5 /* ComplexModel.m in Sources */,
 				2FF8D94D24C88A6F006A83B5 /* TestBadgeViewController.m in Sources */,
-				2FF8D98924C88A70006A83B5 /* FWDatabaseManager.m in Sources */,
 				2F7D7869251259DB0078EAAA /* TestThemeExtensionViewController.m in Sources */,
 				2FF8D95E24C88A70006A83B5 /* TestAnimationViewController.m in Sources */,
 				2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */,
@@ -1451,7 +1432,6 @@
 				2FF8D96C24C88A70006A83B5 /* TestIndicatorControlViewController.m in Sources */,
 				2FF8D96D24C88A70006A83B5 /* TestImageViewController.m in Sources */,
 				2FF8D98C24C88A70006A83B5 /* AppStandard.m in Sources */,
-				2FF8D98A24C88A70006A83B5 /* FWDbModel.m in Sources */,
 				2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */,
 				2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */,
 				2FF8D97A24C88A70006A83B5 /* TestCustomerAlertController.m in Sources */,
