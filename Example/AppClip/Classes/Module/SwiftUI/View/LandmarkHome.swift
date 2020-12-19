@@ -78,6 +78,12 @@ struct LandmarkHome: View {
                     label: {
                         Text("Codable Test")
                     })
+                
+                NavigationLink(
+                    destination: LandmarkTestDatabaseView(),
+                    label: {
+                        Text("Database Test")
+                    })
             }
             .navigationBarTitle("Featured", displayMode: .inline)
             .navigationBarItems(trailing: profileButton)
