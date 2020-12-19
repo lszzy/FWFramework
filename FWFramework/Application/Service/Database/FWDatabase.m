@@ -232,7 +232,7 @@ static sqlite3 * _fw_database;
         if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) ||
             (all_propertys.count > 0 && ![all_propertys containsObject:property_name_string]) ||
             [property_name_string isEqualToString:@"pkId"] ||
-            [property_name_string isEqualToString:[self getMainKeyWithClass:model_class]]) {
+            [property_name_string isEqualToString:[self getPrimaryKeyWithClass:model_class]]) {
             continue;
         }
         NSString * property_attributes_string = [NSString stringWithUTF8String:property_attributes];
@@ -357,29 +357,6 @@ static sqlite3 * _fw_database;
     return sub_model_info;
 }
 
-+ (NSDictionary * )scanSubModelClass:(Class)model_class {
-    return [self scanCommonSubModel:model_class isClass:YES];
-}
-
-+ (NSDictionary * )scanSubModelObject:(NSObject *)model_object {
-    return [self scanCommonSubModel:model_object isClass:NO];
-}
-
-+ (sqlite_int64)getModelMaxIdWithClass:(Class)model_class {
-    sqlite_int64 max_id = 0;
-    if (_fw_database) {
-        NSString * select_sql = [NSString stringWithFormat:@"SELECT MAX(%@) AS MAXVALUE FROM %@",[self getMainKeyWithClass:model_class],[self getTableName:model_class]];
-        sqlite3_stmt * pp_stmt = nil;
-        if (sqlite3_prepare_v2(_fw_database, [select_sql UTF8String], -1, &pp_stmt, nil) == SQLITE_OK) {
-            while (sqlite3_step(pp_stmt) == SQLITE_ROW) {
-                max_id = sqlite3_column_int64(pp_stmt, 0);
-            }
-        }
-        sqlite3_finalize(pp_stmt);
-    }
-    return max_id;
-}
-
 + (NSArray *)getModelFieldNameWithClass:(Class)model_class {
     NSMutableArray * field_name_array = [NSMutableArray array];
     if (_fw_database) {
@@ -434,7 +411,7 @@ static sqlite3 * _fw_database;
             }
             if (delete_field_names.length > 0) {
                 [delete_field_names deleteCharactersInRange:NSMakeRange(delete_field_names.length - 1, 1)];
-                NSString * default_key = [self getMainKeyWithClass:model_class];
+                NSString * default_key = [self getPrimaryKeyWithClass:model_class];
                 if (![default_key isEqualToString:delete_field_names]) {
                     [self shareInstance].check_update = NO;
                     NSArray * old_model_data_array = [self commonQuery:model_class conditions:@[@""] queryType:FWDatabaseQueryTypeWhere];
@@ -466,7 +443,6 @@ static sqlite3 * _fw_database;
 
 + (BOOL)setKey:(NSString*)key {
     NSData *keyData = [NSData dataWithBytes:[key UTF8String] length:(NSUInteger)strlen([key UTF8String])];
-    
     return [self setKeyWithData:keyData];
 }
 
@@ -486,7 +462,6 @@ static sqlite3 * _fw_database;
 
 + (BOOL)rekey:(NSString*)key {
     NSData *keyData = [NSData dataWithBytes:(void *)[key UTF8String] length:(NSUInteger)strlen([key UTF8String])];
-    
     return [self rekeyWithData:keyData];
 }
 
@@ -513,12 +488,12 @@ static sqlite3 * _fw_database;
     return nil;
 }
 
-+ (NSString *)getMainKeyWithClass:(Class)model_class {
-    NSString * main_key = [self exceSelector:@selector(fwTablePrimaryKey) modelClass:model_class];
-    if (!main_key || main_key.length == 0) {
-        main_key = @"pkid";
++ (NSString *)getPrimaryKeyWithClass:(Class)model_class {
+    NSString * primary_key = [self exceSelector:@selector(fwTablePrimaryKey) modelClass:model_class];
+    if (!primary_key || primary_key.length == 0) {
+        primary_key = @"pkid";
     }
-    return main_key;
+    return primary_key;
 }
 
 + (NSString *)md5:(NSString *)psw {
@@ -655,8 +630,8 @@ static sqlite3 * _fw_database;
     NSString * table_name = [self getTableName:model_class];
     NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class];
     if (field_dictionary.count > 0) {
-        NSString * main_key = [self getMainKeyWithClass:model_class];
-        __block NSString * create_table_sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (%@ INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,",table_name,main_key];
+        NSString * primary_key = [self getPrimaryKeyWithClass:model_class];
+        __block NSString * create_table_sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (%@ INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,",table_name,primary_key];
         [field_dictionary enumerateKeysAndObjectsUsingBlock:^(NSString * field, FWDatabasePropertyInfo * property_info, BOOL * _Nonnull stop) {
             create_table_sql = [create_table_sql stringByAppendingFormat:@"%@ %@ DEFAULT ",field, [self databaseFieldTypeWithType:property_info.type]];
             switch (property_info.type) {
@@ -1123,7 +1098,7 @@ static sqlite3 * _fw_database;
             if (!model_object) {break;}
             SEL whc_id_sel = NSSelectorFromString(@"setPkId:");
             SEL custom_id_sel = nil;
-            NSString * custom_id_key = [self getMainKeyWithClass:model_class];
+            NSString * custom_id_key = [self getPrimaryKeyWithClass:model_class];
             if (custom_id_key && custom_id_key.length > 0) {
                 if (custom_id_key.length > 1) {
                     custom_id_sel = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:",[custom_id_key substringToIndex:1].uppercaseString,[custom_id_key substringFromIndex:1]]);
@@ -1256,7 +1231,6 @@ static sqlite3 * _fw_database;
     return model_object_array;
 }
 
-
 + (NSArray *)startQuery:(Class)model_class conditions:(NSArray *)conditions queryType:(FWDatabaseQueryType)query_type {
     if (![self openTable:model_class]) return @[];
     NSArray * model_object_array = [self commonQuery:model_class conditions:conditions queryType:query_type];
@@ -1312,7 +1286,7 @@ static sqlite3 * _fw_database;
 
 + (id)query:(Class)model_class pkid:(NSInteger)pkid
 {
-    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getMainKeyWithClass:model_class], (long)pkid];
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:model_class], (long)pkid];
     return [self query:model_class where:where].firstObject;
 }
 
@@ -1543,8 +1517,6 @@ static sqlite3 * _fw_database;
                 }
                     break;
                 case FWDatabaseFieldTypeInt: {
-                    /* 32bit os type issue
-                     long value = ((long (*)(id, SEL))(void *) objc_msgSend)((id)sub_model_object, property_info.getter);*/
                     NSNumber * value = [current_model_object valueForKey:actual_field];
                     sqlite3_bind_int64(pp_stmt, index, (sqlite3_int64)[value longLongValue]);
                 }
@@ -1601,7 +1573,7 @@ static sqlite3 * _fw_database;
 + (BOOL)update:(id)model_object pkid:(NSInteger)pkid
 {
     if (!model_object) return NO;
-    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getMainKeyWithClass:[model_object class]], (long)pkid];
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:[model_object class]], (long)pkid];
     return [self update:model_object where:where];
 }
 
@@ -1670,7 +1642,7 @@ static sqlite3 * _fw_database;
 
 + (BOOL)delete:(Class)model_class pkid:(NSInteger)pkid
 {
-    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getMainKeyWithClass:model_class], (long)pkid];
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:model_class], (long)pkid];
     return [self delete:model_class where:where];
 }
 
