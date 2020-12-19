@@ -20,7 +20,7 @@ struct LandmarkTestDatabaseView: View {
             .onDelete(perform: { index in
                 let item = itemList[index.first!]
                 itemList.remove(at: index.first!)
-                FWDatabase.delete(LandmarkTestTable.self, where: "id = \(item.id)")
+                FWDatabase.delete(LandmarkTestTable.self, pkid: item.pkid)
             })
             .onMove(perform: { from, to in
                 if from.first! != to {
@@ -35,10 +35,9 @@ struct LandmarkTestDatabaseView: View {
         })
         .navigationBarItems(trailing: HStack {
             Button(action: {
-                let lastItem = FWDatabase.query(LandmarkTestTable.self, order: "pkid desc", limit: "1").first as? LandmarkTestTable
-                
                 let item = LandmarkTestTable()
-                item.id = lastItem != nil ? lastItem!.id + 1 : 1;
+                let maxId = FWDatabase.query(LandmarkTestTable.self, func: "max(pkid)") as? Int ?? 0
+                item.id = maxId + 1
                 item.name = "name"
                 let info = LandmarkTestTableInfo()
                 info.id = item.id

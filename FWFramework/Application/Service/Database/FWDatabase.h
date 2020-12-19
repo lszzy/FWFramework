@@ -196,6 +196,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
+/**
+ * 说明: 根据主键查询本地模型对象
+ * @param model_class 模型类
+ * @param pkid 主键Id
+ * @return 查询模型对象
+ */
+
+/// example: [FWDatabase query:[Person class] pkid:1]; /// 获取Person表主键为1的记录
++ (nullable id)query:(Class)model_class pkid:(NSInteger)pkid;
 
 /**
  说明: 自定义sql查询
@@ -239,6 +248,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)update:(id)model_object where:(nullable NSString *)where;
 
 /**
+ * 说明: 根据主键更新本地模型对象
+ * @param model_object 模型对象
+ * @param pkid 主键Id
+ * @return 是否成功
+ */
++ (BOOL)update:(id)model_object pkid:(NSInteger)pkid;
+
+/**
  说明: 更新数据表字段
 
  @param model_class 模型类
@@ -262,6 +279,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @param where 查询条件(查询语法和SQL where 查询语法一样，where为空则删除所有)
  */
 + (BOOL)delete:(Class)model_class where:(nullable NSString *)where;
+
+/**
+ * 说明: 根据主键删除本地模型对象
+ * @param model_class 模型类
+ * @param pkid 主键Id
+ */
++ (BOOL)delete:(Class)model_class pkid:(NSInteger)pkid;
 
 /**
  * 说明: 清空所有本地模型数据库
