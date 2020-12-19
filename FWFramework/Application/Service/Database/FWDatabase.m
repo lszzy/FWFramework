@@ -923,12 +923,20 @@ static sqlite3 * _whc_database;
     return result;
 }
 
-
-+ (BOOL)insert:(id)model_object {
-    if (model_object) {
-        return [self inserts:@[model_object]];
++ (NSInteger)insert:(id)model_object {
+    if (!model_object) return 0;
+    __block NSInteger result = 0;
+    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    @autoreleasepool {
+        if ([self openTable:[model_object class]]) {
+            if ([self commonInsert:model_object]) {
+                result = (NSInteger)sqlite3_last_insert_rowid(_whc_database);
+            }
+            [self close];
+        }
     }
-    return NO;
+    dispatch_semaphore_signal([self shareInstance].dsema);
+    return result;
 }
 
 + (id)autoNewSubmodelWithClass:(Class)model_class {
