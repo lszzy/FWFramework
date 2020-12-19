@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// 数据库模型协议信息
 @protocol FWDatabaseModel <NSObject>
 @optional
@@ -16,13 +18,13 @@
  自定义数据存储路径
  @return 自定义数据库路径(目录即可)
  */
-+ (NSString *)fwDatabasePath;
++ (nullable NSString *)fwDatabasePath;
 
 /// 自定义模型类数据库版本号
 /** 注意：
  ***该返回值在改变数据模型属性类型/增加/删除属性时需要更改否则无法自动更新原来模型数据表字段以及类型***
  */
-+ (NSString *)fwDatabaseVersion;
++ (nullable NSString *)fwDatabaseVersion;
 
 /// 自定义数据库加密密码
 /** 注意：
@@ -31,7 +33,7 @@
  *** 手动引入 ***
  *** pod 'Component/SQLCipher' ***
  */
-+ (NSString *)fwDatabasePasswordKey;
++ (nullable NSString *)fwDatabasePasswordKey;
 
 /**
  引入第三方创建的数据库存储路径比如:FMDB
@@ -39,7 +41,7 @@
 
  @return 存储路径
  */
-+ (NSString *)fwDatabaseVendorPath;
++ (nullable NSString *)fwDatabaseVendorPath;
 
 /**
  指定自定义表名，默认类名
@@ -48,20 +50,20 @@
  
  @return 表名
  */
-+ (NSString *)fwTableName;
++ (nullable NSString *)fwTableName;
 
 /// 自定义数据表主键名称，默认pkid
 /**
  *** 返回自定义主键名称
  */
-+ (NSString *)fwTablePrimaryKey;
++ (nullable NSString *)fwTablePrimaryKey;
 
 /**
  指定数据库表忽略属性集合
 
  @return 返回数据库表忽略属性集合
  */
-+ (NSArray *)fwTableIgnorePropertys;
++ (nullable NSArray<NSString *> *)fwTableIgnorePropertys;
 
 @end
 
@@ -77,14 +79,14 @@
  * @param model_array 模型数组对象(model_array 里对象类型要一致)
  */
 
-+ (BOOL)inserts:(NSArray *)model_array;
++ (BOOL)inserts:(nullable NSArray *)model_array;
 
 /**
  * 说明: 存储模型到本地
  * @param model_object 模型对象
  */
 
-+ (BOOL)insert:(id)model_object;
++ (BOOL)insert:(nullable id)model_object;
 
 
 /**
@@ -109,7 +111,7 @@
  * @return 查询模型对象数组
  */
 
-+ (NSArray *)query:(Class)model_class where:(NSString *)where;
++ (NSArray *)query:(Class)model_class where:(nullable NSString *)where;
 
 /**
  * 说明: 查询本地模型对象
@@ -121,7 +123,7 @@
 /// example: [FWDatabase query:[Person class] order:@"by age desc/asc"];
 /// 对person数据表查询并且根据age自动降序或者升序排序
 
-+ (NSArray *)query:(Class)model_class order:(NSString *)order;
++ (NSArray *)query:(Class)model_class order:(nullable NSString *)order;
 
 /**
  * 说明: 查询本地模型对象
@@ -135,7 +137,7 @@
 /// example: [FWDatabase query:[Person class] limit:@"8 offset 8"];
 /// 对person数据表查询并且对查询列表偏移8并且限制查询数量为8
 
-+ (NSArray *)query:(Class)model_class limit:(NSString *)limit;
++ (NSArray *)query:(Class)model_class limit:(nullable NSString *)limit;
 
 /**
  * 说明: 查询本地模型对象
@@ -148,7 +150,7 @@
 /// example: [FWDatabase query:[Person class] where:@"age < 30" order:@"by age desc/asc"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序
 
-+ (NSArray *)query:(Class)model_class where:(NSString *)where order:(NSString *)order;
++ (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order;
 
 /**
  * 说明: 查询本地模型对象
@@ -163,7 +165,7 @@
 /// example: [FWDatabase query:[Person class] where:@"age <= 30" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且对查询列表偏移8并且限制查询数量为8
 
-+ (NSArray *)query:(Class)model_class where:(NSString *)where limit:(NSString *)limit;
++ (NSArray *)query:(Class)model_class where:(nullable NSString *)where limit:(nullable NSString *)limit;
 
 /**
  * 说明: 查询本地模型对象
@@ -178,7 +180,7 @@
 /// example: [FWDatabase query:[Person class] order:@"by age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 
-+ (NSArray *)query:(Class)model_class order:(NSString *)order limit:(NSString *)limit;
++ (NSArray *)query:(Class)model_class order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
 /**
  * 说明: 查询本地模型对象
@@ -194,7 +196,7 @@
 /// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
 
-+ (NSArray *)query:(Class)model_class where:(NSString *)where order:(NSString *)order limit:(NSString *)limit;
++ (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
 
 /**
@@ -217,7 +219,7 @@
  * /// example: [FWDatabase query:[Person class] sqliteFunc:@"max(age)"];  /// 获取Person表的最大age值
  * /// example: [FWDatabase query:[Person class] sqliteFunc:@"count(*)"];  /// 获取Person表的总记录条数
  */
-+ (id)query:(Class)model_class func:(NSString *)func;
++ (nullable id)query:(Class)model_class func:(NSString *)func;
 
 /**
  * 说明: 利用sqlite 函数进行查询
@@ -229,16 +231,14 @@
  * /// example: [FWDatabase query:[Person class] sqliteFunc:@"max(age)" condition:@"where name = '北京'"];  /// 获取Person表name=北京集合中的的最大age值
  * /// example: [FWDatabase query:[Person class] sqliteFunc:@"count(*)" condition:@"where name = '北京'"];  /// 获取Person表name=北京集合中的总记录条数
  */
-+ (id)query:(Class)model_class func:(NSString *)func condition:(NSString *)condition;
++ (nullable id)query:(Class)model_class func:(NSString *)func condition:(nullable NSString *)condition;
 
 /**
  * 说明: 更新本地模型对象
  * @param model_object 模型对象
  * @param where 查询条件(查询语法和SQL where 查询语法一样，where为空则更新所有)
  */
-
-+ (BOOL)update:(id)model_object where:(NSString *)where;
-
++ (BOOL)update:(id)model_object where:(nullable NSString *)where;
 
 /**
  说明: 更新数据表字段
@@ -250,35 +250,30 @@
  /// 更新Person表在age字段大于25岁是的name值为whc，age为100岁
  /// example: [FWDatabase update:Person.self value:@"name = 'whc', age = 100" where:@"age > 25"];
  */
-+ (BOOL)update:(Class)model_class value:(NSString *)value where:(NSString *)where;
++ (BOOL)update:(Class)model_class value:(NSString *)value where:(nullable NSString *)where;
 
 /**
  * 说明: 清空本地模型对象
  * @param model_class 模型类
  */
-
 + (BOOL)clear:(Class)model_class;
-
 
 /**
  * 说明: 删除本地模型对象
  * @param model_class 模型类
  * @param where 查询条件(查询语法和SQL where 查询语法一样，where为空则删除所有)
  */
-
-+ (BOOL)delete:(Class)model_class where:(NSString *)where;
++ (BOOL)delete:(Class)model_class where:(nullable NSString *)where;
 
 /**
  * 说明: 清空所有本地模型数据库
  */
-
 + (void)removeAllModel;
 
 /**
  * 说明: 清空指定本地模型数据库
  * @param model_class 模型类
  */
-
 + (void)removeModel:(Class)model_class;
 
 /**
@@ -286,14 +281,15 @@
  * @param model_class 模型类
  * @return 路径
  */
-
-+ (NSString *)localPathWithModel:(Class)model_class;
++ (nullable NSString *)localPathWithModel:(Class)model_class;
 
 /**
  * 说明: 返回本地模型数据库版本号
  * @param model_class 模型类
  * @return 版本号
  */
-+ (NSString *)versionWithModel:(Class)model_class;
++ (nullable NSString *)versionWithModel:(Class)model_class;
 
 @end
+
+NS_ASSUME_NONNULL_END
