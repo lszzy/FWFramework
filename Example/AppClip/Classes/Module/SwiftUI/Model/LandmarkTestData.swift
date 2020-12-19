@@ -8,9 +8,9 @@
 
 import FWFramework
 
-struct LandmarkTestData: Codable {
-    var id: Int = 0
-    var name: String = ""
+struct LandmarkTestData: Codable, Hashable, Identifiable {
+    var id: Int
+    var name: String
     var info: LandmarkTestInfo?
     var infos: [LandmarkTestInfo] = []
     
@@ -22,7 +22,7 @@ struct LandmarkTestData: Codable {
     }
 }
 
-struct LandmarkTestInfo: Codable {
+struct LandmarkTestInfo: Codable, Hashable {
     var id: Int = 0
     var title: String?
     
