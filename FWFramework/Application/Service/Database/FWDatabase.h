@@ -85,16 +85,13 @@ NS_ASSUME_NONNULL_BEGIN
  * 说明: 存储模型数组到本地(事务方式)
  * @param model_array 模型数组对象(model_array 里对象类型要一致)
  */
-
 + (BOOL)inserts:(nullable NSArray *)model_array;
 
 /**
  * 说明: 存储模型到本地
  * @param model_object 模型对象
  */
-
 + (BOOL)insert:(nullable id)model_object;
-
 
 /**
  * 说明: 获取模型类表总条数
@@ -108,7 +105,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param model_class 模型类
  * @return 查询模型对象数组
  */
-
 + (NSArray *)query:(Class)model_class;
 
 /**
@@ -117,7 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param where 查询条件(查询语法和SQL where 查询语法一样，where为空则查询所有)
  * @return 查询模型对象数组
  */
-
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where;
 
 /**
@@ -129,7 +124,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// example: [FWDatabase query:[Person class] order:@"by age desc/asc"];
 /// 对person数据表查询并且根据age自动降序或者升序排序
-
 + (NSArray *)query:(Class)model_class order:(nullable NSString *)order;
 
 /**
@@ -143,7 +137,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 对person数据表查询并且并且限制查询数量为8
 /// example: [FWDatabase query:[Person class] limit:@"8 offset 8"];
 /// 对person数据表查询并且对查询列表偏移8并且限制查询数量为8
-
 + (NSArray *)query:(Class)model_class limit:(nullable NSString *)limit;
 
 /**
@@ -156,7 +149,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// example: [FWDatabase query:[Person class] where:@"age < 30" order:@"by age desc/asc"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序
-
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order;
 
 /**
@@ -171,7 +163,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 对person数据表查询age小于30岁并且限制查询数量为8
 /// example: [FWDatabase query:[Person class] where:@"age <= 30" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且对查询列表偏移8并且限制查询数量为8
-
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where limit:(nullable NSString *)limit;
 
 /**
@@ -186,7 +177,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8
 /// example: [FWDatabase query:[Person class] order:@"by age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
-
 + (NSArray *)query:(Class)model_class order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
 /**
@@ -202,7 +192,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8
 /// example: [FWDatabase query:[Person class] where:@"age <= 30" order:@"by age desc/asc" limit:@"8 offset 8"];
 /// 对person数据表查询age小于30岁并且根据age自动降序或者升序排序并且限制查询的数量为8偏移为8
-
 + (NSArray *)query:(Class)model_class where:(nullable NSString *)where order:(nullable NSString *)order limit:(nullable NSString *)limit;
 
 
