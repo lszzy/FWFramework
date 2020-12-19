@@ -1310,6 +1310,12 @@ static sqlite3 * _fw_database;
                                                      limit == nil ? @"" : limit] queryType:FWDatabaseQueryTypeWhereOrderLimit];
 }
 
++ (id)query:(Class)model_class pkid:(NSInteger)pkid
+{
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getMainKeyWithClass:model_class], (long)pkid];
+    return [self query:model_class where:where].firstObject;
+}
+
 + (NSArray *)query:(Class)model_class sql:(NSString *)sql {
     if (sql && sql.length > 0) {
         if (![self localNameWithModel:model_class]) {return @[];}
@@ -1592,6 +1598,13 @@ static sqlite3 * _fw_database;
     return result;
 }
 
++ (BOOL)update:(id)model_object pkid:(NSInteger)pkid
+{
+    if (!model_object) return NO;
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getMainKeyWithClass:[model_object class]], (long)pkid];
+    return [self update:model_object where:where];
+}
+
 + (BOOL)update:(Class)model_class value:(NSString *)value where:(NSString *)where {
     if (model_class == nil) return NO;
     BOOL result = YES;
@@ -1653,6 +1666,12 @@ static sqlite3 * _fw_database;
     }
     dispatch_semaphore_signal([self shareInstance].dsema);
     return result;
+}
+
++ (BOOL)delete:(Class)model_class pkid:(NSInteger)pkid
+{
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getMainKeyWithClass:model_class], (long)pkid];
+    return [self delete:model_class where:where];
 }
 
 + (void)close {
