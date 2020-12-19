@@ -14,22 +14,44 @@
 
 + (NSData *)fwArchiveObject:(id)object
 {
-    return [NSKeyedArchiver archivedDataWithRootObject:object];
+    NSData *data = nil;
+    @try {
+        data = [NSKeyedArchiver archivedDataWithRootObject:object];
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
+    return data;
 }
 
 - (id)fwUnarchiveObject
 {
-    return [NSKeyedUnarchiver unarchiveObjectWithData:self];
+    id object = nil;
+    @try {
+        object = [NSKeyedUnarchiver unarchiveObjectWithData:self];
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
+    return object;
 }
 
 + (void)fwArchiveObject:(id)object toFile:(NSString *)path
 {
-    [NSKeyedArchiver archiveRootObject:object toFile:path];
+    @try {
+        [NSKeyedArchiver archiveRootObject:object toFile:path];
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
 }
 
 + (id)fwUnarchiveObjectWithFile:(NSString *)path
 {
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    id object = nil;
+    @try {
+        object = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
+    return object;
 }
 
 #pragma mark - Encrypt
