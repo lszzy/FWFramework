@@ -904,7 +904,7 @@ static sqlite3 * _fw_database;
                     result = [self commonInsert:model];
                     if (!result) {*stop = YES;}
                 }];
-                [self execSql:@"COMMIT"];
+                [self execSql:result ? @"COMMIT" : @"ROLLBACK"];
                 [self close];
             }
         }
