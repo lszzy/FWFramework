@@ -22,6 +22,12 @@
     intercepter.loadViewIntercepter = @selector(viewControllerLoadView:);
     intercepter.viewDidLoadIntercepter = @selector(viewControllerViewDidLoad:);
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWViewController) withIntercepter:intercepter];
+    
+    FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] initWithBackgroundColor:nil foregroundColor:nil appearanceBlock:^(UINavigationBar * _Nonnull navigationBar) {
+        [navigationBar setBackgroundImage:[UIImage fwImageWithColor:[UIColor fwRandomColor]] forBarMetrics:UIBarMetricsDefault];
+        [navigationBar setShadowImage:[UIImage new]];
+    }];
+    [FWNavigationBarAppearance setAppearance:appearance forStyle:FWNavigationBarStyleRandom];
 }
 
 - (void)viewControllerInit:(UIViewController *)viewController

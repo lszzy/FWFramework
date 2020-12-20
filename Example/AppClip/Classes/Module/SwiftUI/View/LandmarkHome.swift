@@ -38,6 +38,7 @@ struct LandmarkHome: View {
                 FeaturedLandmarks(landmarks: features)
                     .scaledToFill()
                     .frame(height: 200)
+                    .fwCornerRadius(10, corners: [.topLeft, .topRight])
                     .clipped()
                     .listRowInsets(EdgeInsets())
                 
@@ -71,9 +72,22 @@ struct LandmarkHome: View {
                 NavigationLink(destination: LandmarkModelView(title: "ViewModel2"), tag: "ViewModel", selection: $showingPage) {
                     Text("ViewModel2")
                 }
+                
+                NavigationLink(
+                    destination: LandmarkTestDataView(),
+                    label: {
+                        Text("Codable Test")
+                    })
+                
+                NavigationLink(
+                    destination: LandmarkTestDatabaseView(),
+                    label: {
+                        Text("Database Test")
+                    })
             }
             .navigationBarTitle("Featured", displayMode: .inline)
             .navigationBarItems(trailing: profileButton)
+            .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xFFDA00), titleColor: .fwColor(withHex: 0x111111))
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()
                     .environmentObject(self.userData)

@@ -72,6 +72,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ *  ViewModel架构协议
+ */
+@protocol FWViewModel <NSObject>
+
+@end
+
 /*!
  @brief Model模型解析分类，参考自YYModel
  

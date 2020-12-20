@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '0.8.0'
+  s.version               = '0.8.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -59,8 +59,8 @@ Pod::Spec.new do |s|
     end
 
     ss.subspec 'Cache' do |sss|
+      sss.library = 'sqlite3'
       sss.source_files = 'FWFramework/Application/Service/Cache/*.{h,m,swift}'
-      sss.dependency 'FWFramework/Application/Database'
     end
 
     ss.subspec 'Database' do |sss|
@@ -71,10 +71,6 @@ Pod::Spec.new do |s|
     ss.subspec 'Image' do |sss|
       sss.source_files = 'FWFramework/Application/Service/Image/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
-    end
-
-    ss.subspec 'Json' do |sss|
-      sss.source_files = 'FWFramework/Application/Service/Json/*.{h,m,swift}'
     end
 
     ss.subspec 'Network' do |sss|
@@ -129,6 +125,12 @@ Pod::Spec.new do |s|
     ss.subspec 'SDWebImage' do |sss|
       sss.dependency 'SDWebImage'
       sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
+    end
+
+    ss.subspec 'SQLCipher' do |sss|
+      sss.dependency 'SQLCipher'
+      sss.dependency 'FWFramework/Application/Database'
+      sss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC -DHAVE_USLEEP=1' }
     end
   end
 end

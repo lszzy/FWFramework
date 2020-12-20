@@ -18,7 +18,7 @@
 
 - (id)fwNavigationBarTransitionIdentifier
 {
-    return @(self.index < 3 ? 1 : self.index);
+    return @(self.fwNavigationBarStyle);
 }
 
 - (void)viewDidLoad
@@ -26,6 +26,13 @@
     [super viewDidLoad];
     self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     self.fwForcePopGesture = YES;
+    if (self.index < 2) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
+    } else if (self.index < 4) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleRandom;
+    } else {
+        self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleRandom), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
+    }
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
@@ -40,23 +47,6 @@
         viewController.index = self.index + 1;
         [self.navigationController pushViewController:viewController animated:YES];
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if (self.index < 3) {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor greenColor]];
-        [self.navigationController.navigationBar fwSetLineHidden:YES];
-    } else {
-        if (!self.fwTempObject) {
-            self.fwTempObject = @[[UIColor fwRandomColor], [@[@0, @1] fwRandomObject], (self.index < 6 ? @0 : [@[@0, @1] fwRandomObject])];
-        }
-        [self.navigationController.navigationBar fwSetBackgroundColor:self.fwTempObject[0]];
-        [self.navigationController.navigationBar fwSetLineHidden:[self.fwTempObject[1] boolValue]];
-        [self fwSetNavigationBarHidden:[self.fwTempObject[2] boolValue] animated:animated];
-    }
 }
 
 @end
@@ -126,6 +116,7 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"状态栏切换", @"onStatusBar"],
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
+                                         @[@"导航栏样式", @"onNavigationStyle"],
                                          @[@"标签栏切换", @"onTabBar"],
                                          @[@"工具栏切换", @"onToolBar"],
                                          @[@"导航栏转场", @"onTransitionBar"],
@@ -202,6 +193,16 @@ FWPropertyAssign(BOOL, hideToast);
 - (void)onNavigationBar
 {
     self.fwNavigationBarHidden = !self.fwNavigationBarHidden;
+    [self refreshBarFrame];
+}
+
+- (void)onNavigationStyle
+{
+    if (self.fwNavigationBarStyle == FWNavigationBarStyleDefault) {
+        self.fwNavigationBarStyle = FWNavigationBarStyleRandom;
+    } else {
+        self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
+    }
     [self refreshBarFrame];
 }
 

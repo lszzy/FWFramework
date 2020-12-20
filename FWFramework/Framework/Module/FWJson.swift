@@ -243,8 +243,6 @@ public struct FWJSON {
     }
 
     /// The static null JSON
-    @available(*, unavailable, renamed:"null")
-    public static var nullJSON: FWJSON { return null }
     public static var null: FWJSON { return FWJSON(NSNull()) }
 }
 

@@ -25,8 +25,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWWebViewController.h>
 #endif
 
-#if __has_include(<FWFramework/FWViewModel.h>)
-#import <FWFramework/FWViewModel.h>
+#if __has_include(<FWFramework/FWModel.h>)
+#import <FWFramework/FWModel.h>
 #endif
 
 #if __has_include(<FWFramework/FWView.h>)
@@ -37,8 +37,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/FWCacheManager.h>
 #endif
 
-#if __has_include(<FWFramework/FWDatabaseQueue.h>)
-#import <FWFramework/FWDatabaseQueue.h>
+#if __has_include(<FWFramework/FWDatabase.h>)
+#import <FWFramework/FWDatabase.h>
 #endif
 
 #if __has_include(<FWFramework/FWWebImage.h>)
@@ -83,8 +83,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWWebViewController.h"
 #endif
 
-#if __has_include("FWViewModel.h")
-#import "FWViewModel.h"
+#if __has_include("FWModel.h")
+#import "FWModel.h"
 #endif
 
 #if __has_include("FWView.h")
@@ -95,8 +95,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWCacheManager.h"
 #endif
 
-#if __has_include("FWDatabaseQueue.h")
-#import "FWDatabaseQueue.h"
+#if __has_include("FWDatabase.h")
+#import "FWDatabase.h"
 #endif
 
 #if __has_include("FWWebImage.h")

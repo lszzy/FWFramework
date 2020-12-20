@@ -50,52 +50,87 @@ import FWFramework
     }
 }
 
-class SwiftTestCollectionCell: UICollectionViewCell {
-    lazy var bgView: UIView = {
-        let view = UIView()
-        return view
+@objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, UICollectionViewDelegateFlowLayout {
+    lazy var flowLayout: FWCollectionViewFlowLayout = {
+        let flowLayout = FWCollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.sectionInset = .zero
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.columnCount = 4
+        flowLayout.rowCount = 3
+        return flowLayout
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        contentView.addSubview(bgView)
-        bgView.fwLayoutChain.edges()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-@objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController {
     func renderCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: (FWScreenWidth - 10) / 2.0, height: 100)
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        return layout
+        return flowLayout
     }
     
     func renderCollectionView() {
         view.backgroundColor = UIColor.appColorBg()
         collectionView.backgroundColor = UIColor.appColorTable()
-        collectionView.register(SwiftTestCollectionCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.isPagingEnabled = true
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "view")
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "view")
+    }
+    
+    func renderCollectionLayout() {
+        collectionView.fwLayoutChain.edges(excludingEdge: .bottom).height(200)
+    }
+    
+    func renderModel() {
+        fwSetRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] (sender) in
+            guard let self = self else { return }
+            
+            self.flowLayout.itemRenderVertical = !self.flowLayout.itemRenderVertical
+            self.collectionView.reloadData()
+        }
     }
     
     func renderData() {
-        collectionData.addObjects(from: [0, 1, 2])
+        for _ in 0 ..< 18 {
+            collectionData.add(UIColor.fwRandom())
+        }
         collectionView.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        collectionData.count
+        return flowLayout.itemRenderCount(collectionData.count)
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SwiftTestCollectionCell
-        cell.bgView.backgroundColor = UIColor.fwRandom()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.contentView.backgroundColor = collectionData.fwObject(at: indexPath.item) as? UIColor
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "view", for: indexPath)
+        view.backgroundColor = UIColor.fwRandom()
+        return view
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: (FWScreenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 80 : 60)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: 40, height: 200)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: 40, height: 200)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.item < collectionData.count {
+            view.fwShowMessage(withText: "点击section: \(indexPath.section) item: \(indexPath.item)")
+        }
     }
 }
 
