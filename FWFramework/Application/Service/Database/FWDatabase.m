@@ -697,7 +697,8 @@ static sqlite3 * _fw_database;
 
 + (BOOL)commonInsert:(id)model_object isReplace:(BOOL)isReplace {
     sqlite3_stmt * pp_stmt = nil;
-    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:[model_object class] hasPrimary:YES];
+    NSInteger primary_value = [self getPrimaryValueWithObject:model_object];
+    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:[model_object class] hasPrimary:primary_value > 0];
     NSString * table_name = [self getTableName:[model_object class]];
     __block NSString * insert_sql = [NSString stringWithFormat:@"%@ INTO %@ (", isReplace ? @"REPLACE" : @"INSERT", table_name];
     NSArray * field_array = field_dictionary.allKeys;
