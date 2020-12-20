@@ -87,18 +87,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, copy) NSString *version;
 
 /**
- * 说明: 存储模型数组到本地(事务方式)
+ * 说明: 保存模型到本地，主键存在时更新，不存在时新增
+ * @param model_object 模型对象
+ * @return 是否保存成功
+ */
++ (BOOL)save:(nullable id)model_object;
+
+/**
+ * 说明: 新增模型数组到本地(事务方式)
  * @param model_array 模型数组对象(model_array 里对象类型要一致)
  * @return 是否插入成功
  */
 + (BOOL)inserts:(nullable NSArray *)model_array;
 
 /**
- * 说明: 存储模型到本地
+ * 说明: 新增模型到本地，自动更新主键
  * @param model_object 模型对象
- * @return 当前插入数据主键id
+ * @return 是否插入成功
  */
-+ (NSInteger)insert:(nullable id)model_object;
++ (BOOL)insert:(nullable id)model_object;
 
 /**
  * 说明: 获取模型类表总条数
@@ -204,12 +211,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 说明: 根据主键查询本地模型对象
  * @param model_class 模型类
- * @param pkid 主键Id
+ * @param key 主键Id
  * @return 查询模型对象
  */
 
-/// example: [FWDatabase query:[Person class] pkid:1]; /// 获取Person表主键为1的记录
-+ (nullable id)query:(Class)model_class pkid:(NSInteger)pkid;
+/// example: [FWDatabase query:[Person class] key:1]; /// 获取Person表主键为1的记录
++ (nullable id)query:(Class)model_class key:(NSInteger)key;
 
 /**
  说明: 自定义sql查询
@@ -253,14 +260,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)update:(id)model_object where:(nullable NSString *)where;
 
 /**
- * 说明: 根据主键更新本地模型对象
- * @param model_object 模型对象
- * @param pkid 主键Id
- * @return 是否成功
- */
-+ (BOOL)update:(id)model_object pkid:(NSInteger)pkid;
-
-/**
  说明: 更新数据表字段
 
  @param model_class 模型类
@@ -279,18 +278,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)clear:(Class)model_class;
 
 /**
+ * 说明: 根据主键删除本地模型对象，主键必须存在
+ * @param model_object 模型对象
+ * @return 是否删除成功
+ */
++ (BOOL)delete:(id)model_object;
+
+/**
  * 说明: 删除本地模型对象
  * @param model_class 模型类
  * @param where 查询条件(查询语法和SQL where 查询语法一样，where为空则删除所有)
  */
 + (BOOL)delete:(Class)model_class where:(nullable NSString *)where;
-
-/**
- * 说明: 根据主键删除本地模型对象
- * @param model_class 模型类
- * @param pkid 主键Id
- */
-+ (BOOL)delete:(Class)model_class pkid:(NSInteger)pkid;
 
 /**
  * 说明: 清空所有本地模型数据库

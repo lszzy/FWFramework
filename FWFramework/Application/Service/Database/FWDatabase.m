@@ -70,6 +70,14 @@ static sqlite3 * _fw_database;
 
 @implementation FWDatabasePropertyInfo
 
++ (SEL)setterWithProperyName:(NSString *)property_name {
+    if (property_name.length > 1) {
+        return NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [property_name substringToIndex:1].uppercaseString, [property_name substringFromIndex:1]]);
+    } else {
+        return NSSelectorFromString([NSString stringWithFormat:@"set%@:", property_name.uppercaseString]);
+    }
+}
+
 - (FWDatabasePropertyInfo *)initWithType:(FWDatabaseFieldType)type
                       propertyName:(NSString *)property_name
                               name:(NSString *)name {
@@ -77,11 +85,7 @@ static sqlite3 * _fw_database;
     if (self) {
         _name = name.mutableCopy;
         _type = type;
-        if (property_name.length > 1) {
-            _setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:",[property_name substringToIndex:1].uppercaseString,[property_name substringFromIndex:1]]);
-        }else {
-            _setter = NSSelectorFromString([NSString stringWithFormat:@"set%@:",property_name.uppercaseString]);
-        }
+        _setter = [FWDatabasePropertyInfo setterWithProperyName:property_name];
         _getter = NSSelectorFromString(property_name);
     }
     return self;
@@ -246,7 +250,6 @@ static sqlite3 * _fw_database;
         NSString * property_name_string = [NSString stringWithUTF8String:property_name];
         if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) ||
             (all_propertys.count > 0 && ![all_propertys containsObject:property_name_string]) ||
-            [property_name_string isEqualToString:@"pkId"] ||
             [property_name_string isEqualToString:[self getPrimaryKeyWithClass:model_class]]) {
             continue;
         }
@@ -254,14 +257,9 @@ static sqlite3 * _fw_database;
         NSArray * property_attributes_list = [property_attributes_string componentsSeparatedByString:@"\""];
         NSString * name = property_name_string;
         
-        if (property_name_string.length > 1) {
-            if (![model_class instancesRespondToSelector:NSSelectorFromString([NSString stringWithFormat:@"set%@%@:",[property_name_string substringToIndex:1].uppercaseString,[property_name_string substringFromIndex:1]])]) {
-                continue;
-            }
-        }else {
-            if (![model_class instancesRespondToSelector:NSSelectorFromString([NSString stringWithFormat:@"set%@:",property_name_string.uppercaseString])]) {
-                continue;
-            }
+        SEL property_setter = [FWDatabasePropertyInfo setterWithProperyName:property_name_string];
+        if (![model_class instancesRespondToSelector:property_setter]) {
+            continue;
         }
         if (!need_dictionary_save) {
             name = [NSString stringWithFormat:@"%@$%@",main_property_name,property_name_string];
@@ -511,6 +509,15 @@ static sqlite3 * _fw_database;
     return primary_key;
 }
 
++ (NSInteger)getPrimaryValueWithObject:(id)model_object {
+    if (!model_object) return -1;
+    SEL primary_getter = NSSelectorFromString([self getPrimaryKeyWithClass:[model_object class]]);
+    if ([model_object respondsToSelector:primary_getter]) {
+        return ((NSInteger (*)(id, SEL))(void *) objc_msgSend)(model_object, primary_getter);
+    }
+    return -1;
+}
+
 + (NSString *)md5:(NSString *)psw {
     if (psw && psw.length > 0) {
         NSMutableString * encrypt = [NSMutableString string];
@@ -692,7 +699,7 @@ static sqlite3 * _fw_database;
     sqlite3_stmt * pp_stmt = nil;
     NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:[model_object class]];
     NSString * table_name = [self getTableName:[model_object class]];
-    __block NSString * insert_sql = [NSString stringWithFormat:@"INSERT INTO %@ (",table_name];
+    __block NSString * insert_sql = [NSString stringWithFormat:@"REPLACE INTO %@ (",table_name];
     NSArray * field_array = field_dictionary.allKeys;
     NSMutableArray * value_array = [NSMutableArray array];
     NSMutableArray * insert_field_array = [NSMutableArray array];
@@ -893,6 +900,10 @@ static sqlite3 * _fw_database;
     return YES;
 }
 
++ (BOOL)save:(id)model_object {
+    return [self insert:model_object];
+}
+
 + (BOOL)inserts:(NSArray *)model_array {
     __block BOOL result = YES;
     dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
@@ -913,14 +924,20 @@ static sqlite3 * _fw_database;
     return result;
 }
 
-+ (NSInteger)insert:(id)model_object {
-    if (!model_object) return 0;
-    __block NSInteger result = 0;
++ (BOOL)insert:(id)model_object {
+    if (!model_object) return NO;
+    __block BOOL result = NO;
     dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         if ([self openTable:[model_object class]]) {
-            if ([self commonInsert:model_object]) {
-                result = (NSInteger)sqlite3_last_insert_rowid(_fw_database);
+            result = [self commonInsert:model_object];
+            NSInteger value = result ? [self getPrimaryValueWithObject:model_object] : -1;
+            if (result && value == 0) {
+                NSInteger rowid = (NSInteger)sqlite3_last_insert_rowid(_fw_database);
+                SEL primary_setter = [FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:[model_object class]]];
+                if (primary_setter && [model_object respondsToSelector:primary_setter]) {
+                    ((void (*)(id, SEL, NSInteger))(void *) objc_msgSend)(model_object, primary_setter, rowid);
+                }
             }
             [self close];
         }
@@ -1111,23 +1128,10 @@ static sqlite3 * _fw_database;
         while (sqlite3_step(pp_stmt) == SQLITE_ROW) {
             id model_object = [self autoNewSubmodelWithClass:model_class];
             if (!model_object) {break;}
-            SEL whc_id_sel = NSSelectorFromString(@"setPkId:");
-            SEL custom_id_sel = nil;
-            NSString * custom_id_key = [self getPrimaryKeyWithClass:model_class];
-            if (custom_id_key && custom_id_key.length > 0) {
-                if (custom_id_key.length > 1) {
-                    custom_id_sel = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:",[custom_id_key substringToIndex:1].uppercaseString,[custom_id_key substringFromIndex:1]]);
-                }else {
-                    custom_id_sel = NSSelectorFromString([NSString stringWithFormat:@"set%@:",custom_id_key.uppercaseString]);
-                }
-            }
-            if (custom_id_sel && [model_object respondsToSelector:custom_id_sel]) {
+            SEL primary_setter = [FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:model_class]];;
+            if (primary_setter && [model_object respondsToSelector:primary_setter]) {
                 sqlite3_int64 value = sqlite3_column_int64(pp_stmt, 0);
-                ((void (*)(id, SEL, int64_t))(void *) objc_msgSend)((id)model_object, custom_id_sel, value);
-            }
-            if ([model_object respondsToSelector:whc_id_sel]) {
-                sqlite3_int64 value = sqlite3_column_int64(pp_stmt, 0);
-                ((void (*)(id, SEL, int64_t))(void *) objc_msgSend)((id)model_object, whc_id_sel, value);
+                ((void (*)(id, SEL, int64_t))(void *) objc_msgSend)((id)model_object, primary_setter, value);
             }
             for (int column = 1; column < colum_count; column++) {
                 NSString * field_name = [NSString stringWithCString:sqlite3_column_name(pp_stmt, column) encoding:NSUTF8StringEncoding];
@@ -1299,9 +1303,9 @@ static sqlite3 * _fw_database;
                                                      limit == nil ? @"" : limit] queryType:FWDatabaseQueryTypeWhereOrderLimit];
 }
 
-+ (id)query:(Class)model_class pkid:(NSInteger)pkid
++ (id)query:(Class)model_class key:(NSInteger)key
 {
-    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:model_class], (long)pkid];
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:model_class], (long)key];
     return [self query:model_class where:where].firstObject;
 }
 
@@ -1585,13 +1589,6 @@ static sqlite3 * _fw_database;
     return result;
 }
 
-+ (BOOL)update:(id)model_object pkid:(NSInteger)pkid
-{
-    if (!model_object) return NO;
-    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:[model_object class]], (long)pkid];
-    return [self update:model_object where:where];
-}
-
 + (BOOL)update:(Class)model_class value:(NSString *)value where:(NSString *)where {
     if (model_class == nil) return NO;
     BOOL result = YES;
@@ -1625,6 +1622,17 @@ static sqlite3 * _fw_database;
     return [self delete:model_class where:nil];
 }
 
++ (BOOL)delete:(id)model_object
+{
+    if (!model_object) return NO;
+    Class model_class = [model_object class];
+    NSString *primary_key = [self getPrimaryKeyWithClass:model_class];
+    NSInteger primary_value = [self getPrimaryValueWithObject:model_object];
+    if (primary_value <= 0) return NO;
+    NSString *where = [NSString stringWithFormat:@"%@ = %ld", primary_key, (long)primary_value];
+    return [self delete:model_class where:where];
+}
+
 + (BOOL)commonDeleteModel:(Class)model_class where:(NSString *)where {
     BOOL result = YES;
     if ([self localNameWithModel:model_class]) {
@@ -1653,12 +1661,6 @@ static sqlite3 * _fw_database;
     }
     dispatch_semaphore_signal([self shareInstance].dsema);
     return result;
-}
-
-+ (BOOL)delete:(Class)model_class pkid:(NSInteger)pkid
-{
-    NSString *where = [NSString stringWithFormat:@"%@ = %ld", [self getPrimaryKeyWithClass:model_class], (long)pkid];
-    return [self delete:model_class where:where];
 }
 
 + (void)close {
