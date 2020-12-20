@@ -23,8 +23,8 @@ struct LandmarkTestDatabaseView: View {
             }
             .onDelete(perform: { index in
                 let item = itemList[index.first!]
-                itemList.remove(at: index.first!)
                 FWDatabase.delete(item)
+                reloadData()
             })
             .onMove(perform: { from, to in
                 if from.first! != to {
@@ -33,14 +33,12 @@ struct LandmarkTestDatabaseView: View {
             })
         }
         .onAppear(perform: {
-            if itemList.count < 1 {
-                itemList = FWDatabase.query(LandmarkTestTable.self) as! [LandmarkTestTable]
-            }
+            reloadData()
         })
         .navigationBarItems(trailing: HStack {
             Button(action: {
                 let item = LandmarkTestTable()
-                let maxId = FWDatabase.query(LandmarkTestTable.self, func: "max(pkid)") as? Int ?? 0
+                let maxId = FWDatabase.query(LandmarkTestTable.self, func: "max(id)") as? Int ?? 0
                 item.id = maxId + 1
                 item.name = "name"
                 let info = LandmarkTestTableInfo()
@@ -49,7 +47,7 @@ struct LandmarkTestDatabaseView: View {
                 item.info = info
                 item.infos = [info]
                 FWDatabase.save(item)
-                itemList.append(item)
+                reloadData()
             }, label: {
                 Image(systemName: "plus")
                     .imageScale(.large)
@@ -58,6 +56,10 @@ struct LandmarkTestDatabaseView: View {
             
             EditButton()
         })
+    }
+    
+    func reloadData() {
+        itemList = FWDatabase.query(LandmarkTestTable.self) as! [LandmarkTestTable]
     }
 }
 

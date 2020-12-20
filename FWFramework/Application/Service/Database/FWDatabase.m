@@ -214,17 +214,17 @@ static sqlite3 * _fw_database;
     return FWDatabaseSqliteString;
 }
 
-+ (NSDictionary *)parserModelObjectFieldsWithModelClass:(Class)model_class {
-    return [self parserSubModelObjectFieldsWithModelClass:model_class propertyName:nil complete:nil];
++ (NSDictionary *)parserModelObjectFieldsWithModelClass:(Class)model_class hasPrimary:(BOOL)hasPrimary {
+    return [self parserSubModelObjectFieldsWithModelClass:model_class propertyName:nil hasPrimary:hasPrimary complete:nil];
 }
 
-+ (NSDictionary *)parserSubModelObjectFieldsWithModelClass:(Class)model_class propertyName:(NSString *)main_property_name complete:(void(^)(NSString * key, FWDatabasePropertyInfo * property_object))complete {
++ (NSDictionary *)parserSubModelObjectFieldsWithModelClass:(Class)model_class propertyName:(NSString *)main_property_name hasPrimary:(BOOL)hasPrimary complete:(void(^)(NSString * key, FWDatabasePropertyInfo * property_object))complete {
     BOOL need_dictionary_save = !main_property_name && !complete;
     NSMutableDictionary * fields = need_dictionary_save ? [NSMutableDictionary dictionary] : nil;
     Class super_class = class_getSuperclass(model_class);
     if (super_class != nil &&
         super_class != [NSObject class]) {
-        NSDictionary * super_fields = [self parserSubModelObjectFieldsWithModelClass:super_class propertyName:main_property_name complete:complete];
+        NSDictionary * super_fields = [self parserSubModelObjectFieldsWithModelClass:super_class propertyName:main_property_name hasPrimary:hasPrimary complete:complete];
         if (need_dictionary_save) [fields setValuesForKeysWithDictionary:super_fields];
     }
     SEL selector = @selector(fwTablePropertyBlacklist);
@@ -250,7 +250,7 @@ static sqlite3 * _fw_database;
         NSString * property_name_string = [NSString stringWithUTF8String:property_name];
         if ((ignore_propertys && [ignore_propertys containsObject:property_name_string]) ||
             (all_propertys.count > 0 && ![all_propertys containsObject:property_name_string]) ||
-            [property_name_string isEqualToString:[self getPrimaryKeyWithClass:model_class]]) {
+            ([property_name_string isEqualToString:[self getPrimaryKeyWithClass:model_class]] && !hasPrimary)) {
             continue;
         }
         NSString * property_attributes_string = [NSString stringWithUTF8String:property_attributes];
@@ -299,11 +299,11 @@ static sqlite3 * _fw_database;
                 [self log:@"检查模型类异常数据类型"];
             }else {
                 if (need_dictionary_save) {
-                    [self parserSubModelObjectFieldsWithModelClass:class_type propertyName:name complete:^(NSString * key, FWDatabasePropertyInfo *property_object) {
+                    [self parserSubModelObjectFieldsWithModelClass:class_type propertyName:name hasPrimary:hasPrimary complete:^(NSString * key, FWDatabasePropertyInfo *property_object) {
                         [fields setObject:property_object forKey:key];
                     }];
                 }else {
-                    [self parserSubModelObjectFieldsWithModelClass:class_type propertyName:name complete:complete];
+                    [self parserSubModelObjectFieldsWithModelClass:class_type propertyName:name hasPrimary:hasPrimary complete:complete];
                 }
             }
         }
@@ -399,7 +399,7 @@ static sqlite3 * _fw_database;
         if (sqlite3_open([database_cache_path UTF8String], &_fw_database) == SQLITE_OK) {
             [self decryptionSqlite:model_class];
             NSArray * old_model_field_name_array = [self getModelFieldNameWithClass:model_class];
-            NSDictionary * new_model_info = [self parserModelObjectFieldsWithModelClass:model_class];
+            NSDictionary * new_model_info = [self parserModelObjectFieldsWithModelClass:model_class hasPrimary:NO];
             NSMutableString * delete_field_names = [NSMutableString string];
             NSMutableString * add_field_names = [NSMutableString string];
             [old_model_field_name_array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -438,7 +438,7 @@ static sqlite3 * _fw_database;
                     if ([self openTable:model_class]) {
                         [self execSql:@"BEGIN TRANSACTION"];
                         [old_model_data_array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            [self commonInsert:obj];
+                            [self commonInsert:obj isReplace:NO];
                         }];
                         [self execSql:@"COMMIT"];
                         [self close];
@@ -650,7 +650,7 @@ static sqlite3 * _fw_database;
 
 + (BOOL)createTable:(Class)model_class {
     NSString * table_name = [self getTableName:model_class];
-    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class];
+    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class hasPrimary:NO];
     if (field_dictionary.count > 0) {
         NSString * primary_key = [self getPrimaryKeyWithClass:model_class];
         __block NSString * create_table_sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (%@ INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,",table_name,primary_key];
@@ -695,11 +695,11 @@ static sqlite3 * _fw_database;
     return result;
 }
 
-+ (BOOL)commonInsert:(id)model_object {
++ (BOOL)commonInsert:(id)model_object isReplace:(BOOL)isReplace {
     sqlite3_stmt * pp_stmt = nil;
-    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:[model_object class]];
+    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:[model_object class] hasPrimary:YES];
     NSString * table_name = [self getTableName:[model_object class]];
-    __block NSString * insert_sql = [NSString stringWithFormat:@"REPLACE INTO %@ (",table_name];
+    __block NSString * insert_sql = [NSString stringWithFormat:@"%@ INTO %@ (", isReplace ? @"REPLACE" : @"INSERT", table_name];
     NSArray * field_array = field_dictionary.allKeys;
     NSMutableArray * value_array = [NSMutableArray array];
     NSMutableArray * insert_field_array = [NSMutableArray array];
@@ -900,37 +900,13 @@ static sqlite3 * _fw_database;
     return YES;
 }
 
-+ (BOOL)save:(id)model_object {
-    return [self insert:model_object];
-}
-
-+ (BOOL)inserts:(NSArray *)model_array {
-    __block BOOL result = YES;
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
-    @autoreleasepool {
-        if (model_array != nil && model_array.count > 0) {
-            if ([self openTable:[model_array.firstObject class]]) {
-                [self execSql:@"BEGIN TRANSACTION"];
-                [model_array enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _Nonnull stop) {
-                    result = [self commonInsert:model];
-                    if (!result) {*stop = YES;}
-                }];
-                [self execSql:result ? @"COMMIT" : @"ROLLBACK"];
-                [self close];
-            }
-        }
-    }
-    dispatch_semaphore_signal([self shareInstance].dsema);
-    return result;
-}
-
-+ (BOOL)insert:(id)model_object {
++ (BOOL)insert:(id)model_object isReplace:(BOOL)isReplace {
     if (!model_object) return NO;
     __block BOOL result = NO;
     dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         if ([self openTable:[model_object class]]) {
-            result = [self commonInsert:model_object];
+            result = [self commonInsert:model_object isReplace:isReplace];
             NSInteger value = result ? [self getPrimaryValueWithObject:model_object] : -1;
             if (result && value == 0) {
                 NSInteger rowid = (NSInteger)sqlite3_last_insert_rowid(_fw_database);
@@ -944,6 +920,34 @@ static sqlite3 * _fw_database;
     }
     dispatch_semaphore_signal([self shareInstance].dsema);
     return result;
+}
+
++ (BOOL)save:(id)model_object {
+    return [self insert:model_object isReplace:YES];
+}
+
++ (BOOL)inserts:(NSArray *)model_array {
+    __block BOOL result = YES;
+    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    @autoreleasepool {
+        if (model_array != nil && model_array.count > 0) {
+            if ([self openTable:[model_array.firstObject class]]) {
+                [self execSql:@"BEGIN TRANSACTION"];
+                [model_array enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _Nonnull stop) {
+                    result = [self commonInsert:model isReplace:NO];
+                    if (!result) {*stop = YES;}
+                }];
+                [self execSql:result ? @"COMMIT" : @"ROLLBACK"];
+                [self close];
+            }
+        }
+    }
+    dispatch_semaphore_signal([self shareInstance].dsema);
+    return result;
+}
+
++ (BOOL)insert:(id)model_object {
+    return [self insert:model_object isReplace:NO];
 }
 
 + (id)autoNewSubmodelWithClass:(Class)model_class {
@@ -1120,7 +1124,7 @@ static sqlite3 * _fw_database;
 }
 
 + (NSArray *)startSqlQuery:(Class)model_class sql:(NSString *)sql {
-    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class];
+    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class hasPrimary:NO];
     NSMutableArray * model_object_array = [NSMutableArray array];
     sqlite3_stmt * pp_stmt = nil;
     if (sqlite3_prepare_v2(_fw_database, [sql UTF8String], -1, &pp_stmt, nil) == SQLITE_OK) {
@@ -1441,7 +1445,7 @@ static sqlite3 * _fw_database;
     Class model_class = [model_object class];
     if (![self openTable:model_class]) return NO;
     sqlite3_stmt * pp_stmt = nil;
-    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class];
+    NSDictionary * field_dictionary = [self parserModelObjectFieldsWithModelClass:model_class hasPrimary:NO];
     NSString * table_name = [self getTableName:model_class];
     __block NSString * update_sql = [NSString stringWithFormat:@"UPDATE %@ SET ",table_name];
     
