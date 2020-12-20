@@ -616,11 +616,11 @@ static sqlite3 * _fw_database;
         BOOL is_directory = NO;
         NSString * version = [self exceSelector:@selector(fwDatabaseVersion) modelClass:model_class];
         if (!version || version.length == 0) { version = [self shareInstance].version; }
-        NSString * whc_sqlite_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),version];
+        NSString * model_sqlite_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),version];
         NSFileManager * file_manager = [NSFileManager defaultManager];
         if ([file_manager fileExistsAtPath:sqlite_path isDirectory:&is_directory] &&
-            ![file_manager fileExistsAtPath:whc_sqlite_path isDirectory:&is_directory]) {
-            [file_manager copyItemAtPath:sqlite_path toPath:whc_sqlite_path error:nil];
+            ![file_manager fileExistsAtPath:model_sqlite_path isDirectory:&is_directory]) {
+            [file_manager copyItemAtPath:sqlite_path toPath:model_sqlite_path error:nil];
         }
     }
     return cache_directory;
@@ -892,13 +892,13 @@ static sqlite3 * _fw_database;
                     break;
             }
         }];
-        sqlite3_step(pp_stmt);
+        BOOL result = sqlite3_step(pp_stmt) == SQLITE_DONE;
         sqlite3_finalize(pp_stmt);
-    }else {
+        return result;
+    } else {
         [self log:@"Sorry存储数据失败,建议检查模型类属性类型是否符合规范"];
         return NO;
     }
-    return YES;
 }
 
 + (BOOL)insert:(id)model_object isReplace:(BOOL)isReplace {
@@ -1569,15 +1569,15 @@ static sqlite3 * _fw_database;
                     break;
             }
         }];
-        sqlite3_step(pp_stmt);
+        BOOL result = sqlite3_step(pp_stmt) == SQLITE_DONE;
         sqlite3_finalize(pp_stmt);
-    }else {
+        [self close];
+        return result;
+    } else {
         [self log:@"更新失败"];
         [self close];
         return NO;
     }
-    [self close];
-    return YES;
 }
 
 + (BOOL)update:(id)model_object where:(NSString *)where {
