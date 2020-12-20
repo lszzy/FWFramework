@@ -14,14 +14,10 @@
 
 - (id)objectForKey:(NSString *)key
 {
-    if (!key) {
-        return nil;
-    }
+    if (!key) return nil;
     
     id object = [self innerObjectForKey:key];
-    if (!object) {
-        return nil;
-    }
+    if (!object) return nil;
     
     // 检查缓存有效期
     NSNumber *expire = [self innerObjectForKey:[self expireKey:key]];
@@ -32,7 +28,7 @@
             return nil;
         }
     }
-    
+
     return object;
 }
 
@@ -43,9 +39,7 @@
 
 - (void)setObject:(id)object forKey:(NSString *)key withExpire:(NSTimeInterval)expire
 {
-    if (!key) {
-        return;
-    }
+    if (!key) return;
     
     if (nil != object) {
         [self innerSetObject:object forKey:key];
@@ -63,6 +57,8 @@
 
 - (void)removeObjectForKey:(NSString *)key
 {
+    if (!key) return;
+    
     [self innerRemoveObjectForKey:key];
     [self innerRemoveObjectForKey:[self expireKey:key]];
 }

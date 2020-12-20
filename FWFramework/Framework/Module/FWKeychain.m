@@ -84,7 +84,13 @@
 {
     NSData *passwordData = [self passwordDataForService:service account:account];
     if (passwordData) {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:passwordData];
+        id object = nil;
+        @try {
+            object = [NSKeyedUnarchiver unarchiveObjectWithData:passwordData];
+        } @catch (NSException *exception) {
+            NSLog(@"%@", exception);
+        }
+        return object;
     }
     return nil;
 }
@@ -123,7 +129,12 @@
 
 - (BOOL)setPasswordObject:(id)passwordObject forService:(NSString *)service account:(NSString *)account
 {
-    NSData *passwordData = [NSKeyedArchiver archivedDataWithRootObject:passwordObject];
+    NSData *passwordData = nil;
+    @try {
+        passwordData = [NSKeyedArchiver archivedDataWithRootObject:passwordObject];
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
     if (passwordData) {
         return [self setPasswordData:passwordData forService:service account:account];
     }

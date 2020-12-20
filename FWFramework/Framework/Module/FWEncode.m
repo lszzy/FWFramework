@@ -439,6 +439,11 @@ NSNumber * FWSafeNumber(id value) {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
+- (NSData *)fwUTF8Data
+{
+    return [self dataUsingEncoding:NSUTF8StringEncoding];
+}
+
 - (NSString *)fwSubstringFromIndex:(NSInteger)from
 {
     if (from < 0) {
@@ -480,6 +485,17 @@ NSNumber * FWSafeNumber(id value) {
     }
     
     return [self substringWithRange:range];
+}
+
+@end
+
+#pragma mark - NSData+FWSafeType
+
+@implementation NSData (FWSafeType)
+
+- (NSString *)fwUTF8String
+{
+    return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
 }
 
 @end

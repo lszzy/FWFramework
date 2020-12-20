@@ -319,6 +319,13 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
 - (NSString *)fwTrimString;
 
 /*!
+ @brief 转换为UTF8编码数据
+ 
+ @return UTF8编码数据
+ */
+- (nullable NSData *)fwUTF8Data;
+
+/*!
  @brief 从指定位置截取子串
  
  @param from 起始位置
@@ -341,6 +348,22 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  @return 子串
  */
 - (nullable NSString *)fwSubstringWithRange:(NSRange)range;
+
+@end
+
+#pragma mark - NSData+FWSafeType
+
+/*!
+ @brief NSData类型安全分类
+ */
+@interface NSData (FWSafeType)
+
+/*!
+ @brief 转换为UTF8编码字符串
+ 
+ @return UTF8编码字符串
+ */
+- (nullable NSString *)fwUTF8String;
 
 @end
 
