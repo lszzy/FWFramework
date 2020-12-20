@@ -1710,7 +1710,7 @@ static sqlite3 * _fw_database;
         NSArray <NSString *> * file_name_array = [file_manager contentsOfDirectoryAtPath:file_directory error:nil];
         if (file_name_array != nil && file_name_array.count > 0) {
             [file_name_array enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj rangeOfString:class_name].location != NSNotFound) {
+                if ([obj rangeOfString:[class_name stringByAppendingString:@"_v"]].location != NSNotFound) {
                     if (isPath) {
                         file_path = [NSString stringWithFormat:@"%@%@",file_directory,obj];
                     }else {
