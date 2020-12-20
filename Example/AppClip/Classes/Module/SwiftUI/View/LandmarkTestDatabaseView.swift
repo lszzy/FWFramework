@@ -24,7 +24,7 @@ struct LandmarkTestDatabaseView: View {
             .onDelete(perform: { index in
                 let item = itemList[index.first!]
                 itemList.remove(at: index.first!)
-                FWDatabase.delete(LandmarkTestTable.self, pkid: item.pkid)
+                FWDatabase.delete(item)
             })
             .onMove(perform: { from, to in
                 if from.first! != to {
@@ -48,8 +48,7 @@ struct LandmarkTestDatabaseView: View {
                 info.title = nil
                 item.info = info
                 item.infos = [info]
-                item.pkid = FWDatabase.insert(item)
-                
+                FWDatabase.save(item)
                 itemList.append(item)
             }, label: {
                 Image(systemName: "plus")
