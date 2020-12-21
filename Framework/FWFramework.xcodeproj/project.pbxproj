@@ -984,6 +984,8 @@
 				2FFE1C2F2507BFA5000332A3 /* FWScrollViewController.m */,
 				2FFE1C2E2507BFA5000332A3 /* FWTableViewController.h */,
 				2FFE1C282507BFA5000332A3 /* FWTableViewController.m */,
+				2F3E60162590A12100118E01 /* FWTabBarController.h */,
+				2F3E60172590A12100118E01 /* FWTabBarController.m */,
 				2FFE1C2D2507BFA5000332A3 /* FWWebViewController.h */,
 				2FFE1C262507BFA5000332A3 /* FWWebViewController.m */,
 				2FFE1C862507BFBC000332A3 /* FWWebViewBridge.h */,
@@ -1151,8 +1153,6 @@
 				2FFE1CBF2507BFBD000332A3 /* FWSegmentedControl.h */,
 				2FFE1CD52507BFBD000332A3 /* FWSegmentedControl.m */,
 				2FFE1CD72507BFBD000332A3 /* FWSkeletonView.swift */,
-				2F3E60162590A12100118E01 /* FWTabBarController.h */,
-				2F3E60172590A12100118E01 /* FWTabBarController.m */,
 				2FFE1CD62507BFBD000332A3 /* FWTagCollectionView.h */,
 				2FFE1CBE2507BFBD000332A3 /* FWTagCollectionView.m */,
 			);

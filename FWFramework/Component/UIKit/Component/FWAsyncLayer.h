@@ -24,7 +24,6 @@
 #import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"
-#import "FWTabBarController.h"
 #import "FWTagCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
