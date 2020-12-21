@@ -11,7 +11,7 @@
 #import "TestViewController.h"
 #import "SettingsViewController.h"
 
-@interface TestTabBarViewController ()
+@interface TestTabBarViewController () <FWViewController>
 
 @end
 
