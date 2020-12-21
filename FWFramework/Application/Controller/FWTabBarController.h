@@ -78,6 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) UIView *backgroundView;
 
+/// 内容边距，默认底部边距为安全区域高度
 @property UIEdgeInsets contentEdgeInsets;
 
 - (void)setHeight:(CGFloat)height;

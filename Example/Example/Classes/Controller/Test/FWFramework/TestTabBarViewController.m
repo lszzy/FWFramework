@@ -38,6 +38,7 @@
 
 - (void)customizeTabBar
 {
+    [self.tabBar.backgroundView fwSetShadowColor:[UIColor appColorHex:0x040000 alpha:0.15] offset:CGSizeMake(0, 1) radius:3];
     NSArray *tabBarItemTitles = @[@"首页", @"测试", @"设置"];
     NSArray *tabBarItemImages = @[@"tabbar_home", @"tabbar_settings", @"tabbar_settings"];
     NSInteger index = 0;
