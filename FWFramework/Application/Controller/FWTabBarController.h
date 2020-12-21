@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWTabBar, FWTabBarItem, FWTabBarController;
 
+/// 自定义TabBar事件代理
 @protocol FWTabBarDelegate <NSObject>
 
 - (BOOL)tabBar:(FWTabBar *)tabBar shouldSelectItemAtIndex:(NSInteger)index;
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// 自定义TabBar控制器事件代理
 @protocol FWTabBarControllerDelegate <NSObject>
 
 @optional
@@ -58,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// 视图控制器自定义TabBar分类
 @interface UIViewController (FWTabBarController)
 
 @property(nonatomic, nullable) FWTabBarItem *fwTabBarItem;
@@ -68,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTabBar
 
+/// 自定义TabBar视图，默认内容底部边距为安全区域高度，和系统一致
 @interface FWTabBar : UIView
 
 @property (nonatomic, weak, nullable) id <FWTabBarDelegate> delegate;
@@ -78,7 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) UIView *backgroundView;
 
-/// 内容边距，默认底部边距为安全区域高度
 @property UIEdgeInsets contentEdgeInsets;
 
 - (void)setHeight:(CGFloat)height;
@@ -91,6 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTabBarItem
 
+/// 自定义TabBarItem视图
 @interface FWTabBarItem : UIControl
 
 @property CGFloat itemHeight;
