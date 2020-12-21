@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /*!
- @brief 自定义TabBar控制器，支持嵌入UINavigationController和设置Badge提醒灯
+ @brief 自定义TabBar控制器，支持嵌入到UINavigationController和设置Badge提醒灯
  
  @see https://github.com/robbdimitrov/RDVTabBarController
  */

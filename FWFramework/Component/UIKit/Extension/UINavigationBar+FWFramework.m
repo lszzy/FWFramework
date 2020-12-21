@@ -128,9 +128,7 @@
     // self.shadowImage = hidden ? [UIImage new] : nil;
 }
 
-- (void)fwSetShadowColor:(UIColor *)color
-                  offset:(CGSize)offset
-                  radius:(CGFloat)radius
+- (void)fwSetShadowColor:(UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius
 {
     self.barStyle = UIBarStyleBlack;
     self.translucent = NO;
