@@ -8,6 +8,7 @@
  */
 
 #import "FWTabBarController.h"
+#import "FWAdaptive.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWTabBarController
@@ -79,17 +80,8 @@
     CGFloat tabBarStartingY = viewSize.height;
     CGFloat contentViewHeight = viewSize.height;
     CGFloat tabBarHeight = CGRectGetHeight([[self tabBar] frame]);
-
     if (!tabBarHeight) {
-        if (@available(iOS 11.0, *)) {
-            CGFloat safeAreaBottom = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
-            tabBarHeight = 58.f + safeAreaBottom / 1.5f;
-        } else {
-            tabBarHeight = 58.f;
-        }
-    } else if (@available(iOS 11.0, *)) {
-        CGFloat safeAreaBottom = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
-        tabBarHeight = 58.f + safeAreaBottom / 1.5f;
+        tabBarHeight = FWTabBarHeight;
     }
 
     if (!self.tabBarHidden) {
@@ -317,6 +309,7 @@
 }
 
 - (void)commonInitialization {
+    _contentEdgeInsets = UIEdgeInsetsMake(0, 0, UIScreen.fwSafeAreaInsets.bottom, 0);
     _backgroundView = [[UIView alloc] init];
     [self addSubview:_backgroundView];
     
