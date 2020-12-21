@@ -114,6 +114,7 @@
                                              @[@"FWPopupMenu", @"TestPopupMenuViewController"],
                                              @[@"FWViewController", @"TestControllerViewController"],
                                              @[@"FWViewController(Swift)", [TestSwiftViewController new]],
+                                             @[@"FWTabBarController", @"TestTabBarViewController"],
                                              @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
                                              @[@"FWAuthorizeManager", @"TestAuthorizeViewController"],
                                              @[@"FWLocationManager", [TestLocationViewController new]],
