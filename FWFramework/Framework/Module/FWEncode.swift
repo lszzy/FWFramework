@@ -121,11 +121,11 @@ public extension Decoder {
     }
     
     func fwJson(_ key: String) throws -> FWJSON {
-        return try fwDecode(key, as: FWJSON.self)
+        return try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null
     }
     
     func fwJson<K: CodingKey>(_ key: K) throws -> FWJSON {
-        return try fwDecode(key, as: FWJSON.self)
+        return try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null
     }
 
     func fwJsonIf(_ key: String) throws -> FWJSON? {
