@@ -70,9 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwSetLineHidden:(BOOL)hidden;
 
 // 设置阴影色，offset示例(0,1)，radius示例6
-- (void)fwSetShadowColor:(nullable UIColor *)color
-                  offset:(CGSize)offset
-                  radius:(CGFloat)radius;
+- (void)fwSetShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
 
 // UITabBar 的背景 view，可能显示磨砂、背景图，顶部有一部分溢出到 UITabBar 外。在 iOS 10 及以后是私有的 _UIBarBackground 类，在 iOS 9 及以前是私有的 _UITabBarBackgroundView 类
 @property (nullable, nonatomic, weak, readonly) UIView *fwBackgroundView;
