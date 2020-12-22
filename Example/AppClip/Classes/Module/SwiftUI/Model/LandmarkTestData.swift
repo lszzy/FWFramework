@@ -15,10 +15,10 @@ struct LandmarkTestData: Codable, Hashable, Identifiable {
     var infos: [LandmarkTestInfo] = []
     
     init(from decoder: Decoder) throws {
-        id = try decoder.fwJson("id").intValue
-        name = try decoder.fwJson("name").stringValue
-        info = try decoder.fwDecodeIf("info")
-        infos = try decoder.fwDecode("infos")
+        id = try decoder.fwValue("id")
+        name = try decoder.fwValue("name")
+        info = try decoder.fwValueIf("info")
+        infos = try decoder.fwValue("infos")
     }
 }
 
@@ -27,7 +27,7 @@ struct LandmarkTestInfo: Codable, Hashable {
     var title: String?
     
     init(from decoder: Decoder) throws {
-        id = try decoder.fwJson("id").intValue
-        title = try decoder.fwJsonIf("title")?.string ?? decoder.fwJsonIf("name")?.string
+        id = try decoder.fwValue("id")
+        title = try decoder.fwValue("title") ?? decoder.fwValue("name")
     }
 }
