@@ -135,6 +135,72 @@ public extension Decoder {
     func fwJsonIf<K: CodingKey>(_ key: K) throws -> FWJSON? {
         return try fwDecodeIf(key, as: FWJSON.self)
     }
+    
+    // MARK: - Value
+    
+    func fwValueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
+        if let value = fwValue(with: try fwDecodeSingle(as: FWJSON.self), as: type) {
+            return value
+        }
+        return try fwDecodeSingle(as: type)
+    }
+    
+    func fwValue<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
+        return try fwValue(FWAnyCodingKey(key), as: type)
+    }
+
+    func fwValue<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
+        if let value = fwValue(with: try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null, as: type) {
+            return value
+        }
+        return try fwDecode(key, as: type)
+    }
+
+    func fwValueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+        return try fwValueIf(FWAnyCodingKey(key), as: type)
+    }
+
+    func fwValueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+        if let json = try fwDecodeIf(key, as: FWJSON.self), let value = fwValue(with: json, as: type) {
+            return value
+        }
+        return try fwDecodeIf(key, as: type)
+    }
+    
+    private func fwValue<T>(with json: FWJSON, as type: T.Type) -> T? {
+        switch type {
+        case is Bool.Type:
+            return json.boolValue as? T
+        case is String.Type:
+            return json.stringValue as? T
+        case is Double.Type:
+            return json.doubleValue as? T
+        case is Float.Type:
+            return json.floatValue as? T
+        case is Int.Type:
+            return json.intValue as? T
+        case is Int8.Type:
+            return json.int8Value as? T
+        case is Int16.Type:
+            return json.int16Value as? T
+        case is Int32.Type:
+            return json.int32Value as? T
+        case is Int64.Type:
+            return json.int64Value as? T
+        case is UInt.Type:
+            return json.uIntValue as? T
+        case is UInt8.Type:
+            return json.uInt8Value as? T
+        case is UInt16.Type:
+            return json.uInt16Value as? T
+        case is UInt32.Type:
+            return json.uInt32Value as? T
+        case is UInt64.Type:
+            return json.uInt64Value as? T
+        default:
+            return nil
+        }
+    }
 }
 
 public protocol FWAnyDateFormatter {
