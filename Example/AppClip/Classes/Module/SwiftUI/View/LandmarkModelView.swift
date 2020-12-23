@@ -36,16 +36,14 @@ struct LandmarkModelView: View {
                 Button("Refresh") {
                     self.viewModel.send(.refresh)
                 }
+                
+                Button("Back") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
             }
         }
         .navigationBarTitle(title, displayMode: .inline)
-        .navigationBarItems(leading: Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
-        }, label: {
-            Image(systemName: "chevron.left")
-                .imageScale(.large)
-        }))
-        .navigationBarBackButtonHidden(true)
+        //.fwNavigationBarColor(backgroundColor: .green)
         .onAppear {
             self.viewModel.send(.refresh)
         }
