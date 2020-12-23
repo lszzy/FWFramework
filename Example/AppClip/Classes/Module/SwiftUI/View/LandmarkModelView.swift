@@ -16,7 +16,7 @@ struct LandmarkModelView: View {
     var title: String = "ViewModel"
     
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             switch viewModel.state {
             case .idle:
                 EmptyView()
@@ -43,7 +43,7 @@ struct LandmarkModelView: View {
             }
         }
         .navigationBarTitle(title, displayMode: .inline)
-        //.fwNavigationBarColor(backgroundColor: .green)
+        .fwNavigationBarColor(backgroundColor: .green)
         .onAppear {
             self.viewModel.send(.refresh)
         }

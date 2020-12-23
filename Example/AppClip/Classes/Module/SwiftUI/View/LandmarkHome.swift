@@ -88,9 +88,8 @@ struct LandmarkHome: View {
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: profileButton)
-            .fwNavigationBarAppearance(backgroundColor: .fwColor(withHex: 0xFFDA00), titleColor: .fwColor(withHex: 0x111111))
-            //.fwNavigationBarAppearance(backgroundColor: nil, titleColor: .fwColor(withHex: 0x111111))
-            //.fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xFFDA00))
+            .fwNavigationBarAppearance(backgroundColor: nil, titleColor: .fwColor(withHex: 0x111111))
+            .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xF2F2F7))
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()
                     .environmentObject(self.userData)
