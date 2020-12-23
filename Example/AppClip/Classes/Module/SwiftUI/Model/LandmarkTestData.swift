@@ -28,6 +28,6 @@ struct LandmarkTestInfo: Codable, Hashable {
     
     init(from decoder: Decoder) throws {
         id = try decoder.fwValue("id")
-        title = try decoder.fwValue("title") ?? decoder.fwValue("name")
+        title = try decoder.fwValueIf("title") ?? decoder.fwValueIf("name")
     }
 }
