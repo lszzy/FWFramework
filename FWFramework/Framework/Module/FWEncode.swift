@@ -139,38 +139,10 @@ public extension Decoder {
     // MARK: - Value
     
     func fwValueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        switch type {
-        case is Bool.Type:
-            return try fwJsonSingle().boolValue as! T
-        case is String.Type:
-            return try fwJsonSingle().stringValue as! T
-        case is Double.Type:
-            return try fwJsonSingle().doubleValue as! T
-        case is Float.Type:
-            return try fwJsonSingle().floatValue as! T
-        case is Int.Type:
-            return try fwJsonSingle().intValue as! T
-        case is Int8.Type:
-            return try fwJsonSingle().int8Value as! T
-        case is Int16.Type:
-            return try fwJsonSingle().int16Value as! T
-        case is Int32.Type:
-            return try fwJsonSingle().int32Value as! T
-        case is Int64.Type:
-            return try fwJsonSingle().int64Value as! T
-        case is UInt.Type:
-            return try fwJsonSingle().uIntValue as! T
-        case is UInt8.Type:
-            return try fwJsonSingle().uInt8Value as! T
-        case is UInt16.Type:
-            return try fwJsonSingle().uInt16Value as! T
-        case is UInt32.Type:
-            return try fwJsonSingle().uInt32Value as! T
-        case is UInt64.Type:
-            return try fwJsonSingle().uInt64Value as! T
-        default:
-            return try fwDecodeSingle(as: type)
+        if let value = fwValue(with: try fwDecodeSingle(as: FWJSON.self), as: type) {
+            return value
         }
+        return try fwDecodeSingle(as: type)
     }
     
     func fwValue<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
@@ -178,38 +150,10 @@ public extension Decoder {
     }
 
     func fwValue<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        switch type {
-        case is Bool.Type:
-            return try fwJson(key).boolValue as! T
-        case is String.Type:
-            return try fwJson(key).stringValue as! T
-        case is Double.Type:
-            return try fwJson(key).doubleValue as! T
-        case is Float.Type:
-            return try fwJson(key).floatValue as! T
-        case is Int.Type:
-            return try fwJson(key).intValue as! T
-        case is Int8.Type:
-            return try fwJson(key).int8Value as! T
-        case is Int16.Type:
-            return try fwJson(key).int16Value as! T
-        case is Int32.Type:
-            return try fwJson(key).int32Value as! T
-        case is Int64.Type:
-            return try fwJson(key).int64Value as! T
-        case is UInt.Type:
-            return try fwJson(key).uIntValue as! T
-        case is UInt8.Type:
-            return try fwJson(key).uInt8Value as! T
-        case is UInt16.Type:
-            return try fwJson(key).uInt16Value as! T
-        case is UInt32.Type:
-            return try fwJson(key).uInt32Value as! T
-        case is UInt64.Type:
-            return try fwJson(key).uInt64Value as! T
-        default:
-            return try fwDecode(key, as: type)
+        if let value = fwValue(with: try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null, as: type) {
+            return value
         }
+        return try fwDecode(key, as: type)
     }
 
     func fwValueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
@@ -217,37 +161,44 @@ public extension Decoder {
     }
 
     func fwValueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+        if let json = try fwDecodeIf(key, as: FWJSON.self), let value = fwValue(with: json, as: type) {
+            return value
+        }
+        return try fwDecodeIf(key, as: type)
+    }
+    
+    private func fwValue<T>(with json: FWJSON, as type: T.Type) -> T? {
         switch type {
         case is Bool.Type:
-            return try fwJsonIf(key)?.boolValue as? T
+            return json.boolValue as? T
         case is String.Type:
-            return try fwJsonIf(key)?.stringValue as? T
+            return json.stringValue as? T
         case is Double.Type:
-            return try fwJsonIf(key)?.doubleValue as? T
+            return json.doubleValue as? T
         case is Float.Type:
-            return try fwJsonIf(key)?.floatValue as? T
+            return json.floatValue as? T
         case is Int.Type:
-            return try fwJsonIf(key)?.intValue as? T
+            return json.intValue as? T
         case is Int8.Type:
-            return try fwJsonIf(key)?.int8Value as? T
+            return json.int8Value as? T
         case is Int16.Type:
-            return try fwJsonIf(key)?.int16Value as? T
+            return json.int16Value as? T
         case is Int32.Type:
-            return try fwJsonIf(key)?.int32Value as? T
+            return json.int32Value as? T
         case is Int64.Type:
-            return try fwJsonIf(key)?.int64Value as? T
+            return json.int64Value as? T
         case is UInt.Type:
-            return try fwJsonIf(key)?.uIntValue as? T
+            return json.uIntValue as? T
         case is UInt8.Type:
-            return try fwJsonIf(key)?.uInt8Value as? T
+            return json.uInt8Value as? T
         case is UInt16.Type:
-            return try fwJsonIf(key)?.uInt16Value as? T
+            return json.uInt16Value as? T
         case is UInt32.Type:
-            return try fwJsonIf(key)?.uInt32Value as? T
+            return json.uInt32Value as? T
         case is UInt64.Type:
-            return try fwJsonIf(key)?.uInt64Value as? T
+            return json.uInt64Value as? T
         default:
-            return try fwDecodeIf(key, as: type)
+            return nil
         }
     }
 }
