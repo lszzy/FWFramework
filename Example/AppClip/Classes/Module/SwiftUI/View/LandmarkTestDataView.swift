@@ -51,8 +51,8 @@ struct LandmarkTestDataView: View {
 {
 "id": \(index),
 "name": "name1",
-"info": { "id": true, "title": "title2" },
-"infos": [{ "id": "3", "name": "title3" }, { "id": 4.4, "title": "title4" }]
+"info": { "id": true, "name": "title2" },
+"infos": [{ "id": "3", "name": "title3" }, { "id": 4.4, "name": 4 }]
 }
 """
         guard let codableObject = try? codableString.fwUTF8Data?.fwDecoded() as LandmarkTestData? else { return }
