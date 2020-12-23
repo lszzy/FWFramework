@@ -219,33 +219,33 @@ public extension Decoder {
     func fwValueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
         switch type {
         case is Bool.Type:
-            return try fwJsonIf(key)?.bool as? T
+            return try fwJsonIf(key)?.boolValue as? T
         case is String.Type:
-            return try fwJsonIf(key)?.string as? T
+            return try fwJsonIf(key)?.stringValue as? T
         case is Double.Type:
-            return try fwJsonIf(key)?.double as? T
+            return try fwJsonIf(key)?.doubleValue as? T
         case is Float.Type:
-            return try fwJsonIf(key)?.float as? T
+            return try fwJsonIf(key)?.floatValue as? T
         case is Int.Type:
-            return try fwJsonIf(key)?.int as? T
+            return try fwJsonIf(key)?.intValue as? T
         case is Int8.Type:
-            return try fwJsonIf(key)?.int8 as? T
+            return try fwJsonIf(key)?.int8Value as? T
         case is Int16.Type:
-            return try fwJsonIf(key)?.int16 as? T
+            return try fwJsonIf(key)?.int16Value as? T
         case is Int32.Type:
-            return try fwJsonIf(key)?.int32 as? T
+            return try fwJsonIf(key)?.int32Value as? T
         case is Int64.Type:
-            return try fwJsonIf(key)?.int64 as? T
+            return try fwJsonIf(key)?.int64Value as? T
         case is UInt.Type:
-            return try fwJsonIf(key)?.uInt as? T
+            return try fwJsonIf(key)?.uIntValue as? T
         case is UInt8.Type:
-            return try fwJsonIf(key)?.uInt8 as? T
+            return try fwJsonIf(key)?.uInt8Value as? T
         case is UInt16.Type:
-            return try fwJsonIf(key)?.uInt16 as? T
+            return try fwJsonIf(key)?.uInt16Value as? T
         case is UInt32.Type:
-            return try fwJsonIf(key)?.uInt32 as? T
+            return try fwJsonIf(key)?.uInt32Value as? T
         case is UInt64.Type:
-            return try fwJsonIf(key)?.uInt64 as? T
+            return try fwJsonIf(key)?.uInt64Value as? T
         default:
             return try fwDecodeIf(key, as: type)
         }
