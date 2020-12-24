@@ -32,6 +32,7 @@ struct LandmarkTestDataView: View {
                 loadData()
             }
         })
+        .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xFFDA00))
         .navigationBarItems(trailing: HStack {
             Button(action: {
                 loadData()

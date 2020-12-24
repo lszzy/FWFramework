@@ -28,6 +28,7 @@ struct LandmarkList: View {
             }
         }
         .navigationBarTitle(Text("Landmarks"))
+        .fwNavigationBarColor(backgroundColor: .white)
     }
 }
 

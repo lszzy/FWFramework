@@ -55,6 +55,7 @@
 		2F48F720253804CD00AEBB60 /* landmarkData.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F0DE5AB24F65BE100DCC13E /* landmarkData.json */; };
 		2F48F723253804D000AEBB60 /* hikeData.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F8E45FB24F8A2A900BDF302 /* hikeData.json */; };
 		2F48F7282538075F00AEBB60 /* progressive.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2F48F7272538075E00AEBB60 /* progressive.jpg */; };
+		2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D6389259461B2007B822F /* LandmarkInputView.swift */; };
 		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
 		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
 		2F697B4E2521ACE800910C93 /* TestDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F697B4D2521ACE800910C93 /* TestDrawViewController.m */; };
@@ -69,8 +70,6 @@
 		2FB1463F258CAC5D00D867D4 /* LandmarkTestDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */; };
 		2FB146A8258E203800D867D4 /* LandmarkTestDatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */; };
 		2FB146B2258E230F00D867D4 /* LandmarkTestTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB146B1258E230F00D867D4 /* LandmarkTestTable.swift */; };
-		2FB15BA325848FB100B92D80 /* View+FWRoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */; };
-		2FB15BA7258498F200B92D80 /* View+FWNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB15BA6258498F200B92D80 /* View+FWNavigationBar.swift */; };
 		2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */; };
 		2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */; };
 		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
@@ -247,6 +246,7 @@
 		2F48F6F82538036100AEBB60 /* HikeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeView.swift; sourceTree = "<group>"; };
 		2F48F6F92538036100AEBB60 /* PageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		2F48F7272538075E00AEBB60 /* progressive.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = progressive.jpg; sourceTree = "<group>"; };
+		2F4D6389259461B2007B822F /* LandmarkInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkInputView.swift; sourceTree = "<group>"; };
 		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
@@ -271,8 +271,6 @@
 		2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestDataView.swift; sourceTree = "<group>"; };
 		2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestDatabaseView.swift; sourceTree = "<group>"; };
 		2FB146B1258E230F00D867D4 /* LandmarkTestTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestTable.swift; sourceTree = "<group>"; };
-		2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FWRoundedCorner.swift"; sourceTree = "<group>"; };
-		2FB15BA6258498F200B92D80 /* View+FWNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FWNavigationBar.swift"; sourceTree = "<group>"; };
 		2FDEA02A24E695C900D2FBD1 /* TestThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeViewController.h; sourceTree = "<group>"; };
 		2FDEA02B24E695C900D2FBD1 /* TestThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeViewController.m; sourceTree = "<group>"; };
 		2FDF6F6625206B440086A99E /* TestTableCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableCreateViewController.h; sourceTree = "<group>"; };
@@ -551,7 +549,6 @@
 		2F48F6D1253801F200AEBB60 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2FB15BA125848F7000B92D80 /* Extension */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -595,6 +592,7 @@
 				2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */,
 				2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */,
 				2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */,
+				2F4D6389259461B2007B822F /* LandmarkInputView.swift */,
 				2F48F6F42538036100AEBB60 /* CategoryRow.swift */,
 				2F48F6F52538036100AEBB60 /* ProfileHost.swift */,
 				2F48F6F62538036100AEBB60 /* LandmarkRow.swift */,
@@ -630,15 +628,6 @@
 				2F8A990D2554575B00AC554B /* test.webp */,
 			);
 			path = Images;
-			sourceTree = "<group>";
-		};
-		2FB15BA125848F7000B92D80 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				2FB15BA6258498F200B92D80 /* View+FWNavigationBar.swift */,
-				2FB15BA225848FB100B92D80 /* View+FWRoundedCorner.swift */,
-			);
-			path = Extension;
 			sourceTree = "<group>";
 		};
 		2FF8D86D24C886EC006A83B5 = {
@@ -1322,7 +1311,6 @@
 				2F48F7012538036100AEBB60 /* PageControl.swift in Sources */,
 				2FB1463F258CAC5D00D867D4 /* LandmarkTestDataView.swift in Sources */,
 				2F48F7022538036100AEBB60 /* LandmarkList.swift in Sources */,
-				2FB15BA325848FB100B92D80 /* View+FWRoundedCorner.swift in Sources */,
 				2F48F7152538036100AEBB60 /* ProfileHost.swift in Sources */,
 				2F48F7032538036100AEBB60 /* ProfileEditor.swift in Sources */,
 				2F48F7042538036100AEBB60 /* GraphCapsule.swift in Sources */,
@@ -1336,6 +1324,7 @@
 				2F48F6FC2538036100AEBB60 /* Hike.swift in Sources */,
 				2F48F7002538036100AEBB60 /* ProfileSummary.swift in Sources */,
 				2F48F7182538036100AEBB60 /* HikeView.swift in Sources */,
+				2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */,
 				2F48F7072538036100AEBB60 /* BadgeView.swift in Sources */,
 				2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */,
 				2F48F7192538036100AEBB60 /* PageView.swift in Sources */,
@@ -1346,7 +1335,6 @@
 				2FB146B2258E230F00D867D4 /* LandmarkTestTable.swift in Sources */,
 				2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */,
 				2F48F7142538036100AEBB60 /* CategoryRow.swift in Sources */,
-				2FB15BA7258498F200B92D80 /* View+FWNavigationBar.swift in Sources */,
 				2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */,
 				2F48F6FA2538036100AEBB60 /* Profile.swift in Sources */,
 				2F48F7102538036100AEBB60 /* BadgeBackground.swift in Sources */,

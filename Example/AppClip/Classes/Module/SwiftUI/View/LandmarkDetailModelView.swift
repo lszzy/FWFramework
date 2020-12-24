@@ -13,6 +13,7 @@ struct LandmarkDetailModelView: View {
     
     var body: some View {
         content
+            .fwNavigationBarColor(backgroundColor: .red)
             .onAppear { self.viewModel.send(event: .onAppear) }
     }
     
