@@ -4,6 +4,8 @@
 //  Licensed under the MIT license. See the LICENSE file for more info.
 //
 
+#if DEBUG || arch(arm64)
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// https://github.com/paololeonardi/WaterfallGrid
@@ -96,6 +98,7 @@ public struct FWWaterfallGrid<Data, ID, Content>: View where Data : RandomAccess
 
 // MARK: - Initializers
 
+@available(iOS 13.0, *)
 extension FWWaterfallGrid {
 
     /// Creates an instance that uniquely identifies views across updates based
@@ -112,6 +115,7 @@ extension FWWaterfallGrid {
 
 }
 
+@available(iOS 13.0, *)
 extension FWWaterfallGrid where ID == Data.Element.ID, Data.Element : Identifiable {
 
     /// Creates an instance that uniquely identifies views across updates based
@@ -127,6 +131,7 @@ extension FWWaterfallGrid where ID == Data.Element.ID, Data.Element : Identifiab
 
 }
 
+@available(iOS 13.0, *)
 struct FWGridSyle {
     @FWPositiveNumber var columnsInPortrait: Int
     @FWPositiveNumber var columnsInLandscape: Int
@@ -140,11 +145,13 @@ struct FWGridSyle {
     }
 }
 
+@available(iOS 13.0, *)
 struct FWGridStyleKey: EnvironmentKey {
     static let defaultValue = FWGridSyle(columnsInPortrait: 2, columnsInLandscape: 2,
                                        spacing: 8, animation: .default)
 }
 
+@available(iOS 13.0, *)
 extension EnvironmentValues {
     var fwGridStyle: FWGridSyle {
         get { self[FWGridStyleKey.self] }
@@ -152,6 +159,7 @@ extension EnvironmentValues {
     }
 }
 
+@available(iOS 13.0, *)
 @propertyWrapper
 struct FWPositiveNumber {
     private var value: Int = 1
@@ -166,14 +174,17 @@ struct FWPositiveNumber {
     }
 }
 
+@available(iOS 13.0, *)
 struct FWScrollOptions {
     let direction: Axis.Set
 }
 
+@available(iOS 13.0, *)
 struct FWScrollOptionsKey: EnvironmentKey {
     static let defaultValue = FWScrollOptions(direction: .vertical)
 }
 
+@available(iOS 13.0, *)
 extension EnvironmentValues {
     var fwScrollOptions: FWScrollOptions {
         get { self[FWScrollOptionsKey.self] }
@@ -181,11 +192,13 @@ extension EnvironmentValues {
     }
 }
 
+@available(iOS 13.0, *)
 struct FWElementPreferenceData: Equatable {
     let id: AnyHashable
     let size: CGSize
 }
 
+@available(iOS 13.0, *)
 struct FWElementPreferenceKey: PreferenceKey {
     typealias Value = [FWElementPreferenceData]
 
@@ -196,6 +209,7 @@ struct FWElementPreferenceKey: PreferenceKey {
     }
 }
 
+@available(iOS 13.0, *)
 struct FWPreferenceSetter<ID: Hashable>: View {
     var id: ID
     var body: some View {
@@ -209,6 +223,7 @@ struct FWPreferenceSetter<ID: Hashable>: View {
 
 // MARK: - View+FWWaterfallGrid
 
+@available(iOS 13.0, *)
 extension View {
 
     /// Sets the style for `FWWaterfallGrid` within the environment of `self`.
@@ -240,3 +255,6 @@ extension View {
     }
 
 }
+
+#endif
+#endif
