@@ -58,6 +58,8 @@
 		2F4D6345259441F3007B822F /* FWGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D6344259441F3007B822F /* FWGrid.swift */; };
 		2F4D634925944405007B822F /* FWPullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D634825944404007B822F /* FWPullToRefresh.swift */; };
 		2F4D634D2594460C007B822F /* FWWaterfallGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D634C2594460C007B822F /* FWWaterfallGrid.swift */; };
+		2F4D638625945CAF007B822F /* FWKeyboardObserving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D638525945CAF007B822F /* FWKeyboardObserving.swift */; };
+		2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D6389259461B2007B822F /* LandmarkInputView.swift */; };
 		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
 		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
 		2F697B4E2521ACE800910C93 /* TestDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F697B4D2521ACE800910C93 /* TestDrawViewController.m */; };
@@ -251,6 +253,8 @@
 		2F4D6344259441F3007B822F /* FWGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWGrid.swift; sourceTree = "<group>"; };
 		2F4D634825944404007B822F /* FWPullToRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWPullToRefresh.swift; sourceTree = "<group>"; };
 		2F4D634C2594460C007B822F /* FWWaterfallGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWWaterfallGrid.swift; sourceTree = "<group>"; };
+		2F4D638525945CAF007B822F /* FWKeyboardObserving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWKeyboardObserving.swift; sourceTree = "<group>"; };
+		2F4D6389259461B2007B822F /* LandmarkInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkInputView.swift; sourceTree = "<group>"; };
 		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
@@ -553,6 +557,7 @@
 		2F48F6D1253801F200AEBB60 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				2F4D638525945CAF007B822F /* FWKeyboardObserving.swift */,
 				2F4D634825944404007B822F /* FWPullToRefresh.swift */,
 				2F4D6344259441F3007B822F /* FWGrid.swift */,
 				2F4D634C2594460C007B822F /* FWWaterfallGrid.swift */,
@@ -599,6 +604,7 @@
 				2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */,
 				2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */,
 				2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */,
+				2F4D6389259461B2007B822F /* LandmarkInputView.swift */,
 				2F48F6F42538036100AEBB60 /* CategoryRow.swift */,
 				2F48F6F52538036100AEBB60 /* ProfileHost.swift */,
 				2F48F6F62538036100AEBB60 /* LandmarkRow.swift */,
@@ -1326,12 +1332,14 @@
 				2F48F7112538036100AEBB60 /* CircleView.swift in Sources */,
 				2F48F6FE2538036100AEBB60 /* Landmark.swift in Sources */,
 				2FB146A8258E203800D867D4 /* LandmarkTestDatabaseView.swift in Sources */,
+				2F4D638625945CAF007B822F /* FWKeyboardObserving.swift in Sources */,
 				2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */,
 				2FB1463B258CAB8A00D867D4 /* LandmarkTestData.swift in Sources */,
 				2F4D634925944405007B822F /* FWPullToRefresh.swift in Sources */,
 				2F48F6FC2538036100AEBB60 /* Hike.swift in Sources */,
 				2F48F7002538036100AEBB60 /* ProfileSummary.swift in Sources */,
 				2F48F7182538036100AEBB60 /* HikeView.swift in Sources */,
+				2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */,
 				2F48F7072538036100AEBB60 /* BadgeView.swift in Sources */,
 				2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */,
 				2F48F7192538036100AEBB60 /* PageView.swift in Sources */,

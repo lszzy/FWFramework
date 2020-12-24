@@ -10,8 +10,8 @@ import SwiftUI
 @available(iOS 13, OSX 10.15, tvOS 13, watchOS 6, *)
 public struct FWWaterfallGrid<Data, ID, Content>: View where Data : RandomAccessCollection, Content : View, ID : Hashable {
 
-    @Environment(\.gridStyle) private var style
-    @Environment(\.scrollOptions) private var scrollOptions
+    @Environment(\.fwGridStyle) private var style
+    @Environment(\.fwScrollOptions) private var scrollOptions
 
     private let data: Data
     private let dataId: KeyPath<Data.Element, ID>
@@ -146,7 +146,7 @@ struct FWGridStyleKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var gridStyle: FWGridSyle {
+    var fwGridStyle: FWGridSyle {
         get { self[FWGridStyleKey.self] }
         set { self[FWGridStyleKey.self] = newValue }
     }
@@ -175,7 +175,7 @@ struct FWScrollOptionsKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var scrollOptions: FWScrollOptions {
+    var fwScrollOptions: FWScrollOptions {
         get { self[FWScrollOptionsKey.self] }
         set { self[FWScrollOptionsKey.self] = newValue }
     }
@@ -207,7 +207,7 @@ struct FWPreferenceSetter<ID: Hashable>: View {
 }
 
 
-// MARK: - GridStyle
+// MARK: - View+FWWaterfallGrid
 
 extension View {
 
@@ -216,7 +216,7 @@ extension View {
     /// - Parameter columns: The number of columns of the grid. The default is `2`.
     /// - Parameter spacing: The distance between adjacent items. The default is `8`.
     /// - Parameter animation: The animation to apply when data change. If `animation` is `nil`, the grid doesn't animate.
-    public func gridStyle(
+    public func fwGridStyle(
         columns: Int = 2,
         spacing: CGFloat = 8,
         animation: Animation? = .default
@@ -227,22 +227,16 @@ extension View {
             spacing: spacing,
             animation: animation
         )
-        return self.environment(\.gridStyle, style)
+        return self.environment(\.fwGridStyle, style)
     }
-
-}
-
-// MARK: - FWScrollOptions
-
-extension View {
-
+    
     /// Sets the scroll options for `FWWaterfallGrid` within the environment of `self`.
     ///
     /// - Parameters:
     ///   - direction: The scrollable axes. The default is `.vertical`.
-    public func scrollOptions(direction: Axis.Set) -> some View {
+    public func fwScrollOptions(direction: Axis.Set) -> some View {
         let options = FWScrollOptions(direction: direction)
-        return self.environment(\.scrollOptions, options)
+        return self.environment(\.fwScrollOptions, options)
     }
 
 }
