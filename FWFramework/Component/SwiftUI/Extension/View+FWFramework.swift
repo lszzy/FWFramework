@@ -10,6 +10,8 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
+// MARK: - FWNavigationBarModifier
+
 @available(iOS 13.0, *)
 struct FWNavigationBarModifier: ViewModifier {
     var backgroundColor: UIColor?
@@ -30,17 +32,6 @@ struct FWNavigationBarModifier: ViewModifier {
                 }
             }
         }
-    }
-}
-
-@available(iOS 13.0, *)
-struct FWRoundedCornerShape: Shape {
-    var radius: CGFloat = 0
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
     }
 }
 
@@ -71,7 +62,23 @@ public extension View {
     func fwNavigationBarColor(backgroundColor: UIColor?) -> some View {
         self.modifier(FWNavigationBarModifier(backgroundColor: backgroundColor))
     }
-    
+}
+
+// MARK: - FWRoundedCornerShape
+
+@available(iOS 13.0, *)
+struct FWRoundedCornerShape: Shape {
+    var radius: CGFloat = 0
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+@available(iOS 13.0, *)
+public extension View {
     /// 设置不规则圆角效果
     func fwCornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(FWRoundedCornerShape(radius: radius, corners: corners))

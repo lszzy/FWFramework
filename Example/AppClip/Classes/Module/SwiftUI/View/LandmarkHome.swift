@@ -84,6 +84,12 @@ struct LandmarkHome: View {
                     label: {
                         Text("Database Test")
                     })
+                
+                NavigationLink(
+                    destination: LandmarkInputView(),
+                    label: {
+                        Text("Keyboard Observing")
+                    })
             }
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
