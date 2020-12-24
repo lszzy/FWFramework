@@ -84,10 +84,18 @@ struct LandmarkHome: View {
                     label: {
                         Text("Database Test")
                     })
+                
+                NavigationLink(
+                    destination: LandmarkInputView(),
+                    label: {
+                        Text("Keyboard Observing")
+                    })
             }
-            .navigationBarTitle("Featured", displayMode: .inline)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: profileButton)
-            .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xFFDA00), titleColor: .fwColor(withHex: 0x111111))
+            .fwNavigationBarAppearance(backgroundColor: nil, titleColor: .fwColor(withHex: 0x111111))
+            .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xF2F2F7))
             .sheet(isPresented: $showingProfile, content: {
                 ProfileHost()
                     .environmentObject(self.userData)

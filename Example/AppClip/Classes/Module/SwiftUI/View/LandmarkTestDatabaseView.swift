@@ -35,6 +35,7 @@ struct LandmarkTestDatabaseView: View {
         .onAppear(perform: {
             reloadData()
         })
+        .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xFFDA00))
         .navigationBarItems(trailing: HStack {
             Button(action: {
                 let item = LandmarkTestTable()
