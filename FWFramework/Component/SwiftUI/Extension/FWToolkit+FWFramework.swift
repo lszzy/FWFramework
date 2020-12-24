@@ -75,14 +75,5 @@ public extension Image {
     }
 }
 
-@available(iOS 13.0, *)
-public extension View {
-    
-    /// 转换为AnyView
-    func fwEraseToAnyView() -> AnyView {
-        AnyView(self)
-    }
-}
-
 #endif
 #endif

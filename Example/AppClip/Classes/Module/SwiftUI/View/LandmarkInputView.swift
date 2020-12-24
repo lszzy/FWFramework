@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import FWFramework
 
 struct LandmarkInputView: View {
     @State var text: String = ""

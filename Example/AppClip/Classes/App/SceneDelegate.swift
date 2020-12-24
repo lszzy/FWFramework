@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import FWFramework
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
