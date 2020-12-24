@@ -4,10 +4,13 @@
 //  Created by Nicholas Fox on 10/4/19.
 //
 
+#if DEBUG || arch(arm64)
+#if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 import Combine
 
 /// https://github.com/nickffox/KeyboardObserving
+@available(iOS 13.0, *)
 struct FWKeyboardObserving: ViewModifier {
 
   var offset: CGFloat
@@ -44,6 +47,7 @@ struct FWKeyboardObserving: ViewModifier {
   }
 }
 
+@available(iOS 13.0, *)
 struct FWHiddenOnKeyboardViewModifier: ViewModifier {
   @EnvironmentObject private var fwKeyboard: FWKeyboard
 
@@ -62,6 +66,7 @@ struct FWHiddenOnKeyboardViewModifier: ViewModifier {
   }
 }
 
+@available(iOS 13.0, *)
 extension View {
   /// Automatically hides the view when keyboard is shown.
   /// - Warning: A Keyboard must be available in the Environment.
@@ -70,15 +75,14 @@ extension View {
   public func fwHideOnKeyboard(transition: AnyTransition = .opacity) -> some View {
     self.modifier(FWHiddenOnKeyboardViewModifier(transition: transition))
   }
-}
-
-extension View {
+    
   public func fwKeyboardObserving(offset: CGFloat = 0.0) -> some View {
     self.modifier(FWKeyboardObserving(offset: offset))
   }
 }
 
 /// An object representing the keyboard
+@available(iOS 13.0, *)
 public final class FWKeyboard: ObservableObject {
 
   // MARK: - Published Properties
@@ -108,6 +112,7 @@ public final class FWKeyboard: ObservableObject {
 }
 
 // MARK: - Nested Types
+@available(iOS 13.0, *)
 extension FWKeyboard {
 
   public struct State {
@@ -172,6 +177,7 @@ extension FWKeyboard {
 ///
 /// Important: A Keyboard must be available in the Environment.
 ///
+@available(iOS 13.0, *)
 public struct FWKeyboardObservingView<Content: View>: View {
 
   @EnvironmentObject var fwKeyboard: FWKeyboard
@@ -196,3 +202,6 @@ public struct FWKeyboardObservingView<Content: View>: View {
       .animation(.easeOut(duration: fwKeyboard.state.animationDuration))
   }
 }
+
+#endif
+#endif
