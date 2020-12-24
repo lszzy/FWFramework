@@ -56,6 +56,7 @@
 		2F48F723253804D000AEBB60 /* hikeData.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F8E45FB24F8A2A900BDF302 /* hikeData.json */; };
 		2F48F7282538075F00AEBB60 /* progressive.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2F48F7272538075E00AEBB60 /* progressive.jpg */; };
 		2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D6389259461B2007B822F /* LandmarkInputView.swift */; };
+		2F4D63DB2594EC83007B822F /* TestPropertyAnimatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D63DA2594EC83007B822F /* TestPropertyAnimatorViewController.swift */; };
 		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
 		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
 		2F697B4E2521ACE800910C93 /* TestDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F697B4D2521ACE800910C93 /* TestDrawViewController.m */; };
@@ -247,6 +248,7 @@
 		2F48F6F92538036100AEBB60 /* PageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		2F48F7272538075E00AEBB60 /* progressive.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = progressive.jpg; sourceTree = "<group>"; };
 		2F4D6389259461B2007B822F /* LandmarkInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkInputView.swift; sourceTree = "<group>"; };
+		2F4D63DA2594EC83007B822F /* TestPropertyAnimatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPropertyAnimatorViewController.swift; sourceTree = "<group>"; };
 		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
@@ -824,6 +826,7 @@
 				2FF8D8D924C88A6F006A83B5 /* TestNestScrollViewController.m */,
 				2FF8D8E924C88A6F006A83B5 /* TestNotificationViewController.h */,
 				2FF8D8B624C88A6F006A83B5 /* TestNotificationViewController.m */,
+				2F4D63DA2594EC83007B822F /* TestPropertyAnimatorViewController.swift */,
 				2FF8D8E124C88A6F006A83B5 /* TestPopupMenuViewController.h */,
 				2FF8D8AA24C88A6F006A83B5 /* TestPopupMenuViewController.m */,
 				2FAB482625777E520072FF9F /* TestAnnotationViewController.swift */,
@@ -1435,6 +1438,7 @@
 				2FF8D96D24C88A70006A83B5 /* TestImageViewController.m in Sources */,
 				2FF8D98C24C88A70006A83B5 /* AppStandard.m in Sources */,
 				2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */,
+				2F4D63DB2594EC83007B822F /* TestPropertyAnimatorViewController.swift in Sources */,
 				2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */,
 				2FF8D97A24C88A70006A83B5 /* TestCustomerAlertController.m in Sources */,
 				2FF8D94B24C88A6F006A83B5 /* TestDrawerViewController.m in Sources */,

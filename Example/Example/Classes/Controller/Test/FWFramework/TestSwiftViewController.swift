@@ -51,6 +51,12 @@ import FWFramework
 }
 
 @objcMembers class SwiftTestCollectionViewController: UIViewController, FWCollectionViewController, UICollectionViewDelegateFlowLayout {
+    lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.layer.masksToBounds = true
+        return contentView
+    }()
+    
     lazy var flowLayout: FWCollectionViewFlowLayout = {
         let flowLayout = FWCollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
@@ -76,6 +82,11 @@ import FWFramework
     }
     
     func renderCollectionLayout() {
+        view.addSubview(contentView)
+        contentView.fwLayoutChain.edges(excludingEdge: .bottom).height(200)
+        
+        collectionView.removeFromSuperview()
+        contentView.addSubview(collectionView)
         collectionView.fwLayoutChain.edges(excludingEdge: .bottom).height(200)
     }
     
@@ -131,6 +142,18 @@ import FWFramework
         if indexPath.item < collectionData.count {
             view.fwShowMessage(withText: "点击section: \(indexPath.section) item: \(indexPath.item)")
         }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetTotal = FWClamp(0, scrollView.fwContentOffsetX / FWScreenWidth, 3)
+        let offsetPercent = offsetTotal - CGFloat(Int(offsetTotal))
+        var contentHeight: CGFloat = 0
+        if Int(offsetTotal) % 2 == 0 {
+            contentHeight = 200 - (120 * offsetPercent)
+        } else {
+            contentHeight = 80 + (120 * offsetPercent)
+        }
+        contentView.fwLayoutChain.height(contentHeight)
     }
 }
 
