@@ -12,6 +12,7 @@
 		2F1624DC25737B590037427D /* jsonDecode.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F1624DB25737B590037427D /* jsonDecode.json */; };
 		2F16273525763B220037427D /* LandmarkModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273425763B220037427D /* LandmarkModelView.swift */; };
 		2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273A25763BA40037427D /* LandmarkViewModel.swift */; };
+		2F1A3F03259618B8001063D2 /* List+Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1A3F02259618B8001063D2 /* List+Separator.swift */; };
 		2F1D1ACB253D822A00AC110B /* TestCollectionCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */; };
 		2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */; };
 		2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */; };
@@ -201,6 +202,7 @@
 		2F1624DB25737B590037427D /* jsonDecode.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonDecode.json; sourceTree = "<group>"; };
 		2F16273425763B220037427D /* LandmarkModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModelView.swift; sourceTree = "<group>"; };
 		2F16273A25763BA40037427D /* LandmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkViewModel.swift; sourceTree = "<group>"; };
+		2F1A3F02259618B8001063D2 /* List+Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "List+Separator.swift"; sourceTree = "<group>"; };
 		2F1D1AC9253D822A00AC110B /* TestCollectionCreateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionCreateViewController.h; sourceTree = "<group>"; };
 		2F1D1ACA253D822A00AC110B /* TestCollectionCreateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionCreateViewController.m; sourceTree = "<group>"; };
 		2F1F1E1E2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionDynamicLayoutViewController.h; sourceTree = "<group>"; };
@@ -481,6 +483,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		2F1A3F0125961844001063D2 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2F1A3F02259618B8001063D2 /* List+Separator.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		2F48F6B32538004700AEBB60 /* AppClip */ = {
 			isa = PBXGroup;
 			children = (
@@ -551,6 +561,7 @@
 		2F48F6D1253801F200AEBB60 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				2F1A3F0125961844001063D2 /* Extension */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -1339,6 +1350,7 @@
 				2F48F7092538036100AEBB60 /* RotatedBadgeSymbol.swift in Sources */,
 				2F48F7142538036100AEBB60 /* CategoryRow.swift in Sources */,
 				2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */,
+				2F1A3F03259618B8001063D2 /* List+Separator.swift in Sources */,
 				2F48F6FA2538036100AEBB60 /* Profile.swift in Sources */,
 				2F48F7102538036100AEBB60 /* BadgeBackground.swift in Sources */,
 				2F48F7162538036100AEBB60 /* LandmarkRow.swift in Sources */,
