@@ -45,7 +45,7 @@ struct LandmarkHome: View {
                 ForEach(categories.keys.sorted(), id: \.self) { key in
                     CategoryRow(categoryName: key, items: self.categories[key]!)
                 }
-                .listRowInsets(EdgeInsets())
+                .listSeparatorNone()
                 
                 NavigationLink(
                     destination: LandmarkList(),
