@@ -45,7 +45,9 @@ struct LandmarkHome: View {
                 ForEach(categories.keys.sorted(), id: \.self) { key in
                     CategoryRow(categoryName: key, items: self.categories[key]!)
                 }
-                .listSeparatorNone()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .listRowInsets(EdgeInsets())
+                .background(Color.white)
                 
                 NavigationLink(
                     destination: LandmarkList(),
@@ -89,6 +91,12 @@ struct LandmarkHome: View {
                     destination: LandmarkInputView(),
                     label: {
                         Text("Keyboard Observing")
+                    })
+                
+                NavigationLink(
+                    destination: LandmarkLazyView(),
+                    label: {
+                        Text("LazyVStack")
                     })
             }
             .navigationTitle("")
