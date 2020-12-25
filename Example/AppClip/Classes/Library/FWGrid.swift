@@ -24,8 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if DEBUG || arch(arm64)
-#if canImport(SwiftUI)
 import SwiftUI
 
 /// https://github.com/Q-Mobile/QGrid
@@ -157,6 +155,3 @@ public struct FWGrid<Data, Content>: View
     return width / CGFloat(self.cols)
   }
 }
-
-#endif
-#endif

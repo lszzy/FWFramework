@@ -4,8 +4,6 @@
 //  Licensed under the MIT license. See the LICENSE file for more info.
 //
 
-#if DEBUG || arch(arm64)
-#if canImport(SwiftUI)
 import SwiftUI
 
 /// https://github.com/paololeonardi/WaterfallGrid
@@ -255,6 +253,3 @@ extension View {
     }
 
 }
-
-#endif
-#endif
