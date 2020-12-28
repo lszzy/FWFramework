@@ -41,6 +41,19 @@ FWDefLazyProperty(UIView *, animationView, {
     [button2 fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }
 
+- (void)renderModel
+{
+    if (@available(iOS 11.0, *)) {
+        FWWeakifySelf();
+        [self fwSetRightBarItem:@"Animator" block:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            
+            TestPropertyAnimatorViewController *viewController = [TestPropertyAnimatorViewController new];
+            [self.navigationController pushViewController:viewController animated:true];
+        }];
+    }
+}
+
 #pragma mark - Action
 
 - (void)onAnimation:(UIButton *)sender

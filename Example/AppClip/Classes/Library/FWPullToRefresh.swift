@@ -7,8 +7,6 @@
 //  Copyright © 2019. András Samu. All rights reserved.
 //
 
-#if DEBUG || arch(arm64)
-#if canImport(SwiftUI)
 import SwiftUI
 
 /// https://github.com/AppPear/SwiftUI-PullToRefresh
@@ -233,6 +231,3 @@ struct FWRefreshableKeyTypes {
         typealias Value = [PrefData]
     }
 }
-
-#endif
-#endif
