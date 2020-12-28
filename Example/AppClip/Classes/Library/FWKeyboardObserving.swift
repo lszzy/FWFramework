@@ -4,8 +4,6 @@
 //  Created by Nicholas Fox on 10/4/19.
 //
 
-#if DEBUG || arch(arm64)
-#if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 import Combine
 
@@ -202,6 +200,3 @@ public struct FWKeyboardObservingView<Content: View>: View {
       .animation(.easeOut(duration: fwKeyboard.state.animationDuration))
   }
 }
-
-#endif
-#endif

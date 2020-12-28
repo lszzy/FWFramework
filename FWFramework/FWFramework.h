@@ -65,8 +65,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import <FWFramework/UIKit+FWFramework.h>
 #endif
 
-#if __has_include(<FWFramework/FWAsyncLayer.h>)
-#import <FWFramework/FWAsyncLayer.h>
+#if __has_include(<FWFramework/FWAttributedLabel.h>)
+#import <FWFramework/FWAttributedLabel.h>
 #endif
 
 #else
@@ -123,8 +123,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "UIKit+FWFramework.h"
 #endif
 
-#if __has_include("FWAsyncLayer.h")
-#import "FWAsyncLayer.h"
+#if __has_include("FWAttributedLabel.h")
+#import "FWAttributedLabel.h"
 #endif
 
 #endif
