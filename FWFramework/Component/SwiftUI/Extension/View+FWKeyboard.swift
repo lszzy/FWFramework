@@ -1,5 +1,5 @@
 //
-//  FWKeyboardObserving.swift
+//  View+FWKeyboard.swift
 //
 //  Created by Nicholas Fox on 10/4/19.
 //
