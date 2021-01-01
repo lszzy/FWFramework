@@ -1,5 +1,5 @@
 //
-//  TESTAppDelegate.h
+//  ViewController.h
 //  Test
 //
 //  Created by lingshizhuangzi@gmail.com on 01/01/2021.
@@ -8,8 +8,6 @@
 
 @import UIKit;
 
-@interface TESTAppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
+@interface ViewController : UIViewController
 
 @end

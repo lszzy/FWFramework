@@ -1,14 +1,14 @@
 //
-//  TESTAppDelegate.m
+//  AppDelegate.m
 //  Test
 //
 //  Created by lingshizhuangzi@gmail.com on 01/01/2021.
 //  Copyright (c) 2021 lingshizhuangzi@gmail.com. All rights reserved.
 //
 
-#import "TESTAppDelegate.h"
+#import "AppDelegate.h"
 
-@implementation TESTAppDelegate
+@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
