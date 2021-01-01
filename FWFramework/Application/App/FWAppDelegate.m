@@ -8,6 +8,9 @@
  */
 
 #import "FWAppDelegate.h"
+#import "FWMediator.h"
+
+#define FWSafeArgument(obj) obj ? obj : [NSNull null]
 
 @interface FWAppDelegate ()
 
@@ -17,8 +20,16 @@
 
 #pragma mark - UIApplicationDelegate
 
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
+{
+    [FWMediator setupAllModules];
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
+    return YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
     [self setupApplication:application options:launchOptions];
     [self setupService];
     [self setupAppearance];
@@ -29,38 +40,40 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 #pragma mark - Notification
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(deviceToken)]];
     [self setupDeviceToken:deviceToken error:nil];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(error)]];
     [self setupDeviceToken:nil error:error];
 }
 
@@ -83,11 +96,19 @@
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
+    BOOL result = [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(app), FWSafeArgument(url), FWSafeArgument(options)]];
+    if (result) {
+        return result;
+    }
     return [self handleOpenURL:url options:options];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
+    BOOL result = [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userActivity), restorationHandler]];
+    if (result) {
+        return result;
+    }
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
         userActivity.webpageURL != nil) {
         return [self handleUserActivity:userActivity];
