@@ -1,18 +1,18 @@
 //
-//  TESTViewController.m
+//  ViewController.m
 //  Test
 //
 //  Created by lingshizhuangzi@gmail.com on 01/01/2021.
 //  Copyright (c) 2021 lingshizhuangzi@gmail.com. All rights reserved.
 //
 
-#import "TESTViewController.h"
+#import "ViewController.h"
 
-@interface TESTViewController ()
+@interface ViewController ()
 
 @end
 
-@implementation TESTViewController
+@implementation ViewController
 
 - (void)viewDidLoad
 {

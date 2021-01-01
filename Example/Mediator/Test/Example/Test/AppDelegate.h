@@ -1,5 +1,5 @@
 //
-//  TESTViewController.h
+//  AppDelegate.h
 //  Test
 //
 //  Created by lingshizhuangzi@gmail.com on 01/01/2021.
@@ -8,6 +8,8 @@
 
 @import UIKit;
 
-@interface TESTViewController : UIViewController
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
+
+@property (strong, nonatomic) UIWindow *window;
 
 @end
