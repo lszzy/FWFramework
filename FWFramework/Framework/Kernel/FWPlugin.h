@@ -11,6 +11,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 加载指定插件
+#define FWPlugin(pluginProtocol) \
+    ((id<pluginProtocol>)[FWPluginManager.sharedInstance loadPlugin:@protocol(pluginProtocol)])
+
+/// 注册指定插件
+#define FWRegPlugin(pluginProtocol) \
+    [FWPluginManager.sharedInstance registerPlugin:@protocol(pluginProtocol) withObject:self.class];
+
 /*!
  @brief 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
  @discussion 和Mediator对比如下：

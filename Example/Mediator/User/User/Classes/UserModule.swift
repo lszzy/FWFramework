@@ -10,9 +10,7 @@ import Mediator
 
 @objcMembers class UserBundle: FWModuleBundle {
     override class func bundle() -> Bundle {
-        let bundle = Bundle(for: self.classForCoder())
-        let path = bundle.path(forResource: "User", ofType: "bundle")
-        return Bundle(path: path ?? "") ?? .main
+        return Bundle.fwBundle(with: self.classForCoder(), name: "User")?.fwLocalized() ?? .main
     }
 }
 

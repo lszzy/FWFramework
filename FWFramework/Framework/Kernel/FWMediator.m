@@ -52,6 +52,22 @@
     }
 }
 
++ (id<FWModuleProtocol>)loadModule:(Protocol *)serviceProtocol
+{
+    NSString *protocolName = NSStringFromProtocol(serviceProtocol);
+    if (protocolName.length == 0) {
+        return nil;
+    }
+    
+    Class moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
+    if (!moduleClass || ![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)] ||
+        ![moduleClass respondsToSelector:@selector(sharedInstance)]) {
+        return nil;
+    }
+    
+    return [moduleClass sharedInstance];
+}
+
 + (NSArray<Class<FWModuleProtocol>> *)allRegisteredModules
 {
     NSArray *modules = [FWMediator sharedInstance].moduleDict.allValues;
@@ -95,25 +111,6 @@
     }
 }
 
-+ (id<FWModuleProtocol>)moduleByService:(Protocol *)serviceProtocol
-{
-    NSString *protocolName = NSStringFromProtocol(serviceProtocol);
-    if (protocolName.length == 0) {
-        return nil;
-    }
-    
-    Class moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
-    if (!moduleClass || ![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
-        return nil;
-    }
-    
-    @try {
-        return [moduleClass sharedInstance];
-    } @catch (NSException *exception) {
-        return nil;
-    }
-}
-
 + (BOOL)checkAllModulesWithSelector:(SEL)selector arguments:(NSArray *)arguments
 {
     BOOL result = NO;
@@ -136,10 +133,10 @@
                     [[FWMediator sharedInstance].moduleInvokeDict setObject:moduleItem forKey:NSStringFromClass([moduleItem class])];
                 }
                 
-                BOOL ret = NO;
-                [self invokeTarget:moduleItem action:selector arguments:arguments returnValue:&ret];
+                BOOL returnValue = NO;
+                [self invokeTarget:moduleItem action:selector arguments:arguments returnValue:&returnValue];
                 if (!result) {
-                    result = ret;
+                    result = returnValue;
                 }
             }
         }
@@ -226,17 +223,6 @@
 
 @implementation FWModuleBundle
 
-+ (NSBundle *)bundleWithName:(NSString *)bundleName
-{
-    if (bundleName.length < 1) {
-        return [NSBundle mainBundle];
-    }
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:bundleName ofType:([bundleName hasSuffix:@".bundle"] ? nil : @"bundle")];
-    NSAssert([NSBundle bundleWithPath:path], @"bundle not found");
-    return [NSBundle bundleWithPath:path];
-}
-
 + (NSBundle *)bundle
 {
     return [NSBundle mainBundle];
@@ -249,7 +235,7 @@
 
 + (NSString *)localizedString:(NSString *)key
 {
-    return [[self bundle] localizedStringForKey:key value:nil table:nil];
+    return [self localizedString:key table:nil];
 }
 
 + (NSString *)localizedString:(NSString *)key table:(NSString *)table

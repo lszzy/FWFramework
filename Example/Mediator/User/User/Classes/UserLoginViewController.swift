@@ -21,13 +21,13 @@ import Mediator
         testButton.setTitle(UserBundle.localizedString("testButton"), for: .normal)
         testButton.setImage(UserBundle.imageNamed("testIcon")?.fwCompressImage(withMaxWidth: 25), for: .normal)
         testButton.fwAddTouch { (sender) in
-            let testModule = FWMediator.module(byService: TestModuleService.self) as? TestModuleService
+            let testModule = FWMediator.loadModule(TestModuleService.self) as? TestModuleService
             if let viewController = testModule?.testViewController() {
                 FWRouter.push(viewController, animated: true)
             }
         }
         self.view.addSubview(testButton)
-        testButton.fwLayoutChain.centerX().centerYToView(self.view, withOffset: -80)
+        testButton.fwLayoutChain.centerX().centerYToView(self.view as Any, withOffset: -80)
         
         let button = UIButton(type: .system)
         button.setTitle(UserBundle.localizedString("loginButton"), for: .normal)

@@ -11,13 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 注册指定业务模块
-#define FWModuleRegister(serviceProtocol) \
-    [FWMediator registerService:@protocol(serviceProtocol) withModule:self.class];
-
 /// 加载指定业务模块
 #define FWModule(serviceProtocol) \
-    ((id<serviceProtocol>)[FWMediator moduleByService:@protocol(serviceProtocol)])
+    ((id<serviceProtocol>)[FWMediator loadModule:@protocol(serviceProtocol)])
+
+/// 注册指定业务模块
+#define FWRegModule(serviceProtocol) \
+    [FWMediator registerService:@protocol(serviceProtocol) withModule:self.class];
 
 /// 模块默认优先级，100
 #define FWModulePriorityDefault 100
@@ -58,14 +58,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 取消注册指定模块服务
 + (void)unregisterService:(Protocol *)serviceProtocol;
 
-/// 初始化所有模块，推荐在willFinishLaunchingWithOptions中调用
-+ (void)setupAllModules;
-
 /// 通过服务协议获取指定模块实例
-+ (nullable id<FWModuleProtocol>)moduleByService:(Protocol *)serviceProtocol;
++ (nullable id<FWModuleProtocol>)loadModule:(Protocol *)serviceProtocol;
 
 /// 获取所有已注册模块类数组，按照优先级排序
 + (NSArray<Class<FWModuleProtocol>> *)allRegisteredModules;
+
+/// 初始化所有模块，推荐在willFinishLaunchingWithOptions中调用
++ (void)setupAllModules;
 
 /// 在UIApplicationDelegate检查所有模块方法
 + (BOOL)checkAllModulesWithSelector:(SEL)selector arguments:(nullable NSArray *)arguments;
@@ -73,12 +73,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /*!
- @brief 业务模块Bundle类，子类可重写
+ @brief 业务模块Bundle基类，各模块可继承
  */
 @interface FWModuleBundle : NSObject
-
-/// 指定名称初始化Bundle
-+ (NSBundle *)bundleWithName:(NSString *)bundleName;
 
 /// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
@@ -90,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)localizedString:(NSString *)key;
 
 /// 获取当前模块指定文件多语言
-+ (NSString *)localizedString:(NSString *)key table:(NSString *)table;
++ (NSString *)localizedString:(NSString *)key table:(nullable NSString *)table;
 
 @end
 
