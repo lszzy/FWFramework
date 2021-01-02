@@ -8,6 +8,14 @@
 import FWFramework
 import Mediator
 
+@objcMembers class UserBundle: FWModuleBundle {
+    override class func bundle() -> Bundle {
+        let bundle = Bundle(for: self.classForCoder())
+        let path = bundle.path(forResource: "User", ofType: "bundle")
+        return Bundle(path: path ?? "") ?? .main
+    }
+}
+
 @objcMembers class UserModule: NSObject, FWModuleProtocol {
     private static let shared: UserModule = UserModule()
     

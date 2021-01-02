@@ -239,7 +239,7 @@
 
 + (NSBundle *)bundle
 {
-    return [NSBundle bundleForClass:[self class]];
+    return [NSBundle mainBundle];
 }
 
 + (UIImage *)imageNamed:(NSString *)imageName
@@ -250,6 +250,11 @@
 + (NSString *)localizedString:(NSString *)key
 {
     return [[self bundle] localizedStringForKey:key value:nil table:nil];
+}
+
++ (NSString *)localizedString:(NSString *)key table:(NSString *)table
+{
+    return [[self bundle] localizedStringForKey:key value:nil table:table];
 }
 
 @end

@@ -15,10 +15,11 @@ import Mediator
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.white
-        navigationItem.title = "UserLoginViewController"
+        navigationItem.title = UserBundle.localizedString("userModule")
         
         let testButton = UIButton(type: .system)
-        testButton.setTitle("Test", for: .normal)
+        testButton.setTitle(UserBundle.localizedString("testButton"), for: .normal)
+        testButton.setImage(UserBundle.imageNamed("testIcon")?.fwCompressImage(withMaxWidth: 25), for: .normal)
         testButton.fwAddTouch { (sender) in
             let testModule = FWMediator.module(byService: TestModuleService.self) as? TestModuleService
             if let viewController = testModule?.testViewController() {
@@ -29,7 +30,8 @@ import Mediator
         testButton.fwLayoutChain.centerX().centerYToView(self.view, withOffset: -80)
         
         let button = UIButton(type: .system)
-        button.setTitle("完成登录", for: .normal)
+        button.setTitle(UserBundle.localizedString("loginButton"), for: .normal)
+        button.setImage(UserBundle.imageNamed("user")?.fwCompressImage(withMaxWidth: 25), for: .normal)
         button.fwAddTouch { [weak self] (sender) in
             self?.dismiss(animated: true, completion: self?.completion)
         }

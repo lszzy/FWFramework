@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 指定名称初始化Bundle
 + (NSBundle *)bundleWithName:(NSString *)bundleName;
 
-/// 获取当前模块Bundle
+/// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
 
 /// 获取当前模块图片
@@ -88,6 +88,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 获取当前模块多语言
 + (NSString *)localizedString:(NSString *)key;
+
+/// 获取当前模块指定文件多语言
++ (NSString *)localizedString:(NSString *)key table:(NSString *)table;
 
 @end
 
