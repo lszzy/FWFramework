@@ -6,18 +6,24 @@
 //  Copyright (c) 2021 lingshizhuangzi@gmail.com. All rights reserved.
 //
 
-import UIKit
+import FWFramework
+import Mediator
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        let button = UIButton(type: .system)
+        button.setTitle("Login", for: .normal)
+        button.fwAddTouch { (sender) in
+            let userModule = FWMediator.module(byService: UserModuleService.self) as? UserModuleService
+            userModule?.login({
+                button.setTitle("已登录", for: .normal)
+            })
+        }
+        self.view.addSubview(button)
+        button.fwLayoutChain.center()
     }
 
 }
