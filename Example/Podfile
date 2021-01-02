@@ -4,6 +4,8 @@ use_frameworks!
 target "Example" do
   pod 'FWFramework', :path => '../'
   pod 'FWDebug', :configurations => ['Debug']
+  pod 'Mediator', :path => 'Mediator/Mediator/'
+  pod 'User', :path => 'Mediator/User/'
 end
 
 target "AppClip" do

@@ -32,11 +32,16 @@ TODO: Add long description of the pod here.
 
   s.source_files = 'User/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'User' => ['User/Assets/*.png']
-  # }
+  s.resource_bundles = {
+    'User' => ['User/Assets/**/*.{xcassets,lproj,png}']
+  }
+  
+  s.resources = [
+    'User/Static/UserModule.bundle'
+  ]
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Mediator'
+  s.dependency 'FWFramework/Framework'
 end

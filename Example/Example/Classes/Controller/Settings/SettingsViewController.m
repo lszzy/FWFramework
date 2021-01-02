@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import <FWDebug/FWDebug.h>
+#import <Mediator/Mediator-Swift.h>
 
 @interface SettingsViewController ()
 
@@ -21,6 +22,11 @@
 
 - (void)renderView
 {
+    UIButton *moduleButton = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:@"mediator测试"];
+    [moduleButton fwAddTouchTarget:self action:@selector(onMediator)];
+    [self.view addSubview:moduleButton];
+    moduleButton.fwLayoutChain.centerX().centerYWithOffset(-80);
+    
     UIButton *button = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:@"present时登录失效"];
     [button fwAddTouchTarget:self action:@selector(onLogout)];
     [self.view addSubview:button];
@@ -41,6 +47,16 @@
     [button4 fwAddTouchTarget:self action:@selector(onScreenButton:)];
     [self.view addSubview:button4];
     button4.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button3, 50);
+}
+
+- (void)onMediator
+{
+    FWWeakifySelf();
+    [FWModule(UserModuleService) login:^{
+        FWStrongifySelf();
+        
+        [self.view fwShowMessageWithText:@"登录成功"];
+    }];
 }
 
 - (void)onLogout
