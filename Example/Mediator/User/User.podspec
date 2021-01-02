@@ -36,12 +36,13 @@ TODO: Add long description of the pod here.
     'User' => ['User/Assets/**/*.{xcassets,lproj,png}']
   }
   
-  s.resources = [
-    'User/Static/UserModule.bundle'
-  ]
+  # s.resources = [
+  #   'User/Static/UserModule.bundle'
+  # ]
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'Mediator'
+  s.dependency 'Test'
   s.dependency 'FWFramework/Framework'
 end
