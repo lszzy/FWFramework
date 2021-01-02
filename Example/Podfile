@@ -6,6 +6,7 @@ target "Example" do
   pod 'FWDebug', :configurations => ['Debug']
   pod 'Mediator', :path => 'Mediator/Mediator/'
   pod 'User', :path => 'Mediator/User/'
+  pod 'Test', :path => 'Mediator/Test/'
 end
 
 target "AppClip" do

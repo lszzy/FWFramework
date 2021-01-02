@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import <FWFramework/FWFramework.h>
+#import <Mediator/Mediator-Swift.h>
 
 @interface ViewController ()
 
@@ -17,13 +19,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    self.navigationItem.title = @"ViewController";
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button setTitle:@"Test" forState:UIControlStateNormal];
+    [button fwAddTouchBlock:^(id  _Nonnull sender) {
+        UIViewController *viewController = [FWModule(TestModuleService) testViewController];
+        [FWRouter pushViewController:viewController animated:YES];
+    }];
+    [self.view addSubview:button];
+    button.fwLayoutChain.center();
 }
 
 @end
