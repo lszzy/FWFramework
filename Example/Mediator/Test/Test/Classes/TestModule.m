@@ -14,7 +14,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWModuleRegister(TestModuleService);
+        FWRegModule(TestModuleService);
     });
 }
 
@@ -36,9 +36,7 @@ FWDefSingleton(TestModule);
 
 + (NSBundle *)bundle
 {
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *path = [bundle pathForResource:@"TestModule" ofType:@"bundle"];
-    return [NSBundle bundleWithPath:path];
+    return [[NSBundle fwBundleWithClass:[self class] name:@"TestModule"] fwLocalizedBundle];
 }
 
 @end

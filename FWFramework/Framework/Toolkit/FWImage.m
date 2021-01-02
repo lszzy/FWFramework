@@ -28,6 +28,11 @@ UIImage * FWImageFile(NSString *path) {
     return [UIImage imageNamed:name];
 }
 
++ (UIImage *)fwImageWithName:(NSString *)name bundle:(NSBundle *)bundle
+{
+    return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+}
+
 + (UIImage *)fwImageWithFile:(NSString *)path
 {
     if (path.length < 1) return nil;

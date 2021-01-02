@@ -27,6 +27,9 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name;
 
+/// 使用文件名方式从指定bundle加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
++ (nullable UIImage *)fwImageWithName:(NSString *)name bundle:(nullable NSBundle *)bundle;
+
 /// 从图片文件加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
 + (nullable UIImage *)fwImageWithFile:(NSString *)path;
 
