@@ -6,6 +6,7 @@
 //
 
 #import "TestModuleViewController.h"
+#import "TestModule.h"
 #import <FWFramework/FWFramework.h>
 
 @interface TestModuleViewController ()
@@ -18,12 +19,16 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UIColor.whiteColor;
-    self.navigationItem.title = @"TestModuleViewController";
-    FWWeakifySelf();
-    [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        [self fwCloseViewControllerAnimated:YES];
+    self.navigationItem.title = [TestBundle localizedString:@"testModule"];
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button setTitle:[TestBundle localizedString:@"closeButton"] forState:UIControlStateNormal];
+    [button setImage:[[TestBundle imageNamed:@"test"] fwCompressImageWithMaxWidth:25] forState:UIControlStateNormal];
+    [button fwAddTouchBlock:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
     }];
+    [self.view addSubview:button];
+    button.fwLayoutChain.center();
 }
 
 @end

@@ -22,7 +22,7 @@
 
 - (void)renderView
 {
-    UIButton *moduleButton = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:@"mediator测试"];
+    UIButton *moduleButton = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:FWLocalizedString(@"mediatorButton")];
     [moduleButton fwAddTouchTarget:self action:@selector(onMediator)];
     [self.view addSubview:moduleButton];
     moduleButton.fwLayoutChain.centerX().centerYWithOffset(-80);

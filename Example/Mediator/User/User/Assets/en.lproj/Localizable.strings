@@ -5,3 +5,7 @@
   Created by wuyong on 2021/1/1.
   
 */
+
+"userModule" = "UserModule";
+"loginButton" = "Login";
+"testButton" = "Test";

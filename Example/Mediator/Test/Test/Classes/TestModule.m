@@ -31,3 +31,14 @@ FWDefSingleton(TestModule);
 }
 
 @end
+
+@implementation TestBundle
+
++ (NSBundle *)bundle
+{
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *path = [bundle pathForResource:@"TestModule" ofType:@"bundle"];
+    return [NSBundle bundleWithPath:path];
+}
+
+@end
