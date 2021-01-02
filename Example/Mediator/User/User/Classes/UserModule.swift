@@ -24,6 +24,7 @@ extension UserModule: UserModuleService {
     func login(_ completion: (() -> Void)?) {
         let viewController = UserLoginViewController()
         viewController.completion = completion
-        FWRouter.present(viewController, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        FWRouter.present(navigationController, animated: true, completion: nil)
     }
 }
