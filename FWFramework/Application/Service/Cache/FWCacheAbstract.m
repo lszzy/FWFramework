@@ -8,7 +8,22 @@
 
 #import "FWCacheAbstract.h"
 
+@interface FWCacheAbstract ()
+
+@property (nonatomic, strong) dispatch_semaphore_t semaphore;
+
+@end
+
 @implementation FWCacheAbstract
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _semaphore = dispatch_semaphore_create(1);
+    }
+    return self;
+}
 
 #pragma mark - Public
 
@@ -16,19 +31,26 @@
 {
     if (!key) return nil;
     
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     id object = [self innerObjectForKey:key];
-    if (!object) return nil;
+    if (!object) {
+        dispatch_semaphore_signal(self.semaphore);
+        return nil;
+    }
     
     // 检查缓存有效期
     NSNumber *expire = [self innerObjectForKey:[self expireKey:key]];
     if (expire) {
         // 检查是否过期，大于0为过期
         if ([[NSDate date] timeIntervalSince1970] > [expire doubleValue]) {
-            [self removeObjectForKey:key];
+            [self innerRemoveObjectForKey:key];
+            [self innerRemoveObjectForKey:[self expireKey:key]];
+            dispatch_semaphore_signal(self.semaphore);
             return nil;
         }
     }
 
+    dispatch_semaphore_signal(self.semaphore);
     return object;
 }
 
@@ -41,6 +63,7 @@
 {
     if (!key) return;
     
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     if (nil != object) {
         [self innerSetObject:object forKey:key];
         
@@ -51,21 +74,27 @@
             [self innerSetObject:@([[NSDate date] timeIntervalSince1970] + expire) forKey:[self expireKey:key]];
         }
     } else {
-        [self removeObjectForKey:key];
+        [self innerRemoveObjectForKey:key];
+        [self innerRemoveObjectForKey:[self expireKey:key]];
     }
+    dispatch_semaphore_signal(self.semaphore);
 }
 
 - (void)removeObjectForKey:(NSString *)key
 {
     if (!key) return;
     
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     [self innerRemoveObjectForKey:key];
     [self innerRemoveObjectForKey:[self expireKey:key]];
+    dispatch_semaphore_signal(self.semaphore);
 }
 
 - (void)removeAllObjects
 {
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     [self innerRemoveAllObjects];
+    dispatch_semaphore_signal(self.semaphore);
 }
 
 #pragma mark - Private

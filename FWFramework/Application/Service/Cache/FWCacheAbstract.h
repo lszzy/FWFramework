@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWCacheAbstract
 
 /**
- *  缓存抽象类，自动管理缓存有效期
+ *  缓存抽象类，自动管理缓存有效期，线程安全
  */
 @interface FWCacheAbstract : NSObject <FWCacheProtocol>
 
