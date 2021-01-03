@@ -11,7 +11,7 @@
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
-NSString *const FWLocalizedLanguageChangedNotification = @"FWLocalizedLanguageChangedNotification";
+NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification";
 
 #pragma mark - FWInnerBundle
 
@@ -104,7 +104,7 @@ static NSString *fwStaticPreferredLanguage = nil;
     }
     [self fwLoadLocalizedLanguage:language];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWLocalizedLanguageChangedNotification object:language];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FWLanguageChangedNotification object:language];
 }
 
 + (void)fwLoadLocalizedLanguage:(NSString *)language
@@ -155,10 +155,10 @@ static NSString *fwStaticPreferredLanguage = nil;
             
             NSString *language = [NSBundle fwLocalizedLanguage];
             if (language) {
-                [self fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLocalizedLanguageChangedNotification object:language]];
+                [self fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLanguageChangedNotification object:language]];
             }
             
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fwLocalizedLanguageChanged:) name:FWLocalizedLanguageChangedNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fwLocalizedLanguageChanged:) name:FWLanguageChangedNotification object:nil];
         }
     }
     return self;

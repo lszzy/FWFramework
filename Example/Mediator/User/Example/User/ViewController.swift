@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
         button.fwAddTouch { (sender) in
-            let userModule = FWMediator.module(byService: UserModuleService.self) as? UserModuleService
+            let userModule = FWMediator.loadModule(UserModuleService.self) as? UserModuleService
             userModule?.login({
                 button.setTitle("已登录", for: .normal)
             })
