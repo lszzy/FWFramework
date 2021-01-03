@@ -27,23 +27,50 @@
 
 #pragma mark - Notification
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [UIDevice fwSetDeviceTokenData:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [UIDevice fwSetDeviceTokenData:nil];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
-{
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
+}
+
+#pragma mark - openURL
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    [FWRouter openURL:url.absoluteString];
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
+        userActivity.webpageURL != nil) {
+        [FWRouter openURL:userActivity.webpageURL.absoluteString];
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - Protected
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
+    [self setupNotification:options];
+    [self setupAppearance];
+}
+
+- (void)setupNotification:(NSDictionary *)options
+{
     [[FWNotificationManager sharedInstance] clearNotificationBadges];
-    
     NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (remoteNotification) {
         [[FWNotificationManager sharedInstance] handleRemoteNotification:remoteNotification];
@@ -52,10 +79,7 @@
     if (localNotification) {
         [[FWNotificationManager sharedInstance] handleLocalNotification:localNotification];
     }
-}
-
-- (void)setupService
-{
+    
     [[FWNotificationManager sharedInstance] registerNotificationHandler];
     [[FWNotificationManager sharedInstance] requestAuthorize:nil];
     [FWNotificationManager sharedInstance].remoteNotificationHandler = ^(NSDictionary * userInfo, id notification) {
@@ -84,11 +108,9 @@
 
 - (void)setupAppearance
 {
-    // 导航栏样式
     FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] initWithBackgroundColor:[UIColor fwColorWithHex:0xFFDA00] foregroundColor:[UIColor fwColorWithHex:0x111111] appearanceBlock:nil];
     [FWNavigationBarAppearance setAppearance:appearance forStyle:FWNavigationBarStyleDefault];
     
-    // 优先查找非cancel按钮，找不到则默认cancel
     FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
         return alertController.actions.firstObject;
     };
@@ -122,22 +144,6 @@
         self.window.backgroundColor = [UIColor whiteColor];
         self.window.rootViewController = [TabBarController new];
     }
-}
-
-- (void)setupComponent
-{
-    // 预加载启动广告，检查App更新等
-}
-
-- (void)setupDeviceToken:(NSData *)tokenData error:(NSError *)error
-{
-    [UIDevice fwSetDeviceTokenData:tokenData];
-}
-
-- (BOOL)handleOpenURL:(NSURL *)url options:(NSDictionary *)options
-{
-    [FWRouter openURL:url.absoluteString];
-    return YES;
 }
 
 @end

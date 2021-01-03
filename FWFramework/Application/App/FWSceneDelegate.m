@@ -18,8 +18,8 @@
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     if ([scene isKindOfClass:[UIWindowScene class]]) {
         self.window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
-        [self setupController];
         [self.window makeKeyAndVisible];
+        [self setupController];
     }
 }
 
@@ -45,9 +45,10 @@
 
 #pragma mark - Protected
 
-- (void)setupController
-{
-    // self.window.rootViewController = [TabBarController new];
+- (void)setupController {
+    /*
+    self.window.rootViewController = [TabBarController new];
+     */
 }
 
 @end

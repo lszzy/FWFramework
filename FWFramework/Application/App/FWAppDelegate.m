@@ -31,10 +31,7 @@
 {
     [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
     [self setupApplication:application options:launchOptions];
-    [self setupService];
-    [self setupAppearance];
     [self setupController];
-    [self setupComponent];
     return YES;
 }
 
@@ -68,99 +65,90 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(deviceToken)]];
-    [self setupDeviceToken:deviceToken error:nil];
+    /*
+    [UIDevice fwSetDeviceTokenData:tokenData];
+     */
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
     [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(error)]];
-    [self setupDeviceToken:nil error:error];
+    /*
+    [UIDevice fwSetDeviceTokenData:nil];
+     */
 }
 
-/*
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userInfo), completionHandler]];
+    /*
     [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
+     */
 }
-*/
 
-/*
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(notification)]];
+    /*
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
+     */
 }
-*/
 
 #pragma mark - openURL
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    BOOL result = [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(app), FWSafeArgument(url), FWSafeArgument(options)]];
-    if (result) {
-        return result;
-    }
-    return [self handleOpenURL:url options:options];
+    return [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(app), FWSafeArgument(url), FWSafeArgument(options)]];
+    /*
+    [FWRouter openURL:url.absoluteString];
+    return YES;
+     */
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-    BOOL result = [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userActivity), restorationHandler]];
-    if (result) {
-        return result;
-    }
+    return [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userActivity), restorationHandler]];
+    /*
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
         userActivity.webpageURL != nil) {
-        return [self handleUserActivity:userActivity];
+        [FWRouter openURL:userActivity.webpageURL.absoluteString];
+        return YES;
     }
     return NO;
+     */
 }
 
 #pragma mark - Protected
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
-    // [[FWNotificationManager sharedInstance] clearNotificationBadges];
-    // NSDictionary *localNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    // NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-}
-
-- (void)setupService
-{
-    // [[FWNotificationManager sharedInstance] registerNotificationHandler];
-    // [[FWNotificationManager sharedInstance] requestAuthorize:nil];
-}
-
-- (void)setupAppearance
-{
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
+    
+    /*
+    [[FWNotificationManager sharedInstance] clearNotificationBadges];
+    NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification) {
+        [[FWNotificationManager sharedInstance] handleRemoteNotification:remoteNotification];
+    }
+    NSDictionary *localNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        [[FWNotificationManager sharedInstance] handleLocalNotification:localNotification];
+    }
+     */
+    
+    /*
+    [[FWNotificationManager sharedInstance] registerNotificationHandler];
+    [[FWNotificationManager sharedInstance] requestAuthorize:nil];
+     */
 }
 
 - (void)setupController
 {
-    // self.window.rootViewController = [TabBarController new];
-}
-
-- (void)setupComponent
-{
-    // 预加载启动广告，检查App更新等
-}
-
-- (void)setupDeviceToken:(NSData *)tokenData error:(NSError *)error
-{
-    // [UIDevice fwSetDeviceTokenData:tokenData];
-}
-
-- (BOOL)handleOpenURL:(NSURL *)url options:(NSDictionary *)options
-{
-    // [FWRouter openURL:url.absoluteString];
-    return YES;
-}
-
-- (BOOL)handleUserActivity:(NSUserActivity *)userActivity
-{
-    return [self handleOpenURL:userActivity.webpageURL options:nil];
+    /*
+    self.window.rootViewController = [TabBarController new];
+     */
 }
 
 @end
