@@ -52,7 +52,7 @@
 - (void)renderModel
 {
     FWWeakifySelf();
-    [self fwObserveNotification:FWLocalizedLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
+    [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
         FWStrongifySelf();
         [self.view fwRemoveAllSubviews];
         [self renderView];
