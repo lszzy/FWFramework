@@ -60,12 +60,15 @@
     }
     
     Class moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
-    if (!moduleClass || ![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)] ||
-        ![moduleClass respondsToSelector:@selector(sharedInstance)]) {
+    if (!moduleClass || ![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
         return nil;
     }
     
-    return [moduleClass sharedInstance];
+    @try {
+        return [moduleClass sharedInstance];
+    } @catch (NSException *exception) {
+        return nil;
+    }
 }
 
 + (NSArray<Class<FWModuleProtocol>> *)allRegisteredModules
