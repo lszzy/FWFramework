@@ -6,12 +6,12 @@
 //  Copyright (c) 2021 lingshizhuangzi@gmail.com. All rights reserved.
 //
 
-import UIKit
+import FWFramework
 
-@objc public protocol UserModuleService {
+@objc public protocol UserModuleService: FWModuleProtocol {
     func login(_ completion: (() -> Void)?)
 }
 
-@objc public protocol TestModuleService {
+@objc public protocol TestModuleService: FWModuleProtocol {
     func testViewController() -> UIViewController
 }

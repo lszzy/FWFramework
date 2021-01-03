@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestModule : NSObject <FWModuleProtocol, TestModuleService>
+@interface TestModule : NSObject <TestModuleService>
 
 @end
 

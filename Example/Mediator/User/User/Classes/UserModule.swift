@@ -14,7 +14,7 @@ import Mediator
     }
 }
 
-@objcMembers class UserModule: NSObject, FWModuleProtocol {
+@objcMembers class UserModule: NSObject, UserModuleService {
     private static let shared: UserModule = UserModule()
     
     static func sharedInstance() -> Self {
@@ -22,11 +22,9 @@ import Mediator
     }
     
     func setup() {
-        print("UserModule.setup")
+        NSLog("UserModule.setup")
     }
-}
-
-extension UserModule: UserModuleService {
+    
     func login(_ completion: (() -> Void)?) {
         let viewController = UserLoginViewController()
         viewController.completion = completion

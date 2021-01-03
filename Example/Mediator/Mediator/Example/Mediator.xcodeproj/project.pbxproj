@@ -217,10 +217,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mediator_Example/Pods-Mediator_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Mediator/Mediator.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mediator.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
