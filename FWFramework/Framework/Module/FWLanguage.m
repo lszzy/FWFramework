@@ -66,7 +66,7 @@ static NSString *fwStaticPreferredLanguage = nil;
     dispatch_once(&onceToken, ^{
         NSString *language = [self fwLocalizedLanguage];
         if (language) {
-            [self fwLoadLocalizedLanguage:language];
+            [self fwLocalizedChanged:language];
         }
     });
 }
@@ -102,12 +102,12 @@ static NSString *fwStaticPreferredLanguage = nil;
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AppleLanguages"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    [self fwLoadLocalizedLanguage:language];
+    [self fwLocalizedChanged:language];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:FWLanguageChangedNotification object:language];
 }
 
-+ (void)fwLoadLocalizedLanguage:(NSString *)language
++ (void)fwLocalizedChanged:(NSString *)language
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -155,16 +155,16 @@ static NSString *fwStaticPreferredLanguage = nil;
             
             NSString *language = [NSBundle fwLocalizedLanguage];
             if (language) {
-                [self fwLocalizedLanguageChanged:[NSNotification notificationWithName:FWLanguageChangedNotification object:language]];
+                [self fwLanguageChanged:[NSNotification notificationWithName:FWLanguageChangedNotification object:language]];
             }
             
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fwLocalizedLanguageChanged:) name:FWLanguageChangedNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fwLanguageChanged:) name:FWLanguageChangedNotification object:nil];
         }
     }
     return self;
 }
 
-- (void)fwLocalizedLanguageChanged:(NSNotification *)notification
+- (void)fwLanguageChanged:(NSNotification *)notification
 {
     NSString *language = [notification.object isKindOfClass:[NSString class]] ? notification.object : nil;
     NSBundle *bundle = [self fwLocalizedBundleWithLanguage:language];
