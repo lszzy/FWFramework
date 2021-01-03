@@ -49,6 +49,16 @@
     button4.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button3, 50);
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwObserveNotification:FWLocalizedLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
+        FWStrongifySelf();
+        [self.view fwRemoveAllSubviews];
+        [self renderView];
+    }];
+}
+
 - (void)onMediator
 {
     FWWeakifySelf();
@@ -79,15 +89,29 @@
 
 - (void)onLanguage
 {
-    [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"英文"] actionBlock:^(NSInteger index) {
-        NSString *language = nil;
-        if (index == 1) {
-            language = @"zh-Hans";
-        } else if (index == 2) {
-            language = @"en";
+    [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"English", @"不刷新根控制器"] actionBlock:^(NSInteger index) {
+        if (index < 3) {
+            NSString *language = nil;
+            if (index == 1) {
+                language = @"zh-Hans";
+            } else if (index == 2) {
+                language = @"en";
+            }
+            NSBundle.fwLocalizedLanguage = language;
+            [AppRouter refreshController];
+        } else {
+            // 只需要处理当前导航栈页面和其它Tab根页面控制器
+            NSString *language = NSBundle.fwLocalizedLanguage;
+            NSString *newLanguage = nil;
+            if (language == nil) {
+                newLanguage = @"zh-Hans";
+            } else if ([language isEqualToString:@"zh-Hans"]) {
+                newLanguage = @"en";
+            } else {
+                newLanguage = nil;
+            }
+            NSBundle.fwLocalizedLanguage = newLanguage;
         }
-        NSBundle.fwLocalizedLanguage = language;
-        [AppRouter refreshController];
     }];
 }
 
