@@ -5,11 +5,11 @@
 [![Pod License](https://img.shields.io/cocoapods/l/FWFramework.svg?style=flat)](https://github.com/lszzy/FWFramework/blob/master/LICENSE)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/lszzy/FWFramework)
 
-# [中文](README_CN.md)
+# [English](README.md)
 
 iOS开发框架，方便iOS开发。
 
-## Installation
+## 安装教程
 推荐使用CocoaPods安装，自动管理依赖。如需手工导入请参考Example项目配置。
 
 ### CocoaPods
@@ -33,7 +33,7 @@ iOS开发框架，方便iOS开发。
 
 执行`carthage update`并拷贝`FWFramework.framework`到项目即可。
 
-## Tutorial
+## 帮助文档
 本框架所有Swizzle默认不会生效，不会对现有项目产生影响，需要手工开启或调用才会生效。 
 
 ### Document 
@@ -54,19 +54,19 @@ Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下�
 
 	./Templates.sh
 
-## Standard
-[编码规范文档](STANDARD.md)
+## 编码规范
+[编码规范文档](STANDARD_CN.md)
 
-## Changelog
+## 更新日志
 1.0.0版本：
 
 	* 框架1.0.0版本发布
 
-## Vendor
+## 第三方库
 本框架使用了很多第三方库，在此感谢所有第三方库的作者，此处不一一列举，详见源码头文件相关链接。  
  
 	在引入第三方库时，为了兼容现有项目pod依赖，也为了三方库自定义改动和bug修复，并方便后续维护，本框架统一修改了FW类前缀和fw方法前缀，使用时如有不便敬请谅解。
 	如果您是某三方开源库的作者，若是本库侵犯了您的权益，请告诉我，本人会立即移除该三方开源库的使用，深感歉意。
 
-## Support
-[wuyong.site](http://www.wuyong.site)
+## 官方网站
+[大勇的网站](http://www.wuyong.site)
