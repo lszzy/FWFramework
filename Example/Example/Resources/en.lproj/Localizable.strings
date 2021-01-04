@@ -10,3 +10,5 @@
 "关闭" = "OK";
 "确定" = "Yes";
 "取消" = "Cancel";
+
+"mediatorButton" = "MediatorTest";

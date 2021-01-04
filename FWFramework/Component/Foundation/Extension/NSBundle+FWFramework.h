@@ -16,11 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @interface NSBundle (FWFramework)
 
-// 指定名称读取并创建bundle对象，bundle文件需位于mainBundle
-+ (nullable instancetype)fwBundleWithName:(NSString *)name;
-
-#pragma mark - Vendor
-
 // 自定义GoogleMaps反解析地址结果语言，为nil时不指定
 + (void)fwSetGoogleMapsLanguage:(nullable NSString *)language;
 

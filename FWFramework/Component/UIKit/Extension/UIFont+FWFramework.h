@@ -38,12 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Height
 
-// 字体占用行高(含空白)
-- (CGFloat)fwLineHeight;
-
-// 字体实际高度(不含空白)
-- (CGFloat)fwPointHeight;
-
 // 字体空白高度(上下之和)
 - (CGFloat)fwSpaceHeight;
 

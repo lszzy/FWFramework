@@ -11,7 +11,6 @@
 
 @interface FWCacheSqlite ()
 
-@property (nonatomic, strong) dispatch_semaphore_t dsema;
 @property (nonatomic, strong) NSString *dbPath;
 @property (nonatomic) sqlite3 *database;
 
@@ -38,7 +37,6 @@
 {
     self = [super init];
     if (self) {
-        _dsema = dispatch_semaphore_create(1);
         // 绝对路径: path
         NSString *dbPath = nil;
         if (path && [path isAbsolutePath]) {
@@ -86,7 +84,6 @@
 - (id)innerObjectForKey:(NSString *)key
 {
     id object = nil;
-    dispatch_semaphore_wait(self.dsema, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         if ([self open]) {
             NSString *sql = @"SELECT object FROM FWCache WHERE key = ?";
@@ -112,13 +109,11 @@
             [self close];
         }
     }
-    dispatch_semaphore_signal(self.dsema);
     return object;
 }
 
 - (void)innerSetObject:(id)object forKey:(NSString *)key
 {
-    dispatch_semaphore_wait(self.dsema, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         if ([self open]) {
             NSData *data = nil;
@@ -143,12 +138,10 @@
             [self close];
         }
     }
-    dispatch_semaphore_signal(self.dsema);
 }
 
 - (void)innerRemoveObjectForKey:(NSString *)key
 {
-    dispatch_semaphore_wait(self.dsema, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         if ([self open]) {
             NSString *sql = @"DELETE FROM FWCache WHERE key = ?";
@@ -163,12 +156,10 @@
             [self close];
         }
     }
-    dispatch_semaphore_signal(self.dsema);
 }
 
 - (void)innerRemoveAllObjects
 {
-    dispatch_semaphore_wait(self.dsema, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         if ([self open]) {
             NSString *sql = @"DELETE FROM FWCache";
@@ -180,7 +171,6 @@
             [self close];
         }
     }
-    dispatch_semaphore_signal(self.dsema);
 }
 
 @end

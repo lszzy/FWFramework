@@ -12,15 +12,16 @@ import SwiftUI
 
 // MARK: - FWNavigationBarModifier
 
+/// 导航栏背景色修改器
 @available(iOS 13.0, *)
-struct FWNavigationBarModifier: ViewModifier {
+public struct FWNavigationBarModifier: ViewModifier {
     var backgroundColor: UIColor?
 
-    init(backgroundColor: UIColor?) {
+    public init(backgroundColor: UIColor?) {
         self.backgroundColor = backgroundColor
     }
 
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         ZStack{
             content
             VStack {
@@ -32,6 +33,39 @@ struct FWNavigationBarModifier: ViewModifier {
                 }
             }
         }
+    }
+}
+
+// MARK: - FWLineShape
+
+/// 线条形状，用于分割线、虚线等。自定义路径形状：Path { (path) in ... }
+@available(iOS 13.0, *)
+public struct FWLineShape: Shape {
+    public var axes: Axis.Set = .horizontal
+    
+    public func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 0))
+        if axes == .horizontal {
+            path.addLine(to: CGPoint(x: rect.width, y: 0))
+        } else {
+            path.addLine(to: CGPoint(x: 0, y: rect.height))
+        }
+        return path
+    }
+}
+
+// MARK: - FWRoundedCornerShape
+
+/// 不规则圆角形状
+@available(iOS 13.0, *)
+public struct FWRoundedCornerShape: Shape {
+    public var radius: CGFloat = 0
+    public var corners: UIRectCorner = .allCorners
+
+    public func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
     }
 }
 
@@ -62,23 +96,7 @@ public extension View {
     func fwNavigationBarColor(backgroundColor: UIColor?) -> some View {
         self.modifier(FWNavigationBarModifier(backgroundColor: backgroundColor))
     }
-}
-
-// MARK: - FWRoundedCornerShape
-
-@available(iOS 13.0, *)
-struct FWRoundedCornerShape: Shape {
-    var radius: CGFloat = 0
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
-@available(iOS 13.0, *)
-public extension View {
+    
     /// 设置不规则圆角效果
     func fwCornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(FWRoundedCornerShape(radius: radius, corners: corners))

@@ -33,6 +33,8 @@
 		2FB4F3242576874800FF1ED3 /* FWAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB4F3232576874800FF1ED3 /* FWAnnotation.swift */; };
 		2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */; };
 		2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */; };
+		2FDD411F259DB1E900163B7F /* FWMediator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDD411D259DB1E900163B7F /* FWMediator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FDD4120259DB1E900163B7F /* FWMediator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD411E259DB1E900163B7F /* FWMediator.m */; };
 		2FE56501257BDD0A00BF89E5 /* FWViewControllerStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE564FF257BDD0A00BF89E5 /* FWViewControllerStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE56502257BDD0A00BF89E5 /* FWViewControllerStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -360,6 +362,8 @@
 		2FB4F3232576874800FF1ED3 /* FWAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWAnnotation.swift; sourceTree = "<group>"; };
 		2FC06A33253FCEE4009C8E23 /* UITableView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
+		2FDD411D259DB1E900163B7F /* FWMediator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWMediator.h; sourceTree = "<group>"; };
+		2FDD411E259DB1E900163B7F /* FWMediator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWMediator.m; sourceTree = "<group>"; };
 		2FE564FF257BDD0A00BF89E5 /* FWViewControllerStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWViewControllerStyle.h; sourceTree = "<group>"; };
 		2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWViewControllerStyle.m; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDynamicLayout.h; sourceTree = "<group>"; };
@@ -922,6 +926,8 @@
 				2FFE83D12515AAD100545D6E /* FWMacro.swift */,
 				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
 				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
+				2FDD411D259DB1E900163B7F /* FWMediator.h */,
+				2FDD411E259DB1E900163B7F /* FWMediator.m */,
 				2FFE1B9C2507BF95000332A3 /* FWPlugin.h */,
 				2FFE1BAA2507BF95000332A3 /* FWPlugin.m */,
 				2F2574942539928800880FEF /* FWPromise.swift */,
@@ -1208,6 +1214,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FDD411F259DB1E900163B7F /* FWMediator.h in Headers */,
 				2F3E60182590A12100118E01 /* FWTabBarController.h in Headers */,
 				2FB14690258DDDB200D867D4 /* FWDatabase.h in Headers */,
 				2FE56501257BDD0A00BF89E5 /* FWViewControllerStyle.h in Headers */,
@@ -1532,6 +1539,7 @@
 				2FFE1BD42507BF95000332A3 /* FWNetworkPrivate.m in Sources */,
 				2FFE1D282507BFBD000332A3 /* UIView+FWAnimation.m in Sources */,
 				2FFE1DC32507BFBD000332A3 /* NSUserDefaults+FWFramework.m in Sources */,
+				2FDD4120259DB1E900163B7F /* FWMediator.m in Sources */,
 				2FFE1C382507BFA5000332A3 /* FWAppDelegate.m in Sources */,
 				2FFE1D6B2507BFBD000332A3 /* UICollectionView+FWFramework.m in Sources */,
 				2FFE840E2515C4BF00545D6E /* FWAdaptive.m in Sources */,

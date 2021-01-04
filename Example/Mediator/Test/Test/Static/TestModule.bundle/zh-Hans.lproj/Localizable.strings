@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Pods
+
+  Created by wuyong on 2021/1/1.
+  
+*/
+
+"testModule" = "测试模块";
+"closeButton" = "关闭";

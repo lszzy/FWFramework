@@ -8,6 +8,9 @@
  */
 
 #import "FWAppDelegate.h"
+#import "FWMediator.h"
+
+#define FWSafeArgument(obj) obj ? obj : [NSNull null]
 
 @interface FWAppDelegate ()
 
@@ -17,129 +20,135 @@
 
 #pragma mark - UIApplicationDelegate
 
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
+{
+    [FWMediator setupAllModules];
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
+    return YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
     [self setupApplication:application options:launchOptions];
-    [self setupService];
-    [self setupAppearance];
     [self setupController];
-    [self setupComponent];
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
 }
 
 #pragma mark - Notification
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    [self setupDeviceToken:deviceToken error:nil];
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(deviceToken)]];
+    /*
+    [UIDevice fwSetDeviceTokenData:tokenData];
+     */
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    [self setupDeviceToken:nil error:error];
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(error)]];
+    /*
+    [UIDevice fwSetDeviceTokenData:nil];
+     */
 }
 
-/*
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userInfo), completionHandler]];
+    /*
     [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
+     */
 }
-*/
 
-/*
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
+    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(notification)]];
+    /*
     [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
+     */
 }
-*/
 
 #pragma mark - openURL
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    return [self handleOpenURL:url options:options];
+    return [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(app), FWSafeArgument(url), FWSafeArgument(options)]];
+    /*
+    [FWRouter openURL:url.absoluteString];
+    return YES;
+     */
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
+    return [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userActivity), restorationHandler]];
+    /*
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
         userActivity.webpageURL != nil) {
-        return [self handleUserActivity:userActivity];
+        [FWRouter openURL:userActivity.webpageURL.absoluteString];
+        return YES;
     }
     return NO;
+     */
 }
 
 #pragma mark - Protected
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
-    // [[FWNotificationManager sharedInstance] clearNotificationBadges];
-    // NSDictionary *localNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    // NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-}
-
-- (void)setupService
-{
-    // [[FWNotificationManager sharedInstance] registerNotificationHandler];
-    // [[FWNotificationManager sharedInstance] requestAuthorize:nil];
-}
-
-- (void)setupAppearance
-{
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
+    
+    /*
+    [[FWNotificationManager sharedInstance] clearNotificationBadges];
+    NSDictionary *remoteNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification) {
+        [[FWNotificationManager sharedInstance] handleRemoteNotification:remoteNotification];
+    }
+    NSDictionary *localNotification = (NSDictionary *)[options objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        [[FWNotificationManager sharedInstance] handleLocalNotification:localNotification];
+    }
+     */
+    
+    /*
+    [[FWNotificationManager sharedInstance] registerNotificationHandler];
+    [[FWNotificationManager sharedInstance] requestAuthorize:nil];
+     */
 }
 
 - (void)setupController
 {
-    // self.window.rootViewController = [TabBarController new];
-}
-
-- (void)setupComponent
-{
-    // 预加载启动广告，检查App更新等
-}
-
-- (void)setupDeviceToken:(NSData *)tokenData error:(NSError *)error
-{
-    // [UIDevice fwSetDeviceTokenData:tokenData];
-}
-
-- (BOOL)handleOpenURL:(NSURL *)url options:(NSDictionary *)options
-{
-    // [FWRouter openURL:url.absoluteString];
-    return YES;
-}
-
-- (BOOL)handleUserActivity:(NSUserActivity *)userActivity
-{
-    return [self handleOpenURL:userActivity.webpageURL options:nil];
+    /*
+    self.window.rootViewController = [TabBarController new];
+     */
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import <FWDebug/FWDebug.h>
+#import <Mediator/Mediator-Swift.h>
 
 @interface SettingsViewController ()
 
@@ -21,6 +22,11 @@
 
 - (void)renderView
 {
+    UIButton *moduleButton = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:FWLocalizedString(@"mediatorButton")];
+    [moduleButton fwAddTouchTarget:self action:@selector(onMediator)];
+    [self.view addSubview:moduleButton];
+    moduleButton.fwLayoutChain.centerX().centerYWithOffset(-80);
+    
     UIButton *button = [UIButton fwButtonWithFont:[UIFont appFontBoldNormal] titleColor:[UIColor appColorBlackOpacityHuge] title:@"present时登录失效"];
     [button fwAddTouchTarget:self action:@selector(onLogout)];
     [self.view addSubview:button];
@@ -43,6 +49,26 @@
     button4.fwLayoutChain.centerX().topToBottomOfViewWithOffset(button3, 50);
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
+        FWStrongifySelf();
+        [self.view fwRemoveAllSubviews];
+        [self renderView];
+    }];
+}
+
+- (void)onMediator
+{
+    FWWeakifySelf();
+    [FWModule(UserModuleService) login:^{
+        FWStrongifySelf();
+        
+        [self.view fwShowMessageWithText:@"登录成功"];
+    }];
+}
+
 - (void)onLogout
 {
     [UIWindow.fwMainWindow fwPresentViewController:[ObjcController new] animated:YES completion:^{
@@ -63,15 +89,29 @@
 
 - (void)onLanguage
 {
-    [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"英文"] actionBlock:^(NSInteger index) {
-        NSString *language = nil;
-        if (index == 1) {
-            language = @"zh-Hans";
-        } else if (index == 2) {
-            language = @"en";
+    [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"English", @"不刷新根控制器"] actionBlock:^(NSInteger index) {
+        if (index < 3) {
+            NSString *language = nil;
+            if (index == 1) {
+                language = @"zh-Hans";
+            } else if (index == 2) {
+                language = @"en";
+            }
+            NSBundle.fwLocalizedLanguage = language;
+            [AppRouter refreshController];
+        } else {
+            // 只需要处理当前导航栈页面和其它Tab根页面控制器
+            NSString *language = NSBundle.fwLocalizedLanguage;
+            NSString *newLanguage = nil;
+            if (language == nil) {
+                newLanguage = @"zh-Hans";
+            } else if ([language isEqualToString:@"zh-Hans"]) {
+                newLanguage = @"en";
+            } else {
+                newLanguage = nil;
+            }
+            NSBundle.fwLocalizedLanguage = newLanguage;
         }
-        NSBundle.fwLocalizedLanguage = language;
-        [AppRouter refreshController];
     }];
 }
 

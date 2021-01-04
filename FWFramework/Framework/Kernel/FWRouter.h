@@ -15,21 +15,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief 路由URL */
 extern NSString * const FWRouterURLKey;
-
 /*! @brief 路由完成回调 */
 extern NSString * const FWRouterCompletionKey;
-
 /*! @brief 路由用户信息 */
 extern NSString * const FWRouterUserInfoKey;
 
 /*! @brief 路由处理句柄 */
 typedef void (^FWRouterHandler)(NSDictionary *parameters);
-
 /*! @brief 路由对象处理句柄 */
 typedef id _Nullable (^FWRouterObjectHandler)(NSDictionary *parameters);
-
 /*! @brief 路由过滤器处理句柄 */
 typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
+/*! @brief 路由完成句柄 */
+typedef void (^FWRouterCompletion)(id _Nullable result);
 
 /*!
  @brief URL路由器
@@ -121,7 +119,7 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  @param URL        带 Scheme 的 URL，如 app://beauty/4
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL completion:(nullable void (^)(id _Nullable result))completion;
++ (void)openURL:(NSString *)URL completion:(nullable FWRouterCompletion)completion;
 
 /**
  *  打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
@@ -130,7 +128,15 @@ typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
  *  @param userInfo   附加参数
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable void (^)(id _Nullable result))completion;
++ (void)openURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
+
+/**
+ *  快速调用FWRouterHandler参数中的回调句柄，指定回调结果
+ *
+ *  @param parameters FWRouterHandler中的参数
+ *  @param result URL处理完成后的回调结果
+ */
++ (void)completeURL:(NSDictionary *)parameters result:(nullable id)result;
 
 #pragma mark - Object
 
