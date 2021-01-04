@@ -22,7 +22,7 @@ import Mediator
     }
     
     func setup() {
-        NSLog("UserModule.setup")
+        FWLogDebug("UserModule.setup")
     }
     
     func login(_ completion: (() -> Void)?) {

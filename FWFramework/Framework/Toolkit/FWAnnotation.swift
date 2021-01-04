@@ -33,6 +33,38 @@ public struct FWUserDefaultAnnotation<T> {
     }
 }
 
+/// 模块属性包装器注解
+/// 使用示例：
+/// @FWModuleAnnotation(UserModuleService.self)
+/// static var userModule: UserModuleService
+@propertyWrapper
+public struct FWModuleAnnotation<T> {
+    let serviceProtocol: Protocol
+    var module: T?
+    
+    public init(_ serviceProtocol: Protocol) {
+        self.serviceProtocol = serviceProtocol
+    }
+    
+    public init(_ serviceProtocol: Protocol, module: FWModuleProtocol.Type) {
+        self.serviceProtocol = serviceProtocol
+        FWMediator.registerService(serviceProtocol, withModule: module)
+    }
+    
+    public var wrappedValue: T {
+        get {
+            if let value = module {
+                return value
+            } else {
+                return FWMediator.loadModule(serviceProtocol) as! T
+            }
+        }
+        set {
+            module = newValue
+        }
+    }
+}
+
 /// 插件属性包装器注解
 /// 使用示例：
 /// @FWPluginAnnotation(TestPluginProtocol.self)
