@@ -70,7 +70,7 @@ As this framework is constantly upgrading, optimizing and expanding new function
 
 Version 1.0.0:
 
-	* Framework version 1.0.0 released
+	* After two years of hard work, version 1.0.0 was released
 
 ## Vendor
 This framework uses a lot of third-party libraries. Thanks to the authors of all third-party libraries. I will not list them all here. For details, please refer to the relevant links of the source file.
