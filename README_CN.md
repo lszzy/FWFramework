@@ -25,6 +25,12 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	  # 引入指定子模块，子模块列表详见podspec文件
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Component/SDWebImage']
 	end
+	
+子模块简单说明说下：
+
+	Framework 框架层，核心架构，和应用无关，底层依赖
+	Application 应用层，AOP方案，无需继承，组件可替换
+	Component 组件层，可选引入，常用功能，方便开发
 
 ### Carthage
 本框架支持Carthage，Cartfile示例：
