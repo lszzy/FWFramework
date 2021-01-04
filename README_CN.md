@@ -7,7 +7,7 @@
 
 # [English](README.md)
 
-iOS开发框架，方便iOS开发。
+iOS开发框架，方便iOS开发，兼容OC和Swift。
 
 ## 安装教程
 推荐使用CocoaPods安装，自动管理依赖。如需手工导入请参考Example项目配置。
@@ -34,12 +34,11 @@ iOS开发框架，方便iOS开发。
 执行`carthage update`并拷贝`FWFramework.framework`到项目即可。
 
 ## 帮助文档
-本框架所有Swizzle默认不会生效，不会对现有项目产生影响，需要手工开启或调用才会生效。 
-
-### Document 
-本框架文档位于Document文件夹，编译时会自动生成[HeaderDoc文档](Document/HeaderDoc)，支持标签列表详见[HeaderDoc tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html)。
+本框架所有Swizzle默认不会生效，不会对现有项目产生影响，需要手工开启或调用才会生效。本库已经在正式项目使用，后续也会一直维护扩展，欢迎大家使用并提出宝贵意见，共同成长。
 
 ### HeaderDoc
+本框架文档位于Document文件夹，编译时会自动生成[HeaderDoc文档](Document/HeaderDoc)，支持标签列表详见[HeaderDoc tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html)。
+
 HeaderDoc.sh可以快速生成框架HeaderDoc文档，使用命令如下：
 
 	./HeaderDoc.sh
@@ -58,6 +57,11 @@ Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下�
 [编码规范文档](STANDARD_CN.md)
 
 ## 更新日志
+由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
+
+	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '1.0.0'
+	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Component/Deprecated子模块，并在后续版本删除
+
 1.0.0版本：
 
 	* 框架1.0.0版本发布

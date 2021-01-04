@@ -7,66 +7,70 @@
 
 # [中文](README_CN.md)
 
-iOS开发框架，方便iOS开发。
+iOS development framework, convenient for iOS development, compatible with OC and Swift.
 
 ## Installation
-推荐使用CocoaPods安装，自动管理依赖。如需手工导入请参考Example项目配置。
+It is recommended to use CocoaPods to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
 
 ### CocoaPods
-本框架支持CocoaPods，Podfile示例：
+This framework supports CocoaPods, Podfile example:
 
 	platform :ios, '9.0'
 	use_frameworks!
 
 	target 'Example' do
-	  # 引入默认子模块
+	  # Import the default subspecs
 	  pod 'FWFramework'
 	  
-	  # 引入指定子模块，子模块列表详见podspec文件
+	  # Import the specified subspecs, see the podspec file for the list of subspecs
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Component/SDWebImage']
 	end
 
 ### Carthage
-本框架支持Carthage，Cartfile示例：
+This framework supports Carthage, Cartfile example:
 
 	github "lszzy/FWFramework"
 
-执行`carthage update`并拷贝`FWFramework.framework`到项目即可。
+Execute `carthage update` and copy `FWFramework.framework` to the project.
 
 ## Tutorial
-本框架所有Swizzle默认不会生效，不会对现有项目产生影响，需要手工开启或调用才会生效。 
+All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
-### Document 
-本框架文档位于Document文件夹，编译时会自动生成[HeaderDoc文档](Document/HeaderDoc)，支持标签列表详见[HeaderDoc tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html)。
+### HeaderDoc 
+This framework document is located in the Document folder. [HeaderDoc Document](Document/HeaderDoc) will be automatically generated when compiling. For the list of supported tags, please see [HeaderDoc tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html).
 
-### HeaderDoc
-HeaderDoc.sh可以快速生成框架HeaderDoc文档，使用命令如下：
+HeaderDoc.sh can quickly generate framework HeaderDoc documents, using the following commands:
 
 	./HeaderDoc.sh
 	
 ### CodeSnippets
-CodeSnippets可以在Xcode快速编写HeaderDoc注释，如`hd_class`等，安装命令如下：
+CodeSnippets can quickly write HeaderDoc comments in Xcode, such as `hd_class`, etc. The installation command is as follows:
 
 	./CodeSnippets.sh
 	
 ### Templates
-Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下：
+Templates can create new OC classes with HeaderDoc annotations in Xcode. The installation commands are as follows:
 
 	./Templates.sh
 
 ## Standard
-[编码规范文档](STANDARD.md)
+[Coding Standards Document](STANDARD.md)
 
 ## Changelog
-1.0.0版本：
+As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	* 框架1.0.0版本发布
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
+	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
+
+Version 1.0.0:
+
+	* Framework version 1.0.0 released
 
 ## Vendor
-本框架使用了很多第三方库，在此感谢所有第三方库的作者，此处不一一列举，详见源码头文件相关链接。  
+This framework uses a lot of third-party libraries. Thanks to the authors of all third-party libraries. I will not list them all here. For details, please refer to the relevant links of the source file.
  
-	在引入第三方库时，为了兼容现有项目pod依赖，也为了三方库自定义改动和bug修复，并方便后续维护，本框架统一修改了FW类前缀和fw方法前缀，使用时如有不便敬请谅解。
-	如果您是某三方开源库的作者，若是本库侵犯了您的权益，请告诉我，本人会立即移除该三方开源库的使用，深感歉意。
+	In the introduction of third-party libraries, in order to be compatible with existing project pod dependencies, as well as to customize changes and bug fixes of third-party libraries, and to facilitate subsequent maintenance, this framework uniformly modified the FW class prefix and fw method prefix. If there is any inconvenience during use, Please understand.
+	If you are the author of a third-party open source library, if this library violates your rights, please let me know, and I will immediately remove the use of the third-party open source library. 
 
 ## Support
 [wuyong.site](http://www.wuyong.site)
