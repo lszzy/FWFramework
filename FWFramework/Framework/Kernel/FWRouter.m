@@ -170,12 +170,12 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     [self openURL:URL userInfo:userInfo completion:nil];
 }
 
-+ (void)openURL:(NSString *)URL completion:(void (^)(id result))completion
++ (void)openURL:(NSString *)URL completion:(FWRouterCompletion)completion
 {
     [self openURL:URL userInfo:nil completion:completion];
 }
 
-+ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(void (^)(id result))completion
++ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(FWRouterCompletion)completion
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
@@ -208,6 +208,14 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         if ([self sharedInstance].errorHandler) {
             [self sharedInstance].errorHandler(parameters);
         }
+    }
+}
+
++ (void)completeURL:(NSDictionary *)parameters result:(id)result
+{
+    FWRouterCompletion completion = parameters[FWRouterCompletionKey];
+    if (completion) {
+        completion(result);
     }
 }
 

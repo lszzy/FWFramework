@@ -13,14 +13,6 @@
 
 @implementation NSBundle (FWFramework)
 
-+ (instancetype)fwBundleWithName:(NSString *)name
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:([name hasSuffix:@".bundle"] ? nil : @"bundle")];
-    return path ? [NSBundle bundleWithPath:path] : nil;
-}
-
-#pragma mark - Vendor
-
 + (void)fwSetGoogleMapsLanguage:(NSString *)language
 {
     static NSString *customLanguage = nil;

@@ -49,16 +49,6 @@
 
 #pragma mark - Height
 
-- (CGFloat)fwLineHeight
-{
-    return self.lineHeight;
-}
-
-- (CGFloat)fwPointHeight
-{
-    return self.pointSize;
-}
-
 - (CGFloat)fwSpaceHeight
 {
     return self.lineHeight - self.pointSize;
