@@ -22,7 +22,7 @@ FWDefSingleton(TestModule);
 
 - (void)setup
 {
-    NSLog(@"TestModule.setup");
+    FWLogDebug(@"TestModule.setup");
 }
 
 - (UIViewController *)testViewController
