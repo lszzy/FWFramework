@@ -2,104 +2,104 @@
 
 # [中文](STANDARD_CN.md)
 
-## 编码规范
-### 命名
-* 约定优先原则，如果命名约定存在应优先遵循约定命名，示例：
+## Coding Standards
+### Naming
+* The principle of precedence by convention, if there is a naming convention, the convention should be followed first, example:
 
 		FWClassName.sharedInstance
 
-* 框架自定义OC类必须以FW开头，驼峰式命名，示例：
+* The framework custom OC class must start with FW and be named in camel case. Example:
 
 		FWClassName
 
-* 框架枚举必须以FW开头，枚举项必须以枚举类型开头；应用枚举项可以以k+枚举类型开头，驼峰式命名，示例：
+* The frame enumeration must start with FW, and the enumeration item must start with the enumeration type; the application enumeration item can start with k+enumeration type, with camel case naming, example:
 
-		# 框架
+		# Framework
 		FWLogType
 		FWLogTypeVerbose
-		# 应用
+		# Application
 		AppEnumType
 		kAppEnumTypeValue
 	
-* 框架自定义协议、代理必须以FW开头，以Protocol/Delegate/DataSource结尾，驼峰式命名，示例：
+* The framework custom protocol and proxy must start with FW and end with Protocol/Delegate/DataSource, with camel case naming, example:
 
 		FWTestProtocol
 		FWViewDelegate
 		FWTableViewDataSource
 		
-* 框架自定义OC方法、分类方法、属性必须以fw开头，驼峰式命名，以区别于系统方法，示例：
+* Framework custom OC methods, classification methods, and attributes must start with fw and be named in camel case to distinguish them from system methods. Examples:
 
 		fwCGRectAdd
 		fwMethodName
 		fwPropertyName
 
-* 框架OC分类的类初始化方法必须以fw开头，示例：
+* The class initialization method of the framework OC classification must start with fw, example:
 
 		 fwColorWithString
 		 fwImageWithView
 
-* 框架C方法必须以fw_开头，内部c方法必须以fw_inner_开头，内部c全局静态变量必须以fw_static_开头，下划线分隔，示例：
+* Frame C methods must start with fw\_, internal c methods must start with fw\_inner\_, internal c global static variables must start with fw\_static\_, separated by underscores, examples:
 
 		fw_method_name
 		fw_inner_method
 		fw_static_variable
 		
-* 框架自定义协议方法、自定义类的方法、属性不需要以fw开头，示例：
+* Framework custom protocol methods, custom class methods, and attributes do not need to start with fw, examples:
 
 		FWTestProtocol.methodName
 		FWClassName.methodName
 		FWClassName.initWithString
 
-* 框架内部OC类必须以FWInner开头，内部OC方法必须以fwInner开头，内部OC全局静态变量必须以fwStatic开头，驼峰式命名，示例：
+* The internal OC class of the framework must start with FWInner, the internal OC method must start with fwInner, and the internal OC global static variables must start with fwStatic, named in camel case. Example:
 
 		FWInnerClassName
 		fwInnerDebug
 		fwStaticVariable
 
-* 框架类内部全局属性统一使用_作为后缀，以区别于外部属性，示例：
+* The internal global attributes of the framework class uniformly use _ as a suffix to distinguish them from external attributes. Example:
 
 		propertyName_
 
-* 框架类内部扩展头文件必须按照类名+Private.h格式命名(使用扩展声明，主文件实现)，框架内部类分类使用Private分类命名，示例：
+* The internal extension header file of the framework class must be named in the format of class name+Private.h (using the extension declaration, the main file implementation), the internal class classification of the framework uses the Private classification naming, example:
 
 		FWClassName+Private.h
 		FWClassName(Private)
 
-### 宏定义
-* 约定优先原则，如果命名约定存在应优先遵循约定命名，且必须加上ifndef判断，示例：
+### Macro
+* The principle of precedence by convention, if there is a naming convention, the convention should be followed first, and ifndef must be added for judgment.
 
-		// 使用
+		// use
 		@weakify
 		
-		// 定义
+		// definition
 		#ifndef weakify
 		#define weakify( x ) \
 			...
 		#endif
 
-* 框架编译宏定义常量必须以FW_开头，全部大写，下划线分隔，示例：
+* Frame compilation macro definition constants must start with FW_, all capitals, separated by underscores, example:
 	
 		FW_TEST
 
-* 框架OC宏定义或宏定义方法必须以FW开头，实现宏定义必须以FWDef开头，驼峰式命名，示例：
+* The frame OC macro definition or macro definition method must start with FW, and the realization of the macro definition must start with FWDef, with camel case naming. Example:
 	
 		FWScreenSize
 		FWPropertyStrong
 		FWDefPropertyStrong
 		
-* 框架C宏定义必须以fw_开头，下划线分隔，示例：
+* The frame C macro definition must start with fw_, separated by underscores, examples:
 
 		fw_macro_make
 	
-* 内部宏定义统一使用_作为后缀，以区别于公开宏定义，示例：
+* Internal macro definitions uniformly use _ as a suffix to distinguish them from public macro definitions. Examples:
 
 		fw_macro_first_
 		FWIsScreenInch_
 
-### 注释
-* xcode注释，类文件应该按照功能模块进行pragma分段，未完成的功能应该用TODO等标记，常用注释如下：
+### Comment
+* xcode comments, class files should be pragma segmented according to function modules, unfinished functions should be marked with TODO, etc. Common comments are as follows:
 
-		// OC版本注释
+		// OC version notes
 		#pragma mark - Lifecycle
 		#pragma mark - Accessor
 		#pragma mark - Public
@@ -109,7 +109,7 @@
 		// TODO: feature
 		// FIXME: hotfix
 		
-		// Swift版本注释
+		// Swift version notes
 		// MARK: - Lifecycle
 		// MARK: - Accessor
 		// MARK: - Public
@@ -119,74 +119,74 @@
 		// TODO: feature
 		// FIXME: hotfix
 		
-* 代码注释，使用HeaderDoc标准，[可用标签列表](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html)，常用注释如下：
+* Code comments, using the HeaderDoc standard, [list of available tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html), common comments are as follows:
 
-		// 注释格式
+		// Comment format
 		/*!
- 		 @brief 标签描述
-		 @discussion 详细描述
+ 		 @brief tag description
+		 @discussion detailed description
 		 @... ...
  		 */
  		
- 		// 通用标签
-		@brief 简单描述
-		@abstract 简单描述，类似brief
-		@discussion 详细描述
-		@internal 标记内部文档，开启--document-internal生效
-		@see 链接标签
-		@link 链接标签，类似see，@/link结束
-		@updated 更新日期
+ 		// Generic label
+		@brief Brief description
+		@abstract Brief description, similar to brief
+		@discussion detailed description
+		@internal mark internal documents, enable --document-internal to take effect
+		@see link tag
+		@link link tag, similar to see, @/link ends
+		@updated update date
 
-		// 文件标签
-		@header 文件名，Top-level(可不提供，自动生成)
-		@file 文件名，Top-level，同header
-		@indexgroup 文档分组
-		@author 作者
-		@copyright 版权
-		@ignore 忽略指定关键字文档
-		@version 版本号
+		// File label
+		@header file name, Top-level (optional, automatically generated)
+		@file file name, Top-level, same as header
+		@indexgroup document grouping
+		@author Author
+		@copyright copyright
+		@ignore ignore the specified keyword document
+		@version version number
 
-		// 类、接口、协议标签
-		@class 类名，Top-level
-		@interface 类名，同class，Top-level
-		@protocol 协议，Top-level
-		@category 分类名，Top-level
-		@classdesign 类设计描述，支持多行
-		@deprecated 废弃描述
-		@superclass 父类
+		// class, interface, protocol label
+		@class class name, Top-level
+		@interface class name, same as class, Top-level
+		@protocol agreement, Top-level
+		@category category name, Top-level
+		@classdesign class design description, support multiple lines
+		@deprecated Deprecated description
+		@superclass superclass
 
-		// 方法标签
-		@function C方法名，Top-level
-		@method OC方法名，Top-level
-		@param 参数名 描述
-		@return 返回描述
-		@throws 抛出异常
+		// method label
+		@function C method name, Top-level
+		@method OC method name, Top-level
+		@param parameter name description
+		@return return description
+		@throws throws an exception
 
-		// 变量标签
-		@var 实例变量 描述，用于全局变量，属性等，Top-level
-		@const 常量名，Top-level。代表枚举时非Top-level
-		@constant 常量名，同const，Top-level。代表枚举时非Top-level
-		@property OC属性，Top-level
-		@enum 枚举，Top-level
-		@struct 结构体，Top-level
-		@typedef 定义，Top-level
-		@field 名称 描述
+		// Variable label
+		@var instance variable description, used for global variables, attributes, etc., Top-level
+		@const Constant name, Top-level. Non-Top-level during enumeration
+		@constant Constant name, same as const, Top-level. Non-Top-level during enumeration
+		@property OC attribute, Top-level
+		@enum enumeration, Top-level
+		@struct structure, Top-level
+		@typedef definition, Top-level
+		@field name description
 		
-		// C预处理宏标签
-		@define 宏名称，#define，Top-level
-		@defined 宏名称，Top-level
-		@defineblock 连续宏定义，@/defineblock结束，Top-level
-		@definedblock 连续宏定义，@/definedblock结束，Top-level
-		@define 名称 描述，用于连续宏定义时表示单个定义
-		@param 参数名 描述
-		@parseOnly 标记文档中隐藏
+		// C preprocessing macro tag
+		@define macro name, #define, Top-level
+		@defined macro name, Top-level
+		@defineblock continuous macro definition, @/defineblock ends, Top-level
+		@definedblock continuous macro definition, @/definedblock ends, Top-level
+		@define name description, it means a single definition when used for continuous macro definition
+		@param parameter name description
+		@parseOnly mark hidden in the document
 
-		// CodeSnippets占位符
-		<#abstract#>: 占位符
+		// CodeSnippets placeholder
+		<#abstract#>: placeholder
  		
- 		// xctempleate系统宏
- 		___FILENAME___: 文件名
- 		___PROJECTNAME___: 项目名
- 		___FULLUSERNAME___: 用户名
- 		___COPYRIGHT___: 版权声明
- 		___DATE___: 日期
+ 		// xctempleate system macro
+		___FILENAME___: File name
+		___PROJECTNAME___: Project name
+		___FULLUSERNAME___: username
+		___COPYRIGHT___: Copyright statement
+		___DATE___: Date
