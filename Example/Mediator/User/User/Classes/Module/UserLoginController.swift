@@ -1,5 +1,5 @@
 //
-//  UserLoginViewController.swift
+//  UserLoginController.swift
 //  User
 //
 //  Created by wuyong on 2021/1/1.
@@ -8,7 +8,7 @@
 import FWFramework
 import Mediator
 
-@objcMembers class UserLoginViewController: UIViewController {
+@objcMembers class UserLoginController: UIViewController {
     var completion: (() -> Void)?
     
     @FWModuleAnnotation(TestModuleService.self)
