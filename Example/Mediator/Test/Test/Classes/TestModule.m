@@ -36,7 +36,12 @@ FWDefSingleton(TestModule);
 
 + (NSBundle *)bundle
 {
-    return [[NSBundle fwBundleWithClass:[self class] name:@"TestModule"] fwLocalizedBundle];
+    static NSBundle *bundle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        bundle = [[NSBundle fwBundleWithClass:[self class] name:@"TestModule"] fwLocalizedBundle];
+    });
+    return bundle;
 }
 
 @end
