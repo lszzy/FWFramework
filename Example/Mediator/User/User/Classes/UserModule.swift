@@ -9,8 +9,12 @@ import FWFramework
 import Mediator
 
 @objcMembers class UserBundle: FWModuleBundle {
+    private static let userBundle: Bundle = {
+        return Bundle.fwBundle(with: UserBundle.classForCoder(), name: "User")?.fwLocalized() ?? .main
+    }()
+    
     override class func bundle() -> Bundle {
-        return Bundle.fwBundle(with: self.classForCoder(), name: "User")?.fwLocalized() ?? .main
+        return userBundle
     }
 }
 
