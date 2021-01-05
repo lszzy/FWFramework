@@ -108,7 +108,9 @@
 
 - (void)setupAppearance
 {
-    FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] initWithBackgroundColor:[UIColor fwColorWithHex:0xFFDA00] foregroundColor:[UIColor fwColorWithHex:0x111111] appearanceBlock:nil];
+    FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] init];
+    appearance.backgroundColor = [UIColor fwColorWithHex:0xFFDA00];
+    appearance.foregroundColor = [UIColor fwColorWithHex:0x111111];
     [FWNavigationBarAppearance setAppearance:appearance forStyle:FWNavigationBarStyleDefault];
     
     FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
