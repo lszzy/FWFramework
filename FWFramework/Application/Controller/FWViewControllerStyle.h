@@ -11,11 +11,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 导航栏样式可扩展枚举
+/// 导航栏全局样式可扩展枚举
 typedef NSInteger FWNavigationBarStyle NS_TYPED_EXTENSIBLE_ENUM;
 static const FWNavigationBarStyle FWNavigationBarStyleDefault = 0;
 static const FWNavigationBarStyle FWNavigationBarStyleHidden  = -1;
 static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
+
+/// 导航栏样式配置
+@interface FWNavigationBarAppearance : NSObject
+
+@property (nullable, nonatomic, strong) UIColor *backgroundColor;
+@property (nullable, nonatomic, strong) UIColor *foregroundColor;
+@property (nonatomic, assign) BOOL isHidden;
+@property (nonatomic, assign) BOOL isTransparent;
+@property (nullable, nonatomic, copy) void (^appearanceBlock)(UINavigationBar *navigationBar);
+
++ (nullable FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style;
++ (void)setAppearance:(nullable FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style;
+
+@end
 
 /*!
  @brief 视图控制器样式分类
@@ -39,6 +53,9 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 /// 当前导航栏样式，默认Default，设置后才会在viewWillAppear:自动应用生效
 @property (nonatomic, assign) FWNavigationBarStyle fwNavigationBarStyle;
+
+/// 当前导航栏设置，优先级高于style，设置后会在viewWillAppear:自动应用生效
+@property (nullable, nonatomic, strong) FWNavigationBarAppearance *fwNavigationBarAppearance;
 
 /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
@@ -79,22 +96,6 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 /// 设置导航栏返回按钮仅显示图片模式，下个页面生效
 - (void)fwSetBackBarImage:(nullable UIImage *)image;
-
-@end
-
-/// 导航栏样式配置
-@interface FWNavigationBarAppearance : NSObject
-
-@property (nullable, nonatomic, strong, readonly) UIColor *backgroundColor;
-@property (nullable, nonatomic, strong, readonly) UIColor *foregroundColor;
-@property (nullable, nonatomic, copy, readonly) void (^appearanceBlock)(UINavigationBar *navigationBar);
-
-- (instancetype)initWithBackgroundColor:(nullable UIColor *)backgroundColor
-                        foregroundColor:(nullable UIColor *)foregroundColor
-                        appearanceBlock:(nullable void (^)(UINavigationBar *navigationBar))appearanceBlock;
-
-+ (nullable FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style;
-+ (void)setAppearance:(nullable FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style;
 
 @end
 

@@ -13,6 +13,33 @@
 #import "FWImage.h"
 #import <objc/runtime.h>
 
+@implementation FWNavigationBarAppearance
+
++ (NSMutableDictionary *)styleAppearances
+{
+    static NSMutableDictionary *appearances = nil;
+    if (!appearances) {
+        appearances = [[NSMutableDictionary alloc] init];
+    }
+    return appearances;
+}
+
++ (FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style
+{
+    return [[self styleAppearances] objectForKey:@(style)];
+}
+
++ (void)setAppearance:(FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style
+{
+    if (appearance) {
+        [[self styleAppearances] setObject:appearance forKey:@(style)];
+    } else {
+        [[self styleAppearances] removeObjectForKey:@(style)];
+    }
+}
+
+@end
+
 @implementation UIViewController (FWStyle)
 
 #pragma mark - Bar
@@ -104,24 +131,43 @@
     }
 }
 
+- (FWNavigationBarAppearance *)fwNavigationBarAppearance
+{
+    return objc_getAssociatedObject(self, @selector(fwNavigationBarAppearance));
+}
+
+- (void)setFwNavigationBarAppearance:(FWNavigationBarAppearance *)fwNavigationBarAppearance
+{
+    objc_setAssociatedObject(self, @selector(fwNavigationBarAppearance), fwNavigationBarAppearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (self.isViewLoaded && self.view.window) {
+        [self fwUpdateNavigationBarStyle:NO];
+    }
+}
+
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
     if (!self.navigationController) return;
-    NSNumber *styleValue = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
-    if (!styleValue) return;
-    
-    FWNavigationBarStyle style = [styleValue integerValue];
-    BOOL hidden = (style == FWNavigationBarStyleHidden);
-    if (self.navigationController.navigationBarHidden != hidden) {
-        [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
+    NSNumber *style = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
+    if (!appearance && !style) return;
+
+    BOOL isHidden = appearance.isHidden;
+    BOOL isTransparent = appearance.isTransparent;
+    if (!appearance) {
+        appearance = [FWNavigationBarAppearance appearanceForStyle:style.integerValue];
+        isHidden = (style.integerValue == FWNavigationBarStyleHidden) || appearance.isHidden;
+        isTransparent = (style.integerValue == FWNavigationBarStyleClear) || appearance.isTransparent;
     }
     
-    if (style == FWNavigationBarStyleClear) {
+    if (self.navigationController.navigationBarHidden != isHidden) {
+        [self.navigationController setNavigationBarHidden:isHidden animated:animated];
+    }
+    if (isTransparent) {
         [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         [self.navigationController.navigationBar setShadowImage:[UIImage new]];
     }
     
-    FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance appearanceForStyle:style];
     if (appearance.backgroundColor) {
         [self.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:appearance.backgroundColor] forBarMetrics:UIBarMetricsDefault];
         [self.navigationController.navigationBar setShadowImage:[UIImage new]];
@@ -239,46 +285,6 @@
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationController.navigationBar.backIndicatorImage = indicatorImage;
     self.navigationController.navigationBar.backIndicatorTransitionMaskImage = indicatorImage;
-}
-
-@end
-
-@implementation FWNavigationBarAppearance
-
-- (instancetype)initWithBackgroundColor:(UIColor *)backgroundColor
-                        foregroundColor:(UIColor *)foregroundColor
-                        appearanceBlock:(void (^)(UINavigationBar *))appearanceBlock
-{
-    self = [super init];
-    if (self) {
-        _backgroundColor = backgroundColor;
-        _foregroundColor = foregroundColor;
-        _appearanceBlock = appearanceBlock;
-    }
-    return self;
-}
-
-+ (NSMutableDictionary *)styleAppearances
-{
-    static NSMutableDictionary *appearances = nil;
-    if (!appearances) {
-        appearances = [[NSMutableDictionary alloc] init];
-    }
-    return appearances;
-}
-
-+ (FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style
-{
-    return [[self styleAppearances] objectForKey:@(style)];
-}
-
-+ (void)setAppearance:(FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style
-{
-    if (appearance) {
-        [[self styleAppearances] setObject:appearance forKey:@(style)];
-    } else {
-        [[self styleAppearances] removeObjectForKey:@(style)];
-    }
 }
 
 @end
