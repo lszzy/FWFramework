@@ -88,29 +88,6 @@ static NSString *fwStaticDeviceUUID = nil;
 #endif
 }
 
-#pragma mark - Landscape
-
-+ (BOOL)fwIsInterfaceLandscape
-{
-    return UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
-}
-
-+ (BOOL)fwIsDeviceLandscape
-{
-    return UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]);
-}
-
-+ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation
-{
-    if ([UIDevice currentDevice].orientation == orientation) {
-        [UIViewController attemptRotationToDeviceOrientation];
-        return NO;
-    }
-    
-    [[UIDevice currentDevice] setValue:@(orientation) forKey:@"orientation"];
-    return YES;
-}
-
 #pragma mark - Network
 
 + (NSString *)fwIpAddress

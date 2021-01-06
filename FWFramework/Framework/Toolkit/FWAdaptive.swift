@@ -27,27 +27,29 @@ public let FWIsSimulator: Bool = false
 public var FWIsIphone: Bool { return UI_USER_INTERFACE_IDIOM() == .phone }
 /// 是否是iPad设备
 public var FWIsIpad: Bool { return UI_USER_INTERFACE_IDIOM() == .pad }
+/// 是否是Mac设备
+public var FWIsMac: Bool { return UIDevice.fwIsMac() }
+
+/// 界面是否横屏
+public var FWIsLandscape: Bool { return UIApplication.shared.statusBarOrientation.isLandscape }
+/// 设备是否横屏，无论支不支持横屏
+public var FWIsDeviceLandscape: Bool { return UIDevice.current.orientation.isLandscape }
 
 /// iOS系统版本
-public var FWIosVersion: Float {
-    return UIDevice.fwIosVersion()
-}
-
+public var FWIosVersion: Double { return UIDevice.fwIosVersion() }
 /// 是否是指定iOS主版本
-///
-/// - Parameter version: 指定主版本号
-/// - Returns: 比较结果
-public func FWIsIos(_ version: Int) -> Bool {
-    return UIDevice.fwIsIos(version)
-}
-
+public func FWIsIos(_ version: Int) -> Bool { return UIDevice.fwIsIos(version) }
 /// 是否是大于等于指定iOS主版本
-///
-/// - Parameter version: 指定主版本号
-/// - Returns: 比较结果
-public func FWIsIosLater(_ version: Int) -> Bool {
-    return UIDevice.fwIsIosLater(version)
-}
+public func FWIsIosLater(_ version: Int) -> Bool { return UIDevice.fwIsIosLater(version) }
+
+/// 设备尺寸，跟横竖屏无关
+public var FWDeviceSize: CGSize { return CGSize(width: FWDeviceWidth, height: FWDeviceHeight) }
+/// 设备宽度，跟横竖屏无关
+public var FWDeviceWidth: CGFloat { return min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) }
+/// 设备高度，跟横竖屏无关
+public var FWDeviceHeight: CGFloat { return max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) }
+/// 设备分辨率，跟横竖屏无关
+public var FWDeviceResolution: CGSize { return CGSize(width: FWDeviceWidth * UIScreen.main.scale, height: FWDeviceHeight * UIScreen.main.scale) }
 
 // MARK: - UIScreen+FWAdaptive
 
@@ -59,42 +61,10 @@ public var FWScreenWidth: CGFloat { return UIScreen.main.bounds.size.width }
 public var FWScreenHeight: CGFloat { return UIScreen.main.bounds.size.height }
 /// 屏幕像素比例
 public var FWScreenScale: CGFloat { return UIScreen.main.scale }
-/// 屏幕分辨率
-public var FWScreenResolution: CGSize { return CGSize(width: UIScreen.main.bounds.size.width * UIScreen.main.scale, height: UIScreen.main.bounds.size.height * UIScreen.main.scale) }
-
-/// 判断屏幕尺寸
-///
-/// - Parameters:
-///   - width: 屏幕宽度
-///   - height: 屏幕高度
-/// - Returns: 是否为该尺寸
-public func FWIsScreenSize(_ width: CGFloat, _ height: CGFloat) -> Bool {
-    return UIScreen.main.bounds.size.equalTo(CGSize(width: width, height: height))
-}
-
-/// 判断屏幕分辨率
-///
-/// - Parameters:
-///   - width: 分辨率宽度
-///   - height: 分辨率高度
-/// - Returns: 是否为该分辨率
-public func FWIsScreenResolution(_ width: CGFloat, _ height: CGFloat) -> Bool {
-    return FWScreenResolution.equalTo(CGSize(width: width, height: height))
-}
-
 /// 判断屏幕英寸
-///
-/// - Parameters:
-///   - inch: 屏幕英寸
-/// - Returns: 是否为该英寸
-public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool {
-    return UIScreen.fwIsScreenInch(inch)
-}
-
+public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fwIsScreenInch(inch) }
 /// 是否是iPhoneX系列全面屏幕
-public var FWIsScreenX: Bool {
-    return UIScreen.fwIsScreenX()
-}
+public var FWIsScreenX: Bool { return UIScreen.fwIsScreenX() }
 
 /// 状态栏高度
 public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight() }

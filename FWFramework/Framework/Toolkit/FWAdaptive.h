@@ -40,16 +40,32 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 /// 是否是iPhone设备
-#define FWIsIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
+#define FWIsIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 /// 是否是iPad设备
-#define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
+#define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+/// 是否是Mac设备
+#define FWIsMac [UIDevice fwIsMac]
+
+/// 界面是否横屏
+#define FWIsLandscape UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation)
+/// 设备是否横屏，无论支不支持横屏
+#define FWIsDeviceLandscape UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])
 
 /// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
-#define FWIosVersion [[[UIDevice currentDevice] systemVersion] floatValue]
+#define FWIosVersion [[[UIDevice currentDevice] systemVersion] doubleValue]
 /// 是否是指定iOS主版本
-#define FWIsIos( version ) (FWIosVersion >= version && FWIosVersion < (version + 1) ? YES : NO)
+#define FWIsIos( version ) (FWIosVersion >= version && FWIosVersion < (version + 1))
 /// 是否是大于等于指定iOS主版本
-#define FWIsIosLater( version ) (FWIosVersion >= version ? YES : NO)
+#define FWIsIosLater( version ) (FWIosVersion >= version)
+
+/// 设备尺寸，跟横竖屏无关
+#define FWDeviceSize CGSizeMake(FWDeviceWidth, FWDeviceHeight)
+/// 设备宽度，跟横竖屏无关
+#define FWDeviceWidth MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)
+/// 设备高度，跟横竖屏无关
+#define FWDeviceHeight MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)
+/// 设备分辨率，跟横竖屏无关
+#define FWDeviceResolution CGSizeMake(FWDeviceWidth * [UIScreen mainScreen].scale, FWDeviceHeight * [UIScreen mainScreen].scale)
 
 /*!
  @brief UIDevice+FWAdaptive
@@ -63,13 +79,31 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)fwIsIphone;
 /// 是否是iPad
 + (BOOL)fwIsIpad;
+/// 是否是Mac
++ (BOOL)fwIsMac;
+
+/// 界面是否横屏
++ (BOOL)fwIsLandscape;
+/// 设备是否横屏，无论支不支持横屏
++ (BOOL)fwIsDeviceLandscape;
+/// 设置界面方向，支持旋转方向时生效
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
 
 /// iOS系统版本
-+ (float)fwIosVersion;
++ (double)fwIosVersion;
 /// 是否是指定iOS主版本
 + (BOOL)fwIsIos:(NSInteger)version;
 /// 是否是大于等于指定iOS主版本
 + (BOOL)fwIsIosLater:(NSInteger)version;
+
+/// 设备尺寸，跟横竖屏无关
++ (CGSize)fwDeviceSize;
+/// 设备宽度，跟横竖屏无关
++ (CGFloat)fwDeviceWidth;
+/// 设备高度，跟横竖屏无关
++ (CGFloat)fwDeviceHeight;
+/// 设备分辨率，跟横竖屏无关
++ (CGSize)fwDeviceResolution;
 
 @end
 
@@ -87,21 +121,14 @@ static const FWScreenInch FWScreenInch61 = 61;
 static const FWScreenInch FWScreenInch65 = 65;
 static const FWScreenInch FWScreenInch67 = 67;
 
-/// 屏幕尺寸
+/// 屏幕尺寸，随横竖屏变化
 #define FWScreenSize [UIScreen mainScreen].bounds.size
-/// 屏幕宽度
+/// 屏幕宽度，随横竖屏变化
 #define FWScreenWidth [UIScreen mainScreen].bounds.size.width
-/// 屏幕高度
+/// 屏幕高度，随横竖屏变化
 #define FWScreenHeight [UIScreen mainScreen].bounds.size.height
 /// 屏幕像素比例
 #define FWScreenScale [UIScreen mainScreen].scale
-/// 屏幕分辨率
-#define FWScreenResolution CGSizeMake( [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale )
-
-/// 判断屏幕尺寸
-#define FWIsScreenSize( width, height ) CGSizeEqualToSize(CGSizeMake(width, height), [UIScreen mainScreen].bounds.size)
-/// 判断屏幕分辨率
-#define FWIsScreenResolution( width, height ) CGSizeEqualToSize(CGSizeMake(width, height), FWScreenResolution)
 /// 判断屏幕英寸
 #define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
 /// 是否是iPhoneX系列全面屏幕
@@ -138,20 +165,13 @@ static const FWScreenInch FWScreenInch67 = 67;
 + (CGFloat)fwScreenHeight;
 /// 屏幕像素比例
 + (CGFloat)fwScreenScale;
-/// 屏幕分辨率
-+ (CGSize)fwScreenResolution;
-/// 获取一像素的大小
-+ (CGFloat)fwPixelOne;
-
-/// 是否是指定尺寸屏幕
-+ (BOOL)fwIsScreenSize:(CGSize)size;
-/// 是否是指定分辨率屏幕
-+ (BOOL)fwIsScreenResolution:(CGSize)resolution;
 /// 是否是指定英寸屏幕
 + (BOOL)fwIsScreenInch:(FWScreenInch)inch;
 /// 是否是iPhoneX系列全面屏幕
 + (BOOL)fwIsScreenX;
 
+/// 获取一像素的大小
++ (CGFloat)fwPixelOne;
 /// 检查是否含有安全区域，可用来判断iPhoneX
 + (BOOL)fwHasSafeAreaInsets;
 /// 获取安全区域距离
