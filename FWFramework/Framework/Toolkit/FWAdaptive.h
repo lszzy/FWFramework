@@ -108,17 +108,17 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWIsScreenX [UIScreen fwIsScreenX]
 
 /// 状态栏高度
-#define FWStatusBarHeight (FWIsScreenX ? 44.0 : 20.0)
+#define FWStatusBarHeight [UIScreen fwStatusBarHeight]
 /// 导航栏高度
-#define FWNavigationBarHeight (FWIsScreenX ? 44.0 : 44.0)
+#define FWNavigationBarHeight [UIScreen fwNavigationBarHeight]
 /// 标签栏高度
-#define FWTabBarHeight (FWIsScreenX ? 83.0 : 49.0)
+#define FWTabBarHeight [UIScreen fwTabBarHeight]
 /// 工具栏高度
-#define FWToolBarHeight (FWIsScreenX ? 78.0 : 44.0)
+#define FWToolBarHeight [UIScreen fwToolBarHeight]
 /// 顶部栏高度，包含状态栏、导航栏
-#define FWTopBarHeight (FWStatusBarHeight + FWNavigationBarHeight)
+#define FWTopBarHeight [UIScreen fwTopBarHeight]
 /// 底部栏高度，包含标签栏
-#define FWBottomBarHeight FWTabBarHeight
+#define FWBottomBarHeight [UIScreen fwBottomBarHeight]
 
 /// 当前屏幕宽度缩放比例
 #define FWScaleFactorWidth [UIScreen fwScaleFactorWidth]
