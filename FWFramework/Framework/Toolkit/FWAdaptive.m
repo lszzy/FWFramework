@@ -38,32 +38,49 @@
 
 + (BOOL)fwIsIphone
 {
-    static BOOL isIphone;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        isIphone = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
-    });
-    return isIphone;
+    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
 }
 
 + (BOOL)fwIsIpad
 {
-    static BOOL isIpad;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        isIpad = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
-    });
-    return isIpad;
+    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
 }
 
-+ (float)fwIosVersion
++ (BOOL)fwIsMac
 {
-    static float version;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        version = [UIDevice currentDevice].systemVersion.floatValue;
-    });
-    return version;
+#if __IPHONE_14_0
+    if (@available(iOS 14.0, *)) {
+        return NSProcessInfo.processInfo.isiOSAppOnMac ||
+            NSProcessInfo.processInfo.isMacCatalystApp;
+    }
+#endif
+    return NO;
+}
+
++ (BOOL)fwIsLandscape
+{
+    return UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
+}
+
++ (BOOL)fwIsDeviceLandscape
+{
+    return UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]);
+}
+
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation
+{
+    if ([UIDevice currentDevice].orientation == orientation) {
+        [UIViewController attemptRotationToDeviceOrientation];
+        return NO;
+    }
+    
+    [[UIDevice currentDevice] setValue:@(orientation) forKey:@"orientation"];
+    return YES;
+}
+
++ (double)fwIosVersion
+{
+    return [UIDevice currentDevice].systemVersion.doubleValue;
 }
 
 + (BOOL)fwIsIos:(NSInteger)version
@@ -74,6 +91,26 @@
 + (BOOL)fwIsIosLater:(NSInteger)version
 {
     return [self fwIosVersion] >= version;
+}
+
++ (CGSize)fwDeviceSize
+{
+    return CGSizeMake([self fwDeviceWidth], [self fwDeviceHeight]);
+}
+
++ (CGFloat)fwDeviceWidth
+{
+    return MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+}
+
++ (CGFloat)fwDeviceHeight
+{
+    return MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+}
+
++ (CGSize)fwDeviceResolution
+{
+    return CGSizeMake([self fwDeviceWidth] * [UIScreen mainScreen].scale, [self fwDeviceHeight] * [UIScreen mainScreen].scale);
 }
 
 @end
@@ -105,12 +142,36 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     return [UIScreen mainScreen].scale;
 }
 
-+ (CGSize)fwScreenResolution
++ (BOOL)fwIsScreenInch:(FWScreenInch)inch
 {
-    return CGSizeMake(
-                      [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale,
-                      [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale
-                      );
+    switch (inch) {
+        case FWScreenInch35:
+            return CGSizeEqualToSize(CGSizeMake(320, 480), [UIDevice fwDeviceSize]);
+        case FWScreenInch40:
+            return CGSizeEqualToSize(CGSizeMake(320, 568), [UIDevice fwDeviceSize]);
+        case FWScreenInch47:
+            return CGSizeEqualToSize(CGSizeMake(375, 667), [UIDevice fwDeviceSize]);
+        case FWScreenInch54:
+            return CGSizeEqualToSize(CGSizeMake(360, 780), [UIDevice fwDeviceSize]);
+        case FWScreenInch55:
+            return CGSizeEqualToSize(CGSizeMake(414, 736), [UIDevice fwDeviceSize]);
+        case FWScreenInch58:
+            return CGSizeEqualToSize(CGSizeMake(375, 812), [UIDevice fwDeviceSize]);
+        case FWScreenInch61:
+            return CGSizeEqualToSize(CGSizeMake(828, 1792), [UIDevice fwDeviceResolution])
+                || CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fwDeviceSize]);
+        case FWScreenInch65:
+            return CGSizeEqualToSize(CGSizeMake(1242, 2688), [UIDevice fwDeviceResolution]);
+        case FWScreenInch67:
+            return CGSizeEqualToSize(CGSizeMake(428, 926), [UIDevice fwDeviceSize]);
+        default:
+            return NO;
+    }
+}
+
++ (BOOL)fwIsScreenX
+{
+    return [self fwSafeAreaInsets].bottom > 0;
 }
 
 + (CGFloat)fwPixelOne
@@ -120,48 +181,6 @@ static CGFloat fwStaticScaleFactorHeight = 812;
         pixelOne = 1 / [[UIScreen mainScreen] scale];
     }
     return pixelOne;
-}
-
-+ (BOOL)fwIsScreenSize:(CGSize)size
-{
-    return CGSizeEqualToSize(size, [UIScreen mainScreen].bounds.size);
-}
-
-+ (BOOL)fwIsScreenResolution:(CGSize)resolution
-{
-    return CGSizeEqualToSize(resolution, [self fwScreenResolution]);
-}
-
-+ (BOOL)fwIsScreenInch:(FWScreenInch)inch
-{
-    switch (inch) {
-        case FWScreenInch35:
-            return [self fwIsScreenSize:CGSizeMake(320, 480)];
-        case FWScreenInch40:
-            return [self fwIsScreenSize:CGSizeMake(320, 568)];
-        case FWScreenInch47:
-            return [self fwIsScreenSize:CGSizeMake(375, 667)];
-        case FWScreenInch54:
-            return [self fwIsScreenSize:CGSizeMake(360, 780)];
-        case FWScreenInch55:
-            return [self fwIsScreenSize:CGSizeMake(414, 736)];
-        case FWScreenInch58:
-            return [self fwIsScreenSize:CGSizeMake(375, 812)];
-        case FWScreenInch61:
-            return [self fwIsScreenResolution:CGSizeMake(828, 1792)]
-                || [self fwIsScreenSize:CGSizeMake(390, 844)];
-        case FWScreenInch65:
-            return [self fwIsScreenResolution:CGSizeMake(1242, 2688)];
-        case FWScreenInch67:
-            return [self fwIsScreenSize:CGSizeMake(428, 926)];
-        default:
-            return NO;
-    }
-}
-
-+ (BOOL)fwIsScreenX
-{
-    return [self fwSafeAreaInsets].bottom > 0;
 }
 
 + (BOOL)fwHasSafeAreaInsets
