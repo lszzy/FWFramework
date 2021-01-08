@@ -138,14 +138,12 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWStatusBarHeight [UIScreen fwStatusBarHeight]
 /// 导航栏高度
 #define FWNavigationBarHeight [UIScreen fwNavigationBarHeight]
+/// 顶部栏高度，包含状态栏、导航栏
+#define FWTopBarHeight [UIScreen fwTopBarHeight]
 /// 标签栏高度
 #define FWTabBarHeight [UIScreen fwTabBarHeight]
 /// 工具栏高度
 #define FWToolBarHeight [UIScreen fwToolBarHeight]
-/// 顶部栏高度，包含状态栏、导航栏
-#define FWTopBarHeight [UIScreen fwTopBarHeight]
-/// 底部栏高度，包含标签栏
-#define FWBottomBarHeight [UIScreen fwBottomBarHeight]
 
 /// 当前屏幕宽度缩放比例
 #define FWScaleFactorWidth [UIScreen fwScaleFactorWidth]
@@ -181,14 +179,12 @@ static const FWScreenInch FWScreenInch67 = 67;
 + (CGFloat)fwStatusBarHeight;
 /// 导航栏高度，与是否隐藏无关
 + (CGFloat)fwNavigationBarHeight;
+/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
++ (CGFloat)fwTopBarHeight;
 /// 标签栏高度，与是否隐藏无关
 + (CGFloat)fwTabBarHeight;
 /// 工具栏高度，与是否隐藏无关
 + (CGFloat)fwToolBarHeight;
-/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-+ (CGFloat)fwTopBarHeight;
-/// 底部栏高度，包含标签栏，与是否隐藏无关
-+ (CGFloat)fwBottomBarHeight;
 
 /// 指定缩放比例原始设计图尺寸，默认{375,812}
 + (void)fwSetScaleFactorSize:(CGSize)size;
@@ -208,14 +204,12 @@ static const FWScreenInch FWScreenInch67 = 67;
 - (CGFloat)fwStatusBarHeight;
 /// 当前导航栏高度，隐藏为0
 - (CGFloat)fwNavigationBarHeight;
+/// 顶部栏高度，包含状态栏、导航栏，隐藏为0
+- (CGFloat)fwTopBarHeight;
 /// 当前标签栏高度，隐藏为0
 - (CGFloat)fwTabBarHeight;
 /// 当前工具栏高度，隐藏为0
 - (CGFloat)fwToolBarHeight;
-/// 顶部栏高度，包含状态栏、导航栏，隐藏为0
-- (CGFloat)fwTopBarHeight;
-/// 底部栏高度，包含标签栏，隐藏为0
-- (CGFloat)fwBottomBarHeight;
 
 @end
 

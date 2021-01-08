@@ -70,14 +70,12 @@ public var FWIsScreenX: Bool { return UIScreen.fwIsScreenX() }
 public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight() }
 /// 导航栏高度
 public var FWNavigationBarHeight: CGFloat { return UIScreen.fwNavigationBarHeight() }
+/// 顶部栏高度，包含状态栏、导航栏
+public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight() }
 /// 标签栏高度
 public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight() }
 /// 工具栏高度
 public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight() }
-/// 顶部栏高度，包含状态栏、导航栏
-public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight() }
-/// 底部栏高度，包含标签栏
-public var FWBottomBarHeight: CGFloat { return UIScreen.fwBottomBarHeight() }
 
 /// 当前屏幕宽度缩放比例
 public var FWScaleFactorWidth: CGFloat { return UIScreen.fwScaleFactorWidth() }
