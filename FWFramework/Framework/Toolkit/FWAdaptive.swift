@@ -63,8 +63,11 @@ public var FWScreenHeight: CGFloat { return UIScreen.main.bounds.size.height }
 public var FWScreenScale: CGFloat { return UIScreen.main.scale }
 /// 判断屏幕英寸
 public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fwIsScreenInch(inch) }
+/// 是否是全面屏屏幕
+public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen() }
 /// 是否是iPhoneX系列全面屏幕
-public var FWIsScreenX: Bool { return UIScreen.fwIsScreenX() }
+@available(*, deprecated, renamed: "FWIsNotchedScreen")
+public var FWIsScreenX: Bool { return UIScreen.fwIsNotchedScreen() }
 
 /// 状态栏高度
 public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight() }

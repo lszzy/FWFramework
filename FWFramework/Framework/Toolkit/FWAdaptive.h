@@ -131,8 +131,10 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWScreenScale [UIScreen mainScreen].scale
 /// 判断屏幕英寸
 #define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
-/// 是否是iPhoneX系列全面屏幕
-#define FWIsScreenX [UIScreen fwIsScreenX]
+/// 是否是全面屏屏幕
+#define FWIsNotchedScreen [UIScreen fwIsNotchedScreen]
+/// 是否是iPhoneX系列全面屏幕，已废弃，下个版本移除
+#define FWIsScreenX [UIScreen fwIsNotchedScreen]
 
 /// 状态栏高度
 #define FWStatusBarHeight [UIScreen fwStatusBarHeight]
@@ -165,8 +167,10 @@ static const FWScreenInch FWScreenInch67 = 67;
 + (CGFloat)fwScreenScale;
 /// 是否是指定英寸屏幕
 + (BOOL)fwIsScreenInch:(FWScreenInch)inch;
-/// 是否是iPhoneX系列全面屏幕
-+ (BOOL)fwIsScreenX;
+/// 是否是全面屏屏幕
++ (BOOL)fwIsNotchedScreen;
+/// 是否是iPhoneX系列全面屏幕，已废弃，下个版本删除
++ (BOOL)fwIsScreenX DEPRECATED_MSG_ATTRIBUTE("Use fwIsNotchedScreen instead.");
 
 /// 获取一像素的大小
 + (CGFloat)fwPixelOne;

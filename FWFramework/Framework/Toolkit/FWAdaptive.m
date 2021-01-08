@@ -170,9 +170,14 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     }
 }
 
-+ (BOOL)fwIsScreenX
++ (BOOL)fwIsNotchedScreen
 {
     return [self fwSafeAreaInsets].bottom > 0;
+}
+
++ (BOOL)fwIsScreenX
+{
+    return [self fwIsNotchedScreen];
 }
 
 + (CGFloat)fwPixelOne
@@ -201,10 +206,10 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     }
     
     if ([UIDevice fwIsIpad]) {
-        return [self fwIsScreenX] ? 24 : 20;
+        return [self fwIsNotchedScreen] ? 24 : 20;
     }
     
-    if (![self fwIsScreenX]) { return 20; }
+    if (![self fwIsNotchedScreen]) { return 20; }
     if ([UIDevice fwIsLandscape]) { return 0; }
     if ([[UIDevice fwDeviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
     if (CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fwDeviceSize])) { return 47; }
@@ -229,7 +234,7 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 + (CGFloat)fwTabBarHeight
 {
     if ([UIDevice fwIsIpad]) {
-        if ([self fwIsScreenX]) { return 65; }
+        if ([self fwIsNotchedScreen]) { return 65; }
         return [UIDevice fwIosVersion] >= 12.0 ? 50 : 49;
     }
     
@@ -239,7 +244,7 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 + (CGFloat)fwToolBarHeight
 {
     if ([UIDevice fwIsIpad]) {
-        if ([UIScreen fwIsScreenX]) { return 70; }
+        if ([UIScreen fwIsNotchedScreen]) { return 70; }
         return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
     }
     
