@@ -9,6 +9,7 @@
 
 #import "FWAdaptive.h"
 #import "FWRouter.h"
+#import "FWToolkit.h"
 
 @implementation UIApplication (FWAdaptive)
 
@@ -176,11 +177,7 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 + (CGFloat)fwPixelOne
 {
-    static CGFloat pixelOne = -1.0;
-    if (pixelOne < 0) {
-        pixelOne = 1 / [[UIScreen mainScreen] scale];
-    }
-    return pixelOne;
+    return 1 / UIScreen.mainScreen.scale;
 }
 
 + (BOOL)fwHasSafeAreaInsets
@@ -190,36 +187,38 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 + (UIEdgeInsets)fwSafeAreaInsets
 {
-    static UIEdgeInsets safeAreaInsets;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (@available(iOS 11.0, *)) {
-            safeAreaInsets = UIWindow.fwMainWindow.safeAreaInsets;
-        } else {
-            safeAreaInsets = UIEdgeInsetsZero;
-        }
-    });
-    return safeAreaInsets;
+    if (@available(iOS 11.0, *)) {
+        return UIWindow.fwMainWindow.safeAreaInsets;
+    } else {
+        return UIEdgeInsetsZero;
+    }
 }
 
 + (CGFloat)fwStatusBarHeight
 {
-    return [self fwIsScreenX] ? 44.0 : 20.0;
+    if (!UIApplication.sharedApplication.statusBarHidden) {
+        return UIApplication.sharedApplication.statusBarFrame.size.height;
+    }
+    
+    if ([UIDevice fwIsIpad]) {
+        return [self fwIsScreenX] ? 24 : 20;
+    }
+    
+    if (![self fwIsScreenX]) { return 20; }
+    if ([UIDevice fwIsLandscape]) { return 0; }
+    if ([[UIDevice fwDeviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
+    if (CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fwDeviceSize])) { return 47; }
+    if ([self fwIsScreenInch:FWScreenInch67]) { return 47; }
+    return 44;
 }
 
 + (CGFloat)fwNavigationBarHeight
 {
-    return 44.0;
-}
-
-+ (CGFloat)fwTabBarHeight
-{
-    return [self fwIsScreenX] ? 83.0 : 49.0;
-}
-
-+ (CGFloat)fwToolBarHeight
-{
-    return [self fwIsScreenX] ? 78.0 : 44.0;
+    if ([UIDevice fwIsIpad]) {
+        return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
+    }
+    
+    return [UIDevice fwIsLandscape] ? 32 : 44;
 }
 
 + (CGFloat)fwTopBarHeight
@@ -227,9 +226,24 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
 }
 
-+ (CGFloat)fwBottomBarHeight
++ (CGFloat)fwTabBarHeight
 {
-    return [self fwTabBarHeight];
+    if ([UIDevice fwIsIpad]) {
+        if ([self fwIsScreenX]) { return 65; }
+        return [UIDevice fwIosVersion] >= 12.0 ? 50 : 49;
+    }
+    
+    return ([UIDevice fwIsLandscape] ? 32 : 49) + [self fwSafeAreaInsets].bottom;
+}
+
++ (CGFloat)fwToolBarHeight
+{
+    if ([UIDevice fwIsIpad]) {
+        if ([UIScreen fwIsScreenX]) { return 70; }
+        return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
+    }
+    
+    return ([UIDevice fwIsLandscape] ? 32 : 44) + [self fwSafeAreaInsets].bottom;
 }
 
 + (void)fwSetScaleFactorSize:(CGSize)size
@@ -262,7 +276,7 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 - (CGFloat)fwStatusBarHeight
 {
-    if ([self prefersStatusBarHidden]) {
+    if (UIApplication.sharedApplication.statusBarHidden) {
         return 0.0;
     } else {
         return [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -276,6 +290,11 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     } else {
         return self.navigationController.navigationBar.frame.size.height;
     }
+}
+
+- (CGFloat)fwTopBarHeight
+{
+    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
 }
 
 - (CGFloat)fwTabBarHeight
@@ -292,18 +311,8 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     if (self.navigationController.toolbarHidden) {
         return 0.0;
     } else {
-        return self.navigationController.toolbar.frame.size.height;
+        return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
     }
-}
-
-- (CGFloat)fwTopBarHeight
-{
-    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
-}
-
-- (CGFloat)fwBottomBarHeight
-{
-    return [self fwTabBarHeight];
 }
 
 @end

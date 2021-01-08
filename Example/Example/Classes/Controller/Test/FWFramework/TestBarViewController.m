@@ -66,6 +66,7 @@ FWPropertyAssign(BOOL, hideToast);
     
     self.fwTabBarHidden = YES;
     [self refreshBarFrame];
+    [self fwObserveNotification:UIDeviceOrientationDidChangeNotification target:self action:@selector(refreshBarFrame)];
     
     if (!self.hideToast) {
         [self fwSetRightBarItem:@"启用" block:^(id sender) {
@@ -167,11 +168,12 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)refreshBarFrame
 {
-    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@ 当前状态栏：%@\n全局导航栏：%@ 当前导航栏：%@\n全局标签栏：%@ 当前标签栏：%@\n全局工具栏：%@ 当前工具栏：%@",
+    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@ 当前状态栏：%@\n全局导航栏：%@ 当前导航栏：%@\n全局标签栏：%@ 当前标签栏：%@\n全局工具栏：%@ 当前工具栏：%@\n安全区域：%@",
                             @([UIScreen fwStatusBarHeight]), @([self fwStatusBarHeight]),
                             @([UIScreen fwNavigationBarHeight]), @([self fwNavigationBarHeight]),
                             @([UIScreen fwTabBarHeight]), @([self fwTabBarHeight]),
-                            @([UIScreen fwToolBarHeight]), @([self fwToolBarHeight])];
+                            @([UIScreen fwToolBarHeight]), @([self fwToolBarHeight]),
+                            NSStringFromUIEdgeInsets([UIScreen fwSafeAreaInsets])];
 }
 
 - (void)onStatusBar
@@ -295,6 +297,7 @@ FWPropertyAssign(BOOL, hideToast);
     } else {
         [UIDevice fwSetDeviceOrientation:UIDeviceOrientationLandscapeLeft];
     }
+    [self refreshBarFrame];
 }
 
 @end

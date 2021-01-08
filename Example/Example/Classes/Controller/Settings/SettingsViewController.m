@@ -124,7 +124,7 @@
         self.screenView.backgroundColor = [UIColor whiteColor];
         [self.screenView fwSetBorderColor:[UIColor appColorBorder] width:0.5 cornerRadius:5];
         [[UIWindow fwMainWindow] addSubview:self.screenView];
-        self.screenView.fwLayoutChain.rightWithInset(10).bottomWithInset(FWBottomBarHeight + 10).size(CGSizeMake(100, 100.0 / FWScreenWidth * FWScreenHeight));
+        self.screenView.fwLayoutChain.rightWithInset(10).bottomWithInset(FWTabBarHeight + 10).size(CGSizeMake(100, 100.0 / FWScreenWidth * FWScreenHeight));
         
         UILabel *screenLabel = [UILabel fwLabelWithFont:[UIFont appFontTiny] textColor:[UIColor redColor] text:@"0"];
         self.screenLabel = screenLabel;
