@@ -21,6 +21,9 @@ import Mediator
 @objcMembers public class UserModule: NSObject, UserModuleService {
     private static let sharedModule = UserModule()
     
+    @FWUserDefaultAnnotation("userId", defaultValue: "")
+    private var userId: String
+    
     public static func sharedInstance() -> Self {
         return sharedModule as! Self
     }
@@ -29,10 +32,22 @@ import Mediator
         FWLogDebug(#function)
     }
     
+    public func isLogin() -> Bool {
+        return userId.count > 0
+    }
+    
     public func login(_ completion: (() -> Void)?) {
         let viewController = UserLoginController()
-        viewController.completion = completion
+        viewController.completion = { [weak self] in
+            self?.userId = "1"
+            completion?()
+        }
         let navigationController = UINavigationController(rootViewController: viewController)
         FWRouter.present(navigationController, animated: true, completion: nil)
+    }
+    
+    public func logout(_ completion: (() -> Void)?) {
+        userId = ""
+        completion?()
     }
 }

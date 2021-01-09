@@ -43,12 +43,13 @@
     
     UIViewController *settingsController = [SettingsViewController new];
     settingsController.hidesBottomBarWhenPushed = NO;
-    settingsController.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
-    settingsController.tabBarItem.title = @"设置";
+    UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
+    settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
+    settingsNav.tabBarItem.title = @"设置";
     
     self.delegate = self;
     self.definesPresentationContext = YES;
-    self.viewControllers = @[homeNav, testNav, settingsController];
+    self.viewControllers = @[homeNav, testNav, settingsNav];
 }
 
 #pragma mark - UITabBarControllerDelegate
