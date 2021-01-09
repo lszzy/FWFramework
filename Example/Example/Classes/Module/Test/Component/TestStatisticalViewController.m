@@ -7,7 +7,7 @@
 //
 
 #import "TestStatisticalViewController.h"
-#import "BaseWebViewController.h"
+#import "WebViewController.h"
 
 @interface TestStatisticalCell : UICollectionViewCell
 
@@ -278,7 +278,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 - (void)clickHandler:(NSInteger)index
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        BaseWebViewController *viewController = [BaseWebViewController new];
+        WebViewController *viewController = [WebViewController new];
         viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
         if (index % 2 == 0) {
             [self.navigationController pushViewController:viewController animated:YES];

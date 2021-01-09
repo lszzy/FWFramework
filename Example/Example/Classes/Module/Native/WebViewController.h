@@ -1,5 +1,5 @@
 //
-//  BaseWebViewController.h
+//  WebViewController.h
 //  Example
 //
 //  Created by wuyong on 2019/9/2.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface BaseWebViewController : BaseViewController <FWWebViewController>
+@interface WebViewController : BaseViewController <FWWebViewController>
 
 @property (nonatomic, copy, nullable) NSString *requestUrl;
 

@@ -153,11 +153,8 @@ AppFontImpl(appFontSemiBoldTiny, 10, AppFontStyleSemiBold);
     [button fwSetCornerRadius:kAppCornerRadiusNormal];
     button.titleLabel.font = [UIFont appFontLarge];
     [button setTitleColor:[UIColor appColorWhite] forState:UIControlStateNormal];
-    // 设置阴影
     [button.titleLabel fwSetShadowColor:[UIColor appColorBlack] offset:CGSizeMake(0, -1) radius:0.01];
-    // 全局背景色
     button.backgroundColor = [UIColor appColorMain];
-    // 禁用背景色图片
     [button fwSetBackgroundColor:[UIColor appColorFill] forState:UIControlStateDisabled];
     [button fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - kAppPaddingLarge * 2];
     [button fwSetDimension:NSLayoutAttributeHeight toSize:45];
