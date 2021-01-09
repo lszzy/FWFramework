@@ -13,6 +13,8 @@
 
 "mediatorLogin" = "Mediator Login";
 "mediatorLogout" = "Mediator Logout";
+"homeTitle" = "Home";
+"testTitle" = "Test";
 "settingTitle" = "Settings";
 "debugButton" = "Debug";
 "languageTitle" = "Custom:%@ System:%@ (%@)";

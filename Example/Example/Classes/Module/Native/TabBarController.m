@@ -32,24 +32,30 @@
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
     homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
-    homeNav.tabBarItem.title = @"首页";
+    homeNav.tabBarItem.title = FWLocalizedString(@"homeTitle");
     [homeNav.tabBarItem fwShowBadgeView:[[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall] badgeValue:@"1"];
     
     UIViewController *testController = [TestViewController new];
     testController.hidesBottomBarWhenPushed = NO;
     UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:testController];
     testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
-    testNav.tabBarItem.title = @"测试";
+    testNav.tabBarItem.title = FWLocalizedString(@"testTitle");
     
     UIViewController *settingsController = [SettingsViewController new];
     settingsController.hidesBottomBarWhenPushed = NO;
     UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
     settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
-    settingsNav.tabBarItem.title = @"设置";
+    settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
     
     self.delegate = self;
     self.definesPresentationContext = YES;
     self.viewControllers = @[homeNav, testNav, settingsNav];
+    
+    [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
+        homeNav.tabBarItem.title = FWLocalizedString(@"homeTitle");
+        testNav.tabBarItem.title = FWLocalizedString(@"testTitle");
+        settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
+    }];
 }
 
 #pragma mark - UITabBarControllerDelegate

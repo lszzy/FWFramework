@@ -23,9 +23,10 @@
 {
     if (!_searchBar) {
         _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
-        _searchBar.placeholder = @"请输入搜索关键字";
+        _searchBar.placeholder = @"Search";
         _searchBar.delegate = self;
         _searchBar.showsCancelButton = YES;
+        [_searchBar.fwCancelButton setTitle:FWLocalizedString(@"取消") forState:UIControlStateNormal];
         [_searchBar fwForceCancelButtonEnabled:YES];
         [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
         [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
