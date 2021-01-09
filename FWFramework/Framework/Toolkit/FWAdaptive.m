@@ -223,7 +223,11 @@ static CGFloat fwStaticScaleFactorHeight = 812;
         return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
     }
     
-    return [UIDevice fwIsLandscape] ? 32 : 44;
+    CGFloat height = 44;
+    if ([UIDevice fwIsLandscape]) {
+        height = [self fwIsRegularScreen] ? 44 : 32;
+    }
+    return height;
 }
 
 + (CGFloat)fwTopBarHeight
@@ -238,7 +242,11 @@ static CGFloat fwStaticScaleFactorHeight = 812;
         return [UIDevice fwIosVersion] >= 12.0 ? 50 : 49;
     }
     
-    return ([UIDevice fwIsLandscape] ? 32 : 49) + [self fwSafeAreaInsets].bottom;
+    CGFloat height = 49;
+    if ([UIDevice fwIsLandscape]) {
+        height = [self fwIsRegularScreen] ? 49 : 32;
+    }
+    return height + [self fwSafeAreaInsets].bottom;
 }
 
 + (CGFloat)fwToolBarHeight
@@ -248,7 +256,36 @@ static CGFloat fwStaticScaleFactorHeight = 812;
         return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
     }
     
-    return ([UIDevice fwIsLandscape] ? 32 : 44) + [self fwSafeAreaInsets].bottom;
+    CGFloat height = 44;
+    if ([UIDevice fwIsLandscape]) {
+        height = [self fwIsRegularScreen] ? 44 : 32;
+    }
+    return height + [self fwSafeAreaInsets].bottom;
+}
+
++ (BOOL)fwIsRegularScreen
+{
+    // https://github.com/Tencent/QMUI_iOS
+    if ([UIDevice fwIsIpad]) { return YES; }
+    
+    BOOL isZoomedMode = NO;
+    if ([UIDevice fwIsIphone]) {
+        CGFloat nativeScale = UIScreen.mainScreen.nativeScale;
+        CGFloat scale = UIScreen.mainScreen.scale;
+        if (CGSizeEqualToSize(UIScreen.mainScreen.nativeBounds.size, CGSizeMake(1080, 1920))) {
+            scale /= 1.15;
+        }
+        isZoomedMode = nativeScale > scale;
+    }
+    if (isZoomedMode) return NO;
+    
+    if ([self fwIsScreenInch:FWScreenInch67] ||
+        [self fwIsScreenInch:FWScreenInch65] ||
+        [self fwIsScreenInch:FWScreenInch61] ||
+        [self fwIsScreenInch:FWScreenInch55]) {
+        return YES;
+    }
+    return NO;
 }
 
 + (void)fwSetScaleFactorSize:(CGSize)size
@@ -318,6 +355,15 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     } else {
         return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
     }
+}
+
+- (CGFloat)fwBottomBarHeight
+{
+    CGFloat height = [self fwTabBarHeight];
+    if (height <= 0) {
+        height = [self fwToolBarHeight];
+    }
+    return height;
 }
 
 @end
