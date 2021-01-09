@@ -11,4 +11,11 @@
 "确定" = "确定";
 "取消" = "取消";
 
-"mediatorButton" = "模块化测试";
+"mediatorLogin" = "中间件登录";
+"mediatorLogout" = "中间件退出";
+"settingTitle" = "设置";
+"debugButton" = "调试";
+"languageTitle" = "自定义:%@ 系统:%@ (%@)";
+"loginInvalid" = "登录失效";
+"loginSuccess" = "登录成功";
+"logoutSuccess" = "退出成功";
