@@ -11,7 +11,9 @@
 
 @interface TestViewController () <UISearchBarDelegate>
 
+@property (nonatomic, assign) BOOL isSearch;
 @property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) NSMutableArray *searchResult;
 
 @end
 
@@ -21,7 +23,7 @@
 {
     if (!_searchBar) {
         _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
-        _searchBar.placeholder = @"我是很长很长";
+        _searchBar.placeholder = @"请输入搜索关键字";
         _searchBar.delegate = self;
         _searchBar.showsCancelButton = YES;
         [_searchBar fwForceCancelButtonEnabled:YES];
@@ -39,6 +41,11 @@
     return _searchBar;
 }
 
+- (NSArray *)displayData
+{
+    return self.isSearch ? self.searchResult : self.tableData;
+}
+
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     [searchBar fwSetSearchIconCenter:NO];
     return YES;
@@ -47,6 +54,37 @@
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
     [searchBar fwSetSearchIconCenter:YES];
     return YES;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    self.isSearch = searchText.fwTrimString.length > 0;
+    if (!self.isSearch) {
+        self.searchResult = [NSMutableArray array];
+        [self.tableView reloadData];
+        return;
+    }
+    
+    NSMutableArray *searchResult = [NSMutableArray array];
+    NSString *searchString = searchText.fwTrimString.lowercaseString;
+    for (NSArray *sectionData in self.tableData) {
+        NSMutableArray *sectionResult = [NSMutableArray array];
+        for (NSArray *rowData in sectionData[1]) {
+            if ([[rowData[0] lowercaseString] containsString:searchString]) {
+                [sectionResult addObject:rowData];
+            }
+        }
+        if (sectionResult.count > 0) {
+            [searchResult addObject:@[sectionData[0], sectionResult]];
+        }
+    }
+    self.searchResult = searchResult;
+    [self.tableView reloadData];
 }
 
 - (void)renderData
@@ -150,7 +188,7 @@
 
 - (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
 {
-    NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
+    NSArray *sectionData = [self.displayData objectAtIndex:indexPath.section];
     NSArray *sectionList = [sectionData objectAtIndex:1];
     NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
     
@@ -159,7 +197,7 @@
 
 - (void)onCellSelect:(NSIndexPath *)indexPath
 {
-    NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
+    NSArray *sectionData = [self.displayData objectAtIndex:indexPath.section];
     NSArray *sectionList = [sectionData objectAtIndex:1];
     NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
     
@@ -178,19 +216,19 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.tableData.count;
+    return self.displayData.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *sectionData = [self.tableData objectAtIndex:section];
+    NSArray *sectionData = [self.displayData objectAtIndex:section];
     NSArray *sectionList = [sectionData objectAtIndex:1];
     return sectionList.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSArray *sectionData = [self.tableData objectAtIndex:section];
+    NSArray *sectionData = [self.displayData objectAtIndex:section];
     NSString *sectionName = [sectionData objectAtIndex:0];
     return sectionName;
 }
