@@ -69,15 +69,15 @@ public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen() }
 @available(*, deprecated, renamed: "FWIsNotchedScreen")
 public var FWIsScreenX: Bool { return UIScreen.fwIsNotchedScreen() }
 
-/// 状态栏高度
+/// 状态栏高度，与是否隐藏无关
 public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight() }
-/// 导航栏高度
+/// 导航栏高度，与是否隐藏无关
 public var FWNavigationBarHeight: CGFloat { return UIScreen.fwNavigationBarHeight() }
-/// 顶部栏高度，包含状态栏、导航栏
+/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
 public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight() }
-/// 标签栏高度
+/// 标签栏高度，与是否隐藏无关
 public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight() }
-/// 工具栏高度
+/// 工具栏高度，与是否隐藏无关
 public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight() }
 
 /// 当前屏幕宽度缩放比例

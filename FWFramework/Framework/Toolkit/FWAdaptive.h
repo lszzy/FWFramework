@@ -136,15 +136,15 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 是否是iPhoneX系列全面屏幕，已废弃，下个版本移除
 #define FWIsScreenX [UIScreen fwIsNotchedScreen]
 
-/// 状态栏高度
+/// 状态栏高度，与是否隐藏无关
 #define FWStatusBarHeight [UIScreen fwStatusBarHeight]
-/// 导航栏高度
+/// 导航栏高度，与是否隐藏无关
 #define FWNavigationBarHeight [UIScreen fwNavigationBarHeight]
-/// 顶部栏高度，包含状态栏、导航栏
+/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
 #define FWTopBarHeight [UIScreen fwTopBarHeight]
-/// 标签栏高度
+/// 标签栏高度，与是否隐藏无关
 #define FWTabBarHeight [UIScreen fwTabBarHeight]
-/// 工具栏高度
+/// 工具栏高度，与是否隐藏无关
 #define FWToolBarHeight [UIScreen fwToolBarHeight]
 
 /// 当前屏幕宽度缩放比例
@@ -204,16 +204,18 @@ static const FWScreenInch FWScreenInch67 = 67;
  */
 @interface UIViewController (FWAdaptive)
 
-/// 当前状态栏高度，隐藏为0
+/// 当前状态栏高度，隐藏为0，推荐使用
 - (CGFloat)fwStatusBarHeight;
-/// 当前导航栏高度，隐藏为0
+/// 当前导航栏高度，隐藏为0，推荐使用
 - (CGFloat)fwNavigationBarHeight;
-/// 顶部栏高度，包含状态栏、导航栏，隐藏为0
+/// 顶部栏高度，包含状态栏、导航栏，隐藏为0，推荐使用
 - (CGFloat)fwTopBarHeight;
-/// 当前标签栏高度，隐藏为0
+/// 当前标签栏高度，隐藏为0，推荐使用
 - (CGFloat)fwTabBarHeight;
-/// 当前工具栏高度，隐藏为0
+/// 当前工具栏高度，隐藏为0，推荐使用
 - (CGFloat)fwToolBarHeight;
+/// 底部栏高度，标签栏>工具栏，隐藏为0，推荐使用
+- (CGFloat)fwBottomBarHeight;
 
 @end
 
