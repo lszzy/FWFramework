@@ -7,11 +7,11 @@
  @updated    2020/3/17
  */
 
-#import "BaseWebViewController.h"
+#import "WebViewController.h"
 
 /*!
  @brief TestJavascriptBridgeViewController
  */
-@interface TestJavascriptBridgeViewController : BaseWebViewController
+@interface TestJavascriptBridgeViewController : WebViewController
 
 @end

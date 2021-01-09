@@ -7,7 +7,7 @@
 //
 
 #import "TestBannerViewController.h"
-#import "BaseWebViewController.h"
+#import "WebViewController.h"
 
 @interface TestBannerViewController () <FWBannerViewDelegate>
 
@@ -213,7 +213,7 @@
 {
     FWLogDebug(@"index: %@", @(index));
     
-    BaseWebViewController *viewController = [BaseWebViewController new];
+    WebViewController *viewController = [WebViewController new];
     viewController.requestUrl = @"http://kvm.wuyong.site/test.php";
     if (index % 2 == 0) {
         [self.navigationController pushViewController:viewController animated:YES];

@@ -7,7 +7,7 @@
 //
 
 #import "AppRouter.h"
-#import "BaseWebViewController.h"
+#import "WebViewController.h"
 #import "TestViewController.h"
 #import "SettingsViewController.h"
 #import "TestRouterViewController.h"
@@ -60,7 +60,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         [UIApplication fwOpenUniversalLinks:parameters[FWRouterURLKey] completionHandler:^(BOOL success) {
             if (success) return;
             
-            BaseWebViewController *viewController = [BaseWebViewController new];
+            WebViewController *viewController = [WebViewController new];
             viewController.title = parameters[FWRouterURLKey];
             viewController.requestUrl = parameters[FWRouterURLKey];
             [FWRouter pushViewController:viewController animated:YES];
@@ -116,7 +116,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     
     [FWRouter registerURL:AppRouter.ROUTE_JAVASCRIPT withHandler:^(NSDictionary *parameters) {
         UIViewController *topController = [[UIWindow fwMainWindow] fwTopViewController];
-        if (![topController isKindOfClass:[BaseWebViewController class]] || !topController.isViewLoaded) return;
+        if (![topController isKindOfClass:[WebViewController class]] || !topController.isViewLoaded) return;
         
         NSString *param = [parameters[@"param"] fwAsNSString];
         NSString *result = [NSString stringWithFormat:@"js:%@ => app:%@", param, @"2"];
@@ -124,7 +124,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         NSString *callback = [parameters[@"callback"] fwAsNSString];
         NSString *javascript = [NSString stringWithFormat:@"%@('%@');", callback, result];
         
-        BaseWebViewController *viewController = (BaseWebViewController *)topController;
+        WebViewController *viewController = (WebViewController *)topController;
         [viewController.webView evaluateJavaScript:javascript completionHandler:^(id value, NSError *error) {
             [[[UIWindow fwMainWindow] fwTopViewController] fwShowAlertWithTitle:@"App" message:[NSString stringWithFormat:@"app:%@ => js:%@", @"2", value] cancel:@"关闭" cancelBlock:nil];
         }];
