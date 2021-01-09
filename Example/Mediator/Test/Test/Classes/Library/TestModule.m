@@ -6,7 +6,7 @@
 //
 
 #import "TestModule.h"
-#import "TestModuleViewController.h"
+#import "TestModuleController.h"
 
 @implementation TestModule
 
@@ -27,7 +27,7 @@ FWDefSingleton(TestModule);
 
 - (UIViewController *)testViewController
 {
-    return [[TestModuleViewController alloc] init];
+    return [[TestModuleController alloc] init];
 }
 
 @end
