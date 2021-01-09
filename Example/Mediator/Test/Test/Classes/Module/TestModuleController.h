@@ -1,5 +1,5 @@
 //
-//  TestModuleViewController.h
+//  TestModuleController.h
 //  Pods
 //
 //  Created by wuyong on 2021/1/2.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestModuleViewController : UIViewController
+@interface TestModuleController : UIViewController
 
 @end
 

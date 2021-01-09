@@ -1,19 +1,19 @@
 //
-//  TestModuleViewController.m
+//  TestModuleController.m
 //  Pods
 //
 //  Created by wuyong on 2021/1/2.
 //
 
-#import "TestModuleViewController.h"
+#import "TestModuleController.h"
 #import "TestModule.h"
 #import <FWFramework/FWFramework.h>
 
-@interface TestModuleViewController ()
+@interface TestModuleController ()
 
 @end
 
-@implementation TestModuleViewController
+@implementation TestModuleController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
