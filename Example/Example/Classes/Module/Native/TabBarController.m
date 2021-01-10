@@ -38,7 +38,7 @@
     UIViewController *testController = [TestViewController new];
     testController.hidesBottomBarWhenPushed = NO;
     UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:testController];
-    testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
+    testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_test"];
     testNav.tabBarItem.title = FWLocalizedString(@"testTitle");
     
     UIViewController *settingsController = [SettingsViewController new];
