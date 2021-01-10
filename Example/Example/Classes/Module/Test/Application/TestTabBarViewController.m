@@ -40,7 +40,7 @@
 {
     [self.tabBar.backgroundView fwSetShadowColor:[UIColor appColorHex:0x040000 alpha:0.15] offset:CGSizeMake(0, 1) radius:3];
     NSArray *tabBarItemTitles = @[FWLocalizedString(@"homeTitle"), FWLocalizedString(@"testTitle"), FWLocalizedString(@"settingTitle")];
-    NSArray *tabBarItemImages = @[@"tabbar_home", @"tabbar_settings", @"tabbar_settings"];
+    NSArray *tabBarItemImages = @[@"tabbar_home", @"tabbar_test", @"tabbar_settings"];
     NSInteger index = 0;
     for (FWTabBarItem *item in [[self tabBar] items]) {
         item.title = [tabBarItemTitles objectAtIndex:index];
