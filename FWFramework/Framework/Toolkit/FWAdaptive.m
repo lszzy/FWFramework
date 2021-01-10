@@ -9,6 +9,7 @@
 
 #import "FWAdaptive.h"
 #import "FWRouter.h"
+#import "FWToolkit.h"
 
 @implementation UIApplication (FWAdaptive)
 
@@ -38,32 +39,49 @@
 
 + (BOOL)fwIsIphone
 {
-    static BOOL isIphone;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        isIphone = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
-    });
-    return isIphone;
+    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
 }
 
 + (BOOL)fwIsIpad
 {
-    static BOOL isIpad;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        isIpad = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
-    });
-    return isIpad;
+    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
 }
 
-+ (float)fwIosVersion
++ (BOOL)fwIsMac
 {
-    static float version;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        version = [UIDevice currentDevice].systemVersion.floatValue;
-    });
-    return version;
+#if __IPHONE_14_0
+    if (@available(iOS 14.0, *)) {
+        return NSProcessInfo.processInfo.isiOSAppOnMac ||
+            NSProcessInfo.processInfo.isMacCatalystApp;
+    }
+#endif
+    return NO;
+}
+
++ (BOOL)fwIsLandscape
+{
+    return UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]);
+}
+
++ (BOOL)fwIsDeviceLandscape
+{
+    return UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]);
+}
+
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation
+{
+    if ([UIDevice currentDevice].orientation == orientation) {
+        [UIViewController attemptRotationToDeviceOrientation];
+        return NO;
+    }
+    
+    [[UIDevice currentDevice] setValue:@(orientation) forKey:@"orientation"];
+    return YES;
+}
+
++ (double)fwIosVersion
+{
+    return [UIDevice currentDevice].systemVersion.doubleValue;
 }
 
 + (BOOL)fwIsIos:(NSInteger)version
@@ -74,6 +92,26 @@
 + (BOOL)fwIsIosLater:(NSInteger)version
 {
     return [self fwIosVersion] >= version;
+}
+
++ (CGSize)fwDeviceSize
+{
+    return CGSizeMake([self fwDeviceWidth], [self fwDeviceHeight]);
+}
+
++ (CGFloat)fwDeviceWidth
+{
+    return MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+}
+
++ (CGFloat)fwDeviceHeight
+{
+    return MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+}
+
++ (CGSize)fwDeviceResolution
+{
+    return CGSizeMake([self fwDeviceWidth] * [UIScreen mainScreen].scale, [self fwDeviceHeight] * [UIScreen mainScreen].scale);
 }
 
 @end
@@ -105,63 +143,46 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     return [UIScreen mainScreen].scale;
 }
 
-+ (CGSize)fwScreenResolution
-{
-    return CGSizeMake(
-                      [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale,
-                      [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale
-                      );
-}
-
-+ (CGFloat)fwPixelOne
-{
-    static CGFloat pixelOne = -1.0;
-    if (pixelOne < 0) {
-        pixelOne = 1 / [[UIScreen mainScreen] scale];
-    }
-    return pixelOne;
-}
-
-+ (BOOL)fwIsScreenSize:(CGSize)size
-{
-    return CGSizeEqualToSize(size, [UIScreen mainScreen].bounds.size);
-}
-
-+ (BOOL)fwIsScreenResolution:(CGSize)resolution
-{
-    return CGSizeEqualToSize(resolution, [self fwScreenResolution]);
-}
-
 + (BOOL)fwIsScreenInch:(FWScreenInch)inch
 {
     switch (inch) {
         case FWScreenInch35:
-            return [self fwIsScreenSize:CGSizeMake(320, 480)];
+            return CGSizeEqualToSize(CGSizeMake(320, 480), [UIDevice fwDeviceSize]);
         case FWScreenInch40:
-            return [self fwIsScreenSize:CGSizeMake(320, 568)];
+            return CGSizeEqualToSize(CGSizeMake(320, 568), [UIDevice fwDeviceSize]);
         case FWScreenInch47:
-            return [self fwIsScreenSize:CGSizeMake(375, 667)];
+            return CGSizeEqualToSize(CGSizeMake(375, 667), [UIDevice fwDeviceSize]);
         case FWScreenInch54:
-            return [self fwIsScreenSize:CGSizeMake(360, 780)];
+            return CGSizeEqualToSize(CGSizeMake(360, 780), [UIDevice fwDeviceSize]);
         case FWScreenInch55:
-            return [self fwIsScreenSize:CGSizeMake(414, 736)];
+            return CGSizeEqualToSize(CGSizeMake(414, 736), [UIDevice fwDeviceSize]);
         case FWScreenInch58:
-            return [self fwIsScreenSize:CGSizeMake(375, 812)];
+            return CGSizeEqualToSize(CGSizeMake(375, 812), [UIDevice fwDeviceSize]);
         case FWScreenInch61:
-            return [self fwIsScreenResolution:CGSizeMake(828, 1792)]
-                || [self fwIsScreenSize:CGSizeMake(390, 844)];
+            return CGSizeEqualToSize(CGSizeMake(828, 1792), [UIDevice fwDeviceResolution])
+                || CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fwDeviceSize]);
         case FWScreenInch65:
-            return [self fwIsScreenResolution:CGSizeMake(1242, 2688)];
+            return CGSizeEqualToSize(CGSizeMake(1242, 2688), [UIDevice fwDeviceResolution]);
         case FWScreenInch67:
-            return [self fwIsScreenSize:CGSizeMake(428, 926)];
+            return CGSizeEqualToSize(CGSizeMake(428, 926), [UIDevice fwDeviceSize]);
         default:
             return NO;
     }
 }
 
-+ (BOOL)fwIsScreenX
++ (BOOL)fwIsNotchedScreen
 {
     return [self fwSafeAreaInsets].bottom > 0;
+}
+
++ (BOOL)fwIsScreenX
+{
+    return [self fwIsNotchedScreen];
+}
+
++ (CGFloat)fwPixelOne
+{
+    return 1 / UIScreen.mainScreen.scale;
 }
 
 + (BOOL)fwHasSafeAreaInsets
@@ -171,36 +192,42 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 + (UIEdgeInsets)fwSafeAreaInsets
 {
-    static UIEdgeInsets safeAreaInsets;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (@available(iOS 11.0, *)) {
-            safeAreaInsets = UIWindow.fwMainWindow.safeAreaInsets;
-        } else {
-            safeAreaInsets = UIEdgeInsetsZero;
-        }
-    });
-    return safeAreaInsets;
+    if (@available(iOS 11.0, *)) {
+        return UIWindow.fwMainWindow.safeAreaInsets;
+    } else {
+        return UIEdgeInsetsZero;
+    }
 }
 
 + (CGFloat)fwStatusBarHeight
 {
-    return [self fwIsScreenX] ? 44.0 : 20.0;
+    if (!UIApplication.sharedApplication.statusBarHidden) {
+        return UIApplication.sharedApplication.statusBarFrame.size.height;
+    }
+    
+    if ([UIDevice fwIsIpad]) {
+        return [self fwIsNotchedScreen] ? 24 : 20;
+    }
+    
+    if (![self fwIsNotchedScreen]) { return 20; }
+    if ([UIDevice fwIsLandscape]) { return 0; }
+    if ([[UIDevice fwDeviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
+    if (CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fwDeviceSize])) { return 47; }
+    if ([self fwIsScreenInch:FWScreenInch67]) { return 47; }
+    return 44;
 }
 
 + (CGFloat)fwNavigationBarHeight
 {
-    return 44.0;
-}
-
-+ (CGFloat)fwTabBarHeight
-{
-    return [self fwIsScreenX] ? 83.0 : 49.0;
-}
-
-+ (CGFloat)fwToolBarHeight
-{
-    return [self fwIsScreenX] ? 78.0 : 44.0;
+    if ([UIDevice fwIsIpad]) {
+        return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
+    }
+    
+    CGFloat height = 44;
+    if ([UIDevice fwIsLandscape]) {
+        height = [self fwIsRegularScreen] ? 44 : 32;
+    }
+    return height;
 }
 
 + (CGFloat)fwTopBarHeight
@@ -208,9 +235,57 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
 }
 
-+ (CGFloat)fwBottomBarHeight
++ (CGFloat)fwTabBarHeight
 {
-    return [self fwTabBarHeight];
+    if ([UIDevice fwIsIpad]) {
+        if ([self fwIsNotchedScreen]) { return 65; }
+        return [UIDevice fwIosVersion] >= 12.0 ? 50 : 49;
+    }
+    
+    CGFloat height = 49;
+    if ([UIDevice fwIsLandscape]) {
+        height = [self fwIsRegularScreen] ? 49 : 32;
+    }
+    return height + [self fwSafeAreaInsets].bottom;
+}
+
++ (CGFloat)fwToolBarHeight
+{
+    if ([UIDevice fwIsIpad]) {
+        if ([UIScreen fwIsNotchedScreen]) { return 70; }
+        return [UIDevice fwIosVersion] >= 12.0 ? 50 : 44;
+    }
+    
+    CGFloat height = 44;
+    if ([UIDevice fwIsLandscape]) {
+        height = [self fwIsRegularScreen] ? 44 : 32;
+    }
+    return height + [self fwSafeAreaInsets].bottom;
+}
+
++ (BOOL)fwIsRegularScreen
+{
+    // https://github.com/Tencent/QMUI_iOS
+    if ([UIDevice fwIsIpad]) { return YES; }
+    
+    BOOL isZoomedMode = NO;
+    if ([UIDevice fwIsIphone]) {
+        CGFloat nativeScale = UIScreen.mainScreen.nativeScale;
+        CGFloat scale = UIScreen.mainScreen.scale;
+        if (CGSizeEqualToSize(UIScreen.mainScreen.nativeBounds.size, CGSizeMake(1080, 1920))) {
+            scale /= 1.15;
+        }
+        isZoomedMode = nativeScale > scale;
+    }
+    if (isZoomedMode) return NO;
+    
+    if ([self fwIsScreenInch:FWScreenInch67] ||
+        [self fwIsScreenInch:FWScreenInch65] ||
+        [self fwIsScreenInch:FWScreenInch61] ||
+        [self fwIsScreenInch:FWScreenInch55]) {
+        return YES;
+    }
+    return NO;
 }
 
 + (void)fwSetScaleFactorSize:(CGSize)size
@@ -243,7 +318,7 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 - (CGFloat)fwStatusBarHeight
 {
-    if ([self prefersStatusBarHidden]) {
+    if (UIApplication.sharedApplication.statusBarHidden) {
         return 0.0;
     } else {
         return [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -257,6 +332,11 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     } else {
         return self.navigationController.navigationBar.frame.size.height;
     }
+}
+
+- (CGFloat)fwTopBarHeight
+{
+    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
 }
 
 - (CGFloat)fwTabBarHeight
@@ -273,18 +353,17 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     if (self.navigationController.toolbarHidden) {
         return 0.0;
     } else {
-        return self.navigationController.toolbar.frame.size.height;
+        return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
     }
-}
-
-- (CGFloat)fwTopBarHeight
-{
-    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
 }
 
 - (CGFloat)fwBottomBarHeight
 {
-    return [self fwTabBarHeight];
+    CGFloat height = [self fwTabBarHeight];
+    if (height <= 0) {
+        height = [self fwToolBarHeight];
+    }
+    return height;
 }
 
 @end

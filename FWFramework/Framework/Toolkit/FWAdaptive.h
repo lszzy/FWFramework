@@ -40,16 +40,32 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 /// 是否是iPhone设备
-#define FWIsIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? YES : NO)
+#define FWIsIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 /// 是否是iPad设备
-#define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? YES : NO)
+#define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+/// 是否是Mac设备
+#define FWIsMac [UIDevice fwIsMac]
+
+/// 界面是否横屏
+#define FWIsLandscape UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation)
+/// 设备是否横屏，无论支不支持横屏
+#define FWIsDeviceLandscape UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])
 
 /// iOS系统版本，只获取第二级的版本号，如10.3.1返回10.3
-#define FWIosVersion [[[UIDevice currentDevice] systemVersion] floatValue]
+#define FWIosVersion [[[UIDevice currentDevice] systemVersion] doubleValue]
 /// 是否是指定iOS主版本
-#define FWIsIos( version ) (FWIosVersion >= version && FWIosVersion < (version + 1) ? YES : NO)
+#define FWIsIos( version ) (FWIosVersion >= version && FWIosVersion < (version + 1))
 /// 是否是大于等于指定iOS主版本
-#define FWIsIosLater( version ) (FWIosVersion >= version ? YES : NO)
+#define FWIsIosLater( version ) (FWIosVersion >= version)
+
+/// 设备尺寸，跟横竖屏无关
+#define FWDeviceSize CGSizeMake(FWDeviceWidth, FWDeviceHeight)
+/// 设备宽度，跟横竖屏无关
+#define FWDeviceWidth MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)
+/// 设备高度，跟横竖屏无关
+#define FWDeviceHeight MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)
+/// 设备分辨率，跟横竖屏无关
+#define FWDeviceResolution CGSizeMake(FWDeviceWidth * [UIScreen mainScreen].scale, FWDeviceHeight * [UIScreen mainScreen].scale)
 
 /*!
  @brief UIDevice+FWAdaptive
@@ -63,13 +79,31 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)fwIsIphone;
 /// 是否是iPad
 + (BOOL)fwIsIpad;
+/// 是否是Mac
++ (BOOL)fwIsMac;
+
+/// 界面是否横屏
++ (BOOL)fwIsLandscape;
+/// 设备是否横屏，无论支不支持横屏
++ (BOOL)fwIsDeviceLandscape;
+/// 设置界面方向，支持旋转方向时生效
++ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
 
 /// iOS系统版本
-+ (float)fwIosVersion;
++ (double)fwIosVersion;
 /// 是否是指定iOS主版本
 + (BOOL)fwIsIos:(NSInteger)version;
 /// 是否是大于等于指定iOS主版本
 + (BOOL)fwIsIosLater:(NSInteger)version;
+
+/// 设备尺寸，跟横竖屏无关
++ (CGSize)fwDeviceSize;
+/// 设备宽度，跟横竖屏无关
++ (CGFloat)fwDeviceWidth;
+/// 设备高度，跟横竖屏无关
++ (CGFloat)fwDeviceHeight;
+/// 设备分辨率，跟横竖屏无关
++ (CGSize)fwDeviceResolution;
 
 @end
 
@@ -87,38 +121,31 @@ static const FWScreenInch FWScreenInch61 = 61;
 static const FWScreenInch FWScreenInch65 = 65;
 static const FWScreenInch FWScreenInch67 = 67;
 
-/// 屏幕尺寸
+/// 屏幕尺寸，随横竖屏变化
 #define FWScreenSize [UIScreen mainScreen].bounds.size
-/// 屏幕宽度
+/// 屏幕宽度，随横竖屏变化
 #define FWScreenWidth [UIScreen mainScreen].bounds.size.width
-/// 屏幕高度
+/// 屏幕高度，随横竖屏变化
 #define FWScreenHeight [UIScreen mainScreen].bounds.size.height
 /// 屏幕像素比例
 #define FWScreenScale [UIScreen mainScreen].scale
-/// 屏幕分辨率
-#define FWScreenResolution CGSizeMake( [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale )
-
-/// 判断屏幕尺寸
-#define FWIsScreenSize( width, height ) CGSizeEqualToSize(CGSizeMake(width, height), [UIScreen mainScreen].bounds.size)
-/// 判断屏幕分辨率
-#define FWIsScreenResolution( width, height ) CGSizeEqualToSize(CGSizeMake(width, height), FWScreenResolution)
 /// 判断屏幕英寸
 #define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
-/// 是否是iPhoneX系列全面屏幕
-#define FWIsScreenX [UIScreen fwIsScreenX]
+/// 是否是全面屏屏幕
+#define FWIsNotchedScreen [UIScreen fwIsNotchedScreen]
+/// 是否是iPhoneX系列全面屏幕，已废弃，下个版本移除
+#define FWIsScreenX [UIScreen fwIsNotchedScreen]
 
-/// 状态栏高度
-#define FWStatusBarHeight (FWIsScreenX ? 44.0 : 20.0)
-/// 导航栏高度
-#define FWNavigationBarHeight (FWIsScreenX ? 44.0 : 44.0)
-/// 标签栏高度
-#define FWTabBarHeight (FWIsScreenX ? 83.0 : 49.0)
-/// 工具栏高度
-#define FWToolBarHeight (FWIsScreenX ? 78.0 : 44.0)
-/// 顶部栏高度，包含状态栏、导航栏
-#define FWTopBarHeight (FWStatusBarHeight + FWNavigationBarHeight)
-/// 底部栏高度，包含标签栏
-#define FWBottomBarHeight FWTabBarHeight
+/// 状态栏高度，与是否隐藏无关
+#define FWStatusBarHeight [UIScreen fwStatusBarHeight]
+/// 导航栏高度，与是否隐藏无关
+#define FWNavigationBarHeight [UIScreen fwNavigationBarHeight]
+/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
+#define FWTopBarHeight [UIScreen fwTopBarHeight]
+/// 标签栏高度，与是否隐藏无关
+#define FWTabBarHeight [UIScreen fwTabBarHeight]
+/// 工具栏高度，与是否隐藏无关
+#define FWToolBarHeight [UIScreen fwToolBarHeight]
 
 /// 当前屏幕宽度缩放比例
 #define FWScaleFactorWidth [UIScreen fwScaleFactorWidth]
@@ -138,20 +165,15 @@ static const FWScreenInch FWScreenInch67 = 67;
 + (CGFloat)fwScreenHeight;
 /// 屏幕像素比例
 + (CGFloat)fwScreenScale;
-/// 屏幕分辨率
-+ (CGSize)fwScreenResolution;
-/// 获取一像素的大小
-+ (CGFloat)fwPixelOne;
-
-/// 是否是指定尺寸屏幕
-+ (BOOL)fwIsScreenSize:(CGSize)size;
-/// 是否是指定分辨率屏幕
-+ (BOOL)fwIsScreenResolution:(CGSize)resolution;
 /// 是否是指定英寸屏幕
 + (BOOL)fwIsScreenInch:(FWScreenInch)inch;
-/// 是否是iPhoneX系列全面屏幕
-+ (BOOL)fwIsScreenX;
+/// 是否是全面屏屏幕
++ (BOOL)fwIsNotchedScreen;
+/// 是否是iPhoneX系列全面屏幕，已废弃，下个版本删除
++ (BOOL)fwIsScreenX DEPRECATED_MSG_ATTRIBUTE("Use fwIsNotchedScreen instead.");
 
+/// 获取一像素的大小
++ (CGFloat)fwPixelOne;
 /// 检查是否含有安全区域，可用来判断iPhoneX
 + (BOOL)fwHasSafeAreaInsets;
 /// 获取安全区域距离
@@ -161,14 +183,12 @@ static const FWScreenInch FWScreenInch67 = 67;
 + (CGFloat)fwStatusBarHeight;
 /// 导航栏高度，与是否隐藏无关
 + (CGFloat)fwNavigationBarHeight;
+/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
++ (CGFloat)fwTopBarHeight;
 /// 标签栏高度，与是否隐藏无关
 + (CGFloat)fwTabBarHeight;
 /// 工具栏高度，与是否隐藏无关
 + (CGFloat)fwToolBarHeight;
-/// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-+ (CGFloat)fwTopBarHeight;
-/// 底部栏高度，包含标签栏，与是否隐藏无关
-+ (CGFloat)fwBottomBarHeight;
 
 /// 指定缩放比例原始设计图尺寸，默认{375,812}
 + (void)fwSetScaleFactorSize:(CGSize)size;
@@ -184,17 +204,17 @@ static const FWScreenInch FWScreenInch67 = 67;
  */
 @interface UIViewController (FWAdaptive)
 
-/// 当前状态栏高度，隐藏为0
+/// 当前状态栏高度，隐藏为0，推荐使用
 - (CGFloat)fwStatusBarHeight;
-/// 当前导航栏高度，隐藏为0
+/// 当前导航栏高度，隐藏为0，推荐使用
 - (CGFloat)fwNavigationBarHeight;
-/// 当前标签栏高度，隐藏为0
-- (CGFloat)fwTabBarHeight;
-/// 当前工具栏高度，隐藏为0
-- (CGFloat)fwToolBarHeight;
-/// 顶部栏高度，包含状态栏、导航栏，隐藏为0
+/// 顶部栏高度，包含状态栏、导航栏，隐藏为0，推荐使用
 - (CGFloat)fwTopBarHeight;
-/// 底部栏高度，包含标签栏，隐藏为0
+/// 当前标签栏高度，隐藏为0，推荐使用
+- (CGFloat)fwTabBarHeight;
+/// 当前工具栏高度，隐藏为0，推荐使用
+- (CGFloat)fwToolBarHeight;
+/// 底部栏高度，标签栏>工具栏，隐藏为0，推荐使用
 - (CGFloat)fwBottomBarHeight;
 
 @end

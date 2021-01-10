@@ -9,7 +9,11 @@
 import FWFramework
 
 @objc public protocol UserModuleService: FWModuleProtocol {
+    func isLogin() -> Bool
+    
     func login(_ completion: (() -> Void)?)
+    
+    func logout(_ completion: (() -> Void)?)
 }
 
 @objc public protocol TestModuleService: FWModuleProtocol {

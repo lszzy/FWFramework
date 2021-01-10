@@ -11,4 +11,13 @@
 "确定" = "Yes";
 "取消" = "Cancel";
 
-"mediatorButton" = "MediatorTest";
+"mediatorLogin" = "Mediator Login";
+"mediatorLogout" = "Mediator Logout";
+"homeTitle" = "Home";
+"testTitle" = "Test";
+"settingTitle" = "Settings";
+"debugButton" = "Debug";
+"languageTitle" = "Custom:%@ System:%@ (%@)";
+"loginInvalid" = "Login Invalid";
+"loginSuccess" = "Login Successful";
+"logoutSuccess" = "Logout Successful";
