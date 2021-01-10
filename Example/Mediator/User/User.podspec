@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'User/Classes/**/*'
+  s.source_files = 'User/Classes/**/*.{h,m,swift}'
   
   s.resource_bundles = {
     'User' => ['User/Assets/**/*.{xcassets,lproj,png}']

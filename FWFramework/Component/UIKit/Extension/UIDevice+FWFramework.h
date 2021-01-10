@@ -26,17 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否越狱
 + (BOOL)fwIsJailbroken;
 
-#pragma mark - Landscape
-
-// 界面是否横屏
-+ (BOOL)fwIsInterfaceLandscape;
-
-// 设备是否横屏，无论支不支持横屏
-+ (BOOL)fwIsDeviceLandscape;
-
-// 设置界面方向，支持旋转方向时生效
-+ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
-
 #pragma mark - Network
 
 // 本地IP地址
