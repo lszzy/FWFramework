@@ -306,7 +306,7 @@ FWPropertyWeak(UIButton *, snapshotButton);
     TestLayerView *layerView = [[TestLayerView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:layerView];
     
-    UIButton *button = [AppTheme themeButton];
+    UIButton *button = [AppTheme largeButton];
     self.snapshotButton = button;
     [button setTitle:@"截屏" forState:UIControlStateNormal];
     // TouchDown事件，按钮还未highlighted

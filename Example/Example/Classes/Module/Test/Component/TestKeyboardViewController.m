@@ -101,7 +101,7 @@ FWPropertyAssign(BOOL, canScroll);
     [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:15];
     [inputView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UIButton *submitButton = [AppTheme themeButton];
+    UIButton *submitButton = [AppTheme largeButton];
     self.submitButton = submitButton;
     [submitButton setTitle:@"提交" forState:UIControlStateNormal];
     [submitButton fwAddTouchTarget:self action:@selector(onSubmit)];

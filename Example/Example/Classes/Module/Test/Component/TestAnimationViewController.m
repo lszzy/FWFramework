@@ -26,14 +26,14 @@ FWDefLazyProperty(UIView *, animationView, {
 
 - (void)renderView
 {
-    UIButton *button = [AppTheme themeButton];
+    UIButton *button = [AppTheme largeButton];
     [button setTitle:@"切换拖动" forState:UIControlStateNormal];
     [button fwAddTouchTarget:self action:@selector(onDrag:)];
     [self.view addSubview:button];
     [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UIButton *button2 = [AppTheme themeButton];
+    UIButton *button2 = [AppTheme largeButton];
     [button2 setTitle:@"切换动画" forState:UIControlStateNormal];
     [button2 fwAddTouchTarget:self action:@selector(onAnimation:)];
     [self.view addSubview:button2];
