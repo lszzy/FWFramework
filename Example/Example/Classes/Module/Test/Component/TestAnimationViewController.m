@@ -26,18 +26,18 @@ FWDefLazyProperty(UIView *, animationView, {
 
 - (void)renderView
 {
-    UIButton *button = [AppStandard buttonWithStyle:kAppButtonStyleDefault];
+    UIButton *button = [AppTheme themeButton];
     [button setTitle:@"切换拖动" forState:UIControlStateNormal];
     [button fwAddTouchTarget:self action:@selector(onDrag:)];
     [self.view addSubview:button];
-    [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
+    [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UIButton *button2 = [AppStandard buttonWithStyle:kAppButtonStyleDefault];
+    UIButton *button2 = [AppTheme themeButton];
     [button2 setTitle:@"切换动画" forState:UIControlStateNormal];
     [button2 fwAddTouchTarget:self action:@selector(onAnimation:)];
     [self.view addSubview:button2];
-    [button2 fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:button withOffset:-kAppPaddingLarge];
+    [button2 fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:button withOffset:-15];
     [button2 fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }
 

@@ -12,7 +12,7 @@
 #import <FWFramework/FWFramework.h>
 #import "SwiftHeader.h"
 #import "AppConfig.h"
-#import "AppStandard.h"
 #import "AppRouter.h"
+#import "AppTheme.h"
 
 #endif /* PrefixHeader_pch */

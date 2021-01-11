@@ -71,7 +71,7 @@
     [activityView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
     [activityView fwSetDimensionsToSize:activitySize];
     
-    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:nil];
+    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
     textLabel.numberOfLines = 0;
     textLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:textLabel];
@@ -155,8 +155,8 @@
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
     self.segmentedControl.selectionIndicatorCornerRadius = 2.5f;
-    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
-    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:16]};
+    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16]};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:16]};
     [self.view addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
@@ -196,14 +196,14 @@
     tagConfig.textFont = [UIFont systemFontOfSize:10];
     tagConfig.textColor = [UIColor blackColor];
     tagConfig.selectedTextColor = [UIColor blackColor];
-    tagConfig.backgroundColor = [UIColor appColorBg];
-    tagConfig.selectedBackgroundColor = [UIColor appColorBg];
+    tagConfig.backgroundColor = [AppTheme backgroundColor];
+    tagConfig.selectedBackgroundColor = [AppTheme backgroundColor];
     tagConfig.cornerRadius = 2;
     tagConfig.selectedCornerRadius = 2;
     tagConfig.borderWidth = 1;
     tagConfig.selectedBorderWidth = 1;
-    tagConfig.borderColor = [UIColor appColorHex:0xF3B2AF];
-    tagConfig.selectedBorderColor = [UIColor appColorHex:0xF3B2AF];
+    tagConfig.borderColor = [UIColor fwColorWithHex:0xF3B2AF];
+    tagConfig.selectedBorderColor = [UIColor fwColorWithHex:0xF3B2AF];
     tagConfig.extraSpace = CGSizeMake(10, 6);
     tagConfig.enableGradientBackground = NO;
     return tagConfig;

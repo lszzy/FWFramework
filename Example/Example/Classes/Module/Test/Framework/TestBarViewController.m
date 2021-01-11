@@ -98,8 +98,8 @@ FWPropertyAssign(BOOL, hideToast);
     UILabel *frameLabel = [UILabel fwAutoLayoutView];
     self.frameLabel = frameLabel;
     frameLabel.numberOfLines = 0;
-    frameLabel.textColor = [UIColor appColorBlack];
-    frameLabel.font = [UIFont appFontNormal];
+    frameLabel.textColor = [UIColor blackColor];
+    frameLabel.font = [UIFont fwFontOfSize:15];
     frameLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:frameLabel]; {
         [frameLabel fwPinEdgesToSuperviewSafeAreaWithInsets:UIEdgeInsetsMake(0, 10, 100, 10) excludingEdge:NSLayoutAttributeTop];
