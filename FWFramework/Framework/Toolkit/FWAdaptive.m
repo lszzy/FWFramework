@@ -357,13 +357,4 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     }
 }
 
-- (CGFloat)fwBottomBarHeight
-{
-    CGFloat height = [self fwTabBarHeight];
-    if (height <= 0) {
-        height = [self fwToolBarHeight];
-    }
-    return height;
-}
-
 @end

@@ -69,11 +69,7 @@
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
             
-            if (!selfObject.navigationController) return;
-            NSNumber *styleValue = objc_getAssociatedObject(selfObject, @selector(fwNavigationBarStyle));
-            if (styleValue) {
-                [selfObject fwUpdateNavigationBarStyle:animated];
-            }
+            [selfObject fwUpdateNavigationBarStyle:animated];
         }));
     });
 }
