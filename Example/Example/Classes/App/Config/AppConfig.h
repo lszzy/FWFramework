@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - ENV
 
 // 开发环境
@@ -54,3 +56,5 @@
 @interface AppConfig : NSObject
 
 @end
+
+NS_ASSUME_NONNULL_END

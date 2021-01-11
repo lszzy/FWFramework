@@ -5,7 +5,7 @@
 #import <FWFramework/FWFramework.h>
 #import "AppConfig.h"
 #import "AppRouter.h"
-#import "AppStandard.h"
+#import "AppTheme.h"
 #import "BaseViewController.h"
 #import "BaseTableViewController.h"
 #import "ObjcController.h"

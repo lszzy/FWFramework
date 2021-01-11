@@ -20,7 +20,7 @@
     if (!scrollView) {
         scrollView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
         // 默认背景色
-        scrollView.backgroundColor = [UIColor appColorBg];
+        scrollView.backgroundColor = [AppTheme backgroundColor];
         objc_setAssociatedObject(self, _cmd, scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return scrollView;

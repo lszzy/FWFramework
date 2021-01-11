@@ -19,7 +19,7 @@
 
 - (void)renderView
 {
-    UILabel *label = [UILabel fwLabelWithFont:[UIFont appFontSize:15] textColor:[UIColor appColorHex:0x111111] text:nil];
+    UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor fwColorWithHex:0x111111] text:nil];
     _label = label;
     label.backgroundColor = [UIColor grayColor];
     label.numberOfLines = 0;
@@ -31,7 +31,7 @@
 {
     FWAttributedOption *appearance = [FWAttributedOption appearance];
     appearance.lineHeightMultiplier = 1.5;
-    appearance.font = [UIFont appFontSize:16];
+    appearance.font = [UIFont fwFontOfSize:16];
     appearance.paragraphStyle = [NSMutableParagraphStyle new];
     
     NSMutableAttributedString *attrString = [NSMutableAttributedString new];

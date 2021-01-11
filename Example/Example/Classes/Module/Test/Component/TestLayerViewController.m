@@ -18,7 +18,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor appColorClear];
+        self.backgroundColor = [UIColor clearColor];
         
         [self testLayer];
         [self progressLayer];
@@ -306,13 +306,13 @@ FWPropertyWeak(UIButton *, snapshotButton);
     TestLayerView *layerView = [[TestLayerView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:layerView];
     
-    UIButton *button = [AppStandard buttonWithStyle:kAppButtonStyleDefault];
+    UIButton *button = [AppTheme themeButton];
     self.snapshotButton = button;
     [button setTitle:@"截屏" forState:UIControlStateNormal];
     // TouchDown事件，按钮还未highlighted
     [button addTarget:self action:@selector(onSnapshot) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:button];
-    [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
+    [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }
 

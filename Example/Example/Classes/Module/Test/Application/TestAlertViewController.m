@@ -292,14 +292,14 @@
     attachment.bounds = CGRectMake(0, -20, 30, 30);
     [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
     NSDictionary *attrs = @{
-        NSFontAttributeName: [UIFont appFontBoldSize:17],
+        NSFontAttributeName: [UIFont fwBoldFontOfSize:17],
         NSForegroundColorAttributeName: [UIColor redColor],
     };
     [title appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n警告框标题" attributes:attrs]];
         
     NSMutableAttributedString *message = [NSMutableAttributedString new];
     attrs = @{
-        NSFontAttributeName: [UIFont appFontSize:15],
+        NSFontAttributeName: [UIFont fwFontOfSize:15],
         NSForegroundColorAttributeName: [UIColor greenColor],
     };
     [message appendAttributedString:[[NSAttributedString alloc] initWithString:@"警告框消息" attributes:attrs]];
@@ -321,14 +321,14 @@
     attachment.bounds = CGRectMake(0, -20, 30, 30);
     [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
     NSDictionary *attrs = @{
-        NSFontAttributeName: [UIFont appFontBoldSize:17],
+        NSFontAttributeName: [UIFont fwBoldFontOfSize:17],
         NSForegroundColorAttributeName: [UIColor redColor],
     };
     [title appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n操作表标题" attributes:attrs]];
         
     NSMutableAttributedString *message = [NSMutableAttributedString new];
     attrs = @{
-        NSFontAttributeName: [UIFont appFontSize:15],
+        NSFontAttributeName: [UIFont fwFontOfSize:15],
         NSForegroundColorAttributeName: [UIColor greenColor],
     };
     [message appendAttributedString:[[NSAttributedString alloc] initWithString:@"操作表消息" attributes:attrs]];

@@ -17,6 +17,7 @@
 		2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */; };
 		2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */; };
 		2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */; };
+		2F2E0FE525AC9D7F009F7AA6 /* AppTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2E0FE425AC9D7F009F7AA6 /* AppTheme.m */; };
 		2F3E60262590A3CC00118E01 /* TestTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E60252590A3CC00118E01 /* TestTabBarViewController.m */; };
 		2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B42538004700AEBB60 /* AppDelegate.swift */; };
 		2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B62538004700AEBB60 /* SceneDelegate.swift */; };
@@ -140,7 +141,6 @@
 		2FF8D98724C88A70006A83B5 /* BaseScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92C24C88A6F006A83B5 /* BaseScrollViewController.m */; };
 		2FF8D98824C88A70006A83B5 /* BaseCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */; };
 		2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93A24C88A6F006A83B5 /* AppConfig.m */; };
-		2FF8D98C24C88A70006A83B5 /* AppStandard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93D24C88A6F006A83B5 /* AppStandard.m */; };
 		2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */; };
 		2FF8D98E24C88A70006A83B5 /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D94224C88A6F006A83B5 /* AppRouter.m */; };
 		2FF8D9DB24C88C86006A83B5 /* JavascriptBridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9C024C88C86006A83B5 /* JavascriptBridge.html */; };
@@ -204,6 +204,8 @@
 		2F1F1E1F2534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCollectionDynamicLayoutViewController.m; sourceTree = "<group>"; };
 		2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetailViewModel.swift; sourceTree = "<group>"; };
 		2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetailModelView.swift; sourceTree = "<group>"; };
+		2F2E0FE325AC9D7F009F7AA6 /* AppTheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppTheme.h; sourceTree = "<group>"; };
+		2F2E0FE425AC9D7F009F7AA6 /* AppTheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppTheme.m; sourceTree = "<group>"; };
 		2F3E60242590A3CC00118E01 /* TestTabBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTabBarViewController.h; sourceTree = "<group>"; };
 		2F3E60252590A3CC00118E01 /* TestTabBarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTabBarViewController.m; sourceTree = "<group>"; };
 		2F48F6B22538004700AEBB60 /* AppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -405,8 +407,6 @@
 		2FF8D93824C88A6F006A83B5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2FF8D93A24C88A6F006A83B5 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
 		2FF8D93B24C88A6F006A83B5 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
-		2FF8D93D24C88A6F006A83B5 /* AppStandard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppStandard.m; sourceTree = "<group>"; };
-		2FF8D93E24C88A6F006A83B5 /* AppStandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppStandard.h; sourceTree = "<group>"; };
 		2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2FF8D94124C88A6F006A83B5 /* AppRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRouter.h; sourceTree = "<group>"; };
 		2FF8D94224C88A6F006A83B5 /* AppRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRouter.m; sourceTree = "<group>"; };
@@ -936,8 +936,6 @@
 				2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */,
 				2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */,
 				2FF8D93924C88A6F006A83B5 /* Config */,
-				2FF8D94024C88A6F006A83B5 /* Router */,
-				2FF8D93C24C88A6F006A83B5 /* Standard */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -947,26 +945,12 @@
 			children = (
 				2FF8D93B24C88A6F006A83B5 /* AppConfig.h */,
 				2FF8D93A24C88A6F006A83B5 /* AppConfig.m */,
-			);
-			path = Config;
-			sourceTree = "<group>";
-		};
-		2FF8D93C24C88A6F006A83B5 /* Standard */ = {
-			isa = PBXGroup;
-			children = (
-				2FF8D93E24C88A6F006A83B5 /* AppStandard.h */,
-				2FF8D93D24C88A6F006A83B5 /* AppStandard.m */,
-			);
-			path = Standard;
-			sourceTree = "<group>";
-		};
-		2FF8D94024C88A6F006A83B5 /* Router */ = {
-			isa = PBXGroup;
-			children = (
 				2FF8D94124C88A6F006A83B5 /* AppRouter.h */,
 				2FF8D94224C88A6F006A83B5 /* AppRouter.m */,
+				2F2E0FE325AC9D7F009F7AA6 /* AppTheme.h */,
+				2F2E0FE425AC9D7F009F7AA6 /* AppTheme.m */,
 			);
-			path = Router;
+			path = Config;
 			sourceTree = "<group>";
 		};
 		2FF8D9CE24C88C86006A83B5 /* Images */ = {
@@ -1308,6 +1292,7 @@
 				2FF8D96324C88A70006A83B5 /* TestFacesViewController.m in Sources */,
 				2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */,
 				2F938E522500D60D009395FB /* TestGridViewController.m in Sources */,
+				2F2E0FE525AC9D7F009F7AA6 /* AppTheme.m in Sources */,
 				2FF8D96724C88A70006A83B5 /* TestChainViewController.m in Sources */,
 				2F1F1E202534337B0006DCB5 /* TestCollectionDynamicLayoutViewController.m in Sources */,
 				2FF8D95F24C88A70006A83B5 /* TestGradientViewController.m in Sources */,
@@ -1338,7 +1323,6 @@
 				2FF8D95424C88A6F006A83B5 /* TestQrcodeViewController.m in Sources */,
 				2FF8D96C24C88A70006A83B5 /* TestIndicatorControlViewController.m in Sources */,
 				2FF8D96D24C88A70006A83B5 /* TestImageViewController.m in Sources */,
-				2FF8D98C24C88A70006A83B5 /* AppStandard.m in Sources */,
 				2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */,
 				2F4D63DB2594EC83007B822F /* TestPropertyAnimatorViewController.swift in Sources */,
 				2F938E592500E1C0009395FB /* TestFloatLayoutViewController.m in Sources */,
