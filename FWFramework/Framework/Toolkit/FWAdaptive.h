@@ -214,8 +214,6 @@ static const FWScreenInch FWScreenInch67 = 67;
 - (CGFloat)fwTabBarHeight;
 /// 当前工具栏高度，隐藏为0，推荐使用
 - (CGFloat)fwToolBarHeight;
-/// 底部栏高度，标签栏>工具栏，隐藏为0，推荐使用
-- (CGFloat)fwBottomBarHeight;
 
 @end
 
