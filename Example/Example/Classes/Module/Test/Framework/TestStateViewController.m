@@ -32,7 +32,7 @@
         [label fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(10, 10, 10, 10) excludingEdge:NSLayoutAttributeBottom];
     }
     
-    UIButton *button = [AppTheme themeButton];
+    UIButton *button = [AppTheme largeButton];
     self.button = button;
     [button fwAddTouchTarget:self action:@selector(onClick:)];
     [self.view addSubview:button]; {

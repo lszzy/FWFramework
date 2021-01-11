@@ -14,11 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIColor *)backgroundColor;
 
-+ (UIColor *)tableColor;
-
 + (UIColor *)textColor;
 
-+ (UIButton *)themeButton;
++ (UIColor *)barColor;
+
++ (UIColor *)tableColor;
+
++ (UIColor *)cellColor;
+
++ (UIColor *)borderColor;
+
++ (UIButton *)largeButton;
 
 @end
 

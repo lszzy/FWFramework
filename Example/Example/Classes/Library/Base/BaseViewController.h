@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static const FWNavigationBarStyle FWNavigationBarStyleRandom = 2;
+static const FWNavigationBarStyle FWNavigationBarStyleWhite = 2;
 
 @interface BaseViewController : UIViewController <FWViewController>
 
