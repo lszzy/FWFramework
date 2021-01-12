@@ -161,7 +161,7 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface UIImageView (FWTheme)
 
-/// 设置主题图片，自动跟随系统改变
+/// 设置主题图片，自动跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, strong) UIImage *fwThemeImage;
 
 @end
@@ -171,16 +171,16 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface CALayer (FWTheme)
 
-/// 设置主题背景色，启用主题订阅后可跟随系统改变
+/// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
 
-/// 设置主题边框色，启用主题订阅后可跟随系统改变
+/// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, strong) UIColor *fwThemeBorderColor;
 
-/// 设置主题阴影色，启用主题订阅后可跟随系统改变
+/// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, strong) UIColor *fwThemeShadowColor;
 
-/// 设置主题内容图片，启用主题订阅后可跟随系统改变
+/// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, strong) UIImage *fwThemeContents;
 
 @end
@@ -190,7 +190,7 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface CAGradientLayer (FWTheme)
 
-/// 设置主题渐变色，启用主题订阅后可跟随系统改变
+/// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, copy) NSArray<UIColor *> *fwThemeColors;
 
 @end
