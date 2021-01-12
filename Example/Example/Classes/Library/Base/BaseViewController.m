@@ -60,7 +60,7 @@
 - (void)viewControllerLoadView:(UIViewController *)viewController
 {
     // 默认背景色
-    viewController.view.backgroundColor = [AppTheme backgroundColor];
+    viewController.view.backgroundColor = [AppTheme tableColor];
 }
 
 - (void)viewControllerViewDidLoad:(UIViewController *)viewController

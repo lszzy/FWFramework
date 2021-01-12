@@ -138,8 +138,6 @@
 		2FF8D98424C88A70006A83B5 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92524C88A6F006A83B5 /* WebViewController.m */; };
 		2FF8D98524C88A70006A83B5 /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92624C88A6F006A83B5 /* BaseTableViewController.m */; };
 		2FF8D98624C88A70006A83B5 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92724C88A6F006A83B5 /* BaseViewController.m */; };
-		2FF8D98724C88A70006A83B5 /* BaseScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92C24C88A6F006A83B5 /* BaseScrollViewController.m */; };
-		2FF8D98824C88A70006A83B5 /* BaseCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */; };
 		2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93A24C88A6F006A83B5 /* AppConfig.m */; };
 		2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */; };
 		2FF8D98E24C88A70006A83B5 /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D94224C88A6F006A83B5 /* AppRouter.m */; };
@@ -397,13 +395,9 @@
 		2FF8D92524C88A6F006A83B5 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		2FF8D92624C88A6F006A83B5 /* BaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewController.m; sourceTree = "<group>"; };
 		2FF8D92724C88A6F006A83B5 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
-		2FF8D92824C88A6F006A83B5 /* BaseScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseScrollViewController.h; sourceTree = "<group>"; };
-		2FF8D92924C88A6F006A83B5 /* BaseCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCollectionViewController.h; sourceTree = "<group>"; };
 		2FF8D92A24C88A6F006A83B5 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		2FF8D92B24C88A6F006A83B5 /* BaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewController.h; sourceTree = "<group>"; };
-		2FF8D92C24C88A6F006A83B5 /* BaseScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseScrollViewController.m; sourceTree = "<group>"; };
 		2FF8D92D24C88A6F006A83B5 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
-		2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCollectionViewController.m; sourceTree = "<group>"; };
 		2FF8D93824C88A6F006A83B5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2FF8D93A24C88A6F006A83B5 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
 		2FF8D93B24C88A6F006A83B5 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
@@ -910,12 +904,8 @@
 			children = (
 				2FF8D92D24C88A6F006A83B5 /* BaseViewController.h */,
 				2FF8D92724C88A6F006A83B5 /* BaseViewController.m */,
-				2FF8D92824C88A6F006A83B5 /* BaseScrollViewController.h */,
-				2FF8D92C24C88A6F006A83B5 /* BaseScrollViewController.m */,
 				2FF8D92B24C88A6F006A83B5 /* BaseTableViewController.h */,
 				2FF8D92624C88A6F006A83B5 /* BaseTableViewController.m */,
-				2FF8D92924C88A6F006A83B5 /* BaseCollectionViewController.h */,
-				2FF8D92E24C88A6F006A83B5 /* BaseCollectionViewController.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1264,7 +1254,6 @@
 				2FF8D96E24C88A70006A83B5 /* TestModelViewController.m in Sources */,
 				2FF8D95D24C88A70006A83B5 /* TestTableBackgroundViewController.m in Sources */,
 				2FF8D98424C88A70006A83B5 /* WebViewController.m in Sources */,
-				2FF8D98824C88A70006A83B5 /* BaseCollectionViewController.m in Sources */,
 				2FF8D95724C88A6F006A83B5 /* TestCollectionViewController.m in Sources */,
 				2FF8D96F24C88A70006A83B5 /* TestWorkflowViewController.m in Sources */,
 				2FF8D96524C88A70006A83B5 /* TestLayerViewController.m in Sources */,
@@ -1306,7 +1295,6 @@
 				2F07876624D1B6B7007BF096 /* TestSkeletonViewController.m in Sources */,
 				2FF8D94724C88A6F006A83B5 /* TestStateViewController.m in Sources */,
 				2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */,
-				2FF8D98724C88A70006A83B5 /* BaseScrollViewController.m in Sources */,
 				2FF8D97B24C88A70006A83B5 /* TestThreadViewController.m in Sources */,
 				2FF8D97124C88A70006A83B5 /* TestJavascriptBridgeViewController.m in Sources */,
 				2FF8D95624C88A6F006A83B5 /* TestCrashViewController.m in Sources */,

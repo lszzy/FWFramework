@@ -7,9 +7,9 @@
 //
 
 #import "TestTransitionViewController.h"
-#import "BaseScrollViewController.h"
+#import "BaseViewController.h"
 
-@interface TestFullScreenViewController : BaseScrollViewController
+@interface TestFullScreenViewController : BaseViewController <FWScrollViewController>
 
 @property (nonatomic, assign) BOOL canScroll;
 @property (nonatomic, weak) UILabel *frameLabel;

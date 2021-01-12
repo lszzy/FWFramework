@@ -8,7 +8,7 @@
 
 #import "TestNavigationViewController.h"
 
-@interface TestNavigationViewController ()
+@interface TestNavigationViewController () <FWScrollViewController>
 
 @property (nonatomic, assign) BOOL fullscreenPop;
 
