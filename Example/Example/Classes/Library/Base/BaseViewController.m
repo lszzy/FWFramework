@@ -24,14 +24,25 @@
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWViewController) withIntercepter:intercepter];
     
     FWNavigationBarAppearance *defaultAppearance = [[FWNavigationBarAppearance alloc] init];
-    defaultAppearance.backgroundColor = [AppTheme barColor];
     defaultAppearance.foregroundColor = [AppTheme textColor];
+    defaultAppearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
+        navigationBar.fwThemeBackgroundColor = [AppTheme barColor];
+    };
     [FWNavigationBarAppearance setAppearance:defaultAppearance forStyle:FWNavigationBarStyleDefault];
     
-    FWNavigationBarAppearance *whiteAppearance = [[FWNavigationBarAppearance alloc] init];
-    whiteAppearance.backgroundColor = [UIColor whiteColor];
-    whiteAppearance.foregroundColor = [UIColor blackColor];
-    [FWNavigationBarAppearance setAppearance:whiteAppearance forStyle:FWNavigationBarStyleWhite];
+    FWNavigationBarAppearance *randomAppearance = [[FWNavigationBarAppearance alloc] init];
+    randomAppearance.foregroundColor = [AppTheme textColor];
+    randomAppearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
+        navigationBar.fwThemeBackgroundColor = [UIColor fwRandomColor];
+    };
+    [FWNavigationBarAppearance setAppearance:randomAppearance forStyle:FWNavigationBarStyleRandom];
+    
+    FWNavigationBarAppearance *clearAppearance = [[FWNavigationBarAppearance alloc] init];
+    clearAppearance.foregroundColor = [AppTheme textColor];
+    clearAppearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
+        navigationBar.fwThemeBackgroundColor = [UIColor clearColor];
+    };
+    [FWNavigationBarAppearance setAppearance:clearAppearance forStyle:FWNavigationBarStyleClear];
 }
 
 - (void)viewControllerInit:(UIViewController *)viewController

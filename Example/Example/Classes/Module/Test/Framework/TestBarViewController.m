@@ -29,9 +29,9 @@
     if (self.index < 2) {
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
     } else if (self.index < 4) {
-        self.fwNavigationBarStyle = FWNavigationBarStyleWhite;
+        self.fwNavigationBarStyle = FWNavigationBarStyleRandom;
     } else {
-        self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleWhite), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
+        self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleRandom), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
     }
     
     FWWeakifySelf();
@@ -201,7 +201,7 @@ FWPropertyAssign(BOOL, hideToast);
 - (void)onNavigationStyle
 {
     if (self.fwNavigationBarStyle == FWNavigationBarStyleDefault) {
-        self.fwNavigationBarStyle = FWNavigationBarStyleWhite;
+        self.fwNavigationBarStyle = FWNavigationBarStyleRandom;
     } else {
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
     }
