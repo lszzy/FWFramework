@@ -22,33 +22,33 @@
 
 + (UIColor *)barColor
 {
-    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xF8F8FD] dark:[UIColor fwColorWithHex:0x121312]];
+    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xFAFAFA] dark:[UIColor fwColorWithHex:0x121212]];
 }
 
 + (UIColor *)tableColor
 {
-    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xF2F2F7] dark:[UIColor fwColorWithHex:0x000000]];
+    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xF2F2F2] dark:[UIColor fwColorWithHex:0x000000]];
 }
 
 + (UIColor *)cellColor
 {
-    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xFFFFFF] dark:[UIColor fwColorWithHex:0x1C1C1E]];
+    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xFFFFFF] dark:[UIColor fwColorWithHex:0x1C1C1C]];
 }
 
 + (UIColor *)borderColor
 {
-    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xDDDDDD] dark:[UIColor fwColorWithHex:0x303032]];
+    return [UIColor fwThemeLight:[UIColor fwColorWithHex:0xDDDDDD] dark:[UIColor fwColorWithHex:0x303030]];
 }
 
 + (UIButton *)largeButton
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button fwSetCornerRadius:5];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button fwSetBackgroundColor:[UIColor fwThemeLight:[UIColor fwColorWithHex:0x017AFF] dark:[UIColor fwColorWithHex:0x0A84FF]] forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont fwBoldFontOfSize:17];
+    [button fwSetCornerRadius:8];
     [button fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 15 * 2];
-    [button fwSetDimension:NSLayoutAttributeHeight toSize:45];
+    [button fwSetDimension:NSLayoutAttributeHeight toSize:50];
     return button;
 }
 
