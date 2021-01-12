@@ -16,6 +16,7 @@
     UITableView *tableView = objc_getAssociatedObject(self, _cmd);
     if (!tableView) {
         tableView = [[FWViewControllerManager sharedInstance] performIntercepter:_cmd withObject:self];
+        tableView.backgroundColor = [AppTheme tableColor];
         // 渲染可重用单元格类
         NSDictionary *cellDict = [self renderCellClass];
         for (NSString *cellIdentifier in cellDict) {

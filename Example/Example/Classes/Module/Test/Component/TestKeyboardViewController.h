@@ -6,8 +6,8 @@
 //  Copyright © 2017年 ocphp.com. All rights reserved.
 //
 
-#import "BaseScrollViewController.h"
+#import "BaseViewController.h"
 
-@interface TestKeyboardViewController : BaseScrollViewController
+@interface TestKeyboardViewController : BaseViewController
 
 @end

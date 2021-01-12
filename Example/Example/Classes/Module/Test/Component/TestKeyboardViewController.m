@@ -8,7 +8,7 @@
 
 #import "TestKeyboardViewController.h"
 
-@interface TestKeyboardViewController () <UITextFieldDelegate, UITextViewDelegate>
+@interface TestKeyboardViewController () <FWScrollViewController, UITextFieldDelegate, UITextViewDelegate>
 
 FWPropertyStrong(UITextField *, mobileField);
 
@@ -30,6 +30,7 @@ FWPropertyAssign(BOOL, canScroll);
 
 - (void)renderView
 {
+    self.scrollView.backgroundColor = [AppTheme tableColor];
     self.scrollView.fwKeyboardDismissOnDrag = YES;
     
     UITextField *textFieldAppearance = [UITextField appearanceWhenContainedInInstancesOfClasses:@[[TestKeyboardViewController class]]];
