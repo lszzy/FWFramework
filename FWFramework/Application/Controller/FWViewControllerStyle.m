@@ -213,6 +213,16 @@
 
 #pragma mark - Item
 
+- (BOOL)fwIsPresented
+{
+    UIViewController *viewController = self;
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.firstObject != self) return NO;
+        viewController = self.navigationController;
+    }
+    return viewController.presentingViewController.presentedViewController == viewController;
+}
+
 - (void)fwSetBarTitle:(id)title
 {
     if ([title isKindOfClass:[UIView class]]) {

@@ -780,11 +780,9 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
 - (void)fwCloseViewControllerAnimated:(BOOL)animated
 {
     if (self.navigationController) {
-        UIViewController *viewController = [self.navigationController popViewControllerAnimated:animated];
-        if (!viewController && self.presentingViewController) {
-            [self dismissViewControllerAnimated:animated completion:nil];
-        }
-    } else if (self.presentingViewController) {
+        if ([self.navigationController popViewControllerAnimated:animated]) return;
+    }
+    if (self.presentingViewController) {
         [self dismissViewControllerAnimated:animated completion:nil];
     }
 }
