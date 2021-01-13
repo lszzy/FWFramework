@@ -27,7 +27,7 @@
         self.step = 1;
     }
     
-    self.title = [NSString stringWithFormat:@"工作流-%ld", self.step];
+    self.navigationItem.title = [NSString stringWithFormat:@"工作流-%ld", self.step];
     
     if (self.step < 3) {
         [self fwSetRightBarItem:@"下一步" target:self action:@selector(onNext)];

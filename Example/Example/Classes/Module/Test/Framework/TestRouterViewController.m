@@ -263,7 +263,7 @@
 - (void)onOpen14
 {
     BaseViewController *viewController = [BaseViewController new];
-    viewController.title = @"iOS14 bug";
+    viewController.navigationItem.title = @"iOS14 bug";
     FWWeakifySelf();
     [viewController fwSetBackBarBlock:^BOOL{
         FWStrongifySelf();

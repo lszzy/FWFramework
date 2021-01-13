@@ -152,12 +152,12 @@
     self.tableView.fwPullRefreshView.stateBlock = ^(FWPullRefreshView * _Nonnull view, FWPullRefreshState state) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
+        self.navigationItem.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
     };
     self.tableView.fwPullRefreshView.progressBlock = ^(FWPullRefreshView * _Nonnull view, CGFloat progress) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
+        self.navigationItem.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
     };
     
     FWInfiniteScrollView.height = 64;
@@ -170,12 +170,12 @@
     self.tableView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"load state-%@", @(state)];
+        self.navigationItem.title = [NSString stringWithFormat:@"load state-%@", @(state)];
     };
     self.tableView.fwInfiniteScrollView.progressBlock = ^(FWInfiniteScrollView * _Nonnull view, CGFloat progress) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
+        self.navigationItem.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
     };
 }
 

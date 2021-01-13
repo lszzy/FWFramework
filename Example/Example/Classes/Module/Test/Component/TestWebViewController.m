@@ -36,7 +36,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"WKWebView";
+    self.navigationItem.title = @"WKWebView";
 }
 
 #pragma mark - FWWebViewNavigationDelegate
@@ -47,7 +47,7 @@
     FWWeakifySelf();
     [_webView evaluateJavaScript:@"document.title" completionHandler:^(id title, NSError * _Nullable error) {
         FWStrongifySelf();
-        self.title = [title fwAsNSString];
+        self.navigationItem.title = [title fwAsNSString];
     }];
 }
 

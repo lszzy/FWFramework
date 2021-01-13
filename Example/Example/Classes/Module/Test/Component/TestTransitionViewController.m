@@ -72,7 +72,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"全屏弹出框";
+    self.navigationItem.title = @"全屏弹出框";
     
     // 视图延伸到导航栏
     self.fwForcePopGesture = YES;
