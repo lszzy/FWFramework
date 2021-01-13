@@ -249,8 +249,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
-/// 关闭最顶部的视图控制器，自动判断pop|dismiss
-+ (void)closeViewControllerAnimated:(BOOL)animated;
+/// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
++ (BOOL)closeViewControllerAnimated:(BOOL)animated;
 
 @end
 
@@ -285,8 +285,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present
 - (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
-/// 关闭最顶部的视图控制器，自动判断pop|dismiss
-- (void)fwCloseViewControllerAnimated:(BOOL)animated;
+/// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
+- (BOOL)fwCloseViewControllerAnimated:(BOOL)animated;
 
 @end
 
@@ -300,8 +300,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
 - (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
-/// 关闭控制器。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
-- (void)fwCloseViewControllerAnimated:(BOOL)animated;
+/// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
+- (BOOL)fwCloseViewControllerAnimated:(BOOL)animated;
 
 @end
 
