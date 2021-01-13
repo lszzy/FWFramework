@@ -71,6 +71,9 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 #pragma mark - Item
 
+/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES，方便添加左上角关闭按钮
+- (BOOL)fwIsPresented;
+
 /// 快捷设置导航栏标题文字或视图
 - (void)fwSetBarTitle:(nullable id)title;
 
