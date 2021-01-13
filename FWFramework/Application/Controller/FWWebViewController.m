@@ -58,7 +58,7 @@
     
     __weak __typeof(viewController) weakController = viewController;
     [webView fwObserveProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
-        weakController.title = webView.title;
+        weakController.navigationItem.title = webView.title;
     }];
     __weak __typeof(progressView) weakProgressView = progressView;
     [webView fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {

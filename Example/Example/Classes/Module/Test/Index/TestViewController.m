@@ -206,9 +206,9 @@
     if ([vc isKindOfClass:[NSString class]]) {
         Class vcClass = NSClassFromString(vc);
         vc = [[vcClass alloc] init];
-        ((UIViewController *)vc).title = [rowData objectAtIndex:0];
+        ((UIViewController *)vc).navigationItem.title = [rowData objectAtIndex:0];
     } else if ([vc isKindOfClass:[UIViewController class]]) {
-        ((UIViewController *)vc).title = [rowData objectAtIndex:0];
+        ((UIViewController *)vc).navigationItem.title = [rowData objectAtIndex:0];
     }
     [self.navigationController pushViewController:vc animated:YES];
 }

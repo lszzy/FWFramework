@@ -42,7 +42,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         if ([url.absoluteString hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
             viewController.parameters = parameters;
-            viewController.title = url.absoluteString;
+            viewController.navigationItem.title = url.absoluteString;
             [FWRouter pushViewController:viewController animated:YES];
             return NO;
         }
@@ -61,7 +61,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
             if (success) return;
             
             WebViewController *viewController = [WebViewController new];
-            viewController.title = parameters[FWRouterURLKey];
+            viewController.navigationItem.title = parameters[FWRouterURLKey];
             viewController.requestUrl = parameters[FWRouterURLKey];
             [FWRouter pushViewController:viewController animated:YES];
         }];
@@ -70,7 +70,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     [FWRouter registerURL:AppRouter.ROUTE_TEST withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = [NSString stringWithFormat:@"app://test/%@", parameters[@"id"]];
+        viewController.navigationItem.title = [NSString stringWithFormat:@"app://test/%@", parameters[@"id"]];
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;
@@ -81,7 +81,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     [FWRouter registerURL:@"wildcard://*" withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = @"wildcard://*";
+        viewController.navigationItem.title = @"wildcard://*";
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;
@@ -92,7 +92,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     [FWRouter registerURL:AppRouter.ROUTE_WILDCARD withHandler:^(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = AppRouter.ROUTE_WILDCARD;
+        viewController.navigationItem.title = AppRouter.ROUTE_WILDCARD;
         FWBlockParam completion = parameters[FWRouterCompletionKey];
         if (completion) {
             viewController.completion = completion;
@@ -103,14 +103,14 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     [FWRouter registerURL:AppRouter.ROUTE_CONTROLLER withHandler:^(NSDictionary * _Nonnull parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = [NSString stringWithFormat:@"app://controller/%@", parameters[@"id"]];
+        viewController.navigationItem.title = [NSString stringWithFormat:@"app://controller/%@", parameters[@"id"]];
         [FWRouter pushViewController:viewController animated:YES];
     }];
     
     [FWRouter registerURL:AppRouter.ROUTE_OBJECT withObjectHandler:^id(NSDictionary *parameters) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters;
-        viewController.title = AppRouter.ROUTE_OBJECT;
+        viewController.navigationItem.title = AppRouter.ROUTE_OBJECT;
         return viewController;
     }];
     
