@@ -10,15 +10,30 @@
 #import <FWDebug/FWDebug.h>
 #import <Mediator/Mediator-Swift.h>
 
+@interface SettingsViewController () <FWTableViewController>
+
+@end
+
 @implementation SettingsViewController
 
-- (void)renderModel
++ (void)load
 {
-    FWWeakifySelf();
-    [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
-        FWStrongifySelf();
-        [self renderData];
-    }];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            FWThemeManager.sharedInstance.overrideWindow = YES;
+        });
+    });
+}
+
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
+- (void)renderTableView
+{
+    self.tableView.backgroundColor = [AppTheme tableColor];
 }
 
 - (void)renderData
@@ -39,26 +54,49 @@
     } else {
         [self.tableData addObject:@[FWLocalizedString(@"mediatorLogin"), @"onLogin"]];
     }
-    [self.tableData addObject:@[[NSString stringWithFormat:FWLocalizedString(@"languageTitle"), NSBundle.fwLocalizedLanguage, NSBundle.fwSystemLanguage, NSLocalizedString(@"确定", nil)], @"onLanguage"]];
+    [self.tableData addObject:@[FWLocalizedString(@"languageTitle"), @"onLanguage"]];
+    [self.tableData addObject:@[FWLocalizedString(@"themeTitle"), @"onTheme"]];
     [self.tableView reloadData];
 }
 
-- (UITableViewStyle)renderTableStyle
+#pragma mark - UITableView
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return UITableViewStyleGrouped;
+    return self.tableData.count;
 }
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView style:UITableViewCellStyleValue1];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.text = [rowData objectAtIndex:0];
+    
+    if ([@"onLanguage" isEqualToString:[rowData objectAtIndex:1]]) {
+        NSString *language = FWLocalizedString(@"systemTitle");
+        if (NSBundle.fwLocalizedLanguage.length > 0) {
+            language = [NSBundle.fwLocalizedLanguage hasPrefix:@"zh"] ? @"中文" : @"English";
+        }
+        cell.detailTextLabel.text = language;
+    } else if ([@"onTheme" isEqualToString:[rowData objectAtIndex:1]]) {
+        FWThemeMode mode = FWThemeManager.sharedInstance.mode;
+        NSString *theme = (mode == FWThemeModeSystem) ? FWLocalizedString(@"systemTitle") : (mode == FWThemeModeDark ? FWLocalizedString(@"themeDark") : FWLocalizedString(@"themeLight"));
+        cell.detailTextLabel.text = theme;
+    } else {
+        cell.detailTextLabel.text = @"";
+    }
+    return cell;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     [self fwPerformSelector:NSSelectorFromString([rowData objectAtIndex:1])];
 }
+
+#pragma mark - Action
 
 - (void)onLogin
 {
@@ -102,21 +140,31 @@
 - (void)onLanguage
 {
     FWWeakifySelf();
-    [self fwShowSheetWithTitle:@"选择语言" message:nil cancel:@"取消" actions:@[@"跟随系统", @"中文", @"English"] actionBlock:^(NSInteger index) {
+    [self fwShowSheetWithTitle:FWLocalizedString(@"languageTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[FWLocalizedString(@"systemTitle"), @"中文", @"English", FWLocalizedString(@"changeTitle")] actionBlock:^(NSInteger index) {
         FWStrongifySelf();
-        NSString *language = nil;
-        if (index == 1) {
-            language = @"zh-Hans";
-        } else if (index == 2) {
-            language = @"en";
-        }
-        
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"刷新跟控制器", @"不刷新跟控制器"] actionBlock:^(NSInteger index) {
+        if (index < 3) {
+            NSString *language = (index == 1) ? @"zh-Hans" : (index == 2 ? @"en" : nil);
             NSBundle.fwLocalizedLanguage = language;
-            if (index == 0) {
-                [AppRouter refreshController];
-            }
-        }];
+            [AppRouter refreshController];
+        } else {
+            NSString *localized = NSBundle.fwLocalizedLanguage;
+            NSString *language = (!localized) ? @"zh-Hans" : ([localized hasPrefix:@"zh"] ? @"en" : nil);
+            NSBundle.fwLocalizedLanguage = language;
+            [self renderData];
+        }
+    }];
+}
+
+- (void)onTheme
+{
+    [self fwShowSheetWithTitle:FWLocalizedString(@"themeTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[FWLocalizedString(@"systemTitle"), FWLocalizedString(@"themeLight"), FWLocalizedString(@"themeDark"), FWLocalizedString(@"changeTitle")] actionBlock:^(NSInteger index) {
+        FWThemeMode mode = index;
+        if (index > 2) {
+            FWThemeMode currentMode = FWThemeManager.sharedInstance.mode;
+            mode = (currentMode == FWThemeModeSystem) ? FWThemeModeLight : (currentMode == FWThemeModeLight ? FWThemeModeDark : FWThemeModeSystem);
+        }
+        FWThemeManager.sharedInstance.mode = mode;
+        [AppRouter refreshController];
     }];
 }
 
