@@ -9,7 +9,7 @@
 
 #import "TestViewController.h"
 
-@interface TestViewController () <UISearchBarDelegate>
+@interface TestViewController () <FWTableViewController, UISearchBarDelegate>
 
 @property (nonatomic, assign) BOOL isSearch;
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -28,8 +28,8 @@
         _searchBar.showsCancelButton = YES;
         [_searchBar.fwCancelButton setTitle:FWLocalizedString(@"取消") forState:UIControlStateNormal];
         [_searchBar fwForceCancelButtonEnabled:YES];
-        [_searchBar fwSetBackgroundColor:[UIColor whiteColor]];
-        [_searchBar fwSetTextFieldBackgroundColor:[UIColor fwColorWithHex:0xEEEEEE]];
+        [_searchBar fwSetBackgroundColor:[AppTheme tableColor]];
+        [_searchBar fwSetTextFieldBackgroundColor:[AppTheme tableColor]];
         _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 65);
         [_searchBar fwSetSearchIconCenter:YES];
         [_searchBar fwSetSearchIconPosition:0];
@@ -47,45 +47,15 @@
     return self.isSearch ? self.searchResult : self.tableData;
 }
 
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    [searchBar fwSetSearchIconCenter:NO];
-    return YES;
-}
-
-- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
-    [searchBar fwSetSearchIconCenter:YES];
-    return YES;
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+- (UITableViewStyle)renderTableStyle
 {
-    [searchBar resignFirstResponder];
+    return UITableViewStyleGrouped;
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+- (void)renderTableView
 {
-    self.isSearch = searchText.fwTrimString.length > 0;
-    if (!self.isSearch) {
-        self.searchResult = [NSMutableArray array];
-        [self.tableView reloadData];
-        return;
-    }
-    
-    NSMutableArray *searchResult = [NSMutableArray array];
-    NSString *searchString = searchText.fwTrimString.lowercaseString;
-    for (NSArray *sectionData in self.tableData) {
-        NSMutableArray *sectionResult = [NSMutableArray array];
-        for (NSArray *rowData in sectionData[1]) {
-            if ([[rowData[0] lowercaseString] containsString:searchString]) {
-                [sectionResult addObject:rowData];
-            }
-        }
-        if (sectionResult.count > 0) {
-            [searchResult addObject:@[sectionData[0], sectionResult]];
-        }
-    }
-    self.searchResult = searchResult;
-    [self.tableView reloadData];
+    self.tableView.backgroundColor = [AppTheme tableColor];
+    self.tableView.fwKeyboardDismissOnDrag = YES;
 }
 
 - (void)renderData
@@ -103,9 +73,9 @@
               @[@"FWAdaptive", @"TestBarViewController"],
               @[@"FWImage", @"TestImageViewController"],
               @[@"FWState", @"TestStateViewController"],
-              @[@"FWAnnotation", [TestAnnotationViewController new]],
+              @[@"FWAnnotation", @"Example.TestAnnotationViewController"],
               @[@"FWAuthorize", @"TestAuthorizeViewController"],
-              @[@"FWLocation", [TestLocationViewController new]],
+              @[@"FWLocation", @"Example.TestLocationViewController"],
               @[@"FWNotification", @"TestNotificationViewController"],
               @[@"FWVersion", @"TestVersionViewController"],
               ]],
@@ -119,7 +89,7 @@
               @[@"FWEmptyPlugin", @"TestEmptyViewController"],
               @[@"FWModel", @"TestModelViewController"],
               @[@"FWAsyncSocket", @"TestSocketViewController"],
-              @[@"FWViewController", [TestSwiftViewController new]],
+              @[@"FWViewController", @"Example.TestSwiftViewController"],
               @[@"FWScrollViewController", @"TestControllerViewController"],
               @[@"FWTabBarController", @"TestTabBarViewController"],
               @[@"FWCache", @"TestCacheViewController"],
@@ -175,42 +145,47 @@
     [self.searchBar fwAddToNavigationItem:self.navigationItem];
 }
 
-#pragma mark - TableView
+#pragma mark - UISearchBar
 
-- (UITableViewStyle)renderTableStyle
-{
-    return UITableViewStyleGrouped;
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    [searchBar fwSetSearchIconCenter:NO];
+    return YES;
 }
 
-- (void)renderTableView
-{
-    self.tableView.fwKeyboardDismissOnDrag = YES;
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
+    [searchBar fwSetSearchIconCenter:YES];
+    return YES;
 }
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    NSArray *sectionData = [self.displayData objectAtIndex:indexPath.section];
-    NSArray *sectionList = [sectionData objectAtIndex:1];
-    NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
-    
-    cell.textLabel.text = [rowData objectAtIndex:0];
+    [searchBar resignFirstResponder];
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    NSArray *sectionData = [self.displayData objectAtIndex:indexPath.section];
-    NSArray *sectionList = [sectionData objectAtIndex:1];
-    NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
-    
-    id vc = [rowData objectAtIndex:1];
-    if ([vc isKindOfClass:[NSString class]]) {
-        Class vcClass = NSClassFromString(vc);
-        vc = [[vcClass alloc] init];
-        ((UIViewController *)vc).navigationItem.title = [rowData objectAtIndex:0];
-    } else if ([vc isKindOfClass:[UIViewController class]]) {
-        ((UIViewController *)vc).navigationItem.title = [rowData objectAtIndex:0];
+    self.isSearch = searchText.fwTrimString.length > 0;
+    if (!self.isSearch) {
+        self.searchResult = [NSMutableArray array];
+        [self.tableView reloadData];
+        return;
     }
-    [self.navigationController pushViewController:vc animated:YES];
+    
+    NSMutableArray *searchResult = [NSMutableArray array];
+    NSString *searchString = searchText.fwTrimString.lowercaseString;
+    for (NSArray *sectionData in self.tableData) {
+        NSMutableArray *sectionResult = [NSMutableArray array];
+        for (NSArray *rowData in sectionData[1]) {
+            if ([[rowData[0] lowercaseString] containsString:searchString]) {
+                [sectionResult addObject:rowData];
+            }
+        }
+        if (sectionResult.count > 0) {
+            [searchResult addObject:@[sectionData[0], sectionResult]];
+        }
+    }
+    self.searchResult = searchResult;
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableView
@@ -227,11 +202,35 @@
     return sectionList.count;
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    NSArray *sectionData = [self.displayData objectAtIndex:indexPath.section];
+    NSArray *sectionList = [sectionData objectAtIndex:1];
+    NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
+    cell.textLabel.text = [rowData objectAtIndex:0];
+    return cell;
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSArray *sectionData = [self.displayData objectAtIndex:section];
     NSString *sectionName = [sectionData objectAtIndex:0];
     return sectionName;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSArray *sectionData = [self.displayData objectAtIndex:indexPath.section];
+    NSArray *sectionList = [sectionData objectAtIndex:1];
+    NSArray *rowData = [sectionList objectAtIndex:indexPath.row];
+    
+    Class controllerClass = NSClassFromString([rowData objectAtIndex:1]);
+    UIViewController *viewController = [[controllerClass alloc] init];
+    viewController.navigationItem.title = [rowData objectAtIndex:0];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end
