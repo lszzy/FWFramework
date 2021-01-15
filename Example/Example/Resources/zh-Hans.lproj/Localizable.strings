@@ -11,13 +11,18 @@
 "确定" = "确定";
 "取消" = "取消";
 
-"mediatorLogin" = "中间件登录";
-"mediatorLogout" = "中间件退出";
+"mediatorLogin" = "登录";
+"mediatorLogout" = "退出登录";
 "homeTitle" = "首页";
 "testTitle" = "测试";
 "settingTitle" = "设置";
 "debugButton" = "调试";
-"languageTitle" = "自定义:%@ 系统:%@ (%@)";
+"languageTitle" = "多语言";
+"changeTitle" = "切换";
+"themeTitle" = "主题";
+"systemTitle" = "系统";
+"themeLight" = "浅色";
+"themeDark" = "深色";
 "loginInvalid" = "登录失效";
 "loginSuccess" = "登录成功";
 "logoutSuccess" = "退出成功";

@@ -65,7 +65,6 @@
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
 {
     [self setupNotification:options];
-    [self setupAppearance];
 }
 
 - (void)setupNotification:(NSDictionary *)options
@@ -106,46 +105,16 @@
     };
 }
 
-- (void)setupAppearance
-{
-    FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] init];
-    appearance.backgroundColor = [UIColor fwColorWithHex:0xFFDA00];
-    appearance.foregroundColor = [UIColor fwColorWithHex:0x111111];
-    [FWNavigationBarAppearance setAppearance:appearance forStyle:FWNavigationBarStyleDefault];
-    
-    FWAlertAppearance.appearance.preferredActionBlock = ^UIAlertAction *(UIAlertController *alertController) {
-        return alertController.actions.firstObject;
-    };
-    
-    FWAlertAppearance.appearance.titleFont = [UIFont appFontSemiBoldSize:16];
-    FWAlertAppearance.appearance.titleColor = [UIColor appColorHex:0x111111];
-    FWAlertAppearance.appearance.messageFont = [UIFont appFontSize:13];
-    FWAlertAppearance.appearance.messageColor = [UIColor appColorHex:0x111111];
-    
-    FWAlertAppearance.appearance.actionColor = [UIColor appColorHex:0xBFA300];
-    FWAlertAppearance.appearance.preferredActionColor = [UIColor appColorHex:0xC69B00];
-    FWAlertAppearance.appearance.cancelActionColor = [UIColor appColorHex:0x111111];
-    FWAlertAppearance.appearance.destructiveActionColor = [UIColor redColor];
-    FWAlertAppearance.appearance.disabledActionColor = [UIColor lightGrayColor];
-    
-    FWAlertStyle.appearance.lineColor = [UIColor appColorHex:0xDDDDDD];
-    FWAlertStyle.appearance.contentInsets = UIEdgeInsetsMake(32, 16, 24, 16);
-    FWAlertStyle.appearance.actionFont = [UIFont appFontSize:16];
-    FWAlertStyle.appearance.actionBoldFont = [UIFont appFontSemiBoldSize:16];
-}
-
 - (void)setupController
 {
     // iOS13以前使用旧的方式
-    if (@available(iOS 13.0, *)) { } else {
-        if (!self.window) {
-            self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-            [self.window makeKeyAndVisible];
-        }
-        
-        self.window.backgroundColor = [UIColor whiteColor];
-        self.window.rootViewController = [TabBarController new];
+    if (@available(iOS 13.0, *)) { return; }
+    
+    if (!self.window) {
+        self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        [self.window makeKeyAndVisible];
     }
+    self.window.rootViewController = [TabBarController new];
 }
 
 @end

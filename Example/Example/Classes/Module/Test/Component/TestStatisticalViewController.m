@@ -21,7 +21,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlack] text:nil];
+        UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
         _textLabel = textLabel;
         [self.contentView addSubview:textLabel];
         textLabel.fwLayoutChain.center();
@@ -91,8 +91,8 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     self.segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
-    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont appFontSize:16]};
-    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont appFontBoldSize:18]};
+    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16]};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:18]};
     [headerView addSubview:self.segmentedControl];
     segmentedControl.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(testSwitch, 50).height(50);
     

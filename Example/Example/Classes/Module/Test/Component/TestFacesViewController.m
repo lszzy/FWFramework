@@ -50,8 +50,8 @@
 - (UIImageView *)addImageView:(CGRect)frame
 {
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-    [imageView fwSetCornerRadius:kAppCornerRadiusNormal];
-    imageView.backgroundColor = [UIColor appColorBlackOpacityTiny];
+    [imageView fwSetCornerRadius:5];
+    imageView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:imageView];
     return imageView;
 }
@@ -84,7 +84,7 @@
     
     imageView12_.contentMode = UIViewContentModeScaleAspectFit;
     NSAttributedString *watermark = [[NSAttributedString alloc] initWithString:@"水印" attributes:@{
-                                                                                                  NSFontAttributeName: [UIFont appFontTiny],
+                                                                                                  NSFontAttributeName: [UIFont fwFontOfSize:10],
                                                                                                   NSForegroundColorAttributeName: [UIColor whiteColor],
                                                                                                   }];
     [imageView12_ fwSetImage:[UIImage imageNamed:@"public_test"] watermarkString:watermark inRect:CGRectMake(50, 58, 30, 22)];

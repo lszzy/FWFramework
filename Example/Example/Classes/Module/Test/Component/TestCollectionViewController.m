@@ -38,7 +38,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
 
 @end
 
-@interface TestCollectionViewController () <UICollectionViewDelegateFlowLayout>
+@interface TestCollectionViewController () <FWCollectionViewController, UICollectionViewDelegateFlowLayout>
 
 @end
 
@@ -59,6 +59,7 @@ static NSString * const kTestCollectionFooterViewID = @"kTestCollectionFooterVie
 
 - (void)renderCollectionView
 {
+    self.collectionView.backgroundColor = [AppTheme tableColor];
     [self.collectionView registerClass:[TestCollectionCell class] forCellWithReuseIdentifier:kTestCollectionCellID];
     [self.collectionView registerClass:[TestCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTestCollectionHeaderViewID];
     [self.collectionView registerClass:[TestCollectionFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kTestCollectionFooterViewID];

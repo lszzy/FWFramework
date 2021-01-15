@@ -58,7 +58,7 @@
     
     __weak __typeof(viewController) weakController = viewController;
     [webView fwObserveProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
-        weakController.title = webView.title;
+        weakController.navigationItem.title = webView.title;
     }];
     __weak __typeof(progressView) weakProgressView = progressView;
     [webView fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {
@@ -86,41 +86,49 @@
 - (void)webViewControllerViewDidLoad:(UIViewController<FWWebViewController> *)viewController
 {
     NSArray *webItems = viewController.webItems;
-    if (webItems.count > 0) {
-        __weak __typeof(viewController) weakController = viewController;
-        NSMutableArray<UIBarButtonItem *> *leftItems = [NSMutableArray array];
-        for (int i = 0; i < webItems.count; i++) {
-            id webItem = webItems[i];
-            if ([webItem isKindOfClass:[UIBarButtonItem class]]) {
-                [leftItems addObject:webItem];
-            } else {
-                if (i == 0) {
-                    UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
-                        if (weakController.webView.canGoBack) {
-                            [weakController.webView goBack];
-                        } else {
-                            [weakController onWebClose];
-                        }
-                    }];
-                    [leftItems addObject:leftItem];
-                } else {
-                    UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
+    if (webItems.count < 1 || !viewController.navigationController) {
+        [self webViewControllerLoadRequest:viewController];
+        return;
+    }
+    
+    __weak __typeof(viewController) weakController = viewController;
+    NSMutableArray<UIBarButtonItem *> *leftItems = [NSMutableArray array];
+    for (int i = 0; i < webItems.count; i++) {
+        id webItem = webItems[i];
+        if ([webItem isKindOfClass:[UIBarButtonItem class]]) {
+            [leftItems addObject:webItem];
+        } else {
+            if (i == 0) {
+                UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
+                    if (weakController.webView.canGoBack) {
+                        [weakController.webView goBack];
+                    } else {
                         [weakController onWebClose];
-                    }];
-                    [leftItems addObject:leftItem];
-                }
+                    }
+                }];
+                [leftItems addObject:leftItem];
+            } else {
+                UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:webItem block:^(id sender) {
+                    [weakController onWebClose];
+                }];
+                [leftItems addObject:leftItem];
             }
         }
-        
-        viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
-        [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
-            if (webView.canGoBack) {
-                weakController.navigationItem.leftBarButtonItems = [leftItems copy];
-            } else {
-                weakController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:leftItems.firstObject, nil];
-            }
-        }];
     }
+    
+    BOOL showClose = YES;
+    if (viewController.navigationController.viewControllers.firstObject == viewController &&
+        viewController.navigationController.presentingViewController.presentedViewController != viewController.navigationController) {
+        showClose = NO;
+    }
+    viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+    [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+        if (webView.canGoBack) {
+            weakController.navigationItem.leftBarButtonItems = [leftItems copy];
+        } else {
+            weakController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+        }
+    }];
     
     [self webViewControllerLoadRequest:viewController];
 }
@@ -133,21 +141,22 @@
     WKWebView *webView = [viewController webView];
     if ([webRequest isKindOfClass:[NSURLRequest class]]) {
         [webView loadRequest:webRequest];
+        return;
+    }
+    
+    NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
+    if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
+        requestUrl = [NSURL fwURLWithString:webRequest];
+    }
+    if (!requestUrl) return;
+    
+    if (requestUrl.isFileURL) {
+        NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
+        if (htmlString) {
+            [webView loadHTMLString:htmlString baseURL:requestUrl];
+        }
     } else {
-        NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
-        if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
-            requestUrl = [NSURL fwURLWithString:webRequest];
-        }
-        if (!requestUrl) return;
-        
-        if (requestUrl.isFileURL) {
-            NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
-            if (htmlString) {
-                [webView loadHTMLString:htmlString baseURL:requestUrl];
-            }
-        } else {
-            [webView loadRequest:[NSURLRequest requestWithURL:requestUrl]];
-        }
+        [webView loadRequest:[NSURLRequest requestWithURL:requestUrl]];
     }
 }
 
@@ -202,12 +211,17 @@
 - (void)fwInnerOnWebClose
 {
     if (self.navigationController) {
-        UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
-        if (!viewController && self.presentingViewController) {
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    } else if (self.presentingViewController) {
+        if ([self.navigationController popViewControllerAnimated:YES]) return;
+    }
+    if (self.presentingViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    
+    WKWebView *webView = [(id<FWWebViewController>)self webView];
+    WKBackForwardListItem *firstItem = webView.backForwardList.backList.firstObject;
+    if (firstItem != nil) {
+        [webView goToBackForwardListItem:firstItem];
     }
 }
 

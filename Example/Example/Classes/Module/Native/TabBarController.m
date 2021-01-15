@@ -21,9 +21,17 @@
 {
     self = [super init];
     if (self) {
+        [self setupAppearance];
         [self setupController];
     }
     return self;
+}
+
+- (void)setupAppearance
+{
+    self.delegate = self;
+    [self.tabBar fwSetTextColor:[AppTheme textColor]];
+    self.tabBar.fwThemeBackgroundColor = [AppTheme barColor];
 }
 
 - (void)setupController
@@ -46,9 +54,6 @@
     UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
     settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
     settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
-    
-    self.delegate = self;
-    self.definesPresentationContext = YES;
     self.viewControllers = @[homeNav, testNav, settingsNav];
     
     [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {

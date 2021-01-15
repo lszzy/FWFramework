@@ -660,9 +660,9 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     [[UIWindow fwMainWindow] fwOpenViewController:viewController animated:animated];
 }
 
-+ (void)closeViewControllerAnimated:(BOOL)animated
++ (BOOL)closeViewControllerAnimated:(BOOL)animated
 {
-    [[UIWindow fwMainWindow] fwCloseViewControllerAnimated:animated];
+    return [[UIWindow fwMainWindow] fwCloseViewControllerAnimated:animated];
 }
 
 @end
@@ -757,9 +757,9 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     [[self fwTopViewController] fwOpenViewController:viewController animated:animated];
 }
 
-- (void)fwCloseViewControllerAnimated:(BOOL)animated
+- (BOOL)fwCloseViewControllerAnimated:(BOOL)animated
 {
-    [[self fwTopViewController] fwCloseViewControllerAnimated:animated];
+    return [[self fwTopViewController] fwCloseViewControllerAnimated:animated];
 }
 
 @end
@@ -777,16 +777,16 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     }
 }
 
-- (void)fwCloseViewControllerAnimated:(BOOL)animated
+- (BOOL)fwCloseViewControllerAnimated:(BOOL)animated
 {
     if (self.navigationController) {
-        UIViewController *viewController = [self.navigationController popViewControllerAnimated:animated];
-        if (!viewController && self.presentingViewController) {
-            [self dismissViewControllerAnimated:animated completion:nil];
-        }
-    } else if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:animated completion:nil];
+        if ([self.navigationController popViewControllerAnimated:animated]) return YES;
     }
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:animated completion:nil];
+        return YES;
+    }
+    return NO;
 }
 
 @end

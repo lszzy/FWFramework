@@ -44,8 +44,8 @@
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
-        titleLabel.font = [UIFont appFontNormal];
-        titleLabel.textColor = [UIColor appColorBlackOpacityHuge];
+        titleLabel.font = [UIFont fwFontOfSize:15];
+        titleLabel.textColor = [UIColor blackColor];
         self.myTitleLabel = titleLabel;
         [self.contentView addSubview:titleLabel];
         [titleLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
@@ -54,13 +54,13 @@
         
         UILabel *textLabel = [UILabel fwAutoLayoutView];
         textLabel.numberOfLines = 0;
-        textLabel.font = [UIFont appFontSmall];
-        textLabel.textColor = [UIColor appColorBlackOpacityLarge];
+        textLabel.font = [UIFont fwFontOfSize:13];
+        textLabel.textColor = [UIColor blackColor];
         self.myTextLabel = textLabel;
         [self.contentView addSubview:textLabel];
         [textLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
             make.leftToView(titleLabel).rightToView(titleLabel);
-            NSLayoutConstraint *constraint = [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:titleLabel withOffset:kAppPaddingNormal];
+            NSLayoutConstraint *constraint = [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:titleLabel withOffset:10];
             [textLabel fwAddCollapseConstraint:constraint];
             textLabel.fwAutoCollapse = YES;
         }];
@@ -72,10 +72,10 @@
         [imageView fwSetContentModeAspectFill];
         [self.contentView addSubview:imageView];
         [imageView fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
-            [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
             NSLayoutConstraint *widthCons = [imageView fwSetDimension:NSLayoutAttributeWidth toSize:100];
             NSLayoutConstraint *heightCons = [imageView fwSetDimension:NSLayoutAttributeHeight toSize:100];
-            NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:kAppPaddingNormal];
+            NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:10];
             [imageView fwAddCollapseConstraint:widthCons];
             [imageView fwAddCollapseConstraint:heightCons];
             [imageView fwAddCollapseConstraint:constraint];
@@ -127,7 +127,7 @@
         self.backgroundColor = [UIColor fwRandomColor];
         self.fwMaxYViewPadding = 15;
         
-        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:nil];
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
         titleLabel.numberOfLines = 0;
         _titleLabel = titleLabel;
         [self addSubview:titleLabel];
@@ -157,7 +157,7 @@
 {
     self.collectionView = [UICollectionView fwCollectionView];
     self.collectionView.fwDelegate.collectionData = @[@[]];
-    self.collectionView.backgroundColor = [UIColor appColorBg];
+    self.collectionView.backgroundColor = [AppTheme backgroundColor];
     self.collectionView.alwaysBounceVertical = YES;
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     flowLayout.minimumLineSpacing = 0;

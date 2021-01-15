@@ -8,6 +8,7 @@
 
 #import "UINavigationBar+FWFramework.h"
 #import "FWImage.h"
+#import "FWTheme.h"
 #import "FWMessage.h"
 #import "FWAdaptive.h"
 #import "FWSwizzle.h"
@@ -16,6 +17,28 @@
 #pragma mark - UINavigationBar+FWFramework
 
 @implementation UINavigationBar (FWFramework)
+
+- (UIColor *)fwThemeBackgroundColor
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundColor));
+}
+
+- (void)setFwThemeBackgroundColor:(UIColor *)fwThemeBackgroundColor
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), fwThemeBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setBackgroundImage:[UIImage fwImageWithColor:fwThemeBackgroundColor] forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:[UIImage new]];
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    [super fwThemeChanged:style];
+    
+    if (self.fwThemeBackgroundColor != nil) {
+        [self setBackgroundImage:[UIImage fwImageWithColor:self.fwThemeBackgroundColor] forBarMetrics:UIBarMetricsDefault];
+        [self setShadowImage:[UIImage new]];
+    }
+}
 
 + (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes
 {
@@ -35,25 +58,14 @@
 
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    // 不使用barTintColor。默认Default样式下barTintColor在iOS10以下无法隐藏底部线条；在iOS8.2或者之前的版本，如果导航栏的translucent值为true时，用barTintColor去设置导航栏的背景样式，然后改变barTintColor的颜色，那么当边缘左滑返回手势取消的时候导航栏的背景色会闪烁。
     [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
-}
-
-- (void)fwSetBackgroundImage:(UIImage *)image
-{
-    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:[UIImage new]];
 }
 
 - (void)fwSetBackgroundClear
 {
     [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
-}
-
-- (void)fwSetLineHidden:(BOOL)hidden
-{
-    // 设置线条颜色，传入UIColor创建的UIImage对象即可
-    [self setShadowImage:hidden ? [UIImage new] : nil];
 }
 
 - (UIView *)fwOverlayView
@@ -103,6 +115,28 @@
 
 @implementation UITabBar (FWFramework)
 
+- (UIColor *)fwThemeBackgroundColor
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundColor));
+}
+
+- (void)setFwThemeBackgroundColor:(UIColor *)fwThemeBackgroundColor
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), fwThemeBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.backgroundImage = [UIImage fwImageWithColor:fwThemeBackgroundColor];
+    self.shadowImage = [UIImage new];
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    [super fwThemeChanged:style];
+    
+    if (self.fwThemeBackgroundColor != nil) {
+        self.backgroundImage = [UIImage fwImageWithColor:self.fwThemeBackgroundColor];
+        self.shadowImage = [UIImage new];
+    }
+}
+
 - (void)fwSetTextColor:(UIColor *)color
 {
     self.tintColor = color;
@@ -110,32 +144,8 @@
 
 - (void)fwSetBackgroundColor:(UIColor *)color
 {
-    self.barTintColor = color;
-}
-
-- (void)fwSetBackgroundImage:(UIImage *)image
-{
-    self.backgroundImage = image;
-}
-
-- (void)fwSetLineHidden:(BOOL)hidden
-{
-    // 方案一，不影响背景图片，影响barStyle
-    self.barStyle = hidden ? UIBarStyleBlack : UIBarStyleDefault;
-    
-    // 方案二，不影响barStyle，影响backgroundImage，同时设置才生效
-    // self.backgroundImage = hidden ? [UIImage new] : nil;
-    // self.shadowImage = hidden ? [UIImage new] : nil;
-}
-
-- (void)fwSetShadowColor:(UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius
-{
-    self.barStyle = UIBarStyleBlack;
-    self.translucent = NO;
-    self.layer.shadowColor = color.CGColor;
-    self.layer.shadowOffset = offset;
-    self.layer.shadowRadius = radius;
-    self.layer.shadowOpacity = 1.0;
+    self.backgroundImage = [UIImage fwImageWithColor:color];
+    self.shadowImage = [UIImage new];
 }
 
 - (UIView *)fwBackgroundView

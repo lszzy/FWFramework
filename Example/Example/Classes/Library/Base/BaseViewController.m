@@ -23,12 +23,26 @@
     intercepter.viewDidLoadIntercepter = @selector(viewControllerViewDidLoad:);
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWViewController) withIntercepter:intercepter];
     
-    FWNavigationBarAppearance *appearance = [[FWNavigationBarAppearance alloc] init];
-    appearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
-        [navigationBar setBackgroundImage:[UIImage fwImageWithColor:[UIColor fwRandomColor]] forBarMetrics:UIBarMetricsDefault];
-        [navigationBar setShadowImage:[UIImage new]];
+    FWNavigationBarAppearance *defaultAppearance = [[FWNavigationBarAppearance alloc] init];
+    defaultAppearance.foregroundColor = [AppTheme textColor];
+    defaultAppearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
+        navigationBar.fwThemeBackgroundColor = [AppTheme barColor];
     };
-    [FWNavigationBarAppearance setAppearance:appearance forStyle:FWNavigationBarStyleRandom];
+    [FWNavigationBarAppearance setAppearance:defaultAppearance forStyle:FWNavigationBarStyleDefault];
+    
+    FWNavigationBarAppearance *randomAppearance = [[FWNavigationBarAppearance alloc] init];
+    randomAppearance.foregroundColor = [AppTheme textColor];
+    randomAppearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
+        navigationBar.fwThemeBackgroundColor = [UIColor fwRandomColor];
+    };
+    [FWNavigationBarAppearance setAppearance:randomAppearance forStyle:FWNavigationBarStyleRandom];
+    
+    FWNavigationBarAppearance *clearAppearance = [[FWNavigationBarAppearance alloc] init];
+    clearAppearance.foregroundColor = [AppTheme textColor];
+    clearAppearance.appearanceBlock = ^(UINavigationBar * _Nonnull navigationBar) {
+        navigationBar.fwThemeBackgroundColor = [UIColor clearColor];
+    };
+    [FWNavigationBarAppearance setAppearance:clearAppearance forStyle:FWNavigationBarStyleClear];
 }
 
 - (void)viewControllerInit:(UIViewController *)viewController
@@ -46,7 +60,7 @@
 - (void)viewControllerLoadView:(UIViewController *)viewController
 {
     // 默认背景色
-    viewController.view.backgroundColor = [UIColor whiteColor];
+    viewController.view.backgroundColor = [AppTheme tableColor];
 }
 
 - (void)viewControllerViewDidLoad:(UIViewController *)viewController

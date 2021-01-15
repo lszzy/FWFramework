@@ -19,7 +19,6 @@ import UIKit
         // FIXME: hotfix
         navigationItem.title = String(describing: type(of: self))
         edgesForExtendedLayout = []
-        view.backgroundColor = UIColor.white
 
         // TODO: feature
         let objcButton = UIButton(type: .system)

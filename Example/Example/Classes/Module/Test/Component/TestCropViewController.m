@@ -218,7 +218,7 @@
 #pragma mark - View Creation/Lifecycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"FWCropViewController", @"");
+    self.navigationItem.title = NSLocalizedString(@"FWCropViewController", @"");
     
     self.navigationController.navigationBar.translucent = NO;
     

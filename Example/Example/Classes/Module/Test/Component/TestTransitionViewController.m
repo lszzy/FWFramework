@@ -7,9 +7,9 @@
 //
 
 #import "TestTransitionViewController.h"
-#import "BaseScrollViewController.h"
+#import "BaseViewController.h"
 
-@interface TestFullScreenViewController : BaseScrollViewController
+@interface TestFullScreenViewController : BaseViewController <FWScrollViewController>
 
 @property (nonatomic, assign) BOOL canScroll;
 @property (nonatomic, weak) UILabel *frameLabel;
@@ -59,9 +59,9 @@
     
     // 添加视图
     UIButton *button = [UIButton fwAutoLayoutView];
-    button.backgroundColor = [UIColor appColorWhite];
-    button.titleLabel.font = [UIFont appFontNormal];
-    [button setTitleColor:[UIColor appColorBlackOpacityLarge] forState:UIControlStateNormal];
+    button.backgroundColor = [UIColor whiteColor];
+    button.titleLabel.font = [UIFont fwFontOfSize:15];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitle:@"点击背景关闭" forState:UIControlStateNormal];
     [footerView addSubview:button];
     [button fwSetDimensionsToSize:CGSizeMake(200, 100)];
@@ -72,7 +72,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"全屏弹出框";
+    self.navigationItem.title = @"全屏弹出框";
     
     // 视图延伸到导航栏
     self.fwForcePopGesture = YES;
@@ -86,7 +86,7 @@
     }];
     
     // 设置背景(present时透明，push时不透明)
-    self.view.backgroundColor = self.navigationController ? [UIColor appColorBlack] : [UIColor appColorCover];
+    self.view.backgroundColor = self.navigationController ? [UIColor blackColor] : [[UIColor blackColor] colorWithAlphaComponent:0.9];
     
     // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
     [self.view fwAddTapGestureWithBlock:^(id sender) {

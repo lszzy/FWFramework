@@ -42,19 +42,6 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     return self.isViewLoaded && self.view.window;
 }
 
-- (BOOL)fwIsPresented
-{
-    UIViewController *viewController = self;
-    if (self.navigationController) {
-        if (self.navigationController.viewControllers.firstObject != self) {
-            return NO;
-        }
-        viewController = self.navigationController;
-    }
-    BOOL result = viewController.presentingViewController.presentedViewController == viewController;
-    return result;
-}
-
 - (BOOL)fwIsLoaded
 {
     return [objc_getAssociatedObject(self, @selector(fwIsLoaded)) boolValue];
