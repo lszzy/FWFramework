@@ -11,6 +11,7 @@
 #define FWMacro_h
 
 #import <Foundation/Foundation.h>
+#import "FWAutoloader.h"
 #import "FWLog.h"
 #import "FWMessage.h"
 #import "FWMediator.h"
