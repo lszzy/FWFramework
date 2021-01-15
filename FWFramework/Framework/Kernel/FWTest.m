@@ -84,7 +84,6 @@
 + (NSArray<Class> *)testSuite
 {
     NSMutableArray *testCases = [[NSMutableArray alloc] init];
-    
     unsigned int classesCount = 0;
     Class *classes = objc_copyClassList(&classesCount);
     Class testClass = [FWTestCase class], objectClass = [NSObject class];
@@ -111,34 +110,24 @@
 + (NSArray *)testMethods:(Class)clazz
 {
     NSMutableArray *methodNames = [NSMutableArray array];
-    
     while (clazz != NULL) {
         unsigned int methodCount = 0;
         Method *methods = class_copyMethodList(clazz, &methodCount);
-        
         for (unsigned int i = 0; i < methodCount; ++i) {
-            SEL selector = method_getName(methods[i]);
-            if (selector) {
-                const char *cstrName = sel_getName(selector);
-                if (NULL == cstrName) continue;
-                
-                NSString *selectorName = [NSString stringWithUTF8String:cstrName];
-                if (NULL == selectorName) continue;
-                if ([methodNames containsObject:selectorName]) continue;
-                
-                // 是否是测试方法(前缀test)
-                if ([selectorName hasPrefix:@"test"]) {
-                    [methodNames addObject:selectorName];
-                }
+            const char *cstrName = sel_getName(method_getName(methods[i]));
+            if (NULL == cstrName) continue;
+            NSString *selectorName = [NSString stringWithUTF8String:cstrName];
+            if (NULL == selectorName) continue;
+            
+            if ([selectorName hasPrefix:@"test"] && ![methodNames containsObject:selectorName]) {
+                [methodNames addObject:selectorName];
             }
         }
-        
         free(methods);
         
         clazz = class_getSuperclass(clazz);
         if (nil == clazz || clazz == [NSObject class]) break;
     }
-    
     return methodNames;
 }
 
