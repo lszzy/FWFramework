@@ -45,6 +45,10 @@
     }
     free(methods);
     
+    [methodNames sortUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+        return [obj1 compare:obj2];
+    }];
+    
     for (NSString *methodName in methodNames) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
