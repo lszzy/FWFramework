@@ -6,11 +6,11 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SettingsViewController : BaseTableViewController
+@interface SettingsViewController : BaseViewController
 
 @end
 

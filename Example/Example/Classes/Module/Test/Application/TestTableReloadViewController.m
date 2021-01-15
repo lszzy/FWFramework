@@ -20,7 +20,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:nil];
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
         _titleLabel = titleLabel;
         [self.contentView addSubview:titleLabel];
         titleLabel.fwLayoutChain.centerY().leftWithInset(15).rightWithInset(15);

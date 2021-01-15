@@ -33,7 +33,6 @@
     // FIXME: hotfix
     self.navigationItem.title = NSStringFromClass(self.class);
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.view.backgroundColor = [UIColor whiteColor];
     
     // TODO: feature
     UIButton *swiftButton = [UIButton buttonWithType:UIButtonTypeSystem];

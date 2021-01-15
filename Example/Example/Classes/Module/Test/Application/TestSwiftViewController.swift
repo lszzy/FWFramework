@@ -39,7 +39,7 @@ import FWFramework
         default:
             viewController = SwiftTestViewController()
         }
-        viewController?.title = tableData.object(at: indexPath.row) as? String
+        viewController?.navigationItem.title = tableData.object(at: indexPath.row) as? String
         navigationController?.pushViewController(viewController!, animated: true)
     }
 }
@@ -73,8 +73,8 @@ import FWFramework
     }
     
     func renderCollectionView() {
-        view.backgroundColor = UIColor.appColorBg()
-        collectionView.backgroundColor = UIColor.appColorTable()
+        view.backgroundColor = AppTheme.backgroundColor()
+        collectionView.backgroundColor = AppTheme.tableColor()
         collectionView.isPagingEnabled = true
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "view")
@@ -170,8 +170,8 @@ import FWFramework
 
 @objcMembers class SwiftTestTableViewController: UIViewController, FWTableViewController {
     func renderTableView() {
-        view.backgroundColor = UIColor.appColorBg()
-        tableView.backgroundColor = UIColor.appColorTable()
+        view.backgroundColor = AppTheme.backgroundColor()
+        tableView.backgroundColor = AppTheme.tableColor()
     }
     
     func renderData() {

@@ -41,6 +41,8 @@
 		2FF0B3BF250FCA8D005B93DD /* FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */; };
 		2FF573282535FBFC009C8B2D /* UINavigationController+FWPopGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF573292535FBFC009C8B2D /* UINavigationController+FWPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF573272535FBFC009C8B2D /* UINavigationController+FWPopGesture.m */; };
+		2FFA37B525B13905000FE6E6 /* FWAutoloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFA37B325B13905000FE6E6 /* FWAutoloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FFA37B625B13905000FE6E6 /* FWAutoloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFA37B425B13905000FE6E6 /* FWAutoloader.m */; };
 		2FFE1BB72507BF95000332A3 /* FWCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B3D2507BF95000332A3 /* FWCacheManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BB82507BF95000332A3 /* FWCacheMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B3E2507BF95000332A3 /* FWCacheMemory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BB92507BF95000332A3 /* FWCacheSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B3F2507BF95000332A3 /* FWCacheSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -370,6 +372,8 @@
 		2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDynamicLayout.m; sourceTree = "<group>"; };
 		2FF573262535FBFC009C8B2D /* UINavigationController+FWPopGesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FWPopGesture.h"; sourceTree = "<group>"; };
 		2FF573272535FBFC009C8B2D /* UINavigationController+FWPopGesture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FWPopGesture.m"; sourceTree = "<group>"; };
+		2FFA37B325B13905000FE6E6 /* FWAutoloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAutoloader.h; sourceTree = "<group>"; };
+		2FFA37B425B13905000FE6E6 /* FWAutoloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAutoloader.m; sourceTree = "<group>"; };
 		2FFE1B3D2507BF95000332A3 /* FWCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheManager.h; sourceTree = "<group>"; };
 		2FFE1B3E2507BF95000332A3 /* FWCacheMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheMemory.h; sourceTree = "<group>"; };
 		2FFE1B3F2507BF95000332A3 /* FWCacheSqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheSqlite.h; sourceTree = "<group>"; };
@@ -918,16 +922,18 @@
 		2FFE1B912507BF95000332A3 /* Kernel */ = {
 			isa = PBXGroup;
 			children = (
+				2FFA37B325B13905000FE6E6 /* FWAutoloader.h */,
+				2FFA37B425B13905000FE6E6 /* FWAutoloader.m */,
 				2FFE1B9A2507BF95000332A3 /* FWLog.h */,
 				2FFE1BA72507BF95000332A3 /* FWLog.m */,
 				2FFE1BA42507BF95000332A3 /* FWLog.swift */,
 				2FFE1BAB2507BF95000332A3 /* FWMacro.h */,
 				2FFE841925163E3100545D6E /* FWMacro.m */,
 				2FFE83D12515AAD100545D6E /* FWMacro.swift */,
-				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
-				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
 				2FDD411D259DB1E900163B7F /* FWMediator.h */,
 				2FDD411E259DB1E900163B7F /* FWMediator.m */,
+				2FFE1BA92507BF95000332A3 /* FWMessage.h */,
+				2FFE1B9D2507BF95000332A3 /* FWMessage.m */,
 				2FFE1B9C2507BF95000332A3 /* FWPlugin.h */,
 				2FFE1BAA2507BF95000332A3 /* FWPlugin.m */,
 				2F2574942539928800880FEF /* FWPromise.swift */,
@@ -1214,6 +1220,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FFA37B525B13905000FE6E6 /* FWAutoloader.h in Headers */,
 				2FDD411F259DB1E900163B7F /* FWMediator.h in Headers */,
 				2F3E60182590A12100118E01 /* FWTabBarController.h in Headers */,
 				2FB14690258DDDB200D867D4 /* FWDatabase.h in Headers */,
@@ -1588,6 +1595,7 @@
 				2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */,
 				2FFE1BF42507BF95000332A3 /* FWAuthorize.m in Sources */,
 				2FFE1D382507BFBD000332A3 /* UIImage+FWFramework.m in Sources */,
+				2FFA37B625B13905000FE6E6 /* FWAutoloader.m in Sources */,
 				2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */,
 				2FFE1D362507BFBD000332A3 /* UIControl+FWFramework.m in Sources */,
 				2FFE1BF22507BF95000332A3 /* FWTheme.m in Sources */,

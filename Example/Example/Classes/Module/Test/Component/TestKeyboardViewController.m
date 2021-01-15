@@ -8,7 +8,7 @@
 
 #import "TestKeyboardViewController.h"
 
-@interface TestKeyboardViewController () <UITextFieldDelegate, UITextViewDelegate>
+@interface TestKeyboardViewController () <FWScrollViewController, UITextFieldDelegate, UITextViewDelegate>
 
 FWPropertyStrong(UITextField *, mobileField);
 
@@ -30,6 +30,7 @@ FWPropertyAssign(BOOL, canScroll);
 
 - (void)renderView
 {
+    self.scrollView.backgroundColor = [AppTheme tableColor];
     self.scrollView.fwKeyboardDismissOnDrag = YES;
     
     UITextField *textFieldAppearance = [UITextField appearanceWhenContainedInInstancesOfClasses:@[[TestKeyboardViewController class]]];
@@ -41,7 +42,7 @@ FWPropertyAssign(BOOL, canScroll);
     textViewAppearance.fwTouchResign = YES;
     textViewAppearance.fwKeyboardResign = YES;
     
-    UITextField *mobileField = [AppStandard textFieldWithStyle:kAppTextFieldStyleDefault];
+    UITextField *mobileField = [self createTextField];
     self.mobileField = mobileField;
     mobileField.delegate = self;
     mobileField.fwMaxUnicodeLength = 10;
@@ -49,11 +50,11 @@ FWPropertyAssign(BOOL, canScroll);
     mobileField.keyboardType = UIKeyboardTypeDefault;
     mobileField.returnKeyType = UIReturnKeyNext;
     [self.contentView addSubview:mobileField];
-    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
-    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
+    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
+    [mobileField fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:15];
     [mobileField fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UITextField *passwordField = [AppStandard textFieldWithStyle:kAppTextFieldStyleDefault];
+    UITextField *passwordField = [self createTextField];
     self.passwordField = passwordField;
     passwordField.delegate = self;
     passwordField.fwMaxLength = 20;
@@ -73,21 +74,21 @@ FWPropertyAssign(BOOL, canScroll);
     [passwordField fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:mobileField];
     [passwordField fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UITextView *textView = [AppStandard textViewWithStyle:kAppTextViewStyleDefault];
+    UITextView *textView = [self createTextView];
     self.textView = textView;
     textView.delegate = self;
-    textView.backgroundColor = [UIColor appColorBg];
+    textView.backgroundColor = [AppTheme backgroundColor];
     textView.fwMaxUnicodeLength = 10;
     textView.fwPlaceholder = @"问题，最多10个中文";
     textView.returnKeyType = UIReturnKeyNext;
     passwordField.fwReturnResponder = textView;
     [self.contentView addSubview:textView];
-    [textView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:passwordField withOffset:kAppPaddingLarge];
+    [textView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:passwordField withOffset:15];
     [textView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UITextView *inputView = [AppStandard textViewWithStyle:kAppTextViewStyleDefault];
+    UITextView *inputView = [self createTextView];
     self.inputView = inputView;
-    inputView.backgroundColor = [UIColor appColorBg];
+    inputView.backgroundColor = [AppTheme backgroundColor];
     inputView.fwMaxLength = 20;
     inputView.fwMenuDisabled = YES;
     inputView.fwPlaceholder = @"建议，最多20个英文";
@@ -98,15 +99,15 @@ FWPropertyAssign(BOOL, canScroll);
     inputView.fwDelegate = self;
     [inputView fwAddToolbar:UIBarStyleDefault title:nil block:nil];
     [self.contentView addSubview:inputView];
-    [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:kAppPaddingLarge];
+    [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:15];
     [inputView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UIButton *submitButton = [AppStandard buttonWithStyle:kAppButtonStyleDefault];
+    UIButton *submitButton = [AppTheme largeButton];
     self.submitButton = submitButton;
     [submitButton setTitle:@"提交" forState:UIControlStateNormal];
     [submitButton fwAddTouchTarget:self action:@selector(onSubmit)];
     [self.contentView addSubview:submitButton];
-    [submitButton fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:inputView withOffset:kAppPaddingLarge];
+    [submitButton fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:inputView withOffset:15];
     [submitButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [submitButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }
@@ -159,6 +160,29 @@ FWPropertyAssign(BOOL, canScroll);
     CGFloat marginTop = FWScreenHeight - (390 + 15 + FWTopBarHeight + UIScreen.fwSafeAreaInsets.bottom);
     CGFloat topInset = self.canScroll ? FWScreenHeight : marginTop;
     [self.mobileField fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:topInset];
+}
+
+- (UITextView *)createTextView
+{
+    UITextView *textView = [UITextView fwAutoLayoutView];
+    textView.font = [UIFont fwFontOfSize:15];
+    textView.textColor = [UIColor blackColor];
+    [textView fwSetBorderColor:[UIColor fwColorWithHex:0xEEEEEE] width:0.5 cornerRadius:5];
+    [textView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 15 * 2];
+    [textView fwSetDimension:NSLayoutAttributeHeight toSize:100];
+    return textView;
+}
+
+- (UITextField *)createTextField
+{
+    UITextField *textField = [UITextField fwAutoLayoutView];
+    textField.font = [UIFont fwFontOfSize:15];
+    textField.textColor = [UIColor blackColor];
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    [textField fwSetBorderView:UIRectEdgeBottom color:[UIColor fwColorWithHex:0xEEEEEE] width:0.5];
+    [textField fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 15 * 2];
+    [textField fwSetDimension:NSLayoutAttributeHeight toSize:50];
+    return textField;
 }
 
 #pragma mark - Action

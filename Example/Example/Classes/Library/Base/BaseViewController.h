@@ -9,11 +9,12 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 static const FWNavigationBarStyle FWNavigationBarStyleRandom = 2;
 
-/*!
- @brief BaseViewController
- */
 @interface BaseViewController : UIViewController <FWViewController>
 
 @end
+
+NS_ASSUME_NONNULL_END

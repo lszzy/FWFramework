@@ -10,7 +10,7 @@ import FWFramework
 
 @objcMembers class TestLocationViewController: BaseViewController {
     lazy var startButton: UIButton = {
-        let view = UIButton.fwButton(with: UIFont.appFontNormal(), titleColor: UIColor.appColorBlackOpacityLarge(), title: "Start")
+        let view = UIButton.fwButton(with: UIFont.fwFont(ofSize: 15), titleColor: AppTheme.textColor(), title: "Start")
         view.frame = CGRect(x: 20, y: 50, width: 60, height: 50)
         view.fwAddTouch { (sender) in
             FWLocationManager.sharedInstance.startUpdateLocation()
@@ -19,7 +19,7 @@ import FWFramework
     }()
     
     lazy var stopButton: UIButton = {
-        let view = UIButton.fwButton(with: UIFont.appFontNormal(), titleColor: UIColor.appColorBlackOpacityLarge(), title: "Stop")
+        let view = UIButton.fwButton(with: UIFont.fwFont(ofSize: 15), titleColor: AppTheme.textColor(), title: "Stop")
         view.frame = CGRect(x: 100, y: 50, width: 60, height: 50)
         view.fwAddTouch { (sender) in
             FWLocationManager.sharedInstance.stopUpdateLocation()
@@ -28,7 +28,7 @@ import FWFramework
     }()
     
     lazy var configButton: UIButton = {
-        let view = UIButton.fwButton(with: UIFont.appFontNormal(), titleColor: UIColor.appColorBlackOpacityLarge(), title: "Once")
+        let view = UIButton.fwButton(with: UIFont.fwFont(ofSize: 15), titleColor: AppTheme.textColor(), title: "Once")
         view.frame = CGRect(x: 180, y: 50, width: 60, height: 50)
         view.fwAddTouch { (sender) in
             FWLocationManager.sharedInstance.stopWhenCompleted = !FWLocationManager.sharedInstance.stopWhenCompleted
@@ -37,7 +37,7 @@ import FWFramework
     }()
     
     lazy var resultLabel: UILabel = {
-        let view = UILabel.fwLabel(with: UIFont.appFontNormal(), textColor: UIColor.appColorBlackOpacityLarge(), text: "")
+        let view = UILabel.fwLabel(with: UIFont.fwFont(ofSize: 15), textColor: AppTheme.textColor(), text: "")
         view.numberOfLines = 0
         view.frame = CGRect(x: 20, y: 100, width: FWScreenWidth - 40, height: 450)
         return view

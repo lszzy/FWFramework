@@ -11,13 +11,18 @@
 "确定" = "Yes";
 "取消" = "Cancel";
 
-"mediatorLogin" = "Mediator Login";
-"mediatorLogout" = "Mediator Logout";
+"mediatorLogin" = "Login";
+"mediatorLogout" = "Logout";
 "homeTitle" = "Home";
 "testTitle" = "Test";
 "settingTitle" = "Settings";
 "debugButton" = "Debug";
-"languageTitle" = "Custom:%@ System:%@ (%@)";
+"languageTitle" = "Language";
+"changeTitle" = "Next";
+"themeTitle" = "Theme";
+"systemTitle" = "System";
+"themeLight" = "Light";
+"themeDark" = "Dark";
 "loginInvalid" = "Login Invalid";
 "loginSuccess" = "Login Successful";
 "logoutSuccess" = "Logout Successful";

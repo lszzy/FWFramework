@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief 路由管理器
  */
@@ -26,3 +28,5 @@ FWStaticString(ROUTE_CLOSE);
 + (void)refreshController;
 
 @end
+
+NS_ASSUME_NONNULL_END

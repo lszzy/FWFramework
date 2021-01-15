@@ -45,10 +45,10 @@
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.backgroundColor = [UIColor appColorBg];
+        self.backgroundColor = [AppTheme backgroundColor];
         
         UIView *bgView = [UIView fwAutoLayoutView];
-        bgView.backgroundColor = [UIColor appColorWhite];
+        bgView.backgroundColor = [UIColor whiteColor];
         bgView.layer.masksToBounds = NO;
         bgView.layer.cornerRadius = 10;
         [bgView fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:5];
@@ -63,26 +63,26 @@
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
-        titleLabel.font = [UIFont appFontNormal];
-        titleLabel.textColor = [UIColor appColorBlackOpacityHuge];
+        titleLabel.font = [UIFont fwFontOfSize:15];
+        titleLabel.textColor = [UIColor blackColor];
         self.myTitleLabel = titleLabel;
         [bgView addSubview:titleLabel]; {
-            [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
-            [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
-            NSLayoutConstraint *constraint = [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:kAppPaddingLarge];
+            [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
+            [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:15];
+            NSLayoutConstraint *constraint = [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:15];
             [titleLabel fwAddCollapseConstraint:constraint];
             titleLabel.fwAutoCollapse = YES;
         }
         
         UILabel *textLabel = [UILabel fwAutoLayoutView];
         textLabel.numberOfLines = 0;
-        textLabel.font = [UIFont appFontSmall];
-        textLabel.textColor = [UIColor appColorBlackOpacityLarge];
+        textLabel.font = [UIFont fwFontOfSize:13];
+        textLabel.textColor = [UIColor blackColor];
         self.myTextLabel = textLabel;
         [bgView addSubview:textLabel]; {
-            [textLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
-            [textLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge];
-            NSLayoutConstraint *constraint = [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:titleLabel withOffset:kAppPaddingNormal];
+            [textLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
+            [textLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:15];
+            NSLayoutConstraint *constraint = [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:titleLabel withOffset:10];
             [textLabel fwAddCollapseConstraint:constraint];
         }
         
@@ -91,10 +91,10 @@
         imageView.userInteractionEnabled = YES;
         [imageView fwAddTapGestureWithTarget:self action:@selector(onImageClick:)];
         [bgView addSubview:imageView]; {
-            [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:kAppPaddingLarge];
-            [imageView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:kAppPaddingLarge relation:NSLayoutRelationGreaterThanOrEqual];
-            [imageView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:kAppPaddingLarge];
-            NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:kAppPaddingNormal];
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:15 relation:NSLayoutRelationGreaterThanOrEqual];
+            [imageView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
+            NSLayoutConstraint *constraint = [imageView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:10];
             [imageView fwAddCollapseConstraint:constraint];
             imageView.fwAutoCollapse = YES;
         }
@@ -143,7 +143,7 @@
 - (void)renderView
 {
     FWWeakifySelf();
-    self.tableView.backgroundColor = [UIColor appColorBg];
+    self.tableView.backgroundColor = [AppTheme backgroundColor];
     [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         
@@ -152,12 +152,12 @@
     self.tableView.fwPullRefreshView.stateBlock = ^(FWPullRefreshView * _Nonnull view, FWPullRefreshState state) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
+        self.navigationItem.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
     };
     self.tableView.fwPullRefreshView.progressBlock = ^(FWPullRefreshView * _Nonnull view, CGFloat progress) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
+        self.navigationItem.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
     };
     
     FWInfiniteScrollView.height = 64;
@@ -170,12 +170,12 @@
     self.tableView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"load state-%@", @(state)];
+        self.navigationItem.title = [NSString stringWithFormat:@"load state-%@", @(state)];
     };
     self.tableView.fwInfiniteScrollView.progressBlock = ^(FWInfiniteScrollView * _Nonnull view, CGFloat progress) {
         FWStrongifySelf();
         
-        self.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
+        self.navigationItem.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
     };
 }
 

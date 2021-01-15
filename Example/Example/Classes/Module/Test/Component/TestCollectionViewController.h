@@ -6,8 +6,8 @@
 //  Copyright © 2018 wuyong.site. All rights reserved.
 //
 
-#import "BaseCollectionViewController.h"
+#import "BaseViewController.h"
 
-@interface TestCollectionViewController : BaseCollectionViewController
+@interface TestCollectionViewController : BaseViewController
 
 @end

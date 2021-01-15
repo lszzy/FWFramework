@@ -30,7 +30,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _textLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityNormal] text:nil];
+        _textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
         _textLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:_textLabel];
         [_textLabel fwPinEdgesToSuperview];
@@ -41,7 +41,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
-    self.contentView.backgroundColor = selected ? [UIColor whiteColor] : [UIColor appColorFill];
+    self.contentView.backgroundColor = selected ? [UIColor whiteColor] : [UIColor grayColor];
 }
 
 @end
@@ -78,7 +78,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (void)renderCollectionLayout
 {
-    self.collectionView.backgroundColor = [UIColor appColorBg];
+    self.collectionView.backgroundColor = [AppTheme backgroundColor];
     [self.collectionView registerClass:[TestNestCollectionCell class] forCellWithReuseIdentifier:kTestNestCollectionCellID];
     [self.collectionView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0) excludingEdge:NSLayoutAttributeRight];
     [self.collectionView fwSetDimension:NSLayoutAttributeWidth toSize:self.cart ? CategoryViewWidth : 0];
@@ -195,7 +195,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     UIView *view = [UIView new];
     view.backgroundColor = [UIColor whiteColor];
     
-    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor appColorBlackOpacityLarge] text:[NSString stringWithFormat:@"Header%@", @(section)]];
+    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:[NSString stringWithFormat:@"Header%@", @(section)]];
     headerLabel.frame = CGRectMake(0, 0, FWScreenWidth, ItemViewHeight);
     [view addSubview:headerLabel];
     return view;
@@ -341,7 +341,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     [self.view addSubview:cartView];
     [cartView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
     [cartView fwSetDimension:NSLayoutAttributeHeight toSize:CartViewHeight];
-    UILabel *cartLabel = [UILabel fwLabelWithFont:[UIFont appFontNormal] textColor:[UIColor blackColor] text:@"我是购物车"];
+    UILabel *cartLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:@"我是购物车"];
     cartLabel.textAlignment = NSTextAlignmentCenter;
     cartLabel.frame = CGRectMake(0, 0, FWScreenWidth, CartViewHeight);
     [cartView addSubview:cartLabel];
@@ -398,13 +398,13 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
     if (progress >= 1) {
         [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
-        [self.navigationController.navigationBar fwSetTextColor:[UIColor appColorHex:0x111111]];
+        [self.navigationController.navigationBar fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
     } else if (progress >= 0 && progress < 1) {
         [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
         if (progress <= 0.5) {
             [self.navigationController.navigationBar fwSetTextColor:[[UIColor whiteColor] colorWithAlphaComponent:1 - progress]];
         } else {
-            [self.navigationController.navigationBar fwSetTextColor:[[UIColor appColorHex:0x111111] colorWithAlphaComponent:progress]];
+            [self.navigationController.navigationBar fwSetTextColor:[[UIColor fwColorWithHex:0x111111] colorWithAlphaComponent:progress]];
         }
     }
 }

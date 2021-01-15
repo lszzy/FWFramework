@@ -38,13 +38,12 @@
 
 - (void)customizeTabBar
 {
-    [self.tabBar.backgroundView fwSetShadowColor:[UIColor appColorHex:0x040000 alpha:0.15] offset:CGSizeMake(0, 1) radius:3];
     NSArray *tabBarItemTitles = @[FWLocalizedString(@"homeTitle"), FWLocalizedString(@"testTitle"), FWLocalizedString(@"settingTitle")];
     NSArray *tabBarItemImages = @[@"tabbar_home", @"tabbar_test", @"tabbar_settings"];
     NSInteger index = 0;
     for (FWTabBarItem *item in [[self tabBar] items]) {
         item.title = [tabBarItemTitles objectAtIndex:index];
-        UIImage *selectedimage = [[UIImage imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[UIColor appColorMain]];
+        UIImage *selectedimage = [[UIImage imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[AppTheme textColor]];
         UIImage *unselectedimage = [UIImage imageNamed:[tabBarItemImages objectAtIndex:index]];
         [item setFinishedSelectedImage:selectedimage withFinishedUnselectedImage:unselectedimage];
         if (index == 0) {

@@ -7,7 +7,7 @@
  @updated    2018/9/26
  */
 
-#import "BaseScrollViewController.h"
+#import "BaseViewController.h"
 
 /*!
  @brief TestModelViewController
