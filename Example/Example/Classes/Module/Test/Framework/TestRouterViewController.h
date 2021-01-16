@@ -6,7 +6,7 @@
 //  Copyright © 2018 wuyong.site. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
 @interface TestRouterResultViewController : BaseViewController
 
@@ -15,6 +15,6 @@
 
 @end
 
-@interface TestRouterViewController : BaseTableViewController
+@interface TestRouterViewController : BaseViewController
 
 @end

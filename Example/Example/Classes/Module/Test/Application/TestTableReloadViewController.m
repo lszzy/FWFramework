@@ -30,7 +30,7 @@
 
 @end
 
-@interface TestTableReloadViewController ()
+@interface TestTableReloadViewController () <FWTableViewController>
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSInteger count;
@@ -89,6 +89,7 @@
 
 - (void)renderView
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwPullRefreshHeight = FWPullRefreshView.height + UIScreen.fwSafeAreaInsets.top;
     [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
     self.tableView.fwInfiniteScrollHeight = FWInfiniteScrollView.height + UIScreen.fwSafeAreaInsets.bottom;
@@ -105,6 +106,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 100;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

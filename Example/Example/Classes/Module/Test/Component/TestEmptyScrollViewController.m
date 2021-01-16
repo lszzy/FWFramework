@@ -8,7 +8,7 @@
 
 #import "TestEmptyScrollViewController.h"
 
-@interface TestEmptyScrollViewController () <FWEmptyViewDataSource, FWEmptyViewDelegate>
+@interface TestEmptyScrollViewController () <FWTableViewController, FWEmptyViewDataSource, FWEmptyViewDelegate>
 
 @end
 
@@ -19,6 +19,17 @@
     self.tableView.fwEmptyViewDataSource = self;
     self.tableView.fwEmptyViewDelegate = self;
     [self.tableView reloadData];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
+    return cell;
 }
 
 #pragma mark - FWEmptyViewDataSource

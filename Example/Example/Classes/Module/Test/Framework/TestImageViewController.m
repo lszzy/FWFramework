@@ -41,18 +41,13 @@
 
 @end
 
-@interface TestImageViewController ()
+@interface TestImageViewController () <FWTableViewController>
 
 @property (nonatomic, assign) NSInteger imageType;
 
 @end
 
 @implementation TestImageViewController
-
-- (NSDictionary<NSString *,Class> *)renderCellClass
-{
-    return @{ @"cell" : [TestImageCell class] };
-}
 
 - (void)renderModel
 {
@@ -100,13 +95,19 @@
 
 #pragma mark - TableView
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 150;
 }
 
-- (void)renderCellData:(TestImageCell *)cell indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    TestImageCell *cell = [TestImageCell fwCellWithTableView:tableView];
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = [fileName lastPathComponent];
     if (self.imageType == 0) {
@@ -123,6 +124,7 @@
         [cell.systemView fwSetImageWithURL:url];
         [cell.animatedView fwSetImageWithURL:url];
     }
+    return cell;
 }
 
 @end

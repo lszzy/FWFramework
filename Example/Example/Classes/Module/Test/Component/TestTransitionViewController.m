@@ -273,7 +273,7 @@ FWDealloc();
 
 #define TestTransitinDuration 0.35
 
-@interface TestTransitionViewController ()
+@interface TestTransitionViewController () <FWTableViewController>
 
 @end
 
@@ -294,6 +294,7 @@ FWDealloc();
 
 - (void)renderData
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                           @[@"默认Present", @"onPresent"],
                                           @[@"转场present", @"onPresentTransition"],
@@ -317,14 +318,22 @@ FWDealloc();
                                           ]];
 }
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *cellData = [self.tableData objectAtIndex:indexPath.row];
-    cell.textLabel.text = [cellData objectAtIndex:0];
+    return self.tableData.count;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
+    NSArray *cellData = [self.tableData objectAtIndex:indexPath.row];
+    cell.textLabel.text = [cellData objectAtIndex:0];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *cellData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([cellData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {

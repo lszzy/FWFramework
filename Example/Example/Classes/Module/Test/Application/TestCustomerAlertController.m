@@ -1674,7 +1674,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
 // 随机色
 #define FWRandomColor ZCColorRGBA(arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256),1)
 
-@interface TestCustomerAlertController ()
+@interface TestCustomerAlertController () <FWTableViewController>
 
 @property (nonatomic, assign) BOOL lookBlur;
 
@@ -1724,15 +1724,23 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
 
 #pragma mark - TableView
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    return self.tableData.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.text = [rowData objectAtIndex:0];
+    return cell;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {

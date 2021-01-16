@@ -8,7 +8,7 @@
 
 #import "TestAuthorizeViewController.h"
 
-@interface TestAuthorizeViewController ()
+@interface TestAuthorizeViewController () <FWTableViewController>
 
 @end
 
@@ -50,8 +50,14 @@
 
 #pragma mark - TableView
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    return self.tableData.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     FWAuthorizeType type = [[rowData objectAtIndex:1] integerValue];
     
@@ -71,10 +77,12 @@
     }
     cell.textLabel.text = typeText;
     cell.accessoryType = canSelect ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+    return cell;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     FWAuthorizeType type = [[rowData objectAtIndex:1] integerValue];
     

@@ -6,8 +6,8 @@
 //  Copyright © 2016年 ocphp.com. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
-@interface TestTransitionViewController : BaseTableViewController
+@interface TestTransitionViewController : BaseViewController
 
 @end

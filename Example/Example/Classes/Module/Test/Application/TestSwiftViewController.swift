@@ -8,7 +8,7 @@
 
 import FWFramework
 
-@objcMembers class TestSwiftViewController: BaseTableViewController {
+@objcMembers class TestSwiftViewController: BaseViewController, FWTableViewController {
     override func renderData() {
         tableData.addObjects(from: [
             "FWViewController",
@@ -19,13 +19,20 @@ import FWFramework
         ])
     }
     
-    override func renderCellData(_ cell: UITableViewCell!, indexPath: IndexPath!) {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.tableData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell.fwCell(with: tableView)
         let value = tableData.object(at: indexPath.row) as? String
         cell.textLabel?.text = value
         cell.accessoryType = .disclosureIndicator
+        return cell
     }
     
-    override func onCellSelect(_ indexPath: IndexPath!) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         var viewController: UIViewController? = nil
         switch indexPath.row {
         case 1:

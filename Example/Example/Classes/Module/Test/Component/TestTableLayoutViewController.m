@@ -132,7 +132,7 @@
 
 @end
 
-@interface TestTableLayoutViewController () <FWPhotoBrowserDelegate>
+@interface TestTableLayoutViewController () <FWTableViewController, FWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) FWPhotoBrowser *photoBrowser;
 
@@ -143,7 +143,6 @@
 - (void)renderView
 {
     FWWeakifySelf();
-    self.tableView.backgroundColor = [Theme backgroundColor];
     [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         
@@ -193,7 +192,13 @@
 
 - (void)renderTableView
 {
+    self.tableView.backgroundColor = [Theme tableColor];
     [self.tableView registerClass:[TestTableLayoutCell class] forCellReuseIdentifier:@"Cell"];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

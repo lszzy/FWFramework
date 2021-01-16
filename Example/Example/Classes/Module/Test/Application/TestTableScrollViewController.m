@@ -98,7 +98,7 @@
 
 @end
 
-@interface TestTableScrollViewController ()
+@interface TestTableScrollViewController () <FWTableViewController>
 
 @end
 
@@ -128,7 +128,13 @@
 
 - (void)renderTableView
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

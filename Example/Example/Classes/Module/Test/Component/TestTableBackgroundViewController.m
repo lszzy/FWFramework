@@ -8,7 +8,7 @@
 
 #import "TestTableBackgroundViewController.h"
 
-@interface TestTableBackgroundViewController ()
+@interface TestTableBackgroundViewController () <FWTableViewController>
 
 @property (nonatomic, strong) UIView *bgView;
 
@@ -78,11 +78,13 @@
 
 #pragma mark - TableView
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
     cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
+    return cell;
 }
 
 #pragma mark - UITableView

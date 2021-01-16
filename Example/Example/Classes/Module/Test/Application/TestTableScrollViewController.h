@@ -6,8 +6,8 @@
 //  Copyright © 2018 wuyong.site. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
-@interface TestTableScrollViewController : BaseTableViewController
+@interface TestTableScrollViewController : BaseViewController
 
 @end

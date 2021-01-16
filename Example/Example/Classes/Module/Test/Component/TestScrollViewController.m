@@ -8,7 +8,7 @@
 
 #import "TestScrollViewController.h"
 
-@interface TestScrollViewController ()
+@interface TestScrollViewController () <FWTableViewController>
 
 @property (nonatomic, assign) NSInteger index;
 
@@ -56,10 +56,11 @@
     }
 }
 
-#pragma mark - TableView
+#pragma mark - UITableView
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
     cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
     
     if (indexPath.section % 2 == 0) {
@@ -73,15 +74,15 @@
         [cell.fwBackgroundView.contentView fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:10];
         [cell.fwBackgroundView setSectionContentInset:UIEdgeInsetsMake(15, 15, 15, 15) tableView:self.tableView atIndexPath:indexPath];
     }
+    return cell;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.index = indexPath.row;
     [self.tableView reloadData];
 }
-
-#pragma mark - UITableView
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
