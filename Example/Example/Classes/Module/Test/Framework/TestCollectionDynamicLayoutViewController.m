@@ -166,7 +166,7 @@ static BOOL isExpanded = NO;
 - (void)renderView
 {
     FWWeakifySelf();
-    self.collectionView.backgroundColor = [AppTheme backgroundColor];
+    self.collectionView.backgroundColor = [Theme backgroundColor];
     [self.collectionView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         

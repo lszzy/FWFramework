@@ -30,7 +30,7 @@ FWPropertyAssign(BOOL, canScroll);
 
 - (void)renderView
 {
-    self.scrollView.backgroundColor = [AppTheme tableColor];
+    self.scrollView.backgroundColor = [Theme tableColor];
     self.scrollView.fwKeyboardDismissOnDrag = YES;
     
     UITextField *textFieldAppearance = [UITextField appearanceWhenContainedInInstancesOfClasses:@[[TestKeyboardViewController class]]];
@@ -77,7 +77,7 @@ FWPropertyAssign(BOOL, canScroll);
     UITextView *textView = [self createTextView];
     self.textView = textView;
     textView.delegate = self;
-    textView.backgroundColor = [AppTheme backgroundColor];
+    textView.backgroundColor = [Theme backgroundColor];
     textView.fwMaxUnicodeLength = 10;
     textView.fwPlaceholder = @"问题，最多10个中文";
     textView.returnKeyType = UIReturnKeyNext;
@@ -88,7 +88,7 @@ FWPropertyAssign(BOOL, canScroll);
     
     UITextView *inputView = [self createTextView];
     self.inputView = inputView;
-    inputView.backgroundColor = [AppTheme backgroundColor];
+    inputView.backgroundColor = [Theme backgroundColor];
     inputView.fwMaxLength = 20;
     inputView.fwMenuDisabled = YES;
     inputView.fwPlaceholder = @"建议，最多20个英文";
@@ -102,7 +102,7 @@ FWPropertyAssign(BOOL, canScroll);
     [inputView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textView withOffset:15];
     [inputView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
-    UIButton *submitButton = [AppTheme largeButton];
+    UIButton *submitButton = [Theme largeButton];
     self.submitButton = submitButton;
     [submitButton setTitle:@"提交" forState:UIControlStateNormal];
     [submitButton fwAddTouchTarget:self action:@selector(onSubmit)];

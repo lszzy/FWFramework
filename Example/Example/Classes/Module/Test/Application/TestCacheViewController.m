@@ -31,7 +31,7 @@
         [cacheLabel fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(10, 10, 10, 10) excludingEdge:NSLayoutAttributeBottom];
     }
     
-    UIButton *refreshButton = [AppTheme largeButton];
+    UIButton *refreshButton = [Theme largeButton];
     [refreshButton setTitle:@"读取缓存" forState:UIControlStateNormal];
     FWWeakifySelf();
     [refreshButton fwAddTouchBlock:^(id sender) {
@@ -44,7 +44,7 @@
         [refreshButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     }
     
-    UIButton *cacheButton = [AppTheme largeButton];
+    UIButton *cacheButton = [Theme largeButton];
     [cacheButton setTitle:@"写入缓存" forState:UIControlStateNormal];
     [cacheButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
@@ -57,7 +57,7 @@
         [cacheButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     }
     
-    UIButton *expireButton = [AppTheme largeButton];
+    UIButton *expireButton = [Theme largeButton];
     [expireButton setTitle:@"写入缓存(10s)" forState:UIControlStateNormal];
     [expireButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
@@ -70,7 +70,7 @@
         [expireButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     }
     
-    UIButton *deleteButton = [AppTheme largeButton];
+    UIButton *deleteButton = [Theme largeButton];
     [deleteButton setTitle:@"删除缓存" forState:UIControlStateNormal];
     [deleteButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();
@@ -83,7 +83,7 @@
         [deleteButton fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     }
     
-    UIButton *clearButton = [AppTheme largeButton];
+    UIButton *clearButton = [Theme largeButton];
     [clearButton setTitle:@"清空缓存" forState:UIControlStateNormal];
     [clearButton fwAddTouchBlock:^(id sender) {
         FWStrongifySelf();

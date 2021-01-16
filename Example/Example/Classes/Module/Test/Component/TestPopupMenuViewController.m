@@ -55,7 +55,7 @@
     
     UILabel *customLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:16] textColor:[UIColor blackColor] text:@"我是自定义标签"];
     _customCellView = customLabel;
-    customLabel.backgroundColor = [AppTheme backgroundColor];
+    customLabel.backgroundColor = [Theme backgroundColor];
     [self.view addSubview:customLabel];
     customLabel.fwLayoutChain.centerX().topToBottomOfViewWithOffset(textField, 50).size(CGSizeMake(200, 50));
     
