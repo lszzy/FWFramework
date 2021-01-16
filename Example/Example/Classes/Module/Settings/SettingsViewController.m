@@ -48,7 +48,7 @@
     }];
     
     [self.tableData removeAllObjects];
-    if (FWModule(UserModuleService).isLogin) {
+    if (Mediator.userModule.isLogin) {
         [self.tableData addObject:@[FWLocalizedString(@"mediatorLogout"), @"onLogout"]];
         [self.tableData addObject:@[FWLocalizedString(@"loginInvalid"), @"onInvalid"]];
     } else {
@@ -101,7 +101,7 @@
 - (void)onLogin
 {
     FWWeakifySelf();
-    [FWModule(UserModuleService) login:^{
+    [Mediator.userModule login:^{
         FWStrongifySelf();
         [self.view fwShowMessageWithText:FWLocalizedString(@"loginSuccess")];
         [self renderData];
@@ -111,7 +111,7 @@
 - (void)onLogout
 {
     FWWeakifySelf();
-    [FWModule(UserModuleService) logout:^{
+    [Mediator.userModule logout:^{
         FWStrongifySelf();
         [self.view fwShowMessageWithText:FWLocalizedString(@"logoutSuccess")];
         [self renderData];
@@ -127,7 +127,7 @@
             FWStrongifySelf();
             [UIWindow.fwMainWindow fwDismissViewControllers:^{
                 FWStrongifySelf();
-                [FWModule(UserModuleService) logout:^{
+                [Mediator.userModule logout:^{
                     FWStrongifySelf();
                     [self renderData];
                     [self onLogin];

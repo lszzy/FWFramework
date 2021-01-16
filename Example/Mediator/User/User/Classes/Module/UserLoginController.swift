@@ -11,9 +11,6 @@ import Mediator
 @objcMembers class UserLoginController: UIViewController {
     var completion: (() -> Void)?
     
-    @FWModuleAnnotation(TestModuleService.self)
-    private var testModule: TestModuleService
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,9 +21,7 @@ import Mediator
         testButton.setTitle(UserBundle.localizedString("testButton"), for: .normal)
         testButton.setImage(UserBundle.imageNamed("testIcon")?.fwCompressImage(withMaxWidth: 25), for: .normal)
         testButton.fwAddTouch { [weak self] (sender) in
-            if let viewController = self?.testModule.testViewController() {
-                self?.navigationController?.pushViewController(viewController, animated: true)
-            }
+            self?.navigationController?.pushViewController(Mediator.testModule.testViewController(), animated: true)
         }
         self.view.addSubview(testButton)
         testButton.fwLayoutChain.centerX().centerYToView(self.view as Any, withOffset: -80)
