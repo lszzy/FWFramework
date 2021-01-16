@@ -24,5 +24,4 @@
 "themeLight" = "浅色";
 "themeDark" = "深色";
 "loginInvalid" = "登录失效";
-"loginSuccess" = "登录成功";
-"logoutSuccess" = "退出成功";
+"logoutConfirm" = "确定要退出当前账号吗?";

@@ -7,6 +7,7 @@
 //
 
 #import "TestThemeViewController.h"
+#import "TabBarController.h"
 
 @implementation TestThemeViewController
 
@@ -158,7 +159,7 @@
             
             FWThemeManager.sharedInstance.mode = index;
             [self renderModel];
-            [AppConfig refreshController];
+            [TabBarController refreshController];
         }];
     }];
 }

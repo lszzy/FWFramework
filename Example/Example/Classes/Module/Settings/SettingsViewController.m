@@ -7,10 +7,13 @@
 //
 
 #import "SettingsViewController.h"
+#import "TabBarController.h"
 #import <FWDebug/FWDebug.h>
 #import <Mediator/Mediator-Swift.h>
 
 @interface SettingsViewController () <FWTableViewController>
+
+@property (nonatomic, strong) UIButton *loginButton;
 
 @end
 
@@ -26,6 +29,11 @@
     });
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self renderData];
+}
+
 - (UITableViewStyle)renderTableStyle
 {
     return UITableViewStyleGrouped;
@@ -34,6 +42,16 @@
 - (void)renderTableView
 {
     self.tableView.backgroundColor = [Theme tableColor];
+    
+    UIView *footerView = [UIView new];
+    footerView.frame = CGRectMake(0, 0, FWScreenWidth, 90);
+    self.tableView.tableFooterView = footerView;
+    
+    UIButton *loginButton = [Theme largeButton];
+    self.loginButton = loginButton;
+    [loginButton fwAddTouchTarget:self action:@selector(onMediator)];
+    [footerView addSubview:loginButton];
+    loginButton.fwLayoutChain.center();
 }
 
 - (void)renderData
@@ -47,13 +65,13 @@
         }
     }];
     
-    [self.tableData removeAllObjects];
     if (Mediator.userModule.isLogin) {
-        [self.tableData addObject:@[FWLocalizedString(@"mediatorLogout"), @"onLogout"]];
-        [self.tableData addObject:@[FWLocalizedString(@"loginInvalid"), @"onInvalid"]];
+        [self.loginButton setTitle:FWLocalizedString(@"mediatorLogout") forState:UIControlStateNormal];
     } else {
-        [self.tableData addObject:@[FWLocalizedString(@"mediatorLogin"), @"onLogin"]];
+        [self.loginButton setTitle:FWLocalizedString(@"mediatorLogin") forState:UIControlStateNormal];
     }
+    
+    [self.tableData removeAllObjects];
     [self.tableData addObject:@[FWLocalizedString(@"languageTitle"), @"onLanguage"]];
     [self.tableData addObject:@[FWLocalizedString(@"themeTitle"), @"onTheme"]];
     [self.tableView reloadData];
@@ -98,12 +116,20 @@
 
 #pragma mark - Action
 
+- (void)onMediator
+{
+    if ([Mediator.userModule isLogin]) {
+        [self onLogout];
+    } else {
+        [self onLogin];
+    }
+}
+
 - (void)onLogin
 {
     FWWeakifySelf();
     [Mediator.userModule login:^{
         FWStrongifySelf();
-        [self.view fwShowMessageWithText:FWLocalizedString(@"loginSuccess")];
         [self renderData];
     }];
 }
@@ -111,28 +137,11 @@
 - (void)onLogout
 {
     FWWeakifySelf();
-    [Mediator.userModule logout:^{
+    [self fwShowConfirmWithTitle:FWLocalizedString(@"logoutConfirm") message:nil cancel:FWLocalizedString(@"取消") confirm:FWLocalizedString(@"确定") confirmBlock:^{
         FWStrongifySelf();
-        [self.view fwShowMessageWithText:FWLocalizedString(@"logoutSuccess")];
-        [self renderData];
-    }];
-}
-
-- (void)onInvalid
-{
-    FWWeakifySelf();
-    [UIWindow.fwMainWindow fwPresentViewController:[ObjcController new] animated:YES completion:^{
-        FWStrongifySelf();
-        [UIWindow.fwMainWindow.fwTopPresentedController fwShowAlertWithTitle:FWLocalizedString(@"loginInvalid") message:nil cancel:FWLocalizedString(@"确定") cancelBlock:^{
+        [Mediator.userModule logout:^{
             FWStrongifySelf();
-            [UIWindow.fwMainWindow fwDismissViewControllers:^{
-                FWStrongifySelf();
-                [Mediator.userModule logout:^{
-                    FWStrongifySelf();
-                    [self renderData];
-                    [self onLogin];
-                }];
-            }];
+            [self renderData];
         }];
     }];
 }
@@ -145,7 +154,7 @@
         if (index < 3) {
             NSString *language = (index == 1) ? @"zh-Hans" : (index == 2 ? @"en" : nil);
             NSBundle.fwLocalizedLanguage = language;
-            [AppConfig refreshController];
+            [TabBarController refreshController];
         } else {
             NSString *localized = NSBundle.fwLocalizedLanguage;
             NSString *language = (!localized) ? @"zh-Hans" : ([localized hasPrefix:@"zh"] ? @"en" : nil);
@@ -164,7 +173,7 @@
             mode = (currentMode == FWThemeModeSystem) ? FWThemeModeLight : (currentMode == FWThemeModeLight ? FWThemeModeDark : FWThemeModeSystem);
         }
         FWThemeManager.sharedInstance.mode = mode;
-        [AppConfig refreshController];
+        [TabBarController refreshController];
     }];
 }
 

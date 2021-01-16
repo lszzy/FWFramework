@@ -24,5 +24,4 @@
 "themeLight" = "Light";
 "themeDark" = "Dark";
 "loginInvalid" = "Login Invalid";
-"loginSuccess" = "Login Successful";
-"logoutSuccess" = "Logout Successful";
+"logoutConfirm" = "Are you sure you want to log out?";

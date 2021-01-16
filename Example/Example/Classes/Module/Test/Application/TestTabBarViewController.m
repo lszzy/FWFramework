@@ -7,7 +7,7 @@
 //
 
 #import "TestTabBarViewController.h"
-#import "ObjcController.h"
+#import "HomeViewController.h"
 #import "TestViewController.h"
 #import "SettingsViewController.h"
 
@@ -29,7 +29,7 @@
 
 - (void)setupViewControllers
 {
-    UIViewController *firstViewController = [[ObjcController alloc] init];
+    UIViewController *firstViewController = [[HomeViewController alloc] init];
     UIViewController *secondViewController = [[TestViewController alloc] init];
     UIViewController *thirdViewController = [[SettingsViewController alloc] init];
     [self setViewControllers:@[firstViewController, secondViewController, thirdViewController]];

@@ -8,6 +8,7 @@
 
 #import "TestRouterViewController.h"
 #import "WebViewController.h"
+#import "HomeViewController.h"
 #import "TestViewController.h"
 #import "SettingsViewController.h"
 
@@ -130,7 +131,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_HOME withHandler:^(NSDictionary * _Nonnull parameters) {
-        ObjcController *homeController = [UIWindow.fwMainWindow fwSelectTabBarController:[ObjcController class]];
+        HomeViewController *homeController = [UIWindow.fwMainWindow fwSelectTabBarController:[HomeViewController class]];
         homeController.selectedIndex = 1;
     }];
     

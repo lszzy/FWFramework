@@ -7,6 +7,7 @@
 //
 
 #import "TestThemeExtensionViewController.h"
+#import "TabBarController.h"
 
 static const FWThemeStyle FWThemeStyleRed = 3;
 static const FWThemeMode FWThemeModeRed = FWThemeStyleRed;
@@ -96,7 +97,7 @@ static const FWThemeMode FWThemeModeRed = FWThemeStyleRed;
             
             FWThemeManager.sharedInstance.mode = index;
             [self renderModel];
-            [AppConfig refreshController];
+            [TabBarController refreshController];
         }];
     }];
 }

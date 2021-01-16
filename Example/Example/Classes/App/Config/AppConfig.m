@@ -10,15 +10,4 @@
 
 @implementation AppConfig
 
-+ (void)refreshController
-{
-    if (@available(iOS 13.0, *)) {
-        FWSceneDelegate *sceneDelegete = (FWSceneDelegate *)UIWindow.fwMainScene.delegate;
-        [sceneDelegete setupController];
-    } else {
-        FWAppDelegate *appDelegate = (FWAppDelegate *)UIApplication.sharedApplication.delegate;
-        [appDelegate setupController];
-    }
-}
-
 @end
