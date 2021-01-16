@@ -8,14 +8,10 @@
 
 import FWFramework
 
-@objc public protocol UserModuleService: FWModuleProtocol {
-    func isLogin() -> Bool
+@objcMembers public class Mediator: NSObject {
+    @FWModuleAnnotation(TestModuleService.self)
+    public static var testModule: TestModuleService
     
-    func login(_ completion: (() -> Void)?)
-    
-    func logout(_ completion: (() -> Void)?)
-}
-
-@objc public protocol TestModuleService: FWModuleProtocol {
-    func testViewController() -> UIViewController
+    @FWModuleAnnotation(UserModuleService.self)
+    public static var userModule: UserModuleService
 }
