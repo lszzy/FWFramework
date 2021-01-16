@@ -6,6 +6,4 @@
   
 */
 
-"userModule" = "UserModule";
-"loginButton" = "Login";
-"testButton" = "Test";
+"coreModule" = "CoreModule";
