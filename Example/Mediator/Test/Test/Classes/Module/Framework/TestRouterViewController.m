@@ -196,6 +196,11 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 @implementation TestRouterViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderTableLayout
 {
     [self.tableView fwPinEdgesToSuperviewSafeArea];

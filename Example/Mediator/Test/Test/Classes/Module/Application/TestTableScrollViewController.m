@@ -104,6 +104,11 @@
 
 @implementation TestTableScrollViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderView
 {
     FWInfiniteScrollView.height = 64;

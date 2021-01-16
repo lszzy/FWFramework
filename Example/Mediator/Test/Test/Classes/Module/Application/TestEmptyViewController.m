@@ -14,6 +14,11 @@
 
 @implementation TestEmptyViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderModel
 {
     FWWeakifySelf();

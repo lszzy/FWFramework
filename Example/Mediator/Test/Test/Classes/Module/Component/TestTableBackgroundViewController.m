@@ -32,6 +32,11 @@
     [self.navigationController.navigationBar fwSetBackgroundClear];
 }
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderTableView
 {
     self.tableView.backgroundColor = [UIColor clearColor];

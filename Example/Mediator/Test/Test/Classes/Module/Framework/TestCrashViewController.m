@@ -14,6 +14,11 @@
 
 @implementation TestCrashViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderData
 {
     [self.tableData addObjectsFromArray:@[

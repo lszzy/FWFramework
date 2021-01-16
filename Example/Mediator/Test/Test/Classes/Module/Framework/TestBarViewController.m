@@ -106,6 +106,11 @@ FWPropertyAssign(BOOL, hideToast);
     }
 }
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderTableLayout
 {
     [self.tableView fwPinEdgesToSuperviewSafeArea];

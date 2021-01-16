@@ -22,6 +22,11 @@
     // self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderView
 {
     self.view.backgroundColor = [UIColor fwColorWithHex:0xF5F5F5];
