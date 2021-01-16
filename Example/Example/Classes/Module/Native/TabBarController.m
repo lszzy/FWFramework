@@ -7,7 +7,7 @@
 //
 
 #import "TabBarController.h"
-#import "ObjcController.h"
+#import "HomeViewController.h"
 #import "TestViewController.h"
 #import "SettingsViewController.h"
 
@@ -36,7 +36,7 @@
 
 - (void)setupController
 {
-    UIViewController *homeController = [ObjcController new];
+    UIViewController *homeController = [HomeViewController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
     homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
@@ -72,6 +72,19 @@
     animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     animation.repeatCount = 1;
     animation.autoreverses = YES;
+}
+
+#pragma mark - Public
+
++ (void)refreshController
+{
+    if (@available(iOS 13.0, *)) {
+        FWSceneDelegate *sceneDelegete = (FWSceneDelegate *)UIWindow.fwMainScene.delegate;
+        [sceneDelegete setupController];
+    } else {
+        FWAppDelegate *appDelegate = (FWAppDelegate *)UIApplication.sharedApplication.delegate;
+        [appDelegate setupController];
+    }
 }
 
 @end

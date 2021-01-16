@@ -14,5 +14,6 @@
 @import Mediator;
 #import "SwiftHeader.h"
 #import "AppConfig.h"
+#import "BaseViewController.h"
 
 #endif /* PrefixHeader_pch */

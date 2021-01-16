@@ -55,8 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 动态配置
 @interface AppConfig : NSObject
 
-+ (void)refreshController;
-
 @end
 
 NS_ASSUME_NONNULL_END

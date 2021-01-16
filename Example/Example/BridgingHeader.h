@@ -7,5 +7,3 @@
 @import Mediator;
 #import "AppConfig.h"
 #import "BaseViewController.h"
-#import "ObjcController.h"
-#import "TestTableLayoutViewController.h"

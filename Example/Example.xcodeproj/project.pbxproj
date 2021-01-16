@@ -45,8 +45,7 @@
 		2FDF6F6825206B440086A99E /* TestTableCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDF6F6725206B440086A99E /* TestTableCreateViewController.m */; };
 		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
 		2FF8D94324C88A6F006A83B5 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */; };
-		2FF8D94424C88A6F006A83B5 /* ObjcController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A024C88A6F006A83B5 /* ObjcController.m */; };
-		2FF8D94524C88A6F006A83B5 /* SwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A124C88A6F006A83B5 /* SwiftController.swift */; };
+		2FF8D94424C88A6F006A83B5 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A024C88A6F006A83B5 /* HomeViewController.m */; };
 		2FF8D94624C88A6F006A83B5 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A424C88A6F006A83B5 /* TestViewController.m */; };
 		2FF8D94724C88A6F006A83B5 /* TestStateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A724C88A6F006A83B5 /* TestStateViewController.m */; };
 		2FF8D94824C88A6F006A83B5 /* TestPopupMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8AA24C88A6F006A83B5 /* TestPopupMenuViewController.m */; };
@@ -212,9 +211,8 @@
 		2FF8D88B24C886EE006A83B5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2FF8D89E24C88A6F006A83B5 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		2FF8D8A024C88A6F006A83B5 /* ObjcController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjcController.m; sourceTree = "<group>"; };
-		2FF8D8A124C88A6F006A83B5 /* SwiftController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftController.swift; sourceTree = "<group>"; };
-		2FF8D8A224C88A6F006A83B5 /* ObjcController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcController.h; sourceTree = "<group>"; };
+		2FF8D8A024C88A6F006A83B5 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		2FF8D8A224C88A6F006A83B5 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		2FF8D8A424C88A6F006A83B5 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		2FF8D8A524C88A6F006A83B5 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
 		2FF8D8A724C88A6F006A83B5 /* TestStateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestStateViewController.m; sourceTree = "<group>"; };
@@ -393,15 +391,6 @@
 				2FF8D92524C88A6F006A83B5 /* WebViewController.m */,
 			);
 			path = Native;
-			sourceTree = "<group>";
-		};
-		2F03BB6125A9EB4C0024C79C /* Index */ = {
-			isa = PBXGroup;
-			children = (
-				2FF8D8A524C88A6F006A83B5 /* TestViewController.h */,
-				2FF8D8A424C88A6F006A83B5 /* TestViewController.m */,
-			);
-			path = Index;
 			sourceTree = "<group>";
 		};
 		2F03BB6225A9EB610024C79C /* Framework */ = {
@@ -687,9 +676,8 @@
 		2FF8D89F24C88A6F006A83B5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D8A224C88A6F006A83B5 /* ObjcController.h */,
-				2FF8D8A024C88A6F006A83B5 /* ObjcController.m */,
-				2FF8D8A124C88A6F006A83B5 /* SwiftController.swift */,
+				2FF8D8A224C88A6F006A83B5 /* HomeViewController.h */,
+				2FF8D8A024C88A6F006A83B5 /* HomeViewController.m */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -697,7 +685,8 @@
 		2FF8D8A324C88A6F006A83B5 /* Test */ = {
 			isa = PBXGroup;
 			children = (
-				2F03BB6125A9EB4C0024C79C /* Index */,
+				2FF8D8A524C88A6F006A83B5 /* TestViewController.h */,
+				2FF8D8A424C88A6F006A83B5 /* TestViewController.m */,
 				2F03BB6225A9EB610024C79C /* Framework */,
 				2F03BB6325A9EB6B0024C79C /* Application */,
 				2FF8D8A624C88A6F006A83B5 /* Component */,
@@ -1086,7 +1075,7 @@
 			files = (
 				2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */,
 				2FF8D96924C88A70006A83B5 /* TestButtonViewController.m in Sources */,
-				2FF8D94424C88A6F006A83B5 /* ObjcController.m in Sources */,
+				2FF8D94424C88A6F006A83B5 /* HomeViewController.m in Sources */,
 				2FF8D94C24C88A6F006A83B5 /* TestUrlViewController.m in Sources */,
 				2FF8D97824C88A70006A83B5 /* TestAlertViewController.m in Sources */,
 				2FF8D95124C88A6F006A83B5 /* TestNotificationViewController.m in Sources */,
@@ -1113,7 +1102,6 @@
 				2FF8D94824C88A6F006A83B5 /* TestPopupMenuViewController.m in Sources */,
 				2FF8D95824C88A6F006A83B5 /* TestTableScrollViewController.m in Sources */,
 				2FDEA02C24E695C900D2FBD1 /* TestThemeViewController.m in Sources */,
-				2FF8D94524C88A6F006A83B5 /* SwiftController.swift in Sources */,
 				2FF8D95C24C88A70006A83B5 /* TestMenuViewController.m in Sources */,
 				2FF8D95224C88A6F006A83B5 /* TestCropViewController.m in Sources */,
 				2F697B4E2521ACE800910C93 /* TestDrawViewController.m in Sources */,

@@ -7,7 +7,7 @@
 //
 
 #import "TestWindowViewController.h"
-#import "ObjcController.h"
+#import "HomeViewController.h"
 
 @interface TestWindowViewController () <FWTableViewController>
 
@@ -61,41 +61,41 @@
 
 - (void)onPush
 {
-    [[UIWindow fwMainWindow] fwPushViewController:[ObjcController new] animated:YES];
+    [[UIWindow fwMainWindow] fwPushViewController:[HomeViewController new] animated:YES];
 }
 
 - (void)onPresent
 {
-    [[UIWindow fwMainWindow] fwPresentViewController:[ObjcController new] animated:YES completion:nil];
+    [[UIWindow fwMainWindow] fwPresentViewController:[HomeViewController new] animated:YES completion:nil];
 }
 
 - (void)onPush2
 {
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[ObjcController new]];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[HomeViewController new]];
     [self presentViewController:nav animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPushViewController:[ObjcController new] animated:YES];
+        [[UIWindow fwMainWindow] fwPushViewController:[HomeViewController new] animated:YES];
     }];
 }
 
 - (void)onPresent2
 {
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[ObjcController new]];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[HomeViewController new]];
     [self presentViewController:nav animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPresentViewController:[ObjcController new] animated:YES completion:nil];
+        [[UIWindow fwMainWindow] fwPresentViewController:[HomeViewController new] animated:YES completion:nil];
     }];
 }
 
 - (void)onPush3
 {
-    [self presentViewController:[ObjcController new] animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPushViewController:[ObjcController new] animated:YES];
+    [self presentViewController:[HomeViewController new] animated:YES completion:^{
+        [[UIWindow fwMainWindow] fwPushViewController:[HomeViewController new] animated:YES];
     }];
 }
 
 - (void)onPresent3
 {
-    [self presentViewController:[ObjcController new] animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPresentViewController:[ObjcController new] animated:YES completion:nil];
+    [self presentViewController:[HomeViewController new] animated:YES completion:^{
+        [[UIWindow fwMainWindow] fwPresentViewController:[HomeViewController new] animated:YES completion:nil];
     }];
 }
 
