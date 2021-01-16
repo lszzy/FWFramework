@@ -6,7 +6,6 @@
 @import Core;
 @import Mediator;
 #import "AppConfig.h"
-#import "AppRouter.h"
 #import "BaseViewController.h"
 #import "ObjcController.h"
 #import "TestTableLayoutViewController.h"

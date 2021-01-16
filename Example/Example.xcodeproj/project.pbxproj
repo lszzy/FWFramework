@@ -107,7 +107,6 @@
 		2FF8D98624C88A70006A83B5 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92724C88A6F006A83B5 /* BaseViewController.m */; };
 		2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93A24C88A6F006A83B5 /* AppConfig.m */; };
 		2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */; };
-		2FF8D98E24C88A70006A83B5 /* AppRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D94224C88A6F006A83B5 /* AppRouter.m */; };
 		2FF8D9DB24C88C86006A83B5 /* JavascriptBridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9C024C88C86006A83B5 /* JavascriptBridge.html */; };
 		2FF8D9DC24C88C86006A83B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9C124C88C86006A83B5 /* Assets.xcassets */; };
 		2FF8D9DD24C88C86006A83B5 /* LoadingPlaceholder.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9C224C88C86006A83B5 /* LoadingPlaceholder.gif */; };
@@ -334,8 +333,6 @@
 		2FF8D93A24C88A6F006A83B5 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
 		2FF8D93B24C88A6F006A83B5 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
 		2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		2FF8D94124C88A6F006A83B5 /* AppRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRouter.h; sourceTree = "<group>"; };
-		2FF8D94224C88A6F006A83B5 /* AppRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRouter.m; sourceTree = "<group>"; };
 		2FF8D98F24C88ABA006A83B5 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		2FF8D99024C88B0C006A83B5 /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		2FF8D99124C88B3E006A83B5 /* SwiftHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
@@ -818,8 +815,6 @@
 			children = (
 				2FF8D93B24C88A6F006A83B5 /* AppConfig.h */,
 				2FF8D93A24C88A6F006A83B5 /* AppConfig.m */,
-				2FF8D94124C88A6F006A83B5 /* AppRouter.h */,
-				2FF8D94224C88A6F006A83B5 /* AppRouter.m */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -1111,7 +1106,6 @@
 				2FF8D97D24C88A70006A83B5 /* TestControllerViewController.m in Sources */,
 				2F938E642500EBFE009395FB /* TestEmptyScrollViewController.m in Sources */,
 				2FF8D97C24C88A70006A83B5 /* TestMapViewController.m in Sources */,
-				2FF8D98E24C88A70006A83B5 /* AppRouter.m in Sources */,
 				2FF8D95A24C88A6F006A83B5 /* TestCacheViewController.m in Sources */,
 				2FF8D98624C88A70006A83B5 /* BaseViewController.m in Sources */,
 				2FF8D95324C88A6F006A83B5 /* TestSegmentViewController.m in Sources */,
