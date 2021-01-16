@@ -31,7 +31,7 @@
 
 @end
 
-@interface TestStatisticalViewController () <FWCollectionViewController>
+@interface TestStatisticalViewController () <FWTableViewController, FWCollectionViewController>
 
 FWPropertyWeak(UIView *, shieldView);
 FWPropertyWeak(FWBannerView *, bannerView);
@@ -109,6 +109,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
 - (void)renderTableLayout
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwLayoutChain.edges();
 }
 

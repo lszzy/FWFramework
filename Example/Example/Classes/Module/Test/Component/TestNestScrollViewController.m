@@ -7,7 +7,7 @@
 //
 
 #import "TestNestScrollViewController.h"
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
 #define HeaderViewHeight 150
 #define SegmentViewHeight 50
@@ -46,7 +46,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 @end
 
-@interface TestNestChildController : BaseTableViewController <FWCollectionViewController, FWPagingViewListViewDelegate>
+@interface TestNestChildController : BaseViewController <FWTableViewController, FWCollectionViewController, FWPagingViewListViewDelegate>
 
 @property (nonatomic, assign) BOOL refreshList;
 @property (nonatomic, assign) NSInteger rows;
@@ -179,10 +179,12 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     return 5;
 }
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
     NSInteger index = indexPath.section * 5 + indexPath.row;
     cell.textLabel.text = [self.tableData objectAtIndex:index];
+    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

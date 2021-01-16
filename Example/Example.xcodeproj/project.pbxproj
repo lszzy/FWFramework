@@ -135,7 +135,6 @@
 		2FF8D97D24C88A70006A83B5 /* TestControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D91124C88A6F006A83B5 /* TestControllerViewController.m */; };
 		2FF8D97E24C88A70006A83B5 /* TestBorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D91224C88A6F006A83B5 /* TestBorderViewController.m */; };
 		2FF8D98424C88A70006A83B5 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92524C88A6F006A83B5 /* WebViewController.m */; };
-		2FF8D98524C88A70006A83B5 /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92624C88A6F006A83B5 /* BaseTableViewController.m */; };
 		2FF8D98624C88A70006A83B5 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D92724C88A6F006A83B5 /* BaseViewController.m */; };
 		2FF8D98B24C88A70006A83B5 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93A24C88A6F006A83B5 /* AppConfig.m */; };
 		2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */; };
@@ -390,10 +389,8 @@
 		2FF8D91224C88A6F006A83B5 /* TestBorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestBorderViewController.m; sourceTree = "<group>"; };
 		2FF8D91324C88A6F006A83B5 /* TestIndicatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestIndicatorViewController.h; sourceTree = "<group>"; };
 		2FF8D92524C88A6F006A83B5 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
-		2FF8D92624C88A6F006A83B5 /* BaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewController.m; sourceTree = "<group>"; };
 		2FF8D92724C88A6F006A83B5 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		2FF8D92A24C88A6F006A83B5 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
-		2FF8D92B24C88A6F006A83B5 /* BaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewController.h; sourceTree = "<group>"; };
 		2FF8D92D24C88A6F006A83B5 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		2FF8D93824C88A6F006A83B5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2FF8D93A24C88A6F006A83B5 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
@@ -455,6 +452,8 @@
 			children = (
 				2F63D407250C73D400BA83A6 /* TabBarController.h */,
 				2F63D408250C73D400BA83A6 /* TabBarController.m */,
+				2FF8D92D24C88A6F006A83B5 /* BaseViewController.h */,
+				2FF8D92724C88A6F006A83B5 /* BaseViewController.m */,
 				2FF8D92A24C88A6F006A83B5 /* WebViewController.h */,
 				2FF8D92524C88A6F006A83B5 /* WebViewController.m */,
 			);
@@ -896,21 +895,9 @@
 			path = Component;
 			sourceTree = "<group>";
 		};
-		2FF8D92424C88A6F006A83B5 /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				2FF8D92D24C88A6F006A83B5 /* BaseViewController.h */,
-				2FF8D92724C88A6F006A83B5 /* BaseViewController.m */,
-				2FF8D92B24C88A6F006A83B5 /* BaseTableViewController.h */,
-				2FF8D92624C88A6F006A83B5 /* BaseTableViewController.m */,
-			);
-			path = Base;
-			sourceTree = "<group>";
-		};
 		2FF8D92F24C88A6F006A83B5 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D92424C88A6F006A83B5 /* Base */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -1245,7 +1232,6 @@
 				2FF8D95524C88A6F006A83B5 /* TestTransitionViewController.m in Sources */,
 				2FF8D96624C88A70006A83B5 /* TestSocketViewController.m in Sources */,
 				2FF8D97224C88A70006A83B5 /* TestRouterViewController.m in Sources */,
-				2FF8D98524C88A70006A83B5 /* BaseTableViewController.m in Sources */,
 				2FF8D96E24C88A70006A83B5 /* TestModelViewController.m in Sources */,
 				2FF8D95D24C88A70006A83B5 /* TestTableBackgroundViewController.m in Sources */,
 				2FF8D98424C88A70006A83B5 /* WebViewController.m in Sources */,

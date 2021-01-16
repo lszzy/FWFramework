@@ -237,7 +237,7 @@
 
 @end
 
-@interface TestSkeletonViewController () <FWSkeletonViewDelegate>
+@interface TestSkeletonViewController () <FWTableViewController, FWSkeletonViewDelegate>
 
 @property (nonatomic, strong) TestSkeletonTableHeaderView *headerView;
 @property (nonatomic, strong) TestSkeletonTableFooterView *footerView;
@@ -252,6 +252,7 @@
     self.headerView = [[TestSkeletonTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
     self.footerView = [[TestSkeletonTableFooterView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 0)];
     
+    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.tableFooterView = self.footerView;
     [self.headerView fwAutoLayoutSubviews];

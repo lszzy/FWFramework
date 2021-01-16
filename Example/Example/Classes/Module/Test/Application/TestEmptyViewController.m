@@ -8,6 +8,10 @@
 
 #import "TestEmptyViewController.h"
 
+@interface TestEmptyViewController () <FWTableViewController>
+
+@end
+
 @implementation TestEmptyViewController
 
 - (void)renderModel
@@ -26,8 +30,9 @@
     return self.view.fwExistsEmptyView ? 0 : 4;
 }
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
     NSInteger row = indexPath.row;
     if (row == 0) {
         cell.textLabel.text = @"显示提示语";
@@ -38,10 +43,12 @@
     } else if (row == 3) {
         cell.textLabel.text = @"显示提示语及操作按钮";
     }
+    return cell;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger row = indexPath.row;
     if (row == 0) {
         [self.view fwShowEmptyViewWithText:@"联系人为空"];

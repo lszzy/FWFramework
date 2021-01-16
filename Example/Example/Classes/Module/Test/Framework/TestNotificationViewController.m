@@ -8,7 +8,7 @@
 
 #import "TestNotificationViewController.h"
 
-@interface TestNotificationViewController ()
+@interface TestNotificationViewController () <FWTableViewController>
 
 @end
 
@@ -16,6 +16,7 @@
 
 - (void)renderData
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                           @[@"本地通知(不重复，立即)", @"onNotification1"],
                                           @[@"本地通知(不重复，5秒后)", @"onNotification2"],
@@ -27,14 +28,22 @@
 
 #pragma mark - TableView
 
-- (void)renderCellData:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
-    cell.textLabel.text = [rowData objectAtIndex:0];
+    return self.tableData.count;
 }
 
-- (void)onCellSelect:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
+    NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
+    cell.textLabel.text = [rowData objectAtIndex:0];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *rowData = [self.tableData objectAtIndex:indexPath.row];
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {

@@ -8,6 +8,5 @@
 #import "AppConfig.h"
 #import "AppRouter.h"
 #import "BaseViewController.h"
-#import "BaseTableViewController.h"
 #import "ObjcController.h"
 #import "TestTableLayoutViewController.h"

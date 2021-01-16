@@ -7,11 +7,11 @@
  @updated    2018/9/22
  */
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
 /*!
  @brief TestIndicatorViewController
  */
-@interface TestIndicatorViewController : BaseTableViewController
+@interface TestIndicatorViewController : BaseViewController
 
 @end

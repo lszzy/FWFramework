@@ -6,11 +6,11 @@
 //  Copyright © 2019 wuyong.site. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestUrlViewController : BaseTableViewController
+@interface TestUrlViewController : BaseViewController
 
 @end
 
