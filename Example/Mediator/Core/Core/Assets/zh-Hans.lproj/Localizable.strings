@@ -6,6 +6,4 @@
   
 */
 
-"userModule" = "用户模块";
-"loginButton" = "登录";
-"testButton" = "测试";
+"coreModule" = "核心模块";
