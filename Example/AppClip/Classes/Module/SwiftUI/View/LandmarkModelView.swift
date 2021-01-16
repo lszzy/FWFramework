@@ -43,7 +43,7 @@ struct LandmarkModelView: View {
             }
         }
         .navigationBarTitle(title, displayMode: .inline)
-        .fwNavigationBarColor(backgroundColor: .green)
+        .fwNavigationBarColor(backgroundColor: .systemPurple)
         .onAppear {
             self.viewModel.send(.refresh)
         }
