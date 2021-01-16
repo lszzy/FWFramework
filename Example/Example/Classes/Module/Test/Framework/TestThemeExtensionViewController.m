@@ -96,7 +96,7 @@ static const FWThemeMode FWThemeModeRed = FWThemeStyleRed;
             
             FWThemeManager.sharedInstance.mode = index;
             [self renderModel];
-            [AppRouter refreshController];
+            [AppConfig refreshController];
         }];
     }];
 }

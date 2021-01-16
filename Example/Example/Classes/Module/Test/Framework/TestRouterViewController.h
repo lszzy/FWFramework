@@ -8,6 +8,20 @@
 
 #import "BaseViewController.h"
 
+@interface TestRouter : NSObject
+
+FWStaticString(ROUTE_TEST);
+FWStaticString(ROUTE_WILDCARD);
+FWStaticString(ROUTE_OBJECT);
+FWStaticString(ROUTE_CONTROLLER);
+FWStaticString(ROUTE_JAVASCRIPT);
+FWStaticString(ROUTE_HOME);
+FWStaticString(ROUTE_HOME_TEST);
+FWStaticString(ROUTE_HOME_SETTINGS);
+FWStaticString(ROUTE_CLOSE);
+
+@end
+
 @interface TestRouterResultViewController : BaseViewController
 
 @property (nonatomic, strong) NSDictionary *parameters;

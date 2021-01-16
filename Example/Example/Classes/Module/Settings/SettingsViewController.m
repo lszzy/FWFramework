@@ -145,7 +145,7 @@
         if (index < 3) {
             NSString *language = (index == 1) ? @"zh-Hans" : (index == 2 ? @"en" : nil);
             NSBundle.fwLocalizedLanguage = language;
-            [AppRouter refreshController];
+            [AppConfig refreshController];
         } else {
             NSString *localized = NSBundle.fwLocalizedLanguage;
             NSString *language = (!localized) ? @"zh-Hans" : ([localized hasPrefix:@"zh"] ? @"en" : nil);
@@ -164,7 +164,7 @@
             mode = (currentMode == FWThemeModeSystem) ? FWThemeModeLight : (currentMode == FWThemeModeLight ? FWThemeModeDark : FWThemeModeSystem);
         }
         FWThemeManager.sharedInstance.mode = mode;
-        [AppRouter refreshController];
+        [AppConfig refreshController];
     }];
 }
 
