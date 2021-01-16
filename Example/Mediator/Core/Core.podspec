@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/lingshizhuangzi@gmail.com/Core.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '9.0'
+  s.swift_version         = '5.0'
   s.source_files = 'Core/Classes/**/*.{h,m,swift}'
   s.resource_bundles = {
     'Core' => ['Core/Assets/**/*.{xcassets,lproj,png}']

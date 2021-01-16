@@ -1,0 +1,105 @@
+//
+//  TestThemeExtensionViewController.m
+//  Example
+//
+//  Created by wuyong on 2020/9/16.
+//  Copyright © 2020 site.wuyong. All rights reserved.
+//
+
+#import "TestThemeExtensionViewController.h"
+#import "TestTabBarViewController.h"
+
+static const FWThemeStyle FWThemeStyleRed = 3;
+static const FWThemeMode FWThemeModeRed = FWThemeStyleRed;
+
+@interface TestThemeExtensionViewController ()
+
+@end
+
+@implementation TestThemeExtensionViewController
+
+- (void)renderView
+{
+    self.view.backgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
+        if (style == FWThemeStyleDark) {
+            return [UIColor blackColor];
+        } else if (style == FWThemeStyleLight) {
+            return [UIColor whiteColor];
+        } else {
+            return [UIColor whiteColor];
+        }
+    }];
+    
+    UIView *colorView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
+    colorView.backgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
+        if (style == FWThemeStyleDark) {
+            return [UIColor whiteColor];
+        } else if (style == FWThemeStyleLight) {
+            return [UIColor blackColor];
+        } else {
+            return [UIColor redColor];
+        }
+    }];
+    [self.view addSubview:colorView];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
+    imageView.fwThemeImage = [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
+        if (style == FWThemeStyleDark) {
+            return [UIImage imageNamed:@"theme_image_dark"];
+        } else if (style == FWThemeStyleLight) {
+            return [UIImage imageNamed:@"theme_image_light"];
+        } else {
+            return [[UIImage imageNamed:@"theme_image_dark"] fwImageWithTintColor:[UIColor redColor]];
+        }
+    }];
+    [self.view addSubview:imageView];
+    
+    CALayer *layer = [CALayer new];
+    layer.frame = CGRectMake(20, 160, 50, 50);
+    layer.fwThemeContext = self.view;
+    layer.fwThemeBackgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
+        if (style == FWThemeStyleDark) {
+            return [UIColor whiteColor];
+        } else if (style == FWThemeStyleLight) {
+            return [UIColor blackColor];
+        } else {
+            return [UIColor redColor];
+        }
+    }];
+    [self.view.layer addSublayer:layer];
+    
+    UILabel *themeLabel = [UILabel new];
+    themeLabel.frame = CGRectMake(20, 230, FWScreenWidth, 50);
+    UIColor *textColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
+        if (style == FWThemeStyleDark) {
+            return [UIColor whiteColor];
+        } else if (style == FWThemeStyleLight) {
+            return [UIColor blackColor];
+        } else {
+            return [UIColor redColor];
+        }
+    }];
+    themeLabel.attributedText = [NSAttributedString fwAttributedString:@"我是AttributedString" withFont:FWFontSize(16).fwBoldFont textColor:textColor];
+    [self.view addSubview:themeLabel];
+}
+
+- (void)renderModel
+{
+    FWThemeMode mode = FWThemeManager.sharedInstance.mode;
+    NSArray *themes = @[@"系统", @"浅色", @"深色", @"红色"];
+    NSString *title = [themes fwObjectAtIndex:mode];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:title block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:themes actionBlock:^(NSInteger index) {
+            FWStrongifySelf();
+            
+            FWThemeManager.sharedInstance.mode = index;
+            [self renderModel];
+            [TestTabBarViewController refreshController];
+        }];
+    }];
+}
+
+@end

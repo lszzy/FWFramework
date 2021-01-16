@@ -8,8 +8,7 @@
 
 #import "SettingsViewController.h"
 #import "TabBarController.h"
-#import <FWDebug/FWDebug.h>
-#import <Mediator/Mediator-Swift.h>
+@import FWDebug;
 
 @interface SettingsViewController () <FWTableViewController>
 

@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TestModuleController : UIViewController
 
+@property (nonatomic, assign) NSInteger selectedIndex;
+
 @end
 
 NS_ASSUME_NONNULL_END

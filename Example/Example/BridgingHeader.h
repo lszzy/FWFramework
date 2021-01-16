@@ -6,4 +6,3 @@
 @import Core;
 @import Mediator;
 #import "AppConfig.h"
-#import "BaseViewController.h"

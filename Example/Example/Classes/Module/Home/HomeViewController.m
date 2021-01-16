@@ -10,7 +10,7 @@
 
 #pragma mark - HomeViewController
 
-@interface HomeViewController ()
+@interface HomeViewController () <FWViewController>
 
 @property (nonatomic, strong) UIButton *loginButton;
 
