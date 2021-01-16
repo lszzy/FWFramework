@@ -14,6 +14,11 @@
 
 @implementation TestEmptyScrollViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderView
 {
     self.tableView.fwEmptyViewDataSource = self;

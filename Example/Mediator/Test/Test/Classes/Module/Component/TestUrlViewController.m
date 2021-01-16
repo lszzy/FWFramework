@@ -20,6 +20,11 @@
 
 @implementation TestUrlViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderData
 {
     self.gps = @"29.5302033389,106.4601725638";

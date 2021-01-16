@@ -292,6 +292,11 @@ FWDealloc();
     self.navigationController.fwNavigationTransition = nil;
 }
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderData
 {
     self.tableView.backgroundColor = Theme.tableColor;

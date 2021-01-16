@@ -1682,6 +1682,11 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
 
 @implementation TestCustomerAlertController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderData
 {
     NSArray *tableData = @[

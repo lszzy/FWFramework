@@ -14,6 +14,11 @@
 
 @implementation TestAlertViewController
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderModel
 {
     [self fwSetRightBarItem:@"切换插件" block:^(id  _Nonnull sender) {

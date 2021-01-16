@@ -87,6 +87,11 @@
     self.timer = nil;
 }
 
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
 - (void)renderView
 {
     self.tableView.backgroundColor = Theme.tableColor;
