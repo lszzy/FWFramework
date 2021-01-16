@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
 - (nullable __kindof UIViewController *)fwSelectTabBarController:(Class)viewController;
 
+// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+- (nullable __kindof UIViewController *)fwSelectTabBarIndex:(NSUInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END

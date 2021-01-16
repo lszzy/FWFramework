@@ -7,9 +7,7 @@
 //
 
 #import "TestTabBarViewController.h"
-#import "HomeViewController.h"
 #import "TestViewController.h"
-#import "SettingsViewController.h"
 
 @interface TestTabBarViewController () <FWViewController>
 
@@ -29,9 +27,9 @@
 
 - (void)setupViewControllers
 {
-    UIViewController *firstViewController = [[HomeViewController alloc] init];
+    UIViewController *firstViewController = [[NSClassFromString(@"HomeViewController") alloc] init];
     UIViewController *secondViewController = [[TestViewController alloc] init];
-    UIViewController *thirdViewController = [[SettingsViewController alloc] init];
+    UIViewController *thirdViewController = [[NSClassFromString(@"SettingsViewController") alloc] init];
     [self setViewControllers:@[firstViewController, secondViewController, thirdViewController]];
     [self customizeTabBar];
 }

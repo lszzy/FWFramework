@@ -19,6 +19,15 @@
 
 @implementation TestViewController
 
+#pragma mark - Accessor
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex
+{
+    _selectedIndex = selectedIndex;
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:selectedIndex] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [self.view fwShowMessageWithText:[NSString stringWithFormat:@"跳转到测试section: %@", @(selectedIndex)]];
+}
+
 - (UISearchBar *)searchBar
 {
     if (!_searchBar) {
@@ -46,6 +55,8 @@
 {
     return self.isSearch ? self.searchResult : self.tableData;
 }
+
+#pragma mark - Lifecycle
 
 - (UITableViewStyle)renderTableStyle
 {
