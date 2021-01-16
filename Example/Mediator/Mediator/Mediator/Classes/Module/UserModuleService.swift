@@ -8,8 +8,16 @@
 
 import FWFramework
 
+@objcMembers public class UserInfo: NSObject {
+    public var userId: String = ""
+    public var userName: String = ""
+    public var userAvatar: UIImage?
+}
+
 @objc public protocol UserModuleService: FWModuleProtocol {
     func isLogin() -> Bool
+    
+    func userInfo() -> UserInfo?
     
     func login(_ completion: (() -> Void)?)
     

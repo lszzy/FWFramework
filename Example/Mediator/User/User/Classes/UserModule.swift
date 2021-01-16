@@ -30,6 +30,9 @@ import Mediator
     @FWUserDefaultAnnotation("userId", defaultValue: "")
     private var userId: String
     
+    @FWUserDefaultAnnotation("userName", defaultValue: "")
+    private var userName: String
+    
     public static func sharedInstance() -> Self {
         return sharedModule as! Self
     }
@@ -42,10 +45,21 @@ import Mediator
         return userId.count > 0
     }
     
+    public func userInfo() -> UserInfo? {
+        if userId.count < 1 { return nil }
+        
+        let userInfo = UserInfo()
+        userInfo.userId = userId
+        userInfo.userName = userName
+        userInfo.userAvatar = UserBundle.imageNamed("user")
+        return userInfo
+    }
+    
     public func login(_ completion: (() -> Void)?) {
         let viewController = UserLoginController()
         viewController.completion = { [weak self] in
             self?.userId = "1"
+            self?.userName = "FWFramework"
             completion?()
         }
         let navigationController = UINavigationController(rootViewController: viewController)
@@ -54,6 +68,7 @@ import Mediator
     
     public func logout(_ completion: (() -> Void)?) {
         userId = ""
+        userName = ""
         completion?()
     }
 }

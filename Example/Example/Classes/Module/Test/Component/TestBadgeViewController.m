@@ -22,11 +22,11 @@
     
     self.fwTabBarHidden = NO;
     
-    [self fwSetLeftBarItem:[UIImage imageNamed:@"public_back"] target:self action:@selector(onClose)];
+    [self fwSetLeftBarItem:[CoreBundle imageNamed:@"back"] target:self action:@selector(onClose)];
     FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
     [self.navigationItem.leftBarButtonItem fwShowBadgeView:badgeView badgeValue:nil];
     
-    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:[UIImage imageNamed:@"public_back"] target:self action:@selector(onClick:)];
+    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [rightItem fwShowBadgeView:badgeView badgeValue:@"1"];
     

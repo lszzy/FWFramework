@@ -22,7 +22,7 @@
     self.navigationItem.hidesBackButton = YES;
     
     FWWeakifySelf();
-    [self fwSetLeftBarItem:[UIImage imageNamed:@"public_back"] block:^(id sender) {
+    [self fwSetLeftBarItem:[CoreBundle imageNamed:@"back"] block:^(id sender) {
         FWStrongifySelf();
         [self fwCloseViewControllerAnimated:YES];
     }];

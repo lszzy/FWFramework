@@ -199,8 +199,8 @@ import FWFramework
 @objcMembers class SwiftTestWebViewController: UIViewController, FWWebViewController {
     var webItems: NSArray? = {
         return [
-            UIImage(named: "public_back") as Any,
-            UIImage(named: "public_close") as Any
+            CoreBundle.imageNamed("back") as Any,
+            CoreBundle.imageNamed("close") as Any
         ]
     }()
     

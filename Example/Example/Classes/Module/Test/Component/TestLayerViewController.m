@@ -161,7 +161,7 @@
     
     // 画图片
     {
-        UIImage *image = [UIImage imageNamed:@"public_close"];
+        UIImage *image = [CoreBundle imageNamed:@"close"];
         [image drawInRect:CGRectMake(20, 120, 50, 50)];
         
         [[image fwImageWithTintColor:[UIColor orangeColor] blendMode:kCGBlendModeNormal] drawInRect:CGRectMake(90, 120, 50, 50)];

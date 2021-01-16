@@ -7,9 +7,9 @@
 
 #import "TestModuleController.h"
 #import "TestModule.h"
-#import <FWFramework/FWFramework.h>
+@import FWFramework;
 
-@interface TestModuleController ()
+@interface TestModuleController () <FWViewController>
 
 @end
 
@@ -17,8 +17,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = UIColor.whiteColor;
     self.navigationItem.title = [TestBundle localizedString:@"testModule"];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];

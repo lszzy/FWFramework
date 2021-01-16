@@ -217,6 +217,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-User_Example/Pods-User_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Core/Core.framework",
 				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Mediator/Mediator.framework",
 				"${BUILT_PRODUCTS_DIR}/Test/Test.framework",
@@ -224,6 +225,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Core.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mediator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Test.framework",
