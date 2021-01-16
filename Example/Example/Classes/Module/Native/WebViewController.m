@@ -31,7 +31,7 @@
 
 - (NSArray *)webItems
 {
-    return @[[UIImage imageNamed:@"public_back"], [UIImage imageNamed:@"public_close"]];
+    return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
 }
 
 #pragma mark - Lifecycle

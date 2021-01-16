@@ -7,15 +7,14 @@
 
 import FWFramework
 import Mediator
+import Core
 
-@objcMembers class UserLoginController: UIViewController {
+@objcMembers class UserLoginController: UIViewController, FWViewController {
     var completion: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = UIColor.white
-        navigationItem.title = UserBundle.localizedString("userModule")
+        navigationItem.title = UserBundle.localizedString("loginButton")
         
         let testButton = UIButton(type: .system)
         testButton.setTitle(UserBundle.localizedString("testButton"), for: .normal)

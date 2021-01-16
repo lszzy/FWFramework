@@ -4,6 +4,7 @@ platform :ios, '9.0'
 target 'User_Example' do
   pod 'User', :path => '../'
   pod 'Mediator', :path => '../../Mediator/'
+  pod 'Core', :path => '../../Core/'
   pod 'Test', :path => '../../Test/'
-  pod 'FWFramework/Framework', :path => '../../../../'
+  pod 'FWFramework', :path => '../../../../'
 end

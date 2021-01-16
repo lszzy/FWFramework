@@ -44,5 +44,6 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
   # s.static_framework = true
   s.dependency 'Mediator'
-  s.dependency 'FWFramework/Framework'
+  s.dependency 'Core'
+  s.dependency 'FWFramework/FWFramework'
 end
