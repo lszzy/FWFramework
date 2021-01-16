@@ -78,7 +78,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 
 - (void)renderCollectionLayout
 {
-    self.collectionView.backgroundColor = [AppTheme backgroundColor];
+    self.collectionView.backgroundColor = [Theme backgroundColor];
     [self.collectionView registerClass:[TestNestCollectionCell class] forCellWithReuseIdentifier:kTestNestCollectionCellID];
     [self.collectionView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(0, 0, self.cart ? CartViewHeight : 0, 0) excludingEdge:NSLayoutAttributeRight];
     [self.collectionView fwSetDimension:NSLayoutAttributeWidth toSize:self.cart ? CategoryViewWidth : 0];

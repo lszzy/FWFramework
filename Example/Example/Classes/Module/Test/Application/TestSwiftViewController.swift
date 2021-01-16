@@ -73,8 +73,8 @@ import FWFramework
     }
     
     func renderCollectionView() {
-        view.backgroundColor = AppTheme.backgroundColor()
-        collectionView.backgroundColor = AppTheme.tableColor()
+        view.backgroundColor = Theme.backgroundColor
+        collectionView.backgroundColor = Theme.tableColor
         collectionView.isPagingEnabled = true
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "view")
@@ -170,8 +170,8 @@ import FWFramework
 
 @objcMembers class SwiftTestTableViewController: UIViewController, FWTableViewController {
     func renderTableView() {
-        view.backgroundColor = AppTheme.backgroundColor()
-        tableView.backgroundColor = AppTheme.tableColor()
+        view.backgroundColor = Theme.backgroundColor
+        tableView.backgroundColor = Theme.tableColor
     }
     
     func renderData() {

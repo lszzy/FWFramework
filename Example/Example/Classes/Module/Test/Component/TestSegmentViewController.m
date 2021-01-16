@@ -196,8 +196,8 @@
     tagConfig.textFont = [UIFont systemFontOfSize:10];
     tagConfig.textColor = [UIColor blackColor];
     tagConfig.selectedTextColor = [UIColor blackColor];
-    tagConfig.backgroundColor = [AppTheme backgroundColor];
-    tagConfig.selectedBackgroundColor = [AppTheme backgroundColor];
+    tagConfig.backgroundColor = [Theme backgroundColor];
+    tagConfig.selectedBackgroundColor = [Theme backgroundColor];
     tagConfig.cornerRadius = 2;
     tagConfig.selectedCornerRadius = 2;
     tagConfig.borderWidth = 1;

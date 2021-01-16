@@ -177,7 +177,7 @@ static BOOL isExpanded = NO;
     
     FWWeakifySelf();
     [self.tableView fwResetGroupedStyle];
-    self.tableView.backgroundColor = [AppTheme backgroundColor];
+    self.tableView.backgroundColor = [Theme backgroundColor];
     [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         

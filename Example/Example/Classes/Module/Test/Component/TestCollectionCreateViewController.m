@@ -157,7 +157,7 @@
 {
     self.collectionView = [UICollectionView fwCollectionView];
     self.collectionView.fwDelegate.collectionData = @[@[]];
-    self.collectionView.backgroundColor = [AppTheme backgroundColor];
+    self.collectionView.backgroundColor = [Theme backgroundColor];
     self.collectionView.alwaysBounceVertical = YES;
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     flowLayout.minimumLineSpacing = 0;

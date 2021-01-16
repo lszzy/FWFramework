@@ -45,7 +45,7 @@
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.backgroundColor = [AppTheme backgroundColor];
+        self.backgroundColor = [Theme backgroundColor];
         
         UIView *bgView = [UIView fwAutoLayoutView];
         bgView.backgroundColor = [UIColor whiteColor];
@@ -143,7 +143,7 @@
 - (void)renderView
 {
     FWWeakifySelf();
-    self.tableView.backgroundColor = [AppTheme backgroundColor];
+    self.tableView.backgroundColor = [Theme backgroundColor];
     [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         

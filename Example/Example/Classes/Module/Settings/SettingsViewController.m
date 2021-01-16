@@ -33,7 +33,7 @@
 
 - (void)renderTableView
 {
-    self.tableView.backgroundColor = [AppTheme tableColor];
+    self.tableView.backgroundColor = [Theme tableColor];
 }
 
 - (void)renderData

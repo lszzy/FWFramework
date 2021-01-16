@@ -30,8 +30,8 @@
 - (void)setupAppearance
 {
     self.delegate = self;
-    [self.tabBar fwSetTextColor:[AppTheme textColor]];
-    self.tabBar.fwThemeBackgroundColor = [AppTheme barColor];
+    [self.tabBar fwSetTextColor:[Theme textColor]];
+    self.tabBar.fwThemeBackgroundColor = [Theme barColor];
 }
 
 - (void)setupController
