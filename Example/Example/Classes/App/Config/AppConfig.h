@@ -50,11 +50,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 #endif
 
-#pragma mark - AppConfig
-
-// 动态配置
-@interface AppConfig : NSObject
-
-@end
-
 NS_ASSUME_NONNULL_END
