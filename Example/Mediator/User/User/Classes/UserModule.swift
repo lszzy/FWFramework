@@ -59,7 +59,7 @@ import Mediator
         let viewController = UserLoginController()
         viewController.completion = { [weak self] in
             self?.userId = "1"
-            self?.userName = "FWFramework"
+            self?.userName = "test"
             completion?()
         }
         let navigationController = UINavigationController(rootViewController: viewController)

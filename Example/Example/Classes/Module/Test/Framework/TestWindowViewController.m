@@ -7,7 +7,71 @@
 //
 
 #import "TestWindowViewController.h"
-#import "HomeViewController.h"
+
+@interface TestWindowPresentController : BaseViewController
+
+@property (nonatomic, strong) UIButton *loginButton;
+
+@end
+
+@implementation TestWindowPresentController
+
+- (void)renderView
+{
+    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.loginButton = loginButton;
+    [loginButton addTarget:self action:@selector(onMediator) forControlEvents:UIControlEventTouchUpInside];
+    loginButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 20, 150, 30);
+    [self.view addSubview:loginButton];
+    [self.view fwAddTapGestureWithTarget:self action:@selector(onClose)];
+}
+
+- (void)renderData {
+    if ([Mediator.userModule isLogin]) {
+        [self.loginButton setTitle:@"模拟登录失效" forState:UIControlStateNormal];
+    } else {
+        [self.loginButton setTitle:@"点击登录" forState:UIControlStateNormal];
+    }
+}
+
+#pragma mark - Action
+
+- (void)onClose {
+    [self fwCloseViewControllerAnimated:YES];
+}
+
+- (void)onMediator {
+    if ([Mediator.userModule isLogin]) {
+        [self onInvalid];
+    } else {
+        [self onLogin];
+    }
+}
+
+- (void)onLogin {
+    FWWeakifySelf();
+    [Mediator.userModule login:^{
+        FWStrongifySelf();
+        [self renderData];
+    }];
+}
+
+- (void)onInvalid {
+    FWWeakifySelf();
+    [UIWindow.fwMainWindow.fwTopPresentedController fwShowConfirmWithTitle:@"模拟登录失效" message:nil cancel:FWLocalizedString(@"取消") confirm:FWLocalizedString(@"确定") confirmBlock:^{
+        FWStrongifySelf();
+        [UIWindow.fwMainWindow fwDismissViewControllers:^{
+            FWStrongifySelf();
+            [Mediator.userModule logout:^{
+                FWStrongifySelf();
+                [self renderData];
+                [self onLogin];
+            }];
+        }];
+    }];
+}
+
+@end
 
 @interface TestWindowViewController () <FWTableViewController>
 
@@ -61,41 +125,41 @@
 
 - (void)onPush
 {
-    [[UIWindow fwMainWindow] fwPushViewController:[HomeViewController new] animated:YES];
+    [[UIWindow fwMainWindow] fwPushViewController:[TestWindowPresentController new] animated:YES];
 }
 
 - (void)onPresent
 {
-    [[UIWindow fwMainWindow] fwPresentViewController:[HomeViewController new] animated:YES completion:nil];
+    [[UIWindow fwMainWindow] fwPresentViewController:[TestWindowPresentController new] animated:YES completion:nil];
 }
 
 - (void)onPush2
 {
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[HomeViewController new]];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[TestWindowPresentController new]];
     [self presentViewController:nav animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPushViewController:[HomeViewController new] animated:YES];
+        [[UIWindow fwMainWindow] fwPushViewController:[TestWindowPresentController new] animated:YES];
     }];
 }
 
 - (void)onPresent2
 {
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[HomeViewController new]];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[TestWindowPresentController new]];
     [self presentViewController:nav animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPresentViewController:[HomeViewController new] animated:YES completion:nil];
+        [[UIWindow fwMainWindow] fwPresentViewController:[TestWindowPresentController new] animated:YES completion:nil];
     }];
 }
 
 - (void)onPush3
 {
-    [self presentViewController:[HomeViewController new] animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPushViewController:[HomeViewController new] animated:YES];
+    [self presentViewController:[TestWindowPresentController new] animated:YES completion:^{
+        [[UIWindow fwMainWindow] fwPushViewController:[TestWindowPresentController new] animated:YES];
     }];
 }
 
 - (void)onPresent3
 {
-    [self presentViewController:[HomeViewController new] animated:YES completion:^{
-        [[UIWindow fwMainWindow] fwPresentViewController:[HomeViewController new] animated:YES completion:nil];
+    [self presentViewController:[TestWindowPresentController new] animated:YES completion:^{
+        [[UIWindow fwMainWindow] fwPresentViewController:[TestWindowPresentController new] animated:YES completion:nil];
     }];
 }
 
