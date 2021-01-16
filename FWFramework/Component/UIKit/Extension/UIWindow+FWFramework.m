@@ -35,6 +35,26 @@
     }
     if (!targetNavigation) return nil;
     
+    return [self fwSelectTabBarNavigation:targetNavigation];
+}
+
+- (UIViewController *)fwSelectTabBarIndex:(NSUInteger)index
+{
+    if (![self.rootViewController isKindOfClass:[UITabBarController class]]) return nil;
+    
+    UINavigationController *targetNavigation = nil;
+    UITabBarController *tabbarController = (UITabBarController *)self.rootViewController;
+    if (tabbarController.viewControllers.count > index) {
+        targetNavigation = tabbarController.viewControllers[index];
+    }
+    if (!targetNavigation) return nil;
+    
+    return [self fwSelectTabBarNavigation:targetNavigation];
+}
+
+- (UIViewController *)fwSelectTabBarNavigation:(UINavigationController *)targetNavigation
+{
+    UITabBarController *tabbarController = (UITabBarController *)self.rootViewController;
     UINavigationController *currentNavigation = tabbarController.selectedViewController;
     if (currentNavigation != targetNavigation) {
         if ([currentNavigation isKindOfClass:[UINavigationController class]] &&

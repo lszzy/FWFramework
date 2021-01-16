@@ -18,15 +18,6 @@
 
 @implementation HomeViewController
 
-#pragma mark - Accessor
-
-- (void)setSelectedIndex:(NSInteger)selectedIndex
-{
-    _selectedIndex = selectedIndex;
-    
-    [self.view fwShowMessageWithText:[NSString stringWithFormat:@"切换到tab: %@", @(selectedIndex)]];
-}
-
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad {
