@@ -38,8 +38,8 @@
     // TODO: feature
     UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.loginButton = loginButton;
-    [loginButton addTarget:self action:@selector(onMediator) forControlEvents:UIControlEventTouchUpInside];
-    loginButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 20, 150, 30);
+    [loginButton addTarget:self action:@selector(onLogin) forControlEvents:UIControlEventTouchUpInside];
+    loginButton.frame = CGRectMake(0, 20, FWScreenWidth, 30);
     [self.view addSubview:loginButton];
 }
 
@@ -51,42 +51,21 @@
 - (void)renderData {
     self.navigationItem.title = FWLocalizedString(@"homeTitle");
     if ([Mediator.userModule isLogin]) {
-        [self.loginButton setTitle:FWLocalizedString(@"loginInvalid") forState:UIControlStateNormal];
+        [self.loginButton setTitle:FWLocalizedString(@"backTitle") forState:UIControlStateNormal];
     } else {
-        [self.loginButton setTitle:FWLocalizedString(@"mediatorLogin") forState:UIControlStateNormal];
+        [self.loginButton setTitle:FWLocalizedString(@"welcomeTitle") forState:UIControlStateNormal];
     }
 }
 
 #pragma mark - Action
 
-- (void)onMediator {
-    if ([Mediator.userModule isLogin]) {
-        [self onInvalid];
-    } else {
-        [self onLogin];
-    }
-}
-
 - (void)onLogin {
+    if ([Mediator.userModule isLogin]) return;
+    
     FWWeakifySelf();
     [Mediator.userModule login:^{
         FWStrongifySelf();
         [self renderData];
-    }];
-}
-
-- (void)onInvalid {
-    FWWeakifySelf();
-    [UIWindow.fwMainWindow.fwTopPresentedController fwShowConfirmWithTitle:FWLocalizedString(@"loginInvalid") message:nil cancel:FWLocalizedString(@"取消") confirm:FWLocalizedString(@"确定") confirmBlock:^{
-        FWStrongifySelf();
-        [UIWindow.fwMainWindow fwDismissViewControllers:^{
-            FWStrongifySelf();
-            [Mediator.userModule logout:^{
-                FWStrongifySelf();
-                [self renderData];
-                [self onLogin];
-            }];
-        }];
     }];
 }
 
