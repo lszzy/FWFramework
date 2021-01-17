@@ -12,9 +12,9 @@ Pod::Spec.new do |s|
   s.swift_version         = '5.0'
   s.source_files = 'User/Classes/**/*.{h,m,swift}'
   s.public_header_files = 'User/Classes/Public/**/*.h'
-  s.resource_bundles = {
-    'User' => ['User/Assets/**/*.{xcassets,lproj,png}']
-  }
+  s.resources = [
+    'User/Static/UserModule.bundle'
+  ]
   s.dependency 'Mediator'
   s.dependency 'Core'
   s.dependency 'FWFramework/FWFramework'

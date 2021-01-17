@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Core/Classes/**/*.{h,m,swift}'
   s.public_header_files = 'Core/Classes/Public/**/*.h'
   s.resource_bundles = {
-    'Core' => ['Core/Assets/**/*.{xcassets,lproj,png}']
+    'Core' => ['Core/Assets/**/*.*']
   }
   s.dependency 'FWFramework/FWFramework'
 end

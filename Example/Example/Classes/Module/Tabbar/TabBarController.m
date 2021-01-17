@@ -38,20 +38,20 @@
     UIViewController *homeController = [HomeViewController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
-    homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_home"];
+    homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbarHome"];
     homeNav.tabBarItem.title = FWLocalizedString(@"homeTitle");
     [homeNav.tabBarItem fwShowBadgeView:[[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall] badgeValue:@"1"];
     
     UIViewController *testController = [Mediator.testModule testViewController];
     testController.hidesBottomBarWhenPushed = NO;
     UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:testController];
-    testNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_test"];
+    testNav.tabBarItem.image = [UIImage imageNamed:@"tabbarTest"];
     testNav.tabBarItem.title = FWLocalizedString(@"testTitle");
     
     UIViewController *settingsController = [SettingsViewController new];
     settingsController.hidesBottomBarWhenPushed = NO;
     UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
-    settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbar_settings"];
+    settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbarSettings"];
     settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
     self.viewControllers = @[homeNav, testNav, settingsNav];
     
