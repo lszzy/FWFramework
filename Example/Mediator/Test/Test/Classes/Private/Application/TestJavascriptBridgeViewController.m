@@ -31,7 +31,7 @@
 {
     [self renderButtons:self.webView];
     
-    NSURL *htmlUrl = [[NSBundle mainBundle] URLForResource:@"JavascriptBridge" withExtension:@"html"];
+    NSURL *htmlUrl = [TestBundle.bundle URLForResource:@"JavascriptBridge" withExtension:@"html"];
     self.webRequest = htmlUrl;
 }
 

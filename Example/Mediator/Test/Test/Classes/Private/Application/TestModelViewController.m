@@ -122,7 +122,7 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
     // FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
     
     // 测试\udf36字符会导致json解码失败问题
-    NSString *jsonFile = [[NSBundle mainBundle] pathForResource:@"jsonDecode" ofType:@"json"];
+    NSString *jsonFile = [TestBundle.bundle pathForResource:@"jsonDecode" ofType:@"json"];
     NSString *jsonString = [NSString stringWithContentsOfFile:jsonFile encoding:NSUTF8StringEncoding error:nil];
     id jsonObject = [jsonString fwJsonDecode];
     FWLogDebug(@"jsonString: %@ => json: %@", jsonString, jsonObject);
