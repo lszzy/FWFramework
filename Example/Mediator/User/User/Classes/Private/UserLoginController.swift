@@ -18,7 +18,7 @@ import Core
         
         let testButton = UIButton(type: .system)
         testButton.setTitle(UserBundle.localizedString("testButton"), for: .normal)
-        testButton.setImage(UserBundle.imageNamed("testIcon")?.fwCompressImage(withMaxWidth: 25), for: .normal)
+        testButton.setImage(UserBundle.imageNamed("test")?.fwCompressImage(withMaxWidth: 25), for: .normal)
         testButton.fwAddTouch { [weak self] (sender) in
             self?.navigationController?.pushViewController(Mediator.testModule.testViewController(), animated: true)
         }
