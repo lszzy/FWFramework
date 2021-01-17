@@ -116,7 +116,7 @@
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = [fileName lastPathComponent];
     if (self.imageType == 0) {
-        UIImage *image = FWImageFile(fileName);
+        UIImage *image = FWImageFile([TestBundle.bundle pathForResource:fileName ofType:nil]);
         cell.systemView.image = image;
         cell.animatedView.image = image;
     } else {

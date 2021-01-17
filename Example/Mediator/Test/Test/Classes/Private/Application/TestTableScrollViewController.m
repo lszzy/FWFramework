@@ -120,7 +120,7 @@
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    infiniteView.image = [UIImage imageNamed:@"LoadingPlaceholder.gif"];
+    infiniteView.image = FWImageFile([TestBundle.bundle pathForResource:@"LoadingPlaceholder.gif" ofType:nil]);
     [self.tableView.fwInfiniteScrollView setCustomView:infiniteView forState:FWInfiniteScrollStateAll];
 }
 
