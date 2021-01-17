@@ -11,14 +11,9 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.swift_version         = '5.0'
   s.source_files = 'Core/Classes/**/*.{h,m,swift}'
+  s.public_header_files = 'Core/Classes/Public/**/*.h'
   s.resource_bundles = {
     'Core' => ['Core/Assets/**/*.{xcassets,lproj,png}']
   }
-  # s.resources = [
-  #   'Core/Static/CoreModule.bundle'
-  # ]
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.static_framework = true
   s.dependency 'FWFramework/FWFramework'
 end
