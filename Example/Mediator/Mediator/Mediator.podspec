@@ -13,8 +13,11 @@ Pod::Spec.new do |s|
   s.source_files = 'Mediator/Classes/**/*'
   s.public_header_files = 'Mediator/Classes/Public/**/*.h'
   # s.resource_bundles = {
-  #   'Mediator' => ['Mediator/Assets/*.png']
+  #   'Mediator' => ['Mediator/Assets/*.*']
   # }
+  # s.resources = [
+  #   'Mediator/Static/Mediator.bundle'
+  # ]
   # s.frameworks = 'UIKit', 'MapKit'
   # s.static_framework = true
   s.dependency 'FWFramework/FWFramework'

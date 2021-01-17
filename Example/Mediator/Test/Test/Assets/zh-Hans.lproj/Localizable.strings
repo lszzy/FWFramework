@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  Example
+
+  Created by wuyong on 2018/9/20.
+  Copyright © 2018年 wuyong.site. All rights reserved.
+*/
+
+"完成" = "完成";
+"关闭" = "关闭";
+"确定" = "确定";
+"取消" = "取消";
+
+"mediatorLogin" = "登录";
+"mediatorLogout" = "退出登录";
+"homeTitle" = "首页";
+"testTitle" = "测试";
+"settingTitle" = "设置";
+"debugButton" = "调试";
+"languageTitle" = "多语言";
+"changeTitle" = "切换";
+"themeTitle" = "主题";
+"systemTitle" = "系统";
+"themeLight" = "浅色";
+"themeDark" = "深色";
+"welcomeTitle" = "你知道我在等你吗？";
+"backTitle" = "欢迎回来，亲";
+"logoutConfirm" = "确定要退出当前账号吗?";
