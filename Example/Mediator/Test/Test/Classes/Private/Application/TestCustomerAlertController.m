@@ -38,7 +38,7 @@
     NSArray *images = @[@"public_icon",@"public_icon",@"public_icon",@"public_icon",@"public_icon",@"public_icon",@"public_icon",@"public_icon",@"public_icon",@"public_icon"];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
-    scrollView.backgroundColor = [UIColor colorWithRed:244.0/255.0 green:244.0/255.0 blue:244.0/255.0 alpha:1];
+    scrollView.backgroundColor = [Theme backgroundColor];
     scrollView.showsVerticalScrollIndicator = NO;
     [self addSubview:scrollView];
     _scrollView = scrollView;
@@ -46,7 +46,7 @@
     for (int i = 0; i < images.count; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.image = [TestBundle imageNamed:images[i]];
-        imageView.backgroundColor = [UIColor redColor];
+        imageView.backgroundColor = [Theme cellColor];
         [scrollView addSubview:imageView];
         [self.imageViews addObject:imageView];
     }
@@ -165,7 +165,7 @@
         _pickerView = [[UIPickerView alloc] init];
         _pickerView.delegate = self;
         _pickerView.dataSource = self;
-        _pickerView.backgroundColor = [UIColor colorWithRed:239.0/255.0 green:239.0/255.0 blue:244.0/255.0 alpha:1];
+        _pickerView.backgroundColor = [Theme backgroundColor];
     }
     return _pickerView;
 }
@@ -183,7 +183,7 @@
         UIBarButtonItem *flexibleBBI = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         _toolbar = [[UIToolbar alloc] init];
         // 设置tollbar的背景色
-        _toolbar.barTintColor = [UIColor whiteColor];
+        _toolbar.barTintColor = [Theme cellColor];
         NSArray *toolbarItems = [NSArray arrayWithObjects:cancelBBI, flexibleBBI, doneBBI, nil];
         [_toolbar setItems:toolbarItems];
     }
@@ -284,7 +284,7 @@ IB_DESIGNABLE
     if ([super backgroundColor]) {
         return [super backgroundColor];
     } else {
-        return self.isOpaque ? [UIColor whiteColor] : [UIColor clearColor];
+        return self.isOpaque ? [Theme backgroundColor] : [UIColor clearColor];
     };
 }
 

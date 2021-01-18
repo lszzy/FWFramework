@@ -45,7 +45,7 @@
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont fwFontOfSize:15];
-        titleLabel.textColor = [UIColor blackColor];
+        titleLabel.textColor = [Theme textColor];
         self.myTitleLabel = titleLabel;
         [self.contentView addSubview:titleLabel]; {
             [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
@@ -58,7 +58,7 @@
         UILabel *textLabel = [UILabel fwAutoLayoutView];
         textLabel.numberOfLines = 0;
         textLabel.font = [UIFont fwFontOfSize:13];
-        textLabel.textColor = [UIColor blackColor];
+        textLabel.textColor = [Theme textColor];
         self.myTextLabel = textLabel;
         [self.contentView addSubview:textLabel]; {
             [textLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
