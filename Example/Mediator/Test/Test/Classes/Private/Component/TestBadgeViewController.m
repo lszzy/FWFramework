@@ -31,7 +31,7 @@
     [rightItem fwShowBadgeView:badgeView badgeValue:@"1"];
     
     UIButton *customView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    customView.backgroundColor = [UIColor grayColor];
+    customView.backgroundColor = [Theme textColor];
     UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:customView target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [customItem fwShowBadgeView:badgeView badgeValue:@"1"];
@@ -59,43 +59,43 @@
 - (void)renderView
 {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
     [view fwShowBadgeView:badgeView badgeValue:nil];
     [self.view addSubview:view];
     
     view = [[UIView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [view fwShowBadgeView:badgeView badgeValue:@"9"];
     [self.view addSubview:view];
     
     view = [[UIView alloc] initWithFrame:CGRectMake(90, 90, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [view fwShowBadgeView:badgeView badgeValue:@"99"];
     [self.view addSubview:view];
     
     view = [[UIView alloc] initWithFrame:CGRectMake(160, 90, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [view fwShowBadgeView:badgeView badgeValue:@"99+"];
     [self.view addSubview:view];
     
     view = [[UIView alloc] initWithFrame:CGRectMake(20, 160, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleBig];
     [view fwShowBadgeView:badgeView badgeValue:@"9"];
     [self.view addSubview:view];
     
     view = [[UIView alloc] initWithFrame:CGRectMake(90, 160, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleBig];
     [view fwShowBadgeView:badgeView badgeValue:@"99"];
     [self.view addSubview:view];
     
     view = [[UIView alloc] initWithFrame:CGRectMake(160, 160, 50, 50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [Theme textColor];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleBig];
     [view fwShowBadgeView:badgeView badgeValue:@"99+"];
     [self.view addSubview:view];

@@ -72,16 +72,19 @@
     topLabel.textAlignment = NSTextAlignmentCenter;
     topLabel.text = @"I am top";
     topLabel.numberOfLines = 0;
+    topLabel.textColor = [UIColor blackColor];
     [contentView addSubview:topLabel];
     UILabel *middleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 975, self.view.fwWidth, 50)];
     middleLabel.textAlignment = NSTextAlignmentCenter;
     middleLabel.text = @"I am middle";
     middleLabel.numberOfLines = 0;
+    middleLabel.textColor = [UIColor blackColor];
     [contentView addSubview:middleLabel];
     UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 1950, self.view.fwWidth, 50)];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
     bottomLabel.text = @"I am bottom";
     bottomLabel.numberOfLines = 0;
+    bottomLabel.textColor = [UIColor blackColor];
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
@@ -130,16 +133,19 @@
     topLabel.textAlignment = NSTextAlignmentCenter;
     topLabel.text = @"I am top";
     topLabel.numberOfLines = 0;
+    topLabel.textColor = [UIColor whiteColor];
     [contentView addSubview:topLabel];
     UILabel *middleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 975, self.view.fwWidth, 50)];
     middleLabel.textAlignment = NSTextAlignmentCenter;
     middleLabel.text = @"I am middle";
     middleLabel.numberOfLines = 0;
+    middleLabel.textColor = [UIColor whiteColor];
     [contentView addSubview:middleLabel];
     UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 50)];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
     bottomLabel.text = @"I am bottom";
     bottomLabel.numberOfLines = 0;
+    bottomLabel.textColor = [UIColor whiteColor];
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
@@ -175,16 +181,19 @@
     topLabel.textAlignment = NSTextAlignmentCenter;
     topLabel.text = @"I am top";
     topLabel.numberOfLines = 0;
+    topLabel.textColor = [UIColor whiteColor];
     [contentView addSubview:topLabel];
     UILabel *middleLabel = [[UILabel alloc] initWithFrame:CGRectMake(975, 0, 50, ViewHeight)];
     middleLabel.textAlignment = NSTextAlignmentCenter;
     middleLabel.text = @"I am middle";
     middleLabel.numberOfLines = 0;
+    middleLabel.textColor = [UIColor whiteColor];
     [contentView addSubview:middleLabel];
     UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(1950, 0, 50, ViewHeight)];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
     bottomLabel.text = @"I am bottom";
     bottomLabel.numberOfLines = 0;
+    bottomLabel.textColor = [UIColor whiteColor];
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     
@@ -220,16 +229,19 @@
     topLabel.textAlignment = NSTextAlignmentCenter;
     topLabel.text = @"I am top";
     topLabel.numberOfLines = 0;
+    topLabel.textColor = [UIColor blackColor];
     [contentView addSubview:topLabel];
     UILabel *middleLabel = [[UILabel alloc] initWithFrame:CGRectMake(975, 0, 50, ViewHeight)];
     middleLabel.textAlignment = NSTextAlignmentCenter;
     middleLabel.text = @"I am middle";
     middleLabel.numberOfLines = 0;
+    middleLabel.textColor = [UIColor blackColor];
     [contentView addSubview:middleLabel];
     UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, ViewHeight)];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
     bottomLabel.text = @"I am bottom";
     bottomLabel.numberOfLines = 0;
+    bottomLabel.textColor = [UIColor blackColor];
     [contentView addSubview:bottomLabel];
     [scrollView addSubview:contentView];
     

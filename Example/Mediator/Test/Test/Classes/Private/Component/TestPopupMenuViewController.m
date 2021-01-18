@@ -46,16 +46,16 @@
     
     UITextField *textField = [UITextField new];
     textField.placeholder = @"我是输入框";
-    textField.textColor = [UIColor blackColor];
-    [textField fwSetBorderColor:[UIColor fwColorWithHex:0xDDDDDD] width:0.5 cornerRadius:5];
+    textField.textColor = [Theme textColor];
+    [textField fwSetBorderColor:[Theme borderColor] width:0.5 cornerRadius:5];
     _textField = textField;
     textField.delegate = self;
     [self.view addSubview:textField];
     textField.fwLayoutChain.leftWithInset(50).rightWithInset(50).topWithInset(200).height(45);
     
-    UILabel *customLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:16] textColor:[UIColor blackColor] text:@"我是自定义标签"];
+    UILabel *customLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:16] textColor:[Theme textColor] text:@"我是自定义标签"];
     _customCellView = customLabel;
-    customLabel.backgroundColor = [Theme backgroundColor];
+    customLabel.backgroundColor = [Theme cellColor];
     [self.view addSubview:customLabel];
     customLabel.fwLayoutChain.centerX().topToBottomOfViewWithOffset(textField, 50).size(CGSizeMake(200, 50));
     

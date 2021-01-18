@@ -29,7 +29,7 @@
 
 - (void)renderView
 {
-    self.view.backgroundColor = [UIColor fwColorWithHex:0xF5F5F5];
+    self.view.backgroundColor = [Theme tableColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor clearColor];
 }
@@ -69,12 +69,12 @@
     cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
     
     if (indexPath.section % 2 == 0) {
-        cell.fwBackgroundView.contentView.backgroundColor = [UIColor whiteColor];
+        cell.fwBackgroundView.contentView.backgroundColor = [Theme cellColor];
         cell.fwBackgroundView.contentView.layer.cornerRadius = 10;
         [cell.fwBackgroundView.contentView fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:10];
         cell.fwBackgroundView.contentInset = UIEdgeInsetsMake(15, 15, 15, 15);
     } else {
-        cell.fwBackgroundView.contentView.backgroundColor = [UIColor whiteColor];
+        cell.fwBackgroundView.contentView.backgroundColor = [Theme cellColor];
         cell.fwBackgroundView.contentView.layer.cornerRadius = 10;
         [cell.fwBackgroundView.contentView fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:10];
         [cell.fwBackgroundView setSectionContentInset:UIEdgeInsetsMake(15, 15, 15, 15) tableView:self.tableView atIndexPath:indexPath];

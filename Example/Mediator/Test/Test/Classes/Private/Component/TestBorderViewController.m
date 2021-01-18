@@ -16,7 +16,7 @@
 
 - (void)renderView
 {
-    UIColor *bgColor = [UIColor fwColorWithHex:0xFFDA00];
+    UIColor *bgColor = [UIColor yellowColor];
     
     // All
     UIView *frameView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];

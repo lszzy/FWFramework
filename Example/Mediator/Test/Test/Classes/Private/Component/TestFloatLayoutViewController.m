@@ -23,7 +23,7 @@
     self.floatLayoutView.itemMargins = UIEdgeInsetsMake(10, 10, 10, 10);
     self.floatLayoutView.minimumItemSize = CGSizeMake(69, 29);// 以2个字的按钮作为最小宽度
     self.floatLayoutView.layer.borderWidth = 0.5;
-    self.floatLayoutView.layer.borderColor = [UIColor fwColorWithHex:0xEEEEEE].CGColor;
+    self.floatLayoutView.layer.borderColor = [Theme textColor].CGColor;
     [self.view addSubview:self.floatLayoutView];
     self.floatLayoutView.fwLayoutChain.leftWithInset(24).rightWithInset(24).topWithInset(36);
     
@@ -31,17 +31,17 @@
     for (NSInteger i = 0; i < suggestions.count; i++) {
         if (i < 3) {
             UILabel *label = [[UILabel alloc] init];
-            label.textColor = [UIColor blackColor];
+            label.textColor = Theme.textColor;
             label.numberOfLines = 0;
             label.text = suggestions[i];
             label.font = FWFontRegular(14);
-            [label fwSetBorderColor:[UIColor fwColorWithHex:0xEEEEEE] width:0.5 cornerRadius:10];
+            [label fwSetBorderColor:[Theme textColor] width:0.5 cornerRadius:10];
             label.fwContentInset = UIEdgeInsetsMake(6, 20, 6, 20);
             [self.floatLayoutView addSubview:label];
         } else {
             UIButton *button = [[UIButton alloc] init];
-            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [button fwSetBorderColor:[UIColor fwColorWithHex:0xEEEEEE] width:0.5 cornerRadius:10];
+            [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
+            [button fwSetBorderColor:[Theme textColor] width:0.5 cornerRadius:10];
             [button setTitle:suggestions[i] forState:UIControlStateNormal];
             button.titleLabel.font = FWFontRegular(14);
             button.titleLabel.numberOfLines = 0;

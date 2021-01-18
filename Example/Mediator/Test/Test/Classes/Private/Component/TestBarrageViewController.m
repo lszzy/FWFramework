@@ -514,13 +514,13 @@
 //    self.barrageManager.renderView.center = self.view.center;
     self.barrageManager.renderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [Theme backgroundColor];
     
     CGFloat originY = CGRectGetHeight(self.view.frame) - 50.0;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:@"开始" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(startBarrage) forControlEvents:UIControlEventTouchUpInside];
     button.frame= CGRectMake(0.0, originY, 50.0, 50.0);
     button.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
@@ -528,7 +528,7 @@
     
     UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [button2 setTitle:@"暂停" forState:UIControlStateNormal];
-    [button2 setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button2 setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [button2 addTarget:self action:@selector(pasueBarrage) forControlEvents:UIControlEventTouchUpInside];
     button2.frame= CGRectMake(55.0, originY, 50.0, 50.0);
     button2.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
@@ -536,7 +536,7 @@
     
     UIButton *button3 = [UIButton buttonWithType:UIButtonTypeCustom];
     [button3 setTitle:@"继续" forState:UIControlStateNormal];
-    [button3 setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button3 setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [button3 addTarget:self action:@selector(resumeBarrage) forControlEvents:UIControlEventTouchUpInside];
     button3.frame= CGRectMake(110.0, originY, 50.0, 50.0);
     button3.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
@@ -544,7 +544,7 @@
     
     UIButton *button4 = [UIButton buttonWithType:UIButtonTypeCustom];
     [button4 setTitle:@"停止" forState:UIControlStateNormal];
-    [button4 setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button4 setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [button4 addTarget:self action:@selector(stopBarrage) forControlEvents:UIControlEventTouchUpInside];
     button4.frame= CGRectMake(165.0, originY, 50.0, 50.0);
     button4.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
@@ -578,10 +578,10 @@
     
     FWBarrageTextDescriptor *textDescriptor = [[FWBarrageTextDescriptor alloc] init];
     textDescriptor.text = [NSString stringWithFormat:@"~FWBarrage~"];
-    textDescriptor.textColor = [UIColor grayColor];
+    textDescriptor.textColor = [Theme textColor];
     textDescriptor.positionPriority = FWBarragePositionLow;
     textDescriptor.textFont = [UIFont systemFontOfSize:17.0];
-    textDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    textDescriptor.strokeColor = [[Theme textColor] colorWithAlphaComponent:0.3];
     textDescriptor.strokeWidth = -1;
     textDescriptor.animationDuration = arc4random()%5 + 5;
     textDescriptor.barrageCellClass = [FWBarrageTextCell class];
@@ -594,10 +594,10 @@
 - (void)addFixedSpeedAnimationCell {
     FWBarrageGradientBackgroundColorDescriptor *gradientBackgroundDescriptor = [[FWBarrageGradientBackgroundColorDescriptor alloc] init];
     gradientBackgroundDescriptor.text = [NSString stringWithFormat:@"~等速弹幕~"];
-    gradientBackgroundDescriptor.textColor = [UIColor whiteColor];
+    gradientBackgroundDescriptor.textColor = [Theme textColor];
     gradientBackgroundDescriptor.positionPriority = FWBarragePositionLow;
     gradientBackgroundDescriptor.textFont = [UIFont systemFontOfSize:17.0];
-    gradientBackgroundDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    gradientBackgroundDescriptor.strokeColor = [[Theme textColor] colorWithAlphaComponent:0.3];
     gradientBackgroundDescriptor.strokeWidth = -1;
     gradientBackgroundDescriptor.fixedSpeed = 50.0;//用fixedSpeed属性设定速度
     gradientBackgroundDescriptor.barrageCellClass = [FWBarrageGradientBackgroundColorCell class];
@@ -621,10 +621,10 @@
     };
     
     bannerDescriptor.text = [NSString stringWithFormat:@"~欢迎全民超人大驾光临~"];
-    bannerDescriptor.textColor = [UIColor fwRandomColor];
+    bannerDescriptor.textColor = [Theme textColor];
     bannerDescriptor.textFont = [UIFont systemFontOfSize:17.0];
     bannerDescriptor.positionPriority = FWBarragePositionMiddle;
-    bannerDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    bannerDescriptor.strokeColor = [[Theme textColor] colorWithAlphaComponent:0.3];
     bannerDescriptor.strokeWidth = -1;
     bannerDescriptor.animationDuration = arc4random()%5 + 5;
     bannerDescriptor.barrageCellClass = [FWBarrageWalkBannerCell class];
@@ -636,7 +636,7 @@
 - (void)addStopoverBarrage {
     FWBarrageBecomeNobleDescriptor *becomeNobleDescriptor = [[FWBarrageBecomeNobleDescriptor alloc] init];
     NSMutableAttributedString *mAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"~FWBarrage~全民直播~荣誉出品~"]];
-    [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, mAttributedString.length)];
+    [mAttributedString addAttribute:NSForegroundColorAttributeName value:[Theme textColor] range:NSMakeRange(0, mAttributedString.length)];
     [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor greenColor] range:NSMakeRange(1, 9)];
     [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor cyanColor] range:NSMakeRange(11, 4)];
     [mAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(16, 4)];
@@ -664,10 +664,10 @@
 - (void)addVerticalAnimationCell {
     FWBarrageVerticalTextDescriptor *verticalTextDescriptor = [[FWBarrageVerticalTextDescriptor alloc] init];
     verticalTextDescriptor.text = [NSString stringWithFormat:@"~从上往下的动画~"];
-    verticalTextDescriptor.textColor = [UIColor grayColor];
+    verticalTextDescriptor.textColor = [Theme textColor];
     verticalTextDescriptor.positionPriority = FWBarragePositionLow;
     verticalTextDescriptor.textFont = [UIFont systemFontOfSize:17.0];
-    verticalTextDescriptor.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    verticalTextDescriptor.strokeColor = [[Theme textColor] colorWithAlphaComponent:0.3];
     verticalTextDescriptor.strokeWidth = -1;
     verticalTextDescriptor.animationDuration = 5;
     verticalTextDescriptor.barrageCellClass = [FWBarrageVerticalAnimationCell class];
