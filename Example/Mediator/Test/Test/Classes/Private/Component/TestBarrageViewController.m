@@ -680,7 +680,7 @@
 - (void)addGifBarrage {
     FWBarrageGifDescriptor *gifDescriptor = [[FWBarrageGifDescriptor alloc] init];
     
-    UIImage *image = FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]);
+    UIImage *image = [UIImage fwImageWithFile:@"test.gif" bundle:TestBundle.bundle];
     gifDescriptor.image = image;
     gifDescriptor.positionPriority = FWBarragePositionHigh;
     gifDescriptor.animationDuration = arc4random()%5 + 5;

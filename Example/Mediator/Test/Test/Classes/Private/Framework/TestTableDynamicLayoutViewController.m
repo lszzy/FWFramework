@@ -437,7 +437,7 @@ static BOOL isExpanded = NO;
                                      [TestBundle imageNamed:@"public_icon"],
                                      @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
                                      @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                                     FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]),
+                                     [UIImage fwImageWithFile:@"test.gif" bundle:TestBundle.bundle],
                                      @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
                                      ];
         photoBrowser.longPressBlock = ^(NSInteger index) {
