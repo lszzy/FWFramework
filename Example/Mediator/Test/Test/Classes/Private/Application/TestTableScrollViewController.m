@@ -116,7 +116,7 @@
     [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    pullView.image = [TestBundle imageNamed:@"loading.gif"];
+    pullView.image = FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]);
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];

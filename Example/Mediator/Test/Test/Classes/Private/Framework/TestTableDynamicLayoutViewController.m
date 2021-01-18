@@ -429,15 +429,15 @@ static BOOL isExpanded = NO;
                                      @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
                                      @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
                                      @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-                                     @"public_picture",
+                                     [TestBundle imageNamed:@"public_picture"],
                                      @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
                                      @"http://littlesvr.ca/apng/images/SteamEngine.webp",
                                      @"https://pic3.zhimg.com/b471eb23a_im.jpg",
                                      @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-                                     @"public_icon",
+                                     [TestBundle imageNamed:@"public_icon"],
                                      @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
                                      @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                                     @"loading.gif",
+                                     FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]),
                                      @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
                                      ];
         photoBrowser.longPressBlock = ^(NSInteger index) {
@@ -473,7 +473,7 @@ static BOOL isExpanded = NO;
  }*/
 
 /*
-- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index {
+- (id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index {
     return self.browserImages[index];
 }*/
 

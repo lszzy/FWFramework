@@ -33,7 +33,7 @@
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 4;
-    cycleView.placeholderImage = [TestBundle imageNamed:@"loading"];
+    cycleView.placeholderImage = FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]);
     [self.view addSubview:cycleView];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
