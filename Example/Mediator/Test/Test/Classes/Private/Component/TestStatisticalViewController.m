@@ -21,7 +21,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
+        UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
         _textLabel = textLabel;
         [self.contentView addSubview:textLabel];
         textLabel.fwLayoutChain.center();
@@ -85,14 +85,15 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     
     FWSegmentedControl *segmentedControl = [FWSegmentedControl new];
     self.segmentedControl = segmentedControl;
+    self.segmentedControl.backgroundColor = Theme.cellColor;
     self.segmentedControl.selectedSegmentIndex = 1;
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleBox;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 30, 0, 5);
     self.segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
-    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16]};
-    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:18]};
+    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16], NSForegroundColorAttributeName: Theme.textColor};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:18], NSForegroundColorAttributeName: Theme.textColor};
     [headerView addSubview:self.segmentedControl];
     segmentedControl.fwLayoutChain.leftWithInset(10).rightWithInset(10).topToBottomOfViewWithOffset(testSwitch, 50).height(50);
     
@@ -147,7 +148,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     // 设置遮挡视图
     UIView *shieldView = [UIView new];
     self.shieldView = shieldView;
-    shieldView.backgroundColor = [UIColor whiteColor];
+    shieldView.backgroundColor = [Theme tableColor];
     FWWeakifySelf();
     [shieldView fwAddTapGestureWithBlock:^(UITapGestureRecognizer *sender) {
         FWStrongifySelf();

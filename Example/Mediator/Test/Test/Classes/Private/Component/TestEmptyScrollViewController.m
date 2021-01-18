@@ -41,12 +41,16 @@
 
 - (NSAttributedString *)fwTitleForEmptyView:(UIScrollView *)scrollView
 {
-    return [[NSAttributedString alloc] initWithString:@"暂无数据"];
+    return [[NSAttributedString alloc] initWithString:@"暂无数据" attributes:@{
+        NSForegroundColorAttributeName: UIColor.grayColor
+    }];
 }
 
 - (NSAttributedString *)fwDescriptionForEmptyView:(UIScrollView *)scrollView
 {
-    return [[NSAttributedString alloc] initWithString:@"请稍候再试"];
+    return [[NSAttributedString alloc] initWithString:@"请稍候再试" attributes:@{
+        NSForegroundColorAttributeName: UIColor.grayColor
+    }];
 }
 
 - (UIImage *)fwImageForEmptyView:(UIScrollView *)scrollView
@@ -65,12 +69,14 @@
 
 - (NSAttributedString *)fwButtonTitleForEmptyView:(UIScrollView *)scrollView forState:(UIControlState)state
 {
-    return [[NSAttributedString alloc] initWithString:@"再试一次"];
+    return [[NSAttributedString alloc] initWithString:@"再试一次" attributes:@{
+        NSForegroundColorAttributeName: Theme.textColor
+    }];
 }
 
 - (UIColor *)fwBackgroundColorForEmptyView:(UIScrollView *)scrollView
 {
-    return [UIColor whiteColor];
+    return [Theme backgroundColor];
 }
 
 - (CGFloat)fwVerticalOffsetForEmptyView:(UIScrollView *)scrollView

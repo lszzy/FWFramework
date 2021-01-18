@@ -19,9 +19,9 @@
 
 - (void)renderView
 {
-    UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor fwColorWithHex:0x111111] text:nil];
+    UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
     _label = label;
-    label.backgroundColor = [UIColor grayColor];
+    label.backgroundColor = [Theme cellColor];
     label.numberOfLines = 0;
     [self.view addSubview:label];
     [label fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(15, 15, 15, 15) excludingEdge:NSLayoutAttributeBottom];

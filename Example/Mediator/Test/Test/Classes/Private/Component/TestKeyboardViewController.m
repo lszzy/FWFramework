@@ -166,8 +166,8 @@ FWPropertyAssign(BOOL, canScroll);
 {
     UITextView *textView = [UITextView fwAutoLayoutView];
     textView.font = [UIFont fwFontOfSize:15];
-    textView.textColor = [UIColor blackColor];
-    [textView fwSetBorderColor:[UIColor fwColorWithHex:0xEEEEEE] width:0.5 cornerRadius:5];
+    textView.textColor = [Theme textColor];
+    [textView fwSetBorderColor:[Theme textColor] width:0.5 cornerRadius:5];
     [textView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 15 * 2];
     [textView fwSetDimension:NSLayoutAttributeHeight toSize:100];
     return textView;
@@ -177,9 +177,9 @@ FWPropertyAssign(BOOL, canScroll);
 {
     UITextField *textField = [UITextField fwAutoLayoutView];
     textField.font = [UIFont fwFontOfSize:15];
-    textField.textColor = [UIColor blackColor];
+    textField.textColor = [Theme textColor];
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    [textField fwSetBorderView:UIRectEdgeBottom color:[UIColor fwColorWithHex:0xEEEEEE] width:0.5];
+    [textField fwSetBorderView:UIRectEdgeBottom color:[Theme textColor] width:0.5];
     [textField fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 15 * 2];
     [textField fwSetDimension:NSLayoutAttributeHeight toSize:50];
     return textField;

@@ -35,7 +35,7 @@
 {
     UIImageView *imageView = [UIImageView new];
     _gifImageView = imageView;
-    imageView.backgroundColor = [UIColor grayColor];
+    imageView.backgroundColor = [Theme cellColor];
     [self.view addSubview:imageView];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.layer.masksToBounds = YES;
@@ -64,6 +64,7 @@
     
     CGSize activitySize = CGSizeMake(30, 30);
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityView.color = Theme.textColor;
     [activityView fwSetIndicatorSize:activitySize];
     [activityView startAnimating];
     [self.view addSubview:activityView];
@@ -71,7 +72,7 @@
     [activityView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
     [activityView fwSetDimensionsToSize:activitySize];
     
-    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
+    UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
     textLabel.numberOfLines = 0;
     textLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:textLabel];
@@ -103,8 +104,9 @@
     textLabel.attributedText = attrStr;
     
     FWAttributedLabel *label = [FWAttributedLabel new];
+    label.backgroundColor = Theme.cellColor;
     label.font = [UIFont systemFontOfSize:15];
-    label.textColor = [UIColor fwColorWithHex:0x111111];
+    label.textColor = [Theme textColor];
     label.textAlignment = kCTTextAlignmentCenter;
     [self.view addSubview:label];
     [label fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -137,7 +139,7 @@
         [self.tagCollectionView addTag:tagName withConfig:self.textTagConfig];
     }
     
-    FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontRegular(16) textColor:[UIColor blackColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
+    FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontRegular(16) textColor:[Theme textColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
     [self.view addSubview:marqueeLabel];
     [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
     [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
@@ -150,13 +152,14 @@
     NSArray *sectionTitles = @[@"菜单一", @"菜单二", @"长的菜单三", @"菜单四", @"菜单五", @"菜单六"];
     NSArray *sectionContents = @[@"我是内容一", @"我是内容二", @"我是长的内容三", @"我是内容四", @"我是内容五", @"我是内容六"];
     self.segmentedControl = [[FWSegmentedControl alloc] initWithSectionTitles:@[]];
+    self.segmentedControl.backgroundColor = Theme.cellColor;
     self.segmentedControl.selectionStyle = FWSegmentedControlSelectionStyleTextWidthStripe;
     self.segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.segmentedControl.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleDynamic;
     self.segmentedControl.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationBottom;
     self.segmentedControl.selectionIndicatorCornerRadius = 2.5f;
-    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16]};
-    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:16]};
+    self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16], NSForegroundColorAttributeName: Theme.textColor};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:16], NSForegroundColorAttributeName: Theme.textColor};
     [self.view addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
@@ -194,10 +197,10 @@
 {
     FWTextTagConfig *tagConfig = [[FWTextTagConfig alloc] init];
     tagConfig.textFont = [UIFont systemFontOfSize:10];
-    tagConfig.textColor = [UIColor blackColor];
-    tagConfig.selectedTextColor = [UIColor blackColor];
-    tagConfig.backgroundColor = [Theme backgroundColor];
-    tagConfig.selectedBackgroundColor = [Theme backgroundColor];
+    tagConfig.textColor = [Theme textColor];
+    tagConfig.selectedTextColor = [Theme textColor];
+    tagConfig.backgroundColor = [Theme cellColor];
+    tagConfig.selectedBackgroundColor = [Theme cellColor];
     tagConfig.cornerRadius = 2;
     tagConfig.selectedCornerRadius = 2;
     tagConfig.borderWidth = 1;

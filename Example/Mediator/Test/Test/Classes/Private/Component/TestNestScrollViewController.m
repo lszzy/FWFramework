@@ -30,7 +30,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
+        _textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
         _textLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:_textLabel];
         [_textLabel fwPinEdgesToSuperview];
@@ -41,7 +41,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
-    self.contentView.backgroundColor = selected ? [UIColor whiteColor] : [UIColor grayColor];
+    self.contentView.backgroundColor = selected ? [UIColor grayColor] : [Theme cellColor];
 }
 
 @end
@@ -195,9 +195,9 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *view = [UIView new];
-    view.backgroundColor = [UIColor whiteColor];
+    view.backgroundColor = [Theme cellColor];
     
-    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:[NSString stringWithFormat:@"Header%@", @(section)]];
+    UILabel *headerLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:[NSString stringWithFormat:@"Header%@", @(section)]];
     headerLabel.frame = CGRectMake(0, 0, FWScreenWidth, ItemViewHeight);
     [view addSubview:headerLabel];
     return view;
@@ -321,6 +321,9 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     self.headerView.image = [TestBundle imageNamed:@"public_picture"];
     
     self.segmentedControl = [FWSegmentedControl new];
+    self.segmentedControl.backgroundColor = Theme.cellColor;
+    self.segmentedControl.titleTextAttributes = @{NSForegroundColorAttributeName: Theme.textColor};
+    self.segmentedControl.selectedTitleTextAttributes = @{NSForegroundColorAttributeName: Theme.textColor};
     self.segmentedControl.sectionTitles = @[@"下单", @"评价", @"商家"];
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
@@ -399,14 +402,14 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     // 导航栏透明度
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
     if (progress >= 1) {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[UIColor whiteColor]];
-        [self.navigationController.navigationBar fwSetTextColor:[UIColor fwColorWithHex:0x111111]];
+        [self.navigationController.navigationBar fwSetBackgroundColor:[Theme barColor]];
+        [self.navigationController.navigationBar fwSetTextColor:[Theme textColor]];
     } else if (progress >= 0 && progress < 1) {
-        [self.navigationController.navigationBar fwSetBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:progress]];
+        [self.navigationController.navigationBar fwSetBackgroundColor:[[Theme barColor] colorWithAlphaComponent:progress]];
         if (progress <= 0.5) {
-            [self.navigationController.navigationBar fwSetTextColor:[[UIColor whiteColor] colorWithAlphaComponent:1 - progress]];
+            [self.navigationController.navigationBar fwSetTextColor:[[Theme textColor] colorWithAlphaComponent:1 - progress]];
         } else {
-            [self.navigationController.navigationBar fwSetTextColor:[[UIColor fwColorWithHex:0x111111] colorWithAlphaComponent:progress]];
+            [self.navigationController.navigationBar fwSetTextColor:[[Theme textColor] colorWithAlphaComponent:progress]];
         }
     }
 }

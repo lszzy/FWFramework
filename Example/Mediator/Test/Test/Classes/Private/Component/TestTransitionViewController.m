@@ -46,22 +46,22 @@
     cycleView.titlesGroup = @[@"1", @"2", @"3", @"4"];
     
     UIView *footerView = [UIView fwAutoLayoutView];
-    footerView.backgroundColor = [UIColor whiteColor];
+    footerView.backgroundColor = [Theme tableColor];
     [self.contentView addSubview:footerView];
     footerView.fwLayoutChain.left().bottom().topToBottomOfView(cycleView).width(FWScreenWidth).height(1000);
     
     UILabel *frameLabel = [[UILabel alloc] init];
     _frameLabel = frameLabel;
-    frameLabel.textColor = [UIColor blackColor];
+    frameLabel.textColor = [Theme textColor];
     frameLabel.text = NSStringFromCGRect(self.view.frame);
     [footerView addSubview:frameLabel];
     frameLabel.fwLayoutChain.centerX().topWithInset(50);
     
     // 添加视图
     UIButton *button = [UIButton fwAutoLayoutView];
-    button.backgroundColor = [UIColor whiteColor];
+    button.backgroundColor = [Theme cellColor];
     button.titleLabel.font = [UIFont fwFontOfSize:15];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [button setTitle:@"点击背景关闭" forState:UIControlStateNormal];
     [footerView addSubview:button];
     [button fwSetDimensionsToSize:CGSizeMake(200, 100)];
@@ -86,7 +86,7 @@
     }];
     
     // 设置背景(present时透明，push时不透明)
-    self.view.backgroundColor = self.navigationController ? [UIColor blackColor] : [[UIColor blackColor] colorWithAlphaComponent:0.9];
+    self.view.backgroundColor = self.navigationController ? [Theme tableColor] : [[Theme tableColor] colorWithAlphaComponent:0.9];
     
     // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
     [self.view fwAddTapGestureWithBlock:^(id sender) {
@@ -153,7 +153,7 @@ FWDealloc();
     // 方式2：不指定presentedFrame，背景手势不生效，自己添加手势和圆角即可
     UIView *contentView = [UIView fwAutoLayoutView];
     _contentView = contentView;
-    contentView.backgroundColor = UIColor.whiteColor;
+    contentView.backgroundColor = Theme.cellColor;
     [self.view addSubview:contentView];
     contentView.fwLayoutChain.center();
     
@@ -229,7 +229,7 @@ FWDealloc();
     _contentView = contentView;
     contentView.layer.masksToBounds = YES;
     contentView.layer.cornerRadius = 10;
-    contentView.backgroundColor = UIColor.whiteColor;
+    contentView.backgroundColor = Theme.cellColor;
     [self.view addSubview:contentView];
     contentView.fwLayoutChain.center();
     
@@ -238,7 +238,7 @@ FWDealloc();
     childView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
     
     FWWeakifySelf();
-    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    self.view.backgroundColor = [[Theme backgroundColor] colorWithAlphaComponent:0.5];
     [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self dismiss];

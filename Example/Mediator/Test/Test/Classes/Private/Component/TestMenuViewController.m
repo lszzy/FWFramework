@@ -47,7 +47,7 @@
 
 - (void)renderView
 {
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [Theme tableColor];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(-FWScreenWidth / 2.0, 0, FWScreenWidth / 2.0, self.view.fwHeight)];
     _contentView = contentView;

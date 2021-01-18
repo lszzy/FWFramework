@@ -48,7 +48,7 @@
         self.backgroundColor = [Theme backgroundColor];
         
         UIView *bgView = [UIView fwAutoLayoutView];
-        bgView.backgroundColor = [UIColor whiteColor];
+        bgView.backgroundColor = [Theme cellColor];
         bgView.layer.masksToBounds = NO;
         bgView.layer.cornerRadius = 10;
         [bgView fwSetShadowColor:[UIColor grayColor] offset:CGSizeMake(0, 0) radius:5];
@@ -64,7 +64,7 @@
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont fwFontOfSize:15];
-        titleLabel.textColor = [UIColor blackColor];
+        titleLabel.textColor = [Theme textColor];
         self.myTitleLabel = titleLabel;
         [bgView addSubview:titleLabel]; {
             [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
@@ -77,7 +77,7 @@
         UILabel *textLabel = [UILabel fwAutoLayoutView];
         textLabel.numberOfLines = 0;
         textLabel.font = [UIFont fwFontOfSize:13];
-        textLabel.textColor = [UIColor blackColor];
+        textLabel.textColor = [Theme textColor];
         self.myTextLabel = textLabel;
         [bgView addSubview:textLabel]; {
             [textLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
@@ -398,7 +398,7 @@
         button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = 101;
         [button setTitle:@"保存" forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
         [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
         // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
         [photoView addSubview:button];

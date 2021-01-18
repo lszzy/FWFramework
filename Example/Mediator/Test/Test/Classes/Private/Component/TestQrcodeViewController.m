@@ -26,7 +26,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor blackColor];
     self.navigationItem.title = @"扫一扫";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStyleDone target:self action:@selector(onPhotoLibrary)];
     
@@ -95,7 +94,7 @@
         CGFloat tipLabelY = 0.5 * QrcodeViewHeight + 0.35 * self.view.frame.size.width + 12;
         _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, tipLabelY, FWScreenWidth, 20)];
         _promptLabel.font = [UIFont systemFontOfSize:13];
-        _promptLabel.textColor = [UIColor whiteColor];
+        _promptLabel.textColor = [Theme textColor];
         _promptLabel.textAlignment = NSTextAlignmentCenter;
         _promptLabel.text = @"将二维码/条码放入框内, 即可自动扫描";
     }

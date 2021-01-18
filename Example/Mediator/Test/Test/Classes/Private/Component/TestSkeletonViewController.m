@@ -30,7 +30,7 @@
         [self.contentView addSubview:iconView];
         iconView.fwLayoutChain.topWithInset(20).leftWithInset(20).size(CGSizeMake(50, 50));
         
-        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:@"我是文本"];
+        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"我是文本"];
         _iconLabel = iconLabel;
         [self.contentView addSubview:iconLabel];
         iconLabel.fwLayoutChain.centerY().rightWithInset(20).leftToRightOfViewWithOffset(iconView, 20);
@@ -68,7 +68,7 @@
         [self.contentView addSubview:iconView];
         iconView.fwLayoutChain.topWithInset(20).leftWithInset(20).size(CGSizeMake(20, 20));
         
-        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:@"我是头视图"];
+        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"我是头视图"];
         _iconLabel = iconLabel;
         [self.contentView addSubview:iconLabel];
         iconLabel.fwLayoutChain.rightWithInset(20).centerYToView(iconView).leftToRightOfViewWithOffset(iconView, 20);
@@ -106,7 +106,7 @@
         [self.contentView addSubview:iconView];
         iconView.fwLayoutChain.topWithInset(20).leftWithInset(20).size(CGSizeMake(20, 20));
         
-        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:@"我是尾视图"];
+        UILabel *iconLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"我是尾视图"];
         _iconLabel = iconLabel;
         [self.contentView addSubview:iconLabel];
         iconLabel.fwLayoutChain.rightWithInset(20).centerYToView(iconView).leftToRightOfViewWithOffset(iconView, 20);
@@ -153,7 +153,7 @@
         
         UIView *childView = [UIView new];
         _childView = childView;
-        childView.backgroundColor = [UIColor blueColor];
+        childView.backgroundColor = [UIColor yellowColor];
         [rightView addSubview:childView];
         childView.fwLayoutChain.edgesWithInsets(UIEdgeInsetsMake(10, 10, 10, 10));
         
@@ -167,7 +167,7 @@
             .topToBottomOfViewWithOffset(testView, 20).size(CGSizeMake(50, 50));
         
         UIView *childView2 = [UIView new];
-        childView2.backgroundColor = [UIColor blueColor];
+        childView2.backgroundColor = [UIColor yellowColor];
         [self addSubview:childView2];
         childView2.fwLayoutChain.centerXToView(childView)
             .centerYToView(imageView).sizeToView(childView)
@@ -195,7 +195,7 @@
     if (self) {
         UILabel *label1 = [UILabel new];
         _label1 = label1;
-        label1.textColor = [UIColor blueColor];
+        label1.textColor = [Theme textColor];
         label1.text = @"我是Label1";
         [self addSubview:label1];
         label1.fwLayoutChain.leftWithInset(20).topWithInset(20);
@@ -203,7 +203,7 @@
         UILabel *label2 = [UILabel new];
         _label2 = label2;
         label2.font = [UIFont systemFontOfSize:12];
-        label2.textColor = [UIColor blueColor];
+        label2.textColor = [Theme textColor];
         label2.numberOfLines = 0;
         label2.text = @"我是Label2222222222\n我是Label22222\n我是Label2";
         [self addSubview:label2];
@@ -213,7 +213,7 @@
         UITextView *textView1 = [UITextView new];
         _textView1 = textView1;
         textView1.editable = NO;
-        textView1.textColor = [UIColor blueColor];
+        textView1.textColor = [Theme textColor];
         textView1.text = @"我是TextView1";
         [self addSubview:textView1];
         textView1.fwLayoutChain.leftWithInset(20)
@@ -224,7 +224,7 @@
         _textView2 = textView2;
         textView2.font = [UIFont systemFontOfSize:12];
         textView2.editable = NO;
-        textView2.textColor = [UIColor blueColor];
+        textView2.textColor = [Theme textColor];
         textView2.text = @"我是TextView2222\n我是TextView2\n我是TextView";
         [self addSubview:textView2];
         textView2.fwLayoutChain.rightWithInset(20)
