@@ -68,7 +68,7 @@
 {
     if (!_scanView) {
         _scanView = [[FWQrcodeScanView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, QrcodeViewHeight)];
-        _scanView.scanImageName = @"qrcode_line";
+        _scanView.scanImageName = [TestBundle imageNamed:@"qrcode_line"];
     }
     return _scanView;
 }

@@ -547,7 +547,13 @@
 {
     if (!_scanningline) {
         _scanningline = [[UIImageView alloc] init];
-        _scanningline.image = self.scanImageName ? [UIImage imageNamed:self.scanImageName] : nil;
+        if ([self.scanImageName isKindOfClass:[UIImage class]]) {
+            _scanningline.image = (UIImage *)self.scanImageName;
+        } else if ([self.scanImageName isKindOfClass:[NSString class]]) {
+            _scanningline.image = [UIImage imageNamed:self.scanImageName];
+        } else {
+            _scanningline.image = nil;
+        }
     }
     return _scanningline;
 }
