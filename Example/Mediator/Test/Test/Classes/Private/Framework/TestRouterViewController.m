@@ -167,7 +167,6 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
     
     UILabel *label = [UILabel fwAutoLayoutView];
     label.numberOfLines = 0;

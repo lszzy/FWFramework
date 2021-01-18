@@ -21,6 +21,7 @@
 
 - (void)renderData
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                          @[[@"NSNull" stringByAppendingString:FWIsDebug ? @"(Debug)" : @"(Release)"], @"onNull"],
                                          @[@"NSNumber", @"onNumber"],

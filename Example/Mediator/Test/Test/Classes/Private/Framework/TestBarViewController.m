@@ -98,7 +98,7 @@ FWPropertyAssign(BOOL, hideToast);
     UILabel *frameLabel = [UILabel fwAutoLayoutView];
     self.frameLabel = frameLabel;
     frameLabel.numberOfLines = 0;
-    frameLabel.textColor = [UIColor blackColor];
+    frameLabel.textColor = [Theme textColor];
     frameLabel.font = [UIFont fwFontOfSize:15];
     frameLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:frameLabel]; {
@@ -113,6 +113,7 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)renderTableLayout
 {
+    self.tableView.backgroundColor = [Theme tableColor];
     [self.tableView fwPinEdgesToSuperviewSafeArea];
 }
 
