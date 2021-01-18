@@ -51,7 +51,7 @@
     [self.view addSubview:colorView];
     
     colorView = [[UIView alloc] initWithFrame:CGRectMake(160, 20, 50, 50)];
-    colorView.backgroundColor = [UIColor fwThemeNamed:@"theme_color"];
+    colorView.backgroundColor = [UIColor fwThemeNamed:@"theme_color" bundle:TestBundle.bundle];
     [self.view addSubview:colorView];
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
@@ -69,7 +69,7 @@
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 90, 50, 50)];
-    imageView.image = [UIImage fwThemeNamed:@"theme_image"];
+    imageView.image = [UIImage fwThemeNamed:@"theme_image" bundle:TestBundle.bundle];
     [self.view addSubview:imageView];
     
     CALayer *layer = [CALayer new];
@@ -93,7 +93,7 @@
     CAGradientLayer *gradientLayer = [CAGradientLayer new];
     gradientLayer.frame = CGRectMake(160, 160, 50, 50);
     gradientLayer.fwThemeContext = self;
-    gradientLayer.fwThemeColors = @[[UIColor fwThemeNamed:@"theme_color"], [UIColor fwThemeNamed:@"theme_color"]];
+    gradientLayer.fwThemeColors = @[[UIColor fwThemeNamed:@"theme_color" bundle:TestBundle.bundle], [UIColor fwThemeNamed:@"theme_color" bundle:TestBundle.bundle]];
     [self.view.layer addSublayer:gradientLayer];
     
     layer = [CALayer new];
@@ -117,7 +117,7 @@
     layer = [CALayer new];
     layer.frame = CGRectMake(160, 230, 50, 50);
     layer.fwThemeContext = self.view;
-    layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image"];
+    layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image" bundle:TestBundle.bundle];
     [self.view.layer addSublayer:layer];
     
     UILabel *themeLabel = [UILabel new];

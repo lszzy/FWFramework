@@ -159,16 +159,24 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeNamed:(NSString *)name
 {
+    return [self fwThemeNamed:name bundle:nil];
+}
+
++ (UIColor *)fwThemeNamed:(NSString *)name bundle:(NSBundle *)bundle
+{
     return [self fwThemeColor:^UIColor *(FWThemeStyle style) {
         UIColor *color = nil;
         if (@available(iOS 13, *)) {
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
-            color = [[UIColor colorNamed:name] resolvedColorWithTraitCollection:traitCollection];
+            color = bundle ? [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIColor colorNamed:name];
+            color = [color resolvedColorWithTraitCollection:traitCollection];
         }
         if (!color) {
             color = fwStaticNameColors[name];
             if (!color) {
-                if (@available(iOS 11.0, *)) { color = [UIColor colorNamed:name]; }
+                if (@available(iOS 11.0, *)) {
+                    color = bundle ? [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIColor colorNamed:name];
+                }
             }
         }
         return color ?: UIColor.clearColor;
@@ -220,15 +228,21 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIImage *)fwThemeNamed:(NSString *)name
 {
+    return [self fwThemeNamed:name bundle:nil];
+}
+
++ (UIImage *)fwThemeNamed:(NSString *)name bundle:(NSBundle *)bundle
+{
     return [self fwThemeImage:^UIImage * (FWThemeStyle style) {
         UIImage *image = nil;
         if (@available(iOS 13, *)) {
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
-            image = [[UIImage imageNamed:name] imageWithConfiguration:traitCollection.imageConfiguration];
+            image = bundle ? [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIImage imageNamed:name];
+            image = [image imageWithConfiguration:traitCollection.imageConfiguration];
         }
         if (!image) {
             image = fwStaticNameImages[name];
-            if (!image) image = [UIImage imageNamed:name];
+            if (!image) image = bundle ? [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIImage imageNamed:name];
         }
         return image;
     }];
