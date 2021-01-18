@@ -32,7 +32,7 @@
     // iOS13以下named方式不支持动态颜色和图像，可手工注册之
     if (@available(iOS 13.0, *)) { } else {
         [UIColor fwSetThemeColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forName:@"theme_color"];
-        [UIImage fwSetThemeImage:[UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]] forName:@"theme_image"];
+        [UIImage fwSetThemeImage:[UIImage fwThemeLight:[TestBundle imageNamed:@"theme_image_light"] dark:[TestBundle imageNamed:@"theme_image_dark"]] forName:@"theme_image"];
     }
 }
 
@@ -55,7 +55,7 @@
     [self.view addSubview:colorView];
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
-    UIImage *themeImage = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
+    UIImage *themeImage = [UIImage fwThemeLight:[TestBundle imageNamed:@"theme_image_light"] dark:[TestBundle imageNamed:@"theme_image_dark"]];
     imageView.image = themeImage;
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
         imageView.image = themeImage.fwThemeImage;
@@ -64,7 +64,7 @@
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 90, 50, 50)];
     imageView.fwThemeImage = [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
-        return style == FWThemeStyleDark ? [UIImage imageNamed:@"theme_image_dark"] : [UIImage imageNamed:@"theme_image_light"];
+        return style == FWThemeStyleDark ? [TestBundle imageNamed:@"theme_image_dark"] : [TestBundle imageNamed:@"theme_image_light"];
     }];
     [self.view addSubview:imageView];
     
@@ -98,7 +98,7 @@
     
     layer = [CALayer new];
     layer.frame = CGRectMake(20, 230, 50, 50);
-    UIImage *layerImage = [UIImage fwThemeLight:[UIImage imageNamed:@"theme_image_light"] dark:[UIImage imageNamed:@"theme_image_dark"]];
+    UIImage *layerImage = [UIImage fwThemeLight:[TestBundle imageNamed:@"theme_image_light"] dark:[TestBundle imageNamed:@"theme_image_dark"]];
     layer.contents = (id)layerImage.CGImage;
     layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
@@ -110,7 +110,7 @@
     layer.frame = CGRectMake(90, 230, 50, 50);
     layer.fwThemeContext = self;
     layer.fwThemeContents = [UIImage fwThemeImage:^UIImage * _Nonnull(FWThemeStyle style) {
-        return style == FWThemeStyleDark ? [UIImage imageNamed:@"theme_image_dark"] : [UIImage imageNamed:@"theme_image_light"];
+        return style == FWThemeStyleDark ? [TestBundle imageNamed:@"theme_image_dark"] : [TestBundle imageNamed:@"theme_image_light"];
     }];
     [self.view.layer addSublayer:layer];
     
@@ -131,7 +131,7 @@
     themeButton.titleLabel.font = FWFontRegular(16);
     [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
     
-    UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [UIImage imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [UIImage imageNamed:@"theme_image_dark"])];
+    UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [TestBundle imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [TestBundle imageNamed:@"theme_image_dark"])];
     FWThemeObject<NSAttributedString *> *themeString = [NSAttributedString fwThemeObjectWithHtmlString:@"我是<span style='color:red;'>红色</span>字符串" defaultAttributes:@{
         NSFontAttributeName: FWFontBold(16).fwItalicFont,
         NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]],

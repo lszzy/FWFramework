@@ -45,11 +45,11 @@ static const FWThemeMode FWThemeModeRed = FWThemeStyleRed;
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
     imageView.fwThemeImage = [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
         if (style == FWThemeStyleDark) {
-            return [UIImage imageNamed:@"theme_image_dark"];
+            return [TestBundle imageNamed:@"theme_image_dark"];
         } else if (style == FWThemeStyleLight) {
-            return [UIImage imageNamed:@"theme_image_light"];
+            return [TestBundle imageNamed:@"theme_image_light"];
         } else {
-            return [[UIImage imageNamed:@"theme_image_dark"] fwImageWithTintColor:[UIColor redColor]];
+            return [[TestBundle imageNamed:@"theme_image_dark"] fwImageWithTintColor:[UIColor redColor]];
         }
     }];
     [self.view addSubview:imageView];

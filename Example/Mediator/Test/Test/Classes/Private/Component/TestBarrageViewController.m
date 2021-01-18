@@ -649,7 +649,7 @@
     becomeNobleDescriptor.positionPriority = FWBarragePositionVeryHigh;
     becomeNobleDescriptor.animationDuration = 4.0;
     becomeNobleDescriptor.barrageCellClass = [FWBarrageBecomeNobleCell class];
-    becomeNobleDescriptor.backgroundImage = [UIImage imageNamed:@"qrcode_grid"];
+    becomeNobleDescriptor.backgroundImage = [TestBundle imageNamed:@"qrcode_grid"];
     [self.barrageManager renderBarrageDescriptor:becomeNobleDescriptor];
     
     [self performSelector:@selector(addStopoverBarrage) withObject:nil afterDelay:4.0];

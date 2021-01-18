@@ -51,7 +51,7 @@
 
 - (UIImage *)fwImageForEmptyView:(UIScrollView *)scrollView
 {
-    return [UIImage imageNamed:@"loading"];
+    return [TestBundle imageNamed:@"loading"];
 }
 
 - (CAAnimation *)fwImageAnimationForEmptyView:(UIScrollView *)scrollView

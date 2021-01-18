@@ -9,7 +9,7 @@
 #import "TestPopupMenuViewController.h"
 
 #define TITLES @[@"修改", @"删除", @"扫一扫",@"付款"]
-#define ICONS  @[@"icon_modify",@"icon_delete",@"icon_scan",@"icon_pay"]
+#define ICONS  @[[TestBundle imageNamed:@"icon_modify"],[TestBundle imageNamed:@"icon_delete"],[TestBundle imageNamed:@"icon_scan"],[TestBundle imageNamed:@"icon_pay"]]
 
 @interface TestPopupMenuViewController () <FWPopupMenuDelegate,UITextFieldDelegate>
 
@@ -24,22 +24,22 @@
 
 - (void)renderView
 {
-    UIButton *button = [UIButton fwButtonWithImage:[UIImage imageNamed:@"icon_scan"]];
+    UIButton *button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
     [self.view addSubview:button];
     button.fwLayoutChain.leftWithInset(10).topWithInset(10).size(CGSizeMake(44, 44));
     
-    button = [UIButton fwButtonWithImage:[UIImage imageNamed:@"icon_scan"]];
+    button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
     [self.view addSubview:button];
     button.fwLayoutChain.rightWithInset(10).topWithInset(10).size(CGSizeMake(44, 44));
     
-    button = [UIButton fwButtonWithImage:[UIImage imageNamed:@"icon_scan"]];
+    button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
     [self.view addSubview:button];
     button.fwLayoutChain.leftWithInset(10).bottomWithInset(10).size(CGSizeMake(44, 44));
     
-    button = [UIButton fwButtonWithImage:[UIImage imageNamed:@"icon_scan"]];
+    button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
     [self.view addSubview:button];
     button.fwLayoutChain.rightWithInset(10).bottomWithInset(10).size(CGSizeMake(44, 44));
@@ -144,7 +144,7 @@
     }
     
     cell.textLabel.text = TITLES[index];
-    cell.imageView.image = [UIImage imageNamed:ICONS[index]];
+    cell.imageView.image = ICONS[index];
     return cell;
 }
 

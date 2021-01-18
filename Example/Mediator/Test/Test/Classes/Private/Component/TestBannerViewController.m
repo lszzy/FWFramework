@@ -33,7 +33,7 @@
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 4;
-    cycleView.placeholderImage = [UIImage imageNamed:@"loading"];
+    cycleView.placeholderImage = [TestBundle imageNamed:@"loading"];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -59,7 +59,7 @@
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 4;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.placeholderImage = [TestBundle imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleCustom;
     cycleView.pageDotViewClass = [FWDotView class];
     cycleView.pageControlDotSize = CGSizeMake(10, 1);
@@ -92,7 +92,7 @@
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 4;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.placeholderImage = [TestBundle imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
     [self.view addSubview:cycleView];
     [cycleView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.previousView withOffset:10];
@@ -102,7 +102,7 @@
     
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:[TestBundle imageNamed:@"public_picture"]];
     [imageUrls2 addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
     [imageUrls2 addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls2 addObject:@"not_found.jpg"];
@@ -119,7 +119,7 @@
     cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.placeholderImage = [TestBundle imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
     cycleView.itemPagingEnabled = YES;
     cycleView.itemSpacing = 10;
@@ -133,7 +133,7 @@
     
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:[TestBundle imageNamed:@"public_picture"]];
     [imageUrls2 addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
     [imageUrls2 addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls2 addObject:@"not_found.jpg"];
@@ -150,7 +150,7 @@
     cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.placeholderImage = [TestBundle imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
     cycleView.itemSpacing = 10;
     cycleView.itemPagingEnabled = YES;
@@ -165,7 +165,7 @@
     
     NSMutableArray *imageUrls2 = [NSMutableArray array];
     [imageUrls2 addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls2 addObject:@"public_picture"];
+    [imageUrls2 addObject:[TestBundle imageNamed:@"public_picture"]];
     [imageUrls2 addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
     [imageUrls2 addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls2 addObject:@"not_found.jpg"];
@@ -182,7 +182,7 @@
     cycleView.contentViewCornerRadius = 5;
     cycleView.delegate = self;
     cycleView.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    cycleView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    cycleView.placeholderImage = [TestBundle imageNamed:@"public_icon"];
     cycleView.pageControlStyle = FWBannerViewPageControlStyleNone;
     cycleView.itemSpacing = 10;
     cycleView.itemPagingEnabled = YES;

@@ -301,7 +301,7 @@
 {
     NSMutableAttributedString *title = [NSMutableAttributedString new];
     NSTextAttachment *attachment = [NSTextAttachment new];
-    attachment.image = [[UIImage imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    attachment.image = [[TestBundle imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     attachment.bounds = CGRectMake(0, -20, 30, 30);
     [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
     NSDictionary *attrs = @{
@@ -330,7 +330,7 @@
 {
     NSMutableAttributedString *title = [NSMutableAttributedString new];
     NSTextAttachment *attachment = [NSTextAttachment new];
-    attachment.image = [[UIImage imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    attachment.image = [[TestBundle imageNamed:@"public_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     attachment.bounds = CGRectMake(0, -20, 30, 30);
     [title appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
     NSDictionary *attrs = @{

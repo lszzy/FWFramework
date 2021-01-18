@@ -45,8 +45,8 @@
     NSInteger index = 0;
     for (FWTabBarItem *item in [[self tabBar] items]) {
         item.title = [tabBarItemTitles objectAtIndex:index];
-        UIImage *selectedimage = [[UIImage imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme textColor]];
-        UIImage *unselectedimage = [UIImage imageNamed:[tabBarItemImages objectAtIndex:index]];
+        UIImage *selectedimage = [[TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme textColor]];
+        UIImage *unselectedimage = [TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]];
         [item setFinishedSelectedImage:selectedimage withFinishedUnselectedImage:unselectedimage];
         if (index == 0) {
             item.badgeValue = @"1";

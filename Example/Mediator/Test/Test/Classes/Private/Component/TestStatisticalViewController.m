@@ -53,7 +53,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     _bannerView = bannerView;
     bannerView.autoScroll = YES;
     bannerView.autoScrollTimeInterval = 6;
-    bannerView.placeholderImage = [UIImage imageNamed:@"public_icon"];
+    bannerView.placeholderImage = [TestBundle imageNamed:@"public_icon"];
     [headerView addSubview:bannerView];
     bannerView.fwLayoutChain.leftWithInset(10).topWithInset(50).rightWithInset(10).height(100);
     
@@ -208,7 +208,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
         }
     }];
     
-    NSArray *imageUrls = @[@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg", @"public_picture", @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp", @"http://littlesvr.ca/apng/images/SteamEngine.webp", @"not_found.jpg", @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
+    NSArray *imageUrls = @[@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg", [TestBundle imageNamed:@"public_picture"], @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp", @"http://littlesvr.ca/apng/images/SteamEngine.webp", @"not_found.jpg", @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"];
     self.bannerView.imageURLStringsGroup = imageUrls;
     NSArray *sectionTitles = @[@"Section0", @"Section1", @"Section2", @"Section3", @"Section4", @"Section5", @"Section6", @"Section7", @"Section8"];
     self.segmentedControl.sectionTitles = sectionTitles;
