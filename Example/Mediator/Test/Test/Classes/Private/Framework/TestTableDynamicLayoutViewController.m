@@ -46,12 +46,12 @@ static BOOL isExpanded = NO;
     if (self) {
         self.fwSeparatorInset = UIEdgeInsetsZero;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.backgroundColor = [UIColor fwRandomColor];
+        self.contentView.backgroundColor = [Theme cellColor];
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont fwFontOfSize:15];
-        titleLabel.textColor = [UIColor blackColor];
+        titleLabel.textColor = [Theme textColor];
         self.myTitleLabel = titleLabel;
         [self.contentView addSubview:titleLabel];
         [titleLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
@@ -61,7 +61,7 @@ static BOOL isExpanded = NO;
         UILabel *textLabel = [UILabel fwAutoLayoutView];
         textLabel.numberOfLines = 0;
         textLabel.font = [UIFont fwFontOfSize:13];
-        textLabel.textColor = [UIColor blackColor];
+        textLabel.textColor = [Theme textColor];
         self.myTextLabel = textLabel;
         [self.contentView addSubview:textLabel];
         [textLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
@@ -134,10 +134,10 @@ static BOOL isExpanded = NO;
 {
     self = [super initWithReuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = [UIColor fwRandomColor];
+        self.contentView.backgroundColor = [Theme cellColor];
         self.fwMaxYViewPadding = 15;
         
-        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
         titleLabel.numberOfLines = 0;
         _titleLabel = titleLabel;
         [self.contentView addSubview:titleLabel];
@@ -177,7 +177,7 @@ static BOOL isExpanded = NO;
     
     FWWeakifySelf();
     [self.tableView fwResetGroupedStyle];
-    self.tableView.backgroundColor = [Theme backgroundColor];
+    self.tableView.backgroundColor = [Theme tableColor];
     [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         
@@ -484,7 +484,7 @@ static BOOL isExpanded = NO;
         button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = 101;
         [button setTitle:@"保存" forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
         [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
         // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
         [photoView addSubview:button];

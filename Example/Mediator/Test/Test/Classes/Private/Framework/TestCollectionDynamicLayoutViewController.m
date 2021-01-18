@@ -42,12 +42,12 @@ static BOOL isExpanded = NO;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentView.backgroundColor = [UIColor fwRandomColor];
+        self.contentView.backgroundColor = [Theme cellColor];
         
         UILabel *titleLabel = [UILabel fwAutoLayoutView];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont fwFontOfSize:15];
-        titleLabel.textColor = [UIColor blackColor];
+        titleLabel.textColor = [Theme textColor];
         self.myTitleLabel = titleLabel;
         [self.contentView addSubview:titleLabel];
         [titleLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
@@ -57,7 +57,7 @@ static BOOL isExpanded = NO;
         UILabel *textLabel = [UILabel fwAutoLayoutView];
         textLabel.numberOfLines = 0;
         textLabel.font = [UIFont fwFontOfSize:13];
-        textLabel.textColor = [UIColor blackColor];
+        textLabel.textColor = [Theme textColor];
         self.myTextLabel = textLabel;
         [self.contentView addSubview:textLabel];
         [textLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
@@ -121,10 +121,10 @@ static BOOL isExpanded = NO;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor fwRandomColor];
+        self.backgroundColor = Theme.cellColor;
         self.fwMaxYViewPadding = 15;
         
-        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:nil];
+        UILabel *titleLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
         titleLabel.numberOfLines = 0;
         _titleLabel = titleLabel;
         [self addSubview:titleLabel];
@@ -166,7 +166,7 @@ static BOOL isExpanded = NO;
 - (void)renderView
 {
     FWWeakifySelf();
-    self.collectionView.backgroundColor = [Theme backgroundColor];
+    self.collectionView.backgroundColor = [Theme tableColor];
     [self.collectionView fwSetRefreshingBlock:^{
         FWStrongifySelf();
         

@@ -10,7 +10,6 @@
 #import "TestTabBarViewController.h"
 
 static const FWThemeStyle FWThemeStyleRed = 3;
-static const FWThemeMode FWThemeModeRed = FWThemeStyleRed;
 
 @interface TestThemeExtensionViewController ()
 

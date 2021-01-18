@@ -14,15 +14,15 @@
 - (void)renderView
 {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor redColor];
+    view.backgroundColor = Theme.textColor;
     [self.view addSubview:view];
     view.fwLayoutChain.remake().topWithInset(20).leftWithInset(20).size(CGSizeMake(100, 100)).width(50).height(50);
     
     UILabel *label = [[UILabel alloc] init];
     label.text = @"text";
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = UIColor.blackColor;
-    label.backgroundColor = UIColor.grayColor;
+    label.textColor = Theme.textColor;
+    label.backgroundColor = Theme.backgroundColor;
     label.fwContentInset = UIEdgeInsetsMake(5, 5, 5, 5);
     [label fwSetCornerRadius:5];
     [self.view addSubview:label];
@@ -31,7 +31,7 @@
     }];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [button setTitle:@"btn" forState:UIControlStateNormal];
     [self.view addSubview:button];
     button.fwLayoutChain.widthToView(view).heightToView(view).leftToRightOfViewWithOffset(label, 20).topToViewWithOffset(view, 0);
@@ -43,7 +43,7 @@
     
     FWAttributedLabel *attr = [[FWAttributedLabel alloc] init];
     attr.text = @"attr";
-    attr.backgroundColor = [UIColor grayColor];
+    attr.backgroundColor = Theme.backgroundColor;
     attr.textAlignment = kCTTextAlignmentCenter;
     [self.view addSubview:attr];
     [attr fwLayoutMaker:^(FWLayoutChain *  _Nonnull make) {
@@ -53,8 +53,8 @@
     
     UILabel *emptyLabel = [[UILabel alloc] init];
     emptyLabel.textAlignment = NSTextAlignmentCenter;
-    emptyLabel.textColor = UIColor.blackColor;
-    emptyLabel.backgroundColor = UIColor.grayColor;
+    emptyLabel.textColor = Theme.textColor;
+    emptyLabel.backgroundColor = Theme.backgroundColor;
     [self.view addSubview:emptyLabel];
     [emptyLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
         make.leftToRightOfViewWithOffset(attr, 20);
@@ -63,8 +63,8 @@
     
     UILabel *emptyLabel2 = [[UILabel alloc] init];
     emptyLabel2.textAlignment = NSTextAlignmentCenter;
-    emptyLabel2.textColor = UIColor.blackColor;
-    emptyLabel2.backgroundColor = UIColor.grayColor;
+    emptyLabel2.textColor = Theme.textColor;
+    emptyLabel2.backgroundColor = Theme.backgroundColor;
     emptyLabel2.fwContentInset = UIEdgeInsetsMake(5, 5, 5, 5);
     [self.view addSubview:emptyLabel2];
     [emptyLabel2 fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
@@ -77,7 +77,7 @@
     CGSize emptySize2 = [emptyLabel2 sizeThatFits:CGSizeMake(1, 1)];
     resultLabel.text = [NSString stringWithFormat:@"%@ <=> %@", NSStringFromCGSize(emptySize), NSStringFromCGSize(emptySize2)];
     resultLabel.textAlignment = NSTextAlignmentCenter;
-    resultLabel.textColor = UIColor.blackColor;
+    resultLabel.textColor = Theme.textColor;
     [self.view addSubview:resultLabel];
     [resultLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
         make.leftToRightOfViewWithOffset(emptyLabel2, 20);
@@ -87,7 +87,7 @@
     UILabel *numberLabel = [UILabel new];
     numberLabel.textAlignment = NSTextAlignmentCenter;
     numberLabel.numberOfLines = 0;
-    numberLabel.textColor = UIColor.blackColor;
+    numberLabel.textColor = Theme.textColor;
     numberLabel.text = [self numberString];
     [self.view addSubview:numberLabel];
     [numberLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
