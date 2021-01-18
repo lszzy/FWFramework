@@ -90,6 +90,9 @@ extern NSString *const FWThemeChangedNotification;
 /// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
 + (UIColor *)fwThemeNamed:(NSString *)name;
 
+/// 动态创建主题色，指定名称和bundle，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
++ (UIColor *)fwThemeNamed:(NSString *)name bundle:(nullable NSBundle *)bundle;
+
 /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwSetThemeColor:(nullable UIColor *)color forName:(NSString *)name;
 
@@ -117,6 +120,9 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 创建主题模拟动态图像，指定名称，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
 + (UIImage *)fwThemeNamed:(NSString *)name;
+
+/// 创建主题模拟动态图像，指定名称和bundle，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
++ (UIImage *)fwThemeNamed:(NSString *)name bundle:(nullable NSBundle *)bundle;
 
 /// 手工单个注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImage:(nullable UIImage *)image forName:(NSString *)name;

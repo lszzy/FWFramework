@@ -44,11 +44,8 @@ UIImage * FWImageFile(NSString *path) {
     
     NSString *imageFile = path;
     if (!path.isAbsolutePath) {
-        if (bundle != nil) {
-            imageFile = [bundle pathForResource:path ofType:nil];
-        } else {
-            imageFile = [[NSBundle mainBundle] pathForResource:path ofType:nil];
-        }
+        NSBundle *imageBundle = (bundle != nil) ? bundle : [NSBundle mainBundle];
+        imageFile = [imageBundle pathForResource:path ofType:nil];
     }
     NSData *data = [NSData dataWithContentsOfFile:imageFile];
     if (!data) {
