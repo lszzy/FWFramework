@@ -116,7 +116,7 @@
     [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    pullView.image = [UIImage imageNamed:@"loading.gif"];
+    pullView.image = [TestBundle imageNamed:@"loading.gif"];
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -188,7 +188,7 @@
     object.text = [[randomArray objectAtIndex:1] fwRandomObject];
     NSString *imageName =[[randomArray objectAtIndex:2] fwRandomObject];
     if (imageName.length > 0) {
-        object.image = [UIImage imageNamed:imageName];
+        object.image = [TestBundle imageNamed:imageName];
     }
     return object;
 }

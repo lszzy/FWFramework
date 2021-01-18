@@ -59,51 +59,51 @@
 - (void)renderData
 {
     imageView1_.contentMode = UIViewContentModeScaleToFill;
-    imageView1_.image = [UIImage imageNamed:@"public_face"];
+    imageView1_.image = [TestBundle imageNamed:@"public_face"];
     
     imageView2_.contentMode = UIViewContentModeScaleAspectFit;
-    imageView2_.image = [UIImage imageNamed:@"public_face"];
+    imageView2_.image = [TestBundle imageNamed:@"public_face"];
     
     imageView3_.contentMode = UIViewContentModeScaleAspectFill;
-    imageView3_.image = [UIImage imageNamed:@"public_face"];
+    imageView3_.image = [TestBundle imageNamed:@"public_face"];
     
     imageView4_.contentMode = UIViewContentModeScaleToFill;
-    imageView4_.image = [UIImage imageNamed:@"public_face"];
+    imageView4_.image = [TestBundle imageNamed:@"public_face"];
     [imageView4_ fwFaceAware];
     
     imageView5_.contentMode = UIViewContentModeScaleAspectFit;
-    imageView5_.image = [UIImage imageNamed:@"public_face"];
+    imageView5_.image = [TestBundle imageNamed:@"public_face"];
     [imageView5_ fwFaceAware];
     
     imageView6_.contentMode = UIViewContentModeScaleAspectFill;
-    imageView6_.image = [UIImage imageNamed:@"public_face"];
+    imageView6_.image = [TestBundle imageNamed:@"public_face"];
     [imageView6_ fwFaceAware];
     
     imageView11_.contentMode = UIViewContentModeScaleToFill;
-    [imageView11_ fwSetImage:[UIImage imageNamed:@"public_test"] watermarkImage:[UIImage imageNamed:@"public_icon"] inRect:CGRectMake(50, 50, 20, 20)];
+    [imageView11_ fwSetImage:[TestBundle imageNamed:@"public_test"] watermarkImage:[TestBundle imageNamed:@"public_icon"] inRect:CGRectMake(50, 50, 20, 20)];
     
     imageView12_.contentMode = UIViewContentModeScaleAspectFit;
     NSAttributedString *watermark = [[NSAttributedString alloc] initWithString:@"水印" attributes:@{
                                                                                                   NSFontAttributeName: [UIFont fwFontOfSize:10],
                                                                                                   NSForegroundColorAttributeName: [UIColor whiteColor],
                                                                                                   }];
-    [imageView12_ fwSetImage:[UIImage imageNamed:@"public_test"] watermarkString:watermark inRect:CGRectMake(50, 58, 30, 22)];
+    [imageView12_ fwSetImage:[TestBundle imageNamed:@"public_test"] watermarkString:watermark inRect:CGRectMake(50, 58, 30, 22)];
     
     imageView13_.contentMode = UIViewContentModeScaleAspectFill;
-    imageView13_.image = [UIImage imageNamed:@"public_test"];
+    imageView13_.image = [TestBundle imageNamed:@"public_test"];
     
     imageView14_.contentMode = UIViewContentModeScaleToFill;
-    imageView14_.image = [UIImage imageNamed:@"public_test"];
+    imageView14_.image = [TestBundle imageNamed:@"public_test"];
     [imageView14_ fwFaceAware];
     [imageView14_ fwReflect];
     
     imageView15_.contentMode = UIViewContentModeScaleAspectFit;
-    imageView15_.image = [UIImage imageNamed:@"public_test"];
+    imageView15_.image = [TestBundle imageNamed:@"public_test"];
     [imageView15_ fwFaceAware];
     [imageView15_ fwReflect];
     
     imageView16_.contentMode = UIViewContentModeScaleAspectFill;
-    imageView16_.image = [UIImage imageNamed:@"public_test"];
+    imageView16_.image = [TestBundle imageNamed:@"public_test"];
     [imageView16_ fwFaceAware];
     [imageView16_ fwReflect];
 }

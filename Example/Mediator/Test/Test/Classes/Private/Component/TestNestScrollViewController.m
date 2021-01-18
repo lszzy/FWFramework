@@ -318,7 +318,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (void)renderView
 {
     self.headerView = [[UIImageView alloc] init];
-    self.headerView.image = [UIImage imageNamed:@"public_picture"];
+    self.headerView.image = [TestBundle imageNamed:@"public_picture"];
     
     self.segmentedControl = [FWSegmentedControl new];
     self.segmentedControl.sectionTitles = @[@"下单", @"评价", @"商家"];

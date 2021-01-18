@@ -108,7 +108,7 @@
 - (void)onImage
 {
     self.view.fwIndicatorControl = [[FWIndicatorControl alloc] initWithType:FWIndicatorControlTypeImage];
-    self.view.fwIndicatorControl.indicatorImage = [UIImage imageNamed:@"public_icon"];
+    self.view.fwIndicatorControl.indicatorImage = [TestBundle imageNamed:@"public_icon"];
     [self.view.fwIndicatorControl show:YES];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view.fwIndicatorControl hide:YES];
@@ -119,7 +119,7 @@
 {
     self.view.fwIndicatorControl = [[FWIndicatorControl alloc] initWithType:FWIndicatorControlTypeImage];
     self.view.fwIndicatorControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"正在加载，我是好长好长好长好长好长好长真的很长很长的文本\n我是另一行的文本"];
-    self.view.fwIndicatorControl.indicatorImage = [UIImage imageNamed:@"public_icon"];
+    self.view.fwIndicatorControl.indicatorImage = [TestBundle imageNamed:@"public_icon"];
     self.view.fwIndicatorControl.indicatorSize = CGSizeMake(20, 20);
     [self.view.fwIndicatorControl show:YES];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

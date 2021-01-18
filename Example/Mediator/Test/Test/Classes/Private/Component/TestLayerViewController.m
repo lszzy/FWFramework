@@ -30,7 +30,7 @@
 - (void)testLayer
 {
     // 宿主图层显示图片
-    UIImage *image = [UIImage imageNamed:@"public_icon"];
+    UIImage *image = [TestBundle imageNamed:@"public_icon"];
     CALayer *imageLayer = [[CALayer alloc] init];
     imageLayer.frame = CGRectMake(90, 70, 20, 40);
     imageLayer.contents = (__bridge id)image.CGImage;

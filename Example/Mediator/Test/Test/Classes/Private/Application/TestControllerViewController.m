@@ -55,7 +55,7 @@
     self.scrollView.delegate = self;
     
     UIImageView *imageView = [UIImageView fwAutoLayoutView];
-    imageView.image = [UIImage imageNamed:@"public_picture"];
+    imageView.image = [TestBundle imageNamed:@"public_picture"];
     [self.contentView addSubview:imageView]; {
         [imageView fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth];
         [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];

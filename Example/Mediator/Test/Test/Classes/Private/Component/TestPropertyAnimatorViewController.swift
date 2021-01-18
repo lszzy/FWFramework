@@ -33,7 +33,7 @@ import UIKit.UIGestureRecognizerSubclass
     
     private lazy var contentImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "public_picture")
+        imageView.image = TestBundle.imageNamed("public_picture")
         return imageView
     }()
     
@@ -76,7 +76,7 @@ import UIKit.UIGestureRecognizerSubclass
     
     private lazy var reviewsImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "public_test")
+        imageView.image = TestBundle.imageNamed("public_test")
         return imageView
     }()
     

@@ -82,8 +82,8 @@
         CGFloat flashlightBtnX = 0.5 * (self.view.frame.size.width - flashlightBtnW);
         CGFloat flashlightBtnY = 0.5 * QrcodeViewHeight + 0.35 * self.view.frame.size.width - flashlightBtnH - 25;
         _flashlightBtn.frame = CGRectMake(flashlightBtnX, flashlightBtnY, flashlightBtnW, flashlightBtnH);
-        [_flashlightBtn setBackgroundImage:[UIImage imageNamed:@"flashlight_open"] forState:(UIControlStateNormal)];
-        [_flashlightBtn setBackgroundImage:[UIImage imageNamed:@"flashlight_close"] forState:(UIControlStateSelected)];
+        [_flashlightBtn setBackgroundImage:[TestBundle imageNamed:@"flashlight_open"] forState:(UIControlStateNormal)];
+        [_flashlightBtn setBackgroundImage:[TestBundle imageNamed:@"flashlight_close"] forState:(UIControlStateSelected)];
         [_flashlightBtn addTarget:self action:@selector(toggleFlashlightBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _flashlightBtn;

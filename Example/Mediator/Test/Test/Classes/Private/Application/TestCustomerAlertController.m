@@ -45,7 +45,7 @@
     
     for (int i = 0; i < images.count; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.image = [UIImage imageNamed:images[i]];
+        imageView.image = [TestBundle imageNamed:images[i]];
         imageView.backgroundColor = [UIColor redColor];
         [scrollView addSubview:imageView];
         [self.imageViews addObject:imageView];
@@ -1485,7 +1485,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
         buttonCount = MIN(images.count, titles.count);
         for (int i = 0; i < buttonCount; i++) {
             FWButton *button = [[FWButton alloc] initWithImagePosition:FWButtonImagePositionTop];
-            [button setImage:[UIImage imageNamed:images[i]] forState:UIControlStateNormal];
+            [button setImage:[TestBundle imageNamed:images[i]] forState:UIControlStateNormal];
             [button setTitle:titles[i] forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont systemFontOfSize:14];
             [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -1899,13 +1899,13 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
     FWAlertAction *action1 = [FWAlertAction actionWithTitle:@"视频通话" style:FWAlertActionStyleDefault handler:^(FWAlertAction * _Nonnull action) {
         NSLog(@"点击了‘视频通话’");
     }];
-    action1.image = [UIImage imageNamed:@"public_icon"];
+    action1.image = [TestBundle imageNamed:@"public_icon"];
     action1.imageTitleSpacing = 5;
     
     FWAlertAction *action2 = [FWAlertAction actionWithTitle:@"语音通话" style:FWAlertActionStyleDefault handler:^(FWAlertAction * _Nonnull action) {
         NSLog(@"点击了‘语音通话’");
     }];
-    action2.image = [UIImage imageNamed:@"public_icon"];
+    action2.image = [TestBundle imageNamed:@"public_icon"];
     action2.imageTitleSpacing = 5;
     
     FWAlertAction *action3 = [FWAlertAction actionWithTitle:@"取消" style:FWAlertActionStyleCancel handler:^(FWAlertAction * _Nonnull action) {
@@ -2089,7 +2089,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
     FWAlertController *alertController = [FWAlertController alertControllerWithTitle:@"“支付宝”的触控 ID" message:@"请验证已有指纹" preferredStyle:FWAlertControllerStyleAlert animationType:FWAlertAnimationTypeShrink];
 
     // 设置图标
-    alertController.image = [UIImage imageNamed:@"public_icon"];
+    alertController.image = [TestBundle imageNamed:@"public_icon"];
     
     FWAlertAction *action = [FWAlertAction actionWithTitle:@"取消" style:FWAlertActionStyleCancel handler:^(FWAlertAction * _Nonnull action) {
         NSLog(@"点击了取消");

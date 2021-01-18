@@ -91,9 +91,9 @@
     // 自动收缩
     self.myTitleLabel.text = object.title;
     if ([object.imageUrl fwIsFormatUrl]) {
-        [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[UIImage imageNamed:@"public_icon"]];
+        [self.myImageView fwSetImageWithURL:[NSURL URLWithString:object.imageUrl] placeholderImage:[TestBundle imageNamed:@"public_icon"]];
     } else if (object.imageUrl.length > 0) {
-        self.myImageView.image = [UIImage imageNamed:object.imageUrl];
+        self.myImageView.image = [TestBundle imageNamed:object.imageUrl];
     } else {
         self.myImageView.image = nil;
     }
@@ -106,7 +106,7 @@
     [super setFwViewModel:fwViewModel];
     
     self.myTitleLabel.text = @"我是标题";
-    self.myImageView.image = FWImageName(@"public_icon");
+    self.myImageView.image = [TestBundle imageNamed:@"public_icon"];
     self.myTextLabel.text = @"我是文本";
 }
 

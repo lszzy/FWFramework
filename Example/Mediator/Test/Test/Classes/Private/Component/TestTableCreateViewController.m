@@ -158,7 +158,7 @@
         
         UIImageView *imageView = [UIImageView new];
         _imageView = imageView;
-        imageView.image = [UIImage imageNamed:@"test_scale"];
+        imageView.image = [TestBundle imageNamed:@"test_scale"];
         [imageView fwSetContentModeAspectFill];
         [imageView fwSetCornerRadius:5];
         [self addSubview:imageView];

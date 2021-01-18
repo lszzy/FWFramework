@@ -1165,7 +1165,7 @@ typedef NS_ENUM(NSInteger, LSShapeType)
     drawView.brushWidth = 3;
     drawView.shapeType = LSShapeCurve;
     
-    drawView.backgroundImage = [UIImage imageNamed:@"public_picture"];
+    drawView.backgroundImage = [TestBundle imageNamed:@"public_picture"];
     
     [self.view addSubview:drawView];
     
