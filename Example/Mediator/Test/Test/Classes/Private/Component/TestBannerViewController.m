@@ -33,7 +33,7 @@
     cycleView.delegate = self;
     cycleView.autoScroll = YES;
     cycleView.autoScrollTimeInterval = 4;
-    cycleView.placeholderImage = FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]);
+    cycleView.placeholderImage = [UIImage fwImageWithFile:@"test.gif" bundle:TestBundle.bundle];
     [self.view addSubview:cycleView];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:10];
     [cycleView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
@@ -42,7 +42,7 @@
     
     NSMutableArray *imageUrls = [NSMutableArray array];
     [imageUrls addObject:@"http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg"];
-    [imageUrls addObject:FWImageFile([TestBundle.bundle pathForResource:@"LoadingPlaceholder.gif" ofType:nil])];
+    [imageUrls addObject:[UIImage fwImageWithFile:@"LoadingPlaceholder.gif" bundle:TestBundle.bundle]];
     [imageUrls addObject:@"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp"];
     [imageUrls addObject:@"http://littlesvr.ca/apng/images/SteamEngine.webp"];
     [imageUrls addObject:@"not_found.jpg"];

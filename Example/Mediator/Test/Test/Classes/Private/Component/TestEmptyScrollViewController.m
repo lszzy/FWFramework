@@ -51,7 +51,7 @@
 
 - (UIImage *)fwImageForEmptyView:(UIScrollView *)scrollView
 {
-    return FWImageFile([TestBundle.bundle pathForResource:@"test.gif" ofType:nil]);
+    return [UIImage fwImageWithFile:@"test.gif" bundle:TestBundle.bundle];
 }
 
 - (CAAnimation *)fwImageAnimationForEmptyView:(UIScrollView *)scrollView

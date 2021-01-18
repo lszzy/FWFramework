@@ -35,12 +35,24 @@ UIImage * FWImageFile(NSString *path) {
 
 + (UIImage *)fwImageWithFile:(NSString *)path
 {
+    return [self fwImageWithFile:path bundle:nil];
+}
+
++ (UIImage *)fwImageWithFile:(NSString *)path bundle:(NSBundle *)bundle
+{
     if (path.length < 1) return nil;
     
-    NSString *file = path.isAbsolutePath ? path : [[NSBundle mainBundle] pathForResource:path ofType:nil];
-    NSData *data = [NSData dataWithContentsOfFile:file];
+    NSString *imageFile = path;
+    if (!path.isAbsolutePath) {
+        if (bundle != nil) {
+            imageFile = [bundle pathForResource:path ofType:nil];
+        } else {
+            imageFile = [[NSBundle mainBundle] pathForResource:path ofType:nil];
+        }
+    }
+    NSData *data = [NSData dataWithContentsOfFile:imageFile];
     if (!data) {
-        return [UIImage imageNamed:path];
+        return [UIImage imageNamed:path inBundle:bundle compatibleWithTraitCollection:nil];
     }
     
     return [self fwImageWithData:data scale:[UIScreen mainScreen].scale];
