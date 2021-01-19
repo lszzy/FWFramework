@@ -1,16 +1,5 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
+# fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog]
+# https://docs.fastlane.tools
 # update_fastlane
 
 # config
@@ -19,8 +8,6 @@ PGYER_USERKEY="{PGYER_USERKEY}"
 PGYER_PASSWD="{PGYER_PASSWD}"
 WORKSPACE_NAME="Example.xcworkspace"
 SCHEME_NAME="Example"
-
-# fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog]
 
 # .env
 # PGYER_APIKEY="{PGYER_APIKEY}"
@@ -51,8 +38,12 @@ platform :ios do
 
   desc "Push a new test build to Pgyer"
   lane :pgtest do |options|
-    CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
-    puts "#{CHANGELOG_TEXT}"
+    if options[:update]
+      CHANGELOG_TEXT = options[:update]
+    else
+      CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
+    end
+    puts "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog: #{CHANGELOG_TEXT}"
     cocoapods
     build_app(
       workspace: WORKSPACE_NAME,
