@@ -13,27 +13,97 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+# config
+PGYER_APIKEY="{PGYER_APIKEY}"
+PGYER_USERKEY="{PGYER_USERKEY}"
+PGYER_PASSWD="{PGYER_PASSWD}"
+WORKSPACE_NAME="Example.xcworkspace"
+SCHEME_NAME="Example"
+
+# fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog]
+
+# .env
+# PGYER_APIKEY="{PGYER_APIKEY}"
+# PGYER_USERKEY="{PGYER_USERKEY}"
+# PGYER_PASSWD="{PGYER_PASSWD}"
+# WORKSPACE_NAME="{WORKSPACE_NAME}"
+# SCHEME_NAME="{SCHEME_NAME}"
+# Fastfile
+# ENV["PGYER_APIKEY"]
+
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to Pgyer"
-  lane :pgyerbeta do
-    # export_method: app-store、ad-hoc、development、enterprise
-    build_app(export_method: "ad-hoc")
-    pgyer(api_key: "{api_key}", user_key: "{user_key}", password: "{password}", install_type: "2", update_description: "{update_description}")
+  before_all do |lane, options|
+    if options[:version]
+      VERSION_NUMBER = options[:version]
+      increment_version_number(version_number: VERSION_NUMBER)
+    else
+      VERSION_NUMBER = get_version_number
+    end
+    if options[:build]
+      BUILD_NUMBER = options[:build]
+      increment_build_number(build_number: BUILD_NUMBER)
+    else
+      BUILD_NUMBER = get_build_number
+    end
   end
 
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
-    increment_build_number(xcodeproj: "Example.xcodeproj")
-    build_app(workspace: "Example.xcworkspace", scheme: "Example")
-    upload_to_testflight
+  desc "Push a new test build to Pgyer"
+  lane :pgtest do |options|
+    CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
+    puts "#{CHANGELOG_TEXT}"
+    cocoapods
+    build_app(
+      workspace: WORKSPACE_NAME,
+      scheme: SCHEME_NAME,
+      configuration: "Release",
+      export_method: "ad-hoc",
+      output_directory: "fastlane/build/",
+      output_name: "#{SCHEME_NAME}_pgyer_test.ipa",
+      include_symbols: false,
+      include_bitcode: false,
+      silent: true,
+      clean: true
+    )
+    pgyer(
+      api_key: PGYER_APIKEY,
+      user_key: PGYER_USERKEY,
+      password: PGYER_PASSWD,
+      install_type: "2",
+      update_description: CHANGELOG_TEXT
+    )
   end
 
-  desc "Push a new release build to the App Store"
-  lane :release do
-    increment_build_number(xcodeproj: "Example.xcodeproj")
-    build_app(workspace: "Example.xcworkspace", scheme: "Example")
-    upload_to_app_store(skip_metadata: true, skip_screenshots: true)
+  desc "Push a new test build to TestFlight"
+  lane :tftest do
+    if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
+      cocoapods
+      build_app(
+        workspace: WORKSPACE_NAME,
+        scheme: SCHEME_NAME,
+        output_directory: "fastlane/build/",
+        output_name: "#{SCHEME_NAME}_testflight_test.ipa",
+        silent: true,
+        clean: true
+      )
+      upload_to_testflight
+    end
+  end
+
+  desc "Push a new prod build to the App Store"
+  lane :asprod do
+    if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
+      cocoapods
+      build_app(
+        workspace: WORKSPACE_NAME,
+        scheme: SCHEME_NAME,
+        output_directory: "fastlane/build/",
+        output_name: "#{SCHEME_NAME}_appstore_prod.ipa",
+        silent: true,
+        clean: true
+      )
+      upload_to_app_store(skip_metadata: true, skip_screenshots: true)
+    end
   end
 end
