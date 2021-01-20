@@ -40,7 +40,15 @@
 }
 
 - (void)renderData {
-    self.navigationItem.title = FWLocalizedString(@"homeTitle");
+    #if APP_PROD
+    NSString *envTitle = FWLocalizedString(@"envProd");
+    #elif APP_TEST
+    NSString *envTitle = FWLocalizedString(@"envTest");
+    #else
+    NSString *envTitle = FWLocalizedString(@"envDev");
+    #endif
+    [self fwSetBarTitle:[NSString stringWithFormat:@"%@ - %@", FWLocalizedString(@"homeTitle"), envTitle]];
+    
     if ([Mediator.userModule isLogin]) {
         [self.loginButton setTitle:FWLocalizedString(@"backTitle") forState:UIControlStateNormal];
     } else {
