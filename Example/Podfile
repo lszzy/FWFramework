@@ -1,9 +1,11 @@
 platform :ios, '9.0'
 use_frameworks!
 
+project 'Example', 'Release-Prod' => :release, 'Release-Test' => :release, 'Debug-Test' => :debug, 'Debug-Prod' => :debug
+
 target "Example" do
   pod 'FWFramework', :path => '../'
-  pod 'FWDebug', :configurations => ['Debug']
+  pod 'FWDebug', :configurations => ['Debug', 'Debug-Test', 'Debug-Prod']
   pod 'Mediator', :path => 'Mediator/Mediator/'
   pod 'Core', :path => 'Mediator/Core/'
   pod 'User', :path => 'Mediator/User/'
@@ -12,5 +14,5 @@ end
 
 target "AppClip" do
   pod 'FWFramework', :path => '../', :subspecs => ['Application/Database', 'Application/Image', 'Application/Request', 'Component/SwiftUI']
-  pod 'FWDebug', :configurations => ['Debug']
+  pod 'FWDebug', :configurations => ['Debug', 'Debug-Test', 'Debug-Prod']
 end
