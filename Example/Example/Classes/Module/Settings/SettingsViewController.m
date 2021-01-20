@@ -8,7 +8,9 @@
 
 #import "SettingsViewController.h"
 #import "TabBarController.h"
+#if DEBUG
 @import FWDebug;
+#endif
 
 @interface SettingsViewController () <FWTableViewController>
 
@@ -56,6 +58,8 @@
 - (void)renderData
 {
     [self fwSetBarTitle:FWLocalizedString(@"settingTitle")];
+    
+    #if DEBUG
     [self fwSetRightBarItem:FWLocalizedString(@"debugButton") block:^(id  _Nonnull sender) {
         if ([FWDebugManager sharedInstance].isHidden) {
             [[FWDebugManager sharedInstance] show];
@@ -63,6 +67,7 @@
             [[FWDebugManager sharedInstance] hide];
         }
     }];
+    #endif
     
     if (Mediator.userModule.isLogin) {
         [self.loginButton setTitle:FWLocalizedString(@"mediatorLogout") forState:UIControlStateNormal];

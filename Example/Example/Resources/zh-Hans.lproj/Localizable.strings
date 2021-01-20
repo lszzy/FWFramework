@@ -26,3 +26,6 @@
 "welcomeTitle" = "你知道我在等你吗？";
 "backTitle" = "欢迎回来，亲";
 "logoutConfirm" = "确定要退出当前账号吗?";
+"envDev" = "开发";
+"envTest" = "测试";
+"envProd" = "正式";
