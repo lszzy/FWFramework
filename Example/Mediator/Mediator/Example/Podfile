@@ -1,8 +1,7 @@
 use_frameworks!
-
 platform :ios, '9.0'
 
 target 'Mediator_Example' do
   pod 'Mediator', :path => '../'
-  pod 'FWFramework/Framework', :path => '../../../../'
+  pod 'FWFramework', :path => '../../../../'
 end

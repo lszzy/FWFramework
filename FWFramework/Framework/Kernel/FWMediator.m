@@ -8,6 +8,8 @@
  */
 
 #import "FWMediator.h"
+#import "FWPlugin.h"
+#import "FWLog.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 
@@ -112,6 +114,9 @@
             }
         } @catch (NSException *exception) {}
     }
+    
+    FWLogDebug(@"%@", [FWMediator sharedInstance].debugDescription);
+    FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
 }
 
 + (BOOL)checkAllModulesWithSelector:(SEL)selector arguments:(NSArray *)arguments
@@ -220,6 +225,19 @@
         }
     }
     return YES;
+}
+
+#pragma mark - NSObject
+
+- (NSString *)debugDescription
+{
+    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
+    for (NSString *protocolName in self.moduleDict) {
+        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
+    }
+    
+    NSString *debugDescription = [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
+    return debugDescription;
 }
 
 @end

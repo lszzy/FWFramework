@@ -13,7 +13,9 @@ struct LandmarkDetailModelView: View {
     
     var body: some View {
         content
-            .fwNavigationBarColor(backgroundColor: .red)
+            .fwNavigationBarColor(backgroundColor: .systemGreen)
+            .navigationTitle("ViewModel Detail")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear { self.viewModel.send(event: .onAppear) }
     }
     

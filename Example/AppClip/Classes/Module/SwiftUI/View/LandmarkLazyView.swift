@@ -17,6 +17,7 @@ struct LandmarkLazyView: View {
     var body: some View {
         VStack{
             Text("count:\(list.count)")
+                .frame(height: 44)
             //数据数量，在LazyVStack下数据在每次刷新后才会增加，在VStack下，数据会一直增加。
             ScrollView{
                 LazyVStack{ //换成VStack作比较
@@ -25,6 +26,7 @@ struct LandmarkLazyView: View {
                             .onAppear {
                                 moreItem(id: item.id)
                             }
+                            .frame(height: 44)
                     }
                 }
                 if loading {
@@ -32,6 +34,8 @@ struct LandmarkLazyView: View {
                 }
             }
         }
+        .fwNavigationBarColor(backgroundColor: .tertiarySystemBackground)
+        .navigationTitle("LazyVStack")
     }
 
     func moreItem(id:UUID){

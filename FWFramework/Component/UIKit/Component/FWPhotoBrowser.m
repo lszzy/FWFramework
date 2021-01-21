@@ -82,7 +82,7 @@
     self.dismissTapGes = tapGes;
 }
 
-- (void)setPictureUrls:(NSArray<NSString *> *)pictureUrls {
+- (void)setPictureUrls:(NSArray *)pictureUrls {
     _pictureUrls = pictureUrls;
     self.picturesCount = pictureUrls.count;
 }
@@ -477,11 +477,11 @@
     }
 }
 
-- (void)setUrlString:(NSString *)urlString {
+- (void)setUrlString:(id)urlString {
     _urlString = urlString;
     [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
-    if ([urlString.lowercaseString hasPrefix:@"http"]) {
+    if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
         self.progressView.progress = 0.01;
         // 如果没有在执行动画，那么就显示出来
         if (self.showAnimation == false) {
@@ -523,7 +523,12 @@
             self.progressView.progress = progress;
         }];
     } else {
-        UIImage *image = [UIImage imageNamed:urlString];
+        UIImage *image = nil;
+        if ([urlString isKindOfClass:[NSString class]]) {
+            image = [UIImage imageNamed:urlString];
+        } else if ([urlString isKindOfClass:[UIImage class]]) {
+            image = (UIImage *)urlString;
+        }
         if (image) {
             self.imageView.image = image;
             // 计算图片的大小

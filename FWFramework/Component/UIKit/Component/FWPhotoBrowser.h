@@ -22,9 +22,9 @@
  @param photoBrowser 图片浏览器
  @param index          索引
  
- @return 图片的 url 字符串
+ @return 图片的 url 字符串或UIImage
  */
-- (NSString *)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
+- (id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
 
 /**
  获取对应索引的视图
@@ -97,7 +97,7 @@
 /**
  必须参数，与picturesCount二选一，图片地址列表，自动设置图片张数
  */
-@property (nonatomic, copy) NSArray<NSString *> *pictureUrls;
+@property (nonatomic, copy) NSArray *pictureUrls;
 
 /**
  当前选中索引，默认0
@@ -178,8 +178,8 @@
 @property (nonatomic, assign) CGSize pictureSize;
 // 显示的默认图片
 @property (nonatomic, strong) UIImage *placeholderImage;
-// 图片的地址 URL
-@property (nonatomic, strong) NSString *urlString;
+// 图片的地址，支持NSString和UIImage
+@property (nonatomic, strong) id urlString;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 图片是否加载成功，加载成功可获取imageView.image
