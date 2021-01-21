@@ -9,7 +9,6 @@
 
 #import "FWTest.h"
 #import "FWLog.h"
-#import "FWPlugin.h"
 #import <objc/runtime.h>
 
 #ifdef DEBUG
@@ -74,7 +73,6 @@
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
                     FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
-                    FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
                 });
             }
         });
