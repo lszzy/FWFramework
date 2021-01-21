@@ -106,7 +106,10 @@ platform :ios do
         silent: true,
         clean: true
       )
-      upload_to_testflight(skip_submission: true)
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true,
+        skip_submission: true
+      )
     end
   end
 
@@ -124,7 +127,10 @@ platform :ios do
         silent: true,
         clean: true
       )
-      upload_to_testflight(skip_submission: true)
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true,
+        skip_submission: true
+      )
     end
   end
 
