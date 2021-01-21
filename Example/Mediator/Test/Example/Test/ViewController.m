@@ -7,10 +7,10 @@
 //
 
 #import "ViewController.h"
-#import <FWFramework/FWFramework.h>
-#import <Mediator/Mediator-Swift.h>
+@import FWFramework;
+@import Mediator;
 
-@interface ViewController ()
+@interface ViewController () <FWViewController>
 
 @end
 
@@ -19,14 +19,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.navigationItem.title = @"ViewController";
+    self.navigationItem.title = @"TestModule Example";
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button setTitle:@"Test" forState:UIControlStateNormal];
     [button fwAddTouchBlock:^(id  _Nonnull sender) {
-        UIViewController *viewController = [FWModule(TestModuleService) testViewController];
-        [FWRouter pushViewController:viewController animated:YES];
+        [FWRouter pushViewController:[Mediator.testModule testViewController] animated:YES];
     }];
     [self.view addSubview:button];
     button.fwLayoutChain.center();

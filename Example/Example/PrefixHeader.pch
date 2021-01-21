@@ -9,10 +9,10 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
-#import <FWFramework/FWFramework.h>
+@import FWFramework;
+@import Core;
+@import Mediator;
 #import "SwiftHeader.h"
 #import "AppConfig.h"
-#import "AppRouter.h"
-#import "AppTheme.h"
 
 #endif /* PrefixHeader_pch */

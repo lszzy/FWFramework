@@ -23,6 +23,9 @@
 "systemTitle" = "系统";
 "themeLight" = "浅色";
 "themeDark" = "深色";
-"loginInvalid" = "登录失效";
-"loginSuccess" = "登录成功";
-"logoutSuccess" = "退出成功";
+"welcomeTitle" = "你知道我在等你吗？";
+"backTitle" = "欢迎回来，亲";
+"logoutConfirm" = "确定要退出当前账号吗?";
+"envDev" = "开发";
+"envTest" = "测试";
+"envProd" = "正式";

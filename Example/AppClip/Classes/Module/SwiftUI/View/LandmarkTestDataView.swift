@@ -32,7 +32,8 @@ struct LandmarkTestDataView: View {
                 loadData()
             }
         })
-        .fwNavigationBarColor(backgroundColor: .fwColor(withHex: 0xFFDA00))
+        .fwNavigationBarColor(backgroundColor: .tertiarySystemBackground)
+        .navigationTitle("Codable Test")
         .navigationBarItems(trailing: HStack {
             Button(action: {
                 loadData()

@@ -1,0 +1,11 @@
+use_frameworks!
+platform :ios, '9.0'
+
+target 'Core_Example' do
+  pod 'Core', :path => '../'
+  pod 'FWFramework', :path => '../../../../'
+
+  target 'Core_Tests' do
+    inherit! :search_paths
+  end
+end

@@ -253,6 +253,13 @@
             [[FWViewControllerManager sharedInstance] hookInit:viewController];
             return viewController;
         }));
+        FWSwizzleClass(UIViewController, @selector(initWithCoder:), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(NSCoder *coder), FWSwizzleCode({
+            UIViewController *viewController = FWSwizzleOriginal(coder);
+            if (viewController) {
+                [[FWViewControllerManager sharedInstance] hookInit:viewController];
+            }
+            return viewController;
+        }));
         FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             [[FWViewControllerManager sharedInstance] hookLoadView:selfObject];

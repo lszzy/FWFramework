@@ -4,7 +4,7 @@
 //  Created by Nicholas Fox on 10/4/19.
 //
 
-#if DEBUG || arch(arm64)
+#if arch(arm64) || arch(x86_64)
 #if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 import Combine

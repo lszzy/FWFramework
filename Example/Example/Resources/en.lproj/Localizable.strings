@@ -23,6 +23,9 @@
 "systemTitle" = "System";
 "themeLight" = "Light";
 "themeDark" = "Dark";
-"loginInvalid" = "Login Invalid";
-"loginSuccess" = "Login Successful";
-"logoutSuccess" = "Logout Successful";
+"welcomeTitle" = "Do you know that I'm waiting for you?";
+"backTitle" = "Welcome back, dear";
+"logoutConfirm" = "Are you sure you want to log out?";
+"envDev" = "Dev";
+"envTest" = "Test";
+"envProd" = "Prod";

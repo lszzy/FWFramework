@@ -19,8 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 正式环境
 #define APP_ENV_PROD 3
 
-// 定义当前环境
+// 自动配置当前环境
+#if APP_PROD
+#define APP_ENV APP_ENV_PROD
+#elif APP_TEST
+#define APP_ENV APP_ENV_TEST
+#else
 #define APP_ENV APP_ENV_DEV
+#endif
 
 #pragma mark - API
 
@@ -49,12 +55,5 @@ NS_ASSUME_NONNULL_BEGIN
 #define APP_API_KEY @""
 
 #endif
-
-#pragma mark - AppConfig
-
-// 动态配置
-@interface AppConfig : NSObject
-
-@end
 
 NS_ASSUME_NONNULL_END

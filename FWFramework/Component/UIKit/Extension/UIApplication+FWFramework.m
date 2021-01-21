@@ -167,7 +167,10 @@
     }
     
     // 文件是否存在
-    NSString *soundFile = [[NSBundle mainBundle] pathForResource:file ofType:nil];
+    NSString *soundFile = file;
+    if (![file isAbsolutePath]) {
+        soundFile = [[NSBundle mainBundle] pathForResource:file ofType:nil];
+    }
     if (![[NSFileManager defaultManager] fileExistsAtPath:soundFile]) {
         return 0;
     }
