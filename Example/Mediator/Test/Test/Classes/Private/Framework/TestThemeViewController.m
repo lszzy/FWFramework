@@ -132,8 +132,8 @@
     [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
     
     UIImage *buttonImage = [UIImage fwThemeLight:(FWThemeManager.sharedInstance.style == FWThemeStyleLight ? nil : [TestBundle imageNamed:@"theme_image_light"]) dark:(FWThemeManager.sharedInstance.style == FWThemeStyleDark ? nil : [TestBundle imageNamed:@"theme_image_dark"])];
-    FWThemeObject<NSAttributedString *> *themeString = [NSAttributedString fwThemeObjectWithHtmlString:@"我是<span style='color:red;'>红色</span>字符串" defaultAttributes:@{
-        NSFontAttributeName: FWFontBold(16).fwItalicFont,
+    FWThemeObject<NSAttributedString *> *themeString = [NSAttributedString fwThemeObjectWithHtmlString:@"我是<span style='color:red;'>红色</span>AttributedString" defaultAttributes:@{
+        NSFontAttributeName: FWFontBold(16),
         NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]],
     }];
     
