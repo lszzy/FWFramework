@@ -68,6 +68,12 @@ Templates可以在Xcode新建使用HeaderDoc注释的OC类，安装命令如下�
 	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '1.0.0'
 	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Component/Deprecated子模块，并在后续版本删除
 
+1.0.3版本：
+
+	* FWTheme和FWImage类支持bundle加载
+	* FWPhotoBrowser支持UIImage参数
+	* Example项目重构、模块化和持续集成示例
+
 1.0.2版本：
 
 	* 增加FWAutoloader自动加载类
