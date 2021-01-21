@@ -130,7 +130,7 @@
         }
     }
     
-    return [NSString stringWithFormat:@"font-weight:%@;font-style:%@;font-size:%.0fpx;",
+    return [NSString stringWithFormat:@"font-family:-apple-system;font-weight:%@;font-style:%@;font-size:%.0fpx;",
             fontWeight, fontStyle, font.pointSize];
 }
 
