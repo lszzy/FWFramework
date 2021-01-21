@@ -106,10 +106,19 @@ platform :ios do
         silent: true,
         clean: true
       )
-      upload_to_testflight(
-        skip_waiting_for_build_processing: true,
-        skip_submission: true
-      )
+      if options[:update]
+        CHANGELOG_TEXT = options[:update]
+        upload_to_testflight(
+          skip_waiting_for_build_processing: false,
+          changelog: CHANGELOG_TEXT,
+          skip_submission: true
+        )
+      else
+        upload_to_testflight(
+          skip_waiting_for_build_processing: true,
+          skip_submission: true
+        )
+      end
     end
   end
 
@@ -127,10 +136,19 @@ platform :ios do
         silent: true,
         clean: true
       )
-      upload_to_testflight(
-        skip_waiting_for_build_processing: true,
-        skip_submission: true
-      )
+      if options[:update]
+        CHANGELOG_TEXT = options[:update]
+        upload_to_testflight(
+          skip_waiting_for_build_processing: false,
+          changelog: CHANGELOG_TEXT,
+          skip_submission: true
+        )
+      else
+        upload_to_testflight(
+          skip_waiting_for_build_processing: true,
+          skip_submission: true
+        )
+      end
     end
   end
 
