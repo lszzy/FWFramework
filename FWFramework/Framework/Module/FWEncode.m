@@ -17,6 +17,10 @@
 
 + (NSString *)fwJsonEncode:(id)object
 {
+    if (!object) {
+        return nil;
+    }
+    
     NSError *err = nil;
     id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
     if (err) {
@@ -492,6 +496,30 @@ NSNumber * FWSafeNumber(id value) {
 #pragma mark - NSData+FWSafeType
 
 @implementation NSData (FWSafeType)
+
++ (NSData *)fwJsonEncode:(id)object
+{
+    if (!object) {
+        return nil;
+    }
+    
+    NSError *err = nil;
+    id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
+    if (err) {
+        return nil;
+    }
+    return data;
+}
+
+- (id)fwJsonDecode
+{
+    NSError *err = nil;
+    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&err];
+    if (err) {
+        return nil;
+    }
+    return obj;
+}
 
 - (NSString *)fwUTF8String
 {
