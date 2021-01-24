@@ -359,6 +359,21 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
 @interface NSData (FWSafeType)
 
 /*!
+ @brief Foundation对象编码为json数据
+ 
+ @param object 编码对象
+ @return json数据
+ */
++ (nullable NSData *)fwJsonEncode:(id)object;
+
+/**
+ *  json数据解码为Foundation对象
+ *
+ *  @return Foundation对象
+ */
+- (nullable id)fwJsonDecode;
+
+/*!
  @brief 转换为UTF8编码字符串
  
  @return UTF8编码字符串
