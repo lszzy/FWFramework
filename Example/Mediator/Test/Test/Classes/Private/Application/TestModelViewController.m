@@ -9,6 +9,37 @@
 
 #import "TestModelViewController.h"
 
+@interface TestModelRequest: FWRequest
+
+@property (nonatomic, copy, readonly) NSString *responseName;
+
+@end
+
+@implementation TestModelRequest
+
+- (NSString *)requestUrl
+{
+    return @"http://kvm.wuyong.site/test.json";
+}
+
+- (FWResponseSerializerType)responseSerializerType
+{
+    return FWResponseSerializerTypeJSON;
+}
+
+- (NSTimeInterval)requestTimeoutInterval
+{
+    return 30;
+}
+
+- (void)requestCompleteFilter
+{
+    NSDictionary *dict = [self.responseJSONObject fwAsNSDictionary];
+    _responseName = [dict[@"name"] fwAsNSString];
+}
+
+@end
+
 @interface TestModelUser : NSObject <FWModel>
 
 @property (nonatomic, assign) NSInteger userId;
@@ -75,6 +106,16 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
     self.textView = [[UITextView alloc] initWithFrame:self.view.bounds];
     self.textView.editable = NO;
     [self.view addSubview:self.textView];
+}
+
+- (void)renderModel
+{
+    TestModelRequest *request = [TestModelRequest new];
+    [request startWithCompletionBlockWithSuccess:^(TestModelRequest *request) {
+        [self.view fwShowMessageWithText:[NSString stringWithFormat:@"json请求成功: \n%@", request.responseName]];
+    } failure:^(TestModelRequest *request) {
+        [self fwShowAlertWithTitle:@"json请求失败" message:[NSString stringWithFormat:@"%@", request.error] cancel:FWLocalizedString(@"关闭") cancelBlock:nil];
+    }];
 }
 
 - (void)renderData
