@@ -162,11 +162,10 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
     // FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
     
     // 测试\udf36字符会导致json解码失败问题
-    NSString *jsonFile = [TestBundle.bundle pathForResource:@"jsonDecode" ofType:@"json"];
-    NSString *jsonString = [NSString stringWithContentsOfFile:jsonFile encoding:NSUTF8StringEncoding error:nil];
+    NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\udf36\\ufe0f\"}";
     id jsonObject = [jsonString fwJsonDecode];
     FWLogDebug(@"jsonString: %@ => json: %@", jsonString, jsonObject);
-    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@\njson: %@\nstring: %@", obj, [obj fwModelToJsonObject], jsonObject, [NSString fwJsonEncode:jsonObject]];
+    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@\ndecode.name: %@\nencode: %@", obj, [obj fwModelToJsonObject], [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
 }
 
 @end
