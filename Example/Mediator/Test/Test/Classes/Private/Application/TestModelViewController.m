@@ -133,39 +133,30 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
                                        @{
                                            @"userId": @2,
                                            @"userAge": @20,
-                                           @"userName": @"userName",
-                                           @"userLink": @"http://www.baidu.com/中文?id=中文",
-                                           },
-                                       @{
-                                           @"user_id": @3,
-                                           @"user_age": @20,
                                            @"user_name": @"userName",
                                            @"user_link": @"http://www.baidu.com/中文?id=中文",
-                                           },
+                                           }
                                        ],
                                @"users2": @[
                                        @{
-                                           @"userId": @4,
-                                           @"userAge": @20,
+                                           @"user_id": @3,
+                                           @"user_age": @20,
                                            @"userName": @"userName",
                                            @"userLink": @"http://www.baidu.com/中文?id=中文",
-                                           },
-                                       @{
-                                           @"user_id": @5,
-                                           @"user_age": @20,
-                                           @"user_name": @"userName",
-                                           @"user_link": @"http://www.baidu.com/中文?id=中文",
-                                           },
+                                           }
                                        ],
                                };
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
-    // FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
+    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
     
     // 测试\udf36字符会导致json解码失败问题
-    NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\udf36\\ufe0f\"}";
+    NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\"}";
     id jsonObject = [jsonString fwJsonDecode];
-    FWLogDebug(@"jsonString: %@ => json: %@", jsonString, jsonObject);
-    self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@\ndecode.name: %@\nencode: %@", obj, [obj fwModelToJsonObject], [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
+    self.textView.text = [NSString stringWithFormat:@"%@\nname: %@\njson: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
+    
+    jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\udf36\\ufe0f\"}";
+    jsonObject = [jsonString fwJsonDecode];
+    self.textView.text = [NSString stringWithFormat:@"%@\nname2: %@\njson2: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
 }
 
 @end
