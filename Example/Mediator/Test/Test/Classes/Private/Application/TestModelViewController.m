@@ -150,11 +150,11 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
     self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
     
     // 测试\udf36字符会导致json解码失败问题
-    NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\"}";
+    NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\\\udf36\\ufe0f\"}";
     id jsonObject = [jsonString fwJsonDecode];
     self.textView.text = [NSString stringWithFormat:@"%@\nname: %@\njson: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
     
-    jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\udf36\\ufe0f\"}";
+    jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\udf36\\ufe0f\"}";
     jsonObject = [jsonString fwJsonDecode];
     self.textView.text = [NSString stringWithFormat:@"%@\nname2: %@\njson2: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
 }
