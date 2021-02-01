@@ -130,6 +130,7 @@
               @[@"FWSkeletonView", @"TestSkeletonViewController"],
               @[@"UITableView+Background", @"TestTableBackgroundViewController"],
               @[@"FWPagingView", @"TestNestScrollViewController"],
+              @[@"FWPasscodeView", @"TestPasscodeViewController"],
               @[@"FWCropViewController", @"TestCropViewController"],
               @[@"MKMapView", @"TestMapViewController"],
               @[@"FWDrawerView", @"TestDrawerViewController"],
