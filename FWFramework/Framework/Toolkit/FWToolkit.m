@@ -215,6 +215,8 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 + (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion
 {
+    if (![self fwIsHttpURL:url]) return;
+    
     NSURL *nsurl = [self fwNSURLWithURL:url];
     SFSafariViewController *safariController = [[SFSafariViewController alloc] initWithURL:nsurl];
     if (completion) {

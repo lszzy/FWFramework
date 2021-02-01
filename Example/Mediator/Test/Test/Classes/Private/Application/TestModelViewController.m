@@ -9,6 +9,37 @@
 
 #import "TestModelViewController.h"
 
+@interface TestModelRequest: FWRequest
+
+@property (nonatomic, copy, readonly) NSString *responseName;
+
+@end
+
+@implementation TestModelRequest
+
+- (NSString *)requestUrl
+{
+    return @"http://kvm.wuyong.site/test.json";
+}
+
+- (FWResponseSerializerType)responseSerializerType
+{
+    return FWResponseSerializerTypeJSON;
+}
+
+- (NSTimeInterval)requestTimeoutInterval
+{
+    return 30;
+}
+
+- (void)requestCompleteFilter
+{
+    NSDictionary *dict = [self.responseJSONObject fwAsNSDictionary];
+    _responseName = [dict[@"name"] fwAsNSString];
+}
+
+@end
+
 @interface TestModelUser : NSObject <FWModel>
 
 @property (nonatomic, assign) NSInteger userId;
@@ -77,6 +108,16 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
     [self.view addSubview:self.textView];
 }
 
+- (void)renderModel
+{
+    TestModelRequest *request = [TestModelRequest new];
+    [request startWithCompletionBlockWithSuccess:^(TestModelRequest *request) {
+        [self.view fwShowMessageWithText:[NSString stringWithFormat:@"json请求成功: \n%@", request.responseName]];
+    } failure:^(TestModelRequest *request) {
+        [self fwShowAlertWithTitle:@"json请求失败" message:[NSString stringWithFormat:@"%@", request.error] cancel:FWLocalizedString(@"关闭") cancelBlock:nil];
+    }];
+}
+
 - (void)renderData
 {
     NSDictionary *jsonDict = @{
@@ -92,40 +133,30 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
                                        @{
                                            @"userId": @2,
                                            @"userAge": @20,
-                                           @"userName": @"userName",
-                                           @"userLink": @"http://www.baidu.com/中文?id=中文",
-                                           },
-                                       @{
-                                           @"user_id": @3,
-                                           @"user_age": @20,
                                            @"user_name": @"userName",
                                            @"user_link": @"http://www.baidu.com/中文?id=中文",
-                                           },
+                                           }
                                        ],
                                @"users2": @[
                                        @{
-                                           @"userId": @4,
-                                           @"userAge": @20,
+                                           @"user_id": @3,
+                                           @"user_age": @20,
                                            @"userName": @"userName",
                                            @"userLink": @"http://www.baidu.com/中文?id=中文",
-                                           },
-                                       @{
-                                           @"user_id": @5,
-                                           @"user_age": @20,
-                                           @"user_name": @"userName",
-                                           @"user_link": @"http://www.baidu.com/中文?id=中文",
-                                           },
+                                           }
                                        ],
                                };
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
     self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
-    // FWLogDebug(@"test long log:\n%@\n%@\n%@", self.textView.text, self.textView.text, self.textView.text);
     
     // 测试\udf36字符会导致json解码失败问题
-    NSString *jsonFile = [TestBundle.bundle pathForResource:@"jsonDecode" ofType:@"json"];
-    NSString *jsonString = [NSString stringWithContentsOfFile:jsonFile encoding:NSUTF8StringEncoding error:nil];
+    NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\\\udf36\\ufe0f\"}";
     id jsonObject = [jsonString fwJsonDecode];
-    FWLogDebug(@"jsonString: %@ => json: %@", jsonString, jsonObject);
+    self.textView.text = [NSString stringWithFormat:@"%@\nname: %@\njson: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
+    
+    jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\udf36\\ufe0f\"}";
+    jsonObject = [jsonString fwJsonDecode];
+    self.textView.text = [NSString stringWithFormat:@"%@\nname2: %@\njson2: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
 }
 
 @end

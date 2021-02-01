@@ -40,7 +40,7 @@ platform :ios do
       CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
     end
     puts "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog: #{CHANGELOG_TEXT}"
-    cocoapods
+    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Test",
@@ -70,7 +70,7 @@ platform :ios do
       CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
     end
     puts "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog: #{CHANGELOG_TEXT}"
-    cocoapods
+    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Prod",
@@ -93,9 +93,9 @@ platform :ios do
   end
 
   desc "Push a new test build to TestFlight"
-  lane :testflight_test do
+  lane :testflight_test do |options|
     if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
-      cocoapods
+      cocoapods(repo_update: false, use_bundle_exec: false)
       build_app(
         workspace: "Example.xcworkspace",
         scheme: "Example-Test",
@@ -123,9 +123,9 @@ platform :ios do
   end
 
   desc "Push a new prod build to TestFlight"
-  lane :testflight_prod do
+  lane :testflight_prod do |options|
     if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
-      cocoapods
+      cocoapods(repo_update: false, use_bundle_exec: false)
       build_app(
         workspace: "Example.xcworkspace",
         scheme: "Example-Prod",
@@ -153,9 +153,9 @@ platform :ios do
   end
 
   desc "Push a new prod build to the App Store"
-  lane :appstore_prod do
+  lane :appstore_prod do |options|
     if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
-      cocoapods
+      cocoapods(repo_update: false, use_bundle_exec: false)
       build_app(
         workspace: "Example.xcworkspace",
         scheme: "Example-Prod",
