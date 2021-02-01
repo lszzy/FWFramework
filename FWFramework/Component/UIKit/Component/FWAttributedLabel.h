@@ -20,6 +20,7 @@
 #import "FWIndicatorControl.h"
 #import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
+#import "FWPasscodeView.h"
 #import "FWPhotoBrowser.h"
 #import "FWPopupMenu.h"
 #import "FWProgressView.h"
