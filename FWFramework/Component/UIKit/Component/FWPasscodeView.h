@@ -340,7 +340,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeInputType) {
 - (void)resetCodeLength:(NSInteger)codeLength beginEdit:(BOOL)beginEdit;
 
 // Init
-- (instancetype _Nullable )initWithCodeLength:(NSInteger)codeLength;
+- (instancetype)initWithCodeLength:(NSInteger)codeLength;
 
 @end
 
