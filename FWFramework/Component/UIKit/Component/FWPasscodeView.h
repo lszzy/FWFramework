@@ -319,6 +319,12 @@ typedef NS_ENUM(NSInteger, FWPasscodeInputType) {
 - (void)reloadInputString:(NSString *_Nullable)value;
 
 /**
+ 开始或者结束编辑模式
+ */
+- (void)beginEdit;
+- (void)endEdit;
+
+/**
  清空输入，beginEdit: 自动开启编辑模式。默认: YES
  */
 - (void)clearAll;
@@ -340,7 +346,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeInputType) {
 - (void)resetCodeLength:(NSInteger)codeLength beginEdit:(BOOL)beginEdit;
 
 // Init
-- (instancetype _Nullable )initWithCodeLength:(NSInteger)codeLength;
+- (instancetype)initWithCodeLength:(NSInteger)codeLength;
 
 @end
 

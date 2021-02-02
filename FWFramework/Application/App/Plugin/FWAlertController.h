@@ -141,6 +141,9 @@ typedef NS_ENUM(NSInteger, FWAlertActionStyle) {
 /** 是否需要对话框拥有毛玻璃,默认为YES */
 @property(nonatomic, assign) BOOL needDialogBlur;
 
+/** 是否含有自定义TextField,键盘的frame改变会自动偏移,默认为NO */
+@property(nonatomic, assign) BOOL customTextField;
+
 /** 是否单击背景退出对话框,默认为YES */
 @property(nonatomic, assign) BOOL tapBackgroundViewDismiss;
 

@@ -1706,6 +1706,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
         @[@"alert样式 水平排列2个以上的按钮", @"alertTest5"],
         @[@"alert样式 设置头部图标", @"alertTest6"],
         @[@"alert样式 含有文本输入框", @"alertTest7"],
+        @[@"alert样式 自定义头部视图", @"alertTest8"],
         
         @[@"富文本(action设置富文本)", @"attributedStringTest1"],
         @[@"富文本(头部设置富文本)", @"attributedStringTest2"],
@@ -2129,6 +2130,36 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
         textField.secureTextEntry = YES;
         textField.clearButtonMode = UITextFieldViewModeAlways;
     }];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+// alert 自定义头部视图
+- (void)alertTest8 {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+    headerView.backgroundColor = Theme.backgroundColor;
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.textColor = Theme.textColor;
+    titleLabel.text = @"请输入验证码";
+    [headerView addSubview:titleLabel];
+    titleLabel.fwLayoutChain.centerX().topWithInset(40);
+    
+    FWPasscodeView *boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
+    [boxInputView prepareViewWithBeginEdit:YES];
+    [headerView addSubview:boxInputView];
+    boxInputView.fwLayoutChain.topToBottomOfViewWithOffset(titleLabel, 40).centerX().size(CGSizeMake(260, 50));
+    
+    FWAlertController *alertController = [FWAlertController alertControllerWithCustomHeaderView:headerView preferredStyle:FWAlertControllerStyleAlert animationType:FWAlertAnimationTypeDefault];
+    alertController.customTextField = YES;
+
+    FWAlertAction *action1 = [FWAlertAction actionWithTitle:@"取消" style:FWAlertActionStyleDefault handler:^(FWAlertAction * _Nonnull action) {
+        NSLog(@"取消");
+    }];
+    FWAlertAction *action2 = [FWAlertAction actionWithTitle:@"确定" style:FWAlertActionStyleDefault handler:^(FWAlertAction * _Nonnull action) {
+        NSLog(@"确定");
+    }];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 

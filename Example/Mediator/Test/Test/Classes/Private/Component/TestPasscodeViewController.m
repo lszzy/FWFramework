@@ -183,6 +183,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
 {
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 20, 0, 20);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-40, 0);
     [_boxInputView prepareViewWithBeginEdit:YES];
     _boxInputView.inputType = FWPasscodeInputTypeNumber;
     
@@ -206,6 +207,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
     
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 20, 0, 20);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-40, 0);
     _boxInputView.showCursor = NO;
     _boxInputView.placeholderText = @"露可娜娜";
     _boxInputView.cellProperty = cellProperty;
@@ -236,6 +238,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
 
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-20, 0);
     _boxInputView.flowLayout.itemSize = CGSizeMake((52), (52));
     _boxInputView.cellProperty = cellProperty;
     [_boxInputView prepareViewWithBeginEdit:YES];
@@ -275,6 +278,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
 
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-20, 0);
     _boxInputView.flowLayout.itemSize = CGSizeMake((52), (52));
     _boxInputView.cellProperty = cellProperty;
     [_boxInputView prepareViewWithBeginEdit:YES];
@@ -298,6 +302,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
 
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-20, 0);
     _boxInputView.needSecurity = YES;//need
     _boxInputView.flowLayout.itemSize = CGSizeMake((52), (52));
     _boxInputView.cellProperty = cellProperty;
@@ -342,6 +347,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
 
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-20, 0);
     _boxInputView.needSecurity = YES;//need
     _boxInputView.flowLayout.itemSize = CGSizeMake((52), (52));
     _boxInputView.cellProperty = cellProperty;
@@ -380,6 +386,7 @@ typedef NS_ENUM(NSInteger, CRBoxInputModelType) {
 
     FWPasscodeView *_boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
     _boxInputView.collectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    _boxInputView.collectionView.contentOffset = CGPointMake(-20, 0);
     _boxInputView.needSecurity = YES;
     _boxInputView.flowLayout.itemSize = CGSizeMake((52), (52));
     _boxInputView.cellProperty = cellProperty;
