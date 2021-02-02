@@ -604,7 +604,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     return self;
 }
 
-- (instancetype _Nullable )initWithCodeLength:(NSInteger)codeLength
+- (instancetype)initWithCodeLength:(NSInteger)codeLength
 {
     self = [super init];
     if (self) {

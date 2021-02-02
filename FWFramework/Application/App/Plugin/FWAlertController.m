@@ -1615,7 +1615,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (!_isForceOffset && !_customAlertView && !_customHeaderView && !_customActionSequenceView && !_componentView) {
+    if (!_isForceOffset && ((!_customAlertView && !_customHeaderView && !_customActionSequenceView && !_componentView) || _customTextField)) {
         // 监听键盘改变frame，键盘frame改变需要移动对话框
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
@@ -1666,7 +1666,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 #pragma mark - 键盘通知
 
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
-    if (!_isForceOffset && (_offsetForAlert.y == 0.0 || _textFields.lastObject.isFirstResponder)) {
+    if (!_isForceOffset && (_offsetForAlert.y == 0.0 || _textFields.lastObject.isFirstResponder || _customTextField)) {
         CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGFloat keyboardEndY = keyboardEndFrame.origin.y;
         CGFloat diff = fabs((FWScreenHeight - keyboardEndY) * 0.5);
