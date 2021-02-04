@@ -657,6 +657,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     self.backgroundColor = [UIColor clearColor];
     _valueArr = [NSMutableArray new];
     _needBeginEdit = NO;
+    _endEditWhenEditingFinished = YES;
 }
 
 #pragma mark - LoadAndPrepareView
@@ -839,7 +840,9 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     
     if (verStr.length >= _codeLength) {
         verStr = [verStr substringToIndex:_codeLength];
-        [self endEdit];
+        if (_endEditWhenEditingFinished) {
+            [self endEdit];
+        }
     }
     textField.text = verStr;
     
