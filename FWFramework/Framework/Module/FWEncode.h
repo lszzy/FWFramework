@@ -35,6 +35,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable id)fwJsonDecode;
 
+#pragma mark - Base64
+
+/**
+ *  base64编码
+ *
+ *  @return base64字符串
+ */
+- (nullable NSString *)fwBase64Encode;
+
+/**
+ *  base64解码
+ *
+ *  @return 原字符串
+ */
+- (nullable NSString *)fwBase64Decode;
+
 #pragma mark - Unicode
 
 /**
@@ -62,22 +78,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return 中文字符串
  */
 - (NSString *)fwUnicodeDecode;
-
-#pragma mark - Base64
-
-/**
- *  base64编码
- *
- *  @return base64字符串
- */
-- (nullable NSString *)fwBase64Encode;
-
-/**
- *  base64解码
- *
- *  @return 原字符串
- */
-- (nullable NSString *)fwBase64Decode;
 
 #pragma mark - Url
 
@@ -144,6 +144,48 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return md5字符串
  */
 - (nullable NSString *)fwMd5EncodeFile;
+
+@end
+
+#pragma mark - NSData+FWEncode
+
+/**
+ *  NSData编码扩展
+ */
+@interface NSData (FWEncode)
+
+#pragma mark - Json
+
+/*!
+ @brief Foundation对象编码为json数据
+ 
+ @param object 编码对象
+ @return json数据
+ */
++ (nullable NSData *)fwJsonEncode:(id)object;
+
+/**
+ *  json数据解码为Foundation对象
+ *
+ *  @return Foundation对象
+ */
+- (nullable id)fwJsonDecode;
+
+#pragma mark - Base64
+
+/**
+ *  base64编码
+ *
+ *  @return base64数据
+ */
+- (NSData *)fwBase64Encode;
+
+/**
+ *  base64解码
+ *
+ *  @return 原数据
+ */
+- (nullable NSData *)fwBase64Decode;
 
 @end
 
@@ -357,21 +399,6 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  @brief NSData类型安全分类
  */
 @interface NSData (FWSafeType)
-
-/*!
- @brief Foundation对象编码为json数据
- 
- @param object 编码对象
- @return json数据
- */
-+ (nullable NSData *)fwJsonEncode:(id)object;
-
-/**
- *  json数据解码为Foundation对象
- *
- *  @return Foundation对象
- */
-- (nullable id)fwJsonDecode;
 
 /*!
  @brief 转换为UTF8编码字符串
