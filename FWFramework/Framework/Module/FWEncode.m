@@ -46,6 +46,30 @@
     return obj;
 }
 
+#pragma mark - Base64
+
+- (NSString *)fwBase64Encode
+{
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    if (!data) {
+        return nil;
+    }
+    
+    data = [data base64EncodedDataWithOptions:0];
+    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return ret;
+}
+
+- (NSString *)fwBase64Decode
+{
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    if (!data) {
+        return nil;
+    }
+    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return ret;
+}
+
 #pragma mark - Unicode
 
 - (NSUInteger)fwUnicodeLength
@@ -123,30 +147,6 @@
     // NSString *retStr = [NSPropertyListSerialization propertyListFromData:tempData mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
     NSString *retStr = [NSPropertyListSerialization propertyListWithData:tempData options:NSPropertyListMutableContainersAndLeaves format:NULL error:NULL];
     return [retStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
-}
-
-#pragma mark - Base64
-
-- (NSString *)fwBase64Encode
-{
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
-    if (!data) {
-        return nil;
-    }
-    
-    data = [data base64EncodedDataWithOptions:0];
-    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return ret;
-}
-
-- (NSString *)fwBase64Decode
-{
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    if (!data) {
-        return nil;
-    }
-    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return ret;
 }
 
 #pragma mark - Url
@@ -250,6 +250,50 @@
                         digest[12], digest[13],
                         digest[14], digest[15]];
     return result;
+}
+
+@end
+
+#pragma mark - NSData+FWEncode
+
+@implementation NSData (FWEncode)
+
+#pragma mark - Json
+
++ (NSData *)fwJsonEncode:(id)object
+{
+    if (!object) {
+        return nil;
+    }
+    
+    NSError *err = nil;
+    id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
+    if (err) {
+        return nil;
+    }
+    return data;
+}
+
+- (id)fwJsonDecode
+{
+    NSError *err = nil;
+    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&err];
+    if (err) {
+        return nil;
+    }
+    return obj;
+}
+
+#pragma mark - Base64
+
+- (NSData *)fwBase64Encode
+{
+    return [self base64EncodedDataWithOptions:0];
+}
+
+- (NSData *)fwBase64Decode
+{
+    return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 @end
@@ -496,30 +540,6 @@ NSNumber * FWSafeNumber(id value) {
 #pragma mark - NSData+FWSafeType
 
 @implementation NSData (FWSafeType)
-
-+ (NSData *)fwJsonEncode:(id)object
-{
-    if (!object) {
-        return nil;
-    }
-    
-    NSError *err = nil;
-    id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
-    if (err) {
-        return nil;
-    }
-    return data;
-}
-
-- (id)fwJsonDecode
-{
-    NSError *err = nil;
-    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&err];
-    if (err) {
-        return nil;
-    }
-    return obj;
-}
 
 - (NSString *)fwUTF8String
 {
