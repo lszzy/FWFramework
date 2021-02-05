@@ -44,28 +44,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - RSA
 
-/// RSA公钥加密，使用默认标签，执行base64编码
+/// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
 - (nullable NSData *)fwRSAEncryptWithPublicKey:(NSString *)publicKey;
 
-/// RSA公钥加密，可自定义标签，指定base64编码
+/// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
 - (nullable NSData *)fwRSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
 
-/// RSA私钥解密，使用默认标签，执行base64解密
+/// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
 - (nullable NSData *)fwRSADecryptWithPrivateKey:(NSString *)privateKey;
 
-/// RSA私钥解密，可自定义标签，指定base64解码
+/// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
 - (nullable NSData *)fwRSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
 
-/// RSA私钥加签，使用默认标签，执行base64编码
+/// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
 - (nullable NSData *)fwRSASignWithPrivateKey:(NSString *)privateKey;
 
-/// RSA私钥加签，可自定义标签，指定base64编码
+/// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
 - (nullable NSData *)fwRSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
 
-/// RSA公钥验签，使用默认标签，执行base64解密
+/// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
 - (nullable NSData *)fwRSAVerifyWithPublicKey:(NSString *)publicKey;
 
-/// RSA公钥验签，可自定义标签，指定base64解码
+/// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
 - (nullable NSData *)fwRSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
 
 @end
