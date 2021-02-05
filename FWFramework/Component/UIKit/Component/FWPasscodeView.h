@@ -299,6 +299,10 @@ typedef NS_ENUM(NSInteger, FWPasscodeInputType) {
  */
 @property (assign, nonatomic) BOOL clearAllWhenEditingBegin;
 
+/**
+ 输入完成时，是否自动结束编辑模式，收起键盘。默认: YES
+ */
+@property (assign, nonatomic) BOOL endEditWhenEditingFinished;
 
 @property (copy, nonatomic, nullable) void(^textDidChangeBlock)(NSString * _Nullable text, BOOL isFinished);
 @property (copy, nonatomic, nullable) void(^editStatusChangeBlock)(FWPasscodeEditStatus editStatus);

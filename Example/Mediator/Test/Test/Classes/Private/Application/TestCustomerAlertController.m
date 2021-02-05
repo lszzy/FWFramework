@@ -2145,6 +2145,7 @@ static NSTimeInterval kDelay = 0.0618; // 按钮接着上一个按钮的延时�
     titleLabel.fwLayoutChain.centerX().topWithInset(40);
     
     FWPasscodeView *boxInputView = [[FWPasscodeView alloc] initWithCodeLength:4];
+    boxInputView.endEditWhenEditingFinished = NO;
     [boxInputView prepareViewWithBeginEdit:YES];
     [headerView addSubview:boxInputView];
     boxInputView.fwLayoutChain.topToBottomOfViewWithOffset(titleLabel, 40).centerX().size(CGSizeMake(260, 50));
