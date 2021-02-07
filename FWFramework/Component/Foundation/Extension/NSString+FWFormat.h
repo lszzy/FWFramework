@@ -156,6 +156,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)fwIsFormatUrl;
 
 /**
+ *  是否是HTML
+ */
+- (BOOL)fwIsFormatHtml;
+
+/**
  *  是否是IP
  */
 - (BOOL)fwIsFormatIp;
