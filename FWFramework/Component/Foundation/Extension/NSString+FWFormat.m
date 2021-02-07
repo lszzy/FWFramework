@@ -281,6 +281,11 @@
     return [self.lowercaseString hasPrefix:@"http://"] || [self.lowercaseString hasPrefix:@"https://"];
 }
 
+- (BOOL)fwIsFormatHtml
+{
+    return [self rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch].location != NSNotFound;
+}
+
 - (BOOL)fwIsFormatEmail
 {
     return [self fwIsFormatRegex:@"^[A-Z0-9a-z._\%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"];
