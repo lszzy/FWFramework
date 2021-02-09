@@ -17,11 +17,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// reloadData完成回调
 - (void)fwReloadDataWithCompletion:(nullable void (^)(void))completion;
 
+/// reloadData清空尺寸缓存
+- (void)fwReloadDataWithoutCache;
+
 /// reloadData禁用动画
 - (void)fwReloadDataWithoutAnimation;
 
-/// reloadData清空尺寸缓存
-- (void)fwReloadDataWithoutCache;
+/// reloadSections禁用动画
+- (void)fwReloadSectionsWithoutAnimation:(NSIndexSet *)sections;
 
 /// reloadItems禁用动画
 - (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;

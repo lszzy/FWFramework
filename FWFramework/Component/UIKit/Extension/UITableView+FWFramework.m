@@ -49,6 +49,20 @@
     [self reloadData];
 }
 
+- (void)fwReloadDataWithoutAnimation
+{
+    [UIView performWithoutAnimation:^{
+        [self reloadData];
+    }];
+}
+
+- (void)fwReloadSectionsWithoutAnimation:(NSIndexSet *)sections
+{
+    [UIView performWithoutAnimation:^{
+        [self reloadSections:sections withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
 - (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths
 {
     [UIView performWithoutAnimation:^{
