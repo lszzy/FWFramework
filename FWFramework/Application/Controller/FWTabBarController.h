@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, nullable) id<FWTabBarControllerDelegate> delegate;
 
-@property (nonatomic, copy, nullable) IBOutletCollection(UIViewController) NSArray *viewControllers;
+@property (nonatomic, copy, nullable) IBOutletCollection(UIViewController) NSArray<UIViewController *> *viewControllers;
 
 @property (nonatomic, readonly) FWTabBar *tabBar;
 
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, nullable) id <FWTabBarDelegate> delegate;
 
-@property (nonatomic, copy, nullable) NSArray *items;
+@property (nonatomic, copy, nullable) NSArray<FWTabBarItem *> *items;
 
 @property (nonatomic, weak, nullable) FWTabBarItem *selectedItem;
 

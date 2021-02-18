@@ -9,6 +9,7 @@
 
 #import "FWTabBarController.h"
 #import "FWAdaptive.h"
+#import "FWTheme.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWTabBarController
@@ -148,7 +149,7 @@
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
-- (void)setViewControllers:(NSArray *)viewControllers {
+- (void)setViewControllers:(NSArray<UIViewController *> *)viewControllers {
     if (_viewControllers && _viewControllers.count) {
         for (UIViewController *viewController in _viewControllers) {
             [viewController willMoveToParentViewController:nil];
@@ -352,7 +353,7 @@
     }
 }
 
-- (void)setItems:(NSArray *)items {
+- (void)setItems:(NSArray<FWTabBarItem *> *)items {
     for (FWTabBarItem *item in _items) {
         [item removeFromSuperview];
     }
@@ -417,10 +418,14 @@
     
     CGFloat alpha = (translucent ? 0.9 : 1.0);
     
-    [_backgroundView setBackgroundColor:[UIColor colorWithRed:245/255.0
-                                                        green:245/255.0
-                                                         blue:245/255.0
-                                                        alpha:alpha]];
+    [_backgroundView setBackgroundColor:[UIColor fwThemeLight:[UIColor colorWithRed:245/255.0
+                                                                              green:245/255.0
+                                                                               blue:245/255.0
+                                                                              alpha:alpha]
+                                                         dark:[UIColor colorWithRed:18/255.0
+                                                                              green:18/255.0
+                                                                               blue:18/255.0
+                                                                              alpha:alpha]]];
 }
 
 #pragma mark - Accessibility
@@ -487,10 +492,17 @@
     _title = @"";
     _titlePositionAdjustment = UIOffsetZero;
     _unselectedTitleAttributes = @{
-                                   NSFontAttributeName: [UIFont systemFontOfSize:12],
-                                   NSForegroundColorAttributeName: [UIColor blackColor],
-                                   };
-    _selectedTitleAttributes = [_unselectedTitleAttributes copy];
+        NSFontAttributeName: [UIFont systemFontOfSize:12],
+        NSForegroundColorAttributeName: [UIColor colorWithRed:146/255.0
+                                                        green:146/255.0
+                                                         blue:146/255.0
+                                                        alpha:1.0],
+    };
+    _selectedTitleAttributes = @{
+        NSFontAttributeName: [UIFont systemFontOfSize:12],
+        NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor]
+                                                         dark:[UIColor whiteColor]],
+    };
     _badgeBackgroundColor = [UIColor redColor];
     _badgeTextColor = [UIColor whiteColor];
     _badgeTextFont = [UIFont systemFontOfSize:12];
