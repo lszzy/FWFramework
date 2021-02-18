@@ -23,8 +23,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.hidesBottomBarWhenPushed = YES;
+        self.tabBar.backgroundView.backgroundColor = [Theme barColor];
         [self setupViewControllers];
-        [self fwThemeChanged:FWThemeManager.sharedInstance.style];
     }
     return self;
 }
@@ -36,28 +36,26 @@
     TestWebViewController *thirdViewController = [[TestWebViewController alloc] init];
     thirdViewController.requestUrl = @"http://kvm.wuyong.site/test.php";
     [self setViewControllers:@[firstViewController, secondViewController, thirdViewController]];
+    
+    firstViewController.fwTabBarItem.title = FWLocalizedString(@"homeTitle");
+    firstViewController.fwTabBarItem.badgeValue = @"99";
+    secondViewController.fwTabBarItem.title = FWLocalizedString(@"testTitle");
+    thirdViewController.fwTabBarItem.title = FWLocalizedString(@"settingTitle");
+    thirdViewController.fwTabBarItem.badgeDot = YES;
+    
+    [self setupItemImages];
+    FWWeakifySelf();
+    [self fwAddThemeListener:^(FWThemeStyle style) {
+        FWStrongifySelf();
+        [self setupItemImages];
+    }];
 }
 
-- (void)fwThemeChanged:(FWThemeStyle)style
+- (void)setupItemImages
 {
-    self.tabBar.backgroundView.backgroundColor = [Theme barColor];
-    NSArray *tabBarItemTitles = @[FWLocalizedString(@"homeTitle"), FWLocalizedString(@"testTitle"), FWLocalizedString(@"settingTitle")];
-    NSArray *tabBarItemImages = @[@"tabbar_home", @"tabbar_test", @"tabbar_settings"];
-    NSInteger index = 0;
-    for (FWTabBarItem *item in [[self tabBar] items]) {
-        item.selectedTitleAttributes = @{NSForegroundColorAttributeName: [Theme textColor]};
-        item.unselectedTitleAttributes = @{NSForegroundColorAttributeName: [Theme detailColor]};
-        item.title = [tabBarItemTitles objectAtIndex:index];
-        UIImage *selectedimage = [[TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme textColor]];
-        UIImage *unselectedimage = [[TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme detailColor]];
-        [item setFinishedSelectedImage:selectedimage withFinishedUnselectedImage:unselectedimage];
-        if (index == 0) {
-            item.badgeValue = @"99";
-        } else if (index == 2) {
-            item.badgeDot = YES;
-        }
-        index++;
-    }
+    [self.viewControllers[0].fwTabBarItem setFinishedSelectedImage:[[TestBundle imageNamed:@"tabbar_home"] fwImageWithTintColor:[Theme textColor]] withFinishedUnselectedImage:[[TestBundle imageNamed:@"tabbar_home"] fwImageWithTintColor:[Theme detailColor]]];
+    [self.viewControllers[1].fwTabBarItem setFinishedSelectedImage:[[TestBundle imageNamed:@"tabbar_test"] fwImageWithTintColor:[Theme textColor]] withFinishedUnselectedImage:[[TestBundle imageNamed:@"tabbar_test"] fwImageWithTintColor:[Theme detailColor]]];
+    [self.viewControllers[2].fwTabBarItem setFinishedSelectedImage:[[TestBundle imageNamed:@"tabbar_settings"] fwImageWithTintColor:[Theme textColor]] withFinishedUnselectedImage:[[TestBundle imageNamed:@"tabbar_settings"] fwImageWithTintColor:[Theme detailColor]]];
 }
 
 #pragma mark - Public
