@@ -131,6 +131,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, nullable) NSString *badgeValue;
 
+@property (nonatomic) BOOL badgeDot;
+
 @property (strong, nullable) UIImage *badgeBackgroundImage;
 
 @property (strong) UIColor *badgeBackgroundColor;

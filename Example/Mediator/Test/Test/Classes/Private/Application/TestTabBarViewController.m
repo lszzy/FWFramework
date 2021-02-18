@@ -52,7 +52,9 @@
         UIImage *unselectedimage = [[TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme detailColor]];
         [item setFinishedSelectedImage:selectedimage withFinishedUnselectedImage:unselectedimage];
         if (index == 0) {
-            item.badgeValue = @"1";
+            item.badgeValue = @"99";
+        } else if (index == 2) {
+            item.badgeDot = YES;
         }
         index++;
     }

@@ -555,11 +555,14 @@
             withAttributes:titleAttributes];
     }
     
-    if ([[self badgeValue] integerValue] != 0) {
-        CGSize badgeSize = [_badgeValue boundingRectWithSize:CGSizeMake(frameSize.width, 20)
-                                              options:NSStringDrawingUsesLineFragmentOrigin
-                                           attributes:@{NSFontAttributeName: [self badgeTextFont]}
-                                              context:nil].size;
+    if ([self badgeDot] || [[self badgeValue] length] > 0) {
+        CGSize badgeSize = CGSizeMake(6, 6);
+        if (![self badgeDot]) {
+            badgeSize = [_badgeValue boundingRectWithSize:CGSizeMake(frameSize.width, 20)
+                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                               attributes:@{NSFontAttributeName: [self badgeTextFont]}
+                                                  context:nil].size;
+        }
         
         CGFloat textOffset = 2.0f;
         
@@ -580,22 +583,24 @@
             [[self badgeBackgroundImage] drawInRect:badgeBackgroundFrame];
         }
         
-        CGContextSetFillColorWithColor(context, [[self badgeTextColor] CGColor]);
-        
-        NSMutableParagraphStyle *badgeTextStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-        [badgeTextStyle setLineBreakMode:NSLineBreakByWordWrapping];
-        [badgeTextStyle setAlignment:NSTextAlignmentCenter];
-        
-        NSDictionary *badgeTextAttributes = @{
-                                              NSFontAttributeName: [self badgeTextFont],
-                                              NSForegroundColorAttributeName: [self badgeTextColor],
-                                              NSParagraphStyleAttributeName: badgeTextStyle,
-                                              };
-        
-        [[self badgeValue] drawInRect:CGRectMake(CGRectGetMinX(badgeBackgroundFrame) + textOffset,
-                                                 CGRectGetMinY(badgeBackgroundFrame) + textOffset,
-                                                 badgeSize.width, badgeSize.height)
-            withAttributes:badgeTextAttributes];
+        if (![self badgeDot]) {
+            CGContextSetFillColorWithColor(context, [[self badgeTextColor] CGColor]);
+            
+            NSMutableParagraphStyle *badgeTextStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            [badgeTextStyle setLineBreakMode:NSLineBreakByWordWrapping];
+            [badgeTextStyle setAlignment:NSTextAlignmentCenter];
+            
+            NSDictionary *badgeTextAttributes = @{
+                                                  NSFontAttributeName: [self badgeTextFont],
+                                                  NSForegroundColorAttributeName: [self badgeTextColor],
+                                                  NSParagraphStyleAttributeName: badgeTextStyle,
+                                                  };
+            
+            [[self badgeValue] drawInRect:CGRectMake(CGRectGetMinX(badgeBackgroundFrame) + textOffset,
+                                                     CGRectGetMinY(badgeBackgroundFrame) + textOffset,
+                                                     badgeSize.width, badgeSize.height)
+                withAttributes:badgeTextAttributes];
+        }
     }
     
     CGContextRestoreGState(context);
@@ -623,6 +628,12 @@
 
 - (void)setBadgeValue:(NSString *)badgeValue {
     _badgeValue = badgeValue;
+    
+    [self setNeedsDisplay];
+}
+
+- (void)setBadgeDot:(BOOL)badgeDot {
+    _badgeDot = badgeDot;
     
     [self setNeedsDisplay];
 }
