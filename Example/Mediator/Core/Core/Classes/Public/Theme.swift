@@ -10,6 +10,7 @@ import FWFramework
 @objcMembers public class Theme: NSObject {
     public static var backgroundColor = UIColor.fwThemeLight(.white, dark: .black)
     public static var textColor = UIColor.fwThemeLight(.black, dark: .white)
+    public static var detailColor = UIColor.fwThemeLight(UIColor.black.withAlphaComponent(0.5), dark: UIColor.white.withAlphaComponent(0.5))
     public static var barColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFAFAFA), dark: .fwColor(withHex: 0x121212))
     public static var tableColor = UIColor.fwThemeLight(.fwColor(withHex: 0xF2F2F2), dark: .fwColor(withHex: 0x000000))
     public static var cellColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFFFFFF), dark: .fwColor(withHex: 0x1C1C1C))

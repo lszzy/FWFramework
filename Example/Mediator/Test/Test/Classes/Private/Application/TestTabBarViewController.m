@@ -24,6 +24,7 @@
     if (self) {
         self.hidesBottomBarWhenPushed = YES;
         [self setupViewControllers];
+        [self fwThemeChanged:FWThemeManager.sharedInstance.style];
     }
     return self;
 }
@@ -35,18 +36,20 @@
     TestWebViewController *thirdViewController = [[TestWebViewController alloc] init];
     thirdViewController.requestUrl = @"http://kvm.wuyong.site/test.php";
     [self setViewControllers:@[firstViewController, secondViewController, thirdViewController]];
-    [self customizeTabBar];
 }
 
-- (void)customizeTabBar
+- (void)fwThemeChanged:(FWThemeStyle)style
 {
+    self.tabBar.backgroundView.backgroundColor = [Theme barColor];
     NSArray *tabBarItemTitles = @[FWLocalizedString(@"homeTitle"), FWLocalizedString(@"testTitle"), FWLocalizedString(@"settingTitle")];
     NSArray *tabBarItemImages = @[@"tabbar_home", @"tabbar_test", @"tabbar_settings"];
     NSInteger index = 0;
     for (FWTabBarItem *item in [[self tabBar] items]) {
+        item.selectedTitleAttributes = @{NSForegroundColorAttributeName: [Theme textColor]};
+        item.unselectedTitleAttributes = @{NSForegroundColorAttributeName: [Theme detailColor]};
         item.title = [tabBarItemTitles objectAtIndex:index];
         UIImage *selectedimage = [[TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme textColor]];
-        UIImage *unselectedimage = [TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]];
+        UIImage *unselectedimage = [[TestBundle imageNamed:[tabBarItemImages objectAtIndex:index]] fwImageWithTintColor:[Theme detailColor]];
         [item setFinishedSelectedImage:selectedimage withFinishedUnselectedImage:unselectedimage];
         if (index == 0) {
             item.badgeValue = @"1";
