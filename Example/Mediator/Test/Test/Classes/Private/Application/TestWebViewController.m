@@ -38,10 +38,27 @@
         [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
     }];
     
+    // 加载网页
+    [self loadRequestUrl];
+}
+
+- (void)loadRequestUrl
+{
     // 设置统一请求头
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
+    urlRequest.timeoutInterval = 30;
     [urlRequest setValue:@"test" forHTTPHeaderField:@"Test-Token"];
     self.webRequest = urlRequest;
+}
+
+- (void)didFailLoad:(NSError *)error
+{
+    FWWeakifySelf();
+    [self.view fwShowEmptyViewWithText:error.localizedDescription detail:nil image:nil action:@"点击重试" block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.view fwHideEmptyView];
+        [self loadRequestUrl];
+    }];
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
