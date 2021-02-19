@@ -50,6 +50,7 @@
     
     if (!self.window) {
         self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        self.window.backgroundColor = [Theme backgroundColor];
         [self.window makeKeyAndVisible];
     }
     self.window.rootViewController = [TabBarController new];
