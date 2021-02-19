@@ -28,7 +28,6 @@
     [super viewDidLoad];
     if (!self.requestUrl) return;
     
-    // 侧滑返回和webView手势兼容
     self.fwForcePopGesture = YES;
     FWWeakifySelf();
     [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
@@ -36,13 +35,11 @@
         self.fwForcePopGesture = !webView.canGoBack;
     }];
     
-    // 分享按钮
     [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) block:^(id sender) {
         FWStrongifySelf();
         [self shareRequestUrl];
     }];
     
-    // 工具栏
     if (self.showToolbar) {
         [self setupToolbar];
     }
@@ -97,6 +94,14 @@
     
     UIBarButtonItem *flexibleItem = [UIBarButtonItem fwBarItemWithObject:@(UIBarButtonSystemItemFlexibleSpace) target:nil action:nil];
     self.toolbarItems = @[flexibleItem, backItem, flexibleItem, forwardItem, flexibleItem];
+    
+    [self.webView.scrollView fwObserveProperty:@"contentOffset" block:^(UIScrollView *scrollView, NSDictionary * _Nonnull change) {
+        FWStrongifySelf();
+        BOOL toolbarHidden = scrollView.fwCanScrollVertical && scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionUp;
+        if (self.fwToolBarHidden != toolbarHidden) {
+            [self fwSetToolBarHidden:toolbarHidden animated:YES];
+        }
+    }];
 }
 
 - (void)shareRequestUrl
@@ -126,28 +131,24 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    // 调用钩子
     if ([self respondsToSelector:@selector(shouldStartLoad:)] &&
         ![self shouldStartLoad:navigationAction]) {
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    // 系统Scheme
     if ([UIApplication fwIsSystemURL:navigationAction.request.URL]) {
         [UIApplication fwOpenURL:navigationAction.request.URL];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    // AppScheme
     if ([navigationAction.request.URL.scheme isEqualToString:@"app"]) {
         [FWRouter openURL:navigationAction.request.URL.absoluteString];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    // 通用链接
     if ([navigationAction.request.URL.scheme isEqualToString:@"https"]) {
         [UIApplication fwOpenUniversalLinks:navigationAction.request.URL completionHandler:^(BOOL success) {
             if (success) {
