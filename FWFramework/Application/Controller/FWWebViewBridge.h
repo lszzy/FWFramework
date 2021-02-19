@@ -70,6 +70,9 @@ NSString * FWWebViewJsBridge_js(void);
 
 @property (strong, nonatomic, nullable) FWWebViewJsBridge *fwJsBridge;
 
+/// 清理WebView缓存，完成时回调
++ (void)fwClearWebCache:(nullable void (^)(void))completion;
+
 /// 异步获取并缓存WebView原始默认UserAgent，需主线程调用，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
 + (void)fwWebViewUserAgent:(nullable void (^)(NSString * _Nullable userAgent))completion;
 
