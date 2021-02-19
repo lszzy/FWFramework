@@ -61,6 +61,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
             TestWebViewController *viewController = [TestWebViewController new];
             viewController.navigationItem.title = parameters[FWRouterURLKey];
             viewController.requestUrl = parameters[FWRouterURLKey];
+            viewController.showToolbar = [parameters[@"toolbar"] fwAsBool];
             [FWRouter pushViewController:viewController animated:YES];
         }];
     }];
@@ -404,7 +405,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenHttp
 {
-    [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/test.php?toolbar=1"];
 }
 
 - (void)onOpenUniversalLinks

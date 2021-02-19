@@ -16,7 +16,11 @@
 
 - (NSArray *)webItems
 {
-    return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
+    if (self.showToolbar) {
+        return @[[UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"close"] target:self action:@selector(onWebClose)]];
+    } else {
+        return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
+    }
 }
 
 - (void)viewDidLoad
@@ -35,16 +39,73 @@
     // 分享按钮
     [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) block:^(id sender) {
         FWStrongifySelf();
-        [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
+        [self shareRequestUrl];
     }];
     
-    // 加载网页
+    // 工具栏
+    if (self.showToolbar) {
+        [self setupToolbar];
+    }
+    
     [self loadRequestUrl];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.showToolbar) {
+        [self.navigationController setToolbarHidden:NO animated:animated];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (self.showToolbar) {
+        [self.navigationController setToolbarHidden:YES animated:animated];
+    }
+}
+
+- (void)setupToolbar
+{
+    FWWeakifySelf();
+    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:[TestBundle imageNamed:@"web_back"] block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        if ([self.webView canGoBack]) {
+            [self.webView goBack];
+        }
+    }];
+    backItem.enabled = self.webView.canGoBack;
+    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+        backItem.enabled = webView.canGoBack;
+    }];
+    
+    UIBarButtonItem *forwardItem = [UIBarButtonItem fwBarItemWithObject:[TestBundle imageNamed:@"web_next"] block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        if ([self.webView canGoForward]) {
+            [self.webView goForward];
+        }
+    }];
+    forwardItem.enabled = self.webView.canGoForward;
+    [self.webView fwObserveProperty:@"canGoForward" block:^(WKWebView *webView, NSDictionary *change) {
+        forwardItem.enabled = webView.canGoForward;
+    }];
+    
+    UIBarButtonItem *flexibleItem = [UIBarButtonItem fwBarItemWithObject:@(UIBarButtonSystemItemFlexibleSpace) target:nil action:nil];
+    self.toolbarItems = @[flexibleItem, backItem, flexibleItem, forwardItem, flexibleItem];
+}
+
+- (void)shareRequestUrl
+{
+    NSURL *url = [NSURL URLWithString:self.requestUrl];
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:url, nil] applicationActivities:nil];
+    [self presentViewController:activityController animated:YES completion:nil];
 }
 
 - (void)loadRequestUrl
 {
-    // 设置统一请求头
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
     urlRequest.timeoutInterval = 30;
     [urlRequest setValue:@"test" forHTTPHeaderField:@"Test-Token"];
