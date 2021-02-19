@@ -77,6 +77,7 @@
             [self.webView goBack];
         }
     }];
+    backItem.tintColor = [Theme textColor];
     backItem.enabled = self.webView.canGoBack;
     [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
         backItem.enabled = webView.canGoBack;
@@ -88,6 +89,7 @@
             [self.webView goForward];
         }
     }];
+    forwardItem.tintColor = [Theme textColor];
     forwardItem.enabled = self.webView.canGoForward;
     [self.webView fwObserveProperty:@"canGoForward" block:^(WKWebView *webView, NSDictionary *change) {
         forwardItem.enabled = webView.canGoForward;
