@@ -543,6 +543,13 @@ NSString * FWWebViewJsBridge_js() {
     objc_setAssociatedObject(self, @selector(fwJsBridge), fwJsBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
++ (void)fwClearWebCache:(void (^)(void))completion
+{
+    NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+    NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:completion];
+}
+
 + (void)fwWebViewUserAgent:(void (^)(NSString * _Nullable))completion
 {
     static NSString *staticUserAgent = nil;
