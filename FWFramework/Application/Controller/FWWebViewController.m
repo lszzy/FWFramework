@@ -266,8 +266,8 @@
 
 - (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    if ([self respondsToSelector:@selector(didFinishLoad:)]) {
-        [(id<FWWebViewController>)self didFinishLoad:navigation];
+    if ([self respondsToSelector:@selector(didFinishLoad)]) {
+        [(id<FWWebViewController>)self didFinishLoad];
     }
 }
 
@@ -275,8 +275,8 @@
 {
     if (error.code == NSURLErrorCancelled) return;
     
-    if ([self respondsToSelector:@selector(didFailLoad:withError:)]) {
-        [(id<FWWebViewController>)self didFailLoad:navigation withError:error];
+    if ([self respondsToSelector:@selector(didFailLoad:)]) {
+        [(id<FWWebViewController>)self didFailLoad:error];
     }
 }
 
@@ -284,8 +284,8 @@
 {
     if (error.code == NSURLErrorCancelled) return;
     
-    if ([self respondsToSelector:@selector(didFailLoad:withError:)]) {
-        [(id<FWWebViewController>)self didFailLoad:navigation withError:error];
+    if ([self respondsToSelector:@selector(didFailLoad:)]) {
+        [(id<FWWebViewController>)self didFailLoad:error];
     }
 }
 
