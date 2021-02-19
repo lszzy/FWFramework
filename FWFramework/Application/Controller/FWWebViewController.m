@@ -35,6 +35,8 @@
         @"renderWebLayout" : @"fwInnerRenderWebLayout",
         @"onWebClose": @"fwInnerOnWebClose",
         @"webView:didFinishNavigation:" : @"fwInnerWebView:didFinishNavigation:",
+        @"webView:didFailProvisionalNavigation:withError:" : @"fwInnerWebView:didFailProvisionalNavigation:withError:",
+        @"webView:didFailNavigation:withError:" : @"fwInnerWebView:didFailNavigation:withError:",
         @"webView:decidePolicyForNavigationAction:decisionHandler:" : @"fwInnerWebView:decidePolicyForNavigationAction:decisionHandler:",
         @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
         @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
@@ -262,10 +264,28 @@
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+- (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
     if ([self respondsToSelector:@selector(didFinishLoad:)]) {
         [(id<FWWebViewController>)self didFinishLoad:navigation];
+    }
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (error.code == NSURLErrorCancelled) return;
+    
+    if ([self respondsToSelector:@selector(didFailLoad:withError:)]) {
+        [(id<FWWebViewController>)self didFailLoad:navigation withError:error];
+    }
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (error.code == NSURLErrorCancelled) return;
+    
+    if ([self respondsToSelector:@selector(didFailLoad:withError:)]) {
+        [(id<FWWebViewController>)self didFailLoad:navigation withError:error];
     }
 }
 
