@@ -54,7 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction;
 
 /// 已经加载完成，可用来获取title、设置按钮等，默认未实现
-- (void)didFinishLoad:(WKNavigation *)navigation;
+- (void)didFinishLoad:(null_unspecified WKNavigation *)navigation;
+
+/// 网页加载失败，可用来处理加载异常等，默认未实现
+- (void)didFailLoad:(null_unspecified WKNavigation *)navigation withError:(NSError *)error;
 
 /// 点击关闭按钮(不含手势返回)，可用来拦截关闭时二次确认等，默认直接关闭
 - (void)onWebClose;
