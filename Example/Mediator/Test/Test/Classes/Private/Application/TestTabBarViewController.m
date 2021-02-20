@@ -12,61 +12,80 @@
 #import "TestWebViewController.h"
 @import Core;
 
-@interface TestTabBarViewController () <FWViewController>
+@interface TestTabBarViewController () <UITabBarControllerDelegate>
 
 @end
 
 @implementation TestTabBarViewController
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)init
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super init];
     if (self) {
-        self.hidesBottomBarWhenPushed = YES;
-        self.tabBar.backgroundView.backgroundColor = [Theme barColor];
-        self.fwForcePopGesture = YES;
-        self.fwNavigationBarStyle = FWNavigationBarStyleHidden;
-        [self setupViewControllers];
+        [self setupAppearance];
+        [self setupController];
     }
     return self;
 }
 
-- (void)setupViewControllers
+- (void)setupAppearance
 {
-    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
-        [FWRouter closeViewControllerAnimated:YES];
-    }];
+    self.hidesBottomBarWhenPushed = YES;
+    self.delegate = self;
+    [self.tabBar fwSetTextColor:[Theme textColor]];
+    self.tabBar.fwThemeBackgroundColor = [Theme barColor];
+    self.fwForcePopGesture = YES;
+    self.fwNavigationBarStyle = FWNavigationBarStyleHidden;
+}
+
+- (void)setupController
+{
     UIViewController *firstController = [TestRouterViewController new];
-    firstController.navigationItem.leftBarButtonItem = backItem;
+    firstController.hidesBottomBarWhenPushed = NO;
+    FWWeakifySelf();
+    firstController.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
     UIViewController *secondController = [TestModuleController new];
-    secondController.navigationItem.leftBarButtonItem = backItem;
+    secondController.hidesBottomBarWhenPushed = NO;
+    secondController.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
     UIViewController *thirdController = [[TestWebViewController alloc] initWithRequestUrl:@"http://kvm.wuyong.site/test.php"];
-    thirdController.navigationItem.leftBarButtonItem = backItem;
+    thirdController.hidesBottomBarWhenPushed = NO;
+    thirdController.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
     
     firstController = [[UINavigationController alloc] initWithRootViewController:firstController];
     secondController = [[UINavigationController alloc] initWithRootViewController:secondController];
     thirdController = [[UINavigationController alloc] initWithRootViewController:thirdController];
     [self setViewControllers:@[firstController, secondController, thirdController]];
     
-    firstController.fwTabBarItem.title = FWLocalizedString(@"homeTitle");
-    firstController.fwTabBarItem.badgeValue = @"99";
-    secondController.fwTabBarItem.title = FWLocalizedString(@"testTitle");
-    thirdController.fwTabBarItem.title = FWLocalizedString(@"settingTitle");
-    thirdController.fwTabBarItem.badgeDot = YES;
-    
-    [self setupItemImages];
-    FWWeakifySelf();
-    [self fwAddThemeListener:^(FWThemeStyle style) {
-        FWStrongifySelf();
-        [self setupItemImages];
-    }];
+    firstController.tabBarItem.image = [TestBundle imageNamed:@"tabbar_home"];
+    firstController.tabBarItem.title = FWLocalizedString(@"homeTitle");
+    firstController.tabBarItem.badgeValue = @"99";
+    secondController.tabBarItem.image = [TestBundle imageNamed:@"tabbar_test"];
+    secondController.tabBarItem.title = FWLocalizedString(@"testTitle");
+    thirdController.tabBarItem.image = [TestBundle imageNamed:@"tabbar_settings"];
+    thirdController.tabBarItem.title = FWLocalizedString(@"settingTitle");
+    FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
+    [thirdController.tabBarItem fwShowBadgeView:badgeView badgeValue:nil];
 }
 
-- (void)setupItemImages
+#pragma mark - UITabBarControllerDelegate
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-    [self.viewControllers[0].fwTabBarItem setFinishedSelectedImage:[[TestBundle imageNamed:@"tabbar_home"] fwImageWithTintColor:[Theme textColor]] withFinishedUnselectedImage:[[TestBundle imageNamed:@"tabbar_home"] fwImageWithTintColor:[Theme detailColor]]];
-    [self.viewControllers[1].fwTabBarItem setFinishedSelectedImage:[[TestBundle imageNamed:@"tabbar_test"] fwImageWithTintColor:[Theme textColor]] withFinishedUnselectedImage:[[TestBundle imageNamed:@"tabbar_test"] fwImageWithTintColor:[Theme detailColor]]];
-    [self.viewControllers[2].fwTabBarItem setFinishedSelectedImage:[[TestBundle imageNamed:@"tabbar_settings"] fwImageWithTintColor:[Theme textColor]] withFinishedUnselectedImage:[[TestBundle imageNamed:@"tabbar_settings"] fwImageWithTintColor:[Theme detailColor]]];
+    UIImageView *imageView = viewController.tabBarItem.fwImageView;
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    animation.values = @[@(1.0), @(1.4), @(0.9), @(1.15), @(0.95), @(1.02), @(1.0)];
+    animation.duration = 0.3 * 2;
+    animation.calculationMode = kCAAnimationCubic;
+    [imageView.layer addAnimation:animation forKey:nil];
 }
 
 #pragma mark - Public
