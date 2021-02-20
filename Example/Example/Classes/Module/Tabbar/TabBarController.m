@@ -67,10 +67,11 @@
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
     UIImageView *imageView = viewController.tabBarItem.fwImageView;
-    CABasicAnimation *animation = [imageView fwAddAnimationWithKeyPath:@"transform.scale" fromValue:@(0.7) toValue:@(1.3) duration:0.08 completion:nil];
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    animation.repeatCount = 1;
-    animation.autoreverses = YES;
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    animation.values = @[@(1.0), @(1.4), @(0.9), @(1.15), @(0.95), @(1.02), @(1.0)];
+    animation.duration = 0.3 * 2;
+    animation.calculationMode = kCAAnimationCubic;
+    [imageView.layer addAnimation:animation forKey:nil];
 }
 
 #pragma mark - Public
