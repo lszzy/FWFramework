@@ -68,13 +68,17 @@ NSString * FWWebViewJsBridge_js(void);
 
 @interface WKWebView (FWWebViewBridge)
 
+/// 设置Javascript桥接器强引用属性，防止使用过程中被释放
 @property (strong, nonatomic, nullable) FWWebViewJsBridge *fwJsBridge;
+
+/// 获取当前UserAgent，未自定义时为默认，失败时返回nil，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+@property (copy, readonly, nonatomic, nullable) NSString *fwUserAgent;
 
 /// 清理WebView缓存，完成时回调
 + (void)fwClearWebCache:(nullable void (^)(void))completion;
 
-/// 异步获取并缓存WebView原始默认UserAgent，需主线程调用，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-+ (void)fwWebViewUserAgent:(nullable void (^)(NSString * _Nullable userAgent))completion;
+/// 获取并缓存WebView默认UserAgent，包含应用信息，需主线程调用，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
++ (NSString *)fwWebViewUserAgent;
 
 /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
 + (NSString *)fwBrowserUserAgent;

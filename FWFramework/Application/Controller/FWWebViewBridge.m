@@ -8,6 +8,7 @@
  */
 
 #import "FWWebViewBridge.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation FWWebViewJsBridgeBase {
@@ -543,6 +544,15 @@ NSString * FWWebViewJsBridge_js() {
     objc_setAssociatedObject(self, @selector(fwJsBridge), fwJsBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSString *)fwUserAgent
+{
+    if (self.customUserAgent != nil) {
+        return self.customUserAgent;
+    }
+    NSString *userAgent = [self fwPerformPropertySelector:@"userAgent"];
+    return [userAgent isKindOfClass:[NSString class]] ? userAgent : nil;
+}
+
 + (void)fwClearWebCache:(void (^)(void))completion
 {
     NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
@@ -550,23 +560,23 @@ NSString * FWWebViewJsBridge_js() {
     [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:completion];
 }
 
-+ (void)fwWebViewUserAgent:(void (^)(NSString * _Nullable))completion
++ (NSString *)fwWebViewUserAgent
 {
     static NSString *staticUserAgent = nil;
-    static WKWebView *staticWebView = nil;
-    if (staticUserAgent != nil) {
-        completion(staticUserAgent);
-        return;
-    }
-    
-    staticWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
-    [staticWebView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-        if (result && [result isKindOfClass:[NSString class]]) {
-            staticUserAgent = (NSString *)result;
-            staticWebView = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
+        webConfiguration.applicationNameForUserAgent = [self fwBrowserExtensionUserAgent];
+        WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
+        
+        NSString *userAgent = [webView fwPerformPropertySelector:@"userAgent"];
+        if ([userAgent isKindOfClass:[NSString class]] && userAgent.length > 0) {
+            staticUserAgent = userAgent;
+        } else {
+            staticUserAgent = [self fwBrowserUserAgent];
         }
-        completion(staticUserAgent);
-    }];
+    });
+    return staticUserAgent;
 }
 
 + (NSString *)fwBrowserUserAgent
