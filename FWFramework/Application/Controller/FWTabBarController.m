@@ -97,6 +97,10 @@
     [[[self selectedViewController] view] setFrame:[[self contentView] bounds]];
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return self.selectedViewController.prefersStatusBarHidden;
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.selectedViewController.preferredStatusBarStyle;
 }
