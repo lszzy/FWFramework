@@ -78,6 +78,7 @@
     [self.tableData removeAllObjects];
     [self.tableData addObject:@[FWLocalizedString(@"languageTitle"), @"onLanguage"]];
     [self.tableData addObject:@[FWLocalizedString(@"themeTitle"), @"onTheme"]];
+    [self.tableData addObject:@[FWLocalizedString(@"rootTitle"), @"onRoot"]];
     [self.tableView reloadData];
 }
 
@@ -105,6 +106,9 @@
         FWThemeMode mode = FWThemeManager.sharedInstance.mode;
         NSString *theme = (mode == FWThemeModeSystem) ? FWLocalizedString(@"systemTitle") : (mode == FWThemeModeDark ? FWLocalizedString(@"themeDark") : FWLocalizedString(@"themeLight"));
         cell.detailTextLabel.text = theme;
+    } else if ([@"onRoot" isEqualToString:[rowData objectAtIndex:1]]) {
+        NSString *root = AppConfig.rootNavBar ? FWLocalizedString(@"rootNavBar") : FWLocalizedString(@"rootTabBar");
+        cell.detailTextLabel.text = root;
     } else {
         cell.detailTextLabel.text = @"";
     }
@@ -177,6 +181,14 @@
             mode = (currentMode == FWThemeModeSystem) ? FWThemeModeLight : (currentMode == FWThemeModeLight ? FWThemeModeDark : FWThemeModeSystem);
         }
         FWThemeManager.sharedInstance.mode = mode;
+        [TabBarController refreshController];
+    }];
+}
+
+- (void)onRoot
+{
+    [self fwShowSheetWithTitle:FWLocalizedString(@"rootTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[FWLocalizedString(@"rootTabBar"), FWLocalizedString(@"rootNavBar")] actionBlock:^(NSInteger index) {
+        AppConfig.rootNavBar = (index == 1);
         [TabBarController refreshController];
     }];
 }

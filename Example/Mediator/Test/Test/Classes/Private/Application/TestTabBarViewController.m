@@ -31,17 +31,16 @@
 
 - (void)setupViewControllers
 {
-    UIViewController *firstViewController = [[TestRouterViewController alloc] init];
-    UIViewController *secondViewController = [[TestModuleController alloc] init];
-    TestWebViewController *thirdViewController = [[TestWebViewController alloc] init];
-    thirdViewController.requestUrl = @"http://kvm.wuyong.site/test.php";
-    [self setViewControllers:@[firstViewController, secondViewController, thirdViewController]];
+    UIViewController *firstController = [[TestRouterViewController alloc] init];
+    UIViewController *secondController = [[TestModuleController alloc] init];
+    UIViewController *thirdController = [[TestWebViewController alloc] initWithRequestUrl:@"http://kvm.wuyong.site/test.php"];
+    [self setViewControllers:@[firstController, secondController, thirdController]];
     
-    firstViewController.fwTabBarItem.title = FWLocalizedString(@"homeTitle");
-    firstViewController.fwTabBarItem.badgeValue = @"99";
-    secondViewController.fwTabBarItem.title = FWLocalizedString(@"testTitle");
-    thirdViewController.fwTabBarItem.title = FWLocalizedString(@"settingTitle");
-    thirdViewController.fwTabBarItem.badgeDot = YES;
+    firstController.fwTabBarItem.title = FWLocalizedString(@"homeTitle");
+    firstController.fwTabBarItem.badgeValue = @"99";
+    secondController.fwTabBarItem.title = FWLocalizedString(@"testTitle");
+    thirdController.fwTabBarItem.title = FWLocalizedString(@"settingTitle");
+    thirdController.fwTabBarItem.badgeDot = YES;
     
     [self setupItemImages];
     FWWeakifySelf();

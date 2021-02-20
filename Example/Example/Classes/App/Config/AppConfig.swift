@@ -9,5 +9,6 @@
 import Foundation
 
 @objcMembers class AppConfig: NSObject {
-    
+    @FWUserDefaultAnnotation("rootNavBar", defaultValue: false)
+    static var rootNavBar: Bool
 }

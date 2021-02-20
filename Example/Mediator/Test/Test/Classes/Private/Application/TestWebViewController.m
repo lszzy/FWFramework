@@ -14,6 +14,15 @@
 
 @implementation TestWebViewController
 
+- (instancetype)initWithRequestUrl:(NSString *)requestUrl
+{
+    self = [super init];
+    if (self) {
+        _requestUrl = requestUrl;
+    }
+    return self;
+}
+
 - (NSArray *)webItems
 {
     if (self.showToolbar) {

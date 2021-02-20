@@ -17,7 +17,9 @@
 - (void)setupController {
     // iOS13使用新的方式
     self.window.backgroundColor = [Theme backgroundColor];
-    self.window.rootViewController = [TabBarController new];
+    self.window.rootViewController = AppConfig.rootNavBar
+        ? [[UINavigationController alloc] initWithRootViewController:[TabBarController new]]
+        : [TabBarController new];
 }
 
 @end

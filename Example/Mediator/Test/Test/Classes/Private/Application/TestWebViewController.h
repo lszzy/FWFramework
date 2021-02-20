@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL showToolbar;
 
+- (instancetype)initWithRequestUrl:(nullable NSString *)requestUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END
