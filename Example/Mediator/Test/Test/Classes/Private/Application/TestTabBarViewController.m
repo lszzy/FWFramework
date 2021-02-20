@@ -24,6 +24,8 @@
     if (self) {
         self.hidesBottomBarWhenPushed = YES;
         self.tabBar.backgroundView.backgroundColor = [Theme barColor];
+        self.fwForcePopGesture = YES;
+        self.fwNavigationBarStyle = FWNavigationBarStyleHidden;
         [self setupViewControllers];
     }
     return self;
@@ -31,9 +33,19 @@
 
 - (void)setupViewControllers
 {
-    UIViewController *firstController = [[TestRouterViewController alloc] init];
-    UIViewController *secondController = [[TestModuleController alloc] init];
+    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    UIViewController *firstController = [TestRouterViewController new];
+    firstController.navigationItem.leftBarButtonItem = backItem;
+    UIViewController *secondController = [TestModuleController new];
+    secondController.navigationItem.leftBarButtonItem = backItem;
     UIViewController *thirdController = [[TestWebViewController alloc] initWithRequestUrl:@"http://kvm.wuyong.site/test.php"];
+    thirdController.navigationItem.leftBarButtonItem = backItem;
+    
+    firstController = [[UINavigationController alloc] initWithRootViewController:firstController];
+    secondController = [[UINavigationController alloc] initWithRootViewController:secondController];
+    thirdController = [[UINavigationController alloc] initWithRootViewController:thirdController];
     [self setViewControllers:@[firstController, secondController, thirdController]];
     
     firstController.fwTabBarItem.title = FWLocalizedString(@"homeTitle");
