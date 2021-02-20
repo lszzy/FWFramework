@@ -25,7 +25,9 @@
 
 - (NSArray *)webItems
 {
-    if (self.showToolbar) {
+    if (self.navigationItem.leftBarButtonItem) {
+        return nil;
+    } else if (self.showToolbar) {
         return @[[UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"close"] target:self action:@selector(onWebClose)]];
     } else {
         return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
