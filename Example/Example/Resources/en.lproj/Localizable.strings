@@ -23,6 +23,9 @@
 "systemTitle" = "System";
 "themeLight" = "Light";
 "themeDark" = "Dark";
+"rootTitle" = "Root";
+"rootTabBar" = "TabBar";
+"rootNavBar" = "NavBar";
 "welcomeTitle" = "Do you know that I'm waiting for you?";
 "backTitle" = "Welcome back, dear";
 "logoutConfirm" = "Are you sure you want to log out?";

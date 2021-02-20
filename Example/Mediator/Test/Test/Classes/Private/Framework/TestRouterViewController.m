@@ -208,6 +208,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)renderModel
 {
+    self.navigationItem.title = @"FWRouter";
     NSString *url = @"http://test.com?id=我是中文";
     NSLog(@"fwUrlEncode: %@", [url fwUrlEncode]);
     NSLog(@"fwUrlDecode: %@", [[url fwUrlEncode] fwUrlDecode]);
