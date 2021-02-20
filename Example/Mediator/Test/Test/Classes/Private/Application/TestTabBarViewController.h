@@ -6,11 +6,11 @@
 //  Copyright © 2020 site.wuyong. All rights reserved.
 //
 
-@import FWFramework;
+#import "TestViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestTabBarViewController : FWTabBarController
+@interface TestTabBarViewController : UITabBarController
 
 + (void)refreshController;
 

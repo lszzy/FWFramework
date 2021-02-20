@@ -13,7 +13,7 @@
 #import "FWCollectionViewController.h"
 #import "FWScrollViewController.h"
 #import "FWTableViewController.h"
-#import "FWTabBarController.h"
+#import "FWNavigationController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
