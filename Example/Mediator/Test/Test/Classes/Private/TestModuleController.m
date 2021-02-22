@@ -37,7 +37,7 @@
         _searchBar.showsCancelButton = YES;
         [_searchBar.fwCancelButton setTitle:FWLocalizedString(@"取消") forState:UIControlStateNormal];
         [_searchBar fwForceCancelButtonEnabled:YES];
-        [_searchBar fwSetBackgroundColor:[Theme tableColor]];
+        [_searchBar fwSetBackgroundColor:[Theme barColor]];
         [_searchBar fwSetTextFieldBackgroundColor:[Theme tableColor]];
         _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 65);
         [_searchBar fwSetSearchIconCenter:YES];
