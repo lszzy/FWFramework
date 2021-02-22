@@ -17,7 +17,7 @@
     self.delegate = self;
     [self.tabBar fwSetTextColor:[Theme textColor]];
     self.tabBar.fwThemeBackgroundColor = [Theme barColor];
-    if (AppConfig.isRootNavigation) {
+    if (AppConfig.isRootNavigation && !AppConfig.isRootCustom) {
         self.fwNavigationBarStyle = FWNavigationBarStyleHidden;
     }
     
@@ -90,7 +90,7 @@
     if (!AppConfig.isRootNavigation) {
         return tabBarController;
     } else if (AppConfig.isRootCustom) {
-        return [[FWRootNavigationController alloc] initWithRootViewController:tabBarController];
+        return [[FWRootNavigationController alloc] initWithRootViewControllerNoWrapping:tabBarController];
     } else {
         return [[UINavigationController alloc] initWithRootViewController:tabBarController];
     }
