@@ -10,6 +10,15 @@
 #import "HomeViewController.h"
 #import "SettingsViewController.h"
 
+@implementation FWTabBarItem (AppTabBar)
+
+- (UIImageView *)fwImageView
+{
+    return self.contentView.imageView;
+}
+
+@end
+
 @implementation UITabBarController (AppTabBar)
 
 - (void)setupController
@@ -34,10 +43,15 @@
     UIViewController *settingsController = [SettingsViewController new];
     settingsController.hidesBottomBarWhenPushed = NO;
     UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
-    if (AppConfig.isRootCustom) settingsNav.tabBarItem = [FWTabBarItem new];
+    if (AppConfig.isRootCustom) {
+        settingsNav.tabBarItem = [FWTabBarItem new];
+        settingsNav.tabBarItem.badgeValue = @"";
+    } else {
+        FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
+        [settingsNav.tabBarItem fwShowBadgeView:badgeView badgeValue:nil];
+    }
     settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbarSettings"];
     settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
-    settingsNav.tabBarItem.badgeValue = @"";
     self.viewControllers = @[homeNav, testNav, settingsNav];
     
     [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
@@ -51,12 +65,11 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-    UIImageView *imageView = viewController.tabBarItem.fwImageView;
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     animation.values = @[@(1.0), @(1.4), @(0.9), @(1.15), @(0.95), @(1.02), @(1.0)];
     animation.duration = 0.3 * 2;
     animation.calculationMode = kCAAnimationCubic;
-    [imageView.layer addAnimation:animation forKey:nil];
+    [viewController.tabBarItem.fwImageView.layer addAnimation:animation forKey:nil];
 }
 
 #pragma mark - Public
