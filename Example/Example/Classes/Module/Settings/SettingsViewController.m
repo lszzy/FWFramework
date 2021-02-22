@@ -107,7 +107,12 @@
         NSString *theme = (mode == FWThemeModeSystem) ? FWLocalizedString(@"systemTitle") : (mode == FWThemeModeDark ? FWLocalizedString(@"themeDark") : FWLocalizedString(@"themeLight"));
         cell.detailTextLabel.text = theme;
     } else if ([@"onRoot" isEqualToString:[rowData objectAtIndex:1]]) {
-        NSString *root = AppConfig.rootNavBar ? FWLocalizedString(@"rootNavBar") : FWLocalizedString(@"rootTabBar");
+        NSString *root;
+        if (AppConfig.isRootCustom) {
+            root = AppConfig.isRootNavigation ? @"FWNavigationController" : @"FWTabBarController";
+        } else {
+            root = AppConfig.isRootNavigation ? @"UINavigationController" : @"UITabBarController";
+        }
         cell.detailTextLabel.text = root;
     } else {
         cell.detailTextLabel.text = @"";
@@ -162,7 +167,7 @@
         if (index < 3) {
             NSString *language = (index == 1) ? @"zh-Hans" : (index == 2 ? @"en" : nil);
             NSBundle.fwLocalizedLanguage = language;
-            [TabBarController refreshController];
+            [UITabBarController refreshController];
         } else {
             NSString *localized = NSBundle.fwLocalizedLanguage;
             NSString *language = (!localized) ? @"zh-Hans" : ([localized hasPrefix:@"zh"] ? @"en" : nil);
@@ -181,15 +186,32 @@
             mode = (currentMode == FWThemeModeSystem) ? FWThemeModeLight : (currentMode == FWThemeModeLight ? FWThemeModeDark : FWThemeModeSystem);
         }
         FWThemeManager.sharedInstance.mode = mode;
-        [TabBarController refreshController];
+        [UITabBarController refreshController];
     }];
 }
 
 - (void)onRoot
 {
-    [self fwShowSheetWithTitle:FWLocalizedString(@"rootTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[FWLocalizedString(@"rootTabBar"), FWLocalizedString(@"rootNavBar")] actionBlock:^(NSInteger index) {
-        AppConfig.rootNavBar = (index == 1);
-        [TabBarController refreshController];
+    [self fwShowSheetWithTitle:FWLocalizedString(@"rootTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[@"UITabBarController", @"FWTabBarController", @"UINavigationController", @"FWNavigationController"] actionBlock:^(NSInteger index) {
+        switch (index) {
+            case 1:
+                AppConfig.isRootNavigation = NO;
+                AppConfig.isRootCustom = YES;
+                break;
+            case 2:
+                AppConfig.isRootNavigation = YES;
+                AppConfig.isRootCustom = NO;
+                break;
+            case 3:
+                AppConfig.isRootNavigation = YES;
+                AppConfig.isRootCustom = YES;
+                break;
+            default:
+                AppConfig.isRootNavigation = NO;
+                AppConfig.isRootCustom = NO;
+                break;
+        }
+        [UITabBarController refreshController];
     }];
 }
 
