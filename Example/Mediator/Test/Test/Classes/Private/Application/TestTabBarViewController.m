@@ -35,7 +35,7 @@
     [self.tabBar fwSetTextColor:[Theme textColor]];
     self.tabBar.fwThemeBackgroundColor = [Theme barColor];
     self.fwForcePopGesture = YES;
-    self.fwNavigationBarStyle = FWNavigationBarStyleHidden;
+    self.fwNavigationBarHidden = YES;
 }
 
 - (void)setupController

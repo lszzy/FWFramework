@@ -101,7 +101,7 @@
     
     self.frameLabel.text = NSStringFromCGRect(self.view.frame);
     if (!self.fwIsPresented) {
-        [self fwSetNavigationBarHidden:YES animated:animated];
+        [self.navigationController setNavigationBarHidden:YES animated:animated];
     }
 }
 
@@ -282,7 +282,7 @@ FWDealloc();
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self fwSetNavigationBarHidden:NO animated:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
