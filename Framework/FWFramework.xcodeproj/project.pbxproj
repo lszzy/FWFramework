@@ -27,9 +27,7 @@
 		2F6313A9251DC83F0040F949 /* UIScrollView+FWContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6313A7251DC83F0040F949 /* UIScrollView+FWContentView.m */; };
 		2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F63D40D250CBB6000BA83A6 /* FWSceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */; };
-		2F64829725E172F800E9B77F /* FWNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F64829425E172F800E9B77F /* FWNavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F64829825E172F800E9B77F /* FWTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F64829525E172F800E9B77F /* FWTabBarController.swift */; };
-		2F64829925E172F800E9B77F /* FWNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F64829625E172F800E9B77F /* FWNavigationController.m */; };
 		2F8A9898255403A500AC554B /* FWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8A9896255403A500AC554B /* FWWebImage.m */; };
 		2F8A9899255403A500AC554B /* FWWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8A9897255403A500AC554B /* FWWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -362,9 +360,7 @@
 		2F6313A7251DC83F0040F949 /* UIScrollView+FWContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWContentView.m"; sourceTree = "<group>"; };
 		2F63D40A250CBB6000BA83A6 /* FWSceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWSceneDelegate.h; sourceTree = "<group>"; };
 		2F63D40B250CBB6000BA83A6 /* FWSceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWSceneDelegate.m; sourceTree = "<group>"; };
-		2F64829425E172F800E9B77F /* FWNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWNavigationController.h; sourceTree = "<group>"; };
 		2F64829525E172F800E9B77F /* FWTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWTabBarController.swift; sourceTree = "<group>"; };
-		2F64829625E172F800E9B77F /* FWNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWNavigationController.m; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F8A9896255403A500AC554B /* FWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
 		2F8A9897255403A500AC554B /* FWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
@@ -993,8 +989,6 @@
 			children = (
 				2FFE1C2C2507BFA5000332A3 /* FWCollectionViewController.h */,
 				2FFE1C272507BFA5000332A3 /* FWCollectionViewController.m */,
-				2F64829425E172F800E9B77F /* FWNavigationController.h */,
-				2F64829625E172F800E9B77F /* FWNavigationController.m */,
 				2FFE1C2A2507BFA5000332A3 /* FWScrollViewController.h */,
 				2FFE1C2F2507BFA5000332A3 /* FWScrollViewController.m */,
 				2F64829525E172F800E9B77F /* FWTabBarController.swift */,
@@ -1235,7 +1229,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F64829725E172F800E9B77F /* FWNavigationController.h in Headers */,
 				2F4CEC8025C66AED00D4C7F5 /* FWPasscodeView.h in Headers */,
 				2F48AD2D25B9E19C009792C6 /* FWAsyncLayer.h in Headers */,
 				2FFA37B525B13905000FE6E6 /* FWAutoloader.h in Headers */,
@@ -1489,7 +1482,6 @@
 				2FFE1C162507BF95000332A3 /* FWTask.m in Sources */,
 				2FFE1D312507BFBD000332A3 /* UIScrollView+FWEmptyView.m in Sources */,
 				2FFE1D572507BFBD000332A3 /* UITextField+FWKeyboard.m in Sources */,
-				2F64829925E172F800E9B77F /* FWNavigationController.m in Sources */,
 				2FFE1C3F2507BFA5000332A3 /* FWViewController.m in Sources */,
 				2F25749A25399A5300880FEF /* FWRefreshPlugin.m in Sources */,
 				2FFE1DBD2507BFBD000332A3 /* NSAttributedString+FWOption.m in Sources */,

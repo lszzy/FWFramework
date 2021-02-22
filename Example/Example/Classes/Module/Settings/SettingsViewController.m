@@ -108,10 +108,10 @@
         cell.detailTextLabel.text = theme;
     } else if ([@"onRoot" isEqualToString:[rowData objectAtIndex:1]]) {
         NSString *root;
-        if (AppConfig.isRootCustom) {
-            root = AppConfig.isRootNavigation ? @"FWNavigationController" : @"FWTabBarController";
+        if (AppConfig.isRootNavigation) {
+            root = AppConfig.isRootCustom ? @"Navigation+FWTabBar" : @"Navigation+UITabBar";
         } else {
-            root = AppConfig.isRootNavigation ? @"UINavigationController" : @"UITabBarController";
+            root = AppConfig.isRootCustom ? @"FWTabBar+Navigation" : @"UITabBar+Navigation";
         }
         cell.detailTextLabel.text = root;
     } else {
@@ -192,7 +192,7 @@
 
 - (void)onRoot
 {
-    [self fwShowSheetWithTitle:FWLocalizedString(@"rootTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[@"UITabBarController", @"FWTabBarController", @"UINavigationController", @"FWNavigationController"] actionBlock:^(NSInteger index) {
+    [self fwShowSheetWithTitle:FWLocalizedString(@"rootTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[@"UITabBar+Navigation", @"FWTabBar+Navigation", @"Navigation+UITabBar", @"Navigation+FWTabBar"] actionBlock:^(NSInteger index) {
         switch (index) {
             case 1:
                 AppConfig.isRootNavigation = NO;
