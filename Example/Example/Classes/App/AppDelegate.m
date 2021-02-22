@@ -53,9 +53,7 @@
         self.window.backgroundColor = [Theme backgroundColor];
         [self.window makeKeyAndVisible];
     }
-    self.window.rootViewController = AppConfig.rootNavBar
-        ? [[UINavigationController alloc] initWithRootViewController:[TabBarController new]]
-        : [TabBarController new];
+    self.window.rootViewController = [UITabBarController setupController];
 }
 
 @end
