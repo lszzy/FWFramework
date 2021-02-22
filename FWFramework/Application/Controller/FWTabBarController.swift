@@ -1121,7 +1121,7 @@ internal extension FWTabBar /* Actions */ {
 @objcMembers open class FWTabBarItemBadgeView: UIView {
     
     /// 默认颜色
-    public static var defaultBadgeColor = UIColor(red: 255.0/255.0, green: 59.0/255.0, blue: 48.0/255.0, alpha: 1.0)
+    public static var defaultBadgeColor = UIColor.red
     
     /// Badge color
     open var badgeColor: UIColor? = defaultBadgeColor {
@@ -1180,7 +1180,7 @@ internal extension FWTabBar /* Actions */ {
         badgeLabel.isHidden = false
         
         if badgeValue == "" {
-            imageView.frame = CGRect.init(origin: CGPoint.init(x: (bounds.size.width - 8.0) / 2.0, y: (bounds.size.height - 8.0) / 2.0), size: CGSize.init(width: 8.0, height: 8.0))
+            imageView.frame = CGRect.init(origin: CGPoint.init(x: (bounds.size.width - 10.0) / 2.0, y: (bounds.size.height - 10.0) / 2.0), size: CGSize.init(width: 10.0, height: 10.0))
         } else {
             imageView.frame = bounds
         }
