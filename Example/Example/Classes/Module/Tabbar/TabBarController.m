@@ -17,43 +17,27 @@
     self.delegate = self;
     [self.tabBar fwSetTextColor:[Theme textColor]];
     self.tabBar.fwThemeBackgroundColor = [Theme barColor];
-    if (AppConfig.isRootNavigation && !AppConfig.isRootCustom) {
-        self.fwNavigationBarStyle = FWNavigationBarStyleHidden;
-    }
     
     UIViewController *homeController = [HomeViewController new];
     homeController.hidesBottomBarWhenPushed = NO;
-    UINavigationController *homeNav;
-    if (AppConfig.isRootCustom) {
-        homeNav = [[FWContainerNavigationController alloc] initWithRootViewController:homeController];
-    } else {
-        homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
-    }
+    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
     homeNav.tabBarItem.image = [UIImage imageNamed:@"tabbarHome"];
     homeNav.tabBarItem.title = FWLocalizedString(@"homeTitle");
     [homeNav.tabBarItem fwShowBadgeView:[[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall] badgeValue:@"1"];
     
     UIViewController *testController = [Mediator.testModule testViewController];
     testController.hidesBottomBarWhenPushed = NO;
-    UINavigationController *testNav;
-    if (AppConfig.isRootCustom) {
-        testNav = [[FWContainerNavigationController alloc] initWithRootViewController:testController];
-    } else {
-        testNav = [[UINavigationController alloc] initWithRootViewController:testController];
-    }
+    UINavigationController *testNav = [[UINavigationController alloc] initWithRootViewController:testController];
     testNav.tabBarItem.image = [UIImage imageNamed:@"tabbarTest"];
     testNav.tabBarItem.title = FWLocalizedString(@"testTitle");
     
     UIViewController *settingsController = [SettingsViewController new];
     settingsController.hidesBottomBarWhenPushed = NO;
-    UINavigationController *settingsNav;
-    if (AppConfig.isRootCustom) {
-        settingsNav = [[FWContainerNavigationController alloc] initWithRootViewController:settingsController];
-    } else {
-        settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
-    }
+    UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
+    if (AppConfig.isRootCustom) settingsNav.tabBarItem = [FWTabBarItem new];
     settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbarSettings"];
     settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
+    settingsNav.tabBarItem.badgeValue = @"";
     self.viewControllers = @[homeNav, testNav, settingsNav];
     
     [self fwObserveNotification:FWLanguageChangedNotification block:^(NSNotification * _Nonnull notification) {
@@ -79,21 +63,13 @@
 
 + (UIViewController *)setupController
 {
-    UITabBarController *tabBarController;
-    if (AppConfig.isRootCustom) {
-        tabBarController = [FWTabBarController new];
-    } else {
-        tabBarController = [UITabBarController new];
-    }
+    UITabBarController *tabBarController = AppConfig.isRootCustom ? [FWTabBarController new] : [UITabBarController new];
     [tabBarController setupController];
+    if (!AppConfig.isRootNavigation) return tabBarController;
     
-    if (!AppConfig.isRootNavigation) {
-        return tabBarController;
-    } else if (AppConfig.isRootCustom) {
-        return [[FWRootNavigationController alloc] initWithRootViewControllerNoWrapping:tabBarController];
-    } else {
-        return [[UINavigationController alloc] initWithRootViewController:tabBarController];
-    }
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabBarController];
+    navigationController.navigationBarHidden = YES;
+    return navigationController;
 }
 
 + (void)refreshController
