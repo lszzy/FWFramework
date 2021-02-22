@@ -110,7 +110,7 @@
         FWStrongifySelf();
         BOOL toolbarHidden = scrollView.fwCanScrollVertical && scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionUp;
         if (self.fwToolBarHidden != toolbarHidden) {
-            [self fwSetToolBarHidden:toolbarHidden animated:YES];
+            [self.navigationController setToolbarHidden:toolbarHidden animated:YES];
         }
     }];
 }

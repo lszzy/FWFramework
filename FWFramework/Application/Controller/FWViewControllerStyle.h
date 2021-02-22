@@ -45,16 +45,13 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 /// 状态栏样式，默认UIStatusBarStyleDefault，设置后才会生效
 @property (nonatomic, assign) UIStatusBarStyle fwStatusBarStyle;
 
-/// 导航栏是否隐藏，切换无动画，立即生效
+/// 导航栏是否隐藏，默认NO，设置后才会在viewWillAppear:自动应用生效
 @property (nonatomic, assign) BOOL fwNavigationBarHidden;
-
-/// 动态设置导航栏是否隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
-- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 /// 当前导航栏样式，默认Default，设置后才会在viewWillAppear:自动应用生效
 @property (nonatomic, assign) FWNavigationBarStyle fwNavigationBarStyle;
 
-/// 当前导航栏设置，优先级高于style，设置后会在viewWillAppear:自动应用生效
+/// 当前导航栏设置，优先级高于style和hidden，设置后会在viewWillAppear:自动应用生效
 @property (nullable, nonatomic, strong) FWNavigationBarAppearance *fwNavigationBarAppearance;
 
 /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
@@ -62,9 +59,6 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 /// 工具栏是否隐藏，默认为YES。需设置toolbarItems，立即生效
 @property (nonatomic, assign) BOOL fwToolBarHidden;
-
-/// 动态设置工具栏是否隐藏，切换动画不突兀，立即生效
-- (void)fwSetToolBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 - (void)fwSetBarExtendEdge:(UIRectEdge)edge;

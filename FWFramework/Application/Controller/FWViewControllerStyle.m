@@ -101,17 +101,18 @@
 
 - (BOOL)fwNavigationBarHidden
 {
-    return self.navigationController.navigationBarHidden;
+    return [objc_getAssociatedObject(self, @selector(fwNavigationBarHidden)) boolValue];
 }
 
 - (void)setFwNavigationBarHidden:(BOOL)fwNavigationBarHidden
 {
-    self.navigationController.navigationBarHidden = fwNavigationBarHidden;
-}
-
-- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(fwNavigationBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
+    // [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    if (self.isViewLoaded && self.view.window) {
+        [self fwUpdateNavigationBarStyle:NO];
+    }
 }
 
 - (FWNavigationBarStyle)fwNavigationBarStyle
@@ -147,13 +148,14 @@
     if (!self.navigationController) return;
     FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
     NSNumber *style = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
-    if (!appearance && !style) return;
+    NSNumber *hidden = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
+    if (!appearance && !style && !hidden) return;
 
     BOOL isHidden = appearance.isHidden;
     BOOL isTransparent = appearance.isTransparent;
     if (!appearance) {
         appearance = [FWNavigationBarAppearance appearanceForStyle:style.integerValue];
-        isHidden = (style.integerValue == FWNavigationBarStyleHidden) || appearance.isHidden;
+        isHidden = (style.integerValue == FWNavigationBarStyleHidden) || hidden.boolValue || appearance.isHidden;
         isTransparent = (style.integerValue == FWNavigationBarStyleClear) || appearance.isTransparent;
     }
     
@@ -198,12 +200,9 @@
 
 - (void)setFwToolBarHidden:(BOOL)fwToolBarHidden
 {
+    // 动态切换工具栏显示隐藏，切换动画不突兀，立即生效
+    // [self.navigationController setToolbarHidden:hidden animated:animated];
     self.navigationController.toolbarHidden = fwToolBarHidden;
-}
-
-- (void)fwSetToolBarHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    [self.navigationController setToolbarHidden:hidden animated:animated];
 }
 
 - (void)fwSetBarExtendEdge:(UIRectEdge)edge
