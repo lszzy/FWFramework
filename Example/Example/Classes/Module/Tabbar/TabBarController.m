@@ -10,15 +10,6 @@
 #import "HomeViewController.h"
 #import "SettingsViewController.h"
 
-@implementation FWTabBarItem (AppTabBar)
-
-- (UIImageView *)fwImageView
-{
-    return self.contentView.imageView;
-}
-
-@end
-
 @implementation UITabBarController (AppTabBar)
 
 - (void)setupController
@@ -44,7 +35,10 @@
     settingsController.hidesBottomBarWhenPushed = NO;
     UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
     if (AppConfig.isRootCustom) {
-        settingsNav.tabBarItem = [FWTabBarItem new];
+        FWTabBarItem *tabBarItem = [FWTabBarItem new];
+        tabBarItem.contentView.highlightTextColor = Theme.textColor;
+        tabBarItem.contentView.highlightIconColor = Theme.textColor;
+        settingsNav.tabBarItem = tabBarItem;
         settingsNav.tabBarItem.badgeValue = @"";
     } else {
         FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
@@ -69,7 +63,12 @@
     animation.values = @[@(1.0), @(1.4), @(0.9), @(1.15), @(0.95), @(1.02), @(1.0)];
     animation.duration = 0.3 * 2;
     animation.calculationMode = kCAAnimationCubic;
-    [viewController.tabBarItem.fwImageView.layer addAnimation:animation forKey:nil];
+    
+    UIView *animationView = viewController.tabBarItem.fwImageView;
+    if ([viewController.tabBarItem isKindOfClass:[FWTabBarItem class]]) {
+        animationView = ((FWTabBarItem *)viewController.tabBarItem).contentView.imageView;
+    }
+    [animationView.layer addAnimation:animation forKey:nil];
 }
 
 #pragma mark - Public
