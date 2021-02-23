@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGRect fwFitFrame;
 
 // 计算当前视图适合大小，需实现sizeThatFits:方法
-- (CGSize)fwFitSize;
+@property (nonatomic, assign, readonly) CGSize fwFitSize;
 
 // 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
 - (CGSize)fwFitSizeWithDrawSize:(CGSize)drawSize;
@@ -75,10 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Snapshot
 
 // 图片截图
-- (nullable UIImage *)fwSnapshotImage;
+@property (nonatomic, readonly, nullable) UIImage *fwSnapshotImage;
 
 // Pdf截图
-- (nullable NSData *)fwSnapshotPdf;
+@property (nonatomic, readonly, nullable) NSData *fwSnapshotPdf;
 
 @end
 

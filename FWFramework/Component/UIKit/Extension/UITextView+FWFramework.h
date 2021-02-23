@@ -39,11 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Select
 
-// 获取当前选中的字符串范围
-- (NSRange)fwSelectedRange;
-
-// 选中指定范围的文字
-- (void)fwSetSelectedRange:(NSRange)range;
+// 获取及设置当前选中文字范围
+@property (nonatomic, assign) NSRange fwSelectedRange;
 
 // 选中所有文字
 - (void)fwSelectAllText;
@@ -51,10 +48,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Size
 
 // 计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整
-- (CGSize)fwTextSize;
+@property (nonatomic, assign, readonly) CGSize fwTextSize;
 
 // 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
-- (CGSize)fwAttributedTextSize;
+@property (nonatomic, assign, readonly) CGSize fwAttributedTextSize;
 
 @end
 

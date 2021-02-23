@@ -44,10 +44,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIEdgeInsets fwSeparatorInset;
 
 /// 获取当前所属tableView
-- (nullable UITableView *)fwTableView;
+@property (nonatomic, weak, readonly, nullable) UITableView *fwTableView;
 
 /// 获取当前显示indexPath
-- (nullable NSIndexPath *)fwIndexPath;
+@property (nonatomic, readonly, nullable) NSIndexPath *fwIndexPath;
 
 @end
 
