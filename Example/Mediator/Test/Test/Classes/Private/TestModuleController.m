@@ -36,12 +36,12 @@
         _searchBar.delegate = self;
         _searchBar.showsCancelButton = YES;
         [_searchBar.fwCancelButton setTitle:FWLocalizedString(@"取消") forState:UIControlStateNormal];
-        [_searchBar fwForceCancelButtonEnabled:YES];
-        [_searchBar fwSetBackgroundColor:[Theme barColor]];
-        [_searchBar fwSetTextFieldBackgroundColor:[Theme tableColor]];
+        _searchBar.fwForceCancelButtonEnabled = YES;
+        _searchBar.fwBackgroundColor = [Theme barColor];
+        _searchBar.fwTextFieldBackgroundColor = [Theme tableColor];
         _searchBar.fwContentInset = UIEdgeInsetsMake(6, 15, 6, 65);
-        [_searchBar fwSetSearchIconCenter:YES];
-        [_searchBar fwSetSearchIconPosition:0];
+        _searchBar.fwSearchIconCenter = YES;
+        _searchBar.fwSearchIconPosition = 0;
         
         UITextField *textField = [_searchBar fwTextField];
         textField.font = [UIFont systemFontOfSize:12];
@@ -160,12 +160,12 @@
 #pragma mark - UISearchBar
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    [searchBar fwSetSearchIconCenter:NO];
+    searchBar.fwSearchIconCenter = NO;
     return YES;
 }
 
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
-    [searchBar fwSetSearchIconCenter:YES];
+    searchBar.fwSearchIconCenter = YES;
     return YES;
 }
 
