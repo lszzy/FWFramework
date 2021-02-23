@@ -20,14 +20,14 @@
     [super viewDidLoad];
     
     FWWeakifySelf();
-    [self fwSetBackBarBlock:^BOOL{
+    self.fwBackBarBlock = ^BOOL{
         FWStrongifySelf();
         [self fwShowConfirmWithTitle:nil message:@"是否关闭" cancel:@"否" confirm:@"是" confirmBlock:^{
             FWStrongifySelf();
             [self fwCloseViewControllerAnimated:YES];
         }];
         return NO;
-    }];
+    };
 }
 
 - (UITableViewStyle)renderTableStyle

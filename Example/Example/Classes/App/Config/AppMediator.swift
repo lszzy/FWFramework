@@ -49,7 +49,7 @@ import Foundation
                     title = response.notification.request.content.title
                 }
             }
-            UIWindow.fwMain()?.fwShowMessage(withText: "收到远程通知：\(title ?? "")\n\(userInfo ?? [:])")
+            UIWindow.fwMain?.fwShowMessage(withText: "收到远程通知：\(title ?? "")\n\(userInfo ?? [:])")
         }
         FWNotificationManager.sharedInstance.localNotificationHandler = { (userInfo, notification) in
             FWNotificationManager.sharedInstance.clearNotificationBadges()
@@ -64,7 +64,7 @@ import Foundation
                     title = local.alertTitle ?? local.alertBody
                 }
             }
-            UIWindow.fwMain()?.fwShowMessage(withText: "收到本地通知：\(title ?? "")\n\(userInfo ?? [:])")
+            UIWindow.fwMain?.fwShowMessage(withText: "收到本地通知：\(title ?? "")\n\(userInfo ?? [:])")
         }
         return true
     }

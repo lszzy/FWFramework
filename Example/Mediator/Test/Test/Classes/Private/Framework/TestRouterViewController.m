@@ -431,7 +431,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     TestViewController *viewController = [TestViewController new];
     viewController.navigationItem.title = @"iOS14 bug";
     FWWeakifySelf();
-    [viewController fwSetBackBarBlock:^BOOL{
+    viewController.fwBackBarBlock = ^BOOL{
         FWStrongifySelf();
         static NSInteger count = 0;
         NSInteger index = count++ % 3;
@@ -443,7 +443,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
             [self.navigationController setViewControllers:@[self.navigationController.viewControllers.firstObject] animated:YES];
         }
         return NO;
-    }];
+    };
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

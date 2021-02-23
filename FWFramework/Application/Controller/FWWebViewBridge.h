@@ -78,19 +78,19 @@ NSString * FWWebViewJsBridge_js(void);
 + (void)fwClearWebCache:(nullable void (^)(void))completion;
 
 /// 获取并缓存WebView默认UserAgent，包含应用信息，需主线程调用，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
-+ (NSString *)fwWebViewUserAgent;
+@property (class, nonatomic, copy, readonly) NSString *fwWebViewUserAgent;
 
 /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
-+ (NSString *)fwBrowserUserAgent;
+@property (class, nonatomic, copy, readonly) NSString *fwBrowserUserAgent;
 
 /// 获取默认浏览器平台UserAgent，不含扩展信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)
-+ (NSString *)fwBrowserPlatformUserAgent;
+@property (class, nonatomic, copy, readonly) NSString *fwBrowserPlatformUserAgent;
 
 /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
-+ (NSString *)fwBrowserExtensionUserAgent;
+@property (class, nonatomic, copy, readonly) NSString *fwBrowserExtensionUserAgent;
 
 /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
-+ (NSString *)fwRequestUserAgent;
+@property (class, nonatomic, copy, readonly) NSString *fwRequestUserAgent;
 
 @end
 

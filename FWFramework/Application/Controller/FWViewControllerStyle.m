@@ -363,7 +363,12 @@
     return shouldPop;
 }
 
-- (void)fwSetBackBarBlock:(BOOL (^)(void))block
+- (BOOL (^)(void))fwBackBarBlock
+{
+    return objc_getAssociatedObject(self, @selector(fwPopBackBarItem));
+}
+
+- (void)setFwBackBarBlock:(BOOL (^)(void))block
 {
     if (block) {
         objc_setAssociatedObject(self, @selector(fwPopBackBarItem), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
