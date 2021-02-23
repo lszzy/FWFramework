@@ -11,6 +11,7 @@
 #import <CoreText/CoreText.h>
 #import <Foundation/Foundation.h>
 #import "FWAsyncLayer.h"
+#import "FWBadgeView.h"
 #import "FWBannerView.h"
 #import "FWBarrageView.h"
 #import "FWCollectionViewFlowLayout.h"

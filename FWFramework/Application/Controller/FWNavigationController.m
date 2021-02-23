@@ -1,13 +1,13 @@
 /*!
- @header     UINavigationController+FWBar.m
+ @header     FWNavigationController.m
  @indexgroup FWFramework
- @brief      UINavigationController+FWBar
+ @brief      FWNavigationController
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/2/14
  */
 
-#import "UINavigationController+FWBar.h"
+#import "FWNavigationController.h"
 #import "FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
@@ -81,14 +81,14 @@
 
 #pragma mark - Accessor
 
-- (id)fwNavigationBarTransitionIdentifier
+- (id)fwBarTransitionIdentifier
 {
-    return objc_getAssociatedObject(self, @selector(fwNavigationBarTransitionIdentifier));
+    return objc_getAssociatedObject(self, @selector(fwBarTransitionIdentifier));
 }
 
 - (void)setFwNavigationBarTransitionIdentifier:(id)identifier
 {
-    objc_setAssociatedObject(self, @selector(fwNavigationBarTransitionIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBarTransitionIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UINavigationBar *)fwTransitionNavigationBar
@@ -147,8 +147,8 @@
     }
     
     // 如果identifier有值则比较之，不相等才启用转场
-    id fromIdentifier = [from fwNavigationBarTransitionIdentifier];
-    id toIdentifier = [to fwNavigationBarTransitionIdentifier];
+    id fromIdentifier = [from fwBarTransitionIdentifier];
+    id toIdentifier = [to fwBarTransitionIdentifier];
     if (fromIdentifier || toIdentifier) {
         return ![fromIdentifier isEqual:toIdentifier];
     }
@@ -158,11 +158,11 @@
 
 @end
 
-#pragma mark - UINavigationController+FWBar
+#pragma mark - UINavigationController+FWBarTransition
 
-@implementation UINavigationController (FWBar)
+@implementation UINavigationController (FWBarTransition)
 
-+ (void)fwEnableNavigationBarTransition
++ (void)fwEnableBarTransition
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -232,7 +232,7 @@
             
             if ([selfObject isEqual:selfObject.navigationController.viewControllers.lastObject] && [toViewController isEqual:selfObject] && tc.presentationStyle == UIModalPresentationNone) {
                 if (selfObject.navigationController.navigationBar.translucent) {
-                    [tc containerView].backgroundColor = [selfObject.navigationController fwContainerViewBackgroundColor];
+                    [tc containerView].backgroundColor = [selfObject.navigationController fwContainerBackgroundColor];
                 }
                 fromViewController.view.clipsToBounds = NO;
                 toViewController.view.clipsToBounds = NO;
@@ -347,15 +347,15 @@
 
 #pragma mark - Accessor
 
-- (UIColor *)fwContainerViewBackgroundColor
+- (UIColor *)fwContainerBackgroundColor
 {
-    UIColor *backgroundColor = objc_getAssociatedObject(self, @selector(fwContainerViewBackgroundColor));
+    UIColor *backgroundColor = objc_getAssociatedObject(self, @selector(fwContainerBackgroundColor));
     return backgroundColor ?: [UIColor whiteColor];
 }
 
-- (void)setFwContainerViewBackgroundColor:(UIColor *)backgroundColor
+- (void)setFwContainerBackgroundColor:(UIColor *)backgroundColor
 {
-    objc_setAssociatedObject(self, @selector(fwContainerViewBackgroundColor), backgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwContainerBackgroundColor), backgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)fwBackgroundViewHidden

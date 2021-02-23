@@ -1,12 +1,12 @@
 //
-//  UIView+FWBadge.m
+//  FWBadgeView.m
 //  FWFramework
 //
 //  Created by wuyong on 2017/4/10.
 //  Copyright © 2018年 wuyong.site. All rights reserved.
 //
 
-#import "UIView+FWBadge.h"
+#import "FWBadgeView.h"
 #import "FWAutoLayout.h"
 #import "FWMessage.h"
 #import "FWSwizzle.h"

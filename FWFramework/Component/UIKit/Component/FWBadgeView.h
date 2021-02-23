@@ -1,5 +1,5 @@
 //
-//  UIView+FWBadge.h
+//  FWBadgeView.h
 //  FWFramework
 //
 //  Created by wuyong on 2017/4/10.
