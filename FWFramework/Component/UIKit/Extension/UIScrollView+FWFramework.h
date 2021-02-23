@@ -38,27 +38,24 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Page
 
 // 总页数，自动识别翻页方向
-- (NSInteger)fwTotalPage;
+@property (nonatomic, assign, readonly) NSInteger fwTotalPage;
 
-// 当前页数，自动识别翻页方向
-- (NSInteger)fwCurrentPage;
-
-// 设置当前页数，自动识别翻页方向
-- (void)fwSetCurrentPage:(NSInteger)page;
+// 当前页数，不支持动画，自动识别翻页方向
+@property (nonatomic, assign) NSInteger fwCurrentPage;
 
 // 设置当前页数，支持动画，自动识别翻页方向
 - (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated;
 
 // 是否是最后一页，自动识别翻页方向
-- (BOOL)fwIsLastPage;
+@property (nonatomic, assign, readonly) BOOL fwIsLastPage;
 
 #pragma mark - Scroll
 
 // 判断当前的scrollView内容是否足够水平滚动
-- (BOOL)fwCanScrollHorizontal;
+@property (nonatomic, assign, readonly) BOOL fwCanScrollHorizontal;
 
 // 判断当前的scrollView内容是否足够纵向滚动
-- (BOOL)fwCanScrollVertical;
+@property (nonatomic, assign, readonly) BOOL fwCanScrollVertical;
 
 // 是否已滚动到指定边
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
@@ -70,10 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge;
 
 // 当前滚动方向，如果多个方向滚动，取绝对值较大的一方，失败返回0
-- (UISwipeGestureRecognizerDirection)fwScrollDirection;
+@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection fwScrollDirection;
 
 // 当前滚动进度，滚动绝对值相对于当前视图的宽或高
-- (CGFloat)fwScrollPercent;
+@property (nonatomic, assign, readonly) CGFloat fwScrollPercent;
 
 // 计算指定方向的滚动进度
 - (CGFloat)fwScrollPercentOfDirection:(UISwipeGestureRecognizerDirection)direction;
