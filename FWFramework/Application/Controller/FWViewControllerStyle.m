@@ -11,6 +11,7 @@
 #import "FWBlock.h"
 #import "FWSwizzle.h"
 #import "FWProxy.h"
+#import "FWRouter.h"
 #import "FWImage.h"
 #import <objc/runtime.h>
 
@@ -228,12 +229,53 @@
     return viewController.presentingViewController.presentedViewController == viewController;
 }
 
-- (void)fwSetBarTitle:(id)title
+- (id)fwBarTitle
+{
+    return self.navigationItem.titleView ?: self.navigationItem.title;
+}
+
+- (void)setFwBarTitle:(id)title
 {
     if ([title isKindOfClass:[UIView class]]) {
         self.navigationItem.titleView = title;
     } else {
         self.navigationItem.title = title;
+    }
+}
+
+- (id)fwLeftBarItem
+{
+    return self.navigationItem.leftBarButtonItem;
+}
+
+- (void)setFwLeftBarItem:(id)object
+{
+    if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
+        self.navigationItem.leftBarButtonItem = object;
+    } else {
+        __weak __typeof__(self) self_weak_ = self;
+        self.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
+            __typeof__(self) self = self_weak_;
+            [self fwCloseViewControllerAnimated:YES];
+        }];
+    }
+}
+
+- (id)fwRightBarItem
+{
+    return self.navigationItem.rightBarButtonItem;
+}
+
+- (void)setFwRightBarItem:(id)object
+{
+    if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
+        self.navigationItem.rightBarButtonItem = object;
+    } else {
+        __weak __typeof__(self) self_weak_ = self;
+        self.navigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
+            __typeof__(self) self = self_weak_;
+            [self fwCloseViewControllerAnimated:YES];
+        }];
     }
 }
 
@@ -259,46 +301,47 @@
 
 #pragma mark - Back
 
-- (void)fwSetBackBarArrow
+- (id)fwBackBarItem
 {
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.backIndicatorImage = nil;
-    self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
+    return self.navigationItem.backBarButtonItem;
 }
 
-- (void)fwSetBackBarTitle:(NSString *)title
+- (void)setFwBackBarItem:(id)object
 {
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.backIndicatorImage = nil;
-    self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
-}
-
-- (void)fwSetBackBarImage:(UIImage *)image
-{
-    if (!image) {
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
+    if (![object isKindOfClass:[UIImage class]]) {
+        UIBarButtonItem *backItem;
+        if (!object) {
+            backItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
+        } else if ([object isKindOfClass:[UIBarButtonItem class]]) {
+            backItem = (UIBarButtonItem *)object;
+        } else {
+            backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
+        }
+        self.navigationItem.backBarButtonItem = backItem;
         self.navigationController.navigationBar.backIndicatorImage = nil;
         self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
         return;
     }
     
-    // 左侧偏移8个像素，和左侧按钮位置一致
-    UIEdgeInsets insets = UIEdgeInsetsMake(0, -8, 0, 0);
-    CGSize size = image.size;
-    size.width -= insets.left + insets.right;
-    size.height -= insets.top + insets.bottom;
-    CGRect rect = CGRectMake(-insets.left, -insets.top, image.size.width, image.size.height);
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    [image drawInRect:rect];
-    UIImage *indicatorImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage *indicatorImage = nil;
+    UIImage *image = (UIImage *)object;
+    if (image.size.width > 0 && image.size.height > 0) {
+        // 左侧偏移8个像素，和左侧按钮位置一致
+        UIEdgeInsets insets = UIEdgeInsetsMake(0, -8, 0, 0);
+        CGSize size = image.size;
+        size.width -= insets.left + insets.right;
+        size.height -= insets.top + insets.bottom;
+        CGRect rect = CGRectMake(-insets.left, -insets.top, image.size.width, image.size.height);
+        UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+        [image drawInRect:rect];
+        indicatorImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationController.navigationBar.backIndicatorImage = indicatorImage;
     self.navigationController.navigationBar.backIndicatorTransitionMaskImage = indicatorImage;
 }
-
-#pragma mark - Pop
 
 - (BOOL)fwForcePopGesture
 {
