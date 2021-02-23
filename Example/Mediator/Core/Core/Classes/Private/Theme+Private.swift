@@ -45,13 +45,13 @@ import FWFramework
         whiteAppearance.appearanceBlock = { (navigationBar) in
             navigationBar.fwThemeBackgroundColor = .white
         }
-        let clearAppearance = FWNavigationBarAppearance()
-        clearAppearance.foregroundColor = Theme.textColor
-        clearAppearance.appearanceBlock = { (navigationBar) in
+        let transparentAppearance = FWNavigationBarAppearance()
+        transparentAppearance.foregroundColor = Theme.textColor
+        transparentAppearance.appearanceBlock = { (navigationBar) in
             navigationBar.fwThemeBackgroundColor = .clear
         }
         FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
         FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .init(2))
-        FWNavigationBarAppearance.setAppearance(clearAppearance, forStyle: .clear)
+        FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
     }
 }

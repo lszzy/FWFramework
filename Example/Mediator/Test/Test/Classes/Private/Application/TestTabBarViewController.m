@@ -32,7 +32,7 @@
 {
     self.hidesBottomBarWhenPushed = YES;
     self.delegate = self;
-    [self.tabBar fwSetTextColor:[Theme textColor]];
+    self.tabBar.fwTextColor = [Theme textColor];
     self.tabBar.fwThemeBackgroundColor = [Theme barColor];
     self.fwForcePopGesture = YES;
     self.fwNavigationBarHidden = YES;

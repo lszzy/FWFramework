@@ -13,9 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 导航栏全局样式可扩展枚举
 typedef NSInteger FWNavigationBarStyle NS_TYPED_EXTENSIBLE_ENUM;
-static const FWNavigationBarStyle FWNavigationBarStyleDefault = 0;
-static const FWNavigationBarStyle FWNavigationBarStyleHidden  = -1;
-static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
+static const FWNavigationBarStyle FWNavigationBarStyleDefault     = 0;
+static const FWNavigationBarStyle FWNavigationBarStyleHidden      = -1;
+static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 
 /// 导航栏样式配置
 @interface FWNavigationBarAppearance : NSObject

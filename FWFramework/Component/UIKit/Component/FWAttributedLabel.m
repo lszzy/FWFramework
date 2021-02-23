@@ -8,6 +8,7 @@
  */
 
 #import "FWAttributedLabel.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWAttributedLabel
 
@@ -132,7 +133,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     {
         _font = font;
         
-        [_attributedString fwSetFont:_font];
+        _attributedString.fwFont = _font;
         [self resetFont];
         for (FWAttributedLabelAttachment *attachment in _attachments)
         {
@@ -148,7 +149,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     if (textColor && _textColor != textColor)
     {
         _textColor = textColor;
-        [_attributedString fwSetTextColor:textColor];
+        _attributedString.fwTextColor = textColor;
         [self resetTextFrame];
     }
 }
@@ -290,8 +291,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     if ([text length])
     {
         NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:text];
-        [string fwSetFont:self.font];
-        [string fwSetTextColor:self.textColor];
+        string.fwFont = self.font;
+        string.fwTextColor = self.textColor;
         return string;
     }
     else
@@ -1393,8 +1394,15 @@ CGFloat fwAttributedWidthCallback(void* ref)
 
 @implementation NSMutableAttributedString (FWAttributedLabel)
 
-- (void)fwSetTextColor:(UIColor*)color
+- (UIColor *)fwTextColor
 {
+    return objc_getAssociatedObject(self, @selector(fwTextColor));
+}
+
+- (void)setFwTextColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(fwTextColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     [self fwSetTextColor:color range:NSMakeRange(0, [self length])];
 }
 
@@ -1409,8 +1417,15 @@ CGFloat fwAttributedWidthCallback(void* ref)
     }
 }
 
-- (void)fwSetFont:(UIFont*)font
+- (UIFont *)fwFont
 {
+    return objc_getAssociatedObject(self, @selector(fwFont));
+}
+
+- (void)setFwFont:(UIFont *)font
+{
+    objc_setAssociatedObject(self, @selector(fwFont), font, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     [self fwSetFont:font range:NSMakeRange(0, [self length])];
 }
 

@@ -24,7 +24,7 @@
 - (void)setupController
 {
     self.delegate = self;
-    [self.tabBar fwSetTextColor:[Theme textColor]];
+    self.tabBar.fwTextColor = [Theme textColor];
     self.tabBar.fwThemeBackgroundColor = [Theme barColor];
     
     UIViewController *homeController = [HomeViewController new];
