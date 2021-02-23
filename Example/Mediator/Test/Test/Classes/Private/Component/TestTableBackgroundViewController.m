@@ -29,7 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar fwSetBackgroundClear];
+    [self.navigationController.navigationBar fwSetBackgroundTransparent];
 }
 
 - (UITableViewStyle)renderTableStyle

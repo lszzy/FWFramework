@@ -166,10 +166,10 @@ CGFloat fwAttributedWidthCallback(void* ref);
 
 @interface NSMutableAttributedString (FWAttributedLabel)
 
-- (void)fwSetTextColor:(UIColor*)color;
+@property (nonatomic, strong, nullable) UIColor *fwTextColor;
 - (void)fwSetTextColor:(UIColor*)color range:(NSRange)range;
 
-- (void)fwSetFont:(UIFont*)font;
+@property (nonatomic, strong, nullable) UIFont *fwFont;
 - (void)fwSetFont:(UIFont*)font range:(NSRange)range;
 
 - (void)fwSetUnderlineStyle:(CTUnderlineStyle)style

@@ -157,7 +157,7 @@
     if (!appearance) {
         appearance = [FWNavigationBarAppearance appearanceForStyle:style.integerValue];
         isHidden = (style.integerValue == FWNavigationBarStyleHidden) || hidden.boolValue || appearance.isHidden;
-        isTransparent = (style.integerValue == FWNavigationBarStyleClear) || appearance.isTransparent;
+        isTransparent = (style.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
     }
     
     if (self.navigationController.navigationBarHidden != isHidden) {

@@ -18,6 +18,18 @@
 
 @implementation UINavigationBar (FWFramework)
 
++ (NSDictionary<NSAttributedStringKey,id> *)fwButtonTitleAttributes
+{
+    return [[UIBarButtonItem appearance] titleTextAttributesForState:UIControlStateNormal];
+}
+
++ (void)setFwButtonTitleAttributes:(NSDictionary<NSAttributedStringKey,id> *)attributes
+{
+    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateDisabled];
+}
+
 - (UIColor *)fwThemeBackgroundColor
 {
     return objc_getAssociatedObject(self, @selector(fwThemeBackgroundColor));
@@ -40,14 +52,12 @@
     }
 }
 
-+ (void)fwSetButtonTitleAttributes:(NSDictionary *)attributes
+- (UIColor *)fwTextColor
 {
-    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:UIControlStateDisabled];
+    return self.tintColor;
 }
 
-- (void)fwSetTextColor:(UIColor *)color
+- (void)setFwTextColor:(UIColor *)color
 {
     self.tintColor = color;
     self.titleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
@@ -56,13 +66,20 @@
     }
 }
 
-- (void)fwSetBackgroundColor:(UIColor *)color
+- (UIColor *)fwBackgroundColor
 {
-    [self setBackgroundImage:[UIImage fwImageWithColor:color] forBarMetrics:UIBarMetricsDefault];
+    return objc_getAssociatedObject(self, @selector(fwBackgroundColor));
+}
+
+- (void)setFwBackgroundColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIImage *image = color ? [UIImage fwImageWithColor:color] : [UIImage new];
+    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
 }
 
-- (void)fwSetBackgroundClear
+- (void)fwSetBackgroundTransparent
 {
     [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
@@ -137,13 +154,24 @@
     }
 }
 
-- (void)fwSetTextColor:(UIColor *)color
+- (UIColor *)fwTextColor
+{
+    return self.tintColor;
+}
+
+- (void)setFwTextColor:(UIColor *)color
 {
     self.tintColor = color;
 }
 
-- (void)fwSetBackgroundColor:(UIColor *)color
+- (UIColor *)fwBackgroundColor
 {
+    return objc_getAssociatedObject(self, @selector(fwBackgroundColor));
+}
+
+- (void)setFwBackgroundColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.backgroundImage = [UIImage fwImageWithColor:color];
     self.shadowImage = [UIImage new];
 }

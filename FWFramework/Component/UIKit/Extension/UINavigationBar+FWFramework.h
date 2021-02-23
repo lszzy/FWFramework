@@ -15,23 +15,23 @@ NS_ASSUME_NONNULL_BEGIN
 // 导航栏视图分类，全局设置用[UINavigationBar appearance]
 @interface UINavigationBar (FWFramework)
 
-/// 设置主题背景色并隐藏底部线条，自动跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
-
 /// 设置全局按钮文字样式(不含图片)，单个设置时详见UIBarButtonItem
-+ (void)fwSetButtonTitleAttributes:(nullable NSDictionary *)attributes;
+@property (class, nonatomic, nullable) NSDictionary<NSAttributedStringKey,id> *fwButtonTitleAttributes;
+
+/// 设置主题背景色并隐藏底部线条，自动跟随系统改变，清空时需置为nil
+@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
 
 /// 设置标题和按钮颜色
-- (void)fwSetTextColor:(nullable UIColor *)color UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong, nullable) UIColor *fwTextColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景颜色并隐藏底部线条。为避免barTintColor的一些兼容问题，此方法使用颜色生成的图片来设置backgroundImage
-- (void)fwSetBackgroundColor:(nullable UIColor *)color UI_APPEARANCE_SELECTOR;
+/// 设置背景颜色并隐藏底部线条，设为nil时背景透明。为避免barTintColor的一些兼容问题，此方法使用颜色生成的图片来设置backgroundImage
+@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
 /// 设置透明背景并隐藏底部线条
-- (void)fwSetBackgroundClear UI_APPEARANCE_SELECTOR;
+- (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
 
-/// 添加背景视图，可设置背景色等
-- (UIView *)fwOverlayView;
+/// 添加背景视图，可设置背景色等，调用时自动创建
+@property (nonatomic, readonly) UIView *fwOverlayView;
 
 /// 重置导航栏背景颜色和图片，移除自定义视图
 - (void)fwResetBackground;
@@ -55,13 +55,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UITabBar (FWFramework)
 
 /// 设置主题背景色并隐藏顶部线条，自动跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
 
 /// 设置文字颜色(含图标)
-- (void)fwSetTextColor:(nullable UIColor *)color;
+@property (nonatomic, strong, nullable) UIColor *fwTextColor;
 
 /// 设置背景颜色并隐藏顶部线条。为了不影响barStyle，此方法使用颜色生成的图片来设置backgroundImage
-- (void)fwSetBackgroundColor:(nullable UIColor *)color;
+@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
 /// UITabBar 的背景 view，可能显示磨砂、背景图，顶部有一部分溢出到 UITabBar 外。在 iOS 10 及以后是私有的 _UIBarBackground 类，在 iOS 9 及以前是私有的 _UITabBarBackgroundView 类
 @property (nullable, nonatomic, weak, readonly) UIView *fwBackgroundView;
