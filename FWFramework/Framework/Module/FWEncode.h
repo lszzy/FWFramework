@@ -219,98 +219,98 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  
  @return 如果为非Null返回YES，为Null返回NO
  */
-- (BOOL)fwIsNotNull;
+@property (nonatomic, assign, readonly) BOOL fwIsNotNull;
 
 /*!
  @brief 是否是非空对象(nil, NSNull, count为0, length为0)
  
  @return 如果是非空对象返回YES，为空对象返回NO
  */
-- (BOOL)fwIsNotEmpty;
+@property (nonatomic, assign, readonly) BOOL fwIsNotEmpty;
 
 /*!
  @brief 检测并转换为NSInteger
  
  @return NSInteger
  */
-- (NSInteger)fwAsInteger;
+@property (nonatomic, assign, readonly) NSInteger fwAsInteger;
 
 /*!
  @brief 检测并转换为Float
  
  @return Float
  */
-- (float)fwAsFloat;
+@property (nonatomic, assign, readonly) float fwAsFloat;
 
 /*!
  @brief 检测并转换为Double
  
  @return Double
  */
-- (double)fwAsDouble;
+@property (nonatomic, assign, readonly) double fwAsDouble;
 
 /*!
  @brief 检测并转换为Bool
  
  @return Bool
  */
-- (BOOL)fwAsBool;
+@property (nonatomic, assign, readonly) BOOL fwAsBool;
 
 /*!
  @brief 检测并转换为NSNumber
  
  @return NSNumber
  */
-- (nullable NSNumber *)fwAsNSNumber;
+@property (nonatomic, readonly, nullable) NSNumber *fwAsNSNumber;
 
 /*!
  @brief 检测并转换为NSString
  
  @return NSString
  */
-- (nullable NSString *)fwAsNSString;
+@property (nonatomic, copy, readonly, nullable) NSString *fwAsNSString;
 
 /*!
  @brief 检测并转换为NSDate
  
  @return NSDate
  */
-- (nullable NSDate *)fwAsNSDate;
+@property (nonatomic, readonly, nullable) NSDate *fwAsNSDate;
 
 /*!
  @brief 检测并转换为NSData
  
  @return NSData
  */
-- (nullable NSData *)fwAsNSData;
+@property (nonatomic, readonly, nullable) NSData *fwAsNSData;
 
 /*!
  @brief 检测并转换为NSArray
  
  @return NSArray
  */
-- (nullable NSArray *)fwAsNSArray;
+@property (nonatomic, readonly, nullable) NSArray *fwAsNSArray;
 
 /*!
  @brief 检测并转换为NSMutableArray
  
  @return NSMutableArray
  */
-- (nullable NSMutableArray *)fwAsNSMutableArray;
+@property (nonatomic, readonly, nullable) NSMutableArray *fwAsNSMutableArray;
 
 /*!
  @brief 检测并转换为NSDictionary
  
  @return NSDictionary
  */
-- (nullable NSDictionary *)fwAsNSDictionary;
+@property (nonatomic, readonly, nullable) NSDictionary *fwAsNSDictionary;
 
 /*!
  @brief 检测并转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-- (nullable NSMutableDictionary *)fwAsNSMutableDictionary;
+@property (nonatomic, readonly, nullable) NSMutableDictionary *fwAsNSMutableDictionary;
 
 /*!
  @brief 检测并转换为指定Class对象
