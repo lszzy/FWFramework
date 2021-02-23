@@ -198,8 +198,7 @@
 
 - (CGSize)fwPixelSize
 {
-    CGSize size = CGSizeMake(self.size.width * self.scale, self.size.height * self.scale);
-    return size;
+    return CGSizeMake(self.size.width * self.scale, self.size.height * self.scale);
 }
 
 #pragma mark - Icon

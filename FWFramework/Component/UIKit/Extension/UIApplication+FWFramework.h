@@ -24,27 +24,27 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable id)fwAppInfo:(NSString *)key;
 
 // 读取应用名称
-+ (NSString *)fwAppName;
+@property (class, nonatomic, copy, readonly) NSString *fwAppName;
 
 // 读取应用显示名称，未配置时读取名称
-+ (NSString *)fwAppDisplayName;
+@property (class, nonatomic, copy, readonly) NSString *fwAppDisplayName;
 
 // 读取应用主版本号，示例：1.0.0
-+ (NSString *)fwAppVersion;
+@property (class, nonatomic, copy, readonly) NSString *fwAppVersion;
 
 // 读取应用构建版本号，示例：1.0.0.1
-+ (NSString *)fwAppBuildVersion;
+@property (class, nonatomic, copy, readonly) NSString *fwAppBuildVersion;
 
 // 读取应用标识
-+ (NSString *)fwAppIdentifier;
+@property (class, nonatomic, copy, readonly) NSString *fwAppIdentifier;
 
 #pragma mark - Debug
 
 // 是否是盗版(不是从AppStore安装)
-+ (BOOL)fwIsPirated;
+@property (class, nonatomic, assign, readonly) BOOL fwIsPirated;
 
 // 是否是Testflight版本
-+ (BOOL)fwIsTestflight;
+@property (class, nonatomic, assign, readonly) BOOL fwIsTestflight;
 
 #pragma mark - URL
 

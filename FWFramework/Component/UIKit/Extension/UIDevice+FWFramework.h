@@ -24,18 +24,18 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Jailbroken
 
 // 是否越狱
-+ (BOOL)fwIsJailbroken;
+@property (class, nonatomic, assign, readonly) BOOL fwIsJailbroken;
 
 #pragma mark - Network
 
 // 本地IP地址
-+ (nullable NSString *)fwIpAddress;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwIpAddress;
 
 // 本地主机名称
-+ (nullable NSString *)fwHostName;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwHostName;
 
 // 手机运营商名称
-+ (nullable NSString *)fwCarrierName;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwCarrierName;
 
 @end
 
