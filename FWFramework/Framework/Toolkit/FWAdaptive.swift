@@ -11,7 +11,7 @@ import UIKit
 // MARK: - UIApplication+FWAdaptive
 
 /// 是否是调试模式
-public let FWIsDebug: Bool = UIApplication.fwIsDebug()
+public let FWIsDebug: Bool = UIApplication.fwIsDebug
 
 // MARK: - UIDevice+FWAdaptive
 
@@ -28,7 +28,7 @@ public var FWIsIphone: Bool { return UI_USER_INTERFACE_IDIOM() == .phone }
 /// 是否是iPad设备
 public var FWIsIpad: Bool { return UI_USER_INTERFACE_IDIOM() == .pad }
 /// 是否是Mac设备
-public var FWIsMac: Bool { return UIDevice.fwIsMac() }
+public var FWIsMac: Bool { return UIDevice.fwIsMac }
 
 /// 界面是否横屏
 public var FWIsLandscape: Bool { return UIApplication.shared.statusBarOrientation.isLandscape }
@@ -36,7 +36,7 @@ public var FWIsLandscape: Bool { return UIApplication.shared.statusBarOrientatio
 public var FWIsDeviceLandscape: Bool { return UIDevice.current.orientation.isLandscape }
 
 /// iOS系统版本
-public var FWIosVersion: Double { return UIDevice.fwIosVersion() }
+public var FWIosVersion: Double { return UIDevice.fwIosVersion }
 /// 是否是指定iOS主版本
 public func FWIsIos(_ version: Int) -> Bool { return UIDevice.fwIsIos(version) }
 /// 是否是大于等于指定iOS主版本
@@ -64,23 +64,20 @@ public var FWScreenScale: CGFloat { return UIScreen.main.scale }
 /// 判断屏幕英寸
 public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fwIsScreenInch(inch) }
 /// 是否是全面屏屏幕
-public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen() }
-/// 是否是iPhoneX系列全面屏幕
-@available(*, deprecated, renamed: "FWIsNotchedScreen")
-public var FWIsScreenX: Bool { return UIScreen.fwIsNotchedScreen() }
+public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen }
 
 /// 状态栏高度，与是否隐藏无关
-public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight() }
+public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight }
 /// 导航栏高度，与是否隐藏无关
-public var FWNavigationBarHeight: CGFloat { return UIScreen.fwNavigationBarHeight() }
+public var FWNavigationBarHeight: CGFloat { return UIScreen.fwNavigationBarHeight }
 /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight() }
+public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight }
 /// 标签栏高度，与是否隐藏无关
-public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight() }
+public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight }
 /// 工具栏高度，与是否隐藏无关
-public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight() }
+public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight }
 
 /// 当前屏幕宽度缩放比例
-public var FWScaleFactorWidth: CGFloat { return UIScreen.fwScaleFactorWidth() }
+public var FWScaleFactorWidth: CGFloat { return UIScreen.fwScaleFactorWidth }
 /// 当前屏幕高度缩放比例
-public var FWScaleFactorHeight: CGFloat { return UIScreen.fwScaleFactorHeight() }
+public var FWScaleFactorHeight: CGFloat { return UIScreen.fwScaleFactorHeight }

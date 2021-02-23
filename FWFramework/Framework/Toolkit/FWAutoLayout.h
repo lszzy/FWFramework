@@ -21,27 +21,23 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - AutoLayout
 
 /*!
+ @brief 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
+ @discussion 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
+ 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+ */
+@property (class, nonatomic, assign) BOOL fwAutoLayoutRTL;
+
+/*!
+ @brief 是否启用自动布局
+ */
+@property (nonatomic, assign) BOOL fwAutoLayout;
+
+/*!
  @brief 创建自动布局视图
  
  @return 自动布局视图
  */
 + (instancetype)fwAutoLayoutView;
-
-/*!
- @brief 设置自动布局开关
- 
- @param enabled 是否启用AutoLayout
- */
-- (void)fwSetAutoLayout:(BOOL)enabled;
-
-/*!
- @brief 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
- @discussion 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
- 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
- 
- @param enabled 是否启用自动布局适配RTL
- */
-+ (void)fwAutoLayoutRTL:(BOOL)enabled;
 
 /*!
  @brief 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
@@ -62,17 +58,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief 设置水平方向抗压缩优先级
- 
- @param priority 布局优先级
  */
-- (void)fwSetCompressionHorizontal:(UILayoutPriority)priority;
+@property (nonatomic, assign) UILayoutPriority fwCompressionHorizontal;
 
 /*!
  @brief 设置垂直方向抗压缩优先级
- 
- @param priority 布局优先级
  */
-- (void)fwSetCompressionVertical:(UILayoutPriority)priority;
+@property (nonatomic, assign) UILayoutPriority fwCompressionVertical;
+
+/*!
+ @brief 设置水平方向抗拉伸优先级
+ */
+@property (nonatomic, assign) UILayoutPriority fwHuggingHorizontal;
+
+/*!
+ @brief 设置垂直方向抗拉伸优先级
+ */
+@property (nonatomic, assign) UILayoutPriority fwHuggingVertical;
 
 #pragma mark - Collapse
 
@@ -608,7 +610,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束列表
  */
-- (NSArray<NSLayoutConstraint *> *)fwAllConstraints;
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fwAllConstraints;
 
 /*!
  @brief 移除当前指定约束，不包含Key
@@ -640,6 +642,8 @@ NS_SWIFT_UNAVAILABLE("")
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^compressionHorizontal)(UILayoutPriority priority);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^compressionVertical)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^huggingHorizontal)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^huggingVertical)(UILayoutPriority priority);
 
 #pragma mark - Collapse
 

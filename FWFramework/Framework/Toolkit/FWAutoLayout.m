@@ -63,21 +63,31 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - AutoLayout
 
++ (BOOL)fwAutoLayoutRTL
+{
+    return fwStaticAutoLayoutRTL;
+}
+
++ (void)setFwAutoLayoutRTL:(BOOL)enabled
+{
+    fwStaticAutoLayoutRTL = enabled;
+}
+
+- (BOOL)fwAutoLayout
+{
+    return !self.translatesAutoresizingMaskIntoConstraints;
+}
+
+- (void)setFwAutoLayout:(BOOL)enabled
+{
+    self.translatesAutoresizingMaskIntoConstraints = !enabled;
+}
+
 + (instancetype)fwAutoLayoutView
 {
     UIView *view = [self new];
     view.translatesAutoresizingMaskIntoConstraints = NO;
     return view;
-}
-
-- (void)fwSetAutoLayout:(BOOL)enabled
-{
-    self.translatesAutoresizingMaskIntoConstraints = !enabled;
-}
-
-+ (void)fwAutoLayoutRTL:(BOOL)enabled
-{
-    fwStaticAutoLayoutRTL = enabled;
 }
 
 - (void)fwAutoLayoutSubviews
@@ -134,14 +144,44 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Compression
 
-- (void)fwSetCompressionHorizontal:(UILayoutPriority)priority
+- (UILayoutPriority)fwCompressionHorizontal
+{
+    return [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal];
+}
+
+- (void)setFwCompressionHorizontal:(UILayoutPriority)priority
 {
     [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisHorizontal];
 }
 
-- (void)fwSetCompressionVertical:(UILayoutPriority)priority
+- (UILayoutPriority)fwCompressionVertical
+{
+    return [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical];
+}
+
+- (void)setFwCompressionVertical:(UILayoutPriority)priority
 {
     [self setContentCompressionResistancePriority:priority forAxis:UILayoutConstraintAxisVertical];
+}
+
+- (UILayoutPriority)fwHuggingHorizontal
+{
+    return [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal];
+}
+
+- (void)setFwHuggingHorizontal:(UILayoutPriority)priority
+{
+    [self setContentHuggingPriority:priority forAxis:UILayoutConstraintAxisHorizontal];
+}
+
+- (UILayoutPriority)fwHuggingVertical
+{
+    return [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical];
+}
+
+- (void)setFwHuggingVertical:(UILayoutPriority)priority
+{
+    [self setContentHuggingPriority:priority forAxis:UILayoutConstraintAxisVertical];
 }
 
 #pragma mark - Collapse
@@ -709,7 +749,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (FWLayoutChain * (^)(UILayoutPriority))compressionHorizontal
 {
     return ^id(UILayoutPriority priority) {
-        [self.view fwSetCompressionHorizontal:priority];
+        self.view.fwCompressionHorizontal = priority;
         return self;
     };
 }
@@ -717,7 +757,23 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (FWLayoutChain * (^)(UILayoutPriority))compressionVertical
 {
     return ^id(UILayoutPriority priority) {
-        [self.view fwSetCompressionVertical:priority];
+        self.view.fwCompressionVertical = priority;
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(UILayoutPriority))huggingHorizontal
+{
+    return ^id(UILayoutPriority priority) {
+        self.view.fwHuggingHorizontal = priority;
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(UILayoutPriority))huggingVertical
+{
+    return ^id(UILayoutPriority priority) {
+        self.view.fwHuggingVertical = priority;
         return self;
     };
 }
