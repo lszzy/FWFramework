@@ -26,19 +26,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, weak, readonly) UIButton *fwCancelButton;
 
 // 设置整体背景色
-- (void)fwSetBackgroundColor:(nullable UIColor *)color;
+@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
 // 设置输入框背景色
-- (void)fwSetTextFieldBackgroundColor:(nullable UIColor *)color;
+@property (nonatomic, strong, nullable) UIColor *fwTextFieldBackgroundColor;
 
 // 设置TextField搜索图标(placeholder)离左侧的位置
-- (void)fwSetSearchIconPosition:(CGFloat)offset;
+@property (nonatomic, assign) CGFloat fwSearchIconPosition;
 
 // 设置TextField搜索图标(placeholder)是否居中，否则居左
-- (void)fwSetSearchIconCenter:(BOOL)center;
+@property (nonatomic, assign) BOOL fwSearchIconCenter;
 
 // 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
-- (void)fwForceCancelButtonEnabled:(BOOL)force;
+@property (nonatomic, assign) BOOL fwForceCancelButtonEnabled;
 
 #pragma mark - Navigation
 
