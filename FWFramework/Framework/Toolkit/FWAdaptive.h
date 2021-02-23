@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIApplication (FWAdaptive)
 
 /// 是否是调试模式
-+ (BOOL)fwIsDebug;
+@property (class, nonatomic, assign, readonly) BOOL fwIsDebug;
 
 @end
 
@@ -73,37 +73,37 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIDevice (FWAdaptive)
 
 /// 是否是模拟器
-+ (BOOL)fwIsSimulator;
+@property (class, nonatomic, assign, readonly) BOOL fwIsSimulator;
 
 /// 是否是iPhone
-+ (BOOL)fwIsIphone;
+@property (class, nonatomic, assign, readonly) BOOL fwIsIphone;
 /// 是否是iPad
-+ (BOOL)fwIsIpad;
+@property (class, nonatomic, assign, readonly) BOOL fwIsIpad;
 /// 是否是Mac
-+ (BOOL)fwIsMac;
+@property (class, nonatomic, assign, readonly) BOOL fwIsMac;
 
 /// 界面是否横屏
-+ (BOOL)fwIsLandscape;
+@property (class, nonatomic, assign, readonly) BOOL fwIsLandscape;
 /// 设备是否横屏，无论支不支持横屏
-+ (BOOL)fwIsDeviceLandscape;
+@property (class, nonatomic, assign, readonly) BOOL fwIsDeviceLandscape;
 /// 设置界面方向，支持旋转方向时生效
 + (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
 
 /// iOS系统版本
-+ (double)fwIosVersion;
+@property (class, nonatomic, assign, readonly) double fwIosVersion;
 /// 是否是指定iOS主版本
 + (BOOL)fwIsIos:(NSInteger)version;
 /// 是否是大于等于指定iOS主版本
 + (BOOL)fwIsIosLater:(NSInteger)version;
 
 /// 设备尺寸，跟横竖屏无关
-+ (CGSize)fwDeviceSize;
+@property (class, nonatomic, assign, readonly) CGSize fwDeviceSize;
 /// 设备宽度，跟横竖屏无关
-+ (CGFloat)fwDeviceWidth;
+@property (class, nonatomic, assign, readonly) CGFloat fwDeviceWidth;
 /// 设备高度，跟横竖屏无关
-+ (CGFloat)fwDeviceHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwDeviceHeight;
 /// 设备分辨率，跟横竖屏无关
-+ (CGSize)fwDeviceResolution;
+@property (class, nonatomic, assign, readonly) CGSize fwDeviceResolution;
 
 @end
 
@@ -133,8 +133,6 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
 /// 是否是全面屏屏幕
 #define FWIsNotchedScreen [UIScreen fwIsNotchedScreen]
-/// 是否是iPhoneX系列全面屏幕，已废弃，下个版本移除
-#define FWIsScreenX [UIScreen fwIsNotchedScreen]
 
 /// 状态栏高度，与是否隐藏无关
 #define FWStatusBarHeight [UIScreen fwStatusBarHeight]
@@ -158,44 +156,42 @@ static const FWScreenInch FWScreenInch67 = 67;
 @interface UIScreen (FWAdaptive)
 
 /// 屏幕尺寸
-+ (CGSize)fwScreenSize;
+@property (class, nonatomic, assign, readonly) CGSize fwScreenSize;
 /// 屏幕宽度
-+ (CGFloat)fwScreenWidth;
+@property (class, nonatomic, assign, readonly) CGFloat fwScreenWidth;
 /// 屏幕高度
-+ (CGFloat)fwScreenHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwScreenHeight;
 /// 屏幕像素比例
-+ (CGFloat)fwScreenScale;
+@property (class, nonatomic, assign, readonly) CGFloat fwScreenScale;
 /// 是否是指定英寸屏幕
 + (BOOL)fwIsScreenInch:(FWScreenInch)inch;
 /// 是否是全面屏屏幕
-+ (BOOL)fwIsNotchedScreen;
-/// 是否是iPhoneX系列全面屏幕，已废弃，下个版本删除
-+ (BOOL)fwIsScreenX DEPRECATED_MSG_ATTRIBUTE("Use fwIsNotchedScreen instead.");
+@property (class, nonatomic, assign, readonly) BOOL fwIsNotchedScreen;
 
 /// 获取一像素的大小
-+ (CGFloat)fwPixelOne;
+@property (class, nonatomic, assign, readonly) CGFloat fwPixelOne;
 /// 检查是否含有安全区域，可用来判断iPhoneX
-+ (BOOL)fwHasSafeAreaInsets;
+@property (class, nonatomic, assign, readonly) BOOL fwHasSafeAreaInsets;
 /// 获取安全区域距离
-+ (UIEdgeInsets)fwSafeAreaInsets;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets fwSafeAreaInsets;
 
 /// 状态栏高度，与是否隐藏无关
-+ (CGFloat)fwStatusBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
 /// 导航栏高度，与是否隐藏无关
-+ (CGFloat)fwNavigationBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
 /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-+ (CGFloat)fwTopBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwTopBarHeight;
 /// 标签栏高度，与是否隐藏无关
-+ (CGFloat)fwTabBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwTabBarHeight;
 /// 工具栏高度，与是否隐藏无关
-+ (CGFloat)fwToolBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwToolBarHeight;
 
 /// 指定缩放比例原始设计图尺寸，默认{375,812}
 + (void)fwSetScaleFactorSize:(CGSize)size;
 /// 获取当前屏幕宽度缩放比例
-+ (CGFloat)fwScaleFactorWidth;
+@property (class, nonatomic, assign, readonly) CGFloat fwScaleFactorWidth;
 /// 获取当前屏幕高度缩放比例
-+ (CGFloat)fwScaleFactorHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fwScaleFactorHeight;
 
 @end
 
@@ -205,15 +201,15 @@ static const FWScreenInch FWScreenInch67 = 67;
 @interface UIViewController (FWAdaptive)
 
 /// 当前状态栏高度，隐藏为0，推荐使用
-- (CGFloat)fwStatusBarHeight;
+@property (nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
 /// 当前导航栏高度，隐藏为0，推荐使用
-- (CGFloat)fwNavigationBarHeight;
+@property (nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
 /// 顶部栏高度，包含状态栏、导航栏，隐藏为0，推荐使用
-- (CGFloat)fwTopBarHeight;
+@property (nonatomic, assign, readonly) CGFloat fwTopBarHeight;
 /// 当前标签栏高度，隐藏为0，推荐使用
-- (CGFloat)fwTabBarHeight;
+@property (nonatomic, assign, readonly) CGFloat fwTabBarHeight;
 /// 当前工具栏高度，隐藏为0，推荐使用
-- (CGFloat)fwToolBarHeight;
+@property (nonatomic, assign, readonly) CGFloat fwToolBarHeight;
 
 @end
 
