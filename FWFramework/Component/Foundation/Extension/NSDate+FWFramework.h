@@ -20,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - System
 
 /// 系统运行时间
-+ (long long)fwSystemUptime;
+@property (class, nonatomic, assign, readonly) long long fwSystemUptime;
 
 /// 获取系统启动时间
-+ (nullable NSDate *)fwSystemBoottime;
+@property (class, nonatomic, readonly, nullable) NSDate *fwSystemBoottime;
 
 #pragma mark - Convert
 
@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 格式：yyyy-MM-dd HH:mm:ss
  */
-- (NSString *)fwStringValue;
+@property (nonatomic, copy, readonly) NSString *fwStringValue;
 
 /**
  *  转化为字符串，默认当前时区
@@ -105,15 +105,15 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return UTC时间戳
  */
-- (NSTimeInterval)fwTimestampValue;
+@property (nonatomic, assign, readonly) NSTimeInterval fwTimestampValue;
 
 #pragma mark - TimeZone
 
 // 转换为当前时区时间
-- (NSDate *)fwDateWithLocalTimeZone;
+@property (nonatomic, strong, readonly) NSDate *fwDateWithLocalTimeZone;
 
 // 转换为UTC时区时间
-- (NSDate *)fwDateWithUTCTimeZone;
+@property (nonatomic, strong, readonly) NSDate *fwDateWithUTCTimeZone;
 
 // 转换为指定时区时间
 - (NSDate *)fwDateWithTimeZone:(nullable NSTimeZone *)timeZone;
@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)fwCalendarUnit:(NSCalendarUnit)unit;
 
 // 是否是闰年
-- (BOOL)fwIsLeapYear;
+@property (nonatomic, assign, readonly) BOOL fwIsLeapYear;
 
 // 是否是同一天
 - (BOOL)fwIsSameDay:(NSDate *)date;
