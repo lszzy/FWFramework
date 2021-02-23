@@ -70,7 +70,7 @@ FWPropertyAssign(BOOL, hideToast);
     
     if (!self.hideToast) {
         [self fwSetRightBarItem:@"启用" block:^(id sender) {
-            [UINavigationController fwEnableNavigationBarTransition];
+            [UINavigationController fwEnableBarTransition];
         }];
     }
 }

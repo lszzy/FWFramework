@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWNavigationBarAppearance
+
 /// 导航栏全局样式可扩展枚举
 typedef NSInteger FWNavigationBarStyle NS_TYPED_EXTENSIBLE_ENUM;
 static const FWNavigationBarStyle FWNavigationBarStyleDefault     = 0;
@@ -30,6 +32,8 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 + (void)setAppearance:(nullable FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style;
 
 @end
+
+#pragma mark - UIViewController+FWStyle
 
 /*!
  @brief 视图控制器样式分类
@@ -113,6 +117,8 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 
 @end
 
+#pragma mark - UINavigationController+FWStyle
+
 /*!
  @brief 导航栏全屏返回手势分类，兼容fwPopBackBarItem返回拦截方法
  @see https://github.com/forkingdog/FDFullscreenPopGesture
@@ -127,6 +133,45 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 
 /// 判断手势是否是全局返回手势对象
 + (BOOL)fwIsFullscreenPopGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;
+
+@end
+
+#pragma mark - UINavigationBar+FWStyle
+
+/*!
+ @brief 导航栏视图分类，全局设置用[UINavigationBar appearance]
+ */
+@interface UINavigationBar (FWStyle)
+
+/// 设置文字和按钮颜色
+@property (nonatomic, strong, nullable) UIColor *fwTextColor UI_APPEARANCE_SELECTOR;
+
+/// 设置背景颜色(nil时透明)并隐藏底部线条
+@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
+
+/// 设置主题背景色(nil时透明)并隐藏底部线条，自动跟随系统改变
+@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
+
+/// 设置透明背景并隐藏底部线条
+- (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
+
+@end
+
+#pragma mark - UITabBar+FWStyle
+
+/*!
+ @brief 标签栏视图分类，全局设置用[UITabBar appearance]
+ */
+@interface UITabBar (FWStyle)
+
+/// 设置文字和按钮颜色
+@property (nonatomic, strong, nullable) UIColor *fwTextColor;
+
+/// 设置背景颜色并隐藏顶部线条
+@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
+
+/// 设置主题背景色并隐藏顶部线条，自动跟随系统改变
+@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
 
 @end
 
