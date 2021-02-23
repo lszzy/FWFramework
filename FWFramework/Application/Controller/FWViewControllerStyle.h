@@ -101,7 +101,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 - (BOOL)fwPopBackBarItem;
 
 /// 设置导航栏返回按钮点击block事件，默认fwPopBackBarItem自动调用。逻辑同上
-- (void)fwSetBackBarBlock:(nullable BOOL (^)(void))block;
+@property (nonatomic, copy, nullable) BOOL (^fwBackBarBlock)(void);
 
 #pragma mark - Fullscreen
 

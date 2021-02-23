@@ -31,7 +31,7 @@ struct LandmarkInputView: View {
                     .frame(width: 80, height: 80, alignment: .center)
                 
                 Button("Hide Keyboard") {
-                    UIWindow.fwMain()?.endEditing(true)
+                    UIWindow.fwMain?.endEditing(true)
                 }
                 
                 TextField("Input", text: $text)
