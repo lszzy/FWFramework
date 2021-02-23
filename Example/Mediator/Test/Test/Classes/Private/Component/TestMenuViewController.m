@@ -19,7 +19,7 @@
 
 - (void)renderInit
 {
-    [self fwSetBarExtendEdge:UIRectEdgeTop];
+    self.fwExtendedLayoutEdge = UIRectEdgeTop;
 }
 
 - (void)viewDidLoad

@@ -205,7 +205,12 @@
     self.navigationController.toolbarHidden = fwToolBarHidden;
 }
 
-- (void)fwSetBarExtendEdge:(UIRectEdge)edge
+- (UIRectEdge)fwExtendedLayoutEdge
+{
+    return self.edgesForExtendedLayout;
+}
+
+- (void)setFwExtendedLayoutEdge:(UIRectEdge)edge
 {
     self.edgesForExtendedLayout = edge;
     self.extendedLayoutIncludesOpaqueBars = YES;

@@ -24,13 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @brief 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
  */
-- (BOOL)fwIsViewVisible;
+@property (nonatomic, assign, readonly) BOOL fwIsViewVisible;
 
 /*!
  @brief 是否已经加载完数据，默认NO，加载完成后可标记为YES
  @discussion 一般第一次加载数据时需要显示loading等，可判断和标记此开关
  */
-@property (nonatomic, assign) BOOL fwIsLoaded;
+@property (nonatomic, assign) BOOL fwIsDataLoaded;
 
 #pragma mark - Present
 

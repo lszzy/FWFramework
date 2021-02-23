@@ -276,7 +276,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 {
     self = [super init];
     if (self) {
-        [self fwSetBarExtendEdge:UIRectEdgeTop];
+        self.fwExtendedLayoutEdge = UIRectEdgeTop;
     }
     return self;
 }

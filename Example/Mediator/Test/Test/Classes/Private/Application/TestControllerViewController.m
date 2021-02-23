@@ -26,7 +26,7 @@
     
     if (isTop) {
         self.fwNavigationBarStyle = FWNavigationBarStyleClear;
-        [self fwSetBarExtendEdge:UIRectEdgeTop];
+        self.fwExtendedLayoutEdge = UIRectEdgeTop;
     }
 }
 

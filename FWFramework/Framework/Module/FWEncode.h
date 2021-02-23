@@ -358,14 +358,14 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  
  @return trim字符串
  */
-- (NSString *)fwTrimString;
+@property (nonatomic, copy, readonly) NSString *fwTrimString;
 
 /*!
  @brief 转换为UTF8编码数据
  
  @return UTF8编码数据
  */
-- (nullable NSData *)fwUTF8Data;
+@property (nonatomic, strong, readonly, nullable) NSData *fwUTF8Data;
 
 /*!
  @brief 从指定位置截取子串
@@ -405,7 +405,7 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  
  @return UTF8编码字符串
  */
-- (nullable NSString *)fwUTF8String;
+@property (nonatomic, copy, readonly, nullable) NSString *fwUTF8String;
 
 @end
 
