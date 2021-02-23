@@ -34,10 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UICollectionViewCell (FWFramework)
 
 /// 获取当前所属collectionView
-- (nullable UICollectionView *)fwCollectionView;
+@property (nonatomic, weak, readonly, nullable) UICollectionView *fwCollectionView;
 
 /// 获取当前显示indexPath
-- (nullable NSIndexPath *)fwIndexPath;
+@property (nonatomic, readonly, nullable) NSIndexPath *fwIndexPath;
 
 @end
 

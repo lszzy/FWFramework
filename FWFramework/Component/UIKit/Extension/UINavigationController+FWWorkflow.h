@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 工作流名称
  */
-- (nullable NSString *)fwTopWorkflowName;
+@property (nonatomic, copy, readonly, nullable) NSString *fwTopWorkflowName;
 
 /*!
  @brief push控制器，并清理最外层工作流（不属于工作流则不清理）

@@ -30,10 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIColor *)fwAddColor:(UIColor *)color blendMode:(CGBlendMode)blendMode;
 
 // 当前颜色的反色。http://stackoverflow.com/questions/5893261/how-to-get-inverse-color-from-uicolor
-- (UIColor *)fwInverseColor;
+@property (nonatomic, strong, readonly) UIColor *fwInverseColor;
 
 // 判断当前颜色是否为深色。http://stackoverflow.com/questions/19456288/text-color-based-on-background-image
-- (BOOL)fwIsDarkColor;
+@property (nonatomic, assign, readonly) BOOL fwIsDarkColor;
 
 // 当前颜色修改亮度比率的颜色
 - (UIColor *)fwBrightnessColor:(CGFloat)ratio;
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Random
 
 // 随机颜色
-+ (UIColor *)fwRandomColor;
+@property (class, nonatomic, readonly) UIColor *fwRandomColor;
 
 @end
 
