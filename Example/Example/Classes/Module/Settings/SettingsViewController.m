@@ -57,7 +57,7 @@
 
 - (void)renderData
 {
-    [self fwSetBarTitle:FWLocalizedString(@"settingTitle")];
+    self.fwBarTitle = FWLocalizedString(@"settingTitle");
     
     #if DEBUG
     [self fwSetRightBarItem:FWLocalizedString(@"debugButton") block:^(id  _Nonnull sender) {

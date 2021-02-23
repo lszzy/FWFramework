@@ -68,8 +68,14 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES，方便添加左上角关闭按钮
 @property (nonatomic, assign, readonly) BOOL fwIsPresented;
 
-/// 快捷设置导航栏标题文字或视图
-- (void)fwSetBarTitle:(nullable id)title;
+/// 快捷设置导航栏标题文字或试图
+@property (nonatomic, strong, nullable) id fwBarTitle;
+
+/// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+@property (nonatomic, strong, nullable) id fwLeftBarItem;
+
+/// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+@property (nonatomic, strong, nullable) id fwRightBarItem;
 
 /// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
 - (void)fwSetLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
@@ -85,16 +91,8 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 
 #pragma mark - Back
 
-/// 设置导航栏返回按钮仅显示箭头模式，下个页面生效
-- (void)fwSetBackBarArrow;
-
-/// 设置导航栏返回按钮文字加箭头模式，下个页面生效
-- (void)fwSetBackBarTitle:(nullable NSString *)title;
-
-/// 设置导航栏返回按钮仅显示图片模式，下个页面生效
-- (void)fwSetBackBarImage:(nullable UIImage *)image;
-
-#pragma mark - Pop
+/// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
+@property (nonatomic, strong, nullable) id fwBackBarItem;
 
 /// 当自定义left按钮之后，系统返回手势失效，可通过此方法强制加回手势。当interactivePopGestureRecognizer.enabled为NO时不生效
 @property (nonatomic, assign) BOOL fwForcePopGesture;

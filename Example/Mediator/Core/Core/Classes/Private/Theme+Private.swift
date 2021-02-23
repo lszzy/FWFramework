@@ -21,7 +21,7 @@ import FWFramework
     }
     
     func viewControllerViewDidLoad(_ viewController: UIViewController) {
-        viewController.fwSetBackBarImage(CoreBundle.imageNamed("back"))
+        viewController.fwBackBarItem = CoreBundle.imageNamed("back")
     }
 }
 
