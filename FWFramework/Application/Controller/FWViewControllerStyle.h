@@ -61,12 +61,12 @@ static const FWNavigationBarStyle FWNavigationBarStyleClear   = 1;
 @property (nonatomic, assign) BOOL fwToolBarHidden;
 
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
-- (void)fwSetBarExtendEdge:(UIRectEdge)edge;
+@property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
 
 #pragma mark - Item
 
 /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES，方便添加左上角关闭按钮
-- (BOOL)fwIsPresented;
+@property (nonatomic, assign, readonly) BOOL fwIsPresented;
 
 /// 快捷设置导航栏标题文字或视图
 - (void)fwSetBarTitle:(nullable id)title;

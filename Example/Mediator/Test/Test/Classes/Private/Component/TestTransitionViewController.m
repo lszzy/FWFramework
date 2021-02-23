@@ -76,7 +76,7 @@
     
     // 视图延伸到导航栏
     self.fwForcePopGesture = YES;
-    [self fwSetBarExtendEdge:UIRectEdgeNone];
+    self.fwExtendedLayoutEdge = UIRectEdgeNone;
     
     // 自定义关闭按钮
     FWWeakifySelf();
