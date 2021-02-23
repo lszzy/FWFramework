@@ -8,7 +8,6 @@
  */
 
 #import "UINavigationController+FWBar.h"
-#import "UINavigationBar+FWFramework.h"
 #import "FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
@@ -36,6 +35,8 @@
 
 @interface UINavigationBar (FWBarTransition)
 
+@property (nonatomic, weak, readonly) UIView *fwBackgroundView;
+
 @property (nonatomic, assign) BOOL fwIsFakeBar;
 
 - (void)fwReplaceStyleWithNavigationBar:(UINavigationBar *)navigationBar;
@@ -43,6 +44,11 @@
 @end
 
 @implementation UINavigationBar (FWBarTransition)
+
+- (UIView *)fwBackgroundView
+{
+    return [self fwPerformPropertySelector:@"_backgroundView"];
+}
 
 - (BOOL)fwIsFakeBar
 {
