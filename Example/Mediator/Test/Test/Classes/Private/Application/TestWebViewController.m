@@ -27,8 +27,6 @@
 {
     if (self.navigationItem.leftBarButtonItem) {
         return nil;
-    } else if (self.showToolbar) {
-        return @[[UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"close"] target:self action:@selector(onWebClose)]];
     } else {
         return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
     }
@@ -37,47 +35,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (!self.requestUrl) return;
-    
-    self.fwForcePopGesture = YES;
-    FWWeakifySelf();
-    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
-        FWStrongifySelf();
-        self.fwForcePopGesture = !webView.canGoBack;
-    }];
-    
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) block:^(id sender) {
-        FWStrongifySelf();
-        [self shareRequestUrl];
-    }];
-    
-    if (self.showToolbar) {
-        [self setupToolbar];
-    }
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
     
     [self loadRequestUrl];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if (self.showToolbar) {
-        [self.navigationController setToolbarHidden:NO animated:animated];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    if (self.showToolbar) {
-        [self.navigationController setToolbarHidden:YES animated:animated];
-    }
-}
-
 - (void)renderWebView
 {
+    self.view.backgroundColor = [Theme tableColor];
+    self.webView.scrollView.backgroundColor = [UIColor clearColor];
+    self.webView.scrollView.showsVerticalScrollIndicator = NO;
+    self.webView.scrollView.showsHorizontalScrollIndicator = NO;
+    
+    // 显示网页host来源
+    UILabel *tipLabel = [UILabel new];
+    tipLabel.font = [UIFont systemFontOfSize:12];
+    tipLabel.textColor = [Theme detailColor];
+    [self.view insertSubview:tipLabel belowSubview:self.webView];
+    tipLabel.fwLayoutChain.centerX().topWithInset(10);
+    [self.webView fwObserveProperty:@"URL" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
+        if (webView.URL.host.length > 0) {
+            tipLabel.text = [NSString stringWithFormat:@"此网页由 %@ 提供", webView.URL.host];
+        }
+    }];
+    
     // 跨WKWebView共享cookie，如需切换用户时清空cookie，重置此配置即可
     static WKProcessPool *processPool = nil;
     static dispatch_once_t onceToken;
@@ -85,45 +66,6 @@
         processPool = [[WKProcessPool alloc] init];
     });
     self.webView.configuration.processPool = processPool;
-}
-
-- (void)setupToolbar
-{
-    FWWeakifySelf();
-    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:[TestBundle imageNamed:@"web_back"] block:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        if ([self.webView canGoBack]) {
-            [self.webView goBack];
-        }
-    }];
-    backItem.tintColor = [Theme textColor];
-    backItem.enabled = self.webView.canGoBack;
-    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
-        backItem.enabled = webView.canGoBack;
-    }];
-    
-    UIBarButtonItem *forwardItem = [UIBarButtonItem fwBarItemWithObject:[TestBundle imageNamed:@"web_next"] block:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        if ([self.webView canGoForward]) {
-            [self.webView goForward];
-        }
-    }];
-    forwardItem.tintColor = [Theme textColor];
-    forwardItem.enabled = self.webView.canGoForward;
-    [self.webView fwObserveProperty:@"canGoForward" block:^(WKWebView *webView, NSDictionary *change) {
-        forwardItem.enabled = webView.canGoForward;
-    }];
-    
-    UIBarButtonItem *flexibleItem = [UIBarButtonItem fwBarItemWithObject:@(UIBarButtonSystemItemFlexibleSpace) target:nil action:nil];
-    self.toolbarItems = @[flexibleItem, backItem, flexibleItem, forwardItem, flexibleItem];
-    
-    [self.webView.scrollView fwObserveProperty:@"contentOffset" block:^(UIScrollView *scrollView, NSDictionary * _Nonnull change) {
-        FWStrongifySelf();
-        BOOL toolbarHidden = scrollView.fwCanScrollVertical && scrollView.fwScrollDirection == UISwipeGestureRecognizerDirectionUp;
-        if (self.fwToolBarHidden != toolbarHidden) {
-            [self.navigationController setToolbarHidden:toolbarHidden animated:YES];
-        }
-    }];
 }
 
 - (void)shareRequestUrl

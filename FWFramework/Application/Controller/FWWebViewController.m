@@ -8,6 +8,7 @@
  */
 
 #import "FWWebViewController.h"
+#import "FWViewControllerStyle.h"
 #import "FWEncode.h"
 #import "FWMessage.h"
 #import "FWToolkit.h"
@@ -124,7 +125,9 @@
         showClose = NO;
     }
     viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+    viewController.fwForcePopGesture = YES;
     [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+        weakController.fwForcePopGesture = !webView.canGoBack;
         if (webView.canGoBack) {
             weakController.navigationItem.leftBarButtonItems = [leftItems copy];
         } else {
