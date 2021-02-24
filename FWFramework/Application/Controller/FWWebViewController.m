@@ -190,6 +190,7 @@
 {
     WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
     webConfiguration.applicationNameForUserAgent = [WKWebView fwBrowserExtensionUserAgent];
+    // 如需跨WKWebView共享cookie，设置processPool为单例对象即可
     return webConfiguration;
 }
 
