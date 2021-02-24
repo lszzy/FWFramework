@@ -61,7 +61,6 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
             TestWebViewController *viewController = [TestWebViewController new];
             viewController.navigationItem.title = parameters[FWRouterURLKey];
             viewController.requestUrl = parameters[FWRouterURLKey];
-            viewController.showToolbar = [parameters[@"toolbar"] fwAsBool];
             [FWRouter pushViewController:viewController animated:YES];
         }];
     }];
@@ -234,6 +233,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     NSLog(@"url: %@", urlStr);
     
     [self.tableData addObjectsFromArray:@[
+                                         @[@"打开Web", @"onOpenHttp"],
                                          @[@"打开Url", @"onOpen"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，协议", @"onOpenController"],
@@ -255,7 +255,6 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"跳转home/undefined", @"onOpenHome4"],
                                          @[@"不支持tabbar/home", @"onOpenHome5"],
                                          @[@"关闭close", @"onOpenClose"],
-                                         @[@"内部web", @"onOpenHttp"],
                                          @[@"通用链接douyin", @"onOpenUniversalLinks"],
                                          @[@"外部safari", @"onOpenUrl"],
                                          @[@"内部safari", @"onOpenSafari"],
@@ -406,7 +405,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenHttp
 {
-    [FWRouter openURL:@"http://kvm.wuyong.site/test.php?toolbar=1"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
 }
 
 - (void)onOpenUniversalLinks
