@@ -86,7 +86,7 @@
     return objc_getAssociatedObject(self, @selector(fwBarTransitionIdentifier));
 }
 
-- (void)setFwNavigationBarTransitionIdentifier:(id)identifier
+- (void)setFwBarTransitionIdentifier:(id)identifier
 {
     objc_setAssociatedObject(self, @selector(fwBarTransitionIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

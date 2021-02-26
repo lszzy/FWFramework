@@ -41,7 +41,7 @@ import FWFramework
             navigationBar.fwThemeBackgroundColor = Theme.barColor
         }
         let whiteAppearance = FWNavigationBarAppearance()
-        whiteAppearance.foregroundColor = .white
+        whiteAppearance.foregroundColor = Theme.textColor.fwThemeColor(.light)
         whiteAppearance.appearanceBlock = { (navigationBar) in
             navigationBar.fwThemeBackgroundColor = .white
         }
