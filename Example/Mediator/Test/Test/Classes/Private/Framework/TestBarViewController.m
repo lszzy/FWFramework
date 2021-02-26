@@ -16,7 +16,7 @@
 
 @implementation TestBarSubViewController
 
-- (id)fwNavigationBarTransitionIdentifier
+- (id)fwBarTransitionIdentifier
 {
     return @(self.fwNavigationBarStyle);
 }
