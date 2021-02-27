@@ -12,7 +12,7 @@
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
-#pragma mark - UINavigationController+FWBarInternal
+#pragma mark - UINavigationController+FWBarTransition
 
 @interface UINavigationController (FWBarInternal)
 
@@ -21,8 +21,6 @@
 
 @end
 
-#pragma mark - UIViewController+FWBarInternal
-
 @interface UIViewController (FWBarInternal)
 
 @property (nonatomic, strong) UINavigationBar *fwTransitionNavigationBar;
@@ -30,8 +28,6 @@
 - (void)fwAddTransitionNavigationBarIfNeeded;
 
 @end
-
-#pragma mark - UINavigationBar+FWBarTransition
 
 @interface UINavigationBar (FWBarTransition)
 
@@ -74,8 +70,6 @@
 }
 
 @end
-
-#pragma mark - UIViewController+FWBarTransition
 
 @implementation UIViewController (FWBarTransition)
 
@@ -157,8 +151,6 @@
 }
 
 @end
-
-#pragma mark - UINavigationController+FWBarTransition
 
 @implementation UINavigationController (FWBarTransition)
 
