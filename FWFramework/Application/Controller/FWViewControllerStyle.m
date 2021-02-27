@@ -358,6 +358,12 @@
     objc_setAssociatedObject(self, @selector(fwForcePopGesture), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)issetFwForcePopGesture
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwForcePopGesture));
+    return value != nil;
+}
+
 - (BOOL)fwPopBackBarItem
 {
     BOOL shouldPop = YES;
@@ -420,6 +426,16 @@
 
 @implementation FWGestureRecognizerDelegateProxy
 
+- (BOOL)shouldForceReceive
+{
+    if (self.navigationController.viewControllers.count <= 1) return NO;
+    if (!self.navigationController.interactivePopGestureRecognizer.enabled) return NO;
+    if ([self.navigationController.topViewController issetFwForcePopGesture]) {
+        return self.navigationController.topViewController.fwForcePopGesture;
+    }
+    return self.navigationController.fwForcePopGesture;
+}
+
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
@@ -443,10 +459,7 @@
     if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
         if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
             BOOL shouldReceive = [self.delegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
-            if (!shouldReceive &&
-                self.navigationController.viewControllers.count > 1 &&
-                self.navigationController.interactivePopGestureRecognizer.enabled &&
-                self.navigationController.topViewController.fwForcePopGesture) {
+            if (!shouldReceive && [self shouldForceReceive]) {
                 return YES;
             }
             return shouldReceive;
@@ -461,10 +474,7 @@
     if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
         if ([self.delegate respondsToSelector:@selector(_gestureRecognizer:shouldReceiveEvent:)]) {
             BOOL shouldReceive = [self.delegate _gestureRecognizer:gestureRecognizer shouldReceiveEvent:event];
-            if (!shouldReceive &&
-                self.navigationController.viewControllers.count > 1 &&
-                self.navigationController.interactivePopGestureRecognizer.enabled &&
-                self.navigationController.topViewController.fwForcePopGesture) {
+            if (!shouldReceive && [self shouldForceReceive]) {
                 return YES;
             }
             return shouldReceive;

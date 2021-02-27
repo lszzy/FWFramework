@@ -98,7 +98,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
 @property (nonatomic, strong, nullable) id fwBackBarItem;
 
-/// 当自定义left按钮之后，系统返回手势失效，可通过此方法强制加回手势。当interactivePopGestureRecognizer.enabled为NO时不生效
+/// 当自定义left按钮或隐藏导航栏之后，系统返回手势失效，可开启此属性强制加回手势。设置即生效，VC优先级大于Nav，当interactivePop手势禁用时不生效
 @property (nonatomic, assign) BOOL fwForcePopGesture;
 
 /// 导航栏返回按钮点击事件(pop不会触发)，当前页面生效。返回YES关闭页面，NO不关闭，子类可重写。默认调用已设置的block事件
