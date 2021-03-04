@@ -8,6 +8,7 @@
  */
 
 #import "FWNavigationController.h"
+#import "FWViewControllerStyle.h"
 #import "FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
@@ -370,6 +371,283 @@
 - (void)setFwTransitionContextToViewController:(UIViewController *)viewController
 {
     objc_setAssociatedObject(self, @selector(fwTransitionContextToViewController), [[FWWeakObject alloc] initWithObject:viewController], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+#pragma mark - UINavigationController+FWPopGesture
+
+@implementation UIViewController (FWPopGesture)
+
+- (BOOL)fwForcePopGesture
+{
+    return [objc_getAssociatedObject(self, @selector(fwForcePopGesture)) boolValue];
+}
+
+- (void)setFwForcePopGesture:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwForcePopGesture), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)issetFwForcePopGesture
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwForcePopGesture));
+    return value != nil;
+}
+
+- (BOOL)fwFullscreenPopGestureDisabled
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwFullscreenPopGestureDisabled:(BOOL)disabled
+{
+    objc_setAssociatedObject(self, @selector(fwFullscreenPopGestureDisabled), @(disabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)fwFullscreenPopGestureDistance
+{
+#if CGFLOAT_IS_DOUBLE
+    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+#else
+    return [objc_getAssociatedObject(self, _cmd) floatValue];
+#endif
+}
+
+- (void)setFwFullscreenPopGestureDistance:(CGFloat)distance
+{
+    objc_setAssociatedObject(self, @selector(fwFullscreenPopGestureDistance), @(MAX(0, distance)), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+@interface FWGestureRecognizerDelegateProxy : FWDelegateProxy <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+
+@end
+
+@implementation FWGestureRecognizerDelegateProxy
+
+- (BOOL)shouldForceReceive
+{
+    if (self.navigationController.viewControllers.count <= 1) return NO;
+    if (!self.navigationController.interactivePopGestureRecognizer.enabled) return NO;
+    if ([self.navigationController.topViewController issetFwForcePopGesture]) {
+        return self.navigationController.topViewController.fwForcePopGesture;
+    }
+    return self.navigationController.fwForcePopGesture;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        BOOL shouldPop = YES;
+        if ([self.navigationController.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+            // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
+            shouldPop = [self.navigationController.topViewController fwPopBackBarItem];
+        }
+        if (shouldPop) {
+            if ([self.delegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
+                return [self.delegate gestureRecognizerShouldBegin:gestureRecognizer];
+            }
+        }
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+            BOOL shouldReceive = [self.delegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
+            if (!shouldReceive && [self shouldForceReceive]) {
+                return YES;
+            }
+            return shouldReceive;
+        }
+    }
+    return YES;
+}
+
+- (BOOL)_gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event
+{
+    // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(_gestureRecognizer:shouldReceiveEvent:)]) {
+            BOOL shouldReceive = [self.delegate _gestureRecognizer:gestureRecognizer shouldReceiveEvent:event];
+            if (!shouldReceive && [self shouldForceReceive]) {
+                return YES;
+            }
+            return shouldReceive;
+        }
+    }
+    return YES;
+}
+
+@end
+
+@interface FWFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+
+@end
+
+@implementation FWFullscreenPopGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    if (self.navigationController.viewControllers.count <= 1) {
+        return NO;
+    }
+    
+    UIViewController *topViewController = self.navigationController.viewControllers.lastObject;
+    if (topViewController.fwFullscreenPopGestureDisabled) {
+        return NO;
+    }
+    
+    if ([topViewController respondsToSelector:@selector(fwPopBackBarItem)] &&
+        ![topViewController fwPopBackBarItem]) {
+        return NO;
+    }
+    
+    CGPoint beginningLocation = [gestureRecognizer locationInView:gestureRecognizer.view];
+    CGFloat maxAllowedInitialDistance = topViewController.fwFullscreenPopGestureDistance;
+    if (maxAllowedInitialDistance > 0 && beginningLocation.x > maxAllowedInitialDistance) {
+        return NO;
+    }
+    
+    if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) {
+        return NO;
+    }
+    
+    CGPoint translation = [gestureRecognizer translationInView:gestureRecognizer.view];
+    BOOL isLeftToRight = [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight;
+    CGFloat multiplier = isLeftToRight ? 1 : - 1;
+    if ((translation.x * multiplier) <= 0) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+@end
+
+@implementation UINavigationController (FWPopGesture)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UINavigationController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            // 拦截系统返回手势事件代理，加载自定义代理方法
+            if (selfObject.interactivePopGestureRecognizer.delegate != selfObject.fwDelegateProxy) {
+                selfObject.fwDelegateProxy.delegate = selfObject.interactivePopGestureRecognizer.delegate;
+                selfObject.fwDelegateProxy.navigationController = selfObject;
+                selfObject.interactivePopGestureRecognizer.delegate = selfObject.fwDelegateProxy;
+            }
+        }));
+        FWSwizzleClass(UINavigationController, @selector(navigationBar:shouldPopItem:), FWSwizzleReturn(BOOL), FWSwizzleArgs(UINavigationBar *navigationBar, UINavigationItem *item), FWSwizzleCode({
+            // 检查返回按钮点击事件钩子
+            if (selfObject.viewControllers.count >= navigationBar.items.count &&
+                [selfObject.topViewController respondsToSelector:@selector(fwPopBackBarItem)]) {
+                // 调用钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+                if (![selfObject.topViewController fwPopBackBarItem]) {
+                    if (@available(iOS 11, *)) {
+                    } else {
+                        [navigationBar.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                            if (subview.alpha < 1.0) {
+                                [UIView animateWithDuration:.25 animations:^{
+                                    subview.alpha = 1.0;
+                                }];
+                            }
+                        }];
+                    }
+                    return NO;
+                }
+            }
+            
+            return FWSwizzleOriginal(navigationBar, item);
+        }));
+        FWSwizzleClass(UINavigationController, @selector(childViewControllerForStatusBarHidden), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(), FWSwizzleCode({
+            if (selfObject.topViewController) {
+                return selfObject.topViewController;
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
+        FWSwizzleClass(UINavigationController, @selector(childViewControllerForStatusBarStyle), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(), FWSwizzleCode({
+            if (selfObject.topViewController) {
+                return selfObject.topViewController;
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
+    });
+}
+
+- (FWGestureRecognizerDelegateProxy *)fwDelegateProxy
+{
+    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
+    if (!proxy) {
+        proxy = [[FWGestureRecognizerDelegateProxy alloc] init];
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return proxy;
+}
+
++ (BOOL)fwIsFullscreenPopGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer.delegate isKindOfClass:[FWFullscreenPopGestureRecognizerDelegate class]]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)fwFullscreenPopGestureEnabled
+{
+    return self.fwFullscreenPopGestureRecognizer.enabled;
+}
+
+- (void)setFwFullscreenPopGestureEnabled:(BOOL)enabled
+{
+    if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.fwFullscreenPopGestureRecognizer]) {
+        [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.fwFullscreenPopGestureRecognizer];
+        
+        NSArray *internalTargets = [self.interactivePopGestureRecognizer valueForKey:@"targets"];
+        id internalTarget = [internalTargets.firstObject valueForKey:@"target"];
+        SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
+        self.fwFullscreenPopGestureRecognizer.delegate = self.fwPopGestureRecognizerDelegate;
+        [self.fwFullscreenPopGestureRecognizer addTarget:internalTarget action:internalAction];
+    }
+    
+    self.fwFullscreenPopGestureRecognizer.enabled = enabled;
+    self.interactivePopGestureRecognizer.enabled = !enabled;
+}
+
+- (FWFullscreenPopGestureRecognizerDelegate *)fwPopGestureRecognizerDelegate
+{
+    FWFullscreenPopGestureRecognizerDelegate *delegate = objc_getAssociatedObject(self, _cmd);
+    if (!delegate) {
+        delegate = [[FWFullscreenPopGestureRecognizerDelegate alloc] init];
+        delegate.navigationController = self;
+        objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return delegate;
+}
+
+- (UIPanGestureRecognizer *)fwFullscreenPopGestureRecognizer
+{
+    UIPanGestureRecognizer *panGestureRecognizer = objc_getAssociatedObject(self, _cmd);
+    if (!panGestureRecognizer) {
+        panGestureRecognizer = [[UIPanGestureRecognizer alloc] init];
+        panGestureRecognizer.maximumNumberOfTouches = 1;
+        objc_setAssociatedObject(self, _cmd, panGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return panGestureRecognizer;
 }
 
 @end
