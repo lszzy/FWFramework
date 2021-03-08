@@ -7,7 +7,10 @@
 
 # [中文](README_CN.md)
 
+## Tutorial
 iOS development framework, convenient for iOS development, compatible with OC and Swift.
+
+All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
 ## Installation
 It is recommended to use CocoaPods to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
@@ -38,29 +41,6 @@ This framework supports Carthage, Cartfile example:
 	github "lszzy/FWFramework"
 
 Execute `carthage update` and copy `FWFramework.framework` to the project.
-
-## Tutorial
-All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
-
-### HeaderDoc 
-This framework document is located in the Document folder. [HeaderDoc Document](Document/HeaderDoc) will be automatically generated when compiling. For the list of supported tags, please see [HeaderDoc tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html).
-
-HeaderDoc.sh can quickly generate framework HeaderDoc documents, using the following commands:
-
-	./HeaderDoc.sh
-	
-### CodeSnippets
-CodeSnippets can quickly write HeaderDoc comments in Xcode, such as `hd_class`, etc. The installation command is as follows:
-
-	./CodeSnippets.sh
-	
-### Templates
-Templates can create new OC classes with HeaderDoc annotations in Xcode. The installation commands are as follows:
-
-	./Templates.sh
-
-## Standard
-[Coding Standards Document](STANDARD.md)
 
 ## Changelog
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
