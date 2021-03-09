@@ -49,6 +49,12 @@
 		2F65D77525F7451E00E522D6 /* FWKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D76425F7451E00E522D6 /* FWKeychain.m */; };
 		2F65D77625F7451E00E522D6 /* FWLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D76525F7451E00E522D6 /* FWLanguage.m */; };
 		2F65D77725F7451E00E522D6 /* FWLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F65D76625F7451E00E522D6 /* FWLocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2F65D82C25F7ACC200E522D6 /* View+FWKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D82525F7ACC200E522D6 /* View+FWKeyboard.swift */; };
+		2F65D82D25F7ACC200E522D6 /* View+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D82625F7ACC200E522D6 /* View+FWFramework.swift */; };
+		2F65D82E25F7ACC200E522D6 /* FWToolkit+FWFramework.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D82725F7ACC200E522D6 /* FWToolkit+FWFramework.swift */; };
+		2F65D82F25F7ACC200E522D6 /* FWViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D82925F7ACC200E522D6 /* FWViewWrapper.swift */; };
+		2F65D83025F7ACC200E522D6 /* FWWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D82A25F7ACC200E522D6 /* FWWebImage.swift */; };
+		2F65D83125F7ACC200E522D6 /* FWImageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F65D82B25F7ACC200E522D6 /* FWImageWrapper.swift */; };
 		2F8A9898255403A500AC554B /* FWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8A9896255403A500AC554B /* FWWebImage.m */; };
 		2F8A9899255403A500AC554B /* FWWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F8A9897255403A500AC554B /* FWWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FA99DA3228AA9CF0059DFDB /* FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -376,6 +382,12 @@
 		2F65D76425F7451E00E522D6 /* FWKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWKeychain.m; sourceTree = "<group>"; };
 		2F65D76525F7451E00E522D6 /* FWLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWLanguage.m; sourceTree = "<group>"; };
 		2F65D76625F7451E00E522D6 /* FWLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWLocation.h; sourceTree = "<group>"; };
+		2F65D82525F7ACC200E522D6 /* View+FWKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+FWKeyboard.swift"; sourceTree = "<group>"; };
+		2F65D82625F7ACC200E522D6 /* View+FWFramework.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+FWFramework.swift"; sourceTree = "<group>"; };
+		2F65D82725F7ACC200E522D6 /* FWToolkit+FWFramework.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FWToolkit+FWFramework.swift"; sourceTree = "<group>"; };
+		2F65D82925F7ACC200E522D6 /* FWViewWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWViewWrapper.swift; sourceTree = "<group>"; };
+		2F65D82A25F7ACC200E522D6 /* FWWebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWWebImage.swift; sourceTree = "<group>"; };
+		2F65D82B25F7ACC200E522D6 /* FWImageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWImageWrapper.swift; sourceTree = "<group>"; };
 		2F7E41FE20FC2DCF00CE3E2F /* FWFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FWFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F8A9896255403A500AC554B /* FWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWWebImage.m; sourceTree = "<group>"; };
 		2F8A9897255403A500AC554B /* FWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWWebImage.h; sourceTree = "<group>"; };
@@ -696,6 +708,35 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
+		2F65D82325F7ACC200E522D6 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				2F65D82425F7ACC200E522D6 /* Extension */,
+				2F65D82825F7ACC200E522D6 /* Component */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		2F65D82425F7ACC200E522D6 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2F65D82525F7ACC200E522D6 /* View+FWKeyboard.swift */,
+				2F65D82625F7ACC200E522D6 /* View+FWFramework.swift */,
+				2F65D82725F7ACC200E522D6 /* FWToolkit+FWFramework.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		2F65D82825F7ACC200E522D6 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				2F65D82925F7ACC200E522D6 /* FWViewWrapper.swift */,
+				2F65D82A25F7ACC200E522D6 /* FWWebImage.swift */,
+				2F65D82B25F7ACC200E522D6 /* FWImageWrapper.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		2F6A722A2538A8C6008F7D0F /* Toolkit */ = {
 			isa = PBXGroup;
 			children = (
@@ -781,6 +822,7 @@
 			isa = PBXGroup;
 			children = (
 				2F6A72352538B72B008F7D0F /* Foundation */,
+				2F65D82325F7ACC200E522D6 /* SwiftUI */,
 				2F6A72392538B805008F7D0F /* UIKit */,
 			);
 			path = Component;
@@ -1494,6 +1536,7 @@
 				2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */,
 				2F65D76C25F7451E00E522D6 /* FWJson.swift in Sources */,
 				2FFE1D122507BFBD000332A3 /* UINavigationController+FWFramework.m in Sources */,
+				2F65D82C25F7ACC200E522D6 /* View+FWKeyboard.swift in Sources */,
 				2FFE1DB22507BFBD000332A3 /* NSDate+FWFramework.m in Sources */,
 				2FFE1D7B2507BFBD000332A3 /* FWFloatLayoutView.m in Sources */,
 				2FFE1BCB2507BF95000332A3 /* FWURLSessionManager.m in Sources */,
@@ -1514,6 +1557,7 @@
 				2FFE1D3D2507BFBD000332A3 /* UIColor+FWFramework.m in Sources */,
 				2FFE1D162507BFBD000332A3 /* UILabel+FWFramework.m in Sources */,
 				2F4CEC8125C66AED00D4C7F5 /* FWPasscodeView.m in Sources */,
+				2F65D82E25F7ACC200E522D6 /* FWToolkit+FWFramework.swift in Sources */,
 				2FFE1DB52507BFBD000332A3 /* NSDictionary+FWFramework.m in Sources */,
 				2FFE1D712507BFBD000332A3 /* UIView+FWStatistical.m in Sources */,
 				2F64829825E172F800E9B77F /* FWTabBarController.swift in Sources */,
@@ -1548,6 +1592,7 @@
 				2FFE1D642507BFBD000332A3 /* UIImagePickerController+FWFramework.m in Sources */,
 				2F65D77425F7451E00E522D6 /* FWEncode.swift in Sources */,
 				2FFE1BC02507BF95000332A3 /* FWCacheSqlite.m in Sources */,
+				2F65D83125F7ACC200E522D6 /* FWImageWrapper.swift in Sources */,
 				2FFE1D992507BFBD000332A3 /* FWCropViewController.m in Sources */,
 				2F8A9898255403A500AC554B /* FWWebImage.m in Sources */,
 				2FFE1BED2507BF95000332A3 /* FWAsyncUdpSocket.m in Sources */,
@@ -1579,6 +1624,7 @@
 				2FFE1D772507BFBD000332A3 /* FWPhotoBrowser.m in Sources */,
 				2FFE1D682507BFBD000332A3 /* UIViewController+FWTransition.m in Sources */,
 				2FFE1D3C2507BFBD000332A3 /* WKWebView+FWFramework.m in Sources */,
+				2F65D82F25F7ACC200E522D6 /* FWViewWrapper.swift in Sources */,
 				2FFE1C182507BF95000332A3 /* FWLog.swift in Sources */,
 				2FFE1D202507BFBD000332A3 /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */,
@@ -1599,6 +1645,7 @@
 				2FFE1BCD2507BF95000332A3 /* FWNetworkReachabilityManager.m in Sources */,
 				2FFE840F2515C4BF00545D6E /* FWAdaptive.swift in Sources */,
 				2FFE1BDF2507BF95000332A3 /* FWBaseRequest.m in Sources */,
+				2F65D82D25F7ACC200E522D6 /* View+FWFramework.swift in Sources */,
 				2FFE1D792507BFBD000332A3 /* FWGridView.m in Sources */,
 				2FFE1DC02507BFBD000332A3 /* NSDictionary+FWThread.m in Sources */,
 				2FFE1D1E2507BFBD000332A3 /* UIBezierPath+FWShape.m in Sources */,
@@ -1621,6 +1668,7 @@
 				2FFE1BD82507BF95000332A3 /* FWChainRequest.m in Sources */,
 				2FFE1DB62507BFBD000332A3 /* NSFileManager+FWFramework.swift in Sources */,
 				2FFE1DC42507BFBD000332A3 /* NSString+FWFramework.m in Sources */,
+				2F65D83025F7ACC200E522D6 /* FWWebImage.swift in Sources */,
 				2FFE1C032507BF95000332A3 /* FWAutoLayout.m in Sources */,
 				2FFE1C3C2507BFA5000332A3 /* FWTableViewController.m in Sources */,
 				2FFE1D452507BFBD000332A3 /* UIFont+FWFramework.m in Sources */,
