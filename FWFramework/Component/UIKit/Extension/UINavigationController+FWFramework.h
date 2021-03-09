@@ -8,8 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "UINavigationController+FWBar.h"
-#import "UINavigationController+FWPopGesture.h"
 #import "UINavigationController+FWWorkflow.h"
 
 /*!

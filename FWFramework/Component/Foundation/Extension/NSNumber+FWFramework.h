@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSNumber (FWFramework)
 
 /// 转换为CGFloat
-- (CGFloat)fwCGFloatValue;
+@property (nonatomic, assign, readonly) CGFloat fwCGFloatValue;
 
 /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
 - (NSString *)fwRoundString:(NSInteger)digit;

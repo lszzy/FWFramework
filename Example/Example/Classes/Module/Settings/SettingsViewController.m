@@ -57,7 +57,7 @@
 
 - (void)renderData
 {
-    [self fwSetBarTitle:FWLocalizedString(@"settingTitle")];
+    self.fwBarTitle = FWLocalizedString(@"settingTitle");
     
     #if DEBUG
     [self fwSetRightBarItem:FWLocalizedString(@"debugButton") block:^(id  _Nonnull sender) {
@@ -78,6 +78,7 @@
     [self.tableData removeAllObjects];
     [self.tableData addObject:@[FWLocalizedString(@"languageTitle"), @"onLanguage"]];
     [self.tableData addObject:@[FWLocalizedString(@"themeTitle"), @"onTheme"]];
+    [self.tableData addObject:@[FWLocalizedString(@"rootTitle"), @"onRoot"]];
     [self.tableView reloadData];
 }
 
@@ -105,6 +106,14 @@
         FWThemeMode mode = FWThemeManager.sharedInstance.mode;
         NSString *theme = (mode == FWThemeModeSystem) ? FWLocalizedString(@"systemTitle") : (mode == FWThemeModeDark ? FWLocalizedString(@"themeDark") : FWLocalizedString(@"themeLight"));
         cell.detailTextLabel.text = theme;
+    } else if ([@"onRoot" isEqualToString:[rowData objectAtIndex:1]]) {
+        NSString *root;
+        if (AppConfig.isRootNavigation) {
+            root = AppConfig.isRootCustom ? @"Navigation+FWTabBar" : @"Navigation+UITabBar";
+        } else {
+            root = AppConfig.isRootCustom ? @"FWTabBar+Navigation" : @"UITabBar+Navigation";
+        }
+        cell.detailTextLabel.text = root;
     } else {
         cell.detailTextLabel.text = @"";
     }
@@ -158,7 +167,7 @@
         if (index < 3) {
             NSString *language = (index == 1) ? @"zh-Hans" : (index == 2 ? @"en" : nil);
             NSBundle.fwLocalizedLanguage = language;
-            [TabBarController refreshController];
+            [UITabBarController refreshController];
         } else {
             NSString *localized = NSBundle.fwLocalizedLanguage;
             NSString *language = (!localized) ? @"zh-Hans" : ([localized hasPrefix:@"zh"] ? @"en" : nil);
@@ -177,7 +186,32 @@
             mode = (currentMode == FWThemeModeSystem) ? FWThemeModeLight : (currentMode == FWThemeModeLight ? FWThemeModeDark : FWThemeModeSystem);
         }
         FWThemeManager.sharedInstance.mode = mode;
-        [TabBarController refreshController];
+        [UITabBarController refreshController];
+    }];
+}
+
+- (void)onRoot
+{
+    [self fwShowSheetWithTitle:FWLocalizedString(@"rootTitle") message:nil cancel:FWLocalizedString(@"取消") actions:@[@"UITabBar+Navigation", @"FWTabBar+Navigation", @"Navigation+UITabBar", @"Navigation+FWTabBar"] actionBlock:^(NSInteger index) {
+        switch (index) {
+            case 1:
+                AppConfig.isRootNavigation = NO;
+                AppConfig.isRootCustom = YES;
+                break;
+            case 2:
+                AppConfig.isRootNavigation = YES;
+                AppConfig.isRootCustom = NO;
+                break;
+            case 3:
+                AppConfig.isRootNavigation = YES;
+                AppConfig.isRootCustom = YES;
+                break;
+            default:
+                AppConfig.isRootNavigation = NO;
+                AppConfig.isRootCustom = NO;
+                break;
+        }
+        [UITabBarController refreshController];
     }];
 }
 

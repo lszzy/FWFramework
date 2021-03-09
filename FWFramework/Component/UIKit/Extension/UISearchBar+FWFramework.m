@@ -37,7 +37,7 @@
             }
             
             // 自定义了才处理
-            NSNumber *isCenterNumber = objc_getAssociatedObject(selfObject, @selector(fwSetSearchIconCenter:));
+            NSNumber *isCenterNumber = objc_getAssociatedObject(selfObject, @selector(fwSearchIconCenter));
             if (isCenterNumber) {
                 if (@available(iOS 11.0, *)) {
                     if (![isCenterNumber boolValue]) {
@@ -98,12 +98,6 @@
     objc_setAssociatedObject(self, @selector(fwContentInset), [NSValue valueWithUIEdgeInsets:fwContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwSetSearchIconCenter:(BOOL)center
-{
-    objc_setAssociatedObject(self, @selector(fwSetSearchIconCenter:), @(center), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self setNeedsLayout];
-}
-
 - (UITextField *)fwTextField
 {
     return [self fwPerformPropertySelector:@"searchField"];
@@ -114,25 +108,62 @@
     return [self fwPerformPropertySelector:@"cancelButton"];
 }
 
-- (void)fwSetBackgroundColor:(UIColor *)color
+- (UIColor *)fwBackgroundColor
 {
+    return objc_getAssociatedObject(self, @selector(fwBackgroundColor));
+}
+
+- (void)setFwBackgroundColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     self.backgroundImage = [UIImage fwImageWithColor:color];
 }
 
-- (void)fwSetTextFieldBackgroundColor:(UIColor *)color
+- (UIColor *)fwTextFieldBackgroundColor
+{
+    UITextField *textField = [self fwTextField];
+    return textField.backgroundColor;
+}
+
+- (void)setFwTextFieldBackgroundColor:(UIColor *)color
 {
     UITextField *textField = [self fwTextField];
     textField.backgroundColor = color;
 }
 
-- (void)fwSetSearchIconPosition:(CGFloat)offset
+- (CGFloat)fwSearchIconPosition
 {
-    [self setPositionAdjustment:UIOffsetMake(offset, 0) forSearchBarIcon:UISearchBarIconSearch];
+    UIOffset offset = [self positionAdjustmentForSearchBarIcon:UISearchBarIconSearch];
+    return offset.horizontal;
 }
 
-- (void)fwForceCancelButtonEnabled:(BOOL)force
+- (void)setFwSearchIconPosition:(CGFloat)horizontal
 {
-    if (force) {
+    [self setPositionAdjustment:UIOffsetMake(horizontal, 0) forSearchBarIcon:UISearchBarIconSearch];
+}
+
+- (BOOL)fwSearchIconCenter
+{
+    return [objc_getAssociatedObject(self, @selector(fwSearchIconCenter)) boolValue];
+}
+
+- (void)setFwSearchIconCenter:(BOOL)center
+{
+    objc_setAssociatedObject(self, @selector(fwSearchIconCenter), @(center), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsLayout];
+}
+
+- (BOOL)fwForceCancelButtonEnabled
+{
+    return [objc_getAssociatedObject(self, @selector(fwForceCancelButtonEnabled)) boolValue];
+}
+
+- (void)setFwForceCancelButtonEnabled:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwForceCancelButtonEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (enabled) {
         [self.fwCancelButton fwObserveProperty:@"enabled" block:^(UIButton *object, NSDictionary *change) {
             if (!object.enabled) {
                 object.enabled = YES;

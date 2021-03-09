@@ -47,7 +47,7 @@
     #else
     NSString *envTitle = FWLocalizedString(@"envDev");
     #endif
-    [self fwSetBarTitle:[NSString stringWithFormat:@"%@ - %@", FWLocalizedString(@"homeTitle"), envTitle]];
+    self.fwBarTitle = [NSString stringWithFormat:@"%@ - %@", FWLocalizedString(@"homeTitle"), envTitle];
     
     if ([Mediator.userModule isLogin]) {
         [self.loginButton setTitle:FWLocalizedString(@"backTitle") forState:UIControlStateNormal];

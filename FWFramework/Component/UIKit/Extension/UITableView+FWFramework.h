@@ -27,6 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// reloadData清空尺寸缓存
 - (void)fwReloadDataWithoutCache;
 
+/// reloadData禁用动画
+- (void)fwReloadDataWithoutAnimation;
+
+/// reloadSections禁用动画
+- (void)fwReloadSectionsWithoutAnimation:(NSIndexSet *)sections;
+
 /// reloadRows禁用动画
 - (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
 
@@ -38,10 +44,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIEdgeInsets fwSeparatorInset;
 
 /// 获取当前所属tableView
-- (nullable UITableView *)fwTableView;
+@property (nonatomic, weak, readonly, nullable) UITableView *fwTableView;
 
 /// 获取当前显示indexPath
-- (nullable NSIndexPath *)fwIndexPath;
+@property (nonatomic, readonly, nullable) NSIndexPath *fwIndexPath;
 
 @end
 

@@ -1,4 +1,4 @@
-# fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog]
+# fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog] [skip:true]
 # https://docs.fastlane.tools
 # update_fastlane
 
@@ -21,31 +21,43 @@ platform :ios do
     if options[:version]
       VERSION_NUMBER = options[:version]
       increment_version_number(version_number: VERSION_NUMBER)
+    elsif options[:skip]
+      VERSION_NUMBER = ""
     else
       VERSION_NUMBER = get_version_number
     end
+
     if options[:build]
       BUILD_NUMBER = options[:build]
       increment_build_number(build_number: BUILD_NUMBER)
+    elsif options[:skip]
+      BUILD_NUMBER = ""
     else
       BUILD_NUMBER = get_build_number
     end
+
+    puts "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER}"
+
+    if options[:update]
+      CHANGELOG_TEXT = options[:update]
+    elsif options[:skip]
+      CHANGELOG_TEXT = ""
+    else
+      CHANGELOG_TEXT = prompt(text: "Changelog:", multi_line_end_keyword: "END")
+    end
+
+    puts "Changelog: #{CHANGELOG_TEXT}"
   end
 
   desc "Push a new test build to Pgyer"
   lane :pgyer_test do |options|
-    if options[:update]
-      CHANGELOG_TEXT = options[:update]
-    else
-      CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
-    end
-    puts "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog: #{CHANGELOG_TEXT}"
     cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Test",
       configuration: "Release-Test",
       export_method: "ad-hoc",
+      export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
       output_name: "Example_pgyer_test.ipa",
       include_symbols: false,
@@ -64,18 +76,13 @@ platform :ios do
 
   desc "Push a new prod build to Pgyer"
   lane :pgyer_prod do |options|
-    if options[:update]
-      CHANGELOG_TEXT = options[:update]
-    else
-      CHANGELOG_TEXT = prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog:", multi_line_end_keyword: "END")
-    end
-    puts "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Changelog: #{CHANGELOG_TEXT}"
     cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Prod",
       configuration: "Release-Prod",
       export_method: "ad-hoc",
+      export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
       output_name: "Example_pgyer_prod.ipa",
       include_symbols: false,
@@ -94,83 +101,80 @@ platform :ios do
 
   desc "Push a new test build to TestFlight"
   lane :testflight_test do |options|
-    if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
-      cocoapods(repo_update: false, use_bundle_exec: false)
-      build_app(
-        workspace: "Example.xcworkspace",
-        scheme: "Example-Test",
-        configuration: "Release-Test",
-        export_method: "app-store",
-        output_directory: "fastlane/build/",
-        output_name: "Example_testflight_test.ipa",
-        silent: true,
-        clean: true
+    cocoapods(repo_update: false, use_bundle_exec: false)
+    build_app(
+      workspace: "Example.xcworkspace",
+      scheme: "Example-Test",
+      configuration: "Release-Test",
+      export_method: "app-store",
+      export_xcargs: "-allowProvisioningUpdates",
+      output_directory: "fastlane/build/",
+      output_name: "Example_testflight_test.ipa",
+      silent: true,
+      clean: true
+    )
+    if options[:update]
+      CHANGELOG_TEXT = options[:update]
+      upload_to_testflight(
+        skip_waiting_for_build_processing: false,
+        changelog: CHANGELOG_TEXT,
+        skip_submission: true
       )
-      if options[:update]
-        CHANGELOG_TEXT = options[:update]
-        upload_to_testflight(
-          skip_waiting_for_build_processing: false,
-          changelog: CHANGELOG_TEXT,
-          skip_submission: true
-        )
-      else
-        upload_to_testflight(
-          skip_waiting_for_build_processing: true,
-          skip_submission: true
-        )
-      end
+    else
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true,
+        skip_submission: true
+      )
     end
   end
 
   desc "Push a new prod build to TestFlight"
   lane :testflight_prod do |options|
-    if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
-      cocoapods(repo_update: false, use_bundle_exec: false)
-      build_app(
-        workspace: "Example.xcworkspace",
-        scheme: "Example-Prod",
-        configuration: "Release-Prod",
-        export_method: "app-store",
-        output_directory: "fastlane/build/",
-        output_name: "Example_testflight_prod.ipa",
-        silent: true,
-        clean: true
+    cocoapods(repo_update: false, use_bundle_exec: false)
+    build_app(
+      workspace: "Example.xcworkspace",
+      scheme: "Example-Prod",
+      configuration: "Release-Prod",
+      export_method: "app-store",
+      export_xcargs: "-allowProvisioningUpdates",
+      output_directory: "fastlane/build/",
+      output_name: "Example_testflight_prod.ipa",
+      silent: true,
+      clean: true
+    )
+    if options[:update]
+      CHANGELOG_TEXT = options[:update]
+      upload_to_testflight(
+        skip_waiting_for_build_processing: false,
+        changelog: CHANGELOG_TEXT,
+        skip_submission: true
       )
-      if options[:update]
-        CHANGELOG_TEXT = options[:update]
-        upload_to_testflight(
-          skip_waiting_for_build_processing: false,
-          changelog: CHANGELOG_TEXT,
-          skip_submission: true
-        )
-      else
-        upload_to_testflight(
-          skip_waiting_for_build_processing: true,
-          skip_submission: true
-        )
-      end
+    else
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true,
+        skip_submission: true
+      )
     end
   end
 
   desc "Push a new prod build to the App Store"
   lane :appstore_prod do |options|
-    if prompt(text: "Version: #{VERSION_NUMBER} Build: #{BUILD_NUMBER} Continue?", boolean: true, ci_input: "y")
-      cocoapods(repo_update: false, use_bundle_exec: false)
-      build_app(
-        workspace: "Example.xcworkspace",
-        scheme: "Example-Prod",
-        configuration: "Release-Prod",
-        export_method: "app-store",
-        output_directory: "fastlane/build/",
-        output_name: "Example_appstore_prod.ipa",
-        silent: true,
-        clean: true
-      )
-      upload_to_app_store(
-        skip_metadata: true,
-        skip_screenshots: true,
-        skip_app_version_update: true
-      )
-    end
+    cocoapods(repo_update: false, use_bundle_exec: false)
+    build_app(
+      workspace: "Example.xcworkspace",
+      scheme: "Example-Prod",
+      configuration: "Release-Prod",
+      export_method: "app-store",
+      export_xcargs: "-allowProvisioningUpdates",
+      output_directory: "fastlane/build/",
+      output_name: "Example_appstore_prod.ipa",
+      silent: true,
+      clean: true
+    )
+    upload_to_app_store(
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_app_version_update: true
+    )
   end
 end

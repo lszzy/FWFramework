@@ -11,6 +11,7 @@
 #import <CoreText/CoreText.h>
 #import <Foundation/Foundation.h>
 #import "FWAsyncLayer.h"
+#import "FWBadgeView.h"
 #import "FWBannerView.h"
 #import "FWBarrageView.h"
 #import "FWCollectionViewFlowLayout.h"
@@ -166,10 +167,10 @@ CGFloat fwAttributedWidthCallback(void* ref);
 
 @interface NSMutableAttributedString (FWAttributedLabel)
 
-- (void)fwSetTextColor:(UIColor*)color;
+@property (nonatomic, strong, nullable) UIColor *fwTextColor;
 - (void)fwSetTextColor:(UIColor*)color range:(NSRange)range;
 
-- (void)fwSetFont:(UIFont*)font;
+@property (nonatomic, strong, nullable) UIFont *fwFont;
 - (void)fwSetFont:(UIFont*)font range:(NSRange)range;
 
 - (void)fwSetUnderlineStyle:(CTUnderlineStyle)style

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, nullable) NSString *requestUrl;
 
+- (instancetype)initWithRequestUrl:(nullable NSString *)requestUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -207,6 +207,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)renderModel
 {
+    self.navigationItem.title = @"FWRouter";
     NSString *url = @"http://test.com?id=我是中文";
     NSLog(@"fwUrlEncode: %@", [url fwUrlEncode]);
     NSLog(@"fwUrlDecode: %@", [[url fwUrlEncode] fwUrlDecode]);
@@ -232,6 +233,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     NSLog(@"url: %@", urlStr);
     
     [self.tableData addObjectsFromArray:@[
+                                         @[@"打开Web", @"onOpenHttp"],
                                          @[@"打开Url", @"onOpen"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，协议", @"onOpenController"],
@@ -253,7 +255,6 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"跳转home/undefined", @"onOpenHome4"],
                                          @[@"不支持tabbar/home", @"onOpenHome5"],
                                          @[@"关闭close", @"onOpenClose"],
-                                         @[@"内部web", @"onOpenHttp"],
                                          @[@"通用链接douyin", @"onOpenUniversalLinks"],
                                          @[@"外部safari", @"onOpenUrl"],
                                          @[@"内部safari", @"onOpenSafari"],
@@ -429,7 +430,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     TestViewController *viewController = [TestViewController new];
     viewController.navigationItem.title = @"iOS14 bug";
     FWWeakifySelf();
-    [viewController fwSetBackBarBlock:^BOOL{
+    viewController.fwBackBarBlock = ^BOOL{
         FWStrongifySelf();
         static NSInteger count = 0;
         NSInteger index = count++ % 3;
@@ -441,7 +442,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
             [self.navigationController setViewControllers:@[self.navigationController.viewControllers.firstObject] animated:YES];
         }
         return NO;
-    }];
+    };
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

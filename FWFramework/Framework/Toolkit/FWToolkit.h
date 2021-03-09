@@ -121,16 +121,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
 
 /// 读取颜色的十六进制值RGB，不含透明度
-- (long)fwHexValue;
+@property (nonatomic, assign, readonly) long fwHexValue;
 
 /// 读取颜色的透明度值，范围0~1
-- (CGFloat)fwAlphaValue;
+@property (nonatomic, assign, readonly) CGFloat fwAlphaValue;
 
 /// 读取颜色的十六进制字符串RGB，不含透明度
-- (NSString *)fwHexString;
+@property (nonatomic, copy, readonly) NSString *fwHexString;
 
 /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-- (NSString *)fwHexStringWithAlpha;
+@property (nonatomic, copy, readonly) NSString *fwHexStringWithAlpha;
 
 @end
 
@@ -178,16 +178,16 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 + (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
 
 /// 获取设备Token格式化后的字符串
-+ (nullable NSString *)fwDeviceToken;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceToken;
 
 /// 获取设备模型，格式："iPhone6,1"
-+ (nullable NSString *)fwDeviceModel;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceModel;
 
 /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-+ (nullable NSString *)fwDeviceIDFV;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFV;
 
 /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Component_Tracking组件后生效
-+ (nullable NSString *)fwDeviceIDFA;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFA;
 
 @end
 
@@ -199,7 +199,7 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 @interface UIView (FWToolkit)
 
 /// 获取响应的视图控制器
-- (nullable UIViewController *)fwViewController;
+@property (nonatomic, strong, readonly, nullable) UIViewController *fwViewController;
 
 @end
 

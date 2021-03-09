@@ -78,7 +78,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 - (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
 
 /// 判断图片是否有透明通道
-- (BOOL)fwHasAlpha;
+@property (nonatomic, assign, readonly) BOOL fwHasAlpha;
 
 @end
 

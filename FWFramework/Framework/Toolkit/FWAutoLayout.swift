@@ -33,13 +33,25 @@ public class FWLayoutChain {
 
     @discardableResult
     public func compressionHorizontal(_ priority: UILayoutPriority) -> FWLayoutChain {
-        view?.fwSetCompressionHorizontal(priority)
+        view?.fwCompressionHorizontal = priority
         return self
     }
 
     @discardableResult
     public func compressionVertical(_ priority: UILayoutPriority) -> FWLayoutChain {
-        view?.fwSetCompressionVertical(priority)
+        view?.fwCompressionVertical = priority
+        return self
+    }
+    
+    @discardableResult
+    public func huggingHorizontal(_ priority: UILayoutPriority) -> FWLayoutChain {
+        view?.fwHuggingHorizontal = priority
+        return self
+    }
+
+    @discardableResult
+    public func huggingVertical(_ priority: UILayoutPriority) -> FWLayoutChain {
+        view?.fwHuggingVertical = priority
         return self
     }
     

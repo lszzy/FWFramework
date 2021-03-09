@@ -8,6 +8,7 @@
  */
 
 #import "FWWebViewController.h"
+#import "FWViewControllerStyle.h"
 #import "FWEncode.h"
 #import "FWMessage.h"
 #import "FWToolkit.h"
@@ -35,6 +36,8 @@
         @"renderWebLayout" : @"fwInnerRenderWebLayout",
         @"onWebClose": @"fwInnerOnWebClose",
         @"webView:didFinishNavigation:" : @"fwInnerWebView:didFinishNavigation:",
+        @"webView:didFailProvisionalNavigation:withError:" : @"fwInnerWebView:didFailProvisionalNavigation:withError:",
+        @"webView:didFailNavigation:withError:" : @"fwInnerWebView:didFailNavigation:withError:",
         @"webView:decidePolicyForNavigationAction:decisionHandler:" : @"fwInnerWebView:decidePolicyForNavigationAction:decisionHandler:",
         @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
         @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
@@ -122,7 +125,9 @@
         showClose = NO;
     }
     viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+    viewController.fwForcePopGesture = YES;
     [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+        weakController.fwForcePopGesture = !webView.canGoBack;
         if (webView.canGoBack) {
             weakController.navigationItem.leftBarButtonItems = [leftItems copy];
         } else {
@@ -188,6 +193,7 @@
 {
     WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
     webConfiguration.applicationNameForUserAgent = [WKWebView fwBrowserExtensionUserAgent];
+    // 如需跨WKWebView共享cookie，设置processPool为单例对象即可
     return webConfiguration;
 }
 
@@ -262,10 +268,28 @@
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+- (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    if ([self respondsToSelector:@selector(didFinishLoad:)]) {
-        [(id<FWWebViewController>)self didFinishLoad:navigation];
+    if ([self respondsToSelector:@selector(didFinishLoad)]) {
+        [(id<FWWebViewController>)self didFinishLoad];
+    }
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (error.code == NSURLErrorCancelled) return;
+    
+    if ([self respondsToSelector:@selector(didFailLoad:)]) {
+        [(id<FWWebViewController>)self didFailLoad:error];
+    }
+}
+
+- (void)fwInnerWebView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (error.code == NSURLErrorCancelled) return;
+    
+    if ([self respondsToSelector:@selector(didFailLoad:)]) {
+        [(id<FWWebViewController>)self didFailLoad:error];
     }
 }
 

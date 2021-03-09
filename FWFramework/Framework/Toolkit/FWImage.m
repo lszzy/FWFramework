@@ -295,7 +295,7 @@ UIImage * FWImageFile(NSString *path) {
 
 #pragma mark - FWSDWebImagePlugin
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+#if FWCONFIGURATION_SDWEBIMAGE_ENABLED
 @import SDWebImage;
 #endif
 
@@ -311,7 +311,7 @@ UIImage * FWImageFile(NSString *path) {
     return instance;
 }
 
-#if FWCOMPONENT_SDWEBIMAGE_ENABLED
+#if FWCONFIGURATION_SDWEBIMAGE_ENABLED
 
 + (void)load
 {

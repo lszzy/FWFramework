@@ -23,6 +23,12 @@
     }];
 }
 
+- (void)fwReloadDataWithoutCache
+{
+    [self fwClearSizeCache];
+    [self reloadData];
+}
+
 - (void)fwReloadDataWithoutAnimation
 {
     [CATransaction begin];
@@ -31,10 +37,11 @@
     [CATransaction commit];
 }
 
-- (void)fwReloadDataWithoutCache
+- (void)fwReloadSectionsWithoutAnimation:(NSIndexSet *)sections
 {
-    [self fwClearSizeCache];
-    [self reloadData];
+    [self performBatchUpdates:^{
+        [self reloadSections:sections];
+    } completion:nil];
 }
 
 - (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths

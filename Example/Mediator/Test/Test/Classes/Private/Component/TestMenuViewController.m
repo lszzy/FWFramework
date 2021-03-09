@@ -19,7 +19,7 @@
 
 - (void)renderInit
 {
-    [self fwSetBarExtendEdge:UIRectEdgeTop];
+    self.fwExtendedLayoutEdge = UIRectEdgeTop;
 }
 
 - (void)viewDidLoad
@@ -42,7 +42,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar fwSetBackgroundClear];
+    [self.navigationController.navigationBar fwSetBackgroundTransparent];
 }
 
 - (void)renderView

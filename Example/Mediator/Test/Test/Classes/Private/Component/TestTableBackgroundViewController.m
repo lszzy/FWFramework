@@ -21,7 +21,7 @@
     self = [super init];
     if (self) {
         self.automaticallyAdjustsScrollViewInsets = NO;
-        [self fwSetBarExtendEdge:UIRectEdgeTop];
+        self.fwExtendedLayoutEdge = UIRectEdgeTop;
     }
     return self;
 }
@@ -29,7 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar fwSetBackgroundClear];
+    [self.navigationController.navigationBar fwSetBackgroundTransparent];
 }
 
 - (UITableViewStyle)renderTableStyle

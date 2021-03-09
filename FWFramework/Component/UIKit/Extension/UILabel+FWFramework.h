@@ -33,10 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Size
 
 // 计算当前文本所占尺寸，需frame或者宽度布局完整
-- (CGSize)fwTextSize;
+@property (nonatomic, assign, readonly) CGSize fwTextSize;
 
 // 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
-- (CGSize)fwAttributedTextSize;
+@property (nonatomic, assign, readonly) CGSize fwAttributedTextSize;
 
 @end
 

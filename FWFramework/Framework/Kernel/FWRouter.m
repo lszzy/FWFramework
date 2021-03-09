@@ -704,21 +704,24 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     return nil;
 }
 
-- (UIViewController *)fwTopViewController
++ (UIViewController *)fwTopViewController:(UIViewController *)viewController
 {
-    UIViewController *viewController = [self fwTopPresentedController];
-    
-    while ([viewController isKindOfClass:[UITabBarController class]] &&
-           [(UITabBarController *)viewController selectedViewController]) {
-        viewController = [(UITabBarController *)viewController selectedViewController];
+    if ([viewController isKindOfClass:[UITabBarController class]]) {
+        UIViewController *topController = [(UITabBarController *)viewController selectedViewController];
+        if (topController) return [self fwTopViewController:topController];
     }
     
-    while ([viewController isKindOfClass:[UINavigationController class]] &&
-           [(UINavigationController *)viewController topViewController]) {
-        viewController = [(UINavigationController*)viewController topViewController];
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        UIViewController *topController = [(UINavigationController *)viewController topViewController];
+        if (topController) return [self fwTopViewController:topController];
     }
     
     return viewController;
+}
+
+- (UIViewController *)fwTopViewController
+{
+    return [UIWindow fwTopViewController:[self fwTopPresentedController]];
 }
 
 - (UINavigationController *)fwTopNavigationController

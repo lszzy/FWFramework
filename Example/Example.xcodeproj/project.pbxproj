@@ -9,26 +9,9 @@
 /* Begin PBXBuildFile section */
 		1C18E5A84B7D2A5EDB24DF6E /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027459ABC308013A8B85ABC9 /* Pods_Example.framework */; };
 		2F0AC3EF25B3486B0090CFF5 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0AC3EE25B3486B0090CFF5 /* AppConfig.swift */; };
-		2F16273525763B220037427D /* LandmarkModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273425763B220037427D /* LandmarkModelView.swift */; };
-		2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F16273A25763BA40037427D /* LandmarkViewModel.swift */; };
-		2F1A3F0D259622F1001063D2 /* LandmarkLazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1A3F0C259622F1001063D2 /* LandmarkLazyView.swift */; };
-		2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */; };
-		2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */; };
-		2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B42538004700AEBB60 /* AppDelegate.swift */; };
-		2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6B62538004700AEBB60 /* SceneDelegate.swift */; };
-		2F48F6BB2538004900AEBB60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F48F6BA2538004900AEBB60 /* Assets.xcassets */; };
-		2F48F6BE2538004900AEBB60 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F48F6BD2538004900AEBB60 /* Preview Assets.xcassets */; };
-		2F48F6C12538004900AEBB60 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F48F6BF2538004900AEBB60 /* LaunchScreen.storyboard */; };
-		2F48F6C62538004900AEBB60 /* AppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 2F48F6B22538004700AEBB60 /* AppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2F48F7122538036100AEBB60 /* LandmarkHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F48F6F22538036100AEBB60 /* LandmarkHome.swift */; };
-		2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D6389259461B2007B822F /* LandmarkInputView.swift */; };
 		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
 		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
-		2F8A990E2554575B00AC554B /* test.webp in Resources */ = {isa = PBXBuildFile; fileRef = 2F8A990D2554575B00AC554B /* test.webp */; };
-		2FB1463B258CAB8A00D867D4 /* LandmarkTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB1463A258CAB8A00D867D4 /* LandmarkTestData.swift */; };
-		2FB1463F258CAC5D00D867D4 /* LandmarkTestDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */; };
-		2FB146A8258E203800D867D4 /* LandmarkTestDatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */; };
-		2FB146B2258E230F00D867D4 /* LandmarkTestTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB146B1258E230F00D867D4 /* LandmarkTestTable.swift */; };
+		2F7A0B2325D122FB008E588D /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7A0B2225D122FB008E588D /* AppMediator.swift */; };
 		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
 		2FF8D94324C88A6F006A83B5 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */; };
 		2FF8D94424C88A6F006A83B5 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A024C88A6F006A83B5 /* HomeViewController.m */; };
@@ -37,18 +20,7 @@
 		2FF8D9EE24C88C86006A83B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9DA24C88C86006A83B5 /* LaunchScreen.storyboard */; };
 		2FF8D9F124C88D3B006A83B5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9F324C88D3B006A83B5 /* InfoPlist.strings */; };
 		2FF8D9F724C88D6A006A83B5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9F924C88D6A006A83B5 /* Localizable.strings */; };
-		43845DF3826DE5B3067EBBB0 /* Pods_AppClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB46C8900333E8CECA188CD1 /* Pods_AppClip.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		2F48F6C42538004900AEBB60 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2FF8D86E24C886EC006A83B5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2F48F6B12538004700AEBB60;
-			remoteInfo = AppClip;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2FF4835124ED0423000661D0 /* Embed App Clips */ = {
@@ -57,7 +29,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				2F48F6C62538004900AEBB60 /* AppClip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,36 +37,15 @@
 
 /* Begin PBXFileReference section */
 		027459ABC308013A8B85ABC9 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		16E81B56077725F066EB7D4F /* Pods-AppClip.release-test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppClip.release-test.xcconfig"; path = "Target Support Files/Pods-AppClip/Pods-AppClip.release-test.xcconfig"; sourceTree = "<group>"; };
 		17B05770937DC0FCD6BB809C /* Pods-Example.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release-prod.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release-prod.xcconfig"; sourceTree = "<group>"; };
-		1BBF7BED37A74FF51F8C18C4 /* Pods-AppClip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppClip.debug.xcconfig"; path = "Target Support Files/Pods-AppClip/Pods-AppClip.debug.xcconfig"; sourceTree = "<group>"; };
 		22984264913F27A680A5D0EC /* Pods-Example.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug-prod.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		2F0AC3EE25B3486B0090CFF5 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
-		2F16273425763B220037427D /* LandmarkModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModelView.swift; sourceTree = "<group>"; };
-		2F16273A25763BA40037427D /* LandmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkViewModel.swift; sourceTree = "<group>"; };
-		2F1A3F0C259622F1001063D2 /* LandmarkLazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkLazyView.swift; sourceTree = "<group>"; };
-		2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetailViewModel.swift; sourceTree = "<group>"; };
-		2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetailModelView.swift; sourceTree = "<group>"; };
-		2F48F6B22538004700AEBB60 /* AppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F48F6B42538004700AEBB60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2F48F6B62538004700AEBB60 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2F48F6BA2538004900AEBB60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2F48F6BD2538004900AEBB60 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2F48F6C02538004900AEBB60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2F48F6C22538004900AEBB60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2F48F6C32538004900AEBB60 /* AppClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppClip.entitlements; sourceTree = "<group>"; };
-		2F48F6F22538036100AEBB60 /* LandmarkHome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandmarkHome.swift; sourceTree = "<group>"; };
-		2F4D6389259461B2007B822F /* LandmarkInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkInputView.swift; sourceTree = "<group>"; };
 		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		2F63D408250C73D400BA83A6 /* TabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		2F6E684B24FFA5D100079E53 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
-		2F8A990D2554575B00AC554B /* test.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.webp; sourceTree = "<group>"; };
-		2FB1463A258CAB8A00D867D4 /* LandmarkTestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestData.swift; sourceTree = "<group>"; };
-		2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestDataView.swift; sourceTree = "<group>"; };
-		2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestDatabaseView.swift; sourceTree = "<group>"; };
-		2FB146B1258E230F00D867D4 /* LandmarkTestTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkTestTable.swift; sourceTree = "<group>"; };
+		2F7A0B2225D122FB008E588D /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2FF8D87624C886EC006A83B5 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FF8D88A24C886EE006A83B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2FF8D88B24C886EE006A83B5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -116,25 +66,12 @@
 		2FF8D9F824C88D6A006A83B5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2FF8D9FA24C88D6B006A83B5 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		52DD0B80E112B8E85F9B65AD /* Pods-Example.release-test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release-test.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release-test.xcconfig"; sourceTree = "<group>"; };
-		71D8FA0D21EA945520D1033E /* Pods-AppClip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppClip.release.xcconfig"; path = "Target Support Files/Pods-AppClip/Pods-AppClip.release.xcconfig"; sourceTree = "<group>"; };
 		A8BEDAE99F51A71C71611ADC /* Pods-Example.debug-test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug-test.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug-test.xcconfig"; sourceTree = "<group>"; };
-		B0BE75643E348A840328FA73 /* Pods-AppClip.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppClip.debug-prod.xcconfig"; path = "Target Support Files/Pods-AppClip/Pods-AppClip.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		B4BAA06B2DF878F043EBA54F /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
-		B79183E79A89DB81C7D307AE /* Pods-AppClip.debug-test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppClip.debug-test.xcconfig"; path = "Target Support Files/Pods-AppClip/Pods-AppClip.debug-test.xcconfig"; sourceTree = "<group>"; };
 		DB055C82FC6CC339287B2D34 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
-		DFF3EB046E9F859537BE3B9D /* Pods-AppClip.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppClip.release-prod.xcconfig"; path = "Target Support Files/Pods-AppClip/Pods-AppClip.release-prod.xcconfig"; sourceTree = "<group>"; };
-		FB46C8900333E8CECA188CD1 /* Pods_AppClip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppClip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2F48F6AF2538004700AEBB60 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				43845DF3826DE5B3067EBBB0 /* Pods_AppClip.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2FF8D87324C886EC006A83B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -155,133 +92,10 @@
 			path = Tabbar;
 			sourceTree = "<group>";
 		};
-		2F16273325763AC40037427D /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2F16273A25763BA40037427D /* LandmarkViewModel.swift */,
-				2F2740372577E97F0095D716 /* LandmarkDetailViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		2F48F6B32538004700AEBB60 /* AppClip */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6CD253801A500AEBB60 /* Classes */,
-				2F48F6CE253801AC00AEBB60 /* Resources */,
-				2F48F6CC2538015300AEBB60 /* Supporting Files */,
-				2F48F6BC2538004900AEBB60 /* Preview Content */,
-			);
-			path = AppClip;
-			sourceTree = "<group>";
-		};
-		2F48F6BC2538004900AEBB60 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6BD2538004900AEBB60 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		2F48F6CC2538015300AEBB60 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6C22538004900AEBB60 /* Info.plist */,
-				2F48F6C32538004900AEBB60 /* AppClip.entitlements */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		2F48F6CD253801A500AEBB60 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6CF253801D900AEBB60 /* App */,
-				2F48F6D1253801F200AEBB60 /* Library */,
-				2F48F6D0253801DD00AEBB60 /* Module */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		2F48F6CE253801AC00AEBB60 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6BA2538004900AEBB60 /* Assets.xcassets */,
-				2F48F7262538072E00AEBB60 /* Images */,
-				2F48F6BF2538004900AEBB60 /* LaunchScreen.storyboard */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		2F48F6CF253801D900AEBB60 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6B42538004700AEBB60 /* AppDelegate.swift */,
-				2F48F6B62538004700AEBB60 /* SceneDelegate.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		2F48F6D0253801DD00AEBB60 /* Module */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6D62538036100AEBB60 /* SwiftUI */,
-			);
-			path = Module;
-			sourceTree = "<group>";
-		};
-		2F48F6D1253801F200AEBB60 /* Library */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Library;
-			sourceTree = "<group>";
-		};
-		2F48F6D62538036100AEBB60 /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-				2F16273325763AC40037427D /* ViewModel */,
-				2F48F6D72538036100AEBB60 /* Model */,
-				2F48F6DD2538036100AEBB60 /* View */,
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
-		2F48F6D72538036100AEBB60 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				2FB1463A258CAB8A00D867D4 /* LandmarkTestData.swift */,
-				2FB146B1258E230F00D867D4 /* LandmarkTestTable.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		2F48F6DD2538036100AEBB60 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				2F48F6F22538036100AEBB60 /* LandmarkHome.swift */,
-				2F16273425763B220037427D /* LandmarkModelView.swift */,
-				2F27403B2577E9A60095D716 /* LandmarkDetailModelView.swift */,
-				2FB1463E258CAC5D00D867D4 /* LandmarkTestDataView.swift */,
-				2FB146A7258E203800D867D4 /* LandmarkTestDatabaseView.swift */,
-				2F4D6389259461B2007B822F /* LandmarkInputView.swift */,
-				2F1A3F0C259622F1001063D2 /* LandmarkLazyView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		2F48F7262538072E00AEBB60 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				2F8A990D2554575B00AC554B /* test.webp */,
-			);
-			path = Images;
-			sourceTree = "<group>";
-		};
 		2FF8D86D24C886EC006A83B5 = {
 			isa = PBXGroup;
 			children = (
 				2FF8D87824C886EC006A83B5 /* Example */,
-				2F48F6B32538004700AEBB60 /* AppClip */,
 				2FF8D87724C886EC006A83B5 /* Products */,
 				8308B34A12C3D1D0D913BACB /* Pods */,
 				DB539000495F785F4F8A26DA /* Frameworks */,
@@ -292,7 +106,6 @@
 			isa = PBXGroup;
 			children = (
 				2FF8D87624C886EC006A83B5 /* Example.app */,
-				2F48F6B22538004700AEBB60 /* AppClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -393,6 +206,7 @@
 			children = (
 				2FF8D93B24C88A6F006A83B5 /* AppConfig.h */,
 				2F0AC3EE25B3486B0090CFF5 /* AppConfig.swift */,
+				2F7A0B2225D122FB008E588D /* AppMediator.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -402,12 +216,6 @@
 			children = (
 				B4BAA06B2DF878F043EBA54F /* Pods-Example.debug.xcconfig */,
 				DB055C82FC6CC339287B2D34 /* Pods-Example.release.xcconfig */,
-				1BBF7BED37A74FF51F8C18C4 /* Pods-AppClip.debug.xcconfig */,
-				71D8FA0D21EA945520D1033E /* Pods-AppClip.release.xcconfig */,
-				B79183E79A89DB81C7D307AE /* Pods-AppClip.debug-test.xcconfig */,
-				B0BE75643E348A840328FA73 /* Pods-AppClip.debug-prod.xcconfig */,
-				16E81B56077725F066EB7D4F /* Pods-AppClip.release-test.xcconfig */,
-				DFF3EB046E9F859537BE3B9D /* Pods-AppClip.release-prod.xcconfig */,
 				A8BEDAE99F51A71C71611ADC /* Pods-Example.debug-test.xcconfig */,
 				22984264913F27A680A5D0EC /* Pods-Example.debug-prod.xcconfig */,
 				52DD0B80E112B8E85F9B65AD /* Pods-Example.release-test.xcconfig */,
@@ -420,7 +228,6 @@
 			isa = PBXGroup;
 			children = (
 				027459ABC308013A8B85ABC9 /* Pods_Example.framework */,
-				FB46C8900333E8CECA188CD1 /* Pods_AppClip.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -428,25 +235,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2F48F6B12538004700AEBB60 /* AppClip */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2F48F6C92538004900AEBB60 /* Build configuration list for PBXNativeTarget "AppClip" */;
-			buildPhases = (
-				E0C564096F0C6212998C50F0 /* [CP] Check Pods Manifest.lock */,
-				2F48F6AE2538004700AEBB60 /* Sources */,
-				2F48F6AF2538004700AEBB60 /* Frameworks */,
-				2F48F6B02538004700AEBB60 /* Resources */,
-				C4419C68D408F1CC22266B67 /* [CP] Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = AppClip;
-			productName = AppClip;
-			productReference = 2F48F6B22538004700AEBB60 /* AppClip.app */;
-			productType = "com.apple.product-type.application.on-demand-install-capable";
-		};
 		2FF8D87524C886EC006A83B5 /* Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2FF8D88F24C886EE006A83B5 /* Build configuration list for PBXNativeTarget "Example" */;
@@ -461,7 +249,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2F48F6C52538004900AEBB60 /* PBXTargetDependency */,
 			);
 			name = Example;
 			productName = Example;
@@ -478,9 +265,6 @@
 				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = site.wuyong;
 				TargetAttributes = {
-					2F48F6B12538004700AEBB60 = {
-						CreatedOnToolsVersion = 12.0.1;
-					};
 					2FF8D87524C886EC006A83B5 = {
 						CreatedOnToolsVersion = 11.5;
 					};
@@ -501,23 +285,11 @@
 			projectRoot = "";
 			targets = (
 				2FF8D87524C886EC006A83B5 /* Example */,
-				2F48F6B12538004700AEBB60 /* AppClip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2F48F6B02538004700AEBB60 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2F8A990E2554575B00AC554B /* test.webp in Resources */,
-				2F48F6C12538004900AEBB60 /* LaunchScreen.storyboard in Resources */,
-				2F48F6BE2538004900AEBB60 /* Preview Assets.xcassets in Resources */,
-				2F48F6BB2538004900AEBB60 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2FF8D87424C886EC006A83B5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -571,74 +343,16 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C4419C68D408F1CC22266B67 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AppClip/Pods-AppClip-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AppClip/Pods-AppClip-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppClip/Pods-AppClip-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E0C564096F0C6212998C50F0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AppClip-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2F48F6AE2538004700AEBB60 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2FB1463F258CAC5D00D867D4 /* LandmarkTestDataView.swift in Sources */,
-				2F1A3F0D259622F1001063D2 /* LandmarkLazyView.swift in Sources */,
-				2FB146A8258E203800D867D4 /* LandmarkTestDatabaseView.swift in Sources */,
-				2F27403C2577E9A60095D716 /* LandmarkDetailModelView.swift in Sources */,
-				2FB1463B258CAB8A00D867D4 /* LandmarkTestData.swift in Sources */,
-				2F4D638A259461B2007B822F /* LandmarkInputView.swift in Sources */,
-				2F2740382577E97F0095D716 /* LandmarkDetailViewModel.swift in Sources */,
-				2F16273525763B220037427D /* LandmarkModelView.swift in Sources */,
-				2FB146B2258E230F00D867D4 /* LandmarkTestTable.swift in Sources */,
-				2F48F6B52538004700AEBB60 /* AppDelegate.swift in Sources */,
-				2F48F7122538036100AEBB60 /* LandmarkHome.swift in Sources */,
-				2F16273B25763BA40037427D /* LandmarkViewModel.swift in Sources */,
-				2F48F6B72538004700AEBB60 /* SceneDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2FF8D87224C886EC006A83B5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */,
 				2F0AC3EF25B3486B0090CFF5 /* AppConfig.swift in Sources */,
+				2F7A0B2325D122FB008E588D /* AppMediator.swift in Sources */,
 				2FF8D94424C88A6F006A83B5 /* HomeViewController.m in Sources */,
 				2FF8D88C24C886EE006A83B5 /* main.m in Sources */,
 				2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */,
@@ -649,23 +363,7 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		2F48F6C52538004900AEBB60 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2F48F6B12538004700AEBB60 /* AppClip */;
-			targetProxy = 2F48F6C42538004900AEBB60 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
-		2F48F6BF2538004900AEBB60 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2F48F6C02538004900AEBB60 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		2FF8D9F324C88D3B006A83B5 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -798,50 +496,6 @@
 			};
 			name = "Debug-Prod";
 		};
-		2F3F49C225B7F588002BD598 /* Debug-Prod */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0BE75643E348A840328FA73 /* Pods-AppClip.debug-prod.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
-				CODE_SIGN_ENTITLEMENTS = AppClip/AppClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AppClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-l\"c++\"",
-					"-l\"sqlite3\"",
-					"-l\"xml2\"",
-					"-l\"z\"",
-					"-framework",
-					"\"FWDebug\"",
-					"-framework",
-					"\"FWFramework\"",
-					"-framework",
-					"\"Foundation\"",
-					"-framework",
-					"\"UIKit\"",
-					"-ObjC",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Debug-Prod";
-		};
 		2F3F49C325B7F598002BD598 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -939,46 +593,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_OBJC_BRIDGING_HEADER = Example/BridgingHeader.h;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Release-Prod";
-		};
-		2F3F49C525B7F598002BD598 /* Release-Prod */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DFF3EB046E9F859537BE3B9D /* Pods-AppClip.release-prod.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
-				CODE_SIGN_ENTITLEMENTS = AppClip/AppClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AppClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-l\"sqlite3\"",
-					"-framework",
-					"\"FWFramework\"",
-					"-framework",
-					"\"Foundation\"",
-					"-framework",
-					"\"UIKit\"",
-					"-ObjC",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPCLIP $(inherited)";
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1096,50 +710,6 @@
 			};
 			name = "Debug-Test";
 		};
-		2F3F49C825B7F5A9002BD598 /* Debug-Test */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B79183E79A89DB81C7D307AE /* Pods-AppClip.debug-test.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
-				CODE_SIGN_ENTITLEMENTS = AppClip/AppClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AppClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-l\"c++\"",
-					"-l\"sqlite3\"",
-					"-l\"xml2\"",
-					"-l\"z\"",
-					"-framework",
-					"\"FWDebug\"",
-					"-framework",
-					"\"FWFramework\"",
-					"-framework",
-					"\"Foundation\"",
-					"-framework",
-					"\"UIKit\"",
-					"-ObjC",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Debug-Test";
-		};
 		2F3F49C925B7F5B4002BD598 /* Release-Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1242,130 +812,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release-Test";
-		};
-		2F3F49CB25B7F5B4002BD598 /* Release-Test */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 16E81B56077725F066EB7D4F /* Pods-AppClip.release-test.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
-				CODE_SIGN_ENTITLEMENTS = AppClip/AppClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AppClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-l\"sqlite3\"",
-					"-framework",
-					"\"FWFramework\"",
-					"-framework",
-					"\"Foundation\"",
-					"-framework",
-					"\"UIKit\"",
-					"-ObjC",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPCLIP $(inherited)";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Release-Test";
-		};
-		2F48F6C72538004900AEBB60 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BBF7BED37A74FF51F8C18C4 /* Pods-AppClip.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
-				CODE_SIGN_ENTITLEMENTS = AppClip/AppClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AppClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-l\"c++\"",
-					"-l\"sqlite3\"",
-					"-l\"xml2\"",
-					"-l\"z\"",
-					"-framework",
-					"\"FWDebug\"",
-					"-framework",
-					"\"FWFramework\"",
-					"-framework",
-					"\"Foundation\"",
-					"-framework",
-					"\"UIKit\"",
-					"-ObjC",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2F48F6C82538004900AEBB60 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 71D8FA0D21EA945520D1033E /* Pods-AppClip.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
-				CODE_SIGN_ENTITLEMENTS = AppClip/AppClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AppClip/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AppClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-l\"sqlite3\"",
-					"-framework",
-					"\"FWFramework\"",
-					"-framework",
-					"\"Foundation\"",
-					"-framework",
-					"\"UIKit\"",
-					"-ObjC",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.Example.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPCLIP $(inherited)";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
 		};
 		2FF8D88D24C886EE006A83B5 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1580,19 +1026,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2F48F6C92538004900AEBB60 /* Build configuration list for PBXNativeTarget "AppClip" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2F48F6C72538004900AEBB60 /* Debug */,
-				2F3F49C825B7F5A9002BD598 /* Debug-Test */,
-				2F3F49C225B7F588002BD598 /* Debug-Prod */,
-				2F48F6C82538004900AEBB60 /* Release */,
-				2F3F49CB25B7F5B4002BD598 /* Release-Test */,
-				2F3F49C525B7F598002BD598 /* Release-Prod */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2FF8D87124C886EC006A83B5 /* Build configuration list for PBXProject "Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

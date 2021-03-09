@@ -1,8 +1,14 @@
+# https://docs.fastlane.tools/advanced/#appfile
 app_identifier("{app_identifier}") # The bundle identifier of your app
 apple_id("{apple_id}") # Your Apple email address
-
+# https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/user/detail
 itc_team_id("{itc_team_id}") # App Store Connect Team ID
 team_id("{team_id}") # Developer Portal Team ID
 
-# For more information about the Appfile, see:
-#     https://docs.fastlane.tools/advanced/#appfile
+# https://docs.fastlane.tools/advanced/Appfile/
+for_lane :testflight_test do
+  app_identifier("{app_identifier}")
+  apple_id("{apple_id}")
+  itc_team_id("{itc_team_id}")
+  team_id("{team_id}")
+end
