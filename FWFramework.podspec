@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '1.0.6'
+  s.version               = '1.1.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -16,8 +16,7 @@ Pod::Spec.new do |s|
   s.subspec 'FWFramework' do |ss|
     ss.dependency 'FWFramework/Framework'
     ss.dependency 'FWFramework/Application'
-    ss.dependency 'FWFramework/Component/Foundation'
-    ss.dependency 'FWFramework/Component/UIKit'
+    ss.dependency 'FWFramework/Component'
   end
 
   s.subspec 'Framework' do |ss|
@@ -27,8 +26,8 @@ Pod::Spec.new do |s|
       sss.source_files = 'FWFramework/Framework/Kernel/*.{h,m,swift}'
     end
 
-    ss.subspec 'Module' do |sss|
-      sss.source_files = 'FWFramework/Framework/Module/*.{h,m,swift}'
+    ss.subspec 'Service' do |sss|
+      sss.source_files = 'FWFramework/Framework/Service/*.{h,m,swift}'
       sss.dependency 'FWFramework/Framework/Kernel'
     end
 
@@ -101,30 +100,34 @@ Pod::Spec.new do |s|
     ss.subspec 'SwiftUI' do |sss|
       sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
     end
+  end
+
+  s.subspec 'Configuration' do |ss|
+    ss.dependency 'FWFramework/Framework'
 
     ss.subspec 'Contacts' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_CONTACTS_ENABLED=1' }
     end
 
     ss.subspec 'Microphone' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_MICROPHONE_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_MICROPHONE_ENABLED=1' }
     end
 
     ss.subspec 'Calendar' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CALENDAR_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_CALENDAR_ENABLED=1' }
     end
 
     ss.subspec 'AppleMusic' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_APPLEMUSIC_ENABLED=1' }
     end
 
     ss.subspec 'Tracking' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_TRACKING_ENABLED=1' }
     end
 
     ss.subspec 'SDWebImage' do |sss|
       sss.dependency 'SDWebImage'
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_SDWEBIMAGE_ENABLED=1' }
     end
 
     ss.subspec 'SQLCipher' do |sss|
