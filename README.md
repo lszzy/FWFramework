@@ -52,6 +52,7 @@ As this framework is constantly upgrading, optimizing and expanding new function
 Version 1.1.0:
 
 	* Optimize framework OC attribute declaration, Swift call is more friendly
+	* FWAutoloader was renamed to FWLoader
 	* Code optimization, Example project optimization
 
 Version 1.0.6:

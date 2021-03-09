@@ -1,31 +1,31 @@
 /*!
- @header     FWAutoloader.m
+ @header     FWLoader.m
  @indexgroup FWFramework
- @brief      FWAutoloader
+ @brief      FWLoader
  @author     wuyong
  @copyright  Copyright © 2021 wuyong.site. All rights reserved.
  @updated    2021/1/15
  */
 
-#import "FWAutoloader.h"
+#import "FWLoader.h"
 #import <objc/runtime.h>
 
-@implementation FWAutoloader
+@implementation FWLoader
 
 + (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[FWAutoloader sharedInstance] autoload];
+        [[FWLoader sharedInstance] autoload];
     });
 }
 
-+ (FWAutoloader *)sharedInstance
++ (FWLoader *)sharedInstance
 {
-    static FWAutoloader *instance = nil;
+    static FWLoader *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWAutoloader alloc] init];
+        instance = [[FWLoader alloc] init];
     });
     return instance;
 }
@@ -34,7 +34,7 @@
 {
     NSMutableArray<NSString *> *methodNames = [NSMutableArray array];
     unsigned int methodCount = 0;
-    Method *methods = class_copyMethodList([FWAutoloader class], &methodCount);
+    Method *methods = class_copyMethodList([FWLoader class], &methodCount);
     for (unsigned int i = 0; i < methodCount; ++i) {
         const char *methodChar = sel_getName(method_getName(methods[i]));
         if (!methodChar) continue;
