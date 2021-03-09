@@ -18,28 +18,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Font
 
-// 是否是粗体
-- (BOOL)fwIsBold;
+/// 是否是粗体
+@property (nonatomic, assign, readonly) BOOL fwIsBold;
 
-// 是否是斜体
-- (BOOL)fwIsItalic;
+/// 是否是斜体
+@property (nonatomic, assign, readonly) BOOL fwIsItalic;
 
-// 当前字体的粗体字体
-- (UIFont *)fwBoldFont;
+/// 当前字体的粗体字体
+@property (nonatomic, strong, readonly) UIFont *fwBoldFont;
 
-// 当前字体的非粗体字体
-- (UIFont *)fwNonBoldFont;
+/// 当前字体的非粗体字体
+@property (nonatomic, strong, readonly) UIFont *fwNonBoldFont;
 
-// 当前字体的斜体字体
-- (UIFont *)fwItalicFont;
+/// 当前字体的斜体字体
+@property (nonatomic, strong, readonly) UIFont *fwItalicFont;
 
-// 当前字体的非斜体字体
-- (UIFont *)fwNonItalicFont;
+/// 当前字体的非斜体字体
+@property (nonatomic, strong, readonly) UIFont *fwNonItalicFont;
 
 #pragma mark - Height
 
 // 字体空白高度(上下之和)
-- (CGFloat)fwSpaceHeight;
+@property (nonatomic, assign, readonly) CGFloat fwSpaceHeight;
 
 // 根据字体计算指定倍数行间距的实际行距值(减去空白高度)，示例：行间距为0.5倍实际高度
 - (CGFloat)fwLineSpacingWithMultiplier:(CGFloat)multiplier;

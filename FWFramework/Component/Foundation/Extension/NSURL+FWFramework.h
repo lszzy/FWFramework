@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSURL (FWFramework)
 
 // 获取当前query的参数列表，不含空值
-- (nullable NSDictionary *)fwQueryParams;
+@property (nonatomic, copy, readonly, nullable) NSDictionary *fwQueryParams;
 
 #pragma mark - Map
 

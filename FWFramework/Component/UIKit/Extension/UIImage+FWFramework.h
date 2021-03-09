@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Color
 
 // 获取灰度图
-- (nullable UIImage *)fwGrayImage;
+@property (nonatomic, readonly, nullable) UIImage *fwGrayImage;
 
 // 取图片某一点的颜色
 - (nullable UIColor *)fwColorAtPoint:(CGPoint)point;
@@ -34,10 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable UIColor *)fwColorAtPixel:(CGPoint)point;
 
 // 获取图片的平均颜色
-- (UIColor *)fwAverageColor;
+@property (nonatomic, readonly) UIColor *fwAverageColor;
 
 // 获取当前图片的像素大小，多倍图会放大到一倍
-- (CGSize)fwPixelSize;
+@property (nonatomic, assign, readonly) CGSize fwPixelSize;
 
 #pragma mark - Icon
 
@@ -100,10 +100,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Blend
 
 // 设置图片渲染模式为原始，始终显示原色，不显示tintColor。默认自动根据上下文
-- (UIImage *)fwImageWithRenderOriginal;
+@property (nonatomic, readonly) UIImage *fwImageWithRenderOriginal;
 
 // 设置图片渲染模式为模板，始终显示tintColor，不显示原色。默认自动根据上下文
-- (UIImage *)fwImageWithRenderTemplate;
+@property (nonatomic, readonly) UIImage *fwImageWithRenderTemplate;
 
 #pragma mark - Resize
 
@@ -149,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable UIImage *)fwImageWithMaskImage:(UIImage *)maskImage;
 
 // 获取装饰图片
-- (UIImage *)fwMaskImage;
+@property (nonatomic, readonly) UIImage *fwMaskImage;
 
 // 合并图片
 - (nullable UIImage *)fwImageWithMergeImage:(UIImage *)mergeImage;
@@ -168,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Alpha
 
 // 如果没有透明通道，增加透明通道
-- (UIImage *)fwAlphaImage;
+@property (nonatomic, readonly) UIImage *fwAlphaImage;
 
 #pragma mark - Save
 

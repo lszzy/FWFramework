@@ -7,7 +7,10 @@
 
 # [中文](README_CN.md)
 
+## Tutorial
 iOS development framework, convenient for iOS development, compatible with OC and Swift.
+
+All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
 ## Installation
 It is recommended to use CocoaPods to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
@@ -23,7 +26,7 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Component/SDWebImage']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Configuration/SDWebImage']
 	end
 
 A brief description of the subspecs:
@@ -31,6 +34,7 @@ A brief description of the subspecs:
 	Framework: framework layer, core architecture, has nothing to do with the application, the bottom layer depends on
 	Application: application layer, AOP solution, no need to inherit, components can be replaced
 	Component: component layer, optional import, common functions, convenient for development
+	Configuration: configuration layer, optional introduction, additional configuration, function switch
 
 ### Carthage
 This framework supports Carthage, Cartfile example:
@@ -39,34 +43,17 @@ This framework supports Carthage, Cartfile example:
 
 Execute `carthage update` and copy `FWFramework.framework` to the project.
 
-## Tutorial
-All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
-
-### HeaderDoc 
-This framework document is located in the Document folder. [HeaderDoc Document](Document/HeaderDoc) will be automatically generated when compiling. For the list of supported tags, please see [HeaderDoc tags](https://developer.apple.com/legacy/library/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html).
-
-HeaderDoc.sh can quickly generate framework HeaderDoc documents, using the following commands:
-
-	./HeaderDoc.sh
-	
-### CodeSnippets
-CodeSnippets can quickly write HeaderDoc comments in Xcode, such as `hd_class`, etc. The installation command is as follows:
-
-	./CodeSnippets.sh
-	
-### Templates
-Templates can create new OC classes with HeaderDoc annotations in Xcode. The installation commands are as follows:
-
-	./Templates.sh
-
-## Standard
-[Coding Standards Document](STANDARD.md)
-
 ## Changelog
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
+
+Version 1.1.0:
+
+	* Optimize framework OC attribute declaration, Swift call is more friendly
+	* FWAutoloader was renamed to FWLoader
+	* Code optimization, Example project optimization
 
 Version 1.0.6:
 

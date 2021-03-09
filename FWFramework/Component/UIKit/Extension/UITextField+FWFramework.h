@@ -39,11 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Select
 
-// 获取当前选中的字符串范围
-- (NSRange)fwSelectedRange;
-
-// 选中指定范围的文字
-- (void)fwSetSelectedRange:(NSRange)range;
+// 获取及设置当前选中文字范围
+@property (nonatomic, assign) NSRange fwSelectedRange;
 
 // 选中所有文字
 - (void)fwSelectAllText;

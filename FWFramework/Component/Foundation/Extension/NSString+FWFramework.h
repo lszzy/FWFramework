@@ -22,29 +22,29 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  首字母大写
  */
-- (NSString *)fwUcfirstString;
+@property (nonatomic, copy, readonly) NSString *fwUcfirstString;
 
 /**
  *  首字母小写
  */
-- (NSString *)fwLcfirstString;
+@property (nonatomic, copy, readonly) NSString *fwLcfirstString;
 
 /**
  *  驼峰转下划线
  */
-- (NSString *)fwUnderlineString;
+@property (nonatomic, copy, readonly) NSString *fwUnderlineString;
 
 /**
  *  下划线转驼峰
  */
-- (NSString *)fwCamelString;
+@property (nonatomic, copy, readonly) NSString *fwCamelString;
 
 #pragma mark - Pinyin
 
 /**
  *  转拼音
  */
-- (NSString *)fwPinyinString;
+@property (nonatomic, copy, readonly) NSString *fwPinyinString;
 
 /**
  *  中文转拼音并进行比较
@@ -94,17 +94,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 转义后的字符串
  */
-- (NSString *)fwEscapeHtml;
+@property (nonatomic, copy, readonly) NSString *fwEscapeHtml;
 
 #pragma mark - Number
 
 // 字符串转NSNumber
-- (nullable NSNumber *)fwNumberValue;
+@property (nonatomic, readonly, nullable) NSNumber *fwNumberValue;
 
 #pragma mark - Static
 
 // 创建一个UUID字符串，示例："D1178E50-2A4D-4F1F-9BD3-F6AAB00E06B1"。也可调用NSUUID.UUID.UUIDString
-+ (NSString *)fwUUIDString;
+@property (class, nonatomic, copy, readonly) NSString *fwUUIDString;
 
 // 格式化文件大小为".0K/.1M/.1G"
 + (NSString *)fwSizeString:(NSUInteger)aFileSize;

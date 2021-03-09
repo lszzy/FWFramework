@@ -148,7 +148,6 @@
     if (((NSInteger)style) > -1) {
         UIBlurEffect *effect = [UIBlurEffect effectWithStyle:style];
         UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-        [effectView fwSetAutoLayout:YES];
         [self addSubview:effectView];
         [effectView fwPinEdgesToSuperview];
     }

@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Size
 
 /// 计算所占尺寸，需设置Font等
-- (CGSize)fwSize;
+@property (nonatomic, assign, readonly) CGSize fwSize;
 
 /// 计算在指定绘制区域内所占尺寸，需设置Font等
 - (CGSize)fwSizeWithDrawSize:(CGSize)drawSize;

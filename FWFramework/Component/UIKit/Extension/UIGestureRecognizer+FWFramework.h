@@ -26,10 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, weak, readonly) UIView *fwTargetView;
 
 // 是否正在拖动中：Began || Changed
-- (BOOL)fwIsTracking;
+@property (nonatomic, assign, readonly) BOOL fwIsTracking;
 
 // 是否是激活状态: isEnabled && (Began || Changed)
-- (BOOL)fwIsActive;
+@property (nonatomic, assign, readonly) BOOL fwIsActive;
 
 @end
 
@@ -39,10 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIPanGestureRecognizer (FWFramework)
 
 // 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
-- (UISwipeGestureRecognizerDirection)fwSwipeDirection;
+@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection fwSwipeDirection;
 
 // 当前滑动进度，滑动绝对值相对于手势视图的宽或高
-- (CGFloat)fwSwipePercent;
+@property (nonatomic, assign, readonly) CGFloat fwSwipePercent;
 
 // 计算指定方向的滑动进度
 - (CGFloat)fwSwipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction;

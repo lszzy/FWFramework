@@ -175,11 +175,6 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     return [self fwSafeAreaInsets].bottom > 0;
 }
 
-+ (BOOL)fwIsScreenX
-{
-    return [self fwIsNotchedScreen];
-}
-
 + (CGFloat)fwPixelOne
 {
     return 1 / UIScreen.mainScreen.scale;

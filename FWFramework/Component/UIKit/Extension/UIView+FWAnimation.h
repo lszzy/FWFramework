@@ -13,10 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CAAnimation (FWAnimation)
 
 // 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
-- (void)fwSetStartBlock:(void (^)(CAAnimation *animation))startBlock;
+@property (nonatomic, copy, nullable) void (^fwStartBlock)(CAAnimation *animation);
 
 // 设置动画停止回调
-- (void)fwSetStopBlock:(void (^)(CAAnimation *animation, BOOL finished))stopBlock;
+@property (nonatomic, copy, nullable) void (^fwStopBlock)(CAAnimation *animation, BOOL finished);
 
 @end
 

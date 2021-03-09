@@ -98,7 +98,7 @@
     }
 }
 
-- (void)fwSetCurrentPage:(NSInteger)page
+- (void)setFwCurrentPage:(NSInteger)page
 {
     if ([self fwCanScrollVertical]) {
         CGFloat offset = (self.frame.size.height * page);

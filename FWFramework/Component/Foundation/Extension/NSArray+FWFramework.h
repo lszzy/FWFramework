@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 随机对象
  */
-- (nullable ObjectType)fwRandomObject;
+@property (nullable, nonatomic, readonly) ObjectType fwRandomObject;
 
 /*!
  @brief 从数组中按照权重随机取出对象，如@[@"a", @"b", @"c"]按照@[@0, @8, @02]大概率取出@"b"，不会取出@"a"
@@ -62,28 +62,28 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 翻转后的数组
  */
-- (NSArray *)fwReverseArray;
+@property (nonatomic, copy, readonly) NSArray<ObjectType> *fwReverseArray;
 
 /*!
  @brief 获取打乱后的新数组
  
  @return 打乱后的数组
  */
-- (NSArray *)fwShuffleArray;
+@property (nonatomic, copy, readonly) NSArray<ObjectType> *fwShuffleArray;
 
 /*!
  @brief 数组中是否含有NSNull值
  
  @return 是否含有NSNull
  */
-- (BOOL)fwIncludeNull;
+@property (nonatomic, assign, readonly) BOOL fwIncludeNull;
 
 /*!
  @brief 递归移除数组中NSNull值
  
  @return 不含NSNull的数组
  */
-- (NSArray *)fwRemoveNull;
+@property (nonatomic, copy, readonly) NSArray<ObjectType> *fwRemoveNull;
 
 /*!
  @brief 移除数组中NSNull值
@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  @praram recursive 是否递归
  @return 不含NSNull的数组
  */
-- (NSArray *)fwRemoveNullRecursive:(BOOL)recursive;
+- (NSArray<ObjectType> *)fwRemoveNullRecursive:(BOOL)recursive;
 
 @end
 

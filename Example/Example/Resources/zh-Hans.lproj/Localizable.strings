@@ -23,6 +23,7 @@
 "systemTitle" = "系统";
 "themeLight" = "浅色";
 "themeDark" = "深色";
+"rootTitle" = "根控制器";
 "welcomeTitle" = "你知道我在等你吗？";
 "backTitle" = "欢迎回来，亲";
 "logoutConfirm" = "确定要退出当前账号吗?";

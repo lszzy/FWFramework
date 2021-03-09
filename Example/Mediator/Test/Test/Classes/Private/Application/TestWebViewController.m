@@ -14,60 +14,105 @@
 
 @implementation TestWebViewController
 
+- (instancetype)initWithRequestUrl:(NSString *)requestUrl
+{
+    self = [super init];
+    if (self) {
+        _requestUrl = requestUrl;
+    }
+    return self;
+}
+
 - (NSArray *)webItems
 {
-    return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
+    if (self.navigationItem.leftBarButtonItem) {
+        return nil;
+    } else {
+        return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
+    }
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (!self.requestUrl) return;
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
     
-    // 侧滑返回和webView手势兼容
-    self.fwForcePopGesture = YES;
-    FWWeakifySelf();
-    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
-        FWStrongifySelf();
-        self.fwForcePopGesture = !webView.canGoBack;
+    [self loadRequestUrl];
+}
+
+- (void)renderWebView
+{
+    self.view.backgroundColor = [Theme tableColor];
+    self.webView.scrollView.backgroundColor = [UIColor clearColor];
+    self.webView.scrollView.showsVerticalScrollIndicator = NO;
+    self.webView.scrollView.showsHorizontalScrollIndicator = NO;
+    
+    // 显示网页host来源
+    UILabel *tipLabel = [UILabel new];
+    tipLabel.font = [UIFont systemFontOfSize:12];
+    tipLabel.textColor = [Theme detailColor];
+    [self.view insertSubview:tipLabel belowSubview:self.webView];
+    tipLabel.fwLayoutChain.centerX().topWithInset(10);
+    [self.webView fwObserveProperty:@"URL" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
+        if (webView.URL.host.length > 0) {
+            tipLabel.text = [NSString stringWithFormat:@"此网页由 %@ 提供", webView.URL.host];
+        }
     }];
     
-    // 分享按钮
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) block:^(id sender) {
-        FWStrongifySelf();
-        [self fwShowAlertWithTitle:self.title message:self.requestUrl cancel:@"关闭" cancelBlock:nil];
-    }];
-    
-    // 设置统一请求头
+    // 跨WKWebView共享cookie，如需切换用户时清空cookie，重置此配置即可
+    static WKProcessPool *processPool = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        processPool = [[WKProcessPool alloc] init];
+    });
+    self.webView.configuration.processPool = processPool;
+}
+
+- (void)shareRequestUrl
+{
+    NSURL *url = [NSURL URLWithString:self.requestUrl];
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:url, nil] applicationActivities:nil];
+    [self presentViewController:activityController animated:YES completion:nil];
+}
+
+- (void)loadRequestUrl
+{
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
+    urlRequest.timeoutInterval = 30;
     [urlRequest setValue:@"test" forHTTPHeaderField:@"Test-Token"];
     self.webRequest = urlRequest;
 }
 
+- (void)didFailLoad:(NSError *)error
+{
+    FWWeakifySelf();
+    [self.view fwShowEmptyViewWithText:error.localizedDescription detail:nil image:nil action:@"点击重试" block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.view fwHideEmptyView];
+        [self loadRequestUrl];
+    }];
+}
+
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    // 调用钩子
     if ([self respondsToSelector:@selector(shouldStartLoad:)] &&
         ![self shouldStartLoad:navigationAction]) {
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    // 系统Scheme
     if ([UIApplication fwIsSystemURL:navigationAction.request.URL]) {
         [UIApplication fwOpenURL:navigationAction.request.URL];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    // AppScheme
     if ([navigationAction.request.URL.scheme isEqualToString:@"app"]) {
         [FWRouter openURL:navigationAction.request.URL.absoluteString];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    // 通用链接
     if ([navigationAction.request.URL.scheme isEqualToString:@"https"]) {
         [UIApplication fwOpenUniversalLinks:navigationAction.request.URL completionHandler:^(BOOL success) {
             if (success) {

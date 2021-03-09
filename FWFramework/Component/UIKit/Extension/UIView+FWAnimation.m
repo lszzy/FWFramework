@@ -43,30 +43,42 @@
 
 @implementation CAAnimation (FWAnimation)
 
-- (FWInnerAnimationTarget *)fwInnerAnimationTarget
+- (FWInnerAnimationTarget *)fwInnerAnimationTarget:(BOOL)lazyload
 {
     FWInnerAnimationTarget *target = objc_getAssociatedObject(self, _cmd);
-    if (!target) {
+    if (!target && lazyload) {
         target = [[FWInnerAnimationTarget alloc] init];
         objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
-- (void)fwSetStartBlock:(void (^)(CAAnimation *animation))startBlock
+- (void (^)(CAAnimation * _Nonnull))fwStartBlock
+{
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:NO];
+    return target.startBlock;
+}
+
+- (void)setFwStartBlock:(void (^)(CAAnimation * _Nonnull))startBlock
 {
     // 初始化事件代理
-    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget];
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:YES];
     target.startBlock = startBlock;
     
     // 设置代理对象(默认强引用)
     self.delegate = target;
 }
 
-- (void)fwSetStopBlock:(void (^)(CAAnimation *animation, BOOL finished))stopBlock
+- (void (^)(CAAnimation * _Nonnull, BOOL))fwStopBlock
+{
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:NO];
+    return target.stopBlock;
+}
+
+- (void)setFwStopBlock:(void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
 {
     // 初始化事件代理
-    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget];
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:YES];
     target.stopBlock = stopBlock;
     
     // 设置代理对象(默认强引用)
@@ -176,9 +188,9 @@
     
     // 设置完成事件，需要在add之前设置才能生效，因为add时会copy动画对象
     if (completion) {
-        [animation fwSetStopBlock:^(CAAnimation *animation, BOOL finished) {
+        animation.fwStopBlock = ^(CAAnimation *animation, BOOL finished) {
             completion(finished);
-        }];
+        };
     }
     
     [self.layer addAnimation:animation forKey:@"FWAnimation"];
@@ -282,9 +294,9 @@
     
     // 设置完成事件
     if (completion) {
-        [transition fwSetStopBlock:^(CAAnimation *animation, BOOL finished) {
+        transition.fwStopBlock = ^(CAAnimation *animation, BOOL finished) {
             completion(finished);
-        }];
+        };
     }
     
     // 所有核心动画和特效都是基于CAAnimation(作用于CALayer)
@@ -313,9 +325,9 @@
     
     // 设置完成事件
     if (completion) {
-        [animation fwSetStopBlock:^(CAAnimation *animation, BOOL finished) {
+        animation.fwStopBlock = ^(CAAnimation *animation, BOOL finished) {
             completion(finished);
-        }];
+        };
     }
     
     [layer addAnimation:animation forKey:@"FWAnimation"];

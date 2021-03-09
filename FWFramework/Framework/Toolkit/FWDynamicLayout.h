@@ -123,7 +123,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 /// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGFloat)fwHeightWithCellClass:(Class)clazz
                       cacheByKey:(nullable id<NSCopying>)key
@@ -152,7 +152,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 key
 /// @param clazz HeaderFooter class
 /// @param type HeaderFooter类型，Header 或者 Footer
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
 - (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
                                         type:(FWHeaderFooterViewType)type
@@ -327,7 +327,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 
 /// 获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGSize)fwSizeWithCellClass:(Class)clazz
                    cacheByKey:(nullable id<NSCopying>)key
@@ -336,7 +336,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// 获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
 /// @param width 固定宽度
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGSize)fwSizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
@@ -346,7 +346,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// 获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
 /// @param height 固定高度
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGSize)fwSizeWithCellClass:(Class)clazz
                        height:(CGFloat)height
@@ -420,7 +420,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// 获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 key
 /// @param clazz ReusableView class
 /// @param kind ReusableView类型，Header 或者 Footer
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 ReusableView，内部不会拥有 Block，不需要 __weak
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
@@ -431,7 +431,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @param clazz ReusableView class
 /// @param width 固定宽度
 /// @param kind ReusableView类型，Header 或者 Footer
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 ReusableView，内部不会拥有 Block，不需要 __weak
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
@@ -443,7 +443,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @param clazz ReusableView class
 /// @param height 固定高度
 /// @param kind ReusableView类型，Header 或者 Footer
-/// @param key 使用 key 做缓存标识
+/// @param key 使用 key 做缓存标识，如数据唯一id，对象hash等
 /// @param configuration 布局 ReusableView，内部不会拥有 Block，不需要 __weak
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
                                height:(CGFloat)height

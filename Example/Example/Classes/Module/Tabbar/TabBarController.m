@@ -10,31 +10,14 @@
 #import "HomeViewController.h"
 #import "SettingsViewController.h"
 
-@interface TabBarController () <UITabBarControllerDelegate>
-
-@end
-
-@implementation TabBarController
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self setupAppearance];
-        [self setupController];
-    }
-    return self;
-}
-
-- (void)setupAppearance
-{
-    self.delegate = self;
-    [self.tabBar fwSetTextColor:[Theme textColor]];
-    self.tabBar.fwThemeBackgroundColor = [Theme barColor];
-}
+@implementation UITabBarController (AppTabBar)
 
 - (void)setupController
 {
+    self.delegate = self;
+    self.tabBar.fwTextColor = [Theme textColor];
+    self.tabBar.fwThemeBackgroundColor = [Theme barColor];
+    
     UIViewController *homeController = [HomeViewController new];
     homeController.hidesBottomBarWhenPushed = NO;
     UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeController];
@@ -51,6 +34,16 @@
     UIViewController *settingsController = [SettingsViewController new];
     settingsController.hidesBottomBarWhenPushed = NO;
     UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settingsController];
+    if (AppConfig.isRootCustom) {
+        FWTabBarItem *tabBarItem = [FWTabBarItem new];
+        tabBarItem.contentView.highlightTextColor = Theme.textColor;
+        tabBarItem.contentView.highlightIconColor = Theme.textColor;
+        settingsNav.tabBarItem = tabBarItem;
+        settingsNav.tabBarItem.badgeValue = @"";
+    } else {
+        FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
+        [settingsNav.tabBarItem fwShowBadgeView:badgeView badgeValue:nil];
+    }
     settingsNav.tabBarItem.image = [UIImage imageNamed:@"tabbarSettings"];
     settingsNav.tabBarItem.title = FWLocalizedString(@"settingTitle");
     self.viewControllers = @[homeNav, testNav, settingsNav];
@@ -66,14 +59,30 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-    UIImageView *imageView = viewController.tabBarItem.fwImageView;
-    CABasicAnimation *animation = [imageView fwAddAnimationWithKeyPath:@"transform.scale" fromValue:@(0.7) toValue:@(1.3) duration:0.08 completion:nil];
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    animation.repeatCount = 1;
-    animation.autoreverses = YES;
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    animation.values = @[@(1.0), @(1.4), @(0.9), @(1.15), @(0.95), @(1.02), @(1.0)];
+    animation.duration = 0.3 * 2;
+    animation.calculationMode = kCAAnimationCubic;
+    
+    UIView *animationView = viewController.tabBarItem.fwImageView;
+    if ([viewController.tabBarItem isKindOfClass:[FWTabBarItem class]]) {
+        animationView = ((FWTabBarItem *)viewController.tabBarItem).contentView.imageView;
+    }
+    [animationView.layer addAnimation:animation forKey:nil];
 }
 
 #pragma mark - Public
+
++ (UIViewController *)setupController
+{
+    UITabBarController *tabBarController = AppConfig.isRootCustom ? [FWTabBarController new] : [UITabBarController new];
+    [tabBarController setupController];
+    if (!AppConfig.isRootNavigation) return tabBarController;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabBarController];
+    navigationController.navigationBarHidden = YES;
+    return navigationController;
+}
 
 + (void)refreshController
 {

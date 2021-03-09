@@ -60,28 +60,28 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)fwPathSearch:(NSSearchPathDirectory)directory;
 
 // 沙盒路径
-+ (NSString *)fwPathHome;
+@property (class, nonatomic, copy, readonly) NSString *fwPathHome;
 
 // 文档路径，iTunes会同步备份
-+ (nullable NSString *)fwPathDocument;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwPathDocument;
 
 // 缓存路径，系统不会删除，iTunes会删除
-+ (nullable NSString *)fwPathCaches;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwPathCaches;
 
 // Library路径
-+ (nullable NSString *)fwPathLibrary;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwPathLibrary;
 
 // 配置路径，配置文件保存位置
-+ (nullable NSString *)fwPathPreference;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwPathPreference;
 
 // 临时路径，App退出后可能会删除
-+ (NSString *)fwPathTmp;
+@property (class, nonatomic, copy, readonly) NSString *fwPathTmp;
 
 // bundle路径，不可写
-+ (NSString *)fwPathBundle;
+@property (class, nonatomic, copy, readonly) NSString *fwPathBundle;
 
 // 资源路径，不可写
-+ (nullable NSString *)fwPathResource;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fwPathResource;
 
 // 绝对路径缩短为波浪线路径
 + (NSString *)fwAbbreviateTildePath:(NSString *)path;
@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (unsigned long long)fwFolderSize:(NSString *)folderPath;
 
 // 获取磁盘可用空间，单位：MB
-+ (double)fwAvailableDiskSize;
+@property (class, nonatomic, assign, readonly) double fwAvailableDiskSize;
 
 #pragma mark - Addition
 

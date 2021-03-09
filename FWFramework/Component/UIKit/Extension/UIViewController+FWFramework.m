@@ -42,14 +42,14 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
     return self.isViewLoaded && self.view.window;
 }
 
-- (BOOL)fwIsLoaded
+- (BOOL)fwIsDataLoaded
 {
-    return [objc_getAssociatedObject(self, @selector(fwIsLoaded)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fwIsDataLoaded)) boolValue];
 }
 
-- (void)setFwIsLoaded:(BOOL)fwIsLoaded
+- (void)setFwIsDataLoaded:(BOOL)fwIsDataLoaded
 {
-    objc_setAssociatedObject(self, @selector(fwIsLoaded), @(fwIsLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwIsDataLoaded), @(fwIsDataLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - Present

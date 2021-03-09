@@ -180,7 +180,7 @@
     return NSMakeRange(location, length);
 }
 
-- (void)fwSetSelectedRange:(NSRange)range
+- (void)setFwSelectedRange:(NSRange)range
 {
     UITextPosition *beginning = self.beginningOfDocument;
     UITextPosition *startPosition = [self positionFromPosition:beginning offset:range.location];

@@ -262,19 +262,19 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 @interface UIWindow (FWNavigation)
 
 /// 获取当前主window
-+ (nullable UIWindow *)fwMainWindow;
+@property (class, nonatomic, readonly, nullable) UIWindow *fwMainWindow;
 
 /// 获取当前主场景
-+ (nullable UIWindowScene *)fwMainScene API_AVAILABLE(ios(13.0));
+@property (class, nonatomic, readonly, nullable) UIWindowScene *fwMainScene API_AVAILABLE(ios(13.0));
 
 /// 获取最顶部的视图控制器
-- (nullable UIViewController *)fwTopViewController;
+@property (nonatomic, readonly, nullable) UIViewController *fwTopViewController;
 
 /// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
-- (nullable UINavigationController *)fwTopNavigationController;
+@property (nonatomic, readonly, nullable) UINavigationController *fwTopNavigationController;
 
 /// 获取最顶部的显示控制器
-- (nullable UIViewController *)fwTopPresentedController;
+@property (nonatomic, readonly, nullable) UIViewController *fwTopPresentedController;
 
 /// 使用最顶部的导航栏控制器打开控制器
 - (BOOL)fwPushViewController:(UIViewController *)viewController animated:(BOOL)animated;
