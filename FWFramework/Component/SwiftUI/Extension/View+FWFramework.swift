@@ -6,6 +6,7 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
+#if arch(arm64) || arch(x86_64)
 #if canImport(SwiftUI)
 import SwiftUI
 
@@ -107,4 +108,5 @@ public extension View {
     }
 }
 
+#endif
 #endif
