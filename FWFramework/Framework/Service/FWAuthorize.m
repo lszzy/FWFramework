@@ -11,7 +11,7 @@
 
 #pragma mark - FWAuthorizeContacts
 
-#if FWCOMPONENT_CONTACTS_ENABLED
+#if FWCONFIGURATION_CONTACTS_ENABLED
 
 #import <Contacts/Contacts.h>
 #import <AddressBook/AddressBook.h>
@@ -90,7 +90,7 @@
 
 #pragma mark - FWAuthorizeEventKit
 
-#if FWCOMPONENT_CALENDAR_ENABLED
+#if FWCONFIGURATION_CALENDAR_ENABLED
 
 #import <EventKit/EventKit.h>
 
@@ -249,7 +249,7 @@
 
 #pragma mark - FWAuthorizeMicrophone
 
-#if FWCOMPONENT_MICROPHONE_ENABLED
+#if FWCONFIGURATION_MICROPHONE_ENABLED
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -377,7 +377,7 @@
 
 #pragma mark - FWAuthorizeAppleMusic
 
-#if FWCOMPONENT_APPLEMUSIC_ENABLED
+#if FWCONFIGURATION_APPLEMUSIC_ENABLED
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -576,7 +576,7 @@
 
 #pragma mark - FWAuthorizeTracking
 
-#if FWCOMPONENT_TRACKING_ENABLED
+#if FWCONFIGURATION_TRACKING_ENABLED
 
 #import <AdSupport/ASIdentifierManager.h>
 #if __IPHONE_14_0
@@ -684,7 +684,7 @@
         case FWAuthorizeTypeLocationAlways:
             object = [[FWAuthorizeLocation alloc] initWithIsAlways:YES];
             break;
-#if FWCOMPONENT_MICROPHONE_ENABLED
+#if FWCONFIGURATION_MICROPHONE_ENABLED
         case FWAuthorizeTypeMicrophone:
             object = [[FWAuthorizeMicrophone alloc] init];
             break;
@@ -695,12 +695,12 @@
         case FWAuthorizeTypeCamera:
             object = [[FWAuthorizeCamera alloc] init];
             break;
-#if FWCOMPONENT_CONTACTS_ENABLED
+#if FWCONFIGURATION_CONTACTS_ENABLED
         case FWAuthorizeTypeContacts:
             object = [[FWAuthorizeContacts alloc] init];
             break;
 #endif
-#if FWCOMPONENT_CALENDAR_ENABLED
+#if FWCONFIGURATION_CALENDAR_ENABLED
         case FWAuthorizeTypeCalendars:
             object = [[FWAuthorizeEventKit alloc] initWithType:EKEntityTypeEvent];
             break;
@@ -708,7 +708,7 @@
             object = [[FWAuthorizeEventKit alloc] initWithType:EKEntityTypeReminder];
             break;
 #endif
-#if FWCOMPONENT_APPLEMUSIC_ENABLED
+#if FWCONFIGURATION_APPLEMUSIC_ENABLED
         case FWAuthorizeTypeAppleMusic:
             object = [[FWAuthorizeAppleMusic alloc] init];
             break;
@@ -716,7 +716,7 @@
         case FWAuthorizeTypeNotifications:
             object = [[FWAuthorizeNotifications alloc] init];
             break;
-#if FWCOMPONENT_TRACKING_ENABLED
+#if FWCONFIGURATION_TRACKING_ENABLED
         case FWAuthorizeTypeTracking:
             object = [[FWAuthorizeTracking alloc] init];
             break;
