@@ -52,6 +52,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 1.1.0版本：
 
 	* 优化框架OC属性声明，Swift调用更友好
+	* FWAutoloader改名为FWLoader
 	* 代码优化，Example项目优化
 
 1.0.6版本：

@@ -25,7 +25,7 @@ import FWFramework
     }
 }
 
-@objc extension FWAutoloader {
+@objc extension FWLoader {
     func loadTheme() {
         // 控制器默认设置
         let intercepter = FWViewControllerIntercepter()

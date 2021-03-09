@@ -10,7 +10,7 @@ import Foundation
 
 @objc protocol NotificationService: FWModuleProtocol {}
 
-@objc extension FWAutoloader {
+@objc extension FWLoader {
     func loadNotificationModule() {
         FWMediator.registerService(NotificationService.self, withModule: NotificationModule.self)
     }

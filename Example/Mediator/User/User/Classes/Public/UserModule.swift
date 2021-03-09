@@ -8,7 +8,7 @@
 import FWFramework
 import Mediator
 
-@objc extension FWAutoloader {
+@objc extension FWLoader {
     func loadUserModule() {
         FWMediator.registerService(UserModuleService.self, withModule: UserModule.self)
     }

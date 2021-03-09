@@ -63,8 +63,8 @@
 		2FE56502257BDD0A00BF89E5 /* FWViewControllerStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FF0B3BF250FCA8D005B93DD /* FWDynamicLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */; };
-		2FFA37B525B13905000FE6E6 /* FWAutoloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFA37B325B13905000FE6E6 /* FWAutoloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFA37B625B13905000FE6E6 /* FWAutoloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFA37B425B13905000FE6E6 /* FWAutoloader.m */; };
+		2FFA37B525B13905000FE6E6 /* FWLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFA37B325B13905000FE6E6 /* FWLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FFA37B625B13905000FE6E6 /* FWLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFA37B425B13905000FE6E6 /* FWLoader.m */; };
 		2FFE1BB72507BF95000332A3 /* FWCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B3D2507BF95000332A3 /* FWCacheManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BB82507BF95000332A3 /* FWCacheMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B3E2507BF95000332A3 /* FWCacheMemory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1BB92507BF95000332A3 /* FWCacheSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1B3F2507BF95000332A3 /* FWCacheSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -391,8 +391,8 @@
 		2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWViewControllerStyle.m; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDynamicLayout.h; sourceTree = "<group>"; };
 		2FF0B3BD250FCA8D005B93DD /* FWDynamicLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWDynamicLayout.m; sourceTree = "<group>"; };
-		2FFA37B325B13905000FE6E6 /* FWAutoloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAutoloader.h; sourceTree = "<group>"; };
-		2FFA37B425B13905000FE6E6 /* FWAutoloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAutoloader.m; sourceTree = "<group>"; };
+		2FFA37B325B13905000FE6E6 /* FWLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWLoader.h; sourceTree = "<group>"; };
+		2FFA37B425B13905000FE6E6 /* FWLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWLoader.m; sourceTree = "<group>"; };
 		2FFE1B3D2507BF95000332A3 /* FWCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheManager.h; sourceTree = "<group>"; };
 		2FFE1B3E2507BF95000332A3 /* FWCacheMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheMemory.h; sourceTree = "<group>"; };
 		2FFE1B3F2507BF95000332A3 /* FWCacheSqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCacheSqlite.h; sourceTree = "<group>"; };
@@ -916,8 +916,8 @@
 		2FFE1B912507BF95000332A3 /* Kernel */ = {
 			isa = PBXGroup;
 			children = (
-				2FFA37B325B13905000FE6E6 /* FWAutoloader.h */,
-				2FFA37B425B13905000FE6E6 /* FWAutoloader.m */,
+				2FFA37B325B13905000FE6E6 /* FWLoader.h */,
+				2FFA37B425B13905000FE6E6 /* FWLoader.m */,
 				2FFE1B9A2507BF95000332A3 /* FWLog.h */,
 				2FFE1BA72507BF95000332A3 /* FWLog.m */,
 				2FFE1BA42507BF95000332A3 /* FWLog.swift */,
@@ -1222,7 +1222,7 @@
 				2F64834425E5641F00E9B77F /* FWNavigationController.h in Headers */,
 				2F4CEC8025C66AED00D4C7F5 /* FWPasscodeView.h in Headers */,
 				2F48AD2D25B9E19C009792C6 /* FWAsyncLayer.h in Headers */,
-				2FFA37B525B13905000FE6E6 /* FWAutoloader.h in Headers */,
+				2FFA37B525B13905000FE6E6 /* FWLoader.h in Headers */,
 				2FDD411F259DB1E900163B7F /* FWMediator.h in Headers */,
 				2FB14690258DDDB200D867D4 /* FWDatabase.h in Headers */,
 				2FE56501257BDD0A00BF89E5 /* FWViewControllerStyle.h in Headers */,
@@ -1583,7 +1583,7 @@
 				2FFE1D202507BFBD000332A3 /* UIGestureRecognizer+FWFramework.m in Sources */,
 				2F25748F2539858900880FEF /* FWRequestEventAccessory.m in Sources */,
 				2FFE1D382507BFBD000332A3 /* UIImage+FWFramework.m in Sources */,
-				2FFA37B625B13905000FE6E6 /* FWAutoloader.m in Sources */,
+				2FFA37B625B13905000FE6E6 /* FWLoader.m in Sources */,
 				2FC06A34253FCEE4009C8E23 /* UITableView+FWDelegate.swift in Sources */,
 				2FFE1D362507BFBD000332A3 /* UIControl+FWFramework.m in Sources */,
 				2FFE1BF22507BF95000332A3 /* FWTheme.m in Sources */,
