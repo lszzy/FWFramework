@@ -18,9 +18,7 @@
     NSData *data = nil;
     @try {
         data = [NSKeyedArchiver archivedDataWithRootObject:object];
-    } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
-    }
+    } @catch (NSException *exception) { }
     return data;
 }
 
@@ -29,9 +27,7 @@
     id object = nil;
     @try {
         object = [NSKeyedUnarchiver unarchiveObjectWithData:self];
-    } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
-    }
+    } @catch (NSException *exception) { }
     return object;
 }
 
@@ -39,9 +35,7 @@
 {
     @try {
         [NSKeyedArchiver archiveRootObject:object toFile:path];
-    } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
-    }
+    } @catch (NSException *exception) { }
 }
 
 + (id)fwUnarchiveObjectWithFile:(NSString *)path
@@ -49,9 +43,7 @@
     id object = nil;
     @try {
         object = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
-    }
+    } @catch (NSException *exception) { }
     return object;
 }
 
@@ -280,7 +272,6 @@
                                    );
         }
         if (status != 0) {
-            NSLog(@"SecKeyEncrypt fail. Error Code: %d", status);
             ret = nil;
             break;
         } else {
@@ -319,7 +310,6 @@
                                &outlen
                                );
         if (status != 0) {
-            NSLog(@"SecKeyEncrypt fail. Error Code: %d", status);
             ret = nil;
             break;
         } else {
