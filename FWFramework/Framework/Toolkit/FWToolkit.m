@@ -12,7 +12,7 @@
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
-#if FWCONFIGURATION_TRACKING_ENABLED
+#if FWCOMPONENT_TRACKING_ENABLED
 #import <AdSupport/ASIdentifierManager.h>
 #endif
 
@@ -488,7 +488,7 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 + (NSString *)fwDeviceIDFA
 {
-#if FWCONFIGURATION_TRACKING_ENABLED
+#if FWCOMPONENT_TRACKING_ENABLED
     return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
 #else
     return nil;

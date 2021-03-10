@@ -26,7 +26,7 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Configuration/SDWebImage']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Component/SDWebImage']
 	end
 
 A brief description of the subspecs:
@@ -34,7 +34,6 @@ A brief description of the subspecs:
 	Framework: framework layer, core architecture, has nothing to do with the application, the bottom layer depends on
 	Application: application layer, AOP solution, no need to inherit, components can be replaced
 	Component: component layer, optional import, common functions, convenient for development
-	Configuration: configuration layer, optional introduction, additional configuration, function switch
 
 ### Carthage
 This framework supports Carthage, Cartfile example:
