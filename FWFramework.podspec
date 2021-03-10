@@ -16,7 +16,8 @@ Pod::Spec.new do |s|
   s.subspec 'FWFramework' do |ss|
     ss.dependency 'FWFramework/Framework'
     ss.dependency 'FWFramework/Application'
-    ss.dependency 'FWFramework/Component'
+    ss.dependency 'FWFramework/Component/Foundation'
+    ss.dependency 'FWFramework/Component/UIKit'
   end
 
   s.subspec 'Framework' do |ss|
@@ -100,34 +101,30 @@ Pod::Spec.new do |s|
     ss.subspec 'SwiftUI' do |sss|
       sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
     end
-  end
-
-  s.subspec 'Configuration' do |ss|
-    ss.dependency 'FWFramework/Framework'
 
     ss.subspec 'Contacts' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_CONTACTS_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
     end
 
     ss.subspec 'Microphone' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_MICROPHONE_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_MICROPHONE_ENABLED=1' }
     end
 
     ss.subspec 'Calendar' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_CALENDAR_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CALENDAR_ENABLED=1' }
     end
 
     ss.subspec 'AppleMusic' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_APPLEMUSIC_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
     end
 
     ss.subspec 'Tracking' do |sss|
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_TRACKING_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
     end
 
     ss.subspec 'SDWebImage' do |sss|
       sss.dependency 'SDWebImage'
-      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCONFIGURATION_SDWEBIMAGE_ENABLED=1' }
+      sss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_SDWEBIMAGE_ENABLED=1' }
     end
 
     ss.subspec 'SQLCipher' do |sss|
