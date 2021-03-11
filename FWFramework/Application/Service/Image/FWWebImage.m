@@ -540,9 +540,9 @@
         NSURL *nsurl = nil;
         if ([url isKindOfClass:[NSURL class]]) {
             nsurl = url;
-        } else if ([url isKindOfClass:[NSString class]]) {
+        } else if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
             nsurl = [NSURL URLWithString:url];
-            if (!nsurl && [url length] > 0) {
+            if (!nsurl) {
                 nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
             }
         }
