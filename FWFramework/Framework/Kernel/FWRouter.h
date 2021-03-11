@@ -71,7 +71,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - Filter
 
 /**
- *  设置 过滤器 对应的 Handler，URL 调用时触发
+ *  设置 过滤器 对应的 Handler，URL 有值且调用时触发
  *
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
@@ -80,7 +80,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 + (void)setFilterHandler:(nullable FWRouterFilterHandler)handler;
 
 /**
- *  设置 错误 对应的 Handler，URL 未注册时触发
+ *  设置 错误 对应的 Handler，URL 有值且未注册时触发
  *
  *  @param handler    该 block 回传不支持的URL参数
  */
