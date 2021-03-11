@@ -79,9 +79,9 @@ UIImage * FWImageFile(NSString *path) {
     id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwDownloadImage:completion:progress:)]) {
         NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]]) {
+        if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
             imageURL = [NSURL URLWithString:url];
-            if (!imageURL && [url length] > 0) {
+            if (!imageURL) {
                 imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
             }
         } else if ([url isKindOfClass:[NSURL class]]) {
@@ -268,9 +268,9 @@ UIImage * FWImageFile(NSString *path) {
     id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:completion:progress:)]) {
         NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]]) {
+        if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
             imageURL = [NSURL URLWithString:url];
-            if (!imageURL && [url length] > 0) {
+            if (!imageURL) {
                 imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
             }
         } else if ([url isKindOfClass:[NSURL class]]) {
