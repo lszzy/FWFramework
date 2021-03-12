@@ -125,6 +125,7 @@
         showClose = NO;
     }
     viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+    // 如需自定义fwForcePopGesture，重写该属性getter即可
     viewController.fwForcePopGesture = YES;
     [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
         weakController.fwForcePopGesture = !webView.canGoBack;

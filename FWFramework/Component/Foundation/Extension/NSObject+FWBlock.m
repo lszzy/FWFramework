@@ -131,4 +131,31 @@
     }
 }
 
++ (void)fwPerformBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSUInteger)retryCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval)delayInterval
+{
+    NSParameterAssert(block != nil);
+    NSParameterAssert(completion != nil);
+    
+    NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+    [NSObject fwPerformBlock:block completion:completion retryCount:retryCount timeoutInterval:timeoutInterval delayInterval:delayInterval startTime:startTime];
+}
+
++ (void)fwPerformBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSUInteger)retryCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval)delayInterval startTime:(NSTimeInterval)startTime
+{
+    block(^(BOOL success, id _Nullable obj) {
+        if (!success && retryCount > 0 && ([[NSDate date] timeIntervalSince1970] - startTime) < timeoutInterval) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [NSObject fwPerformBlock:block completion:completion retryCount:retryCount - 1 timeoutInterval:timeoutInterval delayInterval:delayInterval startTime:startTime];
+            });
+        } else {
+            completion(success, obj);
+        }
+    });
+}
+
+- (void)fwPerformBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSUInteger)retryCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval)delayInterval
+{
+    [NSObject fwPerformBlock:block completion:completion retryCount:retryCount timeoutInterval:timeoutInterval delayInterval:delayInterval];
+}
+
 @end
