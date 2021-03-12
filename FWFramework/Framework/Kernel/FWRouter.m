@@ -152,6 +152,8 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (BOOL)canOpenURL:(NSString *)URL
 {
     NSString *rewriteURL = [self rewriteURL:URL];
+    if (rewriteURL.length < 1) return NO;
+    
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:rewriteURL];
     if (parameters[FWRouterBlockKey]) {
         return [parameters[FWRouterTypeKey] integerValue] == FWRouterTypeDefault;
@@ -178,6 +180,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(FWRouterCompletion)completion
 {
     NSString *rewriteURL = [self rewriteURL:URL];
+    if (rewriteURL.length < 1) return;
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
@@ -224,6 +227,8 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (BOOL)isObjectURL:(NSString *)URL
 {
     NSString *rewriteURL = [self rewriteURL:URL];
+    if (rewriteURL.length < 1) return NO;
+    
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:rewriteURL];
     if (parameters[FWRouterBlockKey]) {
         return [parameters[FWRouterTypeKey] integerValue] == FWRouterTypeObject;
@@ -240,6 +245,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 + (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
 {
     NSString *rewriteURL = [self rewriteURL:URL];
+    if (rewriteURL.length < 1) return nil;
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
@@ -363,7 +369,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         }
     }
     
-    NSURL *nsurl = [NSURL URLWithString:URL];
+    NSURL *nsurl = URL.length > 0 ? [NSURL URLWithString:URL] : nil;
     if (!nsurl && URL.length > 0) {
         nsurl = [NSURL URLWithString:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
     }
@@ -429,7 +435,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     }
     
     // Extract Params From Query.
-    NSURL *nsurl = [NSURL URLWithString:url];
+    NSURL *nsurl = url.length > 0 ? [NSURL URLWithString:url] : nil;
     if (!nsurl && url.length > 0) {
         nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
     }

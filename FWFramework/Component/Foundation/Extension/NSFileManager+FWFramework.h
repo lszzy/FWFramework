@@ -102,11 +102,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 禁止iCloud备份路径
 + (BOOL)fwSkipBackup:(NSString *)path;
 
-#pragma mark - Audio
-
-// 异步获取音频文件时长
-+ (void)fwAsyncAudioDuration:(NSString *)audioUrl completion:(void (^)(float duration))completion;
-
 @end
 
 NS_ASSUME_NONNULL_END

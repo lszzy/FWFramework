@@ -48,6 +48,12 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '1.0.0'
 	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Component/Deprecated子模块，并在后续版本删除
 
+1.1.1版本：
+
+	* 优化FWRouter空字符串处理
+	* 重构FWView设计和实现，支持Delegate和Block
+	* 增加FWNetworkUtils.isRequestError错误判断方法
+
 1.1.0版本：
 
 	* 优化框架OC属性声明，Swift调用更友好

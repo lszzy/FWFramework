@@ -322,6 +322,14 @@ typedef void (^FWBlockInt)(NSInteger index);
  */
 typedef void (^FWBlockDouble)(double value);
 
+/*!
+ @brief 通用(BOOL,id)参数block
+ 
+ @param isTrue BOOL参数
+ @param param id参数
+ */
+typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
+
 #pragma mark - Singleton
 
 /*!

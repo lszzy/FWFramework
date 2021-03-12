@@ -10,6 +10,8 @@
 
 @interface TestWebViewController ()
 
+@property (nonatomic, assign) BOOL gobackDisabled;
+
 @end
 
 @implementation TestWebViewController
@@ -28,8 +30,25 @@
     if (self.navigationItem.leftBarButtonItem) {
         return nil;
     } else {
-        return [NSArray arrayWithObjects:[CoreBundle imageNamed:@"back"], [CoreBundle imageNamed:@"close"], nil];
+        return @[
+            [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] target:self action:@selector(onWebBack)],
+            [CoreBundle imageNamed:@"close"],
+        ];
     }
+}
+
+- (void)onWebBack
+{
+    if (self.webView.canGoBack && !self.gobackDisabled) {
+        [self.webView goBack];
+    } else {
+        [self onWebClose];
+    }
+}
+
+- (BOOL)fwForcePopGesture
+{
+    return !self.webView.canGoBack || self.gobackDisabled;
 }
 
 - (void)viewDidLoad
