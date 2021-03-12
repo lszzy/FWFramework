@@ -100,27 +100,4 @@
     return [[NSURL.alloc initFileURLWithPath:path] setResourceValue:@(YES) forKey:NSURLIsExcludedFromBackupKey error:nil];
 }
 
-#pragma mark - Audio
-
-+ (void)fwAsyncAudioDuration:(NSString *)audioUrl completion:(void (^)(float))completion
-{
-    AVURLAsset *urlAsset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:audioUrl] options:nil];
-    [urlAsset loadValuesAsynchronouslyForKeys:@[@"duration"] completionHandler:^{
-        AVKeyValueStatus keyValueState = [urlAsset statusOfValueForKey:@"duration" error:nil];
-        float duration = 0.f;
-        if (keyValueState == AVKeyValueStatusLoaded) {
-            // duration = CMTimeGetSeconds(urlAsset.duration);
-            CMTime cmTime = urlAsset.duration;
-            duration = cmTime.value / cmTime.timescale;
-        }
-        
-        // 主线程回调
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion(duration);
-            }
-        });
-    }];
-}
-
 @end
