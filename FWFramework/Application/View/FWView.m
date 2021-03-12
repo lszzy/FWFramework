@@ -54,6 +54,16 @@
     objc_setAssociatedObject(self, @selector(fwEventReceived), fwEventReceived, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (void (^)(NSNotification *))fwEventFinished
+{
+    return objc_getAssociatedObject(self, @selector(fwEventFinished));
+}
+
+- (void)setFwEventFinished:(void (^)(NSNotification *))fwEventFinished
+{
+    objc_setAssociatedObject(self, @selector(fwEventFinished), fwEventFinished, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (void)fwSendEvent:(NSString *)name
 {
     [self fwSendEvent:name object:nil];
@@ -72,6 +82,13 @@
     }
     if (self.fwViewDelegate && [self.fwViewDelegate respondsToSelector:@selector(fwEventReceived:withNotification:)]) {
         [self.fwViewDelegate fwEventReceived:self withNotification:notification];
+    }
+}
+
+- (void)fwEventFinished:(NSNotification *)notification
+{
+    if (self.fwEventFinished) {
+        self.fwEventFinished(notification);
     }
 }
 
