@@ -55,10 +55,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// 通用事件接收句柄，Block方式
 @property (nonatomic, copy, nullable) void (^fwEventReceived)(__kindof UIView *view, NSNotification *notification);
 
+/// 通用事件完成回调句柄，Block方式
+@property (nonatomic, copy, nullable) void (^fwEventFinished)(NSNotification *notification);
+
 /// 发送指定事件，通知代理，支持附带对象和用户信息
 - (void)fwSendEvent:(NSString *)name;
 - (void)fwSendEvent:(NSString *)name object:(nullable id)object;
 - (void)fwSendEvent:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+
+/// 通用事件完成回调，子类可重写，默认调用fwEventFinished句柄
+- (void)fwEventFinished:(NSNotification *)notification;
 
 @end
 
