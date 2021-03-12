@@ -44,10 +44,34 @@
     }
 }
 
-- (void)fwTouchEvent:(NSNotification *)event
+- (void (^)(__kindof UIView *, NSNotification *))fwEventReceived
 {
-    if (self.fwViewDelegate && [self.fwViewDelegate respondsToSelector:@selector(onTouchView:withEvent:)]) {
-        [self.fwViewDelegate onTouchView:self withEvent:event];
+    return objc_getAssociatedObject(self, @selector(fwEventReceived));
+}
+
+- (void)setFwEventReceived:(void (^)(__kindof UIView *, NSNotification *))fwEventReceived
+{
+    objc_setAssociatedObject(self, @selector(fwEventReceived), fwEventReceived, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (void)fwSendEvent:(NSString *)name
+{
+    [self fwSendEvent:name object:nil];
+}
+
+- (void)fwSendEvent:(NSString *)name object:(id)object
+{
+    [self fwSendEvent:name object:object userInfo:nil];
+}
+
+- (void)fwSendEvent:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
+{
+    NSNotification *notification = [NSNotification notificationWithName:name object:object userInfo:userInfo];
+    if (self.fwEventReceived) {
+        self.fwEventReceived(self, notification);
+    }
+    if (self.fwViewDelegate && [self.fwViewDelegate respondsToSelector:@selector(fwEventReceived:withNotification:)]) {
+        [self.fwViewDelegate fwEventReceived:self withNotification:notification];
     }
 }
 
