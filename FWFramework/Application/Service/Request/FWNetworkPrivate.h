@@ -54,8 +54,6 @@ FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,
 
 + (BOOL)validateResumeData:(NSData *)data;
 
-+ (void)markRequestError:(nullable NSError *)error;
-
 + (BOOL)isRequestError:(nullable NSError *)error;
 
 @end

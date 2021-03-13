@@ -426,7 +426,6 @@
 }
 
 - (void)requestDidFailWithRequest:(FWBaseRequest *)request error:(NSError *)error {
-    [FWNetworkUtils markRequestError:error];
     request.error = error;
     FWRequestLog(@"Request %@ failed, status code = %ld, error = %@",
            NSStringFromClass([request class]), (long)request.responseStatusCode, error.localizedDescription);

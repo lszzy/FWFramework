@@ -140,12 +140,6 @@ void FWRequestLog(NSString *format, ...) {
     return YES;
 }
 
-+ (void)markRequestError:(NSError *)error
-{
-    if (!error) return;
-    objc_setAssociatedObject(error, @selector(isRequestError:), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 + (BOOL)isRequestError:(NSError *)error
 {
     if (!error) return NO;
