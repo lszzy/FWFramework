@@ -78,6 +78,32 @@ static const FWToastStyle FWToastStyleFailure = 2;
 /// 隐藏消息吐司，仅用于提前隐藏
 - (void)fwHideMessage;
 
+#pragma mark - Static
+
+/// 显示加载吐司，需手工隐藏，支持String和AttributedString
++ (void)fwShowLoadingWithText:(nullable id)text;
+
+/// 隐藏加载吐司
++ (void)fwHideLoading;
+
+/// 显示进度条吐司，需手工隐藏，支持String和AttributedString
++ (void)fwShowProgressWithText:(nullable id)text progress:(CGFloat)progress;
+
+/// 隐藏进度条吐司
++ (void)fwHideProgress;
+
+/// 显示默认样式消息吐司，自动隐藏，支持String和AttributedString
++ (void)fwShowMessageWithText:(nullable id)text;
+
+/// 显示指定样式消息吐司，自动隐藏，支持String和AttributedString
++ (void)fwShowMessageWithText:(nullable id)text style:(FWToastStyle)style;
+
+/// 显示指定样式消息吐司，自动隐藏，关闭时回调，支持String和AttributedString
++ (void)fwShowMessageWithText:(nullable id)text style:(FWToastStyle)style completion:(nullable void (^)(void))completion;
+
+/// 隐藏消息吐司，仅用于提前隐藏
++ (void)fwHideMessage;
+
 @end
 
 #pragma mark - UIView+FWIndicator
