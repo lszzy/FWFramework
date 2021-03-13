@@ -11,13 +11,12 @@
 #import "FWMessage.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
+#import "FWRouter.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIViewController+FWAlert
 
 @implementation UIViewController (FWAlert)
-
-#pragma mark - Alert
 
 - (void)fwShowAlertWithTitle:(id)title
                      message:(id)message
@@ -155,8 +154,6 @@
                       priority:priority];
 }
 
-#pragma mark - Sheet
-
 - (void)fwShowSheetWithTitle:(id)title
                      message:(id)message
                       cancel:(id)cancel
@@ -194,8 +191,6 @@
                    customBlock:nil
                       priority:priority];
 }
-
-#pragma mark - Style
 
 - (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
                        title:(id)title
@@ -270,6 +265,184 @@
     alertController.fwAlertPriorityEnabled = YES;
     alertController.fwAlertPriority = priority;
     [alertController fwAlertPriorityPresentIn:self];
+}
+
+#pragma mark - Static
+
++ (void)fwShowAlertWithTitle:(id)title
+                     message:(id)message
+                      cancel:(id)cancel
+                 cancelBlock:(void (^)(void))cancelBlock
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowAlertWithTitle:title
+                       message:message
+                        cancel:cancel
+                   cancelBlock:cancelBlock];
+}
+
++ (void)fwShowAlertWithTitle:(id)title
+                     message:(id)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
+                 actionBlock:(void (^)(NSInteger))actionBlock
+                 cancelBlock:(void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowAlertWithTitle:title
+                       message:message
+                        cancel:cancel
+                       actions:actions
+                   actionBlock:actionBlock
+                   cancelBlock:cancelBlock
+                      priority:priority];
+}
+
++ (void)fwShowConfirmWithTitle:(id)title
+                       message:(id)message
+                        cancel:(id)cancel
+                       confirm:(id)confirm
+                  confirmBlock:(void (^)(void))confirmBlock
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowConfirmWithTitle:title
+                         message:message
+                          cancel:cancel
+                         confirm:confirm
+                    confirmBlock:confirmBlock];
+}
+
++ (void)fwShowConfirmWithTitle:(id)title
+                       message:(id)message
+                        cancel:(id)cancel
+                       confirm:(id)confirm
+                  confirmBlock:(void (^)(void))confirmBlock
+                   cancelBlock:(void (^)(void))cancelBlock
+                      priority:(FWAlertPriority)priority
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowConfirmWithTitle:title
+                         message:message
+                          cancel:cancel
+                         confirm:confirm
+                    confirmBlock:confirmBlock
+                     cancelBlock:cancelBlock
+                        priority:priority];
+}
+
++ (void)fwShowPromptWithTitle:(id)title
+                      message:(id)message
+                       cancel:(id)cancel
+                      confirm:(id)confirm
+                 confirmBlock:(void (^)(NSString *))confirmBlock
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowPromptWithTitle:title
+                        message:message
+                         cancel:cancel
+                        confirm:confirm
+                   confirmBlock:confirmBlock];
+}
+
++ (void)fwShowPromptWithTitle:(id)title
+                      message:(id)message
+                       cancel:(id)cancel
+                      confirm:(id)confirm
+                  promptBlock:(void (^)(UITextField *))promptBlock
+                 confirmBlock:(void (^)(NSString *))confirmBlock
+                  cancelBlock:(void (^)(void))cancelBlock
+                     priority:(FWAlertPriority)priority
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowPromptWithTitle:title
+                        message:message
+                         cancel:cancel
+                        confirm:confirm
+                    promptBlock:promptBlock
+                   confirmBlock:confirmBlock
+                    cancelBlock:cancelBlock
+                       priority:priority];
+}
+
++ (void)fwShowPromptWithTitle:(id)title
+                      message:(id)message
+                       cancel:(id)cancel
+                      confirm:(id)confirm
+                  promptCount:(NSInteger)promptCount
+                  promptBlock:(void (^)(UITextField *, NSInteger))promptBlock
+                 confirmBlock:(void (^)(NSArray<NSString *> *))confirmBlock
+                  cancelBlock:(void (^)(void))cancelBlock
+                     priority:(FWAlertPriority)priority
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowPromptWithTitle:title
+                        message:message
+                         cancel:cancel
+                        confirm:confirm
+                    promptCount:promptCount
+                    promptBlock:promptBlock
+                   confirmBlock:confirmBlock
+                    cancelBlock:cancelBlock
+                       priority:priority];
+}
+
++ (void)fwShowSheetWithTitle:(id)title
+                     message:(id)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
+                 actionBlock:(void (^)(NSInteger))actionBlock
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowSheetWithTitle:title
+                       message:message
+                        cancel:cancel
+                       actions:actions
+                   actionBlock:actionBlock];
+}
+
++ (void)fwShowSheetWithTitle:(id)title
+                     message:(id)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
+                 actionBlock:(void (^)(NSInteger))actionBlock
+                 cancelBlock:(void (^)(void))cancelBlock
+                    priority:(FWAlertPriority)priority
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowSheetWithTitle:title
+                       message:message
+                        cancel:cancel
+                       actions:actions
+                   actionBlock:actionBlock
+                   cancelBlock:cancelBlock
+                      priority:priority];
+}
+
++ (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
+                       title:(id)title
+                     message:(id)message
+                      cancel:(id)cancel
+                     actions:(NSArray *)actions
+                 promptCount:(NSInteger)promptCount
+                 promptBlock:(void (^)(UITextField *, NSInteger))promptBlock
+                 actionBlock:(void (^)(NSArray<NSString *> *, NSInteger))actionBlock
+                 cancelBlock:(void (^)(void))cancelBlock
+                 customBlock:(nullable void (^)(id))customBlock
+                    priority:(FWAlertPriority)priority
+{
+    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    [ctrl fwShowAlertWithStyle:style
+                         title:title
+                       message:message
+                        cancel:cancel
+                       actions:actions
+                   promptCount:promptCount
+                   promptBlock:promptBlock
+                   actionBlock:actionBlock
+                   cancelBlock:cancelBlock
+                   customBlock:customBlock
+                      priority:priority];
 }
 
 @end
