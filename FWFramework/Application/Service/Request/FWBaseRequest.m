@@ -24,6 +24,7 @@
 #import "FWBaseRequest.h"
 #import "FWNetworkAgent.h"
 #import "FWNetworkPrivate.h"
+#import <objc/runtime.h>
 
 NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validation";
 
@@ -41,6 +42,13 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validatio
 @implementation FWBaseRequest
 
 #pragma mark - Request and Response Information
+
+- (void)setError:(NSError *)error {
+    _error = error;
+    if (error != nil) {
+        objc_setAssociatedObject(error, @selector(isRequestError:), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
 
 - (NSHTTPURLResponse *)response {
     return (NSHTTPURLResponse *)self.requestTask.response;

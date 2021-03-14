@@ -11,6 +11,7 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWPlugin.h"
+#import "FWRouter.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIView+FWToastPlugin
@@ -108,6 +109,48 @@
     }
     
     [self fwHideIndicatorMessage];
+}
+
+#pragma mark - Static
+
++ (void)fwShowLoadingWithText:(id)text
+{
+    [UIWindow.fwMainWindow fwShowLoadingWithText:text];
+}
+
++ (void)fwHideLoading
+{
+    [UIWindow.fwMainWindow fwHideLoading];
+}
+
++ (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
+{
+    [UIWindow.fwMainWindow fwShowProgressWithText:text progress:progress];
+}
+
++ (void)fwHideProgress
+{
+    [UIWindow.fwMainWindow fwHideProgress];
+}
+
++ (void)fwShowMessageWithText:(id)text
+{
+    [UIWindow.fwMainWindow fwShowMessageWithText:text];
+}
+
++ (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style
+{
+    [UIWindow.fwMainWindow fwShowMessageWithText:text style:style];
+}
+
++ (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
+{
+    [UIWindow.fwMainWindow fwShowMessageWithText:text style:style completion:completion];
+}
+
++ (void)fwHideMessage
+{
+    [UIWindow.fwMainWindow fwHideMessage];
 }
 
 @end
