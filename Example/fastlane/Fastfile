@@ -1,4 +1,4 @@
-# fastlane {name} [version:1.0.0] [build:'\"1.0.0.1\"'] [update:Changelog] [skip:true]
+# fastlane {name} [version:1.0.0] [build:'\"1.0.0-1+apple.test\"'] [update:Changelog] [skip:true]
 # https://docs.fastlane.tools
 # update_fastlane
 
