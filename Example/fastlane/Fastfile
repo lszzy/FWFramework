@@ -47,11 +47,11 @@ platform :ios do
     end
 
     puts "Changelog: #{CHANGELOG_TEXT}"
+    cocoapods(repo_update: true, use_bundle_exec: false)
   end
 
   desc "Push a new test build to Pgyer"
   lane :pgyer_test do |options|
-    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Test",
@@ -76,7 +76,6 @@ platform :ios do
 
   desc "Push a new prod build to Pgyer"
   lane :pgyer_prod do |options|
-    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Prod",
@@ -101,7 +100,6 @@ platform :ios do
 
   desc "Push a new test build to TestFlight"
   lane :testflight_test do |options|
-    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Test",
@@ -130,7 +128,6 @@ platform :ios do
 
   desc "Push a new prod build to TestFlight"
   lane :testflight_prod do |options|
-    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Prod",
@@ -159,7 +156,6 @@ platform :ios do
 
   desc "Push a new prod build to the App Store"
   lane :appstore_prod do |options|
-    cocoapods(repo_update: false, use_bundle_exec: false)
     build_app(
       workspace: "Example.xcworkspace",
       scheme: "Example-Prod",
