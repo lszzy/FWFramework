@@ -1,4 +1,4 @@
-# fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog] [skip:true]
+# fastlane {name} [version:1.0.0] [build:'\"1.0.0.1\"'] [update:Changelog] [skip:true]
 # https://docs.fastlane.tools
 # update_fastlane
 
@@ -29,7 +29,7 @@ platform :ios do
 
     if options[:build]
       BUILD_NUMBER = options[:build]
-      increment_build_number(build_number: BUILD_NUMBER)
+      increment_build_number(build_number: BUILD_NUMBER, skip_info_plist: true)
     elsif options[:skip]
       BUILD_NUMBER = ""
     else
