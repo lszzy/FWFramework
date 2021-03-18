@@ -8,8 +8,6 @@
 
 #import "TestQrcodeViewController.h"
 
-#define QrcodeViewHeight (FWScreenHeight - FWStatusBarHeight - FWNavigationBarHeight)
-
 @interface TestQrcodeViewController ()
 
 @property (nonatomic, strong) FWQrcodeScanManager *scanManager;
@@ -26,6 +24,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.fwNavigationBarStyle = FWNavigationBarStyleTransparent;
+    self.fwExtendedLayoutEdge = UIRectEdgeTop;
     self.navigationItem.title = @"扫一扫";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStyleDone target:self action:@selector(onPhotoLibrary)];
     
@@ -66,7 +66,7 @@
 - (FWQrcodeScanView *)scanView
 {
     if (!_scanView) {
-        _scanView = [[FWQrcodeScanView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, QrcodeViewHeight)];
+        _scanView = [[FWQrcodeScanView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWScreenHeight)];
         _scanView.scanImageName = [TestBundle imageNamed:@"qrcode_line"];
     }
     return _scanView;
@@ -79,7 +79,7 @@
         CGFloat flashlightBtnW = 30;
         CGFloat flashlightBtnH = 30;
         CGFloat flashlightBtnX = 0.5 * (self.view.frame.size.width - flashlightBtnW);
-        CGFloat flashlightBtnY = 0.5 * QrcodeViewHeight + 0.35 * self.view.frame.size.width - flashlightBtnH - 25;
+        CGFloat flashlightBtnY = 0.5 * FWScreenHeight + 0.35 * self.view.frame.size.width - flashlightBtnH - 25;
         _flashlightBtn.frame = CGRectMake(flashlightBtnX, flashlightBtnY, flashlightBtnW, flashlightBtnH);
         [_flashlightBtn setBackgroundImage:[TestBundle imageNamed:@"flashlight_open"] forState:(UIControlStateNormal)];
         [_flashlightBtn setBackgroundImage:[TestBundle imageNamed:@"flashlight_close"] forState:(UIControlStateSelected)];
@@ -91,7 +91,7 @@
 - (UILabel *)promptLabel
 {
     if (!_promptLabel) {
-        CGFloat tipLabelY = 0.5 * QrcodeViewHeight + 0.35 * self.view.frame.size.width + 12;
+        CGFloat tipLabelY = 0.5 * FWScreenHeight + 0.35 * self.view.frame.size.width + 12;
         _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, tipLabelY, FWScreenWidth, 20)];
         _promptLabel.font = [UIFont systemFontOfSize:13];
         _promptLabel.textColor = [Theme textColor];
