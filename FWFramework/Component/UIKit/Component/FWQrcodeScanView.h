@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief FWQrcodeScanManager
  
@@ -27,10 +29,10 @@
 @property (nonatomic, assign) CGRect rectOfInterest;
 /** 是否需要样本缓冲代理（光线强弱），默认为：NO */
 @property (nonatomic, assign) BOOL sampleBufferDelegate;
-// 扫描二维码回调方法
-@property (nonatomic, copy) void(^scanResultBlock)(NSString *result);
-// 扫描二维码光线强弱回调方法；调用之前配置属性 sampleBufferDelegate 必须为 YES
-@property (nonatomic, copy) void(^scanBrightnessBlock)(CGFloat brightness);
+/** 扫描二维码回调方法 */
+@property (nonatomic, copy, nullable) void(^scanResultBlock)(NSString * _Nullable result);
+/** 扫描二维码光线强弱回调方法；调用之前配置属性 sampleBufferDelegate 必须为 YES */
+@property (nonatomic, copy, nullable) void(^scanBrightnessBlock)(CGFloat brightness);
 
 /** 创建扫描二维码方法 */
 - (void)scanQrcodeWithView:(UIView *)view;
@@ -47,10 +49,13 @@
 /** 关闭手电筒 */
 + (void)closeFlashlight;
 
+/** 配置扫描设备，比如自动聚焦等 */
++ (void)configCaptureDevice:(void (^)(AVCaptureDevice *device))block;
+
 #pragma mark - Image
 
 // 扫描图片二维码，识别失败返回nil。图片过大可能导致闪退，建议先压缩再识别
-+ (NSString *)scanQrcodeWithImage:(UIImage *)image;
++ (nullable NSString *)scanQrcodeWithImage:(UIImage *)image;
 
 #pragma mark - Generate
 
@@ -86,7 +91,7 @@
  */
 + (UIImage *)generateQrcodeWithData:(NSString *)data
                                size:(CGFloat)size
-                          logoImage:(UIImage *)logoImage
+                          logoImage:(nullable UIImage *)logoImage
                               ratio:(CGFloat)ratio;
 
 /**
@@ -102,11 +107,11 @@
  */
 + (UIImage *)generateQrcodeWithData:(NSString *)data
                                size:(CGFloat)size
-                          logoImage:(UIImage *)logoImage
+                          logoImage:(nullable UIImage *)logoImage
                               ratio:(CGFloat)ratio
               logoImageCornerRadius:(CGFloat)logoImageCornerRadius
                logoImageBorderWidth:(CGFloat)logoImageBorderWidth
-               logoImageBorderColor:(UIColor *)logoImageBorderColor;
+               logoImageBorderColor:(nullable UIColor *)logoImageBorderColor;
 
 @end
 
@@ -134,7 +139,7 @@ typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
 /** 扫描样式，默认 ScanAnimationStyleDefault */
 @property (nonatomic, assign) FWQrcodeScanAnimationStyle scanAnimationStyle;
 /** 扫描线名，支持NSString和UIImage，默认无 */
-@property (nonatomic, strong) id scanImageName;
+@property (nonatomic, strong, nullable) id scanImageName;
 /** 边框颜色，默认白色 */
 @property (nonatomic, strong) UIColor *borderColor;
 /** 边角位置，默认 CornerLocationDefault */
@@ -154,3 +159,5 @@ typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
 - (void)removeTimer;
 
 @end
+
+NS_ASSUME_NONNULL_END

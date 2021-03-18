@@ -158,6 +158,16 @@
     }
 }
 
++ (void)configCaptureDevice:(void (^)(AVCaptureDevice *))block
+{
+    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (captureDevice) {
+        [captureDevice lockForConfiguration:nil];
+        if (block) block(captureDevice);
+        [captureDevice unlockForConfiguration];
+    }
+}
+
 #pragma mark - Image
 
 + (NSString *)scanQrcodeWithImage:(UIImage *)image
