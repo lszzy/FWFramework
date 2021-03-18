@@ -20,7 +20,8 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionStyle) {
     FWSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
     FWSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
     FWSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
-    FWSegmentedControlSelectionStyleArrow // An arrow in the middle of the segment pointing up or down depending on `FWSegmentedControlSelectionIndicatorLocation`
+    FWSegmentedControlSelectionStyleArrow, // An arrow in the middle of the segment pointing up or down depending on `FWSegmentedControlSelectionIndicatorLocation`
+    FWSegmentedControlSelectionStyleCircle // An circle in the middle of the segment pointing up or down depending on `FWSegmentedControlSelectionIndicatorLocation`
 };
 
 typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionIndicatorLocation) {
