@@ -21,7 +21,6 @@ class HomeViewController: UIViewController, FWViewController {
         
         // FIXME: hotfix
         edgesForExtendedLayout = []
-        
         // TODO: feature
         view.addSubview(loginButton)
     }
