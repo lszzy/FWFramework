@@ -9,13 +9,12 @@
 /* Begin PBXBuildFile section */
 		1C18E5A84B7D2A5EDB24DF6E /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027459ABC308013A8B85ABC9 /* Pods_Example.framework */; };
 		2F0AC3EF25B3486B0090CFF5 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0AC3EE25B3486B0090CFF5 /* AppConfig.swift */; };
-		2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */; };
+		2F2E15F22604D253003CB99E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2E15F12604D253003CB99E /* SceneDelegate.swift */; };
+		2F2E15F62604D3CA003CB99E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2E15F52604D3CA003CB99E /* AppDelegate.swift */; };
 		2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F63D408250C73D400BA83A6 /* TabBarController.m */; };
 		2F7A0B2325D122FB008E588D /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7A0B2225D122FB008E588D /* AppMediator.swift */; };
-		2FF8D88C24C886EE006A83B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D88B24C886EE006A83B5 /* main.m */; };
 		2FF8D94324C88A6F006A83B5 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */; };
 		2FF8D94424C88A6F006A83B5 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D8A024C88A6F006A83B5 /* HomeViewController.m */; };
-		2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */; };
 		2FF8D9DC24C88C86006A83B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9C124C88C86006A83B5 /* Assets.xcassets */; };
 		2FF8D9EE24C88C86006A83B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9DA24C88C86006A83B5 /* LaunchScreen.storyboard */; };
 		2FF8D9F124C88D3B006A83B5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF8D9F324C88D3B006A83B5 /* InfoPlist.strings */; };
@@ -40,22 +39,18 @@
 		17B05770937DC0FCD6BB809C /* Pods-Example.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release-prod.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release-prod.xcconfig"; sourceTree = "<group>"; };
 		22984264913F27A680A5D0EC /* Pods-Example.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug-prod.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		2F0AC3EE25B3486B0090CFF5 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
-		2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		2F2E15F12604D253003CB99E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2F2E15F52604D3CA003CB99E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F63D407250C73D400BA83A6 /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		2F63D408250C73D400BA83A6 /* TabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		2F6E684B24FFA5D100079E53 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2F7A0B2225D122FB008E588D /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2FF8D87624C886EC006A83B5 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FF8D88A24C886EE006A83B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2FF8D88B24C886EE006A83B5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2FF8D89D24C88A6F006A83B5 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2FF8D89E24C88A6F006A83B5 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2FF8D8A024C88A6F006A83B5 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		2FF8D8A224C88A6F006A83B5 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
-		2FF8D93824C88A6F006A83B5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		2FF8D93B24C88A6F006A83B5 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
-		2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2FF8D98F24C88ABA006A83B5 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		2FF8D99024C88B0C006A83B5 /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		2FF8D99124C88B3E006A83B5 /* SwiftHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftHeader.h; sourceTree = "<group>"; };
@@ -149,7 +144,6 @@
 				2FF8D98F24C88ABA006A83B5 /* PrefixHeader.pch */,
 				2FF8D99124C88B3E006A83B5 /* SwiftHeader.h */,
 				2FF8D99024C88B0C006A83B5 /* BridgingHeader.h */,
-				2FF8D88B24C886EE006A83B5 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -192,10 +186,8 @@
 		2FF8D93724C88A6F006A83B5 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D93824C88A6F006A83B5 /* AppDelegate.h */,
-				2FF8D93F24C88A6F006A83B5 /* AppDelegate.m */,
-				2F63D3E4250C6FE600BA83A6 /* SceneDelegate.h */,
-				2F63D3E5250C6FE600BA83A6 /* SceneDelegate.m */,
+				2F2E15F52604D3CA003CB99E /* AppDelegate.swift */,
+				2F2E15F12604D253003CB99E /* SceneDelegate.swift */,
 				2FF8D93924C88A6F006A83B5 /* Config */,
 			);
 			path = App;
@@ -204,7 +196,6 @@
 		2FF8D93924C88A6F006A83B5 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D93B24C88A6F006A83B5 /* AppConfig.h */,
 				2F0AC3EE25B3486B0090CFF5 /* AppConfig.swift */,
 				2F7A0B2225D122FB008E588D /* AppMediator.swift */,
 			);
@@ -350,12 +341,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FF8D98D24C88A70006A83B5 /* AppDelegate.m in Sources */,
 				2F0AC3EF25B3486B0090CFF5 /* AppConfig.swift in Sources */,
+				2F2E15F22604D253003CB99E /* SceneDelegate.swift in Sources */,
+				2F2E15F62604D3CA003CB99E /* AppDelegate.swift in Sources */,
 				2F7A0B2325D122FB008E588D /* AppMediator.swift in Sources */,
 				2FF8D94424C88A6F006A83B5 /* HomeViewController.m in Sources */,
-				2FF8D88C24C886EE006A83B5 /* main.m in Sources */,
-				2F63D3E6250C6FE600BA83A6 /* SceneDelegate.m in Sources */,
 				2FF8D94324C88A6F006A83B5 /* SettingsViewController.m in Sources */,
 				2F63D409250C73D400BA83A6 /* TabBarController.m in Sources */,
 			);
