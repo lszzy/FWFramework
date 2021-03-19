@@ -331,7 +331,15 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 - (CGFloat)fwTopBarHeight
 {
-    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+    if (![UIScreen fwIsNotchedScreen]) {
+        return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+    }
+    
+    if (self.navigationController.navigationBarHidden) {
+        return [self fwStatusBarHeight];
+    } else {
+        return self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height;
+    }
 }
 
 - (CGFloat)fwTabBarHeight

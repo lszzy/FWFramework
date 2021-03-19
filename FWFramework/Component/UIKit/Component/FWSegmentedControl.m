@@ -30,7 +30,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
 
 @property (nonatomic, strong) CALayer *selectionIndicatorStripLayer;
 @property (nonatomic, strong) CALayer *selectionIndicatorBoxLayer;
-@property (nonatomic, strong) CALayer *selectionIndicatorArrowLayer;
+@property (nonatomic, strong) CALayer *selectionIndicatorShapeLayer;
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray<NSNumber *> *segmentWidthsArray;
 @property (nonatomic, strong) FWSegmentedScrollView *scrollView;
@@ -176,7 +176,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     
     self.shouldAnimateUserSelection = YES;
     
-    self.selectionIndicatorArrowLayer = [CALayer layer];
+    self.selectionIndicatorShapeLayer = [CALayer layer];
     self.selectionIndicatorStripLayer = [CALayer layer];
     self.selectionIndicatorBoxLayer = [CALayer layer];
     self.selectionIndicatorBoxLayer.opacity = self.selectionIndicatorBoxOpacity;
@@ -311,7 +311,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     [self.backgroundColor setFill];
     UIRectFill([self bounds]);
     
-    self.selectionIndicatorArrowLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
+    self.selectionIndicatorShapeLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
     
     self.selectionIndicatorStripLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
     
@@ -614,10 +614,11 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     
     // Add the selection indicators
     if (self.selectedSegmentIndex != FWSegmentedControlNoSegment && [self sectionCount] > 0) {
-        if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
-            if (!self.selectionIndicatorArrowLayer.superlayer) {
-                [self setArrowFrame];
-                [self.scrollView.layer addSublayer:self.selectionIndicatorArrowLayer];
+        if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow ||
+            self.selectionStyle == FWSegmentedControlSelectionStyleCircle) {
+            if (!self.selectionIndicatorShapeLayer.superlayer) {
+                [self setShapeFrame];
+                [self.scrollView.layer addSublayer:self.selectionIndicatorShapeLayer];
             }
         } else {
             if (!self.selectionIndicatorStripLayer.superlayer) {
@@ -672,38 +673,42 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     }
 }
 
-- (void)setArrowFrame {
-    self.selectionIndicatorArrowLayer.frame = [self frameForSelectionIndicator];
+- (void)setShapeFrame {
+    self.selectionIndicatorShapeLayer.frame = [self frameForSelectionIndicator];
+    self.selectionIndicatorShapeLayer.mask = nil;
     
-    self.selectionIndicatorArrowLayer.mask = nil;
-    
-    UIBezierPath *arrowPath = [UIBezierPath bezierPath];
-    
-    CGPoint p1 = CGPointZero;
-    CGPoint p2 = CGPointZero;
-    CGPoint p3 = CGPointZero;
-    
-    if (self.selectionIndicatorLocation == FWSegmentedControlSelectionIndicatorLocationBottom) {
-        p1 = CGPointMake(self.selectionIndicatorArrowLayer.bounds.size.width / 2, 0);
-        p2 = CGPointMake(0, self.selectionIndicatorArrowLayer.bounds.size.height);
-        p3 = CGPointMake(self.selectionIndicatorArrowLayer.bounds.size.width, self.selectionIndicatorArrowLayer.bounds.size.height);
+    UIBezierPath *shapePath = nil;
+    if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
+        shapePath = [UIBezierPath bezierPath];
+        
+        CGPoint p1 = CGPointZero;
+        CGPoint p2 = CGPointZero;
+        CGPoint p3 = CGPointZero;
+        
+        if (self.selectionIndicatorLocation == FWSegmentedControlSelectionIndicatorLocationBottom) {
+            p1 = CGPointMake(self.selectionIndicatorShapeLayer.bounds.size.width / 2, 0);
+            p2 = CGPointMake(0, self.selectionIndicatorShapeLayer.bounds.size.height);
+            p3 = CGPointMake(self.selectionIndicatorShapeLayer.bounds.size.width, self.selectionIndicatorShapeLayer.bounds.size.height);
+        }
+        
+        if (self.selectionIndicatorLocation == FWSegmentedControlSelectionIndicatorLocationTop) {
+            p1 = CGPointMake(self.selectionIndicatorShapeLayer.bounds.size.width / 2, self.selectionIndicatorShapeLayer.bounds.size.height);
+            p2 = CGPointMake(self.selectionIndicatorShapeLayer.bounds.size.width, 0);
+            p3 = CGPointMake(0, 0);
+        }
+        
+        [shapePath moveToPoint:p1];
+        [shapePath addLineToPoint:p2];
+        [shapePath addLineToPoint:p3];
+        [shapePath closePath];
+    } else {
+        shapePath = [UIBezierPath bezierPathWithRoundedRect:self.selectionIndicatorShapeLayer.bounds cornerRadius:self.selectionIndicatorHeight / 2];
     }
-    
-    if (self.selectionIndicatorLocation == FWSegmentedControlSelectionIndicatorLocationTop) {
-        p1 = CGPointMake(self.selectionIndicatorArrowLayer.bounds.size.width / 2, self.selectionIndicatorArrowLayer.bounds.size.height);
-        p2 = CGPointMake(self.selectionIndicatorArrowLayer.bounds.size.width, 0);
-        p3 = CGPointMake(0, 0);
-    }
-    
-    [arrowPath moveToPoint:p1];
-    [arrowPath addLineToPoint:p2];
-    [arrowPath addLineToPoint:p3];
-    [arrowPath closePath];
     
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.selectionIndicatorArrowLayer.bounds;
-    maskLayer.path = arrowPath.CGPath;
-    self.selectionIndicatorArrowLayer.mask = maskLayer;
+    maskLayer.frame = self.selectionIndicatorShapeLayer.bounds;
+    maskLayer.path = shapePath.CGPath;
+    self.selectionIndicatorShapeLayer.mask = maskLayer;
 }
 
 - (CGRect)frameForSelectionIndicator {
@@ -733,12 +738,32 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
         sectionWidth = MAX(stringWidth, imageWidth);
     }
     
-    if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
-        CGFloat widthToEndOfSelectedSegment = (self.segmentWidth * self.selectedSegmentIndex) + self.segmentWidth;
-        CGFloat widthToStartOfSelectedIndex = (self.segmentWidth * self.selectedSegmentIndex);
+    if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow ||
+        self.selectionStyle == FWSegmentedControlSelectionStyleCircle) {
+        CGFloat widthToEndOfSelectedSegment = 0.0f;
+        CGFloat widthToStartOfSelectedIndex = 0.0f;
+        
+        if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
+            NSUInteger i = 0;
+            for (NSNumber *width in self.segmentWidthsArray) {
+                if (self.selectedSegmentIndex == i) {
+                    widthToEndOfSelectedSegment = widthToStartOfSelectedIndex + [width floatValue];
+                    break;
+                }
+                widthToStartOfSelectedIndex = widthToStartOfSelectedIndex + [width floatValue];
+                i++;
+            }
+        } else {
+            widthToEndOfSelectedSegment = (self.segmentWidth * self.selectedSegmentIndex) + self.segmentWidth;
+            widthToStartOfSelectedIndex = (self.segmentWidth * self.selectedSegmentIndex);
+        }
         
         CGFloat x = widthToStartOfSelectedIndex + ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) - (self.selectionIndicatorHeight/2);
-        return CGRectMake(x - (self.selectionIndicatorHeight / 2), indicatorYOffset, self.selectionIndicatorHeight * 2, self.selectionIndicatorHeight);
+        if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
+            return CGRectMake(x - (self.selectionIndicatorHeight / 2), indicatorYOffset, self.selectionIndicatorHeight * 2, self.selectionIndicatorHeight);
+        } else {
+            return CGRectMake(x, indicatorYOffset, self.selectionIndicatorHeight, self.selectionIndicatorHeight);
+        }
     } else {
         if (self.selectionStyle == FWSegmentedControlSelectionStyleTextWidthStripe &&
             sectionWidth <= self.segmentWidth &&
@@ -1008,7 +1033,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     [self setNeedsDisplay];
     
     if (index == FWSegmentedControlNoSegment || [self sectionCount] < 1) {
-        [self.selectionIndicatorArrowLayer removeFromSuperlayer];
+        [self.selectionIndicatorShapeLayer removeFromSuperlayer];
         [self.selectionIndicatorStripLayer removeFromSuperlayer];
         [self.selectionIndicatorBoxLayer removeFromSuperlayer];
     } else {
@@ -1023,9 +1048,10 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             // If the selected segment layer is not added to the super layer, that means no
             // index is currently selected, so add the layer then move it to the new
             // segment index without animating.
-            if(self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
-                if ([self.selectionIndicatorArrowLayer superlayer] == nil) {
-                    [self.scrollView.layer addSublayer:self.selectionIndicatorArrowLayer];
+            if(self.selectionStyle == FWSegmentedControlSelectionStyleArrow ||
+               self.selectionStyle == FWSegmentedControlSelectionStyleCircle) {
+                if ([self.selectionIndicatorShapeLayer superlayer] == nil) {
+                    [self.scrollView.layer addSublayer:self.selectionIndicatorShapeLayer];
                     
                     [self setSelectedSegmentIndex:index animated:NO notify:YES];
                     return;
@@ -1046,7 +1072,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                 [self notifyForSegmentChangeToIndex:index];
             
             // Restore CALayer animations
-            self.selectionIndicatorArrowLayer.actions = nil;
+            self.selectionIndicatorShapeLayer.actions = nil;
             self.selectionIndicatorStripLayer.actions = nil;
             self.selectionIndicatorBoxLayer.actions = nil;
             
@@ -1054,7 +1080,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             [CATransaction begin];
             [CATransaction setAnimationDuration:0.15f];
             [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-            [self setArrowFrame];
+            [self setShapeFrame];
             self.selectionIndicatorBoxLayer.frame = [self frameForSelectionIndicator];
             self.selectionIndicatorStripLayer.frame = [self frameForSelectionIndicator];
             self.selectionIndicatorBoxLayer.frame = [self frameForFillerSelectionIndicator];
@@ -1062,8 +1088,8 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
         } else {
             // Disable CALayer animations
             NSMutableDictionary *newActions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNull null], @"position", [NSNull null], @"bounds", nil];
-            self.selectionIndicatorArrowLayer.actions = newActions;
-            [self setArrowFrame];
+            self.selectionIndicatorShapeLayer.actions = newActions;
+            [self setShapeFrame];
             
             self.selectionIndicatorStripLayer.actions = newActions;
             self.selectionIndicatorStripLayer.frame = [self frameForSelectionIndicator];

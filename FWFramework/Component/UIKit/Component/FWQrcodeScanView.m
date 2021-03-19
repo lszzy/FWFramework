@@ -158,6 +158,16 @@
     }
 }
 
++ (void)configCaptureDevice:(void (^)(AVCaptureDevice *))block
+{
+    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (captureDevice) {
+        [captureDevice lockForConfiguration:nil];
+        if (block) block(captureDevice);
+        [captureDevice unlockForConfiguration];
+    }
+}
+
 #pragma mark - Image
 
 + (NSString *)scanQrcodeWithImage:(UIImage *)image
@@ -269,13 +279,6 @@
 
 @end
 
-/** 扫描内容的 W 值 */
-#define FWQrcodeScanBorderW 0.7 * self.frame.size.width
-/** 扫描内容的 x 值 */
-#define FWQrcodeScanBorderX 0.5 * (1 - 0.7) * self.frame.size.width
-/** 扫描内容的 Y 值 */
-#define FWQrcodeScanBorderY 0.5 * (self.frame.size.height - FWQrcodeScanBorderW)
-
 @interface FWQrcodeScanView ()
 
 @property (nonatomic, strong) UIView *contentView;
@@ -306,9 +309,12 @@
 {
     _scanAnimationStyle = FWQrcodeScanAnimationStyleDefault;
     _borderColor = [UIColor whiteColor];
+    _borderFrame = CGRectMake(0.15 * self.frame.size.width, 0.5 * (self.frame.size.height - 0.7 * self.frame.size.width), 0.7 * self.frame.size.width, 0.7 * self.frame.size.width);
+    _borderWidth = 0.2;
     _cornerLocation = FWQrcodeCornerLocationDefault;
     _cornerColor = [UIColor colorWithRed:85/255.0f green:183/255.0 blue:55/255.0 alpha:1.0];
     _cornerWidth = 2.0;
+    _cornerLength = 20;
     _backgroundAlpha = 0.5;
     _animationTimeInterval = 0.02;
     _scanImageName = nil;
@@ -318,7 +324,7 @@
 {
     if (!_contentView) {
         _contentView = [[UIView alloc] init];
-        _contentView.frame = CGRectMake(FWQrcodeScanBorderX, FWQrcodeScanBorderY, FWQrcodeScanBorderW, FWQrcodeScanBorderW);
+        _contentView.frame = self.borderFrame;
         _contentView.clipsToBounds = YES;
         _contentView.backgroundColor = [UIColor clearColor];
     }
@@ -330,11 +336,11 @@
     [super drawRect:rect];
     
     /// 边框 frame
-    CGFloat borderW = FWQrcodeScanBorderW;
-    CGFloat borderH = borderW;
-    CGFloat borderX = FWQrcodeScanBorderX;
-    CGFloat borderY = FWQrcodeScanBorderY;
-    CGFloat borderLineW = 0.2;
+    CGFloat borderW = self.borderFrame.size.width;
+    CGFloat borderH = self.borderFrame.size.height;
+    CGFloat borderX = self.borderFrame.origin.x;
+    CGFloat borderY = self.borderFrame.origin.y;
+    CGFloat borderLineW = self.borderWidth;
     
     /// 空白区域设置
     [[[UIColor blackColor] colorWithAlphaComponent:self.backgroundAlpha] setFill];
@@ -356,7 +362,7 @@
     [borderPath stroke];
     
     
-    CGFloat cornerLenght = 20;
+    CGFloat cornerLength = self.cornerLength;
     /// 左上角小图标
     UIBezierPath *leftTopPath = [UIBezierPath bezierPath];
     leftTopPath.lineWidth = self.cornerWidth;
@@ -365,17 +371,17 @@
     CGFloat insideExcess = fabs(0.5 * (self.cornerWidth - borderLineW));
     CGFloat outsideExcess = 0.5 * (borderLineW + self.cornerWidth);
     if (self.cornerLocation == FWQrcodeCornerLocationInside) {
-        [leftTopPath moveToPoint:CGPointMake(borderX + insideExcess, borderY + cornerLenght + insideExcess)];
+        [leftTopPath moveToPoint:CGPointMake(borderX + insideExcess, borderY + cornerLength + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + insideExcess)];
-        [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLenght + insideExcess, borderY + insideExcess)];
+        [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength + insideExcess, borderY + insideExcess)];
     } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
-        [leftTopPath moveToPoint:CGPointMake(borderX - outsideExcess, borderY + cornerLenght - outsideExcess)];
+        [leftTopPath moveToPoint:CGPointMake(borderX - outsideExcess, borderY + cornerLength - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY - outsideExcess)];
-        [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLenght - outsideExcess, borderY - outsideExcess)];
+        [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength - outsideExcess, borderY - outsideExcess)];
     } else {
-        [leftTopPath moveToPoint:CGPointMake(borderX, borderY + cornerLenght)];
+        [leftTopPath moveToPoint:CGPointMake(borderX, borderY + cornerLength)];
         [leftTopPath addLineToPoint:CGPointMake(borderX, borderY)];
-        [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLenght, borderY)];
+        [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength, borderY)];
     }
     
     [leftTopPath stroke];
@@ -386,17 +392,17 @@
     [self.cornerColor set];
     
     if (self.cornerLocation == FWQrcodeCornerLocationInside) {
-        [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLenght + insideExcess, borderY + borderH - insideExcess)];
+        [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - insideExcess)];
-        [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - cornerLenght - insideExcess)];
+        [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - cornerLength - insideExcess)];
     } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
-        [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLenght - outsideExcess, borderY + borderH + outsideExcess)];
+        [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH + outsideExcess)];
-        [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH - cornerLenght + outsideExcess)];
+        [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH - cornerLength + outsideExcess)];
     } else {
-        [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLenght, borderY + borderH)];
+        [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength, borderY + borderH)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX, borderY + borderH)];
-        [leftBottomPath addLineToPoint:CGPointMake(borderX, borderY + borderH - cornerLenght)];
+        [leftBottomPath addLineToPoint:CGPointMake(borderX, borderY + borderH - cornerLength)];
     }
     
     [leftBottomPath stroke];
@@ -407,17 +413,17 @@
     [self.cornerColor set];
     
     if (self.cornerLocation == FWQrcodeCornerLocationInside) {
-        [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLenght - insideExcess, borderY + insideExcess)];
+        [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + insideExcess)];
-        [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + cornerLenght + insideExcess)];
+        [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + cornerLength + insideExcess)];
     } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
-        [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLenght + outsideExcess, borderY - outsideExcess)];
+        [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY - outsideExcess)];
-        [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + cornerLenght - outsideExcess)];
+        [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + cornerLength - outsideExcess)];
     } else {
-        [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLenght, borderY)];
+        [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength, borderY)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW, borderY)];
-        [rightTopPath addLineToPoint:CGPointMake(borderX + borderW, borderY + cornerLenght)];
+        [rightTopPath addLineToPoint:CGPointMake(borderX + borderW, borderY + cornerLength)];
     }
     
     [rightTopPath stroke];
@@ -428,17 +434,17 @@
     [self.cornerColor set];
     
     if (self.cornerLocation == FWQrcodeCornerLocationInside) {
-        [rightBottomPath moveToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - cornerLenght - insideExcess)];
+        [rightBottomPath moveToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - cornerLength - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - insideExcess)];
-        [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLenght - insideExcess, borderY + borderH - insideExcess)];
+        [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength - insideExcess, borderY + borderH - insideExcess)];
     } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
-        [rightBottomPath moveToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH - cornerLenght + outsideExcess)];
+        [rightBottomPath moveToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH - cornerLength + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH + outsideExcess)];
-        [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLenght + outsideExcess, borderY + borderH + outsideExcess)];
+        [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength + outsideExcess, borderY + borderH + outsideExcess)];
     } else {
-        [rightBottomPath moveToPoint:CGPointMake(borderX + borderW, borderY + borderH - cornerLenght)];
+        [rightBottomPath moveToPoint:CGPointMake(borderX + borderW, borderY + borderH - cornerLength)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW, borderY + borderH)];
-        [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLenght, borderY + borderH)];
+        [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength, borderY + borderH)];
     }
     
     [rightBottomPath stroke];
@@ -457,17 +463,17 @@
     if (self.scanAnimationStyle == FWQrcodeScanAnimationStyleGrid) {
         [self addSubview:self.contentView];
         [_contentView addSubview:self.scanningline];
-        scanninglineW = FWQrcodeScanBorderW;
-        scanninglineH = FWQrcodeScanBorderW;
+        scanninglineW = self.borderFrame.size.width;
+        scanninglineH = self.borderFrame.size.height;
         scanninglineX = 0;
-        scanninglineY = - FWQrcodeScanBorderW;
+        scanninglineY = - self.borderFrame.size.height;
         _scanningline.frame = CGRectMake(scanninglineX, scanninglineY, scanninglineW, scanninglineH);
     } else {
         [self addSubview:self.scanningline];
-        scanninglineW = FWQrcodeScanBorderW;
-        scanninglineH = 12;
-        scanninglineX = FWQrcodeScanBorderX;
-        scanninglineY = FWQrcodeScanBorderY;
+        scanninglineW = self.borderFrame.size.width;
+        scanninglineH = self.scanningline.image.size.height;
+        scanninglineX = self.borderFrame.origin.x;
+        scanninglineY = self.borderFrame.origin.y;
         _scanningline.frame = CGRectMake(scanninglineX, scanninglineY, scanninglineW, scanninglineH);
     }
     self.timer = [NSTimer timerWithTimeInterval:self.animationTimeInterval target:self selector:@selector(beginRefreshUI) userInfo:nil repeats:YES];
@@ -490,18 +496,18 @@
     __weak typeof(self) weakSelf = self;
     if (self.scanAnimationStyle == FWQrcodeScanAnimationStyleGrid) {
         if (flag) {
-            frame.origin.y = - FWQrcodeScanBorderW;
+            frame.origin.y = - self.borderFrame.size.height;
             flag = NO;
             [UIView animateWithDuration:self.animationTimeInterval animations:^{
                 frame.origin.y += 2;
                 weakSelf.scanningline.frame = frame;
             } completion:nil];
         } else {
-            if (_scanningline.frame.origin.y >= - FWQrcodeScanBorderW) {
-                CGFloat scanContent_MaxY = - FWQrcodeScanBorderW + self.frame.size.width - 2 * FWQrcodeScanBorderX;
-                if (_scanningline.frame.origin.y >= scanContent_MaxY) {
+            if (_scanningline.frame.origin.y >= - self.borderFrame.size.height) {
+                CGFloat scanMaxY = 0;
+                if (_scanningline.frame.origin.y >= scanMaxY) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        frame.origin.y = - FWQrcodeScanBorderW;
+                        frame.origin.y = - self.borderFrame.size.height;
                         weakSelf.scanningline.frame = frame;
                         flag = YES;
                     });
@@ -517,17 +523,17 @@
         }
     } else {
         if (flag) {
-            frame.origin.y = FWQrcodeScanBorderY;
+            frame.origin.y = self.borderFrame.origin.y;
             flag = NO;
             [UIView animateWithDuration:self.animationTimeInterval animations:^{
                 frame.origin.y += 2;
                 weakSelf.scanningline.frame = frame;
             } completion:nil];
         } else {
-            if (_scanningline.frame.origin.y >= FWQrcodeScanBorderY) {
-                CGFloat scanContent_MaxY = FWQrcodeScanBorderY + self.frame.size.width - 2 * FWQrcodeScanBorderX;
-                if (_scanningline.frame.origin.y >= scanContent_MaxY - 10) {
-                    frame.origin.y = FWQrcodeScanBorderY;
+            if (_scanningline.frame.origin.y >= self.borderFrame.origin.y) {
+                CGFloat scanMaxY = self.borderFrame.origin.y + self.borderFrame.size.height;
+                if (_scanningline.frame.origin.y >= scanMaxY - self.scanningline.image.size.height) {
+                    frame.origin.y = self.borderFrame.origin.y;
                     weakSelf.scanningline.frame = frame;
                     flag = YES;
                 } else {
