@@ -19,6 +19,7 @@
 		2F25749A25399A5300880FEF /* FWRefreshPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F25749825399A5300880FEF /* FWRefreshPlugin.m */; };
 		2F2574AB2539A6D400880FEF /* FWBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F2574A92539A6D400880FEF /* FWBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F2574AC2539A6D400880FEF /* FWBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2574AA2539A6D400880FEF /* FWBlock.m */; };
+		2F2E14FE2604737C003CB99E /* FWSignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2E14FD2604737B003CB99E /* FWSignatureView.swift */; };
 		2F48AD2D25B9E19C009792C6 /* FWAsyncLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F48AD2B25B9E19C009792C6 /* FWAsyncLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F48AD2E25B9E19C009792C6 /* FWAsyncLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F48AD2C25B9E19C009792C6 /* FWAsyncLayer.m */; };
 		2F4CEC8025C66AED00D4C7F5 /* FWPasscodeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F4CEC7E25C66AED00D4C7F5 /* FWPasscodeView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -352,6 +353,7 @@
 		2F25749825399A5300880FEF /* FWRefreshPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWRefreshPlugin.m; sourceTree = "<group>"; };
 		2F2574A92539A6D400880FEF /* FWBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWBlock.h; sourceTree = "<group>"; };
 		2F2574AA2539A6D400880FEF /* FWBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWBlock.m; sourceTree = "<group>"; };
+		2F2E14FD2604737B003CB99E /* FWSignatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWSignatureView.swift; sourceTree = "<group>"; };
 		2F48AD2B25B9E19C009792C6 /* FWAsyncLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAsyncLayer.h; sourceTree = "<group>"; };
 		2F48AD2C25B9E19C009792C6 /* FWAsyncLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAsyncLayer.m; sourceTree = "<group>"; };
 		2F4CEC7E25C66AED00D4C7F5 /* FWPasscodeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWPasscodeView.h; sourceTree = "<group>"; };
@@ -1191,6 +1193,7 @@
 				2FFE1CC32507BFBD000332A3 /* FWQrcodeScanView.m */,
 				2FFE1CBF2507BFBD000332A3 /* FWSegmentedControl.h */,
 				2FFE1CD52507BFBD000332A3 /* FWSegmentedControl.m */,
+				2F2E14FD2604737B003CB99E /* FWSignatureView.swift */,
 				2FFE1CD72507BFBD000332A3 /* FWSkeletonView.swift */,
 				2FFE1CD62507BFBD000332A3 /* FWTagCollectionView.h */,
 				2FFE1CBE2507BFBD000332A3 /* FWTagCollectionView.m */,
@@ -1602,6 +1605,7 @@
 				2FFE1D9A2507BFBD000332A3 /* FWBannerView.m in Sources */,
 				2FFE1BEE2507BF95000332A3 /* FWAsyncSocket.m in Sources */,
 				2FFE1D7A2507BFBD000332A3 /* FWMarqueeLabel.m in Sources */,
+				2F2E14FE2604737C003CB99E /* FWSignatureView.swift in Sources */,
 				2F2574AC2539A6D400880FEF /* FWBlock.m in Sources */,
 				2FFE1C122507BF95000332A3 /* FWProxy.m in Sources */,
 				2FFE1D702507BFBD000332A3 /* UIApplication+FWFramework.m in Sources */,

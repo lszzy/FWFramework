@@ -204,7 +204,7 @@ static const FWScreenInch FWScreenInch67 = 67;
 @property (nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
 /// 当前导航栏高度，隐藏为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
-/// 顶部栏高度，包含状态栏、导航栏，隐藏为0，推荐使用
+/// 当前顶部栏高度，包含状态栏、导航栏，隐藏为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwTopBarHeight;
 /// 当前标签栏高度，隐藏为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwTabBarHeight;

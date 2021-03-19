@@ -93,7 +93,12 @@ FWPropertyAssign(BOOL, hideToast);
     }
 }
 
-- (void)renderView
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStyleGrouped;
+}
+
+- (void)renderTableLayout
 {
     UILabel *frameLabel = [UILabel fwAutoLayoutView];
     self.frameLabel = frameLabel;
@@ -102,19 +107,13 @@ FWPropertyAssign(BOOL, hideToast);
     frameLabel.font = [UIFont fwFontOfSize:15];
     frameLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:frameLabel]; {
-        [frameLabel fwPinEdgesToSuperviewSafeAreaWithInsets:UIEdgeInsetsMake(0, 10, 100, 10) excludingEdge:NSLayoutAttributeTop];
+        frameLabel.fwLayoutChain.leftWithInset(10).rightWithInset(10)
+            .bottomWithInset(FWTabBarHeight + 10);
     }
-}
-
-- (UITableViewStyle)renderTableStyle
-{
-    return UITableViewStyleGrouped;
-}
-
-- (void)renderTableLayout
-{
+    
     self.tableView.backgroundColor = [Theme tableColor];
-    [self.tableView fwPinEdgesToSuperviewSafeArea];
+    self.tableView.fwLayoutChain.edgesHorizontal().top()
+        .bottomToTopOfViewWithOffset(self.frameLabel, -10);
 }
 
 - (void)renderData
@@ -182,9 +181,10 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)refreshBarFrame
 {
-    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@ 当前状态栏：%@\n全局导航栏：%@ 当前导航栏：%@\n全局标签栏：%@ 当前标签栏：%@\n全局工具栏：%@ 当前工具栏：%@\n安全区域：%@",
+    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@ 当前状态栏：%@\n全局导航栏：%@ 当前导航栏：%@\n全局顶部栏：%@ 当前顶部栏：%@\n全局标签栏：%@ 当前标签栏：%@\n全局工具栏：%@ 当前工具栏：%@\n安全区域：%@",
                             @([UIScreen fwStatusBarHeight]), @([self fwStatusBarHeight]),
                             @([UIScreen fwNavigationBarHeight]), @([self fwNavigationBarHeight]),
+                            @([UIScreen fwTopBarHeight]), @([self fwTopBarHeight]),
                             @([UIScreen fwTabBarHeight]), @([self fwTabBarHeight]),
                             @([UIScreen fwToolBarHeight]), @([self fwToolBarHeight]),
                             NSStringFromUIEdgeInsets([UIScreen fwSafeAreaInsets])];

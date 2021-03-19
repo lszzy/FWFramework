@@ -15,6 +15,7 @@
 FWDefStaticString(ROUTE_TEST, @"app://test/:id");
 FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
 FWDefStaticString(ROUTE_OBJECT, @"object://test2");
+FWDefStaticString(ROUTE_OBJECT_UNMATCH, @"object://test");
 FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
 FWDefStaticString(ROUTE_HOME, @"app://home");
@@ -47,6 +48,17 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         return YES;
     }];
     [FWRouter setErrorHandler:^(NSDictionary *parameters) {
+        // 处理objectUrl转为openUrl调用
+        NSString *url = parameters[FWRouterURLKey];
+        NSDictionary *userInfo = [parameters[FWRouterUserInfoKey] fwAsNSDictionary];
+        if ([FWRouter isObjectURL:url]) {
+            id object = [FWRouter objectForURL:url userInfo:userInfo];
+            if (object && [object isKindOfClass:[UIViewController class]]) {
+                [FWRouter openViewController:object animated:YES];
+                return;
+            }
+        }
+        
         [[[UIWindow fwMainWindow] fwTopPresentedController] fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", parameters] message:nil cancel:@"OK" cancelBlock:nil];
     }];
 }
@@ -110,6 +122,10 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         viewController.parameters = parameters;
         viewController.navigationItem.title = TestRouter.ROUTE_OBJECT;
         return viewController;
+    }];
+    
+    [FWRouter registerURL:TestRouter.ROUTE_OBJECT_UNMATCH withObjectHandler:^id(NSDictionary *parameters) {
+        return @"OBJECT UNMATCH";
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_JAVASCRIPT withHandler:^(NSDictionary *parameters) {
@@ -247,6 +263,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
+                                         @[@"objectUrl转openUrl", @"onOpenUnmatch3"],
                                          @[@"跳转telprompt", @"onOpenTel"],
                                          @[@"跳转设置", @"onOpenSettings"],
                                          @[@"跳转home", @"onOpenHome"],
@@ -345,12 +362,17 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenUnmatch
 {
-    [FWRouter openURL:TestRouter.ROUTE_OBJECT];
+    [FWRouter openURL:TestRouter.ROUTE_OBJECT_UNMATCH];
 }
 
 - (void)onOpenUnmatch2
 {
     [FWRouter objectForURL:@"app://test/1"];
+}
+
+- (void)onOpenUnmatch3
+{
+    [FWRouter openURL:TestRouter.ROUTE_OBJECT];
 }
 
 - (void)onOpenFilter
