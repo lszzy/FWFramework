@@ -144,6 +144,7 @@
               @[@"FWFloatLayoutView", @"TestFloatLayoutViewController"],
               @[@"FWPopupMenu", @"TestPopupMenuViewController"],
               @[@"FWQrcodeScanView", @"TestQrcodeViewController"],
+              @[@"FWSignatureView", @"Test.TestSignatureViewController"],
               ]],
     ]];
     [self.tableView reloadData];
