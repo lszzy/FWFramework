@@ -13,6 +13,5 @@
 @import Core;
 @import Mediator;
 #import "SwiftHeader.h"
-#import "AppConfig.h"
 
 #endif /* PrefixHeader_pch */

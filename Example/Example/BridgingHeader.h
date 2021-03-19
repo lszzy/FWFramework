@@ -5,4 +5,4 @@
 @import FWFramework;
 @import Core;
 @import Mediator;
-#import "AppConfig.h"
+#import "TabBarController.h"
