@@ -13,6 +13,7 @@
 FWStaticString(ROUTE_TEST);
 FWStaticString(ROUTE_WILDCARD);
 FWStaticString(ROUTE_OBJECT);
+FWStaticString(ROUTE_OBJECT_UNMATCH);
 FWStaticString(ROUTE_CONTROLLER);
 FWStaticString(ROUTE_JAVASCRIPT);
 FWStaticString(ROUTE_HOME);
