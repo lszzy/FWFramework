@@ -76,7 +76,7 @@ extension UITabBarController: UITabBarControllerDelegate {
     }
     
     // MARK: - UITabBarControllerDelegate
-    func didSelect(_ viewController: UIViewController) {
+    public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let animation = CAKeyframeAnimation(keyPath: "transform.scale")
         animation.values = [1.0, 1.4, 0.9, 1.15, 0.95, 1.02, 1.0]
         animation.duration = 0.3 * 2
