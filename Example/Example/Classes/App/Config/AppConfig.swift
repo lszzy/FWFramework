@@ -6,9 +6,11 @@
 //  Copyright © 2021 site.wuyong. All rights reserved.
 //
 
-import Foundation
+@_exported import FWFramework
+@_exported import Core
+@_exported import Mediator
 
-@objcMembers class AppConfig: NSObject {
+class AppConfig: NSObject {
     @FWUserDefaultAnnotation("isRootNavigation", defaultValue: false)
     static var isRootNavigation: Bool
     
