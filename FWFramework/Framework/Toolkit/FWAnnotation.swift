@@ -123,11 +123,6 @@ public struct FWRouterAnnotation<T> {
         FWRouter.registerURL(url, withHandler: handler)
     }
     
-    public init(_ url: String, objectHandler: @escaping FWRouterObjectHandler) {
-        self.url = url
-        FWRouter.registerURL(url, withObjectHandler: objectHandler)
-    }
-    
     public var wrappedValue: T {
         get { return url as! T }
         set { url = newValue }

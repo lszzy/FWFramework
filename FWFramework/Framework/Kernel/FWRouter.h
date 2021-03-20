@@ -11,23 +11,54 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWRouter
+#pragma mark - FWRouterParameters
+
+@class FWRouterParameters;
+
+/*! @brief 路由处理句柄，仅支持openURL时可返回nil */
+typedef id _Nullable (^FWRouterHandler)(FWRouterParameters *parameters);
+/*! @brief 路由完成句柄，openURL时可设置完成回调 */
+typedef void (^FWRouterCompletion)(id _Nullable result);
+
+/*! @brief 路由参数对象 */
+@interface FWRouterParameters : NSObject <NSCopying>
 
 /*! @brief 路由URL */
-extern NSString * const FWRouterURLKey;
-/*! @brief 路由完成回调 */
-extern NSString * const FWRouterCompletionKey;
+@property (nonatomic, copy, readonly) NSString *URL;
 /*! @brief 路由用户信息 */
-extern NSString * const FWRouterUserInfoKey;
+@property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;
+/*! @brief 路由完成回调 */
+@property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
 
-/*! @brief 路由处理句柄 */
-typedef void (^FWRouterHandler)(NSDictionary *parameters);
-/*! @brief 路由对象处理句柄 */
-typedef id _Nullable (^FWRouterObjectHandler)(NSDictionary *parameters);
-/*! @brief 路由过滤器处理句柄 */
-typedef BOOL (^FWRouterFilterHandler)(NSDictionary *parameters);
-/*! @brief 路由完成句柄 */
-typedef void (^FWRouterCompletion)(id _Nullable result);
+/*！@brief 路由使用方式，是否是openURL */
+@property (nonatomic, assign, readonly) BOOL isOpenURL;
+/*! @brief 路由URL参数字典 */
+@property (nonatomic, copy, readonly) NSDictionary *URLParameters;
+/*! @brief 路由合并userInfo和URL参数字典 */
+@property (nonatomic, copy, readonly) NSDictionary *parameters;
+
+/*! @brief 创建路由参数对象 */
+- (instancetype)initWithURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
+
+@end
+
+#pragma mark - FWRouterProtocol
+
+/*! @brief URL路由协议 */
+@protocol FWRouterProtocol <NSObject>
+
+@optional
+/// 路由解析URL，返回字符串或字符串数组(批量)
++ (id)fwRouterURL;
+/// 路由处理方法，打开解析URL时会调用本方法
++ (nullable id)fwRouterHandler:(FWRouterParameters *)parameters;
+
+/// 从路由参数初始化对象方法，可统一调用入口
+- (instancetype)initWithRouterParameters:(FWRouterParameters *)parameters;
+
+@end
+
+#pragma mark - FWRouter
 
 /*!
  @brief URL路由器
@@ -39,22 +70,13 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - URL
 
 /**
- *  注册 pattern 对应的 Handler，在 handler 中可以初始化 VC，然后对 VC 做各种操作
+ *  注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
  *
  *  @param pattern    字符串或字符串数组(批量)，带上 scheme，如 app://beauty/:id
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
  */
 + (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler;
-
-/**
- *  注册 pattern 对应的 ObjectHandler，需要返回一个 object 给调用方
- *
- *  @param pattern    字符串或字符串数组(批量)，带上 scheme，如 app://beauty/:id
- *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
- *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
- */
-+ (void)registerURL:(id)pattern withObjectHandler:(FWRouterObjectHandler)handler;
 
 /**
  *  取消注册某个 pattern
@@ -75,9 +97,9 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  *
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
- *                    如果 block 返回YES，则继续解析pattern；如果返回NO，则停止解析
+ *                    如果 block 返回nil，则继续解析pattern，否则停止解析
  */
-+ (void)setFilterHandler:(nullable FWRouterFilterHandler)handler;
++ (void)setFilterHandler:(nullable FWRouterHandler)handler;
 
 /**
  *  设置 错误 对应的 Handler，URL 有值且未注册时触发
@@ -91,44 +113,44 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /**
  *  是否可以打开URL，不含object
  *
- *  @param URL 带 Scheme，如 app://beauty/3
+ *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
  *
  *  @return 返回BOOL值
  */
-+ (BOOL)canOpenURL:(NSString *)URL;
++ (BOOL)canOpenURL:(id)URL;
 
 /**
  *  打开此 URL
  *  会在已注册的 URL -> Handler 中寻找，如果找到，则执行 Handler
  *
- *  @param URL 带 Scheme，如 app://beauty/3
+ *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
  */
-+ (void)openURL:(NSString *)URL;
++ (void)openURL:(id)URL;
 
 /**
  *  打开此 URL，同时当操作完成时，执行额外的代码
  *
- *  @param URL        带 Scheme 的 URL，如 app://beauty/4
+ *  @param URL        带 Scheme 的 URL，如 app://beauty/4，支持NSURL和NSString
  *  @param userInfo   附加参数
  */
-+ (void)openURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo;
++ (void)openURL:(id)URL userInfo:(nullable NSDictionary *)userInfo;
 
 /**
  *  打开此 URL，同时当操作完成时，执行额外的代码
  *
- *  @param URL        带 Scheme 的 URL，如 app://beauty/4
+ *  @param URL        带 Scheme 的 URL，如 app://beauty/4，支持NSURL和NSString
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL completion:(nullable FWRouterCompletion)completion;
++ (void)openURL:(id)URL completion:(nullable FWRouterCompletion)completion;
 
 /**
  *  打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
  *
- *  @param URL        带 Scheme 的 URL，如 app://beauty/4
+ *  @param URL        带 Scheme 的 URL，如 app://beauty/4，支持NSURL和NSString
  *  @param userInfo   附加参数
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
++ (void)openURL:(id)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
 
 /**
  *  快速调用FWRouterHandler参数中的回调句柄，指定回调结果
@@ -136,31 +158,31 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  *  @param parameters FWRouterHandler中的参数
  *  @param result URL处理完成后的回调结果
  */
-+ (void)completeURL:(NSDictionary *)parameters result:(nullable id)result;
++ (void)completeURL:(FWRouterParameters *)parameters result:(nullable id)result;
 
 #pragma mark - Object
 
 /**
  * 检测是否已注册object
  *
- *  @param URL 带 Scheme，如 app://beauty/3
+ *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
  */
-+ (BOOL)isObjectURL:(NSString *)URL;
++ (BOOL)isObjectURL:(id)URL;
 
 /**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
  *
- *  @param URL 带 Scheme，如 app://beauty/3
+ *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
  */
-+ (nullable id)objectForURL:(NSString *)URL;
++ (nullable id)objectForURL:(id)URL;
 
 /**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
  *
- *  @param URL 带 Scheme，如 app://beauty/3
+ *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
  *  @param userInfo 附加参数
  */
-+ (nullable id)objectForURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo;
++ (nullable id)objectForURL:(id)URL userInfo:(nullable NSDictionary *)userInfo;
 
 #pragma mark - Generator
 
@@ -192,17 +214,17 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /**
  According to the set of Rules, go to rewrite URL.
  
- @param url URL to be rewritten
+ @param URL URL to be rewritten
  @return URL after being rewritten
  */
-+ (nullable NSString *)rewriteURL:(NSString *)url;
++ (nullable NSString *)rewriteURL:(id)URL;
 
 /**
  Set custom rewrite filter block
  
  @param filter Custom filter block
  */
-+ (void)setRewriteFilter:(nullable NSString * (^)(NSString *url))filter;
++ (void)setRewriteFilter:(nullable NSString * (^)(NSString *URL))filter;
 
 /**
  Add a RewriteRule
