@@ -300,15 +300,24 @@
 
 #pragma mark - FWSafeType
 
-NSString * FWSafeString(id value) {
-    return value ? [NSString stringWithFormat:@"%@", value] : @"";
-}
-
 NSNumber * FWSafeNumber(id value) {
     if (!value) return @0;
     if ([value isKindOfClass:[NSNumber class]]) return value;
     NSString *string = [NSString stringWithFormat:@"%@", value];
     return [NSNumber numberWithDouble:[string doubleValue]];
+}
+
+NSString * FWSafeString(id value) {
+    if (!value) return @"";
+    if ([value isKindOfClass:[NSString class]]) return value;
+    return [NSString stringWithFormat:@"%@", value];
+}
+
+NSURL * FWSafeURL(id value) {
+    if (!value) return [NSURL new];
+    if ([value isKindOfClass:[NSURL class]]) return value;
+    if ([value isKindOfClass:[NSURLRequest class]]) return [value URL] ?: [NSURL new];
+    return [NSURL fwURLWithString:FWSafeString(value)] ?: [NSURL new];
 }
 
 #pragma mark - NSObject+FWSafeType

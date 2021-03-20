@@ -9,69 +9,6 @@
 
 #import "FWRouter.h"
 
-#pragma mark - FWURLProtocol
-
-@implementation NSString (FWURLProtocol)
-
-- (NSString *)fwURLString
-{
-    return self;
-}
-
-- (NSURL *)fwURL
-{
-    NSURL *URL = [NSURL URLWithString:self];
-    if (!URL && self.length > 0) {
-        URL = [NSURL URLWithString:[self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
-    return URL ?: [[NSURL alloc] init];
-}
-
-- (NSURLRequest *)fwURLRequest
-{
-    return [NSURLRequest requestWithURL:self.fwURL];
-}
-
-@end
-
-@implementation NSURL (FWURLProtocol)
-
-- (NSString *)fwURLString
-{
-    return self.absoluteString ?: @"";
-}
-
-- (NSURL *)fwURL
-{
-    return self;
-}
-
-- (NSURLRequest *)fwURLRequest
-{
-    return [NSURLRequest requestWithURL:self];
-}
-
-@end
-
-@implementation NSURLRequest (FWURLProtocol)
-
-- (NSString *)fwURLString
-{
-    return self.URL.absoluteString ?: @"";
-}
-
-- (NSURL *)fwURL
-{
-    return self.URL ?: [[NSURL alloc] init];
-}
-
-- (NSURLRequest *)fwURLRequest
-{
-    return self;
-}
-
-@end
-
 #pragma mark - FWRouter
 
 static NSString * const FWRouterWildcardCharacter = @"*";
