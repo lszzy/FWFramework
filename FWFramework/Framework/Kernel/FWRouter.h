@@ -11,6 +11,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWURLProtocol
+
+/*! 自定义URL协议，支持多类型URL参数 */
+@protocol FWURLProtocol <NSObject>
+
+@property (nonatomic, copy, readonly) NSString *fwURLString;
+@property (nonatomic, copy, readonly) NSURL *fwURL;
+@property (nonatomic, strong, readonly) NSURLRequest *fwURLRequest;
+
+@end
+
+@interface NSString (FWURLProtocol) <FWURLProtocol> @end
+@interface NSURL (FWURLProtocol) <FWURLProtocol> @end
+@interface NSURLRequest (FWURLProtocol) <FWURLProtocol> @end
+
 #pragma mark - FWRouter
 
 /*! @brief 路由URL */
