@@ -121,6 +121,13 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  */
 + (void)setErrorHandler:(nullable FWRouterHandler)handler;
 
+/**
+ *  设置 打开 对应的 Handler，URL有值且openURL返回值不为nil时触发。可用于统一处理openURL返回值(如打开VC)
+ *
+ *  @param handler    该 block 回传openURL返回值
+ */
++ (void)setOpenHandler:(nullable void(^)(id result))handler;
+
 #pragma mark - Open
 
 /**

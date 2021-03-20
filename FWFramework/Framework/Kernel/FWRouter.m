@@ -107,6 +107,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 // 错误URL Handler，URL未注册时触发
 @property (nonatomic, copy) FWRouterHandler errorHandler;
 
+// 打开URL Handler，openURL返回值不为nil时触发
+@property (nonatomic, copy) void (^openHandler)(id result);
+
 // rewrite过滤器，优先调用
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
 
@@ -221,6 +224,11 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     [self sharedInstance].errorHandler = handler;
 }
 
++ (void)setOpenHandler:(void (^)(id))handler
+{
+    [self sharedInstance].openHandler = handler;
+}
+
 #pragma mark - Open
 
 + (BOOL)canOpenURL:(id)URL
@@ -261,15 +269,19 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     parameters.routeParameters = [routeParameters copy];
     parameters.isOpenURL = YES;
     
+    id result = nil;
     if ([self sharedInstance].filterHandler) {
-        if ([self sharedInstance].filterHandler(parameters)) return;
+        result = [self sharedInstance].filterHandler(parameters);
     }
-    if (handler) {
-        handler(parameters);
-    } else {
-        if ([self sharedInstance].errorHandler) {
-            [self sharedInstance].errorHandler(parameters);
+    if (!result) {
+        if (handler) {
+            result = handler(parameters);
+        } else if ([self sharedInstance].errorHandler) {
+            result = [self sharedInstance].errorHandler(parameters);
         }
+    }
+    if (result && [self sharedInstance].openHandler) {
+        [self sharedInstance].openHandler(result);
     }
 }
 
@@ -316,12 +328,11 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (handler) {
         return handler(parameters);
-    } else {
-        if ([self sharedInstance].errorHandler) {
-            return [self sharedInstance].errorHandler(parameters);
-        }
-        return nil;
     }
+    if ([self sharedInstance].errorHandler) {
+        return [self sharedInstance].errorHandler(parameters);
+    }
+    return nil;
 }
 
 #pragma mark - Generator
