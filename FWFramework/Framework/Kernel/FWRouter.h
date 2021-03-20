@@ -11,17 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWRouterParameters
+#pragma mark - FWRouterModel
 
-@class FWRouterParameters;
+@class FWRouterModel;
 
 /*! @brief 路由处理句柄，仅支持openURL时可返回nil */
-typedef id _Nullable (^FWRouterHandler)(FWRouterParameters *parameters);
+typedef id _Nullable (^FWRouterHandler)(FWRouterModel *model);
 /*! @brief 路由完成句柄，openURL时可设置完成回调 */
 typedef void (^FWRouterCompletion)(id _Nullable result);
 
-/*! @brief 路由参数对象 */
-@interface FWRouterParameters : NSObject <NSCopying>
+/*! @brief URL路由模型 */
+@interface FWRouterModel : NSObject <NSCopying>
 
 /*! @brief 路由URL */
 @property (nonatomic, copy, readonly) NSString *URL;
@@ -51,7 +51,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /// 路由解析URL，返回字符串或字符串数组(批量)
 + (id)fwRouterURL;
 /// 路由处理方法，打开解析URL时会调用本方法
-+ (nullable id)fwRouterHandler:(FWRouterParameters *)parameters;
++ (nullable id)fwRouterHandler:(FWRouterModel *)model;
 
 @end
 
@@ -167,10 +167,10 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /**
  *  快速调用FWRouterHandler参数中的回调句柄，指定回调结果
  *
- *  @param parameters FWRouterHandler中的参数
+ *  @param model FWRouterHandler中的模型参数
  *  @param result URL处理完成后的回调结果
  */
-+ (void)completeURL:(FWRouterParameters *)parameters result:(nullable id)result;
++ (void)completeURL:(FWRouterModel *)model result:(nullable id)result;
 
 #pragma mark - Object
 
