@@ -113,7 +113,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
         viewController.parameters = parameters.parameters;
         viewController.navigationItem.title = TestRouter.ROUTE_OBJECT;
-        if (parameters.isOpenURL) {
+        if (parameters.isOpen) {
             [FWRouter pushViewController:viewController animated:YES];
         }
         return viewController;

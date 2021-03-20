@@ -13,7 +13,7 @@
 
 @interface FWRouterParameters ()
 
-@property (nonatomic, assign) BOOL isOpenURL;
+@property (nonatomic, assign) BOOL isOpen;
 @property (nonatomic, copy) NSDictionary *routeParameters;
 
 @property (nonatomic, copy) NSDictionary *URLParameters;
@@ -37,7 +37,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     FWRouterParameters *parameters = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
-    parameters.isOpenURL = self.isOpenURL;
+    parameters.isOpen = self.isOpen;
     parameters.routeParameters = self.routeParameters;
     return parameters;
 }
@@ -214,14 +214,29 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Filter
 
++ (FWRouterHandler)filterHandler
+{
+    return [self sharedInstance].filterHandler;
+}
+
 + (void)setFilterHandler:(FWRouterHandler)handler
 {
     [self sharedInstance].filterHandler = handler;
 }
 
++ (FWRouterHandler)errorHandler
+{
+    return [self sharedInstance].errorHandler;
+}
+
 + (void)setErrorHandler:(FWRouterHandler)handler
 {
     [self sharedInstance].errorHandler = handler;
+}
+
++ (void (^)(id))openHandler
+{
+    return [self sharedInstance].openHandler;
 }
 
 + (void)setOpenHandler:(void (^)(id))handler
@@ -267,7 +282,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     parameters.routeParameters = [routeParameters copy];
-    parameters.isOpenURL = YES;
+    parameters.isOpen = YES;
     
     id result = nil;
     if ([self sharedInstance].filterHandler) {
@@ -320,7 +335,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     parameters.routeParameters = [routeParameters copy];
-    parameters.isOpenURL = NO;
+    parameters.isOpen = NO;
     
     if ([self sharedInstance].filterHandler) {
         id result = [self sharedInstance].filterHandler(parameters);
