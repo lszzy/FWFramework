@@ -31,7 +31,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 @property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
 
 /*！@brief 路由使用方式，是否是openURL */
-@property (nonatomic, assign, readonly) BOOL isOpenURL;
+@property (nonatomic, assign, readonly) BOOL isOpen;
 /*! @brief 路由URL参数字典 */
 @property (nonatomic, copy, readonly) NSDictionary *URLParameters;
 /*! @brief 路由合并userInfo和URL参数字典 */
@@ -106,27 +106,19 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - Filter
 
 /**
- *  设置 过滤器 对应的 Handler，URL 有值且调用时触发
- *
- *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
- *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
- *                    如果 block 返回nil，则继续解析pattern，否则停止解析
+ *  设置 过滤器 对应的 Handler，URL 有值且调用时触发。如果返回nil，则继续解析pattern，否则停止解析
  */
-+ (void)setFilterHandler:(nullable FWRouterHandler)handler;
+@property (class, nonatomic, copy, nullable) FWRouterHandler filterHandler;
 
 /**
  *  设置 错误 对应的 Handler，URL 有值且未注册时触发
- *
- *  @param handler    该 block 回传不支持的URL参数
  */
-+ (void)setErrorHandler:(nullable FWRouterHandler)handler;
+@property (class, nonatomic, copy, nullable) FWRouterHandler errorHandler;
 
 /**
  *  设置 打开 对应的 Handler，URL有值且openURL返回值不为nil时触发。可用于统一处理openURL返回值(如打开VC)
- *
- *  @param handler    该 block 回传openURL返回值
  */
-+ (void)setOpenHandler:(nullable void(^)(id result))handler;
+@property (class, nonatomic, copy, nullable) void (^openHandler)(id result);
 
 #pragma mark - Open
 
