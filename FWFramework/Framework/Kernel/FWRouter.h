@@ -47,14 +47,11 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /*! @brief URL路由协议 */
 @protocol FWRouterProtocol <NSObject>
 
-@optional
+@required
 /// 路由解析URL，返回字符串或字符串数组(批量)
 + (id)fwRouterURL;
 /// 路由处理方法，打开解析URL时会调用本方法
 + (nullable id)fwRouterHandler:(FWRouterParameters *)parameters;
-
-/// 从路由参数初始化对象方法，可统一调用入口
-- (instancetype)initWithRouterParameters:(FWRouterParameters *)parameters;
 
 @end
 
@@ -89,6 +86,22 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  *  取消注册所有 pattern
  */
 + (void)unregisterAllURLs;
+
+#pragma mark - Class
+
+/**
+ *  注册路由类，需要实现FWRouterProtocol协议
+ *
+ *  @param cls    路由类，需实现FWRouterProtocol协议
+ */
++ (void)registerClass:(Class)cls;
+
+/**
+ *  取消注册某个路由类
+ *
+ *  @param cls    路由类，需实现FWRouterProtocol协议
+ */
++ (void)unregisterClass:(Class)cls;
 
 #pragma mark - Filter
 
