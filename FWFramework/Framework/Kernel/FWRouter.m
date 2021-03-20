@@ -9,19 +9,18 @@
 
 #import "FWRouter.h"
 
-#pragma mark - FWRouterParameters
+#pragma mark - FWRouterModel
 
-@interface FWRouterParameters ()
+@interface FWRouterModel ()
 
 @property (nonatomic, assign) BOOL isOpen;
 @property (nonatomic, copy) NSDictionary *routeParameters;
-
 @property (nonatomic, copy) NSDictionary *URLParameters;
 @property (nonatomic, copy) NSDictionary *parameters;
 
 @end
 
-@implementation FWRouterParameters
+@implementation FWRouterModel
 
 - (instancetype)initWithURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(FWRouterCompletion)completion
 {
@@ -36,10 +35,10 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    FWRouterParameters *parameters = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
-    parameters.isOpen = self.isOpen;
-    parameters.routeParameters = self.routeParameters;
-    return parameters;
+    FWRouterModel *model = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
+    model.isOpen = self.isOpen;
+    model.routeParameters = self.routeParameters;
+    return model;
 }
 
 - (NSDictionary *)URLParameters
@@ -199,8 +198,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if (![cls respondsToSelector:@selector(fwRouterURL)]) return;
     if (![cls respondsToSelector:@selector(fwRouterHandler:)]) return;
     
-    [self registerURL:[cls fwRouterURL] withHandler:^id(FWRouterParameters *parameters) {
-        return [cls fwRouterHandler:parameters];
+    [self registerURL:[cls fwRouterURL] withHandler:^id(FWRouterModel *model) {
+        return [cls fwRouterHandler:model];
     }];
 }
 
@@ -276,23 +275,23 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if (rewriteURL.length < 1) return;
     
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    FWRouterParameters *parameters = [[FWRouterParameters alloc] initWithURL:URL userInfo:userInfo completion:completion];
+    FWRouterModel *model = [[FWRouterModel alloc] initWithURL:URL userInfo:userInfo completion:completion];
     
     NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
-    parameters.routeParameters = [routeParameters copy];
-    parameters.isOpen = YES;
+    model.routeParameters = [routeParameters copy];
+    model.isOpen = YES;
     
     id result = nil;
     if ([self sharedInstance].filterHandler) {
-        result = [self sharedInstance].filterHandler(parameters);
+        result = [self sharedInstance].filterHandler(model);
     }
     if (!result) {
         if (handler) {
-            result = handler(parameters);
+            result = handler(model);
         } else if ([self sharedInstance].errorHandler) {
-            result = [self sharedInstance].errorHandler(parameters);
+            result = [self sharedInstance].errorHandler(model);
         }
     }
     if (result && [self sharedInstance].openHandler) {
@@ -300,10 +299,10 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
 }
 
-+ (void)completeURL:(FWRouterParameters *)parameters result:(id)result
++ (void)completeURL:(FWRouterModel *)model result:(id)result
 {
-    if (parameters.completion) {
-        parameters.completion(result);
+    if (model.completion) {
+        model.completion(result);
     }
 }
 
@@ -329,23 +328,23 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if (rewriteURL.length < 1) return nil;
     
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    FWRouterParameters *parameters = [[FWRouterParameters alloc] initWithURL:URL userInfo:userInfo completion:nil];
+    FWRouterModel *model = [[FWRouterModel alloc] initWithURL:URL userInfo:userInfo completion:nil];
     
     NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
-    parameters.routeParameters = [routeParameters copy];
-    parameters.isOpen = NO;
+    model.routeParameters = [routeParameters copy];
+    model.isOpen = NO;
     
     if ([self sharedInstance].filterHandler) {
-        id result = [self sharedInstance].filterHandler(parameters);
+        id result = [self sharedInstance].filterHandler(model);
         if (result) return result;
     }
     if (handler) {
-        return handler(parameters);
+        return handler(model);
     }
     if ([self sharedInstance].errorHandler) {
-        return [self sharedInstance].errorHandler(parameters);
+        return [self sharedInstance].errorHandler(model);
     }
     return nil;
 }
