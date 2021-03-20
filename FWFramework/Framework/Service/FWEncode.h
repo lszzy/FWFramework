@@ -207,6 +207,14 @@ FOUNDATION_EXPORT NSNumber * FWSafeNumber(id _Nullable value);
  */
 FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
 
+/*!
+ @brief 安全URL，不为nil
+ 
+ @param value 参数
+ @return URL
+ */
+FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
+
 #pragma mark - NSObject+FWSafeType
 
 /*!
