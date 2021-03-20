@@ -188,6 +188,27 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     [[self sharedInstance].routes removeAllObjects];
 }
 
+#pragma mark - Class
+
++ (void)registerClass:(Class)cls
+{
+    if (![cls conformsToProtocol:@protocol(FWRouterProtocol)]) return;
+    if (![cls respondsToSelector:@selector(fwRouterURL)]) return;
+    if (![cls respondsToSelector:@selector(fwRouterHandler:)]) return;
+    
+    [self registerURL:[cls fwRouterURL] withHandler:^id(FWRouterParameters *parameters) {
+        return [cls fwRouterHandler:parameters];
+    }];
+}
+
++ (void)unregisterClass:(Class)cls
+{
+    if (![cls conformsToProtocol:@protocol(FWRouterProtocol)]) return;
+    if (![cls respondsToSelector:@selector(fwRouterURL)]) return;
+    
+    [self unregisterURL:[cls fwRouterURL]];
+}
+
 #pragma mark - Filter
 
 + (void)setFilterHandler:(FWRouterHandler)handler
