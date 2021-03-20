@@ -150,11 +150,8 @@
         return;
     }
     
-    NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
-    if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
-        requestUrl = [NSURL fwURLWithString:webRequest];
-    }
-    if (!requestUrl) return;
+    NSURL *requestUrl = FWSafeURL(webRequest);
+    if (requestUrl.absoluteString.length < 1) return;
     
     if (requestUrl.isFileURL) {
         NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];

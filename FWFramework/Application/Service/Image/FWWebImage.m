@@ -8,6 +8,7 @@
  */
 
 #import "FWWebImage.h"
+#import "FWEncode.h"
 #import "FWPlugin.h"
 #import "FWImage.h"
 #import "FWHTTPSessionManager.h"
@@ -537,17 +538,8 @@
     if ([url isKindOfClass:[NSURLRequest class]]) {
         urlRequest = url;
     } else {
-        NSURL *nsurl = nil;
-        if ([url isKindOfClass:[NSURL class]]) {
-            nsurl = url;
-        } else if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
-            nsurl = [NSURL URLWithString:url];
-            if (!nsurl) {
-                nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        }
-        
-        if (nsurl != nil) {
+        NSURL *nsurl = FWSafeURL(url);
+        if (nsurl.absoluteString.length > 0) {
             urlRequest = [NSMutableURLRequest requestWithURL:nsurl];
             [(NSMutableURLRequest *)urlRequest addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
         }
