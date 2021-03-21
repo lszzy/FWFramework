@@ -10,7 +10,15 @@
 #import "FWLoader.h"
 #import <objc/runtime.h>
 
+@interface FWLoader ()
+
+@property (nonatomic, strong) NSMutableDictionary<NSString *, id (^)(id)> *blocks;
+
+@end
+
 @implementation FWLoader
+
+#pragma mark - Autoload
 
 + (void)load
 {
@@ -46,6 +54,54 @@
         [loader performSelector:NSSelectorFromString(methodName)];
 #pragma clang diagnostic pop
     }
+}
+
+#pragma mark - Lifecycle
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _blocks = [[NSMutableDictionary alloc] init];
+    }
+    return self;
+}
+
+- (instancetype)initWithBlock:(id (^)(id))block
+{
+    self = [super init];
+    if (self) {
+        _blocks = [[NSMutableDictionary alloc] init];
+        [self addBlock:block];
+    }
+    return self;
+}
+
+- (NSString *)addBlock:(id (^)(id))block
+{
+    NSString *identifier = NSUUID.UUID.UUIDString;
+    self.blocks[identifier] = block;
+    return identifier;
+}
+
+- (void)removeBlock:(NSString *)identifier
+{
+    [self.blocks removeObjectForKey:identifier];
+}
+
+- (void)removeAllBlocks
+{
+    [self.blocks removeAllObjects];
+}
+
+- (id)load:(id)input
+{
+    __block id output = nil;
+    [self.blocks enumerateKeysAndObjectsUsingBlock:^(NSString *key, id (^block)(id), BOOL *stop) {
+        output = block(input);
+        if (output) *stop = YES;
+    }];
+    return output;
 }
 
 @end
