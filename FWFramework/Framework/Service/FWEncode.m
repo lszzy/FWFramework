@@ -173,7 +173,7 @@
 
 #pragma mark - Query
 
-+ (NSString *)fwQueryEncode:(NSDictionary *)dictionary
++ (NSString *)fwQueryEncode:(NSDictionary<NSString *,id> *)dictionary
 {
     NSMutableString *string = [NSMutableString string];
     for (NSString *key in [dictionary allKeys]) {
@@ -187,22 +187,19 @@
     return string;
 }
 
-- (NSDictionary *)fwQueryDecode
+- (NSDictionary<NSString *,NSString *> *)fwQueryDecode
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSArray *parameters = [self componentsSeparatedByString:@"&"];
     for (NSString *parameter in parameters) {
-        NSArray *contents = [parameter componentsSeparatedByString:@"="];
+        NSArray<NSString *> *contents = [parameter componentsSeparatedByString:@"="];
         if ([contents count] == 2) {
             NSString *key = [contents objectAtIndex:0];
             NSString *value = [contents objectAtIndex:1];
-            value = [value stringByRemovingPercentEncoding];
-            if (key && value) {
-                [dict setObject:value forKey:key];
-            }
+            dict[key] = [value stringByRemovingPercentEncoding];
         }
     }
-    return [NSDictionary dictionaryWithDictionary:dict];
+    return [dict copy];
 }
 
 #pragma mark - Md5
@@ -586,6 +583,16 @@ NSURL * FWSafeURL(id value) {
 #pragma mark - NSURL+FWSafeType
 
 @implementation NSURL (FWSafeType)
+
+- (NSDictionary<NSString *,NSString *> *)fwQueryDictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:self.absoluteString ?: @""];
+    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        dict[obj.name] = [obj.value stringByRemovingPercentEncoding];
+    }];
+    return [dict copy];
+}
 
 + (instancetype)fwURLWithString:(NSString *)URLString
 {

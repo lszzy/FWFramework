@@ -56,15 +56,9 @@
     if (nsurl) {
         NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
         for (NSURLQueryItem *item in queryItems) {
-            parameters[item.name] = item.value;
+            parameters[item.name] = [item.value stringByRemovingPercentEncoding];
         }
     }
-    
-    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
-        if ([obj isKindOfClass:[NSString class]]) {
-            parameters[key] = [obj stringByRemovingPercentEncoding];
-        }
-    }];
     
     _parameters = [parameters copy];
     return _parameters;
@@ -464,7 +458,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
                         newPathComponent = [newPathComponent stringByReplacingOccurrencesOfString:suffixToStrip withString:@""];
                     }
                 }
-                routeParameters[newKey] = newPathComponent;
+                routeParameters[newKey] = [newPathComponent stringByRemovingPercentEncoding];
                 break;
             } else {
                 wildcardMatched = NO;

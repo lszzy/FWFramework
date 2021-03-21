@@ -12,22 +12,6 @@
 
 @implementation NSURL (FWFramework)
 
-- (NSDictionary *)fwQueryParams
-{
-    if (!self.absoluteString.length) {
-        return nil;
-    }
-    
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:self.absoluteString];
-    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.name && obj.value) {
-            [params setObject:obj.value forKey:obj.name];
-        }
-    }];
-    return [params copy];
-}
-
 #pragma mark - Map
 
 + (instancetype)fwMapsURLWithString:(NSString *)string params:(NSDictionary *)params
