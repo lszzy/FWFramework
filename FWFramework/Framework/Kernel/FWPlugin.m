@@ -158,13 +158,20 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     [[self sharedInstance].pluginPool removeObjectForKey:protocolName];
 }
 
-+ (nullable id)loadPlugin:(Protocol *)protocol
++ (id)loadPlugin:(Protocol *)protocol
 {
     // 插件未注册时返回nil
     NSString *protocolName = NSStringFromProtocol(protocol);
     FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin) {
-        return nil;
+        // 尝试调用加载器
+        id object = [[self sharedLoader] load:protocol];
+        if (!object) return nil;
+        
+        // 自动注册插件并使用
+        [self registerPlugin:protocol withObject:object];
+        plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+        if (!plugin) return nil;
     }
     
     // 插件已初始化直接返回
