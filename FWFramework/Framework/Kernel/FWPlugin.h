@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 加载指定插件
 #define FWPlugin(pluginProtocol) \
-    ((id<pluginProtocol>)[FWPluginManager.sharedInstance loadPlugin:@protocol(pluginProtocol)])
+    ((id<pluginProtocol>)[FWPluginManager loadPlugin:@protocol(pluginProtocol)])
 
 /// 注册指定插件
 #define FWRegPlugin(pluginProtocol) \
-    [FWPluginManager.sharedInstance registerPlugin:@protocol(pluginProtocol) withObject:self.class];
+    [FWPluginManager registerPlugin:@protocol(pluginProtocol) withObject:self.class];
 
 /*!
  @brief 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
@@ -27,32 +27,29 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWPluginManager : NSObject
 
-/*! @brief 单例模式 */
-@property (class, nonatomic, readonly) FWPluginManager *sharedInstance;
-
 /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
-- (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj;
++ (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj;
 /// 预置单例插件，仅当插件未注册时生效，插件类或对象必须实现protocol
-- (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj;
++ (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj;
 
 /// 注册单例句柄插件，仅当插件未使用时生效，返回的对象必须实现protocol
-- (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerPlugin(_:withBlock:));
++ (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerPlugin(_:withBlock:));
 /// 预置单例句柄插件，仅当插件未注册时生效，返回的对象必须实现protocol
-- (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(presetPlugin(_:withBlock:));
++ (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(presetPlugin(_:withBlock:));
 
 /// 注册工厂插件，仅当插件未使用时生效，返回的对象必须实现protocol
-- (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
++ (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
 /// 预置工厂插件，仅当插件未注册时生效，返回的对象必须实现protocol
-- (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
++ (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
 
 /// 取消插件注册，仅当插件未使用时生效
-- (void)unregisterPlugin:(Protocol *)protocol;
++ (void)unregisterPlugin:(Protocol *)protocol;
 
 /// 延迟加载插件对象，调用后不可再注册该插件
-- (nullable id)loadPlugin:(Protocol *)protocol;
++ (nullable id)loadPlugin:(Protocol *)protocol;
 
 /// 释放插件对象并标记为未使用，释放后可重新注册该插件
-- (void)unloadPlugin:(Protocol *)protocol;
++ (void)unloadPlugin:(Protocol *)protocol;
 
 @end
 

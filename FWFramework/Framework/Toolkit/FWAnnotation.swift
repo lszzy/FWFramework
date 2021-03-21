@@ -79,25 +79,25 @@ public struct FWPluginAnnotation<T> {
     
     public init(_ plugin: Protocol, object: Any) {
         self.plugin = plugin
-        FWPluginManager.sharedInstance.registerPlugin(plugin, with: object)
+        FWPluginManager.registerPlugin(plugin, with: object)
     }
     
     public init(_ plugin: Protocol, block: @escaping () -> T) {
         self.plugin = plugin
-        FWPluginManager.sharedInstance.registerPlugin(plugin, withBlock: block)
+        FWPluginManager.registerPlugin(plugin, withBlock: block)
     }
     
     public init(_ plugin: Protocol, factory: @escaping () -> T) {
         self.plugin = plugin
-        FWPluginManager.sharedInstance.registerPlugin(plugin, withFactory: factory)
+        FWPluginManager.registerPlugin(plugin, withFactory: factory)
     }
     
     public var wrappedValue: T {
         get {
-            return FWPluginManager.sharedInstance.loadPlugin(plugin) as! T
+            return FWPluginManager.loadPlugin(plugin) as! T
         }
         set {
-            FWPluginManager.sharedInstance.registerPlugin(plugin, with: newValue)
+            FWPluginManager.registerPlugin(plugin, with: newValue)
         }
     }
 }

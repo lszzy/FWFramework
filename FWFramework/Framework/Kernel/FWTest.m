@@ -72,7 +72,7 @@
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
-                    FWLogDebug(@"%@", [FWUnitTest sharedInstance].description);
+                    FWLogDebug(@"%@", [FWUnitTest sharedInstance]);
                 });
             }
         });
