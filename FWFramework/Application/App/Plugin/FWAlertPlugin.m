@@ -205,7 +205,7 @@
                     priority:(FWAlertPriority)priority
 {
     // 优先调用插件
-    id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
+    id<FWAlertPlugin> alertPlugin = [FWPluginManager loadPlugin:@protocol(FWAlertPlugin)];
     if (alertPlugin && [alertPlugin respondsToSelector:@selector(fwViewController:showAlert:title:message:cancel:actions:promptCount:promptBlock:actionBlock:cancelBlock:customBlock:priority:)]) {
         [alertPlugin fwViewController:self showAlert:style title:title message:message cancel:cancel actions:actions promptCount:promptCount promptBlock:promptBlock actionBlock:actionBlock cancelBlock:cancelBlock customBlock:customBlock priority:priority];
         return;

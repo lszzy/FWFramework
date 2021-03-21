@@ -8,7 +8,6 @@
  */
 
 #import "FWMediator.h"
-#import "FWPlugin.h"
 #import "FWLog.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
@@ -41,8 +40,7 @@
         [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
     }
     
-    NSString *description = [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
-    return description;
+    return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
 }
 
 + (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
@@ -126,8 +124,10 @@
         } @catch (NSException *exception) {}
     }
     
-    FWLogDebug(@"%@", [FWMediator sharedInstance].description);
-    FWLogDebug(@"%@", [FWPluginManager sharedInstance].description);
+#ifdef DEBUG
+    FWLogDebug(@"%@", [FWMediator sharedInstance]);
+    FWLogDebug(@"%@", [NSClassFromString(@"FWPluginManager") sharedInstance]);
+#endif
 }
 
 + (BOOL)checkAllModulesWithSelector:(SEL)selector arguments:(NSArray *)arguments

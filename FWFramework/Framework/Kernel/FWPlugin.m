@@ -71,43 +71,42 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
         [mutableDescription appendFormat:@"%@ : %@\n", protocolName, (plugin.instance ?: plugin.value)];
     }
     
-    NSString *description = [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", mutableDescription];
-    return description;
+    return [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", mutableDescription];
 }
 
 #pragma mark - Public
 
-- (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
++ (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
 {
     return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isPreset:NO];
 }
 
-- (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj
++ (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj
 {
     return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isPreset:YES];
 }
 
-- (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
++ (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
 {
     return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isPreset:NO];
 }
 
-- (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
++ (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
 {
     return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isPreset:YES];
 }
 
-- (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
++ (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
 {
     return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isPreset:NO];
 }
 
-- (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
++ (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
 {
     return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isPreset:YES];
 }
 
-- (BOOL)registerPlugin:(Protocol *)protocol withValue:(id)value type:(FWPluginType)type isPreset:(BOOL)isPreset
++ (BOOL)registerPlugin:(Protocol *)protocol withValue:(id)value type:(FWPluginType)type isPreset:(BOOL)isPreset
 {
     if (!protocol || !value) {
         return NO;
@@ -115,7 +114,7 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     
     // 插件已锁定时不能注册
     NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
+    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (plugin && plugin.locked) {
         return NO;
     }
@@ -136,26 +135,26 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     FWPlugin *newPlugin = [[FWPlugin alloc] init];
     newPlugin.type = type;
     newPlugin.value = value;
-    [self.pluginPool setObject:newPlugin forKey:protocolName];
+    [[self sharedInstance].pluginPool setObject:newPlugin forKey:protocolName];
     return YES;
 }
 
-- (void)unregisterPlugin:(Protocol *)protocol
++ (void)unregisterPlugin:(Protocol *)protocol
 {
     NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
+    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin || plugin.locked) {
         return;
     }
     
-    [self.pluginPool removeObjectForKey:protocolName];
+    [[self sharedInstance].pluginPool removeObjectForKey:protocolName];
 }
 
-- (nullable id)loadPlugin:(Protocol *)protocol
++ (nullable id)loadPlugin:(Protocol *)protocol
 {
     // 插件未注册时返回nil
     NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
+    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin) {
         return nil;
     }
@@ -209,10 +208,10 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     return instance;
 }
 
-- (void)unloadPlugin:(Protocol *)protocol
++ (void)unloadPlugin:(Protocol *)protocol
 {
     NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
+    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin) {
         return;
     }

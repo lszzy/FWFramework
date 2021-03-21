@@ -19,7 +19,7 @@
 #pragma mark - Refreshing
 
 - (BOOL)fwIsRefreshing {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwIsRefreshing:)]) {
         return [refreshPlugin fwIsRefreshing:self];
     }
@@ -28,7 +28,7 @@
 }
 
 - (BOOL)fwShowRefreshing {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwShowRefreshing:)]) {
         return [refreshPlugin fwShowRefreshing:self];
     }
@@ -37,7 +37,7 @@
 }
 
 - (void)setFwShowRefreshing:(BOOL)fwShowRefreshing {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetShowRefreshing:scrollView:)]) {
         [refreshPlugin fwSetShowRefreshing:fwShowRefreshing scrollView:self];
         return;
@@ -47,7 +47,7 @@
 }
 
 - (void)fwSetRefreshingBlock:(void (^)(void))block {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetRefreshingBlock:scrollView:)]) {
         [refreshPlugin fwSetRefreshingBlock:block scrollView:self];
         return;
@@ -57,7 +57,7 @@
 }
 
 - (void)fwSetRefreshingTarget:(id)target action:(SEL)action {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetRefreshingTarget:action:scrollView:)]) {
         [refreshPlugin fwSetRefreshingTarget:target action:action scrollView:self];
         return;
@@ -67,7 +67,7 @@
 }
 
 - (void)fwBeginRefreshing {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwBeginRefreshing:)]) {
         [refreshPlugin fwBeginRefreshing:self];
         return;
@@ -77,7 +77,7 @@
 }
 
 - (void)fwEndRefreshing {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwEndRefreshing:)]) {
         [refreshPlugin fwEndRefreshing:self];
         return;
@@ -89,7 +89,7 @@
 #pragma mark - Loading
 
 - (BOOL)fwIsLoading {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwIsLoading:)]) {
         return [refreshPlugin fwIsLoading:self];
     }
@@ -98,7 +98,7 @@
 }
 
 - (BOOL)fwShowLoading {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwShowLoading:)]) {
         return [refreshPlugin fwShowLoading:self];
     }
@@ -107,7 +107,7 @@
 }
 
 - (void)setFwShowLoading:(BOOL)fwShowLoading {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetShowLoading:scrollView:)]) {
         [refreshPlugin fwSetShowLoading:fwShowLoading scrollView:self];
         return;
@@ -117,7 +117,7 @@
 }
 
 - (void)fwSetLoadingBlock:(void (^)(void))block {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetLoadingBlock:scrollView:)]) {
         [refreshPlugin fwSetLoadingBlock:block scrollView:self];
         return;
@@ -127,7 +127,7 @@
 }
 
 - (void)fwSetLoadingTarget:(id)target action:(SEL)action {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetLoadingTarget:action:scrollView:)]) {
         [refreshPlugin fwSetLoadingTarget:target action:action scrollView:self];
         return;
@@ -137,7 +137,7 @@
 }
 
 - (void)fwBeginLoading {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwBeginLoading:)]) {
         [refreshPlugin fwBeginLoading:self];
         return;
@@ -147,7 +147,7 @@
 }
 
 - (void)fwEndLoading {
-    id<FWRefreshPlugin> refreshPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWRefreshPlugin)];
+    id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwEndLoading:)]) {
         [refreshPlugin fwEndLoading:self];
         return;

@@ -21,7 +21,7 @@
 - (void)fwShowLoadingWithText:(id)text
 {
     NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
-    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
         [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
         return;
@@ -38,7 +38,7 @@
 
 - (void)fwHideLoading
 {
-    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwHideLoading:)]) {
         [plugin fwHideLoading:self];
         return;
@@ -50,7 +50,7 @@
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
     NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
-    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
         [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
         return;
@@ -67,7 +67,7 @@
 
 - (void)fwHideProgress
 {
-    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwHideProgress:)]) {
         [plugin fwHideProgress:self];
         return;
@@ -89,7 +89,7 @@
 - (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
     NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
-    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
         [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
         return;
@@ -102,7 +102,7 @@
 
 - (void)fwHideMessage
 {
-    id<FWToastPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWToastPlugin)];
+    id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwHideMessage:)]) {
         [plugin fwHideMessage:self];
         return;
