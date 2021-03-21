@@ -18,9 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWLoader : NSObject
 
-/// 单例模式
-@property (class, nonatomic, readonly) FWLoader *sharedInstance;
-
 @end
 
 NS_ASSUME_NONNULL_END
