@@ -63,6 +63,18 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     return self;
 }
 
+- (NSString *)description
+{
+    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
+    for (NSString *protocolName in self.pluginPool) {
+        FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
+        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, (plugin.instance ?: plugin.value)];
+    }
+    
+    NSString *description = [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", mutableDescription];
+    return description;
+}
+
 #pragma mark - Public
 
 - (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
@@ -207,20 +219,6 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     
     plugin.instance = nil;
     plugin.locked = NO;
-}
-
-#pragma mark - NSObject
-
-- (NSString *)debugDescription
-{
-    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
-    for (NSString *protocolName in self.pluginPool) {
-        FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
-        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, (plugin.instance ?: plugin.value)];
-    }
-    
-    NSString *debugDescription = [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", mutableDescription];
-    return debugDescription;
 }
 
 @end

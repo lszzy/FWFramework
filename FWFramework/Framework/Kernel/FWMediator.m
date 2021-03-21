@@ -34,6 +34,17 @@
     return instance;
 }
 
+- (NSString *)description
+{
+    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
+    for (NSString *protocolName in self.moduleDict) {
+        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
+    }
+    
+    NSString *description = [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
+    return description;
+}
+
 + (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
 {
     NSString *protocolName = NSStringFromProtocol(serviceProtocol);
@@ -115,8 +126,8 @@
         } @catch (NSException *exception) {}
     }
     
-    FWLogDebug(@"%@", [FWMediator sharedInstance].debugDescription);
-    FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
+    FWLogDebug(@"%@", [FWMediator sharedInstance].description);
+    FWLogDebug(@"%@", [FWPluginManager sharedInstance].description);
 }
 
 + (BOOL)checkAllModulesWithSelector:(SEL)selector arguments:(NSArray *)arguments
@@ -225,19 +236,6 @@
         }
     }
     return YES;
-}
-
-#pragma mark - NSObject
-
-- (NSString *)debugDescription
-{
-    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
-    for (NSString *protocolName in self.moduleDict) {
-        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
-    }
-    
-    NSString *debugDescription = [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
-    return debugDescription;
 }
 
 @end
