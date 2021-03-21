@@ -16,21 +16,11 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[FWLoader sharedInstance] autoload];
+        [FWLoader autoload];
     });
 }
 
-+ (FWLoader *)sharedInstance
-{
-    static FWLoader *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWLoader alloc] init];
-    });
-    return instance;
-}
-
-- (void)autoload
++ (void)autoload
 {
     NSMutableArray<NSString *> *methodNames = [NSMutableArray array];
     unsigned int methodCount = 0;
@@ -49,10 +39,11 @@
         return [obj1 compare:obj2];
     }];
     
+    FWLoader *loader = [[FWLoader alloc] init];
     for (NSString *methodName in methodNames) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [self performSelector:NSSelectorFromString(methodName)];
+        [loader performSelector:NSSelectorFromString(methodName)];
 #pragma clang diagnostic pop
     }
 }
