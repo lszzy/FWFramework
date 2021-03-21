@@ -122,12 +122,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 字典编码为url参数字符串
  */
-+ (NSString *)fwQueryEncode:(NSDictionary *)dictionary;
++ (NSString *)fwQueryEncode:(NSDictionary<NSString *, id> *)dictionary;
 
 /**
  * url参数字符串解码为字典
  */
-- (NSDictionary *)fwQueryDecode;
+- (NSDictionary<NSString *, NSString *> *)fwQueryDecode;
 
 #pragma mark - Md5
 
@@ -435,6 +435,9 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
  @brief NSURL类型安全分类
  */
 @interface NSURL (FWSafeType)
+
+/// 获取当前query的参数字典，不含空值
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fwQueryDictionary;
 
 /// 生成URL，中文自动URL编码
 + (nullable instancetype)fwURLWithString:(nullable NSString *)URLString;
