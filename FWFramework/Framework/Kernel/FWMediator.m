@@ -8,12 +8,14 @@
  */
 
 #import "FWMediator.h"
+#import "FWLoader.h"
 #import "FWLog.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 
 @interface FWMediator ()
 
+@property (nonatomic, strong) FWLoader<Protocol *, id> *moduleLoader;
 @property (nonatomic, strong) NSMutableDictionary *moduleDict;
 @property (nonatomic, strong) NSMutableDictionary *moduleInvokeDict;
 
@@ -27,6 +29,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
+        instance.moduleLoader = [[FWLoader<Protocol *, id> alloc] init];
         instance.moduleDict = [NSMutableDictionary dictionary];
         instance.moduleInvokeDict = [NSMutableDictionary dictionary];
     });
@@ -41,6 +44,11 @@
     }
     
     return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
+}
+
++ (FWLoader<Protocol *,id> *)sharedLoader
+{
+    return [FWMediator sharedInstance].moduleLoader;
 }
 
 + (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
@@ -71,7 +79,16 @@
     }
     
     Class moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
-    if (!moduleClass || ![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
+    if (!moduleClass) {
+        id object = [[FWMediator sharedLoader] load:serviceProtocol];
+        if (!object) return nil;
+        
+        [FWMediator registerService:serviceProtocol withModule:object];
+        moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
+        if (!moduleClass) return nil;
+    }
+    
+    if (![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
         return nil;
     }
     
