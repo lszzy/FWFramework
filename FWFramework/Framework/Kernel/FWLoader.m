@@ -29,7 +29,7 @@
         const char *methodChar = sel_getName(method_getName(methods[i]));
         if (!methodChar) continue;
         NSString *methodName = [NSString stringWithUTF8String:methodChar];
-        if (methodName && [methodName hasPrefix:@"load"]) {
+        if ([methodName hasPrefix:@"load"] && ![methodName containsString:@":"]) {
             [methodNames addObject:methodName];
         }
     }
