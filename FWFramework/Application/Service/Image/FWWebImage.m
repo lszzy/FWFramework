@@ -732,7 +732,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[FWPluginManager sharedInstance] registerDefault:@protocol(FWImagePlugin) withObject:[FWAppImagePlugin class]];
+        [[FWPluginManager sharedInstance] presetPlugin:@protocol(FWImagePlugin) withObject:[FWAppImagePlugin class]];
     });
 }
 

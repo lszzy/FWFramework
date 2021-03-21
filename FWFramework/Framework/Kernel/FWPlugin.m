@@ -65,37 +65,37 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 #pragma mark - Public
 
-- (BOOL)registerDefault:(Protocol *)protocol withObject:(id)obj
-{
-    return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isDefault:YES];
-}
-
-- (BOOL)registerDefault:(Protocol *)protocol withBlock:(id (^)(void))block
-{
-    return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isDefault:YES];
-}
-
-- (BOOL)registerDefault:(Protocol *)protocol withFactory:(id (^)(void))factory
-{
-    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isDefault:YES];
-}
-
 - (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
 {
-    return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isDefault:NO];
+    return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isPreset:NO];
+}
+
+- (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj
+{
+    return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isPreset:YES];
 }
 
 - (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
 {
-    return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isDefault:NO];
+    return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isPreset:NO];
+}
+
+- (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
+{
+    return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isPreset:YES];
 }
 
 - (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
 {
-    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isDefault:NO];
+    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isPreset:NO];
 }
 
-- (BOOL)registerPlugin:(Protocol *)protocol withValue:(id)value type:(FWPluginType)type isDefault:(BOOL)isDefault
+- (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
+{
+    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isPreset:YES];
+}
+
+- (BOOL)registerPlugin:(Protocol *)protocol withValue:(id)value type:(FWPluginType)type isPreset:(BOOL)isPreset
 {
     if (!protocol || !value) {
         return NO;
@@ -108,17 +108,15 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
         return NO;
     }
     
-    // 插件已存在时不能注册默认插件
-    if (isDefault && plugin) {
+    // 插件已存在时不能注册预置插件
+    if (isPreset && plugin) {
         return NO;
     }
     
-    // 插件必须实现插件协议，否则抛出异常
+    // 插件必须实现插件协议
     if (type == FWPluginTypeObject) {
         if (![value conformsToProtocol:protocol]) {
-            @throw [NSException exceptionWithName:@"FWFramework"
-                                           reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", value, protocolName]
-                                         userInfo:nil];
+            NSLog(@"plugin %@ must confirms to protocol %@", value, protocolName);
             return NO;
         }
     }
@@ -189,11 +187,11 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
         }
     }
     
-    // 插件必须实现插件协议，否则抛出异常
+    // 插件必须实现插件协议
     if (![instance conformsToProtocol:protocol]) {
-        @throw [NSException exceptionWithName:@"FWFramework"
-                                       reason:[NSString stringWithFormat:@"plugin %@ must confirms to protocol %@", instance, protocolName]
-                                     userInfo:nil];
+        NSLog(@"plugin %@ must confirms to protocol %@", instance, protocolName);
+        plugin.instance = nil;
+        return nil;
     }
     
     return instance;
