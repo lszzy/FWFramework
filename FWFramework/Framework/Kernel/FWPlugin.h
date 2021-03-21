@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWPluginManager : NSObject
 
-/// 单例插件加载器，可自定义加载句柄，加载未注册插件时会尝试调用
+/// 单例插件加载器，加载未注册插件时会尝试调用，block返回值为register方法object参数
 @property (class, nonatomic, readonly) FWLoader<Protocol *, id> *sharedLoader;
 
 /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
