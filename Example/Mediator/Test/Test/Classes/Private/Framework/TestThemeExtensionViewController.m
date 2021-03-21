@@ -94,7 +94,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
         [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:themes actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
-            FWThemeManager.sharedInstance.mode = index;
+            FWThemeManager.sharedInstance.mode = (index == 3) ? FWThemeStyleRed : index;
             [self renderModel];
             [TestTabBarViewController refreshController];
         }];

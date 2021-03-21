@@ -118,6 +118,11 @@ public struct FWRouterAnnotation<T> {
         self.url = FWRouter.generateURL(url, parameters: parameters)
     }
     
+    public init(_ url: String, router: FWRouterProtocol.Type) {
+        self.url = url
+        FWRouter.registerURL(url, withClass: router)
+    }
+    
     public init(_ url: String, handler: @escaping FWRouterHandler) {
         self.url = url
         FWRouter.registerURL(url, withHandler: handler)

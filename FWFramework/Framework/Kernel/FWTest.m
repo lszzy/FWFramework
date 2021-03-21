@@ -72,7 +72,7 @@
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
-                    FWLogDebug(@"%@", [FWUnitTest sharedInstance].debugDescription);
+                    FWLogDebug(@"%@", [FWUnitTest sharedInstance].description);
                 });
             }
         });
@@ -150,9 +150,9 @@
     return self;
 }
 
-- (NSString *)debugDescription
+- (NSString *)description
 {
-    return self.testLogs;
+    return self.testLogs ?: @"";
 }
 
 - (void)runTests
