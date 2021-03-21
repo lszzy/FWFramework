@@ -8,6 +8,7 @@
  */
 
 #import "FWPlugin.h"
+#import "FWLoader.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWPlugin
@@ -36,6 +37,7 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 @interface FWPluginManager ()
 
+@property (nonatomic, strong) FWLoader<Protocol *, id> *pluginLoader;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, FWPlugin *> *pluginPool;
 
 @end
@@ -58,6 +60,7 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 {
     self = [super init];
     if (self) {
+        self.pluginLoader = [[FWLoader<Protocol *, id> alloc] init];
         self.pluginPool = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -75,6 +78,11 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 }
 
 #pragma mark - Public
+
++ (FWLoader *)sharedLoader
+{
+    return [self sharedInstance].pluginLoader;
+}
 
 + (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
 {

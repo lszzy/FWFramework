@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWRegPlugin(pluginProtocol) \
     [FWPluginManager registerPlugin:@protocol(pluginProtocol) withObject:self.class];
 
+@class FWLoader<InputType, OutputType>;
+
 /*!
  @brief 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
  @discussion 和Mediator对比如下：
@@ -26,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
     Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
  */
 @interface FWPluginManager : NSObject
+
+/// 单例插件加载器，可自定义加载句柄，加载未注册插件时会尝试调用
+@property (class, nonatomic, readonly) FWLoader<Protocol *, id> *sharedLoader;
 
 /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
 + (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj;
