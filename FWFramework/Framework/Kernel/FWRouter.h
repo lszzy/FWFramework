@@ -11,17 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWRouterModel
+#pragma mark - FWRouterContext
 
-@class FWRouterModel;
+@class FWRouterContext;
 
 /*! @brief 路由处理句柄，仅支持openURL时可返回nil */
-typedef id _Nullable (^FWRouterHandler)(FWRouterModel *model);
+typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context);
 /*! @brief 路由完成句柄，openURL时可设置完成回调 */
 typedef void (^FWRouterCompletion)(id _Nullable result);
 
-/*! @brief URL路由模型 */
-@interface FWRouterModel : NSObject <NSCopying>
+/*! @brief URL路由上下文 */
+@interface FWRouterContext : NSObject <NSCopying>
 
 /*! @brief 路由URL */
 @property (nonatomic, copy, readonly) NSString *URL;
@@ -30,11 +30,9 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /*! @brief 路由完成回调 */
 @property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
 
-/*！@brief 路由使用方式，是否是openURL */
+/*！@brief 路由调用是否是open方式 */
 @property (nonatomic, assign, readonly) BOOL isOpen;
-/*! @brief 路由URL参数字典 */
-@property (nonatomic, copy, readonly) NSDictionary *URLParameters;
-/*! @brief 路由合并userInfo和URL参数字典 */
+/*! @brief 路由URL解析参数字典 */
 @property (nonatomic, copy, readonly) NSDictionary *parameters;
 
 /*! @brief 创建路由参数对象 */
@@ -48,10 +46,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 @protocol FWRouterProtocol <NSObject>
 
 @required
-/// 路由解析URL，返回字符串或字符串数组(批量)
-+ (id)fwRouterURL;
-/// 路由处理方法，打开解析URL时会调用本方法
-+ (nullable id)fwRouterHandler:(FWRouterModel *)model;
+/// 路由处理方法，调用目标URL时会优先调用本方法
++ (nullable id)fwRouterHandler:(FWRouterContext *)context;
 
 @end
 
@@ -65,6 +61,14 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 @interface FWRouter : NSObject
 
 #pragma mark - URL
+
+/**
+ *  注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
+ *
+ *  @param pattern    字符串或字符串数组(批量)，带上 scheme，如 app://beauty/:id
+ *  @param clazz        路由实现类，需实现FWRouterProtocol协议
+ */
++ (void)registerURL:(id)pattern withClass:(Class<FWRouterProtocol>)clazz;
 
 /**
  *  注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
@@ -87,23 +91,12 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  */
 + (void)unregisterAllURLs;
 
-#pragma mark - Class
+#pragma mark - Handler
 
 /**
- *  注册路由类，需要实现FWRouterProtocol协议
- *
- *  @param cls    路由类，需实现FWRouterProtocol协议
+ *  设置 打开 对应的 Handler，URL有值且openURL返回值不为nil时触发。可用于统一处理openURL返回值(如打开VC)
  */
-+ (void)registerClass:(Class)cls;
-
-/**
- *  取消注册某个路由类
- *
- *  @param cls    路由类，需实现FWRouterProtocol协议
- */
-+ (void)unregisterClass:(Class)cls;
-
-#pragma mark - Filter
+@property (class, nonatomic, copy, nullable) void (^openHandler)(id result);
 
 /**
  *  设置 过滤器 对应的 Handler，URL 有值且调用时触发。如果返回nil，则继续解析pattern，否则停止解析
@@ -114,11 +107,6 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  *  设置 错误 对应的 Handler，URL 有值且未注册时触发
  */
 @property (class, nonatomic, copy, nullable) FWRouterHandler errorHandler;
-
-/**
- *  设置 打开 对应的 Handler，URL有值且openURL返回值不为nil时触发。可用于统一处理openURL返回值(如打开VC)
- */
-@property (class, nonatomic, copy, nullable) void (^openHandler)(id result);
 
 #pragma mark - Open
 
@@ -167,10 +155,10 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /**
  *  快速调用FWRouterHandler参数中的回调句柄，指定回调结果
  *
- *  @param model FWRouterHandler中的模型参数
+ *  @param context FWRouterHandler中的模型参数
  *  @param result URL处理完成后的回调结果
  */
-+ (void)completeURL:(FWRouterModel *)model result:(nullable id)result;
++ (void)completeURL:(FWRouterContext *)context result:(nullable id)result;
 
 #pragma mark - Object
 

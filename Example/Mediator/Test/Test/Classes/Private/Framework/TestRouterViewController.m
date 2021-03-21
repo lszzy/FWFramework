@@ -32,23 +32,23 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)registerFilters
 {
-    FWRouter.filterHandler = ^id _Nullable(FWRouterModel * _Nonnull model) {
-        NSURL *url = [NSURL fwURLWithString:model.URL];
+    FWRouter.filterHandler = ^id _Nullable(FWRouterContext * _Nonnull context) {
+        NSURL *url = [NSURL fwURLWithString:context.URL];
         if ([UIApplication fwIsSystemURL:url]) {
             [UIApplication fwOpenURL:url];
             return @YES;
         }
         if ([url.absoluteString hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-            viewController.parameters = model.parameters;
+            viewController.parameters = context.parameters;
             viewController.navigationItem.title = url.absoluteString;
             [FWRouter pushViewController:viewController animated:YES];
             return @YES;
         }
         return nil;
     };
-    FWRouter.errorHandler = ^id _Nullable(FWRouterModel * _Nonnull model) {
-        [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", model.parameters] message:nil cancel:@"OK" cancelBlock:nil];
+    FWRouter.errorHandler = ^id _Nullable(FWRouterContext * _Nonnull context) {
+        [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
         return nil;
     };
     FWRouter.openHandler = ^(id  _Nonnull result) {
@@ -60,79 +60,79 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)registerRouters
 {
-    [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^id(FWRouterContext *context) {
         // 尝试打开通用链接，失败了再内部浏览器打开
-        [UIApplication fwOpenUniversalLinks:model.URL completionHandler:^(BOOL success) {
+        [UIApplication fwOpenUniversalLinks:context.URL completionHandler:^(BOOL success) {
             if (success) return;
             
             TestWebViewController *viewController = [TestWebViewController new];
-            viewController.navigationItem.title = model.URL;
-            viewController.requestUrl = model.URL;
+            viewController.navigationItem.title = context.URL;
+            viewController.requestUrl = context.URL;
             [FWRouter pushViewController:viewController animated:YES];
         }];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_TEST withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:TestRouter.ROUTE_TEST withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = model.parameters;
-        viewController.navigationItem.title = [NSString stringWithFormat:@"app://test/%@", model.parameters[@"id"]];
-        if (model.completion) {
-            viewController.completion = model.completion;
+        viewController.parameters = context.parameters;
+        viewController.navigationItem.title = [NSString stringWithFormat:@"app://test/%@", context.parameters[@"id"]];
+        if (context.completion) {
+            viewController.completion = context.completion;
         }
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
-    [FWRouter registerURL:@"wildcard://*" withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:@"wildcard://*" withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = model.parameters;
+        viewController.parameters = context.parameters;
         viewController.navigationItem.title = @"wildcard://*";
-        if (model.completion) {
-            viewController.completion = model.completion;
+        if (context.completion) {
+            viewController.completion = context.completion;
         }
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_WILDCARD withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:TestRouter.ROUTE_WILDCARD withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = model.parameters;
+        viewController.parameters = context.parameters;
         viewController.navigationItem.title = TestRouter.ROUTE_WILDCARD;
-        if (model.completion) {
-            viewController.completion = model.completion;
+        if (context.completion) {
+            viewController.completion = context.completion;
         }
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_CONTROLLER withHandler:^id(FWRouterModel * _Nonnull model) {
+    [FWRouter registerURL:TestRouter.ROUTE_CONTROLLER withHandler:^id(FWRouterContext * _Nonnull context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = model.parameters;
-        viewController.navigationItem.title = [NSString stringWithFormat:@"app://controller/%@", model.parameters[@"id"]];
+        viewController.parameters = context.parameters;
+        viewController.navigationItem.title = [NSString stringWithFormat:@"app://controller/%@", context.parameters[@"id"]];
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_OBJECT withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:TestRouter.ROUTE_OBJECT withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = model.parameters;
+        viewController.parameters = context.parameters;
         viewController.navigationItem.title = TestRouter.ROUTE_OBJECT;
         return viewController;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_OBJECT_UNMATCH withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:TestRouter.ROUTE_OBJECT_UNMATCH withHandler:^id(FWRouterContext *context) {
         return @"OBJECT UNMATCH";
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_JAVASCRIPT withHandler:^id(FWRouterModel *model) {
+    [FWRouter registerURL:TestRouter.ROUTE_JAVASCRIPT withHandler:^id(FWRouterContext *context) {
         UIViewController *topController = [[UIWindow fwMainWindow] fwTopViewController];
         if (![topController isKindOfClass:[TestWebViewController class]] || !topController.isViewLoaded) return nil;
         
-        NSString *param = [model.parameters[@"param"] fwAsNSString];
+        NSString *param = [context.parameters[@"param"] fwAsNSString];
         NSString *result = [NSString stringWithFormat:@"js:%@ => app:%@", param, @"2"];
         
-        NSString *callback = [model.parameters[@"callback"] fwAsNSString];
+        NSString *callback = [context.parameters[@"callback"] fwAsNSString];
         NSString *javascript = [NSString stringWithFormat:@"%@('%@');", callback, result];
         
         TestWebViewController *viewController = (TestWebViewController *)topController;
@@ -142,23 +142,23 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_HOME withHandler:^id(FWRouterModel * _Nonnull model) {
+    [FWRouter registerURL:TestRouter.ROUTE_HOME withHandler:^id(FWRouterContext * _Nonnull context) {
         [UIWindow.fwMainWindow fwSelectTabBarIndex:0];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_HOME_TEST withHandler:^id(FWRouterModel * _Nonnull model) {
+    [FWRouter registerURL:TestRouter.ROUTE_HOME_TEST withHandler:^id(FWRouterContext * _Nonnull context) {
         TestModuleController *testController = [UIWindow.fwMainWindow fwSelectTabBarController:[TestModuleController class]];
         [testController setSelectedIndex:1];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_HOME_SETTINGS withHandler:^id(FWRouterModel * _Nonnull model) {
+    [FWRouter registerURL:TestRouter.ROUTE_HOME_SETTINGS withHandler:^id(FWRouterContext * _Nonnull context) {
         [UIWindow.fwMainWindow fwSelectTabBarIndex:2];
         return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_CLOSE withHandler:^id(FWRouterModel * _Nonnull model) {
+    [FWRouter registerURL:TestRouter.ROUTE_CLOSE withHandler:^id(FWRouterContext * _Nonnull context) {
         UIViewController *topController = [UIWindow.fwMainWindow fwTopViewController];
         [topController fwCloseViewControllerAnimated:YES];
         return nil;
