@@ -187,6 +187,7 @@
         // 能否直接使用之前的指示器(避免进度重复调用出现闪烁)
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
+            [self bringSubviewToFront:indicatorView];
             indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
             centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
             centerView.layer.cornerRadius = cornerRadius;
