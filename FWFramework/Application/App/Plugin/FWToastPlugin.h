@@ -153,6 +153,14 @@ static const FWToastStyle FWToastStyleFailure = 2;
 - (BOOL)fwHideIndicatorLoading;
 
 /**
+ *  延迟n秒后自动隐藏加载指示器，如果期间调用了show则取消隐藏，可避免连续show|hide时闪烁问题
+ *
+ *  @param delay 延迟时间，如0.1秒
+ *  @return 如果加载指示器不存在，返回NO
+ */
+- (BOOL)fwHideIndicatorLoadingAfterDelay:(NSTimeInterval)delay;
+
+/**
  *  显示消息指示器，默认不可点击（简单版）
  *
  *  @param attributedText 属性文本，默认白色、16号字体
