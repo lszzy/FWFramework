@@ -108,19 +108,19 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - Handler
 
 /**
- *  设置 openURL返回值 对应的 Handler，可用于统一打开VC等。注意filterHandler和errorHandler不会触发
+ *  设置全局前置过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析
  */
-@property (class, nonatomic, copy, nullable) void (^openHandler)(FWRouterContext *context, id object);
+@property (class, nonatomic, copy, nullable) BOOL (^preFilter)(FWRouterContext *context);
 
 /**
- *  设置 过滤器 对应的 Handler，URL 有值且调用时触发。如果返回nil，则继续解析pattern，否则停止解析
+ *  设置全局后置过滤器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
  */
-@property (class, nonatomic, copy, nullable) FWRouterHandler filterHandler;
+@property (class, nonatomic, copy, nullable) id _Nullable (^postFilter)(FWRouterContext *context, id object);
 
 /**
- *  设置 错误 对应的 Handler，URL 有值且未注册时触发
+ *  设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
  */
-@property (class, nonatomic, copy, nullable) FWRouterHandler errorHandler;
+@property (class, nonatomic, copy, nullable) void (^errorHandler)(FWRouterContext *context);
 
 #pragma mark - Open
 
