@@ -14,6 +14,7 @@ FWStaticString(ROUTE_TEST);
 FWStaticString(ROUTE_WILDCARD);
 FWStaticString(ROUTE_OBJECT);
 FWStaticString(ROUTE_OBJECT_UNMATCH);
+FWStaticString(ROUTE_LOADER);
 FWStaticString(ROUTE_CONTROLLER);
 FWStaticString(ROUTE_JAVASCRIPT);
 FWStaticString(ROUTE_HOME);
@@ -23,10 +24,9 @@ FWStaticString(ROUTE_CLOSE);
 
 @end
 
-@interface TestRouterResultViewController : TestViewController
+@interface TestRouterResultViewController : TestViewController <FWRouterProtocol>
 
-@property (nonatomic, strong) NSDictionary *parameters;
-@property (nonatomic, copy) FWBlockParam completion;
+@property (nonatomic, strong) FWRouterContext *context;
 
 @end
 

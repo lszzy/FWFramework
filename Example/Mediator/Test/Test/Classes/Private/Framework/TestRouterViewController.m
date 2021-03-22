@@ -16,6 +16,7 @@ FWDefStaticString(ROUTE_TEST, @"app://test/:id");
 FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
 FWDefStaticString(ROUTE_OBJECT, @"object://test2");
 FWDefStaticString(ROUTE_OBJECT_UNMATCH, @"object://test");
+FWDefStaticString(ROUTE_LOADER, @"app://loader");
 FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
 FWDefStaticString(ROUTE_HOME, @"app://home");
@@ -40,20 +41,21 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         }
         if ([url.absoluteString hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-            viewController.parameters = context.parameters;
-            viewController.navigationItem.title = url.absoluteString;
+            viewController.context = context;
             [FWRouter pushViewController:viewController animated:YES];
             return @YES;
         }
         return nil;
     };
     FWRouter.errorHandler = ^id _Nullable(FWRouterContext * _Nonnull context) {
-        [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
+        [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\nurl: %@\nparameters: %@", context.URL, context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
         return nil;
     };
-    FWRouter.openHandler = ^(id  _Nonnull result) {
-        if ([result isKindOfClass:[UIViewController class]]) {
-            [FWRouter openViewController:result animated:YES];
+    FWRouter.openHandler = ^(FWRouterContext * _Nonnull context, id  _Nonnull object) {
+        if ([object isKindOfClass:[UIViewController class]]) {
+            [FWRouter openViewController:object animated:YES];
+        } else {
+            FWRouter.errorHandler(context);
         }
     };
 }
@@ -75,54 +77,45 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     
     [FWRouter registerURL:TestRouter.ROUTE_TEST withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = context.parameters;
-        viewController.navigationItem.title = [NSString stringWithFormat:@"app://test/%@", context.parameters[@"id"]];
-        if (context.completion) {
-            viewController.completion = context.completion;
-        }
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
     [FWRouter registerURL:@"wildcard://*" withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = context.parameters;
-        viewController.navigationItem.title = @"wildcard://*";
-        if (context.completion) {
-            viewController.completion = context.completion;
-        }
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_WILDCARD withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = context.parameters;
-        viewController.navigationItem.title = TestRouter.ROUTE_WILDCARD;
-        if (context.completion) {
-            viewController.completion = context.completion;
-        }
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_CONTROLLER withHandler:^id(FWRouterContext * _Nonnull context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = context.parameters;
-        viewController.navigationItem.title = [NSString stringWithFormat:@"app://controller/%@", context.parameters[@"id"]];
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
         return nil;
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_OBJECT withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = context.parameters;
-        viewController.navigationItem.title = TestRouter.ROUTE_OBJECT;
+        viewController.context = context;
         return viewController;
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_OBJECT_UNMATCH withHandler:^id(FWRouterContext *context) {
-        return @"OBJECT UNMATCH";
+        if (context.isOpening) {
+            return @"OBJECT UNMATCH";
+        } else {
+            FWRouter.errorHandler(context);
+            return nil;
+        }
     }];
     
     [FWRouter registerURL:TestRouter.ROUTE_JAVASCRIPT withHandler:^id(FWRouterContext *context) {
@@ -180,26 +173,37 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 @implementation TestRouterResultViewController
 
++ (id)fwRouterURL
+{
+    return TestRouter.ROUTE_LOADER;
+}
+
++ (id)fwRouterHandler:(FWRouterContext *)context
+{
+    TestRouterResultViewController *viewController = [TestRouterResultViewController new];
+    viewController.context = context;
+    return viewController;
+}
+
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.fwBarTitle = self.context.URL;
     
     UILabel *label = [UILabel fwAutoLayoutView];
     label.numberOfLines = 0;
-    label.text = [NSString stringWithFormat:@"%@", self.parameters];
+    label.text = [NSString stringWithFormat:@"url: %@\nparameters: %@", self.context.URL, self.context.parameters];
     [self.view addSubview:label];
     [label fwAlignCenterToSuperview];
     [label fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 40];
     
-    if (self.completion) {
+    if (self.context.completion) {
         FWWeakifySelf();
         [self fwSetRightBarItem:@"完成" block:^(id sender) {
             FWStrongifySelf();
-            if (self.completion) {
-                self.completion(@"我是回调数据");
-            }
+            [FWRouter completeURL:self.context result:@"我是回调数据"];
             [self fwCloseViewControllerAnimated:YES];
         }];
     }
@@ -265,7 +269,8 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
-                                         @[@"objectUrl转openUrl", @"onOpenUnmatch3"],
+                                         @[@"打开objectUrl", @"onOpenUnmatch3"],
+                                         @[@"自动注册的Url", @"onOpenLoader"],
                                          @[@"跳转telprompt", @"onOpenTel"],
                                          @[@"跳转设置", @"onOpenSettings"],
                                          @[@"跳转home", @"onOpenHome"],
@@ -335,9 +340,6 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 - (void)onOpenObject
 {
     TestRouterResultViewController *viewController = [FWRouter objectForURL:TestRouter.ROUTE_OBJECT];
-    viewController.completion = ^(id result) {
-        NSLog(@"result: %@", result);
-    };
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:navController animated:YES completion:nil];
 }
@@ -369,12 +371,17 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenUnmatch2
 {
-    [FWRouter objectForURL:@"app://test/1"];
+    [FWRouter objectForURL:TestRouter.ROUTE_OBJECT_UNMATCH];
 }
 
 - (void)onOpenUnmatch3
 {
     [FWRouter openURL:TestRouter.ROUTE_OBJECT];
+}
+
+- (void)onOpenLoader
+{
+    [FWRouter openURL:TestRouter.ROUTE_LOADER];
 }
 
 - (void)onOpenFilter
