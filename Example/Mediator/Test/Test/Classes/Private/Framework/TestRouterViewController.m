@@ -33,6 +33,13 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)registerFilters
 {
+    [FWRouter.sharedLoader addBlock:^id _Nullable(NSString * _Nonnull input) {
+        if ([input isEqualToString:TestRouter.ROUTE_LOADER]) {
+            return [TestRouterResultViewController class];
+        }
+        return nil;
+    }];
+    
     FWRouter.preFilter = ^BOOL(FWRouterContext * _Nonnull context) {
         NSURL *url = [NSURL fwURLWithString:context.URL];
         if ([UIApplication fwIsSystemURL:url]) {
