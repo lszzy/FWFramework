@@ -18,19 +18,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWLoader<__covariant InputType, __covariant OutputType> : NSObject
 
-/// 指定加载block初始化
-- (instancetype)initWithBlock:(OutputType _Nullable (^)(InputType input))block;
-
-/// 添加加载block，返回标志id
+/// 添加block加载器，返回标志id
 - (NSString *)addBlock:(OutputType _Nullable (^)(InputType input))block;
 
-/// 指定标志id移除block
-- (void)removeBlock:(NSString *)identifier;
+/// 添加target和action加载器，返回标志id
+- (NSString *)addTarget:(id)target action:(SEL)action;
 
-/// 移除所有的block
-- (void)removeAllBlocks;
+/// 指定标志id移除加载器
+- (void)remove:(NSString *)identifier;
 
-/// 依次执行加载block，直到加载成功
+/// 移除所有的加载器
+- (void)removeAll;
+
+/// 依次执行加载器，直到加载成功
 - (nullable OutputType)load:(InputType)input;
 
 @end

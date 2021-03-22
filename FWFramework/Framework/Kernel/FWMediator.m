@@ -15,9 +15,9 @@
 
 @interface FWMediator ()
 
-@property (nonatomic, strong) FWLoader<Protocol *, id> *moduleLoader;
 @property (nonatomic, strong) NSMutableDictionary *moduleDict;
 @property (nonatomic, strong) NSMutableDictionary *moduleInvokeDict;
+@property (nonatomic, strong) FWLoader<Protocol *, id> *moduleLoader;
 
 @end
 
@@ -29,9 +29,9 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
-        instance.moduleLoader = [[FWLoader<Protocol *, id> alloc] init];
         instance.moduleDict = [NSMutableDictionary dictionary];
         instance.moduleInvokeDict = [NSMutableDictionary dictionary];
+        instance.moduleLoader = [[FWLoader<Protocol *, id> alloc] init];
     });
     return instance;
 }

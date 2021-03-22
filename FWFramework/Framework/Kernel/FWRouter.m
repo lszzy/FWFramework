@@ -8,6 +8,7 @@
  */
 
 #import "FWRouter.h"
+#import "FWLoader.h"
 
 #pragma mark - FWRouterContext
 
@@ -79,20 +80,14 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 // 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy]}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
-// 打开URL Handler，openURL返回值不为nil时触发
 @property (nonatomic, copy) void (^openHandler)(id result);
-
-// 过滤器URL Handler，URL调用时优先触发
 @property (nonatomic, copy) FWRouterHandler filterHandler;
-
-// 错误URL Handler，URL未注册时触发
 @property (nonatomic, copy) FWRouterHandler errorHandler;
 
-// rewrite过滤器，优先调用
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
-
-// rewrite规格列表，声明到扩展
 @property (nonatomic, strong) NSMutableArray *rewriteRules;
+
+@property (nonatomic, strong) FWLoader<NSString *, id> *routeLoader;
 
 @end
 
@@ -114,21 +109,38 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if (self) {
         _routes = [[NSMutableDictionary alloc] init];
         _rewriteRules = [[NSMutableArray alloc] init];
+        _routeLoader = [[FWLoader<NSString *, id> alloc] init];
     }
     return self;
 }
 
-#pragma mark - URL
++ (FWLoader<NSString *,id> *)sharedLoader
+{
+    return [self sharedInstance].routeLoader;
+}
 
-+ (void)registerURL:(id)pattern withClass:(Class<FWRouterProtocol>)clazz
+#pragma mark - Class
+
++ (void)registerClass:(Class<FWRouterProtocol>)clazz
 {
     if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
+    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return;
     if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return;
     
-    [self registerURL:pattern withHandler:^id(FWRouterContext *context) {
+    [self registerURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
         return [clazz fwRouterHandler:context];
     }];
 }
+
++ (void)unregisterClass:(Class<FWRouterProtocol>)clazz
+{
+    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
+    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return;
+    
+    [self unregisterURL:[clazz fwRouterURL]];
+}
+
+#pragma mark - URL
 
 + (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler
 {

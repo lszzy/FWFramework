@@ -120,7 +120,7 @@ public struct FWRouterAnnotation<T> {
     
     public init(_ url: String, router: FWRouterProtocol.Type) {
         self.url = url
-        FWRouter.registerURL(url, withClass: router)
+        FWRouter.registerClass(router)
     }
     
     public init(_ url: String, handler: @escaping FWRouterHandler) {

@@ -10,9 +10,56 @@
 #import "FWLoader.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWInnerLoaderTarget
+
+@interface FWInnerLoaderTarget : NSObject
+
+@property (nonatomic, copy) NSString *identifier;
+
+@property (nonatomic, copy) id (^block)(id input);
+
+@property (nonatomic, weak) id target;
+
+@property (nonatomic) SEL action;
+
+- (id)invoke:(id)input;
+
+@end
+
+@implementation FWInnerLoaderTarget
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _identifier = NSUUID.UUID.UUIDString;
+    }
+    return self;
+}
+
+- (id)invoke:(id)input
+{
+    if (self.block) {
+        return self.block(input);
+    }
+    
+    if (self.target && self.action && [self.target respondsToSelector:self.action]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        return [self.target performSelector:self.action withObject:input];
+#pragma clang diagnostic pop
+    }
+    
+    return nil;
+}
+
+@end
+
+#pragma mark - FWLoader
+
 @interface FWLoader ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, id (^)(id)> *blocks;
+@property (nonatomic, strong) NSMutableArray *loaders;
 
 @end
 
@@ -62,43 +109,48 @@
 {
     self = [super init];
     if (self) {
-        _blocks = [[NSMutableDictionary alloc] init];
-    }
-    return self;
-}
-
-- (instancetype)initWithBlock:(id (^)(id))block
-{
-    self = [super init];
-    if (self) {
-        _blocks = [[NSMutableDictionary alloc] init];
-        [self addBlock:block];
+        _loaders = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
 - (NSString *)addBlock:(id (^)(id))block
 {
-    NSString *identifier = NSUUID.UUID.UUIDString;
-    self.blocks[identifier] = block;
-    return identifier;
+    FWInnerLoaderTarget *loader = [[FWInnerLoaderTarget alloc] init];
+    loader.block = block;
+    [self.loaders addObject:loader];
+    return loader.identifier;
 }
 
-- (void)removeBlock:(NSString *)identifier
+- (NSString *)addTarget:(id)target action:(SEL)action
 {
-    [self.blocks removeObjectForKey:identifier];
+    FWInnerLoaderTarget *loader = [[FWInnerLoaderTarget alloc] init];
+    loader.target = target;
+    loader.action = action;
+    [self.loaders addObject:loader];
+    return loader.identifier;
+}
+
+- (void)remove:(NSString *)identifier
+{
+    NSMutableArray *loaders = self.loaders;
+    [loaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
+        if ([loader.identifier isEqualToString:identifier]) {
+            [loaders removeObject:loader];
+        }
+    }];
 }
 
 - (void)removeAllBlocks
 {
-    [self.blocks removeAllObjects];
+    [self.loaders removeAllObjects];
 }
 
 - (id)load:(id)input
 {
     __block id output = nil;
-    [self.blocks enumerateKeysAndObjectsUsingBlock:^(NSString *key, id (^block)(id), BOOL *stop) {
-        output = block(input);
+    [self.loaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
+        output = [loader invoke:input];
         if (output) *stop = YES;
     }];
     return output;
