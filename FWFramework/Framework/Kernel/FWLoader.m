@@ -141,7 +141,7 @@
     }];
 }
 
-- (void)removeAllBlocks
+- (void)removeAll
 {
     [self.loaders removeAllObjects];
 }
