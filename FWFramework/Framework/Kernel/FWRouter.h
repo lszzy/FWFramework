@@ -31,10 +31,10 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 /*! @brief 路由完成回调 */
 @property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
 
-/*！@brief 路由调用是否是open方式 */
-@property (nonatomic, assign, readonly) BOOL isOpen;
 /*! @brief 路由URL解析参数字典 */
 @property (nonatomic, copy, readonly) NSDictionary *parameters;
+/*！@brief 路由是否以openURL方式打开，区别于objectForURL */
+@property (nonatomic, assign, readonly) BOOL isOpening;
 
 /*! @brief 创建路由参数对象 */
 - (instancetype)initWithURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
@@ -108,9 +108,9 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - Handler
 
 /**
- *  设置 打开 对应的 Handler，URL有值且openURL返回值不为nil时触发。可用于统一处理openURL返回值(如打开VC)
+ *  设置 openURL返回值 对应的 Handler，可用于统一打开VC等。注意filterHandler和errorHandler不会触发
  */
-@property (class, nonatomic, copy, nullable) void (^openHandler)(id result);
+@property (class, nonatomic, copy, nullable) void (^openHandler)(FWRouterContext *context, id object);
 
 /**
  *  设置 过滤器 对应的 Handler，URL 有值且调用时触发。如果返回nil，则继续解析pattern，否则停止解析

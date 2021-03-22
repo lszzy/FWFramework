@@ -14,7 +14,7 @@
 
 @interface FWRouterContext ()
 
-@property (nonatomic, assign) BOOL isOpen;
+@property (nonatomic, assign) BOOL isOpening;
 @property (nonatomic, copy) NSDictionary *routeParameters;
 @property (nonatomic, copy) NSDictionary *parameters;
 
@@ -36,7 +36,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     FWRouterContext *context = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
-    context.isOpen = self.isOpen;
+    context.isOpening = self.isOpening;
     context.routeParameters = self.routeParameters;
     return context;
 }
@@ -80,7 +80,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 // 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy]}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
-@property (nonatomic, copy) void (^openHandler)(id result);
+@property (nonatomic, copy) void (^openHandler)(FWRouterContext *context, id object);
 @property (nonatomic, copy) FWRouterHandler filterHandler;
 @property (nonatomic, copy) FWRouterHandler errorHandler;
 
@@ -193,12 +193,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Handler
 
-+ (void (^)(id))openHandler
++ (void (^)(FWRouterContext *, id))openHandler
 {
     return [self sharedInstance].openHandler;
 }
 
-+ (void)setOpenHandler:(void (^)(id))handler
++ (void)setOpenHandler:(void (^)(FWRouterContext *, id))handler
 {
     [self sharedInstance].openHandler = handler;
 }
@@ -261,21 +261,20 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     context.routeParameters = [routeParameters copy];
-    context.isOpen = YES;
+    context.isOpening = YES;
     
-    id result = nil;
     if ([self sharedInstance].filterHandler) {
-        result = [self sharedInstance].filterHandler(context);
+        if ([self sharedInstance].filterHandler(context)) return;
     }
-    if (!result) {
-        if (handler) {
-            result = handler(context);
-        } else if ([self sharedInstance].errorHandler) {
-            result = [self sharedInstance].errorHandler(context);
+    if (handler) {
+        id object = handler(context);
+        if (object && [self sharedInstance].openHandler) {
+            [self sharedInstance].openHandler(context, object);
         }
+        return;
     }
-    if (result && [self sharedInstance].openHandler) {
-        [self sharedInstance].openHandler(result);
+    if ([self sharedInstance].errorHandler) {
+        [self sharedInstance].errorHandler(context);
     }
 }
 
@@ -314,11 +313,11 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     context.routeParameters = [routeParameters copy];
-    context.isOpen = NO;
+    context.isOpening = NO;
     
     if ([self sharedInstance].filterHandler) {
-        id result = [self sharedInstance].filterHandler(context);
-        if (result) return result;
+        id object = [self sharedInstance].filterHandler(context);
+        if (object) return object;
     }
     if (handler) {
         return handler(context);
