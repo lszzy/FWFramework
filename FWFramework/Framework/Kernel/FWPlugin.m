@@ -37,8 +37,8 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 @interface FWPluginManager ()
 
-@property (nonatomic, strong) FWLoader<Protocol *, id> *pluginLoader;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, FWPlugin *> *pluginPool;
+@property (nonatomic, strong) FWLoader<Protocol *, id> *pluginLoader;
 
 @end
 
@@ -60,8 +60,8 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 {
     self = [super init];
     if (self) {
-        self.pluginLoader = [[FWLoader<Protocol *, id> alloc] init];
         self.pluginPool = [[NSMutableDictionary alloc] init];
+        self.pluginLoader = [[FWLoader<Protocol *, id> alloc] init];
     }
     return self;
 }

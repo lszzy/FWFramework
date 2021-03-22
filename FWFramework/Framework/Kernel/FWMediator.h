@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWMediator : NSObject
 
-/// 模块服务加载器，加载未注册模块时会尝试调用，block返回值为register方法module参数
+/// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
 @property (class, nonatomic, readonly) FWLoader<Protocol *, id> *sharedLoader;
 
 /// 注册指定模块服务，返回注册结果

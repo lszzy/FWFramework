@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWRouterContext
 
 @class FWRouterContext;
+@class FWLoader<InputType, OutputType>;
 
 /*! @brief 路由处理句柄，仅支持openURL时可返回nil */
 typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context);
@@ -46,7 +47,9 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 @protocol FWRouterProtocol <NSObject>
 
 @required
-/// 路由处理方法，调用目标URL时会优先调用本方法
+/// 路由支持的解析URL，字符串或字符串数组(批量)
++ (id)fwRouterURL;
+/// 路由处理方法，访问支持的解析URL时会调用本方法
 + (nullable id)fwRouterHandler:(FWRouterContext *)context;
 
 @end
@@ -60,15 +63,26 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  */
 @interface FWRouter : NSObject
 
-#pragma mark - URL
+/// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
+@property (class, nonatomic, readonly) FWLoader<NSString *, id> *sharedLoader;
+
+#pragma mark - Class
 
 /**
- *  注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
+*  注册路由类，需要实现FWRouterProtocol协议
+*
+*  @param clazz    路由类，需实现FWRouterProtocol协议
+*/
++ (void)registerClass:(Class<FWRouterProtocol>)clazz;
+
+/**
+ *  取消注册某个路由类
  *
- *  @param pattern    字符串或字符串数组(批量)，带上 scheme，如 app://beauty/:id
- *  @param clazz        路由实现类，需实现FWRouterProtocol协议
+ *  @param clazz    路由类，需实现FWRouterProtocol协议
  */
-+ (void)registerURL:(id)pattern withClass:(Class<FWRouterProtocol>)clazz;
++ (void)unregisterClass:(Class<FWRouterProtocol>)clazz;
+
+#pragma mark - URL
 
 /**
  *  注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
