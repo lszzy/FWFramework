@@ -16,6 +16,7 @@ FWDefStaticString(ROUTE_TEST, @"app://test/:id");
 FWDefStaticString(ROUTE_WILDCARD, @"wildcard://test1");
 FWDefStaticString(ROUTE_OBJECT, @"object://test2");
 FWDefStaticString(ROUTE_OBJECT_UNMATCH, @"object://test");
+FWDefStaticString(ROUTE_LOADER, @"app://loader");
 FWDefStaticString(ROUTE_CONTROLLER, @"app://controller/:id");
 FWDefStaticString(ROUTE_JAVASCRIPT, @"app://javascript");
 FWDefStaticString(ROUTE_HOME, @"app://home");
@@ -32,134 +33,137 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)registerFilters
 {
-    [FWRouter setFilterHandler:^BOOL(NSDictionary *parameters) {
-        NSURL *url = [NSURL fwURLWithString:parameters[FWRouterURLKey]];
+    [FWRouter.sharedLoader addBlock:^id _Nullable(NSString * _Nonnull input) {
+        if ([input isEqualToString:TestRouter.ROUTE_LOADER]) {
+            return [TestRouterResultViewController class];
+        }
+        return nil;
+    }];
+    
+    FWRouter.preFilter = ^BOOL(FWRouterContext * _Nonnull context) {
+        NSURL *url = [NSURL fwURLWithString:context.URL];
         if ([UIApplication fwIsSystemURL:url]) {
             [UIApplication fwOpenURL:url];
             return NO;
         }
         if ([url.absoluteString hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-            viewController.parameters = parameters;
-            viewController.navigationItem.title = url.absoluteString;
+            viewController.context = context;
             [FWRouter pushViewController:viewController animated:YES];
             return NO;
         }
         return YES;
-    }];
-    [FWRouter setErrorHandler:^(NSDictionary *parameters) {
-        // 处理objectUrl转为openUrl调用
-        NSString *url = parameters[FWRouterURLKey];
-        NSDictionary *userInfo = [parameters[FWRouterUserInfoKey] fwAsNSDictionary];
-        if ([FWRouter isObjectURL:url]) {
-            id object = [FWRouter objectForURL:url userInfo:userInfo];
-            if (object && [object isKindOfClass:[UIViewController class]]) {
+    };
+    FWRouter.postFilter = ^(FWRouterContext * _Nonnull context, id  _Nonnull object) {
+        if (context.isOpening) {
+            if ([object isKindOfClass:[UIViewController class]]) {
                 [FWRouter openViewController:object animated:YES];
-                return;
+            } else {
+                FWRouter.errorHandler(context);
             }
         }
-        
-        [[[UIWindow fwMainWindow] fwTopPresentedController] fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\n%@", parameters] message:nil cancel:@"OK" cancelBlock:nil];
-    }];
+        return object;
+    };
+    FWRouter.errorHandler = ^(FWRouterContext * _Nonnull context) {
+        [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\nurl: %@\nparameters: %@", context.URL, context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
+    };
 }
 
 + (void)registerRouters
 {
-    [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:@[@"http://*", @"https://*"] withHandler:^id(FWRouterContext *context) {
         // 尝试打开通用链接，失败了再内部浏览器打开
-        [UIApplication fwOpenUniversalLinks:parameters[FWRouterURLKey] completionHandler:^(BOOL success) {
+        [UIApplication fwOpenUniversalLinks:context.URL completionHandler:^(BOOL success) {
             if (success) return;
             
             TestWebViewController *viewController = [TestWebViewController new];
-            viewController.navigationItem.title = parameters[FWRouterURLKey];
-            viewController.requestUrl = parameters[FWRouterURLKey];
+            viewController.navigationItem.title = context.URL;
+            viewController.requestUrl = context.URL;
             [FWRouter pushViewController:viewController animated:YES];
         }];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_TEST withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_TEST withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = parameters;
-        viewController.navigationItem.title = [NSString stringWithFormat:@"app://test/%@", parameters[@"id"]];
-        FWBlockParam completion = parameters[FWRouterCompletionKey];
-        if (completion) {
-            viewController.completion = completion;
-        }
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
+        return nil;
     }];
     
-    [FWRouter registerURL:@"wildcard://*" withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:@"wildcard://*" withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = parameters;
-        viewController.navigationItem.title = @"wildcard://*";
-        FWBlockParam completion = parameters[FWRouterCompletionKey];
-        if (completion) {
-            viewController.completion = completion;
-        }
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_WILDCARD withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_WILDCARD withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = parameters;
-        viewController.navigationItem.title = TestRouter.ROUTE_WILDCARD;
-        FWBlockParam completion = parameters[FWRouterCompletionKey];
-        if (completion) {
-            viewController.completion = completion;
-        }
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_CONTROLLER withHandler:^(NSDictionary * _Nonnull parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_CONTROLLER withHandler:^id(FWRouterContext * _Nonnull context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = parameters;
-        viewController.navigationItem.title = [NSString stringWithFormat:@"app://controller/%@", parameters[@"id"]];
+        viewController.context = context;
         [FWRouter pushViewController:viewController animated:YES];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_OBJECT withObjectHandler:^id(NSDictionary *parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_OBJECT withHandler:^id(FWRouterContext *context) {
         TestRouterResultViewController *viewController = [TestRouterResultViewController new];
-        viewController.parameters = parameters;
-        viewController.navigationItem.title = TestRouter.ROUTE_OBJECT;
+        viewController.context = context;
         return viewController;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_OBJECT_UNMATCH withObjectHandler:^id(NSDictionary *parameters) {
-        return @"OBJECT UNMATCH";
+    [FWRouter registerURL:TestRouter.ROUTE_OBJECT_UNMATCH withHandler:^id(FWRouterContext *context) {
+        if (context.isOpening) {
+            return @"OBJECT UNMATCH";
+        } else {
+            FWRouter.errorHandler(context);
+            return nil;
+        }
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_JAVASCRIPT withHandler:^(NSDictionary *parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_JAVASCRIPT withHandler:^id(FWRouterContext *context) {
         UIViewController *topController = [[UIWindow fwMainWindow] fwTopViewController];
-        if (![topController isKindOfClass:[TestWebViewController class]] || !topController.isViewLoaded) return;
+        if (![topController isKindOfClass:[TestWebViewController class]] || !topController.isViewLoaded) return nil;
         
-        NSString *param = [parameters[@"param"] fwAsNSString];
+        NSString *param = [context.parameters[@"param"] fwAsNSString];
         NSString *result = [NSString stringWithFormat:@"js:%@ => app:%@", param, @"2"];
         
-        NSString *callback = [parameters[@"callback"] fwAsNSString];
+        NSString *callback = [context.parameters[@"callback"] fwAsNSString];
         NSString *javascript = [NSString stringWithFormat:@"%@('%@');", callback, result];
         
         TestWebViewController *viewController = (TestWebViewController *)topController;
         [viewController.webView evaluateJavaScript:javascript completionHandler:^(id value, NSError *error) {
             [[[UIWindow fwMainWindow] fwTopViewController] fwShowAlertWithTitle:@"App" message:[NSString stringWithFormat:@"app:%@ => js:%@", @"2", value] cancel:@"关闭" cancelBlock:nil];
         }];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_HOME withHandler:^(NSDictionary * _Nonnull parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_HOME withHandler:^id(FWRouterContext * _Nonnull context) {
         [UIWindow.fwMainWindow fwSelectTabBarIndex:0];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_HOME_TEST withHandler:^(NSDictionary * _Nonnull parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_HOME_TEST withHandler:^id(FWRouterContext * _Nonnull context) {
         TestModuleController *testController = [UIWindow.fwMainWindow fwSelectTabBarController:[TestModuleController class]];
         [testController setSelectedIndex:1];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_HOME_SETTINGS withHandler:^(NSDictionary * _Nonnull parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_HOME_SETTINGS withHandler:^id(FWRouterContext * _Nonnull context) {
         [UIWindow.fwMainWindow fwSelectTabBarIndex:2];
+        return nil;
     }];
     
-    [FWRouter registerURL:TestRouter.ROUTE_CLOSE withHandler:^(NSDictionary * _Nonnull parameters) {
+    [FWRouter registerURL:TestRouter.ROUTE_CLOSE withHandler:^id(FWRouterContext * _Nonnull context) {
         UIViewController *topController = [UIWindow.fwMainWindow fwTopViewController];
         [topController fwCloseViewControllerAnimated:YES];
+        return nil;
     }];
 }
 
@@ -178,26 +182,37 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 @implementation TestRouterResultViewController
 
++ (id)fwRouterURL
+{
+    return TestRouter.ROUTE_LOADER;
+}
+
++ (id)fwRouterHandler:(FWRouterContext *)context
+{
+    TestRouterResultViewController *viewController = [TestRouterResultViewController new];
+    viewController.context = context;
+    return viewController;
+}
+
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.fwBarTitle = self.context.URL;
     
     UILabel *label = [UILabel fwAutoLayoutView];
     label.numberOfLines = 0;
-    label.text = [NSString stringWithFormat:@"%@", self.parameters];
+    label.text = [NSString stringWithFormat:@"%@", self.context.parameters];
     [self.view addSubview:label];
     [label fwAlignCenterToSuperview];
     [label fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 40];
     
-    if (self.completion) {
+    if (self.context.completion) {
         FWWeakifySelf();
         [self fwSetRightBarItem:@"完成" block:^(id sender) {
             FWStrongifySelf();
-            if (self.completion) {
-                self.completion(@"我是回调数据");
-            }
+            [FWRouter completeURL:self.context result:@"我是回调数据"];
             [self fwCloseViewControllerAnimated:YES];
         }];
     }
@@ -263,7 +278,8 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"RewriteFilter", @"onRewriteFilter"],
                                          @[@"不匹配的openUrl", @"onOpenUnmatch"],
                                          @[@"不匹配的objectUrl", @"onOpenUnmatch2"],
-                                         @[@"objectUrl转openUrl", @"onOpenUnmatch3"],
+                                         @[@"打开objectUrl", @"onOpenUnmatch3"],
+                                         @[@"自动注册的Url", @"onOpenLoader"],
                                          @[@"跳转telprompt", @"onOpenTel"],
                                          @[@"跳转设置", @"onOpenSettings"],
                                          @[@"跳转home", @"onOpenHome"],
@@ -333,9 +349,6 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 - (void)onOpenObject
 {
     TestRouterResultViewController *viewController = [FWRouter objectForURL:TestRouter.ROUTE_OBJECT];
-    viewController.completion = ^(id result) {
-        NSLog(@"result: %@", result);
-    };
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:navController animated:YES completion:nil];
 }
@@ -367,12 +380,17 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenUnmatch2
 {
-    [FWRouter objectForURL:@"app://test/1"];
+    [FWRouter objectForURL:TestRouter.ROUTE_OBJECT_UNMATCH];
 }
 
 - (void)onOpenUnmatch3
 {
     [FWRouter openURL:TestRouter.ROUTE_OBJECT];
+}
+
+- (void)onOpenLoader
+{
+    [FWRouter openURL:TestRouter.ROUTE_LOADER];
 }
 
 - (void)onOpenFilter

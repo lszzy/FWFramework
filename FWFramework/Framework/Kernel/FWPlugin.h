@@ -13,11 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 加载指定插件
 #define FWPlugin(pluginProtocol) \
-    ((id<pluginProtocol>)[FWPluginManager.sharedInstance loadPlugin:@protocol(pluginProtocol)])
+    ((id<pluginProtocol>)[FWPluginManager loadPlugin:@protocol(pluginProtocol)])
 
 /// 注册指定插件
 #define FWRegPlugin(pluginProtocol) \
-    [FWPluginManager.sharedInstance registerPlugin:@protocol(pluginProtocol) withObject:self.class];
+    [FWPluginManager registerPlugin:@protocol(pluginProtocol) withObject:self.class];
+
+@class FWLoader<InputType, OutputType>;
 
 /*!
  @brief 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
@@ -27,91 +29,32 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWPluginManager : NSObject
 
-/*! @brief 单例模式 */
-@property (class, nonatomic, readonly) FWPluginManager *sharedInstance;
+/// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
+@property (class, nonatomic, readonly) FWLoader<Protocol *, id> *sharedLoader;
 
-/*!
- @brief 注册默认单例插件，仅当插件未注册时生效
- 
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param obj 插件类或对象，必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerDefault:(Protocol *)protocol withObject:(id)obj;
+/// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
++ (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj;
+/// 预置单例插件，仅当插件未注册时生效，插件类或对象必须实现protocol
++ (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj;
 
-/*!
- @brief 注册默认单例插件，仅当插件未注册时生效
- 
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param block 插件块，返回的对象必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerDefault:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerDefault(_:withBlock:));
+/// 注册单例句柄插件，仅当插件未使用时生效，返回的对象必须实现protocol
++ (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerPlugin(_:withBlock:));
+/// 预置单例句柄插件，仅当插件未注册时生效，返回的对象必须实现protocol
++ (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(presetPlugin(_:withBlock:));
 
-/*!
- @brief 注册默认工厂插件，仅当插件未注册时生效
- 
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param factory 插件块，返回的对象必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerDefault:(Protocol *)protocol withFactory:(id (^)(void))factory;
+/// 注册工厂插件，仅当插件未使用时生效，返回的对象必须实现protocol
++ (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
+/// 预置工厂插件，仅当插件未注册时生效，返回的对象必须实现protocol
++ (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
 
-/*!
- @brief 注册单例插件，仅当插件未使用时生效
- 
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param obj 插件类或对象，必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj;
+/// 取消插件注册，仅当插件未使用时生效
++ (void)unregisterPlugin:(Protocol *)protocol;
 
-/*!
- @brief 注册单例插件，仅当插件未使用时生效
- 
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param block 插件块，返回的对象必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block NS_SWIFT_NAME(registerPlugin(_:withBlock:));
+/// 延迟加载插件对象，调用后不可再注册该插件
++ (nullable id)loadPlugin:(Protocol *)protocol;
 
-/*!
- @brief 注册工厂插件，仅当插件未使用时生效
- 
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @param factory 插件块，返回的对象必须实现protocol
- @return 是否注册成功
- */
-- (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory;
-
-/*!
- @brief 取消插件注册，仅当插件未使用时生效
-
- @param protocol 插件协议
- */
-- (void)unregisterPlugin:(Protocol *)protocol;
-
-/*!
- @brief 延迟加载插件对象，调用后不可再注册该插件
-
- @exception NSException 插件未实现插件协议时抛出异常
- @param protocol 插件协议
- @return 插件对象，未注册时返回nil
- */
-- (nullable id)loadPlugin:(Protocol *)protocol;
-
-/*!
- @brief 释放插件对象并标记为未使用，释放后可重新注册该插件
-
- @param protocol 插件协议
- */
-- (void)unloadPlugin:(Protocol *)protocol;
+/// 释放插件对象并标记为未使用，释放后可重新注册该插件
++ (void)unloadPlugin:(Protocol *)protocol;
 
 @end
 

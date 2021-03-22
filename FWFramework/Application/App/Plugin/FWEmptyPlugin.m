@@ -33,7 +33,7 @@
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
-    id<FWEmptyPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWEmptyPlugin)];
+    id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
         [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
         return;
@@ -56,7 +56,7 @@
 
 - (void)fwHideEmptyView
 {
-    id<FWEmptyPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWEmptyPlugin)];
+    id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwHideEmptyView:)]) {
         [plugin fwHideEmptyView:self];
         return;
@@ -68,7 +68,7 @@
 
 - (BOOL)fwExistsEmptyView
 {
-    id<FWEmptyPlugin> plugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWEmptyPlugin)];
+    id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwExistsEmptyView:)]) {
         return [plugin fwExistsEmptyView:self];
     }

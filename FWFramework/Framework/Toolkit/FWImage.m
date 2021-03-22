@@ -64,7 +64,7 @@ UIImage * FWImageFile(NSString *path) {
 {
     if (!data) return nil;
     
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:)]) {
         return [imagePlugin fwImageDecode:data scale:scale];
     }
@@ -76,7 +76,7 @@ UIImage * FWImageFile(NSString *path) {
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwDownloadImage:completion:progress:)]) {
         NSURL *imageURL = nil;
         if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
@@ -97,7 +97,7 @@ UIImage * FWImageFile(NSString *path) {
 
 + (void)fwCancelImageDownload:(id)receipt
 {
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwCancelImageDownload:)]) {
         [imagePlugin fwCancelImageDownload:receipt];
     }
@@ -229,7 +229,7 @@ UIImage * FWImageFile(NSString *path) {
 
 + (Class)fwImageViewAnimatedClass
 {
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageViewAnimatedClass)]) {
         return [imagePlugin fwImageViewAnimatedClass];
     }
@@ -265,7 +265,7 @@ UIImage * FWImageFile(NSString *path) {
                completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
                  progress:(void (^)(double))progress
 {
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:completion:progress:)]) {
         NSURL *imageURL = nil;
         if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
@@ -285,7 +285,7 @@ UIImage * FWImageFile(NSString *path) {
 
 - (void)fwCancelImageRequest
 {
-    id<FWImagePlugin> imagePlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwCancelImageRequest:)]) {
         [imagePlugin fwCancelImageRequest:self];
     }
@@ -317,7 +317,7 @@ UIImage * FWImageFile(NSString *path) {
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
+        [FWPluginManager registerPlugin:@protocol(FWImagePlugin) withObject:[FWSDWebImagePlugin class]];
     });
 }
 

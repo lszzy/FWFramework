@@ -22,12 +22,12 @@
 - (void)renderModel
 {
     [self fwSetRightBarItem:@"切换插件" block:^(id  _Nonnull sender) {
-        id<FWAlertPlugin> alertPlugin = [[FWPluginManager sharedInstance] loadPlugin:@protocol(FWAlertPlugin)];
+        id<FWAlertPlugin> alertPlugin = [FWPluginManager loadPlugin:@protocol(FWAlertPlugin)];
         if (alertPlugin) {
-            [[FWPluginManager sharedInstance] unloadPlugin:@protocol(FWAlertPlugin)];
-            [[FWPluginManager sharedInstance] unregisterPlugin:@protocol(FWAlertPlugin)];
+            [FWPluginManager unloadPlugin:@protocol(FWAlertPlugin)];
+            [FWPluginManager unregisterPlugin:@protocol(FWAlertPlugin)];
         } else {
-            [[FWPluginManager sharedInstance] registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
+            [FWPluginManager registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
         }
     }];
 }

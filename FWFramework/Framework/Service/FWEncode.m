@@ -173,7 +173,7 @@
 
 #pragma mark - Query
 
-+ (NSString *)fwQueryEncode:(NSDictionary *)dictionary
++ (NSString *)fwQueryEncode:(NSDictionary<NSString *,id> *)dictionary
 {
     NSMutableString *string = [NSMutableString string];
     for (NSString *key in [dictionary allKeys]) {
@@ -187,22 +187,19 @@
     return string;
 }
 
-- (NSDictionary *)fwQueryDecode
+- (NSDictionary<NSString *,NSString *> *)fwQueryDecode
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSArray *parameters = [self componentsSeparatedByString:@"&"];
     for (NSString *parameter in parameters) {
-        NSArray *contents = [parameter componentsSeparatedByString:@"="];
+        NSArray<NSString *> *contents = [parameter componentsSeparatedByString:@"="];
         if ([contents count] == 2) {
             NSString *key = [contents objectAtIndex:0];
             NSString *value = [contents objectAtIndex:1];
-            value = [value stringByRemovingPercentEncoding];
-            if (key && value) {
-                [dict setObject:value forKey:key];
-            }
+            dict[key] = [value stringByRemovingPercentEncoding];
         }
     }
-    return [NSDictionary dictionaryWithDictionary:dict];
+    return [dict copy];
 }
 
 #pragma mark - Md5
@@ -300,15 +297,24 @@
 
 #pragma mark - FWSafeType
 
-NSString * FWSafeString(id value) {
-    return value ? [NSString stringWithFormat:@"%@", value] : @"";
-}
-
 NSNumber * FWSafeNumber(id value) {
     if (!value) return @0;
     if ([value isKindOfClass:[NSNumber class]]) return value;
     NSString *string = [NSString stringWithFormat:@"%@", value];
     return [NSNumber numberWithDouble:[string doubleValue]];
+}
+
+NSString * FWSafeString(id value) {
+    if (!value) return @"";
+    if ([value isKindOfClass:[NSString class]]) return value;
+    return [NSString stringWithFormat:@"%@", value];
+}
+
+NSURL * FWSafeURL(id value) {
+    if (!value) return [NSURL new];
+    if ([value isKindOfClass:[NSURL class]]) return value;
+    if ([value isKindOfClass:[NSURLRequest class]]) return [value URL] ?: [NSURL new];
+    return [NSURL fwURLWithString:FWSafeString(value)] ?: [NSURL new];
 }
 
 #pragma mark - NSObject+FWSafeType
@@ -577,6 +583,16 @@ NSNumber * FWSafeNumber(id value) {
 #pragma mark - NSURL+FWSafeType
 
 @implementation NSURL (FWSafeType)
+
+- (NSDictionary<NSString *,NSString *> *)fwQueryDictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:self.absoluteString ?: @""];
+    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        dict[obj.name] = [obj.value stringByRemovingPercentEncoding];
+    }];
+    return [dict copy];
+}
 
 + (instancetype)fwURLWithString:(NSString *)URLString
 {

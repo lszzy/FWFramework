@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 不含NSNull的字典
  */
-@property (nonatomic, copy, readonly) NSDictionary *fwRemoveNull;
+@property (nonatomic, copy, readonly) NSDictionary<KeyType, ObjectType> *fwRemoveNull;
 
 /*!
  @brief 移除字典中NSNull值
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
  @praram recursive 是否递归
  @return 不含NSNull的字典
  */
-- (NSDictionary *)fwRemoveNullRecursive:(BOOL)recursive;
+- (NSDictionary<KeyType, ObjectType> *)fwRemoveNullRecursive:(BOOL)recursive;
 
 @end
 
