@@ -187,6 +187,14 @@
         // 能否直接使用之前的指示器(避免进度重复调用出现闪烁)
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
+            // 清除延时隐藏Timer
+            NSTimer *indicatorTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:));
+            if (indicatorTimer) {
+                [indicatorTimer invalidate];
+                objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), nil, OBJC_ASSOCIATION_ASSIGN);
+            }
+            
+            // 重用指示器视图并移至顶层
             [self bringSubviewToFront:indicatorView];
             indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
             centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
@@ -277,6 +285,29 @@
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
         [indicatorView removeFromSuperview];
+        
+        // 清除延时隐藏Timer
+        NSTimer *indicatorTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:));
+        if (indicatorTimer) {
+            [indicatorTimer invalidate];
+            objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), nil, OBJC_ASSOCIATION_ASSIGN);
+        }
+        
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)fwHideIndicatorLoadingAfterDelay:(NSTimeInterval)delay
+{
+    UIButton *indicatorView = [self viewWithTag:2011];
+    if (indicatorView) {
+        // 创建Common模式Timer，避免ScrollView滚动时不触发
+        NSTimer *indicatorTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
+            [self fwHideIndicatorLoading];
+        } repeats:NO];
+        objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), indicatorTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
         return YES;
     }
     return NO;
@@ -343,6 +374,7 @@
     if (toastView) {
         [toastView removeFromSuperview];
         
+        // 清除延时隐藏Timer
         NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:));
         if (toastTimer) {
             [toastTimer invalidate];
