@@ -8,6 +8,64 @@
  */
 
 #import "FWRouter.h"
+#import "FWLoader.h"
+
+#pragma mark - FWRouterContext
+
+@interface FWRouterContext ()
+
+@property (nonatomic, assign) BOOL isOpening;
+@property (nonatomic, copy) NSDictionary *routeParameters;
+@property (nonatomic, copy) NSDictionary *parameters;
+
+@end
+
+@implementation FWRouterContext
+
+- (instancetype)initWithURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(FWRouterCompletion)completion
+{
+    self = [super init];
+    if (self) {
+        _URL = URL;
+        _userInfo = userInfo;
+        _completion = completion;
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    FWRouterContext *context = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
+    context.isOpening = self.isOpening;
+    context.routeParameters = self.routeParameters;
+    return context;
+}
+
+- (NSDictionary *)parameters
+{
+    if (_parameters) return _parameters;
+
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    if (self.routeParameters) {
+        [parameters addEntriesFromDictionary:self.routeParameters];
+    }
+    
+    NSURL *nsurl = self.URL.length > 0 ? [NSURL URLWithString:self.URL] : nil;
+    if (!nsurl && self.URL.length > 0) {
+        nsurl = [NSURL URLWithString:[self.URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    if (nsurl) {
+        NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
+        for (NSURLQueryItem *item in queryItems) {
+            parameters[item.name] = [item.value stringByRemovingPercentEncoding];
+        }
+    }
+    
+    _parameters = [parameters copy];
+    return _parameters;
+}
+
+@end
 
 #pragma mark - FWRouter
 
@@ -16,33 +74,20 @@ static NSString * FWRouterSpecialCharacters = @"/?&.";
 
 static NSString * const FWRouterCoreKey = @"FWRouterCore";
 static NSString * const FWRouterBlockKey = @"FWRouterBlock";
-static NSString * const FWRouterTypeKey = @"FWRouterType";
-
-NSString * const FWRouterURLKey = @"FWRouterURL";
-NSString * const FWRouterCompletionKey = @"FWRouterCompletion";
-NSString * const FWRouterUserInfoKey = @"FWRouterUserInfo";
-
-typedef NS_ENUM(NSInteger, FWRouterType) {
-    FWRouterTypeDefault = 0,
-    FWRouterTypeObject = 1,
-};
 
 @interface FWRouter ()
 
-// 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy], FWRouterTypeKey: @(FWRouterTypeDefault)}}}
+// 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy]}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
-// 过滤器URL Handler，URL调用时优先触发
-@property (nonatomic, copy) FWRouterFilterHandler filterHandler;
+@property (nonatomic, copy) BOOL (^preFilter)(FWRouterContext *context);
+@property (nonatomic, copy) id (^postFilter)(FWRouterContext *context, id object);
+@property (nonatomic, copy) void (^errorHandler)(FWRouterContext *context);
 
-// 错误URL Handler，URL未注册时触发
-@property (nonatomic, copy) FWRouterHandler errorHandler;
-
-// rewrite过滤器，优先调用
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
-
-// rewrite规格列表，声明到扩展
 @property (nonatomic, strong) NSMutableArray *rewriteRules;
+
+@property (nonatomic, strong) FWLoader<NSString *, id> *routeLoader;
 
 @end
 
@@ -64,8 +109,35 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     if (self) {
         _routes = [[NSMutableDictionary alloc] init];
         _rewriteRules = [[NSMutableArray alloc] init];
+        _routeLoader = [[FWLoader<NSString *, id> alloc] init];
     }
     return self;
+}
+
++ (FWLoader<NSString *,id> *)sharedLoader
+{
+    return [self sharedInstance].routeLoader;
+}
+
+#pragma mark - Class
+
++ (void)registerClass:(Class<FWRouterProtocol>)clazz
+{
+    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
+    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return;
+    if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return;
+    
+    [self registerURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
+        return [clazz fwRouterHandler:context];
+    }];
+}
+
++ (void)unregisterClass:(Class<FWRouterProtocol>)clazz
+{
+    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
+    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return;
+    
+    [self unregisterURL:[clazz fwRouterURL]];
 }
 
 #pragma mark - URL
@@ -80,22 +152,6 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
         if (handler && subRoutes) {
             subRoutes[FWRouterCoreKey] = [handler copy];
-            subRoutes[FWRouterTypeKey] = @(FWRouterTypeDefault);
-        }
-    }
-}
-
-+ (void)registerURL:(id)pattern withObjectHandler:(FWRouterObjectHandler)handler
-{
-    if ([pattern isKindOfClass:[NSArray class]]) {
-        for (id subPattern in pattern) {
-            [self registerURL:subPattern withObjectHandler:handler];
-        }
-    } else {
-        NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
-        if (handler && subRoutes) {
-            subRoutes[FWRouterCoreKey] = [handler copy];
-            subRoutes[FWRouterTypeKey] = @(FWRouterTypeObject);
         }
     }
 }
@@ -135,146 +191,144 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     [[self sharedInstance].routes removeAllObjects];
 }
 
-#pragma mark - Filter
+#pragma mark - Handler
 
-+ (void)setFilterHandler:(FWRouterFilterHandler)handler
++ (BOOL (^)(FWRouterContext *))preFilter
 {
-    [self sharedInstance].filterHandler = handler;
+    return [self sharedInstance].preFilter;
 }
 
-+ (void)setErrorHandler:(FWRouterHandler)handler
++ (void)setPreFilter:(BOOL (^)(FWRouterContext *))preFilter
 {
-    [self sharedInstance].errorHandler = handler;
+    [self sharedInstance].preFilter = preFilter;
+}
+
++ (id (^)(FWRouterContext *, id))postFilter
+{
+    return [self sharedInstance].postFilter;
+}
+
++ (void)setPostFilter:(id (^)(FWRouterContext *, id))postFilter
+{
+    [self sharedInstance].postFilter = postFilter;
+}
+
++ (void (^)(FWRouterContext *))errorHandler
+{
+    return [self sharedInstance].errorHandler;
+}
+
++ (void)setErrorHandler:(void (^)(FWRouterContext *))errorHandler
+{
+    [self sharedInstance].errorHandler = errorHandler;
 }
 
 #pragma mark - Open
 
-+ (BOOL)canOpenURL:(NSString *)URL
++ (BOOL)canOpenURL:(id)URL
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return NO;
     
-    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:rewriteURL];
-    if (parameters[FWRouterBlockKey]) {
-        return [parameters[FWRouterTypeKey] integerValue] == FWRouterTypeDefault;
-    } else {
-        return NO;
-    }
+    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    return routeParameters[FWRouterBlockKey] ? YES : NO;
 }
 
-+ (void)openURL:(NSString *)URL
++ (void)openURL:(id)URL
 {
     [self openURL:URL completion:nil];
 }
 
-+ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
++ (void)openURL:(id)URL userInfo:(NSDictionary *)userInfo
 {
     [self openURL:URL userInfo:userInfo completion:nil];
 }
 
-+ (void)openURL:(NSString *)URL completion:(FWRouterCompletion)completion
++ (void)openURL:(id)URL completion:(FWRouterCompletion)completion
 {
     [self openURL:URL userInfo:nil completion:completion];
 }
 
-+ (void)openURL:(NSString *)URL userInfo:(NSDictionary *)userInfo completion:(FWRouterCompletion)completion
++ (void)openURL:(id)URL userInfo:(NSDictionary *)userInfo completion:(FWRouterCompletion)completion
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return;
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
-    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
-        if ([obj isKindOfClass:[NSString class]]) {
-            parameters[key] = [obj stringByRemovingPercentEncoding];
+    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
+    FWRouterHandler handler = routeParameters[FWRouterBlockKey];
+    [routeParameters removeObjectForKey:FWRouterBlockKey];
+    
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:completion];
+    context.routeParameters = [routeParameters copy];
+    context.isOpening = YES;
+    
+    if ([self sharedInstance].preFilter) {
+        if (![self sharedInstance].preFilter(context)) return;
+    }
+    if (handler) {
+        id object = handler(context);
+        if (object && [self sharedInstance].postFilter) {
+            [self sharedInstance].postFilter(context, object);
         }
-    }];
-    
-    if (completion) {
-        parameters[FWRouterCompletionKey] = completion;
+        return;
     }
-    if (userInfo) {
-        parameters[FWRouterUserInfoKey] = userInfo;
-    }
-    
-    FWRouterHandler handler = parameters[FWRouterBlockKey];
-    FWRouterType type = [parameters[FWRouterTypeKey] integerValue];
-    [parameters removeObjectForKey:FWRouterBlockKey];
-    [parameters removeObjectForKey:FWRouterTypeKey];
-    
-    if ([self sharedInstance].filterHandler) {
-        if (![self sharedInstance].filterHandler(parameters)) return;
-    }
-    if (handler && type == FWRouterTypeDefault) {
-        handler(parameters);
-    } else {
-        if ([self sharedInstance].errorHandler) {
-            [self sharedInstance].errorHandler(parameters);
-        }
+    if ([self sharedInstance].errorHandler) {
+        [self sharedInstance].errorHandler(context);
     }
 }
 
-+ (void)completeURL:(NSDictionary *)parameters result:(id)result
++ (void)completeURL:(FWRouterContext *)context result:(id)result
 {
-    FWRouterCompletion completion = parameters[FWRouterCompletionKey];
-    if (completion) {
-        completion(result);
+    if (context.completion) {
+        context.completion(result);
     }
 }
 
 #pragma mark - Object
 
-+ (BOOL)isObjectURL:(NSString *)URL
++ (BOOL)isObjectURL:(id)URL
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return NO;
     
-    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:rewriteURL];
-    if (parameters[FWRouterBlockKey]) {
-        return [parameters[FWRouterTypeKey] integerValue] == FWRouterTypeObject;
-    } else {
-        return NO;
-    }
+    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    return routeParameters[FWRouterBlockKey] ? YES : NO;
 }
 
-+ (id)objectForURL:(NSString *)URL
++ (id)objectForURL:(id)URL
 {
     return [self objectForURL:URL userInfo:nil];
 }
 
-+ (id)objectForURL:(NSString *)URL userInfo:(NSDictionary *)userInfo
++ (id)objectForURL:(id)URL userInfo:(NSDictionary *)userInfo
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return nil;
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    NSMutableDictionary *parameters = [[self sharedInstance] extractParametersFromURL:URL];
     
-    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
-        if ([obj isKindOfClass:[NSString class]]) {
-            parameters[key] = [obj stringByRemovingPercentEncoding];
+    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
+    FWRouterHandler handler = routeParameters[FWRouterBlockKey];
+    [routeParameters removeObjectForKey:FWRouterBlockKey];
+    
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:nil];
+    context.routeParameters = [routeParameters copy];
+    context.isOpening = NO;
+    
+    if ([self sharedInstance].preFilter) {
+        if (![self sharedInstance].preFilter(context)) return nil;
+    }
+    if (handler) {
+        id object = handler(context);
+        if (object && [self sharedInstance].postFilter) {
+            return [self sharedInstance].postFilter(context, object);
         }
-    }];
-    
-    if (userInfo) {
-        parameters[FWRouterUserInfoKey] = userInfo;
+        return object;
     }
-    
-    FWRouterObjectHandler handler = parameters[FWRouterBlockKey];
-    FWRouterType type = [parameters[FWRouterTypeKey] integerValue];
-    [parameters removeObjectForKey:FWRouterBlockKey];
-    [parameters removeObjectForKey:FWRouterTypeKey];
-    
-    if ([self sharedInstance].filterHandler) {
-        if (![self sharedInstance].filterHandler(parameters)) return nil;
+    if ([self sharedInstance].errorHandler) {
+        [self sharedInstance].errorHandler(context);
     }
-    if (handler && type == FWRouterTypeObject) {
-        return handler(parameters);
-    } else {
-        if ([self sharedInstance].errorHandler) {
-            [self sharedInstance].errorHandler(parameters);
-        }
-        return nil;
-    }
+    return nil;
 }
 
 #pragma mark - Generator
@@ -381,14 +435,24 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
     return [pathComponents copy];
 }
 
+- (NSMutableDictionary *)routeParametersFromURL:(NSString *)url
+{
+    NSMutableDictionary *parameters = [self extractParametersFromURL:url];
+    if (parameters[FWRouterBlockKey]) return parameters;
+    
+    id object = [self.routeLoader load:url];
+    if (object) {
+        [FWRouter registerClass:object];
+        parameters = [self extractParametersFromURL:url];
+    }
+    return parameters;
+}
+
 - (NSMutableDictionary *)extractParametersFromURL:(NSString *)url
 {
-    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
-    
-    parameters[FWRouterURLKey] = url;
-    
-    NSMutableDictionary* subRoutes = self.routes;
-    NSArray* pathComponents = [self pathComponentsFromURL:url];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *subRoutes = self.routes;
+    NSArray *pathComponents = [self pathComponentsFromURL:url];
     
     BOOL wildcardMatched = NO;
     for (NSString *pathComponent in pathComponents) {
@@ -421,7 +485,7 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
                         newPathComponent = [newPathComponent stringByReplacingOccurrencesOfString:suffixToStrip withString:@""];
                     }
                 }
-                parameters[newKey] = newPathComponent;
+                parameters[newKey] = [newPathComponent stringByRemovingPercentEncoding];
                 break;
             } else {
                 wildcardMatched = NO;
@@ -434,24 +498,9 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
         }
     }
     
-    // Extract Params From Query.
-    NSURL *nsurl = url.length > 0 ? [NSURL URLWithString:url] : nil;
-    if (!nsurl && url.length > 0) {
-        nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
-    if (nsurl) {
-        NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
-        
-        for (NSURLQueryItem *item in queryItems) {
-            parameters[item.name] = item.value;
-        }
-    }
-    
     if (subRoutes[FWRouterCoreKey]) {
         parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
-        parameters[FWRouterTypeKey] = subRoutes[FWRouterTypeKey];
     }
-    
     return parameters;
 }
 
@@ -459,24 +508,24 @@ typedef NS_ENUM(NSInteger, FWRouterType) {
 
 #pragma mark - FWRouter+Rewrite
 
-NSString *const FFRouterRewriteMatchRuleKey = @"matchRule";
-NSString *const FFRouterRewriteTargetRuleKey = @"targetRule";
+NSString *const FWRouterRewriteMatchRuleKey = @"matchRule";
+NSString *const FWRouterRewriteTargetRuleKey = @"targetRule";
 
-NSString *const FFRouterRewriteComponentURLKey = @"url";
-NSString *const FFRouterRewriteComponentSchemeKey = @"scheme";
-NSString *const FFRouterRewriteComponentHostKey = @"host";
-NSString *const FFRouterRewriteComponentPortKey = @"port";
-NSString *const FFRouterRewriteComponentPathKey = @"path";
-NSString *const FFRouterRewriteComponentQueryKey = @"query";
-NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
+NSString *const FWRouterRewriteComponentURLKey = @"url";
+NSString *const FWRouterRewriteComponentSchemeKey = @"scheme";
+NSString *const FWRouterRewriteComponentHostKey = @"host";
+NSString *const FWRouterRewriteComponentPortKey = @"port";
+NSString *const FWRouterRewriteComponentPathKey = @"path";
+NSString *const FWRouterRewriteComponentQueryKey = @"query";
+NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 
 @implementation FWRouter (Rewrite)
 
-+ (NSString *)rewriteURL:(NSString *)URL
++ (NSString *)rewriteURL:(id)URL
 {
-    if (!URL) return nil;
+    NSString *rewriteURL = [URL isKindOfClass:[NSURL class]] ? [URL absoluteString] : URL;
+    if (!rewriteURL) return nil;
     
-    NSString *rewriteURL = URL;
     if ([self sharedInstance].rewriteFilter) {
         rewriteURL = [self sharedInstance].rewriteFilter(rewriteURL);
         if (!rewriteURL) return nil;
@@ -500,12 +549,12 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     NSArray *rules = [[self sharedInstance].rewriteRules copy];
     for (int idx = 0; idx < rules.count; idx ++) {
         NSDictionary *ruleDic = [rules objectAtIndex:idx];
-        if ([[ruleDic objectForKey:FFRouterRewriteMatchRuleKey] isEqualToString:matchRule]) {
+        if ([[ruleDic objectForKey:FWRouterRewriteMatchRuleKey] isEqualToString:matchRule]) {
             [[self sharedInstance].rewriteRules removeObject:ruleDic];
         }
     }
     
-    NSDictionary *ruleDic = @{FFRouterRewriteMatchRuleKey:matchRule,FFRouterRewriteTargetRuleKey:targetRule};
+    NSDictionary *ruleDic = @{FWRouterRewriteMatchRuleKey:matchRule,FWRouterRewriteTargetRuleKey:targetRule};
     [[self sharedInstance].rewriteRules addObject:ruleDic];
     
 }
@@ -521,8 +570,8 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
             continue;
         }
         NSDictionary *ruleDic = [rules objectAtIndex:idx];
-        NSString *matchRule = [ruleDic objectForKey:FFRouterRewriteMatchRuleKey];
-        NSString *targetRule = [ruleDic objectForKey:FFRouterRewriteTargetRuleKey];
+        NSString *matchRule = [ruleDic objectForKey:FWRouterRewriteMatchRuleKey];
+        NSString *targetRule = [ruleDic objectForKey:FWRouterRewriteTargetRuleKey];
         if (!matchRule || !targetRule) {
             continue;
         }
@@ -535,7 +584,7 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     NSArray *rules = [[self sharedInstance].rewriteRules copy];
     for (int idx = 0; idx < rules.count; idx ++) {
         NSDictionary *ruleDic = [rules objectAtIndex:idx];
-        if ([[ruleDic objectForKey:FFRouterRewriteMatchRuleKey] isEqualToString:matchRule]) {
+        if ([[ruleDic objectForKey:FWRouterRewriteMatchRuleKey] isEqualToString:matchRule]) {
             [[self sharedInstance].rewriteRules removeObject:ruleDic];
             break;
         }
@@ -557,7 +606,7 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
         NSRegularExpression *replaceRx = [NSRegularExpression regularExpressionWithPattern:@"[$]([$|#]?)(\\d+)" options:0 error:NULL];
         
         for (NSDictionary *rule in rules) {
-            NSString *matchRule = [rule objectForKey:FFRouterRewriteMatchRuleKey];
+            NSString *matchRule = [rule objectForKey:FWRouterRewriteMatchRuleKey];
             if (!([matchRule isKindOfClass:[NSString class]] && matchRule.length > 0)) continue;
             
             NSRange searchRange = NSMakeRange(0, targetURL.length);
@@ -573,7 +622,7 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
                         [groupValues addObject:[targetURL substringWithRange:groupRange]];
                     }
                 }
-                NSString *targetRule = [rule objectForKey:FFRouterRewriteTargetRuleKey];
+                NSString *targetRule = [rule objectForKey:FWRouterRewriteTargetRuleKey];
                 NSMutableString *newTargetURL = [NSMutableString stringWithString:targetRule];
                 [replaceRx enumerateMatchesInString:targetRule options:0 range:NSMakeRange(0, targetRule.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
                     NSRange matchRange = result.range;
@@ -600,13 +649,13 @@ NSString *const FFRouterRewriteComponentFragmentKey = @"fragment";
     
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:encodeURL];
     NSMutableDictionary *componentDic = [[NSMutableDictionary alloc] init];
-    [componentDic setValue:originalURL forKey:FFRouterRewriteComponentURLKey];
-    [componentDic setValue:urlComponents.scheme forKey:FFRouterRewriteComponentSchemeKey];
-    [componentDic setValue:urlComponents.host forKey:FFRouterRewriteComponentHostKey];
-    [componentDic setValue:urlComponents.port forKey:FFRouterRewriteComponentPortKey];
-    [componentDic setValue:urlComponents.path forKey:FFRouterRewriteComponentPathKey];
-    [componentDic setValue:urlComponents.query forKey:FFRouterRewriteComponentQueryKey];
-    [componentDic setValue:urlComponents.fragment forKey:FFRouterRewriteComponentFragmentKey];
+    [componentDic setValue:originalURL forKey:FWRouterRewriteComponentURLKey];
+    [componentDic setValue:urlComponents.scheme forKey:FWRouterRewriteComponentSchemeKey];
+    [componentDic setValue:urlComponents.host forKey:FWRouterRewriteComponentHostKey];
+    [componentDic setValue:urlComponents.port forKey:FWRouterRewriteComponentPortKey];
+    [componentDic setValue:urlComponents.path forKey:FWRouterRewriteComponentPathKey];
+    [componentDic setValue:urlComponents.query forKey:FWRouterRewriteComponentQueryKey];
+    [componentDic setValue:urlComponents.fragment forKey:FWRouterRewriteComponentFragmentKey];
     
     NSMutableString *targetURL = [NSMutableString stringWithString:targetRule];
     NSRegularExpression *replaceRx = [NSRegularExpression regularExpressionWithPattern:@"[$]([$|#]?)(\\w+)" options:0 error:NULL];

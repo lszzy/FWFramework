@@ -8,7 +8,7 @@
  */
 
 #import "FWMediator.h"
-#import "FWPlugin.h"
+#import "FWLoader.h"
 #import "FWLog.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *moduleDict;
 @property (nonatomic, strong) NSMutableDictionary *moduleInvokeDict;
+@property (nonatomic, strong) FWLoader<Protocol *, id> *moduleLoader;
 
 @end
 
@@ -30,8 +31,24 @@
         instance = [[self alloc] init];
         instance.moduleDict = [NSMutableDictionary dictionary];
         instance.moduleInvokeDict = [NSMutableDictionary dictionary];
+        instance.moduleLoader = [[FWLoader<Protocol *, id> alloc] init];
     });
     return instance;
+}
+
+- (NSString *)description
+{
+    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
+    for (NSString *protocolName in self.moduleDict) {
+        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
+    }
+    
+    return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
+}
+
++ (FWLoader<Protocol *,id> *)sharedLoader
+{
+    return [FWMediator sharedInstance].moduleLoader;
 }
 
 + (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
@@ -62,7 +79,16 @@
     }
     
     Class moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
-    if (!moduleClass || ![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
+    if (!moduleClass) {
+        id object = [[FWMediator sharedLoader] load:serviceProtocol];
+        if (!object) return nil;
+        
+        [FWMediator registerService:serviceProtocol withModule:object];
+        moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
+        if (!moduleClass) return nil;
+    }
+    
+    if (![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
         return nil;
     }
     
@@ -115,8 +141,10 @@
         } @catch (NSException *exception) {}
     }
     
-    FWLogDebug(@"%@", [FWMediator sharedInstance].debugDescription);
-    FWLogDebug(@"%@", [FWPluginManager sharedInstance].debugDescription);
+#ifdef DEBUG
+    FWLogDebug(@"%@", [FWMediator sharedInstance]);
+    FWLogDebug(@"%@", [NSClassFromString(@"FWPluginManager") sharedInstance]);
+#endif
 }
 
 + (BOOL)checkAllModulesWithSelector:(SEL)selector arguments:(NSArray *)arguments
@@ -225,19 +253,6 @@
         }
     }
     return YES;
-}
-
-#pragma mark - NSObject
-
-- (NSString *)debugDescription
-{
-    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
-    for (NSString *protocolName in self.moduleDict) {
-        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
-    }
-    
-    NSString *debugDescription = [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
-    return debugDescription;
 }
 
 @end

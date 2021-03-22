@@ -30,10 +30,12 @@
 		function log(message, data) {
 			var log = document.getElementById('log')
 			var el = document.createElement('div')
+            var json = JSON.stringify(data)
 			el.className = 'logLine'
-			el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+			el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + json
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
+            console.log(uniqueId++ + '. ' + message + ':\n' + json)
 		}
 
 		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {

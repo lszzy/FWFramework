@@ -16,7 +16,7 @@ import Foundation
     }
 }
 
-@objcMembers class NotificationModule: NSObject, NotificationService {
+class NotificationModule: NSObject, NotificationService {
     private static let sharedModule = NotificationModule()
     
     public static func sharedInstance() -> Self {
