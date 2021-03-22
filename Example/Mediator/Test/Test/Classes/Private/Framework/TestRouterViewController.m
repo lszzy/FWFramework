@@ -33,30 +33,32 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 + (void)registerFilters
 {
-    FWRouter.filterHandler = ^id _Nullable(FWRouterContext * _Nonnull context) {
+    FWRouter.preFilter = ^BOOL(FWRouterContext * _Nonnull context) {
         NSURL *url = [NSURL fwURLWithString:context.URL];
         if ([UIApplication fwIsSystemURL:url]) {
             [UIApplication fwOpenURL:url];
-            return @YES;
+            return NO;
         }
         if ([url.absoluteString hasPrefix:@"app://filter/"]) {
             TestRouterResultViewController *viewController = [TestRouterResultViewController new];
             viewController.context = context;
             [FWRouter pushViewController:viewController animated:YES];
-            return @YES;
+            return NO;
         }
-        return nil;
+        return YES;
     };
-    FWRouter.errorHandler = ^id _Nullable(FWRouterContext * _Nonnull context) {
+    FWRouter.postFilter = ^(FWRouterContext * _Nonnull context, id  _Nonnull object) {
+        if (context.isOpening) {
+            if ([object isKindOfClass:[UIViewController class]]) {
+                [FWRouter openViewController:object animated:YES];
+            } else {
+                FWRouter.errorHandler(context);
+            }
+        }
+        return object;
+    };
+    FWRouter.errorHandler = ^(FWRouterContext * _Nonnull context) {
         [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\nurl: %@\nparameters: %@", context.URL, context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
-        return nil;
-    };
-    FWRouter.openHandler = ^(FWRouterContext * _Nonnull context, id  _Nonnull object) {
-        if ([object isKindOfClass:[UIViewController class]]) {
-            [FWRouter openViewController:object animated:YES];
-        } else {
-            FWRouter.errorHandler(context);
-        }
     };
 }
 
@@ -194,7 +196,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     
     UILabel *label = [UILabel fwAutoLayoutView];
     label.numberOfLines = 0;
-    label.text = [NSString stringWithFormat:@"url: %@\nparameters: %@", self.context.URL, self.context.parameters];
+    label.text = [NSString stringWithFormat:@"%@", self.context.parameters];
     [self.view addSubview:label];
     [label fwAlignCenterToSuperview];
     [label fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 40];

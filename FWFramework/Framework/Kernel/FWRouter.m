@@ -80,9 +80,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 // 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy]}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
-@property (nonatomic, copy) void (^openHandler)(FWRouterContext *context, id object);
-@property (nonatomic, copy) FWRouterHandler filterHandler;
-@property (nonatomic, copy) FWRouterHandler errorHandler;
+@property (nonatomic, copy) BOOL (^preFilter)(FWRouterContext *context);
+@property (nonatomic, copy) id (^postFilter)(FWRouterContext *context, id object);
+@property (nonatomic, copy) void (^errorHandler)(FWRouterContext *context);
 
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
 @property (nonatomic, strong) NSMutableArray *rewriteRules;
@@ -193,34 +193,34 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Handler
 
-+ (void (^)(FWRouterContext *, id))openHandler
++ (BOOL (^)(FWRouterContext *))preFilter
 {
-    return [self sharedInstance].openHandler;
+    return [self sharedInstance].preFilter;
 }
 
-+ (void)setOpenHandler:(void (^)(FWRouterContext *, id))handler
++ (void)setPreFilter:(BOOL (^)(FWRouterContext *))preFilter
 {
-    [self sharedInstance].openHandler = handler;
+    [self sharedInstance].preFilter = preFilter;
 }
 
-+ (FWRouterHandler)filterHandler
++ (id (^)(FWRouterContext *, id))postFilter
 {
-    return [self sharedInstance].filterHandler;
+    return [self sharedInstance].postFilter;
 }
 
-+ (void)setFilterHandler:(FWRouterHandler)handler
++ (void)setPostFilter:(id (^)(FWRouterContext *, id))postFilter
 {
-    [self sharedInstance].filterHandler = handler;
+    [self sharedInstance].postFilter = postFilter;
 }
 
-+ (FWRouterHandler)errorHandler
++ (void (^)(FWRouterContext *))errorHandler
 {
     return [self sharedInstance].errorHandler;
 }
 
-+ (void)setErrorHandler:(FWRouterHandler)handler
++ (void)setErrorHandler:(void (^)(FWRouterContext *))errorHandler
 {
-    [self sharedInstance].errorHandler = handler;
+    [self sharedInstance].errorHandler = errorHandler;
 }
 
 #pragma mark - Open
@@ -263,13 +263,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     context.routeParameters = [routeParameters copy];
     context.isOpening = YES;
     
-    if ([self sharedInstance].filterHandler) {
-        if ([self sharedInstance].filterHandler(context)) return;
+    if ([self sharedInstance].preFilter) {
+        if (![self sharedInstance].preFilter(context)) return;
     }
     if (handler) {
         id object = handler(context);
-        if (object && [self sharedInstance].openHandler) {
-            [self sharedInstance].openHandler(context, object);
+        if (object && [self sharedInstance].postFilter) {
+            [self sharedInstance].postFilter(context, object);
         }
         return;
     }
@@ -315,15 +315,18 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     context.routeParameters = [routeParameters copy];
     context.isOpening = NO;
     
-    if ([self sharedInstance].filterHandler) {
-        id object = [self sharedInstance].filterHandler(context);
-        if (object) return object;
+    if ([self sharedInstance].preFilter) {
+        if (![self sharedInstance].preFilter(context)) return nil;
     }
     if (handler) {
-        return handler(context);
+        id object = handler(context);
+        if (object && [self sharedInstance].postFilter) {
+            return [self sharedInstance].postFilter(context, object);
+        }
+        return object;
     }
     if ([self sharedInstance].errorHandler) {
-        return [self sharedInstance].errorHandler(context);
+        [self sharedInstance].errorHandler(context);
     }
     return nil;
 }
