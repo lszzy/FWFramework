@@ -253,13 +253,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return;
-    
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:completion];
     
     NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
+    
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:completion];
     context.routeParameters = [routeParameters copy];
     context.isOpening = YES;
     
@@ -305,13 +305,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return nil;
-    
     URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:nil];
     
     NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
+    
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:nil];
     context.routeParameters = [routeParameters copy];
     context.isOpening = NO;
     
@@ -437,7 +437,20 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 - (NSMutableDictionary *)routeParametersFromURL:(NSString *)url
 {
-    NSMutableDictionary *routeParameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *parameters = [self extractParametersFromURL:url];
+    if (parameters[FWRouterBlockKey]) return parameters;
+    
+    id object = [self.routeLoader load:url];
+    if (object) {
+        [FWRouter registerClass:object];
+        parameters = [self extractParametersFromURL:url];
+    }
+    return parameters;
+}
+
+- (NSMutableDictionary *)extractParametersFromURL:(NSString *)url
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     NSMutableDictionary *subRoutes = self.routes;
     NSArray *pathComponents = [self pathComponentsFromURL:url];
     
@@ -472,7 +485,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
                         newPathComponent = [newPathComponent stringByReplacingOccurrencesOfString:suffixToStrip withString:@""];
                     }
                 }
-                routeParameters[newKey] = [newPathComponent stringByRemovingPercentEncoding];
+                parameters[newKey] = [newPathComponent stringByRemovingPercentEncoding];
                 break;
             } else {
                 wildcardMatched = NO;
@@ -486,9 +499,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     
     if (subRoutes[FWRouterCoreKey]) {
-        routeParameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
+        parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
     }
-    return routeParameters;
+    return parameters;
 }
 
 @end
