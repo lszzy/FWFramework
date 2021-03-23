@@ -321,6 +321,16 @@ UIImage * FWImageFile(NSString *path) {
     });
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _displayOptions = SDWebImageRetryFailed;
+        _downloadOptions = SDWebImageRetryFailed;
+    }
+    return self;
+}
+
 - (Class)fwImageViewAnimatedClass
 {
     return [SDAnimatedImageView class];
@@ -337,9 +347,17 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
+    if (self.displayFilter) {
+        self.displayFilter(imageView);
+    }
+    SDWebImageOptions options = self.displayOptions;
+    if (completion && !self.forceDisplay) {
+        options |= SDWebImageAvoidAutoSetImage;
+    }
+    
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
-                          options:SDWebImageRetryFailed
+                          options:options
                           context:nil
                          progress:progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                             if (expectedSize > 0) {
@@ -368,7 +386,7 @@ UIImage * FWImageFile(NSString *path) {
 {
     return [[SDWebImageManager sharedManager]
             loadImageWithURL:imageURL
-            options:SDWebImageRetryFailed
+            options:self.downloadOptions
             progress:(progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                 if (expectedSize > 0) {
                     if ([NSThread isMainThread]) {
