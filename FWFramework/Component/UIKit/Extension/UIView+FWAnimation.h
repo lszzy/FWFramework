@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  添加CATransition转场动画
- 备注：移除动画调用[self.layer removeAllAnimations]
+ 备注：移除动画可调用[self fwRemoveAnimation]
  
  @param type           动画类型
  @param subtype        子类型
@@ -139,10 +139,28 @@ NS_ASSUME_NONNULL_BEGIN
  @return CATransition
  */
 - (CATransition *)fwAddTransitionWithType:(NSString *)type
-                                  subtype:(NSString *)subtype
-                           timingFunction:(NSString *)timingFunction
+                                  subtype:(nullable NSString *)subtype
+                           timingFunction:(nullable NSString *)timingFunction
                                  duration:(CFTimeInterval)duration
                                completion:(nullable void (^)(BOOL finished))completion;
+
+/**
+ 添加CATransition渐变动画
+ 备注：移除动画调用[self fwRemoveAnimation]
+ 
+ @param timingFunction 动画速度
+ @param duration       持续时间，0为默认(0.25秒)
+ @param completion     完成事件
+ @return CATransition
+ */
+- (CATransition *)fwAddTransitionFade:(nullable NSString *)timingFunction
+                             duration:(CFTimeInterval)duration
+                           completion:(nullable void (^)(BOOL finished))completion;
+
+/**
+ 移除单个框架视图动画
+ */
+- (void)fwRemoveAnimation;
 
 /**
  移除所有视图动画
