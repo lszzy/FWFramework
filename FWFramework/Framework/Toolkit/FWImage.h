@@ -153,7 +153,20 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// SDWebImage图片插件，启用Component_SDWebImage组件后生效
 @interface FWSDWebImagePlugin : NSObject <FWImagePlugin>
 
+/// 单例模式
 @property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
+
+/// 图片显示过滤器，可自定义显示效果(如渐变)，示例：if (!imageView.sd_imageTransition) { image.sd_imageTransition = SDWebImageTransition.fadeTransition; }
+@property (nonatomic, copy, nullable) void (^displayFilter)(UIImageView *imageView);
+
+/// 图片显示时如果有自定义completion，是否强制先调用setImage:显示图片，默认NO
+@property (nonatomic, assign) BOOL forceDisplay;
+
+/// 图片显示选项，用于setImageURL，默认SDWebImageRetryFailed
+@property (nonatomic, assign) NSUInteger displayOptions;
+
+/// 图片下载选项，用于downloadImage，默认SDWebImageRetryFailed
+@property (nonatomic, assign) NSUInteger downloadOptions;
 
 @end
 
