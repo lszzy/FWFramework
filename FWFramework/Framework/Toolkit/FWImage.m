@@ -347,14 +347,15 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-    if (self.displayFilter) {
-        self.displayFilter(imageView);
+    if (self.preFilter) {
+        self.preFilter(imageView);
     }
     SDWebImageOptions options = self.displayOptions;
     if (completion && !self.forceDisplay) {
         options |= SDWebImageAvoidAutoSetImage;
     }
     
+    __weak __typeof__(self) self_weak_ = self;
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:options
@@ -370,9 +371,16 @@ UIImage * FWImageFile(NSString *path) {
                                 }
                             }
                         } : nil
-                        completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                            completion(image, error);
-                        } : nil];
+                        completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                            __typeof__(self) self = self_weak_;
+                            if (self.postFilter) {
+                                self.postFilter(imageView, image);
+                            }
+                                                
+                            if (completion) {
+                                completion(image, error);
+                            }
+                        }];
 }
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
