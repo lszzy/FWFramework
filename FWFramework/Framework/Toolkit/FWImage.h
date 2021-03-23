@@ -156,8 +156,11 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// 单例模式
 @property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
 
-/// 图片显示过滤器，可自定义显示效果(如渐变)，示例：if (!imageView.sd_imageTransition) { image.sd_imageTransition = SDWebImageTransition.fadeTransition; }
-@property (nonatomic, copy, nullable) void (^displayFilter)(UIImageView *imageView);
+/// 图片前置过滤器，setImageURL开始时调用。渐变效果示例：if (!imageView.sd_imageTransition) { image.sd_imageTransition = SDWebImageTransition.fadeTransition; }
+@property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
+
+/// 图片后置过滤器，setImageURL完成时调用
+@property (nonatomic, copy, nullable) void (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
 
 /// 图片显示时如果有自定义completion，是否强制先调用setImage:显示图片，默认NO
 @property (nonatomic, assign) BOOL forceDisplay;

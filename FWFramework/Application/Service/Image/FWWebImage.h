@@ -126,7 +126,17 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 /// 应用默认图片插件
 @interface FWAppImagePlugin : NSObject
 
+/// 单例模式
 @property (class, nonatomic, readonly) FWAppImagePlugin *sharedInstance;
+
+/// 图片前置过滤器，setImageURL开始时调用
+@property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
+
+/// 图片后置过滤器，setImageURL完成时调用
+@property (nonatomic, copy, nullable) void (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
+
+/// 图片显示时如果有自定义completion，是否强制先调用setImage:显示图片，默认NO
+@property (nonatomic, assign) BOOL forceDisplay;
 
 @end
 

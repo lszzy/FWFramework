@@ -762,13 +762,25 @@
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
+    if (self.preFilter) {
+        self.preFilter(imageView);
+    }
+    
+    __weak __typeof__(self) self_weak_ = self;
     [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL placeholder:^{
         if (placeholder) imageView.image = placeholder;
     } completion:^(UIImage *image, NSError *error) {
+        __typeof__(self) self = self_weak_;
+        if (image && (self.forceDisplay || !completion)) {
+            imageView.image = image;
+        }
+        
+        if (self.postFilter) {
+            self.postFilter(imageView, image);
+        }
+        
         if (completion) {
             completion(image, error);
-        } else {
-            if (image) imageView.image = image;
         }
     } progress:progress];
 }
