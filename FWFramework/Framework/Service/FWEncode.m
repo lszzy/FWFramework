@@ -500,6 +500,11 @@ NSURL * FWSafeURL(id value) {
     return [self dataUsingEncoding:NSUTF8StringEncoding];
 }
 
+- (NSURL *)fwURL
+{
+    return [NSURL fwURLWithString:self];
+}
+
 - (NSString *)fwSubstringFromIndex:(NSInteger)from
 {
     if (from < 0) {
