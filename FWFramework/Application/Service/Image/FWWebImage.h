@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWImage.h"
 #import "FWAnimatedImage.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -99,12 +100,14 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
                             imageCache:(nullable id <FWImageRequestCache>)imageCache;
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
+                                                 options:(FWImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress *downloadProgress))progress;
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
                                            withReceiptID:(NSUUID *)receiptID
+                                                 options:(FWImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress *downloadProgress))progress;
@@ -113,6 +116,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 - (void)downloadImageForObject:(id)object
                       imageURL:(nullable id)imageURL
+                       options:(FWImageOptions)options
                    placeholder:(nullable void (^)(void))placeholder
                     completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
@@ -134,9 +138,6 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 /// 图片后置过滤器，setImageURL完成时调用
 @property (nonatomic, copy, nullable) void (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
-
-/// 图片显示时如果有自定义completion，是否强制先调用setImage:显示图片，默认NO
-@property (nonatomic, assign) BOOL forceDisplay;
 
 @end
 

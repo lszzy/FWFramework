@@ -9,7 +9,6 @@
 
 #import "FWWebImage.h"
 #import "FWPlugin.h"
-#import "FWImage.h"
 #import "FWHTTPSessionManager.h"
 #import <objc/runtime.h>
 
@@ -363,14 +362,16 @@
 }
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+                                                 options:(FWImageOptions)options
                                                  success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
                                                  failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
-    return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
+    return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] options:options success:success failure:failure progress:progress];
 }
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
                                            withReceiptID:(nonnull NSUUID *)receiptID
+                                                 options:(FWImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
@@ -402,14 +403,16 @@
             case NSURLRequestUseProtocolCachePolicy:
             case NSURLRequestReturnCacheDataElseLoad:
             case NSURLRequestReturnCacheDataDontLoad: {
-                UIImage *cachedImage = [self.imageCache imageforRequest:request withAdditionalIdentifier:nil];
-                if (cachedImage != nil) {
-                    if (success) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            success(request, nil, cachedImage);
-                        });
+                if (!(options & FWImageOptionRefreshCached)) {
+                    UIImage *cachedImage = [self.imageCache imageforRequest:request withAdditionalIdentifier:nil];
+                    if (cachedImage != nil) {
+                        if (success) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                success(request, nil, cachedImage);
+                            });
+                        }
+                        return;
                     }
-                    return;
                 }
                 break;
             }
@@ -641,6 +644,7 @@
 
 - (void)downloadImageForObject:(id)object
                       imageURL:(id)url
+                       options:(FWImageOptions)options
                    placeholder:(void (^)(void))placeholder
                     completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
                       progress:(void (^)(double))progress
@@ -662,8 +666,11 @@
     [self cancelImageDownloadTask:object];
 
     //Use the image from the image cache if it exists
-    id<FWImageRequestCache> imageCache = self.imageCache;
-    UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
+    UIImage *cachedImage = nil;
+    if (!(options & FWImageOptionRefreshCached)) {
+        id<FWImageRequestCache> imageCache = self.imageCache;
+        cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
+    }
     if (cachedImage) {
         if (completion) {
             completion(cachedImage, nil);
@@ -679,6 +686,7 @@
         receipt = [self
                    downloadImageForURL:urlRequest
                    withReceiptID:downloadID
+                   options:options
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
@@ -759,6 +767,7 @@
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
+            options:(FWImageOptions)options
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
@@ -767,11 +776,11 @@
     }
     
     __weak __typeof__(self) self_weak_ = self;
-    [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL placeholder:^{
+    [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
         if (placeholder) imageView.image = placeholder;
     } completion:^(UIImage *image, NSError *error) {
         __typeof__(self) self = self_weak_;
-        if (image && (self.forceDisplay || !completion)) {
+        if (image && !(options & FWImageOptionAvoidSetImage)) {
             imageView.image = image;
         }
         
@@ -791,10 +800,11 @@
 }
 
 - (id)fwDownloadImage:(NSURL *)imageURL
+              options:(FWImageOptions)options
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
-    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
         if (completion) {
             completion(responseObject, nil);
         }

@@ -21,6 +21,8 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// 网络图片加载选项，默认兼容SDWebImage
 typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
+    /// 空选项，默认值
+    FWImageOptionNone = 0,
     /// 是否图片缓存存在时仍重新请求(依赖NSURLCache)
     FWImageOptionRefreshCached = 1 << 3,
     /// 禁止调用imageView.setImage:显示图片
@@ -176,8 +178,8 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 图片前置过滤器，setImageURL开始时调用。渐变效果示例：if (!imageView.sd_imageTransition) { image.sd_imageTransition = SDWebImageTransition.fadeTransition; }
 @property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
 
-/// 图片后置过滤器，setImageURL完成时调用。返回的image传递给completion使用
-@property (nonatomic, copy, nullable) UIImage * _Nullable (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
+/// 图片后置过滤器，setImageURL完成时调用
+@property (nonatomic, copy, nullable) void (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
 
 @end
 
