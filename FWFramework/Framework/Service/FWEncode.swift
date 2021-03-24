@@ -375,6 +375,7 @@ extension Dictionary {
 extension String {
     public var fwNSString: NSString { return self as NSString }
     public var fwUTF8Data: Data? { return self.data(using: .utf8) }
+    public var fwURL: URL? { return fwNSString.fwURL }
 }
 extension URL {
     public var fwNSURL: NSURL { return self as NSURL }

@@ -376,6 +376,13 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
 @property (nonatomic, strong, readonly, nullable) NSData *fwUTF8Data;
 
 /*!
+ @brief 转换为URL对象
+ 
+ @return URL对象
+ */
+@property (nonatomic, copy, readonly, nullable) NSURL *fwURL;
+
+/*!
  @brief 从指定位置截取子串
  
  @param from 起始位置
