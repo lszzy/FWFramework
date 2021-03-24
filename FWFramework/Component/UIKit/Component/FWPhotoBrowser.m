@@ -492,7 +492,7 @@
         self.userInteractionEnabled = false;
         // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
-        [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+        [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             if (image) {
                 self.imageView.image = image;

@@ -53,7 +53,7 @@
     NSString *gifImageUrl = [NSString stringWithFormat:@"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif%@", timestampStr];
     progressView.progress = 0;
     progressView.hidden = NO;
-    [imageView fwSetImageWithURL:gifImageUrl placeholderImage:nil completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+    [imageView fwSetImageWithURL:gifImageUrl placeholderImage:nil options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
         progressView.hidden = YES;
         if (image) {
             imageView.image = image;
