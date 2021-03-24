@@ -120,12 +120,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Query
 
 /**
- * 字典编码为url参数字符串
+ * 字典编码为URL参数字符串
  */
 + (NSString *)fwQueryEncode:(NSDictionary<NSString *, id> *)dictionary;
 
 /**
- * url参数字符串解码为字典
+ * URL参数字符串解码为字典，支持完整URL
  */
 - (NSDictionary<NSString *, NSString *> *)fwQueryDecode;
 

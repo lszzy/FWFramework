@@ -587,8 +587,13 @@ NSURL * FWSafeURL(id value) {
 - (NSDictionary<NSString *,NSString *> *)fwQueryDictionary
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:self.absoluteString ?: @""];
-    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSString *urlString = self.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    if (!urlComponents) {
+        urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    }
+    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
         dict[obj.name] = [obj.value stringByRemovingPercentEncoding];
     }];
     return [dict copy];
