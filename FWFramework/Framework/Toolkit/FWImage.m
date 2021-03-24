@@ -370,7 +370,7 @@ UIImage * FWImageFile(NSString *path) {
                         completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                             __typeof__(self) self = self_weak_;
                             if (self.postFilter) {
-                                image = self.postFilter(imageView, image);
+                                self.postFilter(imageView, image);
                             }
                                                 
                             if (completion) {
