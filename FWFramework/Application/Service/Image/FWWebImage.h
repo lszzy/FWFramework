@@ -133,6 +133,9 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 /// 单例模式
 @property (class, nonatomic, readonly) FWAppImagePlugin *sharedInstance;
 
+/// 图片加载完成是否显示渐变动画，默认NO
+@property (nonatomic, assign) BOOL fadeAnimated;
+
 /// 图片前置过滤器，setImageURL开始时调用
 @property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
 

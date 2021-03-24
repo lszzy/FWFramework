@@ -347,6 +347,10 @@ UIImage * FWImageFile(NSString *path) {
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
+    if (self.fadeAnimated && !imageView.sd_imageTransition) {
+        imageView.sd_imageTransition = SDWebImageTransition.fadeTransition;
+    }
+    
     if (self.preFilter) {
         self.preFilter(imageView);
     }

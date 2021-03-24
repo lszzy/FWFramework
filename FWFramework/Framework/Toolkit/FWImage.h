@@ -175,7 +175,10 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 单例模式
 @property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
 
-/// 图片前置过滤器，setImageURL开始时调用。渐变效果示例：if (!imageView.sd_imageTransition) { image.sd_imageTransition = SDWebImageTransition.fadeTransition; }
+/// 图片加载完成是否显示渐变动画，默认NO
+@property (nonatomic, assign) BOOL fadeAnimated;
+
+/// 图片前置过滤器，setImageURL开始时调用
 @property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
 
 /// 图片后置过滤器，setImageURL完成时调用
