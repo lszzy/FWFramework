@@ -57,6 +57,7 @@
 - (void)renderModel
 {
     FWWeakifySelf();
+    FWAppImagePlugin.sharedInstance.fadeAnimated = YES;
     [self fwSetRightBarItem:@"Toggle" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         self.imageType = (self.imageType + 1) > 2 ? 0 : (self.imageType + 1);
@@ -130,7 +131,7 @@
         cell.systemView.image = nil;
         cell.animatedView.image = nil;
         [cell.systemView fwSetImageWithURL:url];
-        [cell.animatedView fwSetImageWithURL:url];
+        [cell.animatedView fwSetImageWithURL:url placeholderImage:[UIImage imageNamed:@"public_icon"] options:FWImageOptionRefreshCached completion:nil progress:nil];
     }
     return cell;
 }
