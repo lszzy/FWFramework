@@ -114,6 +114,8 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 - (void)cancelTaskForImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt;
 
+- (nullable NSURL *)imageURLForObject:(id)object;
+
 - (void)downloadImageForObject:(id)object
                       imageURL:(nullable id)imageURL
                        options:(FWImageOptions)options

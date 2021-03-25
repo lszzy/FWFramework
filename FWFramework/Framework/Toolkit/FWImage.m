@@ -250,6 +250,15 @@ UIImage * FWImageFile(NSString *path) {
     objc_setAssociatedObject([UIImageView class], @selector(fwImageViewAnimatedClass), animatedClass, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSURL *)fwImageURL
+{
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageURL:)]) {
+        return [imagePlugin fwImageURL:self];
+    }
+    return nil;
+}
+
 - (void)fwSetImageWithURL:(id)url
 {
     [self fwSetImageWithURL:url placeholderImage:nil];
@@ -338,6 +347,11 @@ UIImage * FWImageFile(NSString *path) {
 - (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale
 {
     return [UIImage sd_imageWithData:data scale:scale];
+}
+
+- (NSURL *)fwImageURL:(UIImageView *)imageView
+{
+    return imageView.sd_imageURL;
 }
 
 - (void)fwImageView:(UIImageView *)imageView

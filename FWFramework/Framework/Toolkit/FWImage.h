@@ -108,6 +108,9 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 动画ImageView视图类，优先加载插件，默认UIImageView
 @property (class, nonatomic, unsafe_unretained) Class fwImageViewAnimatedClass;
 
+/// 当前正在加载的网络图片URL
+@property (nonatomic, copy, readonly, nullable) NSURL *fwImageURL;
+
 /// 加载网络图片，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(nullable id)url;
 
@@ -138,6 +141,9 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 @protocol FWImagePlugin <NSObject>
 
 @optional
+
+/// 获取imageView正在加载的URL插件方法
+- (nullable NSURL *)fwImageURL:(UIImageView *)imageView;
 
 /// imageView加载网络图片插件方法
 - (void)fwImageView:(UIImageView *)imageView

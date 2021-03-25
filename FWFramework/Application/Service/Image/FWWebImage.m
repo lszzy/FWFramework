@@ -379,7 +379,7 @@
     __block NSURLSessionDataTask *task = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = request.URL.absoluteString;
-        if (URLIdentifier == nil) {
+        if (URLIdentifier.length == 0) {
             if (failure) {
                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -642,6 +642,30 @@
     objc_setAssociatedObject(object, @selector(activeImageDownloadReceipt:), receipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSURL *)imageURLForObject:(id)object
+{
+    if (!object) return nil;
+    return (NSURL *)objc_getAssociatedObject(object, @selector(imageURLForObject:));
+}
+
+- (void)setImageURL:(NSURL *)imageURL forObject:(id)object
+{
+    if (!object) return;
+    objc_setAssociatedObject(object, @selector(imageURLForObject:), imageURL, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)imageOperationKeyForObject:(id)object
+{
+    if (!object) return nil;
+    return (NSString *)objc_getAssociatedObject(object, @selector(imageOperationKeyForObject:));
+}
+
+- (void)setImageOperationKey:(NSString *)operationKey forObject:(id)object
+{
+    if (!object) return;
+    objc_setAssociatedObject(object, @selector(imageOperationKeyForObject:), operationKey, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (void)downloadImageForObject:(id)object
                       imageURL:(id)url
                        options:(FWImageOptions)options
@@ -651,6 +675,14 @@
 {
     if (!object) return;
     NSURLRequest *urlRequest = [self urlRequestWithURL:url];
+    [self setImageOperationKey:NSStringFromClass([object class]) forObject:object];
+    FWImageDownloadReceipt *activeReceipt = [self activeImageDownloadReceipt:object];
+    if (activeReceipt != nil) {
+        [self cancelTaskForImageDownloadReceipt:activeReceipt];
+        [self setActiveImageDownloadReceipt:nil forObject:object];
+    }
+    [self setImageURL:[urlRequest URL] forObject:object];
+    
     if ([urlRequest URL] == nil) {
         if (placeholder) {
             placeholder();
@@ -661,11 +693,7 @@
         }
         return;
     }
-    
-    if ([[self activeImageDownloadReceipt:object].task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString]) return;
-    [self cancelImageDownloadTask:object];
 
-    //Use the image from the image cache if it exists
     UIImage *cachedImage = nil;
     if (!(options & FWImageOptionRefreshCached)) {
         id<FWImageRequestCache> imageCache = self.imageCache;
@@ -724,6 +752,7 @@
         [self cancelTaskForImageDownloadReceipt:receipt];
         [self setActiveImageDownloadReceipt:nil forObject:object];
     }
+    [self setImageOperationKey:nil forObject:object];
 }
 
 @end
@@ -764,6 +793,11 @@
     return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale];
 }
 
+- (NSURL *)fwImageURL:(UIImageView *)imageView
+{
+    return [[FWImageDownloader sharedDownloader] imageURLForObject:imageView];
+}
+
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
@@ -782,14 +816,14 @@
         __typeof__(self) self = self_weak_;
         BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
         if (autoSetImage && self.fadeAnimated && !isCache) {
-            NSUUID *originalReceiptID = [[FWImageDownloader sharedDownloader] activeImageDownloadReceipt:imageView].receiptID;
+            NSString *originalOperationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
             [UIView transitionWithView:imageView duration:0 options:0 animations:^{
-                NSUUID *receiptID = [[FWImageDownloader sharedDownloader] activeImageDownloadReceipt:imageView].receiptID;
-                if (receiptID && ![originalReceiptID isEqual:receiptID]) return;
+                NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+                if (!operationKey || ![originalOperationKey isEqualToString:operationKey]) return;
             } completion:^(BOOL finished) {
                 [UIView transitionWithView:imageView duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction animations:^{
-                    NSUUID *receiptID = [[FWImageDownloader sharedDownloader] activeImageDownloadReceipt:imageView].receiptID;
-                    if (receiptID && ![originalReceiptID isEqual:receiptID]) return;
+                    NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+                    if (!operationKey || ![originalOperationKey isEqualToString:operationKey]) return;
                     
                     imageView.image = image;
                 } completion:nil];
