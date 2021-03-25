@@ -777,7 +777,7 @@
     
     __weak __typeof__(self) self_weak_ = self;
     [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
-        if (placeholder) imageView.image = placeholder;
+        imageView.image = placeholder;
     } completion:^(UIImage *image, BOOL isCache, NSError *error) {
         __typeof__(self) self = self_weak_;
         BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);

@@ -43,6 +43,8 @@
 
 @interface TestImageViewController () <FWTableViewController>
 
+@property (nonatomic, assign) BOOL isSDWebImage;
+
 @end
 
 @implementation TestImageViewController
@@ -52,8 +54,27 @@
     return UITableViewStyleGrouped;
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@"Change" block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        self.isSDWebImage = !self.isSDWebImage;
+        [FWPluginManager unloadPlugin:@protocol(FWImagePlugin)];
+        [FWPluginManager registerPlugin:@protocol(FWImagePlugin) withObject:self.isSDWebImage ? [FWSDWebImagePlugin class] : [FWAppImagePlugin class]];
+        
+        [self.tableData removeAllObjects];
+        [self.tableView reloadData];
+        self.tableView.contentOffset = CGPointZero;
+        [self renderData];
+    }];
+}
+
 - (void)renderData
 {
+    self.isSDWebImage = [[FWPluginManager loadPlugin:@protocol(FWImagePlugin)] isKindOfClass:[FWSDWebImagePlugin class]];
+    self.fwBarTitle = self.isSDWebImage ? @"FWImage - SDWebImage" : @"FWImage - FWWebImage";
+    FWSDWebImagePlugin.sharedInstance.fadeAnimated = YES;
     FWAppImagePlugin.sharedInstance.fadeAnimated = YES;
     
     [self.tableData setArray:@[
@@ -103,7 +124,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TestImageCell *cell = [TestImageCell fwCellWithTableView:tableView];
+    TestImageCell *cell = [TestImageCell fwCellWithTableView:tableView style:UITableViewCellStyleDefault reuseIdentifier:self.isSDWebImage ? @"SDWebImage" : @"FWWebImage"];
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = [fileName lastPathComponent];
     if (!fileName.fwIsFormatUrl) {
