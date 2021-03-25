@@ -65,7 +65,8 @@
         
         [self.tableData removeAllObjects];
         [self.tableView reloadData];
-        self.tableView.contentOffset = CGPointZero;
+        [self.tableView layoutIfNeeded];
+        [self.tableView setContentOffset:CGPointZero animated:NO];
         [self renderData];
     }];
 }
@@ -129,8 +130,8 @@
     cell.nameLabel.text = [fileName lastPathComponent];
     if (!fileName.fwIsFormatUrl) {
         UIImage *image = [UIImage fwImageWithFile:fileName bundle:TestBundle.bundle];
-        cell.systemView.image = image;
-        cell.animatedView.image = image;
+        [cell.systemView fwSetImageWithURL:nil placeholderImage:image];
+        [cell.animatedView fwSetImageWithURL:nil placeholderImage:image];
     } else {
         NSString *url = fileName;
         if ([url hasPrefix:@"http://kvm.wuyong.site"]) {
