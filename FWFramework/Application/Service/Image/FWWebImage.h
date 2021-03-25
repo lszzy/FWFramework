@@ -118,7 +118,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
                       imageURL:(nullable id)imageURL
                        options:(FWImageOptions)options
                    placeholder:(nullable void (^)(void))placeholder
-                    completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                    completion:(nullable void (^)(UIImage * _Nullable image, BOOL isCache, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
 - (void)cancelImageDownloadTask:(id)object;

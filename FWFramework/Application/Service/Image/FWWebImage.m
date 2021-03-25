@@ -646,7 +646,7 @@
                       imageURL:(id)url
                        options:(FWImageOptions)options
                    placeholder:(void (^)(void))placeholder
-                    completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+                    completion:(void (^)(UIImage * _Nullable, BOOL, NSError * _Nullable))completion
                       progress:(void (^)(double))progress
 {
     if (!object) return;
@@ -657,7 +657,7 @@
         }
         if (completion) {
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
-            completion(nil, error);
+            completion(nil, NO, error);
         }
         return;
     }
@@ -673,7 +673,7 @@
     }
     if (cachedImage) {
         if (completion) {
-            completion(cachedImage, nil);
+            completion(cachedImage, YES, nil);
         }
         [self setActiveImageDownloadReceipt:nil forObject:object];
     } else {
@@ -691,7 +691,7 @@
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                            if (completion) {
-                               completion(responseObject, nil);
+                               completion(responseObject, NO, nil);
                            }
                            [strongSelf setActiveImageDownloadReceipt:nil forObject:object];
                        }
@@ -700,7 +700,7 @@
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                         if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                             if (completion) {
-                                completion(nil, error);
+                                completion(nil, NO, error);
                             }
                             [strongSelf setActiveImageDownloadReceipt:nil forObject:object];
                         }
@@ -778,7 +778,7 @@
     __weak __typeof__(self) self_weak_ = self;
     [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
         if (placeholder) imageView.image = placeholder;
-    } completion:^(UIImage *image, NSError *error) {
+    } completion:^(UIImage *image, BOOL isCache, NSError *error) {
         __typeof__(self) self = self_weak_;
         BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
         if (autoSetImage) {
