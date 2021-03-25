@@ -781,7 +781,20 @@
     } completion:^(UIImage *image, BOOL isCache, NSError *error) {
         __typeof__(self) self = self_weak_;
         BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
-        if (autoSetImage) {
+        if (autoSetImage && self.fadeAnimated && !isCache) {
+            NSUUID *originalReceiptID = [[FWImageDownloader sharedDownloader] activeImageDownloadReceipt:imageView].receiptID;
+            [UIView transitionWithView:imageView duration:0 options:0 animations:^{
+                NSUUID *receiptID = [[FWImageDownloader sharedDownloader] activeImageDownloadReceipt:imageView].receiptID;
+                if (!receiptID || ![originalReceiptID isEqual:receiptID]) return;
+            } completion:^(BOOL finished) {
+                [UIView transitionWithView:imageView duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction animations:^{
+                    NSUUID *receiptID = [[FWImageDownloader sharedDownloader] activeImageDownloadReceipt:imageView].receiptID;
+                    if (!receiptID || ![originalReceiptID isEqual:receiptID]) return;
+                    
+                    imageView.image = image;
+                } completion:nil];
+            }];
+        } else if (autoSetImage) {
             imageView.image = image;
         }
         
