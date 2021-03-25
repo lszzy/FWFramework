@@ -780,7 +780,8 @@
         if (placeholder) imageView.image = placeholder;
     } completion:^(UIImage *image, NSError *error) {
         __typeof__(self) self = self_weak_;
-        if (image && !(options & FWImageOptionAvoidSetImage)) {
+        BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
+        if (autoSetImage) {
             imageView.image = image;
         }
         

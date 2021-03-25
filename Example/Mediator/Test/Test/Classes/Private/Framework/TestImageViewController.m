@@ -66,6 +66,9 @@
 
 - (void)renderData
 {
+    NSString *title = self.imageType == 0 ? @"Local" : (self.imageType == 1 ? @"Network" : @"Remote");
+    self.fwBarTitle = [NSString stringWithFormat:@"FWImage - %@", title];
+    
     if (self.imageType == 2) {
         [self.tableData setArray:@[
             // @"http://www.httpwatch.com/httpgallery/authentication/authenticatedimage/default.aspx?0.35786508303135633",
