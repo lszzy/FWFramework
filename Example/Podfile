@@ -5,7 +5,7 @@ use_frameworks!
 target "Example" do
   project 'Example', 'Release-Prod' => :release, 'Release-Test' => :release, 'Debug-Test' => :debug, 'Debug-Prod' => :debug
 
-  pod 'FWFramework', :path => '../'
+  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'Component/SDWebImage']
   pod 'FWDebug', :configurations => ['Debug', 'Debug-Test', 'Debug-Prod']
   pod 'Mediator', :path => 'Mediator/Mediator/'
   pod 'Core', :path => 'Mediator/Core/'
