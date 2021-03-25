@@ -145,19 +145,6 @@ NS_ASSUME_NONNULL_BEGIN
                                completion:(nullable void (^)(BOOL finished))completion;
 
 /**
- 添加CATransition渐变动画
- 备注：移除动画调用[self fwRemoveAnimation]
- 
- @param timingFunction 动画速度
- @param duration       持续时间，0为默认(0.25秒)
- @param completion     完成事件
- @return CATransition
- */
-- (CATransition *)fwAddTransitionFade:(nullable NSString *)timingFunction
-                             duration:(CFTimeInterval)duration
-                           completion:(nullable void (^)(BOOL finished))completion;
-
-/**
  移除单个框架视图动画
  */
 - (void)fwRemoveAnimation;
@@ -202,6 +189,17 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param completion 完成回调
  */
 - (void)fwFadeWithAlpha:(float)alpha
+               duration:(NSTimeInterval)duration
+             completion:(nullable void (^)(BOOL finished))completion;
+
+/**
+ *  渐变代码块动画
+ *
+ *  @param block      动画代码块，比如调用imageView.setImage:方法
+ *  @param duration   持续时长，建议0.5
+ *  @param completion 完成回调
+ */
+- (void)fwFadeWithBlock:(void (^)(void))block
                duration:(NSTimeInterval)duration
              completion:(nullable void (^)(BOOL finished))completion;
 

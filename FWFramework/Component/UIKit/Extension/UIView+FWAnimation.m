@@ -304,26 +304,6 @@
     return transition;
 }
 
-- (CATransition *)fwAddTransitionFade:(NSString *)timingFunction
-                             duration:(CFTimeInterval)duration
-                           completion:(void (^)(BOOL))completion
-{
-    CATransition *transition = [CATransition new];
-    transition.type = kCATransitionFade;
-    transition.duration = duration;
-    transition.removedOnCompletion = YES;
-    if (timingFunction) transition.timingFunction = [CAMediaTimingFunction functionWithName:timingFunction];
-    
-    if (completion) {
-        transition.fwStopBlock = ^(CAAnimation *animation, BOOL finished) {
-            completion(finished);
-        };
-    }
-    
-    [self.layer addAnimation:transition forKey:@"FWAnimation"];
-    return transition;
-}
-
 - (void)fwRemoveAnimation
 {
     [self.layer removeAnimationForKey:@"FWAnimation"];
@@ -429,6 +409,17 @@
                          self.alpha = alpha;
                      }
                      completion:completion];
+}
+
+- (void)fwFadeWithBlock:(void (^)(void))block
+               duration:(NSTimeInterval)duration
+             completion:(void (^)(BOOL))completion
+{
+    [UIView transitionWithView:self
+                      duration:duration
+                       options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction
+                    animations:block
+                    completion:completion];
 }
 
 - (void)fwRotateWithDegree:(CGFloat)degree
